@@ -126,23 +126,23 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
   switch (m_currentAction) {
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      rotate(m_renderer->scene().center(), delta.y(), delta.x(), 0);
+      rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
       e->accept();
       break;
     }
     case Translation: {
       Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
       Vector2f toScreen(e->localPos().x(), e->localPos().y());
-      translate(m_renderer->scene().center(), fromScreen, toScreen);
+      translate(m_renderer->camera().focus(), fromScreen, toScreen);
       e->accept();
       break;
     }
     case ZoomTilt: {
       QPoint delta = e->pos() - m_lastMousePosition;
       // Tilt
-      rotate(m_renderer->scene().center(), 0, 0, delta.x());
+      rotate(m_renderer->camera().focus(), 0, 0, delta.x());
       // Zoom
-      zoom(m_renderer->scene().center(), delta.y());
+      zoom(m_renderer->camera().focus(), delta.y());
       e->accept();
       break;
     }
@@ -184,7 +184,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
   else if (!numDegrees.isNull())
     d = numDegrees.y();
 
-  zoom(m_renderer->scene().center(), m_zoomDirection * d);
+  zoom(m_renderer->camera().focus(), m_zoomDirection * d);
 
   e->accept();
   emit updateRequested();
@@ -193,7 +193,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
-  Vector3f ref = m_renderer->scene().center();
+  Vector3f ref = m_renderer->camera().focus();
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:

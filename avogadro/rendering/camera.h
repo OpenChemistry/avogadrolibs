@@ -208,12 +208,24 @@ public:
    */
   float orthographicScale() const { return m_orthographicScale; }
 
+  /**
+   * Set focused point. Navigation actions shall occur relative to it.
+   * Note that this method does not cause any change in camera matrices.
+   */
+  void setFocus(const Eigen::Vector3f &newFocus) { m_focus = newFocus; }
+
+  /**
+   * Get focused point. Navigation actions shall occur relative to it.
+   */
+  Vector3f focus() const { return m_focus; }
+
 private:
   int m_width;
   int m_height;
   Projection m_projectionType;
   float m_orthographicScale;
   std::unique_ptr<EigenData> m_data;
+  Eigen::Vector3f m_focus;
 };
 
 inline const Eigen::Affine3f& Camera::projection() const

@@ -120,6 +120,7 @@ void GLRenderer::render()
 void GLRenderer::resetCamera()
 {
   resetGeometry();
+  m_camera.setFocus(m_center);
   m_camera.setIdentity();
   m_camera.translate(-m_center);
   m_camera.preTranslate(-2.22f * m_radius * Vector3f::UnitZ());
@@ -128,6 +129,8 @@ void GLRenderer::resetCamera()
 void GLRenderer::resetGeometry()
 {
   m_scene.setDirty(true);
+  if (m_camera.focus() == m_center)
+    m_camera.setFocus(m_scene.center());
   m_center = m_scene.center();
   m_radius = m_scene.radius();
 }
