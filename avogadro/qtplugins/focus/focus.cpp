@@ -56,12 +56,25 @@ void Focus::setScene(Rendering::Scene* scene)
   m_scene = scene;
 }
 
-void Focus::newFocus(Eigen::Vector3f point)
+void Focus::setActiveWidget(QWidget* widget)
 {
-  Eigen::Vector3f oldFocus = m_camera->focus();
-  Eigen::Vector3f translation = oldFocus - point;
-  m_camera->translate(translation);
-  m_camera->setFocus(point);  
+  if (widget != nullptr) {
+    m_glWidget = widget;
+    connect(this, SIGNAL(updateRequested()), m_glWidget, SLOT(requestUpdate()));
+  }
+}
+
+void Focus::newFocus(Eigen::Vector3f point, float distance)
+{
+  Eigen::Vector3f cameraPoint = -m_camera->modelView().translation();
+  Eigen::Vector3f vectorOfSight = point - cameraPoint;
+  float currentDistance = vectorOfSight.norm();
+  float scaleFactor = distance / currentDistance;
+  vectorOfSight *= 1.0f - scaleFactor;
+  cameraPoint += vectorOfSight;
+  m_camera->setIdentity();
+  m_camera->lookAt(cameraPoint, point, Eigen::Vector3f(0, 1, 0));
+  m_camera->setFocus(point);
 }
 
 void Focus::focusSelection()
@@ -73,19 +86,18 @@ void Focus::focusSelection()
   if (m_molecule->isSelectionEmpty())
     return;
   
-  Eigen::Vector3f selectionCenter;
+  Eigen::Vector3f selectionCenter(0, 0, 0);
   int selectionSize = 0;
-  for (Index i = 0; i < m_molecule->atomCount(); ++i)
-  {
-    if (m_molecule->atomSelected(i))
-    {
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i)) {
       selectionCenter += m_molecule->atomPosition3d(i).cast<float>();
       ++selectionSize;
     }
   }
   selectionCenter /= selectionSize;
   
-  newFocus(selectionCenter);
+  newFocus(selectionCenter, 10.0f);
+  emit updateRequested();
 }
 
 void Focus::unfocus()
@@ -93,7 +105,8 @@ void Focus::unfocus()
   if (!m_camera || !m_scene)
     return;
   
-  newFocus(m_scene->center());
+  newFocus(m_scene->center(), 2.22f * m_scene->radius());
+  emit updateRequested();
 }
 
 } // namespace QtPlugins

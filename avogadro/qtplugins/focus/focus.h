@@ -36,6 +36,7 @@ public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   void setCamera(Rendering::Camera* camera) override;
   void setScene(Rendering::Scene* scene) override;
+  void setActiveWidget(QWidget* widget) override;
 
 signals:
   void updateRequested();
@@ -48,10 +49,11 @@ private:
   QtGui::Molecule* m_molecule;
   Rendering::Camera* m_camera;
   Rendering::Scene* m_scene;
+  QWidget* m_glWidget;
   QAction* m_focusSelectionAction;
   QAction* m_unfocusAction;
 
-  void newFocus(Eigen::Vector3f point);
+  void newFocus(Eigen::Vector3f point, float distance);
 };
 
 } // namespace QtPlugins
