@@ -12,6 +12,4 @@ if [[ $RUNNER_OS == "Windows" ]]; then
         cmake --build . --target install 
 elif [[ $RUNNER_OS == "macOS" ]]; then
     brew install eigen
-else
-    yum install eigen3-devel
 fi

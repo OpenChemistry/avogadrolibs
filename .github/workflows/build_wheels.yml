@@ -20,6 +20,8 @@ env:
   # Run a very simple test to make sure the wheels are working
   CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
 
+  # Run yum install for eigen before anything else
+  CIBW_BEFORE_ALL_LINUX: yum install -y eigen3-devel
 
 # Use bash by default for the run command
 defaults:
