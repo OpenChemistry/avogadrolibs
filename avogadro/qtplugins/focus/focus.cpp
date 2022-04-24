@@ -87,16 +87,23 @@ void Focus::focusSelection()
     return;
   
   Eigen::Vector3f selectionCenter(0, 0, 0);
-  int selectionSize = 0;
+  std::vector<Index> selection;
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
     if (m_molecule->atomSelected(i)) {
       selectionCenter += m_molecule->atomPosition3d(i).cast<float>();
-      ++selectionSize;
+      selection.push_back(i);
     }
   }
-  selectionCenter /= selectionSize;
+  selectionCenter /= selection.size();
+  float selectionRadius = 0.0f;
+  for (Index i : selection) {
+    Eigen::Vector3f pos = m_molecule->atomPosition3d(i).cast<float>();
+    float distance = (pos - selectionCenter).norm();
+    if (distance > selectionRadius)
+        selectionRadius = distance;
+  }
   
-  newFocus(selectionCenter, 10.0f);
+  newFocus(selectionCenter, selectionRadius + 10.0f);
   emit updateRequested();
 }
 
