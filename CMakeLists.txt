@@ -113,6 +113,7 @@ if (NOT SKBUILD)
   install(FILES
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"

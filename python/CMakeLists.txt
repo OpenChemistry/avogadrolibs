@@ -4,12 +4,15 @@ set(PYBIND11_PYTHON_VERSION "3" CACHE STRING "")
 set(PYBIND11_CPP_STANDARD "-std=c++11" CACHE STRING "")
 find_package(pybind11 REQUIRED)
 
+find_package(Eigen3 REQUIRED)
+
 include_directories(SYSTEM
   ${AvogadroLibs_SOURCE_DIR}
   ${AvogadroLibs_BINARY_DIR}/avogadro/core
   ${AvogadroLibs_BINARY_DIR}/avogadro/io
   ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
   ${PYTHON_INCLUDE_PATH}
+  ${EIGEN3_INCLUDE_DIR}
   ${pybind11_INCLUDE_DIRS}
   )
 

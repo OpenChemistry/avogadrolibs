@@ -1,4 +1,5 @@
 find_package(Eigen3 REQUIRED)
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 find_package(Qt5 COMPONENTS Widgets Network Concurrent REQUIRED)
 include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
@@ -223,4 +224,4 @@ set(SOURCES
 
 avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
 target_link_libraries(AvogadroQtPlugins PUBLIC ${Qt5Core_LIBRARIES}
-  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui Eigen3::Eigen)
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)
