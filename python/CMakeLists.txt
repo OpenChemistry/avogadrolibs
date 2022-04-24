@@ -3,6 +3,7 @@ find_package(PythonLibs 3 REQUIRED)
 set(PYBIND11_PYTHON_VERSION "3" CACHE STRING "")
 set(PYBIND11_CPP_STANDARD "-std=c++11" CACHE STRING "")
 find_package(pybind11 REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 include_directories(SYSTEM
   ${AvogadroLibs_SOURCE_DIR}
@@ -11,6 +12,7 @@ include_directories(SYSTEM
   ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
   ${PYTHON_INCLUDE_PATH}
   ${pybind11_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
   )
 
 set(wrapper_SRCS
