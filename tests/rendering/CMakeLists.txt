@@ -23,7 +23,7 @@ message(STATUS "Test source files: ${testSrcs}")
 # Add a single executable for all of our tests.
 add_executable(AvogadroRenderingTests ${testSrcs})
 target_link_libraries(AvogadroRenderingTests AvogadroRendering
-  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB} Eigen3::Eigen)
+  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
