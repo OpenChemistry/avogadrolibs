@@ -56,9 +56,6 @@ public:
   /**
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
-  virtual void process(const Core::Molecule& molecule,
-                       Rendering::GroupNode& node);
-
   virtual void process(const QtGui::Molecule& molecule,
                        Rendering::GroupNode& node);
 

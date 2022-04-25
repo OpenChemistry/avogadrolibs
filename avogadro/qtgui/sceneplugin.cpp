@@ -23,10 +23,6 @@ ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_) {}
 
 ScenePlugin::~ScenePlugin() {}
 
-void ScenePlugin::process(const Core::Molecule& molecule,
-                          Rendering::GroupNode& node)
-{}
-
 void ScenePlugin::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
 {}

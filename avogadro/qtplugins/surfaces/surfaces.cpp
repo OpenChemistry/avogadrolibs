@@ -330,6 +330,8 @@ void Surfaces::displayMesh()
   if (!m_cube)
     return;
 
+  qDebug() << " running displayMesh";
+
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
   if (!m_meshGenerator1) {
@@ -370,6 +372,9 @@ void Surfaces::meshFinished()
       movieFrame();
     } else {
       m_dialog->reenableCalculateButton();
+
+      qDebug() << " mesh finished";
+
       m_molecule->emitChanged(QtGui::Molecule::Added);
     }
   }

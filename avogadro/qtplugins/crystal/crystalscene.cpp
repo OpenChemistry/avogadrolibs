@@ -6,9 +6,9 @@
 #include "crystalscene.h"
 
 #include <avogadro/core/array.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/colorbutton.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
@@ -17,6 +17,8 @@
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QVBoxLayout>
+
+#include <QDebug>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -43,7 +45,7 @@ CrystalScene::CrystalScene(QObject* p)
 
 CrystalScene::~CrystalScene() {}
 
-void CrystalScene::process(const Molecule& molecule, GroupNode& node)
+void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
 {
   if (const UnitCell* cell = molecule.unitCell()) {
     GeometryNode* geometry = new GeometryNode;

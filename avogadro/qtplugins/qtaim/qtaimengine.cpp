@@ -43,14 +43,9 @@ QTAIMEngine::~QTAIMEngine()
 {
 }
 
-void QTAIMEngine::process(const Core::Molecule& coreMolecule,
+void QTAIMEngine::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
 {
-  const QtGui::Molecule* molecule =
-    dynamic_cast<const QtGui::Molecule*>(&coreMolecule);
-  if (!molecule)
-    return;
-
   // Create sphere/cylinder nodes.
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
@@ -60,30 +55,30 @@ void QTAIMEngine::process(const Core::Molecule& coreMolecule,
   geometry->addDrawable(cylinders);
 
   // Render the bond paths
-  if (molecule->property("QTAIMFirstNCPIndexVariantList").isValid() &&
-      molecule->property("QTAIMSecondNCPIndexVariantList").isValid() &&
-      molecule->property("QTAIMLaplacianAtBondCriticalPoints").isValid() &&
-      molecule->property("QTAIMEllipticityAtBondCriticalPoints").isValid() &&
-      molecule->property("QTAIMBondPathSegmentStartIndex").isValid() &&
-      molecule->property("QTAIMBondPathSegmentEndIndex").isValid() &&
-      molecule->property("QTAIMXBondPaths").isValid() &&
-      molecule->property("QTAIMYBondPaths").isValid() &&
-      molecule->property("QTAIMZBondPaths").isValid()) {
+  if (molecule.property("QTAIMFirstNCPIndexVariantList").isValid() &&
+      molecule.property("QTAIMSecondNCPIndexVariantList").isValid() &&
+      molecule.property("QTAIMLaplacianAtBondCriticalPoints").isValid() &&
+      molecule.property("QTAIMEllipticityAtBondCriticalPoints").isValid() &&
+      molecule.property("QTAIMBondPathSegmentStartIndex").isValid() &&
+      molecule.property("QTAIMBondPathSegmentEndIndex").isValid() &&
+      molecule.property("QTAIMXBondPaths").isValid() &&
+      molecule.property("QTAIMYBondPaths").isValid() &&
+      molecule.property("QTAIMZBondPaths").isValid()) {
     QVariant firstNCPIndexVariant =
-      molecule->property("QTAIMFirstNCPIndexVariantList");
+      molecule.property("QTAIMFirstNCPIndexVariantList");
     QVariant secondNCPIndexVariant =
-      molecule->property("QTAIMSecondNCPIndexVariantList");
+      molecule.property("QTAIMSecondNCPIndexVariantList");
     QVariant laplacianAtBondCriticalPointsVariant =
-      molecule->property("QTAIMLaplacianAtBondCriticalPoints");
+      molecule.property("QTAIMLaplacianAtBondCriticalPoints");
     QVariant ellipticityAtBondCriticalPointsVariant =
-      molecule->property("QTAIMEllipticityAtBondCriticalPoints");
+      molecule.property("QTAIMEllipticityAtBondCriticalPoints");
     QVariant bondPathSegmentStartIndexVariant =
-      molecule->property("QTAIMBondPathSegmentStartIndex");
+      molecule.property("QTAIMBondPathSegmentStartIndex");
     QVariant bondPathSegmentEndIndexVariant =
-      molecule->property("QTAIMBondPathSegmentEndIndex");
-    QVariant xBondPathsVariant = molecule->property("QTAIMXBondPaths");
-    QVariant yBondPathsVariant = molecule->property("QTAIMYBondPaths");
-    QVariant zBondPathsVariant = molecule->property("QTAIMZBondPaths");
+      molecule.property("QTAIMBondPathSegmentEndIndex");
+    QVariant xBondPathsVariant = molecule.property("QTAIMXBondPaths");
+    QVariant yBondPathsVariant = molecule.property("QTAIMYBondPaths");
+    QVariant zBondPathsVariant = molecule.property("QTAIMZBondPaths");
 
     QVariantList firstNCPIndexVariantList = firstNCPIndexVariant.toList();
     QVariantList secondNCPIndexVariantList = secondNCPIndexVariant.toList();
@@ -145,15 +140,15 @@ void QTAIMEngine::process(const Core::Molecule& coreMolecule,
     } // bond path
   }
 
-  if (molecule->property("QTAIMXNuclearCriticalPoints").isValid() &&
-      molecule->property("QTAIMYNuclearCriticalPoints").isValid() &&
-      molecule->property("QTAIMZNuclearCriticalPoints").isValid()) {
+  if (molecule.property("QTAIMXNuclearCriticalPoints").isValid() &&
+      molecule.property("QTAIMYNuclearCriticalPoints").isValid() &&
+      molecule.property("QTAIMZNuclearCriticalPoints").isValid()) {
     QVariant xNuclearCriticalPointsVariant =
-      molecule->property("QTAIMXNuclearCriticalPoints");
+      molecule.property("QTAIMXNuclearCriticalPoints");
     QVariant yNuclearCriticalPointsVariant =
-      molecule->property("QTAIMYNuclearCriticalPoints");
+      molecule.property("QTAIMYNuclearCriticalPoints");
     QVariant zNuclearCriticalPointsVariant =
-      molecule->property("QTAIMZNuclearCriticalPoints");
+      molecule.property("QTAIMZNuclearCriticalPoints");
     QVariantList xNuclearCriticalPointsVariantList =
       xNuclearCriticalPointsVariant.toList();
     QVariantList yNuclearCriticalPointsVariantList =
@@ -178,15 +173,15 @@ void QTAIMEngine::process(const Core::Molecule& coreMolecule,
     }
   }
 
-  if (molecule->property("QTAIMXBondCriticalPoints").isValid() &&
-      molecule->property("QTAIMYBondCriticalPoints").isValid() &&
-      molecule->property("QTAIMZBondCriticalPoints").isValid()) {
+  if (molecule.property("QTAIMXBondCriticalPoints").isValid() &&
+      molecule.property("QTAIMYBondCriticalPoints").isValid() &&
+      molecule.property("QTAIMZBondCriticalPoints").isValid()) {
     QVariant xBondCriticalPointsVariant =
-      molecule->property("QTAIMXBondCriticalPoints");
+      molecule.property("QTAIMXBondCriticalPoints");
     QVariant yBondCriticalPointsVariant =
-      molecule->property("QTAIMYBondCriticalPoints");
+      molecule.property("QTAIMYBondCriticalPoints");
     QVariant zBondCriticalPointsVariant =
-      molecule->property("QTAIMZBondCriticalPoints");
+      molecule.property("QTAIMZBondCriticalPoints");
     QVariantList xBondCriticalPointsVariantList =
       xBondCriticalPointsVariant.toList();
     QVariantList yBondCriticalPointsVariantList =
@@ -211,15 +206,15 @@ void QTAIMEngine::process(const Core::Molecule& coreMolecule,
     }
   }
 
-  if (molecule->property("QTAIMXElectronDensitySources").isValid() &&
-      molecule->property("QTAIMYElectronDensitySources").isValid() &&
-      molecule->property("QTAIMZElectronDensitySources").isValid()) {
+  if (molecule.property("QTAIMXElectronDensitySources").isValid() &&
+      molecule.property("QTAIMYElectronDensitySources").isValid() &&
+      molecule.property("QTAIMZElectronDensitySources").isValid()) {
     QVariant xElectronDensitySourcesVariant =
-      molecule->property("QTAIMXElectronDensitySources");
+      molecule.property("QTAIMXElectronDensitySources");
     QVariant yElectronDensitySourcesVariant =
-      molecule->property("QTAIMYElectronDensitySources");
+      molecule.property("QTAIMYElectronDensitySources");
     QVariant zElectronDensitySourcesVariant =
-      molecule->property("QTAIMZElectronDensitySources");
+      molecule.property("QTAIMZElectronDensitySources");
     QVariantList xElectronDensitySourcesVariantList =
       xElectronDensitySourcesVariant.toList();
     QVariantList yElectronDensitySourcesVariantList =

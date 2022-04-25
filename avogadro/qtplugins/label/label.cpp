@@ -6,9 +6,9 @@
 #include "label.h"
 
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/scene.h>
 #include <avogadro/rendering/textlabel3d.h>
@@ -230,7 +230,7 @@ Label::Label(QObject* parent_) : QtGui::ScenePlugin(parent_)
 
 Label::~Label() {}
 
-void Label::process(const Core::Molecule& molecule, Rendering::GroupNode& node)
+void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
   m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {

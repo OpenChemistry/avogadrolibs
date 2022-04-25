@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Marcus Johansson <mcodev31@gmail.com>
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "symmetryscene.h"
@@ -119,22 +108,17 @@ SymmetryScene::SymmetryScene(QObject* p)
 
 SymmetryScene::~SymmetryScene() {}
 
-void SymmetryScene::process(const Core::Molecule& coreMolecule,
+void SymmetryScene::process(const QtGui::Molecule& molecule,
                             Rendering::GroupNode& node)
 {
-  const QtGui::Molecule* molecule =
-    dynamic_cast<const QtGui::Molecule*>(&coreMolecule);
-  if (!molecule)
-    return;
-
-  QVariant origo = molecule->property("SymmetryOrigo");
-  QVariant radius = molecule->property("SymmetryRadius");
-  QVariant inversion = molecule->property("SymmetryInversion");
+  QVariant origo = molecule.property("SymmetryOrigo");
+  QVariant radius = molecule.property("SymmetryRadius");
+  QVariant inversion = molecule.property("SymmetryInversion");
   QVariant properRotation =
-    molecule->property("SymmetryProperRotationVariantList");
+    molecule.property("SymmetryProperRotationVariantList");
   QVariant improperRotation =
-    molecule->property("SymmetryImproperRotationVariantList");
-  QVariant reflection = molecule->property("SymmetryReflectionVariantList");
+    molecule.property("SymmetryImproperRotationVariantList");
+  QVariant reflection = molecule.property("SymmetryReflectionVariantList");
   if (!origo.isValid() || !radius.isValid()) {
     return;
   }
