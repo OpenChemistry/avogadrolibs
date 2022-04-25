@@ -245,6 +245,10 @@ void TextLabelBase::RenderImpl::compileShaders()
     std::cerr << shaderProgram.error() << std::endl;
     return;
   }
+  shaderProgram.detachShader(vertexShader);
+  shaderProgram.detachShader(fragmentShader);
+  vertexShader.cleanup();
+  fragmentShader.cleanup();
 
   shadersInvalid = false;
 }
