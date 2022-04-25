@@ -37,7 +37,7 @@ public:
   }
 
   FileFormat* newInstance() const override { return new GaussianCube; }
-  std::string identifier() const override { return "Avogadro: GaussianCube"; }
+  std::string identifier() const override { return "Avogadro: Gaussian Cube"; }
   std::string name() const override { return "Gaussian"; }
   std::string description() const override
   {
@@ -46,7 +46,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://www.gaussian.com/g_tech/g_ur/u_cubegen.htm";
+    return "https://gaussian.com/cubegen/";
   }
 
   std::vector<std::string> fileExtensions() const override;
