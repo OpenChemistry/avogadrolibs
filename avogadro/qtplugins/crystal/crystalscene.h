@@ -10,6 +10,7 @@
 #include <avogadro/qtgui/sceneplugin.h>
 
 #include <QtGui/QColor> 
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -24,7 +25,7 @@ public:
   explicit CrystalScene(QObject* parent = nullptr);
   ~CrystalScene() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Crystal Lattice"); }

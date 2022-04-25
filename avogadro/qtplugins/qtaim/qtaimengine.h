@@ -33,7 +33,7 @@ public:
   explicit QTAIMEngine(QObject* parent = nullptr);
   virtual ~QTAIMEngine() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("QTAIM"); }

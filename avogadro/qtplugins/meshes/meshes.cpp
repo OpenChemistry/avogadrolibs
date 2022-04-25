@@ -1,29 +1,16 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "meshes.h"
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/mesh.h>
-#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
-
-#include <QtCore/QDebug>
 
 #include <algorithm>
 
@@ -51,14 +38,14 @@ struct Sequence
 };
 } // namespace
 
-void Meshes::process(const Molecule& mol, GroupNode& node)
+void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 {
-  GeometryNode* geometry = new GeometryNode;
-  node.addChild(geometry);
-
   unsigned char opacity = 150;
 
   if (mol.meshCount()) {
+    GeometryNode* geometry = new GeometryNode;
+    node.addChild(geometry);
+ 
     const Mesh* mesh = mol.mesh(0);
 
     /// @todo Allow use of MeshGeometry without an index array when all vertices
