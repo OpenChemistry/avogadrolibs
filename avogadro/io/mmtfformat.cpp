@@ -10,6 +10,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
