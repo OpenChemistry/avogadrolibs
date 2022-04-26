@@ -86,6 +86,14 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     molecule.setUnitCell(unitCellObject);
   }
   // spaceGroup
+  if (structure.spaceGroup.size() > 0) {
+    unsigned short hall = 0;
+    hall = Core::SpaceGroups::hallNumber(structure.spaceGroup);
+
+    if (hall != 0) {
+      molecule.setHallNumber(hall);
+    }
+  }
 
   Index modelChainCount =
     static_cast<Index>(structure.chainsPerModel[modelIndex]);
