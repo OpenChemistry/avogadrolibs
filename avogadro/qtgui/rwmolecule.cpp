@@ -26,8 +26,6 @@
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
-#include <QtCore/QDebug>
-
 namespace Avogadro {
 namespace QtGui {
 
@@ -414,9 +412,6 @@ void RWMolecule::modifyMolecule(const Molecule& newMolecule,
 {
   ModifyMoleculeCommand* comm =
     new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
-
-  qDebug() << " checking layers " << m_molecule.layer().maxLayer() << m_molecule.layer(0);
-  qDebug() << "   and in newMol " << newMolecule.layer().maxLayer() << newMolecule.layer(0);
 
   comm->setText(undoText);
   m_undoStack.push(comm);
