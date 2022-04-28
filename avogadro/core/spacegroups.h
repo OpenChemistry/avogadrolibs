@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_SPACE_GROUPS_H
@@ -53,49 +42,54 @@ public:
   ~SpaceGroups();
 
   /**
-   * Get an enum representing the crystal system for a given hall number.
+   * @return The hall number of the matching space group string or 0 if not found
+   */
+  static unsigned short hallNumber(const std::string& spaceGroup);
+
+  /**
+   * @return an enum representing the crystal system for a given hall number.
    * If an invalid hall number is given, None will be returned.
    */
   static CrystalSystem crystalSystem(unsigned short hallNumber);
 
   /**
-   * Get the international number for a given hall number.
+   * @return the international number for a given hall number.
    * If an invalid hall number is given, 0 will be returned.
    */
   static unsigned short internationalNumber(unsigned short hallNumber);
 
   /**
-   * Get the Schoenflies symbol for a given hall number.
+   * @return the Schoenflies symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
   static const char* schoenflies(unsigned short hallNumber);
 
   /**
-   * Get the Hall symbol for a given hall number. '=' is used instead of '"'.
+   * @return the Hall symbol for a given hall number. '=' is used instead of '"'.
    * If an invalid hall number is given, an empty string will be returned.
    */
   static const char* hallSymbol(unsigned short hallNumber);
 
   /**
-   * Get the international symbol for a given hall number.
+   * @return the international symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
   static const char* international(unsigned short hallNumber);
 
   /**
-   * Get the full international symbol for a given hall number.
+   * @return the full international symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
   static const char* internationalFull(unsigned short hallNumber);
 
   /**
-   * Get the short international symbol for a given hall number.
+   * @return the short international symbol for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    */
   static const char* internationalShort(unsigned short hallNumber);
 
   /**
-   * Get the setting for a given hall number.
+   * @return the setting for a given hall number.
    * If an invalid hall number is given, an empty string will be returned.
    * An empty string may also be returned if there are no settings for this
    * space group.
@@ -103,13 +97,13 @@ public:
   static const char* setting(unsigned short hallNumber);
 
   /**
-   * Get the number of transforms for a given hall number.
+   * @return the number of transforms for a given hall number.
    * If an invalid hall number is given, 0 will be returned.
    */
   static unsigned short transformsCount(unsigned short hallNumber);
 
   /**
-   * Get an array of transforms for a given hall number and a vector v.
+   * @return an array of transforms for a given hall number and a vector v.
    * The vector should be in fractional coordinates.
    * If an invalid hall number is given, an empty array will be returned.
    */

@@ -103,6 +103,9 @@ ShaderProgram::ShaderProgram()
 
 ShaderProgram::~ShaderProgram()
 {
+  if (m_handle != 0) {
+    glDeleteProgram(static_cast<GLuint>(m_handle));
+  }
 }
 
 bool ShaderProgram::attachShader(const Shader& shader)
@@ -172,7 +175,6 @@ bool ShaderProgram::detachShader(const Shader& shader)
         glDetachShader(static_cast<GLuint>(m_handle),
                        static_cast<GLuint>(shader.handle()));
         m_vertexShader = 0;
-        m_linked = false;
         return true;
       }
     case Shader::Fragment:
@@ -183,7 +185,6 @@ bool ShaderProgram::detachShader(const Shader& shader)
         glDetachShader(static_cast<GLuint>(m_handle),
                        static_cast<GLuint>(shader.handle()));
         m_fragmentShader = 0;
-        m_linked = false;
         return true;
       }
     default:
