@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "cmlformat.h"
@@ -24,6 +13,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -153,9 +143,24 @@ public:
         error += "Incomplete unit cell description.";
         return false;
       }
+
+      // look for space group, e.g.
+      // <symmetry spaceGroup="F -4 2 3">
+      xml_node symmetry = node.child("symmetry");
+      unsigned short hall = 0;
+      if (symmetry) {
+        xml_attribute spaceGroup = symmetry.attribute("spaceGroup");
+        if (spaceGroup) {
+          // look for space group in the space group table
+          hall = Core::SpaceGroups::hallNumber(std::string(spaceGroup.value()));
+        }
+      }
+
       UnitCell* cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
       molecule->setUnitCell(cell);
+      if (hall != 0)
+        molecule->setHallNumber(hall);
     }
     return true;
   }
@@ -500,6 +505,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   if (cell) {
     xml_node crystalNode = moleculeNode.append_child("crystal");
 
+    // Add the unit cell parameters.
     xml_node crystalANode = crystalNode.append_child("scalar");
     xml_node crystalBNode = crystalNode.append_child("scalar");
     xml_node crystalCNode = crystalNode.append_child("scalar");
@@ -527,6 +533,13 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     crystalAlphaNode.text() = formatNumber(numberStream, cell->alpha() * RAD_TO_DEG).c_str();
     crystalBetaNode.text() = formatNumber(numberStream, cell->beta() * RAD_TO_DEG).c_str();
     crystalGammaNode.text() = formatNumber(numberStream, cell->gamma() * RAD_TO_DEG).c_str();
+
+    // add the space group
+    unsigned short hall = mol.hallNumber();
+    if (hall != 0) {
+      xml_node spaceGroupNode = crystalNode.append_child("symmetry");
+      spaceGroupNode.append_attribute("spaceGroup") = Core::SpaceGroups::international(hall);
+    }
   }
 
   xml_node atomArrayNode = moleculeNode.append_child("atomArray");
