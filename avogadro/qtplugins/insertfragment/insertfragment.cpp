@@ -124,6 +124,10 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   if (crystal) {
     Molecule::MoleculeChanges changes =
       (Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed);
+
+    // check layers in newMol
+    qDebug() << " added " << newMol.layer().maxLayer() << newMol.layer(0);
+
     m_molecule->undoMolecule()->modifyMolecule(newMol, changes,
                                                tr("Import Crystal"));
     emit requestActiveTool("Navigator");

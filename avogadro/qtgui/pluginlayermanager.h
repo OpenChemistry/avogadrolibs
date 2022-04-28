@@ -18,7 +18,7 @@ namespace QtGui {
  * @class PluginLayerManager pluginlayermanager.h
  * <avogadro/qtgui/pluginlayermanager.h>
  * @brief The PluginLayerManager class is a set of common layer dependent
- * operators usefull for Layer dependent QtPlugins.
+ * operators useful for Layer dependent QtPlugins.
  */
 class AVOGADROQTGUI_EXPORT PluginLayerManager : protected Core::LayerManager
 {

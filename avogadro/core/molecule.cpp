@@ -45,12 +45,8 @@ Molecule::Molecule(const Molecule& other)
     m_residues(other.m_residues), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders),
     m_atomicNumbers(other.m_atomicNumbers),
-    m_layers(LayerManager::getMoleculeLayer(this))
+    m_layers(LayerManager::getMoleculeLayer(&other, this))
 {
-  // Copy the layers, if they exist
-  if (other.m_layers.maxLayer() > 0)
-    m_layers = LayerManager::getMoleculeLayer(&other, this);
-
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
     Mesh* m = addMesh();
@@ -83,12 +79,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_residues(std::move(other.m_residues)), m_graph(std::move(other.m_graph)),
     m_bondOrders(std::move(other.m_bondOrders)),
     m_atomicNumbers(std::move(other.m_atomicNumbers)),
-    m_layers(LayerManager::getMoleculeLayer(this))
+    m_layers(LayerManager::getMoleculeLayer(&other, this))
 {
-  // Copy the layers, if they exist
-  if (other.m_layers.maxLayer() > 0)
-    m_layers = LayerManager::getMoleculeLayer(&other, this);
-
   m_basisSet = other.m_basisSet;
   other.m_basisSet = nullptr;
 
@@ -138,11 +130,10 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
     delete m_unitCell;
     m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
-  }
 
-  // Copy the layers, if they exist
-  if (other.m_layers.maxLayer() > 0)
+    // Copy the layers, if they exist
     m_layers = LayerManager::getMoleculeLayer(&other, this);
+  }
 
   return *this;
 }
@@ -184,8 +175,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     other.m_unitCell = nullptr;
 
     // Copy the layers, if they exist
-    if (other.m_layers.maxLayer() > 0)
-      m_layers = LayerManager::getMoleculeLayer(&other, this);
+    m_layers = LayerManager::getMoleculeLayer(&other, this);
   }
 
   return *this;
@@ -193,7 +183,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
 
 Molecule::~Molecule()
 {
-  LayerManager::deleteMolecule(this);
+  //LayerManager::deleteMolecule(this);
   delete m_basisSet;
   delete m_unitCell;
   clearMeshes();
