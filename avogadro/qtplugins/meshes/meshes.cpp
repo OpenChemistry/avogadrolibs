@@ -177,7 +177,7 @@ QWidget* Meshes::setupWidget()
     form->addRow(tr("Color:"), color1);
 
     QtGui::ColorButton* color2 = new QtGui::ColorButton;
-    color2->setColor(QColor(m_color1[0], m_color1[1], m_color1[2]));
+    color2->setColor(QColor(m_color2[0], m_color2[1], m_color2[2]));
     connect(color2, SIGNAL(colorChanged(const QColor&)),
             SLOT(setColor2(const QColor&)));
     form->addRow(tr("Color:"), color2);
