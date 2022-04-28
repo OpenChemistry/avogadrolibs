@@ -45,6 +45,7 @@ Molecule::Molecule(const Molecule& other)
     m_residues(other.m_residues), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders),
     m_atomicNumbers(other.m_atomicNumbers),
+    m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy the layers, if they exist
@@ -83,6 +84,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_residues(std::move(other.m_residues)), m_graph(std::move(other.m_graph)),
     m_bondOrders(std::move(other.m_bondOrders)),
     m_atomicNumbers(std::move(other.m_atomicNumbers)),
+    m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy the layers, if they exist
@@ -117,6 +119,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_graph = other.m_graph;
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
+    m_hallNumber = other.m_hallNumber;
 
     clearMeshes();
 
@@ -168,6 +171,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_graph = std::move(other.m_graph);
     m_bondOrders = std::move(other.m_bondOrders);
     m_atomicNumbers = std::move(other.m_atomicNumbers);
+    m_hallNumber = std::move(other.m_hallNumber);
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
