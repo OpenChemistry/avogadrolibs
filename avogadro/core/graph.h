@@ -190,10 +190,10 @@ public:
   /** @return the number of connected subgraphs. */
   size_t subgraphsCount() const;
 
-  /**  @return the subgraphs ID from the @p index. */
+  /**  @return the subgraph ID of the connected subgraph @p index lies in. */
   size_t subgraph(size_t index) const;
 
-  /**  @return the group size from the @p index. */
+  /**  @return the number of connected vertices that include @p index. */
   size_t subgraphCount(size_t index) const;
 
   /**
@@ -206,7 +206,12 @@ private:
   std::vector<std::vector<size_t>> m_adjacencyList;
   std::vector<std::vector<size_t>> m_edgeMap;
   Array<std::pair<size_t, size_t>> m_edgePairs;
-  ConnectedGroup m_subgraphs;
+  
+  void checkSplitSubgraph(int subgraph) const;
+  int createNewSubgraph() const;
+  mutable std::vector<int> m_vertexToSubgraph;
+  mutable std::vector<std::set<size_t>> m_subgraphToVertices;
+  mutable std::vector<bool> m_subgraphDirty;
 };
 
 } // namespace Core
