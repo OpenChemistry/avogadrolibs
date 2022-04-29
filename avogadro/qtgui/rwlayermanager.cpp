@@ -242,9 +242,10 @@ void RWLayerManager::addMolecule(const Core::Molecule* mol)
 
 Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
 {
-  if (m_activeMolecule == nullptr) {
+  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr) {
     return Array<std::pair<size_t, string>>();
   }
+
   auto& molecule = m_molToInfo[m_activeMolecule];
   size_t qttyLayer = molecule->layer.layerCount();
   vector<set<string>> active(qttyLayer, set<string>());
