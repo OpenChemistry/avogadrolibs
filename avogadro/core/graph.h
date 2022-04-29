@@ -190,14 +190,17 @@ public:
   /** @return the number of connected subgraphs. */
   size_t subgraphsCount() const;
 
-  /**  @return the subgraph ID of the connected subgraph @p index lies in. */
+  /** @return the subgraph ID of the connected subgraph @p index lies in. */
   size_t subgraph(size_t index) const;
 
-  /**  @return the number of connected vertices that include @p index. */
+  /**
+   * @return the size of the connected subgraph that includes @p index,
+   * that is, the number of connected vertices in it.
+   */
   size_t subgraphCount(size_t index) const;
 
   /**
-   * Get the group ID
+   * @return the subgraph ID of the connected subgraph @p index lies in.
    */
   size_t getConnectedID(size_t index) const;
 
@@ -207,9 +210,23 @@ private:
   std::vector<std::vector<size_t>> m_edgeMap;
   Array<std::pair<size_t, size_t>> m_edgePairs;
   
-  void checkSplitSubgraph(int subgraph) const;
+  /** @return the (new or reused) index of a newly created empty subgraph. */
   int createNewSubgraph() const;
+
+  /**
+   * If @p subgraph is marked as dirty, traverse it
+   * to check if it has split into many new subgraphs,
+   * and mark the resulting subgraph(s) as clean.
+   */
+  void checkSplitSubgraph(int subgraph) const;
+
+  /**
+   * Traverse and mark clean all dirty subgraphs,
+   * and create new subgraphs for all lone vertices.
+   * All subgraph data becomes synchronized as a result.
+   */
   void updateSubgraphs() const;
+
   mutable std::vector<int> m_vertexToSubgraph;
   mutable std::vector<std::set<size_t>> m_subgraphToVertices;
   mutable std::vector<bool> m_subgraphDirty;
