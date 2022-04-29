@@ -16,8 +16,6 @@
 
 #include "graph.h"
 
-#include <avogadro/core/connectedgroup.h>
-
 #include <algorithm>
 #include <array>
 #include <cassert>
