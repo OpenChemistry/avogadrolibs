@@ -535,7 +535,11 @@ void Graph::updateSubgraphs() const
 std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
   updateSubgraphs();
-  return m_subgraphToVertices;
+  std::vector<std::set<size_t>> r;
+  for (std::set<size_t> s: m_subgraphToVertices) {
+    if (!s.empty()) r.push_back(s);
+  }
+  return r;
 }
 
 std::set<size_t> Graph::connectedComponent(size_t index) const
@@ -547,7 +551,11 @@ std::set<size_t> Graph::connectedComponent(size_t index) const
 size_t Graph::subgraphsCount() const
 {
   updateSubgraphs();
-  return m_subgraphToVertices.size();
+  size_t r = 0;
+  for (std::set<size_t> s: m_subgraphToVertices) {
+    if (!s.empty()) r++;
+  }
+  return r;
 }
 
 size_t Graph::subgraph(size_t element) const
