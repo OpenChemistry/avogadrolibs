@@ -508,11 +508,13 @@ void Graph::checkSplitSubgraph(int subgraph) const
       do {
         size_t currentVertex = verticesToVisit.back();
         verticesToVisit.pop_back();
-        // Mark them with the current subgraph
-        m_vertexToSubgraph[currentVertex] = currentSubgraph;
-        m_subgraphToVertices[currentSubgraph].insert(currentVertex);
-        const std::vector<size_t> neighborList = neighbors(currentVertex);
-        verticesToVisit.insert(verticesToVisit.end(), neighborList.begin(), neighborList.end());
+        // Assign new vertices to the current subgraph
+        if(m_vertexToSubgraph[currentVertex] < 0) {
+          m_vertexToSubgraph[currentVertex] = currentSubgraph;
+          m_subgraphToVertices[currentSubgraph].insert(currentVertex);
+          const std::vector<size_t> neighborList = neighbors(currentVertex);
+          verticesToVisit.insert(verticesToVisit.end(), neighborList.begin(), neighborList.end());
+        }
       } while (verticesToVisit.size());
       currentSubgraph = -1;
     }
