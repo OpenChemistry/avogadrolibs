@@ -7,10 +7,16 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/qtgui/colorbutton.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
+
+#include <QtCore/QSettings>
+#include <QtWidgets/QSlider>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QVBoxLayout>
 
 #include <algorithm>
 
@@ -23,7 +29,24 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
 
-Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true) {}
+Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true), m_setupWidget(nullptr)
+{
+  QSettings settings;
+  // out of 255
+  m_opacity = settings.value("meshes/opacity", 150).toUInt();
+
+  QColor color =
+    settings.value("meshes/color1", QColor(Qt::red)).value<QColor>();
+  m_color1[0] = static_cast<unsigned char>(color.red());
+  m_color1[1] = static_cast<unsigned char>(color.green());
+  m_color1[2] = static_cast<unsigned char>(color.blue());
+
+  color =
+    settings.value("meshes/color2", QColor(Qt::blue)).value<QColor>();
+  m_color2[0] = static_cast<unsigned char>(color.red());
+  m_color2[1] = static_cast<unsigned char>(color.green());
+  m_color2[2] = static_cast<unsigned char>(color.blue());  
+}
 
 Meshes::~Meshes() {}
 
@@ -40,8 +63,6 @@ struct Sequence
 
 void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 {
-  unsigned char opacity = 150;
-
   if (mol.meshCount()) {
     GeometryNode* geometry = new GeometryNode;
     node.addChild(geometry);
@@ -57,11 +78,11 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 
     MeshGeometry* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
-    mesh1->setColor(Vector3ub(255, 0, 0));
-    mesh1->setOpacity(opacity);
+    mesh1->setColor(m_color1);
+    mesh1->setOpacity(m_opacity);
     mesh1->addVertices(mesh->vertices(), mesh->normals());
     mesh1->addTriangles(indices);
-    mesh1->setRenderPass(opacity == 255 ? Rendering::OpaquePass
+    mesh1->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
                                         : Rendering::TranslucentPass);
 
     if (mol.meshCount() >= 2) {
@@ -75,11 +96,11 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
         indices.resize(mesh->numVertices());
         std::generate(indices.begin(), indices.end(), indexGenerator);
       }
-      mesh2->setColor(Vector3ub(0, 0, 255));
-      mesh2->setOpacity(opacity);
+      mesh2->setColor(m_color2);
+      mesh2->setOpacity(m_opacity);
       mesh2->addVertices(mesh->vertices(), mesh->normals());
       mesh2->addTriangles(indices);
-      mesh2->setRenderPass(opacity == 255 ? Rendering::OpaquePass
+      mesh2->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
                                           : Rendering::TranslucentPass);
     }
   }
@@ -99,5 +120,75 @@ void Meshes::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
+
+void Meshes::setOpacity(int opacity)
+{
+  m_opacity = opacity;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("meshes/opacity", m_opacity);
+}
+
+void Meshes::setColor1(const QColor& color)
+{
+  m_color1[0] = static_cast<unsigned char>(color.red());
+  m_color1[1] = static_cast<unsigned char>(color.green());
+  m_color1[2] = static_cast<unsigned char>(color.blue());
+
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("meshes/color1", color);
+}
+
+void Meshes::setColor2(const QColor& color)
+{
+  m_color2[0] = static_cast<unsigned char>(color.red());
+  m_color2[1] = static_cast<unsigned char>(color.green());
+  m_color2[2] = static_cast<unsigned char>(color.blue());
+
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("meshes/color2", color);
+}
+
+QWidget* Meshes::setupWidget()
+{
+  if (!m_setupWidget) {
+    m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    QVBoxLayout* v = new QVBoxLayout;
+
+    // Opacity
+    QSlider* slide = new QSlider(Qt::Horizontal);
+    slide->setRange(0, 255);
+    slide->setTickInterval(5);
+    slide->setValue(m_opacity);
+    connect(slide, SIGNAL(valueChanged(int)), SLOT(setOpacity(int)));
+
+    QFormLayout* form = new QFormLayout;
+    form->addRow(tr("Opacity:"), slide);
+
+    QtGui::ColorButton* color1 = new QtGui::ColorButton;
+    color1->setColor(QColor(m_color1[0], m_color1[1], m_color1[2]));
+    connect(color1, SIGNAL(colorChanged(const QColor&)),
+            SLOT(setColor1(const QColor&)));
+    form->addRow(tr("Color:"), color1);
+
+    QtGui::ColorButton* color2 = new QtGui::ColorButton;
+    color2->setColor(QColor(m_color2[0], m_color2[1], m_color2[2]));
+    connect(color2, SIGNAL(colorChanged(const QColor&)),
+            SLOT(setColor2(const QColor&)));
+    form->addRow(tr("Color:"), color2);
+
+    v->addLayout(form);
+
+    v->addStretch(1);
+    m_setupWidget->setLayout(v);
+  }
+  return m_setupWidget;
+}
+
 } // namespace QtPlugins
 } // namespace Avogadro

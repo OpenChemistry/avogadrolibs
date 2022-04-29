@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_MESHES_H
 #define AVOGADRO_QTPLUGINS_MESHES_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
 namespace Avogadro {
@@ -28,7 +29,7 @@ public:
 
   QString name() const override { return tr("Meshes"); }
 
-  QString description() const override { return tr("Render triangle meshes."); }
+  QString description() const override { return tr("Render polygon meshes."); }
 
   bool isEnabled() const override;
 
@@ -36,8 +37,20 @@ public:
 
   void setEnabled(bool enable) override;
 
+  QWidget* setupWidget() override;
+
+private slots:
+  void setColor1(const QColor &color);
+  void setColor2(const QColor &color);
+  void setOpacity(int opacity);
+
 private:
   bool m_enabled;
+
+  QWidget* m_setupWidget;
+  unsigned char m_opacity;
+  Vector3ub m_color1;
+  Vector3ub m_color2;
 };
 
 } // end namespace QtPlugins
