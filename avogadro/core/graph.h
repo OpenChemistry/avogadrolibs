@@ -19,9 +19,9 @@
 
 #include "avogadrocore.h"
 #include "array.h"
-#include "connectedgroup.h"
 
 #include <cstddef>
+#include <set>
 #include <vector>
 
 namespace Avogadro {

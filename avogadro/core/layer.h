@@ -9,7 +9,6 @@
 #include "avogadrocore.h"
 
 #include <avogadro/core/array.h>
-#include <avogadro/core/connectedgroup.h>
 
 namespace Avogadro {
 namespace Core {
