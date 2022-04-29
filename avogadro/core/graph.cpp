@@ -202,20 +202,28 @@ size_t Graph::addEdge(size_t a, size_t b)
   }
 
   // Merge subgraphs
-  if (m_vertexToSubgraph[a] == -1 && m_vertexToSubgraph[b] == -1) {
+  int subgraphA = m_vertexToSubgraph[a];
+  int subgraphB = m_vertexToSubgraph[b];
+  if (subgraphA < 0 && subgraphB < 0) {
     int newSubgraph = createNewSubgraph();
     m_vertexToSubgraph[a] = newSubgraph;
     m_vertexToSubgraph[b] = newSubgraph;
     m_subgraphToVertices[newSubgraph].insert(a);
     m_subgraphToVertices[newSubgraph].insert(b);
-  }
-  else if (m_vertexToSubgraph[a] == -1) m_vertexToSubgraph[a] = m_vertexToSubgraph[b];
-  else if (m_vertexToSubgraph[b] == -1) m_vertexToSubgraph[a] = m_vertexToSubgraph[b];
-  else {
-    for (size_t i: m_subgraphToVertices[m_vertexToSubgraph[b]])
-      m_subgraphToVertices[m_vertexToSubgraph[a]].insert(i);
-    // Just leave it empty, it will be reused
-    m_subgraphToVertices[m_vertexToSubgraph[b]].clear();
+  } else if (subgraphA < 0) {
+    m_vertexToSubgraph[a] = subgraphB;
+    m_subgraphToVertices[subgraphB].insert(a);
+  } else if (subgraphB < 0) {
+    m_vertexToSubgraph[b] = subgraphA;
+    m_subgraphToVertices[subgraphA].insert(b);
+  } else if (subgraphA != subgraphB) {
+    m_subgraphDirty[subgraphA] = m_subgraphDirty[subgraphA] || m_subgraphDirty[subgraphB];
+    for (size_t i: m_subgraphToVertices[subgraphB]) {
+      m_subgraphToVertices[subgraphA].insert(i);
+      m_vertexToSubgraph[i] = subgraphA;
+    }
+    // Just leave it empty, it could be reused
+    m_subgraphToVertices[subgraphB].clear();
   }
 
   // Add the edge to each vertex' adjacency list.
@@ -483,7 +491,7 @@ void Graph::checkSplitSubgraph(int subgraph) const
   std::set<size_t> inputVertices = m_subgraphToVertices[subgraph];
   m_subgraphToVertices[subgraph] = std::set<size_t>();
   for (size_t i: inputVertices) {
-    if (m_vertexToSubgraph[i] == -1) {
+    if (m_vertexToSubgraph[i] < 0) {
       if (currentSubgraph < 0)
         currentSubgraph = createNewSubgraph();
       // Walk through all connected vertices
