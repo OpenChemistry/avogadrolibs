@@ -31,7 +31,10 @@ Graph::Graph(size_t n) :
     m_adjacencyList(n), m_edgeMap(n), m_edgePairs(),
     m_vertexToSubgraph(n), m_subgraphToVertices(), m_subgraphDirty()
 {
-  for (size_t i = 0; i < n; i++) m_vertexToSubgraph[i] = -1;
+  for (size_t i = 0; i < n; i++) {
+    m_vertexToSubgraph[i] = -1;
+    m_loneVertices.insert(i);
+  }
 }
 
 Graph::~Graph() {}
@@ -50,6 +53,7 @@ void Graph::setSize(size_t n)
   // Mark the new nodes as isolated, with no explicit subgraph
   for (size_t i = m_adjacencyList.size(); i < n; ++i) {
     m_vertexToSubgraph[i] = -1;
+    m_loneVertices.insert(i);
   }
 
   m_adjacencyList.resize(n);
@@ -208,12 +212,16 @@ size_t Graph::addEdge(size_t a, size_t b)
     m_vertexToSubgraph[b] = newSubgraph;
     m_subgraphToVertices[newSubgraph].insert(a);
     m_subgraphToVertices[newSubgraph].insert(b);
+    m_loneVertices.erase(a);
+    m_loneVertices.erase(b);
   } else if (subgraphA < 0) {
     m_vertexToSubgraph[a] = subgraphB;
     m_subgraphToVertices[subgraphB].insert(a);
+    m_loneVertices.erase(a);
   } else if (subgraphB < 0) {
     m_vertexToSubgraph[b] = subgraphA;
     m_subgraphToVertices[subgraphA].insert(b);
+    m_loneVertices.erase(b);
   } else if (subgraphA != subgraphB) {
     m_subgraphDirty[subgraphA] = m_subgraphDirty[subgraphA] || m_subgraphDirty[subgraphB];
     for (size_t i: m_subgraphToVertices[subgraphB]) {
@@ -340,6 +348,7 @@ void Graph::removeEdges()
     m_adjacencyList[i].clear();
     m_edgeMap[i].clear();
     m_vertexToSubgraph[i] = -1;
+    m_loneVertices.insert(i);
   }
   m_edgePairs.clear();
   m_subgraphToVertices.clear();
@@ -349,6 +358,7 @@ void Graph::removeEdges()
 void Graph::removeEdges(size_t index)
 {
   m_vertexToSubgraph[index] = -1;
+  m_loneVertices.insert(index);
   // Mark the subgraph as dirty, leave the work for later
   if (m_vertexToSubgraph[index] >= 0)
       m_subgraphDirty[m_vertexToSubgraph[index]] = true;
@@ -509,8 +519,22 @@ void Graph::checkSplitSubgraph(int subgraph) const
   }
 }
 
+void Graph::updateSubgraphs() const
+{
+  for (size_t v: m_loneVertices) {
+    int newSubgraph = createNewSubgraph();
+    m_vertexToSubgraph[v] = newSubgraph;
+    m_subgraphToVertices[newSubgraph].insert(v);
+  }
+  m_loneVertices.clear();
+  for (int i = 0; i < m_subgraphToVertices.size(); i++) {
+    checkSplitSubgraph(i);
+  }
+}
+
 std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
+  updateSubgraphs();
   return m_subgraphToVertices;
 }
 
@@ -522,6 +546,7 @@ std::set<size_t> Graph::connectedComponent(size_t index) const
 
 size_t Graph::subgraphsCount() const
 {
+  updateSubgraphs();
   return m_subgraphToVertices.size();
 }
 

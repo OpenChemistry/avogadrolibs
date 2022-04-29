@@ -209,9 +209,11 @@ private:
   
   void checkSplitSubgraph(int subgraph) const;
   int createNewSubgraph() const;
+  void updateSubgraphs() const;
   mutable std::vector<int> m_vertexToSubgraph;
   mutable std::vector<std::set<size_t>> m_subgraphToVertices;
   mutable std::vector<bool> m_subgraphDirty;
+  mutable std::set<size_t> m_loneVertices;
 };
 
 } // namespace Core
