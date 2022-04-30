@@ -16,8 +16,6 @@
 
 #include "graph.h"
 
-#include <avogadro/core/connectedgroup.h>
-
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -27,11 +25,17 @@
 namespace Avogadro {
 namespace Core {
 
-Graph::Graph() : m_subgraphs() {}
+Graph::Graph() {}
 
 Graph::Graph(size_t n) :
-    m_adjacencyList(n), m_edgeMap(n), m_edgePairs(), m_subgraphs(n)
-{}
+    m_adjacencyList(n), m_edgeMap(n), m_edgePairs(),
+    m_vertexToSubgraph(n), m_subgraphToVertices(), m_subgraphDirty()
+{
+  for (size_t i = 0; i < n; i++) {
+    m_vertexToSubgraph[i] = -1;
+    m_loneVertices.insert(i);
+  }
+}
 
 Graph::~Graph() {}
 
@@ -41,10 +45,15 @@ void Graph::setSize(size_t n)
   // from the soon to be removed vertices.
   for (size_t i = n; i < m_adjacencyList.size(); ++i) {
     removeEdges(i);
-    m_subgraphs.removeNode(i);
+    // Mark subgraph as dirty if vertex has one assigned
+    if (m_vertexToSubgraph[i] >= 0)
+      m_subgraphDirty[m_vertexToSubgraph[i]] = true;
   }
-  if (m_adjacencyList.size() < n) {
-    m_subgraphs.addNodes(n - m_adjacencyList.size());
+  m_vertexToSubgraph.resize(n);
+  // Mark the new nodes as isolated, with no explicit subgraph
+  for (size_t i = m_adjacencyList.size(); i < n; ++i) {
+    m_vertexToSubgraph[i] = -1;
+    m_loneVertices.insert(i);
   }
 
   m_adjacencyList.resize(n);
@@ -66,12 +75,13 @@ void Graph::clear()
   m_adjacencyList.clear();
   m_edgeMap.clear();
   m_edgePairs.clear();
-  m_subgraphs.clear();
+  m_vertexToSubgraph.clear();
+  m_subgraphToVertices.clear();
+  m_subgraphDirty.clear();
 }
 
 size_t Graph::addVertex()
 {
-  m_subgraphs.addNode(size());
   setSize(size() + 1);
   return size() - 1;
 }
@@ -79,7 +89,9 @@ size_t Graph::addVertex()
 void Graph::removeVertex(size_t index)
 {
   assert(index < size());
-  m_subgraphs.removeConnection(index);
+  // Mark the subgraph as dirty, leave the work for later
+  if (m_vertexToSubgraph[index] >= 0)
+      m_subgraphDirty[m_vertexToSubgraph[index]] = true;
   // Remove the edges to the vertex.
   removeEdges(index);
 
@@ -102,9 +114,17 @@ void Graph::removeVertex(size_t index)
       if (m_edgePairs[edgeIndex].second == affectedIndex)
         m_edgePairs[edgeIndex].second = index;
     }
+    if (m_vertexToSubgraph[index] >= 0)
+      m_subgraphToVertices[m_vertexToSubgraph[index]].erase(index);
+    std::swap(m_vertexToSubgraph[index], m_vertexToSubgraph.back());
+    if (m_vertexToSubgraph[index] >= 0) {
+      m_subgraphToVertices[m_vertexToSubgraph[index]].erase(affectedIndex);
+      m_subgraphToVertices[m_vertexToSubgraph[index]].insert(index);
+    }
   }
   m_adjacencyList.pop_back();
   m_edgeMap.pop_back();
+  m_vertexToSubgraph.pop_back();
 }
 
 void Graph::swapVertexIndices(size_t a, size_t b)
@@ -183,7 +203,34 @@ size_t Graph::addEdge(size_t a, size_t b)
     }
   }
 
-  m_subgraphs.addConnection(a, b);
+  // Merge subgraphs
+  int subgraphA = m_vertexToSubgraph[a];
+  int subgraphB = m_vertexToSubgraph[b];
+  if (subgraphA < 0 && subgraphB < 0) {
+    int newSubgraph = createNewSubgraph();
+    m_vertexToSubgraph[a] = newSubgraph;
+    m_vertexToSubgraph[b] = newSubgraph;
+    m_subgraphToVertices[newSubgraph].insert(a);
+    m_subgraphToVertices[newSubgraph].insert(b);
+    m_loneVertices.erase(a);
+    m_loneVertices.erase(b);
+  } else if (subgraphA < 0) {
+    m_vertexToSubgraph[a] = subgraphB;
+    m_subgraphToVertices[subgraphB].insert(a);
+    m_loneVertices.erase(a);
+  } else if (subgraphB < 0) {
+    m_vertexToSubgraph[b] = subgraphA;
+    m_subgraphToVertices[subgraphA].insert(b);
+    m_loneVertices.erase(b);
+  } else if (subgraphA != subgraphB) {
+    m_subgraphDirty[subgraphA] = m_subgraphDirty[subgraphA] || m_subgraphDirty[subgraphB];
+    for (size_t i: m_subgraphToVertices[subgraphB]) {
+      m_subgraphToVertices[subgraphA].insert(i);
+      m_vertexToSubgraph[i] = subgraphA;
+    }
+    // Just leave it empty, it could be reused
+    m_subgraphToVertices[subgraphB].clear();
+  }
 
   // Add the edge to each vertex' adjacency list.
   neighborsA.push_back(b);
@@ -283,12 +330,9 @@ void Graph::removeEdge(size_t a, size_t b)
     *std::find(edgeList2.begin(), edgeList2.end(), affectedIndex) = edgeIndex;
   }
 
-  if (m_subgraphs.getGroup(a) == m_subgraphs.getGroup(b)) {
-    std::set<size_t> connected = checkConectivity(a, b);
-    if (!connected.empty()) {
-      m_subgraphs.removeConnection(a, b, connected);
-    }
-  }
+  // Mark the subgraph as dirty, leave the work for later
+  if (m_vertexToSubgraph[a] >= 0)
+      m_subgraphDirty[m_vertexToSubgraph[a]] = true;
 }
 
 void Graph::removeEdge(size_t edgeIndex)
@@ -300,17 +344,24 @@ void Graph::removeEdge(size_t edgeIndex)
 
 void Graph::removeEdges()
 {
-  m_subgraphs.removeConnections();
   for (size_t i = 0; i < m_adjacencyList.size(); ++i) {
     m_adjacencyList[i].clear();
     m_edgeMap[i].clear();
+    m_vertexToSubgraph[i] = -1;
+    m_loneVertices.insert(i);
   }
   m_edgePairs.clear();
+  m_subgraphToVertices.clear();
+  m_subgraphDirty.clear();
 }
 
 void Graph::removeEdges(size_t index)
 {
-  m_subgraphs.removeConnection(index);
+  m_vertexToSubgraph[index] = -1;
+  m_loneVertices.insert(index);
+  // Mark the subgraph as dirty, leave the work for later
+  if (m_vertexToSubgraph[index] >= 0)
+      m_subgraphDirty[m_vertexToSubgraph[index]] = true;
 
   const std::vector<size_t> &edges = m_edgeMap[index];
   for (size_t i = 0; i < edges.size(); ++i)
@@ -420,35 +471,122 @@ const Array<std::pair<size_t, size_t>>& Graph::edgePairs() const
   return m_edgePairs;
 }
 
+int Graph::createNewSubgraph() const
+{
+  // Try to find an empty subgraph to reuse
+  for (size_t i = 0; i < m_subgraphToVertices.size(); i++) {
+    if (!m_subgraphToVertices[i].size()) {
+      m_subgraphDirty[i] = false;
+      return int(i);
+    }
+  }
+  // Otherwise, extend the list
+  int r = m_subgraphDirty.size();
+  m_subgraphToVertices.push_back(std::set<size_t>());
+  m_subgraphDirty.push_back(false);
+  return r;
+}
+
+void Graph::checkSplitSubgraph(int subgraph) const
+{
+  if (!m_subgraphDirty[subgraph]) return;
+  m_subgraphDirty[subgraph] = false;
+  // First, set all vertices to subgraph -1 (meaning not visited)
+  for (size_t i: m_subgraphToVertices[subgraph])
+    m_vertexToSubgraph[i] = -1;
+  // Then, try to classify all vertices in some subgraph
+  int currentSubgraph = subgraph;
+  std::set<size_t> inputVertices = m_subgraphToVertices[subgraph];
+  m_subgraphToVertices[subgraph] = std::set<size_t>();
+  for (size_t i: inputVertices) {
+    if (m_vertexToSubgraph[i] < 0) {
+      if (currentSubgraph < 0)
+        currentSubgraph = createNewSubgraph();
+      // Walk through all connected vertices
+      std::vector<size_t> verticesToVisit;
+      verticesToVisit.push_back(i);
+      do {
+        size_t currentVertex = verticesToVisit.back();
+        verticesToVisit.pop_back();
+        // Assign new vertices to the current subgraph
+        if(m_vertexToSubgraph[currentVertex] < 0) {
+          m_vertexToSubgraph[currentVertex] = currentSubgraph;
+          m_subgraphToVertices[currentSubgraph].insert(currentVertex);
+          const std::vector<size_t> neighborList = neighbors(currentVertex);
+          verticesToVisit.insert(verticesToVisit.end(), neighborList.begin(), neighborList.end());
+        }
+      } while (verticesToVisit.size());
+      currentSubgraph = -1;
+    }
+  }
+}
+
+void Graph::updateSubgraphs() const
+{
+  for (size_t v: m_loneVertices) {
+    int newSubgraph = createNewSubgraph();
+    m_vertexToSubgraph[v] = newSubgraph;
+    m_subgraphToVertices[newSubgraph].insert(v);
+  }
+  m_loneVertices.clear();
+  for (int i = 0; i < m_subgraphToVertices.size(); i++) {
+    checkSplitSubgraph(i);
+  }
+}
+
 std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
-  return m_subgraphs.getAllGroups();
+  updateSubgraphs();
+  std::vector<std::set<size_t>> r;
+  for (std::set<size_t> s: m_subgraphToVertices) {
+    if (!s.empty()) r.push_back(s);
+  }
+  return r;
 }
 
 std::set<size_t> Graph::connectedComponent(size_t index) const
 {
-  size_t group = m_subgraphs.getGroup(index);
-  return m_subgraphs.getNodes(group);
+  size_t subgraphIndex = subgraph(index);
+  return m_subgraphToVertices[subgraphIndex];
 }
 
 size_t Graph::subgraphsCount() const
 {
-  return m_subgraphs.groupCount();
+  updateSubgraphs();
+  size_t r = 0;
+  for (std::set<size_t> s: m_subgraphToVertices) {
+    if (!s.empty()) r++;
+  }
+  return r;
 }
 
 size_t Graph::subgraph(size_t element) const
 {
-  return m_subgraphs.getGroup(element);
+  int r = m_vertexToSubgraph[element];
+  // Index -1 means disconnected (its own subgraph)
+  if (r < 0) {
+    r = m_subgraphToVertices.size();
+    m_subgraphToVertices.push_back(std::set<size_t>());
+    m_subgraphToVertices[r].insert(element);
+    m_subgraphDirty[r] = false;
+    return r;
+  }
+  if (m_subgraphDirty[r]) {
+    checkSplitSubgraph(r);
+    r = m_vertexToSubgraph[element];
+  }
+  return r;
 }
 
 size_t Graph::subgraphCount(size_t element) const
 {
-  return m_subgraphs.getGroupSize(element);
+  int subgraphIndex = subgraph(element);
+  return m_subgraphToVertices[subgraphIndex].size();
 }
 
 size_t Graph::getConnectedID(size_t index) const
 {
-  return m_subgraphs.getGroup(index);
+  return subgraph(index);
 }
 } // namespace Core
 } // namespace Avogadro
