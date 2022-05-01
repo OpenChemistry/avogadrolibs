@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
-# ovari <ovari123@zoho.com>, 2021.
+# ovari <ovari123@zoho.com>, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-04-30 19:46+0000\n"
-"PO-Revision-Date: 2021-09-22 03:39+0000\n"
+"PO-Revision-Date: 2022-05-01 17:00+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -1028,6 +1028,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"A fájl kiterjesztése hiányzik, így a formátum nem határozható meg. Hozzá "
+"szeretné adni?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -2511,22 +2513,20 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr "PDB-modellek letöltése a fehérjeadatbankból"
 
 #: qtplugins/focus/focus.cpp:21
-#, fuzzy
-#| msgid "Selection"
 msgid "Focus Selection"
-msgstr "Kijelölés"
+msgstr "Összpontosítás kijelölése"
 
 #: qtplugins/focus/focus.cpp:22
 msgid "Unfocus"
-msgstr ""
+msgstr "Összpontosítás eltávolítása"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Összpontosítás"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Meghatározott jellemzőkre összpontosítása a nézetben."
 
 #: qtplugins/force/force.h:28
 msgid "Force"
@@ -2940,10 +2940,8 @@ msgid "Meshes"
 msgstr "Hálók"
 
 #: qtplugins/meshes/meshes.h:32
-#, fuzzy
-#| msgid "Render triangle meshes."
 msgid "Render polygon meshes."
-msgstr "Háromszöghálók megjelenítése."
+msgstr "Sokszög hálók megjelenítése."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 msgid "View general properties of a molecule."
@@ -3590,9 +3588,8 @@ msgid "Valence"
 msgstr "Vegyérték"
 
 #: qtplugins/propertytables/propertymodel.cpp:359
-#, fuzzy
 msgid "Formal Charge"
-msgstr "Formális töltés"
+msgstr "Hivatalos töltés"
 
 #: qtplugins/propertytables/propertymodel.cpp:361
 msgid "X (Å)"
