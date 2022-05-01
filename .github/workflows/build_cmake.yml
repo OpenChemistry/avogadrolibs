@@ -169,7 +169,7 @@ jobs:
       if: runner.os == 'macOS'
       uses: mxschmitt/action-tmate@v3
 
-    - name: Install the Apple certificate and provisioning profile
+    - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
       working-directory: ${{ runner.workspace }}/build
@@ -190,12 +190,24 @@ jobs:
         security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
+    - name: Sign the Mac app
+      # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      run: |
+        # create variables
+        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
         # import certificate to keychain
         security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
         security list-keychain -d user -s $KEYCHAIN_PATH
 
         # code-sign app
-        # Not sure if Apple will grant us a team / org name
         codesign --deep -s "Developer ID Application: Geoffrey Hutchison" -v prefix/Avogadro2.app
 
     - name: Pack
