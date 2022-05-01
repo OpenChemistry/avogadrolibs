@@ -441,7 +441,7 @@ bool ShaderProgram::setAttributeArrayInternal(
 
 void ShaderProgram::initializeTextureUnits()
 {
-  GLint numTextureUnits;
+  GLint numTextureUnits = 0;
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &numTextureUnits);
 
   // We'll impose a hard limit of 32 texture units for symbolic lookups.

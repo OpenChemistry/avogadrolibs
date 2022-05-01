@@ -234,7 +234,8 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
 
 OverlayAxes::OverlayAxes(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_render(new RenderImpl),
-    m_axesAction(new QAction(tr("Reference Axes"), this)), m_initialized(false)
+    m_axesAction(new QAction(tr("Reference Axes"), this)), m_initialized(false),
+    m_glWidget(nullptr)
 {
   connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
 

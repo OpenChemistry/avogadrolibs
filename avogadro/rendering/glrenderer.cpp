@@ -129,7 +129,7 @@ void GLRenderer::resetCamera()
 void GLRenderer::resetGeometry()
 {
   m_scene.setDirty(true);
-  if (m_camera.focus() == m_center)
+  if (m_camera.focus()(0) != m_camera.focus()(0) || m_camera.focus() == m_center)
     m_camera.setFocus(m_scene.center());
   m_center = m_scene.center();
   m_radius = m_scene.radius();
