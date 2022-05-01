@@ -7,7 +7,6 @@ name: CMake Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  BUILD_TYPE: Release
   QT_VERSION: 5.12.12
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
@@ -26,55 +25,23 @@ jobs:
             name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Address Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=asan",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Leak Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=lsan",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Thread Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=tsan",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=ubsan",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Memory Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=msan",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
             cpack: "",
           }
         - {
             name: "Ubuntu 18.04 AppImage", artifact: "Avogadro2.AppImage",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
             cpack: "",
           }
         - {
             name: "macOS Latest Clang", artifact: "macOS.dmg",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
+            build_type: "Release",
             cmake_flags: "-G Ninja",
             cpack_flags: "-G DragNDrop",
           }
@@ -82,9 +49,50 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
+            build_type: "Release",
             cmake_flags: " ",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
+          }
+        - {
+            name: "Ubuntu Address Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "asan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Leak Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "lsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Thread Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "tsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "ubsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Memory Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "msan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
           }
 
     steps:
@@ -153,12 +161,12 @@ jobs:
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
