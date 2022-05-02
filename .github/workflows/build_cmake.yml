@@ -86,14 +86,6 @@ jobs:
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
             cpack: "",
           }
-        - {
-            name: "Ubuntu Memory Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "msan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
-            cpack: "",
-          }
 
     steps:
 
