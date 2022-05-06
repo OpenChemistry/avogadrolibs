@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-19 03:11+0000\n"
+"POT-Creation-Date: 2022-04-30 19:46+0000\n"
 "PO-Revision-Date: 2021-07-19 18:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -954,54 +954,60 @@ msgstr "ファイルを選択:"
 msgid "Select executable:"
 msgstr "実行ファイルを選択:"
 
-#: qtgui/fileformatdialog.cpp:65
+#: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:109
+#: qtgui/fileformatdialog.cpp:100
+msgid ""
+"The file extension is missing, so the format cannot be determined.Do you "
+"want to add it?"
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:158
+#: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:159
+#: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:164
+#: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:169
+#: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:174
+#: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:261
+#: qtgui/fileformatdialog.cpp:283
 msgid "All files (*);;"
 msgstr "すべてのファイル (*);;"
 
-#: qtgui/fileformatdialog.cpp:264
+#: qtgui/fileformatdialog.cpp:286
 #, qt-format
 msgid "All supported formats (%1);;"
 msgstr ""
@@ -1298,53 +1304,53 @@ msgstr "ユニットセルを追加"
 msgid "Remove Unit Cell"
 msgstr "ユニットセルを削除"
 
-#: qtgui/rwmolecule.cpp:465
+#: qtgui/rwmolecule.cpp:467
 msgid "Edit Unit Cell"
 msgstr "ユニットセルを編集"
 
-#: qtgui/rwmolecule.cpp:482
+#: qtgui/rwmolecule.cpp:484
 #, fuzzy
 msgid "Wrap Atoms to Cell"
 msgstr "原子をセルに移動"
 
-#: qtgui/rwmolecule.cpp:505
+#: qtgui/rwmolecule.cpp:507
 #, fuzzy
 msgid "Scale Cell Volume"
 msgstr "セル体積の拡大縮小"
 
-#: qtgui/rwmolecule.cpp:525
+#: qtgui/rwmolecule.cpp:527
 #, fuzzy
 msgid "Build Super Cell"
 msgstr "スーパーセル"
 
-#: qtgui/rwmolecule.cpp:549
+#: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:571
+#: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
 msgstr "標準配向に回転"
 
-#: qtgui/rwmolecule.cpp:596 qtplugins/spacegroup/spacegroup.cpp:69
+#: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:58
 #, fuzzy
 msgid "Reduce to Primitive"
 msgstr "セルをPrimitive既約化"
 
-#: qtgui/rwmolecule.cpp:621 qtplugins/spacegroup/spacegroup.cpp:75
-#: qtplugins/spacegroup/spacegroup.cpp:233
+#: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:64
+#: qtplugins/spacegroup/spacegroup.cpp:222
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:646 qtplugins/spacegroup/spacegroup.cpp:258
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:247
 msgid "Symmetrize Cell"
 msgstr "セルを対称化"
 
-#: qtgui/rwmolecule.cpp:665
+#: qtgui/rwmolecule.cpp:667
 #, fuzzy
 msgid "Fill Unit Cell"
 msgstr "ユニットセルを構成"
 
-#: qtgui/rwmolecule.cpp:685
+#: qtgui/rwmolecule.cpp:687
 #, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "非対称要素に縮約"
@@ -1359,7 +1365,7 @@ msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
-#: qtplugins/insertfragment/insertfragment.cpp:70
+#: qtplugins/insertfragment/insertfragment.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 #: qtplugins/povray/povray.cpp:58 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:58
@@ -1459,7 +1465,7 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
 #: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
-#: qtplugins/insertfragment/insertfragment.cpp:119
+#: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
 #: qtplugins/openbabel/openbabel.cpp:195 qtplugins/openbabel/openbabel.cpp:204
 #: qtplugins/openbabel/openbabel.cpp:214 qtplugins/openbabel/openbabel.cpp:328
@@ -1550,7 +1556,7 @@ msgid "Apply color schemes to atoms and residues."
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:95
-#: qtplugins/applycolors/applycolors.cpp:97
+#: qtplugins/applycolors/applycolors.cpp:97 qtplugins/focus/focus.cpp:41
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:68
 msgid "&View"
@@ -1641,8 +1647,8 @@ msgstr ""
 "原子を左クリック&ドラッグで結合角を変更\n"
 "原子を右クリック&ドラッグで結合長を変更"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:959
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:1047
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:958
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:1046
 #: qtplugins/measuretool/measuretool.cpp:202
 #: qtplugins/measuretool/measuretool.cpp:210
 #: qtplugins/measuretool/measuretool.cpp:211
@@ -1650,7 +1656,7 @@ msgstr ""
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:981
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:980
 #: qtplugins/editor/editor.cpp:241 qtplugins/measuretool/measuretool.cpp:218
 #: qtplugins/measuretool/measuretool.cpp:219
 #: qtplugins/measuretool/measuretool.cpp:221
@@ -1684,13 +1690,13 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
 #: qtplugins/customelements/customelements.cpp:54
 #: qtplugins/hydrogens/hydrogens.cpp:67
-#: qtplugins/insertfragment/insertfragment.cpp:72
+#: qtplugins/insertfragment/insertfragment.cpp:61
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
 msgstr "ビルド (&B)"
 
 #: qtplugins/bonding/bonding.cpp:65
-#: qtplugins/propertytables/propertymodel.cpp:381
+#: qtplugins/propertytables/propertymodel.cpp:389
 #, fuzzy
 msgid "Bond"
 msgstr "結合"
@@ -2272,7 +2278,7 @@ msgstr "セルを既約化 (&Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:117 qtplugins/plotpdf/plotpdf.cpp:66
 #: qtplugins/plotrmsd/plotrmsd.cpp:61 qtplugins/plotxrd/plotxrd.cpp:63
-#: qtplugins/spacegroup/spacegroup.cpp:118
+#: qtplugins/spacegroup/spacegroup.cpp:107
 msgid "&Crystal"
 msgstr "結晶 (&C)"
 
@@ -2305,21 +2311,21 @@ msgstr "結晶"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.cpp:147 qtplugins/wireframe/wireframe.cpp:89
+#: qtplugins/crystal/crystalscene.cpp:149 qtplugins/wireframe/wireframe.cpp:89
 #, fuzzy
 msgid "Line width:"
 msgstr "ピーク幅:"
 
-#: qtplugins/crystal/crystalscene.cpp:152
+#: qtplugins/crystal/crystalscene.cpp:154
 #, fuzzy
 msgid "Line color:"
 msgstr "アミノカラー"
 
-#: qtplugins/crystal/crystalscene.h:30
+#: qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
 msgstr "結晶格子"
 
-#: qtplugins/crystal/crystalscene.h:34
+#: qtplugins/crystal/crystalscene.h:35
 #, fuzzy
 msgid "Render the unit cell boundaries."
 msgstr "ユニットセルの境界を描画"
@@ -2420,7 +2426,7 @@ msgid "Triple"
 msgstr "三重結合"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
-#: qtplugins/insertfragment/insertfragment.cpp:70
+#: qtplugins/insertfragment/insertfragment.cpp:59
 #: qtplugins/networkdatabases/networkdatabases.cpp:53
 msgid "&Import"
 msgstr "インポート (&I)"
@@ -2466,11 +2472,29 @@ msgstr "PDBから構造を取得..."
 msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 
-#: qtplugins/force/force.h:39
+#: qtplugins/focus/focus.cpp:21
+#, fuzzy
+#| msgid "Selection"
+msgid "Focus Selection"
+msgstr "選択"
+
+#: qtplugins/focus/focus.cpp:22
+msgid "Unfocus"
+msgstr ""
+
+#: qtplugins/focus/focus.h:27
+msgid "Focus"
+msgstr ""
+
+#: qtplugins/focus/focus.h:30
+msgid "Focus the view on specific features."
+msgstr ""
+
+#: qtplugins/force/force.h:28
 msgid "Force"
 msgstr "力"
 
-#: qtplugins/force/force.h:44
+#: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
@@ -2600,49 +2624,50 @@ msgstr ""
 msgid "Download a molecule from PQR."
 msgstr ""
 
-#: qtplugins/insertfragment/insertfragment.cpp:46
+#: qtplugins/insertfragment/insertfragment.cpp:35
 #, fuzzy
 #| msgid "Fragments"
 msgid "Fragment…"
 msgstr "フラグメント"
 
-#: qtplugins/insertfragment/insertfragment.cpp:51
+#: qtplugins/insertfragment/insertfragment.cpp:40
 #, fuzzy
 #| msgid "Crystal"
 msgid "Crystal…"
 msgstr "結晶"
 
-#: qtplugins/insertfragment/insertfragment.cpp:72
+#: qtplugins/insertfragment/insertfragment.cpp:61
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Insert"
 msgstr "挿入 (&I)"
 
-#: qtplugins/insertfragment/insertfragment.cpp:120
+#: qtplugins/insertfragment/insertfragment.cpp:109
 #, qt-format
 msgid "Error reading file (%1)."
 msgstr ""
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:128:357
+#: qtplugins/insertfragment/insertfragment.cpp:118:357
 msgid "Import Crystal"
 msgstr "結晶をインポート"
 
-#: qtplugins/insertfragment/insertfragment.cpp:132
+#: qtplugins/insertfragment/insertfragment.cpp:122
 msgid "Insert Fragment"
 msgstr "フラグメントを挿入"
 
-#: qtplugins/insertfragment/insertfragment.h:46
+#: qtplugins/insertfragment/insertfragment.h:35
 #, fuzzy
 msgid "InsertFragment"
 msgstr "フラグメントを挿入"
 
-#: qtplugins/insertfragment/insertfragment.h:71
+#: qtplugins/insertfragment/insertfragment.h:60
 #, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "分子のフラグメントを挿入してより大きな分子を構築"
 
-#: qtplugins/label/label.cpp:134
+#: qtplugins/label/label.cpp:134 qtplugins/meshes/meshes.cpp:177
+#: qtplugins/meshes/meshes.cpp:183
 msgid "Color:"
 msgstr "色:"
 
@@ -2670,7 +2695,7 @@ msgstr ""
 msgid "In."
 msgstr "状態:"
 
-#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:349
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:355
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
 msgstr "元素"
@@ -2697,14 +2722,14 @@ msgstr ""
 msgid "Atom Label:"
 msgstr "原子のラベル"
 
-#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:390
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:398
 #, fuzzy
 msgid "ID"
 msgstr "D"
 
 #: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:72
-#: qtplugins/propertytables/propertymodel.cpp:388
+#: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Name"
 msgstr ""
 
@@ -2910,12 +2935,18 @@ msgstr "角度:"
 msgid "Measure tool"
 msgstr "測定"
 
-#: qtplugins/meshes/meshes.h:40
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
+#. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
+#: qtplugins/meshes/meshes.cpp:171:1465
+msgid "Opacity:"
+msgstr "不透明度:"
+
+#: qtplugins/meshes/meshes.h:30
 msgid "Meshes"
 msgstr "メッシュ"
 
-#: qtplugins/meshes/meshes.h:42
-msgid "Render triangle meshes."
+#: qtplugins/meshes/meshes.h:32
+msgid "Render polygon meshes."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
@@ -3379,7 +3410,7 @@ msgstr ""
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:408
+#: qtplugins/playertool/playertool.cpp:272 qtplugins/surfaces/surfaces.cpp:413
 msgid "GIF (*.gif)"
 msgstr ""
 
@@ -3397,16 +3428,16 @@ msgid "Movie (*.avi)"
 msgstr "動画ファイル (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:351
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:436
-#: qtplugins/surfaces/surfaces.cpp:479 qtplugins/surfaces/surfaces.cpp:491
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:441
+#: qtplugins/surfaces/surfaces.cpp:484 qtplugins/surfaces/surfaces.cpp:496
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:480
+#: qtplugins/playertool/playertool.cpp:352 qtplugins/surfaces/surfaces.cpp:485
 msgid "Error: cannot add frame to video."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:492
+#: qtplugins/playertool/playertool.cpp:382 qtplugins/surfaces/surfaces.cpp:497
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -3556,146 +3587,151 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:351
+#: qtplugins/propertytables/propertymodel.cpp:357
 msgid "Valence"
 msgstr "原子価"
 
-#: qtplugins/propertytables/propertymodel.cpp:353
+#: qtplugins/propertytables/propertymodel.cpp:359
+#, fuzzy
+msgid "Formal Charge"
+msgstr "形式電荷"
+
+#: qtplugins/propertytables/propertymodel.cpp:361
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:355
+#: qtplugins/propertytables/propertymodel.cpp:363
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:357
+#: qtplugins/propertytables/propertymodel.cpp:365
 msgid "Z Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:359
-#: qtplugins/propertytables/propertymodel.cpp:398
+#: qtplugins/propertytables/propertymodel.cpp:367
+#: qtplugins/propertytables/propertymodel.cpp:406
 #, fuzzy
 msgid "Color"
 msgstr "色:"
 
-#: qtplugins/propertytables/propertymodel.cpp:362
+#: qtplugins/propertytables/propertymodel.cpp:370
 msgid "Atom"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:369
-#: qtplugins/propertytables/propertymodel.cpp:408
-#: qtplugins/propertytables/propertymodel.cpp:425
+#: qtplugins/propertytables/propertymodel.cpp:377
+#: qtplugins/propertytables/propertymodel.cpp:416
+#: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
 msgstr "タイプ"
 
-#: qtplugins/propertytables/propertymodel.cpp:371
+#: qtplugins/propertytables/propertymodel.cpp:379
 msgid "Start Atom"
 msgstr "始めの原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:373
+#: qtplugins/propertytables/propertymodel.cpp:381
 #, fuzzy
 msgid "End Atom"
 msgstr "終わりの原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:375
+#: qtplugins/propertytables/propertymodel.cpp:383
 #, fuzzy
 msgid "Bond Order"
 msgstr "結合次数:"
 
-#: qtplugins/propertytables/propertymodel.cpp:377
+#: qtplugins/propertytables/propertymodel.cpp:385
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "長さ %1"
 
-#: qtplugins/propertytables/propertymodel.cpp:392
+#: qtplugins/propertytables/propertymodel.cpp:400
 #, fuzzy
 msgid "Chain"
 msgstr "NH チェーン"
 
-#: qtplugins/propertytables/propertymodel.cpp:394
+#: qtplugins/propertytables/propertymodel.cpp:402
 #, fuzzy
 msgid "Secondary Structure"
 msgstr "ファイルをロード"
 
-#: qtplugins/propertytables/propertymodel.cpp:396
+#: qtplugins/propertytables/propertymodel.cpp:404
 #, fuzzy
 msgid "Heterogen"
 msgstr "水素 (Hydrogen)"
 
-#: qtplugins/propertytables/propertymodel.cpp:410
-#: qtplugins/propertytables/propertymodel.cpp:427
+#: qtplugins/propertytables/propertymodel.cpp:418
+#: qtplugins/propertytables/propertymodel.cpp:435
 #, fuzzy
 msgid "Atom 1"
 msgstr "原子 %1"
 
-#: qtplugins/propertytables/propertymodel.cpp:412
+#: qtplugins/propertytables/propertymodel.cpp:420
 msgid "Vertex"
 msgstr "頂点"
 
-#: qtplugins/propertytables/propertymodel.cpp:414
-#: qtplugins/propertytables/propertymodel.cpp:431
+#: qtplugins/propertytables/propertymodel.cpp:422
+#: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Atom 3"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:416
-#: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:424
+#: qtplugins/propertytables/propertymodel.cpp:443
 #, fuzzy
 msgid "Angle (°)"
 msgstr "角度: %L1"
 
-#: qtplugins/propertytables/propertymodel.cpp:429
+#: qtplugins/propertytables/propertymodel.cpp:437
 #, fuzzy
 msgid "Atom 2"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:433
+#: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
 msgid "Atom 4"
 msgstr "原子"
 
-#: qtplugins/propertytables/propertymodel.cpp:478
+#: qtplugins/propertytables/propertymodel.cpp:486
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "ヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:480
+#: qtplugins/propertytables/propertymodel.cpp:488
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:482
+#: qtplugins/propertytables/propertymodel.cpp:490
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "ヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:484
+#: qtplugins/propertytables/propertymodel.cpp:492
 #, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "シート"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:494
 #, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3_10 ヘリックス"
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:496
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:498
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:500
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -3952,41 +3988,41 @@ msgstr "始めの原子"
 msgid "Selection tool"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:63
+#: qtplugins/spacegroup/spacegroup.cpp:52
 #, fuzzy
 msgid "Perceive Space Group…"
 msgstr "空間群を検出"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:81:1561
+#: qtplugins/spacegroup/spacegroup.cpp:70:1561
 msgid "Symmetrize"
 msgstr "対称化"
 
-#: qtplugins/spacegroup/spacegroup.cpp:86
+#: qtplugins/spacegroup/spacegroup.cpp:75
 #, fuzzy
 msgid "Fill Unit Cell…"
 msgstr "ユニットセルを構成"
 
-#: qtplugins/spacegroup/spacegroup.cpp:91
-#: qtplugins/spacegroup/spacegroup.cpp:305
+#: qtplugins/spacegroup/spacegroup.cpp:80
+#: qtplugins/spacegroup/spacegroup.cpp:297
 msgid "Reduce to Asymmetric Unit"
 msgstr "非対称要素に縮約"
 
-#: qtplugins/spacegroup/spacegroup.cpp:97
+#: qtplugins/spacegroup/spacegroup.cpp:86
 #, fuzzy
 msgid "Set Tolerance…"
 msgstr "許容値:"
 
-#: qtplugins/spacegroup/spacegroup.cpp:118
+#: qtplugins/spacegroup/spacegroup.cpp:107
 msgid "Space Group"
 msgstr "空間群"
 
-#: qtplugins/spacegroup/spacegroup.cpp:192
+#: qtplugins/spacegroup/spacegroup.cpp:181
 msgid "Failure"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:193
+#: qtplugins/spacegroup/spacegroup.cpp:182
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
@@ -3994,70 +4030,70 @@ msgstr ""
 "空間群の検出に失敗しました。\n"
 "許容値を変更して再試行しますか？"
 
-#: qtplugins/spacegroup/spacegroup.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:197
 msgid "Primitive Reduction"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:209
-#: qtplugins/spacegroup/spacegroup.cpp:234
-#: qtplugins/spacegroup/spacegroup.cpp:259
+#: qtplugins/spacegroup/spacegroup.cpp:198
+#: qtplugins/spacegroup/spacegroup.cpp:223
+#: qtplugins/spacegroup/spacegroup.cpp:248
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:222
+#: qtplugins/spacegroup/spacegroup.cpp:211
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:247
+#: qtplugins/spacegroup/spacegroup.cpp:236
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:271
+#: qtplugins/spacegroup/spacegroup.cpp:260
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:326 qtplugins/yaehmop/yaehmop.cpp:177
+#: qtplugins/spacegroup/spacegroup.cpp:318 qtplugins/yaehmop/yaehmop.cpp:177
 #: qtplugins/yaehmop/yaehmop.cpp:267 qtplugins/yaehmop/yaehmop.cpp:279
 #: qtplugins/yaehmop/yaehmop.cpp:293 qtplugins/yaehmop/yaehmop.cpp:410
 #, fuzzy
 msgid "Avogadro2"
 msgstr "Avogadro"
 
-#: qtplugins/spacegroup/spacegroup.cpp:327
+#: qtplugins/spacegroup/spacegroup.cpp:319
 msgid "Select tolerance in Å:"
 msgstr "許容値を Å で選択:"
 
-#: qtplugins/spacegroup/spacegroup.cpp:343
+#: qtplugins/spacegroup/spacegroup.cpp:335
 msgid "International"
 msgstr "国際記号"
 
-#: qtplugins/spacegroup/spacegroup.cpp:343
+#: qtplugins/spacegroup/spacegroup.cpp:335
 msgid "Hall"
 msgstr "Hall記号"
 
-#: qtplugins/spacegroup/spacegroup.cpp:343
+#: qtplugins/spacegroup/spacegroup.cpp:335
 msgid "Hermann-Mauguin"
 msgstr "ヘルマン・モーガン記号"
 
-#: qtplugins/spacegroup/spacegroup.cpp:356
+#: qtplugins/spacegroup/spacegroup.cpp:348
 #, fuzzy
 msgid "Select Space Group"
 msgstr "空間群の選択"
 
-#: qtplugins/spacegroup/spacegroup.h:35
+#: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
 msgstr "空間群"
 
-#: qtplugins/spacegroup/spacegroup.h:76
+#: qtplugins/spacegroup/spacegroup.h:65
 msgid "Space group features for crystals."
 msgstr ""
 
@@ -4121,15 +4157,15 @@ msgstr "電子密度を計算中"
 msgid "Calculating molecular orbital %L1"
 msgstr "第%L1分子軌道を計算中"
 
-#: qtplugins/surfaces/surfaces.cpp:385 qtplugins/surfaces/surfaces.cpp:413
+#: qtplugins/surfaces/surfaces.cpp:390 qtplugins/surfaces/surfaces.cpp:418
 msgid "Movie AVI (*.avi)"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:387
+#: qtplugins/surfaces/surfaces.cpp:392
 msgid "Export Movie"
 msgstr "動画のエクスポート"
 
-#: qtplugins/surfaces/surfaces.cpp:388
+#: qtplugins/surfaces/surfaces.cpp:393
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr ""
 
@@ -4177,12 +4213,12 @@ msgstr "対称性"
 msgid "Provide symmetry functionality."
 msgstr ""
 
-#: qtplugins/symmetry/symmetryscene.h:44
+#: qtplugins/symmetry/symmetryscene.h:33
 #, fuzzy
 msgid "Symmetry Elements"
 msgstr "対称要素"
 
-#: qtplugins/symmetry/symmetryscene.h:48
+#: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
 msgstr ""
 
@@ -6458,11 +6494,6 @@ msgstr "共有結合"
 msgid "Constant Size"
 msgstr "一定サイズ"
 
-#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
-#. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-msgid "Opacity:"
-msgstr "不透明度:"
-
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:21
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Apply Color"
@@ -6911,10 +6942,6 @@ msgstr ""
 
 #~ msgid "Reset to Default Values"
 #~ msgstr "デフォルト値に戻す"
-
-#, fuzzy
-#~ msgid "Formal Charge"
-#~ msgstr "形式電荷"
 
 #~ msgid "Partial Charge"
 #~ msgstr "部分電荷"
