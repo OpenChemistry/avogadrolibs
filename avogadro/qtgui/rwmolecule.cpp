@@ -35,7 +35,7 @@ using Core::CrystalTools;
 using Core::UnitCell;
 using std::swap;
 
-RWMolecule::RWMolecule(Molecule& mol, QObject* p) : QObject(p), m_molecule(mol)
+RWMolecule::RWMolecule(Molecule& mol, QObject* p) : QObject(p), m_molecule(mol), m_interactive(false)
 {}
 
 RWMolecule::~RWMolecule() {}
