@@ -2,30 +2,32 @@
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Julen Larrucea <code@larrucea.eu>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-04-30 19:46+0000\n"
-"PO-Revision-Date: 2016-06-10 06:31+0000\n"
-"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
-"Language-Team: Basque <eu@li.org>\n"
+"PO-Revision-Date: 2022-05-10 14:14+0000\n"
+"Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
+"Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/eu/>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.12.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Sorta lana #%L1 (%2)"
 
 #: molequeue/client/client.cpp:245
 msgid "No message specified."
-msgstr ""
+msgstr "Ez da mezurik zehaztu."
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
@@ -34,32 +36,37 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --print-options output goi mailako JSON objektu bat izan behar du. "
+"Jasotakoa:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:206
 #: qtgui/interfacescript.cpp:302
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "String-a ez den ohartarazpen bat erantzun izan da."
 
 #: molequeue/inputgenerator.cpp:179 qtgui/interfacescript.cpp:209
 #: qtgui/interfacescript.cpp:305
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'ohartarazpenak' kidea ez da array bat."
 
 #: molequeue/inputgenerator.cpp:199 qtgui/interfacescript.cpp:325
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "'%1' erreferentzi fitxategia ez da existitzen."
 
 #: molequeue/inputgenerator.cpp:201 qtgui/interfacescript.cpp:327
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Akatsa %1 fitxategia betetzean: %2"
 
 #: molequeue/inputgenerator.cpp:205 qtgui/interfacescript.cpp:331
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"'%1' fitxategiak egitura eskasa du. 'contents' string-a edo 'filePath' "
+"kideak falta dira."
 
 #: molequeue/inputgenerator.cpp:237 qtgui/interfacescript.cpp:364
 #, qt-format
@@ -75,11 +82,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:249 qtgui/interfacescript.cpp:376
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' kidea ez da array bat."
 
 #: molequeue/inputgenerator.cpp:253 qtgui/interfacescript.cpp:380
 msgid "'files' member missing."
-msgstr ""
+msgstr "'files' kidea falta da."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:391
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -87,11 +94,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:269 qtgui/interfacescript.cpp:396
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' kidea string bat izan behar du."
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:407
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Erantzunak goi mailako JSON objektuak izan behar dira."
 
 #: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:411
 #, qt-format
@@ -99,6 +106,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Script-aren emaitza:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:327 qtgui/interfacescript.cpp:455
 #, qt-format
@@ -142,9 +151,9 @@ msgid "Input Generator (error)"
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:44
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Sarrera Sortzailea..."
+msgstr "%1 Sarrera Sortzailea"
 
 #: molequeue/inputgeneratorwidget.cpp:115
 msgid "Continue"
@@ -200,18 +209,18 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:189
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Arazoak egon dira sarrera sortzerakoan:"
 
 #: molequeue/inputgeneratorwidget.cpp:278
 msgid "No input files to save!"
-msgstr ""
+msgstr "Ez daude gordetzeko sarrera fitxategirik!"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Ezin da MoleQueue-ra konektatu"
 
 #: molequeue/inputgeneratorwidget.cpp:287
 #: molequeue/inputgeneratorwidget.cpp:604 molequeue/molequeuewidget.cpp:71
@@ -221,11 +230,13 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Ezin da MoleQueue serbitzarira konektatu. Mesedez, ziurtatu abian dagoela "
+"eta saiatu berriz."
 
 #: molequeue/inputgeneratorwidget.cpp:318
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Bidali %1 kalkulaketa"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
@@ -237,11 +248,11 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1026
 #: qtplugins/gamessinput/gamessinputdialog.cpp:735
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Lanak ez du behar bezala bukatu."
 
 #: molequeue/inputgeneratorwidget.cpp:352 qtgui/interfacewidget.cpp:56
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Script-ak errorea sortu du:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:369
 msgid "Hide &Warnings"
@@ -253,7 +264,7 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:72
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Errore bat gertatu da:"
 
 #: molequeue/inputgeneratorwidget.cpp:443
 msgid "Select output filename"
@@ -262,12 +273,14 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:458
 #, qt-format
 msgid "%1: File exists and is not writable."
-msgstr ""
+msgstr "%1: Fitxategia existitzen da eta idazgarria da."
 
 #: molequeue/inputgeneratorwidget.cpp:464
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Barneko errorea: ezin izan da '%1' izendun fitxategirentzako textu widget-ik "
+"aurkitu"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -292,27 +305,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:479
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Ezin izan da %1 fitxategian idatzi."
 
 #: molequeue/inputgeneratorwidget.cpp:492
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
 #: qtplugins/openmminput/openmminputdialog.cpp:353
 msgid "Select output directory"
-msgstr ""
+msgstr "Aukeratu itereera direktorio bat"
 
 #: molequeue/inputgeneratorwidget.cpp:509
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:270
 #: qtplugins/openmminput/openmminputdialog.cpp:368
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Direktorioa ez da existitzen!"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:276
 #: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Direktorioa ezin da irakurria izan!"
 
 #: molequeue/inputgeneratorwidget.cpp:525
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
@@ -321,7 +334,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:397
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Fitxategia gainidatzia izango da."
 
 #: molequeue/inputgeneratorwidget.cpp:530
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
@@ -330,13 +343,14 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Fitxategia ez da idazgarria."
 
 #: molequeue/inputgeneratorwidget.cpp:543
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
 #: qtplugins/openmminput/openmminputdialog.cpp:416
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
+"Sarrera fitxategia ezin izan da idatzia izan akats ezezagun baten erruz."
 
 #: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:322
@@ -450,7 +464,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Ez da molekularik ezarri BackgroundFileFormat-an!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -458,7 +472,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Ez da fitxategi izenik zehaztu BackgroundFileFormat-en!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1134,7 +1148,7 @@ msgstr ""
 #: qtgui/moleculemodel.cpp:104
 #, fuzzy
 msgid "Untitled"
-msgstr "Titulugabea"
+msgstr "Izengabea"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -3007,9 +3021,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Nabigatu"
+msgstr "Nabigatzeko tresna"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
