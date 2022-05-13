@@ -88,14 +88,14 @@ jobs:
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
       env:
-        BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+        CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
       run: |
         # create variables
         CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
 
         # import certificate and provisioning profile from secrets
-        echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
-        echo -n "$BUILD_CERTIFICATE_BASE64" >$RUNNER_TEMP/build.base64
+        echo -n "$CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+        echo -n "$CERTIFICATE_BASE64" >$RUNNER_TEMP/build.base64
         # check that it was created properly
         ls -l $CERTIFICATE_PATH $RUNNER_TEMP/build.base64
         md5 $CERTIFICATE_PATH
