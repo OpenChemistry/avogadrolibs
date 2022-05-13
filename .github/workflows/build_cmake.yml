@@ -188,21 +188,20 @@ jobs:
           ls -l $CERTIFICATE_PATH
           md5 $CERTIFICATE_PATH
 
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          # create temporary keychain if the cert is non-zero
+          if [ -s $CERTIFICATE_PATH ]; then
+            security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+            security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
+            # import certificate to keychain
+            security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security list-keychain -d user -s $KEYCHAIN_PATH
 
-          # code-sign app
-          codesign --deep -s "Developer ID Application: Geoffrey Hutchison" -v prefix/Avogadro2.app
-
-          # notarize app
-          # npx notarize-cli --file prefix/Avogadro2.app
-        fi
+            # code-sign app
+            codesign --deep -s "Developer ID Application: Geoffrey Hutchison" -v prefix/Avogadro2.app
+          fi # certificate exists
+        fi # password exists
 
     - name: Pack
       if: matrix.config.artifact != 0
