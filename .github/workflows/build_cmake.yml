@@ -178,7 +178,7 @@ jobs:
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       run: |
         # create variables
-        if ["$P12_PASSWORD" != ""]; then
+        if [ -n "${P12_PASSWORD}" ]; then
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
@@ -231,7 +231,8 @@ jobs:
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
       run: |
-        if ["$NOTARIZE_PASSWORD" != ""]; then
+        # check if we have the password and the username
+        if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           npx notarize-cli --file "build/avogadroapp/Avogadro2*.dmg"
         fi
       env:
