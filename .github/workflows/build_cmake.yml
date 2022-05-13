@@ -87,7 +87,6 @@ jobs:
     - name: Create the Base64 Certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
-      working-directory: ${{ runner.workspace }}/build
       env:
         BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
       run: |
