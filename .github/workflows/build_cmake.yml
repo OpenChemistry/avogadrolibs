@@ -165,10 +165,6 @@ jobs:
           message(FATAL_ERROR "Running tests failed!")
         endif()
 
-    - name: Setup tmate session
-      if: runner.os == 'macOS'
-      uses: mxschmitt/action-tmate@v3
-
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
