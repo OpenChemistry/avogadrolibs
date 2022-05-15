@@ -238,6 +238,7 @@ jobs:
 
     - name: Pack
       if: matrix.config.artifact != 0
+      shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
           unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
