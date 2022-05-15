@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-04-30 19:46+0000\n"
-"PO-Revision-Date: 2022-05-10 14:14+0000\n"
+"PO-Revision-Date: 2022-05-15 20:54+0000\n"
 "Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -361,6 +361,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Sarrera fitxategiak ezin izan dira idatziak izan:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:556
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:331
@@ -375,6 +378,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Ezin da sarrera fitxategietan idatzi:\n"
+"\n"
+"%1\n"
+"\n"
+"Abisuak:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:567
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:342
@@ -387,46 +397,51 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Abisua:\n"
+"\n"
+"%1\n"
+"\n"
+"Jarraitu nahi duzu?"
 
 #: molequeue/inputgeneratorwidget.cpp:571
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:346
 #: qtplugins/openmminput/openmminputdialog.cpp:444
 msgid "Write input files"
-msgstr ""
+msgstr "Sarrera fitxategiak idatzi"
 
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
-msgstr ""
+msgstr "Lana konfiguratu"
 
 #: molequeue/molequeuedialog.cpp:58
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Lana MoleQueue-ra bidaltzen…"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Lan bidalketa denboraz kanpo"
 
 #: molequeue/molequeuedialog.cpp:68
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Abogadrok MoleQueue-ren erantzunaren zain denbora agortu du."
 
 #: molequeue/molequeuedialog.cpp:84
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "%1 \"%2\" lana bukatzeko zain…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Itxaroteari utzi"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Bukatutako lanen informazioa bilatzen…"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Lan berrreskuratzea denboraz kanpo"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
