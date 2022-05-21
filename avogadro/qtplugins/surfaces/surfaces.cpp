@@ -17,9 +17,11 @@ namespace {
 #include <gwavi.h>
 
 #include <avogadro/core/variant.h>
+#include <avogadro/core/vector.h>
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/activeobjects.h>
@@ -160,7 +162,7 @@ void Surfaces::calculateSurface()
     case SolventExcluded:
       calculateEDT();
       // pass a molecule and return a Cube for m_cube
-      //   displayMesh();
+      displayMesh();
       break;
 
     case ElectronDensity:
@@ -179,8 +181,53 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  // pass the molecule to the EDT, plus the surface type
-  // get back a Cube object in m_cube
+  /*double probeRadius = 0.0;
+  switch (m_dialog->surfaceType()) {
+    case VanDerWaals:
+    case SolventAccessible:
+    case SolventExcluded:
+  }*/
+
+  // cache Van der Waals radii
+  std::vector<double> radii(m_molecule->atomCount());
+  double max_radius = probeRadius;
+  for (size_t i = 0; i < radii.size(); i++) {
+    radii[i] = Core::Elements::radiusVDW(m_molecule->atomicNumber(i));
+    if (radii[i] <= 0.0)
+      radii[i] = 10.0;
+    if (radii[i] > max_radius)
+      max_radius = radii[i];
+  }
+
+  double padding = max_radius;
+  m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
+
+  auto neighborPerceiver = Core::NeighborPerceiver(
+    m_molecule->atomPositions3d(), 2.0 * max_radius
+  );
+  Vector3i cubeSize = m_cube->dimensions();
+
+  /* Just some simple proof-of-concept code */
+  for (size_t zi = 0; zi < cubeSize[2]; zi++) {
+    for (size_t yi = 0; yi < cubeSize[1]; yi++) {
+      for (size_t xi = 0; xi < cubeSize[0]; xi++) {
+        Vector3 pos(xi, yi, zi);
+        pos += Vector3(0.5, 0.5, 0.5);
+        pos *= m_dialog->resolution();
+        pos += m_cube->min();
+
+        double minDistance = probeRadius;
+        for (Index neighbor: neighborPerceiver.getNeighbors(pos)) {
+          Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
+          double distance = (neighborPos - pos).norm();
+          distance -= radii[neighbor];
+          minDistance = std::min(minDistance, distance);
+        }
+
+        m_cube->setValue(xi, yi, zi, minDistance);
+      }
+    }
+  }
 }
 
 void Surfaces::calculateQM()
@@ -231,7 +278,7 @@ void Surfaces::calculateQM()
   QString progressText;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
-    m_cube->setName("Electron Denisty");
+    m_cube->setName("Electron Density");
     if (dynamic_cast<GaussianSet*>(m_basis)) {
       m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {

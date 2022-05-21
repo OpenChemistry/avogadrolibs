@@ -25,7 +25,7 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   // set the data for the default items
   /* Don't add surface types that aren't available yet, uncomment once they are.
   m_ui->surfaceCombo->addItem(tr("Van der Waals"), Surfaces::Type::VanDerWaals);
-  m_ui->surfaceCombo->addItem(tr("Solvent Accessible"),
+  /*m_ui->surfaceCombo->addItem(tr("Solvent Accessible"),
                               Surfaces::Type::SolventAccessible);
   m_ui->surfaceCombo->addItem(tr("Solvent Excluded"),
                               Surfaces::Type::SolventExcluded);
