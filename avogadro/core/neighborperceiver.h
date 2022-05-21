@@ -43,10 +43,10 @@ public:
   const Array<Index> getNeighbors(const Vector3 point) const;
   
 private:
-  const std::array<size_t, 3> getBinIndex(const Vector3 point) const;
+  const std::array<int, 3> getBinIndex(const Vector3 point) const;
 protected:
   float m_maxDistance;
-  std::array<size_t, 3> m_binCount;
+  std::array<int, 3> m_binCount;
   std::vector<std::vector<std::vector<std::vector<Index>>>> m_bins;
   Vector3 m_minPos;
   Vector3 m_maxPos;
