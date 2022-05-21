@@ -37,7 +37,7 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDista
   );
   m_bins = bins;
   for (Index i = 0; i < points.size(); i++) {
-    std::array<size_t, 3> bin_index = getBinIndex(points[i]);
+    std::array<int, 3> bin_index = getBinIndex(points[i]);
     m_bins.at(bin_index[0]).at(bin_index[1]).at(bin_index[2]).push_back(i);
   }
 }
@@ -45,12 +45,12 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDista
 const Array<Index> NeighborPerceiver::getNeighbors(const Vector3 point) const
 {
   Array<Index> r;
-  const std::array<size_t, 3> bin_index = getBinIndex(point);
-  for (size_t xi = std::max(size_t(1), bin_index[0]) - 1;
+  const std::array<int, 3> bin_index = getBinIndex(point);
+  for (int xi = std::max(int(1), bin_index[0]) - 1;
       xi < std::min(m_binCount[0], bin_index[0] + 2); xi++) {
-    for (size_t yi = std::max(size_t(1), bin_index[1]) - 1;
+    for (int yi = std::max(int(1), bin_index[1]) - 1;
         yi < std::min(m_binCount[1], bin_index[1] + 2); yi++) {
-      for (size_t zi = std::max(size_t(1), bin_index[2]) - 1;
+      for (int zi = std::max(int(1), bin_index[2]) - 1;
           zi < std::min(m_binCount[2], bin_index[2] + 2); zi++) {
         std::vector<Index> bin = m_bins[xi][yi][zi];
         r.insert(r.end(), bin.begin(), bin.end());
@@ -60,9 +60,9 @@ const Array<Index> NeighborPerceiver::getNeighbors(const Vector3 point) const
   return r;
 }
 
-const std::array<size_t, 3> NeighborPerceiver::getBinIndex(const Vector3 point) const
+const std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 point) const
 {
-  std::array<size_t, 3> r;
+  std::array<int, 3> r;
   for (size_t c = 0; c < 3; c++) {
     r[c] = std::floor((point(c) - m_minPos(c)) / m_maxDistance);
   }
