@@ -193,8 +193,6 @@ void Surfaces::calculateEDT()
   double max_radius = probeRadius;
   for (size_t i = 0; i < radii.size(); i++) {
     radii[i] = Core::Elements::radiusVDW(m_molecule->atomicNumber(i));
-    if (radii[i] <= 0.0)
-      radii[i] = 10.0;
     if (radii[i] > max_radius)
       max_radius = radii[i];
   }
