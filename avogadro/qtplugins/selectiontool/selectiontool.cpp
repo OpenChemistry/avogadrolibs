@@ -267,8 +267,9 @@ void SelectionTool::applyLayer(int layer)
   }
   RWMolecule* rwmol = m_molecule->undoMolecule();
   rwmol->beginMergeMode(tr("Change Layer"));
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
-  qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " << m_layerManager.layerCount();
+  // qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " << m_layerManager.layerCount();
   if (layer >= m_layerManager.layerCount()) {
     // add a new layer
     auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
@@ -278,7 +279,7 @@ void SelectionTool::applyLayer(int layer)
     layer = layerInfo.maxLayer();
 
     // check to enable the same rendering in this new layer
-    qDebug() << "SelectionTool::applyLayer: " << activeLayer << " " << layer;
+    // qDebug() << "SelectionTool::applyLayer: " << activeLayer << " " << layer;
     auto moleculeInfo = Core::LayerManager::getMoleculeInfo(m_molecule);
     for (const auto& names : moleculeInfo->enable) {
       auto values = names.second;
@@ -287,6 +288,10 @@ void SelectionTool::applyLayer(int layer)
 
       moleculeInfo->enable[names.first] = values;
     }
+
+    // update the menu too
+    m_toolWidget->setDropDown(layer, m_layerManager.layerCount());
+    changes |= Molecule::Layers | Molecule::Added;
   }
 
   for (Index i = 0; i < rwmol->atomCount(); ++i) {
@@ -296,7 +301,7 @@ void SelectionTool::applyLayer(int layer)
     }
   }
   rwmol->endMergeMode();
-  rwmol->emitChanged(Molecule::Atoms | Molecule::Modified);
+  rwmol->emitChanged(changes);
 }
 
 void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)

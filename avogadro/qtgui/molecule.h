@@ -72,7 +72,7 @@ public:
     Bonds = 0x02,
     UnitCell = 0x04,
     Selection = 0x08,
-    Layer = 0x16,
+    Layers = 0x16,
     /** Operations that can affect the above types. */
     Added = 0x1024,
     Removed = 0x2048,
