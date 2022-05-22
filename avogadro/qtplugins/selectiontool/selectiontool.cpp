@@ -34,8 +34,10 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
@@ -263,15 +265,30 @@ void SelectionTool::applyLayer(int layer)
   if (layer < 0) {
     return;
   }
-  if (layer > m_layerManager.layerCount()) {
-    // add a new layer
-    auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
-    layerInfo.addLayer();
-    layer = layerInfo.maxLayer();
-  }
-
   RWMolecule* rwmol = m_molecule->undoMolecule();
   rwmol->beginMergeMode(tr("Change Layer"));
+
+  qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " << m_layerManager.layerCount();
+  if (layer >= m_layerManager.layerCount()) {
+    // add a new layer
+    auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
+    const auto activeLayer = layerInfo.activeLayer();
+    QtGui::RWLayerManager rwLayerManager;
+    rwLayerManager.addLayer(rwmol);
+    layer = layerInfo.maxLayer();
+
+    // check to enable the same rendering in this new layer
+    qDebug() << "SelectionTool::applyLayer: " << activeLayer << " " << layer;
+    auto moleculeInfo = Core::LayerManager::getMoleculeInfo(m_molecule);
+    for (const auto& names : moleculeInfo->enable) {
+      auto values = names.second;
+      bool value = values[activeLayer];
+      values.push_back(value);
+
+      moleculeInfo->enable[names.first] = values;
+    }
+  }
+
   for (Index i = 0; i < rwmol->atomCount(); ++i) {
     auto a = rwmol->atom(i);
     if (a.selected()) {

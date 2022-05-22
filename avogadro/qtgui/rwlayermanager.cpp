@@ -9,6 +9,7 @@
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QDebug>
 #include <QtWidgets/QUndoCommand>
 #include <QtWidgets/QUndoStack>
 #include <cassert>
