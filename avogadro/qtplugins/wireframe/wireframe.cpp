@@ -48,18 +48,18 @@ struct LayerWireframe : Core::LayerData
     lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
   }
 
-  ~LayerWireframe()
+  ~LayerWireframe() override
   {
     if (widget)
       widget->deleteLater();
   }
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(lineWidth);
   }
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
