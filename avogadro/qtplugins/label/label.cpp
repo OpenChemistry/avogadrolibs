@@ -88,13 +88,13 @@ struct LayerLabel : Core::LayerData
     color[2] = static_cast<unsigned char>(q_color.blue());
   }
 
-  ~LayerLabel()
+  ~LayerLabel() override
   {
     if (widget)
       widget->deleteLater();
   }
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     std::string aux = (const char*)atomOptions;
     std::string aux2 = (const char*)residueOptions;
@@ -102,7 +102,7 @@ struct LayerLabel : Core::LayerData
            std::to_string(color[0]) + " " + std::to_string(color[1]) + " " +
            std::to_string(color[2]);
   }
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;

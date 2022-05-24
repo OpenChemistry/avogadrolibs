@@ -60,14 +60,14 @@ struct LayerCartoon : Core::LayerData
   typedef void (Cartoons::*JumpTable)(bool);
   JumpTable jumpTable[7];
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     return boolToString(showBackbone) + " " + boolToString(showTrace) + " " +
            boolToString(showTube) + " " + boolToString(showRibbon) + " " +
            boolToString(showSimpleCartoon) + " " + boolToString(showCartoon) +
            " " + boolToString(showRope);
   }
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
@@ -136,7 +136,7 @@ struct LayerCartoon : Core::LayerData
     showSimpleCartoon = settings.value("cartoon/simplecartoon", true).toBool();
   }
 
-  ~LayerCartoon()
+  ~LayerCartoon() override
   {
     if (widget)
       widget->deleteLater();

@@ -49,19 +49,19 @@ struct LayerBallAndStick : Core::LayerData
     showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
   }
 
-  ~LayerBallAndStick()
+  ~LayerBallAndStick() override
   {
     if (widget)
       widget->deleteLater();
   }
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(atomScale) + " " + std::to_string(bondRadius);
   }
 
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
