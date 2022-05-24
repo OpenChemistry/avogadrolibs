@@ -32,7 +32,7 @@ using Rendering::LineStripGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
-CloseContacts::CloseContacts(QObject* p) : ScenePlugin(p)
+CloseContacts::CloseContacts(QObject *p) : ScenePlugin(p)
 {
   m_layerManager = PluginLayerManager(m_name);
   
@@ -42,7 +42,32 @@ CloseContacts::CloseContacts(QObject* p) : ScenePlugin(p)
 
 CloseContacts::~CloseContacts() {}
 
-void CloseContacts::process(const Molecule& molecule, Rendering::GroupNode& node)
+static bool checkPairNot1213(const Molecule &molecule, Index i, Index n)
+{
+  static Array<Index> bondedCache;
+  static Index lastIndex;
+  static bool lastIndexValid = false;
+
+  if (!lastIndexValid || lastIndex != i) {
+    bondedCache.clear();
+    for (const Bond *b : molecule.bonds(i))
+      bondedCache.push_back(b->atom1().index() == i ? b->atom2().index() : b->atom1().index());
+    lastIndex = i;
+    lastIndexValid = true;
+  }
+
+  for (const Bond *b : molecule.bonds(n)) {
+    Index m = (b->atom1().index() == n ? b->atom2() : b->atom1()).index();
+    if (m == i) // exclude 1-2 pairs
+      return false;
+    for (Index bn: bondedCache)
+      if (bn == m) // exclude 1-3 pairs
+        return false;
+  }
+  return true;
+}
+
+void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
   float radius(0.1f);
   Vector3ub color(128, 255, 64);
@@ -52,35 +77,18 @@ void CloseContacts::process(const Molecule& molecule, Rendering::GroupNode& node
 
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
 
-  GeometryNode* geometry = new GeometryNode;
+  GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
-  LineStripGeometry* lines = new LineStripGeometry;
+  LineStripGeometry *lines = new LineStripGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   geometry->addDrawable(lines);
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Vector3 pos = molecule.atomPosition3d(i);
-    Array<Index> bonded;
-    for (const Bond *b : molecule.bonds(i))
-      bonded.push_back(b->atom1().index() == i ? b->atom2().index() : b->atom1().index());
     for (Index n : perceiver.getNeighbors(pos)) {
-      if (n <= i)
+      if (n <= i) // check each pair only once
         continue;
-      bool go_on = false;
-      for (const Bond *b : molecule.bonds(n)) {
-        Index m = (b->atom1().index() == n ? b->atom2() : b->atom1()).index();
-        if (m == i) {
-          go_on = true;
-          break;
-        }
-        for (Index bn: bonded) {
-          if (bn == m) {
-            go_on = true;
-            break;
-          }
-        }
-      }
-      if (go_on)
+      if (!checkPairNot1213(molecule, i, n))
         continue;
 
       Vector3 npos = molecule.atomPosition3d(n);
@@ -95,9 +103,9 @@ void CloseContacts::process(const Molecule& molecule, Rendering::GroupNode& node
   }
 }
 
-QWidget* CloseContacts::setupWidget()
+QWidget *CloseContacts::setupWidget()
 {
-  QWidget *widget = new QWidget(qobject_cast<QWidget*>(this->parent()));
+  QWidget *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
   QVBoxLayout *v = new QVBoxLayout;
 
   // maximum distance
