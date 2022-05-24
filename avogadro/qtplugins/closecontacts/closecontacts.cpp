@@ -10,7 +10,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/rendering/cylindergeometry.h>
+#include <avogadro/rendering/linestripgeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
@@ -28,7 +28,7 @@ using Core::Bond;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
-using Rendering::CylinderGeometry;
+using Rendering::LineStripGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
@@ -46,15 +46,18 @@ void CloseContacts::process(const Molecule& molecule, Rendering::GroupNode& node
 {
   float radius(0.1f);
   Vector3ub color(128, 255, 64);
+  Array<Vector3ub> colors;
+  colors.push_back(color);
+  colors.push_back(color);
 
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
 
   GeometryNode* geometry = new GeometryNode;
   node.addChild(geometry);
-  CylinderGeometry *cylinders = new CylinderGeometry;
-  cylinders->identifier().molecule = &molecule;
-  cylinders->identifier().type = Rendering::BondType;
-  geometry->addDrawable(cylinders);
+  LineStripGeometry* lines = new LineStripGeometry;
+  lines->identifier().molecule = &molecule;
+  lines->identifier().type = Rendering::BondType;
+  geometry->addDrawable(lines);
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Vector3 pos = molecule.atomPosition3d(i);
     Array<Index> bonded;
@@ -83,7 +86,10 @@ void CloseContacts::process(const Molecule& molecule, Rendering::GroupNode& node
       Vector3 npos = molecule.atomPosition3d(n);
       double distance = (npos - pos).norm();
       if (distance < m_maximumDistance) {
-        cylinders->addCylinder(pos.cast<float>(), npos.cast<float>(), radius, color);
+        Array<Vector3f> points;
+        points.push_back(pos.cast<float>());
+        points.push_back(npos.cast<float>());
+        lines->addLineStrip(points, colors, radius);
       }
     }
   }
@@ -96,9 +102,10 @@ QWidget* CloseContacts::setupWidget()
 
   // maximum distance
   QDoubleSpinBox *spin = new QDoubleSpinBox;
-  spin->setRange(0.1, 10.0);
+  spin->setRange(1.5, 10.0);
   spin->setSingleStep(0.1);
   spin->setDecimals(1);
+  spin->setSuffix(tr(" Å"));
   spin->setValue(m_maximumDistance);
   QObject::connect(spin, SIGNAL(valueChanged(double)), this,
                    SLOT(setMaximumDistance(double)));
