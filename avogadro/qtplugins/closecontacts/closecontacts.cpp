@@ -10,7 +10,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/dashedlinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
@@ -28,7 +28,7 @@ using Core::Bond;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
-using Rendering::LineStripGeometry;
+using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
@@ -71,15 +71,12 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 {
   float radius(0.1f);
   Vector3ub color(128, 255, 64);
-  Array<Vector3ub> colors;
-  colors.push_back(color);
-  colors.push_back(color);
 
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
 
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
-  LineStripGeometry *lines = new LineStripGeometry;
+  DashedLineGeometry *lines = new DashedLineGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   geometry->addDrawable(lines);
@@ -93,12 +90,8 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 
       Vector3 npos = molecule.atomPosition3d(n);
       double distance = (npos - pos).norm();
-      if (distance < m_maximumDistance) {
-        Array<Vector3f> points;
-        points.push_back(pos.cast<float>());
-        points.push_back(npos.cast<float>());
-        lines->addLineStrip(points, colors, radius);
-      }
+      if (distance < m_maximumDistance)
+        lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, radius);
     }
   }
 }
