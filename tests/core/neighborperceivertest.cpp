@@ -23,7 +23,7 @@ TEST(NeighborPerceiverTest, positive)
   
   NeighborPerceiver perceiver(points, 1.0f);
   
-  auto neighbors = perceiver.getNeighbors(Vector3(0.0, 0.0, 0.0));
+  auto neighbors = perceiver.getNeighborsInclusive(Vector3(0.0, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(3));
 }
 
@@ -37,7 +37,7 @@ TEST(NeighborPerceiverTest, negative)
   
   NeighborPerceiver perceiver(points, 1.0f);
   
-  auto neighbors = perceiver.getNeighbors(Vector3(0.0, 0.0, 0.0));
+  auto neighbors = perceiver.getNeighborsInclusive(Vector3(0.0, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(3));
 }
 
@@ -48,14 +48,14 @@ TEST(NeighborPerceiverTest, bounds)
   
   NeighborPerceiver perceiver(points, 1.0f);
   
-  auto neighbors = perceiver.getNeighbors(Vector3(0.0, 0.0, 0.0));
+  auto neighbors = perceiver.getNeighborsInclusive(Vector3(0.0, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(1));
-  neighbors = perceiver.getNeighbors(Vector3(1.5, 0.0, 0.0));
+  perceiver.getNeighborsInclusiveInPlace(neighbors, Vector3(1.5, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(1));
-  neighbors = perceiver.getNeighbors(Vector3(2.5, 0.0, 0.0));
+  perceiver.getNeighborsInclusiveInPlace(neighbors, Vector3(2.5, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(0));
-  neighbors = perceiver.getNeighbors(Vector3(-0.5, 0.0, 0.0));
+  perceiver.getNeighborsInclusiveInPlace(neighbors, Vector3(-0.5, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(1));
-  neighbors = perceiver.getNeighbors(Vector3(-1.5, 0.0, 0.0));
+  perceiver.getNeighborsInclusiveInPlace(neighbors, Vector3(-1.5, 0.0, 0.0));
   EXPECT_EQ(neighbors.size(), static_cast<size_t>(0));
 }
