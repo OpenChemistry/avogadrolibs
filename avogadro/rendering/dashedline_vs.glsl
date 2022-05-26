@@ -7,6 +7,5 @@ uniform mat4 projection;
 void main()
 {
   gl_FrontColor = color;
-  gl_BackColor = color;
   gl_Position = projection * modelView * vertex;
 }

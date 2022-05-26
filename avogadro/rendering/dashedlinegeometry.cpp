@@ -49,6 +49,7 @@ public:
 
 DashedLineGeometry::DashedLineGeometry()
   : m_lineWidth(1.0), m_lineCount(0),
+    m_color(255, 0, 0), m_opacity(255),
     m_dirty(false), d(new Private)
 {
 }
