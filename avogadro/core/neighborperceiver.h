@@ -35,15 +35,17 @@ public:
   
   /**
    * Returns a list of neighboring points. Linear time to number of neighbors.
-   * Can return some neighbors up to 2*sqrt(3) times the maximum distance.
+   * Can include some neighbors up to 2*sqrt(3) times the maximum distance.
+   * The list is newly allocated on every call; if performance/fragmentation
+   * is a concern, prefer NeighborPerceiver::getNeighborsInclusiveInPlace().
    *
    * @param point Position to return neighbors of, can be located anywhere.
    */
   const Array<Index> getNeighborsInclusive(const Vector3 &point) const;
   
   /**
-   * Updates a list of neighboring points. Linear time to number of neighbors.
-   * Can return some neighbors up to 2*sqrt(3) times the maximum distance.
+   * Fills an array with all neighboring points. Linear time to number of neighbors.
+   * Can include some neighbors up to 2*sqrt(3) times the maximum distance.
    *
    * @param out Array to output neighbor indices in.
    * @param point Position to return neighbors of, can be located anywhere.
