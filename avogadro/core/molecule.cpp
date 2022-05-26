@@ -793,9 +793,10 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   // check for bonds
   // O(n) average-case, O(n^2) worst-case
   // note that the "worst case" here would need to be an invalid molecule
+  Array<Index> neighbors;
   for (Index i = 0; i < atomCount(); i++) {
     Vector3 ipos = m_positions3d[i];
-    Array<Index> neighbors = neighborPerceiver.getNeighbors(ipos);
+    neighborPerceiver.getNeighborsInclusiveInPlace(neighbors, ipos);
     for (Index nj = 0; nj < neighbors.size(); ++nj) {
       Index j = neighbors[nj];
       double cutoff = radii[i] + radii[j] + tolerance;

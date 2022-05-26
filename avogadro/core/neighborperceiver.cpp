@@ -42,9 +42,10 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDista
   }
 }
 
-const Array<Index> NeighborPerceiver::getNeighbors(const Vector3 point) const
-{
-  Array<Index> r;
+void NeighborPerceiver::getNeighborsInclusiveInPlace(
+    Array<Index> &out, const Vector3 &point
+) const {
+  out.clear();
   const std::array<int, 3> bin_index = getBinIndex(point);
   for (int xi = std::max(int(1), bin_index[0]) - 1;
       xi < std::min(m_binCount[0], bin_index[0] + 2); xi++) {
@@ -52,15 +53,21 @@ const Array<Index> NeighborPerceiver::getNeighbors(const Vector3 point) const
         yi < std::min(m_binCount[1], bin_index[1] + 2); yi++) {
       for (int zi = std::max(int(1), bin_index[2]) - 1;
           zi < std::min(m_binCount[2], bin_index[2] + 2); zi++) {
-        std::vector<Index> bin = m_bins[xi][yi][zi];
-        r.insert(r.end(), bin.begin(), bin.end());
+        const std::vector<Index> &bin = m_bins[xi][yi][zi];
+        out.insert(out.end(), bin.begin(), bin.end());
       }
     }
   }
+}
+
+const Array<Index> NeighborPerceiver::getNeighborsInclusive(const Vector3 &point) const
+{
+  Array<Index> r;
+  getNeighborsInclusiveInPlace(r, point);
   return r;
 }
 
-const std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 point) const
+const std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 &point) const
 {
   std::array<int, 3> r;
   for (size_t c = 0; c < 3; c++) {
