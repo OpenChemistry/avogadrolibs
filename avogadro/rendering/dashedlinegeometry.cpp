@@ -20,7 +20,7 @@
 #include <limits>
 
 namespace {
-#include "linestrip_fs.h"
+#include "dashedline_fs.h"
 #include "dashedline_vs.h"
 }
 
@@ -48,15 +48,15 @@ public:
 };
 
 DashedLineGeometry::DashedLineGeometry()
-  : m_dirty(false), d(new Private)
+  : m_lineWidth(1.0), m_lineCount(0),
+    m_dirty(false), d(new Private)
 {
 }
 
 DashedLineGeometry::DashedLineGeometry(const DashedLineGeometry& other)
-  : Drawable(other), m_vertices(other.m_vertices), m_colors(other.m_colors),
-    m_lineWidths(other.m_lineWidths),
-    m_dirty(true),
-    d(new Private)
+  : Drawable(other), m_vertices(other.m_vertices),
+    m_lineWidth(other.m_lineWidth), m_lineCount(other.m_lineCount),
+    m_dirty(true), d(new Private)
 {
 }
 
@@ -75,12 +75,18 @@ void DashedLineGeometry::update()
   if (m_vertices.empty())
     return;
 
+  // Check if the VBOs are ready, if not get them ready.
+  if (!d->vbo.ready() || m_dirty) {
+    d->vbo.upload(m_vertices, BufferObject::ArrayBuffer);
+    m_dirty = false;
+  }
+
   // Build and link the shader if it has not been used yet.
   if (d->vertexShader.type() == Shader::Unknown) {
     d->vertexShader.setType(Shader::Vertex);
     d->vertexShader.setSource(dashedline_vs);
     d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(linestrip_fs);
+    d->fragmentShader.setSource(dashedline_fs);
     if (!d->vertexShader.compile())
       cout << d->vertexShader.error() << endl;
     if (!d->fragmentShader.compile())
@@ -99,15 +105,32 @@ void DashedLineGeometry::update()
 
 void DashedLineGeometry::render(const Camera& camera)
 {
-  if (m_vertices.empty() || m_colors.empty() ||
-      m_lineWidths.size() != m_colors.size())
+  if (m_vertices.empty())
     return;
 
-  // Prepare the shader program if necessary.
+  // Prepare the VBO and shader program if necessary.
   update();
 
   if (!d->program.bind())
     cout << d->program.error() << endl;
+
+  d->vbo.bind();
+
+  // Set up our attribute arrays.
+  if (!d->program.enableAttributeArray("vertex"))
+    cout << d->program.error() << endl;
+  if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+    cout << d->program.error() << endl;
+  }
+  if (!d->program.enableAttributeArray("color"))
+    cout << d->program.error() << endl;
+  if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
+                                    sizeof(PackedVertex), UCharType, 4,
+                                    ShaderProgram::Normalize)) {
+    cout << d->program.error() << endl;
+  }
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
@@ -117,27 +140,13 @@ void DashedLineGeometry::render(const Camera& camera)
     cout << d->program.error() << endl;
   }
 
-  // Render the linestrips using the shader and bound VBO.
-  Array<Vector3f>::const_iterator startIter = m_vertices.begin();
-  Array<Vector3f>::const_iterator startEnd = m_vertices.end();
-  Array<Vector4ub>::const_iterator colorIter = m_colors.begin();
-  Array<float>::const_iterator widthIter = m_lineWidths.begin();
-  unsigned int startIndex;
-  unsigned int endIndex;
-  while (startIter != startEnd) {
-    const Vector3f &start = *startIter;
-    const Vector3f &end = *(startIter + 1);
-    const Vector4ub &color = *colorIter;
-    glColor4ub(color(0), color(1), color(2), color(3));
-    glLineWidth(*widthIter);
-    glBegin(GL_LINES);
-        glVertex3f(start(0), start(1), start(2));
-        glVertex3f(end(0), end(1), end(2));
-    glEnd();
-    startIter += 2;
-    ++colorIter;
-    ++widthIter;
-  }
+  glLineWidth(m_lineWidth);
+
+  // Render the lines using the shader and bound VBO.
+  glDrawArrays(GL_LINES, static_cast<GLint>(0),
+               static_cast<GLsizei>(m_vertices.size()));
+
+  d->vbo.release();
 
   d->program.release();
 }
@@ -145,38 +154,37 @@ void DashedLineGeometry::render(const Camera& camera)
 void DashedLineGeometry::clear()
 {
   m_vertices.clear();
-  m_colors.clear();
-  m_lineWidths.clear();
   m_dirty = true;
 }
 
 size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       const Vector4ub& rgba,
-                                       float lineWidth)
+                                       const Vector4ub &rgba, int dashCount)
 {
-  size_t result = m_colors.size();
-  m_vertices.reserve(m_vertices.size() + 2);
-  m_vertices.push_back(start);
-  m_vertices.push_back(end);
-  m_colors.push_back(rgba);
-  m_lineWidths.push_back(lineWidth);
+  const int vertexCount = 2 * dashCount;
+  Vector3f delta = (end - start) / (vertexCount - 1);
+  Vector3f current = start;
+  for (int n = 0; n < vertexCount; n++) {
+    m_vertices.push_back(PackedVertex(current, rgba));
+    current += delta;
+  }
+
+  m_lineCount++;
 
   m_dirty = true;
-  return result;
+  return m_lineCount - 1;
 }
 
 size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       const Vector3ub& rgb,
-                                       float lineWidth)
+                                       const Vector3ub &rgb, int dashCount)
 {
   Vector4ub rgba = Vector4ub(rgb(0), rgb(1), rgb(2), m_opacity);
-  return addDashedLine(start, end, rgba, lineWidth);
+  return addDashedLine(start, end, rgba, dashCount);
 }
 
 size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       float lineWidth)
+                                       int dashCount)
 {
-  return addDashedLine(start, end, m_color, lineWidth);
+  return addDashedLine(start, end, m_color, dashCount);
 }
 
 } // End namespace Rendering

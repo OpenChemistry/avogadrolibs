@@ -90,6 +90,7 @@ set(shader_files
   "arrow_vs.glsl"
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
+  "dashedline_fs.glsl"
   "dashedline_vs.glsl"
   "linestrip_fs.glsl"
   "linestrip_vs.glsl"

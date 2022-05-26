@@ -79,6 +79,7 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
   DashedLineGeometry *lines = new DashedLineGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
+  lines->setLineWidth(2.0);
   geometry->addDrawable(lines);
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Vector3 pos = molecule.atomPosition3d(i);
@@ -91,7 +92,7 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
       Vector3 npos = molecule.atomPosition3d(n);
       double distance = (npos - pos).norm();
       if (distance < m_maximumDistance)
-        lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, radius);
+        lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
     }
   }
 }

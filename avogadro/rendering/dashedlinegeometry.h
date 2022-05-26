@@ -16,12 +16,24 @@ namespace Rendering {
 /**
  * @class DashedLineGeometry DashedLinegeometry.h
  * <avogadro/rendering/dashedlinegeometry.h>
- * @brief The DashedLineGeometry class is used to store sets of dashed lines of the same color.
+ * @brief The DashedLineGeometry class is used to store sets of dashed lines.
  */
 
 class AVOGADRORENDERING_EXPORT DashedLineGeometry : public Drawable
 {
-public:  
+public:
+  struct PackedVertex
+  {                  // 16 bytes total:
+    Vector3f vertex; // 12 bytes
+    Vector4ub color; //  4 bytes
+
+    PackedVertex(const Vector3f &v, const Vector4ub &c)
+      : vertex(v), color(c)
+    {}
+    static int vertexOffset() { return 0; }
+    static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
+  };
+
   DashedLineGeometry();
   DashedLineGeometry(const DashedLineGeometry& other);
   ~DashedLineGeometry() override;
@@ -58,11 +70,11 @@ public:
    * @{
    */
   size_t addDashedLine(const Vector3f &start, const Vector3f &end,
-                      const Vector4ub& color, float lineWidth);
+                      const Vector4ub& color, int dashCount);
   size_t addDashedLine(const Vector3f &start, const Vector3f &end,
-                      const Vector3ub& color, float lineWidth);
+                      const Vector3ub& color, int dashCount);
   size_t addDashedLine(const Vector3f &start, const Vector3f &end,
-                      float lineWidth);
+                      int dashCount);
   /** @} */
 
   /**
@@ -83,8 +95,13 @@ public:
   unsigned char opacity() const { return m_opacity; }
   /** @} */
 
-  /** The vertex array. */
-  Core::Array<Vector3f> vertices() const { return m_vertices; }
+  /**
+   * The line width used for all of the lines.
+   * @{
+   */
+  void setLineWidth(unsigned char lineWidth_) { m_lineWidth = lineWidth_; }
+  unsigned char lineWidth() const { return m_lineWidth; }
+  /** @} */
 
 private:
   /**
@@ -92,9 +109,9 @@ private:
    */
   void update();
 
-  Core::Array<Vector3f> m_vertices;
-  Core::Array<Vector4ub> m_colors;
-  Core::Array<float> m_lineWidths;
+  Core::Array<PackedVertex> m_vertices;
+  float m_lineWidth;
+  int m_lineCount;
   
   Vector3ub m_color;
   unsigned char m_opacity;
@@ -117,8 +134,6 @@ inline void swap(DashedLineGeometry& lhs, DashedLineGeometry& rhs)
   using std::swap;
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
   swap(lhs.m_vertices, rhs.m_vertices);
-  swap(lhs.m_colors, rhs.m_colors);
-  swap(lhs.m_lineWidths, rhs.m_lineWidths);
   swap(lhs.m_color, rhs.m_color);
   swap(lhs.m_opacity, rhs.m_opacity);
   lhs.m_dirty = rhs.m_dirty = true;
