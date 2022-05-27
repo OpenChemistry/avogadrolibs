@@ -81,9 +81,11 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
   lines->identifier().type = Rendering::BondType;
   lines->setLineWidth(2.0);
   geometry->addDrawable(lines);
+  Array<Index> neighbors;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Vector3 pos = molecule.atomPosition3d(i);
-    for (Index n : perceiver.getNeighbors(pos)) {
+    perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
+    for (Index n : neighbors) {
       if (n <= i) // check each pair only once
         continue;
       if (!checkPairNot1213(molecule, i, n))
