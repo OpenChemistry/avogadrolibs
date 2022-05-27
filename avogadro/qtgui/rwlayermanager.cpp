@@ -36,6 +36,19 @@ public:
   {
     m_visible = true;
     m_locked = false;
+
+    const auto activeLayer = m_moleculeInfo->layer.activeLayer();
+    // we loop through the layers to find enabled settings for the active layer
+    for (const auto& names : m_moleculeInfo->enable) {
+      bool value = names.second[activeLayer];
+      m_enable[names.first] = value;
+    }
+    // now we do the same thing for settings
+    for (const auto& names : m_moleculeInfo->settings) {
+      auto value = names.second[activeLayer];
+      m_settings[names.first] = value;
+    }
+
   }
 
   void redo() override
@@ -43,8 +56,13 @@ public:
     m_moleculeInfo->visible.push_back(m_visible);
     m_moleculeInfo->locked.push_back(m_locked);
 
-    for (auto& enable : m_enable) {
+    // it's confusing to create an empty layer
+    //  .. so we just create a layer that matches the active layer
+    for (const auto& enable : m_enable) {
       m_moleculeInfo->enable[enable.first].push_back(enable.second);
+    }
+    for (const auto& settings : m_settings) {
+      m_moleculeInfo->settings[settings.first].push_back(settings.second);
     }
 
     m_moleculeInfo->layer.addLayer();

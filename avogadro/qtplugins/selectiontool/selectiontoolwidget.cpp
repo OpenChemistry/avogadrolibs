@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "selectiontoolwidget.h"
@@ -26,6 +15,7 @@ SelectionToolWidget::SelectionToolWidget(QWidget* parent)
   : QWidget(parent), m_ui(new Ui::SelectionToolWidget)
 {
   m_ui->setupUi(this);
+  setDropDown(0, 1);
   connect(m_ui->applyColorButton, SIGNAL(clicked()), this,
           SLOT(userClickedColor()));
   connect(m_ui->changeLayerDropDown, SIGNAL(currentIndexChanged(int)), this,
