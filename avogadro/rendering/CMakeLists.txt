@@ -21,6 +21,7 @@ set(HEADERS
   cartoongeometry.h
   curvegeometry.h
   cylindergeometry.h
+  dashedlinegeometry.h
   drawable.h
   geometrynode.h
   geometryvisitor.h
@@ -57,6 +58,7 @@ set(SOURCES
   camera.cpp
   curvegeometry.cpp
   cylindergeometry.cpp
+  dashedlinegeometry.cpp
   drawable.cpp
   geometrynode.cpp
   geometryvisitor.cpp
@@ -88,6 +90,8 @@ set(shader_files
   "arrow_vs.glsl"
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"
+  "dashedline_fs.glsl"
+  "dashedline_vs.glsl"
   "linestrip_fs.glsl"
   "linestrip_vs.glsl"
   "mesh_fs.glsl"
