@@ -259,23 +259,9 @@ void SelectionTool::applyLayer(int layer)
   if (layer >= m_layerManager.layerCount()) {
     // add a new layer
     auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
-    const auto activeLayer = layerInfo.activeLayer();
     QtGui::RWLayerManager rwLayerManager;
     rwLayerManager.addLayer(rwmol);
     layer = layerInfo.maxLayer();
-
-    // check to enable the same rendering in this new layer
-    // qDebug() << "SelectionTool::applyLayer: " << activeLayer << " " << layer;
-    /*
-    auto moleculeInfo = Core::LayerManager::getMoleculeInfo(m_molecule);
-    for (const auto& names : moleculeInfo->enable) {
-      auto values = names.second;
-      bool value = values[activeLayer];
-      values.push_back(value);
-
-      moleculeInfo->enable[names.first] = values;
-    }
-    */
 
     // update the menu too
     m_toolWidget->setDropDown(layer, m_layerManager.layerCount());
