@@ -29,21 +29,31 @@ public:
    *
    * @param points Positions in 3D space to detect neighbors among.
    * @param maxDistance All neighbors strictly within this distance will be detected.
-   *                    Between 1 and 2*sqrt(3) times this distance, some could be included.
-   *                    Beyond 2*sqrt(3) times this distance, none will be included.
    *                    Should be as low as possible for best performance.
    */
   NeighborPerceiver(const Array<Vector3> points, float maxDistance);
   
   /**
    * Returns a list of neighboring points. Linear time to number of neighbors.
+   * Can include some neighbors up to 2*sqrt(3) times the maximum distance.
+   * The list is newly allocated on every call; if performance/fragmentation
+   * is a concern, prefer NeighborPerceiver::getNeighborsInclusiveInPlace().
    *
    * @param point Position to return neighbors of, can be located anywhere.
    */
-  const Array<Index> getNeighbors(const Vector3 point) const;
+  const Array<Index> getNeighborsInclusive(const Vector3 &point) const;
+  
+  /**
+   * Fills an array with all neighboring points. Linear time to number of neighbors.
+   * Can include some neighbors up to 2*sqrt(3) times the maximum distance.
+   *
+   * @param out Array to output neighbor indices in.
+   * @param point Position to return neighbors of, can be located anywhere.
+   */
+  void getNeighborsInclusiveInPlace(Array<Index> &out, const Vector3 &point) const;
   
 private:
-  const std::array<int, 3> getBinIndex(const Vector3 point) const;
+  const std::array<int, 3> getBinIndex(const Vector3 &point) const;
 protected:
   float m_maxDistance;
   std::array<int, 3> m_binCount;
