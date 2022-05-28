@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "select.h"
@@ -19,6 +8,8 @@
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/periodictableview.h>
+#include <avogadro/qtgui/rwlayermanager.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
@@ -65,6 +56,14 @@ Select::Select(QObject* parent_)
 
   action = new QAction(tr("Select by Residue…"), this);
   connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
+  m_actions.append(action);
+
+  action = new QAction(this);
+  action->setSeparator(true);
+  m_actions.append(action);
+
+  action = new QAction(tr("Create New Layer from Selection"), this);
+  connect(action, SIGNAL(triggered()), SLOT(createLayerFromSelection()));
   m_actions.append(action);
 }
 
@@ -258,6 +257,31 @@ void Select::invertSelection()
         evalSelect(!m_molecule->atomSelected(i), i));
     m_molecule->emitChanged(Molecule::Atoms);
   }
+}
+
+void Select::createLayerFromSelection()
+{
+  if (!m_molecule)
+    return;
+
+  QtGui::RWMolecule* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Change Layer"));
+  Molecule::MoleculeChanges changes =
+    Molecule::Atoms | Molecule::Layers | Molecule::Modified;
+
+  auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
+  QtGui::RWLayerManager rwLayerManager;
+  rwLayerManager.addLayer(rwmol);
+  int layer = layerInfo.maxLayer();
+
+  for (Index i = 0; i < rwmol->atomCount(); ++i) {
+    auto a = rwmol->atom(i);
+    if (a.selected()) {
+      a.setLayer(layer);
+    }
+  }
+  rwmol->endMergeMode();
+  rwmol->emitChanged(changes);
 }
 
 } // namespace QtPlugins

@@ -1,21 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  Adapted from Avogadro 1.x with the following authors' permission:
-  Copyright 2007 Donald Ephraim Curtis
-  Copyright 2008 Marcus D. Hanwell
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "selectiontool.h"
@@ -34,8 +19,10 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QAction>
@@ -260,11 +247,27 @@ void SelectionTool::applyColor(Vector3ub color)
 
 void SelectionTool::applyLayer(int layer)
 {
-  if (layer < 0) {
+  if (layer < 0 || m_molecule == nullptr) {
     return;
   }
   RWMolecule* rwmol = m_molecule->undoMolecule();
   rwmol->beginMergeMode(tr("Change Layer"));
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+
+  // qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " <<
+  // m_layerManager.layerCount();
+  if (layer >= m_layerManager.layerCount()) {
+    // add a new layer
+    auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
+    QtGui::RWLayerManager rwLayerManager;
+    rwLayerManager.addLayer(rwmol);
+    layer = layerInfo.maxLayer();
+
+    // update the menu too
+    m_toolWidget->setDropDown(layer, m_layerManager.layerCount());
+    changes |= Molecule::Layers | Molecule::Added;
+  }
+
   for (Index i = 0; i < rwmol->atomCount(); ++i) {
     auto a = rwmol->atom(i);
     if (a.selected()) {
@@ -272,7 +275,7 @@ void SelectionTool::applyLayer(int layer)
     }
   }
   rwmol->endMergeMode();
-  rwmol->emitChanged(Molecule::Atoms | Molecule::Modified);
+  rwmol->emitChanged(changes);
 }
 
 void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)
@@ -336,6 +339,30 @@ bool SelectionTool::selectAtom(QMouseEvent* e, const Index& index)
   else {
     return toggleAtom(index);
   }
+}
+
+void SelectionTool::setMolecule(QtGui::Molecule* mol)
+{
+  if (m_molecule != mol) {
+    m_molecule = mol;
+  }
+
+  size_t currentLayer = 0;
+  size_t maxLayers = 1;
+  if (m_molecule && !m_molecule->isSelectionEmpty()) {
+    // find a selected atom
+    Index selectedIndex = 0;
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      auto a = m_molecule->atom(i);
+      if (a.selected())
+        selectedIndex = i;
+      break;
+    }
+    currentLayer = m_layerManager.getLayerID(selectedIndex);
+    maxLayers = m_layerManager.layerCount();
+  }
+
+  m_toolWidget->setDropDown(currentLayer, maxLayers);
 }
 
 } // namespace QtPlugins

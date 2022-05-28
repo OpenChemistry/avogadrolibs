@@ -75,7 +75,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return QString("%1 %2").arg(name.c_str()).arg(layer + 1); // count starts at 0 internally
+          return QString("Layer %1").arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
           if (layer == static_cast<int>(getMoleculeLayer().activeLayer()))
@@ -158,6 +158,8 @@ void LayerModel::addMolecule(const Molecule* mol)
   RWLayerManager::addMolecule(mol);
   m_item = 0;
   updateRows();
+
+  connect(mol, &Molecule::changed, this, &LayerModel::updateRows);
 }
 
 void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
