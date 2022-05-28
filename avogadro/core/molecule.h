@@ -69,24 +69,33 @@ public:
   /** Sets the data value with @p name to @p value. */
   void setData(const std::string& name, const Variant& value);
 
-  /** Returns the data value for @p name. */
+  /** @return the data value for @p name. */
   Variant data(const std::string& name) const;
 
   /**
-   * Returns true if the molecule has data with the given key, false otherwise.
+   * @return true if the molecule has data with the given key, false otherwise.
    */
   bool hasData(const std::string& name) const;
 
   /** Set the molecule's variant data to the entries in map. */
   void setDataMap(const VariantMap& map);
 
-  /** Return the molecule's variant data. */
+  /** @return the molecule's variant data. */
   const VariantMap& dataMap() const;
 
   /** \overload */
   VariantMap& dataMap();
 
-  /** Returns a vector of hybridizations for the atoms in the molecule. */
+  /** Sets atomic partial charges with @p type to @p value. */
+  void setPartialCharges(const std::string& type, const MatrixX& value);
+
+  /** @return the atomic partial charges of type @p type */
+  MatrixX partialCharges(const std::string& type) const;
+
+  /** @return the types of partial charges available stored with this molecule. */
+  std::vector<std::string> partialChargeTypes() const;
+
+  /** @return a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
 
   /** \overload */
@@ -115,7 +124,7 @@ public:
    */
   bool setHybridization(Index atomId, AtomHybridization hybridization);
 
-  /** Returns a vector of formal charges for the atoms in the molecule. */
+  /** @return a vector of formal charges for the atoms in the molecule. */
   Array<signed char>& formalCharges();
 
   /** \overload */
@@ -178,7 +187,7 @@ public:
   bool setLayer(Index atomId, size_t layer);
   size_t layer(Index atomId) const;
 
-  /** Returns a vector of 2d atom positions for the atoms in the molecule. */
+  /** @return a vector of 2d atom positions for the atoms in the molecule. */
   const Array<Vector2>& atomPositions2d() const;
 
   /** \overload */
@@ -207,7 +216,7 @@ public:
    */
   bool setAtomPosition2d(Index atomId, const Vector2& pos);
 
-  /** Returns a vector of 2d atom positions for the atoms in the molecule. */
+  /** @return a vector of 3d atom positions for the atoms in the molecule. */
   const Array<Vector3>& atomPositions3d() const;
 
   /** \overload */
@@ -250,7 +259,7 @@ public:
    */
   bool atomSelected(Index atomId) const;
 
-  /** Returns whether the selection is empty or not */
+  /** @return whether the selection is empty or not */
   bool isSelectionEmpty() const;
 
   /** A map of custom element atomic numbers to string identifiers. These ids
@@ -341,13 +350,13 @@ public:
    */
   virtual void clearBonds();
 
-  /** Returns the bond at @p index in the molecule. */
+  /** @return the bond at @p index in the molecule. */
   BondType bond(Index index) const;
 
-  /** Returns the bond between atoms @p a and @p b. */
+  /** @return the bond between atoms @p a and @p b. */
   BondType bond(const AtomType& a, const AtomType& b) const;
 
-  /** Returns the bond between atomId1 and atomId2. */
+  /** @return the bond between atomId1 and atomId2. */
   BondType bond(Index atomId1, Index atomId2) const;
 
   /**
@@ -394,7 +403,7 @@ public:
   const std::vector<Cube*> cubes() const { return m_cubes; }
 
   /**
-   * Returns the chemical formula of the molecule.
+   * @return the chemical formula of the molecule.
    * @param delimiter Delimiter to insert between tokens, defaults to none.
    * @param showCountsOver Show atom counts above this (defaults to 1).
    */
@@ -443,7 +452,7 @@ public:
   void setBasisSet(BasisSet* basis) { m_basisSet = basis; }
 
   /**
-   * Get the basis set (if present) for the molecule.
+   * @return the basis set (if present) for the molecule.
    */
   BasisSet* basisSet() { return m_basisSet; }
   const BasisSet* basisSet() const { return m_basisSet; }
@@ -556,7 +565,7 @@ public:
    * @return The number of atoms with the supplied atomic number.
    */
   Index atomCount(unsigned char atomicNumber) const;
-  /** Returns the number of bonds in the molecule. */
+  /** @return the number of bonds in the molecule. */
   inline Index bondCount() const;
 
   // getters and setters
@@ -676,11 +685,12 @@ public:
 
 protected:
   VariantMap m_data;
+  std::map<std::string, MatrixX> m_charges; //!< Sets of atomic partial charges
   CustomElementMap m_customElementMap;
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<std::string> m_label;
-  Array<Array<Vector3>> m_coordinates3d; // Used for conformers/trajectories.
+  Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
   Array<signed char> m_formalCharges;

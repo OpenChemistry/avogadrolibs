@@ -30,8 +30,8 @@ using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
-// element, valence, formal charge, x, y, z, color TODO: partial charge
-const int AtomColumns = 7;
+// element, valence, formal charge, partial charge, x, y, z, color
+const int AtomColumns = 8;
 // type, atom 1, atom 2, bond order, length
 const int BondColumns = 5;
 // type, atom 1, atom 2, atom 3, angle
@@ -114,6 +114,18 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
       return ConformerColumns;
   }
   return 0;
+}
+
+QString partialCharge(Molecule* molecule, int atom)
+{
+  // TODO: we need to track type and/or calling the charge calculator
+  float charge = 0.0;
+  std::vector<std::string> types = molecule->partialChargeTypes();
+  if (types.size() > 0) {
+    MatrixX charges = molecule->partialCharges(types[0]);
+    charge = charges(atom, 0);
+  }
+  return QString("%L1").arg(charge, 0, 'f', 3);
 }
 
 // Qt calls this for multiple "roles" across row / columns in the index
@@ -200,6 +212,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QVariant::fromValue(m_molecule->bonds(row).size());
       case AtomDataFormalCharge:
         return m_molecule->formalCharge(row);
+      case AtomDataPartialCharge:
+        return partialCharge(m_molecule, row);
       case AtomDataX:
         return QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f',
                                   4);
@@ -357,6 +371,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Valence");
         case AtomDataFormalCharge:
           return tr("Formal Charge");
+        case AtomDataPartialCharge:
+          return tr("Partial Charge");
         case AtomDataX:
           return tr("X (Å)");
         case AtomDataY:

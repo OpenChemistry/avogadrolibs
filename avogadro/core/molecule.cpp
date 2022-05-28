@@ -31,7 +31,7 @@ Molecule::Molecule()
 {}
 
 Molecule::Molecule(const Molecule& other)
-  : m_data(other.m_data), m_customElementMap(other.m_customElementMap),
+  : m_data(other.m_data), m_charges(other.m_charges), m_customElementMap(other.m_customElementMap),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
     m_label(other.m_label), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
@@ -73,6 +73,7 @@ Molecule::Molecule(const Molecule& other)
 
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(std::move(other.m_data)),
+    m_charges(std::move(other.m_charges)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_positions2d(std::move(other.m_positions2d)),
     m_positions3d(std::move(other.m_positions3d)),
@@ -114,6 +115,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 {
   if (this != &other) {
     m_data = other.m_data;
+    m_charges = other.m_charges;
     m_customElementMap = other.m_customElementMap;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
@@ -172,6 +174,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
 {
   if (this != &other) {
     m_data = std::move(other.m_data);
+    m_charges = std::move(other.m_charges);
     m_customElementMap = std::move(other.m_customElementMap);
     m_positions2d = std::move(other.m_positions2d);
     m_positions3d = std::move(other.m_positions3d);
@@ -235,6 +238,33 @@ Layer& Molecule::layer()
 const Layer& Molecule::layer() const
 {
   return m_layers;
+}
+
+void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
+{
+  if (value.size() != atomCount())
+    return;
+  
+  m_charges[type] = value;
+}
+
+MatrixX Molecule::partialCharges(const std::string& type) const
+{  
+  auto search = m_charges.find(type);
+  if (search != m_charges.end()) {
+    return search->second; // value from the map
+  } else {
+    MatrixX charges(atomCount(), 1);
+    return charges;
+  }
+}
+
+std::vector<std::string> Molecule::partialChargeTypes() const
+{
+  std::vector<std::string> types;
+  for (auto& it : m_charges)
+    types.push_back(it.first);
+  return types;
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)
@@ -332,6 +362,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   m_graph.addVertex();
   m_atomicNumbers.push_back(number);
   m_layers.addAtomToActiveLayer(atomCount() - 1);
+  m_charges.clear();
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -390,6 +421,7 @@ bool Molecule::removeAtom(Index index)
     m_selectedAtoms.pop_back();
   }
 
+  m_charges.clear();
   removeBonds(index);
   m_atomicNumbers.swapAndPop(index);
   m_graph.removeVertex(index);
@@ -415,6 +447,7 @@ void Molecule::clearAtoms()
   m_atomicNumbers.clear();
   m_bondOrders.clear();
   m_graph.clear();
+  m_charges.clear();
 }
 
 Molecule::AtomType Molecule::atom(Index index) const
@@ -436,6 +469,8 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   } else {
     m_bondOrders[index] = order;
   }
+  // any existing charges are invalidated
+  m_charges.clear();
   return BondType(this, index);
 }
 
@@ -465,6 +500,7 @@ bool Molecule::removeBond(Index index)
     return false;
   m_graph.removeEdge(index);
   m_bondOrders.swapAndPop(index);
+  m_charges.clear();
   return true;
 }
 
@@ -488,6 +524,7 @@ void Molecule::clearBonds()
   m_bondOrders.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
+  m_charges.clear();
 }
 
 Molecule::BondType Molecule::bond(Index index) const
