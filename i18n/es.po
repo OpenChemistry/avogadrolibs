@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-04-30 19:46+0000\n"
-"PO-Revision-Date: 2022-05-28 00:15+0000\n"
+"PO-Revision-Date: 2022-05-28 18:39+0000\n"
 "Last-Translator: Aritz Erkiaga <aerkiaga3@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -354,7 +354,7 @@ msgstr "%1: El directorio no existe!"
 #: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: El directorio no es accesible!"
 
 #: molequeue/inputgeneratorwidget.cpp:525
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
@@ -379,6 +379,7 @@ msgstr "%1: El archivo no permite escritura."
 #: qtplugins/openmminput/openmminputdialog.cpp:416
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
+"Los archivos de entrada no se pueden escribir debido a un error desconocido."
 
 #: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:322
@@ -389,6 +390,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Los archivos de entrada no se pueden escribir:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:556
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:331
@@ -403,6 +407,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Los archivos de entrada no se pueden escribir:\n"
+"\n"
+"%1\n"
+"\n"
+"Avisos:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:567
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:342
@@ -415,80 +426,89 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Aviso:\n"
+"\n"
+"%1\n"
+"\n"
+"¿Desea continuar?"
 
 #: molequeue/inputgeneratorwidget.cpp:571
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:346
 #: qtplugins/openmminput/openmminputdialog.cpp:444
 msgid "Write input files"
-msgstr ""
+msgstr "Escribir archivos de entrada"
 
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
-msgstr ""
+msgstr "Configurar Tarea"
 
 #: molequeue/molequeuedialog.cpp:58
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Enviando tarea a MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Tiempo Límite para Envío de Tarea"
 
 #: molequeue/molequeuedialog.cpp:68
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Se alcanzó el tiempo límite de espera para la respuesta de MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:84
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Esperando a que se complete la tarea %1 “%2”…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Dejar de esperar"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Recabando información de tarea completada…"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Tiempo Límite de Recepción de Tarea"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Se alcanzó el tiempo límite de espera para detalles de tarea completeada de "
+"MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:128
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Error al Enviar Tarea"
 
 #: molequeue/molequeuedialog.cpp:129
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "La tarea ha sido rechazada por MoleQueue: %1"
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "No program selected."
-msgstr ""
+msgstr "Ningún programa seleccionado."
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:143
 msgid "Please select the target program from the \"Queue and Program\" list."
 msgstr ""
+"Por favor, seleccione el programa deseado de la lista \"Lista de Espera y "
+"Programa\"."
 
 #: molequeue/molequeuewidget.cpp:98
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "El cliente no logró enviar tarea a MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Internal error."
-msgstr ""
+msgstr "Error interno."
 
 #: molequeue/molequeuewidget.cpp:152
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "No se pudo resolver la selección de programa. Se trata de un error."
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
@@ -496,7 +516,7 @@ msgstr "¡Ninguna molécula establecida en BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Io::FileFormat no establecido en BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
@@ -504,11 +524,11 @@ msgstr "¡Ningún nombre de archivo establecido en BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Dividir Horizontalmente"
 
 #: qtgui/containerwidget.cpp:44
 msgid "Split Vertical"
-msgstr ""
+msgstr "Dividir Verticalmente"
 
 #: qtgui/elementtranslator.cpp:32
 msgid "Hydrogen"
@@ -724,7 +744,7 @@ msgstr "Yodo"
 
 #: qtgui/elementtranslator.cpp:191
 msgid "Xenon"
-msgstr ""
+msgstr "Xenón"
 
 #: qtgui/elementtranslator.cpp:194
 msgid "Cesium"
@@ -804,7 +824,7 @@ msgstr "Tantalio"
 
 #: qtgui/elementtranslator.cpp:251
 msgid "Tungsten"
-msgstr ""
+msgstr "Tungsteno"
 
 #: qtgui/elementtranslator.cpp:254
 msgid "Rhenium"
@@ -983,81 +1003,87 @@ msgid "Oganesson"
 msgstr "Oganesón"
 
 #: qtgui/filebrowsewidget.cpp:39
-#, fuzzy
 msgid "Browse"
-msgstr "Examinar..."
+msgstr "Examinar"
 
 #: qtgui/filebrowsewidget.cpp:113
 msgid "Select file:"
-msgstr ""
+msgstr "Seleccionar archivo:"
 
 #: qtgui/filebrowsewidget.cpp:116
 msgid "Select executable:"
-msgstr ""
+msgstr "Seleccionar ejecutable:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "No se pudo hallar un lector adecuado para el archivo seleccionado."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"Falta la extensión de archivo, por lo que no se puede determinar el formato. "
+"Desea añadirlo?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
+"No se pudo hallar un escritor adecuado para el formato de archivo "
+"seleccionado."
 
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "manipuladores"
 
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "manipulador"
 
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "lectores"
 
 #: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "leer"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "escritores"
 
 #: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "escribir"
 
 #: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
+"Múltiples %1 hallados capaces de %2 este formato de archivo. Cuál se debería "
+"usar?"
 
 #: qtgui/fileformatdialog.cpp:283
-#, fuzzy
 msgid "All files (*);;"
-msgstr "Todos los archivos"
+msgstr "Todos los archivos (*);;"
 
 #: qtgui/fileformatdialog.cpp:286
 #, qt-format
 msgid "All supported formats (%1);;"
-msgstr ""
+msgstr "Todos los formatos soportados (%1);;"
 
 #: qtgui/interfacescript.cpp:223
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
+"Error al leer representación de molécula: Formato de archivo no reconocido: "
+"%1"
 
 #: qtgui/interfacescript.cpp:487
 #, qt-format
