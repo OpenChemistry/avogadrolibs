@@ -73,6 +73,9 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
   Vector3ub color(128, 255, 64);
 
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
+  std::vector<bool> isAtomEnabled(molecule.atomCount());
+  for (Index i = 0; i < molecule.atomCount(); ++i)
+    isAtomEnabled[i] = m_layerManager.atomEnabled(i);
 
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
@@ -83,10 +86,14 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
   geometry->addDrawable(lines);
   Array<Index> neighbors;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
+    if (!isAtomEnabled[i])
+      continue;
     Vector3 pos = molecule.atomPosition3d(i);
     perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
     for (Index n : neighbors) {
       if (n <= i) // check each pair only once
+        continue;
+      if (!isAtomEnabled[n])
         continue;
       if (!checkPairNot1213(molecule, i, n))
         continue;
