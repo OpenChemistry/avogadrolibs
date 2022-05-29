@@ -40,7 +40,7 @@ namespace QtPlugins {
 
 InsertDna::InsertDna(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
-    m_molecule(nullptr)
+    m_molecule(nullptr), m_dialog(nullptr)
 {
   QAction* action = new QAction(tr("DNA/RNA..."), this);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
