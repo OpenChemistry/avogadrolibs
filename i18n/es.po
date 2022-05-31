@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-04-30 19:46+0000\n"
+"POT-Creation-Date: 2022-05-29 03:13+0000\n"
 "PO-Revision-Date: 2022-05-28 18:39+0000\n"
 "Last-Translator: Aritz Erkiaga <aerkiaga3@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
@@ -1122,7 +1122,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:175:567
+#: qtgui/jsonwidget.cpp:175:642
 msgid "Title"
 msgstr "Título"
 
@@ -1261,33 +1261,34 @@ msgstr ""
 msgid "Unknown error."
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:34 qtgui/rwlayermanager.cpp:89
-#: qtgui/rwlayermanager.cpp:115
+#: qtgui/rwlayermanager.cpp:35 qtgui/rwlayermanager.cpp:108
+#: qtgui/rwlayermanager.cpp:134
 msgid "Modify Layers"
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:178
+#: qtgui/rwlayermanager.cpp:197
 #, fuzzy
 msgid "Remove Layer"
 msgstr "Eliminar hidrógenos"
 
-#: qtgui/rwlayermanager.cpp:185
+#: qtgui/rwlayermanager.cpp:204
 #, fuzzy
 msgid "Remove Layer Info"
 msgstr "Eliminar hidrógenos"
 
-#: qtgui/rwlayermanager.cpp:194
+#: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer"
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:197
+#: qtgui/rwlayermanager.cpp:216
 msgid "Add Layer Info"
 msgstr ""
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:267:1474
+#: qtgui/rwlayermanager.cpp:223 qtgui/rwlayermanager.cpp:226
+#: qtplugins/select/select.cpp:268
+#: qtplugins/selectiontool/selectiontool.cpp:254:1549
 #, fuzzy
 msgid "Change Layer"
 msgstr "Cambiar orden de enlace"
@@ -1629,7 +1630,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:95
 #: qtplugins/applycolors/applycolors.cpp:97 qtplugins/focus/focus.cpp:41
-#: qtplugins/overlayaxes/overlayaxes.cpp:265
+#: qtplugins/overlayaxes/overlayaxes.cpp:266
 #: qtplugins/resetview/resetview.cpp:68
 msgid "&View"
 msgstr "&Ver"
@@ -1764,7 +1765,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:65
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
 #: qtplugins/customelements/customelements.cpp:54
-#: qtplugins/hydrogens/hydrogens.cpp:67
+#: qtplugins/hydrogens/hydrogens.cpp:67 qtplugins/insertdna/insertdna.cpp:63
 #: qtplugins/insertfragment/insertfragment.cpp:61
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
@@ -1898,6 +1899,39 @@ msgstr ""
 #, fuzzy
 msgid "Filename"
 msgstr "Nombre de archivo:"
+
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:41
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:60
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, minimumSpinBox)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_step)
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
+#: qtplugins/closecontacts/closecontacts.cpp:112:165 rc.cpp:168
+msgid " Å"
+msgstr ""
+
+#: qtplugins/closecontacts/closecontacts.cpp:117
+#, fuzzy
+msgid "Maximum distance:"
+msgstr "Distancia"
+
+#: qtplugins/closecontacts/closecontacts.h:33
+#, fuzzy
+#| msgid "Renders force displacements on atoms"
+msgid "Render close contacts between atoms."
+msgstr "Dibuja la fuerza de desplazamiento en átomos"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map…"
@@ -2063,7 +2097,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
-#: qtplugins/label/label.cpp:157:1528
+#: qtplugins/label/label.cpp:157:1603
 msgid "Custom"
 msgstr ""
 
@@ -2233,13 +2267,13 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:620
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:695
 msgid "NONE"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1198
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1273
 msgid "PME"
 msgstr ""
 
@@ -2706,6 +2740,63 @@ msgstr ""
 msgid "Download a molecule from PQR."
 msgstr ""
 
+#: qtplugins/insertdna/insertdna.cpp:45
+msgid "DNA/RNA..."
+msgstr "ADN/ARN"
+
+#: qtplugins/insertdna/insertdna.cpp:63
+#: qtplugins/insertfragment/insertfragment.cpp:61
+#: qtplugins/lineformatinput/lineformatinput.cpp:71
+msgid "&Insert"
+msgstr "&insertar"
+
+#: qtplugins/insertdna/insertdna.cpp:80
+#, fuzzy
+#| msgid "Insert DNA/RNA"
+msgid "Insert DNA/RNA..."
+msgstr "Insertar ADN/ARN"
+
+#: qtplugins/insertdna/insertdna.cpp:161
+msgctxt "uracil"
+msgid "U"
+msgstr "Uracilo"
+
+#: qtplugins/insertdna/insertdna.cpp:162
+msgid "Uracil"
+msgstr "Uracilo"
+
+#: qtplugins/insertdna/insertdna.cpp:168
+msgctxt "thymine"
+msgid "T"
+msgstr "T"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
+#: qtplugins/insertdna/insertdna.cpp:169:576
+msgid "Thymine"
+msgstr "Timina"
+
+#: qtplugins/insertdna/insertdna.cpp:202
+#, fuzzy
+#| msgid "Molecule"
+msgid "Insert Molecule..."
+msgstr "Molécula"
+
+#: qtplugins/insertdna/insertdna.cpp:203
+#, fuzzy
+msgid "Generating 3D molecule..."
+msgstr "No hay molecula seleccionada"
+
+#: qtplugins/insertdna/insertdna.h:33
+#, fuzzy
+#| msgid "Insert DNA"
+msgid "InsertDNA"
+msgstr "Insertar ADN"
+
+#: qtplugins/insertdna/insertdna.h:63
+msgid "Insert DNA / RNA fragments through a dialog."
+msgstr ""
+
 #: qtplugins/insertfragment/insertfragment.cpp:35
 #, fuzzy
 #| msgid "Fragment..."
@@ -2716,11 +2807,6 @@ msgstr "Fragmento ..."
 #, fuzzy
 msgid "Crystal…"
 msgstr "Cristal…"
-
-#: qtplugins/insertfragment/insertfragment.cpp:61
-#: qtplugins/lineformatinput/lineformatinput.cpp:71
-msgid "&Insert"
-msgstr "&insertar"
 
 #: qtplugins/insertfragment/insertfragment.cpp:109
 #, qt-format
@@ -2764,7 +2850,7 @@ msgstr "Distancia"
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192:1207
+#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192:1282
 msgid "None"
 msgstr "Ninguno"
 
@@ -2910,7 +2996,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133:922
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:997
 #, fuzzy
 #| msgid "Molecule"
 msgid "Insert Molecule…"
@@ -3011,7 +3097,7 @@ msgstr "Mediciones"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:171:1465
+#: qtplugins/meshes/meshes.cpp:171:1540
 msgid "Opacity:"
 msgstr "Opacidad:"
 
@@ -3363,7 +3449,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:509:1108
+#: qtplugins/openmminput/openmminputdialog.cpp:509:1183
 msgid "input.prmtop"
 msgstr ""
 
@@ -3393,7 +3479,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
-#: qtplugins/openmminput/openmminputdialog.cpp:1081:1225 rc.cpp:1240
+#: qtplugins/openmminput/openmminputdialog.cpp:1081:1300 rc.cpp:1315
 msgid "True"
 msgstr ""
 
@@ -3439,7 +3525,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:125:1537
+#: qtplugins/playertool/playertool.cpp:125:1612
 #, fuzzy
 msgid "Frame:"
 msgstr "Parámetros:"
@@ -3950,71 +4036,75 @@ msgstr ""
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
-#: qtplugins/select/select.cpp:40
+#: qtplugins/select/select.cpp:31
 msgid "Select All"
 msgstr ""
 
-#: qtplugins/select/select.cpp:45
+#: qtplugins/select/select.cpp:36
 msgid "Select None"
 msgstr ""
 
-#: qtplugins/select/select.cpp:54
+#: qtplugins/select/select.cpp:45
 msgid "Invert Selection"
 msgstr ""
 
-#: qtplugins/select/select.cpp:58
+#: qtplugins/select/select.cpp:49
 #, fuzzy
 #| msgid "Color by Element"
 msgid "Select by Element…"
 msgstr "Color por elemento"
 
-#: qtplugins/select/select.cpp:62
+#: qtplugins/select/select.cpp:53
 #, fuzzy
 msgid "Select by Atom Index…"
 msgstr "Índices Atómicos"
 
-#: qtplugins/select/select.cpp:66
+#: qtplugins/select/select.cpp:57
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select by Residue…"
 msgstr "Seleccionar por Residuo..."
 
-#: qtplugins/select/select.cpp:79
+#: qtplugins/select/select.cpp:65
+msgid "Create New Layer from Selection"
+msgstr ""
+
+#: qtplugins/select/select.cpp:78
 msgid "Change selections"
 msgstr ""
 
-#: qtplugins/select/select.cpp:89
+#: qtplugins/select/select.cpp:88
 msgid "&Select"
 msgstr "&Seleccionar"
 
-#: qtplugins/select/select.cpp:159
+#: qtplugins/select/select.cpp:158
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:160
+#: qtplugins/select/select.cpp:159
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:197
+#: qtplugins/select/select.cpp:196
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:198
+#: qtplugins/select/select.cpp:197
 msgid "Residues to Select:"
 msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:40:1576
+#: qtplugins/select/select.h:29:1651
 #, fuzzy
 msgid "Select"
 msgstr "&Seleccionar"
 
-#: qtplugins/selectiontool/selectiontool.cpp:66
+#: qtplugins/selectiontool/selectiontool.cpp:53
 msgid "Selection"
 msgstr "Selección"
 
-#: qtplugins/selectiontool/selectiontool.cpp:69
+#: qtplugins/selectiontool/selectiontool.cpp:56
 #, fuzzy
 #| msgid ""
 #| "Selection Tool (F11)\n"
@@ -4044,15 +4134,21 @@ msgstr ""
 "selección\n"
 "Doble Click: \t Seleccionar un fragmento completo"
 
-#: qtplugins/selectiontool/selectiontool.cpp:251
+#: qtplugins/selectiontool/selectiontool.cpp:238
 #, fuzzy
 msgid "Paint Atoms"
 msgstr "Átomo inicial"
 
-#: qtplugins/selectiontool/selectiontool.h:47
-#: qtplugins/selectiontool/selectiontool.h:48
+#: qtplugins/selectiontool/selectiontool.h:32
+#: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
 msgstr ""
+
+#: qtplugins/selectiontool/selectiontoolwidget.cpp:36
+#, fuzzy
+#| msgid "New Label:"
+msgid "New Layer"
+msgstr "Etiqueta nueva:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:52
 #, fuzzy
@@ -4061,7 +4157,7 @@ msgstr "Percibir un grupo de espacio"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:70:1561
+#: qtplugins/spacegroup/spacegroup.cpp:70:1636
 msgid "Symmetrize"
 msgstr ""
 
@@ -4276,7 +4372,7 @@ msgstr "Simetría"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1546
+#: qtplugins/symmetry/symmetry.h:34:1621
 msgid "Symmetry"
 msgstr "Simetría"
 
@@ -4666,27 +4762,6 @@ msgstr ""
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
-msgstr ""
-
-#. i18n: file: qtplugins/bonding/bondingdialog.ui:41
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
-#. i18n: file: qtplugins/bonding/bondingdialog.ui:60
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, minimumSpinBox)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
-#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
-#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_step)
-#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-msgid " Å"
 msgstr ""
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
@@ -5247,6 +5322,163 @@ msgstr ""
 msgid "Name:"
 msgstr ""
 
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, InsertDNADialog)
+#, fuzzy
+#| msgid "Insert DNA"
+msgid "Insert Nucleic Acids"
+msgstr "Insertar ADN"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#, fuzzy
+#| msgid "SWCNT Builder"
+msgid "DNA/RNA Builder"
+msgstr "Constructor SWCNT"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
+#. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
+#, fuzzy
+#| msgid "N/A"
+msgid "DNA"
+msgstr "N/D"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
+#. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
+#, fuzzy
+#| msgid "N/A"
+msgid "RNA"
+msgstr "N/D"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#, fuzzy
+#| msgid "Nucleus:"
+msgid "Nucleic Acids:"
+msgstr "Núcleo"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
+#, fuzzy
+#| msgid "Alanine"
+msgid "Adenine"
+msgstr "Alanina"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
+#, fuzzy
+#| msgid "A"
+msgctxt "adenine (A)"
+msgid "A"
+msgstr "A"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
+#, fuzzy
+#| msgid "Tyrosine"
+msgid "Cytosine"
+msgstr "Tirosina"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
+#, fuzzy
+#| msgid "C"
+msgctxt "cytosine (C)"
+msgid "C"
+msgstr "C"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
+#, fuzzy
+#| msgid "Alanine"
+msgid "Guanine"
+msgstr "Alanina"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
+#, fuzzy
+#| msgid "G"
+msgctxt "guanine (G)"
+msgid "G"
+msgstr "G"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
+#, fuzzy
+#| msgid "T"
+msgctxt "thymine (T)"
+msgid "T"
+msgstr "T"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
+#. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
+#| msgid "Frequencies"
+msgid "Sequence:"
+msgstr "Frecuencias"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
+#. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
+msgid "the number of base pairs per helix turn"
+msgstr ""
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+msgid "A"
+msgstr "A"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+msgid "B"
+msgstr "B"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+msgid "Z"
+msgstr "Z"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+#, fuzzy
+#| msgid "Other"
+msgid "Other"
+msgstr "Otro"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Bases Per Turn:"
+msgstr ""
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Strands:"
+msgstr ""
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
+#. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
+#, fuzzy
+#| msgid "Single"
+msgctxt "single-strand DNA"
+msgid "Single"
+msgstr "Simple"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
+#. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
+#, fuzzy
+#| msgid "Double"
+msgctxt "double-strand DNA"
+msgid "Double"
+msgstr "Doble"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
+#. i18n: ectx: property (text), widget (QPushButton, insertButton)
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
+msgid "Insert"
+msgstr ""
+
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::InsertFragmentDialog)
 #, fuzzy
@@ -5262,11 +5494,6 @@ msgstr ""
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:29
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
-msgstr ""
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
-#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
-msgid "Insert"
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
@@ -7232,9 +7459,6 @@ msgstr ""
 #~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
 #~ msgstr "Representa las primitivas usando esferas (átomos) y palos (enlaces)"
 
-#~ msgid "Renders force displacements on atoms"
-#~ msgstr "Dibuja la fuerza de desplazamiento en átomos"
-
 #~ msgid "Hydrogen Bond"
 #~ msgstr "Enlace de Hidrógeno"
 
@@ -7749,29 +7973,6 @@ msgstr ""
 
 #~ msgid "Add or remove hydrogens"
 #~ msgstr "Agregar o quitar hidrógenos"
-
-#~ msgid "DNA/RNA..."
-#~ msgstr "ADN/ARN"
-
-#~ msgid "Insert DNA"
-#~ msgstr "Insertar ADN"
-
-#~ msgctxt "uracil"
-#~ msgid "U"
-#~ msgstr "Uracilo"
-
-#~ msgid "Uracil"
-#~ msgstr "Uracilo"
-
-#~ msgctxt "thymine"
-#~ msgid "T"
-#~ msgstr "T"
-
-#~ msgid "Thymine"
-#~ msgstr "Timina"
-
-#~ msgid "Insert DNA/RNA"
-#~ msgstr "Insertar ADN/ARN"
 
 #~ msgid "Insert DNA/RNA chains"
 #~ msgstr "Insertar cadenas de ADN/ARN"
@@ -8587,9 +8788,6 @@ msgstr ""
 #~ msgid "Insert Nanotube"
 #~ msgstr "Insertar Nanotubo"
 
-#~ msgid "SWCNT Builder"
-#~ msgstr "Constructor SWCNT"
-
 #~ msgid "Construct single wall carbon nanotubes."
 #~ msgstr "Construye nanotubos de carbono de pared sencilla."
 
@@ -8746,9 +8944,6 @@ msgstr ""
 
 #~ msgid "Unknown Python Engine"
 #~ msgstr "Motor Python Desconocido"
-
-#~ msgid "N/A"
-#~ msgstr "N/D"
 
 #~ msgid "PythonEngine: checking "
 #~ msgstr "PythonEngine: revisando "
@@ -9002,9 +9197,6 @@ msgstr ""
 #~ msgid "Change label of the atom"
 #~ msgstr "Cambiar la etiqueta del átomo"
 
-#~ msgid "New Label:"
-#~ msgstr "Etiqueta nueva:"
-
 #~ msgid "Change label of the bond"
 #~ msgstr "Cambiar la etiqueta del enlace"
 
@@ -9069,9 +9261,6 @@ msgstr ""
 #~ msgid "Y"
 #~ msgstr "Y"
 
-#~ msgid "Z"
-#~ msgstr "Z"
-
 #~ msgid "Norm"
 #~ msgstr "Norma"
 
@@ -9110,9 +9299,6 @@ msgstr ""
 
 #~ msgid "Cut-off radius:"
 #~ msgstr "Radio límite:"
-
-#~ msgid "A"
-#~ msgstr "A"
 
 #~ msgid "Cut-off angle:"
 #~ msgstr "Ángulo límite:"
@@ -9334,21 +9520,6 @@ msgstr ""
 #~ msgid "10e-"
 #~ msgstr "10e-"
 
-#~ msgid "C"
-#~ msgstr "C"
-
-#~ msgid "G"
-#~ msgstr "G"
-
-#~ msgid "T"
-#~ msgstr "T"
-
-#~ msgid "B"
-#~ msgstr "B"
-
-#~ msgid "Alanine"
-#~ msgstr "Alanina"
-
 #~ msgid "Ala"
 #~ msgstr "Ala"
 
@@ -9408,9 +9579,6 @@ msgstr ""
 
 #~ msgid "Val"
 #~ msgstr "Val"
-
-#~ msgid "Tyrosine"
-#~ msgstr "Tirosina"
 
 #~ msgid "Tyr"
 #~ msgstr "Tyr"
@@ -10870,9 +11038,6 @@ msgstr ""
 
 #~ msgid "tab_NMR"
 #~ msgstr "tab_NMR"
-
-#~ msgid "Nucleus:"
-#~ msgstr "Núcleo"
 
 #~ msgid "Gaussian &Width:"
 #~ msgstr "Gaussian &Ancho:"
