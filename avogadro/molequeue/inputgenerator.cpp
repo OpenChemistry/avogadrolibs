@@ -468,7 +468,7 @@ bool InputGenerator::parseHighlightStyles(const QJsonArray& json) const
     GenericHighlighter* highlighter(
       new GenericHighlighter(const_cast<InputGenerator*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
-      qDebug() << "Error parsing style" << styleName << endl
+      qDebug() << "Error parsing style" << styleName << '\n'
                << QString(QJsonDocument(styleObj).toJson());
       highlighter->deleteLater();
       result = false;
@@ -493,13 +493,13 @@ bool InputGenerator::parseRules(const QJsonArray& json,
     QJsonObject ruleObj(ruleVal.toObject());
 
     if (!ruleObj.contains("patterns")) {
-      qDebug() << "Rule missing 'patterns' array:" << endl
+      qDebug() << "Rule missing 'patterns' array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value("patterns").isArray()) {
-      qDebug() << "Rule 'patterns' member is not an array:" << endl
+      qDebug() << "Rule 'patterns' member is not an array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -507,13 +507,13 @@ bool InputGenerator::parseRules(const QJsonArray& json,
     QJsonArray patternsArray(ruleObj.value("patterns").toArray());
 
     if (!ruleObj.contains("format")) {
-      qDebug() << "Rule missing 'format' object:" << endl
+      qDebug() << "Rule missing 'format' object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value("format").isObject()) {
-      qDebug() << "Rule 'format' member is not an object:" << endl
+      qDebug() << "Rule 'format' member is not an object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -525,7 +525,7 @@ bool InputGenerator::parseRules(const QJsonArray& json,
     foreach (QJsonValue patternVal, patternsArray) {
       QRegExp pattern;
       if (!parsePattern(patternVal, pattern)) {
-        qDebug() << "Error while parsing pattern:" << endl
+        qDebug() << "Error while parsing pattern:" << '\n'
                  << QString(QJsonDocument(patternVal.toObject()).toJson());
         result = false;
         continue;
@@ -535,7 +535,7 @@ bool InputGenerator::parseRules(const QJsonArray& json,
 
     QTextCharFormat format;
     if (!parseFormat(formatObj, format)) {
-      qDebug() << "Error while parsing format:" << endl
+      qDebug() << "Error while parsing format:" << '\n'
                << QString(QJsonDocument(formatObj).toJson());
       result = false;
     }
