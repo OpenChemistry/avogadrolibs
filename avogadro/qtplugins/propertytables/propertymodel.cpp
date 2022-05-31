@@ -15,15 +15,22 @@
 #include <avogadro/core/angletools.h>
 #include <avogadro/core/dihedraliterator.h>
 
-#include <QBrush>
-#include <QColor>
-#include <QDebug>
+#include <QtCore/QDebug>
+#include <QtGui/QColor>
 
 #include <limits>
+
+#include <Eigen/Geometry>
 
 namespace Avogadro {
 
 using Avogadro::QtGui::Molecule;
+using QtGui::Molecule;
+using QtGui::RWAtom;
+using QtGui::RWBond;
+using std::numeric_limits;
+using std::pair;
+using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
@@ -76,18 +83,21 @@ int PropertyModel::rowCount(const QModelIndex& parent) const
   if (!m_validCache)
     updateCache();
 
-  if (m_type == AtomType) {
-    return m_molecule->atomCount();
-  } else if (m_type == BondType) {
-    return m_molecule->bondCount();
-  } else if (m_type == ResidueType) {
-    return m_molecule->residueCount();
-  } else if (m_type == AngleType) {
-    return m_angles.size();
-  } else if (m_type == TorsionType) {
-    return m_torsions.size();
-  } else if (m_type == ConformerType) {
-    return m_molecule->coordinate3dCount();
+  switch (m_type) {
+    case AtomType:
+      return m_molecule->atomCount();
+    case BondType:
+      return m_molecule->bondCount();
+    case ResidueType:
+      return m_molecule->residueCount();
+    case AngleType:
+      return m_angles.size();
+    case TorsionType:
+      return m_torsions.size();
+    case ConformerType:
+      return m_molecule->coordinate3dCount();
+    default:
+      return 0;
   }
 
   return 0;
@@ -109,6 +119,8 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
       return ResidueColumns;
     case ConformerType:
       return ConformerColumns;
+    default:
+      return 0;
   }
   return 0;
 }
@@ -188,7 +200,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   bool sortRole =
     (role == Qt::UserRole); // from the proxy model to handle floating-point
 
-  if (role != Qt::UserRole && role != Qt::DisplayRole)
+  if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
 
   //  if (!m_validCache)
@@ -468,8 +480,28 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   if (!index.isValid())
     return Qt::ItemIsEnabled;
 
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable |
-         Qt::ItemIsSelectable;
+  // return QAbstractItemModel::flags(index) | Qt::ItemIsEditable
+  // for the types and columns that can be edited
+  auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+  if (m_type == AtomType) {
+    if (index.column() == AtomDataElement || index.column() == AtomDataX ||
+        index.column() == AtomDataY || index.column() == AtomDataZ)
+      return editable;
+    // TODO: Color
+  } else if (m_type == BondType) {
+    if (index.column() == BondDataOrder || index.column() == BondDataLength)
+      return editable;
+  } else if (m_type == ResidueType) {
+    // TODO: Color
+  } else if (m_type == AngleType) {
+    if (index.column() == AngleDataValue)
+      return editable;
+  } else if (m_type == TorsionType) {
+    if (index.column() == TorsionDataValue)
+      return editable;
+  }
+
+  return QAbstractItemModel::flags(index);
 }
 
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
@@ -481,16 +513,177 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   if (role != Qt::EditRole)
     return false;
 
+  // If an item is actually editable, we should invalidate the cache
+  // We can still use the cached data -- we just invalidate now
+  // So that we can call "return" and have the cache invalid when we leave
+  m_validCache = false;
+
+  if (m_type == AtomType) {
+    Vector3 v = m_molecule->atomPosition3d(index.row());
+
+    switch (static_cast<AtomColumn>(index.column())) {
+      case AtomDataElement: { // atomic number
+        // Try first as a number
+        bool ok;
+        int atomicNumber = value.toInt(&ok);
+        if (ok)
+          m_molecule->setAtomicNumber(index.row(), atomicNumber);
+        else {
+          // try a symbol
+          atomicNumber = Core::Elements::atomicNumberFromSymbol(
+            value.toString().toStdString());
+
+          if (atomicNumber != Avogadro::InvalidElement) {
+            m_molecule->setAtomicNumber(index.row(), atomicNumber);
+          } else
+            return false;
+        } // not a number
+      }
+      case AtomDataX:
+        v[0] = value.toDouble();
+        break;
+      case AtomDataY:
+        v[1] = value.toDouble();
+        break;
+      case AtomDataZ:
+        v[2] = value.toDouble();
+        break;
+      default:
+        return false;
+    }
+    m_molecule->setAtomPosition3d(index.row(), v);
+
+    // cleanup atom changes
+    emit dataChanged(index, index);
+    m_molecule->emitChanged(Molecule::Atoms);
+    return true;
+  } else if (m_type == BondType) {
+    switch (static_cast<BondColumn>(index.column())) {
+      case BondDataOrder:
+        m_molecule->setBondOrder(index.row(), value.toInt());
+        break;
+      case BondDataLength:
+        setBondLength(index.row(), value.toDouble());
+        break;
+      default:
+        return false;
+    }
+
+    emit dataChanged(index, index);
+    m_molecule->emitChanged(Molecule::Bonds);
+    return true;
+  }
+
   return false;
 }
 
+/*
+@todo finish this
+void PropertyModel::buildFragment(const QtGui::RWBond& bond,
+                                   const QtGui::RWAtom& startAtom)
+{
+  m_fragment.clear();
+  if (!fragmentRecurse(bond, startAtom, startAtom)) {
+    // If this returns false, then a cycle has been found. Only move startAtom
+    // in this case.
+    m_fragment.clear();
+  }
+  m_fragment.push_back(m_molecule->atomUniqueId(startAtom));
+}
+
+
+bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
+                                    const QtGui::RWAtom& startAtom,
+                                    const QtGui::RWAtom& currentAtom)
+{
+  Array<Bond> bonds = m_molecule->bonds(currentAtom);
+  typedef std::vector<RWBond>::const_iterator BondIter;
+  for (BondIter it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
+    if (*it != bond) { // Skip the current bond
+      RWAtom nextAtom = otherBondedAtom(*it, currentAtom);
+      if (nextAtom != startAtom) {
+        // Skip atoms that have already been added. This prevents infinite
+        // recursion on cycles in the fragments
+        int uid = m_molecule->atomUniqueId(nextAtom);
+        if (!fragmentHasAtom(uid)) {
+          m_fragment.push_back(uid);
+          if (!fragmentRecurse(*it, startAtom, nextAtom))
+            return false;
+        }
+      } else {
+        // If we've reached startAtom, then we've found a cycle that indicates
+        // no moveable fragment exists.
+        return false;
+      } // nextAtom != startAtom else
+    }   // *it != bond
+  }     // foreach bond
+  return true;
+}
+
+
+inline bool PropertyModel::fragmentHasAtom(int uid) const
+{
+  return std::find(m_fragment.begin(), m_fragment.end(), uid) !=
+         m_fragment.end();
+}
+
+void PropertyModel::transformFragment(Eigen::Affine3d& transform) const
+{
+  for (std::vector<int>::const_iterator it = m_fragment.begin(),
+                                        itEnd = m_fragment.end();
+       it != itEnd; ++it) {
+    RWAtom atom = m_molecule->undoMolecule()->atomByUniqueId(*it);
+    if (atom.isValid()) {
+      Vector3 pos = atom.position3d();
+      pos = transform * pos;
+      atom.setPosition3d(pos);
+    }
+  }
+}
+*/
+
+void PropertyModel::setBondLength(unsigned int index, double length)
+{
+  if (m_molecule == nullptr)
+    return;
+
+  if (index >= m_molecule->bondCount())
+    return;
+
+  //@todo - finish this
+
+  auto bond = m_molecule->bond(index);
+  Vector3 v1 = bond.atom1().position3d();
+  Vector3 v2 = bond.atom2().position3d();
+  Vector3 diff = v2 - v1;
+  diff.normalize();
+  Vector3 delta = v1 + diff * length;
+
+//  buildFragment(bond, bond.atom2());
+
+  Eigen::Affine3d transform;
+  transform.setIdentity();
+  transform.translate(delta);
+
+//  transformFragment(transform);
+
+  m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
+}
+
+void PropertyModel::setAngle(unsigned int index, double value) {}
+
+void PropertyModel::setTorsion(unsigned int index, double value) {}
+
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 {
-  m_molecule = molecule;
-  updateCache();
+  if (molecule && molecule != m_molecule) {
+    m_molecule = molecule;
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-          SLOT(updateTable(unsigned int)));
+    updateCache();
+
+    connect(m_molecule, SIGNAL(changed(unsigned int)), this,
+            SLOT(updateTable(unsigned int)));
+  }
 }
 
 QString PropertyModel::secStructure(unsigned int type) const

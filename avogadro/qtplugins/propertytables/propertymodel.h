@@ -6,13 +6,16 @@
 #ifndef PROPMODEL_H
 #define PROPMODEL_H
 
+#include <QtCore/QAbstractTableModel>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QAbstractTableModel>
 
 #include <avogadro/core/angleiterator.h>
 #include <avogadro/core/dihedraliterator.h>
+#include <avogadro/qtgui/rwmolecule.h>
+
+#include <Eigen/Geometry>
 
 namespace Avogadro {
 
@@ -68,12 +71,31 @@ public:
 private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
-  
+
   mutable bool m_validCache;
   mutable std::vector<Core::Angle> m_angles;
   mutable std::vector<Core::Dihedral> m_torsions;
 
   QString secStructure(unsigned int type) const;
+
+  std::vector<unsigned int> m_fragment;
+  bool fragmentHasAtom(int uid) const;
+  void buildFragment(const QtGui::RWBond& bond,
+                      const QtGui::RWAtom& startAtom);
+  bool fragmentRecurse(const QtGui::RWBond& bond,
+                       const QtGui::RWAtom& startAtom,
+                       const QtGui::RWAtom& currentAtom);
+
+  void setBondLength(unsigned int index, double value);
+  void setAngle(unsigned int index, double value);
+  void setTorsion(unsigned int index, double value);
+  void transformAtoms(Eigen::Affine3f& m_transform);
+
+  inline QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
+                                       const QtGui::RWAtom& atom) const
+  {
+    return bond.atom1() == atom ? bond.atom2() : bond.atom1();
+  }
 
   /*
    * For each category (atom, bond etc), an enum specifies which columns hold
@@ -140,10 +162,9 @@ private:
     ResidueDataID,
     ResidueDataChain,
     ResidueDataSecStructure,
-    ResidueDataHeterogen,
-    ResidueDataColor
+    ResidueDataColor,
+    ResidueDataHeterogen
   };
-
 };
 
 } // end namespace Avogadro
