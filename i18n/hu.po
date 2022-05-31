@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-05-29 03:13+0000\n"
-"PO-Revision-Date: 2022-05-01 17:00+0000\n"
+"PO-Revision-Date: 2022-05-31 20:51+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -1896,16 +1896,12 @@ msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:117
-#, fuzzy
-#| msgid "Minimum Distance:"
 msgid "Maximum distance:"
-msgstr "Legkisebb távolság:"
+msgstr "Legnagyobb távolság:"
 
 #: qtplugins/closecontacts/closecontacts.h:33
-#, fuzzy
-#| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
-msgstr "Megjeleníti az erőeltolódásokat az atomokon."
+msgstr "Atomok között szoros érintkezés megjelenítése."
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map…"
@@ -2693,7 +2689,7 @@ msgstr "PQR-molekula letöltése."
 
 #: qtplugins/insertdna/insertdna.cpp:45
 msgid "DNA/RNA..."
-msgstr ""
+msgstr "DNS/RNS…"
 
 #: qtplugins/insertdna/insertdna.cpp:63
 #: qtplugins/insertfragment/insertfragment.cpp:61
@@ -2703,20 +2699,18 @@ msgstr "&Beszúrás"
 
 #: qtplugins/insertdna/insertdna.cpp:80
 msgid "Insert DNA/RNA..."
-msgstr ""
+msgstr "DNS/RNS beszúrása…"
 
 #: qtplugins/insertdna/insertdna.cpp:161
 msgctxt "uracil"
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:162
 msgid "Uracil"
-msgstr ""
+msgstr "Uracil"
 
 #: qtplugins/insertdna/insertdna.cpp:168
-#, fuzzy
-#| msgid "T"
 msgctxt "thymine"
 msgid "T"
 msgstr "T"
@@ -2725,29 +2719,23 @@ msgstr "T"
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
 #: qtplugins/insertdna/insertdna.cpp:169:576
 msgid "Thymine"
-msgstr ""
+msgstr "Timin"
 
 #: qtplugins/insertdna/insertdna.cpp:202
-#, fuzzy
-#| msgid "Insert Molecule…"
 msgid "Insert Molecule..."
 msgstr "Molekula beszúrása…"
 
 #: qtplugins/insertdna/insertdna.cpp:203
-#, fuzzy
-#| msgid "Generating 3D molecule…"
 msgid "Generating 3D molecule..."
 msgstr "3D molekula létrehozása…"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "Insert"
 msgid "InsertDNA"
-msgstr "Beszúrás"
+msgstr "DNS beszúrása"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "DNS/RNS-töredékek beszúrása párbeszédpanelen keresztül."
 
 #: qtplugins/insertfragment/insertfragment.cpp:35
 msgid "Fragment…"
@@ -3766,7 +3754,7 @@ msgstr "4. atom"
 #: qtplugins/propertytables/propertymodel.cpp:486
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "π-hélix"
+msgstr "π-spirál"
 
 #: qtplugins/propertytables/propertymodel.cpp:488
 msgctxt "protein bend secondary structure"
@@ -3776,7 +3764,7 @@ msgstr "Hajlítás"
 #: qtplugins/propertytables/propertymodel.cpp:490
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "α-hélix"
+msgstr "α-spirál"
 
 #: qtplugins/propertytables/propertymodel.cpp:492
 msgctxt "beta sheet"
@@ -3786,7 +3774,7 @@ msgstr "β-lap"
 #: qtplugins/propertytables/propertymodel.cpp:494
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr "3_10-hélix"
+msgstr "3_10-spirál"
 
 #: qtplugins/propertytables/propertymodel.cpp:496
 msgctxt "beta bridge"
@@ -3968,7 +3956,7 @@ msgstr "Maradék szerint kijelölése…"
 
 #: qtplugins/select/select.cpp:65
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Új réteg létrehozása a kijelölésből"
 
 #: qtplugins/select/select.cpp:78
 msgid "Change selections"
@@ -4034,10 +4022,8 @@ msgid "Selection tool"
 msgstr "Kijelölőeszköz"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:36
-#, fuzzy
-#| msgid "Layer"
 msgid "New Layer"
-msgstr "Réteg"
+msgstr "Új réteg"
 
 #: qtplugins/spacegroup/spacegroup.cpp:52
 msgid "Perceive Space Group…"
@@ -5233,100 +5219,78 @@ msgstr "Név:"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertDNADialog)
 msgid "Insert Nucleic Acids"
-msgstr ""
+msgstr "Nukleinsavak beszúrása"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "DNA/RNA Builder"
-msgstr ""
+msgstr "DNS/RNS-készítő"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "N/A"
+msgstr "DNS"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "N/A"
+msgstr "RNS"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nucleus:"
 msgid "Nucleic Acids:"
-msgstr "Mag:"
+msgstr "Nukleinsavak:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "Alanine"
 msgid "Adenine"
-msgstr "Alanin"
+msgstr "Adenin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "A"
 msgctxt "adenine (A)"
 msgid "A"
 msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "Tyrosine"
 msgid "Cytosine"
-msgstr "Tirozin"
+msgstr "Citozin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "C"
 msgctxt "cytosine (C)"
 msgid "C"
 msgstr "C"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
-#, fuzzy
-#| msgid "Alanine"
 msgid "Guanine"
-msgstr "Alanin"
+msgstr "Guanin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
-#, fuzzy
-#| msgid "G"
 msgctxt "guanine (G)"
 msgid "G"
 msgstr "G"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
-#, fuzzy
-#| msgid "T"
 msgctxt "thymine (T)"
 msgid "T"
 msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Frequencies"
 msgid "Sequence:"
-msgstr "Frekvenciák"
+msgstr "Sorozat:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
 msgid "the number of base pairs per helix turn"
-msgstr ""
+msgstr "a bázispárok száma spirálfordulatonként"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -5341,37 +5305,31 @@ msgstr "B"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "Other…"
 msgid "Other"
-msgstr "Egyéb…"
+msgstr "Egyéb"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Bases Per Turn:"
-msgstr ""
+msgstr "Bázis spirálfordulatonként:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Strands:"
-msgstr ""
+msgstr "Szálak:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
-#| msgid "Single"
 msgctxt "single-strand DNA"
 msgid "Single"
 msgstr "Egyszeres"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
-#, fuzzy
-#| msgid "Double"
 msgctxt "double-strand DNA"
 msgid "Double"
 msgstr "Kétszeres"
