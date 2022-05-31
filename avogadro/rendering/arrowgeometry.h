@@ -51,12 +51,12 @@ public:
    * @brief Render the arrows.
    * @param camera The current camera to be used for rendering.
    */
-  void render(const Camera& camera);
+  void render(const Camera& camera) override;
 
   /**
    * Clear the contents of the node.
    */
-  void clear();
+  void clear() override;
 
   void drawLine(const Vector3f& start, const Vector3f& end, double lineWidth);
   void drawCone(const Vector3f& base, const Vector3f& cap, double baseRadius,
