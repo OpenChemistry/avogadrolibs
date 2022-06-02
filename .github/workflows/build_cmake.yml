@@ -46,6 +46,14 @@ jobs:
             cpack_flags: "-G DragNDrop",
           }
         - {
+            name: "macOS M1", artifact: "macOS-m1.dmg",
+            os: [self-hosted, macOS],
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja",
+            cpack_flags: "-G DragNDrop",
+          }
+        - {
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
