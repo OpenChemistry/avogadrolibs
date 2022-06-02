@@ -2,30 +2,32 @@
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Julen Larrucea <code@larrucea.eu>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-04-30 19:46+0000\n"
-"PO-Revision-Date: 2016-06-10 06:31+0000\n"
-"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
-"Language-Team: Basque <eu@li.org>\n"
+"POT-Creation-Date: 2022-05-29 03:13+0000\n"
+"PO-Revision-Date: 2022-05-15 20:54+0000\n"
+"Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
+"Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/eu/>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Sorta lana #%L1 (%2)"
 
 #: molequeue/client/client.cpp:245
 msgid "No message specified."
-msgstr ""
+msgstr "Ez da mezurik zehaztu."
 
 #: molequeue/inputgenerator.cpp:70 qtgui/interfacescript.cpp:69
 #, qt-format
@@ -34,32 +36,37 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --print-options output goi mailako JSON objektu bat izan behar du. "
+"Jasotakoa:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:206
 #: qtgui/interfacescript.cpp:302
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "String-a ez den ohartarazpen bat erantzun izan da."
 
 #: molequeue/inputgenerator.cpp:179 qtgui/interfacescript.cpp:209
 #: qtgui/interfacescript.cpp:305
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'ohartarazpenak' kidea ez da array bat."
 
 #: molequeue/inputgenerator.cpp:199 qtgui/interfacescript.cpp:325
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "'%1' erreferentzi fitxategia ez da existitzen."
 
 #: molequeue/inputgenerator.cpp:201 qtgui/interfacescript.cpp:327
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Akatsa %1 fitxategia betetzean: %2"
 
 #: molequeue/inputgenerator.cpp:205 qtgui/interfacescript.cpp:331
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"'%1' fitxategiak egitura eskasa du. 'contents' string-a edo 'filePath' "
+"kideak falta dira."
 
 #: molequeue/inputgenerator.cpp:237 qtgui/interfacescript.cpp:364
 #, qt-format
@@ -75,11 +82,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:249 qtgui/interfacescript.cpp:376
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' kidea ez da array bat."
 
 #: molequeue/inputgenerator.cpp:253 qtgui/interfacescript.cpp:380
 msgid "'files' member missing."
-msgstr ""
+msgstr "'files' kidea falta da."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:391
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -87,11 +94,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:269 qtgui/interfacescript.cpp:396
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' kidea string bat izan behar du."
 
 #: molequeue/inputgenerator.cpp:280 qtgui/interfacescript.cpp:407
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Erantzunak goi mailako JSON objektuak izan behar dira."
 
 #: molequeue/inputgenerator.cpp:284 qtgui/interfacescript.cpp:411
 #, qt-format
@@ -99,6 +106,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Script-aren emaitza:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:327 qtgui/interfacescript.cpp:455
 #, qt-format
@@ -142,9 +151,9 @@ msgid "Input Generator (error)"
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:44
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Sarrera Sortzailea..."
+msgstr "%1 Sarrera Sortzailea"
 
 #: molequeue/inputgeneratorwidget.cpp:115
 msgid "Continue"
@@ -200,18 +209,18 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:189
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Arazoak egon dira sarrera sortzerakoan:"
 
 #: molequeue/inputgeneratorwidget.cpp:278
 msgid "No input files to save!"
-msgstr ""
+msgstr "Ez daude gordetzeko sarrera fitxategirik!"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:988
 #: qtplugins/gamessinput/gamessinputdialog.cpp:697
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Ezin da MoleQueue-ra konektatu"
 
 #: molequeue/inputgeneratorwidget.cpp:287
 #: molequeue/inputgeneratorwidget.cpp:604 molequeue/molequeuewidget.cpp:71
@@ -221,11 +230,13 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Ezin da MoleQueue serbitzarira konektatu. Mesedez, ziurtatu abian dagoela "
+"eta saiatu berriz."
 
 #: molequeue/inputgeneratorwidget.cpp:318
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Bidali %1 kalkulaketa"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1025
@@ -237,11 +248,11 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1026
 #: qtplugins/gamessinput/gamessinputdialog.cpp:735
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Lanak ez du behar bezala bukatu."
 
 #: molequeue/inputgeneratorwidget.cpp:352 qtgui/interfacewidget.cpp:56
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Script-ak errorea sortu du:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:369
 msgid "Hide &Warnings"
@@ -253,7 +264,7 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:392 qtgui/interfacewidget.cpp:72
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Errore bat gertatu da:"
 
 #: molequeue/inputgeneratorwidget.cpp:443
 msgid "Select output filename"
@@ -262,12 +273,14 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:458
 #, qt-format
 msgid "%1: File exists and is not writable."
-msgstr ""
+msgstr "%1: Fitxategia existitzen da eta idazgarria da."
 
 #: molequeue/inputgeneratorwidget.cpp:464
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Barneko errorea: ezin izan da '%1' izendun fitxategirentzako textu widget-ik "
+"aurkitu"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -292,27 +305,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:479
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Ezin izan da %1 fitxategian idatzi."
 
 #: molequeue/inputgeneratorwidget.cpp:492
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:255
 #: qtplugins/openmminput/openmminputdialog.cpp:353
 msgid "Select output directory"
-msgstr ""
+msgstr "Aukeratu itereera direktorio bat"
 
 #: molequeue/inputgeneratorwidget.cpp:509
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:270
 #: qtplugins/openmminput/openmminputdialog.cpp:368
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Direktorioa ez da existitzen!"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:276
 #: qtplugins/openmminput/openmminputdialog.cpp:374
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Direktorioa ezin da irakurria izan!"
 
 #: molequeue/inputgeneratorwidget.cpp:525
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:284
@@ -321,7 +334,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:397
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Fitxategia gainidatzia izango da."
 
 #: molequeue/inputgeneratorwidget.cpp:530
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:291
@@ -330,13 +343,14 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Fitxategia ez da idazgarria."
 
 #: molequeue/inputgeneratorwidget.cpp:543
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:318
 #: qtplugins/openmminput/openmminputdialog.cpp:416
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
+"Sarrera fitxategia ezin izan da idatzia izan akats ezezagun baten erruz."
 
 #: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:322
@@ -347,6 +361,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Sarrera fitxategiak ezin izan dira idatziak izan:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:556
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:331
@@ -361,6 +378,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Ezin da sarrera fitxategietan idatzi:\n"
+"\n"
+"%1\n"
+"\n"
+"Abisuak:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:567
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:342
@@ -373,46 +397,51 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Abisua:\n"
+"\n"
+"%1\n"
+"\n"
+"Jarraitu nahi duzu?"
 
 #: molequeue/inputgeneratorwidget.cpp:571
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:346
 #: qtplugins/openmminput/openmminputdialog.cpp:444
 msgid "Write input files"
-msgstr ""
+msgstr "Sarrera fitxategiak idatzi"
 
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
-msgstr ""
+msgstr "Lana konfiguratu"
 
 #: molequeue/molequeuedialog.cpp:58
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Lana MoleQueue-ra bidaltzen…"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Lan bidalketa denboraz kanpo"
 
 #: molequeue/molequeuedialog.cpp:68
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Abogadrok MoleQueue-ren erantzunaren zain denbora agortu du."
 
 #: molequeue/molequeuedialog.cpp:84
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "%1 \"%2\" lana bukatzeko zain…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Itxaroteari utzi"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Bukatutako lanen informazioa bilatzen…"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Lan berrreskuratzea denboraz kanpo"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
@@ -450,7 +479,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:41 qtgui/backgroundfileformat.cpp:66
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Ez da molekularik ezarri BackgroundFileFormat-an!"
 
 #: qtgui/backgroundfileformat.cpp:44 qtgui/backgroundfileformat.cpp:69
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -458,7 +487,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:47 qtgui/backgroundfileformat.cpp:72
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Ez da fitxategi izenik zehaztu BackgroundFileFormat-en!"
 
 #: qtgui/containerwidget.cpp:41
 msgid "Split Horizontal"
@@ -1054,7 +1083,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:175:567
+#: qtgui/jsonwidget.cpp:175:642
 msgid "Title"
 msgstr "Izenburua"
 
@@ -1134,7 +1163,7 @@ msgstr ""
 #: qtgui/moleculemodel.cpp:104
 #, fuzzy
 msgid "Untitled"
-msgstr "Titulugabea"
+msgstr "Izengabea"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1194,33 +1223,34 @@ msgstr ""
 msgid "Unknown error."
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:34 qtgui/rwlayermanager.cpp:89
-#: qtgui/rwlayermanager.cpp:115
+#: qtgui/rwlayermanager.cpp:35 qtgui/rwlayermanager.cpp:108
+#: qtgui/rwlayermanager.cpp:134
 msgid "Modify Layers"
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:178
+#: qtgui/rwlayermanager.cpp:197
 #, fuzzy
 msgid "Remove Layer"
 msgstr "Ezabatu Hidrogenoak"
 
-#: qtgui/rwlayermanager.cpp:185
+#: qtgui/rwlayermanager.cpp:204
 #, fuzzy
 msgid "Remove Layer Info"
 msgstr "Ezabatu Hidrogenoak"
 
-#: qtgui/rwlayermanager.cpp:194
+#: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer"
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:197
+#: qtgui/rwlayermanager.cpp:216
 msgid "Add Layer Info"
 msgstr ""
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:204 qtgui/rwlayermanager.cpp:207
-#: qtplugins/selectiontool/selectiontool.cpp:267:1474
+#: qtgui/rwlayermanager.cpp:223 qtgui/rwlayermanager.cpp:226
+#: qtplugins/select/select.cpp:268
+#: qtplugins/selectiontool/selectiontool.cpp:254:1549
 #, fuzzy
 msgid "Change Layer"
 msgstr "Aldatu Loturen Ordena"
@@ -1564,7 +1594,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:95
 #: qtplugins/applycolors/applycolors.cpp:97 qtplugins/focus/focus.cpp:41
-#: qtplugins/overlayaxes/overlayaxes.cpp:265
+#: qtplugins/overlayaxes/overlayaxes.cpp:266
 #: qtplugins/resetview/resetview.cpp:68
 msgid "&View"
 msgstr "&Ikusi"
@@ -1675,7 +1705,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:65
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:45
 #: qtplugins/customelements/customelements.cpp:54
-#: qtplugins/hydrogens/hydrogens.cpp:67
+#: qtplugins/hydrogens/hydrogens.cpp:67 qtplugins/insertdna/insertdna.cpp:63
 #: qtplugins/insertfragment/insertfragment.cpp:61
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
@@ -1809,6 +1839,40 @@ msgstr ""
 #, fuzzy
 msgid "Filename"
 msgstr "Artxibo-Izena:"
+
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:41
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
+#. i18n: file: qtplugins/bonding/bondingdialog.ui:60
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, minimumSpinBox)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
+#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_step)
+#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
+#: qtplugins/closecontacts/closecontacts.cpp:112:165 rc.cpp:168
+msgid " Å"
+msgstr " Å"
+
+#: qtplugins/closecontacts/closecontacts.cpp:117
+#, fuzzy
+#| msgid "Maximum Force"
+msgid "Maximum distance:"
+msgstr "Indar Maximoa"
+
+#: qtplugins/closecontacts/closecontacts.h:33
+#, fuzzy
+#| msgid "Renders force displacements on atoms"
+msgid "Render close contacts between atoms."
+msgstr "Indar desplazamenduak atomoetan"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map…"
@@ -1974,7 +2038,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:185
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
-#: qtplugins/label/label.cpp:157:1528
+#: qtplugins/label/label.cpp:157:1603
 msgid "Custom"
 msgstr "Petsonalizatua"
 
@@ -2146,13 +2210,13 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:374
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:620
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:409:695
 msgid "NONE"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1198
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377:1273
 msgid "PME"
 msgstr ""
 
@@ -2622,6 +2686,63 @@ msgstr ""
 msgid "Download a molecule from PQR."
 msgstr ""
 
+#: qtplugins/insertdna/insertdna.cpp:45
+msgid "DNA/RNA..."
+msgstr "ADN/ARN..."
+
+#: qtplugins/insertdna/insertdna.cpp:63
+#: qtplugins/insertfragment/insertfragment.cpp:61
+#: qtplugins/lineformatinput/lineformatinput.cpp:71
+msgid "&Insert"
+msgstr "&Txertatu"
+
+#: qtplugins/insertdna/insertdna.cpp:80
+#, fuzzy
+#| msgid "Insert DNA/RNA"
+msgid "Insert DNA/RNA..."
+msgstr "ADN/ARN-a sartu"
+
+#: qtplugins/insertdna/insertdna.cpp:161
+msgctxt "uracil"
+msgid "U"
+msgstr "U"
+
+#: qtplugins/insertdna/insertdna.cpp:162
+msgid "Uracil"
+msgstr "Uraziloa"
+
+#: qtplugins/insertdna/insertdna.cpp:168
+msgctxt "thymine"
+msgid "T"
+msgstr "T"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
+#: qtplugins/insertdna/insertdna.cpp:169:576
+msgid "Thymine"
+msgstr "Timina"
+
+#: qtplugins/insertdna/insertdna.cpp:202
+#, fuzzy
+#| msgid "Molecule"
+msgid "Insert Molecule..."
+msgstr "Molekula"
+
+#: qtplugins/insertdna/insertdna.cpp:203
+#, fuzzy
+msgid "Generating 3D molecule..."
+msgstr "Setatutako Molekularik ez"
+
+#: qtplugins/insertdna/insertdna.h:33
+#, fuzzy
+#| msgid "Insert DNA"
+msgid "InsertDNA"
+msgstr "ADN-a sartu"
+
+#: qtplugins/insertdna/insertdna.h:63
+msgid "Insert DNA / RNA fragments through a dialog."
+msgstr ""
+
 #: qtplugins/insertfragment/insertfragment.cpp:35
 #, fuzzy
 #| msgid "Fragments"
@@ -2632,11 +2753,6 @@ msgstr "Fragmentuak"
 #, fuzzy
 msgid "Crystal…"
 msgstr "Kristal..."
-
-#: qtplugins/insertfragment/insertfragment.cpp:61
-#: qtplugins/lineformatinput/lineformatinput.cpp:71
-msgid "&Insert"
-msgstr "&Txertatu"
 
 #: qtplugins/insertfragment/insertfragment.cpp:109
 #, qt-format
@@ -2679,7 +2795,7 @@ msgstr "Distantzia"
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192:1207
+#: qtplugins/label/label.cpp:152 qtplugins/label/label.cpp:192:1282
 msgid "None"
 msgstr "Ezer ez"
 
@@ -2828,7 +2944,7 @@ msgstr ""
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/lineformatinput/lineformatinput.cpp:118
-#: qtplugins/lineformatinput/lineformatinput.cpp:133:922
+#: qtplugins/lineformatinput/lineformatinput.cpp:133:997
 #, fuzzy
 #| msgid "Molecule"
 msgid "Insert Molecule…"
@@ -2929,7 +3045,7 @@ msgstr "Neurtu"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:171:1465
+#: qtplugins/meshes/meshes.cpp:171:1540
 msgid "Opacity:"
 msgstr "Opakotasuna:"
 
@@ -3007,9 +3123,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:42 qtplugins/navigator/navigator.h:43
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Nabigatu"
+msgstr "Nabigatzeko tresna"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:87
 msgid "Chemical Name"
@@ -3282,7 +3397,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:509:1108
+#: qtplugins/openmminput/openmminputdialog.cpp:509:1183
 msgid "input.prmtop"
 msgstr ""
 
@@ -3312,7 +3427,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1072
-#: qtplugins/openmminput/openmminputdialog.cpp:1081:1225 rc.cpp:1240
+#: qtplugins/openmminput/openmminputdialog.cpp:1081:1300 rc.cpp:1315
 msgid "True"
 msgstr ""
 
@@ -3358,7 +3473,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:276
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:125:1537
+#: qtplugins/playertool/playertool.cpp:125:1612
 #, fuzzy
 msgid "Frame:"
 msgstr "Fotogramak"
@@ -3871,71 +3986,75 @@ msgstr ""
 msgid "Load file reader/writers from external scripts."
 msgstr ""
 
-#: qtplugins/select/select.cpp:40
+#: qtplugins/select/select.cpp:31
 msgid "Select All"
 msgstr ""
 
-#: qtplugins/select/select.cpp:45
+#: qtplugins/select/select.cpp:36
 msgid "Select None"
 msgstr ""
 
-#: qtplugins/select/select.cpp:54
+#: qtplugins/select/select.cpp:45
 msgid "Invert Selection"
 msgstr ""
 
-#: qtplugins/select/select.cpp:58
+#: qtplugins/select/select.cpp:49
 #, fuzzy
 #| msgid "Select by Element..."
 msgid "Select by Element…"
 msgstr "Elementuz Hautatu..."
 
-#: qtplugins/select/select.cpp:62
+#: qtplugins/select/select.cpp:53
 #, fuzzy
 msgid "Select by Atom Index…"
 msgstr "Atomo Aurkibideak"
 
-#: qtplugins/select/select.cpp:66
+#: qtplugins/select/select.cpp:57
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select by Residue…"
 msgstr "Hondakinez Hautatu..."
 
-#: qtplugins/select/select.cpp:79
+#: qtplugins/select/select.cpp:65
+msgid "Create New Layer from Selection"
+msgstr ""
+
+#: qtplugins/select/select.cpp:78
 msgid "Change selections"
 msgstr ""
 
-#: qtplugins/select/select.cpp:89
+#: qtplugins/select/select.cpp:88
 msgid "&Select"
 msgstr "&Hautatu"
 
-#: qtplugins/select/select.cpp:159
+#: qtplugins/select/select.cpp:158
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:160
+#: qtplugins/select/select.cpp:159
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:197
+#: qtplugins/select/select.cpp:196
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:198
+#: qtplugins/select/select.cpp:197
 msgid "Residues to Select:"
 msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:40:1576
+#: qtplugins/select/select.h:29:1651
 #, fuzzy
 msgid "Select"
 msgstr "&Hautatu"
 
-#: qtplugins/selectiontool/selectiontool.cpp:66
+#: qtplugins/selectiontool/selectiontool.cpp:53
 msgid "Selection"
 msgstr "Hautatutakoa"
 
-#: qtplugins/selectiontool/selectiontool.cpp:69
+#: qtplugins/selectiontool/selectiontool.cpp:56
 msgid ""
 "Selection Tool\n"
 "\n"
@@ -3946,15 +4065,21 @@ msgid ""
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
 
-#: qtplugins/selectiontool/selectiontool.cpp:251
+#: qtplugins/selectiontool/selectiontool.cpp:238
 #, fuzzy
 msgid "Paint Atoms"
 msgstr "Hasierako Atomoa"
 
-#: qtplugins/selectiontool/selectiontool.h:47
-#: qtplugins/selectiontool/selectiontool.h:48
+#: qtplugins/selectiontool/selectiontool.h:32
+#: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
 msgstr ""
+
+#: qtplugins/selectiontool/selectiontoolwidget.cpp:36
+#, fuzzy
+#| msgid "New Label:"
+msgid "New Layer"
+msgstr "Marka Berria:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:52
 #, fuzzy
@@ -3963,7 +4088,7 @@ msgstr "Espazio taldea hauteman"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:70:1561
+#: qtplugins/spacegroup/spacegroup.cpp:70:1636
 msgid "Symmetrize"
 msgstr "Simetrizatu"
 
@@ -4179,7 +4304,7 @@ msgstr "Simetria"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1546
+#: qtplugins/symmetry/symmetry.h:34:1621
 msgid "Symmetry"
 msgstr "Simetria"
 
@@ -4570,27 +4695,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
 msgstr ""
-
-#. i18n: file: qtplugins/bonding/bondingdialog.ui:41
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
-#. i18n: file: qtplugins/bonding/bondingdialog.ui:60
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, minimumSpinBox)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:40
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, a)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:72
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
-#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
-#. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_step)
-#. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:100
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
-#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-msgid " Å"
-msgstr " Å"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
@@ -5150,6 +5254,145 @@ msgstr ""
 msgid "Name:"
 msgstr ""
 
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, InsertDNADialog)
+msgid "Insert Nucleic Acids"
+msgstr "Azido Nukleikoak Sartu"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+msgid "DNA/RNA Builder"
+msgstr "ADN/ARN Eraikitzailea"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
+#. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
+msgid "DNA"
+msgstr "ADN"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
+#. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
+msgid "RNA"
+msgstr "ARN"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "Nucleic Acids:"
+msgstr "Azido Nukleikoak:"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
+msgid "Adenine"
+msgstr "Adenina"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
+#, fuzzy
+#| msgid "A"
+msgctxt "adenine (A)"
+msgid "A"
+msgstr "A"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
+msgid "Cytosine"
+msgstr "Zitosina"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
+#, fuzzy
+#| msgid "C"
+msgctxt "cytosine (C)"
+msgid "C"
+msgstr "C"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
+#. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
+msgid "Guanine"
+msgstr "Guanina"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
+#, fuzzy
+#| msgid "G"
+msgctxt "guanine (G)"
+msgid "G"
+msgstr "G"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
+#. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
+#, fuzzy
+#| msgid "T"
+msgctxt "thymine (T)"
+msgid "T"
+msgstr "T"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Sequence:"
+msgstr "Sekuentzia:"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
+#. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
+#. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
+msgid "the number of base pairs per helix turn"
+msgstr "Base bikote kopurua helizearen biraketa bakoitzeko"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+msgid "A"
+msgstr "A"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+msgid "B"
+msgstr "B"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+msgid "Z"
+msgstr "Z"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
+#. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+#, fuzzy
+#| msgid "Other"
+msgid "Other"
+msgstr "Bestelakoa"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Bases Per Turn:"
+msgstr "Baseak Biraketa Bakoitzeko:"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Strands:"
+msgstr ""
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
+#. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
+#, fuzzy
+#| msgid "Single"
+msgctxt "single-strand DNA"
+msgid "Single"
+msgstr "Bakuna"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
+#. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
+#, fuzzy
+#| msgid "Double"
+msgctxt "double-strand DNA"
+msgid "Double"
+msgstr "Bikoitza"
+
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
+#. i18n: ectx: property (text), widget (QPushButton, insertButton)
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
+#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
+msgid "Insert"
+msgstr "Sartu"
+
 #. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::InsertFragmentDialog)
 #, fuzzy
@@ -5168,11 +5411,6 @@ msgid "Type a name or part of a name to show only matching files."
 msgstr ""
 "Sartu izen bat edo izen baten zati bat, horrekin bat egiten duten "
 "fitxategiak erakusteko."
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
-#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
-msgid "Insert"
-msgstr "Sartu"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
@@ -7078,9 +7316,6 @@ msgstr ""
 #~ msgid "Dipole"
 #~ msgstr "Bipolarra"
 
-#~ msgid "Renders force displacements on atoms"
-#~ msgstr "Indar desplazamenduak atomoetan"
-
 #~ msgid "Hydrogen Bond"
 #~ msgstr "Hidrogeno Loturak"
 
@@ -7594,29 +7829,6 @@ msgstr ""
 
 #~ msgid "Add or remove hydrogens"
 #~ msgstr "Gehitu edo ezabatu hidrogenoak"
-
-#~ msgid "DNA/RNA..."
-#~ msgstr "ADN/ARN..."
-
-#~ msgid "Insert DNA"
-#~ msgstr "ADN-a sartu"
-
-#~ msgctxt "uracil"
-#~ msgid "U"
-#~ msgstr "U"
-
-#~ msgid "Uracil"
-#~ msgstr "Uraziloa"
-
-#~ msgctxt "thymine"
-#~ msgid "T"
-#~ msgstr "T"
-
-#~ msgid "Thymine"
-#~ msgstr "Timina"
-
-#~ msgid "Insert DNA/RNA"
-#~ msgstr "ADN/ARN-a sartu"
 
 #~ msgid "Insert DNA/RNA chains"
 #~ msgstr "ADN/ARN kateak sartu"
@@ -8913,9 +9125,6 @@ msgstr ""
 #~ msgid "Change label of the atom"
 #~ msgstr "Atomoaren marka aldatu"
 
-#~ msgid "New Label:"
-#~ msgstr "Marka Berria:"
-
 #~ msgid "Change label of the bond"
 #~ msgstr "Loturaren marka aldatu"
 
@@ -8980,9 +9189,6 @@ msgstr ""
 #~ msgid "Y"
 #~ msgstr "Y"
 
-#~ msgid "Z"
-#~ msgstr "Z"
-
 #~ msgid "Norm"
 #~ msgstr "Araua"
 
@@ -9027,9 +9233,6 @@ msgstr ""
 
 #~ msgid "Cut-off radius:"
 #~ msgstr "Mozketa-Erradioa:"
-
-#~ msgid "A"
-#~ msgstr "A"
 
 #~ msgid "Cut-off angle:"
 #~ msgstr "Mozketa-Angelua:"
@@ -9398,51 +9601,6 @@ msgstr ""
 
 #~ msgid "10e-"
 #~ msgstr "10e-"
-
-#~ msgid "Insert Nucleic Acids"
-#~ msgstr "Azido Nukleikoak Sartu"
-
-#~ msgid "DNA/RNA Builder"
-#~ msgstr "ADN/ARN Eraikitzailea"
-
-#~ msgid "DNA"
-#~ msgstr "ADN"
-
-#~ msgid "RNA"
-#~ msgstr "ARN"
-
-#~ msgid "Nucleic Acids:"
-#~ msgstr "Azido Nukleikoak:"
-
-#~ msgid "Adenine"
-#~ msgstr "Adenina"
-
-#~ msgid "Cytosine"
-#~ msgstr "Zitosina"
-
-#~ msgid "C"
-#~ msgstr "C"
-
-#~ msgid "Guanine"
-#~ msgstr "Guanina"
-
-#~ msgid "G"
-#~ msgstr "G"
-
-#~ msgid "T"
-#~ msgstr "T"
-
-#~ msgid "Sequence:"
-#~ msgstr "Sekuentzia:"
-
-#~ msgid "the number of base pairs per helix turn"
-#~ msgstr "Base bikote kopurua helizearen biraketa bakoitzeko"
-
-#~ msgid "B"
-#~ msgstr "B"
-
-#~ msgid "Bases Per Turn:"
-#~ msgstr "Baseak Biraketa Bakoitzeko:"
 
 #~ msgid "Alanine"
 #~ msgstr "Alanina"
@@ -9852,9 +10010,6 @@ msgstr ""
 
 #~ msgid "Total Potential"
 #~ msgstr "Potentzial Totala"
-
-#~ msgid "Maximum Force"
-#~ msgstr "Indar Maximoa"
 
 #~ msgid "Relative Force"
 #~ msgstr "Indar Erlatiboa"
