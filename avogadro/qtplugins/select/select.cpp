@@ -30,39 +30,48 @@ Select::Select(QObject* parent_)
 {
   QAction* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
+  action->setProperty("menu priority", 990);
   connect(action, SIGNAL(triggered()), SLOT(selectAll()));
   m_actions.append(action);
 
   action = new QAction(tr("Select None"), this);
   action->setShortcut(QKeySequence("Ctrl+Shift+A"));
+  action->setProperty("menu priority", 980);
   connect(action, SIGNAL(triggered()), SLOT(selectNone()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setSeparator(true);
+  action->setProperty("menu priority", 970);
   m_actions.append(action);
 
   action = new QAction(tr("Invert Selection"), this);
+  action->setProperty("menu priority", 890);
   connect(action, SIGNAL(triggered()), SLOT(invertSelection()));
   m_actions.append(action);
 
   action = new QAction(tr("Select by Element…"), this);
+  action->setProperty("menu priority", 880);
   connect(action, SIGNAL(triggered()), SLOT(selectElement()));
   m_actions.append(action);
 
   action = new QAction(tr("Select by Atom Index…"), this);
+  action->setProperty("menu priority", 870);
   connect(action, SIGNAL(triggered()), SLOT(selectAtomIndex()));
   m_actions.append(action);
 
   action = new QAction(tr("Select by Residue…"), this);
+  action->setProperty("menu priority", 860);
   connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
   m_actions.append(action);
 
   action = new QAction(this);
+  action->setProperty("menu priority", 850);
   action->setSeparator(true);
   m_actions.append(action);
 
   action = new QAction(tr("Create New Layer from Selection"), this);
+  action->setProperty("menu priority", 300);
   connect(action, SIGNAL(triggered()), SLOT(createLayerFromSelection()));
   m_actions.append(action);
 }
