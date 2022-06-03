@@ -21,8 +21,6 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-#include <iostream>
-
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -89,10 +87,10 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
 }
 
 static int checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n) {
-  for (const Bond *b : molecule.bonds(i))
-    if ((b->atom1().index() == i ? b->atom2() : b->atom1()).index() == n)
-      return false;
-  return true;
+  Array<const Bond *> bonds = molecule.bonds(i);
+  return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond *b)
+    { return (b->atom1().index() == i ? b->atom2() : b->atom1()).index() != n; }
+  );
 }
 
 void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node)
