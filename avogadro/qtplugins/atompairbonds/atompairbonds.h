@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_ATOMPAIRBONDS_H
 #define AVOGADRO_QTPLUGINS_ATOMPAIRBONDS_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
 namespace Avogadro {
@@ -49,6 +50,8 @@ private:
   
   double m_angleToleranceDegrees;
   double m_maximumDistance;
+  std::array<Vector3ub, 1> m_lineColors;
+  std::array<int, 1> m_lineWidths;
 };
 
 } // end namespace QtPlugins

@@ -15,6 +15,7 @@
 #include <avogadro/rendering/groupnode.h>
 
 #include <QtCore/QSettings>
+#include <QtGui/QColor>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QVBoxLayout>
@@ -41,6 +42,13 @@ AtomPairBonds::AtomPairBonds(QObject *p) : ScenePlugin(p)
   QSettings settings;
   m_angleToleranceDegrees = settings.value("atomPairBonds/angleTolerance", 20.0).toDouble();
   m_maximumDistance = settings.value("atomPairBonds/maximumDistance", 2.0).toDouble();
+  QColor hydrogenBColor = settings.value("atomPairBonds/lineColor0", QColor(64, 192, 255)).value<QColor>();
+  m_lineColors = {
+    Vector3ub(hydrogenBColor.red(), hydrogenBColor.green(), hydrogenBColor.blue())
+  };
+  m_lineWidths = {
+    settings.value("atomPairBonds/lineWidth0", 2).toInt()
+  };
 }
 
 AtomPairBonds::~AtomPairBonds() {}
