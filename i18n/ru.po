@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-05-29 03:13+0000\n"
-"PO-Revision-Date: 2022-06-03 22:19+0000\n"
+"PO-Revision-Date: 2022-06-04 20:23+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -4250,9 +4250,9 @@ msgid "∞"
 msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:341
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "Название группы"
+msgstr "Группа %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:349
 #, qt-format
