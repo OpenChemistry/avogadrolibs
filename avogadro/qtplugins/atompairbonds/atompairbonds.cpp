@@ -80,6 +80,13 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
   return false;
 }
 
+static int checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n) {
+  for (const Bond *b : molecule.bonds(i))
+    if ((b->atom1().index() == i ? b->atom2() : b->atom1()).index() == n)
+      return false;
+  return true;
+}
+
 void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
   float radius(0.1f);
@@ -116,6 +123,8 @@ void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node
       Vector3 distance_vector = npos - pos;
 
       if (distance_vector.norm() > MAX_DISTANCES[interactionType])
+        continue;
+      if (!checkAtomPairNotBonded(molecule, i, n))
         continue;
 
       lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
