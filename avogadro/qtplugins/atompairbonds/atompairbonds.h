@@ -26,7 +26,7 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override { return tr("Atom-Pair Bonds"); }
 
   QString description() const override
   {
@@ -40,13 +40,15 @@ public:
     return DefaultBehavior::False;
   }
 
-public slots:
-  void setAngleTolerance(double angleTolerance);
+public:
+  void setAngleTolerance(float angleTolerance);
+  void setMaximumDistance(float maximumDistance);
 
 private:
   std::string m_name = "Atom-Pair Bonds";
   
   double m_angleToleranceDegrees;
+  double m_maximumDistance;
 };
 
 } // end namespace QtPlugins

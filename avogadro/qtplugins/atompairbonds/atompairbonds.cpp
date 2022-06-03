@@ -40,17 +40,17 @@ AtomPairBonds::AtomPairBonds(QObject *p) : ScenePlugin(p)
   
   QSettings settings;
   m_angleToleranceDegrees = settings.value("atomPairBonds/angleTolerance", 20.0).toDouble();
+  m_maximumDistance = settings.value("atomPairBonds/maximumDistance", 2.0).toDouble();
 }
 
 AtomPairBonds::~AtomPairBonds() {}
 
-static const int HYDROGEN_BOND = 0;
+enum InteractionTypes {
+  NONE = -1,
+  HYDROGEN_BOND = 0
+};
 
-static const float MAX_DISTANCES[] = {2.0};
-
-static const float ABSOLUTE_MAX_DISTANCE = 2.0;
-
-static int getInteractionType(const Molecule &molecule, Index i) {
+static enum InteractionTypes getInteractionType(const Molecule &molecule, Index i) {
   unsigned char inum = molecule.atomicNumber(i);
   switch (inum) {
     case 1: // hydrogen bond
@@ -64,7 +64,7 @@ static int getInteractionType(const Molecule &molecule, Index i) {
       }
       break;
   }
-  return -1;
+  return NONE;
 }
 
 static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interactionType) {
@@ -89,10 +89,9 @@ static int checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n) {
 
 void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
-  float radius(0.1f);
   Vector3ub color(64, 192, 255);
 
-  NeighborPerceiver perceiver(molecule.atomPositions3d(), ABSOLUTE_MAX_DISTANCE);
+  NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
   std::vector<bool> isAtomEnabled(molecule.atomCount());
   for (Index i = 0; i < molecule.atomCount(); ++i)
     isAtomEnabled[i] = m_layerManager.atomEnabled(i);
@@ -108,8 +107,8 @@ void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     if (!isAtomEnabled[i])
       continue;
-    int interactionType = getInteractionType(molecule, i);
-    if (interactionType < 0)
+    enum InteractionTypes interactionType = getInteractionType(molecule, i);
+    if (interactionType == NONE)
       continue;
     Vector3 pos = molecule.atomPosition3d(i);
     perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
@@ -122,7 +121,7 @@ void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node
       Vector3 npos = molecule.atomPosition3d(n);
       Vector3 distance_vector = npos - pos;
 
-      if (distance_vector.norm() > MAX_DISTANCES[interactionType])
+      if (distance_vector.norm() > m_maximumDistance)
         continue;
       if (!checkAtomPairNotBonded(molecule, i, n))
         continue;
@@ -137,17 +136,27 @@ QWidget *AtomPairBonds::setupWidget()
   QWidget *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
   QVBoxLayout *v = new QVBoxLayout;
 
+  // angle tolerance
+  QDoubleSpinBox *angle_spin = new QDoubleSpinBox;
+  angle_spin->setRange(0.0, 180.0);
+  angle_spin->setSingleStep(1.0);
+  angle_spin->setDecimals(0);
+  angle_spin->setSuffix(tr(" °"));
+  angle_spin->setValue(m_angleToleranceDegrees);
+  QObject::connect(angle_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &AtomPairBonds::setAngleTolerance);
+  
   // maximum distance
-  QDoubleSpinBox *spin = new QDoubleSpinBox;
-  spin->setRange(0.0, 180.0);
-  spin->setSingleStep(1.0);
-  spin->setDecimals(0);
-  spin->setSuffix(tr(" °"));
-  spin->setValue(m_angleToleranceDegrees);
-  QObject::connect(spin, SIGNAL(valueChanged(double)), this,
-                   SLOT(setMaximumDistance(double)));
+  QDoubleSpinBox *distance_spin = new QDoubleSpinBox;
+  distance_spin->setRange(1.0, 10.0);
+  distance_spin->setSingleStep(0.1);
+  distance_spin->setDecimals(1);
+  distance_spin->setSuffix(tr(" Å"));
+  distance_spin->setValue(m_angleToleranceDegrees);
+  QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &AtomPairBonds::setMaximumDistance);
+  
   QFormLayout *form = new QFormLayout;
-  //form->addRow(QObject::tr("Angle tolerance:"), spin);
+  form->addRow(QObject::tr("Angle tolerance:"), angle_spin);
+  form->addRow(QObject::tr("Maximum distance:"), distance_spin);
   v->addLayout(form);
 
   v->addStretch(1);
@@ -155,13 +164,22 @@ QWidget *AtomPairBonds::setupWidget()
   return widget;
 }
 
-void AtomPairBonds::setAngleTolerance(double angleTolerance)
+void AtomPairBonds::setAngleTolerance(float angleTolerance)
 {
   m_angleToleranceDegrees = float(angleTolerance);
   emit drawablesChanged();
 
   QSettings settings;
   settings.setValue("atomPairBonds/angleTolerance", m_angleToleranceDegrees);
+}
+
+void AtomPairBonds::setMaximumDistance(float maximumDistance)
+{
+  m_maximumDistance = float(maximumDistance);
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("atomPairBonds/maximumDistance", m_maximumDistance);
 }
 
 } // namespace QtPlugins

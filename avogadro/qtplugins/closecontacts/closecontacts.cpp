@@ -69,7 +69,6 @@ static bool checkPairNot1213(const Molecule &molecule, Index i, Index n)
 
 void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
-  float radius(0.1f);
   Vector3ub color(128, 255, 64);
 
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
