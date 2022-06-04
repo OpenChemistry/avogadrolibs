@@ -27,11 +27,11 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Atom-Pair Bonds"); }
+  QString name() const override { return tr("Non-Covalent Bonds"); }
 
   QString description() const override
   {
-    return tr("Render atom-pair interactions.");
+    return tr("Render a few non-covalent interactions.");
   }
   
   QWidget* setupWidget() override;
@@ -46,7 +46,7 @@ public:
   void setMaximumDistance(float maximumDistance);
 
 private:
-  std::string m_name = "Atom-Pair Bonds";
+  std::string m_name = "Non-Covalent Bonds";
   
   double m_angleToleranceDegrees;
   double m_maximumDistance;

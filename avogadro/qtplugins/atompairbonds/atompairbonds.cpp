@@ -88,9 +88,13 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
 
 static int checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n) {
   Array<const Bond *> bonds = molecule.bonds(i);
-  return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond *b)
-    { return (b->atom1().index() == i ? b->atom2() : b->atom1()).index() != n; }
-  );
+  /* Return true if all of the bonds from i are to atoms other than n */
+  return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond *b) {
+    if (b->atom1().index() == i)
+      return b->atom2().index() != n;
+    else
+      return b->atom1().index() != n;
+  });
 }
 
 void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node)
@@ -107,7 +111,7 @@ void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node
   DashedLineGeometry *lines = new DashedLineGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
-  lines->setLineWidth(2.0);
+  lines->setLineWidth(m_lineWidths[0]);
   geometry->addDrawable(lines);
   Array<Index> neighbors;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
