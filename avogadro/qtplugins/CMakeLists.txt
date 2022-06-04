@@ -166,7 +166,7 @@ add_subdirectory(wireframe)
 add_subdirectory(force)
 add_subdirectory(meshes)
 add_subdirectory(closecontacts)
-add_subdirectory(atompairbonds)
+add_subdirectory(noncovalent)
 if (USE_OPENGL)
   # needs some raw OpenGL code
   add_subdirectory(overlayaxes)

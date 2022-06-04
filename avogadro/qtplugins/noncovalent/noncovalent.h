@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_ATOMPAIRBONDS_H
-#define AVOGADRO_QTPLUGINS_ATOMPAIRBONDS_H
+#ifndef AVOGADRO_QTPLUGINS_NONCOVALENT_H
+#define AVOGADRO_QTPLUGINS_NONCOVALENT_H
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
@@ -13,16 +13,16 @@ namespace Avogadro {
 namespace QtPlugins {
 
 /**
- * @brief Predict atom-pair interactions, like hydrogen bonds.
+ * @brief Predict some non-covalent interactions, like hydrogen bonds.
  * @author Aritz Erkiaga
  */
-class AtomPairBonds : public QtGui::ScenePlugin
+class NonCovalent : public QtGui::ScenePlugin
 {
   Q_OBJECT
 
 public:
-  explicit AtomPairBonds(QObject* parent = nullptr);
-  ~AtomPairBonds() override;
+  explicit NonCovalent(QObject* parent = nullptr);
+  ~NonCovalent() override;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
@@ -57,4 +57,4 @@ private:
 } // end namespace QtPlugins
 } // end namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_ATOMPAIRBONDS_H
+#endif // AVOGADRO_QTPLUGINS_NONCOVALENT_H

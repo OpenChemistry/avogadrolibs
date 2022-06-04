@@ -3,7 +3,7 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "atompairbonds.h"
+#include "noncovalent.h"
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/bond.h>
@@ -33,23 +33,23 @@ using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
-AtomPairBonds::AtomPairBonds(QObject *p) : ScenePlugin(p)
+NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
 {
   m_layerManager = PluginLayerManager(m_name);
   
   QSettings settings;
-  m_angleToleranceDegrees = settings.value("atomPairBonds/angleTolerance", 20.0).toDouble();
-  m_maximumDistance = settings.value("atomPairBonds/maximumDistance", 2.0).toDouble();
-  QColor hydrogenBColor = settings.value("atomPairBonds/lineColor0", QColor(64, 192, 255)).value<QColor>();
+  m_angleToleranceDegrees = settings.value("nonCovalent/angleTolerance", 20.0).toDouble();
+  m_maximumDistance = settings.value("nonCovalent/maximumDistance", 2.0).toDouble();
+  QColor hydrogenBColor = settings.value("nonCovalent/lineColor0", QColor(64, 192, 255)).value<QColor>();
   m_lineColors = {
     Vector3ub(hydrogenBColor.red(), hydrogenBColor.green(), hydrogenBColor.blue())
   };
   m_lineWidths = {
-    settings.value("atomPairBonds/lineWidth0", 2).toInt()
+    settings.value("nonCovalent/lineWidth0", 2).toInt()
   };
 }
 
-AtomPairBonds::~AtomPairBonds() {}
+NonCovalent::~NonCovalent() {}
 
 enum InteractionTypes {
   NONE = -1,
@@ -97,7 +97,7 @@ static int checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n) {
   });
 }
 
-void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node)
+void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
   Vector3ub color(64, 192, 255);
 
@@ -141,7 +141,7 @@ void AtomPairBonds::process(const Molecule &molecule, Rendering::GroupNode &node
   }
 }
 
-QWidget *AtomPairBonds::setupWidget()
+QWidget *NonCovalent::setupWidget()
 {
   QWidget *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
   QVBoxLayout *v = new QVBoxLayout;
@@ -153,7 +153,7 @@ QWidget *AtomPairBonds::setupWidget()
   angle_spin->setDecimals(0);
   angle_spin->setSuffix(tr(" °"));
   angle_spin->setValue(m_angleToleranceDegrees);
-  QObject::connect(angle_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &AtomPairBonds::setAngleTolerance);
+  QObject::connect(angle_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setAngleTolerance);
   
   // maximum distance
   QDoubleSpinBox *distance_spin = new QDoubleSpinBox;
@@ -162,7 +162,7 @@ QWidget *AtomPairBonds::setupWidget()
   distance_spin->setDecimals(1);
   distance_spin->setSuffix(tr(" Å"));
   distance_spin->setValue(m_angleToleranceDegrees);
-  QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &AtomPairBonds::setMaximumDistance);
+  QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setMaximumDistance);
   
   QFormLayout *form = new QFormLayout;
   form->addRow(QObject::tr("Angle tolerance:"), angle_spin);
@@ -174,22 +174,22 @@ QWidget *AtomPairBonds::setupWidget()
   return widget;
 }
 
-void AtomPairBonds::setAngleTolerance(float angleTolerance)
+void NonCovalent::setAngleTolerance(float angleTolerance)
 {
   m_angleToleranceDegrees = float(angleTolerance);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("atomPairBonds/angleTolerance", m_angleToleranceDegrees);
+  settings.setValue("nonCovalent/angleTolerance", m_angleToleranceDegrees);
 }
 
-void AtomPairBonds::setMaximumDistance(float maximumDistance)
+void NonCovalent::setMaximumDistance(float maximumDistance)
 {
   m_maximumDistance = float(maximumDistance);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("atomPairBonds/maximumDistance", m_maximumDistance);
+  settings.setValue("nonCovalent/maximumDistance", m_maximumDistance);
 }
 
 } // namespace QtPlugins
