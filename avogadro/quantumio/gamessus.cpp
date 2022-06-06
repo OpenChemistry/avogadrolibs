@@ -60,7 +60,7 @@ std::vector<std::string> GAMESSUSOutput::mimeTypes() const
   return std::vector<std::string>();
 }
 
-bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
+[[nodiscard]] bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
@@ -99,7 +99,11 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       readEigenvectors(in);
     }
   }
-
+  if (!atomsRead){
+    appendError("Could not find any atomic coordinates! Are you sure this is a GAMESS-US output file?");
+    return false;
+  }
+  
   // f functions and beyond need to be reordered
   reorderMOs();
 
