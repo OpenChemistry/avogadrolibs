@@ -56,12 +56,16 @@ std::vector<std::string> NWChemLog::mimeTypes() const
   return std::vector<std::string>();
 }
 
-bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
+[[nodiscard]] bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
   while (!in.eof())
     processLine(in, molecule);
+  if (0 == molecule.atomCount()){
+    appendError("Could not find any atomic coordinates! Are you sure this is an NWChem output file?");
+    return false;
+  }
 
   if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size() &&
       m_frequencies.size() == m_intensities.size()) {
