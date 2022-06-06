@@ -60,7 +60,7 @@ std::vector<std::string> GAMESSUSOutput::mimeTypes() const
   return std::vector<std::string>();
 }
 
-[[nodiscard]] bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
+bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
