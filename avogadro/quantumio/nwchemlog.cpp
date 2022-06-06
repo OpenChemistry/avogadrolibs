@@ -56,7 +56,7 @@ std::vector<std::string> NWChemLog::mimeTypes() const
   return std::vector<std::string>();
 }
 
-[[nodiscard]] bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
+bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
