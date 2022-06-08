@@ -31,6 +31,16 @@ class Molecule;
 }
 namespace Io {
 
+struct CaseInsensitiveComparator
+{
+  bool operator()(const std::string& a, const std::string& b) const noexcept
+  {
+    return ::strcasecmp(a.c_str(), b.c_str()) < 0;
+  }
+};
+
+
+
 /**
  * @class FileFormatManager fileformatmanager.h
  * <avogadro/io/fileformatmanager.h>
@@ -241,7 +251,7 @@ public:
 
 private:
   typedef std::vector<size_t> FormatIdVector;
-  typedef std::map<std::string, FormatIdVector> FormatIdMap;
+  typedef std::map<std::string, FormatIdVector, CaseInsensitiveComparator> FormatIdMap;
 
   FileFormatManager();
   ~FileFormatManager();
