@@ -41,9 +41,10 @@ public:
     return DefaultBehavior::False;
   }
 
-public:
+public slots:
   void setAngleTolerance(float angleTolerance);
   void setMaximumDistance(float maximumDistance);
+  void setLineWidth(float width);
 
 private:
   std::string m_name = "Non-Covalent";
@@ -51,7 +52,7 @@ private:
   double m_angleToleranceDegrees;
   double m_maximumDistance;
   std::array<Vector3ub, 1> m_lineColors;
-  std::array<int, 1> m_lineWidths;
+  std::array<float, 1> m_lineWidths;
 };
 
 } // end namespace QtPlugins
