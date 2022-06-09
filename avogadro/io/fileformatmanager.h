@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_IO_FILEFORMATMANAGER_H
@@ -30,6 +19,30 @@ namespace Core {
 class Molecule;
 }
 namespace Io {
+
+/**
+ * @struct CaseInsensitiveComparator fileformatmanager.h
+ * <avogadro/io/fileformatmanager.h>
+ * @brief Class to handle case-insensitive comparisons of file extensions.
+ * Adapted from https://stackoverflow.com/a/3009806/131896
+ **/
+struct CaseInsensitiveComparator
+{
+  // case-independent (ci) compare_less binary function
+  struct lowerCaseCompare
+  {
+    bool operator()(const unsigned char& c1, const unsigned char& c2) const
+    {
+      return tolower(c1) < tolower(c2);
+    }
+  };
+  bool operator()(const std::string& s1, const std::string& s2) const noexcept
+  {
+    return std::lexicographical_compare(s1.begin(), s1.end(), // source range
+                                        s2.begin(), s2.end(), // dest range
+                                        lowerCaseCompare());  // comparison
+  }
+};
 
 /**
  * @class FileFormatManager fileformatmanager.h
@@ -241,7 +254,8 @@ public:
 
 private:
   typedef std::vector<size_t> FormatIdVector;
-  typedef std::map<std::string, FormatIdVector> FormatIdMap;
+  typedef std::map<std::string, FormatIdVector, CaseInsensitiveComparator>
+    FormatIdMap;
 
   FileFormatManager();
   ~FileFormatManager();
@@ -326,7 +340,7 @@ private:
   std::string m_error;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_FILEFORMATMANAGER_H
