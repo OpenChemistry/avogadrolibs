@@ -139,6 +139,7 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
+        setup-python: 'false'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
