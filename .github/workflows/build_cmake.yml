@@ -105,7 +105,11 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja eigen glew
+        if uname -p | grep -q "arm" ; then
+           export PATH=/opt/homebrew/bin:$PATH
+        else # not self-hosted runner
+          brew install ninja eigen glew
+        fi
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
