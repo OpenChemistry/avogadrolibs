@@ -285,11 +285,15 @@ jobs:
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
       run: |
+        # check current directory (failing signing)
+        echo `pwd`
+        ls -ld
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
-          codesign -s "$CODESIGN_IDENTITY" --timestamp "build/avogadroapp/Avogadro2*.dmg"
-          npx notarize-cli --file "build/avogadroapp/Avogadro2*.dmg"
+          codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
+          npx notarize-cli --file Avogadro2*.dmg
         fi
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
         NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
@@ -315,77 +319,4 @@ jobs:
         rm -rf ./* || true
         rm -rf ./.??* || true
         ls -la ./
-
-  release:
-    if: contains(github.ref, 'tags/')
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Avogadro ${{ github.ref }}
-        draft: true
-        prerelease: true
-
-    - name: Store Release url
-      run: |
-        echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
-    - uses: actions/upload-artifact@v2
-      with:
-        path: ./upload_url
-        name: upload_url
-
-  publish:
-    if: contains(github.ref, 'tags/')
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - {
-            name: "Ubuntu Latest GCC", artifact: "Ubuntu-2004.tar.gz",
-            os: ubuntu-latest
-          }
-        - {
-            name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: ubuntu-latest
-          }
-        - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
-            os: ubuntu-latest
-          }
-    needs: release
-
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v1
-      with:
-        name: ${{ matrix.config.artifact }}
-        path: ./
-
-    - name: Download URL
-      uses: actions/download-artifact@v1
-      with:
-        name: upload_url
-        path: ./
-    - id: set_upload_url
-      run: |
-        upload_url=`cat ./upload_url`
-        echo ::set-output name=upload_url::$upload_url
-    - name: Upload to Release
-      id: upload_to_release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
-        asset_path: ./${{ matrix.config.artifact }}
-        asset_name: ${{ matrix.config.artifact }}
-        asset_content_type: application/x-gtar
+ 

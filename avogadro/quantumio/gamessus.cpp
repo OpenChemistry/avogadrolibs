@@ -99,7 +99,11 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       readEigenvectors(in);
     }
   }
-
+  if (!atomsRead){
+    appendError("Could not find any atomic coordinates! Are you sure this is a GAMESS-US output file?");
+    return false;
+  }
+  
   // f functions and beyond need to be reordered
   reorderMOs();
 
