@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-05-29 03:13+0000\n"
-"PO-Revision-Date: 2022-05-15 20:54+0000\n"
+"PO-Revision-Date: 2022-06-10 03:53+0000\n"
 "Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -1152,13 +1152,12 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:786 qtplugins/cp2kinput/cp2kinputdialog.cpp:467
 #: qtplugins/gamessinput/gamessinputdialog.cpp:407
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Setatutako Molekularik ez"
+msgstr "[molekularik ez]"
 
 #: qtgui/layermodel.cpp:73
 msgid "Layer"
-msgstr ""
+msgstr "Geruza"
 
 #: qtgui/moleculemodel.cpp:104
 #, fuzzy
@@ -1167,7 +1166,7 @@ msgstr "Izengabea"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
-msgstr ""
+msgstr "Ikuspegi berria sortu"
 
 #: qtgui/periodictableview.cpp:44
 msgid "Periodic Table"
@@ -1177,6 +1176,8 @@ msgstr "Taula Periodikoa"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Errorea gertatu da '%1 %2' script-a abiatzean: Denboraz kanpo (%3) hasteko "
+"itxaroten."
 
 #: qtgui/pythonscript.cpp:115 qtgui/pythonscript.cpp:200
 #, qt-format
@@ -1184,11 +1185,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Errorea gertatu da '%1 %2' script-a abiatzean: ezin izan da stdin-ean idatzi "
+"(luzeera=%3, %4 byte idatzita, QProcess errorea: %5)."
 
 #: qtgui/pythonscript.cpp:128
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Errorea gertatu da '%1 %2' script-a abiatzean: Denboraz kanpo (%3) bukatzeko "
+"itxaroten."
 
 #: qtgui/pythonscript.cpp:136
 #, qt-format
@@ -1198,62 +1203,64 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Errorea gertatu da '%1 %2' script-a abiatzean: ez ohiko iteera estatusa %3 "
+"(%4: %5)\n"
+"\n"
+"Output-a:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:237
 msgid "Script failed to start."
-msgstr ""
+msgstr "Akatsa script-a abiatzerakoan."
 
 #: qtgui/pythonscript.cpp:240
 msgid "Script crashed."
-msgstr ""
+msgstr "Script-ak ez du funzionatu."
 
 #: qtgui/pythonscript.cpp:243
 msgid "Script timed out."
-msgstr ""
+msgstr "Script-aren abiaketa denboraz kanpo dago."
 
 #: qtgui/pythonscript.cpp:246
 msgid "Read error."
-msgstr ""
+msgstr "Irakurketa errorea."
 
 #: qtgui/pythonscript.cpp:249
 msgid "Write error."
-msgstr ""
+msgstr "Idazkera errorea."
 
 #: qtgui/pythonscript.cpp:253
 msgid "Unknown error."
-msgstr ""
+msgstr "Errore ezezaguna."
 
 #: qtgui/rwlayermanager.cpp:35 qtgui/rwlayermanager.cpp:108
 #: qtgui/rwlayermanager.cpp:134
 msgid "Modify Layers"
-msgstr ""
+msgstr "Geruzak eraldatu"
 
 #: qtgui/rwlayermanager.cpp:197
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Ezabatu Hidrogenoak"
+msgstr "Geruzak ezabatu"
 
 #: qtgui/rwlayermanager.cpp:204
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Ezabatu Hidrogenoak"
+msgstr "Geruza informazioa ezabatu"
 
 #: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer"
-msgstr ""
+msgstr "Geruza gehitu"
 
 #: qtgui/rwlayermanager.cpp:216
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Geruza Informazioa Gehitu"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:223 qtgui/rwlayermanager.cpp:226
 #: qtplugins/select/select.cpp:268
 #: qtplugins/selectiontool/selectiontool.cpp:254:1549
-#, fuzzy
 msgid "Change Layer"
-msgstr "Aldatu Loturen Ordena"
+msgstr "Geruza aldatu"
 
 #: qtgui/rwmolecule.cpp:50 qtgui/rwmolecule.cpp:59
 msgid "Add Atom"
@@ -1266,7 +1273,7 @@ msgstr "Ezabatu Atomoa"
 
 #: qtgui/rwmolecule.cpp:106
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Atomoak Ezabatu"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1275,9 +1282,8 @@ msgid "Adjust Hydrogens"
 msgstr "Doitu Hidrogenoak"
 
 #: qtgui/rwmolecule.cpp:140
-#, fuzzy
 msgid "Change Elements"
-msgstr "Aldatu Elementua"
+msgstr "Elementuak Aldatu"
 
 #: qtgui/rwmolecule.cpp:152
 msgid "Change Element"
@@ -1285,20 +1291,19 @@ msgstr "Aldatu Elementua"
 
 #: qtgui/rwmolecule.cpp:215
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Aldatu Atomoaren Hibridazioa"
 
 #: qtgui/rwmolecule.cpp:227
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Aldatu Atomoaren Karga Formala"
 
 #: qtgui/rwmolecule.cpp:239
 msgid "Change Atom Color"
-msgstr ""
+msgstr "Aldatu Atomoaren Kolorea"
 
 #: qtgui/rwmolecule.cpp:251
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Aldatu Loturen Ordena"
+msgstr "Aldatu Atomoaren Geruza"
 
 #: qtgui/rwmolecule.cpp:267
 msgid "Add Bond"
@@ -1306,63 +1311,55 @@ msgstr "Gehitu Lotura Bat"
 
 #: qtgui/rwmolecule.cpp:293
 msgid "Removed Bond"
-msgstr ""
+msgstr "Lotura Ezabatua"
 
 #: qtgui/rwmolecule.cpp:300
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Ezabatu Lotura"
+msgstr "Ezabatu Loturak"
 
 #: qtgui/rwmolecule.cpp:315
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Lotura Ordena"
+msgstr "Lotura Ordenak Ezarri"
 
 #: qtgui/rwmolecule.cpp:327
 msgid "Change Bond Order"
 msgstr "Aldatu Loturen Ordena"
 
 #: qtgui/rwmolecule.cpp:350
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Atxikitu Loturei"
+msgstr "Loturak Eguneratu"
 
 #: qtgui/rwmolecule.cpp:369
 msgid "Update Bond"
-msgstr ""
+msgstr "Lotura Eguneratu"
 
 #: qtgui/rwmolecule.cpp:389
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "Gelaxka &Unitatea gehitu"
+msgstr "Gelaxka Unitatea gehitu"
 
 #: qtgui/rwmolecule.cpp:402
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Gelaxka &Unitatea kendu"
+msgstr "Gelaxka Unitatea kendu"
 
 #: qtgui/rwmolecule.cpp:467
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Gelaxka Unitatea Eraldatu"
 
 #: qtgui/rwmolecule.cpp:484
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "Atomoak Gelaxkan &Multzotu"
+msgstr "Atomoak Gelaxkan Multzotu"
 
 #: qtgui/rwmolecule.cpp:507
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Gelaxka unitatearen bolumena eskalatu"
+msgstr "Gelaxkaren Bolumena Eskalatu"
 
 #: qtgui/rwmolecule.cpp:527
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Super Gelatxoa"
+msgstr "Super Gelaxka Eraiki"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Niggli Erredukzioa"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
