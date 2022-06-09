@@ -21,7 +21,7 @@ jobs:
             os: [self-hosted, macOS],
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt@5/5.15.2_2/lib/cmake/Qt5",
             cpack_flags: "-G DragNDrop",
           }
 
