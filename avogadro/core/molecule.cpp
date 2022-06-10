@@ -37,7 +37,8 @@ Molecule::Molecule(const Molecule& other)
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
-    m_vibrationIntensities(other.m_vibrationIntensities),
+    m_vibrationIRIntensities(other.m_vibrationIRIntensities),
+    m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
     m_vibrationLx(other.m_vibrationLx), m_selectedAtoms(other.m_selectedAtoms),
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
@@ -82,7 +83,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_formalCharges(std::move(other.m_formalCharges)),
     m_colors(std::move(other.m_colors)),
     m_vibrationFrequencies(std::move(other.m_vibrationFrequencies)),
-    m_vibrationIntensities(std::move(other.m_vibrationIntensities)),
+    m_vibrationIRIntensities(std::move(other.m_vibrationIRIntensities)),
+    m_vibrationRamanIntensities(std::move(other.m_vibrationRamanIntensities)),
     m_vibrationLx(std::move(other.m_vibrationLx)),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
@@ -122,7 +124,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_formalCharges = other.m_formalCharges;
     m_colors = other.m_colors,
     m_vibrationFrequencies = other.m_vibrationFrequencies;
-    m_vibrationIntensities = other.m_vibrationIntensities;
+    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
+    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
     m_vibrationLx = other.m_vibrationLx;
     m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
@@ -179,7 +182,8 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_formalCharges = std::move(other.m_formalCharges);
     m_colors = std::move(other.m_colors);
     m_vibrationFrequencies = std::move(other.m_vibrationFrequencies);
-    m_vibrationIntensities = std::move(other.m_vibrationIntensities);
+    m_vibrationIRIntensities = std::move(other.m_vibrationIRIntensities);
+    m_vibrationRamanIntensities = std::move(other.m_vibrationRamanIntensities);
     m_vibrationLx = std::move(other.m_vibrationLx);
     m_selectedAtoms = std::move(other.m_selectedAtoms);
     m_residues = std::move(other.m_residues);
@@ -748,14 +752,24 @@ void Molecule::setVibrationFrequencies(const Array<double>& freq)
   m_vibrationFrequencies = freq;
 }
 
-Array<double> Molecule::vibrationIntensities() const
+Array<double> Molecule::vibrationIRIntensities() const
 {
-  return m_vibrationIntensities;
+  return m_vibrationIRIntensities;
 }
 
-void Molecule::setVibrationIntensities(const Array<double>& intensities)
+void Molecule::setVibrationIRIntensities(const Array<double>& intensities)
 {
-  m_vibrationIntensities = intensities;
+  m_vibrationIRIntensities = intensities;
+}
+
+Array<double> Molecule::vibrationRamanIntensities() const
+{
+  return m_vibrationRamanIntensities;
+}
+
+void Molecule::setVibrationRamanIntensities(const Array<double>& intensities)
+{
+  m_vibrationRamanIntensities = intensities;
 }
 
 Array<Vector3> Molecule::vibrationLx(int mode) const

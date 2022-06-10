@@ -469,8 +469,10 @@ public:
 
   Array<double> vibrationFrequencies() const;
   void setVibrationFrequencies(const Array<double>& freq);
-  Array<double> vibrationIntensities() const;
-  void setVibrationIntensities(const Array<double>& intensities);
+  Array<double> vibrationIRIntensities() const;
+  void setVibrationIRIntensities(const Array<double>& intensities);
+  Array<double> vibrationRamanIntensities() const;
+  void setVibrationRamanIntensities(const Array<double>& intensities);
   Array<Vector3> vibrationLx(int mode) const;
   void setVibrationLx(const Array<Array<Vector3>>& lx);
 
@@ -686,7 +688,8 @@ protected:
   Array<Vector3ub> m_colors;
   // Vibration data if available.
   Array<double> m_vibrationFrequencies;
-  Array<double> m_vibrationIntensities;
+  Array<double> m_vibrationIRIntensities;
+  Array<double> m_vibrationRamanIntensities;
   Array<Array<Vector3>> m_vibrationLx;
 
   // Array declaring whether atoms are selected or not.

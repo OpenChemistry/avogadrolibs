@@ -70,7 +70,7 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
   if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size() &&
       m_frequencies.size() == m_intensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
-    molecule.setVibrationIntensities(m_intensities);
+    molecule.setVibrationIRIntensities(m_intensities);
     molecule.setVibrationLx(m_Lx);
   }
 

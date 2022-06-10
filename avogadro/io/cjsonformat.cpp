@@ -447,7 +447,15 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       for (unsigned int i = 0; i < intensities.size(); ++i) {
         intens.push_back(static_cast<double>(intensities[i]));
       }
-      molecule.setVibrationIntensities(intens);
+      molecule.setVibrationIRIntensities(intens);
+    }
+    json raman = vibrations["ramanIntensities"];
+    if (isNumericArray(raman)) {
+      Array<double> intens;
+      for (unsigned int i = 0; i < raman.size(); ++i) {
+        intens.push_back(static_cast<double>(raman[i]));
+      }
+      molecule.setVibrationRamanIntensities(intens);
     }
     json displacements = vibrations["eigenVectors"];
     if (displacements.is_array()) {
@@ -829,11 +837,13 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     json modes;
     json freqs;
     json inten;
+    json raman;
     json eigenVectors;
     for (size_t i = 0; i < molecule.vibrationFrequencies().size(); ++i) {
       modes.push_back(static_cast<unsigned int>(i) + 1);
       freqs.push_back(molecule.vibrationFrequencies()[i]);
-      inten.push_back(molecule.vibrationIntensities()[i]);
+      inten.push_back(molecule.vibrationIRIntensities()[i]);
+      raman.push_back(molecule.vibrationRamanIntensities()[i]);
       Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
       json eigenVector;
       for (size_t j = 0; j < atomDisplacements.size(); ++j) {
@@ -847,6 +857,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     root["vibrations"]["modes"] = modes;
     root["vibrations"]["frequencies"] = freqs;
     root["vibrations"]["intensities"] = inten;
+    root["vibrations"]["ramanIntensities"] = raman;
     root["vibrations"]["eigenVectors"] = eigenVectors;
   }
 

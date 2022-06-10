@@ -48,7 +48,7 @@ public:
 
   void clear();
 
-  void setMolecule(QtGui::Molecule* mol) { m_molecule = mol; }
+  void setMolecule(QtGui::Molecule* mol);
 
 signals:
 
@@ -56,6 +56,7 @@ public slots:
 
 private:
   QtGui::Molecule* m_molecule;
+  bool m_hasRaman;
 };
 }
 }
