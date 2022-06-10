@@ -314,7 +314,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
         }
       }
       molecule.setVibrationFrequencies(frequencies);
-      molecule.setVibrationIntensities(intensities);
+      molecule.setVibrationIRIntensities(intensities);
       molecule.setVibrationLx(Lx);
     }
   }
