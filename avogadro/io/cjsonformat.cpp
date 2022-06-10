@@ -833,7 +833,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   if (molecule.vibrationFrequencies().size() > 0) {
     // A few sanity checks before we begin.
     assert(molecule.vibrationFrequencies().size() ==
-           molecule.vibrationIntensities().size());
+           molecule.vibrationIRIntensities().size());
     json modes;
     json freqs;
     json inten;
