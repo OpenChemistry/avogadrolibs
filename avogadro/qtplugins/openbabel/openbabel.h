@@ -98,6 +98,7 @@ private:
   QMap<QString, QString> m_writeFormats;
   QMap<QString, QString> m_forceFields;
   QMap<QString, QString> m_charges;
+  std::string m_defaultFormat;
   QProgressDialog* m_progress;
 };
 }
