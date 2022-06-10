@@ -325,7 +325,8 @@ void OBProcess::queryChargesPrepare()
 }
 
 bool OBProcess::optimizeGeometry(const QByteArray& mol,
-                                 const QStringList& options)
+                                 const QStringList& options,
+                                 const std::string format)
 {
   if (!tryLockProcess()) {
     qWarning() << "OBProcess::optimizeGeometry(): process already in use.";
@@ -333,9 +334,14 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   }
 
   QStringList realOptions;
-  realOptions << "-icml"
-              << "-ocml"
-              << "--minimize"
+  if (format == "cjson") {
+    realOptions << "-icjson"
+                << "-ocjson";
+  } else {
+    realOptions << "-icml"
+                << "-ocml";
+  }
+  realOptions << "--minimize"
               << "--noh" // new in OB 3.0.1
               << "--log" << options;
 

@@ -269,7 +269,7 @@ public slots:
    * optimization finishes, optimizeGeometryFinished will be emitted with the
    * result of the optimization.
    *
-   * The optimization is started with
+   * The optimization is started with, e.g. 
    * `obabel -icml -ocml --minimize <options>`
    *
    * The standard output is recorded and returned by optimizeGeometryFinished.
@@ -279,7 +279,7 @@ public slots:
    *
    * @return True if the process started successfully, false otherwise.
    */
-  bool optimizeGeometry(const QByteArray& cml, const QStringList& options);
+  bool optimizeGeometry(const QByteArray& cml, const QStringList& options, std::string format = "cml");
 signals:
   /**
    * Emitted with the standard output of the process when it finishes.
