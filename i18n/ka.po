@@ -2,13 +2,14 @@
 # Copyright (C) 2006-2021 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Temuri Doghonadze <temuri@delta-net.ge>, 2022.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-05-29 03:13+0000\n"
-"PO-Revision-Date: 2022-01-27 08:52+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri@delta-net.ge>\n"
+"PO-Revision-Date: 2022-06-12 16:19+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: molequeue/batchjob.cpp:71
 #, qt-format
@@ -1129,7 +1130,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
-msgstr ""
+msgstr "უსახელო"
 
 #: qtgui/multiviewwidget.cpp:203
 msgid "Create a new view"
@@ -1362,7 +1363,7 @@ msgstr ""
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:58
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:58
 msgid "&Export"
-msgstr ""
+msgstr "&გატანა"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1536,7 +1537,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:266
 #: qtplugins/resetview/resetview.cpp:68
 msgid "&View"
-msgstr ""
+msgstr "&ხედი"
 
 #: qtplugins/applycolors/applycolors.cpp:95
 msgid "Color Atoms"
@@ -2003,7 +2004,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:35:264
 msgid "Clear"
-msgstr ""
+msgstr "გასუფთავება"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -6678,7 +6679,7 @@ msgstr ""
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Temuri Doghonadze"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
