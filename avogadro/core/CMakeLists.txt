@@ -4,7 +4,7 @@ find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
 if(USE_SPGLIB)
-  find_package(Spglib REQUIRED)
+  find_package(SPGLIB REQUIRED)
   include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
 endif()
 
