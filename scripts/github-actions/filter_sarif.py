@@ -87,16 +87,18 @@ def filter_sarif(args):
                 if result.get("locations", []):
                     new_locations = []
                     for location in result["locations"]:
-                        # TODO: The uri field is optional. We might have to fetch the actual uri from "artifacts" via "index"
-                        # (see https://github.com/microsoft/sarif-tutorials/blob/main/docs/2-Basics.md#-linking-results-to-artifacts)
+                        # TODO: The uri field is optional. We might have to fetch the
+                        #  actual uri from "artifacts" via "index"
+                        # (https://github.com/microsoft/sarif-tutorials/blob/main/docs/2-Basics.md)
                         uri = (
                             location.get("physicalLocation", {})
                             .get("artifactLocation", {})
                             .get("uri", None)
                         )
-                        # TODO: The ruleId field is optional and potentially ambiguous. We might have to fetch the actual
-                        # ruleId from the rule metadata via the ruleIndex field.
-                        # (see https://github.com/microsoft/sarif-tutorials/blob/main/docs/2-Basics.md#rule-metadata)
+                        # TODO: The ruleId field is optional and potentially ambiguous.
+                        # We might have to fetch the actual ruleId from the rule metadata
+                        # via the ruleIndex field.
+                        # (https://github.com/microsoft/sarif-tutorials/blob/main/docs/2-Basics.md)
                         rule_id = result["ruleId"]
                         if uri is None or match_path_and_rule(
                             uri, rule_id, args.patterns
