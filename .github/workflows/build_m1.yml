@@ -37,25 +37,30 @@ jobs:
         fi
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: avogadrolibs
 
+    - name: Checkout i18n
+      uses: actions/checkout@v3
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
+
     - name: Grab cache files
       uses: actions/cache@v2
-      if: runner.os != 'Windows'
       with:
         path: |
           ${{ runner.workspace }}/build/thirdparty
