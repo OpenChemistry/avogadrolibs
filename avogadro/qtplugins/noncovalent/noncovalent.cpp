@@ -56,7 +56,8 @@ enum InteractionTypes {
   HYDROGEN_BOND = 0
 };
 
-static enum InteractionTypes getInteractionType(const Molecule &molecule, Index i) {
+static enum InteractionTypes getInteractionType(const Molecule &molecule, Index i)
+{
   unsigned char inum = molecule.atomicNumber(i);
   switch (inum) {
     case 1: // hydrogen bond
@@ -73,7 +74,8 @@ static enum InteractionTypes getInteractionType(const Molecule &molecule, Index 
   return NONE;
 }
 
-static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interactionType) {
+static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interactionType)
+{
   unsigned char nnum = molecule.atomicNumber(n);
   switch (interactionType) {
     case HYDROGEN_BOND:
@@ -86,15 +88,51 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
   return false;
 }
 
-static int checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n) {
+static Index getOtherIndex(const Bond *b, Index i)
+{
+  if (b->atom1().index() == i)
+    return b->atom2().index();
+  else
+    return b->atom1().index();
+}
+
+static bool checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n)
+{
   Array<const Bond *> bonds = molecule.bonds(i);
   /* Return true if all of the bonds from i are to atoms other than n */
   return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond *b) {
-    if (b->atom1().index() == i)
-      return b->atom2().index() != n;
-    else
-      return b->atom1().index() != n;
+    return getOtherIndex(b, i) != n;
   });
+}
+
+static float computeAngle(Vector3 a, Vector3 b)
+{
+  return acos(a.normalized().dot(b.normalized()));
+}
+
+static bool checkHoleVector(
+    const Molecule &molecule, Index i, Vector3 in, float angleTolerance
+) {
+  Array<const Bond *> bonds = molecule.bonds(i);
+  Vector3 pos = molecule.atomPosition3d(i);
+  /* Return true if any of the bonds to i forms a small enough angle
+   * with 'in' at the opposite side of atom 'i' */
+  return std::any_of(bonds.begin(), bonds.end(),
+    [molecule, i, in, angleTolerance, pos](const Bond *b) {
+      Index n = getOtherIndex(b, i);
+      Vector3 npos = molecule.atomPosition3d(n);
+      float oppositeAngle = M_PI - computeAngle(
+        in, npos - pos
+      );
+      return oppositeAngle < angleTolerance;
+    }
+  );
+}
+
+static bool checkPairVector(
+    const Molecule &molecule, Index n, Vector3 in, float angleTolerance
+) {
+  return true;
 }
 
 void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
@@ -134,6 +172,12 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
       if (distance_vector.norm() > m_maximumDistance)
         continue;
       if (!checkAtomPairNotBonded(molecule, i, n))
+        continue;
+
+      float angleTolerance = m_angleToleranceDegrees * M_PI / 180.0;
+      if (!checkHoleVector(molecule, i, distance_vector, angleTolerance))
+        continue;
+      if (!checkPairVector(molecule, n, -distance_vector, angleTolerance))
         continue;
 
       lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
