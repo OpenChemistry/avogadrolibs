@@ -38,7 +38,7 @@ NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
   m_layerManager = PluginLayerManager(m_name);
   
   QSettings settings;
-  m_angleToleranceDegrees = settings.value("nonCovalent/angleTolerance", 20.0).toDouble();
+  m_angleToleranceDegrees = settings.value("nonCovalent/angleTolerance", 30.0).toDouble();
   m_maximumDistance = settings.value("nonCovalent/maximumDistance", 2.0).toDouble();
   QColor hydrogenBColor = settings.value("nonCovalent/lineColor0", QColor(64, 192, 255)).value<QColor>();
   m_lineColors = {
