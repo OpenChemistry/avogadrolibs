@@ -97,20 +97,6 @@ public:
                                            int numberOfHydrogens,
                                            std::vector<Vector3>& positions);
 
-  /**
-   * Perceive the geometry / hybridization bonded to @a atom.
-   * Ideally, the client should cache the hybridization number
-   * by calling setHybridization() later
-   */
-  static Core::AtomHybridization perceiveHybridization(const RWAtom& atom);
-
-  /**
-   * Generate a new bond vector (unit length)
-   */
-  static Vector3 generateNewBondVector(const RWAtom& atom,
-                                       std::vector<Vector3>& currentVectors,
-                                       Core::AtomHybridization hybridization);
-
 private:
   HydrogenTools();  // Not implemented
   ~HydrogenTools(); // Not implemented
