@@ -191,7 +191,7 @@ Vector3 AtomUtilities::generateNewBondVector(
       default:
         Vector3 v2 = bond1.cross(bond2); // find the perpendicular
         v2.normalize();
-        newPos = bond1 - v2 * tan(DEG_TO_RAD * (M_TETRAHED));
+        //newPos = bond1 - v2 * tan(DEG_TO_RAD * (M_TETRAHED));
         newPos = v2 + v1 * (sqrt(2.0) / 2.0);
     }
 
