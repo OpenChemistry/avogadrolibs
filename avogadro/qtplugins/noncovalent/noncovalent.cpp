@@ -88,20 +88,12 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
   return false;
 }
 
-static Index getOtherIndex(const Bond *b, Index i)
-{
-  if (b->atom1().index() == i)
-    return b->atom2().index();
-  else
-    return b->atom1().index();
-}
-
 static bool checkAtomPairNotBonded(const Molecule &molecule, Index i, Index n)
 {
   Array<const Bond *> bonds = molecule.bonds(i);
   /* Return true if all of the bonds from i are to atoms other than n */
   return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond *b) {
-    return getOtherIndex(b, i) != n;
+    return b->getOtherAtom(i).index() != n;
   });
 }
 
@@ -119,7 +111,7 @@ static bool checkHoleVector(
    * with 'in' at the opposite side of atom 'i' */
   return std::any_of(bonds.begin(), bonds.end(),
     [molecule, i, in, angleTolerance, pos](const Bond *b) {
-      Index n = getOtherIndex(b, i);
+      Index n = b->getOtherAtom(i).index();
       Vector3 npos = molecule.atomPosition3d(n);
       float oppositeAngle = M_PI - computeAngle(
         in, npos - pos
