@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-06-12 03:09+0000\n"
-"PO-Revision-Date: 2022-05-31 20:51+0000\n"
+"PO-Revision-Date: 2022-06-14 01:44+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -3110,26 +3110,20 @@ msgid "Interact with online databases, query structures etc."
 msgstr "Online adatbázisokkal, lekérdezési struktúrákkal kölcsönhatása."
 
 #: qtplugins/noncovalent/noncovalent.cpp:154
-#, fuzzy
-#| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:168
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Angle tolerance:"
-msgstr "Tűréshatár:"
+msgstr "Szögtűrés:"
 
 #: qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Kovalens kötések"
+msgstr "Nem kovalens kötések"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Néhány nem kovalens kölcsönhatás megjelenítése."
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:320
 #, qt-format
@@ -3167,10 +3161,8 @@ msgstr ""
 "hozzáadásra."
 
 #: qtplugins/openbabel/openbabel.cpp:191
-#, fuzzy
-#| msgid "Loading molecule from CML…"
 msgid "Loading molecule from Open Babel…"
-msgstr "Molekula betöltése a kémiai jelölési nyelvből (CML)…"
+msgstr "Molekula betöltése az Open Babelből…"
 
 #: qtplugins/openbabel/openbabel.cpp:197
 msgid ""
@@ -3215,16 +3207,12 @@ msgid "Generating MDL…"
 msgstr "MDL létrehozása…"
 
 #: qtplugins/openbabel/openbabel.cpp:433
-#, fuzzy
-#| msgid ""
-#| "An internal error occurred while generating an CML representation of the "
-#| "current molecule."
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
-"Belső hiba történt a jelenlegi molekula (kémiai jelölési nyelv) CML-"
-"képviseletének létrehozásakor."
+"Belső hiba történt a jelenlegi molekula Open Babel-képviseletének "
+"létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:439
 #, qt-format
@@ -3284,16 +3272,13 @@ msgid "Error generating XYZ string."
 msgstr "Hiba történt az XYZ karakterlánc létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:545
-#, fuzzy, qt-format
-#| msgid "Converting XYZ to CML with %1…"
+#, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr "Az XYZ átalakítása kémiai jelölési nyelvre (CML) a következővel: %1…"
+msgstr "Az XYZ átalakítása Open Babel-re a következővel: %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:555
-#, fuzzy
-#| msgid "Updating molecule from CML…"
 msgid "Updating molecule from Open Babel…"
-msgstr "A molekula frissítése a kémiai jelölési nyelvről (CML)…"
+msgstr "A molekula frissítése az Open Babelből…"
 
 #: qtplugins/openbabel/openbabel.cpp:607 qtplugins/openbabel/openbabel.cpp:648
 msgid "Cannot add hydrogens with Open Babel."
@@ -3341,10 +3326,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "Hidrogénatomok eltávolítása („Open Babel” kémiai eszköztár)"
 
 #: qtplugins/openbabel/openbabel.cpp:712
-#, fuzzy
-#| msgid "Error generating Open Babel input."
 msgid "Error generating Open Babel data."
-msgstr "Hiba történt az „Open Babel” kémiai eszköztári bemenet létrehozásakor."
+msgstr "Hiba történt az „Open Babel” kémiai eszköztári adatok létrehozásakor."
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Reading obabel output…"
@@ -6126,7 +6109,7 @@ msgstr "Automatikus felismerés"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr "Nem-kötés tevékenységek korlátozása"
+msgstr "Nem-kötés kölcsönhatások korlátozása"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
