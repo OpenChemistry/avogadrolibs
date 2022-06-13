@@ -17,7 +17,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "macOS M1", artifact: "macOS-m1.dmg",
+            name: "macOS ARM", artifact: "macOS-arm64.dmg",
             os: [self-hosted, macOS],
             cc: "clang", cxx: "clang++",
             build_type: "Release",
