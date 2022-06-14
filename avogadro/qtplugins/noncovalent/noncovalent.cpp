@@ -137,7 +137,8 @@ static bool checkPairVector(
   Array<const Bond *> bonds = molecule.bonds(n);
   size_t bondCount = bonds.size();
   std::vector<Vector3> bondVectors(bondCount);
-  std::transform(bonds.begin(), bonds.end(), bondVectors.begin(), [molecule, n](const Bond *b) {
+  Vector3 pos = molecule.atomPosition3d(n);
+  std::transform(bonds.begin(), bonds.end(), bondVectors.begin(), [molecule, n, pos](const Bond *b) {
     return molecule.atomPosition3d(b->getOtherAtom(n).index());
   });
   float pairAngle;
@@ -179,7 +180,7 @@ static bool checkPairVector(
           pairAngle = 0.0f;
           break;
         case 1:
-          pairAngle = abs(computeAngle(bondVectors[0], in) - M_TRI);
+          pairAngle = abs(computeAngle(bondVectors[0], -in) - M_TRI);
           break;
         case 2: {
           Vector3 pairVector = AtomUtilities::generateNewBondVector(
@@ -198,10 +199,7 @@ static bool checkPairVector(
           pairAngle = 0.0f;
           break;
         case 1: {
-          Vector3 pairVector = AtomUtilities::generateNewBondVector(
-            molecule.atom(n), bondVectors, hybridization
-          );
-          pairAngle = computeAngle(pairVector, in);
+          pairAngle = abs(computeAngle(bondVectors[0], in) - M_PI);
           break;
         }
         default:
@@ -255,7 +253,7 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
       float angleTolerance = m_angleToleranceDegrees * M_PI / 180.0;
       if (!checkHoleVector(molecule, i, distance_vector, angleTolerance))
         continue;
-      if (!checkPairVector(molecule, n, distance_vector, angleTolerance))
+      if (!checkPairVector(molecule, n, -distance_vector, angleTolerance))
         continue;
 
       lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
