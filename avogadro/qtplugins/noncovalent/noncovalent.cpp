@@ -181,7 +181,7 @@ static bool checkPairVector(
           pairAngle = 0.0f;
           break;
         case 1:
-          pairAngle = fabs(computeAngle(bondVectors[0], -in) - M_TRIGONAL);
+          pairAngle = fabs(computeAngle(bondVectors[0], in) - M_TRIGONAL);
           break;
         case 2: {
           Vector3 pairVector = AtomUtilities::generateNewBondVector(
