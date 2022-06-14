@@ -5,7 +5,7 @@
 
 #include "atomutilities.h"
 
-#include "../core/mdlvalence_p.h"
+#include "mdlvalence_p.h"
 
 #include <algorithm>
 #include <cmath>
@@ -13,14 +13,8 @@
 
 #define M_TETRAHED 109.47122063449069389
 
-using Avogadro::Vector3;
-using Avogadro::Core::Array;
-using Avogadro::Core::atomValence;
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
-using Avogadro::Core::Molecule;
-
-namespace {
+namespace Avogadro {
+namespace Core {
 
 typedef Array<Bond> NeighborListType;
 
@@ -34,12 +28,7 @@ inline unsigned int countExistingBonds(const NeighborListType& bonds)
   return result;
 }
 
-} // end anon namespace
-
-namespace Avogadro {
-namespace Core {
-
-Avogadro::Core::AtomHybridization AtomUtilities::perceiveHybridization(const Atom& atom)
+AtomHybridization AtomUtilities::perceiveHybridization(const Atom& atom)
 {
   const NeighborListType bonds(atom.molecule()->bonds(atom));
   const unsigned int numberOfBonds(countExistingBonds(bonds)); // bond order sum
@@ -66,9 +55,9 @@ Avogadro::Core::AtomHybridization AtomUtilities::perceiveHybridization(const Ato
     }
 
     if (numTripleBonds > 0 || numDoubleBonds > 1)
-      hybridization = Core::SP; // sp
+      hybridization = SP; // sp
     else if (numDoubleBonds > 0)
-      hybridization = Core::SP2; // sp2
+      hybridization = SP2; // sp2
   }
 
   return hybridization;
@@ -79,8 +68,8 @@ Avogadro::Core::AtomHybridization AtomUtilities::perceiveHybridization(const Ato
 // Also applies when you have a linear geometry and just need one new vector
 // (it doesn't matter where it goes).
 Vector3 AtomUtilities::generateNewBondVector(
-  const Atom& atom, std::vector<Vector3>& allVectors,
-  Core::AtomHybridization hybridization)
+  const Atom& atom, const std::vector<Vector3>& allVectors,
+  AtomHybridization hybridization)
 {
   Vector3 newPos;
   bool success = false;
@@ -149,18 +138,18 @@ Vector3 AtomUtilities::generateNewBondVector(
     v2.normalize();
 
     switch (hybridization) {
-      case Core::SP:
-      case Core::SquarePlanar:
-      case Core::TrigonalBipyramidal:
+      case SP:
+      case SquarePlanar:
+      case TrigonalBipyramidal:
         newPos = bond1; // 180 degrees away from the current neighbor
         break;
-      case Core::SP2: // sp2
+      case SP2: // sp2
         newPos = bond1 - v2 * tan(DEG_TO_RAD * 120.0);
         break;
-      case Core::Octahedral: // octahedral
+      case Octahedral: // octahedral
         newPos = bond1 - v2 * tan(DEG_TO_RAD * 90.0);
         break;
-      case Core::SP3:
+      case SP3:
       default:
         newPos = (bond1 - v2 * tan(DEG_TO_RAD * M_TETRAHED));
         break;
@@ -177,11 +166,11 @@ Vector3 AtomUtilities::generateNewBondVector(
     v1.normalize();
 
     switch (hybridization) {
-      case Core::SP: // shouldn't happen, but maybe with metal atoms?
-      case Core::SP2:
+      case SP: // shouldn't happen, but maybe with metal atoms?
+      case SP2:
         newPos = v1; // point away from the two existing bonds
         break;
-      case Core::SP3:
+      case SP3:
       default:
         Vector3 v2 = bond1.cross(bond2); // find the perpendicular
         v2.normalize();
