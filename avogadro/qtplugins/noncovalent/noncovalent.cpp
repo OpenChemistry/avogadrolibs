@@ -25,8 +25,9 @@
 
 #include <cmath>
 
-#define M_TETRAHED 1.910633236
-#define M_TRI 2.094395102
+// bond angles
+#define M_TETRAHEDRAL (acosf(-1.0f / 3.0f))
+#define M_TRIGONAL (2.0f * M_PI / 3.0f)
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -138,8 +139,9 @@ static bool checkPairVector(
   size_t bondCount = bonds.size();
   std::vector<Vector3> bondVectors(bondCount);
   Vector3 pos = molecule.atomPosition3d(n);
+  /* Compute all bond vectors around atom n */
   std::transform(bonds.begin(), bonds.end(), bondVectors.begin(), [molecule, n, pos](const Bond *b) {
-    return molecule.atomPosition3d(b->getOtherAtom(n).index());
+    return molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos;
   });
   float pairAngle;
   switch (hybridization) {
@@ -149,7 +151,7 @@ static bool checkPairVector(
           pairAngle = 0.0f;
           break;
         case 1:
-          pairAngle = abs(computeAngle(bondVectors[0], in) - M_TETRAHED);
+          pairAngle = fabs(computeAngle(bondVectors[0], in) - M_TETRAHEDRAL);
           break;
         case 2: {
           Vector3 pairVector = AtomUtilities::generateNewBondVector(
@@ -180,7 +182,7 @@ static bool checkPairVector(
           pairAngle = 0.0f;
           break;
         case 1:
-          pairAngle = abs(computeAngle(bondVectors[0], -in) - M_TRI);
+          pairAngle = fabs(computeAngle(bondVectors[0], -in) - M_TRIGONAL);
           break;
         case 2: {
           Vector3 pairVector = AtomUtilities::generateNewBondVector(
@@ -199,7 +201,7 @@ static bool checkPairVector(
           pairAngle = 0.0f;
           break;
         case 1: {
-          pairAngle = abs(computeAngle(bondVectors[0], in) - M_PI);
+          pairAngle = fabs(computeAngle(bondVectors[0], in) - M_PI);
           break;
         }
         default:
