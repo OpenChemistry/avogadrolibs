@@ -24,12 +24,6 @@ namespace {
 
 typedef Array<Bond> NeighborListType;
 
-// Return the other atom in the bond.
-inline Atom getOtherAtom(const Atom& atom, const Bond& bond)
-{
-  return bond.atom1().index() != atom.index() ? bond.atom1() : bond.atom2();
-}
-
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {
   unsigned int result(0);
@@ -108,12 +102,12 @@ Vector3 AtomUtilities::generateNewBondVector(
     for (NeighborListType::const_iterator it = bonds.begin(),
                                           itEnd = bonds.end();
          it != itEnd; ++it) {
-      Atom a1 = getOtherAtom(atom, *it);
+      Atom a1 = it->getOtherAtom(atom);
       const NeighborListType nbrBonds(atom.molecule()->bonds(a1));
       for (NeighborListType::const_iterator nbIt = nbrBonds.begin(),
                                             nbItEnd = nbrBonds.end();
            nbIt != nbItEnd; ++nbIt) {
-        Atom a2 = getOtherAtom(a1, *nbIt);
+        Atom a2 = nbIt->getOtherAtom(a1);
         if (a2.index() == atom.index())
           continue; // we want a *new* atom
 

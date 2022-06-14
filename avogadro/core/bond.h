@@ -105,9 +105,14 @@ public:
   /** @} */
 
   /**
-   * @return The atom in the bond such that atom.index() != index.
+   * @return The atom in the bond such that returned.index() != index.
    */
   AtomType getOtherAtom(Index index) const;
+
+  /**
+   * @return The atom in the bond such that returned.index() != atom.index().
+   */
+  AtomType getOtherAtom(AtomType atom) const;
 
   /**
    * The bond's order (single = 1, double = 2, etc.)
@@ -217,6 +222,14 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAt
     return atom2();
   else
     return atom1();
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(
+    BondTemplate<Molecule_T>::AtomType atom
+) const
+{
+  return getOtherAtom(atom.index());
 }
 
 template <class Molecule_T>

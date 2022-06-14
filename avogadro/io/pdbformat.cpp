@@ -251,15 +251,8 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
     Index j = 0;
     for (const auto &bond : molecule.bonds(i)) {
       unsigned char otherAtomicNumber(0);
-      Index index1(bond.atom1().index());
-      Index index2(bond.atom2().index());
-      if (index1 == i) {
-        otherAtomicNumber = molecule.atomicNumber(index2);
-        bondCount += bond.order();
-      } else if (index2 == i) {
-        otherAtomicNumber = molecule.atomicNumber(index1);
-        bondCount += bond.order();
-      }
+      otherAtomicNumber = molecule.atomicNumber(bond.getOtherAtom(i).index());
+      bondCount += bond.order();
       if (otherAtomicNumber && otherAtomicNumber != 6) {
         bondCount = 0;
         break;
