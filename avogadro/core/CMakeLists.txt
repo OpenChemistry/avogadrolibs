@@ -19,6 +19,7 @@ set(HEADERS
   atom.h
   atomtyper.h
   atomtyper-inline.h
+  atomutilities.h
   avogadrocore.h
   basisset.h
   bond.h
@@ -59,6 +60,7 @@ set(HEADERS
 
 set(SOURCES
   angleiterator.cpp
+  atomutilities.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp
