@@ -105,6 +105,11 @@ public:
   /** @} */
 
   /**
+   * @return The atom in the bond such that atom.index() != index.
+   */
+  AtomType getOtherAtom(Index index) const;
+
+  /**
    * The bond's order (single = 1, double = 2, etc.)
    * @{
    */
@@ -202,6 +207,16 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
   const
 {
   return AtomType(m_molecule, m_molecule->bondPairs()[m_index].second);
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(Index index)
+  const
+{
+  if (atom1().index() == index)
+    return atom2();
+  else
+    return atom1();
 }
 
 template <class Molecule_T>
