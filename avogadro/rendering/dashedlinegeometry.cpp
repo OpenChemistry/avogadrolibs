@@ -141,11 +141,14 @@ void DashedLineGeometry::render(const Camera& camera)
     cout << d->program.error() << endl;
   }
 
+  glEnable(GL_LINE_SMOOTH);
   glLineWidth(m_lineWidth);
 
   // Render the lines using the shader and bound VBO.
   glDrawArrays(GL_LINES, static_cast<GLint>(0),
                static_cast<GLsizei>(m_vertices.size()));
+
+  glDisable(GL_LINE_SMOOTH);
 
   d->vbo.release();
 
