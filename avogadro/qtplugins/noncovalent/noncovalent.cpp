@@ -45,7 +45,7 @@ NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
     Vector3ub(hydrogenBColor.red(), hydrogenBColor.green(), hydrogenBColor.blue())
   };
   m_lineWidths = {
-    settings.value("nonCovalent/lineWidth0", 2).toInt()
+    settings.value("nonCovalent/lineWidth0", 2.0).toFloat()
   };
 }
 
@@ -200,9 +200,18 @@ QWidget *NonCovalent::setupWidget()
   distance_spin->setValue(m_angleToleranceDegrees);
   QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setMaximumDistance);
   
+  // line width
+  QDoubleSpinBox* lineWidth_spin = new QDoubleSpinBox;
+  lineWidth_spin->setRange(1.0, 10.0);
+  lineWidth_spin->setSingleStep(0.5);
+  lineWidth_spin->setDecimals(1);
+  lineWidth_spin->setValue(m_lineWidths[0]);
+  QObject::connect(lineWidth_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setLineWidth);
+
   QFormLayout *form = new QFormLayout;
   form->addRow(QObject::tr("Angle tolerance:"), angle_spin);
   form->addRow(QObject::tr("Maximum distance:"), distance_spin);
+  form->addRow(QObject::tr("Line width:"), lineWidth_spin);
   v->addLayout(form);
 
   v->addStretch(1);
@@ -226,6 +235,15 @@ void NonCovalent::setMaximumDistance(float maximumDistance)
 
   QSettings settings;
   settings.setValue("nonCovalent/maximumDistance", m_maximumDistance);
+}
+
+void NonCovalent::setLineWidth(float width)
+{
+  m_lineWidths[0] = width;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("nonCovalent/lineWidth0", width);
 }
 
 } // namespace QtPlugins
