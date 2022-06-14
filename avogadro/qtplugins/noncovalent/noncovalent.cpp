@@ -137,12 +137,11 @@ static bool checkPairVector(
   AtomHybridization hybridization = AtomUtilities::perceiveHybridization(molecule.atom(n));
   Array<const Bond *> bonds = molecule.bonds(n);
   size_t bondCount = bonds.size();
-  std::vector<Vector3> bondVectors(bondCount);
+  std::vector<Vector3> bondVectors;
   Vector3 pos = molecule.atomPosition3d(n);
   /* Compute all bond vectors around atom n */
-  std::transform(bonds.begin(), bonds.end(), bondVectors.begin(), [molecule, n, pos](const Bond *b) {
-    return molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos;
-  });
+  for (const Bond *b: bonds)
+    bondVectors.push_back(molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos);
   float pairAngle;
   switch (hybridization) {
     case Core::SP3:
