@@ -373,7 +373,7 @@ QUndoCommand* BondCentricTool::mousePressEvent(QMouseEvent* e)
     Array<RWBond> bonds = m_molecule->bonds(clickedAtom);
     for (Array<RWBond>::const_iterator it = bonds.begin(), itEnd = bonds.end();
          it != itEnd; ++it) {
-      RWAtom atom = otherBondedAtom(*it, clickedAtom);
+      RWAtom atom = it->getOtherAtom(clickedAtom);
       if (bondContainsAtom(selectedBond, atom)) {
         anchorAtom = atom;
         atomIsNearBond = true;
@@ -480,7 +480,7 @@ void BondCentricTool::draw(Rendering::GroupNode& node)
     case RotateBondedAtom: {
       drawBondQuad(*geo, selectedBond);
 
-      RWAtom otherAtom = otherBondedAtom(selectedBond, m_clickedAtom.atom());
+      RWAtom otherAtom = selectedBond.getOtherAtom(m_clickedAtom.atom());
       if (otherAtom.isValid()) {
         drawAtomBondAngles(*geo, otherAtom, selectedBond);
       }
@@ -661,7 +661,7 @@ QUndoCommand* BondCentricTool::rotateBondedAtom(QMouseEvent* e)
 
   RWBond bond = m_selectedBond.bond();
   RWAtom clickedAtom = m_clickedAtom.atom();
-  RWAtom centerAtom = otherBondedAtom(bond, clickedAtom);
+  RWAtom centerAtom = bond.getOtherAtom(clickedAtom);
 
   // Sanity check:
   if (!bond.isValid() || !clickedAtom.isValid() || !centerAtom.isValid())
@@ -734,7 +734,7 @@ QUndoCommand* BondCentricTool::adjustBondLength(QMouseEvent* e)
     return nullptr;
 
   const Rendering::Camera& camera(m_renderer->camera());
-  RWAtom otherAtom = otherBondedAtom(selectedBond, clickedAtom);
+  RWAtom otherAtom = selectedBond.getOtherAtom(clickedAtom);
 
   const Vector2f curPosWin(static_cast<float>(e->pos().x()),
                            static_cast<float>(e->pos().y()));
@@ -777,7 +777,7 @@ QUndoCommand* BondCentricTool::rotateNeighborAtom(QMouseEvent* e)
   // Atom in selected bond also attached to clickedAtom
   RWAtom anchorAtom = m_anchorAtom.atom();
   // The "other" atom in selected bond
-  RWAtom otherAtom = otherBondedAtom(selectedBond, anchorAtom);
+  RWAtom otherAtom = selectedBond.getOtherAtom(anchorAtom);
 
   // Sanity check:
   if (!selectedBond.isValid() || !anchorAtom.isValid() ||
@@ -1011,8 +1011,8 @@ void BondCentricTool::drawAtomBondAngle(Rendering::GeometryNode& node,
                                         const QtGui::RWBond& otherBond,
                                         const Vector3ub& color)
 {
-  const RWAtom otherAtom = otherBondedAtom(otherBond, atom);
-  const RWAtom otherAnchorAtom = otherBondedAtom(anchorBond, atom);
+  const RWAtom otherAtom = otherBond.getOtherAtom(atom);
+  const RWAtom otherAnchorAtom = anchorBond.getOtherAtom(atom);
 
   const Vector3f atomPos(atom.position3d().cast<float>());
   const Vector3f otherAtomPos(otherAtom.position3d().cast<float>());
@@ -1062,12 +1062,6 @@ inline bool BondCentricTool::bondContainsAtom(const QtGui::RWBond& bond,
   return atom == bond.atom1() || atom == bond.atom2();
 }
 
-inline QtGui::RWAtom BondCentricTool::otherBondedAtom(
-  const QtGui::RWBond& bond, const QtGui::RWAtom& atom) const
-{
-  return bond.atom1() == atom ? bond.atom2() : bond.atom1();
-}
-
 inline void BondCentricTool::transformFragment() const
 {
   // Convert the internal float matrix to use the same precision as the atomic
@@ -1103,7 +1097,7 @@ void BondCentricTool::updatePlaneSnapAngles()
                                                itEnd = bonds.end();
            it != itEnd; ++it) {
         if (*it != selectedBond) {
-          const RWAtom otherAtom(otherBondedAtom(*it, atom));
+          const RWAtom otherAtom(it->getOtherAtom(atom));
           const Vector3f otherAtomPos(otherAtom.position3d().cast<float>());
           const Vector3f otherBondVector(otherAtomPos - atomPos);
           // Project otherBondVector into the plane normal to m_bondVector
@@ -1200,7 +1194,7 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
   typedef std::vector<RWBond>::const_iterator BondIter;
   for (BondIter it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
     if (*it != bond) { // Skip the current bond
-      RWAtom nextAtom = otherBondedAtom(*it, currentAtom);
+      RWAtom nextAtom = it->getOtherAtom(currentAtom);
       if (nextAtom != startAtom) {
         // Skip atoms that have already been added. This prevents infinite
         // recursion on cycles in the fragments

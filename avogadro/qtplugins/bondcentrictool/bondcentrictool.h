@@ -137,8 +137,6 @@ private:
   // Bond utilities
   bool bondContainsAtom(const QtGui::RWBond& bond,
                         const QtGui::RWAtom& atom) const;
-  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
-                                const QtGui::RWAtom& atom) const;
 
   // The 'fragment' is the SkeletonTree of the 1.x implementation. It is a list
   // of atoms created by buildFragment(bond, startAtom), which walks the bonds
