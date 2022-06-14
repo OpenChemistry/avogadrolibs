@@ -30,7 +30,7 @@ public:
    * Generate a new bond vector (unit length)
    */
   static Vector3 generateNewBondVector(const Atom& atom,
-                                       std::vector<Vector3>& currentVectors,
+                                       const std::vector<Vector3>& currentVectors,
                                        AtomHybridization hybridization);
 
 private:

@@ -6,6 +6,8 @@
 #include "noncovalent.h"
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/atom.h>
+#include <avogadro/core/atomutilities.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
@@ -21,10 +23,18 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include <cmath>
+
+// bond angles
+#define M_TETRAHEDRAL (acosf(-1.0f / 3.0f))
+#define M_TRIGONAL (2.0f * M_PI / 3.0f)
+
 namespace Avogadro {
 namespace QtPlugins {
 
 using Core::Array;
+using Core::AtomHybridization;
+using Core::AtomUtilities;
 using Core::Bond;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
@@ -62,7 +72,7 @@ static enum InteractionTypes getInteractionType(const Molecule &molecule, Index 
   switch (inum) {
     case 1: // hydrogen bond
       for (const Bond *b : molecule.bonds(i)) {
-        Index j = (b->atom1().index() == i ? b->atom2() : b->atom1()).index();
+        Index j = b->getOtherAtom(i).index();
         unsigned char jnum = molecule.atomicNumber(j);
         switch (jnum) {
           case 7: case 8: case 9: // F, O, N
@@ -116,7 +126,7 @@ static bool checkHoleVector(
       float oppositeAngle = M_PI - computeAngle(
         in, npos - pos
       );
-      return oppositeAngle < angleTolerance;
+      return oppositeAngle <= angleTolerance;
     }
   );
 }
@@ -124,7 +134,82 @@ static bool checkHoleVector(
 static bool checkPairVector(
     const Molecule &molecule, Index n, Vector3 in, float angleTolerance
 ) {
-  return true;
+  AtomHybridization hybridization = AtomUtilities::perceiveHybridization(molecule.atom(n));
+  Array<const Bond *> bonds = molecule.bonds(n);
+  size_t bondCount = bonds.size();
+  std::vector<Vector3> bondVectors;
+  Vector3 pos = molecule.atomPosition3d(n);
+  /* Compute all bond vectors around atom n */
+  for (const Bond *b: bonds)
+    bondVectors.push_back(molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos);
+  float pairAngle;
+  switch (hybridization) {
+    case Core::SP3:
+      switch (bondCount) {
+        case 0:
+          pairAngle = 0.0f;
+          break;
+        case 1:
+          pairAngle = fabs(computeAngle(bondVectors[0], in) - M_TETRAHEDRAL);
+          break;
+        case 2: {
+          Vector3 pairVector = AtomUtilities::generateNewBondVector(
+            molecule.atom(n), bondVectors, hybridization
+          );
+          pairAngle = computeAngle(pairVector, in);
+          bondVectors.push_back(pairVector);
+          pairVector = AtomUtilities::generateNewBondVector(
+            molecule.atom(n), bondVectors, hybridization
+          );
+          pairAngle = std::min(pairAngle, computeAngle(pairVector, in));
+          break;
+        }
+        case 3: {
+          Vector3 pairVector = AtomUtilities::generateNewBondVector(
+            molecule.atom(n), bondVectors, hybridization
+          );
+          pairAngle = computeAngle(pairVector, in);
+          break;
+        }
+        default:
+          return false;
+      }
+      break;
+    case Core::SP2:
+      switch (bondCount) {
+        case 0:
+          pairAngle = 0.0f;
+          break;
+        case 1:
+          pairAngle = fabs(computeAngle(bondVectors[0], in) - M_TRIGONAL);
+          break;
+        case 2: {
+          Vector3 pairVector = AtomUtilities::generateNewBondVector(
+            molecule.atom(n), bondVectors, hybridization
+          );
+          pairAngle = computeAngle(pairVector, in);
+          break;
+        }
+        default:
+          return false;
+      }
+      break;
+    case Core::SP:
+      switch (bondCount) {
+        case 0:
+          pairAngle = 0.0f;
+          break;
+        case 1: {
+          pairAngle = fabs(computeAngle(bondVectors[0], in) - M_PI);
+          break;
+        }
+        default:
+          return false;
+      }
+    default:
+      return true;
+  }
+  return pairAngle <= angleTolerance;
 }
 
 void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
