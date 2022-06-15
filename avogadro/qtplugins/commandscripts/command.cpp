@@ -76,7 +76,14 @@ QStringList Command::menuPath(QAction* action) const
                << scriptFileName << "." << gen.errorList().join("\n\n");
     return path;
   }
-  return path;
+
+  // try to translate each part of the path
+  // not ideal, but menus should already be in the translation file
+  QStringList translatedPath;
+  foreach (QString part, path)
+    translatedPath << tr(part.toUtf8());
+
+  return translatedPath;
 }
 
 void Command::setMolecule(QtGui::Molecule* mol)
@@ -170,7 +177,7 @@ void Command::run()
 
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
-                SLOT(processFinished()));
+               SLOT(processFinished()));
     m_currentScript->deleteLater();
   }
 
@@ -180,13 +187,14 @@ void Command::run()
     // @todo - need a cleaner way to get a script pointer from the widget
     QString scriptFilePath =
       m_currentInterface->interfaceScript().scriptFilePath();
- 
+
     m_currentScript = new InterfaceScript(scriptFilePath, parent());
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
 
     // no cancel button - just an indication we're waiting...
     QString title = tr("Processing %1").arg(m_currentScript->displayName());
-    m_progress = new QProgressDialog(title, QString(), 0, 0, qobject_cast<QWidget*>(parent()));
+    m_progress = new QProgressDialog(title, QString(), 0, 0,
+                                     qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
 
     m_currentScript->runCommand(options, m_molecule);
@@ -292,7 +300,7 @@ void Command::updateActions()
 
 void Command::addAction(const QString& label, const QString& scriptFilePath)
 {
-  QAction* action = new QAction(label, this);
+  QAction* action = new QAction(tr(label.toUtf8()), this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
