@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-05-29 03:13+0000\n"
+"POT-Creation-Date: 2022-06-12 03:09+0000\n"
 "PO-Revision-Date: 2016-06-10 06:32+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -1219,7 +1219,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:223 qtgui/rwlayermanager.cpp:226
-#: qtplugins/select/select.cpp:268
+#: qtplugins/select/select.cpp:277
 #: qtplugins/selectiontool/selectiontool.cpp:254:1549
 #, fuzzy
 msgid "Change Layer"
@@ -1466,15 +1466,15 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
-#: qtplugins/openbabel/openbabel.cpp:195 qtplugins/openbabel/openbabel.cpp:204
-#: qtplugins/openbabel/openbabel.cpp:214 qtplugins/openbabel/openbabel.cpp:328
-#: qtplugins/openbabel/openbabel.cpp:354 qtplugins/openbabel/openbabel.cpp:363
-#: qtplugins/openbabel/openbabel.cpp:415 qtplugins/openbabel/openbabel.cpp:464
-#: qtplugins/openbabel/openbabel.cpp:477 qtplugins/openbabel/openbabel.cpp:502
-#: qtplugins/openbabel/openbabel.cpp:516 qtplugins/openbabel/openbabel.cpp:544
-#: qtplugins/openbabel/openbabel.cpp:556 qtplugins/openbabel/openbabel.cpp:601
-#: qtplugins/openbabel/openbabel.cpp:649 qtplugins/openbabel/openbabel.cpp:689
-#: qtplugins/openbabel/openbabel.cpp:719
+#: qtplugins/openbabel/openbabel.cpp:196 qtplugins/openbabel/openbabel.cpp:205
+#: qtplugins/openbabel/openbabel.cpp:215 qtplugins/openbabel/openbabel.cpp:343
+#: qtplugins/openbabel/openbabel.cpp:369 qtplugins/openbabel/openbabel.cpp:378
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:481
+#: qtplugins/openbabel/openbabel.cpp:494 qtplugins/openbabel/openbabel.cpp:519
+#: qtplugins/openbabel/openbabel.cpp:533 qtplugins/openbabel/openbabel.cpp:562
+#: qtplugins/openbabel/openbabel.cpp:574 qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:669 qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:742
 #: qtplugins/openmminput/openmminput.cpp:73
 #: qtplugins/quantuminput/quantuminput.cpp:123
 msgid "Error"
@@ -1724,7 +1724,7 @@ msgstr ""
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:89
 #: qtplugins/commandscripts/command.cpp:65
 #: qtplugins/commandscripts/command.cpp:73 qtplugins/mongochem/mongochem.cpp:45
-#: qtplugins/openbabel/openbabel.cpp:103
+#: qtplugins/openbabel/openbabel.cpp:104
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Extensions"
@@ -1805,11 +1805,13 @@ msgstr "Tiedoston nimi:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:112:165 rc.cpp:168
+#: qtplugins/closecontacts/closecontacts.cpp:118
+#: qtplugins/noncovalent/noncovalent.cpp:163:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:117
+#: qtplugins/closecontacts/closecontacts.cpp:123
+#: qtplugins/noncovalent/noncovalent.cpp:169
 #, fuzzy
 msgid "Maximum distance:"
 msgstr "Etäisyys"
@@ -2559,7 +2561,7 @@ msgstr ""
 msgid "&Adjust Hydrogens"
 msgstr "Säädä vetyjä"
 
-#: qtplugins/hydrogens/hydrogens.cpp:38 qtplugins/openbabel/openbabel.cpp:60
+#: qtplugins/hydrogens/hydrogens.cpp:38 qtplugins/openbabel/openbabel.cpp:61
 msgid "Add Hydrogens"
 msgstr "Lisää vetyjä"
 
@@ -3005,99 +3007,118 @@ msgstr ""
 msgid "Interact with online databases, query structures etc."
 msgstr ""
 
-#: qtplugins/openbabel/obforcefielddialog.cpp:331
+#: qtplugins/noncovalent/noncovalent.cpp:154
+#, fuzzy
+#| msgid "°"
+msgid " °"
+msgstr "°"
+
+#: qtplugins/noncovalent/noncovalent.cpp:168
+#, fuzzy
+msgid "Angle tolerance:"
+msgstr "Ominaisuudet"
+
+#: qtplugins/noncovalent/noncovalent.h:30
+msgid "Non-Covalent"
+msgstr ""
+
+#: qtplugins/noncovalent/noncovalent.h:34
+msgid "Render a few non-covalent interactions."
+msgstr ""
+
+#: qtplugins/openbabel/obforcefielddialog.cpp:320
 #, qt-format
 msgid "Autodetect (%1)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
+#: qtplugins/openbabel/openbabel.cpp:42 qtplugins/openbabel/openbabel.cpp:505
 msgid "Optimize Geometry"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:48
+#: qtplugins/openbabel/openbabel.cpp:49
 #, fuzzy
 msgid "Configure Force Field…"
 msgstr "Aseta voimakenttä"
 
-#: qtplugins/openbabel/openbabel.cpp:54
+#: qtplugins/openbabel/openbabel.cpp:55
 #, fuzzy
 msgid "Perceive Bonds"
 msgstr "Poista vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:66
+#: qtplugins/openbabel/openbabel.cpp:67
 #, fuzzy
 msgid "Add Hydrogens for pH…"
 msgstr "Lisää vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:72
+#: qtplugins/openbabel/openbabel.cpp:73
 #, fuzzy
 msgid "Remove Hydrogens"
 msgstr "Poista vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:103
+#: qtplugins/openbabel/openbabel.cpp:104
 msgid "&Open Babel"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:110
+#: qtplugins/openbabel/openbabel.cpp:111
 msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:190
-msgid "Loading molecule from CML…"
+#: qtplugins/openbabel/openbabel.cpp:191
+msgid "Loading molecule from Open Babel…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:196
+#: qtplugins/openbabel/openbabel.cpp:197
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:205
+#: qtplugins/openbabel/openbabel.cpp:206
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:215
+#: qtplugins/openbabel/openbabel.cpp:216
 msgid "Error parsing openbabel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:329 qtplugins/openbabel/openbabel.cpp:364
+#: qtplugins/openbabel/openbabel.cpp:344 qtplugins/openbabel/openbabel.cpp:379
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:355
+#: qtplugins/openbabel/openbabel.cpp:370
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:373
+#: qtplugins/openbabel/openbabel.cpp:388
 msgid "Cannot optimize geometry with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:398
+#: qtplugins/openbabel/openbabel.cpp:413
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "Poista vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:399
+#: qtplugins/openbabel/openbabel.cpp:414
 msgid "Generating MDL…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:416
+#: qtplugins/openbabel/openbabel.cpp:433
 msgid ""
-"An internal error occurred while generating an CML representation of the "
-"current molecule."
+"An internal error occurred while generating an Open Babel representation of "
+"the current molecule."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:422
+#: qtplugins/openbabel/openbabel.cpp:439
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:435 qtplugins/openbabel/openbabel.cpp:443
+#: qtplugins/openbabel/openbabel.cpp:452 qtplugins/openbabel/openbabel.cpp:460
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -3105,110 +3126,108 @@ msgid ""
 "dE: %4"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:457
+#: qtplugins/openbabel/openbabel.cpp:474
 #, fuzzy
 msgid "Updating molecule…"
 msgstr "Molekyyli"
 
-#: qtplugins/openbabel/openbabel.cpp:465 qtplugins/openbabel/openbabel.cpp:720
+#: qtplugins/openbabel/openbabel.cpp:482 qtplugins/openbabel/openbabel.cpp:563
+#: qtplugins/openbabel/openbabel.cpp:743
 msgid "Error interpreting Open Babel output."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:478 qtplugins/openbabel/openbabel.cpp:557
+#: qtplugins/openbabel/openbabel.cpp:495 qtplugins/openbabel/openbabel.cpp:575
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:497
+#: qtplugins/openbabel/openbabel.cpp:514
 msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:503
+#: qtplugins/openbabel/openbabel.cpp:520
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:509
+#: qtplugins/openbabel/openbabel.cpp:526
 msgid "Perceiving Bonds (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:510
+#: qtplugins/openbabel/openbabel.cpp:527
 msgid "Generating XYZ representation…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:517
+#: qtplugins/openbabel/openbabel.cpp:534
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:529
-#, qt-format
-msgid "Converting XYZ to CML with %1…"
-msgstr ""
-
-#: qtplugins/openbabel/openbabel.cpp:537
-msgid "Updating molecule from CML…"
-msgstr ""
-
 #: qtplugins/openbabel/openbabel.cpp:545
-msgid "Error interpreting obabel CML output."
+#, qt-format
+msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:589 qtplugins/openbabel/openbabel.cpp:629
+#: qtplugins/openbabel/openbabel.cpp:555
+#, fuzzy
+msgid "Updating molecule from Open Babel…"
+msgstr "Molekyyli"
+
+#: qtplugins/openbabel/openbabel.cpp:607 qtplugins/openbabel/openbabel.cpp:648
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:594 qtplugins/openbabel/openbabel.cpp:642
+#: qtplugins/openbabel/openbabel.cpp:612 qtplugins/openbabel/openbabel.cpp:661
 #, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Lisää vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:595
+#: qtplugins/openbabel/openbabel.cpp:613
 msgid "Generating Open Babel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:602 qtplugins/openbabel/openbabel.cpp:650
+#: qtplugins/openbabel/openbabel.cpp:621 qtplugins/openbabel/openbabel.cpp:670
 msgid "Error generating Open Babel input."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:615 qtplugins/openbabel/openbabel.cpp:663
-#: qtplugins/openbabel/openbabel.cpp:702
+#: qtplugins/openbabel/openbabel.cpp:634 qtplugins/openbabel/openbabel.cpp:683
+#: qtplugins/openbabel/openbabel.cpp:725
 #, qt-format
 msgid "Running %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:636
+#: qtplugins/openbabel/openbabel.cpp:655
 #, fuzzy
 msgid "Add hydrogens for pH"
 msgstr "Lisää vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:636
+#: qtplugins/openbabel/openbabel.cpp:655
 #, fuzzy
 msgid "pH:"
 msgstr "pH"
 
-#: qtplugins/openbabel/openbabel.cpp:643 qtplugins/openbabel/openbabel.cpp:683
+#: qtplugins/openbabel/openbabel.cpp:662 qtplugins/openbabel/openbabel.cpp:704
 msgid "Generating obabel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:677
+#: qtplugins/openbabel/openbabel.cpp:698
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:682
+#: qtplugins/openbabel/openbabel.cpp:703
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Poista vetyjä"
 
-#: qtplugins/openbabel/openbabel.cpp:690
-msgid "Error generating CML data."
+#: qtplugins/openbabel/openbabel.cpp:712
+msgid "Error generating Open Babel data."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:734
 msgid "Reading obabel output…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:774
+#: qtplugins/openbabel/openbabel.cpp:797
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -3839,53 +3858,53 @@ msgstr ""
 msgid "Select All"
 msgstr ""
 
-#: qtplugins/select/select.cpp:36
+#: qtplugins/select/select.cpp:37
 msgid "Select None"
 msgstr ""
 
-#: qtplugins/select/select.cpp:45
+#: qtplugins/select/select.cpp:48
 msgid "Invert Selection"
 msgstr ""
 
-#: qtplugins/select/select.cpp:49
+#: qtplugins/select/select.cpp:53
 #, fuzzy
 msgid "Select by Element…"
 msgstr "Alkuaine:"
 
-#: qtplugins/select/select.cpp:53
+#: qtplugins/select/select.cpp:58
 #, fuzzy
 msgid "Select by Atom Index…"
 msgstr "Järjestysluku"
 
-#: qtplugins/select/select.cpp:57
+#: qtplugins/select/select.cpp:63
 msgid "Select by Residue…"
 msgstr ""
 
-#: qtplugins/select/select.cpp:65
+#: qtplugins/select/select.cpp:73
 msgid "Create New Layer from Selection"
 msgstr ""
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:87
 msgid "Change selections"
 msgstr ""
 
-#: qtplugins/select/select.cpp:88
+#: qtplugins/select/select.cpp:97
 msgid "&Select"
 msgstr "&Valitse"
 
-#: qtplugins/select/select.cpp:158
+#: qtplugins/select/select.cpp:167
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:159
+#: qtplugins/select/select.cpp:168
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:196
+#: qtplugins/select/select.cpp:205
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:197
+#: qtplugins/select/select.cpp:206
 msgid "Residues to Select:"
 msgstr ""
 
