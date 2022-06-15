@@ -51,8 +51,8 @@ private:
   
   double m_angleToleranceDegrees;
   double m_maximumDistance;
-  std::array<Vector3ub, 1> m_lineColors;
-  std::array<float, 1> m_lineWidths;
+  std::array<Vector3ub, 3> m_lineColors;
+  std::array<float, 3> m_lineWidths;
 };
 
 } // end namespace QtPlugins
