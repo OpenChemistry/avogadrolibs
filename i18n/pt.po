@@ -1203,16 +1203,6 @@ msgstr ""
 msgid "'userOptions' missing."
 msgstr "'userOptions' em falta, ou não um objeto."
 
-#: qtgui/jsonwidget.cpp:84
-#, qt-format
-msgid "Option '%1' does not refer to an object."
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:91
-#, qt-format
-msgid "'type' is not a string for option '%1'."
-msgstr ""
-
 #: qtgui/jsonwidget.cpp:98
 #, fuzzy, qt-format
 msgid "Could not find option '%1'."
@@ -1222,80 +1212,6 @@ msgstr "Não é possível executar povray."
 #, qt-format
 msgid "Tab %1"
 msgstr ""
-
-#. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
-#. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:175:609
-msgid "Title"
-msgstr "Título"
-
-#: qtgui/jsonwidget.cpp:179
-msgid "Filename Base"
-msgstr "Base do nome do ficheiro"
-
-#: qtgui/jsonwidget.cpp:183
-msgid "Processor Cores"
-msgstr "Processadores"
-
-#: qtgui/jsonwidget.cpp:187
-msgid "Calculation Type"
-msgstr "Tipo de Cálculo"
-
-#: qtgui/jsonwidget.cpp:191
-msgid "Theory"
-msgstr "Nível de Teoria"
-
-#: qtgui/jsonwidget.cpp:191
-msgid "Basis"
-msgstr "Base"
-
-#: qtgui/jsonwidget.cpp:196
-msgid "Charge"
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:199
-msgid "Multiplicity"
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:511
-#, qt-format
-msgid "Error: value must be object for key '%1'."
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:542
-#, qt-format
-msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:551 qtgui/jsonwidget.cpp:587 qtgui/jsonwidget.cpp:609
-#: qtgui/jsonwidget.cpp:630 qtgui/jsonwidget.cpp:653 qtgui/jsonwidget.cpp:675
-#, qt-format
-msgid "Error setting default for option '%1'. Bad widget type."
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:558 qtgui/jsonwidget.cpp:594 qtgui/jsonwidget.cpp:616
-#: qtgui/jsonwidget.cpp:637 qtgui/jsonwidget.cpp:660 qtgui/jsonwidget.cpp:682
-#, qt-format
-msgid "Error setting default for option '%1'. Bad default value:"
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:572
-#, qt-format
-msgid ""
-"Error setting default for option '%1'. Could not find valid combo entry "
-"index from value:"
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:744
-#, qt-format
-msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
-
-#: qtgui/jsonwidget.cpp:786 qtplugins/cp2kinput/cp2kinputdialog.cpp:467
-#: qtplugins/gamessinput/gamessinputdialog.cpp:407
-#, fuzzy
-msgid "[no molecule]"
-msgstr "Molécula"
 
 #: qtgui/layermodel.cpp:73
 msgid "Layer"
@@ -1535,10 +1451,6 @@ msgstr "Preencher Célula Unitária"
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Reduzir a Unidade Assimétrica"
 
-#: qtgui/rwmolecule_undo.h:30
-msgid "Modify Molecule"
-msgstr ""
-
 #: qtplugins/3dmol/3dmol.cpp:43
 msgid "ThreeDMol HTML Block."
 msgstr "Bloco HTML ThreeDMol."
@@ -1585,12 +1497,6 @@ msgstr ""
 #: qtplugins/apbs/apbs.cpp:61
 msgid "&APBS"
 msgstr "&APBS"
-
-#: qtplugins/apbs/apbs.cpp:73 qtplugins/cp2kinput/cp2kinput.cpp:80
-#: qtplugins/gamessinput/gamessinput.cpp:83
-#: qtplugins/quantuminput/quantuminput.cpp:107
-msgid "Open Output File"
-msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:74
 msgid "OpenDX File (*.dx)"
@@ -2969,23 +2875,9 @@ msgstr "Diédrico:"
 msgid "Angle:"
 msgstr "Ângulo:"
 
-#: qtplugins/measuretool/measuretool.cpp:207
-#: qtplugins/measuretool/measuretool.cpp:215
-#: qtplugins/measuretool/measuretool.cpp:216
-#, qt-format
-msgid "%L1°"
-msgstr "%L1°"
-
 #: qtplugins/measuretool/measuretool.cpp:214
 msgid "Angles:"
 msgstr "Ângulos:"
-
-#: qtplugins/measuretool/measuretool.cpp:224
-#: qtplugins/measuretool/measuretool.cpp:225
-#: qtplugins/measuretool/measuretool.cpp:227
-#, qt-format
-msgid "%L1 Å"
-msgstr "%L1 Å"
 
 #: qtplugins/measuretool/measuretool.h:48
 #: qtplugins/measuretool/measuretool.h:49
@@ -3061,11 +2953,6 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.h:51
 msgid "Interact with online databases, query structures etc."
 msgstr "Interagir com bancos de dados online, estruturas de consulta, etc."
-
-#: qtplugins/openbabel/obforcefielddialog.cpp:331
-#, qt-format
-msgid "Autodetect (%1)"
-msgstr "Autodetectar (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:41 qtplugins/openbabel/openbabel.cpp:488
 msgid "Optimize Geometry"
@@ -4163,10 +4050,6 @@ msgstr ""
 msgid "Class"
 msgstr "Classe"
 
-#: qtplugins/symmetry/operationstablemodel.cpp:64
-msgid "Element"
-msgstr "Elemento"
-
 #: qtplugins/symmetry/symmetry.cpp:53
 msgid "Symmetry..."
 msgstr "Simetria..."
@@ -4529,11 +4412,6 @@ msgstr "Ficheiro de Entrada APBS"
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
 msgid "Save Input File"
 msgstr "Gravar Ficheiro de Entrada"
-
-#. i18n: file: qtplugins/apbs/apbsdialog.ui:177
-#. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
-msgid "Run APBS"
-msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4917,11 +4795,6 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
 msgstr ""
-
-#. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-msgid "Import Crystal"
-msgstr "Importar Cristal"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5901,26 +5774,6 @@ msgstr ""
 msgid "Input Parameters:"
 msgstr "Parâmetros de Entrada:"
 
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
-msgid "Geometry Optimization Parameters"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-msgid "Optimization Method"
-msgstr "Método de Otimização"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Force field:"
-msgstr "Campo de força:"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-msgid "Optimization algorithm:"
-msgstr "Algoritmo de otimização:"
-
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
@@ -5935,11 +5788,6 @@ msgstr "Simples"
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
 msgstr "Método de Newton"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
-#. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
-msgid "Autodetect"
-msgstr "Autodetectar"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -5967,38 +5815,6 @@ msgstr "distância de corte eletrostático:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
 msgid "Å"
 msgstr "Å"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:185
-#. i18n: ectx: property (suffix), widget (QSpinBox, pairFreq)
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:246
-#. i18n: ectx: property (suffix), widget (QSpinBox, stepLimit)
-msgid " steps"
-msgstr " passos"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
-#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-msgid "Convergence Criteria"
-msgstr "Critérios de Convergência"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-msgid "\"Energy\" convergence:"
-msgstr "\"Energia\" de convergência:"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Step limit:"
-msgstr ""
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:227
-#. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
-msgid " units"
-msgstr " unidades"
-
-#. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
-#. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
-msgid "10^"
-msgstr "10^"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
@@ -6888,9 +6704,6 @@ msgstr ""
 "pt,,,,,avogadro-devel@lists.sourceforge.net,david.rodrigues@gmail.com,,,"
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo.pt"
 
-#~ msgid "Theory:"
-#~ msgstr "Teoria:"
-
 #, qt-format
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distância: %L1 Å"
@@ -6899,10 +6712,6 @@ msgstr ""
 #~ msgstr "&GAMESS"
 
 #~ msgid "Van der Waals"
-#~ msgstr "Van der Waals"
-
-#, fuzzy
-#~ msgid "Van der Waals (AO)"
 #~ msgstr "Van der Waals"
 
 #~ msgid "Wireframe"
