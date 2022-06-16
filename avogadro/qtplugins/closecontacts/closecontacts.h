@@ -26,7 +26,7 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override { return tr("Close Contacts", "rendering of non-covalent close contacts"); }
 
   QString description() const override
   {

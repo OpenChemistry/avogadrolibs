@@ -75,7 +75,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return QString("Layer %1").arg(layer + 1); // count starts at 0 internally
+          return QString(tr("Layer %1")).arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
           if (layer == static_cast<int>(getMoleculeLayer().activeLayer()))
@@ -110,7 +110,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return ("  " + name).c_str();
+          return "  " + tr(name.c_str()); // should already be translated
         }
       }
     }
