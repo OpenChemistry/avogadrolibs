@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-06-16 16:55+0000\n"
-"PO-Revision-Date: 2022-06-14 01:44+0000\n"
+"PO-Revision-Date: 2022-06-16 22:13+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1211,10 +1211,9 @@ msgid "Layer"
 msgstr "Réteg"
 
 #: qtgui/layermodel.cpp:78
-#, fuzzy, qt-format
-#| msgid "Layer"
+#, qt-format
 msgid "Layer %1"
-msgstr "Réteg"
+msgstr "%1. réteg"
 
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
@@ -1807,16 +1806,13 @@ msgid "Rope"
 msgstr "Kötél"
 
 #: qtplugins/cartoons/cartoons.h:30
-#, fuzzy
-#| msgctxt "protein rendering style"
-#| msgid "Cartoon"
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Rajzfilm"
+msgstr "Rajzfilmek"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Biomolekula szalagok / rajzfilmek megjelenítése."
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
@@ -1919,11 +1915,11 @@ msgstr "Legnagyobb távolság:"
 #: qtplugins/closecontacts/closecontacts.h:29
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Szoros érintkezések"
 
 #: qtplugins/closecontacts/closecontacts.h:33
 msgid "Render close contacts between atoms."
-msgstr "Atomok között szoros érintkezés megjelenítése."
+msgstr "Atomok között szoros érintkezések megjelenítése."
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map…"
@@ -3050,10 +3046,8 @@ msgid "Render polygon meshes."
 msgstr "Sokszög hálók megjelenítése."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:22
-#, fuzzy
-#| msgid "Molecular Graph…"
 msgid "&Molecular…"
-msgstr "Molekuladiagram…"
+msgstr "&Molekuláris…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:32
 msgid "View general properties of a molecule."
