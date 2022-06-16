@@ -48,14 +48,20 @@ NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
   m_layerManager = PluginLayerManager(m_name);
   
   QSettings settings;
-  m_angleToleranceDegrees = settings.value("nonCovalent/angleTolerance", 30.0).toDouble();
-  m_maximumDistance = settings.value("nonCovalent/maximumDistance", 2.0).toDouble();
+  m_angleToleranceDegrees = settings.value("nonCovalent/angleTolerance", 40.0).toDouble();
+  m_maximumDistance = settings.value("nonCovalent/maximumDistance", 3.0).toDouble();
   QColor hydrogenBColor = settings.value("nonCovalent/lineColor0", QColor(64, 192, 255)).value<QColor>();
+  QColor halogenBColor = settings.value("nonCovalent/lineColor1", QColor(128, 255, 64)).value<QColor>();
+  QColor chalcogenBColor = settings.value("nonCovalent/lineColor2", QColor(255, 192, 64)).value<QColor>();
   m_lineColors = {
-    Vector3ub(hydrogenBColor.red(), hydrogenBColor.green(), hydrogenBColor.blue())
+    Vector3ub(hydrogenBColor.red(), hydrogenBColor.green(), hydrogenBColor.blue()),
+    Vector3ub(halogenBColor.red(), halogenBColor.green(), halogenBColor.blue()),
+    Vector3ub(chalcogenBColor.red(), chalcogenBColor.green(), chalcogenBColor.blue())
   };
   m_lineWidths = {
-    settings.value("nonCovalent/lineWidth0", 2.0).toFloat()
+    settings.value("nonCovalent/lineWidth0", 2.0).toFloat(),
+    settings.value("nonCovalent/lineWidth1", 2.0).toFloat(),
+    settings.value("nonCovalent/lineWidth2", 2.0).toFloat()
   };
 }
 
@@ -63,7 +69,9 @@ NonCovalent::~NonCovalent() {}
 
 enum InteractionTypes {
   NONE = -1,
-  HYDROGEN_BOND = 0
+  HYDROGEN_BOND = 0,
+  HALOGEN_BOND = 1,
+  CHALCOGEN_BOND = 2
 };
 
 static enum InteractionTypes getInteractionType(const Molecule &molecule, Index i)
@@ -80,6 +88,27 @@ static enum InteractionTypes getInteractionType(const Molecule &molecule, Index 
         }
       }
       break;
+    case 9: case 17: case 35: case 53: // halogen bond
+      for (const Bond *b : molecule.bonds(i)) {
+        Index j = (b->atom1().index() == i ? b->atom2() : b->atom1()).index();
+        unsigned char jnum = molecule.atomicNumber(j);
+        switch (jnum) {
+          case 6: case 7: case 8: case 9:
+          case 16: case 17: case 35: case 53: // F, O, N, Cl, Br, C, I, S
+            return HALOGEN_BOND;
+        }
+      }
+      break;
+    case 8: case 16: case 34: case 52: // chalcogen bond
+      for (const Bond *b : molecule.bonds(i)) {
+        Index j = (b->atom1().index() == i ? b->atom2() : b->atom1()).index();
+        unsigned char jnum = molecule.atomicNumber(j);
+        switch (jnum) {
+          case 6: // C
+            return CHALCOGEN_BOND;
+        }
+      }
+      break;
   }
   return NONE;
 }
@@ -90,7 +119,19 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
   switch (interactionType) {
     case HYDROGEN_BOND:
       switch (nnum) {
-        case 7: case 8: case 9: // F, O, N
+        case 7: case 8: case 9: case 17: // F, O, N, Cl
+          return true;
+      }
+      break;
+    case HALOGEN_BOND:
+      switch (nnum) {
+        case 7: case 8: case 9: case 17: // F, O, N, Cl
+          return true;
+      }
+      break;
+    case CHALCOGEN_BOND:
+      switch (nnum) {
+        case 7: case 8: case 9: case 17: // F, O, N, Cl
           return true;
       }
       break;
@@ -257,7 +298,7 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
       if (!checkPairVector(molecule, n, -distance_vector, angleTolerance))
         continue;
 
-      lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
+      lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), m_lineColors[interactionType], 8);
     }
   }
 }
