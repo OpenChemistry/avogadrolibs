@@ -99,7 +99,7 @@ static enum InteractionTypes getInteractionType(const Molecule &molecule, Index 
         }
       }
       break;
-    case 8: case 16: // chalcogen bond
+    case 8: case 16: case 34: case 52: // chalcogen bond
       for (const Bond *b : molecule.bonds(i)) {
         Index j = (b->atom1().index() == i ? b->atom2() : b->atom1()).index();
         unsigned char jnum = molecule.atomicNumber(j);
