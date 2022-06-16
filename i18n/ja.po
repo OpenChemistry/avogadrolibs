@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-12 03:09+0000\n"
+"POT-Creation-Date: 2022-06-16 16:55+0000\n"
 "PO-Revision-Date: 2021-07-19 18:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -1130,6 +1130,11 @@ msgstr "分子がセットされていません"
 msgid "Layer"
 msgstr ""
 
+#: qtgui/layermodel.cpp:78
+#, qt-format
+msgid "Layer %1"
+msgstr ""
+
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
 msgstr "無題"
@@ -1464,7 +1469,8 @@ msgid "PQR Files (*.pqr)"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
-#: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
+#: qtplugins/commandscripts/command.cpp:105
+#: qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
@@ -1665,12 +1671,12 @@ msgstr "%L1°"
 msgid "%L1 Å"
 msgstr "%L1 Å"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:188
+#: qtplugins/bondcentrictool/bondcentrictool.h:186
 #, fuzzy
 msgid "Bond centric manipulation tool."
 msgstr "結合中心操作"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:193
+#: qtplugins/bondcentrictool/bondcentrictool.h:191
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
@@ -1749,8 +1755,14 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr ""
 
+#: qtplugins/cartoons/cartoons.h:30
+#, fuzzy
+msgctxt "protein ribbon / cartoon rendering"
+msgid "Cartoons"
+msgstr "カートゥーン"
+
 #: qtplugins/cartoons/cartoons.h:34
-msgid "Simple display of Cartoons family."
+msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:73
@@ -1842,16 +1854,21 @@ msgstr "ファイル名"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:163:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:325:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:169
+#: qtplugins/noncovalent/noncovalent.cpp:339
 #, fuzzy
 #| msgid "Minimum Distance:"
 msgid "Maximum distance:"
 msgstr "最小距離:"
+
+#: qtplugins/closecontacts/closecontacts.h:29
+msgctxt "rendering of non-covalent close contacts"
+msgid "Close Contacts"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:33
 #, fuzzy
@@ -1876,7 +1893,8 @@ msgstr ""
 msgid "Scripts"
 msgstr "スクリプト"
 
-#: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
+#: qtplugins/commandscripts/command.cpp:106
+#: qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
@@ -1887,17 +1905,17 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:188
+#: qtplugins/commandscripts/command.cpp:195
 #, qt-format
 msgid "Processing %1"
 msgstr "%1を処理中"
 
-#: qtplugins/commandscripts/command.cpp:242
+#: qtplugins/commandscripts/command.cpp:250
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:244
+#: qtplugins/commandscripts/command.cpp:252
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2348,7 +2366,9 @@ msgstr "結晶"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.cpp:149 qtplugins/wireframe/wireframe.cpp:89
+#: qtplugins/crystal/crystalscene.cpp:149
+#: qtplugins/noncovalent/noncovalent.cpp:340
+#: qtplugins/wireframe/wireframe.cpp:89
 #, fuzzy
 msgid "Line width:"
 msgstr "ピーク幅:"
@@ -2885,6 +2905,11 @@ msgstr ""
 "プレビューテキストを更新しますか? Lammpsインプットプレビュー画面での変更は失"
 "われます。"
 
+#: qtplugins/licorice/licorice.h:29
+msgctxt "stick / licorice rendering"
+msgid "Licorice"
+msgstr ""
+
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
 msgstr ""
@@ -3038,24 +3063,30 @@ msgstr "メッシュ"
 msgid "Render polygon meshes."
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:43
+#: qtplugins/molecularproperties/molecularproperties.cpp:22
+#, fuzzy
+#| msgid "Molecular Graph..."
+msgid "&Molecular…"
+msgstr "分子の性質..."
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:32
 msgid "View general properties of a molecule."
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:83
 msgid "&Analysis"
 msgstr "解析 (&A)"
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/symmetry/symmetry.cpp:83
 msgid "&Properties"
 msgstr "プロパティ (&P)"
 
-#: qtplugins/molecularproperties/molecularproperties.h:42
+#: qtplugins/molecularproperties/molecularproperties.h:31
 msgid "Molecular Properties"
 msgstr "分子の性質"
 
@@ -3133,11 +3164,11 @@ msgstr "ネットワークデータベース"
 msgid "Interact with online databases, query structures etc."
 msgstr ""
 
-#: qtplugins/noncovalent/noncovalent.cpp:154
+#: qtplugins/noncovalent/noncovalent.cpp:316
 msgid " °"
 msgstr " °"
 
-#: qtplugins/noncovalent/noncovalent.cpp:168
+#: qtplugins/noncovalent/noncovalent.cpp:338
 #, fuzzy
 #| msgid "Tolerance:"
 msgid "Angle tolerance:"
@@ -4377,6 +4408,10 @@ msgstr "VRML"
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
 msgstr ""
+
+#: qtplugins/wireframe/wireframe.h:28
+msgid "Wireframe"
+msgstr "ワイヤーフレーム"
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -7166,9 +7201,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "ファンデルワールス"
-
-#~ msgid "Wireframe"
-#~ msgstr "ワイヤーフレーム"
 
 #~ msgid "Reset to Default Values"
 #~ msgstr "デフォルト値に戻す"
