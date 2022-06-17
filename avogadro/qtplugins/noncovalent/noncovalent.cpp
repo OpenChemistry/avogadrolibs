@@ -154,26 +154,24 @@ static float computeAngle(Vector3 a, Vector3 b)
 }
 
 static bool checkHoleVector(
-    const Molecule &molecule, Index i, Vector3 in, float angleTolerance
+    const Molecule &molecule, Index i, const Vector3 &in, float angleTolerance
 ) {
   Array<const Bond *> bonds = molecule.bonds(i);
   Vector3 pos = molecule.atomPosition3d(i);
   /* Return true if any of the bonds to i forms a small enough angle
    * with 'in' at the opposite side of atom 'i' */
-  return std::any_of(bonds.begin(), bonds.end(),
-    [molecule, i, in, angleTolerance, pos](const Bond *b) {
-      Index n = b->getOtherAtom(i).index();
+  for (const Bond *b: bonds) {
+    Index n = b->getOtherAtom(i).index();
       Vector3 npos = molecule.atomPosition3d(n);
-      float oppositeAngle = M_PI - computeAngle(
-        in, npos - pos
-      );
-      return oppositeAngle <= angleTolerance;
-    }
-  );
+      float oppositeAngle = M_PI - computeAngle(in, npos - pos);
+      if (oppositeAngle <= angleTolerance)
+        return true;
+  }
+  return false;
 }
 
 static bool checkPairVector(
-    const Molecule &molecule, Index n, Vector3 in, float angleTolerance
+    const Molecule &molecule, Index n, const Vector3 &in, float angleTolerance
 ) {
   AtomHybridization hybridization = AtomUtilities::perceiveHybridization(molecule.atom(n));
   Array<const Bond *> bonds = molecule.bonds(n);
@@ -255,12 +253,14 @@ static bool checkPairVector(
 
 void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
-  Vector3ub color(64, 192, 255);
-
-  NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
-  std::vector<bool> isAtomEnabled(molecule.atomCount());
-  for (Index i = 0; i < molecule.atomCount(); ++i)
-    isAtomEnabled[i] = m_layerManager.atomEnabled(i);
+  std::vector<Index> enabledAtoms;
+  Array<Vector3> enabledPositions;
+  const size_t atomCount = molecule.atomCount();
+  for (Index i = 0; i < atomCount; ++i) {
+    enabledAtoms.push_back(i);
+    enabledPositions.push_back(molecule.atomPosition3d(i));
+  }
+  NeighborPerceiver perceiver(enabledPositions, m_maximumDistance);
 
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
@@ -270,17 +270,14 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
   lines->setLineWidth(m_lineWidths[0]);
   geometry->addDrawable(lines);
   Array<Index> neighbors;
-  for (Index i = 0; i < molecule.atomCount(); ++i) {
-    if (!isAtomEnabled[i])
-      continue;
+  for (Index i: enabledAtoms) {
     enum InteractionTypes interactionType = getInteractionType(molecule, i);
     if (interactionType == NONE)
       continue;
     Vector3 pos = molecule.atomPosition3d(i);
     perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
-    for (Index n : neighbors) {
-      if (!isAtomEnabled[n])
-        continue;
+    for (Index ni : neighbors) {
+      Index n = enabledAtoms[ni];
       if (!checkPairDonorIsValid(molecule, n, interactionType))
         continue;
 
