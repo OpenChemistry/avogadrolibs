@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-06-16 16:55+0000\n"
-"PO-Revision-Date: 2022-06-16 22:13+0000\n"
+"PO-Revision-Date: 2022-06-17 12:58+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1755,7 +1755,7 @@ msgstr "Kötési beállítások…"
 #: qtplugins/insertfragment/insertfragment.cpp:61
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr "&Felépítés"
+msgstr "Fe&lépítés"
 
 #: qtplugins/bonding/bonding.cpp:65
 #: qtplugins/propertytables/propertymodel.cpp:389
@@ -1826,7 +1826,7 @@ msgstr "Ügyfél/kiszolgáló műveletek."
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Extensions"
-msgstr "&Kiterjesztések"
+msgstr "Ki&terjesztések"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
@@ -4006,7 +4006,7 @@ msgstr "Kijelölések módosítása"
 
 #: qtplugins/select/select.cpp:97
 msgid "&Select"
-msgstr "&Kijelölés"
+msgstr "Ki&jelölés"
 
 #: qtplugins/select/select.cpp:167
 msgid "Select Atoms by Index"
