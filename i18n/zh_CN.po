@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-12 03:09+0000\n"
+"POT-Creation-Date: 2022-06-16 16:55+0000\n"
 "PO-Revision-Date: 2021-12-07 16:50+0000\n"
 "Last-Translator: 刘韬 <lyuutau@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -1164,6 +1164,11 @@ msgstr "没有分子集合"
 msgid "Layer"
 msgstr ""
 
+#: qtgui/layermodel.cpp:78
+#, qt-format
+msgid "Layer %1"
+msgstr ""
+
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
 msgstr "无标题"
@@ -1498,7 +1503,8 @@ msgid "PQR Files (*.pqr)"
 msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
-#: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
+#: qtplugins/commandscripts/command.cpp:105
+#: qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
@@ -1672,12 +1678,12 @@ msgstr ""
 msgid "%L1 Å"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:188
+#: qtplugins/bondcentrictool/bondcentrictool.h:186
 #, fuzzy
 msgid "Bond centric manipulation tool."
 msgstr "化学键操纵"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:193
+#: qtplugins/bondcentrictool/bondcentrictool.h:191
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
@@ -1756,8 +1762,14 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr ""
 
+#: qtplugins/cartoons/cartoons.h:30
+#, fuzzy
+msgctxt "protein ribbon / cartoon rendering"
+msgid "Cartoons"
+msgstr "卡通"
+
 #: qtplugins/cartoons/cartoons.h:34
-msgid "Simple display of Cartoons family."
+msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:73
@@ -1849,15 +1861,20 @@ msgstr "文件名"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:163:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:325:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:169
+#: qtplugins/noncovalent/noncovalent.cpp:339
 #, fuzzy
 msgid "Maximum distance:"
 msgstr "距离："
+
+#: qtplugins/closecontacts/closecontacts.h:29
+msgctxt "rendering of non-covalent close contacts"
+msgid "Close Contacts"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:33
 #, fuzzy
@@ -1883,7 +1900,8 @@ msgstr ""
 msgid "Scripts"
 msgstr "脚本(&S)"
 
-#: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
+#: qtplugins/commandscripts/command.cpp:106
+#: qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
@@ -1896,17 +1914,17 @@ msgstr ""
 "读取输出文件'%1'时出错：\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:188
+#: qtplugins/commandscripts/command.cpp:195
 #, qt-format
 msgid "Processing %1"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:242
+#: qtplugins/commandscripts/command.cpp:250
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:244
+#: qtplugins/commandscripts/command.cpp:252
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2354,7 +2372,9 @@ msgstr "晶体"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.cpp:149 qtplugins/wireframe/wireframe.cpp:89
+#: qtplugins/crystal/crystalscene.cpp:149
+#: qtplugins/noncovalent/noncovalent.cpp:340
+#: qtplugins/wireframe/wireframe.cpp:89
 msgid "Line width:"
 msgstr ""
 
@@ -2879,6 +2899,11 @@ msgid ""
 msgstr ""
 "您是否希望更新预览文本，并丢失所有在Gaussian输入卡片预览面板中所做的修改？"
 
+#: qtplugins/licorice/licorice.h:29
+msgctxt "stick / licorice rendering"
+msgid "Licorice"
+msgstr ""
+
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
 msgstr ""
@@ -3005,11 +3030,16 @@ msgstr ""
 msgid "Render polygon meshes."
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:43
+#: qtplugins/molecularproperties/molecularproperties.cpp:22
+#, fuzzy
+msgid "&Molecular…"
+msgstr "分子轨道"
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:32
 msgid "View general properties of a molecule."
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:83
@@ -3017,13 +3047,13 @@ msgstr ""
 msgid "&Analysis"
 msgstr "分析"
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/symmetry/symmetry.cpp:83
 msgid "&Properties"
 msgstr "属性(&P)"
 
-#: qtplugins/molecularproperties/molecularproperties.h:42
+#: qtplugins/molecularproperties/molecularproperties.h:31
 msgid "Molecular Properties"
 msgstr "分子属性"
 
@@ -3086,13 +3116,13 @@ msgstr ""
 msgid "Interact with online databases, query structures etc."
 msgstr ""
 
-#: qtplugins/noncovalent/noncovalent.cpp:154
+#: qtplugins/noncovalent/noncovalent.cpp:316
 #, fuzzy
 #| msgid "°"
 msgid " °"
 msgstr "°"
 
-#: qtplugins/noncovalent/noncovalent.cpp:168
+#: qtplugins/noncovalent/noncovalent.cpp:338
 #, fuzzy
 #| msgid "Tolerance:"
 msgid "Angle tolerance:"
@@ -4318,6 +4348,10 @@ msgstr ""
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
 msgstr "使用 VRML 渲染场景。"
+
+#: qtplugins/wireframe/wireframe.h:28
+msgid "Wireframe"
+msgstr "线框"
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -7100,9 +7134,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "Van der Waals"
-
-#~ msgid "Wireframe"
-#~ msgstr "线框"
 
 #~ msgid "Rotatable"
 #~ msgstr "可旋转的"

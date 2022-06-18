@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-12 03:09+0000\n"
-"PO-Revision-Date: 2022-06-14 01:44+0000\n"
+"POT-Creation-Date: 2022-06-16 16:55+0000\n"
+"PO-Revision-Date: 2022-06-17 12:58+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1210,6 +1210,11 @@ msgstr "[nincs molekula]"
 msgid "Layer"
 msgstr "Réteg"
 
+#: qtgui/layermodel.cpp:78
+#, qt-format
+msgid "Layer %1"
+msgstr "%1. réteg"
+
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
 msgstr "Névtelen"
@@ -1541,7 +1546,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "PQR-fájlok (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
-#: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
+#: qtplugins/commandscripts/command.cpp:105
+#: qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
@@ -1719,11 +1725,11 @@ msgstr "%L1°"
 msgid "%L1 Å"
 msgstr "%L1 Å"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:188
+#: qtplugins/bondcentrictool/bondcentrictool.h:186
 msgid "Bond centric manipulation tool."
 msgstr "Kötésközpontú-művelőeszköz."
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:193
+#: qtplugins/bondcentrictool/bondcentrictool.h:191
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
@@ -1749,7 +1755,7 @@ msgstr "Kötési beállítások…"
 #: qtplugins/insertfragment/insertfragment.cpp:61
 #: qtplugins/lineformatinput/lineformatinput.cpp:71
 msgid "&Build"
-msgstr "&Felépítés"
+msgstr "Fe&lépítés"
 
 #: qtplugins/bonding/bonding.cpp:65
 #: qtplugins/propertytables/propertymodel.cpp:389
@@ -1799,9 +1805,14 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr "Kötél"
 
+#: qtplugins/cartoons/cartoons.h:30
+msgctxt "protein ribbon / cartoon rendering"
+msgid "Cartoons"
+msgstr "Rajzfilmek"
+
 #: qtplugins/cartoons/cartoons.h:34
-msgid "Simple display of Cartoons family."
-msgstr "Rajzfilmi család egyszerű megjelenítése."
+msgid "Display of biomolecule ribbons / cartoons."
+msgstr "Biomolekula szalagok / rajzfilmek megjelenítése."
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
@@ -1815,7 +1826,7 @@ msgstr "Ügyfél/kiszolgáló műveletek."
 #: qtplugins/plugindownloader/plugindownloader.cpp:52
 #: qtplugins/quantuminput/quantuminput.cpp:81 qtplugins/yaehmop/yaehmop.cpp:80
 msgid "&Extensions"
-msgstr "&Kiterjesztések"
+msgstr "Ki&terjesztések"
 
 #: qtplugins/clientserver/clientserver.cpp:83
 msgid "S&erver"
@@ -1892,18 +1903,23 @@ msgstr "Fájlnév"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:163:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:325:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:169
+#: qtplugins/noncovalent/noncovalent.cpp:339
 msgid "Maximum distance:"
 msgstr "Legnagyobb távolság:"
 
+#: qtplugins/closecontacts/closecontacts.h:29
+msgctxt "rendering of non-covalent close contacts"
+msgid "Close Contacts"
+msgstr "Szoros érintkezések"
+
 #: qtplugins/closecontacts/closecontacts.h:33
 msgid "Render close contacts between atoms."
-msgstr "Atomok között szoros érintkezés megjelenítése."
+msgstr "Atomok között szoros érintkezések megjelenítése."
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:71
 msgid "Edit Color Opacity Map…"
@@ -1924,7 +1940,8 @@ msgstr ""
 msgid "Scripts"
 msgstr "&Parancsfájlok"
 
-#: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
+#: qtplugins/commandscripts/command.cpp:106
+#: qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
@@ -1937,17 +1954,17 @@ msgstr ""
 "Hiba történt a(z) „%1” kimeneti fájl olvasásakor:\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:188
+#: qtplugins/commandscripts/command.cpp:195
 #, qt-format
 msgid "Processing %1"
 msgstr "%1 feldolgozása"
 
-#: qtplugins/commandscripts/command.cpp:242
+#: qtplugins/commandscripts/command.cpp:250
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
 msgstr "Python-értelmező elérési útja beállítása:"
 
-#: qtplugins/commandscripts/command.cpp:244
+#: qtplugins/commandscripts/command.cpp:252
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2396,7 +2413,9 @@ msgstr "Kristály"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "Kristályspecifikus szerkesztő/elemző eszközök."
 
-#: qtplugins/crystal/crystalscene.cpp:149 qtplugins/wireframe/wireframe.cpp:89
+#: qtplugins/crystal/crystalscene.cpp:149
+#: qtplugins/noncovalent/noncovalent.cpp:340
+#: qtplugins/wireframe/wireframe.cpp:89
 msgid "Line width:"
 msgstr "Vonalvastagság:"
 
@@ -2892,6 +2911,11 @@ msgstr ""
 "tömegesen párhuzamos szimulátor) bemeneti fedélzet előnézeti ablaka összes "
 "módosítását?"
 
+#: qtplugins/licorice/licorice.h:29
+msgctxt "stick / licorice rendering"
+msgid "Licorice"
+msgstr ""
+
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
 msgstr "Atom megjelenítése vonal- vagy pálcamodell szerint."
@@ -3021,24 +3045,28 @@ msgstr "Hálók"
 msgid "Render polygon meshes."
 msgstr "Sokszög hálók megjelenítése."
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:43
+#: qtplugins/molecularproperties/molecularproperties.cpp:22
+msgid "&Molecular…"
+msgstr "&Molekuláris…"
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:32
 msgid "View general properties of a molecule."
 msgstr "Molekula általános tulajdonságok megtekintése."
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:83
 msgid "&Analysis"
 msgstr "&Elemzés"
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/symmetry/symmetry.cpp:83
 msgid "&Properties"
 msgstr "&Tulajdonságok"
 
-#: qtplugins/molecularproperties/molecularproperties.h:42
+#: qtplugins/molecularproperties/molecularproperties.h:31
 msgid "Molecular Properties"
 msgstr "Molekula tulajdonságai"
 
@@ -3109,11 +3137,11 @@ msgstr "Hálózati adatbázisok"
 msgid "Interact with online databases, query structures etc."
 msgstr "Online adatbázisokkal, lekérdezési struktúrákkal kölcsönhatása."
 
-#: qtplugins/noncovalent/noncovalent.cpp:154
+#: qtplugins/noncovalent/noncovalent.cpp:316
 msgid " °"
 msgstr " °"
 
-#: qtplugins/noncovalent/noncovalent.cpp:168
+#: qtplugins/noncovalent/noncovalent.cpp:338
 msgid "Angle tolerance:"
 msgstr "Szögtűrés:"
 
@@ -3978,7 +4006,7 @@ msgstr "Kijelölések módosítása"
 
 #: qtplugins/select/select.cpp:97
 msgid "&Select"
-msgstr "&Kijelölés"
+msgstr "Ki&jelölés"
 
 #: qtplugins/select/select.cpp:167
 msgid "Select Atoms by Index"
@@ -4303,6 +4331,10 @@ msgstr "VRML-fájl"
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
 msgstr "A jelenet megjelenítése a virtuális valóságot modellező nyelvvel."
+
+#: qtplugins/wireframe/wireframe.h:28
+msgid "Wireframe"
+msgstr "Drótváz"
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -7063,6 +7095,9 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
 
+#~ msgid "Simple display of Cartoons family."
+#~ msgstr "Rajzfilmi család egyszerű megjelenítése."
+
 #~ msgid "Error interpreting obabel CML output."
 #~ msgstr ""
 #~ "Hiba történt az obabel-CML (kémiai jelölési nyelv) kimenet értelmezésekor."
@@ -7150,9 +7185,6 @@ msgstr "E-mail-címek"
 #, fuzzy
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "van der Waals"
-
-#~ msgid "Wireframe"
-#~ msgstr "Drótváz"
 
 #~ msgid "Partial Charge"
 #~ msgstr "Részleges töltés"

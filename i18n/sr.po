@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-12 03:09+0000\n"
+"POT-Creation-Date: 2022-06-16 16:55+0000\n"
 "PO-Revision-Date: 2021-08-20 01:04+0000\n"
 "Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -1210,6 +1210,11 @@ msgstr "Nije podešen molekul"
 msgid "Layer"
 msgstr "Plejer"
 
+#: qtgui/layermodel.cpp:78
+#, fuzzy, qt-format
+msgid "Layer %1"
+msgstr "Plejer"
+
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
 msgstr "Bez naslova"
@@ -1551,7 +1556,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "PQR Datoteke (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
-#: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
+#: qtplugins/commandscripts/command.cpp:105
+#: qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
@@ -1749,11 +1755,11 @@ msgstr "%L1°"
 msgid "%L1 Å"
 msgstr "%L1 Å"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:188
+#: qtplugins/bondcentrictool/bondcentrictool.h:186
 msgid "Bond centric manipulation tool."
 msgstr "Управљање средишњом везом."
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:193
+#: qtplugins/bondcentrictool/bondcentrictool.h:191
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
@@ -1833,10 +1839,15 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.h:34
+#: qtplugins/cartoons/cartoons.h:30
 #, fuzzy
-msgid "Simple display of Cartoons family."
-msgstr "Jednostavan prikaz VdW sfera."
+msgctxt "protein ribbon / cartoon rendering"
+msgid "Cartoons"
+msgstr "Цртани"
+
+#: qtplugins/cartoons/cartoons.h:34
+msgid "Display of biomolecule ribbons / cartoons."
+msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
@@ -1927,16 +1938,21 @@ msgstr "Naziv datoteke:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:163:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:325:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:169
+#: qtplugins/noncovalent/noncovalent.cpp:339
 #, fuzzy
 #| msgid "Minimum Distance:"
 msgid "Maximum distance:"
 msgstr "Minimalna udaljenost:"
+
+#: qtplugins/closecontacts/closecontacts.h:29
+msgctxt "rendering of non-covalent close contacts"
+msgid "Close Contacts"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:33
 #, fuzzy
@@ -1963,7 +1979,8 @@ msgstr "Uredite mape neprozirnosti boja, prvenstveno za iscrtavanje volumena."
 msgid "Scripts"
 msgstr "&Skripte"
 
-#: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
+#: qtplugins/commandscripts/command.cpp:106
+#: qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
@@ -1976,17 +1993,17 @@ msgstr ""
 "Greška pri čitanju izlazne datoteke „%1“:\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:188
+#: qtplugins/commandscripts/command.cpp:195
 #, qt-format
 msgid "Processing %1"
 msgstr "Obrada %1"
 
-#: qtplugins/commandscripts/command.cpp:242
+#: qtplugins/commandscripts/command.cpp:250
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
 msgstr "Podesite putanju do Python tumača:"
 
-#: qtplugins/commandscripts/command.cpp:244
+#: qtplugins/commandscripts/command.cpp:252
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2443,7 +2460,9 @@ msgstr "Kristal"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "Alati za uređivanje/analizu specifične za kristal."
 
-#: qtplugins/crystal/crystalscene.cpp:149 qtplugins/wireframe/wireframe.cpp:89
+#: qtplugins/crystal/crystalscene.cpp:149
+#: qtplugins/noncovalent/noncovalent.cpp:340
+#: qtplugins/wireframe/wireframe.cpp:89
 #, fuzzy
 msgid "Line width:"
 msgstr "Širina vrha:"
@@ -2978,6 +2997,13 @@ msgstr ""
 "Da li želite da ažurirate tekst pregleda, gubeći sve promene izvršene u oknu "
 "za pregled ulazne ploče Lammps?"
 
+#: qtplugins/licorice/licorice.h:29
+#, fuzzy
+#| msgid "Licorice"
+msgctxt "stick / licorice rendering"
+msgid "Licorice"
+msgstr "Likoriš"
+
 #: qtplugins/licorice/licorice.h:33
 #, fuzzy
 msgid "Render atoms as licorice / sticks."
@@ -3135,24 +3161,30 @@ msgstr "Mreže"
 msgid "Render polygon meshes."
 msgstr "Renderirajte trouglaste mreže."
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:43
+#: qtplugins/molecularproperties/molecularproperties.cpp:22
+#, fuzzy
+#| msgid "Molecular Graph..."
+msgid "&Molecular…"
+msgstr "Molekularni grafikon ..."
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:32
 msgid "View general properties of a molecule."
 msgstr "Pogledajte opšta svojstva molekula."
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:83
 msgid "&Analysis"
 msgstr "&Analitički"
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/symmetry/symmetry.cpp:83
 msgid "&Properties"
 msgstr "&Svojstva"
 
-#: qtplugins/molecularproperties/molecularproperties.h:42
+#: qtplugins/molecularproperties/molecularproperties.h:31
 msgid "Molecular Properties"
 msgstr "Svojstva Molekula"
 
@@ -3229,11 +3261,11 @@ msgstr "Mrežne baze podataka"
 msgid "Interact with online databases, query structures etc."
 msgstr "Interakcija sa mrežnim bazama podataka, strukturama upita itd."
 
-#: qtplugins/noncovalent/noncovalent.cpp:154
+#: qtplugins/noncovalent/noncovalent.cpp:316
 msgid " °"
 msgstr " °"
 
-#: qtplugins/noncovalent/noncovalent.cpp:168
+#: qtplugins/noncovalent/noncovalent.cpp:338
 #, fuzzy
 #| msgid "Tolerance:"
 msgid "Angle tolerance:"
@@ -4507,6 +4539,10 @@ msgstr "VRML"
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
 msgstr "Renderirajte scenu pomoću VRML -a."
+
+#: qtplugins/wireframe/wireframe.h:28
+msgid "Wireframe"
+msgstr "Žičani okvir"
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -7309,6 +7345,10 @@ msgstr ""
 "\"miroslavnikolic@rocketmail.com\",\"ivanstar61@gmail.com\","
 "\"nikolamatic225@gmail.com\""
 
+#, fuzzy
+#~ msgid "Simple display of Cartoons family."
+#~ msgstr "Jednostavan prikaz VdW sfera."
+
 #~ msgid "Error interpreting obabel CML output."
 #~ msgstr "Greška pri tumačenju obabel CML izlaza."
 
@@ -7412,17 +7452,11 @@ msgstr ""
 #~ msgid "&LAMMPS Input"
 #~ msgstr "&LAMMPS Ulaz"
 
-#~ msgid "Licorice"
-#~ msgstr "Likoriš"
-
 #~ msgid "Van der Waals"
 #~ msgstr "Van Der Vals"
 
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "Van Der Vals (AO)"
-
-#~ msgid "Wireframe"
-#~ msgstr "Žičani okvir"
 
 #~ msgid "Reset to Default Values"
 #~ msgstr "Vrati na podrazumevane vrednosti"

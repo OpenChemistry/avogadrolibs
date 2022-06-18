@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-12 03:09+0000\n"
+"POT-Creation-Date: 2022-06-16 16:55+0000\n"
 "PO-Revision-Date: 2021-07-16 14:24+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1209,6 +1209,11 @@ msgstr "[sem molécula]"
 msgid "Layer"
 msgstr ""
 
+#: qtgui/layermodel.cpp:78
+#, qt-format
+msgid "Layer %1"
+msgstr ""
+
 #: qtgui/moleculemodel.cpp:104
 msgid "Untitled"
 msgstr "Sem título"
@@ -1551,7 +1556,8 @@ msgid "PQR Files (*.pqr)"
 msgstr "Arquivos PQR (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:143 qtplugins/apbs/apbsdialog.cpp:153
-#: qtplugins/commandscripts/command.cpp:98 qtplugins/cp2kinput/cp2kinput.cpp:96
+#: qtplugins/commandscripts/command.cpp:105
+#: qtplugins/cp2kinput/cp2kinput.cpp:96
 #: qtplugins/gamessinput/gamessinput.cpp:99
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #: qtplugins/lammpsinput/lammpsinput.cpp:75
@@ -1731,11 +1737,11 @@ msgstr "%L1°"
 msgid "%L1 Å"
 msgstr "%L1 Å"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:188
+#: qtplugins/bondcentrictool/bondcentrictool.h:186
 msgid "Bond centric manipulation tool."
 msgstr "Ferramenta de manipulação ligação centrada."
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:193
+#: qtplugins/bondcentrictool/bondcentrictool.h:191
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
@@ -1816,10 +1822,15 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.h:34
+#: qtplugins/cartoons/cartoons.h:30
 #, fuzzy
-msgid "Simple display of Cartoons family."
-msgstr "Exibição simples de esferas VdW."
+msgctxt "protein ribbon / cartoon rendering"
+msgid "Cartoons"
+msgstr "Ilustração"
+
+#: qtplugins/cartoons/cartoons.h:34
+msgid "Display of biomolecule ribbons / cartoons."
+msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:73
 msgid "Client server operations."
@@ -1910,16 +1921,21 @@ msgstr "Nome do arquivo"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:163:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:325:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:169
+#: qtplugins/noncovalent/noncovalent.cpp:339
 #, fuzzy
 #| msgid "Minimum Distance:"
 msgid "Maximum distance:"
 msgstr "Distância Mínima:"
+
+#: qtplugins/closecontacts/closecontacts.h:29
+msgctxt "rendering of non-covalent close contacts"
+msgid "Close Contacts"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:33
 #, fuzzy
@@ -1948,7 +1964,8 @@ msgstr ""
 msgid "Scripts"
 msgstr "Scripts"
 
-#: qtplugins/commandscripts/command.cpp:99 qtplugins/cp2kinput/cp2kinput.cpp:97
+#: qtplugins/commandscripts/command.cpp:106
+#: qtplugins/cp2kinput/cp2kinput.cpp:97
 #: qtplugins/gamessinput/gamessinput.cpp:100
 #: qtplugins/lammpsinput/lammpsinput.cpp:76
 #: qtplugins/openmminput/openmminput.cpp:74
@@ -1961,17 +1978,17 @@ msgstr ""
 "Erro ao ler o arquivo de saída '%1':\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:188
+#: qtplugins/commandscripts/command.cpp:195
 #, qt-format
 msgid "Processing %1"
 msgstr ""
 
-#: qtplugins/commandscripts/command.cpp:242
+#: qtplugins/commandscripts/command.cpp:250
 #: qtplugins/quantuminput/quantuminput.cpp:190
 msgid "Set path to Python interpreter:"
 msgstr "Definir caminho para interpretador Python:"
 
-#: qtplugins/commandscripts/command.cpp:244
+#: qtplugins/commandscripts/command.cpp:252
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2430,7 +2447,9 @@ msgstr "Cristal"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "Ferramentas para edição/análise específica de cristal."
 
-#: qtplugins/crystal/crystalscene.cpp:149 qtplugins/wireframe/wireframe.cpp:89
+#: qtplugins/crystal/crystalscene.cpp:149
+#: qtplugins/noncovalent/noncovalent.cpp:340
+#: qtplugins/wireframe/wireframe.cpp:89
 #, fuzzy
 msgid "Line width:"
 msgstr "Largura do pico:"
@@ -2954,6 +2973,13 @@ msgstr ""
 "Deseja atualizar o texto e perder todas as alterações feitas no painel de "
 "visualização do deck de entrada do Lammps?"
 
+#: qtplugins/licorice/licorice.h:29
+#, fuzzy
+#| msgid "Licorice"
+msgctxt "stick / licorice rendering"
+msgid "Licorice"
+msgstr "Bastão"
+
 #: qtplugins/licorice/licorice.h:33
 #, fuzzy
 msgid "Render atoms as licorice / sticks."
@@ -3085,11 +3111,17 @@ msgstr ""
 msgid "Render polygon meshes."
 msgstr "Desenha malhas triangulares."
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:43
+#: qtplugins/molecularproperties/molecularproperties.cpp:22
+#, fuzzy
+#| msgid "Molecular Graph..."
+msgid "&Molecular…"
+msgstr "Gráfico Molecular..."
+
+#: qtplugins/molecularproperties/molecularproperties.cpp:32
 msgid "View general properties of a molecule."
 msgstr "Visualizar propriedades gerais de uma molécula."
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:90 qtplugins/spectra/spectra.cpp:55
 #: qtplugins/surfaces/surfaces.cpp:120 qtplugins/symmetry/symmetry.cpp:83
@@ -3097,13 +3129,13 @@ msgstr "Visualizar propriedades gerais de uma molécula."
 msgid "&Analysis"
 msgstr "Analítica"
 
-#: qtplugins/molecularproperties/molecularproperties.cpp:53
+#: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/symmetry/symmetry.cpp:83
 msgid "&Properties"
 msgstr "&Propriedades"
 
-#: qtplugins/molecularproperties/molecularproperties.h:42
+#: qtplugins/molecularproperties/molecularproperties.h:31
 msgid "Molecular Properties"
 msgstr "Propriedades Moleculares"
 
@@ -3166,13 +3198,13 @@ msgstr ""
 msgid "Interact with online databases, query structures etc."
 msgstr "Interagir com bancos de dados online, estruturas de consulta, etc."
 
-#: qtplugins/noncovalent/noncovalent.cpp:154
+#: qtplugins/noncovalent/noncovalent.cpp:316
 #, fuzzy
 #| msgid "°"
 msgid " °"
 msgstr "°"
 
-#: qtplugins/noncovalent/noncovalent.cpp:168
+#: qtplugins/noncovalent/noncovalent.cpp:338
 #, fuzzy
 #| msgid "Tolerance:"
 msgid "Angle tolerance:"
@@ -4449,6 +4481,10 @@ msgstr "VRML"
 #: qtplugins/vrml/vrml.h:40
 msgid "Render the scene using VRML."
 msgstr "Renderizar a cena usando VRML."
+
+#: qtplugins/wireframe/wireframe.h:28
+msgid "Wireframe"
+msgstr "Estrutura de Arame"
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -7153,6 +7189,10 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Seus e-mails"
 
+#, fuzzy
+#~ msgid "Simple display of Cartoons family."
+#~ msgstr "Exibição simples de esferas VdW."
+
 #~ msgid "Error interpreting obabel CML output."
 #~ msgstr "Erro ao interpretar a saída obabel CML."
 
@@ -7247,17 +7287,11 @@ msgstr "Seus e-mails"
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distância: %L1 Å"
 
-#~ msgid "Licorice"
-#~ msgstr "Bastão"
-
 #~ msgid "Van der Waals"
 #~ msgstr "Van der Waals"
 
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "Van der Waals (OA)"
-
-#~ msgid "Wireframe"
-#~ msgstr "Estrutura de Arame"
 
 #~ msgid "Reset to Default Values"
 #~ msgstr "Redefinir para Valores Padrão"
