@@ -131,7 +131,8 @@ static bool checkPairDonorIsValid(const Molecule &molecule, Index n, int interac
       break;
     case CHALCOGEN_BOND:
       switch (nnum) {
-        case 7: case 8: case 9: case 17: // F, O, N, Cl
+        case 7: case 8: case 9: case 16:
+        case 17: case 34: case 52: // F, O, N, Cl, S, Se, Te
           return true;
       }
       break;
