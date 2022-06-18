@@ -36,6 +36,7 @@ using Core::Array;
 using Core::AtomHybridization;
 using Core::AtomUtilities;
 using Core::Bond;
+using Core::Elements;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
@@ -256,10 +257,12 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
   std::vector<Index> enabledAtoms;
   Array<Vector3> enabledPositions;
+  Array<double> atomRadii;
   const size_t atomCount = molecule.atomCount();
   for (Index i = 0; i < atomCount; ++i) {
     enabledAtoms.push_back(i);
     enabledPositions.push_back(molecule.atomPosition3d(i));
+    atomRadii.push_back(Elements::radiusVDW(molecule.atomicNumber(i)));
   }
   NeighborPerceiver perceiver(enabledPositions, m_maximumDistance);
 
@@ -276,6 +279,7 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
     if (interactionType == NONE)
       continue;
     Vector3 pos = molecule.atomPosition3d(i);
+    double radius = atomRadii[i];
     perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
     for (Index ni : neighbors) {
       Index n = enabledAtoms[ni];
@@ -283,9 +287,10 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
         continue;
 
       Vector3 npos = molecule.atomPosition3d(n);
+      double nradius = atomRadii[n];
       Vector3 distance_vector = npos - pos;
 
-      if (distance_vector.norm() > m_maximumDistance)
+      if (distance_vector.norm() > m_maximumDistance + radius + nradius)
         continue;
       if (!checkAtomPairNotBonded(molecule, i, n))
         continue;
