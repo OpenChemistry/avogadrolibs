@@ -4,8 +4,6 @@
 namespace Avogadro {
 namespace Core {
 
-unsigned char element_count = 119;
-
 const char* element_symbols[] = {
   "Xx", "H",  "He", "Li", "Be", "B",  "C",  "N",  "O",  "F",  "Ne", "Na",
   "Mg", "Al", "Si", "P",  "S",  "Cl", "Ar", "K",  "Ca", "Sc", "Ti", "V",

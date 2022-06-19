@@ -28,10 +28,13 @@ using std::swap;
 Molecule::Molecule()
   : m_basisSet(nullptr), m_unitCell(nullptr),
     m_layers(LayerManager::getMoleculeLayer(this))
-{}
+{
+  m_elements.reset();
+}
 
 Molecule::Molecule(const Molecule& other)
-  : m_data(other.m_data), m_charges(other.m_charges), m_customElementMap(other.m_customElementMap),
+  : m_data(other.m_data), m_charges(other.m_charges),
+    m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
     m_label(other.m_label), m_coordinates3d(other.m_coordinates3d),
     m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
@@ -44,8 +47,7 @@ Molecule::Molecule(const Molecule& other)
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
@@ -72,10 +74,9 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_data(std::move(other.m_data)),
-    m_charges(std::move(other.m_charges)),
+  : m_data(std::move(other.m_data)), m_charges(std::move(other.m_charges)),
     m_customElementMap(std::move(other.m_customElementMap)),
-    m_positions2d(std::move(other.m_positions2d)),
+    m_elements(other.m_elements), m_positions2d(std::move(other.m_positions2d)),
     m_positions3d(std::move(other.m_positions3d)),
     m_label(std::move(other.m_label)),
     m_coordinates3d(std::move(other.m_coordinates3d)),
@@ -117,6 +118,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_data = other.m_data;
     m_charges = other.m_charges;
     m_customElementMap = other.m_customElementMap;
+    m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
     m_label = other.m_label;
@@ -176,6 +178,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_data = std::move(other.m_data);
     m_charges = std::move(other.m_charges);
     m_customElementMap = std::move(other.m_customElementMap);
+    m_elements = std::move(other.m_elements);
     m_positions2d = std::move(other.m_positions2d);
     m_positions3d = std::move(other.m_positions3d);
     m_label = std::move(other.m_label);
@@ -244,12 +247,12 @@ void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
 {
   if (value.size() != atomCount())
     return;
-  
+
   m_charges[type] = value;
 }
 
 MatrixX Molecule::partialCharges(const std::string& type) const
-{  
+{
   auto search = m_charges.find(type);
   if (search != m_charges.end()) {
     return search->second; // value from the map
@@ -361,6 +364,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
   m_graph.addVertex();
   m_atomicNumbers.push_back(number);
+  m_elements.set(number);
   m_layers.addAtomToActiveLayer(atomCount() - 1);
   m_charges.clear();
   return AtomType(this, static_cast<Index>(atomCount() - 1));
@@ -423,6 +427,23 @@ bool Molecule::removeAtom(Index index)
 
   m_charges.clear();
   removeBonds(index);
+
+  // before we remove, check if there's any other atom of this element
+  // (e.g., we removed the last oxygen)
+  auto elementToRemove = m_atomicNumbers[index];
+  bool foundAnother = false;
+  for (Index i = 0; i < atomCount(); ++i) {
+    if (i == index)
+      continue;
+
+    if (m_atomicNumbers[index] == elementToRemove) {
+      foundAnother = true;
+      break; // we're done
+    }
+  }
+  if (!foundAnother)
+    m_elements.reset(elementToRemove);
+
   m_atomicNumbers.swapAndPop(index);
   m_graph.removeVertex(index);
 
@@ -448,6 +469,7 @@ void Molecule::clearAtoms()
   m_bondOrders.clear();
   m_graph.clear();
   m_charges.clear();
+  m_elements.reset();
 }
 
 Molecule::AtomType Molecule::atom(Index index) const

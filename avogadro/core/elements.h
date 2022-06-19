@@ -13,6 +13,8 @@
 namespace Avogadro {
 namespace Core {
 
+const unsigned char element_count = 119; //!< from 0 to 118
+
 /**
  * @class Elements elements.h <avogadro/core/elements.h>
  * @brief The Elements class stores basic data about chemical elements.

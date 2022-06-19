@@ -48,6 +48,9 @@ public:
   /** Type for custom element map. */
   typedef std::map<unsigned char, std::string> CustomElementMap;
 
+  /** Type for element masks (e.g., does this molecule contain certain elements) */
+  typedef std::bitset<element_count> ElementMask;
+
   /** Creates a new, empty molecule. */
   Molecule();
 
@@ -274,6 +277,9 @@ public:
   const CustomElementMap& customElementMap() const;
   void setCustomElementMap(const CustomElementMap& map);
   /** @} */
+
+  /** @return the elements currently in this molecule */
+  const ElementMask& elements() const;
 
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
@@ -687,6 +693,7 @@ protected:
   VariantMap m_data;
   std::map<std::string, MatrixX> m_charges; //!< Sets of atomic partial charges
   CustomElementMap m_customElementMap;
+  ElementMask m_elements; //!< Which elements this molecule contains (e.g., for force fields)
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<std::string> m_label;
