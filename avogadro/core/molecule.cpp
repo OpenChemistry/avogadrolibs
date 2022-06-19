@@ -251,7 +251,7 @@ void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
   m_charges[type] = value;
 }
 
-MatrixX Molecule::partialCharges(const std::string& type) const
+const MatrixX& Molecule::partialCharges(const std::string& type) const
 {
   auto search = m_charges.find(type);
   if (search != m_charges.end()) {

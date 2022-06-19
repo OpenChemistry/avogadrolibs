@@ -7,11 +7,13 @@ include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}")
 set(HEADERS
   chargemodel.h
   chargemanager.h
+  defaultmodel.h
 )
 
 set(SOURCES
   chargemodel.cpp
   chargemanager.cpp
+  defaultmodel.cpp
 )
 
 avogadro_add_library(AvogadroCalc ${HEADERS} ${SOURCES})

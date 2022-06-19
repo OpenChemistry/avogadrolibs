@@ -93,7 +93,7 @@ public:
   void setPartialCharges(const std::string& type, const MatrixX& value);
 
   /** @return the atomic partial charges of type @p type */
-  MatrixX partialCharges(const std::string& type) const;
+  const MatrixX& partialCharges(const std::string& type) const;
 
   /** @return the types of partial charges available stored with this molecule. */
   std::vector<std::string> partialChargeTypes() const;

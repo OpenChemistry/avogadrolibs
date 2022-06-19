@@ -10,16 +10,13 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
 #include <string>
 #include <vector>
 
 namespace Avogadro {
-
-namespace Core {
-class Molecule;
-}
 
 namespace Calc {
 
@@ -48,7 +45,7 @@ public:
   virtual ~ChargeModel();
 
   /**
-   * Create a new instance of the file format class. Ownership passes to the
+   * Create a new instance of the model. Ownership passes to the
    * caller.
    */
   virtual ChargeModel* newInstance() const = 0;
@@ -61,16 +58,16 @@ public:
   virtual std::string identifier() const = 0;
 
   /**
-   * @brief The user-visibile name of the model (e.g., "Natural Population
+   * @brief A user-visibile name of the model (e.g., "Natural Population
    * Analysis")
    */
   virtual std::string name() const = 0;
 
   /**
-   * A longer description of the model, along with any relevant help text for
-   * users. This can be used for citations, for example.
+   * @brief Indicate if your method only treats a subset of elements
+   * @return an element mask corresponding to the defined subset
    */
-  virtual std::string description() const = 0;
+  virtual Core::Molecule::ElementMask elements() const = 0;
 
   /**
    * Set the dielectric constant for the model.
@@ -83,7 +80,7 @@ public:
    */
   virtual float dielectric() const { return m_dielectric; }
 
-  virtual Core::Array<double> partialCharges(
+  virtual const MatrixX& partialCharges(
     const Core::Molecule& mol) const = 0;
 
   /**
@@ -95,6 +92,18 @@ public:
    */
   virtual double potential(const Core::Molecule& mol,
                            const Vector3& point) const;
+
+  /**
+   * @brief Calculate the electrostatic potential at multiple points
+   * @param mol The molecule to calculate the potential for.
+   * @param array The points in space to calculate the potential at.
+   * @return The electrostatic potential at the points in an array.
+   *
+   * This method is used for batch calculation and defaults to simply
+   * calculating each point at a time. Some methods work faster in batches.
+   */
+  virtual Core::Array<double>& potentials(const Core::Molecule& mol,
+                                    const Core::Array<Vector3>& points) const;
 
 protected:
   /**
