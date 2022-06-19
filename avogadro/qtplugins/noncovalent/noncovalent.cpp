@@ -20,10 +20,13 @@
 #include <QtGui/QColor>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include <algorithm>
 #include <cmath>
+#include <sstream>
 
 // bond angles
 #define M_TETRAHEDRAL (acosf(-1.0f / 3.0f))
@@ -49,8 +52,16 @@ NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
   m_layerManager = PluginLayerManager(m_name);
   
   QSettings settings;
-  m_angleToleranceDegrees = settings.value("nonCovalent/angleTolerance", 40.0).toDouble();
-  m_maximumDistance = settings.value("nonCovalent/maximumDistance", 3.0).toDouble();
+  m_angleTolerancesDegrees = {
+  	settings.value("nonCovalent/angleTolerance0", 40.0).toDouble(),
+  	settings.value("nonCovalent/angleTolerance1", 40.0).toDouble(),
+  	settings.value("nonCovalent/angleTolerance2", 40.0).toDouble()
+  };
+  m_maximumDistances = {
+  	settings.value("nonCovalent/maximumDistance", 1.0).toDouble(),
+  	settings.value("nonCovalent/maximumDistance", 1.0).toDouble(),
+  	settings.value("nonCovalent/maximumDistance", 2.0).toDouble()
+  };
   QColor hydrogenBColor = settings.value("nonCovalent/lineColor0", QColor(64, 192, 255)).value<QColor>();
   QColor halogenBColor = settings.value("nonCovalent/lineColor1", QColor(128, 255, 64)).value<QColor>();
   QColor chalcogenBColor = settings.value("nonCovalent/lineColor2", QColor(255, 192, 64)).value<QColor>();
@@ -59,11 +70,7 @@ NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
     Vector3ub(halogenBColor.red(), halogenBColor.green(), halogenBColor.blue()),
     Vector3ub(chalcogenBColor.red(), chalcogenBColor.green(), chalcogenBColor.blue())
   };
-  m_lineWidths = {
-    settings.value("nonCovalent/lineWidth0", 2.0).toFloat(),
-    settings.value("nonCovalent/lineWidth1", 2.0).toFloat(),
-    settings.value("nonCovalent/lineWidth2", 2.0).toFloat()
-  };
+  m_lineWidth = settings.value("nonCovalent/lineWidth0", 5.0).toFloat();
 }
 
 NonCovalent::~NonCovalent() {}
@@ -264,14 +271,17 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
     enabledPositions.push_back(molecule.atomPosition3d(i));
     atomRadii.push_back(Elements::radiusVDW(molecule.atomicNumber(i)));
   }
-  NeighborPerceiver perceiver(enabledPositions, m_maximumDistance);
+  float absoluteMaxDistance = *std::max_element(
+  	m_maximumDistances.begin(), m_maximumDistances.end()
+  );
+  NeighborPerceiver perceiver(enabledPositions, absoluteMaxDistance);
 
   GeometryNode *geometry = new GeometryNode;
   node.addChild(geometry);
   DashedLineGeometry *lines = new DashedLineGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
-  lines->setLineWidth(m_lineWidths[0]);
+  lines->setLineWidth(m_lineWidth);
   geometry->addDrawable(lines);
   Array<Index> neighbors;
   for (Index i: enabledAtoms) {
@@ -290,12 +300,12 @@ void NonCovalent::process(const Molecule &molecule, Rendering::GroupNode &node)
       double nradius = atomRadii[n];
       Vector3 distance_vector = npos - pos;
 
-      if (distance_vector.norm() > m_maximumDistance + radius + nradius)
+      if (distance_vector.norm() > m_maximumDistances[interactionType] + radius + nradius)
         continue;
       if (!checkAtomPairNotBonded(molecule, i, n))
         continue;
 
-      float angleTolerance = m_angleToleranceDegrees * M_PI / 180.0;
+      float angleTolerance = m_angleTolerancesDegrees[interactionType] * M_PI / 180.0;
       if (!checkHoleVector(molecule, i, distance_vector, angleTolerance))
         continue;
       if (!checkPairVector(molecule, n, -distance_vector, angleTolerance))
@@ -310,69 +320,84 @@ QWidget *NonCovalent::setupWidget()
 {
   QWidget *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
   QVBoxLayout *v = new QVBoxLayout;
-
-  // angle tolerance
-  QDoubleSpinBox *angle_spin = new QDoubleSpinBox;
-  angle_spin->setRange(0.0, 180.0);
-  angle_spin->setSingleStep(1.0);
-  angle_spin->setDecimals(0);
-  angle_spin->setSuffix(tr(" °"));
-  angle_spin->setValue(m_angleToleranceDegrees);
-  QObject::connect(angle_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setAngleTolerance);
+  QTabWidget *tabs = new QTabWidget;
   
-  // maximum distance
-  QDoubleSpinBox *distance_spin = new QDoubleSpinBox;
-  distance_spin->setRange(1.0, 10.0);
-  distance_spin->setSingleStep(0.1);
-  distance_spin->setDecimals(1);
-  distance_spin->setSuffix(tr(" Å"));
-  distance_spin->setValue(m_angleToleranceDegrees);
-  QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setMaximumDistance);
+  for (Index i = 0; i < 3; i++) {
+  	// angle tolerance
+		QDoubleSpinBox *angle_spin = new QDoubleSpinBox;
+		angle_spin->setRange(0.0, 180.0);
+		angle_spin->setSingleStep(1.0);
+		angle_spin->setDecimals(0);
+		angle_spin->setSuffix(tr(" °"));
+		angle_spin->setValue(m_angleTolerancesDegrees[i]);
+		QObject::connect(angle_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
+			[this, i](float width){ return setAngleTolerance(width, i); }
+		);
+		
+		// maximum distance
+		QDoubleSpinBox *distance_spin = new QDoubleSpinBox;
+		distance_spin->setRange(1.0, 10.0);
+		distance_spin->setSingleStep(0.1);
+		distance_spin->setDecimals(1);
+		distance_spin->setSuffix(tr(" Å"));
+		distance_spin->setValue(m_maximumDistances[i]);
+		QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, 
+			[this, i](float width){ return setMaximumDistance(width, i); }
+		);
   
-  // line width
-  QDoubleSpinBox* lineWidth_spin = new QDoubleSpinBox;
-  lineWidth_spin->setRange(1.0, 10.0);
-  lineWidth_spin->setSingleStep(0.5);
-  lineWidth_spin->setDecimals(1);
-  lineWidth_spin->setValue(m_lineWidths[0]);
-  QObject::connect(lineWidth_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setLineWidth);
-
-  QFormLayout *form = new QFormLayout;
-  form->addRow(QObject::tr("Angle tolerance:"), angle_spin);
-  form->addRow(QObject::tr("Maximum distance:"), distance_spin);
-  form->addRow(QObject::tr("Line width:"), lineWidth_spin);
-  v->addLayout(form);
-
+  	// line width
+		QDoubleSpinBox* lineWidth_spin = new QDoubleSpinBox;
+		lineWidth_spin->setRange(1.0, 10.0);
+		lineWidth_spin->setSingleStep(0.5);
+		lineWidth_spin->setDecimals(1);
+		lineWidth_spin->setValue(m_lineWidth);
+		QObject::connect(lineWidth_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &NonCovalent::setLineWidth);
+		
+		QFormLayout *form = new QFormLayout;
+  	form->addRow(QObject::tr("Angle tolerance:"), angle_spin);
+  	form->addRow(QObject::tr("Maximum distance:"), distance_spin);
+  	form->addRow(QObject::tr("Line width:"), lineWidth_spin);
+  	
+  	QWidget *page = new QWidget;
+  	page->setLayout(form);
+  	tabs->addTab(page, INTERACTION_NAMES[i]);
+  }
+  
+  v->addWidget(tabs);
   v->addStretch(1);
   widget->setLayout(v);
   return widget;
 }
 
-void NonCovalent::setAngleTolerance(float angleTolerance)
+void NonCovalent::setAngleTolerance(float angleTolerance, Index index)
 {
-  m_angleToleranceDegrees = float(angleTolerance);
+  m_angleTolerancesDegrees[index] = float(angleTolerance);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("nonCovalent/angleTolerance", m_angleToleranceDegrees);
+  settings.setValue(QString((
+  	std::ostringstream() << "nonCovalent/angleTolerance" << index
+  ).str().c_str()), angleTolerance);
 }
 
-void NonCovalent::setMaximumDistance(float maximumDistance)
+void NonCovalent::setMaximumDistance(float maximumDistance, Index index)
 {
-  m_maximumDistance = float(maximumDistance);
+  m_maximumDistances[index] = float(maximumDistance);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("nonCovalent/maximumDistance", m_maximumDistance);
+  settings.setValue(QString((
+  	std::ostringstream() << "nonCovalent/maximumDistance" << index
+  ).str().c_str()), maximumDistance);
 }
 
 void NonCovalent::setLineWidth(float width)
 {
-  m_lineWidths[0] = width;
+  m_lineWidth = width;
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("nonCovalent/lineWidth0", width);
+  settings.setValue("nonCovalent/lineWidth", width);
 }
 
 } // namespace QtPlugins
