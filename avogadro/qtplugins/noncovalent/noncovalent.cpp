@@ -375,9 +375,7 @@ void NonCovalent::setAngleTolerance(float angleTolerance, Index index)
   emit drawablesChanged();
 
   QSettings settings;
-  std::ostringstream stream;
-  stream << "nonCovalent/angleTolerance" << index;
-  settings.setValue(QString(stream.str().c_str()), angleTolerance);
+  settings.setValue(QString("nonCovalent/angleTolerance%1").arg(index), angleTolerance);
 }
 
 void NonCovalent::setMaximumDistance(float maximumDistance, Index index)
@@ -386,9 +384,7 @@ void NonCovalent::setMaximumDistance(float maximumDistance, Index index)
   emit drawablesChanged();
 
   QSettings settings;
-  std::ostringstream stream;
-  stream << "nonCovalent/maximumDistance" << index;
-  settings.setValue(QString(stream.str().c_str()), maximumDistance);
+  settings.setValue(QString("nonCovalent/maximumDistance%1").arg(index), maximumDistance);
 }
 
 void NonCovalent::setLineWidth(float width)
