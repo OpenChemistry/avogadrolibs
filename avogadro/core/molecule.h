@@ -694,7 +694,7 @@ public:
 
 protected:
   VariantMap m_data;
-  std::map<std::string, MatrixX> m_charges; //!< Sets of atomic partial charges
+  std::map<std::string, MatrixX> m_partialCharges; //!< Sets of atomic partial charges
   CustomElementMap m_customElementMap;
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)

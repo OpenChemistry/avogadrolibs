@@ -47,13 +47,6 @@ bool ChargeManager::addModel(ChargeModel* model)
     appendError("Model " + model->identifier() + " already loaded.");
     return false;
   }
-  for (std::vector<ChargeModel*>::const_iterator it = m_models.begin();
-       it != m_models.end(); ++it) {
-    if (*it == model) {
-      appendError("The model object was already loaded.");
-      return false;
-    }
-  }
 
   // If we got here then the format is unique enough to be added.
   size_t index = m_models.size();
@@ -125,7 +118,7 @@ const MatrixX ChargeManager::partialCharges(
   }
 
   // otherwise go through our list
-  if (m_identifiers.find(identifier) != m_identifiers.end()) {
+  if (m_identifiers.find(identifier) == m_identifiers.end()) {
     MatrixX charges(molecule.atomCount(),
                     1); // we have to return something, so zeros
     return charges;
@@ -150,7 +143,7 @@ double ChargeManager::potential(const std::string& identifier,
   }
 
   // otherwise go through our list
-  if (m_identifiers.find(identifier) != m_identifiers.end()) {
+  if (m_identifiers.find(identifier) == m_identifiers.end()) {
     return 0.0;
   }
 
@@ -171,7 +164,7 @@ Core::Array<double> ChargeManager::potentials(
     return model.potentials(molecule, points);
   }
 
-  if (m_identifiers.find(identifier) != m_identifiers.end()) {
+  if (m_identifiers.find(identifier) == m_identifiers.end()) {
     Core::Array<double> potentials(points.size(), 0.0);
     return potentials;
   }
