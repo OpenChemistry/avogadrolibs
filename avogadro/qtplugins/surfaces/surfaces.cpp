@@ -52,6 +52,7 @@ namespace {
 namespace Avogadro {
 namespace QtPlugins {
 
+using Core::Array;
 using Core::Cube;
 using Core::GaussianSet;
 using QtGui::Molecule;
@@ -181,12 +182,16 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  /*double probeRadius = 0.0;
+  double probeRadius = 0.0;
   switch (m_dialog->surfaceType()) {
     case VanDerWaals:
+        probeRadius = 0.1;
+        break;
     case SolventAccessible:
     case SolventExcluded:
-  }*/
+        probeRadius = 1.4;
+        break;
+  }
 
   // cache Van der Waals radii
   std::vector<double> radii(m_molecule->atomCount());
@@ -206,6 +211,7 @@ void Surfaces::calculateEDT()
   Vector3i cubeSize = m_cube->dimensions();
 
   /* Just some simple proof-of-concept code */
+  Array<Index> neighbors;
   for (size_t zi = 0; zi < cubeSize[2]; zi++) {
     for (size_t yi = 0; yi < cubeSize[1]; yi++) {
       for (size_t xi = 0; xi < cubeSize[0]; xi++) {
@@ -215,7 +221,8 @@ void Surfaces::calculateEDT()
         pos += m_cube->min();
 
         double minDistance = probeRadius;
-        for (Index neighbor: neighborPerceiver.getNeighbors(pos)) {
+        neighborPerceiver.getNeighborsInclusiveInPlace(neighbors, pos);
+        for (Index neighbor: neighbors) {
           Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
           double distance = (neighborPos - pos).norm();
           distance -= radii[neighbor];
