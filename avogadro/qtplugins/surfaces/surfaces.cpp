@@ -183,11 +183,13 @@ void Surfaces::calculateSurface()
 void Surfaces::calculateEDT()
 {
   double probeRadius = 0.0;
+  double radiusOffset = 0.0;
   switch (m_dialog->surfaceType()) {
     case VanDerWaals:
-        probeRadius = 0.1;
         break;
     case SolventAccessible:
+        radiusOffset = 1.4;
+        break;
     case SolventExcluded:
         probeRadius = 1.4;
         break;
@@ -202,7 +204,7 @@ void Surfaces::calculateEDT()
       max_radius = radii[i];
   }
 
-  double padding = max_radius;
+  double padding = max_radius + radiusOffset;
   m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
 
   auto neighborPerceiver = Core::NeighborPerceiver(
@@ -225,7 +227,7 @@ void Surfaces::calculateEDT()
         for (Index neighbor: neighbors) {
           Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
           double distance = (neighborPos - pos).norm();
-          distance -= radii[neighbor];
+          distance -= radii[neighbor] + radiusOffset;
           minDistance = std::min(minDistance, distance);
         }
 

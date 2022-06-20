@@ -26,8 +26,8 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   m_ui->surfaceCombo->addItem(tr("Van der Waals"), Surfaces::Type::VanDerWaals);
   m_ui->surfaceCombo->addItem(tr("Solvent Accessible"),
                               Surfaces::Type::SolventAccessible);
-  m_ui->surfaceCombo->addItem(tr("Solvent Excluded"),
-                              Surfaces::Type::SolventExcluded);
+  /*m_ui->surfaceCombo->addItem(tr("Solvent Excluded"),
+                              Surfaces::Type::SolventExcluded);*/
 
   connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(surfaceComboChanged(int)));
