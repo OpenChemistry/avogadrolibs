@@ -58,9 +58,9 @@ NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
   	settings.value("nonCovalent/angleTolerance2", 40.0).toDouble()
   };
   m_maximumDistances = {
-  	settings.value("nonCovalent/maximumDistance", 1.0).toDouble(),
-  	settings.value("nonCovalent/maximumDistance", 1.0).toDouble(),
-  	settings.value("nonCovalent/maximumDistance", 2.0).toDouble()
+  	settings.value("nonCovalent/maximumDistance0", 1.0).toDouble(),
+  	settings.value("nonCovalent/maximumDistance1", 2.0).toDouble(),
+  	settings.value("nonCovalent/maximumDistance2", 2.0).toDouble()
   };
   QColor hydrogenBColor = settings.value("nonCovalent/lineColor0", QColor(64, 192, 255)).value<QColor>();
   QColor halogenBColor = settings.value("nonCovalent/lineColor1", QColor(128, 255, 64)).value<QColor>();
@@ -375,9 +375,9 @@ void NonCovalent::setAngleTolerance(float angleTolerance, Index index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue(QString((
-  	std::ostringstream() << "nonCovalent/angleTolerance" << index
-  ).str().c_str()), angleTolerance);
+  std::ostringstream stream;
+  stream << "nonCovalent/angleTolerance" << index;
+  settings.setValue(QString(stream.str().c_str()), angleTolerance);
 }
 
 void NonCovalent::setMaximumDistance(float maximumDistance, Index index)
@@ -386,9 +386,9 @@ void NonCovalent::setMaximumDistance(float maximumDistance, Index index)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue(QString((
-  	std::ostringstream() << "nonCovalent/maximumDistance" << index
-  ).str().c_str()), maximumDistance);
+  std::ostringstream stream;
+  stream << "nonCovalent/maximumDistance" << index;
+  settings.setValue(QString(stream.str().c_str()), maximumDistance);
 }
 
 void NonCovalent::setLineWidth(float width)
