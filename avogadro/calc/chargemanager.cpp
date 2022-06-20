@@ -113,7 +113,7 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   return identifiers;
 }
 
-const MatrixX& ChargeManager::partialCharges(
+const MatrixX ChargeManager::partialCharges(
   const std::string& identifier, const Core::Molecule& molecule) const
 {
   // first check if the type is found in the molecule
@@ -159,7 +159,7 @@ double ChargeManager::potential(const std::string& identifier,
   return model->potential(molecule, point);
 }
 
-Core::Array<double>& ChargeManager::potentials(
+Core::Array<double> ChargeManager::potentials(
   const std::string& identifier, const Core::Molecule& molecule,
   const Core::Array<Vector3>& points) const
 {

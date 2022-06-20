@@ -80,7 +80,7 @@ public:
    */
   virtual float dielectric() const { return m_dielectric; }
 
-  virtual const MatrixX& partialCharges(
+  virtual const MatrixX partialCharges(
     const Core::Molecule& mol) const = 0;
 
   /**
@@ -102,7 +102,7 @@ public:
    * This method is used for batch calculation and defaults to simply
    * calculating each point at a time. Some methods work faster in batches.
    */
-  virtual Core::Array<double>& potentials(const Core::Molecule& mol,
+  virtual Core::Array<double> potentials(const Core::Molecule& mol,
                                     const Core::Array<Vector3>& points) const;
 
 protected:

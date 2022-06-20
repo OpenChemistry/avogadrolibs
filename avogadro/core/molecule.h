@@ -282,7 +282,7 @@ public:
   /** @} */
 
   /** @return the elements currently in this molecule */
-  const ElementMask& elements() const;
+  const ElementMask elements() const;
 
   /**  Adds an atom to the molecule. */
   virtual AtomType addAtom(unsigned char atomicNumber);
@@ -804,7 +804,7 @@ inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
   return false;
 }
 
-inline const Molecule::ElementMask& Molecule::elements() const
+inline const Molecule::ElementMask Molecule::elements() const
 {
   return m_elements;
 }

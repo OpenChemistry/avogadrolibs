@@ -15,7 +15,7 @@ using Core::Molecule;
 
 namespace Calc {
 
-DefaultModel::DefaultModel(const std::string id)
+DefaultModel::DefaultModel(const std::string& id)
   : m_identifier(id), ChargeModel()
 {
   // we don't know which elements are in the molecule
@@ -26,7 +26,7 @@ DefaultModel::DefaultModel(const std::string id)
 
 DefaultModel::~DefaultModel() {}
 
-const MatrixX& DefaultModel::partialCharges(
+const MatrixX DefaultModel::partialCharges(
   const Core::Molecule& mol) const
 {
   return mol.partialCharges(m_identifier);

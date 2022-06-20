@@ -32,7 +32,7 @@ namespace Calc {
 class AVOGADROCALC_EXPORT DefaultModel : public ChargeModel
 {
 public:
-  DefaultModel(const std::string identifier = "");
+  DefaultModel(const std::string& identifier = "");
   virtual ~DefaultModel();
 
   /**
@@ -52,7 +52,7 @@ public:
   /**
    * @brief Set the identifier
    */
-  virtual void setIdentifier(const std::string identifier)
+  virtual void setIdentifier(const std::string& identifier)
   {
     m_identifier = identifier;
   }
@@ -74,7 +74,7 @@ public:
   /**
    * @brief Retrieve the relevant charges from the molecule for our defined type
    */
-  virtual const MatrixX& partialCharges(
+  virtual const MatrixX partialCharges(
     const Core::Molecule& mol) const override;
 
 protected:

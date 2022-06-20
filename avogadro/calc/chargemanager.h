@@ -13,8 +13,8 @@
 #include <avogadro/core/vector.h>
 
 #include <map>
-#include <string>
 #include <set>
+#include <string>
 #include <vector>
 
 namespace Avogadro {
@@ -108,8 +108,8 @@ public:
    * Note that some models do not have well-defined atomic partial charges
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
-  const MatrixX& partialCharges(const std::string& identifier,
-                                const Core::Molecule& mol) const;
+  const MatrixX partialCharges(const std::string& identifier,
+                               const Core::Molecule& mol) const;
 
   /**
    * @return the potential at the point for the molecule, or 0.0 if the model is
@@ -122,9 +122,9 @@ public:
    * @return the potentials at the point for the molecule, or an array of 0.0 if
    * the model is not available
    */
-  Core::Array<double>& potentials(const std::string& identifier,
-                                  const Core::Molecule& mol,
-                                  const Core::Array<Vector3>& points) const;
+  Core::Array<double> potentials(const std::string& identifier,
+                                 const Core::Molecule& mol,
+                                 const Core::Array<Vector3>& points) const;
 
   /**
    * Get any errors that have been logged when loading models.

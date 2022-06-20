@@ -46,7 +46,7 @@ double ChargeModel::potential(const Molecule& mol, const Vector3& point) const
   return potential / m_dielectric;
 }
 
-Array<double>& ChargeModel::potentials(const Core::Molecule& mol,
+Array<double> ChargeModel::potentials(const Core::Molecule& mol,
                                       const Array<Vector3>& points) const
 {
   // This is naive and slow, but can be re-implemented by methods
