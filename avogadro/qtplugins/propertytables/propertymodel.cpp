@@ -120,9 +120,10 @@ QString partialCharge(Molecule* molecule, int atom)
 {
   // TODO: we need to track type and/or calling the charge calculator
   float charge = 0.0;
-  std::vector<std::string> types = molecule->partialChargeTypes();
+  std::set<std::string> types = molecule->partialChargeTypes();
   if (types.size() > 0) {
-    MatrixX charges = molecule->partialCharges(types[0]);
+    auto first = types.cbegin();
+    MatrixX charges = molecule->partialCharges((*first));
     charge = charges(atom, 0);
   }
   return QString("%L1").arg(charge, 0, 'f', 3);

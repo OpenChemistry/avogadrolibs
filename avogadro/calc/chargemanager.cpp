@@ -5,6 +5,7 @@
 
 #include "chargemanager.h"
 #include "chargemodel.h"
+#include "defaultmodel.h"
 
 #include <algorithm>
 #include <memory>
@@ -37,11 +38,12 @@ bool ChargeManager::unregisterModel(const std::string& identifier)
 
 bool ChargeManager::addModel(ChargeModel* model)
 {
-  if (!model) {
+  if (model == nullptr) {
     appendError("Supplied model was null.");
     return false;
   }
-  if (m_identifiers.count(model->identifier()) > 0) {
+
+  if (m_identifiers.find(model->identifier()) != m_identifiers.end()) {
     appendError("Model " + model->identifier() + " already loaded.");
     return false;
   }
@@ -56,50 +58,20 @@ bool ChargeManager::addModel(ChargeModel* model)
   // If we got here then the format is unique enough to be added.
   size_t index = m_models.size();
   m_models.push_back(model);
-  m_identifiers[model->identifier()].push_back(index);
+  m_identifiers[model->identifier()] = index;
 
   return true;
 }
 
-namespace {
-// Lookup each key from "keys" in "map", and remove "val" from the Map's
-// data value (which is a vector of ValueType)
-template <typename Map, typename VectorOfKeys, typename ValueType>
-void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
-{
-  typedef typename VectorOfKeys::const_iterator KeysIter;
-  for (KeysIter key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
-    typename Map::iterator mapMatch = map.find(*key);
-    if (mapMatch == map.end())
-      continue;
-    typename Map::mapped_type& vec = mapMatch->second;
-    if (vec.size() <= 1) {
-      map.erase(*key);
-    } else {
-      typename Map::mapped_type::iterator newEnd =
-        std::remove(vec.begin(), vec.end(), val);
-      vec.resize(newEnd - vec.begin());
-    }
-  }
-}
-} // namespace
-
 bool ChargeManager::removeModel(const std::string& identifier)
 {
-  ChargeIdVector ids = m_identifiers[identifier];
+  auto ids = m_identifiers[identifier];
   m_identifiers.erase(identifier);
 
-  if (ids.empty())
-    return false;
+  ChargeModel* model = m_models[ids];
 
-  for (ChargeIdVector::const_iterator it = ids.begin(), itEnd = ids.end();
-       it != itEnd; ++it) {
-    ChargeModel* model = m_models[*it];
-
-    if (model == nullptr)
-      continue;
-
-    m_models[*it] = nullptr;
+  if (model != nullptr) {
+    m_models[ids] = nullptr;
     delete model;
   }
 
@@ -108,7 +80,7 @@ bool ChargeManager::removeModel(const std::string& identifier)
 
 ChargeManager::ChargeManager()
 {
-  // add any default models (EEM maybe?)
+  // add any default models here (EEM maybe?)
 }
 
 ChargeManager::~ChargeManager()
@@ -119,6 +91,94 @@ ChargeManager::~ChargeManager()
     delete (*it);
   }
   m_models.clear();
+}
+
+std::set<std::string> ChargeManager::identifiersForMolecule(
+  const Core::Molecule& molecule) const
+{
+  // start with the types already in the molecule
+  std::set<std::string> identifiers = molecule.partialChargeTypes();
+
+  // check our models for compatibility
+  for (std::vector<ChargeModel*>::const_iterator it = m_models.begin();
+       it != m_models.end(); ++it) {
+
+    // We check that every element in the molecule
+    // is handled by the model
+    auto mask = (*it)->elements() & molecule.elements();
+    if (mask.count() == molecule.elements().count())
+      identifiers.insert((*it)->identifier()); // this one will work
+  }
+
+  return identifiers;
+}
+
+const MatrixX& ChargeManager::partialCharges(
+  const std::string& identifier, const Core::Molecule& molecule) const
+{
+  // first check if the type is found in the molecule
+  // (i.e., read from a file not computed dynamically)
+  auto molIdentifiers = molecule.partialChargeTypes();
+
+  if (molIdentifiers.find(identifier) != molIdentifiers.end()) {
+    return molecule.partialCharges(identifier);
+  }
+
+  // otherwise go through our list
+  if (m_identifiers.find(identifier) != m_identifiers.end()) {
+    MatrixX charges(molecule.atomCount(),
+                    1); // we have to return something, so zeros
+    return charges;
+  }
+
+  const auto id = m_identifiers[identifier];
+  const ChargeModel* model = m_models[id];
+  return model->partialCharges(molecule);
+}
+
+double ChargeManager::potential(const std::string& identifier,
+                                const Core::Molecule& molecule,
+                                const Vector3& point) const
+{
+  // If the type is found in the molecule
+  // we'll use the DefaultModel to handle the potential
+  auto molIdentifiers = molecule.partialChargeTypes();
+
+  if (molIdentifiers.find(identifier) != molIdentifiers.end()) {
+    DefaultModel model(identifier); // so it knows which charges to use
+    return model.potential(molecule, point);
+  }
+
+  // otherwise go through our list
+  if (m_identifiers.find(identifier) != m_identifiers.end()) {
+    return 0.0;
+  }
+
+  const auto id = m_identifiers[identifier];
+  const ChargeModel* model = m_models[id];
+  return model->potential(molecule, point);
+}
+
+Core::Array<double>& ChargeManager::potentials(
+  const std::string& identifier, const Core::Molecule& molecule,
+  const Core::Array<Vector3>& points) const
+{
+  // As above
+  auto molIdentifiers = molecule.partialChargeTypes();
+
+  if (molIdentifiers.find(identifier) != molIdentifiers.end()) {
+    DefaultModel model(identifier); // so it knows which charges to use
+    return model.potentials(molecule, points);
+  }
+
+  if (m_identifiers.find(identifier) != m_identifiers.end()) {
+    Core::Array<double> potentials(points.size(), 0.0);
+    return potentials;
+  }
+
+  const auto id = m_identifiers[identifier];
+  const ChargeModel* model = m_models[id];
+  return model->potentials(molecule, points);
 }
 
 } // namespace Calc

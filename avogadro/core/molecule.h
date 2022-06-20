@@ -96,7 +96,7 @@ public:
   const MatrixX& partialCharges(const std::string& type) const;
 
   /** @return the types of partial charges available stored with this molecule. */
-  std::vector<std::string> partialChargeTypes() const;
+  std::set<std::string> partialChargeTypes() const;
 
   /** @return a vector of hybridizations for the atoms in the molecule. */
   Array<AtomHybridization>& hybridizations();
@@ -798,6 +798,11 @@ inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
     return true;
   }
   return false;
+}
+
+inline const Molecule::ElementMask& Molecule::elements() const
+{
+  return m_elements;
 }
 
 inline Vector3ub Molecule::color(Index atomId) const

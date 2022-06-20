@@ -8,8 +8,13 @@
 
 #include "avogadrocalcexport.h"
 
+#include <avogadro/core/array.h>
+#include <avogadro/core/matrix.h>
+#include <avogadro/core/vector.h>
+
 #include <map>
 #include <string>
+#include <set>
 #include <vector>
 
 namespace Avogadro {
@@ -88,7 +93,38 @@ public:
   /**
    * Get a list of all loaded identifiers
    */
-  std::vector<std::string> identifiers() const;
+  std::set<std::string> identifiers() const;
+
+  /**
+   * @brief Get a list of models that work for this molecule.
+   *
+   * Includes partial charge types in the molecule itself (e.g., from a file)
+   * This is probably the method you want to get a list for a user
+   */
+  std::set<std::string> identifiersForMolecule(
+    const Core::Molecule& molecule) const;
+
+  /**
+   * Note that some models do not have well-defined atomic partial charges
+   * @return atomic partial charges for the molecule, or 0.0 if undefined
+   */
+  const MatrixX& partialCharges(const std::string& identifier,
+                                const Core::Molecule& mol) const;
+
+  /**
+   * @return the potential at the point for the molecule, or 0.0 if the model is
+   * not available
+   */
+  double potential(const std::string& identifier, const Core::Molecule& mol,
+                   const Vector3& point) const;
+
+  /**
+   * @return the potentials at the point for the molecule, or an array of 0.0 if
+   * the model is not available
+   */
+  Core::Array<double>& potentials(const std::string& identifier,
+                                  const Core::Molecule& mol,
+                                  const Core::Array<Vector3>& points) const;
 
   /**
    * Get any errors that have been logged when loading models.
@@ -96,8 +132,7 @@ public:
   std::string error() const;
 
 private:
-  typedef std::vector<size_t> ChargeIdVector;
-  typedef std::map<std::string, ChargeIdVector> ChargeIdMap;
+  typedef std::map<std::string, size_t> ChargeIdMap;
 
   ChargeManager();
   ~ChargeManager();
@@ -112,8 +147,7 @@ private:
   void appendError(const std::string& errorMessage);
 
   std::vector<ChargeModel*> m_models;
-
-  ChargeIdMap m_identifiers;
+  mutable ChargeIdMap m_identifiers;
 
   std::string m_error;
 };

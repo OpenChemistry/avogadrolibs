@@ -262,11 +262,11 @@ const MatrixX& Molecule::partialCharges(const std::string& type) const
   }
 }
 
-std::vector<std::string> Molecule::partialChargeTypes() const
+std::set<std::string> Molecule::partialChargeTypes() const
 {
-  std::vector<std::string> types;
+  std::set<std::string> types;
   for (auto& it : m_charges)
-    types.push_back(it.first);
+    types.insert(it.first);
   return types;
 }
 
