@@ -16,6 +16,7 @@
 #include "variantmap.h"
 #include "vector.h"
 
+#include <bitset>
 #include <list>
 #include <map>
 #include <string>
@@ -48,7 +49,8 @@ public:
   /** Type for custom element map. */
   typedef std::map<unsigned char, std::string> CustomElementMap;
 
-  /** Type for element masks (e.g., does this molecule contain certain elements) */
+  /** Type for element masks (e.g., does this molecule contain certain elements)
+   */
   typedef std::bitset<element_count> ElementMask;
 
   /** Creates a new, empty molecule. */
@@ -95,7 +97,8 @@ public:
   /** @return the atomic partial charges of type @p type */
   const MatrixX& partialCharges(const std::string& type) const;
 
-  /** @return the types of partial charges available stored with this molecule. */
+  /** @return the types of partial charges available stored with this molecule.
+   */
   std::set<std::string> partialChargeTypes() const;
 
   /** @return a vector of hybridizations for the atoms in the molecule. */
@@ -693,7 +696,8 @@ protected:
   VariantMap m_data;
   std::map<std::string, MatrixX> m_charges; //!< Sets of atomic partial charges
   CustomElementMap m_customElementMap;
-  ElementMask m_elements; //!< Which elements this molecule contains (e.g., for force fields)
+  ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
+                          //!< force fields)
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<std::string> m_label;
@@ -723,7 +727,7 @@ protected:
   unsigned short m_hallNumber = 0;
 
 private:
-  mutable Graph m_graph;     // A transformation of the molecule to a graph.
+  mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information
   Array<unsigned char> m_bondOrders;
   // vertex information
