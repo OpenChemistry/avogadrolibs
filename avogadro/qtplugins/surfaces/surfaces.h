@@ -8,6 +8,8 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include <QtCore/QFutureWatcher>
+
 class QAction;
 class QDialog;
 class QProgressDialog;
@@ -92,6 +94,7 @@ private:
 
   Core::Cube* m_cube = nullptr;
   std::vector<Core::Cube*> m_cubes;
+  QFutureWatcher<void> m_cubesWatcher;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;

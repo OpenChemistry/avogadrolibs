@@ -17,9 +17,11 @@ namespace {
 #include <gwavi.h>
 
 #include <avogadro/core/variant.h>
+#include <avogadro/core/vector.h>
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/activeobjects.h>
@@ -37,6 +39,7 @@ namespace {
 #include <avogadro/quantumio/nwchemjson.h>
 #include <avogadro/quantumio/nwchemlog.h>
 
+#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -50,6 +53,7 @@ namespace {
 namespace Avogadro {
 namespace QtPlugins {
 
+using Core::Array;
 using Core::Cube;
 using Core::GaussianSet;
 using QtGui::Molecule;
@@ -160,7 +164,7 @@ void Surfaces::calculateSurface()
     case SolventExcluded:
       calculateEDT();
       // pass a molecule and return a Cube for m_cube
-      //   displayMesh();
+      connect(&m_cubesWatcher, SIGNAL(finished()), SLOT(displayMesh()));
       break;
 
     case ElectronDensity:
@@ -179,8 +183,69 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  // pass the molecule to the EDT, plus the surface type
-  // get back a Cube object in m_cube
+  double probeRadius = 0.0;
+  double radiusOffset = 0.0;
+  switch (m_dialog->surfaceType()) {
+    case VanDerWaals:
+        break;
+    case SolventAccessible:
+        radiusOffset = 1.4;
+        break;
+    case SolventExcluded:
+        probeRadius = 1.4;
+        break;
+  }
+
+  // cache Van der Waals radii
+  std::vector<double> radii(m_molecule->atomCount());
+  double max_radius = probeRadius;
+  for (size_t i = 0; i < radii.size(); i++) {
+    radii[i] = Core::Elements::radiusVDW(m_molecule->atomicNumber(i));
+    if (radii[i] > max_radius)
+      max_radius = radii[i];
+  }
+
+  double padding = max_radius + radiusOffset;
+  m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
+
+  auto neighborPerceiver = Core::NeighborPerceiver(
+    m_molecule->atomPositions3d(), 2.0 * max_radius
+  );
+  Vector3i cubeSize = m_cube->dimensions();
+
+  std::vector<Vector3i> *indices = new std::vector<Vector3i>;
+  indices->reserve(cubeSize[0] * cubeSize[1] * cubeSize[2]);
+  for (size_t zi = 0; zi < cubeSize[2]; zi++)
+    for (size_t yi = 0; yi < cubeSize[1]; yi++)
+      for (size_t xi = 0; xi < cubeSize[0]; xi++)
+        indices->emplace_back(xi, yi, zi);
+
+  const float res = m_dialog->resolution();
+  const Vector3 min = m_cube->min();
+  const float mdist = probeRadius;
+
+  thread_local Array<Index> *neighbors = nullptr;
+  QFuture future = QtConcurrent::map(*indices, [=](Vector3i &in) {
+    Vector3 pos(in(0), in(1), in(2));
+    pos += Vector3(0.5, 0.5, 0.5);
+    pos *= res;
+    pos += min;
+
+    double minDistance = mdist;
+    if (neighbors == nullptr)
+      neighbors = new Array<Index>;
+    neighborPerceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
+    for (Index neighbor: *neighbors) {
+      Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
+      double distance = (neighborPos - pos).norm();
+      distance -= radii[neighbor] + radiusOffset;
+      minDistance = std::min(minDistance, distance);
+    }
+
+    m_cube->setValue(in(0), in(1), in(2), minDistance);
+  });
+
+  m_cubesWatcher.setFuture(future);
 }
 
 void Surfaces::calculateQM()
@@ -231,7 +296,7 @@ void Surfaces::calculateQM()
   QString progressText;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
-    m_cube->setName("Electron Denisty");
+    m_cube->setName("Electron Density");
     if (dynamic_cast<GaussianSet*>(m_basis)) {
       m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
