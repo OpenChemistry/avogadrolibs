@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-06-19 03:21+0000\n"
-"PO-Revision-Date: 2022-06-10 03:53+0000\n"
+"PO-Revision-Date: 2022-06-22 19:15+0000\n"
 "Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -1369,12 +1369,11 @@ msgstr "Niggli Erredukzioa"
 
 #: qtgui/rwmolecule.cpp:562
 msgid "Rotate to Standard Orientation"
-msgstr ""
+msgstr "Orientazio Estandarderaino Errotatu"
 
 #: qtgui/rwmolecule.cpp:587 qtplugins/spacegroup/spacegroup.cpp:58
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Jatorrizko gelaxkara murriztu"
+msgstr "Jatorrizko Gelaxkara Murriztu"
 
 #: qtgui/rwmolecule.cpp:612 qtplugins/spacegroup/spacegroup.cpp:64
 #: qtplugins/spacegroup/spacegroup.cpp:222
@@ -1382,26 +1381,24 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:637 qtplugins/spacegroup/spacegroup.cpp:247
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Simetrizatu"
+msgstr "Gelaxka Simetrizatu"
 
 #: qtgui/rwmolecule.cpp:656
 msgid "Fill Unit Cell"
 msgstr "Bete Gelatxo Unitarioa"
 
 #: qtgui/rwmolecule.cpp:676
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Unitate Asimetrikora murriztu"
+msgstr "Gelaxka Unitate Asimetrikora Murriztu"
 
 #: qtgui/rwmolecule_undo.h:30
 msgid "Modify Molecule"
-msgstr ""
+msgstr "Molekula Aldatu"
 
 #: qtplugins/3dmol/3dmol.cpp:43
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "3DMol HTML Blokea."
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:48
@@ -1414,22 +1411,20 @@ msgstr "&Artxiboa"
 
 #: qtplugins/3dmol/3dmol.cpp:53 qtplugins/povray/povray.cpp:47
 #: qtplugins/svg/svg.cpp:46 qtplugins/vrml/vrml.cpp:47
-#, fuzzy
 msgid "&Export"
-msgstr "Esportatu"
+msgstr "&Esportatu"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
-msgstr ""
+msgstr "APBS abiarazi…"
 
 #: qtplugins/apbs/apbs.cpp:37
-#, fuzzy
 msgid "Open Output File…"
-msgstr "Open WFN Fitxategia"
+msgstr "Irteera Fitxategia Ireki…"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:52
@@ -1437,70 +1432,70 @@ msgstr "Open WFN Fitxategia"
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:72
 msgid "&Input"
-msgstr ""
+msgstr "&Sarrera"
 
 #: qtplugins/apbs/apbs.cpp:50
+#, fuzzy
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:72
 #: qtplugins/quantuminput/quantuminput.cpp:96
 msgid "Open Output File"
-msgstr ""
+msgstr "Irteera Fitxategia Ireki"
 
 #: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX Fitxategia (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:116
-#, fuzzy
 msgid "IO Error"
-msgstr " Errorea "
+msgstr "IO Errorea"
 
 #: qtplugins/apbs/apbs.cpp:117
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Errorea (%1) egitura fitxategia irakurtzean."
 
 #: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX Errorea"
 
 #: qtplugins/apbs/apbs.cpp:138
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Errorea OpenDX fitxategia Irakurtzerakoan: %1"
 
 #: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Errorea OpenDX fitxategia irakurtzerakoan: Ez da kuborik aurkitu"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:31:84
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:34
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "APBS tresnekin interakzionatu."
 
 #: qtplugins/apbs/apbsdialog.cpp:80
 msgid "Open PDB File"
-msgstr ""
+msgstr "PDB Fitxategia Ireki"
 
 #: qtplugins/apbs/apbsdialog.cpp:81
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDB Fitxategiak (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "Open PQR File"
-msgstr ""
+msgstr "PQR Fitxategia Ireki"
 
 #: qtplugins/apbs/apbsdialog.cpp:92
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQR Fitxategiak (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:132 qtplugins/apbs/apbsdialog.cpp:142
 #: qtplugins/commandscripts/command.cpp:105
@@ -1525,32 +1520,31 @@ msgstr "Akatsa"
 #: qtplugins/apbs/apbsdialog.cpp:133
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Errorea APBS abiatzerakoan: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:142
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "Mezedez PDB fitxategia aukeratu"
 
 #: qtplugins/apbs/apbsdialog.cpp:175
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "APBS Sarrera Fitxategia Gorde"
 
 #: qtplugins/apbs/apbsdialog.cpp:175
 msgid "ABPS Input (*.in)"
-msgstr ""
+msgstr "ABPS Sarrera (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:179
 #: qtplugins/clientserver/connectionsettingsdialog.cpp:64:144
-#, fuzzy
 msgid "Success"
-msgstr "Ondo egin da!"
+msgstr "Ondo egin da"
 
 #: qtplugins/apbs/apbsdialog.cpp:180
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Sarrera fitxategia '%1'-en idatzia"
 
 #: qtplugins/applycolors/applycolors.cpp:29
 #: qtplugins/applycolors/applycolors.cpp:50
