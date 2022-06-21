@@ -42,15 +42,19 @@ public:
   }
 
 public slots:
-  void setAngleTolerance(float angleTolerance);
-  void setMaximumDistance(float maximumDistance);
-  void setLineWidth(float width);
+  void setAngleTolerance(float angleTolerance, Index index);
+  void setMaximumDistance(float maximumDistance, Index index);
+  void setLineWidth(float width, Index index);
 
 private:
-  std::string m_name = "Non-Covalent";
+  const std::string m_name = "Non-Covalent";
   
-  double m_angleToleranceDegrees;
-  double m_maximumDistance;
+  const std::array<QString, 3> INTERACTION_NAMES = {
+	tr("Hydrogen"), tr("Halogen"), tr("Chalcogen")
+  };
+  
+  std::array<double, 3> m_angleTolerancesDegrees;
+  std::array<double, 3> m_maximumDistances;
   std::array<Vector3ub, 3> m_lineColors;
   std::array<float, 3> m_lineWidths;
 };
