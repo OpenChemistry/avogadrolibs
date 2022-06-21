@@ -58,6 +58,11 @@ public:
    */
   bool hasValue(const std::string& name) const;
 
+  /**
+   * Clears the map.
+   */
+  void clear() { m_map.clear(); }
+
   /** Return an iterator pointing to the beginning of the map. */
   iterator begin();
 

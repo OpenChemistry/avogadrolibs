@@ -86,6 +86,7 @@ private:
     AtomDataElement = 0,
     AtomDataValence,
     AtomDataFormalCharge,
+    AtomDataPartialCharge,
     AtomDataX,
     AtomDataY,
     AtomDataZ,
