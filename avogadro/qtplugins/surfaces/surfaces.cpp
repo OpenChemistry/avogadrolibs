@@ -39,6 +39,7 @@ namespace {
 #include <avogadro/quantumio/nwchemjson.h>
 #include <avogadro/quantumio/nwchemlog.h>
 
+#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -163,7 +164,7 @@ void Surfaces::calculateSurface()
     case SolventExcluded:
       calculateEDT();
       // pass a molecule and return a Cube for m_cube
-      displayMesh();
+      connect(&m_cubesWatcher, SIGNAL(finished()), SLOT(displayMesh()));
       break;
 
     case ElectronDensity:
@@ -212,29 +213,39 @@ void Surfaces::calculateEDT()
   );
   Vector3i cubeSize = m_cube->dimensions();
 
-  /* Just some simple proof-of-concept code */
-  Array<Index> neighbors;
-  for (size_t zi = 0; zi < cubeSize[2]; zi++) {
-    for (size_t yi = 0; yi < cubeSize[1]; yi++) {
-      for (size_t xi = 0; xi < cubeSize[0]; xi++) {
-        Vector3 pos(xi, yi, zi);
-        pos += Vector3(0.5, 0.5, 0.5);
-        pos *= m_dialog->resolution();
-        pos += m_cube->min();
+  std::vector<Vector3i> *indices = new std::vector<Vector3i>;
+  indices->reserve(cubeSize[0] * cubeSize[1] * cubeSize[2]);
+  for (size_t zi = 0; zi < cubeSize[2]; zi++)
+    for (size_t yi = 0; yi < cubeSize[1]; yi++)
+      for (size_t xi = 0; xi < cubeSize[0]; xi++)
+        indices->emplace_back(xi, yi, zi);
 
-        double minDistance = probeRadius;
-        neighborPerceiver.getNeighborsInclusiveInPlace(neighbors, pos);
-        for (Index neighbor: neighbors) {
-          Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
-          double distance = (neighborPos - pos).norm();
-          distance -= radii[neighbor] + radiusOffset;
-          minDistance = std::min(minDistance, distance);
-        }
+  const float res = m_dialog->resolution();
+  const Vector3 min = m_cube->min();
+  const float mdist = probeRadius;
 
-        m_cube->setValue(xi, yi, zi, minDistance);
-      }
+  thread_local Array<Index> *neighbors = nullptr;
+  QFuture future = QtConcurrent::map(*indices, [=](Vector3i &in) {
+    Vector3 pos(in(0), in(1), in(2));
+    pos += Vector3(0.5, 0.5, 0.5);
+    pos *= res;
+    pos += min;
+
+    double minDistance = mdist;
+    if (neighbors == nullptr)
+      neighbors = new Array<Index>;
+    neighborPerceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
+    for (Index neighbor: *neighbors) {
+      Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
+      double distance = (neighborPos - pos).norm();
+      distance -= radii[neighbor] + radiusOffset;
+      minDistance = std::min(minDistance, distance);
     }
-  }
+
+    m_cube->setValue(in(0), in(1), in(2), minDistance);
+  });
+
+  m_cubesWatcher.setFuture(future);
 }
 
 void Surfaces::calculateQM()
