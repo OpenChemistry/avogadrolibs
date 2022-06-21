@@ -80,8 +80,7 @@ public:
    */
   virtual float dielectric() const { return m_dielectric; }
 
-  virtual const MatrixX partialCharges(
-    const Core::Molecule& mol) const = 0;
+  virtual const MatrixX partialCharges(Core::Molecule& mol) const = 0;
 
   /**
    * @brief Calculate the electrostatic potential at a particular point in
@@ -90,8 +89,7 @@ public:
    * @param point The point in space to calculate the potential at.
    * @return The electrostatic potential at the point.
    */
-  virtual double potential(const Core::Molecule& mol,
-                           const Vector3& point) const;
+  virtual double potential(Core::Molecule& mol, const Vector3& point) const;
 
   /**
    * @brief Calculate the electrostatic potential at multiple points
@@ -102,8 +100,8 @@ public:
    * This method is used for batch calculation and defaults to simply
    * calculating each point at a time. Some methods work faster in batches.
    */
-  virtual Core::Array<double> potentials(const Core::Molecule& mol,
-                                    const Core::Array<Vector3>& points) const;
+  virtual Core::Array<double> potentials(
+    Core::Molecule& mol, const Core::Array<Vector3>& points) const;
 
 protected:
   /**

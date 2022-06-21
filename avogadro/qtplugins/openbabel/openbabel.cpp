@@ -5,10 +5,12 @@
 
 #include "openbabel.h"
 
+#include "obcharges.h"
 #include "obfileformat.h"
 #include "obforcefielddialog.h"
 #include "obprocess.h"
 
+#include <avogadro/calc/chargemanager.h>
 #include <avogadro/io/fileformatmanager.h>
 
 #include <avogadro/qtgui/molecule.h>
@@ -333,6 +335,15 @@ void OpenBabel::handleChargesUpdate(const QMap<QString, QString>& chargeMap)
     proc->deleteLater();
 
   m_charges = chargeMap;
+  // register the charge models
+  foreach (const QString& key, m_charges.keys()) {
+    // we're only picking a few select models for now
+    if (key == "eem" || key == "eem2015ba" || key == "eqeq" ||
+        key == "gasteiger" || key == "mmff94") {
+      OBCharges* model = new OBCharges(key.toStdString());
+      Calc::ChargeManager::instance().registerModel(model);
+    }
+  }
 }
 
 void OpenBabel::onConfigureGeometryOptimization()
@@ -440,7 +451,8 @@ void OpenBabel::onOptimizeGeometry()
                              .arg(m_process->obabelExecutable()));
 
   // Run obabel
-  m_process->optimizeGeometry(QByteArray(mol.c_str()), options, m_defaultFormat);
+  m_process->optimizeGeometry(QByteArray(mol.c_str()), options,
+                              m_defaultFormat);
 }
 
 void OpenBabel::onOptimizeGeometryStatusUpdate(int step, int numSteps,
@@ -634,8 +646,9 @@ void OpenBabel::onAddHydrogens()
     tr("Running %1…").arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(QByteArray(mol.c_str(), mol.size()), m_defaultFormat.c_str(),
-                     m_defaultFormat.c_str(), QStringList() << "-h");
+  m_process->convert(QByteArray(mol.c_str(), mol.size()),
+                     m_defaultFormat.c_str(), m_defaultFormat.c_str(),
+                     QStringList() << "-h");
 }
 
 void OpenBabel::onAddHydrogensPh()
@@ -683,8 +696,8 @@ void OpenBabel::onAddHydrogensPh()
     tr("Running %1…").arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(QByteArray(mol.c_str(), mol.size()), m_defaultFormat.c_str(),
-                     m_defaultFormat.c_str(),
+  m_process->convert(QByteArray(mol.c_str(), mol.size()),
+                     m_defaultFormat.c_str(), m_defaultFormat.c_str(),
                      QStringList() << "-p" << QString::number(pH));
 }
 
@@ -725,8 +738,9 @@ void OpenBabel::onRemoveHydrogens()
     tr("Running %1…").arg(m_process->obabelExecutable()));
 
   // Run process
-  m_process->convert(QByteArray(mol.c_str(), mol.size()), m_defaultFormat.c_str(),
-                     m_defaultFormat.c_str(), QStringList() << "-d");
+  m_process->convert(QByteArray(mol.c_str(), mol.size()),
+                     m_defaultFormat.c_str(), m_defaultFormat.c_str(),
+                     QStringList() << "-d");
 }
 
 void OpenBabel::onHydrogenOperationFinished(const QByteArray& mdl)
