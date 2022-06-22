@@ -197,52 +197,55 @@ void Surfaces::calculateEDT()
   }
 
   // cache Van der Waals radii
-  std::vector<double> radii(m_molecule->atomCount());
+  Array<Vector3> atomPositions = m_molecule->atomPositions3d();
+  std::vector<std::pair<Vector3, double>> *atoms =
+    new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
   double max_radius = probeRadius;
-  for (size_t i = 0; i < radii.size(); i++) {
-    radii[i] = Core::Elements::radiusVDW(m_molecule->atomicNumber(i));
-    if (radii[i] > max_radius)
-      max_radius = radii[i];
+  for (size_t i = 0; i < atoms->size(); i++) {
+    (*atoms)[i].first = atomPositions[i];
+    (*atoms)[i].second = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + radiusOffset;
+    if ((*atoms)[i].second > max_radius)
+      max_radius = (*atoms)[i].second;
   }
 
   double padding = max_radius + radiusOffset;
   m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
-
-  auto neighborPerceiver = Core::NeighborPerceiver(
-    m_molecule->atomPositions3d(), 2.0 * max_radius
-  );
-  Vector3i cubeSize = m_cube->dimensions();
-
-  std::vector<Vector3i> *indices = new std::vector<Vector3i>;
-  indices->reserve(cubeSize[0] * cubeSize[1] * cubeSize[2]);
-  for (size_t zi = 0; zi < cubeSize[2]; zi++)
-    for (size_t yi = 0; yi < cubeSize[1]; yi++)
-      for (size_t xi = 0; xi < cubeSize[0]; xi++)
-        indices->emplace_back(xi, yi, zi);
 
   const float res = m_dialog->resolution();
   const Vector3 min = m_cube->min();
   const float mdist = probeRadius;
 
   thread_local Array<Index> *neighbors = nullptr;
-  QFuture future = QtConcurrent::map(*indices, [=](Vector3i &in) {
-    Vector3 pos(in(0), in(1), in(2));
-    pos += Vector3(0.5, 0.5, 0.5);
-    pos *= res;
-    pos += min;
-
-    double minDistance = mdist;
-    if (neighbors == nullptr)
-      neighbors = new Array<Index>;
-    neighborPerceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
-    for (Index neighbor: *neighbors) {
-      Vector3 neighborPos = m_molecule->atomPosition3d(neighbor);
-      double distance = (neighborPos - pos).norm();
-      distance -= radii[neighbor] + radiusOffset;
-      minDistance = std::min(minDistance, distance);
+  QFuture future = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
+    double startPosZ = in.first(2) - in.second;
+    double endPosZ = in.first(2) + in.second;
+    int startIndexZ = (startPosZ - min(2)) / res;
+    int endIndexZ = (endPosZ - min(2)) / res + 1;
+    for (int indexZ = startIndexZ; indexZ < endIndexZ; indexZ++) {
+      double posZ = indexZ * res + min(2);
+      double radiusZsq = pow(in.second, 2) - pow(posZ - in.first(2), 2);
+      if (radiusZsq < 0.0)
+        continue;
+      double radiusZ = sqrt(radiusZsq);
+      double startPosY = in.first(1) - radiusZ;
+      double endPosY = in.first(1) + radiusZ;
+      int startIndexY = (startPosY - min(1)) / res;
+      int endIndexY = (endPosY - min(1)) / res + 1;
+      for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
+        double posY = indexY * res + min(1);
+        double lengthZYsq = pow(radiusZ, 2) - pow(posY - in.first(1), 2);
+        if (lengthZYsq < 0.0)
+          continue;
+        double lengthZY = sqrt(lengthZYsq);
+        double startPosX = in.first(0) - lengthZY;
+        double endPosX = in.first(0) + lengthZY;
+        int startIndexX = (startPosX - min(0)) / res;
+        int endIndexX = (endPosX - min(0)) / res + 1;
+        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+          m_cube->setValue(indexX, indexY, indexZ, 1.0f);
+        }
+      }
     }
-
-    m_cube->setValue(in(0), in(1), in(2), minDistance);
   });
 
   m_cubesWatcher.setFuture(future);
