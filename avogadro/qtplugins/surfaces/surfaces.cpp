@@ -70,6 +70,7 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   auto action = new QAction(this);
   action->setText(tr("Create Surfaces…"));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
+  connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(displayMesh()));
   m_actions.push_back(action);
 
   // Register quantum file formats
@@ -163,8 +164,6 @@ void Surfaces::calculateSurface()
     case SolventAccessible:
     case SolventExcluded:
       calculateEDT();
-      // pass a molecule and return a Cube for m_cube
-      connect(&m_cubesWatcher, SIGNAL(finished()), SLOT(displayMesh()));
       break;
 
     case ElectronDensity:
@@ -210,6 +209,11 @@ void Surfaces::calculateEDT()
 
   double padding = max_radius + radiusOffset;
   m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
+  Vector3i size = m_cube->dimensions();
+  for (int z = 0; z < size(2); z++)
+    for (int y = 0; y < size(1); y++)
+      for (int x = 0; x < size(0); x++)
+        m_cube->setValue(x, y, z, -1.0f);
 
   const float res = m_dialog->resolution();
   const Vector3 min = m_cube->min();
@@ -248,7 +252,7 @@ void Surfaces::calculateEDT()
     }
   });
 
-  m_cubesWatcher.setFuture(future);
+  m_displayMeshWatcher.setFuture(future);
 }
 
 void Surfaces::calculateQM()
