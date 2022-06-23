@@ -40,6 +40,7 @@ namespace {
 #include <avogadro/quantumio/nwchemlog.h>
 
 #include <QtConcurrent/QtConcurrentMap>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -185,73 +186,77 @@ void Surfaces::calculateSurface()
 
 void Surfaces::calculateEDT()
 {
-  double probeRadius = 0.0;
-  switch (m_dialog->surfaceType()) {
-    case VanDerWaals:
-        break;
-    case SolventAccessible:
-    case SolventExcluded:
-        probeRadius = 1.4;
-        break;
-  }
+  QFuture future = QtConcurrent::run([=]() {
+    double probeRadius = 0.0;
+    switch (m_dialog->surfaceType()) {
+      case VanDerWaals:
+          break;
+      case SolventAccessible:
+      case SolventExcluded:
+          probeRadius = 1.4;
+          break;
+    }
 
-  // first, make a list of all atom positions and radii
-  Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-  std::vector<std::pair<Vector3, double>> *atoms =
-    new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
-  double max_radius = probeRadius;
-  for (size_t i = 0; i < atoms->size(); i++) {
-    (*atoms)[i].first = atomPositions[i];
-    (*atoms)[i].second = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-    if ((*atoms)[i].second > max_radius)
-      max_radius = (*atoms)[i].second;
-  }
+    // first, make a list of all atom positions and radii
+    Array<Vector3> atomPositions = m_molecule->atomPositions3d();
+    std::vector<std::pair<Vector3, double>> *atoms =
+      new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
+    double max_radius = probeRadius;
+    for (size_t i = 0; i < atoms->size(); i++) {
+      (*atoms)[i].first = atomPositions[i];
+      (*atoms)[i].second = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+      if ((*atoms)[i].second > max_radius)
+        max_radius = (*atoms)[i].second;
+    }
 
-  double padding = max_radius + probeRadius;
-  m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
-  Vector3i size = m_cube->dimensions();
-  for (int z = 0; z < size(2); z++)
-    for (int y = 0; y < size(1); y++)
-      for (int x = 0; x < size(0); x++)
-        m_cube->setValue(x, y, z, -1.0f);
+    double padding = max_radius + probeRadius;
+    m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
+    Vector3i size = m_cube->dimensions();
+    for (int z = 0; z < size(2); z++)
+      for (int y = 0; y < size(1); y++)
+        for (int x = 0; x < size(0); x++)
+          m_cube->setValue(x, y, z, -1.0f);
 
-  const float res = m_dialog->resolution();
-  const Vector3 min = m_cube->min();
-  const float mdist = probeRadius;
+    const float res = m_dialog->resolution();
+    const Vector3 min = m_cube->min();
+    const float mdist = probeRadius;
 
-  // then, for each atom, set cubes around it up to a certain radius
-  QFuture future = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
-    double startPosZ = in.first(2) - in.second;
-    double endPosZ = in.first(2) + in.second;
-    int startIndexZ = (startPosZ - min(2)) / res;
-    int endIndexZ = (endPosZ - min(2)) / res + 1;
-    for (int indexZ = startIndexZ; indexZ < endIndexZ; indexZ++) {
-      double posZ = indexZ * res + min(2);
-      double radiusZsq = pow(in.second, 2) - pow(posZ - in.first(2), 2);
-      if (radiusZsq < 0.0)
-        continue;
-      double radiusZ = sqrt(radiusZsq);
-      double startPosY = in.first(1) - radiusZ;
-      double endPosY = in.first(1) + radiusZ;
-      int startIndexY = (startPosY - min(1)) / res;
-      int endIndexY = (endPosY - min(1)) / res + 1;
-      for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-        double posY = indexY * res + min(1);
-        double lengthZYsq = pow(radiusZ, 2) - pow(posY - in.first(1), 2);
-        if (lengthZYsq < 0.0)
+    // then, for each atom, set cubes around it up to a certain radius
+    QFuture innerFuture = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
+      double startPosZ = in.first(2) - in.second;
+      double endPosZ = in.first(2) + in.second;
+      int startIndexZ = (startPosZ - min(2)) / res;
+      int endIndexZ = (endPosZ - min(2)) / res + 1;
+      for (int indexZ = startIndexZ; indexZ < endIndexZ; indexZ++) {
+        double posZ = indexZ * res + min(2);
+        double radiusZsq = pow(in.second, 2) - pow(posZ - in.first(2), 2);
+        if (radiusZsq < 0.0)
           continue;
-        double lengthZY = sqrt(lengthZYsq);
-        double startPosX = in.first(0) - lengthZY;
-        double endPosX = in.first(0) + lengthZY;
-        int startIndexX = (startPosX - min(0)) / res;
-        int endIndexX = (endPosX - min(0)) / res + 1;
-        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-          m_cube->setValue(indexX, indexY, indexZ, 1.0f);
+        double radiusZ = sqrt(radiusZsq);
+        double startPosY = in.first(1) - radiusZ;
+        double endPosY = in.first(1) + radiusZ;
+        int startIndexY = (startPosY - min(1)) / res;
+        int endIndexY = (endPosY - min(1)) / res + 1;
+        for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
+          double posY = indexY * res + min(1);
+          double lengthZYsq = pow(radiusZ, 2) - pow(posY - in.first(1), 2);
+          if (lengthZYsq < 0.0)
+            continue;
+          double lengthZY = sqrt(lengthZYsq);
+          double startPosX = in.first(0) - lengthZY;
+          double endPosX = in.first(0) + lengthZY;
+          int startIndexX = (startPosX - min(0)) / res;
+          int endIndexX = (endPosX - min(0)) / res + 1;
+          for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+            m_cube->setValue(indexX, indexY, indexZ, 1.0f);
+          }
         }
       }
-    }
+    });
+    
+    innerFuture.waitForFinished();
   });
-
+  
   // SolventExcluded requires an extra pass
   if (m_dialog->surfaceType() == SolventExcluded) {
     m_performEDTStepWatcher.setFuture(future);
@@ -262,61 +267,65 @@ void Surfaces::calculateEDT()
 
 void Surfaces::performEDTStep()
 {
-  const double probeRadius = 1.4;
-  const double scaledProbeRadius = probeRadius / m_dialog->resolution();
-  
-  // make a list of all "outside" cubes in contact with an "inside" cube
-  // these are the only ones that can be "nearest" to an "inside" cube
-  Array<Vector3> relativePositions;
-  // also make a list of all "inside" cubes
-  std::vector<Vector3i> *insideIndices = new std::vector<Vector3i>;
-  Vector3i size = m_cube->dimensions();
-  relativePositions.reserve(size(0) * size(1) * 4); // O(n^2)
-  insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
-  for (int z = 0; z < size(2); z++) {
-    int zp = std::max(z - 1, 0);
-    int zn = std::min(z + 1, size(2) - 1);
-    for (int y = 0; y < size(1); y++) {
-      int yp = std::max(y - 1, 0);
-      int yn = std::min(y + 1, size(1) - 1);
-      for (int x = 0; x < size(0); x++) {
-        if (m_cube->value(x, y, z) > 0.0) {
-          insideIndices->emplace_back(x, y, z);
-          continue;
-        }
-        int xp = std::max(x - 1, 0);
-        int xn = std::min(x + 1, size(0) - 1);
-        if (m_cube->value(xp, y, z) > 0.0
-          | m_cube->value(xn, y, z) > 0.0
-          | m_cube->value(x, yp, z) > 0.0
-          | m_cube->value(x, yn, z) > 0.0
-          | m_cube->value(x, y, zp) > 0.0
-          | m_cube->value(x, y, zn) > 0.0
-        ) {
-          relativePositions.push_back(Vector3(x, y, z));
+  QFuture future = QtConcurrent::run([=]() {
+    const double probeRadius = 1.4;
+    const double scaledProbeRadius = probeRadius / m_dialog->resolution();
+    
+    // make a list of all "outside" cubes in contact with an "inside" cube
+    // these are the only ones that can be "nearest" to an "inside" cube
+    Array<Vector3> relativePositions;
+    // also make a list of all "inside" cubes
+    std::vector<Vector3i> *insideIndices = new std::vector<Vector3i>;
+    Vector3i size = m_cube->dimensions();
+    relativePositions.reserve(size(0) * size(1) * 4); // O(n^2)
+    insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
+    for (int z = 0; z < size(2); z++) {
+      int zp = std::max(z - 1, 0);
+      int zn = std::min(z + 1, size(2) - 1);
+      for (int y = 0; y < size(1); y++) {
+        int yp = std::max(y - 1, 0);
+        int yn = std::min(y + 1, size(1) - 1);
+        for (int x = 0; x < size(0); x++) {
+          if (m_cube->value(x, y, z) > 0.0) {
+            insideIndices->emplace_back(x, y, z);
+            continue;
+          }
+          int xp = std::max(x - 1, 0);
+          int xn = std::min(x + 1, size(0) - 1);
+          if (m_cube->value(xp, y, z) > 0.0
+            | m_cube->value(xn, y, z) > 0.0
+            | m_cube->value(x, yp, z) > 0.0
+            | m_cube->value(x, yn, z) > 0.0
+            | m_cube->value(x, y, zp) > 0.0
+            | m_cube->value(x, y, zn) > 0.0
+          ) {
+            relativePositions.push_back(Vector3(x, y, z));
+          }
         }
       }
     }
-  }
-  
-  // pass the list to a NeighborPerceiver so it's faster to look up
-  NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
-  
-  // now, exclude all "inside" cubes too close to any "outside" cube
-  thread_local Array<Index> *neighbors = nullptr;
-  QFuture future = QtConcurrent::map(*insideIndices, [=](Vector3i &in) {
-    Vector3 pos = in.cast<double>();
-    if (neighbors == nullptr)
-      neighbors = new Array<Index>;
-    perceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
-    for (Index neighbor: *neighbors) {
-      const Vector3 &npos = relativePositions[neighbor];
-      float distance = (npos - pos).norm();
-      if (distance <= scaledProbeRadius) {
-        m_cube->setValue(in(0), in(1), in(2), -1.0f);
-        break;
+    
+    // pass the list to a NeighborPerceiver so it's faster to look up
+    NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
+    
+    // now, exclude all "inside" cubes too close to any "outside" cube
+    thread_local Array<Index> *neighbors = nullptr;
+    QFuture innerFuture = QtConcurrent::map(*insideIndices, [=](Vector3i &in) {
+      Vector3 pos = in.cast<double>();
+      if (neighbors == nullptr)
+        neighbors = new Array<Index>;
+      perceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
+      for (Index neighbor: *neighbors) {
+        const Vector3 &npos = relativePositions[neighbor];
+        float distance = (npos - pos).norm();
+        if (distance <= scaledProbeRadius) {
+          m_cube->setValue(in(0), in(1), in(2), -1.0f);
+          break;
+        }
       }
-    }
+    });
+    
+    innerFuture.waitForFinished();
   });
   
   m_displayMeshWatcher.setFuture(future);
