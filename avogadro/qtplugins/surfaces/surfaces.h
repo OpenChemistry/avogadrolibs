@@ -71,6 +71,7 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT();
+  void performEDTStep();
   void calculateQM();
   void calculateCube();
 
@@ -94,7 +95,9 @@ private:
 
   Core::Cube* m_cube = nullptr;
   std::vector<Core::Cube*> m_cubes;
-  QFutureWatcher<void> m_cubesWatcher;
+  QFutureWatcher<void> m_performEDTStepWatcher;
+  QFutureWatcher<void> m_performEDTStep2Watcher;
+  QFutureWatcher<void> m_displayMeshWatcher;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
