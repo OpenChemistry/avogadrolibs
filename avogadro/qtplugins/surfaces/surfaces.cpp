@@ -293,11 +293,11 @@ void Surfaces::performEDTStep()
           int xp = std::max(x - 1, 0);
           int xn = std::min(x + 1, size(0) - 1);
           if (m_cube->value(xp, y, z) > 0.0
-            | m_cube->value(xn, y, z) > 0.0
-            | m_cube->value(x, yp, z) > 0.0
-            | m_cube->value(x, yn, z) > 0.0
-            | m_cube->value(x, y, zp) > 0.0
-            | m_cube->value(x, y, zn) > 0.0
+            || m_cube->value(xn, y, z) > 0.0
+            || m_cube->value(x, yp, z) > 0.0
+            || m_cube->value(x, yn, z) > 0.0
+            || m_cube->value(x, y, zp) > 0.0
+            || m_cube->value(x, y, zn) > 0.0
           ) {
             relativePositions.push_back(Vector3(x, y, z));
           }
