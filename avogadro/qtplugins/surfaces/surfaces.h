@@ -71,6 +71,7 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT();
+  void performEDTStep(); // EDT step for SolventExcluded
   void calculateQM();
   void calculateCube();
 
@@ -94,9 +95,13 @@ private:
 
   Core::Cube* m_cube = nullptr;
   std::vector<Core::Cube*> m_cubes;
-  QFutureWatcher<void> m_cubesWatcher;
+  /* One QFutureWatcher per asynchronous slot function, e.g.:*/
+  /* calculateEDT() -> [performEDTStep()] -> displayMesh() */
+  QFutureWatcher<void> m_performEDTStepWatcher;
+  QFutureWatcher<void> m_displayMeshWatcher;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
+  /* displayMesh() -> meshFinished() */
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
 
