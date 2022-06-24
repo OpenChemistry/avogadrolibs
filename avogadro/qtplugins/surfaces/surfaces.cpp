@@ -184,6 +184,8 @@ void Surfaces::calculateSurface()
   }
 }
 
+float inline square(float x) { return x * x; }
+
 void Surfaces::calculateEDT()
 {
   QFuture future = QtConcurrent::run([=]() {
@@ -211,11 +213,7 @@ void Surfaces::calculateEDT()
 
     double padding = max_radius + probeRadius;
     m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
-    Vector3i size = m_cube->dimensions();
-    for (int z = 0; z < size(2); z++)
-      for (int y = 0; y < size(1); y++)
-        for (int x = 0; x < size(0); x++)
-          m_cube->setValue(x, y, z, -1.0f);
+    m_cube->fill(-1.0);
 
     const float res = m_dialog->resolution();
     const Vector3 min = m_cube->min();
@@ -223,33 +221,31 @@ void Surfaces::calculateEDT()
 
     // then, for each atom, set cubes around it up to a certain radius
     QFuture innerFuture = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
-      double startPosZ = in.first(2) - in.second;
-      double endPosZ = in.first(2) + in.second;
-      int startIndexZ = (startPosZ - min(2)) / res;
-      int endIndexZ = (endPosZ - min(2)) / res + 1;
-      for (int indexZ = startIndexZ; indexZ < endIndexZ; indexZ++) {
-        double posZ = indexZ * res + min(2);
-        double radiusZsq = pow(in.second, 2) - pow(posZ - in.first(2), 2);
-        if (radiusZsq < 0.0)
+      double startPosX = in.first(0) - in.second;
+      double endPosX = in.first(0) + in.second;
+      int startIndexX = (startPosX - min(0)) / res;
+      int endIndexX = (endPosX - min(0)) / res + 1;
+      for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+        double posX = indexX * res + min(0);
+        double radiusXsq = square(in.second) - square(posX - in.first(0));
+        if (radiusXsq < 0.0)
           continue;
-        double radiusZ = sqrt(radiusZsq);
-        double startPosY = in.first(1) - radiusZ;
-        double endPosY = in.first(1) + radiusZ;
+        double radiusX = sqrt(radiusXsq);
+        double startPosY = in.first(1) - radiusX;
+        double endPosY = in.first(1) + radiusX;
         int startIndexY = (startPosY - min(1)) / res;
         int endIndexY = (endPosY - min(1)) / res + 1;
         for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
           double posY = indexY * res + min(1);
-          double lengthZYsq = pow(radiusZ, 2) - pow(posY - in.first(1), 2);
-          if (lengthZYsq < 0.0)
+          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+          if (lengthXYsq < 0.0)
             continue;
-          double lengthZY = sqrt(lengthZYsq);
-          double startPosX = in.first(0) - lengthZY;
-          double endPosX = in.first(0) + lengthZY;
-          int startIndexX = (startPosX - min(0)) / res;
-          int endIndexX = (endPosX - min(0)) / res + 1;
-          for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-            m_cube->setValue(indexX, indexY, indexZ, 1.0f);
-          }
+          double lengthXY = sqrt(lengthXYsq);
+          double startPosZ = in.first(2) - lengthXY;
+          double endPosZ = in.first(2) + lengthXY;
+          int startIndexZ = (startPosZ - min(2)) / res;
+          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1, 1.0f);
         }
       }
     });

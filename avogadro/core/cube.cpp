@@ -265,17 +265,34 @@ double Cube::value(const Vector3& pos) const
 
 bool Cube::setValue(int i, int j, int k, double value_)
 {
-  unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
-  if (index < m_data.size()) {
-    m_data[index] = value_;
-    if (value_ < m_minValue)
-      m_minValue = value_;
-    else if (value_ > m_maxValue)
-      m_maxValue = value_;
-    return true;
-  } else {
+  int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
+  if (index < 0 || index >= m_data.size())
     return false;
-  }
+  m_data[index] = value_;
+  if (value_ < m_minValue)
+    m_minValue = value_;
+  else if (value_ > m_maxValue)
+    m_maxValue = value_;
+  return true;
+}
+
+void Cube::fill(double value_)
+{
+  std::fill(m_data.begin(), m_data.end(), value_);
+  m_minValue = m_maxValue = value_;
+}
+
+bool Cube::fillStripe(int i, int j, int kfirst, int klast, double value_)
+{
+  int sindex = i * m_points.y() * m_points.z() + j * m_points.z();
+  int findex = sindex + kfirst;
+  if (findex < 0 || findex >= m_data.size())
+    return false;
+  int lindex = sindex + klast;
+  if (lindex < 0 || lindex >= m_data.size())
+    return false;
+  std::fill(&m_data[findex], &m_data[lindex+1], value_);
+  return true;
 }
 
 } // End Core namespace
