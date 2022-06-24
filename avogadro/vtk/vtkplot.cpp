@@ -23,7 +23,7 @@
 #include <vtkTextProperty.h>
 
 #include <QSurfaceFormat>
-#include <QVTKOpenGLWidget.h>
+#include <QVTKOpenGLStereoWidget.h>
 
 #include "vtkplot.h"
 
@@ -34,12 +34,12 @@ using std::vector;
 namespace Avogadro {
 namespace VTK {
 
-VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLWidget)
+VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLStereoWidget)
 {
-  m_widget->SetRenderWindow(m_renderWindow);
+  m_widget->setRenderWindow(m_renderWindow);
 
   // Set up the view
-  m_widget->setFormat(QVTKOpenGLWidget::defaultFormat());
+  m_widget->setFormat(QVTKOpenGLStereoWidget::defaultFormat());
   m_view->SetRenderWindow(m_renderWindow);
   m_view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
   m_view->GetRenderWindow()->SetSize(600, 600);
