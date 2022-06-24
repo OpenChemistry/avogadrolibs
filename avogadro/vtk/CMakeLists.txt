@@ -13,12 +13,10 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 find_package(VTK
   COMPONENTS
-    vtkRenderingOpenGL2 vtkGUISupportQt vtkDomainsChemistry
-    vtkRenderingVolumeOpenGL2 vtkViewsCore vtkRenderingFreeType
-    vtkChartsCore vtkViewsContext2D vtkRenderingContextOpenGL2
+    RenderingOpenGL2 GUISupportQt DomainsChemistry
+    RenderingVolumeOpenGL2 ViewsCore RenderingFreeType
+    ChartsCore ViewsContext2D RenderingContextOpenGL2
   REQUIRED)
-include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
-set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS ${VTK_DEFINITIONS})
 
 set(HEADERS
   vtkAvogadroActor.h
@@ -35,6 +33,6 @@ set(SOURCES
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
 set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
-  vtkRenderingOpenGL2 vtkGUISupportQt vtkRenderingVolumeOpenGL2
-  vtkRenderingFreeType vtkInteractionStyle vtkChartsCore vtkViewsContext2D
-  vtkRenderingContextOpenGL2 vtkDomainsChemistryOpenGL2 Qt5::Widgets)
+  VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
+  VTK::RenderingFreeType VTK::InteractionStyle VTK::ChartsCore VTK::ViewsContext2D
+  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt5::Widgets)
