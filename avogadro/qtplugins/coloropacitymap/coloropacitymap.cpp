@@ -180,7 +180,7 @@ void ColorOpacityMap::render()
   auto widget = ActiveObjects::instance().activeWidget();
   auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
   if (vtkWidget) {
-    vtkWidget->GetRenderWindow()->Render();
+    vtkWidget->renderWindow()->Render();
     vtkWidget->update();
   }
 }

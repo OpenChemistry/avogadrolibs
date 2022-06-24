@@ -8,7 +8,7 @@
 
 #include "avogadrovtkexport.h"
 
-#include <QVTKOpenGLWidget.h>
+#include <QVTKOpenGLStereoWidget.h>
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
@@ -39,7 +39,7 @@ class ToolPlugin;
 
 namespace VTK {
 
-class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKOpenGLWidget
+class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKOpenGLStereoWidget
 {
   Q_OBJECT
 

@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-class QVTKOpenGLWidget;
+class QVTKOpenGLStereoWidget;
 class vtkAxis;
 class vtkChartXY;
 class vtkContextView;
@@ -88,7 +88,7 @@ private:
   // Get a pointer to a particular axis. Returns nullptr if invalid.
   vtkAxis* getAxis(Axis axis);
 
-  std::unique_ptr<QVTKOpenGLWidget> m_widget;
+  std::unique_ptr<QVTKOpenGLStereoWidget> m_widget;
   vtkNew<vtkTable> m_table;
   vtkNew<vtkGenericOpenGLRenderWindow> m_renderWindow;
   vtkNew<vtkContextView> m_view;

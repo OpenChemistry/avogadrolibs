@@ -112,7 +112,7 @@ void vtkGLWidget::cubeVolume(Core::Cube* cube)
 }
 
 vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
-  : QVTKOpenGLWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
+  : QVTKOpenGLStereoWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
@@ -120,16 +120,15 @@ vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
           SLOT(updateScene()));
 
   // Set up our renderer, window, scene, etc.
-  vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
-  SetRenderWindow(renderWindow);
-  GetRenderWindow()->AddRenderer(m_vtkRenderer);
-  setFormat(QVTKOpenGLWidget::defaultFormat());
-  vtkNew<vtkInteractorStyleTrackballCamera> interactor;
-  GetInteractor()->SetInteractorStyle(interactor);
-  GetInteractor()->Initialize();
+  vtkNew<vtkGenericOpenGLRenderWindow> renderWin;
+  setRenderWindow(renderWin);
+  renderWindow()->AddRenderer(m_vtkRenderer);
+  setFormat(QVTKOpenGLStereoWidget::defaultFormat());
+  vtkNew<vtkInteractorStyleTrackballCamera> interact;
+  interactor()->SetInteractorStyle(interact);
+  interactor()->Initialize();
   m_vtkRenderer->SetBackground(1.0, 1.0, 1.0);
 
-  // m_actor->setScene(&this->renderer().scene());
   m_moleculeMapper->UseBallAndStickSettings();
   m_actor->SetMapper(m_moleculeMapper);
   m_actor->GetProperty()->SetAmbient(0.0);
@@ -164,7 +163,7 @@ void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
   updateCube();
   // Reset the camera, re-render.
   m_vtkRenderer->ResetCamera();
-  GetRenderWindow()->Render();
+  renderWindow()->Render();
 }
 
 void vtkGLWidget::updateCube()
@@ -194,7 +193,7 @@ void vtkGLWidget::moleculeChanged(unsigned int c)
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Added || changes & Molecule::Removed) {
     updateCube();
-    GetRenderWindow()->Render();
+    renderWindow()->Render();
   }
 }
 
