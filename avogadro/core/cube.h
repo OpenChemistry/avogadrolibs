@@ -183,7 +183,7 @@ public:
    * @param k z component of the position.
    * @param value Value at the specified position.
    */
-  bool setValue(int i, int j, int k, double value);
+  bool setValue(unsigned int i, unsigned int j, unsigned int k, double value);
 
   /**
    * Sets the value at the specified index in the cube.
@@ -205,7 +205,9 @@ public:
    * @param klast last z position to fill.
    * @param value Value to fill the stripe with.
    */
-  bool fillStripe(int i, int j, int kfirst, int klast, double value);
+  bool fillStripe(
+    unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, double value
+  );
 
   /**
    * @return The minimum  value at any point in the Cube.

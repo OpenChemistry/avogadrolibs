@@ -263,10 +263,10 @@ double Cube::value(const Vector3& pos) const
          value(hC.x(), hC.y(), hC.z()) * P.x() * P.y() * P.z();
 }
 
-bool Cube::setValue(int i, int j, int k, double value_)
+bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k, double value_)
 {
-  int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
-  if (index < 0 || index >= m_data.size())
+  unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
+  if (index >= m_data.size())
     return false;
   m_data[index] = value_;
   if (value_ < m_minValue)
@@ -282,16 +282,17 @@ void Cube::fill(double value_)
   m_minValue = m_maxValue = value_;
 }
 
-bool Cube::fillStripe(int i, int j, int kfirst, int klast, double value_)
-{
-  int sindex = i * m_points.y() * m_points.z() + j * m_points.z();
-  int findex = sindex + kfirst;
-  if (findex < 0 || findex >= m_data.size())
+bool Cube::fillStripe(
+  unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, double value_
+) {
+  unsigned int stripeStartIndex = i * m_points.y() * m_points.z() + j * m_points.z();
+  unsigned int firstIndex = stripeStartIndex + kfirst;
+  if (firstIndex >= m_data.size())
     return false;
-  int lindex = sindex + klast;
-  if (lindex < 0 || lindex >= m_data.size())
+  unsigned int lastIndex = stripeStartIndex + klast;
+  if (lastIndex >= m_data.size())
     return false;
-  std::fill(&m_data[findex], &m_data[lindex+1], value_);
+  std::fill(&m_data[firstIndex], &m_data[lastIndex+1], value_);
   return true;
 }
 
