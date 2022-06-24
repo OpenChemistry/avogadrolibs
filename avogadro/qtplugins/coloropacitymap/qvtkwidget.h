@@ -4,11 +4,11 @@
 #ifndef AVOGADRO_QTPLUGINS_QVTKGLWidget_H
 #define AVOGADRO_QTPLUGINS_QVTKGLWidget_H
 
-#include <QVTKOpenGLWidget.h>
+#include <QVTKOpenGLStereoWidget.h>
 
 namespace Avogadro {
 
-class QVTKGLWidget : public QVTKOpenGLWidget
+class QVTKGLWidget : public QVTKOpenGLStereoWidget
 {
   Q_OBJECT
 
@@ -17,7 +17,7 @@ public:
                Qt::WindowFlags f = Qt::WindowFlags());
   ~QVTKGLWidget() override;
 
-  void setEnableHiDPI(bool enable) override;
+  //void setEnableHiDPI(bool enable) override;
 };
 } // namespace Avogadro
 
