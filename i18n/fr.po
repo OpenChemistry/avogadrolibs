@@ -2,13 +2,14 @@
 # Boris Faure <billiob@gmail.com>, 2020.
 # Maxime Leroy <lisacintosh@gmail.com>, 2021.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
+# Translator <kvb@tuta.io>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-06-19 03:21+0000\n"
-"PO-Revision-Date: 2021-11-16 06:53+0000\n"
-"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
+"PO-Revision-Date: 2022-06-26 17:19+0000\n"
+"Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.9.1-dev\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:71
@@ -160,15 +161,18 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Erreur lors de la génération de l'objet cjson : Le JSON analysé n'est pas un "
+"objet :\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:42
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Générateur d'entrée (erreur)"
 
 #: molequeue/inputgeneratordialog.cpp:44
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Éditeur de fichier d'entrée..."
+msgstr "Générateur d'entrée %1"
 
 #: molequeue/inputgeneratorwidget.cpp:115
 msgid "Continue"
@@ -214,7 +218,19 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Le fichier suivant a été modifié :\n"
+"\n"
+"%1\n"
+"\n"
+"Voulez-vous écraser vos modifications pour tenir compte de la nouvelle "
+"géométrie ou des options du travail ?"
 msgstr[1] ""
+"Les fichiers suivants ont été modifiés :\n"
+"\n"
+"%1\n"
+"\n"
+"Voulez-vous écraser vos modifications pour tenir compte de la nouvelle "
+"géométrie ou des options du travail ?"
 
 #: molequeue/inputgeneratorwidget.cpp:163
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:148
@@ -363,6 +379,8 @@ msgstr "%1 : Ce fichier n'est pas inscriptible."
 #: qtplugins/openmminput/openmminputdialog.cpp:405
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
+"Les fichiers d'entrée n'ont pas pu être inscrits à cause d'une erreur "
+"inconnue."
 
 #: molequeue/inputgeneratorwidget.cpp:547
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:311
@@ -467,11 +485,11 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Cette tâche a été refusée par MoleQueue : %1"
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "No program selected."
-msgstr ""
+msgstr "Aucun programme sélectionné."
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:143
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -1339,9 +1357,8 @@ msgid "Change Bond Order"
 msgstr "Changer l'ordre des liaisons"
 
 #: qtgui/rwmolecule.cpp:339
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Ajuster aux liaisons"
+msgstr "Ajuster aux liaisons"
 
 #: qtgui/rwmolecule.cpp:358
 msgid "Update Bond"
