@@ -229,7 +229,7 @@ void Mesh::smooth()
     }
   }
 
-  int iterationCount = 3;
+  int iterationCount = 6;
   float weight = 1.0f;
   for (int iteration = 0; iteration < iterationCount; iteration++) {
     // Copy vertices by ID into source array
@@ -252,9 +252,17 @@ void Mesh::smooth()
   // Recompute normals
   for (size_t id = 0; id < vertexIDToIndices.size(); id++) {
     Vector3f normal(0.0f, 0.0f, 0.0f);
-    for (size_t neighbor: vertexIDTo1Ring[id])
-      normal += m_vertices[vertexIDToIndices[neighbor][0]];
-    normal *= -1.0f / normal.norm();
+    for (size_t v: vertexIDToIndices[id]) {
+      size_t relative = v % 3;
+      size_t triangle = v - relative;
+      Vector3f &a = m_vertices[v];
+      Vector3f &b = m_vertices[triangle + (relative + 1) % 3];
+      Vector3f &c = m_vertices[triangle + (relative + 2) % 3];
+      Vector3f triangleNormal = (b - a).cross(c - a);
+      triangleNormal *= 1.0f / triangleNormal.norm();
+      normal += triangleNormal;
+    }
+    normal *= 1.0f / normal.norm();
     for (size_t i: vertexIDToIndices[id])
       m_normals[i] = normal;
   }
