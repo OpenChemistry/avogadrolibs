@@ -6,6 +6,7 @@
 #include "mesh.h"
 
 #include "mutex.h"
+#include "./neighborperceiver.h"
 
 using std::vector;
 
@@ -175,6 +176,88 @@ Mesh& Mesh::operator=(const Mesh& other)
   m_isoValue = other.m_isoValue;
 
   return *this;
+}
+
+void Mesh::smooth()
+{
+  if (m_vertices.size() == 0)
+    return;
+
+  // Map vertices to a line and pass them to NeighborPerceiver
+  Array<Vector3> linearList(m_vertices.size());
+  for (size_t i = 0; i < m_vertices.size(); i++)
+    linearList[i] = Vector3(
+      double(m_vertices[i](0) + 1.31*m_vertices[i](1) + 0.97*m_vertices[i](2)),
+    0.0, 0.0);
+  NeighborPerceiver perceiver(linearList, 0.01);
+
+  // Identify degenerate vertices
+  std::vector<int> indexToVertexID(m_vertices.size(), -1);
+  std::vector<std::vector<size_t>> vertexIDToIndices;
+  Array<size_t> neighbors;
+  for (size_t i = 0; i < m_vertices.size(); i++) {
+    if (indexToVertexID[i] != -1)
+      continue;
+    perceiver.getNeighborsInclusiveInPlace(neighbors, linearList[i]);
+    size_t vertexID = vertexIDToIndices.size();
+    for (size_t n: neighbors) {
+      if ((m_vertices[n] - m_vertices[i]).norm() < 0.0001) {
+        if (vertexID == vertexIDToIndices.size())
+          vertexIDToIndices.emplace_back();
+        indexToVertexID[n] = vertexID;
+        vertexIDToIndices[vertexID].push_back(n);
+      }
+    }
+  }
+
+  // Compute 1-ring
+  std::vector<std::vector<size_t>> vertexIDTo1Ring(vertexIDToIndices.size());
+  for (size_t id = 0; id < vertexIDToIndices.size(); id++) {
+    for (size_t v: vertexIDToIndices[id]) {
+      size_t relative = v % 3;
+      size_t triangle = v - relative;
+      std::array<size_t, 2> candidates{{
+        triangle + (relative + 1) % 3,
+        triangle + (relative + 2) % 3
+      }};
+      for (size_t candidate: candidates) {
+        size_t newID = indexToVertexID[candidate];
+        if (std::find(vertexIDToIndices[id].begin(), vertexIDToIndices[id].end(), newID)
+        == vertexIDToIndices[id].end())
+          vertexIDTo1Ring[id].push_back(newID);
+      }
+    }
+  }
+
+  int iterationCount = 3;
+  float weight = 1.0f;
+  for (int iteration = 0; iteration < iterationCount; iteration++) {
+    // Copy vertices by ID into source array
+    std::vector<Vector3f> inputVertices(vertexIDToIndices.size());
+    for (size_t id = 0; id < vertexIDToIndices.size(); id++)
+      inputVertices[id] = m_vertices[vertexIDToIndices[id][0]];
+
+    // Apply Laplacian smoothing
+    for (size_t id = 0; id < inputVertices.size(); id++) {
+      Vector3f output(0.0f, 0.0f, 0.0f);
+      for (size_t neighbor: vertexIDTo1Ring[id])
+        output += inputVertices[neighbor];
+      output += weight * inputVertices[id];
+      output *= 1.0f / (weight + vertexIDTo1Ring[id].size());
+      for (size_t i: vertexIDToIndices[id])
+        m_vertices[i] = output;
+    }
+  }
+
+  // Recompute normals
+  for (size_t id = 0; id < vertexIDToIndices.size(); id++) {
+    Vector3f normal(0.0f, 0.0f, 0.0f);
+    for (size_t neighbor: vertexIDTo1Ring[id])
+      normal += m_vertices[vertexIDToIndices[neighbor][0]];
+    normal *= -1.0f / normal.norm();
+    for (size_t i: vertexIDToIndices[id])
+      m_normals[i] = normal;
+  }
 }
 
 } // End namespace QtGui

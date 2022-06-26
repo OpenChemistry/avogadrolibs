@@ -102,6 +102,9 @@ void MeshGenerator::run()
   // Now we are done give all that memory back
   m_vertices.resize(0);
   m_normals.resize(0);
+
+  // Smooth out the mesh
+  m_mesh->smooth();
 }
 
 void MeshGenerator::clear()

@@ -214,6 +214,11 @@ public:
    */
   Mutex* lock() const { return m_lock; }
 
+  /**
+   * Applies Laplacian smoothing.
+   */
+  void smooth();
+
   friend class Molecule;
 
 private:
