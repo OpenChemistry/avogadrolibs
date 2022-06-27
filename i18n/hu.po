@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-06-26 03:19+0000\n"
-"PO-Revision-Date: 2022-06-24 00:14+0000\n"
+"PO-Revision-Date: 2022-06-27 13:21+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2914,7 +2914,7 @@ msgstr ""
 #: qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Édesgyökér"
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
@@ -3154,14 +3154,12 @@ msgid "Render a few non-covalent interactions."
 msgstr "Néhány nem kovalens kölcsönhatás megjelenítése."
 
 #: qtplugins/noncovalent/noncovalent.h:53
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hidrogén"
+msgstr "Halogén"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Chalcogen"
-msgstr ""
+msgstr "Kalkogén"
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:320
 #, qt-format
@@ -4211,11 +4209,11 @@ msgstr "van der Waals"
 
 #: qtplugins/surfaces/surfacedialog.cpp:27
 msgid "Solvent Accessible"
-msgstr ""
+msgstr "Oldószer hozzáférhető"
 
 #: qtplugins/surfaces/surfacedialog.cpp:29
 msgid "Solvent Excluded"
-msgstr ""
+msgstr "Oldószer kizárva"
 
 #: qtplugins/surfaces/surfacedialog.cpp:101
 msgid "Molecular Orbital"
