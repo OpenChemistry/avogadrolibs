@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-19 03:21+0000\n"
+"POT-Creation-Date: 2022-06-26 03:19+0000\n"
 "PO-Revision-Date: 2022-06-24 00:14+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -535,7 +535,7 @@ msgstr "Felosztás vízszintesen"
 msgid "Split Vertical"
 msgstr "Felosztás függőlegesen"
 
-#: qtgui/elementtranslator.cpp:20
+#: qtgui/elementtranslator.cpp:20 qtplugins/noncovalent/noncovalent.h:53
 msgid "Hydrogen"
 msgstr "Hidrogén"
 
@@ -1758,7 +1758,7 @@ msgid "&Build"
 msgstr "Fe&lépítés"
 
 #: qtplugins/bonding/bonding.cpp:54
-#: qtplugins/propertytables/propertymodel.cpp:389
+#: qtplugins/propertytables/propertymodel.cpp:406
 msgid "Bond"
 msgstr "Kötés"
 
@@ -1903,12 +1903,12 @@ msgstr "Fájlnév"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:328:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:351:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:342
+#: qtplugins/noncovalent/noncovalent.cpp:369
 msgid "Maximum distance:"
 msgstr "Legnagyobb távolság:"
 
@@ -2414,7 +2414,7 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Kristályspecifikus szerkesztő/elemző eszközök."
 
 #: qtplugins/crystal/crystalscene.cpp:149
-#: qtplugins/noncovalent/noncovalent.cpp:343
+#: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:89
 msgid "Line width:"
 msgstr "Vonalvastagság:"
@@ -2816,7 +2816,7 @@ msgstr "Tárgymutató"
 msgid "In."
 msgstr "Ebben."
 
-#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:355
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:370
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
 msgstr "Elem"
@@ -2841,13 +2841,13 @@ msgstr ", "
 msgid "Atom Label:"
 msgstr "Atomi címke:"
 
-#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:398
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:415
 msgid "ID"
 msgstr "Azonosító"
 
 #: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:396
+#: qtplugins/propertytables/propertymodel.cpp:413
 msgid "Name"
 msgstr "Név"
 
@@ -3056,7 +3056,7 @@ msgstr "Molekula általános tulajdonságok megtekintése."
 #: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:78 qtplugins/spectra/spectra.cpp:44
-#: qtplugins/surfaces/surfaces.cpp:109 qtplugins/symmetry/symmetry.cpp:83
+#: qtplugins/surfaces/surfaces.cpp:118 qtplugins/symmetry/symmetry.cpp:83
 msgid "&Analysis"
 msgstr "&Elemzés"
 
@@ -3137,11 +3137,11 @@ msgstr "Hálózati adatbázisok"
 msgid "Interact with online databases, query structures etc."
 msgstr "Online adatbázisokkal, lekérdezési struktúrákkal kölcsönhatása."
 
-#: qtplugins/noncovalent/noncovalent.cpp:319
+#: qtplugins/noncovalent/noncovalent.cpp:340
 msgid " °"
 msgstr " °"
 
-#: qtplugins/noncovalent/noncovalent.cpp:341
+#: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
 msgstr "Szögtűrés:"
 
@@ -3152,6 +3152,16 @@ msgstr "Nem kovalens kötések"
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
 msgstr "Néhány nem kovalens kölcsönhatás megjelenítése."
+
+#: qtplugins/noncovalent/noncovalent.h:53
+#, fuzzy
+#| msgid "Hydrogen"
+msgid "Halogen"
+msgstr "Hidrogén"
+
+#: qtplugins/noncovalent/noncovalent.h:53
+msgid "Chalcogen"
+msgstr ""
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:320
 #, qt-format
@@ -3494,7 +3504,7 @@ msgstr "Képkocka:"
 
 #: qtplugins/playertool/playertool.cpp:121
 #: qtplugins/playertool/playertool.cpp:406
-#: qtplugins/surfaces/surfacedialog.cpp:166
+#: qtplugins/surfaces/surfacedialog.cpp:164
 #, qt-format
 msgid " of %0"
 msgstr " / %0"
@@ -3520,7 +3530,7 @@ msgstr "Bittérképes grafika exportálása"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Rajzfilmfájl (*.mp4);;Rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:261 qtplugins/surfaces/surfaces.cpp:402
+#: qtplugins/playertool/playertool.cpp:261 qtplugins/surfaces/surfaces.cpp:546
 msgid "GIF (*.gif)"
 msgstr "GIF-fájl (*.gif)"
 
@@ -3539,16 +3549,16 @@ msgid "Movie (*.avi)"
 msgstr "Rajzfilmfájl (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:340
-#: qtplugins/playertool/playertool.cpp:370 qtplugins/surfaces/surfaces.cpp:430
-#: qtplugins/surfaces/surfaces.cpp:473 qtplugins/surfaces/surfaces.cpp:485
+#: qtplugins/playertool/playertool.cpp:370 qtplugins/surfaces/surfaces.cpp:574
+#: qtplugins/surfaces/surfaces.cpp:617 qtplugins/surfaces/surfaces.cpp:629
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:341 qtplugins/surfaces/surfaces.cpp:474
+#: qtplugins/playertool/playertool.cpp:341 qtplugins/surfaces/surfaces.cpp:618
 msgid "Error: cannot add frame to video."
 msgstr "Hiba történt: nem sikerült képkockát hozzáadni a videóhoz."
 
-#: qtplugins/playertool/playertool.cpp:371 qtplugins/surfaces/surfaces.cpp:486
+#: qtplugins/playertool/playertool.cpp:371 qtplugins/surfaces/surfaces.cpp:630
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 fájl mentése nem sikerult."
@@ -3701,134 +3711,138 @@ msgid "Render the scene using POV-Ray."
 msgstr ""
 "A jelenet megjelenítése a látás kitartása sugárjelző (POV-Ray) segítségével."
 
-#: qtplugins/propertytables/propertymodel.cpp:357
+#: qtplugins/propertytables/propertymodel.cpp:372
 msgid "Valence"
 msgstr "Vegyérték"
 
-#: qtplugins/propertytables/propertymodel.cpp:359
+#: qtplugins/propertytables/propertymodel.cpp:374
 msgid "Formal Charge"
 msgstr "Hivatalos töltés"
 
-#: qtplugins/propertytables/propertymodel.cpp:361
+#: qtplugins/propertytables/propertymodel.cpp:376
+msgid "Partial Charge"
+msgstr "Részleges töltés"
+
+#: qtplugins/propertytables/propertymodel.cpp:378
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:363
+#: qtplugins/propertytables/propertymodel.cpp:380
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:365
+#: qtplugins/propertytables/propertymodel.cpp:382
 msgid "Z Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:367
-#: qtplugins/propertytables/propertymodel.cpp:406
+#: qtplugins/propertytables/propertymodel.cpp:384
+#: qtplugins/propertytables/propertymodel.cpp:423
 msgid "Color"
 msgstr "Szín"
 
-#: qtplugins/propertytables/propertymodel.cpp:370
+#: qtplugins/propertytables/propertymodel.cpp:387
 msgid "Atom"
 msgstr "Atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:377
-#: qtplugins/propertytables/propertymodel.cpp:416
+#: qtplugins/propertytables/propertymodel.cpp:394
 #: qtplugins/propertytables/propertymodel.cpp:433
+#: qtplugins/propertytables/propertymodel.cpp:450
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
 msgstr "Típus"
 
-#: qtplugins/propertytables/propertymodel.cpp:379
+#: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Start Atom"
 msgstr "&Atomanimáció indítása"
 
-#: qtplugins/propertytables/propertymodel.cpp:381
+#: qtplugins/propertytables/propertymodel.cpp:398
 msgid "End Atom"
 msgstr "Utolsó atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:383
+#: qtplugins/propertytables/propertymodel.cpp:400
 msgid "Bond Order"
 msgstr "Kötésrend"
 
-#: qtplugins/propertytables/propertymodel.cpp:385
+#: qtplugins/propertytables/propertymodel.cpp:402
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Hosszúság (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:400
+#: qtplugins/propertytables/propertymodel.cpp:417
 msgid "Chain"
 msgstr "Lánc"
 
-#: qtplugins/propertytables/propertymodel.cpp:402
+#: qtplugins/propertytables/propertymodel.cpp:419
 msgid "Secondary Structure"
 msgstr "Másodlagos szerkezet"
 
-#: qtplugins/propertytables/propertymodel.cpp:404
+#: qtplugins/propertytables/propertymodel.cpp:421
 msgid "Heterogen"
 msgstr "Heterogén"
 
-#: qtplugins/propertytables/propertymodel.cpp:418
 #: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Atom 1"
 msgstr "1. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:420
+#: qtplugins/propertytables/propertymodel.cpp:437
 msgid "Vertex"
 msgstr "Csúcs"
 
-#: qtplugins/propertytables/propertymodel.cpp:422
 #: qtplugins/propertytables/propertymodel.cpp:439
+#: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Atom 3"
 msgstr "3. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:424
-#: qtplugins/propertytables/propertymodel.cpp:443
+#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Angle (°)"
 msgstr "Szög (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:437
+#: qtplugins/propertytables/propertymodel.cpp:454
 msgid "Atom 2"
 msgstr "2. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:458
 msgid "Atom 4"
 msgstr "4. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:503
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π-spirál"
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:505
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Hajlítás"
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:507
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α-spirál"
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β-lap"
 
-#: qtplugins/propertytables/propertymodel.cpp:494
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3_10-spirál"
 
-#: qtplugins/propertytables/propertymodel.cpp:496
+#: qtplugins/propertytables/propertymodel.cpp:513
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β-híd"
 
-#: qtplugins/propertytables/propertymodel.cpp:498
+#: qtplugins/propertytables/propertymodel.cpp:515
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Fordulás"
 
-#: qtplugins/propertytables/propertymodel.cpp:500
+#: qtplugins/propertytables/propertymodel.cpp:517
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Tekercs"
@@ -4191,64 +4205,76 @@ msgstr "Spektrumok és rezgések"
 msgid "Display spectra and vibrational modes."
 msgstr "Spektrumok és rezgési módok megjelenítése."
 
-#: qtplugins/surfaces/surfacedialog.cpp:103
+#: qtplugins/surfaces/surfacedialog.cpp:26
+msgid "Van der Waals"
+msgstr "van der Waals"
+
+#: qtplugins/surfaces/surfacedialog.cpp:27
+msgid "Solvent Accessible"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:29
+msgid "Solvent Excluded"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:101
 msgid "Molecular Orbital"
 msgstr "Molekulapálya"
 
-#: qtplugins/surfaces/surfacedialog.cpp:105
+#: qtplugins/surfaces/surfacedialog.cpp:103
 msgid "Electron Density"
 msgstr "Elektronsűrűség"
 
-#: qtplugins/surfaces/surfacedialog.cpp:124
+#: qtplugins/surfaces/surfacedialog.cpp:122
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
 msgstr "%L1. molekulapálya"
 
-#: qtplugins/surfaces/surfacedialog.cpp:126
+#: qtplugins/surfaces/surfacedialog.cpp:124
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr "(Legmagasabb elfoglalt molekulapálya)"
 
-#: qtplugins/surfaces/surfacedialog.cpp:128
+#: qtplugins/surfaces/surfacedialog.cpp:126
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
 msgstr "(Legalacsonyabb szabad molekulapálya)"
 
-#: qtplugins/surfaces/surfacedialog.cpp:143
+#: qtplugins/surfaces/surfacedialog.cpp:141
 msgid "From File"
 msgstr "Fájlból"
 
-#: qtplugins/surfaces/surfaces.cpp:67
+#: qtplugins/surfaces/surfaces.cpp:73
 msgid "Create Surfaces…"
 msgstr "Felületek létrehozása…"
 
-#: qtplugins/surfaces/surfaces.cpp:233
+#: qtplugins/surfaces/surfaces.cpp:377
 msgid "Calculating electron density"
 msgstr "Elektronsűrűség számítása folyamatban van…"
 
-#: qtplugins/surfaces/surfaces.cpp:243
+#: qtplugins/surfaces/surfaces.cpp:387
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Molekuláris pálya kiszámítása: %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:379 qtplugins/surfaces/surfaces.cpp:407
+#: qtplugins/surfaces/surfaces.cpp:523 qtplugins/surfaces/surfaces.cpp:551
 msgid "Movie AVI (*.avi)"
 msgstr "AVI-rajzfilmfájl (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:381
+#: qtplugins/surfaces/surfaces.cpp:525
 msgid "Export Movie"
 msgstr "Rajzfilmfájl exportálása"
 
-#: qtplugins/surfaces/surfaces.cpp:382
+#: qtplugins/surfaces/surfaces.cpp:526
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4-rajzfilmfájl (*.mp4);;AVI-rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
-#: qtplugins/surfaces/surfaces.h:59
+#: qtplugins/surfaces/surfaces.h:61
 msgid "Surfaces"
 msgstr "Felületek"
 
-#: qtplugins/surfaces/surfaces.h:60
+#: qtplugins/surfaces/surfaces.h:62
 msgid "Read and render surfaces."
 msgstr "Felületek beolvasása és megjelenítése."
 
@@ -7179,15 +7205,9 @@ msgstr "E-mail-címek"
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Távolság (3->4): %L1 %2"
 
-#~ msgid "Van der Waals"
-#~ msgstr "van der Waals"
-
 #, fuzzy
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "van der Waals"
-
-#~ msgid "Partial Charge"
-#~ msgstr "Részleges töltés"
 
 #~ msgid "Rotatable"
 #~ msgstr "Forgatható"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-06-19 03:21+0000\n"
+"POT-Creation-Date: 2022-06-26 03:19+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -532,7 +532,7 @@ msgstr "Dividi Horizontale"
 msgid "Split Vertical"
 msgstr "Dividi Vertikale"
 
-#: qtgui/elementtranslator.cpp:20
+#: qtgui/elementtranslator.cpp:20 qtplugins/noncovalent/noncovalent.h:53
 msgid "Hydrogen"
 msgstr "Hidrogeno"
 
@@ -1741,7 +1741,7 @@ msgid "&Build"
 msgstr "Konstrui (&B)"
 
 #: qtplugins/bonding/bonding.cpp:54
-#: qtplugins/propertytables/propertymodel.cpp:389
+#: qtplugins/propertytables/propertymodel.cpp:406
 msgid "Bond"
 msgstr "Ligo"
 
@@ -1888,12 +1888,12 @@ msgstr "Dosiernomo"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:196
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:118
-#: qtplugins/noncovalent/noncovalent.cpp:328:165 rc.cpp:168 rc.cpp:384
+#: qtplugins/noncovalent/noncovalent.cpp:351:165 rc.cpp:168 rc.cpp:384
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:123
-#: qtplugins/noncovalent/noncovalent.cpp:342
+#: qtplugins/noncovalent/noncovalent.cpp:369
 #, fuzzy
 #| msgid "Minimum Distance:"
 msgid "Maximum distance:"
@@ -2409,7 +2409,7 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Iloj por kristal-specifaj redaktado/analizo."
 
 #: qtplugins/crystal/crystalscene.cpp:149
-#: qtplugins/noncovalent/noncovalent.cpp:343
+#: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:89
 #, fuzzy
 msgid "Line width:"
@@ -2831,7 +2831,7 @@ msgstr "Paŝa Indico"
 msgid "In."
 msgstr "En:"
 
-#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:355
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:370
 #: qtplugins/symmetry/operationstablemodel.cpp:64
 msgid "Element"
 msgstr "Elemento"
@@ -2858,13 +2858,13 @@ msgstr ""
 msgid "Atom Label:"
 msgstr "Teksta Etikedo"
 
-#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:398
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:415
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:396
+#: qtplugins/propertytables/propertymodel.cpp:413
 msgid "Name"
 msgstr "Nomo"
 
@@ -3077,7 +3077,7 @@ msgstr "Vidi ĝeneralajn atributojn de molekulo."
 #: qtplugins/molecularproperties/molecularproperties.cpp:42
 #: qtplugins/propertytables/propertytables.cpp:74
 #: qtplugins/qtaim/qtaimextension.cpp:78 qtplugins/spectra/spectra.cpp:44
-#: qtplugins/surfaces/surfaces.cpp:109 qtplugins/symmetry/symmetry.cpp:83
+#: qtplugins/surfaces/surfaces.cpp:118 qtplugins/symmetry/symmetry.cpp:83
 msgid "&Analysis"
 msgstr "&Analizo"
 
@@ -3150,13 +3150,13 @@ msgstr "Retaj Datenbankoj"
 msgid "Interact with online databases, query structures etc."
 msgstr "Interagi kun retaj datenbankoj, serĉi strukturojn, ktp."
 
-#: qtplugins/noncovalent/noncovalent.cpp:319
+#: qtplugins/noncovalent/noncovalent.cpp:340
 #, fuzzy
 #| msgid "°"
 msgid " °"
 msgstr "°"
 
-#: qtplugins/noncovalent/noncovalent.cpp:341
+#: qtplugins/noncovalent/noncovalent.cpp:368
 #, fuzzy
 #| msgid "Tolerance:"
 msgid "Angle tolerance:"
@@ -3170,6 +3170,16 @@ msgstr "Kovalenta"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
+msgstr ""
+
+#: qtplugins/noncovalent/noncovalent.h:53
+#, fuzzy
+#| msgid "Hydrogen"
+msgid "Halogen"
+msgstr "Hidrogeno"
+
+#: qtplugins/noncovalent/noncovalent.h:53
+msgid "Chalcogen"
 msgstr ""
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:320
@@ -3536,7 +3546,7 @@ msgstr "Filmero:"
 
 #: qtplugins/playertool/playertool.cpp:121
 #: qtplugins/playertool/playertool.cpp:406
-#: qtplugins/surfaces/surfacedialog.cpp:166
+#: qtplugins/surfaces/surfacedialog.cpp:164
 #, qt-format
 msgid " of %0"
 msgstr " el %0"
@@ -3564,7 +3574,7 @@ msgstr "Eksporti Rastruman Grafikaĵon"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Filmeto (*.mp4);;Filmeto (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:261 qtplugins/surfaces/surfaces.cpp:402
+#: qtplugins/playertool/playertool.cpp:261 qtplugins/surfaces/surfaces.cpp:546
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -3581,16 +3591,16 @@ msgid "Movie (*.avi)"
 msgstr "Filmeto (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:340
-#: qtplugins/playertool/playertool.cpp:370 qtplugins/surfaces/surfaces.cpp:430
-#: qtplugins/surfaces/surfaces.cpp:473 qtplugins/surfaces/surfaces.cpp:485
+#: qtplugins/playertool/playertool.cpp:370 qtplugins/surfaces/surfaces.cpp:574
+#: qtplugins/surfaces/surfaces.cpp:617 qtplugins/surfaces/surfaces.cpp:629
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:341 qtplugins/surfaces/surfaces.cpp:474
+#: qtplugins/playertool/playertool.cpp:341 qtplugins/surfaces/surfaces.cpp:618
 msgid "Error: cannot add frame to video."
 msgstr "Eraro: ne povas aldoni filmeron al filmeto."
 
-#: qtplugins/playertool/playertool.cpp:371 qtplugins/surfaces/surfaces.cpp:486
+#: qtplugins/playertool/playertool.cpp:371 qtplugins/surfaces/surfaces.cpp:630
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Ne povas konservi dosieron %1."
@@ -3748,144 +3758,148 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "Bildigi la scenon per POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:357
+#: qtplugins/propertytables/propertymodel.cpp:372
 msgid "Valence"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:359
+#: qtplugins/propertytables/propertymodel.cpp:374
 msgid "Formal Charge"
 msgstr "Formala Ŝargo"
 
-#: qtplugins/propertytables/propertymodel.cpp:361
+#: qtplugins/propertytables/propertymodel.cpp:376
+msgid "Partial Charge"
+msgstr "Parta Ŝargo"
+
+#: qtplugins/propertytables/propertymodel.cpp:378
 msgid "X (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:363
+#: qtplugins/propertytables/propertymodel.cpp:380
 msgid "Y (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:365
+#: qtplugins/propertytables/propertymodel.cpp:382
 msgid "Z Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:367
-#: qtplugins/propertytables/propertymodel.cpp:406
+#: qtplugins/propertytables/propertymodel.cpp:384
+#: qtplugins/propertytables/propertymodel.cpp:423
 #, fuzzy
 msgid "Color"
 msgstr "Kolorigi laŭ:"
 
-#: qtplugins/propertytables/propertymodel.cpp:370
+#: qtplugins/propertytables/propertymodel.cpp:387
 msgid "Atom"
 msgstr "Atomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:377
-#: qtplugins/propertytables/propertymodel.cpp:416
+#: qtplugins/propertytables/propertymodel.cpp:394
 #: qtplugins/propertytables/propertymodel.cpp:433
+#: qtplugins/propertytables/propertymodel.cpp:450
 #: qtplugins/symmetry/operationstablemodel.cpp:60
 msgid "Type"
 msgstr "Tipo"
 
-#: qtplugins/propertytables/propertymodel.cpp:379
+#: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Start Atom"
 msgstr "Komenca atomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:381
+#: qtplugins/propertytables/propertymodel.cpp:398
 msgid "End Atom"
 msgstr "Fina atomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:383
+#: qtplugins/propertytables/propertymodel.cpp:400
 msgid "Bond Order"
 msgstr "Liga Ordo"
 
-#: qtplugins/propertytables/propertymodel.cpp:385
+#: qtplugins/propertytables/propertymodel.cpp:402
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Longo %1"
 
-#: qtplugins/propertytables/propertymodel.cpp:400
+#: qtplugins/propertytables/propertymodel.cpp:417
 #, fuzzy
 msgid "Chain"
 msgstr "NH-Ĉenoj"
 
-#: qtplugins/propertytables/propertymodel.cpp:402
+#: qtplugins/propertytables/propertymodel.cpp:419
 #, fuzzy
 msgid "Secondary Structure"
 msgstr "Ŝargi Strukturan Dosieron"
 
-#: qtplugins/propertytables/propertymodel.cpp:404
+#: qtplugins/propertytables/propertymodel.cpp:421
 #, fuzzy
 msgid "Heterogen"
 msgstr "Hidrogeno"
 
-#: qtplugins/propertytables/propertymodel.cpp:418
 #: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:452
 #, fuzzy
 msgid "Atom 1"
 msgstr "Atomo %1"
 
-#: qtplugins/propertytables/propertymodel.cpp:420
+#: qtplugins/propertytables/propertymodel.cpp:437
 msgid "Vertex"
 msgstr "Vertico"
 
-#: qtplugins/propertytables/propertymodel.cpp:422
 #: qtplugins/propertytables/propertymodel.cpp:439
+#: qtplugins/propertytables/propertymodel.cpp:456
 #, fuzzy
 msgid "Atom 3"
 msgstr "Atomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:424
-#: qtplugins/propertytables/propertymodel.cpp:443
+#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:460
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Angulo"
 
-#: qtplugins/propertytables/propertymodel.cpp:437
+#: qtplugins/propertytables/propertymodel.cpp:454
 #, fuzzy
 msgid "Atom 2"
 msgstr "Atomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
 msgid "Atom 4"
 msgstr "Atomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:503
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:505
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:507
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:494
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:496
+#: qtplugins/propertytables/propertymodel.cpp:513
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:498
+#: qtplugins/propertytables/propertymodel.cpp:515
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:500
+#: qtplugins/propertytables/propertymodel.cpp:517
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -4271,66 +4285,78 @@ msgstr "Spektroj kaj Vibroj"
 msgid "Display spectra and vibrational modes."
 msgstr "Montru spektrojn kaj vibrajn modojn."
 
-#: qtplugins/surfaces/surfacedialog.cpp:103
+#: qtplugins/surfaces/surfacedialog.cpp:26
+msgid "Van der Waals"
+msgstr "Van der Waals"
+
+#: qtplugins/surfaces/surfacedialog.cpp:27
+msgid "Solvent Accessible"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:29
+msgid "Solvent Excluded"
+msgstr ""
+
+#: qtplugins/surfaces/surfacedialog.cpp:101
 msgid "Molecular Orbital"
 msgstr "Molekula Orbito"
 
-#: qtplugins/surfaces/surfacedialog.cpp:105
+#: qtplugins/surfaces/surfacedialog.cpp:103
 msgid "Electron Density"
 msgstr "Elektrona Denso"
 
-#: qtplugins/surfaces/surfacedialog.cpp:124
+#: qtplugins/surfaces/surfacedialog.cpp:122
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
 msgstr "MO %L1"
 
-#: qtplugins/surfaces/surfacedialog.cpp:126
+#: qtplugins/surfaces/surfacedialog.cpp:124
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr "(Plejalta okupata MO)"
 
-#: qtplugins/surfaces/surfacedialog.cpp:128
+#: qtplugins/surfaces/surfacedialog.cpp:126
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
 msgstr "(Malplejalta neokupata MO)"
 
-#: qtplugins/surfaces/surfacedialog.cpp:143
+#: qtplugins/surfaces/surfacedialog.cpp:141
 msgid "From File"
 msgstr "El Dosiero"
 
-#: qtplugins/surfaces/surfaces.cpp:67
+#: qtplugins/surfaces/surfaces.cpp:73
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
 msgstr "Krei Surfacojn"
 
-#: qtplugins/surfaces/surfaces.cpp:233
+#: qtplugins/surfaces/surfaces.cpp:377
 msgid "Calculating electron density"
 msgstr "Kalkulante elektronan denson"
 
-#: qtplugins/surfaces/surfaces.cpp:243
+#: qtplugins/surfaces/surfaces.cpp:387
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Kalkulante molekulan orbiton %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:379 qtplugins/surfaces/surfaces.cpp:407
+#: qtplugins/surfaces/surfaces.cpp:523 qtplugins/surfaces/surfaces.cpp:551
 msgid "Movie AVI (*.avi)"
 msgstr "AVI-Filmeto (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:381
+#: qtplugins/surfaces/surfaces.cpp:525
 msgid "Export Movie"
 msgstr "Eksporti Filmeton"
 
-#: qtplugins/surfaces/surfaces.cpp:382
+#: qtplugins/surfaces/surfaces.cpp:526
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4-Filmeto (*.mp4);;AVI-Filmeto (*.avi);;GIF (*.gif)"
 
-#: qtplugins/surfaces/surfaces.h:59
+#: qtplugins/surfaces/surfaces.h:61
 msgid "Surfaces"
 msgstr "Surfacoj"
 
-#: qtplugins/surfaces/surfaces.h:60
+#: qtplugins/surfaces/surfaces.h:62
 msgid "Read and render surfaces."
 msgstr "Legi kaj montri surfacojn."
 
@@ -7314,9 +7340,6 @@ msgstr "phlostically@example.com"
 #~ msgid "Distance: %L1 Å"
 #~ msgstr "Distanco: %L1 Å"
 
-#~ msgid "Partial Charge"
-#~ msgstr "Parta Ŝargo"
-
 #~ msgid "Rotatable"
 #~ msgstr "Turnebla"
 
@@ -7366,9 +7389,6 @@ msgstr "phlostically@example.com"
 
 #~ msgid "No"
 #~ msgstr "Ne"
-
-#~ msgid "Van der Waals"
-#~ msgstr "Van der Waals"
 
 #~ msgid "Van der Waals (AO)"
 #~ msgstr "Van der Waals (ĉirkaŭa lumbaro)"
