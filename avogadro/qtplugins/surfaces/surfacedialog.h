@@ -52,7 +52,11 @@ public:
 
   float isosurfaceValue();
 
+  int smoothingPassesValue();
+
   float resolution();
+
+  bool automaticResolution();
 
   int step();
   void setStep(int step);
@@ -62,6 +66,7 @@ public slots:
 protected slots:
   void surfaceComboChanged(int n);
   void resolutionComboChanged(int n);
+  void smoothingComboChanged(int n);
   void calculateClicked();
   void record();
 
@@ -72,6 +77,7 @@ signals:
 
 private:
   Ui::SurfaceDialog* m_ui;
+  bool m_automaticResolution;
 };
 
 } // End namespace QtPlugins

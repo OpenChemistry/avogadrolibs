@@ -192,7 +192,7 @@ void Mesh::smooth(int iterationCount)
     linearList[i] = Vector3(
       double(m_vertices[i](0) + 1.31*m_vertices[i](1) + 0.97*m_vertices[i](2)),
     0.0, 0.0);
-  NeighborPerceiver perceiver(linearList, 0.01);
+  NeighborPerceiver perceiver(linearList, 0.005);
 
   // Identify degenerate vertices
   std::vector<int> indexToVertexID(m_vertices.size(), -1);

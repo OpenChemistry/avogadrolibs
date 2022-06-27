@@ -11,7 +11,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
+  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog),
+  m_automaticResolution(true)
 {
   m_ui->setupUi(this);
 
@@ -33,6 +34,8 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
           SLOT(surfaceComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
+  connect(m_ui->smoothingCombo, SIGNAL(currentIndexChanged(int)),
+          SLOT(smoothingComboChanged(int)));
   connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
   connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
@@ -56,6 +59,7 @@ void SurfaceDialog::surfaceComboChanged(int n)
 
 void SurfaceDialog::resolutionComboChanged(int n)
 {
+  m_automaticResolution = false;
   // resolutions are in Angstrom
   switch (n) {
     case 0: // Very low resolution
@@ -78,13 +82,47 @@ void SurfaceDialog::resolutionComboChanged(int n)
       m_ui->resolutionDoubleSpinBox->setValue(0.05);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
       break;
-    case 5: // Custom resolution
+    case 5: // Automatic resolution
+      m_automaticResolution = true;
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 6: // Custom resolution
       m_ui->resolutionDoubleSpinBox->setValue(0.18);
       m_ui->resolutionDoubleSpinBox->setEnabled(true);
       break;
     default:
       m_ui->resolutionDoubleSpinBox->setValue(0.18);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+  }
+}
+
+void SurfaceDialog::smoothingComboChanged(int n)
+{
+  switch (n) {
+    case 0: // No smoothing
+      m_ui->smoothingPassesSpinBox->setValue(0);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 1: // Light smoothing
+      m_ui->smoothingPassesSpinBox->setValue(1);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 2: // Medium smoothing
+      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 3: // Strong smoothing
+      m_ui->smoothingPassesSpinBox->setValue(9);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 4: // Custom smoothing
+      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setEnabled(true);
+      break;
+    default:
+      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
       break;
   }
 }
@@ -195,9 +233,19 @@ float SurfaceDialog::isosurfaceValue()
   return static_cast<float>(m_ui->isosurfaceDoubleSpinBox->value());
 }
 
+int SurfaceDialog::smoothingPassesValue()
+{
+  return static_cast<int>(m_ui->smoothingPassesSpinBox->value());
+}
+
 float SurfaceDialog::resolution()
 {
   return static_cast<float>(m_ui->resolutionDoubleSpinBox->value());
+}
+
+bool SurfaceDialog::automaticResolution()
+{
+  return m_automaticResolution;
 }
 
 int SurfaceDialog::step()
