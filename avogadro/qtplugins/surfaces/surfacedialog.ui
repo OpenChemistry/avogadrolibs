@@ -278,7 +278,7 @@
      <item row="4" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Smoothing Passes:</string>
+        <string>Smoothing:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -288,18 +288,59 @@
      <item row="4" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
+        <widget class="QComboBox" name="smoothingCombo">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="currentText">
+          <string>Medium</string>
+         </property>
+         <property name="currentIndex">
+          <number>2</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>None</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Light</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Medium</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Strong</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Custom</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
         <widget class="QSpinBox" name="smoothingPassesSpinBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimum">
           <double>0</double>
          </property>
          <property name="maximum">
-          <double>99</double>
+          <double>19</double>
          </property>
          <property name="singleStep">
           <double>1</double>
          </property>
          <property name="value">
-          <double>6</double>
+          <double>5</double>
          </property>
         </widget>
        </item>

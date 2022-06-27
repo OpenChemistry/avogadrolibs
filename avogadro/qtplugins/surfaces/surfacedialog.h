@@ -66,6 +66,7 @@ public slots:
 protected slots:
   void surfaceComboChanged(int n);
   void resolutionComboChanged(int n);
+  void smoothingComboChanged(int n);
   void calculateClicked();
   void record();
 
