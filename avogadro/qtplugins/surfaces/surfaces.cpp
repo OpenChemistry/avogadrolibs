@@ -153,6 +153,27 @@ void Surfaces::surfacesActivated()
   m_dialog->show();
 }
 
+float Surfaces::resolution()
+{
+  if (!m_dialog->automaticResolution())
+    return m_dialog->resolution();
+
+  float r = 0.02 * powf(m_molecule->atomCount(), 1.0f / 3.0f);
+  float minimum = 0.05;
+  float maximum = 0.5;
+
+  switch (m_dialog->surfaceType()) {
+    case SolventExcluded:
+      minimum = 0.1;
+      break;
+    default:
+      ;
+  }
+
+  r = std::max(minimum, std::min(maximum, r));
+  return r;
+}
+
 void Surfaces::calculateSurface()
 {
   if (!m_dialog)
@@ -212,10 +233,10 @@ void Surfaces::calculateEDT()
     }
 
     double padding = max_radius + probeRadius;
-    m_cube->setLimits(*m_molecule, m_dialog->resolution(), padding);
+    m_cube->setLimits(*m_molecule, resolution(), padding);
     m_cube->fill(-1.0);
 
-    const float res = m_dialog->resolution();
+    const float res = resolution();
     const Vector3 min = m_cube->min();
     const float mdist = probeRadius;
 
@@ -265,7 +286,7 @@ void Surfaces::performEDTStep()
 {
   QFuture future = QtConcurrent::run([=]() {
     const double probeRadius = 1.4;
-    const double scaledProbeRadius = probeRadius / m_dialog->resolution();
+    const double scaledProbeRadius = probeRadius / resolution();
     
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube
@@ -370,7 +391,7 @@ void Surfaces::calculateQM()
   Type type = m_dialog->surfaceType();
   int index = m_dialog->surfaceIndex();
   m_isoValue = m_dialog->isosurfaceValue();
-  m_cube->setLimits(*m_molecule, m_dialog->resolution(), 5.0);
+  m_cube->setLimits(*m_molecule, resolution(), 5.0);
 
   QString progressText;
   if (type == ElectronDensity) {
@@ -464,6 +485,8 @@ void Surfaces::displayMesh()
     return;
 
   qDebug() << " running displayMesh";
+
+  m_smoothingPasses = m_dialog->smoothingPassesValue();
 
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();

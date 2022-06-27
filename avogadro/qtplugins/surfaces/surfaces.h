@@ -84,6 +84,8 @@ private slots:
   void movieFrame();
 
 private:
+  float resolution();
+
   QList<QAction*> m_actions;
   QProgressDialog* m_progressDialog = nullptr;
 

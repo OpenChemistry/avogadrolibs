@@ -52,7 +52,11 @@ public:
 
   float isosurfaceValue();
 
+  int smoothingPassesValue();
+
   float resolution();
+
+  bool automaticResolution();
 
   int step();
   void setStep(int step);
@@ -72,6 +76,7 @@ signals:
 
 private:
   Ui::SurfaceDialog* m_ui;
+  bool m_automaticResolution;
 };
 
 } // End namespace QtPlugins

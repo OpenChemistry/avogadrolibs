@@ -11,7 +11,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
+  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog),
+  m_automaticResolution(true)
 {
   m_ui->setupUi(this);
 
@@ -56,6 +57,7 @@ void SurfaceDialog::surfaceComboChanged(int n)
 
 void SurfaceDialog::resolutionComboChanged(int n)
 {
+  m_automaticResolution = false;
   // resolutions are in Angstrom
   switch (n) {
     case 0: // Very low resolution
@@ -78,7 +80,11 @@ void SurfaceDialog::resolutionComboChanged(int n)
       m_ui->resolutionDoubleSpinBox->setValue(0.05);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
       break;
-    case 5: // Custom resolution
+    case 5: // Automatic resolution
+      m_automaticResolution = true;
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 6: // Custom resolution
       m_ui->resolutionDoubleSpinBox->setValue(0.18);
       m_ui->resolutionDoubleSpinBox->setEnabled(true);
       break;
@@ -195,9 +201,19 @@ float SurfaceDialog::isosurfaceValue()
   return static_cast<float>(m_ui->isosurfaceDoubleSpinBox->value());
 }
 
+int SurfaceDialog::smoothingPassesValue()
+{
+  return static_cast<int>(m_ui->smoothingPassesSpinBox->value());
+}
+
 float SurfaceDialog::resolution()
 {
   return static_cast<float>(m_ui->resolutionDoubleSpinBox->value());
+}
+
+bool SurfaceDialog::automaticResolution()
+{
+  return m_automaticResolution;
 }
 
 int SurfaceDialog::step()
