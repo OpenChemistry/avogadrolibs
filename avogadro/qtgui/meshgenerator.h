@@ -53,10 +53,11 @@ public:
    * @param cube The source Cube with the volumetric data.
    * @param mesh The Mesh that will hold the isosurface.
    * @param iso The iso value of the surface.
+   * @param passes Number of smoothing passes to perform.
    * @return True if the MeshGenerator was successfully initialized.
    */
   MeshGenerator(const Core::Cube* cube, Core::Mesh* mesh, float iso,
-                bool reverse = false, QObject* parent = nullptr);
+                int passes = 6, bool reverse = false, QObject* parent = nullptr);
 
   /**
    * Destructor.
@@ -69,9 +70,10 @@ public:
    * @param cube The source Cube with the volumetric data.
    * @param mesh The Mesh that will hold the isosurface.
    * @param iso The iso value of the surface.
+   * @param passes Number of smoothing passes to perform.
    */
   bool initialize(const Core::Cube* cube, Core::Mesh* mesh, float iso,
-                  bool reverse = false);
+                  int passes = 6, bool reverse = false);
 
   /**
    * Use this function to begin Mesh generation. Uses an asynchronous thread,
@@ -135,10 +137,11 @@ protected:
   bool marchingCube(const Vector3i& pos);
 
   float m_iso;              /** The value of the isosurface. */
-  bool m_reverseWinding;    /** Whether the winding and normals are reversed */
+  int m_passes;             /** Number of smoothing passes to perform. */
+  bool m_reverseWinding;    /** Whether the winding and normals are reversed. */
   const Core::Cube* m_cube; /** The cube that we are generating a Mesh from. */
   Core::Mesh* m_mesh;       /** The mesh that is being generated. */
-  Vector3f m_stepSize;      /** The step size vector for cube */
+  Vector3f m_stepSize;      /** The step size vector for cube. */
   Vector3f m_min;           /** The minimum point in the cube. */
   Vector3i m_dim;           /** The dimensions of the cube. */
   Core::Array<Vector3f> m_vertices, m_normals;

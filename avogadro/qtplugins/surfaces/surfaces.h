@@ -106,6 +106,7 @@ private:
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
 
   float m_isoValue = 0.01;
+  int m_smoothingPasses = 6;
   int m_meshesLeft = 0;
 
   bool m_recordingMovie = false;
