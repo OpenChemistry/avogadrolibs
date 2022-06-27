@@ -4,11 +4,16 @@
 ******************************************************************************/
 
 #include "applycolors.h"
+#include "ui_chargedialog.h"
 
+#include "tinycolormap.hpp"
+
+#include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QStringList>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QColorDialog>
@@ -19,6 +24,15 @@ namespace QtPlugins {
 const int atomColors = 0;
 const int bondColors = 1;
 const int residueColors = 2;
+
+  class ChargeColorDialog : public QDialog, public Ui::ChargeDialog
+    {
+    public:
+    ChargeColorDialog(QWidget *parent=0) : QDialog(parent) {
+        setWindowFlags(Qt::Dialog | Qt::Tool);
+        setupUi(this);
+      }
+    };
 
 ApplyColors::ApplyColors(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
@@ -55,6 +69,11 @@ ApplyColors::ApplyColors(QObject* parent_)
   action = new QAction(tr("By Chain"), this);
   action->setData(residueColors);
   connect(action, SIGNAL(triggered()), SLOT(resetColorsResidue()));
+  m_actions.append(action);
+
+  action = new QAction(tr("By Partial Charge…"), this);
+  action->setData(atomColors);
+  connect(action, SIGNAL(triggered()), SLOT(applyChargeColors()));
   m_actions.append(action);
 
   action = new QAction(tr("By Secondary Structure"), this);
@@ -115,36 +134,27 @@ void ApplyColors::openColorDialog()
   m_dialog->exec();
 }
 
-// TODO - read colormap gradients
-Vector3ub rainbowGradient(float value)
+// TODO - read colormap gradients (e.g., turbo)
+Vector3ub rainbowGradient(const float value)
 {
-  Vector3 color;
+  auto color = tinycolormap::GetColor(value, tinycolormap::ColormapType::Turbo);
+  Vector3ub ci(color.ri(), color.gi(), color.bi());
 
-  if (value < 0.4f) {
-    // red to orange (i.e., R = 1.0  and G goes from 0 -> 0.5
-    // also orange to yellow R = 1.0 and G goes from 0.5 -> 1.0
-    color[0] = 1.0f;         // red
-    color[1] = value * 2.5f; // green
-    color[2] = 0.0f;         // blue
-  } else if (value > 0.4f && value < 0.6f) {
-    // yellow to green: R 1.0 -> 0.0 and G stays 1.0
-    color[0] = 1.0f - 5.0f * (value - 0.4f); // red
-    color[1] = 1.0f;                         // green
-    color[2] = 0.0f;                         // blue
-  } else if (value > 0.6f && value < 0.8f) {
-    // green to blue: G -> 0.0 and B -> 1.0
-    color[0] = 0.0f;                         // red
-    color[1] = 1.0f - 5.0f * (value - 0.6f); // green
-    color[2] = 5.0f * (value - 0.6f);        // blue
-  } else if (value > 0.8f) {
-    // blue to purple: B -> 0.5 and R -> 0.5
-    color[0] = 2.5f * (value - 0.8f);
-    color[1] = 0.0;
-    color[2] = 1.0f - 2.5f * (value - 0.8f);
-  }
-  color *= 255;
+  return ci;
+}
 
-  return color.cast<unsigned char>();
+Vector3ub chargeGradient(const float value, const float clamp)
+{
+  // okay, typically color scales have blue at the bottom, red at the top.
+  // so we need to invert, so blue is positive charge, red is negative charge.
+  // we also need to scale the color to the range of the charge.
+  float scaledValue = value / clamp; // from -1 to 1.0
+  float scaledValue2 = 1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+
+  auto color = tinycolormap::GetColor(scaledValue2, tinycolormap::ColormapType::Coolwarm);
+  Vector3ub ci(color.ri(), color.gi(), color.bi());
+
+  return ci;
 }
 
 void ApplyColors::applyIndexColors()
@@ -164,6 +174,51 @@ void ApplyColors::applyIndexColors()
     float indexFraction = float(i) / float(numAtoms);
 
     m_molecule->atom(i).setColor(rainbowGradient(indexFraction));
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+}
+
+void ApplyColors::applyChargeColors()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  bool isSelection = !m_molecule->isSelectionEmpty();
+
+  // get the list of possible models
+  const auto identifiers = Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  if (identifiers.empty())
+    return;
+
+  // populate the dialog to choose the model and colormap
+  /* ChargeColorDialog dialog;
+  for (const auto &model : identifiers) {
+    dialog.modelCombo->addItem(model.c_str());
+  }
+  dialog.exec();
+  return;
+  */
+
+  // first off, get the range of partial charges
+  auto numAtoms = m_molecule->atomCount();
+  float minCharge = 0.0f;
+  float maxCharge = 0.0f;
+  auto charges = Calc::ChargeManager::instance().partialCharges("gasteiger", *m_molecule);
+  for (Index i = 0; i < numAtoms; ++i) {
+    float charge = charges(i,0);
+    minCharge = std::min(minCharge, charge);
+    maxCharge = std::max(maxCharge, charge);
+  }
+
+  // now apply the colors
+  float clamp = std::max(std::abs(minCharge), std::abs(maxCharge));
+  for (Index i = 0; i < numAtoms; ++i) {
+    // if there's a selection and this atom isn't selected, skip  it
+    if (isSelection && !m_molecule->atomSelected(i))
+      continue;
+
+    m_molecule->atom(i).setColor(chargeGradient(charges(i, 0), clamp));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);

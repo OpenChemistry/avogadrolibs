@@ -37,6 +37,9 @@ private slots:
   void applyCustomColor(const QColor& color);
   void applyDistanceColors();
   void applyIndexColors();
+
+  void applyChargeColors();
+
   void resetColors();
 
   void openColorDialogResidue();

@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QTimer>
 
 namespace Avogadro {
@@ -27,7 +28,7 @@ class OBCharges::ProcessListener : public QObject
 public:
   ProcessListener() : QObject(), m_finished(false) {}
 
-  bool waitForOutput(Array<double> output, int msTimeout = 120000)
+  bool waitForOutput(Array<double>& output, int msTimeout = 120000)
   {
     if (!wait(msTimeout))
       return false;
@@ -56,14 +57,14 @@ private:
     return m_finished;
   }
 
-  //OBProcess* m_process;
+  // OBProcess* m_process;
   bool m_finished;
   Array<double> m_output;
 };
 
-OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel() 
+OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel()
 {
-  // set the element mask based on our type / identifier 
+  // set the element mask based on our type / identifier
   m_elements.reset();
   if (id == "eqeq") {
     // defined for 1-84
@@ -97,7 +98,7 @@ OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel()
     m_elements.set(17);
     m_elements.set(35);
     m_elements.set(53);
-  } else if ( id == "gasteiger") {
+  } else if (id == "gasteiger") {
     // H, C, N, O, F, P, S, Cl, Br, I, Al
     m_elements.set(1);
     m_elements.set(6);
@@ -110,7 +111,7 @@ OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel()
     m_elements.set(17);
     m_elements.set(35);
     m_elements.set(53);
-  } else if ( id == "mmff94" ) {
+  } else if (id == "mmff94") {
     // H, C, N, O, F, Si, P, S, Cl, Br, and I
     // ions - Fe, F, Cl, Br, Li, Na, K, Zn, Ca, Cu, Mg
     m_elements.set(1);
@@ -175,17 +176,19 @@ const MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
   // todo - check for failure, append errors, etc.
   m_cmlFormat.writeString(outputString, molecule);
 
-  process.calculateCharges(QByteArray(outputString.c_str()), "cml", m_identifier);
+  process.calculateCharges(QByteArray(outputString.c_str()), "cml",
+                           m_identifier);
 
-  const Core::Array<double> output;
+  Core::Array<double> output;
   if (!listener.waitForOutput(output)) {
-    //appendError(std::string("Charges timed out."));
+    qDebug() << "Charges timed out.";
     return charges;
   }
 
   // push the output into our charges array
-  for (unsigned int i = 0; i < output.size(); ++i)
+  for (unsigned int i = 0; i < output.size(); ++i) {
     charges(i, 0) = output[i];
+  }
 
   // cache the charges and allow them to show up in output
   molecule.setPartialCharges(m_identifier, charges);
