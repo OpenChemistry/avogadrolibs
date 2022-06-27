@@ -1,7 +1,7 @@
 name: add artifact links to pull request and related issues
 on:
   workflow_run:
-    workflows: ['CMake Build Matrix', 'CMake Self-Hosted']
+    workflows: ['CMake Build Matrix']
     types: [completed]
 
 jobs:
