@@ -216,8 +216,9 @@ public:
 
   /**
    * Applies Laplacian smoothing.
+   * @param iterationCount number of smoothing passes to make.
    */
-  void smooth();
+  void smooth(int iterationCount = 6);
 
   friend class Molecule;
 

@@ -19,19 +19,19 @@ using Core::Cube;
 using Core::Mesh;
 
 MeshGenerator::MeshGenerator(QObject* p)
-  : QThread(p), m_iso(0.0), m_reverseWinding(false), m_cube(nullptr),
+  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(false), m_cube(nullptr),
     m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
     m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
 }
 
 MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
-                             bool reverse, QObject* p)
-  : QThread(p), m_iso(0.0), m_reverseWinding(reverse), m_cube(nullptr),
+                             int passes, bool reverse, QObject* p)
+  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(reverse), m_cube(nullptr),
     m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
     m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
-  initialize(cube_, mesh_, iso);
+  initialize(cube_, mesh_, iso, passes);
 }
 
 MeshGenerator::~MeshGenerator()
@@ -39,13 +39,14 @@ MeshGenerator::~MeshGenerator()
 }
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
-                               bool reverse)
+                               int passes, bool reverse)
 {
   if (!cube_ || !mesh_)
     return false;
   m_cube = cube_;
   m_mesh = mesh_;
   m_iso = iso;
+  m_passes = passes;
   m_reverseWinding = reverse;
   if (!m_cube->lock()->tryLock()) {
     qDebug() << "Cannot get a read lock…";
@@ -104,12 +105,13 @@ void MeshGenerator::run()
   m_normals.resize(0);
 
   // Smooth out the mesh
-  m_mesh->smooth();
+  m_mesh->smooth(m_passes);
 }
 
 void MeshGenerator::clear()
 {
   m_iso = 0.0;
+  m_passes = 6;
   m_cube = nullptr;
   m_mesh = nullptr;
   m_stepSize.setZero();

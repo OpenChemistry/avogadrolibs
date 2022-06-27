@@ -6,7 +6,7 @@
 #include "mesh.h"
 
 #include "mutex.h"
-#include "./neighborperceiver.h"
+#include "neighborperceiver.h"
 
 using std::vector;
 
@@ -178,14 +178,17 @@ Mesh& Mesh::operator=(const Mesh& other)
   return *this;
 }
 
-void Mesh::smooth()
+void Mesh::smooth(int iterationCount)
 {
   if (m_vertices.size() == 0)
+    return;
+  if (iterationCount <= 0)
     return;
 
   // Map vertices to a line and pass them to NeighborPerceiver
   Array<Vector3> linearList(m_vertices.size());
   for (size_t i = 0; i < m_vertices.size(); i++)
+    // Empirical constants to make the distribution more homogeneous
     linearList[i] = Vector3(
       double(m_vertices[i](0) + 1.31*m_vertices[i](1) + 0.97*m_vertices[i](2)),
     0.0, 0.0);
@@ -229,7 +232,6 @@ void Mesh::smooth()
     }
   }
 
-  int iterationCount = 6;
   float weight = 1.0f;
   for (int iteration = 0; iteration < iterationCount; iteration++) {
     // Copy vertices by ID into source array
@@ -259,12 +261,10 @@ void Mesh::smooth()
       Vector3f &b = m_vertices[triangle + (relative + 1) % 3];
       Vector3f &c = m_vertices[triangle + (relative + 2) % 3];
       Vector3f triangleNormal = (b - a).cross(c - a);
-      triangleNormal *= 1.0f / triangleNormal.norm();
-      normal += triangleNormal;
+      normal += triangleNormal.normalized();
     }
-    normal *= 1.0f / normal.norm();
     for (size_t i: vertexIDToIndices[id])
-      m_normals[i] = normal;
+      m_normals[i] = normal.normalized();
   }
 }
 

@@ -471,7 +471,7 @@ void Surfaces::displayMesh()
     m_meshGenerator1 = new QtGui::MeshGenerator;
     connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue);
+  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue, m_smoothingPasses);
 
   // TODO - only do this if we're generating an orbital
   //    and we need two meshes
@@ -482,7 +482,7 @@ void Surfaces::displayMesh()
     m_meshGenerator2 = new QtGui::MeshGenerator;
     connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, true);
+  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses, true);
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have
