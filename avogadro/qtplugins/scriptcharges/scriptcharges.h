@@ -1,0 +1,50 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#ifndef AVOGADRO_QTPLUGINS_SCRIPTCHARGES_H
+#define AVOGADRO_QTPLUGINS_SCRIPTCHARGES_H
+
+#include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/extensionplugin.h>
+
+namespace Avogadro {
+namespace QtPlugins {
+
+/**
+ * @brief This extension registers ChargeModel electrostatics
+ * implemented as external scripts.
+ */
+class ScriptCharges : public QtGui::ExtensionPlugin
+{
+  Q_OBJECT
+
+public:
+  explicit ScriptCharges(QObject* parent = nullptr);
+  ~ScriptCharges() override;
+
+  QString name() const override { return tr("Script Charge Models"); }
+
+  QString description() const override
+  {
+    return tr("Load electrostatic models from external scripts.");
+  }
+
+  QList<QAction*> actions() const override;
+
+  QStringList menuPath(QAction*) const override;
+
+  void setMolecule(QtGui::Molecule* mol) override;
+
+private:
+  QList<Io::FileFormat*> m_models;
+
+  void refreshModels();
+  void unregisterModels();
+  void registerModels();
+};
+}
+}
+
+#endif // AVOGADRO_QTPLUGINS_SCRIPTCHARGES_H
