@@ -226,7 +226,7 @@ void HydrogenTools::generateNewHydrogenPositions(
   if (hybridization == Core::HybridizationUnknown) {
     // Perceive it
     hybridization = Core::AtomUtilities::perceiveHybridization(
-        Core::Atom(dynamic_cast<Core::Molecule*>(atom.molecule()), atom.index())
+        Core::Atom(dynamic_cast<Core::Molecule*>(&atom.molecule()->molecule()), atom.index())
     );
   }
 
@@ -250,7 +250,7 @@ void HydrogenTools::generateNewHydrogenPositions(
     // First try to derive the bond vector based on the hybridization
     // Fallback will be to a random vector
     Vector3 newPos = Core::AtomUtilities::generateNewBondVector(
-        Core::Atom(dynamic_cast<Core::Molecule*>(atom.molecule()), atom.index()),
+        Core::Atom(dynamic_cast<Core::Molecule*>(&atom.molecule()->molecule()), atom.index()),
         allVectors, hybridization
     );
     allVectors.push_back(newPos);
