@@ -109,10 +109,10 @@ protected:
    * @param errorString The error to be added.
    * @param newLine Add a new line after the error string?
    */
-  void appendError(const std::string& errorString, bool newLine = true);
+  void appendError(const std::string& errorString, bool newLine = true) const;
 
 private:
-  std::string m_error;
+  mutable std::string m_error;
 
   float m_dielectric;
 };
