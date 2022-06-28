@@ -58,7 +58,7 @@ inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
   return static_cast<float>(hCovRadius + covRadius);
 }
 
-} // end anon namespace
+} // namespace
 
 namespace Avogadro {
 namespace QtGui {
@@ -225,9 +225,25 @@ void HydrogenTools::generateNewHydrogenPositions(
   Core::AtomHybridization hybridization = atom.hybridization();
   if (hybridization == Core::HybridizationUnknown) {
     // Perceive it
-    hybridization = Core::AtomUtilities::perceiveHybridization(
-        Core::Atom(dynamic_cast<Core::Molecule*>(atom.molecule()), atom.index())
-    );
+
+    hybridization = Core::SP3; // default to sp3
+    unsigned int numTripleBonds = 0;
+    unsigned int numDoubleBonds = 0;
+
+    const NeighborListType bonds(atom.molecule()->bonds(atom));
+    for (NeighborListType::const_iterator it = bonds.begin(),
+                                          itEnd = bonds.end();
+         it != itEnd; ++it) {
+      if (it->order() == 2)
+        numDoubleBonds++;
+      else if (it->order() == 3)
+        numTripleBonds++;
+    }
+
+    if (numTripleBonds > 0 || numDoubleBonds > 1)
+      hybridization = Core::SP; // sp
+    else if (numDoubleBonds > 0)
+      hybridization = Core::SP2; // sp2
   }
 
   const Avogadro::Real bondLength = hydrogenBondDistance(atom.atomicNumber());
@@ -250,9 +266,8 @@ void HydrogenTools::generateNewHydrogenPositions(
     // First try to derive the bond vector based on the hybridization
     // Fallback will be to a random vector
     Vector3 newPos = Core::AtomUtilities::generateNewBondVector(
-        Core::Atom(dynamic_cast<Core::Molecule*>(atom.molecule()), atom.index()),
-        allVectors, hybridization
-    );
+      Core::Atom(dynamic_cast<Core::Molecule*>(atom.molecule()), atom.index()),
+      allVectors, hybridization);
     allVectors.push_back(newPos);
     positions.push_back(atom.position3d() + (newPos * bondLength));
   }
