@@ -156,6 +156,9 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         # check if we have the password and the username
+        pwd
+        ls -l
+        ls -l build/avogadroapp/
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp "build/avogadroapp/Avogadro2*.dmg"
           npx notarize-cli --file "build/avogadroapp/Avogadro2*.dmg"
