@@ -20,6 +20,10 @@ on:
   schedule:
     - cron: '18 1 * * 5'
 
+env:
+  QT_VERSION: 5.15.2
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+
 jobs:
   analyze:
     name: Analyze
@@ -37,8 +41,36 @@ jobs:
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
-    - name: Checkout repository
+
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v2
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        version: ${{ env.QT_VERSION }}
+
+    - name: Checkout openchemistry
       uses: actions/checkout@v3
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v3
+      with:
+        path: avogadrolibs
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -52,11 +84,18 @@ jobs:
         # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
 
-        
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF
+      shell: bash
+
+    - name: Build
+      run: |
+        cmake --build . 
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -70,3 +109,4 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
+      path: avogadrolibs
