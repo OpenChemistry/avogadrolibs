@@ -109,3 +109,4 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
+      checkout_path: /home/runner/work/avogadrolibs/avogadrolibs/avogadrolibs
