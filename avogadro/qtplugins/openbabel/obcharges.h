@@ -3,46 +3,26 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_CALC_DEFAULTMODEL_H
-#define AVOGADRO_CALC_DEFAULTMODEL_H
-
-#include "avogadrocalcexport.h"
+#ifndef AVOGADRO_QTPLUGINS_OBCHARGES_H
+#define AVOGADRO_QTPLUGINS_OBCHARGES_H
 
 #include <avogadro/calc/chargemodel.h>
+#include <avogadro/io/cmlformat.h>
 
 namespace Avogadro {
+namespace QtPlugins {
 
-namespace Core {
-class Molecule;
-}
-
-namespace Calc {
-
-/**
- * @class DefaultModel defaultmodel.h <avogadro/calc/defaultmodel.h>
- * @brief Default charge model for file-provided atomic charges
- * @author Geoffrey R. Hutchison
- *
- * This is a default model for using atomic partial charges from a
- * file (e.g., quantum chemistry packages often provide Mulliken charges)
- *
- * The class
- */
-
-class AVOGADROCALC_EXPORT DefaultModel : public ChargeModel
+class OBCharges : public Avogadro::Calc::ChargeModel
 {
 public:
-  DefaultModel(const std::string& identifier = "");
-  virtual ~DefaultModel();
+  OBCharges(const std::string& identifier = "");
+  virtual ~OBCharges();
 
   /**
    * Create a new instance of the file format class. Ownership passes to the
    * caller.
    */
-  virtual DefaultModel* newInstance() const override
-  {
-    return new DefaultModel;
-  }
+  virtual OBCharges* newInstance() const override { return new OBCharges; }
 
   /**
    * @brief A unique identifier defined by the file
@@ -58,17 +38,17 @@ public:
   }
 
   /**
-   * @brief We don't have any other name beyond the identifier in the file
+   * @brief Based on the identifiers -- for the menus, etc.
    */
-  virtual std::string name() const override { return m_identifier; }
+  virtual std::string name() const override;
 
   /**
-   * @brief This default method is defined for whatever is in a molecule
-   * @return all elements - technically not true, but we don't have the mol
+   * @brief The element mask for a particular OB charge model (e.g., Gasteiger)
+   * @return the mask relevant for this method
    */
   virtual Core::Molecule::ElementMask elements() const override
   {
-    return (m_elements);
+    return m_elements;
   }
 
   /**
@@ -76,12 +56,20 @@ public:
    */
   virtual const MatrixX partialCharges(Core::Molecule& mol) const override;
 
+  /**
+   * @brief Synchronous use of the OBProcess.
+   */
+  class ProcessListener;
+
 protected:
   std::string m_identifier;
+  std::string m_name;
   Core::Molecule::ElementMask m_elements;
+
+  mutable Io::CmlFormat m_cmlFormat;
 };
 
-} // namespace Calc
+} // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_CALC_CHARGEMODEL_H
+#endif // AVOGADRO_QTPLUGINS_OBCHARGES_H

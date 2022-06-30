@@ -23,7 +23,7 @@ ChargeModel::ChargeModel() : m_dielectric(1.0) {}
 
 ChargeModel::~ChargeModel() {}
 
-double ChargeModel::potential(const Molecule& mol, const Vector3& point) const
+double ChargeModel::potential(Molecule& mol, const Vector3& point) const
 {
   // default is to get the set of partial atomic charges
   const MatrixX charges = partialCharges(mol);
@@ -46,7 +46,7 @@ double ChargeModel::potential(const Molecule& mol, const Vector3& point) const
   return potential / m_dielectric;
 }
 
-Array<double> ChargeModel::potentials(const Core::Molecule& mol,
+Array<double> ChargeModel::potentials(Core::Molecule& mol,
                                       const Array<Vector3>& points) const
 {
   // This is naive and slow, but can be re-implemented by methods

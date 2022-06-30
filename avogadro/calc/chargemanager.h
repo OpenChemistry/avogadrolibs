@@ -109,13 +109,13 @@ public:
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
   const MatrixX partialCharges(const std::string& identifier,
-                               const Core::Molecule& mol) const;
+                               Core::Molecule& mol) const;
 
   /**
    * @return the potential at the point for the molecule, or 0.0 if the model is
    * not available
    */
-  double potential(const std::string& identifier, const Core::Molecule& mol,
+  double potential(const std::string& identifier, Core::Molecule& mol,
                    const Vector3& point) const;
 
   /**
@@ -123,7 +123,7 @@ public:
    * the model is not available
    */
   Core::Array<double> potentials(const std::string& identifier,
-                                 const Core::Molecule& mol,
+                                 Core::Molecule& mol,
                                  const Core::Array<Vector3>& points) const;
 
   /**

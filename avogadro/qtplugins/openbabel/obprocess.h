@@ -7,6 +7,8 @@
 #ifndef AVOGADRO_QTPLUGINS_OBPROCESS_H
 #define AVOGADRO_QTPLUGINS_OBPROCESS_H
 
+#include <avogadro/core/array.h>
+
 #include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -342,6 +344,36 @@ public slots:
 
 private slots:
   void queryChargesPrepare();
+
+public slots:
+  /**
+   * Calculate the partial charges on the molecule @a input using @a type
+   *
+   * @param input String containing molecule representation in @a inFormat
+   * format.
+   * @param inFormat File extension corresponding to input format
+   * (see `obabel -L formats`).
+   * @param type The charge model to use (e.g., MMFF94, gasteiger, etc.)
+   *
+   * After calling this method, the chargesFinished signal will be emitted to
+   * indicate return status along with the charges as text.
+   *
+   * The process is performed as:
+   * `obabel -i<inFormat> -onul --partialcharge <type> --print < input  > output`
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool calculateCharges(const QByteArray& input, const std::string& inFormat = "cml", const std::string& type = "mmff94");
+
+private slots:
+  void chargesPrepareOutput();
+
+signals:
+  /**
+   * Emitted after a call to calculateCharges() finishes.
+   * @param output the set of partial charges
+   */
+  void chargesFinished(const Core::Array<double>& charges);
   // end Charge Models doxygen group
   /**@}*/
 

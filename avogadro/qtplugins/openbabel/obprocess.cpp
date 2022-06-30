@@ -324,6 +324,73 @@ void OBProcess::queryChargesPrepare()
   emit queryChargesFinished(result);
 }
 
+bool OBProcess::calculateCharges(const QByteArray& mol,
+                                 const std::string& format,
+                                 const std::string& type)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::calculateCharges(): process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+
+  if (format == "cjson") {
+    realOptions << "-icjson";
+  } else {
+    realOptions << "-icml";
+  }
+  realOptions << "-onul" // ignore the output
+              << "--partialcharge"
+              << type.c_str()
+              << "--print";
+
+  // Start the optimization
+  executeObabel(realOptions, this, SLOT(chargesPrepareOutput()), mol);
+  return true;
+}
+
+void OBProcess::chargesPrepareOutput()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  // Keep this empty if an error occurs:
+  QByteArray output;
+
+  // Check for errors.
+  QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
+  QRegExp errorChecker("\\b0 molecules converted\\b"
+                       "|"
+                       "obabel: cannot read input format!");
+  if (!errorOutput.contains(errorChecker)) {
+    if (m_process->exitStatus() == QProcess::NormalExit)
+      output = m_process->readAllStandardOutput();
+  }
+
+  /// Print any meaningful warnings @todo This should go to a log at some point.
+  if (!errorOutput.isEmpty() && errorOutput != "1 molecule converted\n")
+    qWarning() << m_obabelExecutable << " stderr:\n" << errorOutput;
+
+  // Convert the output line-by-line to charges
+  Core::Array<double> charges;
+  QTextStream stream(output);
+  QString line;
+  while (stream.readLineInto(&line)) {
+    bool ok;
+    double charge = line.toDouble(&ok);
+    if (!ok)
+      break;
+    
+    charges.push_back(charge);
+  }
+
+  emit chargesFinished(charges);
+  releaseProcess();
+}
+
 bool OBProcess::optimizeGeometry(const QByteArray& mol,
                                  const QStringList& options,
                                  const std::string format)
