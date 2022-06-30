@@ -185,14 +185,15 @@ void Mesh::smooth(int iterationCount)
   if (iterationCount <= 0)
     return;
 
-  // Map vertices to a line and pass them to NeighborPerceiver
-  Array<Vector3> linearList(m_vertices.size());
+  // Map vertices to a plane and pass them to NeighborPerceiver
+  // a line gives less performance, and a volume offers no more benefit
+  Array<Vector3> planarList(m_vertices.size());
   for (size_t i = 0; i < m_vertices.size(); i++)
-    // Empirical constants to make the distribution more homogeneous
-    linearList[i] = Vector3(
-      double(m_vertices[i](0) + 1.31*m_vertices[i](1) + 0.97*m_vertices[i](2)),
-    0.0, 0.0);
-  NeighborPerceiver perceiver(linearList, 0.005);
+    // Empirical constant to make the distribution more homogeneous
+    planarList[i] = Vector3(
+      double(m_vertices[i](0) + 1.31*m_vertices[i](1)),
+    0.0, m_vertices[i](2));
+  NeighborPerceiver perceiver(planarList, 0.1);
 
   // Identify degenerate vertices
   std::vector<int> indexToVertexID(m_vertices.size(), -1);
@@ -201,7 +202,7 @@ void Mesh::smooth(int iterationCount)
   for (size_t i = 0; i < m_vertices.size(); i++) {
     if (indexToVertexID[i] != -1)
       continue;
-    perceiver.getNeighborsInclusiveInPlace(neighbors, linearList[i]);
+    perceiver.getNeighborsInclusiveInPlace(neighbors, planarList[i]);
     size_t vertexID = vertexIDToIndices.size();
     for (size_t n: neighbors) {
       if ((m_vertices[n] - m_vertices[i]).norm() < 0.0001) {
@@ -233,7 +234,7 @@ void Mesh::smooth(int iterationCount)
   }
 
   float weight = 1.0f;
-  for (int iteration = 0; iteration < iterationCount; iteration++) {
+  for (int iteration = iterationCount; iteration > 0; iteration--) {
     // Copy vertices by ID into source array
     std::vector<Vector3f> inputVertices(vertexIDToIndices.size());
     for (size_t id = 0; id < vertexIDToIndices.size(); id++)
@@ -246,8 +247,11 @@ void Mesh::smooth(int iterationCount)
         output += inputVertices[neighbor];
       output += weight * inputVertices[id];
       output *= 1.0f / (weight + vertexIDTo1Ring[id].size());
-      for (size_t i: vertexIDToIndices[id])
-        m_vertices[i] = output;
+      if (iteration == 1)
+        for (size_t i: vertexIDToIndices[id])
+          m_vertices[i] = output;
+      else
+        m_vertices[vertexIDToIndices[id][0]] = output;
     }
   }
 
