@@ -56,7 +56,7 @@ private:
     return m_finished;
   }
 
-  OBProcess* m_process;
+  //OBProcess* m_process;
   bool m_finished;
   Array<double> m_output;
 };

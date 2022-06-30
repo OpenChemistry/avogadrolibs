@@ -15,14 +15,14 @@ namespace QtPlugins {
 class OBCharges : public Avogadro::Calc::ChargeModel
 {
 public:
-  OBCharges(const std::string& identifier);
+  OBCharges(const std::string& identifier = "");
   virtual ~OBCharges();
 
   /**
    * Create a new instance of the file format class. Ownership passes to the
    * caller.
    */
-  virtual OBCharges* newInstance() const override { return new OBCharges(""); }
+  virtual OBCharges* newInstance() const override { return new OBCharges; }
 
   /**
    * @brief A unique identifier defined by the file

@@ -378,10 +378,9 @@ void OBProcess::chargesPrepareOutput()
   Core::Array<double> charges;
   QTextStream stream(output);
   QString line;
-  bool ok;
-  double charge;
   while (stream.readLineInto(&line)) {
-    charge = line.toDouble(&ok);
+    bool ok;
+    double charge = line.toDouble(&ok);
     if (!ok)
       break;
     
