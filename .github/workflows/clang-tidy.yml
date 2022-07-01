@@ -1,19 +1,11 @@
 name: Static Analysis
 
 on: 
-  push:
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
-    inputs:
-      debug_enabled:
-        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
-        required: false
-        default: false
 
 env:
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DUSE_VTK=OFF -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
   BUILD_TYPE: RelWithDebInfo
   CLAZY_VERSION: 1.8
 
@@ -40,30 +32,24 @@ jobs:
       run: |
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install clang-tidy
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: avogadrolibs
-
-    - name: Grab cache files
-      uses: actions/cache@v2
-      if: runner.os != 'Windows'
-      with:
-        path: ${{ runner.workspace }}/build/thirdparty
-        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
@@ -80,27 +66,27 @@ jobs:
         bear ninja
       shell: bash
       working-directory: ${{ runner.workspace }}/build
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
         
-    - name: Check C++ changes with clang-tidy
-      id: static_analysis
-      working-directory: ${{ runner.workspace }}/build
-      run : |
-        sudo apt-get -qq install clang-tidy-11
-        run-clang-tidy-11 -j=2 -checks='-*,performance-*,readability-*,bugprone-*,clang-analyzer-*,cppcoreguidelines-*,concurrency-*,modernize-*,portability-*,misc-*' -export-fixes=fixes.yaml 
-
-    - name: Upload
-      uses: actions/upload-artifact@v2
+    - name: Create results directory
+      run: |
+        mkdir clang-tidy-result
+    
+    - name: Analyze
+      run: |
+        git diff -U0 HEAD^ | clang-tidy-diff -p1 -path ../build -export-fixes ../clang-tidy-result/fixes.yml
+      working-directory: ${{ runner.workspace }}/avogadrolibs
+    
+    - name: Save PR metadata
+      run: |
+        echo ${{ github.event.number }} > clang-tidy-result/pr-id.txt
+        echo ${{ github.event.pull_request.head.repo.full_name }} > clang-tidy-result/pr-head-repo.txt
+        echo ${{ github.event.pull_request.head.ref }} > clang-tidy-result/pr-head-ref.txt
+    
+    - uses: actions/upload-artifact@v2
       with:
-        path: ${{ runner.workspace }}/build/*.yaml
-        name: clang-tidy-fixes.yaml
-
-    - name: Run clang-tidy-pr-comments action
-      if: always()
-      uses: platisd/clang-tidy-pr-comments@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        clang_tidy_fixes: ${{ runner.workspace }}/build/fixes.yaml
+        name: clang-tidy-result
+        path: clang-tidy-result/
+        
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
