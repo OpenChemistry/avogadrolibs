@@ -32,47 +32,27 @@
     <widget class="QComboBox" name="colorMapCombo">
      <item>
       <property name="text">
-       <string>Balance</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>balance.png</normaloff>balance.png</iconset>
+       <string comment="colormap">Balance</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Blue-DarkRed</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>bluedarkred.png</normaloff>bluedarkred.png</iconset>
+       <string comment="colormap">Blue-DarkRed</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Coolwarm</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>coolwarm.png</normaloff>coolwarm.png</iconset>
+       <string comment="colormap">Coolwarm</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Spectral</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>spectral.png</normaloff>spectral.png</iconset>
+       <string comment="colormap">Spectral</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Turbo</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>turbo.png</normaloff>turbo.png</iconset>
+       <string comment="colormap">Turbo</string>
       </property>
      </item>
     </widget>
@@ -107,5 +87,38 @@
   <tabstop>colorMapCombo</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ChargeDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ChargeDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

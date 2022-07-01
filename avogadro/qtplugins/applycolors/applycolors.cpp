@@ -17,6 +17,9 @@
 #include <QtCore/QStringList>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QColorDialog>
+#include <QtWidgets/QInputDialog>
+
+using namespace tinycolormap;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -25,14 +28,15 @@ const int atomColors = 0;
 const int bondColors = 1;
 const int residueColors = 2;
 
-  class ChargeColorDialog : public QDialog, public Ui::ChargeDialog
-    {
-    public:
-    ChargeColorDialog(QWidget *parent=0) : QDialog(parent) {
-        setWindowFlags(Qt::Dialog | Qt::Tool);
-        setupUi(this);
-      }
-    };
+class ChargeColorDialog : public QDialog, public Ui::ChargeDialog
+{
+public:
+  ChargeColorDialog(QWidget* parent = 0) : QDialog(parent)
+  {
+    setWindowFlags(Qt::Dialog | Qt::Tool);
+    setupUi(this);
+  }
+};
 
 ApplyColors::ApplyColors(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
@@ -98,6 +102,41 @@ ApplyColors::~ApplyColors()
     m_dialog->deleteLater();
 }
 
+ColormapType ApplyColors::getColormapFromString(const QString& name) const
+{
+  // Just do all of them, even though we won't use them all
+  if (name == tr("Parula", "colormap"))
+    return ColormapType::Parula;
+  else if (name == tr("Heat", "colormap"))
+    return ColormapType::Heat;
+  else if (name == tr("Hot", "colormap"))
+    return ColormapType::Hot;
+  else if (name == tr("Gray", "colormap"))
+    return ColormapType::Gray;
+  else if (name == tr("Magma", "colormap"))
+    return ColormapType::Magma;
+  else if (name == tr("Inferno", "colormap"))
+    return ColormapType::Inferno;
+  else if (name == tr("Plasma", "colormap"))
+    return ColormapType::Plasma;
+  else if (name == tr("Viridis", "colormap"))
+    return ColormapType::Viridis;
+  else if (name == tr("Cividis", "colormap"))
+    return ColormapType::Cividis;
+  else if (name == tr("Spectral", "colormap"))
+    return ColormapType::Spectral;
+  else if (name == tr("Coolwarm", "colormap"))
+    return ColormapType::Coolwarm;
+  else if (name == tr("Balance", "colormap"))
+    return ColormapType::Balance;
+  else if (name == tr("Blue-DarkRed", "colormap"))
+    return ColormapType::BlueDkRed;
+  else if (name == tr("Turbo", "colormap"))
+    return ColormapType::Turbo;
+
+  return ColormapType::Turbo;
+}
+
 QString ApplyColors::description() const
 {
   return tr("Apply color schemes to atoms and residues.");
@@ -135,23 +174,26 @@ void ApplyColors::openColorDialog()
 }
 
 // TODO - read colormap gradients (e.g., turbo)
-Vector3ub rainbowGradient(const float value)
+Vector3ub rainbowGradient(const float value,
+                          const ColormapType type = ColormapType::Turbo)
 {
-  auto color = tinycolormap::GetColor(value, tinycolormap::ColormapType::Turbo);
+  auto color = tinycolormap::GetColor(value, type);
   Vector3ub ci(color.ri(), color.gi(), color.bi());
 
   return ci;
 }
 
-Vector3ub chargeGradient(const float value, const float clamp)
+Vector3ub chargeGradient(const float value, const float clamp,
+                         const ColormapType type = ColormapType::Coolwarm)
 {
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
   // we also need to scale the color to the range of the charge.
   float scaledValue = value / clamp; // from -1 to 1.0
-  float scaledValue2 = 1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  float scaledValue2 =
+    1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
 
-  auto color = tinycolormap::GetColor(scaledValue2, tinycolormap::ColormapType::Coolwarm);
+  auto color = tinycolormap::GetColor(scaledValue2, type);
   Vector3ub ci(color.ri(), color.gi(), color.bi());
 
   return ci;
@@ -161,6 +203,21 @@ void ApplyColors::applyIndexColors()
 {
   if (m_molecule == nullptr)
     return;
+
+  // check on colormap
+  ColormapType type = ColormapType::Turbo;
+  QStringList colormaps;
+  bool ok;
+  colormaps << tr("Parula", "colormap") << tr("Magma", "colormap")
+            << tr("Inferno", "colormap") << tr("Plasma", "colormap")
+            << tr("Viridis", "colormap") << tr("Cividis", "colormap")
+            << tr("Spectral", "colormap") << tr("Turbo", "colormap");
+
+  QString item = QInputDialog::getItem(
+    nullptr, tr("Select Colormap"), tr("Colormap:"), colormaps, 7, false, &ok);
+  if (ok) {
+    type = getColormapFromString(item);
+  }
 
   bool isSelection = !m_molecule->isSelectionEmpty();
 
@@ -173,7 +230,7 @@ void ApplyColors::applyIndexColors()
 
     float indexFraction = float(i) / float(numAtoms);
 
-    m_molecule->atom(i).setColor(rainbowGradient(indexFraction));
+    m_molecule->atom(i).setColor(rainbowGradient(indexFraction, type));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -187,26 +244,34 @@ void ApplyColors::applyChargeColors()
   bool isSelection = !m_molecule->isSelectionEmpty();
 
   // get the list of possible models
-  const auto identifiers = Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  const auto identifiers =
+    Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
   if (identifiers.empty())
     return;
 
   // populate the dialog to choose the model and colormap
-  /* ChargeColorDialog dialog;
+  ChargeColorDialog dialog;
   for (const auto &model : identifiers) {
-    dialog.modelCombo->addItem(model.c_str());
+    auto name = Calc::ChargeManager::instance().nameForModel(model);
+    dialog.modelCombo->addItem(name.c_str(), model.c_str());
   }
   dialog.exec();
-  return;
-  */
+  if (dialog.result() != QDialog::Accepted)
+    return;
+  
+  // get the model and colormap
+  const auto model = dialog.modelCombo->currentData().toString().toStdString();
+  const auto colormapName = dialog.colorMapCombo->currentText();
+  const auto type = getColormapFromString(colormapName);
 
   // first off, get the range of partial charges
   auto numAtoms = m_molecule->atomCount();
   float minCharge = 0.0f;
   float maxCharge = 0.0f;
-  auto charges = Calc::ChargeManager::instance().partialCharges("gasteiger", *m_molecule);
+  auto charges =
+    Calc::ChargeManager::instance().partialCharges(model, *m_molecule);
   for (Index i = 0; i < numAtoms; ++i) {
-    float charge = charges(i,0);
+    float charge = charges(i, 0);
     minCharge = std::min(minCharge, charge);
     maxCharge = std::max(maxCharge, charge);
   }
@@ -218,7 +283,7 @@ void ApplyColors::applyChargeColors()
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    m_molecule->atom(i).setColor(chargeGradient(charges(i, 0), clamp));
+    m_molecule->atom(i).setColor(chargeGradient(charges(i, 0), clamp, type));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -230,6 +295,22 @@ void ApplyColors::applyDistanceColors()
     return;
 
   bool isSelection = !m_molecule->isSelectionEmpty();
+
+  // check on colormap
+  ColormapType type = ColormapType::Turbo;
+  QStringList colormaps;
+  bool ok;
+  colormaps << tr("Parula", "colormap") << tr("Magma", "colormap")
+            << tr("Inferno", "colormap") << tr("Plasma", "colormap")
+            << tr("Viridis", "colormap") << tr("Cividis", "colormap")
+            << tr("Spectral", "colormap") << tr("Turbo", "colormap");
+
+  QString item = QInputDialog::getItem(
+    nullptr, tr("Select Colormap"), tr("Colormap:"), colormaps, 7, false, &ok);
+  if (ok) {
+    type = getColormapFromString(item);
+  }
+
   Vector3 firstPos = m_molecule->atomPosition3d(0);
   Real size = 2.0 * m_molecule->radius();
 
@@ -245,7 +326,7 @@ void ApplyColors::applyDistanceColors()
     Real distance = diff.norm();
     Real distanceFraction = distance / size;
 
-    m_molecule->atom(i).setColor(rainbowGradient(distanceFraction));
+    m_molecule->atom(i).setColor(rainbowGradient(distanceFraction, type));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);

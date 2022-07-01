@@ -8,7 +8,6 @@ avogadro_plugin(ApplyColors
   ApplyColors
   "applycolors.cpp"
   chargedialog.ui
-  colormaps.qrc
 )
 
 target_link_libraries(ApplyColors PRIVATE AvogadroCalc)

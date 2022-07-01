@@ -52,6 +52,7 @@ bool ChargeManager::addModel(ChargeModel* model)
   size_t index = m_models.size();
   m_models.push_back(model);
   m_identifiers[model->identifier()] = index;
+  m_identifierToName[model->identifier()] = model->name();
 
   return true;
 }
@@ -60,6 +61,7 @@ bool ChargeManager::removeModel(const std::string& identifier)
 {
   auto ids = m_identifiers[identifier];
   m_identifiers.erase(identifier);
+  m_identifierToName.erase(identifier);
 
   ChargeModel* model = m_models[ids];
 
@@ -69,6 +71,15 @@ bool ChargeManager::removeModel(const std::string& identifier)
   }
 
   return true;
+}
+
+const std::string ChargeManager::nameForModel(const std::string& identifier) const
+{
+  auto it = m_identifierToName.find(identifier);
+  if (it == m_identifierToName.end()) {
+    return identifier;
+  }
+  return it->second;
 }
 
 ChargeManager::ChargeManager()

@@ -8,6 +8,8 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include "tinycolormap.hpp"
+
 #include <QtGui/QColor>
 
 class QColorDialog;
@@ -53,6 +55,9 @@ private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   QColorDialog* m_dialog;
+
+  tinycolormap::ColormapType getColormapFromString(const QString& name) const;
+
 };
 
 } // namespace QtPlugins
