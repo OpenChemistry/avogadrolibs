@@ -39,14 +39,14 @@ bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
   return true;
 }
 
-bool Cube::setLimits(const Vector3& min_, const Vector3& max_, double spacing_)
+bool Cube::setLimits(const Vector3& min_, const Vector3& max_, float spacing_)
 {
   Vector3 delta = max_ - min_;
   delta = delta / spacing_;
   return setLimits(min_, max_, delta.cast<int>());
 }
 
-bool Cube::setLimits(const Vector3& min_, const Vector3i& dim, double spacing_)
+bool Cube::setLimits(const Vector3& min_, const Vector3i& dim, float spacing_)
 {
   return setLimits(min_, dim, Vector3(spacing_, spacing_, spacing_));
 }
@@ -75,7 +75,7 @@ bool Cube::setLimits(const Cube& cube)
   return true;
 }
 
-bool Cube::setLimits(const Molecule& mol, double spacing_, double padding)
+bool Cube::setLimits(const Molecule& mol, float spacing_, float padding)
 {
   Index numAtoms = mol.atomCount();
   Vector3 min_, max_;
@@ -107,17 +107,17 @@ bool Cube::setLimits(const Molecule& mol, double spacing_, double padding)
   return setLimits(min_, max_, spacing_);
 }
 
-std::vector<double>* Cube::data()
+std::vector<float>* Cube::data()
 {
   return &m_data;
 }
 
-const std::vector<double>* Cube::data() const
+const std::vector<float>* Cube::data() const
 {
   return &m_data;
 }
 
-bool Cube::setData(const std::vector<double>& values)
+bool Cube::setData(const std::vector<float>& values)
 {
   if (!values.size())
     return false;
@@ -127,7 +127,7 @@ bool Cube::setData(const std::vector<double>& values)
     m_data = values;
     // Now to update the minimum and maximum values
     m_minValue = m_maxValue = m_data[0];
-    for (std::vector<double>::const_iterator it = values.begin();
+    for (std::vector<float>::const_iterator it = values.begin();
          it != values.end(); ++it) {
       if (*it < m_minValue)
         m_minValue = *it;
@@ -140,7 +140,7 @@ bool Cube::setData(const std::vector<double>& values)
   }
 }
 
-bool Cube::addData(const std::vector<double>& values)
+bool Cube::addData(const std::vector<float>& values)
 {
   // Initialise the cube to zero if necessary
   if (!m_data.size())
@@ -187,7 +187,7 @@ Vector3 Cube::position(unsigned int index) const
                  z * m_spacing.z() + m_min.z());
 }
 
-double Cube::value(int i, int j, int k) const
+float Cube::value(int i, int j, int k) const
 {
   unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
   if (index < m_data.size())
@@ -196,7 +196,7 @@ double Cube::value(int i, int j, int k) const
     return 0.0;
 }
 
-double Cube::value(const Vector3i& pos) const
+float Cube::value(const Vector3i& pos) const
 {
   unsigned int index =
     pos.x() * m_points.y() * m_points.z() + pos.y() * m_points.z() + pos.z();
@@ -236,7 +236,7 @@ float Cube::valuef(const Vector3f& pos) const
     value(hC.x(), hC.y(), hC.z()) * P.x() * P.y() * P.z());
 }
 
-double Cube::value(const Vector3& pos) const
+float Cube::value(const Vector3& pos) const
 {
   // This is a really expensive operation and so should be avoided
   // Interpolate the value at the supplied vector - trilinear interpolation...
@@ -263,7 +263,7 @@ double Cube::value(const Vector3& pos) const
          value(hC.x(), hC.y(), hC.z()) * P.x() * P.y() * P.z();
 }
 
-bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k, double value_)
+bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k, float value_)
 {
   unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
   if (index >= m_data.size())
@@ -276,14 +276,14 @@ bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k, double value
   return true;
 }
 
-void Cube::fill(double value_)
+void Cube::fill(float value_)
 {
   std::fill(m_data.begin(), m_data.end(), value_);
   m_minValue = m_maxValue = value_;
 }
 
 bool Cube::fillStripe(
-  unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, double value_
+  unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, float value_
 ) {
   unsigned int stripeStartIndex = i * m_points.y() * m_points.z() + j * m_points.z();
   unsigned int firstIndex = stripeStartIndex + kfirst;
