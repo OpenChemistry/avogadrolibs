@@ -155,9 +155,13 @@ jobs:
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
       run: |
+        pwd
+        ls -l
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
+          echo "codesign DMG"
           codesign -s "$CODESIGN_IDENTITY" --timestamp "Avogadro2*.dmg"
+          echo "notarizing"
           npx notarize-cli --file "Avogadro2*.dmg"
         fi
       env:
