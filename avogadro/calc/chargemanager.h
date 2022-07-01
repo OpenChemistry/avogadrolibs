@@ -104,6 +104,8 @@ public:
   std::set<std::string> identifiersForMolecule(
     const Core::Molecule& molecule) const;
 
+  const std::string nameForModel(const std::string& identifier) const;
+
   /**
    * Note that some models do not have well-defined atomic partial charges
    * @return atomic partial charges for the molecule, or 0.0 if undefined
@@ -148,6 +150,7 @@ private:
 
   std::vector<ChargeModel*> m_models;
   mutable ChargeIdMap m_identifiers;
+  mutable std::map<std::string, std::string> m_identifierToName;
 
   std::string m_error;
 };
