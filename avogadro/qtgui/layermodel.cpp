@@ -110,13 +110,39 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return "  " + tr(name.c_str()); // should already be translated
+          return "  " + getTranslatedName(name); // should already be translated
         }
       }
     }
   }
 
   return QVariant();
+}
+
+const QString LayerModel::getTranslatedName(const std::string& name) const
+{
+  // This is a bad hack, but whatever..
+  // Put all the strings that show up as layer options
+  if (name == "Ball and Stick")
+    return tr("Ball and Stick");
+  else if (name == "Cartoons")
+    return tr("Cartoons", "protein ribbon / cartoon rendering");
+  else if (name == "Close Contacts")
+    return tr("Close Contacts", "rendering of non-covalent close contacts");
+  else if (name == "Labels")
+    return tr("Labels");
+  else if (name == "Licorice")
+    return tr("Licorice", "stick / licorice rendering");
+  else if (name == "Non-Covalent")
+    return tr("Non-Covalent");
+  else if (name == "Van der Waals")
+    return tr("Van der Waals");
+  else if (name == "Van der Waals (AO)")
+    return tr("Van der Waals (AO)", "ambient occlusion");
+  else if (name == "Wireframe")
+    return tr("Wireframe");
+
+  return QString();
 }
 
 QModelIndex LayerModel::index(int row, int column, const QModelIndex& p) const
