@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-02 03:04+0000\n"
-"PO-Revision-Date: 2022-06-27 13:21+0000\n"
+"PO-Revision-Date: 2022-07-02 21:19+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1658,10 +1658,8 @@ msgid "By Chain"
 msgstr "Lánc szerint"
 
 #: qtplugins/applycolors/applycolors.cpp:78
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Részleges töltés"
+msgstr "Részleges feltöltéssel…"
 
 #: qtplugins/applycolors/applycolors.cpp:83
 msgid "By Secondary Structure"
