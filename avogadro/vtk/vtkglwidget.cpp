@@ -49,10 +49,10 @@ vtkImageData* createCubeImageData(Core::Cube* cube)
   data->SetOrigin(cube->min().x(), cube->min().y(), cube->min().z());
   data->SetSpacing(cube->spacing().data());
 
-  data->AllocateScalars(VTK_DOUBLE, 1);
+  data->AllocateScalars(VTK_FLOAT, 1);
 
   double* dataPtr = static_cast<double*>(data->GetScalarPointer());
-  std::vector<double>* cubePtr = cube->data();
+  std::vector<float>* cubePtr = cube->data();
 
   for (int i = 0; i < dim.x(); ++i) {
     for (int j = 0; j < dim.y(); ++j) {

@@ -37,7 +37,7 @@ bool OpenDxReader::readFile(const QString& fileName)
   Vector3i dim(0, 0, 0);
   Vector3 origin(0, 0, 0);
   QVector<Vector3> spacings;
-  std::vector<double> values;
+  std::vector<float> values;
 
   while (!file.atEnd()) {
     QByteArray line = file.readLine();

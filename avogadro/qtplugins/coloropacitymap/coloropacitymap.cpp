@@ -46,10 +46,10 @@ vtkImageData* cubeImageData(Core::Cube* cube)
   // Translate origin, spacing, and types from Avogadro to VTK.
   data->SetOrigin(cube->min().x(), cube->min().y(), cube->min().z());
   data->SetSpacing(cube->spacing().data());
-  data->AllocateScalars(VTK_DOUBLE, 1);
+  data->AllocateScalars(VTK_FLOAT, 1);
 
-  double* dataPtr = static_cast<double*>(data->GetScalarPointer());
-  std::vector<double>* cubePtr = cube->data();
+  float* dataPtr = static_cast<float*>(data->GetScalarPointer());
+  std::vector<float>* cubePtr = cube->data();
 
   // Reorder our cube for VTK's Fortran ordering in vtkImageData.
   for (int i = 0; i < dim.x(); ++i) {

@@ -106,7 +106,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     Core::Cube* cube = molecule.addCube();
 
     cube->setLimits(min, dim, spacing);
-    std::vector<double> values;
+    std::vector<float> values;
     // push_back is slow for this, resize vector first
     values.resize(dim(0) * dim(1) * dim(2));
     for (unsigned int j = 0; j < values.size(); ++j)
@@ -193,7 +193,7 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
   }
 
   // write the raw cube values
-  const std::vector<double>* values = cube->data();
+  const std::vector<float>* values = cube->data();
   for (unsigned int i = 0; i < values->size(); ++i) {
     outStream << std::setw(13) << std::right << std::scientific 
               << std::setprecision(5) << (*values)[i];

@@ -684,7 +684,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   if (molecule.cubeCount() > 0) {
     const Cube* cube = molecule.cube(0);
     json cubeData;
-    for (vector<double>::const_iterator it = cube->data()->begin(),
+    for (vector<float>::const_iterator it = cube->data()->begin(),
                                         itEnd = cube->data()->end();
          it != itEnd; ++it) {
       cubeData.push_back(*it);
