@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-02 03:04+0000\n"
-"PO-Revision-Date: 2022-07-02 21:19+0000\n"
+"PO-Revision-Date: 2022-07-03 19:37+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1222,7 +1222,7 @@ msgstr "Labda és bot modell"
 #: qtgui/layermodel.cpp:129 qtplugins/cartoons/cartoons.h:30
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Rajzfilmek"
+msgstr "Fehérje szalagok"
 
 #: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:29
 msgctxt "rendering of non-covalent close contacts"
@@ -1236,7 +1236,7 @@ msgstr "Címkék"
 #: qtgui/layermodel.cpp:135 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr "Édesgyökér"
+msgstr "Vonal/pálcamodell"
 
 #: qtgui/layermodel.cpp:137 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
@@ -1245,13 +1245,12 @@ msgstr "Nem kovalens kötések"
 #: qtgui/layermodel.cpp:139 qtplugins/surfaces/surfacedialog.cpp:27
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
-msgstr "van der Waals"
+msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:141 qtplugins/vanderwaalsao/vanderwaalsao.h:29
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "van der Waals"
+msgstr "Van der Waals (környezeti elzáródás)"
 
 #: qtgui/layermodel.cpp:143 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1678,91 +1677,87 @@ msgstr "Formásséma szerint"
 #: qtplugins/applycolors/applycolors.cpp:303
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Hőség"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Forró"
 
 #: qtplugins/applycolors/applycolors.cpp:114
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Szürke"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:303
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:304
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Pokol"
 
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:304
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plazma"
 
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:306:171
-#, fuzzy
-#| msgid "Spectra"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Spektrumok"
+msgstr "Kísérteties"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128:168
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Hideg meleg"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130:162
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Mégsem"
+msgstr "Egyensúly"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132:165
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Kék-sötétvörös"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1771,7 +1766,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:306:174
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbó"
 
 #: qtplugins/applycolors/applycolors.cpp:142
 msgid "Apply color schemes to atoms and residues."
@@ -1794,19 +1789,15 @@ msgstr "Maradék színezése"
 
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:309
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Kiválasztott színek"
+msgstr "Színleképezés kijelölése"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:309:159
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Szín:"
+msgstr "Színleképezés:"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -1951,12 +1942,12 @@ msgstr "Szalag"
 #: qtplugins/cartoons/cartoons.cpp:100
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Egyszerű rajzfilm"
+msgstr "Egyszerű fehérje szalag"
 
 #: qtplugins/cartoons/cartoons.cpp:101
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr "Rajzfilm"
+msgstr "Fehérje szalag"
 
 #: qtplugins/cartoons/cartoons.cpp:102
 msgctxt "protein rendering style"
@@ -1965,7 +1956,7 @@ msgstr "Kötél"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr "Biomolekula szalagok / rajzfilmek megjelenítése."
+msgstr "Biomolekula szalagok / fehérje szalagok megjelenítése."
 
 #: qtplugins/clientserver/clientserver.cpp:62
 msgid "Client server operations."
@@ -4340,11 +4331,11 @@ msgstr "Rezgési módok…"
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
-msgstr "Spektrumok és rezgések"
+msgstr "Kísérteties és rezgések"
 
 #: qtplugins/spectra/spectra.h:36
 msgid "Display spectra and vibrational modes."
-msgstr "Spektrumok és rezgési módok megjelenítése."
+msgstr "Kísérteties és rezgési módok megjelenítése."
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Accessible"
@@ -4836,17 +4827,13 @@ msgstr "Kockafájl betöltése"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "Partial Charges"
-msgstr "Részleges töltés"
+msgstr "Részleges töltések"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Charge Model:"
-msgstr "Vízmodell:"
+msgstr "Töltés-modell:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6997,10 +6984,8 @@ msgstr "Izofelületi érték:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "Semmi"
+msgstr "Simítás:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:308
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
@@ -7009,10 +6994,8 @@ msgstr "Világos"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:318
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Stroncium"
+msgstr "Erős"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:458
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
