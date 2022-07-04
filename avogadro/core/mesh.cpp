@@ -118,6 +118,14 @@ const Core::Array<Color3f>& Mesh::colors() const
   return m_colors;
 }
 
+Core::Array<Vector3ub>* Mesh::colorsRGB() const
+{
+  Core::Array<Vector3ub> *r = new Core::Array<Vector3ub>(m_colors.size());
+  for (size_t i = 0; i < m_colors.size(); i++)
+    (*r)[i] = Vector3ub(m_colors[i].red() * 255, m_colors[i].green() * 255, m_colors[i].blue() * 255);
+  return r;
+}
+
 const Color3f* Mesh::color(int n) const
 {
   // If there is only one color return that, otherwise colored by vertex.

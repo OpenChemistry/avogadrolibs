@@ -6,6 +6,8 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
+#include "tinycolormap.hpp"
+
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
 
@@ -16,6 +18,9 @@ namespace {
 
 #include <gwavi.h>
 
+#include <avogadro/calc/chargemanager.h>
+
+#include <avogadro/core/color3f.h>
 #include <avogadro/core/variant.h>
 #include <avogadro/core/vector.h>
 
@@ -50,6 +55,8 @@ namespace {
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+
+using namespace tinycolormap;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -517,10 +524,67 @@ void Surfaces::displayMesh()
   m_meshesLeft = 2;
 }
 
+Core::Color3f chargeGradient(const float value, const float clamp)
+{
+  // okay, typically color scales have blue at the bottom, red at the top.
+  // so we need to invert, so blue is positive charge, red is negative charge.
+  // we also need to scale the color to the range of the charge.
+  float scaledValue = value / clamp; // from -1 to 1.0
+  float scaledValue2 =
+    1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+
+  auto color = tinycolormap::GetColor(scaledValue2, ColormapType::Balance);
+  Core::Color3f r(float(color.r()), color.g(), color.b());
+
+  return r;
+}
+
+void Surfaces::colorMeshByPotential()
+{
+  const auto identifiers =
+    Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  if (identifiers.empty())
+    return;
+  
+  const auto model = *(identifiers.begin());
+  const auto type = ColormapType::Balance;
+  
+  const auto positions = m_mesh1->vertices();
+  Core::Array<float> charges(positions.size());
+  float minCharge = 0.0f;
+  float maxCharge = 0.0f;
+  
+  for (size_t i = 0; i < positions.size(); i++) {
+    charges[i] = Calc::ChargeManager::instance().potential(model, *m_molecule, positions[i].cast<double>());
+    minCharge = std::min(minCharge, charges[i]);
+    maxCharge = std::max(maxCharge, charges[i]);
+  }
+  
+  float clamp = std::max(std::abs(minCharge), std::abs(maxCharge));
+  
+  Core::Array<Core::Color3f> colors(positions.size());
+  for (size_t i = 0; i < charges.size(); i++)
+    colors[i] = chargeGradient(charges[i], clamp);
+  
+  m_mesh1->setColors(colors);
+}
+
+void Surfaces::colorMesh()
+{
+  switch (m_dialog->colorProperty()) {
+    case None:
+      break;
+    case ByElectrostaticPotential:
+      colorMeshByPotential();
+      break;
+  }
+}
+
 void Surfaces::meshFinished()
 {
   --m_meshesLeft;
   if (m_meshesLeft == 0) {
+    colorMesh();
     if (m_recordingMovie) {
       // Move to the next frame.
       qDebug() << "Let's get to the next frame…";

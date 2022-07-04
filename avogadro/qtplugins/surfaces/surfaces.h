@@ -57,6 +57,12 @@ public:
     FromFile,
     Unknown
   };
+  
+  enum ColorProperty
+  {
+    None,
+    ByElectrostaticPotential
+  };
 
   QString name() const override { return tr("Surfaces"); }
   QString description() const override { return tr("Read and render surfaces."); }
@@ -79,6 +85,9 @@ private slots:
 
   void displayMesh();
   void meshFinished();
+  
+  void colorMesh();
+  void colorMeshByPotential();
 
   void recordMovie();
   void movieFrame();
