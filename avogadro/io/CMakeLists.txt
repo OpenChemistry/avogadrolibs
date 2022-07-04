@@ -36,6 +36,7 @@ set(HEADERS
   fileformat.h
   fileformatmanager.h
   gromacsformat.h
+  mdcrdformat.h
   mdlformat.h
   vaspformat.h
   pdbformat.h
@@ -51,6 +52,7 @@ set(SOURCES
   fileformat.cpp
   fileformatmanager.cpp
   gromacsformat.cpp
+  mdcrdformat.cpp
   mdlformat.cpp
   vaspformat.cpp
   pdbformat.cpp

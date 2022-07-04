@@ -12,6 +12,7 @@
 #include "dcdformat.h"
 #include "gromacsformat.h"
 #include "lammpsformat.h"
+#include "mdcrdformat.h"
 #include "mdlformat.h"
 #include "pdbformat.h"
 #include "trrformat.h"
@@ -163,7 +164,7 @@ bool FileFormatManager::addFormat(FileFormat* format)
 namespace {
 // Lookup each key from "keys" in "map", and remove "val" from the Map's
 // data value (which is a vector of ValueType)
-template<typename Map, typename VectorOfKeys, typename ValueType>
+template <typename Map, typename VectorOfKeys, typename ValueType>
 void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
 {
   typedef typename VectorOfKeys::const_iterator KeysIter;
@@ -181,7 +182,7 @@ void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
     }
   }
 }
-}
+} // namespace
 
 bool FileFormatManager::removeFormat(const std::string& identifier)
 {
@@ -292,6 +293,7 @@ FileFormatManager::FileFormatManager()
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
   addFormat(new GromacsFormat);
+  addFormat(new MdcrdFormat);
   addFormat(new MdlFormat);
   addFormat(new OutcarFormat);
   addFormat(new PdbFormat);
@@ -390,5 +392,5 @@ void FileFormatManager::appendError(const std::string& errorMessage)
   m_error += errorMessage + "\n";
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
