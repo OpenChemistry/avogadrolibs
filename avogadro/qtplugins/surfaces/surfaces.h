@@ -8,6 +8,10 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include "tinycolormap.hpp"
+
+#include <avogadro/core/color3f.h>
+
 #include <QtCore/QFutureWatcher>
 
 class QAction;
@@ -94,6 +98,10 @@ private slots:
 
 private:
   float resolution();
+  Core::Color3f chargeGradient(
+    const float value, const float clamp, tinycolormap::ColormapType colormap
+  ) const;
+  tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
   QProgressDialog* m_progressDialog = nullptr;

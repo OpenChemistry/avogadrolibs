@@ -41,6 +41,7 @@ public:
   Surfaces::Type surfaceType();
   
   Surfaces::ColorProperty colorProperty();
+  QString colormapName();
 
   /**
    * This holds the value of the molecular orbital at present.

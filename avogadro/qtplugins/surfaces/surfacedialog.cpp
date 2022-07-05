@@ -61,6 +61,14 @@ void SurfaceDialog::surfaceComboChanged(int n)
 
 void SurfaceDialog::propertyComboChanged(int n)
 {
+  m_ui->colormapCombo->setEnabled(true);
+  switch (n) {
+    case 0: // None
+      m_ui->colormapCombo->setEnabled(false);
+      break;
+    default:
+      ;
+  }
 }
 
 void SurfaceDialog::resolutionComboChanged(int n)
@@ -227,6 +235,11 @@ Surfaces::Type SurfaceDialog::surfaceType()
 Surfaces::ColorProperty SurfaceDialog::colorProperty()
 {
   return static_cast<Surfaces::ColorProperty>(m_ui->propertyCombo->currentIndex());
+}
+
+QString SurfaceDialog::colormapName()
+{
+  return m_ui->colormapCombo->currentText();
 }
 
 int SurfaceDialog::surfaceIndex()

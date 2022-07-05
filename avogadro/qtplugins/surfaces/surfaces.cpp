@@ -524,7 +524,7 @@ void Surfaces::displayMesh()
   m_meshesLeft = 2;
 }
 
-Core::Color3f chargeGradient(const float value, const float clamp)
+Core::Color3f Surfaces::chargeGradient(const float value, const float clamp, ColormapType colormap) const
 {
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
@@ -533,10 +533,45 @@ Core::Color3f chargeGradient(const float value, const float clamp)
   float scaledValue2 =
     1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
 
-  auto color = tinycolormap::GetColor(scaledValue2, ColormapType::Balance);
+  auto color = tinycolormap::GetColor(scaledValue2, colormap);
   Core::Color3f r(float(color.r()), color.g(), color.b());
 
   return r;
+}
+
+ColormapType Surfaces::getColormapFromString(const QString& name) const
+{
+  // Just do all of them, even though we won't use them all
+  if (name == tr("Parula", "colormap"))
+    return ColormapType::Parula;
+  else if (name == tr("Heat", "colormap"))
+    return ColormapType::Heat;
+  else if (name == tr("Hot", "colormap"))
+    return ColormapType::Hot;
+  else if (name == tr("Gray", "colormap"))
+    return ColormapType::Gray;
+  else if (name == tr("Magma", "colormap"))
+    return ColormapType::Magma;
+  else if (name == tr("Inferno", "colormap"))
+    return ColormapType::Inferno;
+  else if (name == tr("Plasma", "colormap"))
+    return ColormapType::Plasma;
+  else if (name == tr("Viridis", "colormap"))
+    return ColormapType::Viridis;
+  else if (name == tr("Cividis", "colormap"))
+    return ColormapType::Cividis;
+  else if (name == tr("Spectral", "colormap"))
+    return ColormapType::Spectral;
+  else if (name == tr("Coolwarm", "colormap"))
+    return ColormapType::Coolwarm;
+  else if (name == tr("Balance", "colormap"))
+    return ColormapType::Balance;
+  else if (name == tr("Blue-DarkRed", "colormap"))
+    return ColormapType::BlueDkRed;
+  else if (name == tr("Turbo", "colormap"))
+    return ColormapType::Turbo;
+
+  return ColormapType::Turbo;
 }
 
 void Surfaces::colorMeshByPotential()
@@ -547,7 +582,7 @@ void Surfaces::colorMeshByPotential()
     return;
   
   const auto model = *(identifiers.begin());
-  const auto type = ColormapType::Balance;
+  const auto colormap = getColormapFromString(m_dialog->colormapName());
   
   const auto positions = m_mesh1->vertices();
   Core::Array<float> charges(positions.size());
@@ -564,7 +599,7 @@ void Surfaces::colorMeshByPotential()
   
   Core::Array<Core::Color3f> colors(positions.size());
   for (size_t i = 0; i < charges.size(); i++)
-    colors[i] = chargeGradient(charges[i], clamp);
+    colors[i] = chargeGradient(charges[i], clamp, colormap);
   
   m_mesh1->setColors(colors);
 }
