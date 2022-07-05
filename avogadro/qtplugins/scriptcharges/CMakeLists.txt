@@ -19,5 +19,5 @@ set(charge_scripts
   chargeScripts/xtb.py
 )
 
-install(PROGRAMS ${format_scripts}
+install(PROGRAMS ${charge_scripts}
   DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/charges/")

@@ -16,7 +16,7 @@ def getMetaData():
         return {}  # Avogadro will ignore us now
 
     metaData = {}
-    metaData["inputFormat"] = "sdf"  # could be other formats, but this is fine
+    metaData["inputFormat"] = "xyz"  # could be other formats, but this is fine
     metaData["identifier"] = "GFN2"
     metaData["name"] = "GFN2"
     metaData["description"] = "Calculate atomic partial charges using GFN2 and xtb"
@@ -31,10 +31,10 @@ def charges():
     # we need to write it to a temporary file
 
     # get the whole sdf file
-    sdf = sys.stdin.read()
+    xyz = sys.stdin.read()
 
-    fd, name = tempfile.mkstemp(".sdf")
-    os.write(fd, sdf.encode())
+    fd, name = tempfile.mkstemp(".xyz")
+    os.write(fd, xyz.encode())
     os.close(fd)
 
     # run xtb
@@ -44,16 +44,26 @@ def charges():
 
     # for now, ignore the output itself
     tempdir = tempfile.mkdtemp()
-    output = subprocess.run([xtb, name], stdout=subprocess.PIPE, cwd=tempdir)
+    output = subprocess.run(
+        [xtb, name], stdout=subprocess.PIPE, cwd=tempdir, check=True
+    )
     # instead we read the "charges" file
-    f = open(tempdir + "/" + "charges", "r")
-    result = f.read()
+    result = ""
+    with open(tempdir + "/" + "charges", "r", encoding="utf-8") as f:
+        result = f.read()
 
-    # cleanup the temporary files
+    # try to cleanup the temporary files
     os.remove(name)
-    for f in os.listdir(tempdir):
-        os.remove(tempdir + "/" + f)
-    os.rmdir(tempdir)
+    for filename in os.listdir(tempdir):
+        try:
+            os.remove(tempdir + "/" + filename)
+        except:
+            continue
+    # and try to cleanup the directory
+    try:
+        os.rmdir(tempdir)
+    except:
+        pass
 
     # write the charges to stdout
     return result

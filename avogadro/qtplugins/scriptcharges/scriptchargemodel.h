@@ -40,7 +40,7 @@ public:
     Xyz
   };
 
-  ScriptChargeModel(const QString& scriptFileName);
+  ScriptChargeModel(const QString& scriptFileName = "");
   ~ScriptChargeModel() override;
 
   QString scriptFilePath() const;

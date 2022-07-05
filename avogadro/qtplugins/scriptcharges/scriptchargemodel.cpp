@@ -72,14 +72,19 @@ const MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
     m_interpreter->execute(QStringList() << "--charges", intermediate.c_str());
 
   if (m_interpreter->hasErrors()) {
-    foreach (const QString& err, m_interpreter->errorList())
+    foreach (const QString& err, m_interpreter->errorList()) {
       appendError(err.toStdString());
+    }
+
     return charges;
   }
 
   // parse the result - each charge should be on a line
   QString resultString = QString(result);
   QStringList lines = resultString.split('\n');
+  // keep a separate atom counter in case there is other text
+  // (e.g., "normal termination, etc.")
+  unsigned int atom = 0;
   for (unsigned int i = 0; i < lines.size(); ++i) {
     const QString line = lines.at(i);
     if (line.isEmpty())
@@ -91,7 +96,9 @@ const MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
       appendError("Invalid charge: " + line.toStdString());
       continue;
     }
-    charges(i, 0) = charge;
+
+    charges(atom, 0) = charge;
+    ++atom;
   }
 
   // cache the charges
@@ -376,7 +383,6 @@ void ScriptChargeModel::processElementString(const QString& str)
 bool ScriptChargeModel::parseElements(const QJsonObject& ob)
 {
   m_elements.reset();
-  bool ok;
 
   // we could either get a string or an array (of numbers)
   if (ob["elements"].isString()) {
@@ -389,9 +395,9 @@ bool ScriptChargeModel::parseElements(const QJsonObject& ob)
       if (arr[i].isString()) {
         processElementString(arr[i].toString());
       } else if (arr[i].isDouble()) {
-        int i = arr[i].toInt();
-        if (i >= 1 && i <= 119) // check the range
-          m_elements.set(i);
+        int element = arr[i].toInt();
+        if (element >= 1 && element <= 119) // check the range
+          m_elements.set(element);
       }
     }
   }
