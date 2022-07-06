@@ -25,7 +25,9 @@ def getMetaData():
     metaData["description"] = "Calculate atomic partial charges using AM1-BCC"
     metaData["charges"] = True
     metaData["potential"] = False
-    metaData["elements"] = "1,6,7,8,9,14,15,16,17,35,53"  # H, C, N, O, F, Si, S, P, Cl, Br, I
+    metaData[
+        "elements"
+    ] = "1,6,7,8,9,14,15,16,17,35,53"  # H, C, N, O, F, Si, S, P, Cl, Br, I
     return metaData
 
 
@@ -50,12 +52,48 @@ def charges():
     lig1 = tempdir + "/" + "lig1.mol2"
     lig2 = tempdir + "/" + "lig2.mol2"
     output = subprocess.run(
-        [binary, '-i', name, '-fi', 'sdf', '-o', lig1, '-fo', 'mol2', '-c', 'bcc'], 
-        stdout=subprocess.PIPE, cwd=tempdir, check=True
+        [
+            binary,
+            "-i",
+            name,
+            "-fi",
+            "sdf",
+            "-o",
+            lig1,
+            "-fo",
+            "mol2",
+            "-c",
+            "bcc",
+            "-pf",
+            "y",
+            "-ek",
+            "maxcyc=0, qm_theory='AM1', scfconv=1.d-10, ndiis_attempts=700,"
+        ],
+        stdout=subprocess.PIPE,
+        cwd=tempdir,
+        check=True,
     )
     output = subprocess.run(
-        [binary, '-i', lig1, '-fi', 'mol2', '-o', lig2, '-fo', 'mol2', '-c', 'wc', '-cf', 'charges'], 
-        stdout=subprocess.PIPE, cwd=tempdir, check=True
+        [
+            binary,
+            "-i",
+            lig1,
+            "-fi",
+            "mol2",
+            "-o",
+            lig2,
+            "-fo",
+            "mol2",
+            "-c",
+            "wc",
+            "-cf",
+            "charges",
+            "-pf",
+            "y",
+        ],
+        stdout=subprocess.PIPE,
+        cwd=tempdir,
+        check=True,
     )
     # instead we read the "charges.txt" file
     result = ""
