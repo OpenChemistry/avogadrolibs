@@ -17,6 +17,7 @@ target_link_libraries(ScriptCharges PRIVATE AvogadroCalc )
 # Bundled format scripts:
 set(charge_scripts
   chargeScripts/xtb.py
+  chargeScripts/antechamber.py
 )
 
 install(PROGRAMS ${charge_scripts}
