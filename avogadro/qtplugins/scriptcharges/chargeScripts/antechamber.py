@@ -1,6 +1,9 @@
 #  This source file is part of the Avogadro project.
 #  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 
+# This assigns charges using AM1-BCC from antechamber
+#  .. which is released under the GPL license
+
 import argparse
 import json
 import sys
@@ -11,46 +14,57 @@ import subprocess
 
 
 def getMetaData():
-    # before we return metadata, make sure xtb is in the path
-    if which("xtb") is None:
+    # before we return metadata, make sure antechamber is in the path
+    if which("antechamber") is None:
         return {}  # Avogadro will ignore us now
 
     metaData = {}
-    metaData["inputFormat"] = "mol"  # could be other formats, but this is fine
-    metaData["identifier"] = "GFN2"
-    metaData["name"] = "GFN2"
-    metaData["description"] = "Calculate atomic partial charges using GFN2 and xtb"
+    metaData["inputFormat"] = "sdf"  # could be other formats, but this is fine
+    metaData["identifier"] = "AM1BCC"
+    metaData["name"] = "AM1-BCC"
+    metaData["description"] = "Calculate atomic partial charges using AM1-BCC"
     metaData["charges"] = True
     metaData["potential"] = False
-    metaData["elements"] = "1-86"  # up to Radon
+    metaData["elements"] = "1,6,7,8,9,14,15,16,17,35,53"  # H, C, N, O, F, Si, S, P, Cl, Br, I
     return metaData
 
 
 def charges():
-    # Avogadro will send us the mol file as stdin
+    # Avogadro will send us the sdf file as stdin
     # we need to write it to a temporary file
 
-    # get the whole file
-    mol = sys.stdin.read()
+    # get the whole sdf file
+    sdf = sys.stdin.read()
 
-    fd, name = tempfile.mkstemp(".mol")
-    os.write(fd, mol.encode())
+    fd, name = tempfile.mkstemp(".sdf")
+    os.write(fd, sdf.encode())
     os.close(fd)
 
     # run xtb
-    xtb = which("xtb")
-    if xtb is None:  # we check again
+    binary = which("antechamber")
+    if binary is None:  # we check again
         return ""
 
     # for now, ignore the output itself
     tempdir = tempfile.mkdtemp()
+    lig1 = tempdir + "/" + "lig1.mol2"
+    lig2 = tempdir + "/" + "lig2.mol2"
     output = subprocess.run(
-        [xtb, name], stdout=subprocess.PIPE, cwd=tempdir, check=True
+        [binary, '-i', name, '-fi', 'sdf', '-o', lig1, '-fo', 'mol2', '-c', 'bcc'], 
+        stdout=subprocess.PIPE, cwd=tempdir, check=True
     )
-    # instead we read the "charges" file
+    output = subprocess.run(
+        [binary, '-i', lig1, '-fi', 'mol2', '-o', lig2, '-fo', 'mol2', '-c', 'wc', '-cf', 'charges'], 
+        stdout=subprocess.PIPE, cwd=tempdir, check=True
+    )
+    # instead we read the "charges.txt" file
     result = ""
     with open(tempdir + "/" + "charges", "r", encoding="utf-8") as f:
-        result = f.read()
+        # we get lines with multiple charges per line
+        for line in f:
+            charges = line.split()
+            for charge in charges:
+                result += charge + "\n"
 
     # try to cleanup the temporary files
     os.remove(name)
@@ -70,8 +84,7 @@ def charges():
 
 
 def potential():
-    # at the moment, xtb doesn't have a good way to do this
-    # and the method shouldn't be called anyway
+    # The default will calculate ESP from the partial charges
 
     # if your plugin has a potential, you can return it here
     # .. you'll get JSON with the file and the set of points
@@ -82,7 +95,7 @@ def potential():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("GFN2 partial charges")
+    parser = argparse.ArgumentParser("AM1-BCC partial charges")
     parser.add_argument("--display-name", action="store_true")
     parser.add_argument("--metadata", action="store_true")
     parser.add_argument("--charges", action="store_true")
