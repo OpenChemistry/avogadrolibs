@@ -369,7 +369,7 @@ QUndoCommand* BondCentricTool::mousePressEvent(QMouseEvent* e)
   RWAtom anchorAtom;
   if (!atomIsInBond) {
     Array<RWBond> bonds = m_molecule->bonds(clickedAtom);
-    for (auto & bond : bonds) {
+    for (auto& bond : bonds) {
       RWAtom atom = bond.getOtherAtom(clickedAtom);
       if (bondContainsAtom(selectedBond, atom)) {
         anchorAtom = atom;
@@ -1183,12 +1183,16 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
                                            const QtGui::RWAtom& startAtom,
                                            const QtGui::RWAtom& currentAtom)
 {
+  // does our cycle include both bonded atoms?
+  const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
+
   Array<RWBond> bonds = m_molecule->bonds(currentAtom);
   typedef std::vector<RWBond>::const_iterator BondIter;
-  for (auto & it : bonds) {
+
+  for (auto& it : bonds) {
     if (it != bond) { // Skip the current bond
-      RWAtom nextAtom = it.getOtherAtom(currentAtom);
-      if (nextAtom != startAtom) {
+      const RWAtom nextAtom = it.getOtherAtom(currentAtom);
+      if (nextAtom != startAtom && nextAtom != bondedAtom) {
         // Skip atoms that have already been added. This prevents infinite
         // recursion on cycles in the fragments
         int uid = m_molecule->atomUniqueId(nextAtom);
@@ -1197,14 +1201,13 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
           if (!buildFragmentRecurse(it, startAtom, nextAtom))
             return false;
         }
-      } else {
-        // If we've reached startAtom, then we've found a cycle that indicates
-        // no moveable fragment exists.
+      } else if (nextAtom == bondedAtom) {
+        // If we've found the bonded atom, the bond is in a cycle
         return false;
-      } // nextAtom != startAtom else
-    }   // *it != bond
-  }     // foreach bond
+      }
+    } // *it != bond
+  }   // foreach bond
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
