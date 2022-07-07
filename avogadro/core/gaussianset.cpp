@@ -15,8 +15,7 @@ using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
 {
@@ -206,7 +205,7 @@ void GaussianSet::outputAll(ElectronType type)
     index = 1;
 
   // Can be called to print out a summary of the basis set as read in
-  unsigned int numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
+  auto numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
   cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << endl;
   switch (m_scfType) {
     case Rhf:
@@ -552,5 +551,4 @@ bool GaussianSet::generateSpinDensity()
   return true;
 }
 
-} // End namespace Core
 } // End namespace Avogadro

@@ -27,8 +27,7 @@ using std::string;
 using std::string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
@@ -86,7 +85,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       Vector3 v3(lexicalCast<double>(tokens[6]), lexicalCast<double>(tokens[7]),
                  lexicalCast<double>(tokens[8]));
 
-      Core::UnitCell* cell = new Core::UnitCell(v1, v2, v3);
+      auto* cell = new Core::UnitCell(v1, v2, v3);
       mol.setUnitCell(cell);
     }
   }
@@ -221,17 +220,16 @@ bool XyzFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> XyzFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("xyz");
-  ext.push_back("extxyz");
+  ext.emplace_back("xyz");
+  ext.emplace_back("extxyz");
   return ext;
 }
 
 std::vector<std::string> XyzFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-xyz");
+  mime.emplace_back("chemical/x-xyz");
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

@@ -18,8 +18,7 @@ using namespace std;
 using namespace Avogadro;
 using namespace Avogadro::Rendering;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMEngine::QTAIMEngine(QObject* aParent)
   : QtGui::ScenePlugin(aParent), m_enabled(false)
@@ -34,11 +33,11 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
 {
   // Create sphere/cylinder nodes.
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   geometry->addDrawable(spheres);
-  CylinderGeometry* cylinders = new CylinderGeometry;
+  auto* cylinders = new CylinderGeometry;
   geometry->addDrawable(cylinders);
 
   // Render the bond paths
@@ -227,5 +226,4 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

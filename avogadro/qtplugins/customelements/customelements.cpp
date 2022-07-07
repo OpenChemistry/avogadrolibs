@@ -12,8 +12,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 CustomElements::CustomElements(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
@@ -60,7 +59,7 @@ void CustomElements::setMolecule(QtGui::Molecule* mol)
 
 void CustomElements::moleculeChanged(unsigned int c)
 {
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Atoms &&
       (changes & (Molecule::Added | Molecule::Modified))) {
     updateReassignAction();
@@ -80,5 +79,4 @@ void CustomElements::updateReassignAction()
   m_reassignAction->setEnabled(m_molecule && m_molecule->hasCustomElements());
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

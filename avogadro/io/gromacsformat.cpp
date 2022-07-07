@@ -20,8 +20,7 @@
 #include <string>
 #include <utility>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Atom;
 using Core::Elements;
@@ -67,7 +66,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   getline(in, buffer);
   buffer = trimmed(buffer);
   bool ok;
-  size_t numAtoms = lexicalCast<size_t>(buffer, ok);
+  auto numAtoms = lexicalCast<size_t>(buffer, ok);
   if (buffer.empty() || !ok) {
     appendError("Number of atoms (line 2) invalid.");
     return false;
@@ -115,7 +114,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     // Offset: 52 format: %8.4f value: y velocity (nm/ps, a.k.a. km/s)
     // Offset: 60 format: %8.4f value: z velocity (nm/ps, a.k.a. km/s)
 
-    size_t residueId = lexicalCast<size_t>(buffer.substr(0, 5), ok);
+    auto residueId = lexicalCast<size_t>(buffer.substr(0, 5), ok);
     if (!ok) {
       appendError("Failed to parse residue sequence number: " +
                   buffer.substr(0, 5));
@@ -125,7 +124,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     if (residueId != currentResidueId) {
       currentResidueId = residueId;
 
-      string residueName = lexicalCast<string>(buffer.substr(5, 5), ok);
+      auto residueName = lexicalCast<string>(buffer.substr(5, 5), ok);
       if (!ok) {
         appendError("Failed to parse residue name: " + buffer.substr(5, 5));
         return false;
@@ -148,7 +147,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       if (atomicNumFromSymbol != 255) {
         atom = molecule.addAtom(atomicNumFromSymbol);
       } else {
-        AtomTypeMap::const_iterator it = atomTypes.find(value);
+        auto it = atomTypes.find(value);
         if (it == atomTypes.end()) {
           atomTypes.insert(std::make_pair(value, customElementCounter++));
           it = atomTypes.find(value);
@@ -181,10 +180,8 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, it->first));
+    for (const auto & atomType : atomTypes) {
+      elementMap.insert(std::make_pair(atomType.second, atomType.first));
     }
     molecule.setCustomElementMap(elementMap);
   }
@@ -216,7 +213,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       }
     }
 
-    UnitCell* cell = new UnitCell;
+    auto* cell = new UnitCell;
     cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
     molecule.setUnitCell(cell);
   }
@@ -229,5 +226,4 @@ bool GromacsFormat::write(std::ostream&, const Core::Molecule&)
   return false;
 }
 
-} // namespace Io
 } // namespace Avogadro

@@ -6,9 +6,7 @@
 #include "zipextracter.h"
 
 #include <QtCore/QString>
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ZipExtracter::ZipExtracter() {}
 
@@ -156,5 +154,4 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   return toReturn;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

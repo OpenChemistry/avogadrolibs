@@ -11,8 +11,7 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::PluginLayerManager;
@@ -31,9 +30,9 @@ void VanDerWaalsAO::process(const QtGui::Molecule& molecule,
                             Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the VdW spheres.
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  AmbientOcclusionSphereGeometry* spheres = new AmbientOcclusionSphereGeometry;
+  auto* spheres = new AmbientOcclusionSphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
@@ -52,5 +51,4 @@ void VanDerWaalsAO::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -13,15 +13,10 @@
 
 using std::vector;
 using std::string;
-using std::cout;
-using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
-using Core::BasisSet;
-using Core::GaussianSet;
 
 NWChemLog::NWChemLog()
 {
@@ -34,9 +29,9 @@ NWChemLog::~NWChemLog()
 std::vector<std::string> NWChemLog::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("log");
-  extensions.push_back("out");
-  extensions.push_back("nwchem");
+  extensions.emplace_back("log");
+  extensions.emplace_back("out");
+  extensions.emplace_back("nwchem");
   return extensions;
 }
 
@@ -202,6 +197,5 @@ void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
       return;
     }
   }
-}
 }
 }

@@ -13,8 +13,7 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 MoleQueueDialog::MoleQueueDialog(QWidget* parent_)
   : QDialog(parent_), m_ui(new Ui::MoleQueueDialog)
@@ -201,5 +200,4 @@ void MoleQueueDialog::done(int r)
   }
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

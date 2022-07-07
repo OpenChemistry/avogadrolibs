@@ -27,8 +27,7 @@
 
 using std::unique_ptr;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 FileFormatManager& FileFormatManager::instance()
 {
@@ -134,9 +133,8 @@ bool FileFormatManager::addFormat(FileFormat* format)
     appendError("Format " + format->identifier() + " already loaded.");
     return false;
   }
-  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin();
-       it != m_formats.end(); ++it) {
-    if (*it == format) {
+  for (auto & m_format : m_formats) {
+    if (m_format == format) {
       appendError("The format object was already loaded.");
       return false;
     }
@@ -147,14 +145,12 @@ bool FileFormatManager::addFormat(FileFormat* format)
   m_formats.push_back(format);
   m_identifiers[format->identifier()].push_back(index);
   std::vector<std::string> mimes = format->mimeTypes();
-  for (std::vector<std::string>::const_iterator it = mimes.begin();
-       it != mimes.end(); ++it) {
-    m_mimeTypes[*it].push_back(index);
+  for (auto & mime : mimes) {
+    m_mimeTypes[mime].push_back(index);
   }
   std::vector<std::string> extensions = format->fileExtensions();
-  for (std::vector<std::string>::const_iterator it = extensions.begin();
-       it != extensions.end(); ++it) {
-    m_fileExtensions[*it].push_back(index);
+  for (auto & extension : extensions) {
+    m_fileExtensions[extension].push_back(index);
   }
 
   return true;
@@ -167,15 +163,15 @@ template<typename Map, typename VectorOfKeys, typename ValueType>
 void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
 {
   typedef typename VectorOfKeys::const_iterator KeysIter;
-  for (KeysIter key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
-    typename Map::iterator mapMatch = map.find(*key);
+  for (auto key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
+    auto mapMatch = map.find(*key);
     if (mapMatch == map.end())
       continue;
     typename Map::mapped_type& vec = mapMatch->second;
     if (vec.size() <= 1) {
       map.erase(*key);
     } else {
-      typename Map::mapped_type::iterator newEnd =
+      auto newEnd =
         std::remove(vec.begin(), vec.end(), val);
       vec.resize(newEnd - vec.begin());
     }
@@ -191,17 +187,16 @@ bool FileFormatManager::removeFormat(const std::string& identifier)
   if (ids.empty())
     return false;
 
-  for (FormatIdVector::const_iterator it = ids.begin(), itEnd = ids.end();
-       it != itEnd; ++it) {
-    FileFormat* fmt = m_formats[*it];
+  for (size_t id : ids) {
+    FileFormat* fmt = m_formats[id];
 
     if (fmt == nullptr)
       continue;
 
-    removeFromMap(m_mimeTypes, fmt->mimeTypes(), *it);
-    removeFromMap(m_fileExtensions, fmt->fileExtensions(), *it);
+    removeFromMap(m_mimeTypes, fmt->mimeTypes(), id);
+    removeFromMap(m_fileExtensions, fmt->fileExtensions(), id);
 
-    m_formats[*it] = nullptr;
+    m_formats[id] = nullptr;
     delete fmt;
   }
 
@@ -253,12 +248,10 @@ std::vector<const FileFormat*> FileFormatManager::fileFormats(
 {
   std::vector<const FileFormat*> result;
 
-  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin(),
-                                                itEnd = m_formats.end();
-       it != itEnd; ++it) {
+  for (auto m_format : m_formats) {
     if (filter == FileFormat::None ||
-        (filter & (*it)->supportedOperations()) == filter) {
-      result.push_back(*it);
+        (filter & m_format->supportedOperations()) == filter) {
+      result.push_back(m_format);
     }
   }
   return result;
@@ -309,9 +302,8 @@ FileFormatManager::FileFormatManager()
 FileFormatManager::~FileFormatManager()
 {
   // Delete the file formats that were loaded.
-  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin();
-       it != m_formats.end(); ++it) {
-    delete (*it);
+  for (auto & m_format : m_formats) {
+    delete m_format;
   }
   m_formats.clear();
 }
@@ -321,12 +313,12 @@ std::vector<std::string> FileFormatManager::filteredKeysFromFormatMap(
   const FileFormatManager::FormatIdMap& fmap) const
 {
   std::vector<std::string> result;
-  for (FormatIdMap::const_iterator it = fmap.begin(); it != fmap.end(); ++it) {
-    for (std::vector<size_t>::const_iterator formatIt = it->second.begin();
-         formatIt != it->second.end(); ++formatIt) {
+  for (const auto & it : fmap) {
+    for (auto formatIt = it.second.begin();
+         formatIt != it.second.end(); ++formatIt) {
       if (filter == FileFormat::None ||
           (m_formats[*formatIt]->supportedOperations() & filter) == filter) {
-        result.push_back(it->first);
+        result.push_back(it.first);
         break;
       }
     }
@@ -340,7 +332,7 @@ std::vector<FileFormat*> FileFormatManager::filteredFormatsFromFormatMap(
 {
   std::vector<FileFormat*> result;
 
-  FormatIdMap::const_iterator it = fmap.find(key);
+  auto it = fmap.find(key);
   if (it != fmap.end())
     result = filteredFormatsFromFormatVector(filter, it->second);
 
@@ -351,7 +343,7 @@ FileFormat* FileFormatManager::filteredFormatFromFormatMap(
   const std::string& key, FileFormat::Operations filter,
   const FileFormatManager::FormatIdMap& fmap) const
 {
-  FormatIdMap::const_iterator it = fmap.find(key);
+  auto it = fmap.find(key);
   if (it != fmap.end())
     return filteredFormatFromFormatVector(filter, it->second);
 
@@ -363,10 +355,10 @@ std::vector<FileFormat*> FileFormatManager::filteredFormatsFromFormatVector(
   const FileFormatManager::FormatIdVector& v) const
 {
   std::vector<FileFormat*> result;
-  for (FormatIdVector::const_iterator it = v.begin(); it != v.end(); ++it) {
+  for (unsigned long it : v) {
     if (filter == FileFormat::None ||
-        (m_formats[*it]->supportedOperations() & filter) == filter) {
-      result.push_back(m_formats[*it]);
+        (m_formats[it]->supportedOperations() & filter) == filter) {
+      result.push_back(m_formats[it]);
     }
   }
   return result;
@@ -376,10 +368,10 @@ FileFormat* FileFormatManager::filteredFormatFromFormatVector(
   FileFormat::Operations filter,
   const FileFormatManager::FormatIdVector& v) const
 {
-  for (FormatIdVector::const_iterator it = v.begin(); it != v.end(); ++it) {
+  for (unsigned long it : v) {
     if (filter == FileFormat::None ||
-        (m_formats[*it]->supportedOperations() & filter) == filter) {
-      return m_formats[*it];
+        (m_formats[it]->supportedOperations() & filter) == filter) {
+      return m_formats[it];
     }
   }
   return nullptr;
@@ -390,5 +382,4 @@ void FileFormatManager::appendError(const std::string& errorMessage)
   m_error += errorMessage + "\n";
 }
 
-} // end Io namespace
 } // end Avogadro namespace

@@ -16,8 +16,7 @@
 
 #include "ui_bondingdialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -158,14 +157,13 @@ void Bonding::clearBonds()
 
       // OK, the atom is selected, get the bonds to delete
       const NeighborListType bonds = m_molecule->bonds(i);
-      for (NeighborListType::const_iterator it = bonds.begin();
-           it != bonds.end(); ++it) {
-        bondIndices.push_back(it->index());
+      for (auto bond : bonds) {
+        bondIndices.push_back(bond.index());
       }
     } // end looping through atoms
 
     // now delete the bonds
-    for (std::vector<size_t>::const_reverse_iterator it = bondIndices.rbegin(),
+    for (auto it = bondIndices.rbegin(),
                                                      itEnd = bondIndices.rend();
          it != itEnd; ++it) {
       m_molecule->removeBond(*it);
@@ -174,5 +172,4 @@ void Bonding::clearBonds()
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

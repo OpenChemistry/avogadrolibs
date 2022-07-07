@@ -8,8 +8,7 @@
 
 #include "inputgeneratorwidget.h"
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 using QtGui::Molecule;
 
@@ -57,7 +56,7 @@ const InputGeneratorWidget& InputGeneratorDialog::widget() const
 bool InputGeneratorDialog::configureBatchJob(BatchJob& batch)
 {
   ui->widget->setBatchMode(true);
-  DialogCode reply = static_cast<DialogCode>(exec());
+  auto reply = static_cast<DialogCode>(exec());
   if (reply != Accepted)
     return false;
 
@@ -69,5 +68,4 @@ void InputGeneratorDialog::setMolecule(Molecule* mol)
   ui->widget->setMolecule(mol);
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

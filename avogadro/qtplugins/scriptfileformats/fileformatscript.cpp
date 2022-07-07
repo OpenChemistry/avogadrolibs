@@ -22,8 +22,7 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 FileFormatScript::FileFormatScript(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
@@ -218,16 +217,15 @@ void FileFormatScript::readMetaData()
   // validate operations:
   Operations operationsTmp = Io::FileFormat::None;
   typedef std::vector<std::string>::const_iterator StringVectorIter;
-  for (StringVectorIter it = opStringsTmp.begin(), itEnd = opStringsTmp.end();
-       it != itEnd; ++it) {
-    if (*it == "read")
+  for (auto & it : opStringsTmp) {
+    if (it == "read")
       operationsTmp |= Io::FileFormat::Read;
-    else if (*it == "write")
+    else if (it == "write")
       operationsTmp |= Io::FileFormat::Write;
     else {
       qWarning() << "Error parsing metadata for file format script:"
                  << scriptFilePath() << "\n"
-                 << "Unrecognized operation:" << it->c_str() << "\n"
+                 << "Unrecognized operation:" << it.c_str() << "\n"
                  << output;
       return;
     }
@@ -359,5 +357,4 @@ bool FileFormatScript::parseStringArray(const QJsonObject& ob,
   return !array.empty();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

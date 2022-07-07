@@ -21,8 +21,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
@@ -226,7 +225,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       return false;
     }
 
-    QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
     QtGui::Molecule newMol(guiMol->parent());
     if (m_moleculeExtension == "cjson") {
       // convert the "cjson" field to a string
@@ -341,7 +340,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj[QStringLiteral("highlightStyles")].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -546,7 +545,7 @@ void InterfaceScript::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
+  QRegExp coordParser(R"(\$\$coords:([^\$]*)\$\$)");
   int ind = 0;
   while ((ind = coordParser.indexIn(str, ind)) != -1) {
     // Extract spec and prepare the replacement
@@ -601,7 +600,7 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value(QStringLiteral("rules")).toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InterfaceScript*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
       qDebug() << "Error parsing style" << styleName << '\n'
@@ -822,5 +821,4 @@ bool InterfaceScript::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

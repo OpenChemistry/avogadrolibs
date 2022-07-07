@@ -5,8 +5,7 @@
 
 #include "extensionplugin.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ExtensionPlugin::ExtensionPlugin(QObject* parent_) : QObject(parent_)
 {
@@ -42,5 +41,4 @@ void ExtensionPlugin::setActiveWidget(QWidget* widget)
 {
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace

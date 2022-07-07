@@ -12,8 +12,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QRegExp>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OBProcess::OBProcess(QObject* parent_)
   : QObject(parent_), m_processLocked(false), m_aborted(false),
@@ -147,7 +146,7 @@ void OBProcess::queryReadFormatsPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("\\s*([^\\s]+)\\s+--\\s+([^\\n]+)\\n");
+  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString extension = parser.cap(1);
@@ -172,7 +171,7 @@ void OBProcess::queryWriteFormatsPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("\\s*([^\\s]+)\\s+--\\s+([^\\n]+)\\n");
+  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString extension = parser.cap(1);
@@ -272,7 +271,7 @@ void OBProcess::queryForceFieldsPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString key = parser.cap(1);
@@ -311,7 +310,7 @@ void OBProcess::queryChargesPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString key = parser.cap(1);
@@ -456,7 +455,7 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegExp lastStepParser("\\n\\s*([0-9]+)\\s+([-0-9.]+)\\s+([-0-9.]+)\\n");
+    QRegExp lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
     if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
       int step = lastStepParser.cap(1).toInt();
       double energy = lastStepParser.cap(2).toDouble();
@@ -497,5 +496,4 @@ void OBProcess::resetState()
   connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

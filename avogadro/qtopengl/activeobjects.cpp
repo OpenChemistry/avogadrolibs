@@ -7,8 +7,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 ActiveObjects::ActiveObjects() = default;
 ActiveObjects::~ActiveObjects() = default;
@@ -61,5 +60,4 @@ void ActiveObjects::setActiveMolecule(QtGui::Molecule* molecule)
   }
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
     while (atomNode) {
       xml_attribute attribute = atomNode.attribute("id");
       if (attribute) {
-        elements.push_back(Element(string(attribute.value())));
+        elements.emplace_back(string(attribute.value()));
       }
       else {
         cout << "Error, no atom id found. Skipping this entry." << endl;

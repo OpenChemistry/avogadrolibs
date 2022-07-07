@@ -9,8 +9,7 @@
 
 #include <QtWidgets/QAction>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 CoordinateEditor::CoordinateEditor(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_dialog(nullptr),
@@ -59,5 +58,4 @@ void CoordinateEditor::pastedMolecule()
   requestActiveTool("Navigator");
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

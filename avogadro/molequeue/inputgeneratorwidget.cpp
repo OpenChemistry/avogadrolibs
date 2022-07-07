@@ -30,8 +30,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
@@ -223,7 +222,7 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   foreach (const QString& fileName, fileNames) {
     if (m_textEdits.contains(fileName))
       continue;
-    QTextEdit* edit = new QTextEdit(this);
+    auto* edit = new QTextEdit(this);
     edit->setObjectName(fileName);
     edit->setFontFamily("monospace");
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
@@ -341,7 +340,7 @@ void InputGeneratorWidget::computeClicked()
       // overwritten with the final job details.
       emit openJobOutput(job);
       // Hide the parent if it's a dialog:
-      if (QDialog* dlg = qobject_cast<QDialog*>(parent()))
+      if (auto* dlg = qobject_cast<QDialog*>(parent()))
         dlg->hide();
       break;
   }
@@ -388,10 +387,10 @@ void InputGeneratorWidget::showError(const QString& err)
   QWidget* theParent =
     this->isVisible() ? this : qobject_cast<QWidget*>(parent());
   QDialog dlg(theParent);
-  QVBoxLayout* vbox = new QVBoxLayout();
-  QLabel* label = new QLabel(tr("An error has occurred:"));
+  auto* vbox = new QVBoxLayout();
+  auto* label = new QLabel(tr("An error has occurred:"));
   vbox->addWidget(label);
-  QTextBrowser* textBrowser = new QTextBrowser();
+  auto* textBrowser = new QTextBrowser();
 
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
@@ -410,7 +409,7 @@ void InputGeneratorWidget::showError(const QString& err)
 
 void InputGeneratorWidget::textEditModified()
 {
-  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
+  if (auto* edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
       if (!m_dirtyTextEdits.contains(edit))
         m_dirtyTextEdits << edit;
@@ -422,7 +421,7 @@ void InputGeneratorWidget::textEditModified()
 
 void InputGeneratorWidget::updateTitlePlaceholder()
 {
-  if (QLineEdit* titleEdit =
+  if (auto* titleEdit =
         qobject_cast<QLineEdit*>(m_widgets.value("Title", nullptr))) {
     titleEdit->setPlaceholderText(generateJobTitle());
   }
@@ -652,5 +651,4 @@ void InputGeneratorWidget::updateOptions()
   setOptionDefaults();
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

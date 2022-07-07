@@ -10,8 +10,7 @@
 
 #include <avogadro/core/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::VibrationDialog)
@@ -43,7 +42,7 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
                SLOT(selectRow(QModelIndex)));
   }
 
-  VibrationModel* model = new VibrationModel(this);
+  auto* model = new VibrationModel(this);
   model->setMolecule(molecule);
   m_ui->tableView->setModel(model);
   connect(m_ui->tableView->selectionModel(),
@@ -70,5 +69,4 @@ void VibrationDialog::selectRow(QModelIndex idx)
   emit modeChanged(idx.row());
 }
 
-} // End namespace QtPlugins
 } // End namespace Avogadro

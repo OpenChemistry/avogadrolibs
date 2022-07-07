@@ -19,8 +19,7 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Mesh;
 
@@ -28,7 +27,7 @@ Apbs::Apbs(QObject* parent_)
   : QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
     m_progressDialog(nullptr), m_dialog(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setText(tr("Run APBS…"));
   connect(action, SIGNAL(triggered()), this, SLOT(onRunApbs()));
   m_actions.append(action);
@@ -72,7 +71,7 @@ void Apbs::onOpenOutputFile()
 
 void Apbs::meshGeneratorFinished()
 {
-  QtGui::MeshGenerator* generator =
+  auto* generator =
     qobject_cast<QtGui::MeshGenerator*>(sender());
   if (!generator) {
     return;
@@ -155,7 +154,7 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       qApp->processEvents();
 
       Mesh* mesh = molecule.addMesh();
-      QtGui::MeshGenerator* meshGenerator =
+      auto* meshGenerator =
         new QtGui::MeshGenerator(cube, mesh, 0.1f);
       connect(meshGenerator, SIGNAL(finished()), this,
               SLOT(meshGeneratorFinished()));
@@ -183,6 +182,5 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
   }
 
   return true;
-}
 }
 }

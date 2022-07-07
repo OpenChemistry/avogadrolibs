@@ -22,11 +22,9 @@
 #include <QtCore/QStringList>
 
 using Avogadro::Core::CrystalTools;
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Crystal::Crystal(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
@@ -128,7 +126,7 @@ void Crystal::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -236,5 +234,4 @@ void Crystal::wrapAtomsToCell()
   m_molecule->undoMolecule()->wrapAtomsToCell();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

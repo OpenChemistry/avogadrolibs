@@ -7,8 +7,7 @@
 
 #include <cmath>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 void UnitCell::setCellParameters(Real a_, Real b_, Real c_, Real al, Real be,
                                  Real ga)
@@ -51,5 +50,4 @@ Real UnitCell::signedAngleRadians(const Vector3& v1, const Vector3& v2,
   return signDet > 0.f ? angle : -angle;
 }
 
-} // end namespace Core
 } // end namespace Avogadro

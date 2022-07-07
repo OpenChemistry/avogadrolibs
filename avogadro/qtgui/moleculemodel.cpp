@@ -10,8 +10,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
@@ -49,8 +48,8 @@ bool MoleculeModel::setData(const QModelIndex& idx, const QVariant& value,
   if (!idx.isValid() || idx.column() > 2)
     return false;
 
-  QObject* object = static_cast<QObject*>(idx.internalPointer());
-  Molecule* mol = qobject_cast<Molecule*>(object);
+  auto* object = static_cast<QObject*>(idx.internalPointer());
+  auto* mol = qobject_cast<Molecule*>(object);
   if (!mol)
     return false;
 
@@ -82,8 +81,8 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
   if (!idx.isValid() || idx.column() > 2)
     return QVariant();
 
-  QObject* object = static_cast<QObject*>(idx.internalPointer());
-  Molecule* mol = qobject_cast<Molecule*>(object);
+  auto* object = static_cast<QObject*>(idx.internalPointer());
+  auto* mol = qobject_cast<Molecule*>(object);
   if (!mol)
     return QVariant();
 
@@ -190,7 +189,7 @@ void MoleculeModel::removeItem(Molecule* item)
 
 void MoleculeModel::itemChanged()
 {
-  Molecule* item = qobject_cast<Molecule*>(sender());
+  auto* item = qobject_cast<Molecule*>(sender());
   if (item) {
     int row = m_molecules.indexOf(item);
     if (row >= 0)
@@ -198,5 +197,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

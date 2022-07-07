@@ -22,8 +22,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -53,13 +52,13 @@ std::vector<ColorNormalVertex> CurveGeometry::computeCirclePoints(
     ColorNormalVertex vert1;
     vert1.normal = a.linear() * circle;
     vert1.vertex = a * circle;
-    vert1.color = Vector3ub(0.7f, 0.7f, 0.7f);
+    vert1.color = Vector3ub(0, 0, 0);
     result.push_back(vert1);
 
     ColorNormalVertex vert2;
     vert2.normal = b.linear() * circle;
     vert2.vertex = b * circle;
-    vert2.color = Vector3ub(0.7f, 0.7f, 0.7f);
+    vert2.color = Vector3ub(0, 0, 0);
     result.push_back(vert2);
   }
   return result;
@@ -148,7 +147,7 @@ void CurveGeometry::update(int index)
       r.color = (*it)->color;
       vertices.push_back(r);
     }
-    const unsigned int tubeStart = static_cast<unsigned int>(
+    const auto tubeStart = static_cast<unsigned int>(
       vertices.size() - (line->flat && m_canBeFlat ? radials.size() : 0));
     for (unsigned int j = 0; j < radials.size() / 2; ++j) {
       unsigned int r1 = j + j;
@@ -307,5 +306,4 @@ Array<Identifier> CurveGeometry::areaHits(const Frustrum& f) const
   return result;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

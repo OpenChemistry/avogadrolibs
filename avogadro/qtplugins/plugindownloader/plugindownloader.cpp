@@ -17,8 +17,7 @@
 #include <QtWidgets/QProgressDialog>
 
 //#include <libarchive/archive.h>
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PluginDownloader::PluginDownloader(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -60,6 +59,5 @@ void PluginDownloader::showDialog()
 
 void PluginDownloader::replyFinished(QNetworkReply* reply)
 {
-}
 }
 }

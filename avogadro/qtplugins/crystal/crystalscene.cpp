@@ -20,11 +20,9 @@
 
 #include <QDebug>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
-using Core::Molecule;
 using Core::UnitCell;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
@@ -36,7 +34,7 @@ CrystalScene::CrystalScene(QObject* p)
   QSettings settings;
   m_lineWidth = settings.value("crystal/lineWidth", 2.0).toDouble();
 
-  QColor color =
+  auto color =
     settings.value("crystal/color", QColor(Qt::white)).value<QColor>();
   m_color[0] = static_cast<unsigned char>(color.red());
   m_color[1] = static_cast<unsigned char>(color.green());
@@ -48,9 +46,9 @@ CrystalScene::~CrystalScene() {}
 void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
 {
   if (const UnitCell* cell = molecule.unitCell()) {
-    GeometryNode* geometry = new GeometryNode;
+    auto* geometry = new GeometryNode;
     node.addChild(geometry);
-    LineStripGeometry* lines = new LineStripGeometry;
+    auto* lines = new LineStripGeometry;
     geometry->addDrawable(lines);
 
     lines->setColor(m_color);
@@ -71,9 +69,8 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
     strip.push_back(vertex -= b);
     lines->addLineStrip(strip, width);
 
-    for (Array<Vector3f>::iterator it = strip.begin(), itEnd = strip.end();
-         it != itEnd; ++it) {
-      *it += c;
+    for (auto & it : strip) {
+      it += c;
     }
     lines->addLineStrip(strip, width);
 
@@ -136,19 +133,19 @@ QWidget* CrystalScene::setupWidget()
 {
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* v = new QVBoxLayout;
+    auto* v = new QVBoxLayout;
 
     // line width
-    QDoubleSpinBox* spin = new QDoubleSpinBox;
+    auto* spin = new QDoubleSpinBox;
     spin->setRange(0.5, 5.0);
     spin->setSingleStep(0.25);
     spin->setDecimals(2);
     spin->setValue(m_lineWidth);
     connect(spin, SIGNAL(valueChanged(double)), SLOT(setLineWidth(double)));
-    QFormLayout* form = new QFormLayout;
+    auto* form = new QFormLayout;
     form->addRow(tr("Line width:"), spin);
 
-    QtGui::ColorButton* color = new QtGui::ColorButton;
+    auto* color = new QtGui::ColorButton;
     connect(color, SIGNAL(colorChanged(const QColor&)),
             SLOT(setColor(const QColor&)));
     form->addRow(tr("Line color:"), color);
@@ -161,5 +158,4 @@ QWidget* CrystalScene::setupWidget()
   return m_setupWidget;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

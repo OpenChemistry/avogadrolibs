@@ -10,8 +10,7 @@
 #include "linestripgeometry.h"
 #include "spheregeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 GeometryVisitor::GeometryVisitor()
   : m_center(Vector3f::Zero()), m_radius(0.0f), m_dirty(false)
@@ -36,7 +35,7 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
 
   Vector3f tmpCenter(Vector3f::Zero());
   // First find the center of the sphere geometry.
-  std::vector<SphereColor>::const_iterator it = spheres.begin();
+  auto it = spheres.begin();
   for (; it != spheres.end(); ++it)
     tmpCenter += it->center;
   tmpCenter /= static_cast<float>(spheres.size());
@@ -65,7 +64,7 @@ void GeometryVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 
   Vector3f tmpCenter(Vector3f::Zero());
   // First find the center of the sphere geometry.
-  std::vector<SphereColor>::const_iterator it = spheres.begin();
+  auto it = spheres.begin();
   for (; it != spheres.end(); ++it)
     tmpCenter += it->center;
   tmpCenter /= static_cast<float>(spheres.size());
@@ -123,16 +122,14 @@ void GeometryVisitor::visit(LineStripGeometry& lsg)
   m_dirty = true;
 
   Vector3f tmpCenter(Vector3f::Zero());
-  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
-       it != itEnd; ++it) {
-    tmpCenter += it->vertex;
+  for (const auto & vert : verts) {
+    tmpCenter += vert.vertex;
   }
   tmpCenter /= static_cast<float>(verts.size());
 
   float tmpRadius(0.f);
-  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
-       it != itEnd; ++it) {
-    float distance = (it->vertex - tmpCenter).squaredNorm();
+  for (const auto & vert : verts) {
+    float distance = (vert.vertex - tmpCenter).squaredNorm();
     if (distance > tmpRadius)
       tmpRadius = distance;
   }
@@ -190,5 +187,4 @@ void GeometryVisitor::average()
   }
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

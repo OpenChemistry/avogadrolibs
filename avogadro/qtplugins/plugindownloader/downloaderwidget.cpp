@@ -24,8 +24,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 void setRawHeaders(QNetworkRequest* request)
 {
@@ -98,7 +97,7 @@ void DownloaderWidget::updateRepoData()
     m_ui->repoTable->setRowCount(numRepos);
     m_repoList.clear();
     for (int i = 0; i < numRepos; i++) {
-      m_repoList.push_back(repo());
+      m_repoList.emplace_back();
 
       const auto& currentRoot = m_root[i];
 
@@ -147,7 +146,7 @@ void DownloaderWidget::updateRepoData()
         m_repoList[i].readmeUrl = readmeUrl;
       }
 
-      QTableWidgetItem* checkbox = new QTableWidgetItem();
+      auto* checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
       m_ui->repoTable->setItem(i, 0, checkbox);
       m_ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));
@@ -379,5 +378,4 @@ void DownloaderWidget::unzipPlugin()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

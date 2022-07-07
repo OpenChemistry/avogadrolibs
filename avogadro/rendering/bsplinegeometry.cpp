@@ -5,8 +5,7 @@
 
 #include "bsplinegeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
 BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
@@ -64,5 +63,4 @@ Vector3f BSplineGeometry::computeCurvePoint(
   return Q;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

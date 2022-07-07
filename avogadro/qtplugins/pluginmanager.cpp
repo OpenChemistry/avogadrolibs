@@ -16,8 +16,7 @@
 
 #include <QtCore/QDebug>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PluginManager::PluginManager(QObject* p)
   : QObject(p)
@@ -126,5 +125,4 @@ void PluginManager::load(const QString& path)
   }
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace
