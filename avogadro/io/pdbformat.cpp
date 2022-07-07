@@ -214,14 +214,14 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 std::vector<std::string> PdbFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("pdb");
+  ext.emplace_back("pdb");
   return ext;
 }
 
 std::vector<std::string> PdbFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-pdb");
+  mime.emplace_back("chemical/x-pdb");
   return mime;
 }
 

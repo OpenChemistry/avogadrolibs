@@ -192,7 +192,7 @@ static bool checkPairVector(
   Vector3 pos = molecule.atomPosition3d(n);
   /* Compute all bond vectors around atom n */
   for (const Bond *b: bonds)
-    bondVectors.push_back(molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos);
+    bondVectors.emplace_back(molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos);
   float pairAngle;
   switch (hybridization) {
     case Core::SP3:

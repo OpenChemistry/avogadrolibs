@@ -33,9 +33,9 @@ MoldenFile::~MoldenFile()
 std::vector<std::string> MoldenFile::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("mold");
-  extensions.push_back("molf");
-  extensions.push_back("molden");
+  extensions.emplace_back("mold");
+  extensions.emplace_back("molf");
+  extensions.emplace_back("molden");
   return extensions;
 }
 

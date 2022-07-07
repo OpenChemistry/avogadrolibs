@@ -65,18 +65,18 @@ const Vector3ub& getColor(size_t i)
 {
   static std::vector<Vector3ub> colors;
   if (colors.empty()) {
-    colors.push_back(Vector3ub(255, 64, 32));
-    colors.push_back(Vector3ub(64, 255, 32));
-    colors.push_back(Vector3ub(32, 64, 255));
-    colors.push_back(Vector3ub(255, 255, 32));
-    colors.push_back(Vector3ub(255, 32, 255));
-    colors.push_back(Vector3ub(32, 255, 255));
-    colors.push_back(Vector3ub(255, 128, 0));
-    colors.push_back(Vector3ub(128, 255, 0));
-    colors.push_back(Vector3ub(0, 255, 128));
-    colors.push_back(Vector3ub(0, 128, 255));
-    colors.push_back(Vector3ub(255, 0, 128));
-    colors.push_back(Vector3ub(128, 0, 255));
+    colors.emplace_back(255, 64, 32);
+    colors.emplace_back(64, 255, 32);
+    colors.emplace_back(32, 64, 255);
+    colors.emplace_back(255, 255, 32);
+    colors.emplace_back(255, 32, 255);
+    colors.emplace_back(32, 255, 255);
+    colors.emplace_back(255, 128, 0);
+    colors.emplace_back(128, 255, 0);
+    colors.emplace_back(0, 255, 128);
+    colors.emplace_back(0, 128, 255);
+    colors.emplace_back(255, 0, 128);
+    colors.emplace_back(128, 0, 255);
   }
 
   return colors[i % colors.size()];

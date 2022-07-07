@@ -29,9 +29,9 @@ NWChemLog::~NWChemLog()
 std::vector<std::string> NWChemLog::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("log");
-  extensions.push_back("out");
-  extensions.push_back("nwchem");
+  extensions.emplace_back("log");
+  extensions.emplace_back("out");
+  extensions.emplace_back("nwchem");
   return extensions;
 }
 

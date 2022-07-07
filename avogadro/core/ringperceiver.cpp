@@ -400,7 +400,7 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
           size = 2 * D(i, j) + 1;
 
         if (size > 2)
-          candidates.push_back(RingCandidate(size, i, j));
+          candidates.emplace_back(size, i, j);
       }
     }
   }

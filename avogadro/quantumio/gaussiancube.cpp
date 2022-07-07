@@ -21,7 +21,7 @@ GaussianCube::~GaussianCube() {}
 std::vector<std::string> GaussianCube::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("cube");
+  extensions.emplace_back("cube");
   return extensions;
 }
 

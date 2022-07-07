@@ -892,14 +892,14 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 vector<std::string> CjsonFormat::fileExtensions() const
 {
   vector<std::string> ext;
-  ext.push_back("cjson");
+  ext.emplace_back("cjson");
   return ext;
 }
 
 vector<std::string> CjsonFormat::mimeTypes() const
 {
   vector<std::string> mime;
-  mime.push_back("chemical/x-cjson");
+  mime.emplace_back("chemical/x-cjson");
   return mime;
 }
 

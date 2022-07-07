@@ -129,7 +129,7 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
       idCartoon = 0;
     }
   }
-  m_type.push_back(make_pair(ct, idCartoon));
+  m_type.emplace_back(ct, idCartoon);
   BSplineGeometry::addPoint(pos, color, m_minRadius, group, id);
 }
 

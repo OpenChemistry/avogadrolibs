@@ -32,7 +32,7 @@ MopacAux::~MopacAux()
 std::vector<std::string> MopacAux::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("aux");
+  extensions.emplace_back("aux");
   return extensions;
 }
 

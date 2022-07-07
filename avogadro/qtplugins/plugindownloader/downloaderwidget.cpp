@@ -97,7 +97,7 @@ void DownloaderWidget::updateRepoData()
     m_ui->repoTable->setRowCount(numRepos);
     m_repoList.clear();
     for (int i = 0; i < numRepos; i++) {
-      m_repoList.push_back(repo());
+      m_repoList.emplace_back();
 
       const auto& currentRoot = m_root[i];
 

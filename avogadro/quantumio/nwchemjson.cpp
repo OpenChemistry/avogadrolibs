@@ -306,15 +306,15 @@ bool NWChemJson::write(std::ostream&, const Molecule&)
 vector<std::string> NWChemJson::fileExtensions() const
 {
   vector<std::string> ext;
-  ext.push_back("json");
-  ext.push_back("nwjson");
+  ext.emplace_back("json");
+  ext.emplace_back("nwjson");
   return ext;
 }
 
 vector<std::string> NWChemJson::mimeTypes() const
 {
   vector<std::string> mime;
-  mime.push_back("chemical/x-nwjson");
+  mime.emplace_back("chemical/x-nwjson");
   return mime;
 }
 

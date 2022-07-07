@@ -388,14 +388,14 @@ bool LammpsTrajectoryFormat::write(std::ostream& outStream,
 std::vector<std::string> LammpsTrajectoryFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("dump");
+  ext.emplace_back("dump");
   return ext;
 }
 
 std::vector<std::string> LammpsTrajectoryFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("text/lammps");
+  mime.emplace_back("text/lammps");
   return mime;
 }
 
@@ -561,14 +561,14 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> LammpsDataFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("lmpdat");
+  ext.emplace_back("lmpdat");
   return ext;
 }
 
 std::vector<std::string> LammpsDataFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("N/A");
+  mime.emplace_back("N/A");
   return mime;
 }
 

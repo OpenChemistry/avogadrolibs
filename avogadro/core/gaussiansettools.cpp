@@ -152,7 +152,7 @@ inline vector<double> GaussianSetTools::calculateValues(
 
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
-    deltas.push_back(pos -
+    deltas.emplace_back(pos -
                      (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
     dr2.push_back(deltas[i].squaredNorm());
   }

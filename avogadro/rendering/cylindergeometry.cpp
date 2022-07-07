@@ -294,8 +294,7 @@ void CylinderGeometry::addCylinder(const Vector3f& pos1, const Vector3f& pos2,
                                    const Vector3ub& colorEnd)
 {
   m_dirty = true;
-  m_cylinders.push_back(
-    CylinderColor(pos1, pos2, radius, colorStart, colorEnd));
+  m_cylinders.emplace_back(pos1, pos2, radius, colorStart, colorEnd);
   m_indices.push_back(m_indices.size());
 }
 

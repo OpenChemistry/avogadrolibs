@@ -34,7 +34,7 @@ void GroupNode::addChild(Node* node, NodeType ui)
     return;
   if (!hasChild(node)) {
     node->setParent(this);
-    m_children.push_back(NodeInfo(node, ui));
+    m_children.emplace_back(node, ui);
   }
 }
 

@@ -109,7 +109,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       charge = (charge > 4) ? ((charge <= 7) ? 4 - charge : 0)
                             : ((charge < 4) ? charge : 0);
       if (charge)
-        chargeList.push_back(chargePair(newAtom.index(), charge));
+        chargeList.emplace_back(newAtom.index(), charge);
       continue;
     } else {
       appendError("Error parsing atom block: " + buffer);
@@ -171,7 +171,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
           return false;
         }
         if (charge)
-          chargeList.push_back(chargePair(index, charge));
+          chargeList.emplace_back(index, charge);
       }
     }
   }
@@ -241,7 +241,7 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
     Atom atom = mol.atom(i);
     signed int charge = atom.formalCharge();
     if (charge)
-      chargeList.push_back(chargePair(atom.index(), charge));
+      chargeList.emplace_back(atom.index(), charge);
     unsigned int chargeField = (charge < 0) ? ((charge >= -3) ? 4 - charge : 0)
                                             : ((charge <= 3) ? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
@@ -277,15 +277,15 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 std::vector<std::string> MdlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("mol");
-  ext.push_back("sdf");
+  ext.emplace_back("mol");
+  ext.emplace_back("sdf");
   return ext;
 }
 
 std::vector<std::string> MdlFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-mdl-molfile");
+  mime.emplace_back("chemical/x-mdl-molfile");
   return mime;
 }
 

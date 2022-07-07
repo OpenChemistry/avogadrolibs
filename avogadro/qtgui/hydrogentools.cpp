@@ -245,7 +245,7 @@ void HydrogenTools::generateNewHydrogenPositions(
         allVectors, hybridization
     );
     allVectors.push_back(newPos);
-    positions.push_back(atom.position3d() + (newPos * bondLength));
+    positions.emplace_back(atom.position3d() + (newPos * bondLength));
   }
 }
 

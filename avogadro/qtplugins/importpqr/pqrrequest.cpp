@@ -110,7 +110,7 @@ void PQRRequest::parseJson()
     } else {
       table->setRowCount(resultSize);
       for (int i = 0; i < resultSize; i++) {
-        results.push_back(result());
+        results.emplace_back();
 
         // Loop through the keys
         for (auto it = root[i].cbegin(); it != root[i].cend(); ++it) {

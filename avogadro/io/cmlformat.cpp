@@ -679,14 +679,14 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 std::vector<std::string> CmlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("cml");
+  ext.emplace_back("cml");
   return ext;
 }
 
 std::vector<std::string> CmlFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-cml");
+  mime.emplace_back("chemical/x-cml");
   return mime;
 }
 

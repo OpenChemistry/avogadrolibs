@@ -408,14 +408,14 @@ bool TrrFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> TrrFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("trr");
+  ext.emplace_back("trr");
   return ext;
 }
 
 std::vector<std::string> TrrFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("application/octet-stream");
+  mime.emplace_back("application/octet-stream");
   return mime;
 }
 

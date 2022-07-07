@@ -310,14 +310,14 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> PoscarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("POSCAR");
+  ext.emplace_back("POSCAR");
   return ext;
 }
 
 std::vector<std::string> PoscarFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("N/A");
+  mime.emplace_back("N/A");
   return mime;
 }
 
@@ -452,14 +452,14 @@ bool OutcarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> OutcarFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("OUTCAR");
+  ext.emplace_back("OUTCAR");
   return ext;
 }
 
 std::vector<std::string> OutcarFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("N/A");
+  mime.emplace_back("N/A");
   return mime;
 }
 
