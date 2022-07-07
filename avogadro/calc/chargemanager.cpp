@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <memory>
 
-using std::unique_ptr;
 
 namespace Avogadro::Calc {
 
@@ -89,9 +88,8 @@ ChargeManager::ChargeManager()
 ChargeManager::~ChargeManager()
 {
   // Delete the models that were loaded.
-  for (auto it = m_models.begin();
-       it != m_models.end(); ++it) {
-    delete (*it);
+  for (auto & m_model : m_models) {
+    delete m_model;
   }
   m_models.clear();
 }

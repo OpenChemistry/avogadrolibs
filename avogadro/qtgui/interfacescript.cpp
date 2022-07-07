@@ -545,7 +545,7 @@ void InterfaceScript::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
+  QRegExp coordParser(R"(\$\$coords:([^\$]*)\$\$)");
   int ind = 0;
   while ((ind = coordParser.indexIn(str, ind)) != -1) {
     // Extract spec and prepare the replacement

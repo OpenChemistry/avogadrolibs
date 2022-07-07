@@ -24,19 +24,10 @@ namespace Avogadro::Io {
 using std::string;
 using std::vector;
 
-using Core::Array;
-using Core::Atom;
-using Core::BasisSet;
-using Core::Bond;
-using Core::CrystalTools;
-using Core::Cube;
 using Core::Elements;
-using Core::GaussianSet;
 using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::split;
-using Core::Variant;
 
 MMTFFormat::MMTFFormat() = default;
 

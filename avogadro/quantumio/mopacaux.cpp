@@ -19,7 +19,6 @@ using std::endl;
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
-using Core::BasisSet;
 using Core::SlaterSet;
 
 MopacAux::MopacAux()

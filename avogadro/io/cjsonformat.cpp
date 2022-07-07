@@ -33,14 +33,11 @@ using Core::BasisSet;
 using Core::Bond;
 using Core::CrystalTools;
 using Core::Cube;
-using Core::Elements;
 using Core::GaussianSet;
 using Core::LayerData;
 using Core::LayerManager;
-using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::split;
 using Core::Variant;
 
 CjsonFormat::CjsonFormat() = default;
@@ -742,12 +739,10 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         Array<Vector3> fcoords;
         CrystalTools::fractionalCoordinates(
           *molecule.unitCell(), molecule.atomPositions3d(), fcoords);
-        for (auto it = fcoords.begin(),
-                                             itEnd = fcoords.end();
-             it != itEnd; ++it) {
-          coordsFractional.push_back(it->x());
-          coordsFractional.push_back(it->y());
-          coordsFractional.push_back(it->z());
+        for (auto & fcoord : fcoords) {
+          coordsFractional.push_back(fcoord.x());
+          coordsFractional.push_back(fcoord.y());
+          coordsFractional.push_back(fcoord.z());
         }
         root["atoms"]["coords"]["3dFractional"] = coordsFractional;
       }

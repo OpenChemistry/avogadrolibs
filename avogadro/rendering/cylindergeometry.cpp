@@ -111,14 +111,12 @@ void CylinderGeometry::update()
       ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
       const auto tubeStart =
         static_cast<unsigned int>(cylinderVertices.size());
-      for (auto it = radials.begin(),
-                                                 itEnd = radials.end();
-           it != itEnd; ++it) {
-        vert.normal = *it;
-        vert.vertex = position1 + *it;
+      for (auto & radial : radials) {
+        vert.normal = radial;
+        vert.vertex = position1 + radial;
         cylinderVertices.push_back(vert);
         vert2.normal = vert.normal;
-        vert2.vertex = position2 + *it;
+        vert2.vertex = position2 + radial;
         cylinderVertices.push_back(vert2);
       }
       // Now to stitch it together.

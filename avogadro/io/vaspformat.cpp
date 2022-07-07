@@ -252,10 +252,8 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   // A map of atomic symbols to their quantity.
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (auto it = atomicNumbers.begin(),
-                                            itEnd = atomicNumbers.end();
-       it != itEnd; ++it) {
-    composition[*it]++;
+  for (unsigned char & atomicNumber : atomicNumbers) {
+    composition[atomicNumber]++;
   }
 
   // Atom symbols

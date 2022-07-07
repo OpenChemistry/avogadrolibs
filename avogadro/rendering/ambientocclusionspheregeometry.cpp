@@ -1124,9 +1124,8 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate center
     Vector3f center(Vector3f::Zero());
-    for (auto i = m_spheres.begin();
-         i != m_spheres.end(); ++i)
-      center += i->center;
+    for (auto & m_sphere : m_spheres)
+      center += m_sphere.center;
     center /= static_cast<float>(nSpheres);
 
     /*
@@ -1138,10 +1137,9 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate radius
     float radius = 0.0f;
-    for (auto i = m_spheres.begin();
-         i != m_spheres.end(); ++i)
-      if ((i->center - center).norm() > radius)
-        radius = (i->center - center).norm();
+    for (auto & m_sphere : m_spheres)
+      if ((m_sphere.center - center).norm() > radius)
+        radius = (m_sphere.center - center).norm();
 
     for (unsigned int i = 0;
          itIndex != m_indices.end() && itSphere != m_spheres.end();

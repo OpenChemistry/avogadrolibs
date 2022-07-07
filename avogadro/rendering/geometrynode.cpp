@@ -26,17 +26,15 @@ GeometryNode::~GeometryNode()
 void GeometryNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (auto it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    (*it)->accept(visitor);
+  for (auto & m_drawable : m_drawables) {
+    m_drawable->accept(visitor);
   }
 }
 
 void GeometryNode::addDrawable(Drawable* object)
 {
-  for (auto it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    if (*it == object)
+  for (auto & m_drawable : m_drawables) {
+    if (m_drawable == object)
       return;
   }
   object->setParent(this);
@@ -69,9 +67,8 @@ Drawable* GeometryNode::drawable(size_t index)
 void GeometryNode::clearDrawables()
 {
   // Like all good parents, we destroy our children before we go...
-  for (auto it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    delete (*it);
+  for (auto & m_drawable : m_drawables) {
+    delete m_drawable;
   }
   m_drawables.clear();
 }

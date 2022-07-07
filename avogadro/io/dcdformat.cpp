@@ -19,10 +19,7 @@
 #include <sstream>
 #include <string>
 
-using std::endl;
-using std::getline;
 using std::map;
-using std::pair;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -31,15 +28,10 @@ namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
-using Core::Elements;
-using Core::lexicalCast;
 using Core::Molecule;
-using Core::split;
-using Core::trimmed;
 using Core::UnitCell;
 
 #ifndef _WIN32
-using std::isalpha;
 #endif
 
 #define DCD_EOF -1

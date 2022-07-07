@@ -18,8 +18,6 @@
 
 namespace Avogadro::QuantumIO {
 
-using std::cout;
-using std::endl;
 using std::string;
 using std::vector;
 
@@ -27,14 +25,9 @@ using nlohmann::json;
 
 using Core::Array;
 using Core::Atom;
-using Core::BasisSet;
-using Core::Bond;
-using Core::CrystalTools;
-using Core::Elements;
 using Core::GaussianSet;
 using Core::Molecule;
 using Core::split;
-using Core::Variant;
 
 NWChemJson::NWChemJson() {}
 

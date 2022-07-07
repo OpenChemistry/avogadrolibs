@@ -217,16 +217,15 @@ void FileFormatScript::readMetaData()
   // validate operations:
   Operations operationsTmp = Io::FileFormat::None;
   typedef std::vector<std::string>::const_iterator StringVectorIter;
-  for (auto it = opStringsTmp.begin(), itEnd = opStringsTmp.end();
-       it != itEnd; ++it) {
-    if (*it == "read")
+  for (auto & it : opStringsTmp) {
+    if (it == "read")
       operationsTmp |= Io::FileFormat::Read;
-    else if (*it == "write")
+    else if (it == "write")
       operationsTmp |= Io::FileFormat::Write;
     else {
       qWarning() << "Error parsing metadata for file format script:"
                  << scriptFilePath() << "\n"
-                 << "Unrecognized operation:" << it->c_str() << "\n"
+                 << "Unrecognized operation:" << it.c_str() << "\n"
                  << output;
       return;
     }

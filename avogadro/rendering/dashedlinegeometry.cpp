@@ -24,7 +24,6 @@ namespace {
 #include "dashedline_vs.h"
 }
 
-using Avogadro::Core::Array;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;

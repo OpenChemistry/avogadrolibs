@@ -24,7 +24,6 @@ using Core::GaussianSet;
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
-using Core::Unknown;
 
 GaussianFchk::GaussianFchk() : m_scftype(Rhf)
 {

@@ -26,7 +26,7 @@ const char MATRIX_FMT = 'f';
 
 // Valid value separators in matrix editors:
 const static QRegExp MATRIX_SEP(
-  "\\s|,|;|\\||\\[|\\]|\\{|\\}|\\(|\\)|\\&|/|<|>");
+  R"(\s|,|;|\||\[|\]|\{|\}|\(|\)|\&|/|<|>)");
 }
 
 namespace Avogadro::QtPlugins {

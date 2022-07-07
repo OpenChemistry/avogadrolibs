@@ -16,9 +16,7 @@
 
 namespace Avogadro::Rendering {
 
-using std::cout;
 using std::string;
-using std::endl;
 using std::ostringstream;
 using std::ostream;
 using std::ofstream;

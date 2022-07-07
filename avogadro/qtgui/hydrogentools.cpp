@@ -98,11 +98,9 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
     if (doAdd && hDiff > 0) {
       newHPos.clear();
       generateNewHydrogenPositions(atom, hDiff, newHPos);
-      for (auto it = newHPos.begin(),
-                                                itEnd = newHPos.end();
-           it != itEnd; ++it) {
+      for (auto & newHPo : newHPos) {
         RWAtom newH(molecule.addAtom(1));
-        newH.setPosition3d(*it);
+        newH.setPosition3d(newHPo);
         molecule.addBond(atom, newH, 1);
       }
     }
@@ -165,11 +163,9 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     // Temporary container for calls to generateNewHydrogenPositions.
     std::vector<Vector3> newHPos;
     generateNewHydrogenPositions(atom, hDiff, newHPos);
-    for (auto it = newHPos.begin(),
-                                              itEnd = newHPos.end();
-         it != itEnd; ++it) {
+    for (auto & newHPo : newHPos) {
       RWAtom newH(molecule->addAtom(1));
-      newH.setPosition3d(*it);
+      newH.setPosition3d(newHPo);
       molecule->addBond(atom, newH, 1);
     }
   }

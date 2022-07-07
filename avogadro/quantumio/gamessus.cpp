@@ -34,7 +34,6 @@ using Core::GaussianSet;
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
-using Core::Unknown;
 
 GAMESSUSOutput::GAMESSUSOutput() : m_coordFactor(1.0), m_scftype(Rhf)
 {

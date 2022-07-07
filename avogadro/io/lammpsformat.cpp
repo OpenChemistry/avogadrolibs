@@ -39,7 +39,6 @@ using Core::trimmed;
 using Core::UnitCell;
 
 #ifndef _WIN32
-using std::isalpha;
 #endif
 
 LammpsTrajectoryFormat::LammpsTrajectoryFormat() {}
@@ -433,11 +432,9 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   size_t idx = 1;
   Array<unsigned char> atomicNumbers = mol2.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (auto it = atomicNumbers.begin(),
-                                            itEnd = atomicNumbers.end();
-       it != itEnd; ++it) {
-    if (composition.find(*it) == composition.end()) {
-      composition[*it] = idx++;
+  for (unsigned char & atomicNumber : atomicNumbers) {
+    if (composition.find(atomicNumber) == composition.end()) {
+      composition[atomicNumber] = idx++;
     }
   }
 

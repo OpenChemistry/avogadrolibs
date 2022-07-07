@@ -19,7 +19,6 @@
 
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;

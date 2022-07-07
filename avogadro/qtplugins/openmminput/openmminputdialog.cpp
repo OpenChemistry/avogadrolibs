@@ -1014,17 +1014,17 @@ QString OpenMMInputDialog::generateInputDeck()
   scriptStream << "platform = mm.Platform.getPlatformByName(\'"
                << getPlatformType(m_platformType) << "\')\n";
   if (m_platformType == CUDA) {
-    scriptStream << "properties = {\'CudaPrecision\': \'"
+    scriptStream << R"(properties = {'CudaPrecision': ')"
                  << getPrecisionType(m_precisionType) << "\'";
     if (m_deviceIndex > 0) {
-      scriptStream << ", \'CudaDeviceIndex\': \'" << m_deviceIndex << "\'";
+      scriptStream << R"(, 'CudaDeviceIndex': ')" << m_deviceIndex << "\'";
     }
     scriptStream << "}\n";
   } else if (m_platformType == OpenCL) {
-    scriptStream << "properties = {\'OpenCLPrecision\': \'"
+    scriptStream << R"(properties = {'OpenCLPrecision': ')"
                  << getPrecisionType(m_precisionType) << "\'";
     if (m_openclPlatformIndex > 0) {
-      scriptStream << ", \'OpenCLPlatformIndex\': \'" << m_openclPlatformIndex
+      scriptStream << R"(, 'OpenCLPlatformIndex': ')" << m_openclPlatformIndex
                    << "\'";
     }
     if (m_deviceIndex > 0) {
@@ -1032,7 +1032,7 @@ QString OpenMMInputDialog::generateInputDeck()
       if (m_openclPlatformIndex > 0) {
         scriptStream << "\n              ";
       }
-      scriptStream << "\'OpenCLDeviceIndex\': \'" << m_deviceIndex << "\'";
+      scriptStream << R"('OpenCLDeviceIndex': ')" << m_deviceIndex << "\'";
     }
     scriptStream << "}\n";
   }

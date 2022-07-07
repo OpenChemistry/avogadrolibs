@@ -19,12 +19,7 @@ using std::endl;
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
-using Core::BasisSet;
 using Core::GaussianSet;
-using Core::Rhf;
-using Core::Uhf;
-using Core::Rohf;
-using Core::Unknown;
 
 MoldenFile::MoldenFile()
   : m_coordFactor(1.0), m_electrons(0), m_mode(Unrecognized)

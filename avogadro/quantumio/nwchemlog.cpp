@@ -13,14 +13,10 @@
 
 using std::vector;
 using std::string;
-using std::cout;
-using std::endl;
 
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
-using Core::BasisSet;
-using Core::GaussianSet;
 
 NWChemLog::NWChemLog()
 {

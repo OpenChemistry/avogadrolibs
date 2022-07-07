@@ -133,9 +133,8 @@ bool FileFormatManager::addFormat(FileFormat* format)
     appendError("Format " + format->identifier() + " already loaded.");
     return false;
   }
-  for (auto it = m_formats.begin();
-       it != m_formats.end(); ++it) {
-    if (*it == format) {
+  for (auto & m_format : m_formats) {
+    if (m_format == format) {
       appendError("The format object was already loaded.");
       return false;
     }
@@ -146,14 +145,12 @@ bool FileFormatManager::addFormat(FileFormat* format)
   m_formats.push_back(format);
   m_identifiers[format->identifier()].push_back(index);
   std::vector<std::string> mimes = format->mimeTypes();
-  for (auto it = mimes.begin();
-       it != mimes.end(); ++it) {
-    m_mimeTypes[*it].push_back(index);
+  for (auto & mime : mimes) {
+    m_mimeTypes[mime].push_back(index);
   }
   std::vector<std::string> extensions = format->fileExtensions();
-  for (auto it = extensions.begin();
-       it != extensions.end(); ++it) {
-    m_fileExtensions[*it].push_back(index);
+  for (auto & extension : extensions) {
+    m_fileExtensions[extension].push_back(index);
   }
 
   return true;
@@ -190,17 +187,16 @@ bool FileFormatManager::removeFormat(const std::string& identifier)
   if (ids.empty())
     return false;
 
-  for (auto it = ids.begin(), itEnd = ids.end();
-       it != itEnd; ++it) {
-    FileFormat* fmt = m_formats[*it];
+  for (unsigned long & id : ids) {
+    FileFormat* fmt = m_formats[id];
 
     if (fmt == nullptr)
       continue;
 
-    removeFromMap(m_mimeTypes, fmt->mimeTypes(), *it);
-    removeFromMap(m_fileExtensions, fmt->fileExtensions(), *it);
+    removeFromMap(m_mimeTypes, fmt->mimeTypes(), id);
+    removeFromMap(m_fileExtensions, fmt->fileExtensions(), id);
 
-    m_formats[*it] = nullptr;
+    m_formats[id] = nullptr;
     delete fmt;
   }
 
@@ -306,9 +302,8 @@ FileFormatManager::FileFormatManager()
 FileFormatManager::~FileFormatManager()
 {
   // Delete the file formats that were loaded.
-  for (auto it = m_formats.begin();
-       it != m_formats.end(); ++it) {
-    delete (*it);
+  for (auto & m_format : m_formats) {
+    delete m_format;
   }
   m_formats.clear();
 }

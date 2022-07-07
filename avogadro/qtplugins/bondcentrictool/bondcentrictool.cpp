@@ -369,9 +369,8 @@ QUndoCommand* BondCentricTool::mousePressEvent(QMouseEvent* e)
   RWAtom anchorAtom;
   if (!atomIsInBond) {
     Array<RWBond> bonds = m_molecule->bonds(clickedAtom);
-    for (auto it = bonds.begin(), itEnd = bonds.end();
-         it != itEnd; ++it) {
-      RWAtom atom = it->getOtherAtom(clickedAtom);
+    for (auto & bond : bonds) {
+      RWAtom atom = bond.getOtherAtom(clickedAtom);
       if (bondContainsAtom(selectedBond, atom)) {
         anchorAtom = atom;
         atomIsNearBond = true;
@@ -1186,16 +1185,16 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
 {
   Array<RWBond> bonds = m_molecule->bonds(currentAtom);
   typedef std::vector<RWBond>::const_iterator BondIter;
-  for (auto it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
-    if (*it != bond) { // Skip the current bond
-      RWAtom nextAtom = it->getOtherAtom(currentAtom);
+  for (auto & it : bonds) {
+    if (it != bond) { // Skip the current bond
+      RWAtom nextAtom = it.getOtherAtom(currentAtom);
       if (nextAtom != startAtom) {
         // Skip atoms that have already been added. This prevents infinite
         // recursion on cycles in the fragments
         int uid = m_molecule->atomUniqueId(nextAtom);
         if (!fragmentHasAtom(uid)) {
           m_fragment.push_back(uid);
-          if (!buildFragmentRecurse(*it, startAtom, nextAtom))
+          if (!buildFragmentRecurse(it, startAtom, nextAtom))
             return false;
         }
       } else {
