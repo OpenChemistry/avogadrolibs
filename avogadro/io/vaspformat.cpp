@@ -108,8 +108,8 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     // Assume atomic symbols are here and store them
     symbolsList = split(line, ' ');
     // Store atomic nums
-    for (size_t i = 0; i < symbolsList.size(); ++i)
-      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(symbolsList[i]));
+    for (auto & i : symbolsList)
+      atomicNumbers.push_back(Elements::atomicNumberFromSymbol(i));
     // This next one should be atom types
     getline(inStream, line);
   }
@@ -120,22 +120,22 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (stringSplit.size() != 0) {
       string trimmedFormula = trimmed(stringSplit.at(0));
       // Let's replace all numbers with spaces
-      for (size_t i = 0; i < trimmedFormula.size(); ++i) {
-        if (isdigit(trimmedFormula.at(i)))
-          trimmedFormula[i] = ' ';
+      for (char & i : trimmedFormula) {
+        if (isdigit(i))
+          i = ' ';
       }
       // Now get the symbols with a simple space split
       symbolsList = split(trimmedFormula, ' ');
-      for (size_t i = 0; i < symbolsList.size(); ++i)
+      for (auto & i : symbolsList)
         atomicNumbers.push_back(
-          Elements::atomicNumberFromSymbol(symbolsList.at(i)));
+          Elements::atomicNumberFromSymbol(i));
     }
   }
 
   stringSplit = split(line, ' ');
   vector<unsigned int> atomCounts;
-  for (size_t i = 0; i < stringSplit.size(); ++i) {
-    unsigned int atomCount = lexicalCast<unsigned int>(stringSplit.at(i));
+  for (auto & i : stringSplit) {
+    unsigned int atomCount = lexicalCast<unsigned int>(i);
     atomCounts.push_back(atomCount);
   }
 
@@ -177,8 +177,8 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   vector<Vector3> atoms;
-  for (size_t i = 0; i < atomCounts.size(); ++i) {
-    for (size_t j = 0; j < atomCounts.at(i); ++j) {
+  for (unsigned int atomCount : atomCounts) {
+    for (size_t j = 0; j < atomCount; ++j) {
       getline(inStream, line);
       stringSplit = split(line, ' ');
       // This may be greater than 3 with selective dynamics
@@ -198,13 +198,13 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // If our atomic coordinates are fractional, convert them to Cartesian
   if (!cart) {
-    for (size_t i = 0; i < atoms.size(); ++i)
-      atoms[i] = cell->toCartesian(atoms.at(i));
+    for (auto & atom : atoms)
+      atom = cell->toCartesian(atom);
   }
   // If they're cartesian, we just need to apply the scaling factor
   else {
-    for (size_t i = 0; i < atoms.size(); ++i)
-      atoms[i] *= scalingFactor;
+    for (auto & atom : atoms)
+      atom *= scalingFactor;
   }
 
   // If we made it this far, the read was a success!
@@ -437,10 +437,8 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+    for (const auto & atomType : atomTypes) {
+      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }

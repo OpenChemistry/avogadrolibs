@@ -74,8 +74,8 @@ bool Mesh::addVertices(const Core::Array<Vector3f>& values)
   if (m_vertices.capacity() < m_vertices.size() + values.size())
     m_vertices.reserve(m_vertices.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (unsigned int i = 0; i < values.size(); ++i)
-      m_vertices.push_back(values.at(i));
+    for (const auto & value : values)
+      m_vertices.push_back(value);
     return true;
   } else {
     return false;
@@ -104,8 +104,8 @@ bool Mesh::addNormals(const Core::Array<Vector3f>& values)
   if (m_normals.capacity() < m_normals.size() + values.size())
     m_normals.reserve(m_normals.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (unsigned int i = 0; i < values.size(); ++i)
-      m_normals.push_back(values.at(i));
+    for (const auto & value : values)
+      m_normals.push_back(value);
     return true;
   } else {
     return false;
@@ -138,8 +138,8 @@ bool Mesh::addColors(const Core::Array<Color3f>& values)
   if (m_colors.capacity() < m_colors.size() + values.size())
     m_colors.reserve(m_colors.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (unsigned int i = 0; i < values.size(); ++i)
-      m_colors.push_back(values.at(i));
+    for (auto value : values)
+      m_colors.push_back(value);
     return true;
   } else {
     return false;
@@ -255,9 +255,9 @@ void Mesh::smooth(int iterationCount)
   }
 
   // Recompute normals
-  for (size_t id = 0; id < vertexIDToIndices.size(); id++) {
+  for (auto & vertexIDToIndice : vertexIDToIndices) {
     Vector3f normal(0.0f, 0.0f, 0.0f);
-    for (size_t v: vertexIDToIndices[id]) {
+    for (size_t v: vertexIDToIndice) {
       size_t relative = v % 3;
       size_t triangle = v - relative;
       Vector3f &a = m_vertices[v];
@@ -266,7 +266,7 @@ void Mesh::smooth(int iterationCount)
       Vector3f triangleNormal = (b - a).cross(c - a);
       normal += triangleNormal.normalized();
     }
-    for (size_t i: vertexIDToIndices[id])
+    for (size_t i: vertexIDToIndice)
       m_normals[i] = normal.normalized();
   }
 }

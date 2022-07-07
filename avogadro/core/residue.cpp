@@ -55,9 +55,8 @@ void Residue::addResidueAtom(const std::string& name, const Atom& atom)
 std::vector<Atom> Residue::residueAtoms() const
 {
   std::vector<Atom> res;
-  for (AtomNameMap::const_iterator it = m_atomNameMap.begin();
-       it != m_atomNameMap.end(); ++it) {
-    res.push_back(it->second);
+  for (const auto & it : m_atomNameMap) {
+    res.push_back(it.second);
   }
   return res;
 }

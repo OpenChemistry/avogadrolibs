@@ -184,14 +184,14 @@ inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
 {
   centroid = Vector3::Zero();
 
-  for (unsigned int i = 0; i < mols.size(); ++i)
-    centroid += mols[i];
+  for (const auto & mol : mols)
+    centroid += mol;
 
   centroid /= (double)mols.size();
   Matrix3d covariance = Matrix3::Zero();
 
-  for (unsigned int i = 0; i < mols.size(); ++i) {
-    Vector3d adjusted = mols[i] - centroid;
+  for (const auto & mol : mols) {
+    Vector3d adjusted = mol - centroid;
     covariance += adjusted * adjusted.transpose();
   }
   covariance /= (double)mols.size();

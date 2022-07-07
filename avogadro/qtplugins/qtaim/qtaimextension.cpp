@@ -275,14 +275,13 @@ void QTAIMExtension::triggered()
                   ellipticityAtBondCriticalPoints.at(bondPair));
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
-                for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                     ++j) {
+                for (auto j : bondPathList.at(bondPair)) {
                   x =
-                    bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    j.x() * convertBohrToAngstrom;
                   y =
-                    bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    j.y() * convertBohrToAngstrom;
                   z =
-                    bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
+                    j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -451,14 +450,13 @@ void QTAIMExtension::triggered()
                   ellipticityAtBondCriticalPoints.at(bondPair));
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
-                for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                     ++j) {
+                for (auto j : bondPathList.at(bondPair)) {
                   x =
-                    bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    j.x() * convertBohrToAngstrom;
                   y =
-                    bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    j.y() * convertBohrToAngstrom;
                   z =
-                    bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
+                    j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -508,9 +506,7 @@ void QTAIMExtension::triggered()
       QVariantList yElectronDensitySourcesVariantList;
       QVariantList zElectronDensitySourcesVariantList;
 
-      for (qint64 n = 0; n < electronDensitySourcesList.length(); ++n) {
-        QVector3D thisCriticalPoint = electronDensitySourcesList.at(n);
-
+      for (auto thisCriticalPoint : electronDensitySourcesList) {
         qreal x = thisCriticalPoint.x() * convertBohrToAngstrom;
         qreal y = thisCriticalPoint.y() * convertBohrToAngstrom;
         qreal z = thisCriticalPoint.z() * convertBohrToAngstrom;
@@ -665,13 +661,12 @@ void QTAIMExtension::triggered()
                     ellipticityAtBondCriticalPoints.at(bondPair));
 
                   bondPathSegmentStartIndexVariantList.append(bpCtr);
-                  for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                       ++j) {
-                    x = bondPathList.at(bondPair).at(j).x() *
+                  for (auto j : bondPathList.at(bondPair)) {
+                    x = j.x() *
                         convertBohrToAngstrom;
-                    y = bondPathList.at(bondPair).at(j).y() *
+                    y = j.y() *
                         convertBohrToAngstrom;
-                    z = bondPathList.at(bondPair).at(j).z() *
+                    z = j.z() *
                         convertBohrToAngstrom;
 
                     xBondPathsVariantList.append(x);

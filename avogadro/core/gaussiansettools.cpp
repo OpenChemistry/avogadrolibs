@@ -248,8 +248,8 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 6; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   double componentsD[6] = { delta.x() * delta.x(),   // xx
@@ -281,8 +281,8 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 5; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   // Calculate the prefactors
@@ -320,8 +320,8 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 10; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   double xxx = delta.x() * delta.x() * delta.x(); // xxx
@@ -373,8 +373,8 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 7; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   double xxx = delta.x() * delta.x() * delta.x(); // xxx

@@ -71,13 +71,13 @@ int isDouble(map<string, int>& header)
   int size = 0;
   string headerKeys[] = { "box_size", "x_size", "v_size", "f_size" };
 
-  for (int i = 0; i < (int)(sizeof(headerKeys) / sizeof(*headerKeys)); i++) {
-    if (header[headerKeys[i]] != 0) {
-      if (headerKeys[i] == "box_size") {
-        size = (int)(header[headerKeys[i]] / DIM * DIM);
+  for (auto & headerKey : headerKeys) {
+    if (header[headerKey] != 0) {
+      if (headerKey == "box_size") {
+        size = (int)(header[headerKey] / DIM * DIM);
         break;
       } else {
-        size = (int)(header[headerKeys[i]] / (header["natoms"] * DIM));
+        size = (int)(header[headerKey] / (header["natoms"] * DIM));
         break;
       }
     }
@@ -162,8 +162,8 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
-  for (int _kid = 0; _kid < 3; ++_kid) {
-    if (header[keyCheck[_kid]] != 0) {
+  for (auto & _kid : keyCheck) {
+    if (header[_kid] != 0) {
       if (doubleStatus) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, DIM * DIM);
         double mat[DIM][DIM];
@@ -171,7 +171,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
         struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2], &mat[1][0],
                       &mat[1][1], &mat[1][2], &mat[2][0], &mat[2][1],
                       &mat[2][2]);
-        if (keyCheck[_kid] == "box_size") {
+        if (_kid == "box_size") {
           mol.setUnitCell(new UnitCell(
             Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                     mat[0][2] * NM_TO_ANGSTROM),
@@ -187,7 +187,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
         struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2], &mat[1][0],
                       &mat[1][1], &mat[1][2], &mat[2][0], &mat[2][1],
                       &mat[2][2]);
-        if (keyCheck[_kid] == "box_size") {
+        if (_kid == "box_size") {
           mol.setUnitCell(new UnitCell(
             Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                     mat[0][2] * NM_TO_ANGSTROM),
@@ -205,12 +205,12 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   unsigned char customElementCounter = CustomElementMin;
 
   // Reading the coordinates of positions, velocities and forces
-  for (int _kid = 0; _kid < 3; ++_kid) {
+  for (auto & _kid : keyCheck2) {
     natoms = header["natoms"];
     double coordsDouble[DIM];
     float coordsFloat[DIM];
     for (int i = 0; i < natoms; ++i) {
-      if (header[keyCheck2[_kid]] != 0) {
+      if (header[_kid] != 0) {
         memset(coordsDouble, 0, sizeof(coordsDouble));
         memset(coordsFloat, 0, sizeof(coordsFloat));
         if (doubleStatus) {
@@ -225,7 +225,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                         &coordsFloat[2]);
         }
 
-        if (keyCheck2[_kid] == "x_size") {
+        if (_kid == "x_size") {
           // If parsed coordinates are fractional, the corresponding unscaling
           // is done. Else the positions are assigned as parsed.
           Vector3 pos(
@@ -251,10 +251,8 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     // Set the custom element map if needed
     if (!atomTypes.empty()) {
       Molecule::CustomElementMap elementMap;
-      for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                       itEnd = atomTypes.end();
-           it != itEnd; ++it) {
-        elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+      for (const auto & atomType : atomTypes) {
+        elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
       }
       mol.setCustomElementMap(elementMap);
     }
@@ -325,8 +323,8 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
-    for (int _kid = 0; _kid < 3; ++_kid) {
-      if (header[keyCheck[_kid]] != 0) {
+    for (auto & _kid : keyCheck) {
+      if (header[_kid] != 0) {
         natoms = header["natoms"];
         if (doubleStatus) {
           snprintf(fmt, sizeof(fmt), "%c%dd", endian, DIM * DIM);
@@ -335,7 +333,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
           struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2],
                         &mat[1][0], &mat[1][1], &mat[1][2], &mat[2][0],
                         &mat[2][1], &mat[2][2]);
-          if (keyCheck[_kid] == "box_size") {
+          if (_kid == "box_size") {
             mol.setUnitCell(new UnitCell(
               Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                       mat[0][2] * NM_TO_ANGSTROM),
@@ -351,7 +349,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
           struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2],
                         &mat[1][0], &mat[1][1], &mat[1][2], &mat[2][0],
                         &mat[2][1], &mat[2][2]);
-          if (keyCheck[_kid] == "box_size") {
+          if (_kid == "box_size") {
             mol.setUnitCell(new UnitCell(
               Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                       mat[0][2] * NM_TO_ANGSTROM),
@@ -369,11 +367,11 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     positions.reserve(natoms);
 
     // Reading the coordinates of positions, velocities and forces
-    for (int _kid = 0; _kid < 3; ++_kid) {
+    for (auto & _kid : keyCheck2) {
       double coordsDouble[DIM];
       float coordsFloat[DIM];
       for (int i = 0; i < natoms; ++i) {
-        if (header[keyCheck2[_kid]] != 0) {
+        if (header[_kid] != 0) {
           memset(coordsDouble, 0, sizeof(coordsDouble));
           memset(coordsFloat, 0, sizeof(coordsFloat));
           if (doubleStatus) {
@@ -388,7 +386,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                           &coordsFloat[2]);
           }
 
-          if (keyCheck2[_kid] == "x_size") {
+          if (_kid == "x_size") {
             // If parsed coordinates are fractional, the corresponding unscaling
             // is done. Else the positions are assigned as parsed.
             Vector3 pos(coordsDouble[0] * NM_TO_ANGSTROM +

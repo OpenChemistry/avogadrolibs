@@ -231,10 +231,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     if (leadingNum == 48) {
       double unitcell[6];
-      for (int aa = 0; aa < 6; ++aa) {
+      for (double & aa : unitcell) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
         inStream.read(buff, struct_calcsize(fmt));
-        struct_unpack(buff, fmt, &unitcell[aa]);
+        struct_unpack(buff, fmt, &aa);
       }
       if (unitcell[1] >= -1.0 && unitcell[1] <= 1.0 && unitcell[3] >= -1.0 &&
           unitcell[3] <= 1.0 && unitcell[4] >= -1.0 && unitcell[4] <= 1.0) {
@@ -334,10 +334,8 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+    for (const auto & atomType : atomTypes) {
+      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }

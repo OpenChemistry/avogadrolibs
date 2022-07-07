@@ -108,8 +108,8 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     std::vector<float> values;
     // push_back is slow for this, resize vector first
     values.resize(dim(0) * dim(1) * dim(2));
-    for (unsigned int j = 0; j < values.size(); ++j)
-      in >> values[j];
+    for (float & value : values)
+      in >> value;
     // clear buffer, if more than one cube
     getline(in, line);
     cube->setData(values);

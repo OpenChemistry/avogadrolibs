@@ -112,8 +112,8 @@ void RWMolecule::adjustHydrogens(Index atomId)
 void RWMolecule::adjustHydrogens(const Core::Array<Index>& atomIds)
 {
   m_undoStack.beginMacro(tr("Adjust Hydrogens"));
-  for (Index i = 0; i < atomIds.size(); ++i) {
-    adjustHydrogens(atomIds[i]);
+  for (unsigned long atomId : atomIds) {
+    adjustHydrogens(atomId);
   }
   m_undoStack.endMacro();
 }

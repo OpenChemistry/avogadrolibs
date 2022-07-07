@@ -116,8 +116,7 @@ void POVRayVisitor::visit(Drawable& geometry)
 void POVRayVisitor::visit(SphereGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.spheres().size(); ++i) {
-    Rendering::SphereColor s = geometry.spheres()[i];
+  for (auto s : geometry.spheres()) {
     str << "sphere {\n\t<" << s.center << ">, " << s.radius
         << "\n\tpigment { rgbt <" << s.color << ", 0.0> }\n}\n";
   }
@@ -132,8 +131,7 @@ void POVRayVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.cylinders().size(); ++i) {
-    Rendering::CylinderColor c = geometry.cylinders()[i];
+  for (auto c : geometry.cylinders()) {
     str << "cylinder {\n"
         << "\t<" << c.end1 << ">,\n"
         << "\t<" << c.end2 << ">, " << c.radius << "\n\tpigment { rgbt <"
@@ -163,8 +161,8 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  for (size_t i = 0; i < v.size(); ++i)
-    str << "texture{pigment{rgb<" << v[i].normal << ">}\n";
+  for (auto & i : v)
+    str << "texture{pigment{rgb<" << i.normal << ">}\n";
   str << "\n}\n";
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {

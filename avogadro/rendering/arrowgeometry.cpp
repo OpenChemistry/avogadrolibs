@@ -96,13 +96,12 @@ void ArrowGeometry::render(const Camera& camera)
   }
 
   // Render the arrows using the shader.
-  for (unsigned int startIndex = 0; startIndex < m_vertices.size();
-       ++startIndex) {
+  for (auto & m_vertice : m_vertices) {
     Vector3f v3 =
-      m_vertices[startIndex].first +
-      0.8 * (m_vertices[startIndex].second - m_vertices[startIndex].first);
-    drawLine(m_vertices[startIndex].first, v3, 2);
-    drawCone(v3, m_vertices[startIndex].second, 0.05, 1.0);
+      m_vertice.first +
+      0.8 * (m_vertice.second - m_vertice.first);
+    drawLine(m_vertice.first, v3, 2);
+    drawCone(v3, m_vertice.second, 0.05, 1.0);
   }
 
   d->program.release();

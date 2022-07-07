@@ -126,12 +126,11 @@ bool Cube::setData(const std::vector<float>& values)
     m_data = values;
     // Now to update the minimum and maximum values
     m_minValue = m_maxValue = m_data[0];
-    for (std::vector<float>::const_iterator it = values.begin();
-         it != values.end(); ++it) {
-      if (*it < m_minValue)
-        m_minValue = *it;
-      else if (*it > m_maxValue)
-        m_maxValue = *it;
+    for (float value : values) {
+      if (value < m_minValue)
+        m_minValue = value;
+      else if (value > m_maxValue)
+        m_maxValue = value;
     }
     return true;
   } else {

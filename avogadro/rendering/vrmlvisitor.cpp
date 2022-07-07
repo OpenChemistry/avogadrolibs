@@ -98,9 +98,7 @@ void VRMLVisitor::visit(Drawable& geometry)
 void VRMLVisitor::visit(SphereGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.spheres().size(); ++i) {
-    Rendering::SphereColor s = geometry.spheres()[i];
-
+  for (auto s : geometry.spheres()) {
     str << "Transform {\n"
         << "\ttranslation\t" << s.center[0] << "\t" << s.center[1] << "\t"
         << s.center[2] << "\n\tchildren Shape {\n"
@@ -120,9 +118,7 @@ void VRMLVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 void VRMLVisitor::visit(CylinderGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.cylinders().size(); ++i) {
-    Rendering::CylinderColor c = geometry.cylinders()[i];
-
+  for (auto c : geometry.cylinders()) {
     // double scale = 1.0;
     double x1, x2, y1, y2, z1, z2;
     x1 = c.end1[0];

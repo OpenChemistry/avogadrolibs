@@ -179,13 +179,13 @@ QString PQRRequest::parseSubscripts(QString formula)
 {
   std::string str = formula.toStdString();
   QString toReturn;
-  for (int i = 0; i < str.length(); i++) {
-    if (isdigit(str[i])) {
+  for (char i : str) {
+    if (isdigit(i)) {
       toReturn.append("<sub>");
-      toReturn.append(str[i]);
+      toReturn.append(i);
       toReturn.append("</sub>");
     } else {
-      toReturn.append(str[i]);
+      toReturn.append(i);
     }
   }
   return toReturn;

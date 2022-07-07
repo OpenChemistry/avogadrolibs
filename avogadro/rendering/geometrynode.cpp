@@ -78,10 +78,9 @@ void GeometryNode::clearDrawables()
 
 void GeometryNode::render(const Camera& camera)
 {
-  for (std::vector<Drawable*>::iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    if ((*it)->isVisible())
-      (*it)->render(camera);
+  for (auto & m_drawable : m_drawables) {
+    if (m_drawable->isVisible())
+      m_drawable->render(camera);
   }
 }
 
@@ -90,11 +89,10 @@ std::multimap<float, Identifier> GeometryNode::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
+  for (auto m_drawable : m_drawables) {
     std::multimap<float, Identifier> drawableHits;
-    if ((*it)->isVisible())
-      drawableHits = (*it)->hits(rayOrigin, rayEnd, rayDirection);
+    if (m_drawable->isVisible())
+      drawableHits = m_drawable->hits(rayOrigin, rayEnd, rayDirection);
     result.insert(drawableHits.begin(), drawableHits.end());
   }
 
@@ -104,10 +102,10 @@ std::multimap<float, Identifier> GeometryNode::hits(
 Array<Identifier> GeometryNode::areaHits(const Frustrum& f) const
 {
   Array<Identifier> result;
-  for (auto it = m_drawables.begin(); it != m_drawables.end(); ++it) {
+  for (auto m_drawable : m_drawables) {
     Array<Identifier> drawableHits;
-    if ((*it)->isVisible())
-      drawableHits = (*it)->areaHits(f);
+    if (m_drawable->isVisible())
+      drawableHits = m_drawable->areaHits(f);
     result.insert(result.end(), drawableHits.begin(), drawableHits.end());
   }
 

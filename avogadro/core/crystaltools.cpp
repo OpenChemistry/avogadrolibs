@@ -430,9 +430,8 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 
     // fix coordinates with COB matrix:
     const Matrix3 invCob(cob.inverse());
-    for (Array<Vector3>::iterator it = fcoords.begin(), itEnd = fcoords.end();
-         it != itEnd; ++it) {
-      *it = invCob * (*it);
+    for (auto & fcoord : fcoords) {
+      fcoord = invCob * fcoord;
     }
 
     // Update cell

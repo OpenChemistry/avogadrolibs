@@ -1,4 +1,5 @@
 Checks: 'clang-analyzer*,modernize-avoid-bind,modernize-concat-nested-namespaces,
+        modernize-loop-convert,modernize-macro-to-enum,modernize-use-bool-literals,
         -portability-restrict-system-includes,-modernize-use-trailing-return-type
         -readability-else-after-return'
 FormatStyle:     file        

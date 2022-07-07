@@ -1066,10 +1066,8 @@ inline void BondCentricTool::transformFragment() const
   // Convert the internal float matrix to use the same precision as the atomic
   // coordinates.
   Eigen::Transform<Real, 3, Eigen::Affine> transform(m_transform.cast<Real>());
-  for (std::vector<int>::const_iterator it = m_fragment.begin(),
-                                        itEnd = m_fragment.end();
-       it != itEnd; ++it) {
-    RWAtom atom = m_molecule->atomByUniqueId(*it);
+  for (int it : m_fragment) {
+    RWAtom atom = m_molecule->atomByUniqueId(it);
     if (atom.isValid()) {
       Vector3 pos = atom.position3d();
       pos = transform * pos;
@@ -1092,11 +1090,9 @@ void BondCentricTool::updatePlaneSnapAngles()
       const RWAtom& atom = i == 0 ? atom1 : atom2;
       const Vector3f atomPos(atom.position3d().cast<float>());
       const Array<RWBond> bonds = m_molecule->bonds(atom);
-      for (std::vector<RWBond>::const_iterator it = bonds.begin(),
-                                               itEnd = bonds.end();
-           it != itEnd; ++it) {
-        if (*it != selectedBond) {
-          const RWAtom otherAtom(it->getOtherAtom(atom));
+      for (auto bond : bonds) {
+        if (bond != selectedBond) {
+          const RWAtom otherAtom(bond.getOtherAtom(atom));
           const Vector3f otherAtomPos(otherAtom.position3d().cast<float>());
           const Vector3f otherBondVector(otherAtomPos - atomPos);
           // Project otherBondVector into the plane normal to m_bondVector

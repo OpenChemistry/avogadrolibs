@@ -23,8 +23,8 @@ GroupNode::~GroupNode()
 void GroupNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
-    it->node->accept(visitor);
+  for (auto & it : m_children) {
+    it.node->accept(visitor);
   }
 }
 
@@ -42,8 +42,8 @@ bool GroupNode::hasChild(Node* node) const
 {
   if (!node)
     return false;
-  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
-    if (it->node == node) {
+  for (auto it : m_children) {
+    if (it.node == node) {
       return true;
     }
   }

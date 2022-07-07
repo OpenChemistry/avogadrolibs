@@ -252,12 +252,10 @@ std::vector<const FileFormat*> FileFormatManager::fileFormats(
 {
   std::vector<const FileFormat*> result;
 
-  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin(),
-                                                itEnd = m_formats.end();
-       it != itEnd; ++it) {
+  for (auto m_format : m_formats) {
     if (filter == FileFormat::None ||
-        (filter & (*it)->supportedOperations()) == filter) {
-      result.push_back(*it);
+        (filter & m_format->supportedOperations()) == filter) {
+      result.push_back(m_format);
     }
   }
   return result;
@@ -320,12 +318,12 @@ std::vector<std::string> FileFormatManager::filteredKeysFromFormatMap(
   const FileFormatManager::FormatIdMap& fmap) const
 {
   std::vector<std::string> result;
-  for (FormatIdMap::const_iterator it = fmap.begin(); it != fmap.end(); ++it) {
-    for (std::vector<size_t>::const_iterator formatIt = it->second.begin();
-         formatIt != it->second.end(); ++formatIt) {
+  for (const auto & it : fmap) {
+    for (std::vector<size_t>::const_iterator formatIt = it.second.begin();
+         formatIt != it.second.end(); ++formatIt) {
       if (filter == FileFormat::None ||
           (m_formats[*formatIt]->supportedOperations() & filter) == filter) {
-        result.push_back(it->first);
+        result.push_back(it.first);
         break;
       }
     }
@@ -362,10 +360,10 @@ std::vector<FileFormat*> FileFormatManager::filteredFormatsFromFormatVector(
   const FileFormatManager::FormatIdVector& v) const
 {
   std::vector<FileFormat*> result;
-  for (FormatIdVector::const_iterator it = v.begin(); it != v.end(); ++it) {
+  for (unsigned long it : v) {
     if (filter == FileFormat::None ||
-        (m_formats[*it]->supportedOperations() & filter) == filter) {
-      result.push_back(m_formats[*it]);
+        (m_formats[it]->supportedOperations() & filter) == filter) {
+      result.push_back(m_formats[it]);
     }
   }
   return result;
@@ -375,10 +373,10 @@ FileFormat* FileFormatManager::filteredFormatFromFormatVector(
   FileFormat::Operations filter,
   const FileFormatManager::FormatIdVector& v) const
 {
-  for (FormatIdVector::const_iterator it = v.begin(); it != v.end(); ++it) {
+  for (unsigned long it : v) {
     if (filter == FileFormat::None ||
-        (m_formats[*it]->supportedOperations() & filter) == filter) {
-      return m_formats[*it];
+        (m_formats[it]->supportedOperations() & filter) == filter) {
+      return m_formats[it];
     }
   }
   return nullptr;

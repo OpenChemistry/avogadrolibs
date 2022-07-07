@@ -36,9 +36,8 @@ typedef Avogadro::Core::Array<RWBond> NeighborListType;
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {
   unsigned int result(0);
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
-       it != itEnd; ++it) {
-    result += static_cast<unsigned int>(it->order());
+  for (auto bond : bonds) {
+    result += static_cast<unsigned int>(bond.order());
   }
   return result;
 }
@@ -142,10 +141,8 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     std::vector<size_t> badHIndices;
 
     const NeighborListType bonds(molecule->bonds(atom));
-    for (NeighborListType::const_iterator it = bonds.begin(),
-                                          itEnd = bonds.end();
-         it != itEnd; ++it) {
-      const RWAtom otherAtom = it->getOtherAtom(atom);
+    for (auto bond : bonds) {
+      const RWAtom otherAtom = bond.getOtherAtom(atom);
       if (otherAtom.atomicNumber() == 1) {
         badHIndices.push_back(otherAtom.index());
       }
@@ -236,9 +233,8 @@ void HydrogenTools::generateNewHydrogenPositions(
   const NeighborListType bonds(atom.molecule()->bonds(atom));
   const int explicitBonds = bonds.size();
   allVectors.reserve(bonds.size() + static_cast<size_t>(numberOfHydrogens));
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
-       it != itEnd; ++it) {
-    RWAtom otherAtom = it->getOtherAtom(atom);
+  for (auto bond : bonds) {
+    RWAtom otherAtom = bond.getOtherAtom(atom);
     Vector3 delta = otherAtom.position3d() - atom.position3d();
     if (!delta.isZero(1e-5)) {
       allVectors.push_back(delta.normalized());

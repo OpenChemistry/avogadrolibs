@@ -421,12 +421,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
   // Check if the previously clicked atom is still under the mouse.
   float depth = -1.0f;
-  for (std::multimap<float, Rendering::Identifier>::const_iterator
-         it = hits.begin(),
-         itEnd = hits.end();
-       it != itEnd; ++it) {
-    if (it->second == m_clickedObject) {
-      depth = it->first;
+  for (const auto & hit : hits) {
+    if (hit.second == m_clickedObject) {
+      depth = hit.first;
       break;
     }
   }
@@ -468,11 +465,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (m_bondedAtom.isValid()) {
     // Is it still under the mouse?
     depth = -1.0f;
-    for (std::multimap<float, Identifier>::const_iterator it = hits.begin(),
-                                                          itEnd = hits.end();
-         it != itEnd; ++it) {
-      if (it->second == m_bondedAtom) {
-        depth = it->first;
+    for (const auto & hit : hits) {
+      if (hit.second == m_bondedAtom) {
+        depth = hit.first;
         break;
       }
     }
@@ -492,10 +487,8 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   // Is there another atom under the cursor, besides newAtom? If so, we'll draw
   // a bond to it.
   Identifier atomToBond;
-  for (std::multimap<float, Identifier>::const_iterator it = hits.begin(),
-                                                        itEnd = hits.end();
-       it != itEnd; ++it) {
-    const Identifier& ident = it->second;
+  for (const auto & hit : hits) {
+    const Identifier& ident = hit.second;
     // Are we on an atom
     if (ident.type == Rendering::AtomType)
       // besides the one that was clicked or a new atom

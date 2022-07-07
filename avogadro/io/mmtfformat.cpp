@@ -47,12 +47,12 @@ MMTFFormat::~MMTFFormat() = default;
 bool is_polymer(const unsigned int chain_index,
                 const std::vector<mmtf::Entity>& entity_list)
 {
-  for (std::size_t i = 0; i < entity_list.size(); ++i) {
-    if (std::find(entity_list[i].chainIndexList.begin(),
-                  entity_list[i].chainIndexList.end(),
-                  chain_index) != entity_list[i].chainIndexList.end()) {
-      return (entity_list[i].type == "polymer" ||
-              entity_list[i].type == "POLYMER");
+  for (const auto & i : entity_list) {
+    if (std::find(i.chainIndexList.begin(),
+                  i.chainIndexList.end(),
+                  chain_index) != i.chainIndexList.end()) {
+      return (i.type == "polymer" ||
+              i.type == "POLYMER");
     }
   }
   return false;

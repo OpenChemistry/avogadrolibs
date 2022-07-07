@@ -241,9 +241,9 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
     if (parts.size() > 5 && buffer.substr(0, 16) != "                ") {
       if (newBlock) {
         // Reorder the columns/rows, add them and then prepare
-        for (size_t i = 0; i < eigenvectors.size(); ++i)
-          for (size_t j = 0; j < eigenvectors[i].size(); ++j)
-            m_MOcoeffs.push_back(eigenvectors[i][j]);
+        for (auto & eigenvector : eigenvectors)
+          for (size_t j = 0; j < eigenvector.size(); ++j)
+            m_MOcoeffs.push_back(eigenvector[j]);
         eigenvectors.clear();
         eigenvectors.resize(parts.size() - 4);
         numberOfMos += eigenvectors.size();
@@ -263,9 +263,9 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
     parts = Core::split(buffer, ' ');
   }
   m_nMOs = numberOfMos;
-  for (size_t i = 0; i < eigenvectors.size(); ++i)
-    for (size_t j = 0; j < eigenvectors[i].size(); ++j)
-      m_MOcoeffs.push_back(eigenvectors[i][j]);
+  for (auto & eigenvector : eigenvectors)
+    for (size_t j = 0; j < eigenvector.size(); ++j)
+      m_MOcoeffs.push_back(eigenvector[j]);
 
   // Now we just need to transpose the matrix, as GAMESS uses a different order.
   // We know the number of columns (MOs), and the number of rows (primitives).
@@ -329,13 +329,13 @@ void GAMESSUSOutput::reorderMOs()
   unsigned int GTOcounter = 0;
   for (int iMO = 0; iMO < m_nMOs; iMO++) {
     // loop over the basis set shells
-    for (unsigned int i = 0; i < m_shellTypes.size(); i++) {
+    for (auto & m_shellType : m_shellTypes) {
       // The angular momentum of the shell
       // determines the number of primitive GTOs.
       // GAMESS always prints the full cartesian set.
       double yyy, zzz, xxy, xxz, yyx, yyz, zzx, zzy, xyz;
       unsigned int nPrimGTOs = 0;
-      switch (m_shellTypes.at(i)) {
+      switch (m_shellType) {
         case GaussianSet::S:
           nPrimGTOs = 1;
           GTOcounter += nPrimGTOs;
@@ -430,12 +430,12 @@ void GAMESSUSOutput::outputAll()
 
   if (m_alphaMOcoeffs.size())
     cout << "Alpha MO coefficients.\n";
-  for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
-    cout << m_alphaMOcoeffs.at(i);
+  for (double m_alphaMOcoeff : m_alphaMOcoeffs)
+    cout << m_alphaMOcoeff;
   if (m_betaMOcoeffs.size())
     cout << "Beta MO coefficients.\n";
-  for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
-    cout << m_betaMOcoeffs.at(i);
+  for (double m_betaMOcoeff : m_betaMOcoeffs)
+    cout << m_betaMOcoeff;
   cout << std::flush;
 }
 }

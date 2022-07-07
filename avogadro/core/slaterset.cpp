@@ -145,8 +145,8 @@ void SlaterSet::initCalculation()
     }
   }
   // Convert the exponents into Angstroms
-  for (size_t i = 0; i < m_zetas.size(); ++i)
-    m_zetas[i] = m_zetas[i] / BOHR_TO_ANGSTROM_D;
+  for (double & m_zeta : m_zetas)
+    m_zeta = m_zeta / BOHR_TO_ANGSTROM_D;
 
   m_initialized = true;
 }

@@ -157,9 +157,8 @@ void Bonding::clearBonds()
 
       // OK, the atom is selected, get the bonds to delete
       const NeighborListType bonds = m_molecule->bonds(i);
-      for (NeighborListType::const_iterator it = bonds.begin();
-           it != bonds.end(); ++it) {
-        bondIndices.push_back(it->index());
+      for (auto bond : bonds) {
+        bondIndices.push_back(bond.index());
       }
     } // end looping through atoms
 

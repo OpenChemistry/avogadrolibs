@@ -145,8 +145,7 @@ struct LayerLabel : Core::LayerData
       QComboBox* atom = new QComboBox;
       atom->setObjectName("atom");
       char elements[] = { None, Index, Name, Custom, Ordinal };
-      for (unsigned char i = 0; i < 5; ++i) {
-        char option = elements[i];
+      for (char option : elements) {
         if (option == 0) {
           atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {

@@ -126,8 +126,8 @@ bool CopyPaste::copy()
   QMimeData* mimeData(new QMimeData);
 
   std::vector<std::string> mimeTypes(cjson.mimeTypes());
-  for (size_t i = 0; i < mimeTypes.size(); ++i)
-    mimeData->setData(QString::fromStdString(mimeTypes[i]), outputBA);
+  for (auto & mimeType : mimeTypes)
+    mimeData->setData(QString::fromStdString(mimeType), outputBA);
 
   mimeData->setData("text/plain", outputBA);
   QApplication::clipboard()->setMimeData(mimeData);

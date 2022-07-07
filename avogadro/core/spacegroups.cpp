@@ -254,8 +254,8 @@ Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
   // These transforms are separated by spaces
   std::vector<std::string> transforms = split(transformsStr, ' ');
 
-  for (Index i = 0; i < transforms.size(); ++i)
-    ret.push_back(getSingleTransform(transforms[i], v));
+  for (auto & transform : transforms)
+    ret.push_back(getSingleTransform(transform, v));
 
   return ret;
 }

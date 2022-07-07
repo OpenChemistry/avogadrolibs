@@ -142,8 +142,8 @@ void Surfaces::surfacesActivated()
   }
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
-    for (unsigned int i = 0; i < m_cubes.size(); ++i) {
-      cubeNames << m_cubes[i]->name().c_str();
+    for (auto & m_cube : m_cubes) {
+      cubeNames << m_cube->name().c_str();
     }
     m_dialog->setupCubes(cubeNames);
   }

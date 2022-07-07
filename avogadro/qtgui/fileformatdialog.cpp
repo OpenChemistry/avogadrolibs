@@ -219,11 +219,9 @@ QString FileFormatDialog::generateFilterString(
   QString filterString;
   // Create a map that groups the file extensions by name:
   QMap<QString, QString> formatMap;
-  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
-                                                          itEnd = ffs.end();
-       it != itEnd; ++it) {
-    QString name(QString::fromStdString((*it)->name()));
-    std::vector<std::string> exts = (*it)->fileExtensions();
+  for (auto ff : ffs) {
+    QString name(QString::fromStdString(ff->name()));
+    std::vector<std::string> exts = ff->fileExtensions();
     for (std::vector<std::string>::const_iterator eit = exts.begin(),
                                                   eitEnd = exts.end();
          eit != eitEnd; ++eit) {
@@ -301,10 +299,8 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
 
   // If more than one format found, prompt user to select one.
   QStringList idents;
-  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
-                                                          itEnd = ffs.end();
-       it != itEnd; ++it) {
-    idents << QString::fromStdString((*it)->identifier());
+  for (auto ff : ffs) {
+    idents << QString::fromStdString(ff->identifier());
   }
 
   // If there is a format prefix, see if that can reduce the results down.

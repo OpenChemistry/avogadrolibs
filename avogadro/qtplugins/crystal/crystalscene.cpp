@@ -70,9 +70,8 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
     strip.push_back(vertex -= b);
     lines->addLineStrip(strip, width);
 
-    for (Array<Vector3f>::iterator it = strip.begin(), itEnd = strip.end();
-         it != itEnd; ++it) {
-      *it += c;
+    for (auto & it : strip) {
+      it += c;
     }
     lines->addLineStrip(strip, width);
 

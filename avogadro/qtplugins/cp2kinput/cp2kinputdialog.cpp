@@ -764,8 +764,8 @@ void Cp2kInputDialog::updatePreviewText()
 
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
       Core::Atom atom = m_molecule->atom(i);
-      for (int i = 0; i < atomList.size(); i++) {
-        if (atomList.at(i) == atom.atomicNumber()) {
+      for (int i : atomList) {
+        if (i == atom.atomicNumber()) {
           inlist = false;
           break;
         } else {

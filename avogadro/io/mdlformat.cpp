@@ -182,9 +182,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Apply charges.
-  for (size_t i = 0; i < chargeList.size(); i++) {
-    size_t index = chargeList[i].first;
-    signed int charge = chargeList[i].second;
+  for (auto & i : chargeList) {
+    size_t index = i.first;
+    signed int charge = i.second;
     mol.setFormalCharge(index, charge);
   }
 
@@ -260,9 +260,9 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
         << "  0  0  0  0\n";
   }
   // Properties block.
-  for (size_t i = 0; i < chargeList.size(); ++i) {
-    Index atomIndex = chargeList[i].first;
-    signed int atomCharge = chargeList[i].second;
+  for (auto & i : chargeList) {
+    Index atomIndex = i.first;
+    signed int atomCharge = i.second;
     out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
         << setw(3) << atomCharge << "\n";
   }

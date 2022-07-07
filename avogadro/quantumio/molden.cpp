@@ -238,8 +238,8 @@ void MoldenFile::outputAll()
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
   cout << "MO coefficients:\n";
-  for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    cout << m_MOcoeffs.at(i) << "\t";
+  for (double m_MOcoeff : m_MOcoeffs)
+    cout << m_MOcoeff << "\t";
   cout << endl;
 }
 }

@@ -122,16 +122,14 @@ void GeometryVisitor::visit(LineStripGeometry& lsg)
   m_dirty = true;
 
   Vector3f tmpCenter(Vector3f::Zero());
-  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
-       it != itEnd; ++it) {
-    tmpCenter += it->vertex;
+  for (const auto & vert : verts) {
+    tmpCenter += vert.vertex;
   }
   tmpCenter /= static_cast<float>(verts.size());
 
   float tmpRadius(0.f);
-  for (VertexArray::const_iterator it = verts.begin(), itEnd = verts.end();
-       it != itEnd; ++it) {
-    float distance = (it->vertex - tmpCenter).squaredNorm();
+  for (const auto & vert : verts) {
+    float distance = (vert.vertex - tmpCenter).squaredNorm();
     if (distance > tmpRadius)
       tmpRadius = distance;
   }

@@ -126,13 +126,11 @@ void CustomElementDialog::prepareForm()
     atomicNumbers.begin(), atomicNumbers.end(), CustomElementFilter());
 
   Molecule::CustomElementMap::const_iterator match;
-  for (std::set<unsigned char>::const_iterator it = customElements.begin(),
-                                               itEnd = customElements.end();
-       it != itEnd; ++it) {
-    if ((match = map.find(*it)) != map.end())
-      addRow(*it, QString::fromStdString(match->second));
+  for (unsigned char customElement : customElements) {
+    if ((match = map.find(customElement)) != map.end())
+      addRow(customElement, QString::fromStdString(match->second));
     else
-      addRow(*it, QString::fromStdString(Elements::name(*it)));
+      addRow(customElement, QString::fromStdString(Elements::name(customElement)));
   }
 }
 
