@@ -30,7 +30,7 @@ const int residueColors = 2;
 class ChargeColorDialog : public QDialog, public Ui::ChargeDialog
 {
 public:
-  ChargeColorDialog(QWidget* parent = 0) : QDialog(parent)
+  ChargeColorDialog(QWidget* parent = nullptr) : QDialog(parent)
   {
     setWindowFlags(Qt::Dialog | Qt::Tool);
     setupUi(this);

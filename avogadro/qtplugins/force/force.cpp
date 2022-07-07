@@ -20,8 +20,6 @@
 
 namespace Avogadro::QtPlugins {
 
-using Core::Array;
-using Core::Elements;
 using QtGui::Molecule;
 using Rendering::ArrowGeometry;
 using Rendering::GeometryNode;
@@ -33,10 +31,10 @@ Force::~Force() {}
 
 void Force::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  ArrowGeometry* arrows = new ArrowGeometry;
+  auto* arrows = new ArrowGeometry;
   arrows->identifier().molecule = &molecule;
   geometry->addDrawable(arrows);
   for (Index i = 0; i < molecule.atomCount(); ++i) {

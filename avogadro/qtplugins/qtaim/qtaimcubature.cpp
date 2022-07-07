@@ -523,7 +523,7 @@ static int isqr(int x)
 
 static void destroy_rule75genzmalik(rule* r_)
 {
-  rule75genzmalik* r = (rule75genzmalik*)r_;
+  auto* r = (rule75genzmalik*)r_;
   free(r->p);
 }
 
@@ -540,7 +540,7 @@ static int rule75genzmalik_evalError(rule* r_, unsigned int fdim, integrand_v f,
   const double weightE4 = 25. / 729.;
   const double ratio = (lambda2 * lambda2) / (lambda4 * lambda4);
 
-  rule75genzmalik* r = (rule75genzmalik*)r_;
+  auto* r = (rule75genzmalik*)r_;
   unsigned int i, j, iR, dim = r_->dim, npts = 0;
   double *diff, *pts, *vals;
 
@@ -1140,7 +1140,7 @@ typedef struct fv_data_s
 static void fv(unsigned int ndim, unsigned int npt, const double* x, void* d_,
                unsigned int fdim, double* fval)
 {
-  fv_data* d = (fv_data*)d_;
+  auto* d = (fv_data*)d_;
   double* fval1 = d->fval1;
   unsigned int i, k;
   /* printf("npt = %u\n", npt); */
@@ -1334,7 +1334,7 @@ void property_v(unsigned int /* ndim */, unsigned int npts, const double* xyz,
                 void* param, unsigned int /* dim */, double* fval)
 {
 
-  QVariantList* paramVariantListPtr = (QVariantList*)param;
+  auto* paramVariantListPtr = (QVariantList*)param;
   QVariantList paramVariantList = *paramVariantListPtr;
 
   qint64 counter = 0;
@@ -1614,7 +1614,7 @@ void property_v_rtp(unsigned int /* ndim */, unsigned int npts,
                     double* fval)
 {
 
-  QVariantList* paramVariantListPtr = (QVariantList*)param;
+  auto* paramVariantListPtr = (QVariantList*)param;
   QVariantList paramVariantList = *paramVariantListPtr;
 
   qint64 counter = 0;
@@ -1724,7 +1724,7 @@ void property_r(unsigned int ndim, const double* xyz, void* param,
   ndim = ndim;
   fdim = fdim;
 
-  QVariantList* paramVariantListPtr = (QVariantList*)param;
+  auto* paramVariantListPtr = (QVariantList*)param;
   QVariantList paramVariantList = *paramVariantListPtr;
 
   qint64 counter = 0;
@@ -2096,7 +2096,7 @@ void property_v_tp(unsigned int /* ndim */, unsigned int npts,
                    double* fval)
 {
 
-  QVariantList* paramVariantListPtr = (QVariantList*)param;
+  auto* paramVariantListPtr = (QVariantList*)param;
   QVariantList paramVariantList = *paramVariantListPtr;
 
   qint64 counter = 0;

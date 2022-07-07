@@ -42,7 +42,7 @@ QTAIMExtension::QTAIMExtension(QObject* aParent)
   : QtGui::ExtensionPlugin(aParent)
 {
   // create an action for our first action
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setText(tr("Molecular Graph…"));
   m_actions.append(action);
   action->setData(FirstAction);
@@ -84,7 +84,7 @@ void QTAIMExtension::setMolecule(QtGui::Molecule* molecule)
 
 void QTAIMExtension::triggered()
 {
-  QAction* action = qobject_cast<QAction*>(sender());
+  auto* action = qobject_cast<QAction*>(sender());
   if (!action)
     return;
 
@@ -231,7 +231,7 @@ void QTAIMExtension::triggered()
       // Connectivity stored as Bonds
 
       qint64 bpCtr = 0;
-      qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+      auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
       for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
         for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -406,7 +406,7 @@ void QTAIMExtension::triggered()
       // Connectivity stored as Bonds
 
       qint64 bpCtr = 0;
-      qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+      auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
       for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
         for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -617,7 +617,7 @@ void QTAIMExtension::triggered()
         // Connectivity stored as Bonds
 
         qint64 bpCtr = 0;
-        qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+        auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
         for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
           for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {

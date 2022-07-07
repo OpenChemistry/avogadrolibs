@@ -74,13 +74,13 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok) * DEG_TO_RAD;
       Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
 
-      Core::UnitCell* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
       mol.setUnitCell(cell);
     }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
       // First we initialize the residue instance
-      size_t residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
+      auto residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
       if (!ok) {
         appendError("Failed to parse residue sequence number: " +
                     buffer.substr(22, 4));
@@ -90,7 +90,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (residueId != currentResidueId) {
         currentResidueId = residueId;
 
-        string residueName = lexicalCast<string>(buffer.substr(17, 3), ok);
+        auto residueName = lexicalCast<string>(buffer.substr(17, 3), ok);
         if (!ok) {
           appendError("Failed to parse residue name: " + buffer.substr(17, 3));
           return false;
@@ -106,7 +106,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           r->setHeterogen(true);
       }
 
-      string atomName = lexicalCast<string>(buffer.substr(12, 4), ok);
+      auto atomName = lexicalCast<string>(buffer.substr(12, 4), ok);
       if (!ok) {
         appendError("Failed to parse atom name: " + buffer.substr(12, 4));
         return false;

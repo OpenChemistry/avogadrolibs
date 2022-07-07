@@ -51,15 +51,12 @@ namespace Avogadro::QtPlugins {
 using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
-using QtGui::RWMolecule;
-using QtOpenGL::GLWidget;
 
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel2D;
-using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
 Editor::Editor(QObject* parent_)
@@ -228,7 +225,7 @@ void Editor::draw(Rendering::GroupNode& node)
   if (fabs(m_bondDistance) < 0.3)
     return;
 
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   node.addChild(geo);
 
   // Determine the field width. Negate it to indicate left-alignment.
@@ -244,7 +241,7 @@ void Editor::draw(Rendering::GroupNode& node)
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  TextLabel2D* label = new TextLabel2D;
+  auto* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);

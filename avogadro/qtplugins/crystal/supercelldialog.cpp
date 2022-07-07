@@ -12,7 +12,6 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-using Avogadro::Core::CrystalTools;
 
 namespace Avogadro::QtPlugins {
 

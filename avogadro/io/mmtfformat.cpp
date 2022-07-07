@@ -81,7 +81,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     Real beta = static_cast<Real>(structure.unitCell[4]) * DEG_TO_RAD;
     Real gamma = static_cast<Real>(structure.unitCell[5]) * DEG_TO_RAD;
 
-    Core::UnitCell* unitCellObject =
+    auto* unitCellObject =
       new Core::UnitCell(a, b, c, alpha, beta, gamma);
     molecule.setUnitCell(unitCellObject);
   }
@@ -95,7 +95,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
-  Index modelChainCount =
+  auto modelChainCount =
     static_cast<Index>(structure.chainsPerModel[modelIndex]);
 
   auto entityList = structure.entityList;
@@ -103,7 +103,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
   for (Index j = 0; j < modelChainCount; j++) {
 
-    Index chainGroupCount =
+    auto chainGroupCount =
       static_cast<Index>(structure.groupsPerChain[chainIndex]);
 
     bool ok;
@@ -115,11 +115,11 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     // A group is like a residue or other molecule in a PDB file.
     for (size_t k = 0; k < chainGroupCount; k++) {
 
-      Index groupType = static_cast<Index>(structure.groupTypeList[groupIndex]);
+      auto groupType = static_cast<Index>(structure.groupTypeList[groupIndex]);
 
       const auto& group = structure.groupList[groupType];
 
-      Index groupId = static_cast<Index>(structure.groupIdList[groupIndex]);
+      auto groupId = static_cast<Index>(structure.groupIdList[groupIndex]);
       auto resname = group.groupName;
 
       auto& residue = molecule.addResidue(resname, groupId, chainid);

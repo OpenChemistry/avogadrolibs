@@ -225,7 +225,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       return false;
     }
 
-    QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
     QtGui::Molecule newMol(guiMol->parent());
     if (m_moleculeExtension == "cjson") {
       // convert the "cjson" field to a string
@@ -340,7 +340,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj[QStringLiteral("highlightStyles")].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -600,7 +600,7 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value(QStringLiteral("rules")).toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InterfaceScript*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
       qDebug() << "Error parsing style" << styleName << '\n'

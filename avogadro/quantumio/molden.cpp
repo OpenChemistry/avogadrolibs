@@ -56,7 +56,7 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in);
 
-  GaussianSet* basis = new GaussianSet;
+  auto* basis = new GaussianSet;
 
   int nAtom = 0;
   for (unsigned int i = 0; i < m_aPos.size(); i += 3) {

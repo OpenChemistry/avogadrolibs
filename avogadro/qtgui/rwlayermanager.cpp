@@ -17,7 +17,6 @@
 namespace Avogadro::QtGui {
 
 using Core::Array;
-using Core::Layer;
 using Core::LayerData;
 using Core::MoleculeInfo;
 using std::map;
@@ -199,7 +198,7 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
     rwmolecule->removeAtom(atom);
   }
   auto& molecule = m_molToInfo[m_activeMolecule];
-  RemoveLayerCommand* comm = new RemoveLayerCommand(molecule, layer);
+  auto* comm = new RemoveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Remove Layer Info"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
@@ -211,7 +210,7 @@ void RWLayerManager::addLayer(RWMolecule* rwmolecule)
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Add Layer"));
   auto& molecule = m_molToInfo[m_activeMolecule];
-  AddLayerCommand* comm = new AddLayerCommand(molecule);
+  auto* comm = new AddLayerCommand(molecule);
   comm->setText(QObject::tr("Add Layer Info"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
@@ -221,7 +220,7 @@ void RWLayerManager::setActiveLayer(size_t layer, RWMolecule* rwmolecule)
 {
   rwmolecule->undoStack().beginMacro(QObject::tr("Change Layer"));
   auto& molecule = m_molToInfo[m_activeMolecule];
-  ActiveLayerCommand* comm = new ActiveLayerCommand(molecule, layer);
+  auto* comm = new ActiveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Change Layer"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();

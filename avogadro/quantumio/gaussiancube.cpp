@@ -72,7 +72,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    short int atomNum = Core::lexicalCast<short int>(list[0]);
+    auto atomNum = Core::lexicalCast<short int>(list[0]);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
     for (unsigned int j = 2; j < 5; ++j)
       pos(j - 2) = Core::lexicalCast<double>(list[j]);

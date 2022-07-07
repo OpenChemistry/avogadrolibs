@@ -33,7 +33,6 @@
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::QtGui::Molecule;
-using Avogadro::QtGui::PluginLayerManager;
 using Avogadro::QtGui::RWMolecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -193,9 +192,9 @@ void SelectionTool::draw(Rendering::GroupNode& node)
     return;
   }
 
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   node.addChild(geo);
-  MeshGeometry* mesh = new MeshGeometry;
+  auto* mesh = new MeshGeometry;
 
   mesh->setRenderPass(Rendering::Overlay2DPass);
 

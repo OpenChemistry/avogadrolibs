@@ -52,7 +52,7 @@ struct RemapAtomicNumbers
   unsigned char operator()(unsigned char old) const
   {
     if (Core::isCustomElement(old)) {
-      MapType::const_iterator it = map.find(old);
+      auto it = map.find(old);
       return it == map.end() ? old : it->second;
     }
     return old;
@@ -75,12 +75,12 @@ void CustomElementDialog::apply()
     if (currentIndex == 0) {
       // Reuse old name:
       unsigned char newId = newIdGenerator++;
-      Molecule::CustomElementMap::const_iterator it = oldMap.find(oldId);
+      auto it = oldMap.find(oldId);
       newMap.insert(std::make_pair(newId, it->second));
       oldToNew.insert(std::make_pair(oldId, newId));
     } else {
       // New element assigned:
-      unsigned char newId = static_cast<unsigned char>(currentIndex);
+      auto newId = static_cast<unsigned char>(currentIndex);
       oldToNew.insert(std::make_pair(oldId, newId));
     }
   }
@@ -136,7 +136,7 @@ void CustomElementDialog::prepareForm()
 
 void CustomElementDialog::addRow(unsigned char elementId, const QString& name)
 {
-  QComboBox* combo = new QComboBox(this);
+  auto* combo = new QComboBox(this);
   combo->setProperty("id", static_cast<unsigned int>(elementId));
   combo->addItem(name);
   combo->addItems(m_elements);

@@ -186,7 +186,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
                   scale_z * (z_min + (z_max - z_min) *
                                        lexicalCast<double>(tokens[z_idx - 2])));
 
-    AtomTypeMap::const_iterator it = atomTypes.find(to_string(atomicNum));
+    auto it = atomTypes.find(to_string(atomicNum));
     if (it == atomTypes.end()) {
       atomTypes.insert(
         std::make_pair(to_string(atomicNum), customElementCounter++));
@@ -433,7 +433,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   size_t idx = 1;
   Array<unsigned char> atomicNumbers = mol2.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (Array<unsigned char>::const_iterator it = atomicNumbers.begin(),
+  for (auto it = atomicNumbers.begin(),
                                             itEnd = atomicNumbers.end();
        it != itEnd; ++it) {
     if (composition.find(*it) == composition.end()) {
@@ -445,7 +445,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 
   // Masses
   massStream << "Masses\n\n";
-  std::map<unsigned char, size_t>::iterator iter = composition.begin();
+  auto iter = composition.begin();
   while (iter != composition.end()) {
     massStream << iter->second << "   " << Elements::mass(iter->first) << "\n";
     ++iter;

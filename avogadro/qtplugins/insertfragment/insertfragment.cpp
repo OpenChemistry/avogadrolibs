@@ -20,9 +20,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
-using Avogadro::QtGui::FileFormatDialog;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
@@ -31,7 +29,7 @@ InsertFragment::InsertFragment(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_crystalDialog(nullptr),
     m_moleculeDialog(nullptr), m_reader(nullptr), m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("Fragment…"), this);
+  auto* action = new QAction(tr("Fragment…"), this);
   action->setData("molecules"); // will also work for crystals
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -71,7 +69,7 @@ void InsertFragment::showDialog()
     return;
 
   QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
 
   // Prompt user for input:
   bool crystal = theSender->data().toString() == "crystals";

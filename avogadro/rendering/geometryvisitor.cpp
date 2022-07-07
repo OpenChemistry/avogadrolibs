@@ -35,7 +35,7 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
 
   Vector3f tmpCenter(Vector3f::Zero());
   // First find the center of the sphere geometry.
-  std::vector<SphereColor>::const_iterator it = spheres.begin();
+  auto it = spheres.begin();
   for (; it != spheres.end(); ++it)
     tmpCenter += it->center;
   tmpCenter /= static_cast<float>(spheres.size());
@@ -64,7 +64,7 @@ void GeometryVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 
   Vector3f tmpCenter(Vector3f::Zero());
   // First find the center of the sphere geometry.
-  std::vector<SphereColor>::const_iterator it = spheres.begin();
+  auto it = spheres.begin();
   for (; it != spheres.end(); ++it)
     tmpCenter += it->center;
   tmpCenter /= static_cast<float>(spheres.size());

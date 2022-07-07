@@ -21,7 +21,7 @@ Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
     m_timer(nullptr), m_mode(0), m_amplitude(20)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Vibrational Modes…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));

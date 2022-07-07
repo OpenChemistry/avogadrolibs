@@ -121,7 +121,7 @@ void Command::refreshScripts()
 
 void Command::menuActivated()
 {
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
   if (!theSender)
     return;
 
@@ -153,10 +153,10 @@ void Command::menuActivated()
   QtGui::ScriptLoader::queryProgramName(scriptFileName, title);
   m_currentDialog->setWindowTitle(title);
 
-  QVBoxLayout* vbox = new QVBoxLayout();
+  auto* vbox = new QVBoxLayout();
   widget->show();
   vbox->addWidget(widget);
-  QDialogButtonBox* buttonBox =
+  auto* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(run()));
@@ -224,10 +224,10 @@ void Command::configurePython()
   // Create objects
   QSettings settings;
   QDialog dlg(qobject_cast<QWidget*>(parent()));
-  QLabel* label = new QLabel;
-  QVBoxLayout* layout = new QVBoxLayout;
-  QtGui::FileBrowseWidget* browser = new QtGui::FileBrowseWidget;
-  QDialogButtonBox* buttonBox = new QDialogButtonBox;
+  auto* label = new QLabel;
+  auto* layout = new QVBoxLayout;
+  auto* browser = new QtGui::FileBrowseWidget;
+  auto* buttonBox = new QDialogButtonBox;
 
   // Configure objects
   // Check for python interpreter in env var
@@ -262,7 +262,7 @@ void Command::configurePython()
   connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
 
   // Show dialog
-  QDialog::DialogCode response = static_cast<QDialog::DialogCode>(dlg.exec());
+  auto response = static_cast<QDialog::DialogCode>(dlg.exec());
   if (response != QDialog::Accepted)
     return;
 
@@ -299,7 +299,7 @@ void Command::updateActions()
 
 void Command::addAction(const QString& label, const QString& scriptFilePath)
 {
-  QAction* action = new QAction(tr(label.toUtf8()), this);
+  auto* action = new QAction(tr(label.toUtf8()), this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));

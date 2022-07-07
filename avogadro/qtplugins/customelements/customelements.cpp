@@ -59,7 +59,7 @@ void CustomElements::setMolecule(QtGui::Molecule* mol)
 
 void CustomElements::moleculeChanged(unsigned int c)
 {
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Atoms &&
       (changes & (Molecule::Added | Molecule::Modified))) {
     updateReassignAction();

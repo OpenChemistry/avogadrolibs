@@ -213,7 +213,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj["highlightStyles"].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -464,7 +464,7 @@ bool InputGenerator::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value("rules").toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InputGenerator*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
       qDebug() << "Error parsing style" << styleName << '\n'

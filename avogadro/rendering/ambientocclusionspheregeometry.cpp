@@ -1119,12 +1119,12 @@ void AmbientOcclusionSphereGeometry::update()
     int tileX = 0;
     int tileY = 0;
 
-    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
-    std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
+    auto itIndex = m_indices.begin();
+    auto itSphere = m_spheres.begin();
 
     // calculate center
     Vector3f center(Vector3f::Zero());
-    for (std::vector<SphereColor>::const_iterator i = m_spheres.begin();
+    for (auto i = m_spheres.begin();
          i != m_spheres.end(); ++i)
       center += i->center;
     center /= static_cast<float>(nSpheres);
@@ -1138,7 +1138,7 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate radius
     float radius = 0.0f;
-    for (std::vector<SphereColor>::const_iterator i = m_spheres.begin();
+    for (auto i = m_spheres.begin();
          i != m_spheres.end(); ++i)
       if ((i->center - center).norm() > radius)
         radius = (i->center - center).norm();
@@ -1341,7 +1341,7 @@ std::multimap<float, Identifier> AmbientOcclusionSphereGeometry::hits(
     id.type = m_identifier.type;
     id.index = i;
     if (id.type != InvalidType) {
-      float rootD = static_cast<float>(sqrt(D));
+      auto rootD = static_cast<float>(sqrt(D));
       float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
       result.insert(std::pair<float, Identifier>(depth, id));
     }

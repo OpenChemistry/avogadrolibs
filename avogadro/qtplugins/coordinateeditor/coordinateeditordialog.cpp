@@ -43,7 +43,6 @@
 #endif // ENABLE_FORMAT_DEBUG
 
 using Avogadro::QtGui::Molecule;
-using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Vector3;
 
@@ -142,7 +141,7 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
 
   // Setup spec edit
   QRegExp specRegExp("[#ZGSNabcxyz01_]*");
-  QRegExpValidator* specValidator = new QRegExpValidator(specRegExp, this);
+  auto* specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
           SLOT(presetChanged(int)));

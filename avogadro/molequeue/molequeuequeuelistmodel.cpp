@@ -195,7 +195,7 @@ QModelIndex MoleQueueQueueListModel::index(int row, int column,
 QModelIndex MoleQueueQueueListModel::parent(const QModelIndex& child) const
 {
   if (child.isValid()) {
-    const quint32 childId = static_cast<quint32>(child.internalId());
+    const auto childId = static_cast<quint32>(child.internalId());
 
     // Child is queue -- return invalid parent.
     if (childId == QueueInternalId)

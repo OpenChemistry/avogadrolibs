@@ -137,7 +137,7 @@ void PQRRequest::parseJson()
         // table->setItem(i, 2, new
         // QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString("
         // g/mol")));
-        QTableWidgetItem* massItem = new QTableWidgetItem();
+        auto* massItem = new QTableWidgetItem();
         massItem->setData(Qt::DisplayRole, results[i].mass);
         table->setItem(i, 2, massItem);
       }

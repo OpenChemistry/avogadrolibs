@@ -23,7 +23,6 @@
 namespace Avogadro::QtPlugins {
 
 using Core::Mesh;
-using Core::Molecule;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
@@ -34,7 +33,7 @@ Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true), m_setupWidget(null
   // out of 255
   m_opacity = settings.value("meshes/opacity", 150).toUInt();
 
-  QColor color =
+  auto color =
     settings.value("meshes/color1", QColor(Qt::red)).value<QColor>();
   m_color1[0] = static_cast<unsigned char>(color.red());
   m_color1[1] = static_cast<unsigned char>(color.green());
@@ -63,7 +62,7 @@ struct Sequence
 void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 {
   if (mol.meshCount()) {
-    GeometryNode* geometry = new GeometryNode;
+    auto* geometry = new GeometryNode;
     node.addChild(geometry);
  
     const Mesh* mesh = mol.mesh(0);
@@ -75,7 +74,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     Core::Array<unsigned int> indices(mesh->numVertices());
     std::generate(indices.begin(), indices.end(), indexGenerator);
 
-    MeshGeometry* mesh1 = new MeshGeometry;
+    auto* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
     mesh1->setColor(m_color1);
     mesh1->setOpacity(m_opacity);
@@ -85,7 +84,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
                                         : Rendering::TranslucentPass);
 
     if (mol.meshCount() >= 2) {
-      MeshGeometry* mesh2 = new MeshGeometry;
+      auto* mesh2 = new MeshGeometry;
       geometry->addDrawable(mesh2);
       mesh = mol.mesh(1);
       if (mesh->numVertices() < indices.size()) {
@@ -157,25 +156,25 @@ QWidget* Meshes::setupWidget()
 {
   if (!m_setupWidget) {
     m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* v = new QVBoxLayout;
+    auto* v = new QVBoxLayout;
 
     // Opacity
-    QSlider* slide = new QSlider(Qt::Horizontal);
+    auto* slide = new QSlider(Qt::Horizontal);
     slide->setRange(0, 255);
     slide->setTickInterval(5);
     slide->setValue(m_opacity);
     connect(slide, SIGNAL(valueChanged(int)), SLOT(setOpacity(int)));
 
-    QFormLayout* form = new QFormLayout;
+    auto* form = new QFormLayout;
     form->addRow(tr("Opacity:"), slide);
 
-    QtGui::ColorButton* color1 = new QtGui::ColorButton;
+    auto* color1 = new QtGui::ColorButton;
     color1->setColor(QColor(m_color1[0], m_color1[1], m_color1[2]));
     connect(color1, SIGNAL(colorChanged(const QColor&)),
             SLOT(setColor1(const QColor&)));
     form->addRow(tr("Color:"), color1);
 
-    QtGui::ColorButton* color2 = new QtGui::ColorButton;
+    auto* color2 = new QtGui::ColorButton;
     color2->setColor(QColor(m_color2[0], m_color2[1], m_color2[2]));
     connect(color2, SIGNAL(colorChanged(const QColor&)),
             SLOT(setColor2(const QColor&)));

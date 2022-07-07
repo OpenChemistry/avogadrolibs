@@ -123,7 +123,7 @@ bool CopyPaste::copy()
 
   QByteArray outputBA(output.c_str(), static_cast<int>(output.length()));
 
-  QMimeData* mimeData(new QMimeData);
+  auto* mimeData(new QMimeData);
 
   std::vector<std::string> mimeTypes(cjson.mimeTypes());
   for (auto & mimeType : mimeTypes)

@@ -42,7 +42,7 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
                SLOT(selectRow(QModelIndex)));
   }
 
-  VibrationModel* model = new VibrationModel(this);
+  auto* model = new VibrationModel(this);
   model->setMolecule(molecule);
   m_ui->tableView->setModel(model);
   connect(m_ui->tableView->selectionModel(),

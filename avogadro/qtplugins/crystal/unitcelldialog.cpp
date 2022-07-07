@@ -16,7 +16,6 @@
 
 #include <QtCore/QRegExp>
 
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
 namespace {

@@ -66,7 +66,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Next line is scaling factor
   getline(inStream, line);
-  double scalingFactor = lexicalCast<double>(line, ok);
+  auto scalingFactor = lexicalCast<double>(line, ok);
 
   if (!ok) {
     appendError("Error: Could not convert scaling factor to double in POSCAR");
@@ -135,7 +135,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   stringSplit = split(line, ' ');
   vector<unsigned int> atomCounts;
   for (auto & i : stringSplit) {
-    unsigned int atomCount = lexicalCast<unsigned int>(i);
+    auto atomCount = lexicalCast<unsigned int>(i);
     atomCounts.push_back(atomCount);
   }
 
@@ -194,7 +194,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Let's make a unit cell
-  UnitCell* cell = new UnitCell(cellMat);
+  auto* cell = new UnitCell(cellMat);
 
   // If our atomic coordinates are fractional, convert them to Cartesian
   if (!cart) {
@@ -252,14 +252,14 @@ bool PoscarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   // A map of atomic symbols to their quantity.
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (Array<unsigned char>::const_iterator it = atomicNumbers.begin(),
+  for (auto it = atomicNumbers.begin(),
                                             itEnd = atomicNumbers.end();
        it != itEnd; ++it) {
     composition[*it]++;
   }
 
   // Atom symbols
-  std::map<unsigned char, size_t>::iterator iter = composition.begin();
+  auto iter = composition.begin();
   while (iter != composition.end()) {
     outStream << "   " << Elements::symbol(iter->first);
     ++iter;

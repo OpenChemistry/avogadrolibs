@@ -13,7 +13,6 @@
 
 namespace Avogadro::QtGui {
 
-using Core::Layer;
 using Core::LayerManager;
 
 namespace {

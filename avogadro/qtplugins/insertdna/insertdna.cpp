@@ -22,7 +22,6 @@
 
 using json = nlohmann::json;
 using Avogadro::Io::FileFormat;
-using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 
 namespace Avogadro::QtPlugins {
@@ -30,7 +29,7 @@ namespace Avogadro::QtPlugins {
   class InsertDNADialog : public QDialog, public Ui::InsertDNADialog
     {
     public:
-    InsertDNADialog(QWidget *parent=0) : QDialog(parent) {
+    InsertDNADialog(QWidget *parent=nullptr) : QDialog(parent) {
         setWindowFlags(Qt::Dialog | Qt::Tool);
         setupUi(this);
       }
@@ -41,7 +40,7 @@ InsertDna::InsertDna(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
     m_molecule(nullptr), m_dialog(nullptr)
 {
-  QAction* action = new QAction(tr("DNA/RNA..."), this);
+  auto* action = new QAction(tr("DNA/RNA..."), this);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
 
   m_actions.append(action);
@@ -97,7 +96,7 @@ void InsertDna::showDialog()
     if (m_dialog == nullptr) {
       m_dialog = new InsertDNADialog(qobject_cast<QWidget*>(parent()));
 
-      QButtonGroup* numStrands = new QButtonGroup(m_dialog);
+      auto* numStrands = new QButtonGroup(m_dialog);
       numStrands->addButton(m_dialog->singleStrandRadio, 0);
       numStrands->addButton(m_dialog->doubleStrandRadio, 1);
       numStrands->setExclusive(true);
@@ -122,7 +121,7 @@ void InsertDna::showDialog()
 
   void InsertDna::updateText()
   {
-    QToolButton *button = qobject_cast<QToolButton*>(sender());
+    auto *button = qobject_cast<QToolButton*>(sender());
     if (button) {
       QString sequenceText = m_dialog->sequenceText->toPlainText();
       sequenceText += button->text();

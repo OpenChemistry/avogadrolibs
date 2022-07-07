@@ -43,7 +43,7 @@ bool Shader::compile()
 
   GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
   GLuint handle_ = glCreateShader(type_);
-  const GLchar* source_ = static_cast<const GLchar*>(m_source.c_str());
+  const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
   glShaderSource(handle_, 1, &source_, nullptr);
   glCompileShader(handle_);
   GLint isCompiled;

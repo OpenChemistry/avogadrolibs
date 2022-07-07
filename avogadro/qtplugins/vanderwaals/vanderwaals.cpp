@@ -30,9 +30,9 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the VdW spheres.
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   auto selectedSpheres = new SphereGeometry;
@@ -49,7 +49,7 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
     unsigned char atomicNumber = atom.atomicNumber();
 
     Vector3ub color = atom.color();
-    float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
+    auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
     spheres->addSphere(atom.position3d().cast<float>(), color, radius, i);
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);

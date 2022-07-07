@@ -85,8 +85,8 @@ void CylinderGeometry::update()
     // cylinderIndices.reserve(m_indices.size() * 4);
     // cylinderVertices.reserve(m_cylinders.size() * 4);
 
-    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
-    std::vector<CylinderColor>::const_iterator itCylinder = m_cylinders.begin();
+    auto itIndex = m_indices.begin();
+    auto itCylinder = m_cylinders.begin();
 
     for (unsigned int i = 0;
          itIndex != m_indices.end() && itCylinder != m_cylinders.end();
@@ -109,9 +109,9 @@ void CylinderGeometry::update()
       // Cylinder
       ColorNormalVertex vert(itCylinder->color, -direction, position1);
       ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
-      const unsigned int tubeStart =
+      const auto tubeStart =
         static_cast<unsigned int>(cylinderVertices.size());
-      for (std::vector<Vector3f>::const_iterator it = radials.begin(),
+      for (auto it = radials.begin(),
                                                  itEnd = radials.end();
            it != itEnd; ++it) {
         vert.normal = *it;

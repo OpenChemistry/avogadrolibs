@@ -56,7 +56,7 @@ const InputGeneratorWidget& InputGeneratorDialog::widget() const
 bool InputGeneratorDialog::configureBatchJob(BatchJob& batch)
 {
   ui->widget->setBatchMode(true);
-  DialogCode reply = static_cast<DialogCode>(exec());
+  auto reply = static_cast<DialogCode>(exec());
   if (reply != Accepted)
     return false;
 

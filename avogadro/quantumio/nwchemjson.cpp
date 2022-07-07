@@ -172,7 +172,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     }
 
     // Now create the structure, and expand out the orbitals.
-    GaussianSet* basis = new GaussianSet;
+    auto* basis = new GaussianSet;
     basis->setMolecule(&molecule);
     string basisSetName;
     for (size_t i = 0; i < atomSymbol.size(); ++i) {

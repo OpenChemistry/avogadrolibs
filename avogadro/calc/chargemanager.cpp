@@ -89,7 +89,7 @@ ChargeManager::ChargeManager()
 ChargeManager::~ChargeManager()
 {
   // Delete the models that were loaded.
-  for (std::vector<ChargeModel*>::const_iterator it = m_models.begin();
+  for (auto it = m_models.begin();
        it != m_models.end(); ++it) {
     delete (*it);
   }

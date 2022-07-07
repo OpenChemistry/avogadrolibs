@@ -146,7 +146,7 @@ void DownloaderWidget::updateRepoData()
         m_repoList[i].readmeUrl = readmeUrl;
       }
 
-      QTableWidgetItem* checkbox = new QTableWidgetItem();
+      auto* checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
       m_ui->repoTable->setItem(i, 0, checkbox);
       m_ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));

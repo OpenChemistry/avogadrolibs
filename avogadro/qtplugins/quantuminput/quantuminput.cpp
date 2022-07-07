@@ -128,7 +128,7 @@ void QuantumInput::refreshGenerators()
 
 void QuantumInput::menuActivated()
 {
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
   if (!theSender)
     return;
 
@@ -153,10 +153,10 @@ void QuantumInput::configurePython()
   // Create objects
   QSettings settings;
   QDialog dlg(qobject_cast<QWidget*>(parent()));
-  QLabel* label = new QLabel;
-  QVBoxLayout* layout = new QVBoxLayout;
-  QtGui::FileBrowseWidget* browser = new QtGui::FileBrowseWidget;
-  QDialogButtonBox* buttonBox = new QDialogButtonBox;
+  auto* label = new QLabel;
+  auto* layout = new QVBoxLayout;
+  auto* browser = new QtGui::FileBrowseWidget;
+  auto* buttonBox = new QDialogButtonBox;
 
   // Configure objects
   // Check for python interpreter in env var
@@ -191,7 +191,7 @@ void QuantumInput::configurePython()
   connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
 
   // Show dialog
-  QDialog::DialogCode response = static_cast<QDialog::DialogCode>(dlg.exec());
+  auto response = static_cast<QDialog::DialogCode>(dlg.exec());
   if (response != QDialog::Accepted)
     return;
 
@@ -227,7 +227,7 @@ void QuantumInput::updateActions()
 
   // Last one is the configuration action
   // TODO: set this globally via the app
-  QAction* action = new QAction(tr("Set Python Path…"), this);
+  auto* action = new QAction(tr("Set Python Path…"), this);
   action->setData(ConfigureAction);
   connect(action, SIGNAL(triggered()), SLOT(configurePython()));
   m_actions << action;
@@ -236,7 +236,7 @@ void QuantumInput::updateActions()
 void QuantumInput::addAction(const QString& label,
                              const QString& scriptFilePath)
 {
-  QAction* action = new QAction(label, this);
+  auto* action = new QAction(label, this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));

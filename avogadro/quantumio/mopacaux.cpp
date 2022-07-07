@@ -49,7 +49,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in);
 
-  SlaterSet* basis = new SlaterSet;
+  auto* basis = new SlaterSet;
 
   for (unsigned int i = 0; i < m_atomPos.size(); ++i) {
     Atom a = molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]));

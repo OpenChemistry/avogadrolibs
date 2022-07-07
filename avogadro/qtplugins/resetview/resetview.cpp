@@ -130,7 +130,7 @@ void ResetView::animationCameraDefault(bool animate)
   linearGoal.row(1) = Vector3f::UnitY();
   linearGoal.row(2) = Vector3f::UnitZ();
   // calculate the translation matrix
-  Affine3f goal = Affine3f(linearGoal);
+  auto goal = Affine3f(linearGoal);
 
   const Array<Vector3>& mols = m_molecule->atomPositions3d();
   Vector3 min, max;
@@ -149,13 +149,13 @@ void ResetView::animationCamera(const Affine3f& goal, bool animate)
   if (animate) {
     Matrix3f rot_aux = goal.rotation();
     Vector3f posGoal = goal.translation();
-    Quaternionf rotGoal = Quaternionf(rot_aux);
+    auto rotGoal = Quaternionf(rot_aux);
 
     Affine3f start = m_camera->modelView();
 
     rot_aux = start.rotation();
     Vector3f posStart = start.translation();
-    Quaternionf rotStart = Quaternionf(rot_aux);
+    auto rotStart = Quaternionf(rot_aux);
 
     for (int frame = 0; frame <= ResetView::TOTAL_FRAMES; ++frame) {
       Affine3f interpolation;
@@ -196,7 +196,7 @@ inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
   }
   covariance /= (double)mols.size();
 
-  EigenSolver<Matrix3d> solver = EigenSolver<Matrix3>(covariance);
+  auto solver = EigenSolver<Matrix3>(covariance);
   Eigen::Matrix3d vectors = solver.eigenvectors().real();
 
   max = vectors.row(0);
@@ -218,7 +218,7 @@ void ResetView::centerView()
   linearGoal.col(1) = (mid.normalized()).cast<float>(); // y
   linearGoal.col(2) = (min.normalized()).cast<float>(); // z
   // calculate the translation matrix
-  Affine3f goal = Affine3f(linearGoal);
+  auto goal = Affine3f(linearGoal);
 
   // eigen return the eigenvectors normalized, but we need a non-normalized
   // so we project all the points to the axis and get the min/max

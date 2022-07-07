@@ -20,7 +20,7 @@ PeriodicTableView::PeriodicTableView(QWidget* parent_)
   // Make the periodic table view a standard dialog.
   setWindowFlags(Qt::Dialog);
 
-  PeriodicTableScene* table = new PeriodicTableScene;
+  auto* table = new PeriodicTableScene;
   table->setSceneRect(-20, -20, 480, 260);
   table->setItemIndexMethod(QGraphicsScene::NoIndex);
   table->setBackgroundBrush(Qt::white);
@@ -41,7 +41,7 @@ PeriodicTableView::~PeriodicTableView()
 void PeriodicTableView::setElement(int element_)
 {
   m_element = element_;
-  PeriodicTableScene* table = qobject_cast<PeriodicTableScene*>(scene());
+  auto* table = qobject_cast<PeriodicTableScene*>(scene());
   if (table)
     table->changeElement(element_);
 }

@@ -14,9 +14,6 @@
 
 namespace Avogadro::QtGui {
 
-using Core::LayerData;
-using QtPlugins::BallAndStick;
-using QtPlugins::Cartoons;
 using std::string;
 using std::vector;
 

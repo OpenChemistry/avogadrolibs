@@ -155,7 +155,7 @@ public:
         }
       }
 
-      UnitCell* cell = new UnitCell;
+      auto* cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
       molecule->setUnitCell(cell);
       if (hall != 0)
@@ -244,7 +244,7 @@ public:
       // Check formal charge.
       attribute = node.attribute("formalCharge");
       if (attribute) {
-        signed int formalCharge = lexicalCast<signed int>(attribute.value());
+        auto formalCharge = lexicalCast<signed int>(attribute.value());
         atom.setFormalCharge(formalCharge);
       }
 

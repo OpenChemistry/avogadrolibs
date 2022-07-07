@@ -38,7 +38,7 @@ OpenBabel::OpenBabel(QObject* p)
     m_readFormatsPending(true), m_writeFormatsPending(true),
     m_defaultFormat("cml"), m_progress(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Optimize Geometry"));
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
@@ -159,7 +159,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
     foreach (const QString& ext, formatExtensions)
       fexts.push_back(ext.toStdString());
 
-    OBFileFormat* fmt =
+    auto* fmt =
       new OBFileFormat(fname, fidentifier, fdescription, fspecificationUrl,
                        fexts, fmime, m_defaultFormat, fileOnly);
 
@@ -228,7 +228,7 @@ void OpenBabel::refreshReadFormats()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess* proc = new OBProcess(this);
+  auto* proc = new OBProcess(this);
 
   connect(proc, SIGNAL(queryReadFormatsFinished(QMap<QString, QString>)),
           SLOT(handleReadFormatUpdate(QMap<QString, QString>)));
@@ -240,7 +240,7 @@ void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString>& fmts)
 {
   m_readFormatsPending = false;
 
-  OBProcess* proc = qobject_cast<OBProcess*>(sender());
+  auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -263,7 +263,7 @@ void OpenBabel::refreshWriteFormats()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess* proc = new OBProcess(this);
+  auto* proc = new OBProcess(this);
 
   connect(proc, SIGNAL(queryWriteFormatsFinished(QMap<QString, QString>)),
           SLOT(handleWriteFormatUpdate(QMap<QString, QString>)));
@@ -275,7 +275,7 @@ void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString>& fmts)
 {
   m_writeFormatsPending = false;
 
-  OBProcess* proc = qobject_cast<OBProcess*>(sender());
+  auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -298,7 +298,7 @@ void OpenBabel::refreshForceFields()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess* proc = new OBProcess(this);
+  auto* proc = new OBProcess(this);
 
   connect(proc, SIGNAL(queryForceFieldsFinished(QMap<QString, QString>)),
           SLOT(handleForceFieldsUpdate(QMap<QString, QString>)));
@@ -308,7 +308,7 @@ void OpenBabel::refreshForceFields()
 
 void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString>& ffMap)
 {
-  OBProcess* proc = qobject_cast<OBProcess*>(sender());
+  auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -319,7 +319,7 @@ void OpenBabel::refreshCharges()
 {
   // No need to check if the member process is in use -- we use a temporary
   // process for the refresh methods.
-  OBProcess* proc = new OBProcess(this);
+  auto* proc = new OBProcess(this);
 
   connect(proc, SIGNAL(queryChargesFinished(QMap<QString, QString>)),
           SLOT(handleChargesUpdate(QMap<QString, QString>)));
@@ -329,7 +329,7 @@ void OpenBabel::refreshCharges()
 
 void OpenBabel::handleChargesUpdate(const QMap<QString, QString>& chargeMap)
 {
-  OBProcess* proc = qobject_cast<OBProcess*>(sender());
+  auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
     proc->deleteLater();
 
@@ -339,7 +339,7 @@ void OpenBabel::handleChargesUpdate(const QMap<QString, QString>& chargeMap)
     // we're only picking a few select models for now
     if (key == "eem" || key == "eem2015ba" || key == "eqeq" ||
         key == "gasteiger" || key == "mmff94") {
-      OBCharges* model = new OBCharges(key.toStdString());
+      auto* model = new OBCharges(key.toStdString());
       Calc::ChargeManager::instance().registerModel(model);
     }
   }

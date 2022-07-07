@@ -27,7 +27,6 @@
 
 #include "vtkplot.h"
 
-using std::array;
 using std::string;
 using std::vector;
 

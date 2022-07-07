@@ -65,7 +65,7 @@ void HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
 {
   const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
-  for (Array<unsigned char>::const_reverse_iterator it = atomicNums.rbegin(),
+  for (auto it = atomicNums.rbegin(),
                                                     itEnd = atomicNums.rend();
        it != itEnd; ++it, --atomIndex) {
     if (*it == 1)
@@ -98,7 +98,7 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
     if (doAdd && hDiff > 0) {
       newHPos.clear();
       generateNewHydrogenPositions(atom, hDiff, newHPos);
-      for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
+      for (auto it = newHPos.begin(),
                                                 itEnd = newHPos.end();
            it != itEnd; ++it) {
         RWAtom newH(molecule.addAtom(1));
@@ -116,10 +116,10 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
   // indexing sane.
   if (doRemove && !badHIndices.empty()) {
     std::sort(badHIndices.begin(), badHIndices.end());
-    std::vector<size_t>::iterator newEnd(
+    auto newEnd(
       std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
-    for (std::vector<size_t>::const_reverse_iterator it = badHIndices.rbegin(),
+    for (auto it = badHIndices.rbegin(),
                                                      itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule.removeAtom(*it);
@@ -149,10 +149,10 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     } // end loop through bonds
 
     std::sort(badHIndices.begin(), badHIndices.end());
-    std::vector<size_t>::iterator newEnd(
+    auto newEnd(
       std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
-    for (std::vector<size_t>::const_reverse_iterator it = badHIndices.rbegin(),
+    for (auto it = badHIndices.rbegin(),
                                                      itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule->removeAtom(*it);
@@ -165,7 +165,7 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     // Temporary container for calls to generateNewHydrogenPositions.
     std::vector<Vector3> newHPos;
     generateNewHydrogenPositions(atom, hDiff, newHPos);
-    for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
+    for (auto it = newHPos.begin(),
                                               itEnd = newHPos.end();
          it != itEnd; ++it) {
       RWAtom newH(molecule->addAtom(1));
@@ -199,7 +199,7 @@ int HydrogenTools::extraHydrogenIndices(const RWAtom& atom,
 
   int result = 0;
   const NeighborListType bonds(atom.molecule()->bonds(atom));
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
+  for (auto it = bonds.begin(), itEnd = bonds.end();
        it != itEnd && result < numberOfHydrogens; ++it) {
     const RWAtom otherAtom = it->getOtherAtom(atom);
     if (otherAtom.atomicNumber() == 1) {

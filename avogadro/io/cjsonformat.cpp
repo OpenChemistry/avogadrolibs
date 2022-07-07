@@ -325,7 +325,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   // Basis set is optional, if present read it in.
   json basisSet = jsonRoot["basisSet"];
   if (basisSet.is_object()) {
-    GaussianSet* basis = new GaussianSet;
+    auto* basis = new GaussianSet;
     basis->setMolecule(&molecule);
     // Gather the relevant pieces together so that they can be read in.
     json shellTypes = basisSet["shellTypes"];
@@ -742,7 +742,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         Array<Vector3> fcoords;
         CrystalTools::fractionalCoordinates(
           *molecule.unitCell(), molecule.atomPositions3d(), fcoords);
-        for (vector<Vector3>::const_iterator it = fcoords.begin(),
+        for (auto it = fcoords.begin(),
                                              itEnd = fcoords.end();
              it != itEnd; ++it) {
           coordsFractional.push_back(it->x());

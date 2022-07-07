@@ -54,7 +54,6 @@ namespace {
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
-using Core::Cube;
 using Core::GaussianSet;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
@@ -221,7 +220,7 @@ void Surfaces::calculateEDT()
 
     // first, make a list of all atom positions and radii
     Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    std::vector<std::pair<Vector3, double>> *atoms =
+    auto *atoms =
       new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
     double max_radius = probeRadius;
     for (size_t i = 0; i < atoms->size(); i++) {
@@ -291,7 +290,7 @@ void Surfaces::performEDTStep()
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
     // also make a list of all "inside" cubes
-    std::vector<Vector3i> *insideIndices = new std::vector<Vector3i>;
+    auto *insideIndices = new std::vector<Vector3i>;
     Vector3i size = m_cube->dimensions();
     relativePositions.reserve(size(0) * size(1) * 4); // O(n^2)
     insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
@@ -613,7 +612,7 @@ void Surfaces::movieFrame()
 
   if (d->gifWriter) {
     int pixelCount = exportImage.width() * exportImage.height();
-    uint8_t* imageData = new uint8_t[pixelCount * 4];
+    auto* imageData = new uint8_t[pixelCount * 4];
     int imageIndex = 0;
     for (int j = 0; j < exportImage.height(); ++j) {
       for (int k = 0; k < exportImage.width(); ++k) {

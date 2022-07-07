@@ -26,7 +26,7 @@ GeometryNode::~GeometryNode()
 void GeometryNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
+  for (auto it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     (*it)->accept(visitor);
   }
@@ -34,7 +34,7 @@ void GeometryNode::accept(Visitor& visitor)
 
 void GeometryNode::addDrawable(Drawable* object)
 {
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
+  for (auto it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if (*it == object)
       return;
@@ -47,7 +47,7 @@ bool GeometryNode::removeDrawable(Drawable* object)
 {
   if (!object)
     return false;
-  for (std::vector<Drawable*>::iterator it = m_drawables.begin();
+  for (auto it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if (*it == object) {
       (*it)->setParent(nullptr);
@@ -69,7 +69,7 @@ Drawable* GeometryNode::drawable(size_t index)
 void GeometryNode::clearDrawables()
 {
   // Like all good parents, we destroy our children before we go...
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
+  for (auto it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     delete (*it);
   }

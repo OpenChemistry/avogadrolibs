@@ -22,17 +22,12 @@
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QAction>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
-using QtGui::RWBond;
-using QtGui::RWMolecule;
-using Rendering::Identifier;
 
 #define ROTATION_SPEED 0.5
 

@@ -291,7 +291,7 @@ void SymmetryWidget::equivalenceSelectionChanged(
     m_molecule->setAtomSelected(i, false);
   }
   // this is yucky, but libmsym uses <void*> for id
-  Index selectedAtom = reinterpret_cast<Index>(a->id);
+  auto selectedAtom = reinterpret_cast<Index>(a->id);
   m_molecule->setAtomSelected(selectedAtom, true);
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -336,14 +336,14 @@ void SymmetryWidget::setEquivalenceSets(int esl,
   m_es = es;
   m_equivalenceTreeModel->clear();
   for (int i = 0; i < esl; i++) {
-    QStandardItem* const parent = new QStandardItem;
+    auto* const parent = new QStandardItem;
     QString label = tr("Group %1").arg(QString::number(i + 1));
     parent->setText(label);
     parent->setData(i, Qt::UserRole);
     m_equivalenceTreeModel->appendRow(parent);
     const msym_equivalence_set_t* smes = &es[i];
     for (int j = 0; j < smes->length; j++) {
-      QStandardItem* const child = new QStandardItem;
+      auto* const child = new QStandardItem;
       label =
         tr("%1 %2").arg(smes->elements[j]->name).arg(QString::number(j + 1));
       child->setText(label);
@@ -361,7 +361,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
   for (int i = 0; i < sgl; i++) {
     if (sg[i].order <= 2)
       continue;
-    QStandardItem* const parent = new QStandardItem;
+    auto* const parent = new QStandardItem;
     parent->setText(pointGroupSymbol(sg[i].name));
     parent->setData(i, Qt::UserRole);
     m_subgroupsTreeModel->appendRow(parent);
@@ -370,7 +370,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
         continue;
       // qDebug() << "child " << sg[i].generators[j] - m_sg << " "
       //         << sg[i].generators[j] << " " << m_sg;
-      QStandardItem* const child = new QStandardItem;
+      auto* const child = new QStandardItem;
       child->setText(pointGroupSymbol(generator->name));
 
       child->setData(static_cast<int>(generator - m_sg),

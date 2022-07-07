@@ -133,7 +133,7 @@ bool FileFormatManager::addFormat(FileFormat* format)
     appendError("Format " + format->identifier() + " already loaded.");
     return false;
   }
-  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin();
+  for (auto it = m_formats.begin();
        it != m_formats.end(); ++it) {
     if (*it == format) {
       appendError("The format object was already loaded.");
@@ -146,12 +146,12 @@ bool FileFormatManager::addFormat(FileFormat* format)
   m_formats.push_back(format);
   m_identifiers[format->identifier()].push_back(index);
   std::vector<std::string> mimes = format->mimeTypes();
-  for (std::vector<std::string>::const_iterator it = mimes.begin();
+  for (auto it = mimes.begin();
        it != mimes.end(); ++it) {
     m_mimeTypes[*it].push_back(index);
   }
   std::vector<std::string> extensions = format->fileExtensions();
-  for (std::vector<std::string>::const_iterator it = extensions.begin();
+  for (auto it = extensions.begin();
        it != extensions.end(); ++it) {
     m_fileExtensions[*it].push_back(index);
   }
@@ -166,15 +166,15 @@ template<typename Map, typename VectorOfKeys, typename ValueType>
 void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
 {
   typedef typename VectorOfKeys::const_iterator KeysIter;
-  for (KeysIter key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
-    typename Map::iterator mapMatch = map.find(*key);
+  for (auto key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
+    auto mapMatch = map.find(*key);
     if (mapMatch == map.end())
       continue;
     typename Map::mapped_type& vec = mapMatch->second;
     if (vec.size() <= 1) {
       map.erase(*key);
     } else {
-      typename Map::mapped_type::iterator newEnd =
+      auto newEnd =
         std::remove(vec.begin(), vec.end(), val);
       vec.resize(newEnd - vec.begin());
     }
@@ -190,7 +190,7 @@ bool FileFormatManager::removeFormat(const std::string& identifier)
   if (ids.empty())
     return false;
 
-  for (FormatIdVector::const_iterator it = ids.begin(), itEnd = ids.end();
+  for (auto it = ids.begin(), itEnd = ids.end();
        it != itEnd; ++it) {
     FileFormat* fmt = m_formats[*it];
 
@@ -306,7 +306,7 @@ FileFormatManager::FileFormatManager()
 FileFormatManager::~FileFormatManager()
 {
   // Delete the file formats that were loaded.
-  for (std::vector<FileFormat*>::const_iterator it = m_formats.begin();
+  for (auto it = m_formats.begin();
        it != m_formats.end(); ++it) {
     delete (*it);
   }
@@ -319,7 +319,7 @@ std::vector<std::string> FileFormatManager::filteredKeysFromFormatMap(
 {
   std::vector<std::string> result;
   for (const auto & it : fmap) {
-    for (std::vector<size_t>::const_iterator formatIt = it.second.begin();
+    for (auto formatIt = it.second.begin();
          formatIt != it.second.end(); ++formatIt) {
       if (filter == FileFormat::None ||
           (m_formats[*formatIt]->supportedOperations() & filter) == filter) {
@@ -337,7 +337,7 @@ std::vector<FileFormat*> FileFormatManager::filteredFormatsFromFormatMap(
 {
   std::vector<FileFormat*> result;
 
-  FormatIdMap::const_iterator it = fmap.find(key);
+  auto it = fmap.find(key);
   if (it != fmap.end())
     result = filteredFormatsFromFormatVector(filter, it->second);
 
@@ -348,7 +348,7 @@ FileFormat* FileFormatManager::filteredFormatFromFormatMap(
   const std::string& key, FileFormat::Operations filter,
   const FileFormatManager::FormatIdMap& fmap) const
 {
-  FormatIdMap::const_iterator it = fmap.find(key);
+  auto it = fmap.find(key);
   if (it != fmap.end())
     return filteredFormatFromFormatVector(filter, it->second);
 

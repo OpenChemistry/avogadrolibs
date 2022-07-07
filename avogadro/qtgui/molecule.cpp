@@ -115,7 +115,7 @@ bool Molecule::removeAtom(Index index)
     return false;
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
-  Index newSize = static_cast<Index>(atomCount() - 1);
+  auto newSize = static_cast<Index>(atomCount() - 1);
 
   // Before removing the atom we must first remove any bonds to it.
   Core::Molecule::removeAtom(index);
@@ -237,7 +237,7 @@ bool Molecule::removeBond(Index index)
     return false;
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
-  Index newSize = static_cast<Index>(bondCount() - 1);
+  auto newSize = static_cast<Index>(bondCount() - 1);
   if (index != newSize) {
     Index movedBondUID = findBondUniqueId(newSize);
     assert(movedBondUID != MaxIndex);

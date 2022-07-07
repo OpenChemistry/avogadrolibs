@@ -49,7 +49,7 @@ void ScriptFileFormats::refreshFileFormats()
   QMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("formatScripts");
   foreach (const QString& filePath, scriptPaths) {
-    FileFormatScript* format = new FileFormatScript(filePath);
+    auto* format = new FileFormatScript(filePath);
     if (format->isValid())
       m_formats.push_back(format);
     else

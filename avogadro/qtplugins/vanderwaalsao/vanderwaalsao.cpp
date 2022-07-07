@@ -30,9 +30,9 @@ void VanDerWaalsAO::process(const QtGui::Molecule& molecule,
                             Rendering::GroupNode& node)
 {
   // Add a sphere node to contain all of the VdW spheres.
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  AmbientOcclusionSphereGeometry* spheres = new AmbientOcclusionSphereGeometry;
+  auto* spheres = new AmbientOcclusionSphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);

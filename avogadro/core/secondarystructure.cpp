@@ -78,7 +78,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Then assign the beta sheet - but only if a residue isn't assigned
-  const Residue::SecondaryStructure maybeBeta =
+  const auto maybeBeta =
     static_cast<const Residue::SecondaryStructure>(-3);
   for (auto hBond : m_hBonds) {
     if (hBond->distSquared < infinity) {
@@ -181,7 +181,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
     auto oxygen = residue.getAtomByName("O");
     if (oxygen.isValid()) {
-      hBondRecord* oRecord = new hBondRecord();
+      auto* oRecord = new hBondRecord();
       oRecord->atom = oxygen.index();
       oRecord->atomZ = oxygen.position3d()[2];
       oRecord->distSquared = std::numeric_limits<float>::max();
@@ -192,7 +192,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
     auto nitrogen = residue.getAtomByName("N");
     if (nitrogen.isValid()) {
-      hBondRecord* nRecord = new hBondRecord();
+      auto* nRecord = new hBondRecord();
       nRecord->atom = nitrogen.index();
       nRecord->atomZ = nitrogen.position3d()[2];
       nRecord->distSquared = std::numeric_limits<float>::max();

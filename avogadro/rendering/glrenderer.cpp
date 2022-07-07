@@ -182,13 +182,13 @@ std::multimap<float, Identifier> GLRenderer::hits(
   for (auto it : group->children()) {
     std::multimap<float, Identifier> loopHits;
     const Node* itNode = it.node;
-    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
-    const GeometryNode* childGeometry = itNode->cast<GeometryNode>();
+    const auto* childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
@@ -227,7 +227,7 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
   for (auto it : group->children()) {
     Array<Identifier> loopHits;
     const Node* itNode = it.node;
-    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());

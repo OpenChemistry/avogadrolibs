@@ -227,7 +227,7 @@ void ShaderProgram::release()
 
 bool ShaderProgram::enableAttributeArray(const std::string& name)
 {
-  GLint location = static_cast<GLint>(findAttributeArray(name));
+  auto location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not enable attribute " + name + ". No such attribute.";
     return false;
@@ -238,7 +238,7 @@ bool ShaderProgram::enableAttributeArray(const std::string& name)
 
 bool ShaderProgram::disableAttributeArray(const std::string& name)
 {
-  GLint location = static_cast<GLint>(findAttributeArray(name));
+  auto location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not disable attribute " + name + ". No such attribute.";
     return false;
@@ -254,7 +254,7 @@ bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
                                       int elementTupleSize,
                                       NormalizeOption normalize)
 {
-  GLint location = static_cast<GLint>(findAttributeArray(name));
+  auto location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
@@ -269,7 +269,7 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
                                       const Texture2D& texture)
 {
   // Look up sampler location:
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set sampler " + name + ". No uniform with that name.";
     return false;
@@ -278,14 +278,14 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
   // Check if the texture is already bound:
   GLint textureUnitId = 0;
   typedef std::map<const Texture2D*, int>::const_iterator TMapIter;
-  TMapIter result = m_textureUnitBindings.find(&texture);
+  auto result = m_textureUnitBindings.find(&texture);
   if (result == m_textureUnitBindings.end()) {
     // Not bound. Attempt to bind the texture to an available texture unit.
     // We'll leave GL_TEXTURE0 unbound, as it is used for manipulating
     // textures.
-    std::vector<bool>::iterator begin = m_boundTextureUnits.begin() + 1;
-    std::vector<bool>::iterator end = m_boundTextureUnits.end();
-    std::vector<bool>::iterator available = std::find(begin, end, false);
+    auto begin = m_boundTextureUnits.begin() + 1;
+    auto end = m_boundTextureUnits.end();
+    auto available = std::find(begin, end, false);
 
     if (available == end) {
       m_error = "Could not set sampler " + name + ". No remaining texture "
@@ -328,7 +328,7 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
 
 bool ShaderProgram::setUniformValue(const std::string& name, int i)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -339,7 +339,7 @@ bool ShaderProgram::setUniformValue(const std::string& name, int i)
 
 bool ShaderProgram::setUniformValue(const std::string& name, float f)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -351,7 +351,7 @@ bool ShaderProgram::setUniformValue(const std::string& name, float f)
 bool ShaderProgram::setUniformValue(const std::string& name,
                                     const Eigen::Matrix3f& matrix)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -364,7 +364,7 @@ bool ShaderProgram::setUniformValue(const std::string& name,
 bool ShaderProgram::setUniformValue(const std::string& name,
                                     const Eigen::Matrix4f& matrix)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -376,7 +376,7 @@ bool ShaderProgram::setUniformValue(const std::string& name,
 
 bool ShaderProgram::setUniformValue(const std::string& name, const Vector3f& v)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -387,7 +387,7 @@ bool ShaderProgram::setUniformValue(const std::string& name, const Vector3f& v)
 
 bool ShaderProgram::setUniformValue(const std::string& name, const Vector2i& v)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -398,7 +398,7 @@ bool ShaderProgram::setUniformValue(const std::string& name, const Vector2i& v)
 
 bool ShaderProgram::setUniformValue(const std::string& name, const Vector3ub& v)
 {
-  GLint location = static_cast<GLint>(findUniform(name));
+  auto location = static_cast<GLint>(findUniform(name));
   if (location == -1) {
     m_error = "Could not set uniform " + name + ". No such uniform.";
     return false;
@@ -416,12 +416,12 @@ bool ShaderProgram::setAttributeArrayInternal(
     m_error = "Unrecognized data type for attribute " + name + ".";
     return false;
   }
-  GLint location = static_cast<GLint>(findAttributeArray(name));
+  auto location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not set attribute " + name + ". No such attribute.";
     return false;
   }
-  const GLvoid* data = static_cast<const GLvoid*>(buffer);
+  const auto* data = static_cast<const GLvoid*>(buffer);
   glVertexAttribPointer(location, tupleSize, convertType(type),
                         normalize == Normalize ? GL_TRUE : GL_FALSE, 0, data);
   return true;
@@ -453,8 +453,8 @@ inline int ShaderProgram::findAttributeArray(const std::string& name)
 {
   if (name.empty() || !m_linked)
     return -1;
-  const GLchar* namePtr = static_cast<const GLchar*>(name.c_str());
-  GLint location = static_cast<int>(
+  const auto* namePtr = static_cast<const GLchar*>(name.c_str());
+  auto location = static_cast<int>(
     glGetAttribLocation(static_cast<GLuint>(m_handle), namePtr));
   if (location == -1) {
     m_error = "Specified attribute not found in current shader program: ";
@@ -468,8 +468,8 @@ inline int ShaderProgram::findUniform(const std::string& name)
 {
   if (name.empty() || !m_linked)
     return -1;
-  const GLchar* namePtr = static_cast<const GLchar*>(name.c_str());
-  GLint location = static_cast<int>(
+  const auto* namePtr = static_cast<const GLchar*>(name.c_str());
+  auto location = static_cast<int>(
     glGetUniformLocation(static_cast<GLuint>(m_handle), namePtr));
   if (location == -1)
     m_error = "Uniform " + name + " not found in current shader program.";

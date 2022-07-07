@@ -45,7 +45,7 @@ void ScriptCharges::refreshModels()
   QMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("charges");
   foreach (const QString& filePath, scriptPaths) {
-    ScriptChargeModel* model = new ScriptChargeModel(filePath);
+    auto* model = new ScriptChargeModel(filePath);
     if (model->isValid())
       m_models.push_back(model);
     else

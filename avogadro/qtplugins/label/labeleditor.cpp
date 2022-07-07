@@ -105,7 +105,7 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
 
   tprop.setColorRgb(255, 255, 255);
-  TextLabel3D* label = new TextLabel3D;
+  auto* label = new TextLabel3D;
   label->setText(text);
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setTextProperties(tprop);
@@ -121,7 +121,7 @@ void LabelEditor::draw(Rendering::GroupNode& node)
       !m_selectedAtom.isValid()) {
     return;
   }
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   unsigned char atomicNumber = m_selectedAtom.atomicNumber();

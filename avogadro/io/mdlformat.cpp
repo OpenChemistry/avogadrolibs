@@ -100,7 +100,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
-    signed int charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
+    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
@@ -164,7 +164,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                       buffer.substr(10 + 8 * i, 3));
           return false;
         }
-        signed int charge(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        auto charge(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
         if (!ok) {
           appendError("Error parsing atom charge:" +
                       buffer.substr(14 + 8 * i, 3));

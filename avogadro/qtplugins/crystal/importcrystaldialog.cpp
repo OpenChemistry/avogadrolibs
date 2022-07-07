@@ -16,7 +16,6 @@
 
 #include <QtGui/QClipboard>
 
-using std::vector;
 using std::string;
 
 namespace Avogadro::QtPlugins {

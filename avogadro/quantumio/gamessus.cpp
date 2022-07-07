@@ -107,7 +107,7 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
   reorderMOs();
 
   molecule.perceiveBondsSimple();
-  GaussianSet* basis = new GaussianSet;
+  auto* basis = new GaussianSet;
   load(basis);
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
@@ -135,7 +135,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
     }
     bool ok(false);
     Vector3 pos;
-    unsigned char atomicNumber(
+    auto atomicNumber(
       static_cast<unsigned char>(Core::lexicalCast<int>(parts[1], ok)));
     if (!ok)
       appendError("Failed to cast to int for atomic number: " + parts[1]);
@@ -242,8 +242,8 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
       if (newBlock) {
         // Reorder the columns/rows, add them and then prepare
         for (auto & eigenvector : eigenvectors)
-          for (size_t j = 0; j < eigenvector.size(); ++j)
-            m_MOcoeffs.push_back(eigenvector[j]);
+          for (double j : eigenvector)
+            m_MOcoeffs.push_back(j);
         eigenvectors.clear();
         eigenvectors.resize(parts.size() - 4);
         numberOfMos += eigenvectors.size();
@@ -264,8 +264,8 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
   }
   m_nMOs = numberOfMos;
   for (auto & eigenvector : eigenvectors)
-    for (size_t j = 0; j < eigenvector.size(); ++j)
-      m_MOcoeffs.push_back(eigenvector[j]);
+    for (double j : eigenvector)
+      m_MOcoeffs.push_back(j);
 
   // Now we just need to transpose the matrix, as GAMESS uses a different order.
   // We know the number of columns (MOs), and the number of rows (primitives).

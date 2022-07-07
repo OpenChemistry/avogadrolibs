@@ -548,18 +548,18 @@ void Cp2kInputDialog::updatePreviewText()
   if (title.isEmpty())
     title = generateJobTitle();
 
-  CalculateOption calculate(
+  auto calculate(
     static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
-  FunctionalOption functional(
+  auto functional(
     static_cast<FunctionalOption>(ui.functionalCombo->currentIndex()));
-  BasisOption basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  MethodOption method(
+  auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
+  auto method(
     static_cast<MethodOption>(ui.methodCombo->currentIndex()));
-  EWALDTypeOption EWALDType(
+  auto EWALDType(
     static_cast<EWALDTypeOption>(ui.ewaldtypeCombo->currentIndex()));
-  SCFGuessOption SCFGuess(
+  auto SCFGuess(
     static_cast<SCFGuessOption>(ui.scfguessComboBox->currentIndex()));
-  OTMinimizerOption OTMinimizer(
+  auto OTMinimizer(
     static_cast<OTMinimizerOption>(ui.otminimizerComboBox->currentIndex()));
 
   QString emaxSpline = QString::number(ui.emaxSplineSpin->value());

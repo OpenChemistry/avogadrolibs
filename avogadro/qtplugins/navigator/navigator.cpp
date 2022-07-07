@@ -52,9 +52,9 @@ QWidget* Navigator::toolWidget() const
 {
   if (!m_toolWidget) {
     m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
 
-    QCheckBox* swapZoom =
+    auto* swapZoom =
       new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
     swapZoom->setToolTip(
       tr("Default:\t Scroll down to shrink, scroll up to zoom\n"

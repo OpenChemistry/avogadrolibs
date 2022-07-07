@@ -14,7 +14,6 @@
 
 namespace Avogadro::QtPlugins {
 
-using Core::Elements;
 using QtGui::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::CylinderGeometry;
@@ -36,9 +35,9 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   float selectedRadius(radius * 2.0f);
 
   // Add a sphere node to contain all of the spheres.
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
   auto selectedSpheres = new SphereGeometry;
@@ -61,7 +60,7 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
     }
   }
 
-  CylinderGeometry* cylinders = new CylinderGeometry;
+  auto* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);

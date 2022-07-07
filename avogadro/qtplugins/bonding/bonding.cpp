@@ -163,7 +163,7 @@ void Bonding::clearBonds()
     } // end looping through atoms
 
     // now delete the bonds
-    for (std::vector<size_t>::const_reverse_iterator it = bondIndices.rbegin(),
+    for (auto it = bondIndices.rbegin(),
                                                      itEnd = bondIndices.rend();
          it != itEnd; ++it) {
       m_molecule->removeBond(*it);

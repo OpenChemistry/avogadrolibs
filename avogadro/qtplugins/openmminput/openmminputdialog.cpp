@@ -246,7 +246,7 @@ void OpenMMInputDialog::addMoleculeDataTab()
 
 void OpenMMInputDialog::textEditModified()
 {
-  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
+  if (auto* edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
       deckDirty(true);
     } else {

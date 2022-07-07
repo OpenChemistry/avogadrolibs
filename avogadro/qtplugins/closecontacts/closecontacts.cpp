@@ -75,9 +75,9 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
   for (Index i = 0; i < molecule.atomCount(); ++i)
     isAtomEnabled[i] = m_layerManager.atomEnabled(i);
 
-  GeometryNode *geometry = new GeometryNode;
+  auto *geometry = new GeometryNode;
   node.addChild(geometry);
-  DashedLineGeometry *lines = new DashedLineGeometry;
+  auto *lines = new DashedLineGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   lines->setLineWidth(2.0);
@@ -106,11 +106,11 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 
 QWidget *CloseContacts::setupWidget()
 {
-  QWidget *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
-  QVBoxLayout *v = new QVBoxLayout;
+  auto *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
+  auto *v = new QVBoxLayout;
 
   // maximum distance
-  QDoubleSpinBox *spin = new QDoubleSpinBox;
+  auto *spin = new QDoubleSpinBox;
   spin->setRange(1.5, 10.0);
   spin->setSingleStep(0.1);
   spin->setDecimals(1);
@@ -118,7 +118,7 @@ QWidget *CloseContacts::setupWidget()
   spin->setValue(m_maximumDistance);
   QObject::connect(spin, SIGNAL(valueChanged(double)), this,
                    SLOT(setMaximumDistance(double)));
-  QFormLayout *form = new QFormLayout;
+  auto *form = new QFormLayout;
   form->addRow(QObject::tr("Maximum distance:"), spin);
   v->addLayout(form);
 

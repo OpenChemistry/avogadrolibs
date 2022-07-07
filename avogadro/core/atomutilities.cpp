@@ -200,7 +200,7 @@ Vector3 AtomUtilities::generateNewBondVector(
   for (int attempt = 0; !success && attempt < 10; ++attempt) {
     newPos = Vector3::Random().normalized();
     success = true;
-    for (std::vector<Vector3>::const_iterator it = allVectors.begin(),
+    for (auto it = allVectors.begin(),
                                               itEnd = allVectors.end();
          success && it != itEnd; ++it) {
       success = newPos.dot(*it) < cosRadTol;

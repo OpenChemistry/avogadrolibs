@@ -33,11 +33,11 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
 {
   // Create sphere/cylinder nodes.
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   geometry->addDrawable(spheres);
-  CylinderGeometry* cylinders = new CylinderGeometry;
+  auto* cylinders = new CylinderGeometry;
   geometry->addDrawable(cylinders);
 
   // Render the bond paths
