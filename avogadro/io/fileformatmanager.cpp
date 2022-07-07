@@ -187,7 +187,7 @@ bool FileFormatManager::removeFormat(const std::string& identifier)
   if (ids.empty())
     return false;
 
-  for (unsigned long & id : ids) {
+  for (size_t id : ids) {
     FileFormat* fmt = m_formats[id];
 
     if (fmt == nullptr)
