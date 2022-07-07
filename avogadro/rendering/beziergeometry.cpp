@@ -5,8 +5,7 @@
 
 #include "beziergeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 BezierGeometry::BezierGeometry() : CurveGeometry() {}
 
@@ -30,5 +29,4 @@ Vector3f BezierGeometry::computeCurvePoint(
   return Q;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

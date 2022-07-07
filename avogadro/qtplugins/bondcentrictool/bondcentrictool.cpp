@@ -42,8 +42,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -1214,5 +1213,4 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

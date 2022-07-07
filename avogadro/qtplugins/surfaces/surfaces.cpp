@@ -51,8 +51,7 @@ namespace {
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Cube;
@@ -702,5 +701,4 @@ void Surfaces::movieFrame()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

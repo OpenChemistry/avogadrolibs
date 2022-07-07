@@ -16,8 +16,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using std::cout;
 using std::endl;
@@ -331,5 +330,4 @@ vector<std::string> NWChemJson::mimeTypes() const
   return mime;
 }
 
-} // namespace QuantumIO
 } // namespace Avogadro

@@ -19,8 +19,7 @@
 using std::vector;
 using std::string;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ImportCrystalDialog::ImportCrystalDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::ImportCrystalDialog)
@@ -73,5 +72,4 @@ void ImportCrystalDialog::displayInvalidFormatMessage()
   close();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

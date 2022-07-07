@@ -14,8 +14,7 @@
 #include <set>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 namespace {
 
@@ -516,5 +515,4 @@ std::vector<std::vector<size_t>>& RingPerceiver::rings()
   return m_rings;
 }
 
-} // end Core namespace
 } // end Avogadro namespace

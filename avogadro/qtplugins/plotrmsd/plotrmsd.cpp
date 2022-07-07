@@ -18,8 +18,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 
@@ -151,5 +150,4 @@ void PlotRmsd::generateRmsdPattern(RmsdData& results)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

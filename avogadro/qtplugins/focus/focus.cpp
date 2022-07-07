@@ -11,8 +11,7 @@
 #include <QtWidgets/QAction>
 #include <iostream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::ExtensionPlugin;
 
@@ -116,5 +115,4 @@ void Focus::unfocus()
   emit updateRequested();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

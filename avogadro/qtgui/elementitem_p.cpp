@@ -14,8 +14,7 @@
 #include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtWidgets/QStyleOption>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Elements;
 
@@ -84,5 +83,4 @@ void ElementItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
   painter->drawText(rect, Qt::AlignCenter, m_symbol);
 }
 
-} // End namespace QtGui
 } // End namespace Avogadro

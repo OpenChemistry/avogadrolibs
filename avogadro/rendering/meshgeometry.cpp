@@ -33,8 +33,7 @@ using Avogadro::Vector4ub;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 const unsigned int MeshGeometry::InvalidIndex =
   std::numeric_limits<unsigned int>::max();
@@ -283,5 +282,4 @@ void MeshGeometry::clear()
   m_dirty = true;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

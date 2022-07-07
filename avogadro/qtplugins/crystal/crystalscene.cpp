@@ -20,8 +20,7 @@
 
 #include <QDebug>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Molecule;
@@ -161,5 +160,4 @@ QWidget* CrystalScene::setupWidget()
   return m_setupWidget;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

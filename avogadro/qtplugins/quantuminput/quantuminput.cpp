@@ -32,8 +32,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QtPlugin>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using MoleQueue::InputGenerator;
 using MoleQueue::InputGeneratorDialog;
@@ -257,6 +256,5 @@ bool QuantumInput::queryProgramName(const QString& scriptFilePath,
     return false;
   }
   return true;
-}
 }
 }

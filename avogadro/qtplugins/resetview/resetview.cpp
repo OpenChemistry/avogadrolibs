@@ -16,8 +16,7 @@
 
 #define CAMERA_NEAR_DISTANCE 13.35f // Experimental number
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::ExtensionPlugin;
 using Core::Array;
@@ -254,5 +253,4 @@ void ResetView::alignToAxes()
   animationCameraDefault();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -16,8 +16,7 @@
 #include <iostream>
 #include <string>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const float SVG::DEFAULT_RADIUS = 35.0f;
 const float SVG::DEFAULT_PEN_WIDTH_MOL = 1.0f;
@@ -278,5 +277,4 @@ void SVG::render()
   painter.end();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

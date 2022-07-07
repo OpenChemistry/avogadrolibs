@@ -10,8 +10,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
@@ -198,5 +197,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

@@ -32,8 +32,7 @@
 #define M_TETRAHEDRAL (acosf(-1.0f / 3.0f))
 #define M_TRIGONAL (2.0f * M_PI / 3.0f)
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::AtomHybridization;
@@ -407,5 +406,4 @@ void NonCovalent::setLineWidth(float width, Index index)
   settings.setValue(QString("nonCovalent/lineWidth%1").arg(index), width);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

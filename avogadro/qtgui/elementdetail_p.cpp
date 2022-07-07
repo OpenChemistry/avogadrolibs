@@ -14,8 +14,7 @@
 #include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtWidgets/QStyleOption>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Elements;
 
@@ -127,5 +126,4 @@ void ElementDetail::setElement(int element)
   }
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace

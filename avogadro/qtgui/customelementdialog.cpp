@@ -17,8 +17,7 @@
 
 using Avogadro::Core::Elements;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 CustomElementDialog::CustomElementDialog(Molecule& mol, QWidget* p)
   : QDialog(p), m_ui(new Ui::CustomElementDialog), m_molecule(mol)
@@ -153,5 +152,4 @@ void CustomElementDialog::addRow(unsigned char elementId, const QString& name)
   m_ui->form->addRow(name + ":", combo);
 }
 
-} // namespace QtGui
 } // namespace Avogadro

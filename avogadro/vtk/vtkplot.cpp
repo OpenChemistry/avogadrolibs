@@ -31,8 +31,7 @@ using std::array;
 using std::string;
 using std::vector;
 
-namespace Avogadro {
-namespace VTK {
+namespace Avogadro::VTK {
 
 VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLStereoWidget)
 {
@@ -225,5 +224,4 @@ vtkAxis* VtkPlot::getAxis(Axis axis)
   return nullptr;
 }
 
-} // namespace VTK
 } // namespace Avogadro

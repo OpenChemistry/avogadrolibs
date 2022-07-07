@@ -8,8 +8,7 @@
 
 #include "inputgeneratorwidget.h"
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 using QtGui::Molecule;
 
@@ -69,5 +68,4 @@ void InputGeneratorDialog::setMolecule(Molecule* mol)
   ui->widget->setMolecule(mol);
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

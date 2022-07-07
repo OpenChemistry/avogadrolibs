@@ -31,8 +31,7 @@ using Avogadro::QtOpenGL::ActiveObjects;
 
 using std::map;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 
@@ -185,5 +184,4 @@ void ColorOpacityMap::render()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -22,8 +22,7 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
@@ -136,5 +135,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

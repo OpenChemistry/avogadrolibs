@@ -15,8 +15,7 @@
 #include <QtWidgets/QFileDialog>
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
@@ -169,6 +168,5 @@ void Spectra::advanceFrame()
     m_currentFrame = 0;
   m_molecule->setCoordinate3d(m_currentFrame);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
-}
 }
 }

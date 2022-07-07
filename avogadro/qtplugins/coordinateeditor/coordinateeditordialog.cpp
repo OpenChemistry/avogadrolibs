@@ -99,8 +99,7 @@ struct AtomStruct
 
 } // end anon namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 // Storage class used to hold state while validating input.
 class CoordinateEditorDialog::ValidateStorage
@@ -808,5 +807,4 @@ void CoordinateEditorDialog::clearClicked()
   m_ui->text->document()->clear();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

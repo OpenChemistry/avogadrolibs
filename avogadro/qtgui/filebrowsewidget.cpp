@@ -16,8 +16,7 @@
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QRegExp>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   : QWidget(theParent)
@@ -202,5 +201,4 @@ FileBrowseWidget::Mode FileBrowseWidget::mode() const
   return m_mode;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

@@ -22,8 +22,7 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 FileFormatScript::FileFormatScript(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
@@ -359,5 +358,4 @@ bool FileFormatScript::parseStringArray(const QJsonObject& ob,
   return !array.empty();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

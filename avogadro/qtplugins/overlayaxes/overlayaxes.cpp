@@ -75,8 +75,7 @@ void CustomMesh::render(const Camera& camera)
 }
 } // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class OverlayAxes::RenderImpl
 {
@@ -326,5 +325,4 @@ void OverlayAxes::setScene(Rendering::Scene* scene)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

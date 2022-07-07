@@ -5,8 +5,7 @@
 
 #include "variantmap.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 VariantMap::VariantMap()
 {
@@ -84,5 +83,4 @@ VariantMap::const_iterator VariantMap::constEnd() const
   return m_map.end();
 }
 
-} // end Core namespace
 } // end Avogadro namespace

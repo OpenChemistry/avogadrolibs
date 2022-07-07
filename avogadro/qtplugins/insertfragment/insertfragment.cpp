@@ -25,8 +25,7 @@ using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 InsertFragment::InsertFragment(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_crystalDialog(nullptr),
@@ -124,5 +123,4 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

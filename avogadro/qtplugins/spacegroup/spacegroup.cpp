@@ -35,8 +35,7 @@ using Avogadro::Core::CrystalTools;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SpaceGroup::SpaceGroup(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -373,5 +372,4 @@ unsigned short SpaceGroup::selectSpaceGroup()
   return view->currentIndex().row() + 1;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

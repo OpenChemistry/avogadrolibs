@@ -14,8 +14,7 @@
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QVBoxLayout>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class ActiveWidgetFilter : public QObject
 {
@@ -239,7 +238,6 @@ void MultiViewWidget::splitView(Qt::Orientation orient,
   }
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace
 
 #include "multiviewwidget.moc"

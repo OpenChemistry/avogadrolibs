@@ -35,8 +35,7 @@
 
 #include <cmath>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 
@@ -407,5 +406,4 @@ void PlayerTool::setSliderLimit()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

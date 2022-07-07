@@ -10,8 +10,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   : QWidget(p, f)
@@ -63,5 +62,4 @@ void ContainerWidget::setActive(bool active)
   }
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace

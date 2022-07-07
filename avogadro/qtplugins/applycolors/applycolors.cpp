@@ -21,8 +21,7 @@
 
 using namespace tinycolormap;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const int atomColors = 0;
 const int bondColors = 1;
@@ -571,5 +570,4 @@ void ApplyColors::applyShapelyColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

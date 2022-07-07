@@ -10,8 +10,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Elements;
 
@@ -148,5 +147,4 @@ void PeriodicTableView::resizeEvent(QResizeEvent* e)
   setTransform(scaleTransform);
 }
 
-} // namespace QtGui
 } // namespace Avogadro

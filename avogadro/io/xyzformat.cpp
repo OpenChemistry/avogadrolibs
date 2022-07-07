@@ -27,8 +27,7 @@ using std::string;
 using std::string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
@@ -233,5 +232,4 @@ std::vector<std::string> XyzFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

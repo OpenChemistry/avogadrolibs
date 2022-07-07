@@ -30,8 +30,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QtPlugin>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
@@ -307,5 +306,4 @@ void Command::addAction(const QString& label, const QString& scriptFilePath)
   m_actions << action;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -25,8 +25,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
@@ -578,5 +577,4 @@ std::vector<std::string> LammpsDataFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
 } // end Avogadro namespace

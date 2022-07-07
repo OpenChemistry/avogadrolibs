@@ -15,8 +15,7 @@ using std::cout;
 using std::endl;
 using Eigen::SelfAdjointEigenSolver;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SlaterSet::SlaterSet() : m_initialized(false)
 {
@@ -159,5 +158,4 @@ inline unsigned int SlaterSet::factorial(unsigned int n)
   return (n * factorial(n - 1));
 }
 
-} // End namespace Core
 } // End namespace Avogadro

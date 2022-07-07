@@ -20,8 +20,7 @@
 #include <string>
 #include <utility>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Atom;
 using Core::Elements;
@@ -229,5 +228,4 @@ bool GromacsFormat::write(std::ostream&, const Core::Molecule&)
   return false;
 }
 
-} // namespace Io
 } // namespace Avogadro

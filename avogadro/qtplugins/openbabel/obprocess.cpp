@@ -12,8 +12,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QRegExp>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OBProcess::OBProcess(QObject* parent_)
   : QObject(parent_), m_processLocked(false), m_aborted(false),
@@ -497,5 +496,4 @@ void OBProcess::resetState()
   connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

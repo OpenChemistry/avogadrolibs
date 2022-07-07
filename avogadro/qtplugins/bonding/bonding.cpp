@@ -16,8 +16,7 @@
 
 #include "ui_bondingdialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -174,5 +173,4 @@ void Bonding::clearBonds()
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -32,8 +32,7 @@ using std::setprecision;
 using std::setw;
 using std::string;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 typedef std::pair<size_t, signed int> chargePair;
 
@@ -290,5 +289,4 @@ std::vector<std::string> MdlFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

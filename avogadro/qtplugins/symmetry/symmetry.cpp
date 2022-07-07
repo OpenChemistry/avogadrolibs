@@ -27,8 +27,7 @@ using Avogadro::QtGui::Molecule;
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_)
@@ -378,5 +377,4 @@ void Symmetry::standardOrientation()
                           | Molecule::Atoms | Molecule::UnitCell);
 }*/
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -16,8 +16,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::BasisSet;
@@ -324,6 +323,5 @@ void MopacAux::outputAll()
   for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
     cout << m_MOcoeffs.at(i) << "\t";
   cout << endl;
-}
 }
 }

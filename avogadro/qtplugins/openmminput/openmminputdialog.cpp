@@ -26,8 +26,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OpenMMInputDialog::OpenMMInputDialog(QWidget* parent, Qt::WindowFlags flag)
   : QDialog(parent, flag), m_molecule(nullptr),
@@ -1345,5 +1344,4 @@ void OpenMMInputDialog::writeSettings(QSettings& settings) const
   settings.setValue("openmm/savepath", m_savePath);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

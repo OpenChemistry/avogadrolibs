@@ -28,8 +28,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class CylinderGeometry::Private
 {
@@ -325,5 +324,4 @@ void CylinderGeometry::clear()
   m_indexMap.clear();
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

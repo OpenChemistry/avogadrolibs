@@ -40,8 +40,7 @@ using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::MeshGeometry;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SelectionTool::SelectionTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -365,5 +364,4 @@ void SelectionTool::setMolecule(QtGui::Molecule* mol)
   m_toolWidget->setDropDown(currentLayer, maxLayers);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

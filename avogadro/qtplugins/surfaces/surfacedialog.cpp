@@ -7,8 +7,7 @@
 
 #include "ui_surfacedialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog),
@@ -282,5 +281,4 @@ void SurfaceDialog::enableRecord()
   m_ui->recordButton->setEnabled(true);
 }
 
-} // End namespace QtPlugins
 } // End namespace Avogadro

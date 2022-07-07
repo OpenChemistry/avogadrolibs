@@ -15,8 +15,7 @@ using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
 {
@@ -163,5 +162,4 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   return values;
 }
 
-} // End Core namespace
 } // End Avogadro namespace

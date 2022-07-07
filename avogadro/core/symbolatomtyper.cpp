@@ -8,8 +8,7 @@
 #include "atom.h"
 #include "elements.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SymbolAtomTyper::SymbolAtomTyper(const Molecule* mol)
   : AtomTyper<std::string>(mol)
@@ -25,5 +24,4 @@ std::string SymbolAtomTyper::type(const Atom& atom)
   return std::string(Elements::symbol(atom.atomicNumber()));
 }
 
-} // namespace Core
 } // namespace Avogadro

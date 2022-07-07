@@ -7,8 +7,7 @@
 
 #include "sceneplugin.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ScenePluginModel::ScenePluginModel(QObject* parent_)
   : QAbstractItemModel(parent_)
@@ -149,5 +148,4 @@ void ScenePluginModel::itemChanged()
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

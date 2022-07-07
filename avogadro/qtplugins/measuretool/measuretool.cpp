@@ -46,8 +46,7 @@ using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MeasureTool::MeasureTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -278,5 +277,4 @@ bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

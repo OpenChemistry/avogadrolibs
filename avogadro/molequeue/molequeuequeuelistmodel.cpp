@@ -9,8 +9,7 @@
 
 #include <limits>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 namespace {
 // Internal id used for queue model indices
@@ -356,5 +355,4 @@ quint32 MoleQueueQueueListModel::nextUid()
   return m_uidCounter;
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

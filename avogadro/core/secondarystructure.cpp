@@ -12,8 +12,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using namespace std;
 
@@ -266,5 +265,4 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   }   // end for(i)
 }
 
-} // namespace Core
 } // namespace Avogadro

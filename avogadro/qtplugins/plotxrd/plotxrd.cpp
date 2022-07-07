@@ -22,8 +22,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PlotXrd::PlotXrd(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -284,5 +283,4 @@ bool PlotXrd::executeGenXrdPattern(const QStringList& args,
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -22,8 +22,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -307,5 +306,4 @@ Array<Identifier> CurveGeometry::areaHits(const Frustrum& f) const
   return result;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

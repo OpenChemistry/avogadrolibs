@@ -30,8 +30,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 namespace {
 const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
@@ -691,5 +690,4 @@ std::vector<std::string> CmlFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
 } // end Avogadro namespace

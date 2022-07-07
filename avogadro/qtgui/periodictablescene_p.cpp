@@ -14,8 +14,7 @@
 #include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtWidgets/QStyleOption>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 PeriodicTableScene::PeriodicTableScene(QObject* parent_)
   : QGraphicsScene(parent_)
@@ -185,5 +184,4 @@ void PeriodicTableScene::changeElement(int element)
   m_detail->setElement(element);
 }
 
-} // End namespace QtGui
 } // End namespace Avogadro

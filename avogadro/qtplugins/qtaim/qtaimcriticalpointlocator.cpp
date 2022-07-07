@@ -43,8 +43,7 @@ using namespace Eigen;
 #define HUGE_REAL_NUMBER 1.e20
 #define SMALL_GRADIENT_NORM 1.e-4
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
 {
@@ -943,5 +942,4 @@ QString QTAIMCriticalPointLocator::temporaryFileName()
   return tempFileName;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

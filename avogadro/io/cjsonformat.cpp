@@ -22,8 +22,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::string;
 using std::vector;
@@ -923,5 +922,4 @@ vector<std::string> CjsonFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

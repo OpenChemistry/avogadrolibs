@@ -19,8 +19,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
@@ -676,5 +675,4 @@ bool InputGenerator::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

@@ -11,8 +11,7 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::PluginLayerManager;
@@ -52,5 +51,4 @@ void VanDerWaalsAO::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

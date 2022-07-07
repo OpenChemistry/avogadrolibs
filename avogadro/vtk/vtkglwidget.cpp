@@ -33,8 +33,7 @@
 
 #include <QtGui/QSurfaceFormat>
 
-namespace Avogadro {
-namespace VTK {
+namespace Avogadro::VTK {
 
 using QtGui::Molecule;
 
@@ -311,5 +310,4 @@ void vtkGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
-} // namespace VTK
 } // namespace Avogadro

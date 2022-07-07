@@ -15,8 +15,7 @@
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/hydrogentools.h>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
 using Core::AtomHybridization;
@@ -711,5 +710,4 @@ bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
   return true;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

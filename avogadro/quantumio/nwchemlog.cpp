@@ -16,8 +16,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::BasisSet;
@@ -202,6 +201,5 @@ void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
       return;
     }
   }
-}
 }
 }

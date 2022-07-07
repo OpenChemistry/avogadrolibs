@@ -23,8 +23,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using namespace Avogadro::QtGui;
 
@@ -248,5 +247,4 @@ void CopyPaste::paste()
   m_pastedData.clear();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -18,8 +18,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ScriptFileFormats::ScriptFileFormats(QObject* p)
   : ExtensionPlugin(p)
@@ -81,5 +80,4 @@ void ScriptFileFormats::registerFileFormats()
   }
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

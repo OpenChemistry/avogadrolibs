@@ -5,8 +5,7 @@
 
 #include "elementtranslator.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ElementTranslator::ElementTranslator() : QObject()
 {
@@ -383,5 +382,4 @@ int ElementTranslator::numberOfElements()
   return 118;
 }
 
-} // End namespace QtGui
 } // End namespace Avogadro

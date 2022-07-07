@@ -13,8 +13,7 @@
 
 #include <algorithm>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 namespace {
 inline GLenum convertType(Type type)
@@ -478,5 +477,4 @@ inline int ShaderProgram::findUniform(const std::string& name)
   return location;
 }
 
-} // End Rendering namespace
 } // End Avogadro namespace

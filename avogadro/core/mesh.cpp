@@ -10,8 +10,7 @@
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 Mesh::Mesh() : m_stable(true), m_other(0), m_cube(0), m_lock(new Mutex)
 {
@@ -272,5 +271,4 @@ void Mesh::smooth(int iterationCount)
   }
 }
 
-} // End namespace QtGui
 } // End namespace Avogadro

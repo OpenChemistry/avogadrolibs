@@ -26,8 +26,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::BasisSet;
@@ -438,6 +437,5 @@ void GAMESSUSOutput::outputAll()
   for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
     cout << m_betaMOcoeffs.at(i);
   cout << std::flush;
-}
 }
 }

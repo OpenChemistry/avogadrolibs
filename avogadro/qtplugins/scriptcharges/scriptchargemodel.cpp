@@ -23,8 +23,7 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ScriptChargeModel::ScriptChargeModel(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
@@ -404,5 +403,4 @@ bool ScriptChargeModel::parseElements(const QJsonObject& ob)
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

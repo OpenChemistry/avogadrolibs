@@ -14,8 +14,7 @@
 #include <QtWidgets/QUndoStack>
 #include <cassert>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
 using Core::Layer;
@@ -288,5 +287,4 @@ Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
   return result;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

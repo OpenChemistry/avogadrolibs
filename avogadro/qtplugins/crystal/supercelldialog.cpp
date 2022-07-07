@@ -14,8 +14,7 @@
 
 using Avogadro::Core::CrystalTools;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SupercellDialog::SupercellDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::SupercellDialog)
@@ -48,5 +47,4 @@ bool SupercellDialog::buildSupercell(Avogadro::QtGui::Molecule& mol)
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -11,8 +11,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QVector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Cube;
 
@@ -97,6 +96,5 @@ QString OpenDxReader::errorString() const
 Cube* OpenDxReader::cube() const
 {
   return m_cube;
-}
 }
 }

@@ -46,8 +46,7 @@ const unsigned char INVALID_ATOMIC_NUMBER =
   std::numeric_limits<unsigned char>::max();
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
@@ -639,5 +638,4 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   return;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

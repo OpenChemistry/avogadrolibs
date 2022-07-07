@@ -34,8 +34,7 @@ using std::istringstream;
 using std::string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 PdbFormat::PdbFormat() {}
 
@@ -266,5 +265,4 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
   }
 }
 
-} // namespace Io
 } // namespace Avogadro

@@ -19,8 +19,7 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using std::vector;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 FileFormatDialog::FileFormatDialog(QWidget* parentW) : QFileDialog(parentW) {}
 
@@ -341,5 +340,4 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   return ffs[index];
 }
 
-} // namespace QtGui
 } // namespace Avogadro

@@ -25,8 +25,7 @@ using Avogadro::Core::CrystalTools;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Crystal::Crystal(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
@@ -236,5 +235,4 @@ void Crystal::wrapAtomsToCell()
   m_molecule->undoMolecule()->wrapAtomsToCell();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

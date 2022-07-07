@@ -18,8 +18,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PropertyTables::PropertyTables(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
@@ -145,5 +144,4 @@ void PropertyTables::showDialog()
   dialog->show();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -16,8 +16,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The ProcessListener class allows synchronous use of OBProcess.
@@ -282,7 +281,6 @@ Io::FileFormat* OBFileFormat::newInstance() const
                           m_defaultFormat, m_fileOnly);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro
 
 #include "obfileformat.moc"

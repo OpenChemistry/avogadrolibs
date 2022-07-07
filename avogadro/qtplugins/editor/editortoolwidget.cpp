@@ -19,8 +19,7 @@ namespace {
 const int ELEMENT_SELECTOR_TAG = 255;
 } // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 EditorToolWidget::EditorToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::EditorToolWidget),
@@ -219,5 +218,4 @@ void EditorToolWidget::saveElements()
   QSettings().setValue("editortool/userElements", atomicNums);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

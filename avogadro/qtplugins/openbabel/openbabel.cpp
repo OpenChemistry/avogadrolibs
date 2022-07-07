@@ -31,8 +31,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OpenBabel::OpenBabel(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_process(new OBProcess(this)),
@@ -857,5 +856,4 @@ QString OpenBabel::autoDetectForceField() const
 
   return result;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

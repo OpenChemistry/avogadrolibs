@@ -13,8 +13,7 @@
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Hydrogens::Hydrogens(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
@@ -104,5 +103,4 @@ void Hydrogens::removeAllHydrogens()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -23,10 +23,7 @@
 #define _ORIENT_DIHEDRAL                                                       \
   msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_ORIENTATION_DIHEDRAL
 
-namespace Avogadro {
-namespace QtPlugins {
-
-namespace SymmetryUtil {
+namespace Avogadro::QtPlugins::SymmetryUtil {
 
 QString pointGroupSymbol(const char* point_group)
 {
@@ -73,6 +70,4 @@ QString operationSymbol(const msym::msym_symmetry_operation_t* operation)
 
   return symbol;
 }
-} // namespace SymmetryUtil
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -26,8 +26,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
   : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
@@ -791,5 +790,4 @@ QString JsonWidget::generateJobTitle() const
     .arg(haveTheory ? " | " + theory : QString());
 }
 
-} // namespace QtGui
 } // namespace Avogadro

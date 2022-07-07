@@ -27,8 +27,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 InterfaceWidget::InterfaceWidget(const QString& scriptFilePath,
                                  QWidget* parent_)
@@ -94,5 +93,4 @@ QString InterfaceWidget::settingsKey(const QString& identifier) const
     .arg(m_interfaceScript.displayName(), identifier);
 }
 
-} // namespace QtGui
 } // namespace Avogadro

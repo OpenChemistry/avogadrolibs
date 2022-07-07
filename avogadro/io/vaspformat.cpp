@@ -16,8 +16,7 @@
 #include <iomanip>
 #include <iostream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::getline;
 using std::map;
@@ -468,5 +467,4 @@ std::vector<std::string> OutcarFormat::mimeTypes() const
   return mime;
 }
 
-} // end Io namespace
 } // end Avogadro namespace

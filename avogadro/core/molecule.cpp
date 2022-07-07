@@ -20,8 +20,7 @@
 #include <cassert>
 #include <iostream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::swap;
 
@@ -1156,5 +1155,4 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   return result;
 }
 
-} // namespace Core
 } // namespace Avogadro

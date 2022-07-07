@@ -15,8 +15,7 @@
 
 using Avogadro::Core::isCustomElement;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 // Handle custom element identifiers:
 namespace {
@@ -269,5 +268,4 @@ const unsigned char* Elements::color(unsigned char atomicNumber)
     return element_color[0];
 }
 
-} // end Core namespace
 } // end Avogadro namespace

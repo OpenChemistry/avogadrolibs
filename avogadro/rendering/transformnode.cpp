@@ -5,8 +5,7 @@
 
 #include "transformnode.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 TransformNode::TransformNode(GroupNode* p) : GroupNode(p)
 {
@@ -16,5 +15,4 @@ TransformNode::~TransformNode()
 {
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

@@ -20,8 +20,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Bond;
@@ -137,5 +136,4 @@ void CloseContacts::setMaximumDistance(double maximumDistance)
   settings.setValue("closeContacts/maximumDistance", m_maximumDistance);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

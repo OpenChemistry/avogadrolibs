@@ -14,8 +14,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QAction>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::RWAtom;
@@ -132,5 +131,4 @@ void LabelEditor::draw(Rendering::GroupNode& node)
   TextLabel3D* atomLabel = createLabel(m_text.toStdString(), pos, radius);
   geometry->addDrawable(atomLabel);
 }
-} // namespace QtPlugins
 } // namespace Avogadro

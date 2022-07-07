@@ -9,8 +9,7 @@
 #include <locale>
 #include <sstream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::ifstream;
 using std::locale;
@@ -144,5 +143,4 @@ void FileFormat::appendError(const std::string& errorString, bool newLine)
     m_error += "\n";
 }
 
-} // namespace Io
 } // namespace Avogadro

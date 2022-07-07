@@ -21,8 +21,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -209,5 +208,4 @@ void Wireframe::setWidth(double width)
   settings.setValue("wireframe/lineWidth", interface.lineWidth);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

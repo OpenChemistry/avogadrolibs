@@ -17,8 +17,7 @@ extern "C" {
 #include "spglib.h"
 }
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
 {
@@ -171,5 +170,4 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   return true;
 }
 
-} // end Core namespace
 } // end Avogadro namespace

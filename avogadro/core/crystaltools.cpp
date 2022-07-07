@@ -11,8 +11,7 @@
 #include <algorithm>
 #include <iostream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 namespace {
 struct WrapAtomsToCellFunctor
@@ -683,5 +682,4 @@ bool CrystalTools::setFractionalCoordinates(Molecule& molecule,
   return true;
 }
 
-} // namespace Core
 } // namespace Avogadro

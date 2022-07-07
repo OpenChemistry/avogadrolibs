@@ -29,8 +29,7 @@
 using namespace std;
 using namespace Eigen;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum QTAIMExtensionIndex
 {
@@ -751,5 +750,4 @@ void QTAIMExtension::triggered()
   return;
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

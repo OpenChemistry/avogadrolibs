@@ -23,8 +23,7 @@
 
 using namespace Avogadro;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Rendering::CylinderGeometry;
@@ -213,5 +212,4 @@ void SymmetryScene::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

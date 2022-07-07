@@ -18,8 +18,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -62,5 +61,4 @@ void Force::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

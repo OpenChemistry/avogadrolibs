@@ -31,8 +31,7 @@ using Avogadro::Core::Array;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class ArrowGeometry::Private
 {
@@ -191,5 +190,4 @@ void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2)
   m_dirty = true;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

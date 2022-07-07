@@ -22,8 +22,7 @@ using Avogadro::QtGui::Molecule;
 
 using std::map;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 
@@ -210,5 +209,4 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -2198,8 +2198,7 @@ void property_v_tp(unsigned int /* ndim */, unsigned int npts,
   }
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMCubature::QTAIMCubature(QTAIMWavefunction& wfn)
 {
@@ -2388,5 +2387,4 @@ QString QTAIMCubature::temporaryFileName()
   return tempFileName;
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

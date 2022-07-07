@@ -24,8 +24,7 @@
 #include <utility>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Atom;
 using Core::AtomicNumber;
@@ -481,5 +480,4 @@ void Cartoons::showRope(bool show)
   settings.setValue("cartoon/rope", show);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -13,8 +13,7 @@
 
 #define M_TETRAHED 109.47122063449069389
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 typedef Array<Bond> NeighborListType;
 
@@ -217,5 +216,4 @@ Vector3 AtomUtilities::generateNewBondVector(
   return newPos;
 }
 
-} // namespace Core
 } // namespace Avogadro

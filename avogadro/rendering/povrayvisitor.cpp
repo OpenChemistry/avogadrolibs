@@ -14,8 +14,7 @@
 #include <iostream>
 #include <ostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using std::cout;
 using std::string;
@@ -185,5 +184,4 @@ void POVRayVisitor::visit(LineStripGeometry& geometry)
   // geometry.render(m_camera);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

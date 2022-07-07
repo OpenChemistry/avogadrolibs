@@ -19,8 +19,7 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Mesh;
 
@@ -183,6 +182,5 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
   }
 
   return true;
-}
 }
 }

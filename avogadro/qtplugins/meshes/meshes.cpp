@@ -20,8 +20,7 @@
 
 #include <algorithm>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Mesh;
 using Core::Molecule;
@@ -190,5 +189,4 @@ QWidget* Meshes::setupWidget()
   return m_setupWidget;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -30,8 +30,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
@@ -652,5 +651,4 @@ void InputGeneratorWidget::updateOptions()
   setOptionDefaults();
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

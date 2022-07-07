@@ -32,8 +32,7 @@ using Avogadro::Vector4ub;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 const size_t LineStripGeometry::InvalidIndex =
   std::numeric_limits<size_t>::max();
@@ -254,5 +253,4 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
   return result;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

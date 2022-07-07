@@ -24,8 +24,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 void setRawHeaders(QNetworkRequest* request)
 {
@@ -379,5 +378,4 @@ void DownloaderWidget::unzipPlugin()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

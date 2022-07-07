@@ -8,8 +8,7 @@
 #include "residuecolors.h"
 #include "residuedata.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 Residue::Residue() {}
 
@@ -141,5 +140,4 @@ bool Residue::hasAtomByIndex(Index index) const
   return false;
 }
 
-} // namespace Core
 } // namespace Avogadro

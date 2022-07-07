@@ -16,8 +16,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::BasisSet;
@@ -562,6 +561,5 @@ void GaussianFchk::outputAll()
       cout << m_betaMOcoeffs.at(i) << "\t";
     cout << endl << endl;
   }
-}
 }
 }

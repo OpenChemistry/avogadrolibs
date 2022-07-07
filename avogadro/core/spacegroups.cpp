@@ -18,8 +18,7 @@
 
 #include "spacegroups.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SpaceGroups::SpaceGroups()
 {
@@ -360,5 +359,4 @@ const char* SpaceGroups::transformsString(unsigned short hallNumber)
     return "";
 }
 
-} // end Core namespace
 } // end Avogadro namespace

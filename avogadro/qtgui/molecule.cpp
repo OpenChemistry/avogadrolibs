@@ -8,8 +8,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using std::swap;
 
@@ -312,5 +311,4 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

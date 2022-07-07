@@ -21,8 +21,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Select::Select(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_layerManager("Select"),
@@ -293,5 +292,4 @@ void Select::createLayerFromSelection()
   rwmol->emitChanged(changes);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

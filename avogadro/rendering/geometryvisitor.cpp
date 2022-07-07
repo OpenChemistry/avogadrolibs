@@ -10,8 +10,7 @@
 #include "linestripgeometry.h"
 #include "spheregeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 GeometryVisitor::GeometryVisitor()
   : m_center(Vector3f::Zero()), m_radius(0.0f), m_dirty(false)
@@ -190,5 +189,4 @@ void GeometryVisitor::average()
   }
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

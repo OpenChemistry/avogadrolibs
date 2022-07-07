@@ -12,8 +12,7 @@
 #include <iostream>
 #include <iomanip>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 GaussianCube::GaussianCube() {}
 
@@ -204,5 +203,4 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
   return true;
 }
 
-} // namespace QuantumIO
 } // namespace Avogadro

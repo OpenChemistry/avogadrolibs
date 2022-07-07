@@ -521,8 +521,7 @@ const float ao_points[] = {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class AmbientOcclusionRenderer
 {
@@ -1365,5 +1364,4 @@ void AmbientOcclusionSphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

@@ -18,8 +18,7 @@ using namespace std;
 using namespace Avogadro;
 using namespace Avogadro::Rendering;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMEngine::QTAIMEngine(QObject* aParent)
   : QtGui::ScenePlugin(aParent), m_enabled(false)
@@ -227,5 +226,4 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

@@ -60,8 +60,7 @@ inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
 
 } // end anon namespace
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 void HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
 {
@@ -258,5 +257,4 @@ void HydrogenTools::generateNewHydrogenPositions(
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

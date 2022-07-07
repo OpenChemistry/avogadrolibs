@@ -27,8 +27,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -281,5 +280,4 @@ void SphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

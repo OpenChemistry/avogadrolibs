@@ -118,8 +118,7 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
 
 } // namespace
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 QtTextRenderStrategy::QtTextRenderStrategy() {}
 
@@ -260,5 +259,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

@@ -8,8 +8,7 @@
 #include "molecule.h"
 #include "mutex.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 Cube::Cube()
   : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
@@ -296,5 +295,4 @@ bool Cube::fillStripe(
   return true;
 }
 
-} // End Core namespace
 } // End Avogadro namespace

@@ -19,8 +19,7 @@ using Avogadro::QtGui::Molecule;
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 msym_thresholds_t tight_thresholds = { // all defaults
   /*.zero =*/1.0e-3,
@@ -401,5 +400,4 @@ msym_thresholds_t* SymmetryWidget::getThresholds() const
   return thresholds;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

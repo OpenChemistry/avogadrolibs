@@ -27,8 +27,7 @@
 
 using std::unique_ptr;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 FileFormatManager& FileFormatManager::instance()
 {
@@ -390,5 +389,4 @@ void FileFormatManager::appendError(const std::string& errorMessage)
   m_error += errorMessage + "\n";
 }
 
-} // end Io namespace
 } // end Avogadro namespace

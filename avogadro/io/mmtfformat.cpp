@@ -19,8 +19,7 @@
 #include <iomanip>
 #include <iostream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::string;
 using std::vector;
@@ -237,5 +236,4 @@ vector<std::string> MMTFFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

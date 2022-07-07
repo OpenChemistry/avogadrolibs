@@ -21,8 +21,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
@@ -822,5 +821,4 @@ bool InterfaceScript::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

@@ -25,8 +25,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QStandardPaths>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ScriptLoader::ScriptLoader(QObject* parent_)
   : QObject(parent_)
@@ -154,5 +153,4 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   return scriptList;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

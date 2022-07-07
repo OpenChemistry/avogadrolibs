@@ -16,8 +16,7 @@
 
 #include "gamesshighlighter.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 GamessHighlighter::GamessHighlighter(QTextDocument* parent_)
   : QSyntaxHighlighter(parent_)
@@ -269,5 +268,4 @@ void GamessHighlighter::highlightBlock(const QString& text)
     setFormat(80, text.length(), m_errorFormat);
 }
 
-} // End namespace QtPlugins
 } // End namespace Avogadro

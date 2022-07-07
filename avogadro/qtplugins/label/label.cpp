@@ -21,8 +21,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::Rendering::TextLabel3D;
 using Core::Array;
@@ -389,5 +388,4 @@ QWidget* Label::setupWidget()
   return interface.widget;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

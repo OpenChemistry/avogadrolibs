@@ -12,8 +12,7 @@
 
 using std::unique_ptr;
 
-namespace Avogadro {
-namespace Calc {
+namespace Avogadro::Calc {
 
 ChargeManager& ChargeManager::instance()
 {
@@ -185,5 +184,4 @@ Core::Array<double> ChargeManager::potentials(
   return model->potentials(molecule, points);
 }
 
-} // namespace Calc
 } // namespace Avogadro

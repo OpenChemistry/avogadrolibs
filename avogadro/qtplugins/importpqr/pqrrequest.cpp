@@ -7,8 +7,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 /**
 * @brief Constructor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
@@ -245,5 +244,4 @@ float PQRRequest::getMolMass(QString formula)
   }
   return totalMass;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

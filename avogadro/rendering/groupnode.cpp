@@ -6,8 +6,7 @@
 #include "groupnode.h"
 #include "visitor.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 GroupNode::GroupNode(GroupNode* parent_)
 {
@@ -118,5 +117,4 @@ void GroupNode::clearUI()
   clear(UI);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

@@ -7,8 +7,7 @@
 
 #include <cassert>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 GenericHighlighter::GenericHighlighter(QObject* parent_)
   : QSyntaxHighlighter(parent_)
@@ -114,5 +113,4 @@ void GenericHighlighter::Rule::setFormat(const QTextCharFormat& format)
   m_format = format;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

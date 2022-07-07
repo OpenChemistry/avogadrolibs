@@ -25,8 +25,7 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
   class InsertDNADialog : public QDialog, public Ui::InsertDNADialog
     {
@@ -217,5 +216,4 @@ void InsertDna::showDialog()
     m_dialog = nullptr;
   }
 
-} // namespace QtPlugins
 } // namespace Avogadro

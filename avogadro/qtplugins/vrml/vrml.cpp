@@ -22,8 +22,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 VRML::VRML(QObject* p)
   : Avogadro::QtGui::ExtensionPlugin(p), m_molecule(nullptr), m_scene(nullptr),
@@ -83,5 +82,4 @@ void VRML::render()
   file.close();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

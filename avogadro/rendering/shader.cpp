@@ -7,8 +7,7 @@
 
 #include "avogadrogl.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Shader::Shader(Type type_, const std::string& source_)
   : m_type(type_), m_handle(0), m_dirty(true), m_source(source_)
@@ -81,5 +80,4 @@ void Shader::cleanup()
   m_dirty = false;
 }
 
-} // End Rendering namespace
 } // End Avogadro namespace

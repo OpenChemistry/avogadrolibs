@@ -26,8 +26,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
@@ -252,5 +251,4 @@ void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

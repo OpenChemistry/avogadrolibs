@@ -12,8 +12,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::Molecule;
@@ -84,5 +83,4 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

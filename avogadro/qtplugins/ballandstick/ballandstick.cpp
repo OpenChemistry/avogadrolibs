@@ -21,8 +21,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::PluginLayerManager;
@@ -279,5 +278,4 @@ void BallAndStick::showHydrogens(bool show)
   settings.setValue("ballandstick/showHydrogens", show);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

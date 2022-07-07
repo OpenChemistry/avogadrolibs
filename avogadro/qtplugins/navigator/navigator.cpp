@@ -23,8 +23,7 @@
 
 #include <Eigen/Geometry>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
@@ -298,5 +297,4 @@ inline void Navigator::translate(const Vector3f& ref, const Vector2f& fromScr,
   m_renderer->camera().translate(to - from);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

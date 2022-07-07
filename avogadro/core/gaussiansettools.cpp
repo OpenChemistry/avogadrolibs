@@ -16,8 +16,7 @@ using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
 {
@@ -421,5 +420,4 @@ final normalization
     values[baseIndex + i] += components[i] * componentsF[i];
 }
 
-} // End Core namespace
 } // End Avogadro namespace

@@ -20,9 +20,7 @@
 #include <Eigen/QR>
 #include <cmath>
 
-namespace Avogadro {
-namespace QtPlugins {
-namespace QTAIMMathUtilities {
+namespace Avogadro::QtPlugins::QTAIMMathUtilities {
 
 Matrix<qreal, 3, 1> eigenvaluesOfASymmetricThreeByThreeMatrix(
   const Matrix<qreal, 3, 3>& A)
@@ -306,6 +304,4 @@ Matrix<qreal, 3, 1> plusThreeSignatureLocatorGradient(
   return value;
 }
 
-} // namespace QTAIMMathUtilities
-} // namespace QtPlugins
 } // namespace Avogadro

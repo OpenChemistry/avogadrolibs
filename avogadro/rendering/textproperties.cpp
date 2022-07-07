@@ -7,8 +7,7 @@
 
 #include <algorithm>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 TextProperties::TextProperties()
   : m_pixelHeight(24), m_hAlign(HLeft), m_vAlign(VTop),
@@ -64,5 +63,4 @@ bool TextProperties::operator==(const TextProperties& other) const
          m_rgba[3] == other.m_rgba[3];
 }
 
-} // namespace Rendering
 } // namespace Avogadro
