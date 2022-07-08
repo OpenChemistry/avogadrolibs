@@ -24,6 +24,7 @@ namespace {
 #include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -223,11 +224,14 @@ void Surfaces::calculateEDT()
     auto *atoms =
       new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
     double max_radius = probeRadius;
-    for (size_t i = 0; i < atoms->size(); i++) {
-      (*atoms)[i].first = atomPositions[i];
-      (*atoms)[i].second = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-      if ((*atoms)[i].second > max_radius)
-        max_radius = (*atoms)[i].second;
+    QtGui::RWLayerManager layerManager;
+    for (size_t i = 0; i < m_molecule->atomCount(); i++) {
+      if (!layerManager.visible(m_molecule->layer(i)))
+        continue;
+      auto radius = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+      atoms->emplace_back(atomPositions[i], radius);
+      if (radius > max_radius)
+        max_radius = radius;
     }
 
     double padding = max_radius + probeRadius;
