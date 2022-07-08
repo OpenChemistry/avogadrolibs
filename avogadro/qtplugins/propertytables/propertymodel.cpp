@@ -517,27 +517,37 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   // We can still use the cached data -- we just invalidate now
   // So that we can call "return" and have the cache invalid when we leave
   m_validCache = false;
+  auto* undoMolecule = m_molecule->undoMolecule();
 
   if (m_type == AtomType) {
     Vector3 v = m_molecule->atomPosition3d(index.row());
 
     switch (static_cast<AtomColumn>(index.column())) {
+      case AtomDataFormalCharge: {
+        bool ok;
+        int charge = value.toInt(&ok);
+        if (ok) {
+          undoMolecule->setFormalCharge(index.row(), charge);
+        }
+        break;
+      }
       case AtomDataElement: { // atomic number
         // Try first as a number
         bool ok;
         int atomicNumber = value.toInt(&ok);
         if (ok)
-          m_molecule->setAtomicNumber(index.row(), atomicNumber);
+          undoMolecule->setAtomicNumber(index.row(), atomicNumber);
         else {
           // try a symbol
           atomicNumber = Core::Elements::atomicNumberFromSymbol(
             value.toString().toStdString());
 
           if (atomicNumber != Avogadro::InvalidElement) {
-            m_molecule->setAtomicNumber(index.row(), atomicNumber);
+            undoMolecule->setAtomicNumber(index.row(), atomicNumber);
           } else
             return false;
         } // not a number
+        break;
       }
       case AtomDataX:
         v[0] = value.toDouble();
@@ -551,7 +561,7 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       default:
         return false;
     }
-    m_molecule->setAtomPosition3d(index.row(), v);
+    undoMolecule->setAtomPosition3d(index.row(), v);
 
     // cleanup atom changes
     emit dataChanged(index, index);
@@ -560,7 +570,7 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   } else if (m_type == BondType) {
     switch (static_cast<BondColumn>(index.column())) {
       case BondDataOrder:
-        m_molecule->setBondOrder(index.row(), value.toInt());
+        undoMolecule->setBondOrder(index.row(), value.toInt());
         break;
       case BondDataLength:
         setBondLength(index.row(), value.toDouble());
@@ -577,10 +587,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   return false;
 }
 
-/*
-@todo finish this
 void PropertyModel::buildFragment(const QtGui::RWBond& bond,
-                                   const QtGui::RWAtom& startAtom)
+                                  const QtGui::RWAtom& startAtom)
 {
   m_fragment.clear();
   if (!fragmentRecurse(bond, startAtom, startAtom)) {
@@ -588,38 +596,40 @@ void PropertyModel::buildFragment(const QtGui::RWBond& bond,
     // in this case.
     m_fragment.clear();
   }
-  m_fragment.push_back(m_molecule->atomUniqueId(startAtom));
+  m_fragment.push_back(m_molecule->undoMolecule()->atomUniqueId(startAtom));
 }
-
 
 bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
                                     const QtGui::RWAtom& startAtom,
                                     const QtGui::RWAtom& currentAtom)
 {
-  Array<Bond> bonds = m_molecule->bonds(currentAtom);
+  // does our cycle include both bonded atoms?
+  const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
+  auto* undoMolecule = m_molecule->undoMolecule();
+
+  Core::Array<RWBond> bonds = undoMolecule->bonds(currentAtom);
   typedef std::vector<RWBond>::const_iterator BondIter;
-  for (BondIter it = bonds.begin(), itEnd = bonds.end(); it != itEnd; ++it) {
-    if (*it != bond) { // Skip the current bond
-      RWAtom nextAtom = otherBondedAtom(*it, currentAtom);
-      if (nextAtom != startAtom) {
+
+  for (auto& it : bonds) {
+    if (it != bond) { // Skip the current bond
+      const RWAtom nextAtom = it.getOtherAtom(currentAtom);
+      if (nextAtom != startAtom && nextAtom != bondedAtom) {
         // Skip atoms that have already been added. This prevents infinite
         // recursion on cycles in the fragments
-        int uid = m_molecule->atomUniqueId(nextAtom);
+        int uid = undoMolecule->atomUniqueId(nextAtom);
         if (!fragmentHasAtom(uid)) {
           m_fragment.push_back(uid);
-          if (!fragmentRecurse(*it, startAtom, nextAtom))
+          if (!fragmentRecurse(it, startAtom, nextAtom))
             return false;
         }
-      } else {
-        // If we've reached startAtom, then we've found a cycle that indicates
-        // no moveable fragment exists.
+      } else if (nextAtom == bondedAtom) {
+        // If we've found the bonded atom, the bond is in a cycle
         return false;
-      } // nextAtom != startAtom else
-    }   // *it != bond
-  }     // foreach bond
+      }
+    } // *it != bond
+  }   // foreach bond
   return true;
 }
-
 
 inline bool PropertyModel::fragmentHasAtom(int uid) const
 {
@@ -627,20 +637,20 @@ inline bool PropertyModel::fragmentHasAtom(int uid) const
          m_fragment.end();
 }
 
-void PropertyModel::transformFragment(Eigen::Affine3d& transform) const
+void PropertyModel::transformFragment() const
 {
-  for (std::vector<int>::const_iterator it = m_fragment.begin(),
-                                        itEnd = m_fragment.end();
-       it != itEnd; ++it) {
-    RWAtom atom = m_molecule->undoMolecule()->atomByUniqueId(*it);
+  auto* undoMolecule = m_molecule->undoMolecule();
+  undoMolecule->beginMergeMode(tr("Adjust Fragment"));
+  for (int it : m_fragment) {
+    RWAtom atom = m_molecule->undoMolecule()->atomByUniqueId(it);
     if (atom.isValid()) {
       Vector3 pos = atom.position3d();
-      pos = transform * pos;
+      pos = m_transform * pos;
       atom.setPosition3d(pos);
     }
   }
+  undoMolecule->endMergeMode();
 }
-*/
 
 void PropertyModel::setBondLength(unsigned int index, double length)
 {
@@ -650,22 +660,21 @@ void PropertyModel::setBondLength(unsigned int index, double length)
   if (index >= m_molecule->bondCount())
     return;
 
-  //@todo - finish this
-
-  auto bond = m_molecule->bond(index);
+  // figure out how much to move and the vector of displacement
+  auto bond = m_molecule->undoMolecule()->bond(index);
   Vector3 v1 = bond.atom1().position3d();
   Vector3 v2 = bond.atom2().position3d();
   Vector3 diff = v2 - v1;
+  double currentLength = diff.norm();
   diff.normalize();
-  Vector3 delta = v1 + diff * length;
+  Vector3 delta = diff * (length - currentLength);
 
-//  buildFragment(bond, bond.atom2());
+  buildFragment(bond, bond.atom2());
 
-  Eigen::Affine3d transform;
-  transform.setIdentity();
-  transform.translate(delta);
+  m_transform.setIdentity();
+  m_transform.translate(delta);
 
-//  transformFragment(transform);
+  transformFragment();
 
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
 }
