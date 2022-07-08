@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-02 03:04+0000\n"
-"PO-Revision-Date: 2022-06-26 17:19+0000\n"
+"PO-Revision-Date: 2022-07-08 20:31+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -310,6 +310,8 @@ msgstr "%1 : Ce fichier existe déjà et n'est pas inscriptible."
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Erreur interne : Le widget texte n'a pas pu être trouvé pour le fichier « %1 "
+"»"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -437,7 +439,7 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:335
 #: qtplugins/openmminput/openmminputdialog.cpp:433
 msgid "Write input files"
-msgstr ""
+msgstr "Écrire les fichiers d'entrée"
 
 #: molequeue/inputgeneratorwidget.cpp:618
 msgid "Configure Job"
@@ -1102,14 +1104,14 @@ msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:98
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Impossible de lancer povray"
+msgstr "Impossible de trouver l'option « %1 »."
 
 #: qtgui/jsonwidget.cpp:152
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "Onglet %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1123,16 +1125,15 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:183
 msgid "Processor Cores"
-msgstr ""
+msgstr "Cœurs du processeur"
 
 #: qtgui/jsonwidget.cpp:187
 msgid "Calculation Type"
-msgstr ""
+msgstr "Type de calcul"
 
 #: qtgui/jsonwidget.cpp:191
-#, fuzzy
 msgid "Theory"
-msgstr "Théorie :"
+msgstr "Théorie"
 
 #: qtgui/jsonwidget.cpp:191
 msgid "Basis"
@@ -1154,19 +1155,22 @@ msgstr "Erreur : la valeur doit être un objet pour la clé '%1'."
 #: qtgui/jsonwidget.cpp:542
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Type de l'option « %1 » non reconnu pour l'option « %2 »."
 
 #: qtgui/jsonwidget.cpp:551 qtgui/jsonwidget.cpp:587 qtgui/jsonwidget.cpp:609
 #: qtgui/jsonwidget.cpp:630 qtgui/jsonwidget.cpp:653 qtgui/jsonwidget.cpp:675
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Erreur du paramètre par défaut pour l'option « %1 ». Type du widget invalide."
 
 #: qtgui/jsonwidget.cpp:558 qtgui/jsonwidget.cpp:594 qtgui/jsonwidget.cpp:616
 #: qtgui/jsonwidget.cpp:637 qtgui/jsonwidget.cpp:660 qtgui/jsonwidget.cpp:682
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Erreur du paramètre par défaut pour l'option « %1 ». Valeur par défaut "
+"incorrecte :"
 
 #: qtgui/jsonwidget.cpp:572
 #, qt-format
@@ -1174,26 +1178,28 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Erreur du paramètre par défaut pour l'option « %1 ». Impossible de trouver "
+"l'index d'entrée de combo valide avec la valeur :"
 
 #: qtgui/jsonwidget.cpp:744
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
+"Widget non supporté dans les options de collection pour l'option « %1 »."
 
 #: qtgui/jsonwidget.cpp:786 qtplugins/cp2kinput/cp2kinputdialog.cpp:456
 #: qtplugins/gamessinput/gamessinputdialog.cpp:396
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Pas de molécule définie"
+msgstr "[pas de molécule]"
 
 #: qtgui/layermodel.cpp:73
 msgid "Layer"
-msgstr ""
+msgstr "Calque"
 
 #: qtgui/layermodel.cpp:78
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Calque %1"
 
 #: qtgui/layermodel.cpp:127 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
@@ -1208,23 +1214,20 @@ msgstr "Animation"
 #: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:29
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Contacts proches"
 
 #: qtgui/layermodel.cpp:133 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
 msgstr "Étiquette"
 
 #: qtgui/layermodel.cpp:135 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Acide glycyrrhizique"
 
 #: qtgui/layermodel.cpp:137 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Covalent"
+msgstr "Non covalente"
 
 #: qtgui/layermodel.cpp:139 qtplugins/surfaces/surfacedialog.cpp:27
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1232,10 +1235,9 @@ msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:141 qtplugins/vanderwaalsao/vanderwaalsao.h:29
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waals"
+msgstr "Van der Waals (OA)"
 
 #: qtgui/layermodel.cpp:143 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1247,7 +1249,7 @@ msgstr "Sans titre"
 
 #: qtgui/multiviewwidget.cpp:192
 msgid "Create a new view"
-msgstr ""
+msgstr "Créer une nouvelle vue"
 
 #: qtgui/periodictableview.cpp:32
 msgid "Periodic Table"
@@ -1257,6 +1259,8 @@ msgstr "Tableau périodique"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente écoulé "
+"pour le démarage (%3)."
 
 #: qtgui/pythonscript.cpp:115 qtgui/pythonscript.cpp:200
 #, qt-format
@@ -1269,6 +1273,8 @@ msgstr ""
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente écoulé "
+"pour finir (%3)."
 
 #: qtgui/pythonscript.cpp:136
 #, qt-format
@@ -1529,9 +1535,8 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:116
-#, fuzzy
 msgid "IO Error"
-msgstr " Erreur "
+msgstr "Erreur IO"
 
 #: qtplugins/apbs/apbs.cpp:117
 #, qt-format
@@ -7248,9 +7253,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxY)
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:123
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
-#, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
