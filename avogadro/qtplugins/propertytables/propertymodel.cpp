@@ -582,6 +582,20 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     emit dataChanged(index, index);
     m_molecule->emitChanged(Molecule::Bonds);
     return true;
+  } else if (m_type == AngleType) {
+    if (index.column() == AngleDataValue) {
+      setAngle(index.row(), value.toDouble());
+      emit dataChanged(index, index);
+      m_molecule->emitChanged(Molecule::Atoms);
+      return true;
+    }
+  } else if (m_type == TorsionType) {
+    if (index.column() == TorsionDataValue) {
+      setTorsion(index.row(), value.toDouble());
+      emit dataChanged(index, index);
+      m_molecule->emitChanged(Molecule::Atoms);
+      return true;
+    }
   }
 
   return false;
@@ -679,9 +693,75 @@ void PropertyModel::setBondLength(unsigned int index, double length)
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
 }
 
-void PropertyModel::setAngle(unsigned int index, double value) {}
+void PropertyModel::setAngle(unsigned int index, double newValue) {
+  // the index refers to the angle
 
-void PropertyModel::setTorsion(unsigned int index, double value) {}
+  auto angle = m_angles[index];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(angle));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(angle));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(angle));
+
+  auto bond = m_molecule->undoMolecule()->bond(atom1, atom2);
+  Vector3 a = atom1.position3d();
+  Vector3 b = atom2.position3d();
+  Vector3 c = atom3.position3d();
+  const double currentValue = calcAngle(a, b, c);
+  Vector3 ab = b - a;
+  Vector3 bc = c - b;
+
+  // Axis of rotation is the cross product of the vectors
+  const Vector3 axis((ab.cross(bc)).normalized());
+  // Angle of rotation
+  const double change = (newValue - currentValue) * M_PI / 180.0;
+
+  // Build transform
+  m_transform.setIdentity();
+  m_transform.translate(b);
+  m_transform.rotate(Eigen::AngleAxis(-change, axis));
+  m_transform.translate(-b);
+
+  // Build the fragment if needed:
+  if (m_fragment.empty())
+    buildFragment(bond, atom2);
+
+  // Perform transformation
+  transformFragment();
+}
+
+void PropertyModel::setTorsion(unsigned int index, double newValue) {
+
+  auto torsion = m_torsions[index];
+  auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(torsion));
+  auto atom2 = m_molecule->undoMolecule()->atom(std::get<1>(torsion));
+  auto atom3 = m_molecule->undoMolecule()->atom(std::get<2>(torsion));
+  auto atom4 = m_molecule->undoMolecule()->atom(std::get<3>(torsion));
+
+  auto bond = m_molecule->undoMolecule()->bond(atom2, atom3);
+  Vector3 a = atom1.position3d();
+  Vector3 b = atom2.position3d();
+  Vector3 c = atom3.position3d();
+  Vector3 d = atom4.position3d();
+  const double currentValue = calcDihedral(a, b, c, d);
+
+  // Axis of rotation
+  const Vector3 axis((c - b).normalized());
+  // Angle of rotation
+  const double change = (newValue - currentValue) * M_PI / 180.0;
+
+  // Build transform
+  m_transform.setIdentity();
+  m_transform.translate(c);
+  m_transform.rotate(Eigen::AngleAxis(change, axis));
+  m_transform.translate(-c);
+
+  // Build the fragment if needed:
+  if (m_fragment.empty())
+    buildFragment(bond, atom3);
+
+  // Perform transformation
+  transformFragment();
+
+}
 
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 {

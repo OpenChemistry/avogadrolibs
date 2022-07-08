@@ -88,8 +88,8 @@ private:
                        const QtGui::RWAtom& currentAtom);
 
   void setBondLength(unsigned int index, double value);
-  void setAngle(unsigned int index, double value);
-  void setTorsion(unsigned int index, double value);
+  void setAngle(unsigned int index, double newValue);
+  void setTorsion(unsigned int index, double newValue);
   void transformFragment() const;
 
   inline QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
