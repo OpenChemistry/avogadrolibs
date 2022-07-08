@@ -13,9 +13,7 @@
 #include <QNetworkRequest>
 #include <QUrlQuery>
 
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 // Some function declarations
 static QString handleGirderError(QNetworkReply* reply, const QByteArray& bytes);
@@ -140,5 +138,4 @@ static QString handleGirderError(QNetworkReply* reply, const QByteArray& bytes)
   return errorMessage;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

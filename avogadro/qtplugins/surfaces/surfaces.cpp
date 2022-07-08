@@ -52,13 +52,9 @@ namespace {
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-#include <iostream>
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
-using Core::Cube;
 using Core::GaussianSet;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
@@ -146,8 +142,8 @@ void Surfaces::surfacesActivated()
   }
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
-    for (unsigned int i = 0; i < m_cubes.size(); ++i) {
-      cubeNames << m_cubes[i]->name().c_str();
+    for (auto & m_cube : m_cubes) {
+      cubeNames << m_cube->name().c_str();
     }
     m_dialog->setupCubes(cubeNames);
   }
@@ -225,9 +221,8 @@ void Surfaces::calculateEDT()
 
     // first, make a list of all atom positions and radii
     Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    std::vector<std::pair<Vector3, double>> *atoms =
-      new std::vector<std::pair<Vector3, double>>();
-    atoms->reserve(m_molecule->atomCount());
+    auto *atoms =
+      new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
     double max_radius = probeRadius;
     QtGui::RWLayerManager layerManager;
     for (size_t i = 0; i < m_molecule->atomCount(); i++) {
@@ -299,7 +294,7 @@ void Surfaces::performEDTStep()
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
     // also make a list of all "inside" cubes
-    std::vector<Vector3i> *insideIndices = new std::vector<Vector3i>;
+    auto *insideIndices = new std::vector<Vector3i>;
     Vector3i size = m_cube->dimensions();
     relativePositions.reserve(size(0) * size(1) * 4); // O(n^2)
     insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
@@ -621,7 +616,7 @@ void Surfaces::movieFrame()
 
   if (d->gifWriter) {
     int pixelCount = exportImage.width() * exportImage.height();
-    uint8_t* imageData = new uint8_t[pixelCount * 4];
+    auto* imageData = new uint8_t[pixelCount * 4];
     int imageIndex = 0;
     for (int j = 0; j < exportImage.height(); ++j) {
       for (int k = 0; k < exportImage.width(); ++k) {
@@ -709,5 +704,4 @@ void Surfaces::movieFrame()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

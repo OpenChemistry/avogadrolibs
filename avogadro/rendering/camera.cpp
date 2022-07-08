@@ -9,8 +9,7 @@
 
 #include <cmath>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Camera::Camera()
   : m_width(0), m_height(0), m_projectionType(Perspective),
@@ -185,5 +184,4 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
   m_data->modelView = transform;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

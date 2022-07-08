@@ -31,12 +31,9 @@
 #include <sstream>
 
 using Avogadro::Core::AvoSpglib;
-using Avogadro::Core::CrystalTools;
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SpaceGroup::SpaceGroup(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -127,7 +124,7 @@ void SpaceGroup::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -346,7 +343,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
   QDialog dialog;
   dialog.setLayout(new QVBoxLayout);
   dialog.setWindowTitle(tr("Select Space Group"));
-  QTableView* view = new QTableView;
+  auto* view = new QTableView;
   view->setSelectionBehavior(QAbstractItemView::SelectRows);
   view->setSelectionMode(QAbstractItemView::SingleSelection);
   view->setCornerButtonEnabled(false);
@@ -361,7 +358,7 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->setMinimumWidth(view->horizontalHeader()->length() +
                         view->verticalScrollBar()->sizeHint().width());
   connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
-  QDialogButtonBox* buttons =
+  auto* buttons =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
   connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
@@ -373,5 +370,4 @@ unsigned short SpaceGroup::selectSpaceGroup()
   return view->currentIndex().row() + 1;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

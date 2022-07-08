@@ -5,8 +5,7 @@
 
 #include "textrenderstrategy.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 TextRenderStrategy::TextRenderStrategy()
 {
@@ -16,5 +15,4 @@ TextRenderStrategy::~TextRenderStrategy()
 {
 }
 
-} // end namespace Rendering
 } // end namespace Avogadro

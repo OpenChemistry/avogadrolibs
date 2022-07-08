@@ -5,8 +5,7 @@
 
 #include "viewfactory.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ViewFactory::ViewFactory()
 {
@@ -16,5 +15,4 @@ ViewFactory::~ViewFactory()
 {
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace

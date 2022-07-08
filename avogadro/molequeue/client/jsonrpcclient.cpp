@@ -10,8 +10,7 @@
 #include <QtCore/QTimer>
 #include <QtNetwork/QLocalSocket>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 JsonRpcClient::JsonRpcClient(QObject *parent_) :
   QObject(parent_),
@@ -143,5 +142,4 @@ void JsonRpcClient::readSocket()
   }
 }
 
-} // End namespace MoleQueue
 } // End namespace Avogadro

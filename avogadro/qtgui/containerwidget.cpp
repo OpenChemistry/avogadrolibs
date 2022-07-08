@@ -10,8 +10,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   : QWidget(p, f)
@@ -19,15 +18,15 @@ ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   , m_label(new QLabel(QStringLiteral("   "), this))
   , m_active(false)
 {
-  QHBoxLayout* h = new QHBoxLayout;
+  auto* h = new QHBoxLayout;
   h->setContentsMargins(0, 0, 0, 0);
-  QVBoxLayout* v = new QVBoxLayout;
+  auto* v = new QVBoxLayout;
   v->setContentsMargins(0, 0, 0, 0);
   v->setSpacing(0);
 
   h->addWidget(m_label);
   h->addStretch();
-  QPushButton* button = new QPushButton(tr("Split Horizontal"), this);
+  auto* button = new QPushButton(tr("Split Horizontal"), this);
   connect(button, SIGNAL(clicked()), SIGNAL(splitHorizontal()));
   h->addWidget(button);
   button = new QPushButton(tr("Split Vertical"), this);
@@ -63,5 +62,4 @@ void ContainerWidget::setActive(bool active)
   }
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace

@@ -7,8 +7,7 @@
 
 #include <QtCore/QJsonArray>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 JobObject::JobObject()
 {
@@ -128,5 +127,4 @@ QJsonObject JobObject::fileSpec(const QString &path)
   return result;
 }
 
-} // End namespace MoleQueue
 } // End namespace Avogadro

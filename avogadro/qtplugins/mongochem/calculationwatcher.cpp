@@ -14,8 +14,7 @@
 
 #include <QDebug>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 static void deleteRequestWhenFinished(GirderRequest* r)
 {
@@ -95,5 +94,4 @@ void CalculationWatcher::handleError(const QString& msg,
   emit error(message, networkReply);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

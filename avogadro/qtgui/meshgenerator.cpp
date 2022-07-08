@@ -12,8 +12,7 @@
 #include <QDebug>
 #include <QReadWriteLock>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Cube;
 using Core::Mesh;
@@ -611,5 +610,4 @@ const int MeshGenerator::a2iTriangleConnectionTable[256][16] = {
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
 };
 
-} // End namespace QtGui
 } // End namespace Avogadro

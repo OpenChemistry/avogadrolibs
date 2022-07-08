@@ -23,8 +23,7 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ScriptChargeModel::ScriptChargeModel(const QString& scriptFileName_)
   : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
@@ -148,9 +147,9 @@ Core::Array<double> ScriptChargeModel::potentials(
   QJsonObject json;
   json[m_formatString] = QString::fromStdString(intermediate);
   QJsonArray pointsArray;
-  for (int i = 0; i < points.size(); ++i) {
+  for (const auto & i : points) {
     QJsonArray point;
-    point << points[i].x() << points[i].y() << points[i].z();
+    point << i.x() << i.y() << i.z();
     pointsArray.append(point);
   }
   json["points"] = pointsArray;
@@ -391,11 +390,11 @@ bool ScriptChargeModel::parseElements(const QJsonObject& ob)
 
   } else if (ob["elements"].isArray()) {
     QJsonArray arr = ob["elements"].toArray();
-    for (int i = 0; i < arr.size(); ++i) {
-      if (arr[i].isString()) {
-        processElementString(arr[i].toString());
-      } else if (arr[i].isDouble()) {
-        int element = arr[i].toInt();
+    for (auto && i : arr) {
+      if (i.isString()) {
+        processElementString(i.toString());
+      } else if (i.isDouble()) {
+        int element = i.toInt();
         if (element >= 1 && element <= 119) // check the range
           m_elements.set(element);
       }
@@ -404,5 +403,4 @@ bool ScriptChargeModel::parseElements(const QJsonObject& ob)
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

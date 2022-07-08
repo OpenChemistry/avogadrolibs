@@ -22,9 +22,7 @@
 #include <QSettings>
 #include <QTableWidgetItem>
 
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MongoChemWidget::MongoChemWidget(MongoChem* plugin, QWidget* parent)
   : QWidget(parent), m_plugin(plugin), m_ui(new Ui::MongoChemWidget),
@@ -390,5 +388,4 @@ void MongoChemWidget::error(const QString& message, QNetworkReply* reply)
   QMessageBox::critical(this, "MongoChem", message);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

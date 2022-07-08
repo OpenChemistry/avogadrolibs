@@ -9,9 +9,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QFileInfo>
 
-namespace Avogadro {
-namespace QtGui {
-namespace Utilities {
+namespace Avogadro::QtGui::Utilities {
 
 QString libraryDirectory()
 {
@@ -50,6 +48,4 @@ QString findExecutablePath(QString program)
   return QString();
 }
 
-} // namespace Utilities
-} // namespace QtGui
 } // namespace Avogadro

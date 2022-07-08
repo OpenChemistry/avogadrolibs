@@ -11,8 +11,7 @@
 #include <set>
 #include <stack>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 Graph::Graph() {}
 
@@ -577,5 +576,4 @@ size_t Graph::getConnectedID(size_t index) const
 {
   return subgraph(index);
 }
-} // namespace Core
 } // namespace Avogadro

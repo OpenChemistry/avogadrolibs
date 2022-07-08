@@ -19,8 +19,7 @@
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ApbsOutputDialog::ApbsOutputDialog(QWidget* parent_)
   : QDialog(parent_), m_ui(new Ui::ApbsOutputDialog)
@@ -40,6 +39,5 @@ bool ApbsOutputDialog::loadStructureFile() const
 bool ApbsOutputDialog::loadCubeFile() const
 {
   return m_ui->loadCubeCheckBox->isChecked();
-}
 }
 }

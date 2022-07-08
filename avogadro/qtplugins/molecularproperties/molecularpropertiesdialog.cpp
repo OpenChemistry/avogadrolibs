@@ -11,8 +11,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule* mol,
                                                      QWidget* parent_)
@@ -91,5 +90,4 @@ void MolecularPropertiesDialog::moleculeDestroyed()
   updateLabels();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

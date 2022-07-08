@@ -19,8 +19,7 @@ namespace {
 const int ELEMENT_SELECTOR_TAG = 255;
 } // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 EditorToolWidget::EditorToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::EditorToolWidget),
@@ -58,7 +57,7 @@ unsigned char EditorToolWidget::atomicNumber() const
   if (!itemData.isValid())
     return 0;
 
-  unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
+  auto atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
   // "Other…" selected....
   if (atomicNum == 0 && m_elementSelector)
@@ -213,11 +212,10 @@ void EditorToolWidget::buildBondOrders()
 void EditorToolWidget::saveElements()
 {
   QVariantList atomicNums;
-  for (int i = 0; i < m_userElements.size(); ++i)
-    atomicNums << QVariant(m_userElements[i]);
+  for (unsigned char m_userElement : m_userElements)
+    atomicNums << QVariant(m_userElement);
 
   QSettings().setValue("editortool/userElements", atomicNums);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

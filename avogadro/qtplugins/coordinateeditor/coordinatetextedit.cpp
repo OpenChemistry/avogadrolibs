@@ -12,8 +12,7 @@
 
 #include <QtCore/QListIterator>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
   : QTextEdit(p), m_hasInvalidMarks(false)
@@ -59,7 +58,7 @@ void CoordinateTextEdit::markValid(QTextCursor& cur, const QString& tooltip)
 bool CoordinateTextEdit::event(QEvent* e)
 {
   if (e->type() == QEvent::ToolTip) {
-    QHelpEvent* helpEvent = static_cast<QHelpEvent*>(e);
+    auto* helpEvent = static_cast<QHelpEvent*>(e);
     showToolTip(helpEvent);
     return true;
   }
@@ -92,5 +91,4 @@ void CoordinateTextEdit::showToolTip(QHelpEvent* e) const
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

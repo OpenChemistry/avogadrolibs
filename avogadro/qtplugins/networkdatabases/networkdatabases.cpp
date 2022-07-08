@@ -15,8 +15,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 NetworkDatabases::NetworkDatabases(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -116,6 +115,5 @@ void NetworkDatabases::replyFinished(QNetworkReply* reply)
   }
   emit moleculeReady(1);
   reply->deleteLater();
-}
 }
 }

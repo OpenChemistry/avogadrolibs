@@ -33,8 +33,7 @@
 
 #include <QtGui/QSurfaceFormat>
 
-namespace Avogadro {
-namespace VTK {
+namespace Avogadro::VTK {
 
 using QtGui::Molecule;
 
@@ -51,7 +50,7 @@ vtkImageData* createCubeImageData(Core::Cube* cube)
 
   data->AllocateScalars(VTK_FLOAT, 1);
 
-  double* dataPtr = static_cast<double*>(data->GetScalarPointer());
+  auto* dataPtr = static_cast<double*>(data->GetScalarPointer());
   std::vector<float>* cubePtr = cube->data();
 
   for (int i = 0; i < dim.x(); ++i) {
@@ -152,7 +151,7 @@ void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
 {
   clearScene();
   if (m_molecule)
-    disconnect(m_molecule, 0, 0, 0);
+    disconnect(m_molecule, nullptr, nullptr, nullptr);
   m_molecule = mol;
   foreach (QtGui::ToolPlugin* tool, m_tools)
     tool->setMolecule(m_molecule);
@@ -270,22 +269,22 @@ void vtkGLWidget::updateScene()
   if (mol) {
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
-    Rendering::GroupNode* moleculeNode = new Rendering::GroupNode(&node);
+    auto* moleculeNode = new Rendering::GroupNode(&node);
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
-      Rendering::GroupNode* engineNode = new Rendering::GroupNode(moleculeNode);
+      auto* engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*mol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
     if (m_activeTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_activeTool->draw(*toolNode);
     }
 
     if (m_defaultTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_defaultTool->draw(*toolNode);
     }
 
@@ -311,5 +310,4 @@ void vtkGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
-} // namespace VTK
 } // namespace Avogadro

@@ -7,8 +7,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 /**
 * @brief Constructor to initialize the NetworkAcessManager and set pointers to
 * the widget's ui elements.
@@ -111,7 +110,7 @@ void PQRRequest::parseJson()
     } else {
       table->setRowCount(resultSize);
       for (int i = 0; i < resultSize; i++) {
-        results.push_back(result());
+        results.emplace_back();
 
         // Loop through the keys
         for (auto it = root[i].cbegin(); it != root[i].cend(); ++it) {
@@ -138,7 +137,7 @@ void PQRRequest::parseJson()
         // table->setItem(i, 2, new
         // QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString("
         // g/mol")));
-        QTableWidgetItem* massItem = new QTableWidgetItem();
+        auto* massItem = new QTableWidgetItem();
         massItem->setData(Qt::DisplayRole, results[i].mass);
         table->setItem(i, 2, massItem);
       }
@@ -180,13 +179,13 @@ QString PQRRequest::parseSubscripts(QString formula)
 {
   std::string str = formula.toStdString();
   QString toReturn;
-  for (int i = 0; i < str.length(); i++) {
-    if (isdigit(str[i])) {
+  for (char i : str) {
+    if (isdigit(i)) {
       toReturn.append("<sub>");
-      toReturn.append(str[i]);
+      toReturn.append(i);
       toReturn.append("</sub>");
     } else {
-      toReturn.append(str[i]);
+      toReturn.append(i);
     }
   }
   return toReturn;
@@ -245,5 +244,4 @@ float PQRRequest::getMolMass(QString formula)
   }
   return totalMass;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

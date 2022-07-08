@@ -8,8 +8,7 @@
 
 #include <QtCore/QSettings>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 XrdOptionsDialog::XrdOptionsDialog(QWidget* aParent)
   : QDialog(aParent), m_ui(new Ui::XrdOptionsDialog)
@@ -63,5 +62,4 @@ void XrdOptionsDialog::accept()
   QDialog::accept();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

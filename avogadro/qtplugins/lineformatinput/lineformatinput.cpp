@@ -22,14 +22,13 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
     m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("SMILES…"), this);
+  auto* action = new QAction(tr("SMILES…"), this);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -71,7 +70,7 @@ void LineFormatInput::showDialog()
     return;
 
   QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
 
   // Create a list of file formats that we can read:
   QStringList availableFormats;
@@ -136,5 +135,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

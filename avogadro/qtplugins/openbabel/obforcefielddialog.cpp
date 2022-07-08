@@ -13,8 +13,7 @@
 
 #include <cmath> // for log10
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum OptimizationAlgorithm
 {
@@ -324,5 +323,4 @@ void OBForceFieldDialog::updateRecommendedForceField()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -15,8 +15,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MongoChem::MongoChem(QObject* parent)
   : ExtensionPlugin(parent), m_action(new QAction(this))
@@ -83,5 +82,4 @@ void MongoChem::setMoleculeData(const QByteArray& data)
   emit moleculeReady(1);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

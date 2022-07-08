@@ -23,8 +23,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using namespace Avogadro::QtGui;
 
@@ -124,11 +123,11 @@ bool CopyPaste::copy()
 
   QByteArray outputBA(output.c_str(), static_cast<int>(output.length()));
 
-  QMimeData* mimeData(new QMimeData);
+  auto* mimeData(new QMimeData);
 
   std::vector<std::string> mimeTypes(cjson.mimeTypes());
-  for (size_t i = 0; i < mimeTypes.size(); ++i)
-    mimeData->setData(QString::fromStdString(mimeTypes[i]), outputBA);
+  for (auto & mimeType : mimeTypes)
+    mimeData->setData(QString::fromStdString(mimeType), outputBA);
 
   mimeData->setData("text/plain", outputBA);
   QApplication::clipboard()->setMimeData(mimeData);
@@ -248,5 +247,4 @@ void CopyPaste::paste()
   m_pastedData.clear();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -26,8 +26,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OpenMMInputDialog::OpenMMInputDialog(QWidget* parent, Qt::WindowFlags flag)
   : QDialog(parent, flag), m_molecule(nullptr),
@@ -247,7 +246,7 @@ void OpenMMInputDialog::addMoleculeDataTab()
 
 void OpenMMInputDialog::textEditModified()
 {
-  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
+  if (auto* edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
       deckDirty(true);
     } else {
@@ -1015,17 +1014,17 @@ QString OpenMMInputDialog::generateInputDeck()
   scriptStream << "platform = mm.Platform.getPlatformByName(\'"
                << getPlatformType(m_platformType) << "\')\n";
   if (m_platformType == CUDA) {
-    scriptStream << "properties = {\'CudaPrecision\': \'"
+    scriptStream << R"(properties = {'CudaPrecision': ')"
                  << getPrecisionType(m_precisionType) << "\'";
     if (m_deviceIndex > 0) {
-      scriptStream << ", \'CudaDeviceIndex\': \'" << m_deviceIndex << "\'";
+      scriptStream << R"(, 'CudaDeviceIndex': ')" << m_deviceIndex << "\'";
     }
     scriptStream << "}\n";
   } else if (m_platformType == OpenCL) {
-    scriptStream << "properties = {\'OpenCLPrecision\': \'"
+    scriptStream << R"(properties = {'OpenCLPrecision': ')"
                  << getPrecisionType(m_precisionType) << "\'";
     if (m_openclPlatformIndex > 0) {
-      scriptStream << ", \'OpenCLPlatformIndex\': \'" << m_openclPlatformIndex
+      scriptStream << R"(, 'OpenCLPlatformIndex': ')" << m_openclPlatformIndex
                    << "\'";
     }
     if (m_deviceIndex > 0) {
@@ -1033,7 +1032,7 @@ QString OpenMMInputDialog::generateInputDeck()
       if (m_openclPlatformIndex > 0) {
         scriptStream << "\n              ";
       }
-      scriptStream << "\'OpenCLDeviceIndex\': \'" << m_deviceIndex << "\'";
+      scriptStream << R"('OpenCLDeviceIndex': ')" << m_deviceIndex << "\'";
     }
     scriptStream << "}\n";
   }
@@ -1345,5 +1344,4 @@ void OpenMMInputDialog::writeSettings(QSettings& settings) const
   settings.setValue("openmm/savepath", m_savePath);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

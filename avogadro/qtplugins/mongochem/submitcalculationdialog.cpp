@@ -10,8 +10,7 @@
 #include <QJsonObject>
 #include <QMessageBox>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SubmitCalculationDialog::SubmitCalculationDialog(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::SubmitCalculationDialog)
@@ -58,5 +57,4 @@ QVariantMap SubmitCalculationDialog::inputParameters() const
   return jsonDoc.object().toVariantMap();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

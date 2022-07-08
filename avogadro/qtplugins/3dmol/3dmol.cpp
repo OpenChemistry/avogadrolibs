@@ -22,8 +22,7 @@
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ThreeDMol::ThreeDMol(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
@@ -72,5 +71,4 @@ void ThreeDMol::showDialog()
   m_dialog->show();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

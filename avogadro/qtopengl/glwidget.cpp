@@ -22,8 +22,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 GLWidget::GLWidget(QWidget* p)
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
@@ -69,24 +68,24 @@ void GLWidget::updateScene()
   if (mol) {
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
-    Rendering::GroupNode* moleculeNode = new Rendering::GroupNode(&node);
+    auto* moleculeNode = new Rendering::GroupNode(&node);
     QtGui::RWMolecule* rwmol = mol->undoMolecule();
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
-      Rendering::GroupNode* engineNode = new Rendering::GroupNode(moleculeNode);
+      auto* engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*mol, *engineNode);
       scenePlugin->processEditable(*rwmol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
     if (m_activeTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_activeTool->draw(*toolNode);
     }
 
     if (m_defaultTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_defaultTool->draw(*toolNode);
     }
 
@@ -330,5 +329,4 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     QOpenGLWidget::keyReleaseEvent(e);
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

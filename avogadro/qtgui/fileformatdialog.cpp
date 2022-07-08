@@ -19,8 +19,7 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using std::vector;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 FileFormatDialog::FileFormatDialog(QWidget* parentW) : QFileDialog(parentW) {}
 
@@ -220,15 +219,11 @@ QString FileFormatDialog::generateFilterString(
   QString filterString;
   // Create a map that groups the file extensions by name:
   QMap<QString, QString> formatMap;
-  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
-                                                          itEnd = ffs.end();
-       it != itEnd; ++it) {
-    QString name(QString::fromStdString((*it)->name()));
-    std::vector<std::string> exts = (*it)->fileExtensions();
-    for (std::vector<std::string>::const_iterator eit = exts.begin(),
-                                                  eitEnd = exts.end();
-         eit != eitEnd; ++eit) {
-      QString ext(QString::fromStdString(*eit));
+  for (auto ff : ffs) {
+    QString name(QString::fromStdString(ff->name()));
+    std::vector<std::string> exts = ff->fileExtensions();
+    for (auto & eit : exts) {
+      QString ext(QString::fromStdString(eit));
       if (!formatMap.values(name).contains(ext)) {
         formatMap.insertMulti(name, ext);
       }
@@ -302,10 +297,8 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
 
   // If more than one format found, prompt user to select one.
   QStringList idents;
-  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
-                                                          itEnd = ffs.end();
-       it != itEnd; ++it) {
-    idents << QString::fromStdString((*it)->identifier());
+  for (auto ff : ffs) {
+    idents << QString::fromStdString(ff->identifier());
   }
 
   // If there is a format prefix, see if that can reduce the results down.
@@ -341,5 +334,4 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   return ffs[index];
 }
 
-} // namespace QtGui
 } // namespace Avogadro

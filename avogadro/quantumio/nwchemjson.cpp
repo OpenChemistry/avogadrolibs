@@ -16,11 +16,8 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
-using std::cout;
-using std::endl;
 using std::string;
 using std::vector;
 
@@ -28,14 +25,9 @@ using nlohmann::json;
 
 using Core::Array;
 using Core::Atom;
-using Core::BasisSet;
-using Core::Bond;
-using Core::CrystalTools;
-using Core::Elements;
 using Core::GaussianSet;
 using Core::Molecule;
 using Core::split;
-using Core::Variant;
 
 NWChemJson::NWChemJson() {}
 
@@ -80,8 +72,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   int numberOfElectrons = 0;
   string theory;
   string xcFunctional;
-  for (size_t i = 0; i < calculations.size(); ++i) {
-    json calcObj = calculations[i];
+  for (auto calcObj : calculations) {
     if (calcObj.is_object()) {
       string calcType = calcObj.value("calculationType", "");
       // Store the last vibrational frequencies calculation object.
@@ -133,8 +124,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     atoms = finalMol.value("atoms", json());
   }
   if (atoms.is_array()) {
-    for (size_t i = 0; i < atoms.size(); ++i) {
-      json jsonAtom = atoms[i];
+    for (auto jsonAtom : atoms) {
       if (jsonAtom.is_null() || !jsonAtom.is_object())
         continue;
       Atom a = molecule.addAtom(
@@ -163,8 +153,8 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     // Figure out the mapping of basis set to molecular orbitals.
     Array<int> atomNumber;
     Array<string> atomSymbol;
-    for (size_t i = 0; i < orbDesc.size(); ++i) {
-      string desc = orbDesc[i];
+    for (auto & i : orbDesc) {
+      string desc = i;
       vector<string> parts = split(desc, ' ');
       assert(parts.size() == 3);
       int num = Core::lexicalCast<int>(parts[0]);
@@ -175,15 +165,15 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     }
 
     // Now create the structure, and expand out the orbitals.
-    GaussianSet* basis = new GaussianSet;
+    auto* basis = new GaussianSet;
     basis->setMolecule(&molecule);
     string basisSetName;
     for (size_t i = 0; i < atomSymbol.size(); ++i) {
       string symbol = atomSymbol[i];
       json basisFunctions = basisSet.value("basisFunctions", json());
       json currentFunction;
-      for (size_t j = 0; j < basisFunctions.size(); ++j) {
-        currentFunction = basisFunctions[j];
+      for (auto & basisFunction : basisFunctions) {
+        currentFunction = basisFunction;
 
         string elementType;
         if (currentFunction.count("elementLabel"))
@@ -211,8 +201,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       json contraction = currentFunction.value("basisSetContraction", json());
       bool spherical =
         currentFunction.value("basisSetHarmonicType", "") == "spherical";
-      for (size_t j = 0; j < contraction.size(); ++j) {
-        json contractionShell = contraction[j];
+      for (auto contractionShell : contraction) {
         string shellType;
         if (contractionShell.count("basisSetShell"))
           shellType = contractionShell["basisSetShell"].get<std::string>();
@@ -251,11 +240,10 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     vector<double> energyArray;
     vector<unsigned char> occArray;
     vector<unsigned int> numArray;
-    for (size_t i = 0; i < moCoeffs.size(); ++i) {
-      json currentMO = moCoeffs[i];
+    for (auto currentMO : moCoeffs) {
       json coeff = currentMO.value("moCoefficients", json());
-      for (size_t j = 0; j < coeff.size(); ++j)
-        coeffArray.push_back(coeff[j]);
+      for (auto & j : coeff)
+        coeffArray.push_back(j);
       if (currentMO.count("orbitalEnergy")) {
         energyArray.push_back(currentMO["orbitalEnergy"].value("value", 0.0));
       }
@@ -287,8 +275,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       Array<double> frequencies;
       Array<double> intensities;
       Array<Array<Vector3>> Lx;
-      for (size_t i = 0; i < normalModes.size(); ++i) {
-        json mode = normalModes[i];
+      for (auto mode : normalModes) {
         frequencies.push_back(
           mode.value("normalModeFrequency", json()).value("value", 0.0));
         intensities.push_back(mode.value("normalModeInfraRedIntensity", json())
@@ -319,17 +306,16 @@ bool NWChemJson::write(std::ostream&, const Molecule&)
 vector<std::string> NWChemJson::fileExtensions() const
 {
   vector<std::string> ext;
-  ext.push_back("json");
-  ext.push_back("nwjson");
+  ext.emplace_back("json");
+  ext.emplace_back("nwjson");
   return ext;
 }
 
 vector<std::string> NWChemJson::mimeTypes() const
 {
   vector<std::string> mime;
-  mime.push_back("chemical/x-nwjson");
+  mime.emplace_back("chemical/x-nwjson");
   return mime;
 }
 
-} // namespace QuantumIO
 } // namespace Avogadro

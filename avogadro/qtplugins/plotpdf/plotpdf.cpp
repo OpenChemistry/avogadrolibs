@@ -22,8 +22,7 @@ using Avogadro::QtGui::Molecule;
 
 using std::map;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 
@@ -75,7 +74,7 @@ void PlotPdf::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -210,5 +209,4 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

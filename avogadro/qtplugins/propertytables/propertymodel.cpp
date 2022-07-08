@@ -24,9 +24,6 @@
 namespace Avogadro {
 
 using Avogadro::QtGui::Molecule;
-using std::numeric_limits;
-using std::pair;
-using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
@@ -198,7 +195,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   //    updateCache();
 
   if (m_type == AtomType) {
-    AtomColumn column = static_cast<AtomColumn>(index.column());
+    auto column = static_cast<AtomColumn>(index.column());
 
     if (row >= m_molecule->atomCount() || column > AtomColumns)
       return QVariant(); // invalid index
@@ -231,7 +228,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   } else if (m_type == BondType) {
 
-    BondColumn column = static_cast<BondColumn>(index.column());
+    auto column = static_cast<BondColumn>(index.column());
 
     if (row >= m_molecule->bondCount() || column > BondColumns)
       return QVariant(); // invalid index
@@ -256,7 +253,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     }
   } else if (m_type == ResidueType) {
 
-    ResidueColumn column = static_cast<ResidueColumn>(index.column());
+    auto column = static_cast<ResidueColumn>(index.column());
 
     if (row >= m_molecule->residueCount() || column > ResidueColumns)
       return QVariant(); // invalid index
@@ -280,7 +277,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     }
   } else if (m_type == AngleType) {
 
-    AngleColumn column = static_cast<AngleColumn>(index.column());
+    auto column = static_cast<AngleColumn>(index.column());
     if (row > m_angles.size() || column > AngleColumns)
       return QVariant(); // invalid index
 
@@ -310,7 +307,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   } else if (m_type == TorsionType) {
 
-    TorsionColumn column = static_cast<TorsionColumn>(index.column());
+    auto column = static_cast<TorsionColumn>(index.column());
     if (row > m_torsions.size() || column > TorsionColumns)
       return QVariant(); // invalid index
 
