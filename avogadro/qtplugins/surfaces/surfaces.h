@@ -99,7 +99,7 @@ private slots:
 private:
   float resolution();
   Core::Color3f chargeGradient(
-    const float value, const float clamp, tinycolormap::ColormapType colormap
+    double value, double clamp, tinycolormap::ColormapType colormap
   ) const;
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 

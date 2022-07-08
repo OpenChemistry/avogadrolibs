@@ -81,8 +81,14 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     geometry->addDrawable(mesh1);
     //mesh1->setColor(m_color1);
     mesh1->setOpacity(m_opacity);
-    auto colors = mesh->colorsRGB();
-    mesh1->addVertices(mesh->vertices(), mesh->normals(), *colors);
+
+    auto colors = mesh->colors();
+    Core::Array<Vector3ub> colorsRGB(colors.size());
+    for (size_t i = 0; i < colors.size(); i++)
+      colorsRGB[i] = Vector3ub(
+        colors[i].red() * 255, colors[i].green() * 255, colors[i].blue() * 255
+      );
+    mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
     mesh1->addTriangles(indices);
     mesh1->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
                                         : Rendering::TranslucentPass);

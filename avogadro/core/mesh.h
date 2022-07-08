@@ -164,11 +164,6 @@ public:
    * @return Array containing all of the colors in a one-dimensional array.
    */
   const Core::Array<Color3f>& colors() const;
-  
-  /**
-   * @return Array containing all of the colors in a one-dimensional array.
-   */
-  Core::Array<Vector3ub>* colorsRGB() const;
 
   /**
    * @return Pointer to the first color of the specified triangle.

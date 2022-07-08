@@ -524,13 +524,13 @@ void Surfaces::displayMesh()
   m_meshesLeft = 2;
 }
 
-Core::Color3f Surfaces::chargeGradient(const float value, const float clamp, ColormapType colormap) const
+Core::Color3f Surfaces::chargeGradient(double value, double clamp, ColormapType colormap) const
 {
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
   // we also need to scale the color to the range of the charge.
-  float scaledValue = value / clamp; // from -1 to 1.0
-  float scaledValue2 =
+  double scaledValue = value / clamp; // from -1 to 1.0
+  double scaledValue2 =
     1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
 
   auto color = tinycolormap::GetColor(scaledValue2, colormap);
@@ -585,21 +585,22 @@ void Surfaces::colorMeshByPotential()
   const auto colormap = getColormapFromString(m_dialog->colormapName());
   
   const auto positions = m_mesh1->vertices();
-  Core::Array<float> charges(positions.size());
-  float minCharge = 0.0f;
-  float maxCharge = 0.0f;
+  auto potentials = new Core::Array<double>(positions.size());
+  (*potentials)[0] = // Avoid calling any initialization routines once per thread
+    Calc::ChargeManager::instance().potential(model, *m_molecule, positions[0].cast<double>());
+  QtConcurrent::map(positions, [=](const Vector3f &pos) {
+    ptrdiff_t index = &pos - &(*positions.begin());
+    (*potentials)[index] =
+      Calc::ChargeManager::instance().potential(model, *m_molecule, pos.cast<double>());
+  }).waitForFinished();
   
-  for (size_t i = 0; i < positions.size(); i++) {
-    charges[i] = Calc::ChargeManager::instance().potential(model, *m_molecule, positions[i].cast<double>());
-    minCharge = std::min(minCharge, charges[i]);
-    maxCharge = std::max(maxCharge, charges[i]);
-  }
-  
-  float clamp = std::max(std::abs(minCharge), std::abs(maxCharge));
+  double minPotential = *std::min_element(potentials->begin(), potentials->end());
+  double maxPotential = *std::max_element(potentials->begin(), potentials->end());
+  double clamp = std::max(std::abs(minPotential), std::abs(minPotential));
   
   Core::Array<Core::Color3f> colors(positions.size());
-  for (size_t i = 0; i < charges.size(); i++)
-    colors[i] = chargeGradient(charges[i], clamp, colormap);
+  for (size_t i = 0; i < potentials->size(); i++)
+    colors[i] = chargeGradient((*potentials)[i], clamp, colormap);
   
   m_mesh1->setColors(colors);
 }
