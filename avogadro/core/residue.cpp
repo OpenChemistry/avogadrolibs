@@ -112,7 +112,7 @@ void Residue::setColor(const Vector3ub color)
   m_color = color;
 }
 
-const Vector3ub Residue::color() const
+Vector3ub Residue::color() const
 {
   if (m_customColorSet)
     return m_color;

@@ -306,7 +306,7 @@ void InputGeneratorWidget::computeClicked()
   for (QMap<QString, QTextEdit*>::const_iterator it = m_textEdits.constBegin(),
                                                  itEnd = m_textEdits.constEnd();
        it != itEnd; ++it) {
-    QString fileName = it.key();
+    const QString& fileName = it.key();
     if (fileName != mainFileName)
       job.appendAdditionalInputFile(fileName, it.value()->toPlainText());
     else

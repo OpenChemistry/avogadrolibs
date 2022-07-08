@@ -57,7 +57,7 @@ public:
 
   Core::Molecule::ElementMask elements() const override { return m_elements; }
 
-  const MatrixX partialCharges(Core::Molecule& mol) const override;
+  MatrixX partialCharges(Core::Molecule& mol) const override;
 
   double potential(Core::Molecule& mol, const Vector3& point) const override;
 

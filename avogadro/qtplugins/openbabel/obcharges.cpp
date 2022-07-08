@@ -156,7 +156,7 @@ std::string OBCharges::name() const
     return "";
 }
 
-const MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
+MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
 {
   // get the charges from obabel
   MatrixX charges(molecule.atomCount(), 1);

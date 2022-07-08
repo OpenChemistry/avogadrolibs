@@ -119,7 +119,7 @@ public:
 
   /** \return the color set for this residue, or a default from the chain id
    */
-  const Vector3ub color() const;
+  Vector3ub color() const;
 
 protected:
   std::string m_residueName;

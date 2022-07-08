@@ -91,7 +91,7 @@ void SlaterSet::initCalculation()
   m_normalized.resize(m_overlap.cols(), m_overlap.rows());
 
   SelfAdjointEigenSolver<MatrixX> s(m_overlap);
-  MatrixX p = s.eigenvectors();
+  const MatrixX& p = s.eigenvectors();
   MatrixX m =
     p * s.eigenvalues().array().inverse().array().sqrt().matrix().asDiagonal() *
     p.inverse();

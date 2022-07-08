@@ -59,14 +59,14 @@ void NeighborPerceiver::getNeighborsInclusiveInPlace(
   }
 }
 
-const Array<Index> NeighborPerceiver::getNeighborsInclusive(const Vector3 &point) const
+Array<Index> NeighborPerceiver::getNeighborsInclusive(const Vector3 &point) const
 {
   Array<Index> r;
   getNeighborsInclusiveInPlace(r, point);
   return r;
 }
 
-const std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 &point) const
+std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 &point) const
 {
   std::array<int, 3> r;
   for (size_t c = 0; c < 3; c++) {

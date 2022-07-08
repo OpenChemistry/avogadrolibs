@@ -80,7 +80,7 @@ public:
    */
   virtual float dielectric() const { return m_dielectric; }
 
-  virtual const MatrixX partialCharges(Core::Molecule& mol) const = 0;
+  virtual MatrixX partialCharges(Core::Molecule& mol) const = 0;
 
   /**
    * @brief Calculate the electrostatic potential at a particular point in

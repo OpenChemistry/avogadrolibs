@@ -242,7 +242,7 @@ void Select::selectResidue()
       }   // index makes sense
     } else {
       // standard residue name
-      for (auto residue : m_molecule->residues()) {
+      for (const auto& residue : m_molecule->residues()) {
         if (label == residue.residueName().c_str()) {
           // select the atoms of the residue
           for (auto atom : residue.residueAtoms()) {

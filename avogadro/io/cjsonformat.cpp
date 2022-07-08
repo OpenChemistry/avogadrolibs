@@ -56,7 +56,7 @@ bool setJsonKey(json& j, Molecule& m, const std::string& key)
 bool isNumericArray(json& j)
 {
   if (j.is_array() && j.size() > 0) {
-    for (auto v : j) {
+    for (const auto& v : j) {
       if (!v.is_number()) {
         return false;
       }
@@ -69,7 +69,7 @@ bool isNumericArray(json& j)
 bool isBooleanArray(json& j)
 {
   if (j.is_array() && j.size() > 0) {
-    for (auto v : j) {
+    for (const auto& v : j) {
       if (!v.is_boolean()) {
         return false;
       }
@@ -815,7 +815,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       entry["color"] = color;
 
       json atoms;
-      for (auto item : residue.atomNameMap()) {
+      for (const auto& item : residue.atomNameMap()) {
         // dictionary between names and atom Id
         atoms[item.first] = item.second.index();
       }

@@ -114,7 +114,7 @@ void POVRayVisitor::visit(Drawable& geometry)
 void POVRayVisitor::visit(SphereGeometry& geometry)
 {
   ostringstream str;
-  for (auto s : geometry.spheres()) {
+  for (const auto& s : geometry.spheres()) {
     str << "sphere {\n\t<" << s.center << ">, " << s.radius
         << "\n\tpigment { rgbt <" << s.color << ", 0.0> }\n}\n";
   }
@@ -129,7 +129,7 @@ void POVRayVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
   ostringstream str;
-  for (auto c : geometry.cylinders()) {
+  for (const auto& c : geometry.cylinders()) {
     str << "cylinder {\n"
         << "\t<" << c.end1 << ">,\n"
         << "\t<" << c.end2 << ">, " << c.radius << "\n\tpigment { rgbt <"
