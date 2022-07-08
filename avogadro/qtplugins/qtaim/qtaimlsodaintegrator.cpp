@@ -39,8 +39,7 @@ tam@wri.com
 
 #include "qtaimlsodaintegrator.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator& eval,
                                            const qint64 mode)
@@ -2762,5 +2761,4 @@ void QTAIMLSODAIntegrator::freevectors()
   free(ipvt);
 } /*   end freevectors   */
 
-} // namespace QtPlugins
 } // namespace Avogadro

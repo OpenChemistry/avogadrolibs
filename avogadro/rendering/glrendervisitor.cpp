@@ -14,8 +14,7 @@
 #include "textlabel2d.h"
 #include "textlabel3d.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 GLRenderVisitor::GLRenderVisitor(const Camera& camera_,
                                  const TextRenderStrategy* trs)
@@ -87,5 +86,4 @@ void GLRenderVisitor::visit(LineStripGeometry& geometry)
     geometry.render(m_camera);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

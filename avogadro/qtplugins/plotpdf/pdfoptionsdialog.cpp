@@ -8,8 +8,7 @@
 
 #include <QtCore/QSettings>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PdfOptionsDialog::PdfOptionsDialog(QWidget* aParent)
   : QDialog(aParent)
@@ -45,5 +44,4 @@ void PdfOptionsDialog::accept()
   QDialog::accept();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

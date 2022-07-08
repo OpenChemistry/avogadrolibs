@@ -17,8 +17,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/utilities.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using MoleQueue::InputGenerator;
 
@@ -218,6 +217,5 @@ void ApbsDialog::updatePreviewTextImmediately()
   }
 
   m_ui->textEdit->setText(m_inputGenerator->fileContents("apbs.in"));
-}
 }
 }

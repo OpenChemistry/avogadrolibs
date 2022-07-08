@@ -46,21 +46,17 @@ const unsigned char INVALID_ATOMIC_NUMBER =
   std::numeric_limits<unsigned char>::max();
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
-using QtGui::RWMolecule;
-using QtOpenGL::GLWidget;
 
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel2D;
-using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
 Editor::Editor(QObject* parent_)
@@ -229,7 +225,7 @@ void Editor::draw(Rendering::GroupNode& node)
   if (fabs(m_bondDistance) < 0.3)
     return;
 
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   node.addChild(geo);
 
   // Determine the field width. Negate it to indicate left-alignment.
@@ -245,7 +241,7 @@ void Editor::draw(Rendering::GroupNode& node)
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  TextLabel2D* label = new TextLabel2D;
+  auto* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);
@@ -422,12 +418,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
   // Check if the previously clicked atom is still under the mouse.
   float depth = -1.0f;
-  for (std::multimap<float, Rendering::Identifier>::const_iterator
-         it = hits.begin(),
-         itEnd = hits.end();
-       it != itEnd; ++it) {
-    if (it->second == m_clickedObject) {
-      depth = it->first;
+  for (const auto & hit : hits) {
+    if (hit.second == m_clickedObject) {
+      depth = hit.first;
       break;
     }
   }
@@ -469,11 +462,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (m_bondedAtom.isValid()) {
     // Is it still under the mouse?
     depth = -1.0f;
-    for (std::multimap<float, Identifier>::const_iterator it = hits.begin(),
-                                                          itEnd = hits.end();
-         it != itEnd; ++it) {
-      if (it->second == m_bondedAtom) {
-        depth = it->first;
+    for (const auto & hit : hits) {
+      if (hit.second == m_bondedAtom) {
+        depth = hit.first;
         break;
       }
     }
@@ -493,10 +484,8 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   // Is there another atom under the cursor, besides newAtom? If so, we'll draw
   // a bond to it.
   Identifier atomToBond;
-  for (std::multimap<float, Identifier>::const_iterator it = hits.begin(),
-                                                        itEnd = hits.end();
-       it != itEnd; ++it) {
-    const Identifier& ident = it->second;
+  for (const auto & hit : hits) {
+    const Identifier& ident = hit.second;
     // Are we on an atom
     if (ident.type == Rendering::AtomType)
       // besides the one that was clicked or a new atom
@@ -639,5 +628,4 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   return;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

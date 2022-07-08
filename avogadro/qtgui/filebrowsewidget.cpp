@@ -16,8 +16,7 @@
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QRegExp>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   : QWidget(theParent)
@@ -28,7 +27,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   , m_button(new QPushButton(tr("Browse")))
   , m_edit(new QLineEdit)
 {
-  QHBoxLayout* hbox = new QHBoxLayout;
+  auto* hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
   hbox->addWidget(m_button);
   setLayout(hbox);
@@ -40,7 +39,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
 
   // Setup completion
   m_fileSystemModel->setRootPath(QDir::rootPath());
-  QCompleter* fsCompleter = new QCompleter(m_fileSystemModel, this);
+  auto* fsCompleter = new QCompleter(m_fileSystemModel, this);
   m_edit->setCompleter(fsCompleter);
 
   // Connections:
@@ -202,5 +201,4 @@ FileBrowseWidget::Mode FileBrowseWidget::mode() const
   return m_mode;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

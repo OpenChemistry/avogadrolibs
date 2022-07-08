@@ -7,8 +7,7 @@
 
 #include <mutex>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::mutex;
 
@@ -42,6 +41,5 @@ bool Mutex::tryLock()
 void Mutex::unlock()
 {
   d->lock.unlock();
-}
 }
 }

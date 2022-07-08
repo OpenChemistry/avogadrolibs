@@ -17,8 +17,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 FetchPDB::FetchPDB(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -122,5 +121,4 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   emit moleculeReady(1);
   reply->deleteLater();
 }
-} // namespace QtPlugins
 } // namespace Avogadro

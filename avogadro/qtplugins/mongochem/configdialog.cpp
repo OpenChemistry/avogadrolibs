@@ -6,8 +6,7 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ConfigDialog::ConfigDialog(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::ConfigDialog)
@@ -42,5 +41,4 @@ QString ConfigDialog::apiKey() const
   return m_ui->apiKey->text();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

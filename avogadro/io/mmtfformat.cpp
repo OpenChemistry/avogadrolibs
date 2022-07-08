@@ -19,25 +19,15 @@
 #include <iomanip>
 #include <iostream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::string;
 using std::vector;
 
-using Core::Array;
-using Core::Atom;
-using Core::BasisSet;
-using Core::Bond;
-using Core::CrystalTools;
-using Core::Cube;
 using Core::Elements;
-using Core::GaussianSet;
 using Core::lexicalCast;
 using Core::Molecule;
 using Core::Residue;
-using Core::split;
-using Core::Variant;
 
 MMTFFormat::MMTFFormat() = default;
 
@@ -48,12 +38,12 @@ MMTFFormat::~MMTFFormat() = default;
 bool is_polymer(const unsigned int chain_index,
                 const std::vector<mmtf::Entity>& entity_list)
 {
-  for (std::size_t i = 0; i < entity_list.size(); ++i) {
-    if (std::find(entity_list[i].chainIndexList.begin(),
-                  entity_list[i].chainIndexList.end(),
-                  chain_index) != entity_list[i].chainIndexList.end()) {
-      return (entity_list[i].type == "polymer" ||
-              entity_list[i].type == "POLYMER");
+  for (const auto & i : entity_list) {
+    if (std::find(i.chainIndexList.begin(),
+                  i.chainIndexList.end(),
+                  chain_index) != i.chainIndexList.end()) {
+      return (i.type == "polymer" ||
+              i.type == "POLYMER");
     }
   }
   return false;
@@ -82,7 +72,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     Real beta = static_cast<Real>(structure.unitCell[4]) * DEG_TO_RAD;
     Real gamma = static_cast<Real>(structure.unitCell[5]) * DEG_TO_RAD;
 
-    Core::UnitCell* unitCellObject =
+    auto* unitCellObject =
       new Core::UnitCell(a, b, c, alpha, beta, gamma);
     molecule.setUnitCell(unitCellObject);
   }
@@ -96,7 +86,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     }
   }
 
-  Index modelChainCount =
+  auto modelChainCount =
     static_cast<Index>(structure.chainsPerModel[modelIndex]);
 
   auto entityList = structure.entityList;
@@ -104,7 +94,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
   for (Index j = 0; j < modelChainCount; j++) {
 
-    Index chainGroupCount =
+    auto chainGroupCount =
       static_cast<Index>(structure.groupsPerChain[chainIndex]);
 
     bool ok;
@@ -116,11 +106,11 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     // A group is like a residue or other molecule in a PDB file.
     for (size_t k = 0; k < chainGroupCount; k++) {
 
-      Index groupType = static_cast<Index>(structure.groupTypeList[groupIndex]);
+      auto groupType = static_cast<Index>(structure.groupTypeList[groupIndex]);
 
       const auto& group = structure.groupList[groupType];
 
-      Index groupId = static_cast<Index>(structure.groupIdList[groupIndex]);
+      auto groupId = static_cast<Index>(structure.groupIdList[groupIndex]);
       auto resname = group.groupName;
 
       auto& residue = molecule.addResidue(resname, groupId, chainid);
@@ -226,16 +216,15 @@ bool MMTFFormat::write(std::ostream& out, const Core::Molecule& molecule)
 vector<std::string> MMTFFormat::fileExtensions() const
 {
   vector<std::string> ext;
-  ext.push_back("mmtf");
+  ext.emplace_back("mmtf");
   return ext;
 }
 
 vector<std::string> MMTFFormat::mimeTypes() const
 {
   vector<std::string> mime;
-  mime.push_back("chemical/x-mmtf");
+  mime.emplace_back("chemical/x-mmtf");
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

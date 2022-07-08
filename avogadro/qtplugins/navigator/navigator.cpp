@@ -23,8 +23,7 @@
 
 #include <Eigen/Geometry>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
@@ -53,9 +52,9 @@ QWidget* Navigator::toolWidget() const
 {
   if (!m_toolWidget) {
     m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
 
-    QCheckBox* swapZoom =
+    auto* swapZoom =
       new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
     swapZoom->setToolTip(
       tr("Default:\t Scroll down to shrink, scroll up to zoom\n"
@@ -298,5 +297,4 @@ inline void Navigator::translate(const Vector3f& ref, const Vector2f& fromScr,
   m_renderer->camera().translate(to - from);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

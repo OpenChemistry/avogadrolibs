@@ -14,8 +14,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 static void deleteRequestWhenFinished(GirderRequest* r)
 {
@@ -460,5 +459,4 @@ void CalculationSubmitter::handleError(const QString& msg,
   emit error(message, networkReply);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

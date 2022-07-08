@@ -7,8 +7,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 VibrationModel::VibrationModel(QObject* p)
   : QAbstractItemModel(p), m_molecule(nullptr), m_hasRaman(false)
@@ -115,6 +114,5 @@ QModelIndex VibrationModel::index(int row, int column,
 
 void VibrationModel::clear()
 {
-}
 }
 }

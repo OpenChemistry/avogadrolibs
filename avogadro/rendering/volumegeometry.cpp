@@ -5,8 +5,7 @@
 
 #include "volumegeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 VolumeGeometry::VolumeGeometry()
 {
@@ -16,5 +15,4 @@ VolumeGeometry::~VolumeGeometry()
 {
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

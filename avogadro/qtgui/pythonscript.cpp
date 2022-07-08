@@ -14,8 +14,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
@@ -256,5 +255,4 @@ QString PythonScript::processErrorString(const QProcess& proc) const
   return result;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

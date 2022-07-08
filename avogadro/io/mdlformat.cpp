@@ -32,8 +32,7 @@ using std::setprecision;
 using std::setw;
 using std::string;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 typedef std::pair<size_t, signed int> chargePair;
 
@@ -101,7 +100,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
-    signed int charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
+    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
@@ -110,7 +109,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       charge = (charge > 4) ? ((charge <= 7) ? 4 - charge : 0)
                             : ((charge < 4) ? charge : 0);
       if (charge)
-        chargeList.push_back(chargePair(newAtom.index(), charge));
+        chargeList.emplace_back(newAtom.index(), charge);
       continue;
     } else {
       appendError("Error parsing atom block: " + buffer);
@@ -165,14 +164,14 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                       buffer.substr(10 + 8 * i, 3));
           return false;
         }
-        signed int charge(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        auto charge(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
         if (!ok) {
           appendError("Error parsing atom charge:" +
                       buffer.substr(14 + 8 * i, 3));
           return false;
         }
         if (charge)
-          chargeList.push_back(chargePair(index, charge));
+          chargeList.emplace_back(index, charge);
       }
     }
   }
@@ -183,9 +182,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Apply charges.
-  for (size_t i = 0; i < chargeList.size(); i++) {
-    size_t index = chargeList[i].first;
-    signed int charge = chargeList[i].second;
+  for (auto & i : chargeList) {
+    size_t index = i.first;
+    signed int charge = i.second;
     mol.setFormalCharge(index, charge);
   }
 
@@ -242,7 +241,7 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
     Atom atom = mol.atom(i);
     signed int charge = atom.formalCharge();
     if (charge)
-      chargeList.push_back(chargePair(atom.index(), charge));
+      chargeList.emplace_back(atom.index(), charge);
     unsigned int chargeField = (charge < 0) ? ((charge >= -3) ? 4 - charge : 0)
                                             : ((charge <= 3) ? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
@@ -261,9 +260,9 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
         << "  0  0  0  0\n";
   }
   // Properties block.
-  for (size_t i = 0; i < chargeList.size(); ++i) {
-    Index atomIndex = chargeList[i].first;
-    signed int atomCharge = chargeList[i].second;
+  for (auto & i : chargeList) {
+    Index atomIndex = i.first;
+    signed int atomCharge = i.second;
     out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
         << setw(3) << atomCharge << "\n";
   }
@@ -278,17 +277,16 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 std::vector<std::string> MdlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("mol");
-  ext.push_back("sdf");
+  ext.emplace_back("mol");
+  ext.emplace_back("sdf");
   return ext;
 }
 
 std::vector<std::string> MdlFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-mdl-molfile");
+  mime.emplace_back("chemical/x-mdl-molfile");
   return mime;
 }
 
-} // namespace Io
 } // namespace Avogadro

@@ -13,13 +13,12 @@
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Hydrogens::Hydrogens(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("&Adjust Hydrogens"), this);
+  auto* action = new QAction(tr("&Adjust Hydrogens"), this);
   action->setShortcut(QKeySequence("Ctrl+Alt+H"));
   connect(action, SIGNAL(triggered()), SLOT(adjustHydrogens()));
   m_actions.append(action);
@@ -104,5 +103,4 @@ void Hydrogens::removeAllHydrogens()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

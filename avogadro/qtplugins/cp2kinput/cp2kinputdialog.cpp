@@ -35,8 +35,7 @@ using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
 using Avogadro::MoleQueue::JobObject;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum CalculateOption
 {
@@ -549,18 +548,18 @@ void Cp2kInputDialog::updatePreviewText()
   if (title.isEmpty())
     title = generateJobTitle();
 
-  CalculateOption calculate(
+  auto calculate(
     static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
-  FunctionalOption functional(
+  auto functional(
     static_cast<FunctionalOption>(ui.functionalCombo->currentIndex()));
-  BasisOption basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  MethodOption method(
+  auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
+  auto method(
     static_cast<MethodOption>(ui.methodCombo->currentIndex()));
-  EWALDTypeOption EWALDType(
+  auto EWALDType(
     static_cast<EWALDTypeOption>(ui.ewaldtypeCombo->currentIndex()));
-  SCFGuessOption SCFGuess(
+  auto SCFGuess(
     static_cast<SCFGuessOption>(ui.scfguessComboBox->currentIndex()));
-  OTMinimizerOption OTMinimizer(
+  auto OTMinimizer(
     static_cast<OTMinimizerOption>(ui.otminimizerComboBox->currentIndex()));
 
   QString emaxSpline = QString::number(ui.emaxSplineSpin->value());
@@ -765,8 +764,8 @@ void Cp2kInputDialog::updatePreviewText()
 
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
       Core::Atom atom = m_molecule->atom(i);
-      for (int i = 0; i < atomList.size(); i++) {
-        if (atomList.at(i) == atom.atomicNumber()) {
+      for (int i : atomList) {
+        if (i == atom.atomicNumber()) {
           inlist = false;
           break;
         } else {
@@ -1030,5 +1029,4 @@ void Cp2kInputDialog::updateTitlePlaceholder()
   ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

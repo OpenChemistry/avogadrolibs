@@ -7,9 +7,7 @@
 
 #include <avogadro/io/fileformat.h>
 
-namespace Avogadro {
-
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 BackgroundFileFormat::BackgroundFileFormat(Io::FileFormat* format,
                                            QObject* aparent)
@@ -71,5 +69,4 @@ void BackgroundFileFormat::write()
   emit finished();
 }
 
-} // namespace QtGui
 } // namespace Avogadro

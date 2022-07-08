@@ -5,8 +5,7 @@
 
 #include "node.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Node::Node() : m_parent(nullptr), m_visible(true)
 {
@@ -21,5 +20,4 @@ void Node::setParent(GroupNode* parent_)
   m_parent = parent_;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

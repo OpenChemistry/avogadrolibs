@@ -5,8 +5,7 @@
 
 #include "neighborperceiver.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDistance)
  : m_maxDistance(maxDistance)
@@ -76,5 +75,4 @@ const std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 &point) co
   return r; 
 }
 
-} // namespace Core
 } // namespace Avogadro

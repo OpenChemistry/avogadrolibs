@@ -36,7 +36,6 @@
 
 namespace Avogadro {
 
-using QtOpenGL::ActiveObjects;
 
 HistogramWidget::HistogramWidget(QWidget* parent)
   : QWidget(parent), m_qvtk(new QVTKGLWidget(this))

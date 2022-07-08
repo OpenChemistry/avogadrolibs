@@ -18,8 +18,7 @@
 
 #include "qtaimwavefunctionevaluator.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMWavefunctionEvaluator::QTAIMWavefunctionEvaluator(QTAIMWavefunction& wfn)
 {
@@ -2195,5 +2194,4 @@ const Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
   return 0.25 * value;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

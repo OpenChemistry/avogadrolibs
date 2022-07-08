@@ -5,8 +5,7 @@
 
 #include "molequeuemanager.h"
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 MoleQueueManager* MoleQueueManager::m_instance = nullptr;
 
@@ -68,5 +67,4 @@ void MoleQueueManager::updateQueueModel(const QJsonObject& json)
   emit queueListUpdated();
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

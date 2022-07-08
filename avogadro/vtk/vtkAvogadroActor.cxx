@@ -25,8 +25,8 @@ vtkStandardNewMacro(vtkAvogadroActor)
 vtkAvogadroActor::vtkAvogadroActor()
   : m_scene(nullptr), m_initialized(false)
 {
-  for (short i = 0; i < 6; ++i)
-    m_bounds[i] = 0.0;
+  for (double & m_bound : m_bounds)
+    m_bound = 0.0;
 }
 
 vtkAvogadroActor::~vtkAvogadroActor()

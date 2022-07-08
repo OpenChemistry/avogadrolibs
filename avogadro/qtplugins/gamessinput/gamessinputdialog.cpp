@@ -32,8 +32,7 @@ using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
 using Avogadro::MoleQueue::JobObject;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum CalculateOption
 {
@@ -434,15 +433,15 @@ void GamessInputDialog::updatePreviewText()
   if (title.isEmpty())
     title = generateJobTitle();
 
-  CalculateOption calculate(
+  auto calculate(
     static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
-  TheoryOption theory(
+  auto theory(
     static_cast<TheoryOption>(ui.theoryCombo->currentIndex()));
-  BasisOption basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  StateOption state(static_cast<StateOption>(ui.stateCombo->currentIndex()));
-  MultiplicityOption multiplicity(
+  auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
+  auto state(static_cast<StateOption>(ui.stateCombo->currentIndex()));
+  auto multiplicity(
     static_cast<MultiplicityOption>(ui.multiplicityCombo->currentIndex()));
-  ChargeOption charge(
+  auto charge(
     static_cast<ChargeOption>(ui.chargeCombo->currentIndex()));
 
   // Disable basis selection for semiempirical methods.
@@ -739,5 +738,4 @@ void GamessInputDialog::updateTitlePlaceholder()
   ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

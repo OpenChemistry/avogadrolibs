@@ -12,10 +12,8 @@
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
-using Core::Layer;
 using Core::LayerManager;
 
 namespace {
@@ -239,5 +237,4 @@ size_t LayerModel::layerCount() const
   return LayerManager::layerCount();
 }
 
-} // namespace QtGui
 } // namespace Avogadro

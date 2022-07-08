@@ -6,8 +6,7 @@
 #include "groupnode.h"
 #include "visitor.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 GroupNode::GroupNode(GroupNode* parent_)
 {
@@ -24,8 +23,8 @@ GroupNode::~GroupNode()
 void GroupNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
-    it->node->accept(visitor);
+  for (auto & it : m_children) {
+    it.node->accept(visitor);
   }
 }
 
@@ -35,7 +34,7 @@ void GroupNode::addChild(Node* node, NodeType ui)
     return;
   if (!hasChild(node)) {
     node->setParent(this);
-    m_children.push_back(NodeInfo(node, ui));
+    m_children.emplace_back(node, ui);
   }
 }
 
@@ -43,8 +42,8 @@ bool GroupNode::hasChild(Node* node) const
 {
   if (!node)
     return false;
-  for (auto it = m_children.begin(); it != m_children.end(); ++it) {
-    if (it->node == node) {
+  for (auto it : m_children) {
+    if (it.node == node) {
       return true;
     }
   }
@@ -118,5 +117,4 @@ void GroupNode::clearUI()
   clear(UI);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

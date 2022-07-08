@@ -20,8 +20,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -180,17 +179,16 @@ std::multimap<float, Identifier> GLRenderer::hits(
   if (!group)
     return result;
 
-  for (auto it = group->children().begin(); it != group->children().end();
-       ++it) {
+  for (auto it : group->children()) {
     std::multimap<float, Identifier> loopHits;
-    const Node* itNode = it->node;
-    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    const Node* itNode = it.node;
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
-    const GeometryNode* childGeometry = itNode->cast<GeometryNode>();
+    const auto* childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
@@ -226,11 +224,10 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
 {
   Array<Identifier> result;
 
-  for (auto it = group->children().begin(); it != group->children().end();
-       ++it) {
+  for (auto it : group->children()) {
     Array<Identifier> loopHits;
-    const Node* itNode = it->node;
-    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    const Node* itNode = it.node;
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());
@@ -277,5 +274,4 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
   return hits(&m_scene.rootNode(), f);
 }
 
-} // namespace Rendering
 } // namespace Avogadro

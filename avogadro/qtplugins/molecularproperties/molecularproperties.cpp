@@ -11,8 +11,7 @@
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MolecularProperties::MolecularProperties(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
@@ -61,5 +60,4 @@ void MolecularProperties::showDialog()
   m_dialog->show();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

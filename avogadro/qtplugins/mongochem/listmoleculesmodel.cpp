@@ -5,8 +5,7 @@
 
 #include "listmoleculesmodel.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ListMoleculesModel::ListMoleculesModel(QObject* parent)
   : QAbstractTableModel(parent)
@@ -123,5 +122,4 @@ void ListMoleculesModel::clear()
   endRemoveRows();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

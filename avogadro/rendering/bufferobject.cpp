@@ -7,8 +7,7 @@
 
 #include "avogadrogl.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 namespace {
 inline GLenum convertType(BufferObject::ObjectType type)
@@ -94,5 +93,4 @@ bool BufferObject::uploadInternal(const void* buffer, size_t size,
   return true;
 }
 
-} // End Rendering namespace
 } // End Avogadro namespace

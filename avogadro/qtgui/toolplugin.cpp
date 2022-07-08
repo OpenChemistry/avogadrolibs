@@ -5,8 +5,7 @@
 
 #include "toolplugin.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ToolPlugin::ToolPlugin(QObject* parent_) : QObject(parent_)
 {
@@ -59,5 +58,4 @@ ToolPluginFactory::~ToolPluginFactory()
 {
 }
 
-} // End QtGui namespace
 } // End Avogadro namespace

@@ -12,12 +12,8 @@
 #include <cassert>
 #include <vector>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
-using Core::LayerData;
-using QtPlugins::BallAndStick;
-using QtPlugins::Cartoons;
 using std::string;
 using std::vector;
 
@@ -146,5 +142,4 @@ size_t PluginLayerManager::layerCount() const
 {
   return LayerManager::layerCount();
 }
-} // namespace QtGui
 } // namespace Avogadro
