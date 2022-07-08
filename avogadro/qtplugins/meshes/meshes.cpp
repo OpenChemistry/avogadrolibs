@@ -27,8 +27,10 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
 
-Meshes::Meshes(QObject* p) : ScenePlugin(p), m_enabled(true), m_setupWidget(nullptr)
+Meshes::Meshes(QObject* p) : ScenePlugin(p), m_setupWidget(nullptr)
 {
+  m_layerManager = QtGui::PluginLayerManager(m_name);
+
   QSettings settings;
   // out of 255
   m_opacity = settings.value("meshes/opacity", 150).toUInt();
@@ -102,21 +104,6 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
                                           : Rendering::TranslucentPass);
     }
   }
-}
-
-bool Meshes::isEnabled() const
-{
-  return m_enabled;
-}
-
-bool Meshes::isActiveLayerEnabled() const
-{
-  return m_enabled;
-}
-
-void Meshes::setEnabled(bool enable)
-{
-  m_enabled = enable;
 }
 
 void Meshes::setOpacity(int opacity)

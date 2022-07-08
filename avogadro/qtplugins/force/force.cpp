@@ -25,7 +25,10 @@ using Rendering::ArrowGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 
-Force::Force(QObject* p) : ScenePlugin(p), m_enabled(false) {}
+Force::Force(QObject* p) : ScenePlugin(p)
+{
+  m_layerManager = QtGui::PluginLayerManager(m_name);
+}
 
 Force::~Force() {}
 
@@ -38,6 +41,9 @@ void Force::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
   arrows->identifier().molecule = &molecule;
   geometry->addDrawable(arrows);
   for (Index i = 0; i < molecule.atomCount(); ++i) {
+    if (!m_layerManager.atomEnabled(i))
+      continue; // ignore hidden atoms
+
     Core::Atom atom1 = molecule.atom(i);
     Vector3f pos1 = atom1.position3d().cast<float>();
     Vector3f forceVector = atom1.forceVector().cast<float>();
@@ -45,18 +51,4 @@ void Force::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
   }
 }
 
-bool Force::isEnabled() const
-{
-  return m_enabled;
-}
-
-bool Force::isActiveLayerEnabled() const
-{
-  return m_enabled;
-}
-
-void Force::setEnabled(bool enable)
-{
-  m_enabled = enable;
-}
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

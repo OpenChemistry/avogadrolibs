@@ -33,14 +33,13 @@ public:
       "Render the force field visualizations for the atoms of the molecule.");
   }
 
-  bool isEnabled() const override;
-
-  bool isActiveLayerEnabled() const override;
-
-  void setEnabled(bool enable) override;
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
 
 private:
-  bool m_enabled;
+  std::string m_name = "Force";
 };
 
 } // end namespace QtPlugins

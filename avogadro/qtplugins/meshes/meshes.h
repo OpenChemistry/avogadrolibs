@@ -24,28 +24,26 @@ public:
   explicit Meshes(QObject* parent = nullptr);
   ~Meshes() override;
 
-  void process(const QtGui::Molecule& mol,
-               Rendering::GroupNode& node) override;
+  void process(const QtGui::Molecule& mol, Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Meshes"); }
 
   QString description() const override { return tr("Render polygon meshes."); }
 
-  bool isEnabled() const override;
-
-  bool isActiveLayerEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
+  }
+
 private slots:
-  void setColor1(const QColor &color);
-  void setColor2(const QColor &color);
+  void setColor1(const QColor& color);
+  void setColor2(const QColor& color);
   void setOpacity(int opacity);
 
 private:
-  bool m_enabled;
+  std::string m_name = "Meshes";
 
   QWidget* m_setupWidget;
   unsigned char m_opacity;
