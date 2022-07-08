@@ -31,8 +31,10 @@ using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
 CrystalScene::CrystalScene(QObject* p)
-  : ScenePlugin(p), m_enabled(true), m_setupWidget(nullptr)
+  : ScenePlugin(p), m_setupWidget(nullptr)
 {
+  m_layerManager = QtGui::PluginLayerManager(m_name);
+
   QSettings settings;
   m_lineWidth = settings.value("crystal/lineWidth", 2.0).toDouble();
 
@@ -94,21 +96,6 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
     strip[1] -= a;
     lines->addLineStrip(strip, width);
   }
-}
-
-bool CrystalScene::isEnabled() const
-{
-  return m_enabled;
-}
-
-bool CrystalScene::isActiveLayerEnabled() const
-{
-  return m_enabled;
-}
-
-void CrystalScene::setEnabled(bool enable)
-{
-  m_enabled = enable;
 }
 
 void CrystalScene::setLineWidth(double width)
