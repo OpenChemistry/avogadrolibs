@@ -41,7 +41,7 @@ public:
    *
    * @param point Position to return neighbors of, can be located anywhere.
    */
-  const Array<Index> getNeighborsInclusive(const Vector3 &point) const;
+  Array<Index> getNeighborsInclusive(const Vector3 &point) const;
   
   /**
    * Fills an array with all neighboring points. Linear time to number of neighbors.
@@ -53,7 +53,7 @@ public:
   void getNeighborsInclusiveInPlace(Array<Index> &out, const Vector3 &point) const;
   
 private:
-  const std::array<int, 3> getBinIndex(const Vector3 &point) const;
+  std::array<int, 3> getBinIndex(const Vector3 &point) const;
 protected:
   float m_maxDistance;
   std::array<int, 3> m_binCount;

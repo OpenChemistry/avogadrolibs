@@ -25,7 +25,7 @@ DefaultModel::DefaultModel(const std::string& id)
 
 DefaultModel::~DefaultModel() {}
 
-const MatrixX DefaultModel::partialCharges(Core::Molecule& mol) const
+MatrixX DefaultModel::partialCharges(Core::Molecule& mol) const
 {
   return mol.partialCharges(m_identifier);
 }

@@ -10,7 +10,6 @@
 namespace Avogadro::Rendering {
 
 using Core::Residue;
-using std::make_pair;
 using std::vector;
 
 const float Cartoon::ELIPSE_RATIO = 0.75f;

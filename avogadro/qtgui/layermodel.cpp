@@ -118,7 +118,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
   return QVariant();
 }
 
-const QString LayerModel::getTranslatedName(const std::string& name) const
+QString LayerModel::getTranslatedName(const std::string& name) const
 {
   // This is a bad hack, but whatever..
   // Put all the strings that show up as layer options

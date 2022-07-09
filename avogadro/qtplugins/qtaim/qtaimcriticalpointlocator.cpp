@@ -582,7 +582,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   file.remove(tempFileName);
   file.remove(nuclearCriticalPointsFileName);
 
-  for (auto thisCriticalPoint : results) {
+  for (const auto& thisCriticalPoint : results) {
     bool success = thisCriticalPoint.at(0).toBool();
 
     if (success) {

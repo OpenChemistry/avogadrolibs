@@ -74,7 +74,7 @@ public:
   /**
    * @brief Retrieve the relevant charges from the molecule for our defined type
    */
-  virtual const MatrixX partialCharges(Core::Molecule& mol) const override;
+  virtual MatrixX partialCharges(Core::Molecule& mol) const override;
 
 protected:
   std::string m_identifier;
