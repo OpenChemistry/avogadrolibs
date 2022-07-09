@@ -19,8 +19,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
@@ -214,7 +213,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj["highlightStyles"].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -410,7 +409,7 @@ void InputGenerator::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
+  QRegExp coordParser(R"(\$\$coords:([^\$]*)\$\$)");
   int ind = 0;
   while ((ind = coordParser.indexIn(str, ind)) != -1) {
     // Extract spec and prepare the replacement
@@ -465,7 +464,7 @@ bool InputGenerator::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value("rules").toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InputGenerator*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
       qDebug() << "Error parsing style" << styleName << '\n'
@@ -676,5 +675,4 @@ bool InputGenerator::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

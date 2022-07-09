@@ -13,17 +13,15 @@
 
 #define M_TETRAHED 109.47122063449069389
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 typedef Array<Bond> NeighborListType;
 
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {
   unsigned int result(0);
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
-       it != itEnd; ++it) {
-    result += static_cast<unsigned int>(it->order());
+  for (auto bond : bonds) {
+    result += static_cast<unsigned int>(bond.order());
   }
   return result;
 }
@@ -45,12 +43,10 @@ AtomHybridization AtomUtilities::perceiveHybridization(const Atom& atom)
     unsigned int numTripleBonds = 0;
     unsigned int numDoubleBonds = 0;
 
-    for (NeighborListType::const_iterator it = bonds.begin(),
-                                          itEnd = bonds.end();
-         it != itEnd; ++it) {
-      if (it->order() == 2)
+    for (auto bond : bonds) {
+      if (bond.order() == 2)
         numDoubleBonds++;
-      else if (it->order() == 3)
+      else if (bond.order() == 3)
         numTripleBonds++;
     }
 
@@ -88,15 +84,11 @@ Vector3 AtomUtilities::generateNewBondVector(
     Vector3 bond2(0.0, 0.0, 0.0);
 
     const NeighborListType bonds(atom.molecule()->bonds(atom));
-    for (NeighborListType::const_iterator it = bonds.begin(),
-                                          itEnd = bonds.end();
-         it != itEnd; ++it) {
-      Atom a1 = it->getOtherAtom(atom);
+    for (auto bond : bonds) {
+      Atom a1 = bond.getOtherAtom(atom);
       const NeighborListType nbrBonds(atom.molecule()->bonds(a1));
-      for (NeighborListType::const_iterator nbIt = nbrBonds.begin(),
-                                            nbItEnd = nbrBonds.end();
-           nbIt != nbItEnd; ++nbIt) {
-        Atom a2 = nbIt->getOtherAtom(a1);
+      for (auto nbrBond : nbrBonds) {
+        Atom a2 = nbrBond.getOtherAtom(a1);
         if (a2.index() == atom.index())
           continue; // we want a *new* atom
 
@@ -107,7 +99,7 @@ Vector3 AtomUtilities::generateNewBondVector(
         // Check for carboxylate (CO2)
         if ((atom.atomicNumber() == 8)  // atom for H is O
             && (a1.atomicNumber() == 6) // central atom is C
-            && (nbIt->order() == 2) && (a2.atomicNumber() == 8))
+            && (nbrBond.order() == 2) && (a2.atomicNumber() == 8))
           break; // make sure the H will be trans to the C=O
       }
     }
@@ -208,7 +200,7 @@ Vector3 AtomUtilities::generateNewBondVector(
   for (int attempt = 0; !success && attempt < 10; ++attempt) {
     newPos = Vector3::Random().normalized();
     success = true;
-    for (std::vector<Vector3>::const_iterator it = allVectors.begin(),
+    for (auto it = allVectors.begin(),
                                               itEnd = allVectors.end();
          success && it != itEnd; ++it) {
       success = newPos.dot(*it) < cosRadTol;
@@ -217,5 +209,4 @@ Vector3 AtomUtilities::generateNewBondVector(
   return newPos;
 }
 
-} // namespace Core
 } // namespace Avogadro

@@ -33,15 +33,13 @@
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::QtGui::Molecule;
-using Avogadro::QtGui::PluginLayerManager;
 using Avogadro::QtGui::RWMolecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::MeshGeometry;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SelectionTool::SelectionTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -194,9 +192,9 @@ void SelectionTool::draw(Rendering::GroupNode& node)
     return;
   }
 
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   node.addChild(geo);
-  MeshGeometry* mesh = new MeshGeometry;
+  auto* mesh = new MeshGeometry;
 
   mesh->setRenderPass(Rendering::Overlay2DPass);
 
@@ -365,5 +363,4 @@ void SelectionTool::setMolecule(QtGui::Molecule* mol)
   m_toolWidget->setDropDown(currentLayer, maxLayers);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

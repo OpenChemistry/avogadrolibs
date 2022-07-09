@@ -118,8 +118,7 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
 
 } // namespace
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 QtTextRenderStrategy::QtTextRenderStrategy() {}
 
@@ -187,7 +186,7 @@ void QtTextRenderStrategy::render(const std::string& string,
   textRect.translate(-textRect.topLeft());
 
   // Apply rotation, if any
-  qreal rot(static_cast<qreal>(tprop.rotationDegreesCW()));
+  auto rot(static_cast<qreal>(tprop.rotationDegreesCW()));
   if (rot != 0.f) {
     // Rotate the painter:
     painter.rotate(static_cast<qreal>(rot));
@@ -249,7 +248,7 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   // output: 0xRRGGBBAA (big endian)
   // output: 0xAABBGGRR (little endian)
 
-  quint32* cur = reinterpret_cast<quint32*>(buffer);
+  auto* cur = reinterpret_cast<quint32*>(buffer);
   quint32* end = &cur[pixels];
 
   while (cur < end) {
@@ -260,5 +259,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

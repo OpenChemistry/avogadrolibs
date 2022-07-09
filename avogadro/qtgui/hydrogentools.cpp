@@ -36,9 +36,8 @@ typedef Avogadro::Core::Array<RWBond> NeighborListType;
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {
   unsigned int result(0);
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
-       it != itEnd; ++it) {
-    result += static_cast<unsigned int>(it->order());
+  for (auto bond : bonds) {
+    result += static_cast<unsigned int>(bond.order());
   }
   return result;
 }
@@ -60,14 +59,13 @@ inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
 
 } // end anon namespace
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 void HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
 {
   const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
-  for (Array<unsigned char>::const_reverse_iterator it = atomicNums.rbegin(),
+  for (auto it = atomicNums.rbegin(),
                                                     itEnd = atomicNums.rend();
        it != itEnd; ++it, --atomIndex) {
     if (*it == 1)
@@ -100,11 +98,9 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
     if (doAdd && hDiff > 0) {
       newHPos.clear();
       generateNewHydrogenPositions(atom, hDiff, newHPos);
-      for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
-                                                itEnd = newHPos.end();
-           it != itEnd; ++it) {
+      for (auto & newHPo : newHPos) {
         RWAtom newH(molecule.addAtom(1));
-        newH.setPosition3d(*it);
+        newH.setPosition3d(newHPo);
         molecule.addBond(atom, newH, 1);
       }
     }
@@ -118,10 +114,10 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
   // indexing sane.
   if (doRemove && !badHIndices.empty()) {
     std::sort(badHIndices.begin(), badHIndices.end());
-    std::vector<size_t>::iterator newEnd(
+    auto newEnd(
       std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
-    for (std::vector<size_t>::const_reverse_iterator it = badHIndices.rbegin(),
+    for (auto it = badHIndices.rbegin(),
                                                      itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule.removeAtom(*it);
@@ -143,20 +139,18 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     std::vector<size_t> badHIndices;
 
     const NeighborListType bonds(molecule->bonds(atom));
-    for (NeighborListType::const_iterator it = bonds.begin(),
-                                          itEnd = bonds.end();
-         it != itEnd; ++it) {
-      const RWAtom otherAtom = it->getOtherAtom(atom);
+    for (auto bond : bonds) {
+      const RWAtom otherAtom = bond.getOtherAtom(atom);
       if (otherAtom.atomicNumber() == 1) {
         badHIndices.push_back(otherAtom.index());
       }
     } // end loop through bonds
 
     std::sort(badHIndices.begin(), badHIndices.end());
-    std::vector<size_t>::iterator newEnd(
+    auto newEnd(
       std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
-    for (std::vector<size_t>::const_reverse_iterator it = badHIndices.rbegin(),
+    for (auto it = badHIndices.rbegin(),
                                                      itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule->removeAtom(*it);
@@ -169,11 +163,9 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     // Temporary container for calls to generateNewHydrogenPositions.
     std::vector<Vector3> newHPos;
     generateNewHydrogenPositions(atom, hDiff, newHPos);
-    for (std::vector<Vector3>::const_iterator it = newHPos.begin(),
-                                              itEnd = newHPos.end();
-         it != itEnd; ++it) {
+    for (auto & newHPo : newHPos) {
       RWAtom newH(molecule->addAtom(1));
-      newH.setPosition3d(*it);
+      newH.setPosition3d(newHPo);
       molecule->addBond(atom, newH, 1);
     }
   }
@@ -203,7 +195,7 @@ int HydrogenTools::extraHydrogenIndices(const RWAtom& atom,
 
   int result = 0;
   const NeighborListType bonds(atom.molecule()->bonds(atom));
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
+  for (auto it = bonds.begin(), itEnd = bonds.end();
        it != itEnd && result < numberOfHydrogens; ++it) {
     const RWAtom otherAtom = it->getOtherAtom(atom);
     if (otherAtom.atomicNumber() == 1) {
@@ -237,9 +229,8 @@ void HydrogenTools::generateNewHydrogenPositions(
   const NeighborListType bonds(atom.molecule()->bonds(atom));
   const int explicitBonds = bonds.size();
   allVectors.reserve(bonds.size() + static_cast<size_t>(numberOfHydrogens));
-  for (NeighborListType::const_iterator it = bonds.begin(), itEnd = bonds.end();
-       it != itEnd; ++it) {
-    RWAtom otherAtom = it->getOtherAtom(atom);
+  for (auto bond : bonds) {
+    RWAtom otherAtom = bond.getOtherAtom(atom);
     Vector3 delta = otherAtom.position3d() - atom.position3d();
     if (!delta.isZero(1e-5)) {
       allVectors.push_back(delta.normalized());
@@ -254,9 +245,8 @@ void HydrogenTools::generateNewHydrogenPositions(
         allVectors, hybridization
     );
     allVectors.push_back(newPos);
-    positions.push_back(atom.position3d() + (newPos * bondLength));
+    positions.emplace_back(atom.position3d() + (newPos * bondLength));
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

@@ -27,8 +27,7 @@ namespace {
 
 using Avogadro::Core::Array;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class TextLabelBase::RenderImpl
 {
@@ -359,5 +358,4 @@ void TextLabelBase::markDirty()
   m_render->vboInvalid = true;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

@@ -9,8 +9,7 @@
 
 #include <Eigen/Geometry>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Scene::Scene()
   : m_backgroundColor(0, 0, 0, 0), m_dirty(true), m_center(Vector3f::Zero()),
@@ -54,5 +53,4 @@ void Scene::clear()
   m_dirty = true;
 }
 
-} // End Rendering namespace
 } // End Avogadro namespace

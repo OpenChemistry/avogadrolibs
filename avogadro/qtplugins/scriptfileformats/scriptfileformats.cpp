@@ -18,8 +18,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ScriptFileFormats::ScriptFileFormats(QObject* p)
   : ExtensionPlugin(p)
@@ -50,7 +49,7 @@ void ScriptFileFormats::refreshFileFormats()
   QMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("formatScripts");
   foreach (const QString& filePath, scriptPaths) {
-    FileFormatScript* format = new FileFormatScript(filePath);
+    auto* format = new FileFormatScript(filePath);
     if (format->isValid())
       m_formats.push_back(format);
     else
@@ -81,5 +80,4 @@ void ScriptFileFormats::registerFileFormats()
   }
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

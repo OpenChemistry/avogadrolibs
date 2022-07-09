@@ -24,7 +24,6 @@ namespace {
 #include "dashedline_vs.h"
 }
 
-using Avogadro::Core::Array;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
@@ -32,8 +31,7 @@ using Avogadro::Vector4ub;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class DashedLineGeometry::Private
 {
@@ -191,5 +189,4 @@ size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &
   return addDashedLine(start, end, m_color, dashCount);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

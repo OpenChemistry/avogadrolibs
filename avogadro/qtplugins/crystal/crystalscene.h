@@ -35,12 +35,6 @@ public:
     return tr("Render the unit cell boundaries.");
   }
 
-  bool isEnabled() const override;
-
-  bool isActiveLayerEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
 private slots:
@@ -48,7 +42,7 @@ private slots:
   void setLineWidth(double width);
 
 private:
-  bool m_enabled;
+  std::string m_name = "Crystal Lattice";
 
   QWidget* m_setupWidget;
   float m_lineWidth;

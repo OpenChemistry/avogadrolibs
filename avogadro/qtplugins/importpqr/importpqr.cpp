@@ -16,8 +16,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ImportPQR::ImportPQR(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -82,5 +81,4 @@ void ImportPQR::setMoleculeData(QByteArray& molData, QString name)
   m_dialog->hide();
   emit moleculeReady(1);
 }
-} // namespace QtPlugins
 } // namespace Avogadro

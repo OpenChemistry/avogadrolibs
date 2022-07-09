@@ -33,8 +33,7 @@ using Avogadro::Vector4ub;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 const unsigned int MeshGeometry::InvalidIndex =
   std::numeric_limits<unsigned int>::max();
@@ -200,10 +199,10 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
 
   size_t result = m_vertices.size();
 
-  Core::Array<Vector3f>::const_iterator vIter = v.begin();
-  Core::Array<Vector3f>::const_iterator vEnd = v.end();
-  Core::Array<Vector3f>::const_iterator nIter = n.begin();
-  Core::Array<Vector4ub>::const_iterator cIter = c.begin();
+  auto vIter = v.begin();
+  auto vEnd = v.end();
+  auto nIter = n.begin();
+  auto cIter = c.begin();
 
   while (vIter != vEnd)
     m_vertices.push_back(PackedVertex(*(cIter++), *(nIter++), *(vIter++)));
@@ -222,10 +221,10 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
 
   size_t result = m_vertices.size();
 
-  Core::Array<Vector3f>::const_iterator vIter = v.begin();
-  Core::Array<Vector3f>::const_iterator vEnd = v.end();
-  Core::Array<Vector3f>::const_iterator nIter = n.begin();
-  Core::Array<Vector3ub>::const_iterator cIter = c.begin();
+  auto vIter = v.begin();
+  auto vEnd = v.end();
+  auto nIter = n.begin();
+  auto cIter = c.begin();
 
   Vector4ub tmpColor(0, 0, 0, m_opacity);
   while (vIter != vEnd) {
@@ -246,9 +245,9 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
 
   size_t result = m_vertices.size();
 
-  Core::Array<Vector3f>::const_iterator vIter = v.begin();
-  Core::Array<Vector3f>::const_iterator vEnd = v.end();
-  Core::Array<Vector3f>::const_iterator nIter = n.begin();
+  auto vIter = v.begin();
+  auto vEnd = v.end();
+  auto nIter = n.begin();
 
   const Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
   while (vIter != vEnd)
@@ -283,5 +282,4 @@ void MeshGeometry::clear()
   m_dirty = true;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

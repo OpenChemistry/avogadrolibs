@@ -20,8 +20,7 @@
 #include <cassert>
 #include <iostream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::swap;
 
@@ -576,8 +575,7 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
   assert(atomId2 < atomCount());
 
   const std::vector<Index>& edgeIndices = m_graph.edges(atomId1);
-  for (Index i = 0; i < edgeIndices.size(); i++) {
-    Index index = edgeIndices[i];
+  for (unsigned long index : edgeIndices) {
     const std::pair<Index, Index>& pair = m_graph.endpoints(index);
     if (pair.first == atomId2 || pair.second == atomId2)
       return BondType(const_cast<Molecule*>(this), index);
@@ -598,8 +596,7 @@ Array<const Molecule::BondType*> Molecule::bonds(Index a) const
   Array<const BondType*> atomBonds;
   if (a < atomCount()) {
     const std::vector<Index>& edgeIndices = m_graph.edges(a);
-    for (Index i = 0; i < edgeIndices.size(); ++i) {
-      Index index = edgeIndices[i];
+    for (unsigned long index : edgeIndices) {
       if (m_graph.endpoints(index).first == a ||
           m_graph.endpoints(index).second == a) {
         // work around to consult bonds without breaking constantness
@@ -620,8 +617,7 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
   Array<BondType> atomBonds;
   if (a < atomCount()) {
     const std::vector<Index>& edgeIndices = m_graph.edges(a);
-    for (Index i = 0; i < edgeIndices.size(); ++i) {
-      Index index = edgeIndices[i];
+    for (unsigned long index : edgeIndices) {
       auto bond = bondPair(index);
       if (bond.first == a || bond.second == a)
         atomBonds.push_back(BondType(this, index));
@@ -876,8 +872,7 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   for (Index i = 0; i < atomCount(); i++) {
     Vector3 ipos = m_positions3d[i];
     neighborPerceiver.getNeighborsInclusiveInPlace(neighbors, ipos);
-    for (Index nj = 0; nj < neighbors.size(); ++nj) {
-      Index j = neighbors[nj];
+    for (unsigned long j : neighbors) {
       double cutoff = radii[i] + radii[j] + tolerance;
       Vector3 jpos = m_positions3d[j];
       Vector3 diff = jpos - ipos;
@@ -898,8 +893,8 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 
 void Molecule::perceiveBondsFromResidueData()
 {
-  for (Index i = 0; i < m_residues.size(); ++i) {
-    m_residues[i].resolveResidueBonds(*this);
+  for (auto & m_residue : m_residues) {
+    m_residue.resolveResidueBonds(*this);
   }
 }
 
@@ -1028,9 +1023,8 @@ bool Molecule::setBondOrder(Index bondId, unsigned char order)
 Index Molecule::atomCount(unsigned char number) const
 {
   Index count(0);
-  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin();
-       it != m_atomicNumbers.end(); ++it) {
-    if (*it == number)
+  for (unsigned char m_atomicNumber : m_atomicNumbers) {
+    if (m_atomicNumber == number)
       ++count;
   }
   return count;
@@ -1063,8 +1057,8 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 
     // recalculate the element mask
     m_elements.reset();
-    for (Index i = 0; i < m_atomicNumbers.size(); ++i) {
-      m_elements.set(m_atomicNumbers[i]);
+    for (unsigned char m_atomicNumber : m_atomicNumbers) {
+      m_elements.set(m_atomicNumber);
     }
 
     // update colors too
@@ -1078,10 +1072,8 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 
 bool Molecule::hasCustomElements() const
 {
-  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
-                                            itEnd = m_atomicNumbers.end();
-       it != itEnd; ++it) {
-    if (Core::isCustomElement(*it))
+  for (unsigned char m_atomicNumber : m_atomicNumbers) {
+    if (Core::isCustomElement(m_atomicNumber))
       return true;
   }
   return false;
@@ -1091,10 +1083,8 @@ std::map<unsigned char, size_t> Molecule::composition() const
 {
   // A map of atomic symbols to their quantity.
   std::map<unsigned char, size_t> composition;
-  for (Array<unsigned char>::const_iterator it = m_atomicNumbers.begin(),
-                                            itEnd = m_atomicNumbers.end();
-       it != itEnd; ++it) {
-    ++composition[*it];
+  for (unsigned char m_atomicNumber : m_atomicNumbers) {
+    ++composition[m_atomicNumber];
   }
   return composition;
 }
@@ -1118,8 +1108,8 @@ Array<std::pair<Index, Index>> Molecule::getAtomBonds(Index index) const
 {
   Array<std::pair<Index, Index>> result;
   const std::vector<Index>& edgeIndices = m_graph.edges(index);
-  for (Index i = 0; i < edgeIndices.size(); i++) {
-    result.push_back(m_graph.endpoints(edgeIndices[i]));
+  for (unsigned long edgeIndice : edgeIndices) {
+    result.push_back(m_graph.endpoints(edgeIndice));
   }
   return result;
 }
@@ -1128,8 +1118,8 @@ Array<unsigned char> Molecule::getAtomOrders(Index index) const
 {
   Array<unsigned char> result;
   const std::vector<Index>& edgeIndices = m_graph.edges(index);
-  for (Index i = 0; i < edgeIndices.size(); i++) {
-    result.push_back(m_bondOrders[edgeIndices[i]]);
+  for (unsigned long edgeIndice : edgeIndices) {
+    result.push_back(m_bondOrders[edgeIndice]);
   }
   return result;
 }
@@ -1156,5 +1146,4 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   return result;
 }
 
-} // namespace Core
 } // namespace Avogadro

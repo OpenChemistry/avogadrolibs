@@ -21,14 +21,13 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Select::Select(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_layerManager("Select"),
     m_molecule(nullptr), m_elements(nullptr)
 {
-  QAction* action = new QAction(tr("Select All"), this);
+  auto* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
   action->setProperty("menu priority", 990);
   connect(action, SIGNAL(triggered()), SLOT(selectAll()));
@@ -293,5 +292,4 @@ void Select::createLayerFromSelection()
   rwmol->emitChanged(changes);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

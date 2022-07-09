@@ -57,7 +57,7 @@ Array<double> ChargeModel::potentials(Core::Molecule& mol,
   return potentials;
 }
 
-void ChargeModel::appendError(const std::string& errorString, bool newLine)
+void ChargeModel::appendError(const std::string& errorString, bool newLine) const
 {
   m_error += errorString;
   if (newLine)

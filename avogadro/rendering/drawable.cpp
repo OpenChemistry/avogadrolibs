@@ -7,8 +7,7 @@
 
 #include "visitor.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -57,5 +56,4 @@ void Drawable::setParent(GeometryNode* parent_)
   m_parent = parent_;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

@@ -13,8 +13,7 @@
 
 #include <iomanip>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 CoordinateBlockGenerator::CoordinateBlockGenerator()
   : m_molecule(nullptr), m_distanceUnit(Angstrom)
@@ -194,5 +193,4 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   return m_stream.str();
 }
 
-} // namespace Core
 } // namespace Avogadro

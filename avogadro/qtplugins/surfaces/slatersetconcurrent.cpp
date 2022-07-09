@@ -14,8 +14,7 @@
 
 #include <QtConcurrent/QtConcurrentMap>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::SlaterSet;
 using Core::SlaterSetTools;
@@ -121,6 +120,5 @@ void SlaterSetConcurrent::processSpinDensity(SlaterShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
-}
 }
 }

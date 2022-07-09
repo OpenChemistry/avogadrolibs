@@ -16,7 +16,6 @@
 
 #include <QtCore/QRegExp>
 
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
 namespace {
@@ -27,11 +26,10 @@ const char MATRIX_FMT = 'f';
 
 // Valid value separators in matrix editors:
 const static QRegExp MATRIX_SEP(
-  "\\s|,|;|\\||\\[|\\]|\\{|\\}|\\(|\\)|\\&|/|<|>");
+  R"(\s|,|;|\||\[|\]|\{|\}|\(|\)|\&|/|<|>)");
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 UnitCellDialog::UnitCellDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::UnitCellDialog), m_molecule(nullptr),
@@ -368,5 +366,4 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
   return result;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

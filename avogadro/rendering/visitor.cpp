@@ -5,8 +5,7 @@
 
 #include "visitor.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Visitor::Visitor()
 {
@@ -16,5 +15,4 @@ Visitor::~Visitor()
 {
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

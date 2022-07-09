@@ -7,8 +7,7 @@
 
 #include "visitor.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 TextLabel3D::TextLabel3D()
 {
@@ -44,5 +43,4 @@ float TextLabel3D::radius() const
   return getRadiusInternal();
 }
 
-} // namespace Rendering
 } // namespace Avogadro

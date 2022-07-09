@@ -6,8 +6,7 @@
 #include "volumescalingdialog.h"
 #include "ui_volumescalingdialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 VolumeScalingDialog::VolumeScalingDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::VolumeScalingDialog), m_currentVolume(0.)
@@ -56,5 +55,4 @@ void VolumeScalingDialog::factorEdited()
   m_ui->newVolume->blockSignals(false);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

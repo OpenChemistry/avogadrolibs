@@ -10,7 +10,6 @@
 
 namespace Avogadro {
 
-using Core::Array;
 using Core::Molecule;
 
 namespace Calc {

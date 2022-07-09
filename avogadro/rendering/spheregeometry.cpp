@@ -27,8 +27,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -77,8 +76,8 @@ void SphereGeometry::update()
     sphereIndices.reserve(m_indices.size() * 4);
     sphereVertices.reserve(m_spheres.size() * 4);
 
-    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
-    std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
+    auto itIndex = m_indices.begin();
+    auto itSphere = m_spheres.begin();
 
     for (size_t i = 0;
          itIndex != m_indices.end() && itSphere != m_spheres.end();
@@ -232,7 +231,7 @@ std::multimap<float, Identifier> SphereGeometry::hits(
     id.type = m_identifier.type;
     id.index = m_indices[i];
     if (id.type != InvalidType) {
-      float rootD = static_cast<float>(sqrt(D));
+      auto rootD = static_cast<float>(sqrt(D));
       float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
       result.insert(std::pair<float, Identifier>(depth, id));
     }
@@ -281,5 +280,4 @@ void SphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

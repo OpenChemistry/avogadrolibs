@@ -6,8 +6,7 @@
 #include "layermanager.h"
 #include <cassert>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::make_shared;
 using std::map;
@@ -99,5 +98,4 @@ size_t LayerManager::layerCount()
   return m_molToInfo[m_activeMolecule]->layer.maxLayer() + 1;
 }
 
-} // namespace Core
 } // namespace Avogadro

@@ -10,13 +10,10 @@
 
 #include <iostream>
 
-using std::cout;
-using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
 {
@@ -111,7 +108,7 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
 
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
-    deltas.push_back(position - m_molecule->atom(i).position3d());
+    deltas.emplace_back(position - m_molecule->atom(i).position3d());
     dr2.push_back(deltas[i].squaredNorm());
   }
 
@@ -163,5 +160,4 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   return values;
 }
 
-} // End Core namespace
 } // End Avogadro namespace

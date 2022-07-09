@@ -12,8 +12,7 @@
 #include <iostream>
 #include <iomanip>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 GaussianCube::GaussianCube() {}
 
@@ -22,7 +21,7 @@ GaussianCube::~GaussianCube() {}
 std::vector<std::string> GaussianCube::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("cube");
+  extensions.emplace_back("cube");
   return extensions;
 }
 
@@ -73,7 +72,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     getline(in, line);
     line = Core::trimmed(line);
     list = Core::split(line, ' ');
-    short int atomNum = Core::lexicalCast<short int>(list[0]);
+    auto atomNum = Core::lexicalCast<short int>(list[0]);
     Core::Atom a = molecule.addAtom(static_cast<unsigned char>(atomNum));
     for (unsigned int j = 2; j < 5; ++j)
       pos(j - 2) = Core::lexicalCast<double>(list[j]);
@@ -109,8 +108,8 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     std::vector<float> values;
     // push_back is slow for this, resize vector first
     values.resize(dim(0) * dim(1) * dim(2));
-    for (unsigned int j = 0; j < values.size(); ++j)
-      in >> values[j];
+    for (float & value : values)
+      in >> value;
     // clear buffer, if more than one cube
     getline(in, line);
     cube->setData(values);
@@ -204,5 +203,4 @@ bool GaussianCube::write(std::ostream& outStream, const Core::Molecule& mol)
   return true;
 }
 
-} // namespace QuantumIO
 } // namespace Avogadro

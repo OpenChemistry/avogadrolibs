@@ -22,8 +22,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 POVRay::POVRay(QObject* p)
   : Avogadro::QtGui::ExtensionPlugin(p), m_molecule(nullptr), m_scene(nullptr),
@@ -83,5 +82,4 @@ void POVRay::render()
   file.close();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

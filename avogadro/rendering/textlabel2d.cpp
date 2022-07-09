@@ -7,8 +7,7 @@
 
 #include "visitor.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 TextLabel2D::TextLabel2D()
 {
@@ -35,5 +34,4 @@ Vector2i TextLabel2D::anchor() const
   return getAnchorInternal().head<2>().cast<int>();
 }
 
-} // namespace Rendering
 } // namespace Avogadro

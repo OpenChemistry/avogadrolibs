@@ -10,10 +10,8 @@
 #include <algorithm>
 #include <memory>
 
-using std::unique_ptr;
 
-namespace Avogadro {
-namespace Calc {
+namespace Avogadro::Calc {
 
 ChargeManager& ChargeManager::instance()
 {
@@ -90,9 +88,8 @@ ChargeManager::ChargeManager()
 ChargeManager::~ChargeManager()
 {
   // Delete the models that were loaded.
-  for (std::vector<ChargeModel*>::const_iterator it = m_models.begin();
-       it != m_models.end(); ++it) {
-    delete (*it);
+  for (auto & m_model : m_models) {
+    delete m_model;
   }
   m_models.clear();
 }
@@ -104,14 +101,13 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   std::set<std::string> identifiers = molecule.partialChargeTypes();
 
   // check our models for compatibility
-  for (std::vector<ChargeModel*>::const_iterator it = m_models.begin();
-       it != m_models.end(); ++it) {
+  for (auto m_model : m_models) {
 
     // We check that every element in the molecule
     // is handled by the model
-    auto mask = (*it)->elements() & molecule.elements();
+    auto mask = m_model->elements() & molecule.elements();
     if (mask.count() == molecule.elements().count())
-      identifiers.insert((*it)->identifier()); // this one will work
+      identifiers.insert(m_model->identifier()); // this one will work
   }
 
   return identifiers;
@@ -185,5 +181,4 @@ Core::Array<double> ChargeManager::potentials(
   return model->potentials(molecule, points);
 }
 
-} // namespace Calc
 } // namespace Avogadro

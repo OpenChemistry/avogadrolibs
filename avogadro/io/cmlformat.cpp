@@ -30,8 +30,7 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 namespace {
 const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
@@ -156,7 +155,7 @@ public:
         }
       }
 
-      UnitCell* cell = new UnitCell;
+      auto* cell = new UnitCell;
       cell->setCellParameters(a, b, c, alpha, beta, gamma);
       molecule->setUnitCell(cell);
       if (hall != 0)
@@ -245,7 +244,7 @@ public:
       // Check formal charge.
       attribute = node.attribute("formalCharge");
       if (attribute) {
-        signed int formalCharge = lexicalCast<signed int>(attribute.value());
+        auto formalCharge = lexicalCast<signed int>(attribute.value());
         atom.setFormalCharge(formalCharge);
       }
 
@@ -680,16 +679,15 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
 std::vector<std::string> CmlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("cml");
+  ext.emplace_back("cml");
   return ext;
 }
 
 std::vector<std::string> CmlFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-cml");
+  mime.emplace_back("chemical/x-cml");
   return mime;
 }
 
-} // end Io namespace
 } // end Avogadro namespace

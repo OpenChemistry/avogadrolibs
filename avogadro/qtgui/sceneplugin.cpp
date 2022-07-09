@@ -5,8 +5,7 @@
 
 #include "sceneplugin.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_) {}
 
@@ -38,5 +37,4 @@ void ScenePlugin::setEnabled(bool enable)
   m_layerManager.setEnabled(enable);
 }
 
-} // namespace QtGui
 } // namespace Avogadro

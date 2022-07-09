@@ -30,9 +30,10 @@ public:
   void addLayer(RWMolecule* rwmolecule);
   void setActiveLayer(size_t layer, RWMolecule* rwmolecule);
 
-protected:
   /** @return if @p layer is visible */
   bool visible(size_t layer) const;
+
+protected:
   /** @return if @p layer is locked */
   bool locked(size_t layer) const;
   /** flip the visible value in layer */

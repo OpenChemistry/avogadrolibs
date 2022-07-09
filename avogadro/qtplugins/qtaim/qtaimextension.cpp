@@ -29,8 +29,7 @@
 using namespace std;
 using namespace Eigen;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum QTAIMExtensionIndex
 {
@@ -43,7 +42,7 @@ QTAIMExtension::QTAIMExtension(QObject* aParent)
   : QtGui::ExtensionPlugin(aParent)
 {
   // create an action for our first action
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setText(tr("Molecular Graph…"));
   m_actions.append(action);
   action->setData(FirstAction);
@@ -85,7 +84,7 @@ void QTAIMExtension::setMolecule(QtGui::Molecule* molecule)
 
 void QTAIMExtension::triggered()
 {
-  QAction* action = qobject_cast<QAction*>(sender());
+  auto* action = qobject_cast<QAction*>(sender());
   if (!action)
     return;
 
@@ -232,7 +231,7 @@ void QTAIMExtension::triggered()
       // Connectivity stored as Bonds
 
       qint64 bpCtr = 0;
-      qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+      auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
       for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
         for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -276,14 +275,13 @@ void QTAIMExtension::triggered()
                   ellipticityAtBondCriticalPoints.at(bondPair));
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
-                for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                     ++j) {
+                for (auto j : bondPathList.at(bondPair)) {
                   x =
-                    bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    j.x() * convertBohrToAngstrom;
                   y =
-                    bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    j.y() * convertBohrToAngstrom;
                   z =
-                    bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
+                    j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -408,7 +406,7 @@ void QTAIMExtension::triggered()
       // Connectivity stored as Bonds
 
       qint64 bpCtr = 0;
-      qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+      auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
       for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
         for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -452,14 +450,13 @@ void QTAIMExtension::triggered()
                   ellipticityAtBondCriticalPoints.at(bondPair));
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
-                for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                     ++j) {
+                for (auto j : bondPathList.at(bondPair)) {
                   x =
-                    bondPathList.at(bondPair).at(j).x() * convertBohrToAngstrom;
+                    j.x() * convertBohrToAngstrom;
                   y =
-                    bondPathList.at(bondPair).at(j).y() * convertBohrToAngstrom;
+                    j.y() * convertBohrToAngstrom;
                   z =
-                    bondPathList.at(bondPair).at(j).z() * convertBohrToAngstrom;
+                    j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -509,9 +506,7 @@ void QTAIMExtension::triggered()
       QVariantList yElectronDensitySourcesVariantList;
       QVariantList zElectronDensitySourcesVariantList;
 
-      for (qint64 n = 0; n < electronDensitySourcesList.length(); ++n) {
-        QVector3D thisCriticalPoint = electronDensitySourcesList.at(n);
-
+      for (auto thisCriticalPoint : electronDensitySourcesList) {
         qreal x = thisCriticalPoint.x() * convertBohrToAngstrom;
         qreal y = thisCriticalPoint.y() * convertBohrToAngstrom;
         qreal z = thisCriticalPoint.z() * convertBohrToAngstrom;
@@ -622,7 +617,7 @@ void QTAIMExtension::triggered()
         // Connectivity stored as Bonds
 
         qint64 bpCtr = 0;
-        qint64 numAtoms = static_cast<qint64>(m_molecule->atomCount());
+        auto numAtoms = static_cast<qint64>(m_molecule->atomCount());
 
         for (qint64 atom0 = 0; atom0 < numAtoms - 1; ++atom0) {
           for (qint64 atom1 = atom0 + 1; atom1 < numAtoms; ++atom1) {
@@ -666,13 +661,12 @@ void QTAIMExtension::triggered()
                     ellipticityAtBondCriticalPoints.at(bondPair));
 
                   bondPathSegmentStartIndexVariantList.append(bpCtr);
-                  for (qint64 j = 0; j < bondPathList.at(bondPair).length();
-                       ++j) {
-                    x = bondPathList.at(bondPair).at(j).x() *
+                  for (auto j : bondPathList.at(bondPair)) {
+                    x = j.x() *
                         convertBohrToAngstrom;
-                    y = bondPathList.at(bondPair).at(j).y() *
+                    y = j.y() *
                         convertBohrToAngstrom;
-                    z = bondPathList.at(bondPair).at(j).z() *
+                    z = j.z() *
                         convertBohrToAngstrom;
 
                     xBondPathsVariantList.append(x);
@@ -751,5 +745,4 @@ void QTAIMExtension::triggered()
   return;
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

@@ -21,8 +21,7 @@
 
 using namespace tinycolormap;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const int atomColors = 0;
 const int bondColors = 1;
@@ -31,7 +30,7 @@ const int residueColors = 2;
 class ChargeColorDialog : public QDialog, public Ui::ChargeDialog
 {
 public:
-  ChargeColorDialog(QWidget* parent = 0) : QDialog(parent)
+  ChargeColorDialog(QWidget* parent = nullptr) : QDialog(parent)
   {
     setWindowFlags(Qt::Dialog | Qt::Tool);
     setupUi(this);
@@ -571,5 +570,4 @@ void ApplyColors::applyShapelyColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

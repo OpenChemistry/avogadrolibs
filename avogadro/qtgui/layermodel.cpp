@@ -7,14 +7,13 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
-using Core::Layer;
 using Core::LayerManager;
 
 namespace {
@@ -123,18 +122,27 @@ const QString LayerModel::getTranslatedName(const std::string& name) const
 {
   // This is a bad hack, but whatever..
   // Put all the strings that show up as layer options
+
   if (name == "Ball and Stick")
     return tr("Ball and Stick");
   else if (name == "Cartoons")
     return tr("Cartoons", "protein ribbon / cartoon rendering");
   else if (name == "Close Contacts")
     return tr("Close Contacts", "rendering of non-covalent close contacts");
+  else if (name == "Crystal Lattice")
+    return tr("Crystal Lattice");
+  else if (name == "Force")
+    return tr("Force");
   else if (name == "Labels")
     return tr("Labels");
   else if (name == "Licorice")
     return tr("Licorice", "stick / licorice rendering");
+  else if (name == "Meshes")
+    return tr("Meshes");
   else if (name == "Non-Covalent")
     return tr("Non-Covalent");
+  else if (name == "Symmetry Elements")
+    return tr("Symmetry Elements");
   else if (name == "Van der Waals")
     return tr("Van der Waals");
   else if (name == "Van der Waals (AO)")
@@ -142,7 +150,9 @@ const QString LayerModel::getTranslatedName(const std::string& name) const
   else if (name == "Wireframe")
     return tr("Wireframe");
 
-  return QString();
+  qDebug() << "LayerModel: name didn't match: " << name.c_str();
+
+  return QString(name.c_str());
 }
 
 QModelIndex LayerModel::index(int row, int column, const QModelIndex& p) const
@@ -227,5 +237,4 @@ size_t LayerModel::layerCount() const
   return LayerManager::layerCount();
 }
 
-} // namespace QtGui
 } // namespace Avogadro

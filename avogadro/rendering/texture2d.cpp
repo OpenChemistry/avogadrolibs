@@ -7,8 +7,7 @@
 
 #include "avogadrogl.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 namespace {
 GLint convertFilterOptionToGL(Texture2D::FilterOption opt)
@@ -301,5 +300,4 @@ bool Texture2D::generateTextureHandle()
   return true;
 }
 
-} // namespace Rendering
 } // namespace Avogadro
