@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "povrayvisitor.h"
@@ -25,12 +14,9 @@
 #include <iostream>
 #include <ostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
-using std::cout;
 using std::string;
-using std::endl;
 using std::ostringstream;
 using std::ostream;
 using std::ofstream;
@@ -128,8 +114,7 @@ void POVRayVisitor::visit(Drawable& geometry)
 void POVRayVisitor::visit(SphereGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.spheres().size(); ++i) {
-    Rendering::SphereColor s = geometry.spheres()[i];
+  for (const auto& s : geometry.spheres()) {
     str << "sphere {\n\t<" << s.center << ">, " << s.radius
         << "\n\tpigment { rgbt <" << s.color << ", 0.0> }\n}\n";
   }
@@ -144,8 +129,7 @@ void POVRayVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.cylinders().size(); ++i) {
-    Rendering::CylinderColor c = geometry.cylinders()[i];
+  for (const auto& c : geometry.cylinders()) {
     str << "cylinder {\n"
         << "\t<" << c.end1 << ">,\n"
         << "\t<" << c.end2 << ">, " << c.radius << "\n\tpigment { rgbt <"
@@ -175,8 +159,8 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  for (size_t i = 0; i < v.size(); ++i)
-    str << "texture{pigment{rgb<" << v[i].normal << ">}\n";
+  for (auto & i : v)
+    str << "texture{pigment{rgb<" << i.normal << ">}\n";
   str << "\n}\n";
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {
@@ -196,5 +180,4 @@ void POVRayVisitor::visit(LineStripGeometry& geometry)
   // geometry.render(m_camera);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

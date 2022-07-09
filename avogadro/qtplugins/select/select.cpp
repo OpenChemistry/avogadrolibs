@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "select.h"
@@ -19,6 +8,8 @@
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/periodictableview.h>
+#include <avogadro/qtgui/rwlayermanager.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
@@ -30,41 +21,57 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Select::Select(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_layerManager("Select"),
     m_molecule(nullptr), m_elements(nullptr)
 {
-  QAction* action = new QAction(tr("Select All"), this);
+  auto* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
+  action->setProperty("menu priority", 990);
   connect(action, SIGNAL(triggered()), SLOT(selectAll()));
   m_actions.append(action);
 
   action = new QAction(tr("Select None"), this);
   action->setShortcut(QKeySequence("Ctrl+Shift+A"));
+  action->setProperty("menu priority", 980);
   connect(action, SIGNAL(triggered()), SLOT(selectNone()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setSeparator(true);
+  action->setProperty("menu priority", 970);
   m_actions.append(action);
 
   action = new QAction(tr("Invert Selection"), this);
+  action->setProperty("menu priority", 890);
   connect(action, SIGNAL(triggered()), SLOT(invertSelection()));
   m_actions.append(action);
 
   action = new QAction(tr("Select by Element…"), this);
+  action->setProperty("menu priority", 880);
   connect(action, SIGNAL(triggered()), SLOT(selectElement()));
   m_actions.append(action);
 
   action = new QAction(tr("Select by Atom Index…"), this);
+  action->setProperty("menu priority", 870);
   connect(action, SIGNAL(triggered()), SLOT(selectAtomIndex()));
   m_actions.append(action);
 
   action = new QAction(tr("Select by Residue…"), this);
+  action->setProperty("menu priority", 860);
   connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
+  m_actions.append(action);
+
+  action = new QAction(this);
+  action->setProperty("menu priority", 850);
+  action->setSeparator(true);
+  m_actions.append(action);
+
+  action = new QAction(tr("Create New Layer from Selection"), this);
+  action->setProperty("menu priority", 300);
+  connect(action, SIGNAL(triggered()), SLOT(createLayerFromSelection()));
   m_actions.append(action);
 }
 
@@ -235,7 +242,7 @@ void Select::selectResidue()
       }   // index makes sense
     } else {
       // standard residue name
-      for (auto residue : m_molecule->residues()) {
+      for (const auto& residue : m_molecule->residues()) {
         if (label == residue.residueName().c_str()) {
           // select the atoms of the residue
           for (auto atom : residue.residueAtoms()) {
@@ -260,5 +267,29 @@ void Select::invertSelection()
   }
 }
 
-} // namespace QtPlugins
+void Select::createLayerFromSelection()
+{
+  if (!m_molecule)
+    return;
+
+  QtGui::RWMolecule* rwmol = m_molecule->undoMolecule();
+  rwmol->beginMergeMode(tr("Change Layer"));
+  Molecule::MoleculeChanges changes =
+    Molecule::Atoms | Molecule::Layers | Molecule::Modified;
+
+  auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
+  QtGui::RWLayerManager rwLayerManager;
+  rwLayerManager.addLayer(rwmol);
+  int layer = layerInfo.maxLayer();
+
+  for (Index i = 0; i < rwmol->atomCount(); ++i) {
+    auto a = rwmol->atom(i);
+    if (a.selected()) {
+      a.setLayer(layer);
+    }
+  }
+  rwmol->endMergeMode();
+  rwmol->emitChanged(changes);
+}
+
 } // namespace Avogadro

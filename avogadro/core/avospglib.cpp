@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "avospglib.h"
@@ -28,8 +17,7 @@ extern "C" {
 #include "spglib.h"
 }
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
 {
@@ -48,7 +36,7 @@ unsigned short AvoSpglib::getHallNumber(Molecule& mol, double cartTol)
   }
 
   Index numAtoms = mol.atomCount();
-  double(*positions)[3] = new double[numAtoms][3];
+  auto positions = new double[numAtoms][3];
   int* types = new int[numAtoms];
 
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
@@ -123,7 +111,7 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   // If toPrimitive is true, then we will just use the number of atoms.
   // See http://atztogo.github.io/spglib/api.html#spg-standardize-cell
   int numAtomsMultiplier = toPrimitive ? 1 : 4;
-  double(*positions)[3] = new double[numAtoms * numAtomsMultiplier][3];
+  auto positions = new double[numAtoms * numAtomsMultiplier][3];
   int* types = new int[numAtoms * numAtomsMultiplier];
 
   const Array<unsigned char>& atomicNums = mol.atomicNumbers();
@@ -160,7 +148,7 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
     }
   }
 
-  UnitCell* newCell = new UnitCell(newCellMat);
+  auto* newCell = new UnitCell(newCellMat);
   newMol.setUnitCell(newCell);
 
   // Next, add in the atoms
@@ -182,5 +170,4 @@ bool AvoSpglib::standardizeCell(Molecule& mol, double cartTol, bool toPrimitive,
   return true;
 }
 
-} // end Core namespace
 } // end Avogadro namespace

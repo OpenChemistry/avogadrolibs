@@ -1,28 +1,16 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "vibrationmodel.h"
 
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 VibrationModel::VibrationModel(QObject* p)
-  : QAbstractItemModel(p), m_molecule(nullptr)
+  : QAbstractItemModel(p), m_molecule(nullptr), m_hasRaman(false)
 {
 }
 
@@ -41,12 +29,22 @@ int VibrationModel::rowCount(const QModelIndex& p) const
 
 int VibrationModel::columnCount(const QModelIndex&) const
 {
+  // do we have raman data?
+  if (m_molecule && m_hasRaman)
+    return 3;
+
   return 2;
 }
 
 Qt::ItemFlags VibrationModel::flags(const QModelIndex&) const
 {
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+void VibrationModel::setMolecule(QtGui::Molecule* mol)
+{
+  m_molecule = mol;
+  m_hasRaman = mol->vibrationRamanIntensities().size() > 0;
 }
 
 QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
@@ -59,6 +57,8 @@ QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
           return QString("Frequency (cm⁻¹)");
         case 1:
           return QString("Intensity (KM/mol)");
+        case 2:
+          return QString("Raman Intensity (Å⁴/amu)");
       }
     }
   }
@@ -85,8 +85,13 @@ QVariant VibrationModel::data(const QModelIndex& idx, int role) const
         else
           return "No value";
       case 1:
-        if (m_molecule->vibrationIntensities().size() > idx.row())
-          return m_molecule->vibrationIntensities()[idx.row()];
+        if (m_molecule->vibrationIRIntensities().size() > idx.row())
+          return m_molecule->vibrationIRIntensities()[idx.row()];
+        else
+          return "No value";
+      case 2:
+        if (m_molecule->vibrationRamanIntensities().size() > idx.row())
+          return m_molecule->vibrationRamanIntensities()[idx.row()];
         else
           return "No value";
       default:
@@ -109,6 +114,5 @@ QModelIndex VibrationModel::index(int row, int column,
 
 void VibrationModel::clear()
 {
-}
 }
 }

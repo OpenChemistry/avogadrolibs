@@ -1,35 +1,22 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "obfileformat.h"
 
 #include "obprocess.h"
 
-#include <avogadro/io/cmlformat.h>
-
 #include <nlohmann/json.hpp>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The ProcessListener class allows synchronous use of OBProcess.
@@ -80,17 +67,15 @@ OBFileFormat::OBFileFormat(const std::string& name_,
                            const std::string& specificationUrl_,
                            const std::vector<std::string> fileExtensions_,
                            const std::vector<std::string> mimeTypes_,
-                           bool fileOnly_)
+                           const std::string& defaultFormat_, bool fileOnly_)
   : Io::FileFormat(), m_description(description_),
     m_fileExtensions(fileExtensions_), m_mimeTypes(mimeTypes_),
     m_identifier(identifier_), m_name(name_),
-    m_specificationUrl(specificationUrl_), m_fileOnly(fileOnly_)
-{
-}
+    m_specificationUrl(specificationUrl_), m_defaultFormat(defaultFormat_),
+    m_fileOnly(fileOnly_)
+{}
 
-OBFileFormat::~OBFileFormat()
-{
-}
+OBFileFormat::~OBFileFormat() {}
 
 bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
@@ -133,6 +118,12 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
+  // check if we're going to read to a different format
+  // default is CML or CJSON
+  QString format =
+    QString::fromStdString(opts.value("format", m_defaultFormat));
+  qDebug() << "Reading to format: " << format << m_defaultFormat.c_str();
+
   if (!m_fileOnly) {
     // Determine length of data
     in.seekg(0, std::ios_base::end);
@@ -151,7 +142,7 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
     // Perform the conversion.
     if (!proc.convert(input, QString::fromStdString(m_fileExtensions.front()),
-                      "cml", options)) {
+                      format, options)) {
       appendError("OpenBabel conversion failed!");
       return false;
     }
@@ -166,29 +157,45 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 
     // Perform the conversion.
     if (!proc.convert(filename,
-                      QString::fromStdString(m_fileExtensions.front()), "cml",
+                      QString::fromStdString(m_fileExtensions.front()), format,
                       options)) {
       appendError("OpenBabel conversion failed!");
       return false;
     }
   }
 
-  QByteArray cmlOutput;
-  if (!listener.waitForOutput(cmlOutput)) {
+  QByteArray output;
+  if (!listener.waitForOutput(output)) {
     appendError(std::string("Conversion timed out."));
     return false;
   }
 
-  if (cmlOutput.isEmpty()) {
+  if (output.isEmpty()) {
     appendError(std::string("OpenBabel error: conversion failed."));
     return false;
   }
 
-  Io::CmlFormat cmlReader;
-  if (!cmlReader.readString(std::string(cmlOutput.constData()), molecule)) {
-    appendError(std::string("Error while reading OpenBabel-generated CML:"));
-    appendError(cmlReader.error());
-    return false;
+  if (format == "cml") {
+    if (!m_cmlFormat.readString(std::string(output.constData()), molecule)) {
+      appendError(std::string("Error while reading OpenBabel-generated CML:"));
+      appendError(m_cmlFormat.error());
+      return false;
+    }
+  } else if (format == "cjson") {
+    if (!m_cjsonFormat.readString(std::string(output.constData()), molecule)) {
+      appendError(
+        std::string("Error while reading OpenBabel-generated CJSON:"));
+      appendError(m_cjsonFormat.error());
+      return false;
+    }
+  } else if (format == "pdb") {
+    if (!m_pdbFormat.readString(std::string(output.constData()), molecule)) {
+      appendError(std::string("Error while reading OpenBabel-generated PDB:"));
+      appendError(m_pdbFormat.error());
+      return false;
+    }
+  } else {
+    return false; // unknown format
   }
 
   return true;
@@ -212,13 +219,22 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
     }
   }
 
-  // Generate CML to give to OpenBabel
-  std::string cml;
-  Io::CmlFormat cmlWriter;
-  if (!cmlWriter.writeString(cml, molecule)) {
-    appendError(std::string("Error while writing CML:"));
-    appendError(cmlWriter.error());
-    return false;
+  qDebug() << " writing to " << m_defaultFormat.c_str();
+
+  // Generate CML or CJSON to give to OpenBabel
+  std::string outputString;
+  if (m_defaultFormat == "cml") {
+    if (!m_cmlFormat.writeString(outputString, molecule)) {
+      appendError(std::string("Error while writing CML:"));
+      appendError(m_cmlFormat.error());
+      return false;
+    }
+  } else if (m_defaultFormat == "cjson") {
+    if (!m_cjsonFormat.writeString(outputString, molecule)) {
+      appendError(std::string("Error while writing CJSON:"));
+      appendError(m_cjsonFormat.error());
+      return false;
+    }
   }
 
   // Block until the OpenBabel conversion finishes:
@@ -233,7 +249,8 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
     appendError("Internal error: No file extensions set.");
     return false;
   }
-  proc.convert(QByteArray(cml.c_str()), "cml",
+
+  proc.convert(QByteArray(outputString.c_str()), m_defaultFormat.c_str(),
                QString::fromStdString(m_fileExtensions.front()), options);
 
   QByteArray output;
@@ -261,10 +278,9 @@ Io::FileFormat* OBFileFormat::newInstance() const
 {
   return new OBFileFormat(m_name, m_identifier, m_description,
                           m_specificationUrl, m_fileExtensions, m_mimeTypes,
-                          m_fileOnly);
+                          m_defaultFormat, m_fileOnly);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro
 
 #include "obfileformat.moc"

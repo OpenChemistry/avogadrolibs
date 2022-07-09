@@ -19,8 +19,7 @@
 
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 OperationsTableModel::OperationsTableModel(QObject* parent)
   : QAbstractTableModel(parent)
@@ -87,6 +86,5 @@ QVariant OperationsTableModel::data(const QModelIndex& index, int role) const
     default:
       return QVariant();
   }
-}
 }
 }

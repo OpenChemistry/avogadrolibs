@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "editortoolwidget.h"
@@ -19,6 +8,7 @@
 
 #include <avogadro/core/elements.h>
 
+#include <avogadro/qtgui/elementtranslator.h>
 #include <avogadro/qtgui/periodictableview.h>
 
 #include <QtCore/QList>
@@ -27,10 +17,9 @@
 namespace {
 // The ItemData of the "Other" entry in the combo box
 const int ELEMENT_SELECTOR_TAG = 255;
-}
+} // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 EditorToolWidget::EditorToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::EditorToolWidget),
@@ -68,7 +57,7 @@ unsigned char EditorToolWidget::atomicNumber() const
   if (!itemData.isValid())
     return 0;
 
-  unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
+  auto atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
   // "Other…" selected....
   if (atomicNum == 0 && m_elementSelector)
@@ -131,7 +120,7 @@ void EditorToolWidget::updateElementCombo()
   m_ui->element->clear();
   foreach (unsigned char atomicNum, allElements) {
     m_ui->element->addItem(
-      QString("%1 (%2)").arg(Core::Elements::name(atomicNum)).arg(atomicNum),
+      QString("%1 (%2)").arg(QtGui::ElementTranslator::name(atomicNum)).arg(atomicNum),
       atomicNum);
   }
   m_ui->element->insertSeparator(m_ui->element->count());
@@ -223,11 +212,10 @@ void EditorToolWidget::buildBondOrders()
 void EditorToolWidget::saveElements()
 {
   QVariantList atomicNums;
-  for (int i = 0; i < m_userElements.size(); ++i)
-    atomicNums << QVariant(m_userElements[i]);
+  for (unsigned char m_userElement : m_userElements)
+    atomicNums << QVariant(m_userElement);
 
   QSettings().setValue("editortool/userElements", atomicNums);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -14,8 +14,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QAction>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::RWAtom;
@@ -88,7 +87,7 @@ QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
     m_selected = (clickedObject.type == Rendering::AtomType);
     if (m_selected) {
       m_selectedAtom = m_molecule->atom(clickedObject.index);
-      m_text = QString::fromStdString(m_selectedAtom.label().c_str());
+      m_text = QString::fromStdString(m_selectedAtom.label());
     }
     emit drawablesChanged();
   }
@@ -106,7 +105,7 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
 
   tprop.setColorRgb(255, 255, 255);
-  TextLabel3D* label = new TextLabel3D;
+  auto* label = new TextLabel3D;
   label->setText(text);
   label->setRenderPass(Rendering::Overlay3DPass);
   label->setTextProperties(tprop);
@@ -122,7 +121,7 @@ void LabelEditor::draw(Rendering::GroupNode& node)
       !m_selectedAtom.isValid()) {
     return;
   }
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   unsigned char atomicNumber = m_selectedAtom.atomicNumber();
@@ -132,5 +131,4 @@ void LabelEditor::draw(Rendering::GroupNode& node)
   TextLabel3D* atomLabel = createLabel(m_text.toStdString(), pos, radius);
   geometry->addDrawable(atomLabel);
 }
-} // namespace QtPlugins
 } // namespace Avogadro

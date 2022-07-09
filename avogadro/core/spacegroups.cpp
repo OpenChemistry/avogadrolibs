@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <algorithm> // for std::count()
@@ -29,8 +18,7 @@
 
 #include "spacegroups.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SpaceGroups::SpaceGroups()
 {
@@ -39,6 +27,43 @@ SpaceGroups::SpaceGroups()
 SpaceGroups::~SpaceGroups()
 {
 }
+
+unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
+{
+  unsigned short hall = 0; // can't find anything
+  const unsigned short hall_count = 530;
+
+  // space_group_hall_symbol
+  for (unsigned short i = 0; i < hall_count; ++i) {
+    if (spaceGroup == space_group_hall_symbol[i]) {
+      return i; // found a match
+    }
+  }
+
+  // space_group_international
+  for (unsigned short i = 0; i < hall_count; ++i) {
+    if (spaceGroup == space_group_international[i]) {
+      return i; // found a match
+    }
+  }
+
+  // space_group_international_short
+  for (unsigned short i = 0; i < hall_count; ++i) {
+    if (spaceGroup == space_group_international_short[i]) {
+      return i; // found a match
+    }
+  }
+
+  // space_group_international_full
+  for (unsigned short i = 0; i < hall_count; ++i) {
+    if (spaceGroup == space_group_international_full[i]) {
+      return i; // found a match
+    }
+  }
+
+  return hall; // can't find anything
+}
+
 
 CrystalSystem SpaceGroups::crystalSystem(unsigned short hallNumber)
 {
@@ -229,8 +254,8 @@ Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
   // These transforms are separated by spaces
   std::vector<std::string> transforms = split(transformsStr, ' ');
 
-  for (Index i = 0; i < transforms.size(); ++i)
-    ret.push_back(getSingleTransform(transforms[i], v));
+  for (auto & transform : transforms)
+    ret.push_back(getSingleTransform(transform, v));
 
   return ret;
 }
@@ -334,5 +359,4 @@ const char* SpaceGroups::transformsString(unsigned short hallNumber)
     return "";
 }
 
-} // end Core namespace
 } // end Avogadro namespace

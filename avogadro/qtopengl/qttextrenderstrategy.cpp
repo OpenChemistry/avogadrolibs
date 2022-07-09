@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "qttextrenderstrategy.h"
@@ -129,8 +118,7 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
 
 } // namespace
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 QtTextRenderStrategy::QtTextRenderStrategy() {}
 
@@ -198,7 +186,7 @@ void QtTextRenderStrategy::render(const std::string& string,
   textRect.translate(-textRect.topLeft());
 
   // Apply rotation, if any
-  qreal rot(static_cast<qreal>(tprop.rotationDegreesCW()));
+  auto rot(static_cast<qreal>(tprop.rotationDegreesCW()));
   if (rot != 0.f) {
     // Rotate the painter:
     painter.rotate(static_cast<qreal>(rot));
@@ -260,7 +248,7 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   // output: 0xRRGGBBAA (big endian)
   // output: 0xAABBGGRR (little endian)
 
-  quint32* cur = reinterpret_cast<quint32*>(buffer);
+  auto* cur = reinterpret_cast<quint32*>(buffer);
   quint32* end = &cur[pixels];
 
   while (cur < end) {
@@ -271,5 +259,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

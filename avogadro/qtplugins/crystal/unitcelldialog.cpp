@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "unitcelldialog.h"
@@ -27,7 +16,6 @@
 
 #include <QtCore/QRegExp>
 
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
 namespace {
@@ -38,11 +26,10 @@ const char MATRIX_FMT = 'f';
 
 // Valid value separators in matrix editors:
 const static QRegExp MATRIX_SEP(
-  "\\s|,|;|\\||\\[|\\]|\\{|\\}|\\(|\\)|\\&|/|<|>");
+  R"(\s|,|;|\||\[|\]|\{|\}|\(|\)|\&|/|<|>)");
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 UnitCellDialog::UnitCellDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::UnitCellDialog), m_molecule(nullptr),
@@ -379,5 +366,4 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
   return result;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

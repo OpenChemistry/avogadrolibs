@@ -30,8 +30,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QtPlugin>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
@@ -76,7 +75,14 @@ QStringList Command::menuPath(QAction* action) const
                << scriptFileName << "." << gen.errorList().join("\n\n");
     return path;
   }
-  return path;
+
+  // try to translate each part of the path
+  // not ideal, but menus should already be in the translation file
+  QStringList translatedPath;
+  foreach (QString part, path)
+    translatedPath << tr(part.toUtf8());
+
+  return translatedPath;
 }
 
 void Command::setMolecule(QtGui::Molecule* mol)
@@ -115,7 +121,7 @@ void Command::refreshScripts()
 
 void Command::menuActivated()
 {
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
   if (!theSender)
     return;
 
@@ -147,10 +153,10 @@ void Command::menuActivated()
   QtGui::ScriptLoader::queryProgramName(scriptFileName, title);
   m_currentDialog->setWindowTitle(title);
 
-  QVBoxLayout* vbox = new QVBoxLayout();
+  auto* vbox = new QVBoxLayout();
   widget->show();
   vbox->addWidget(widget);
-  QDialogButtonBox* buttonBox =
+  auto* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(run()));
@@ -170,7 +176,7 @@ void Command::run()
 
   if (m_currentScript) {
     disconnect(m_currentScript, SIGNAL(finished()), this,
-                SLOT(processFinished()));
+               SLOT(processFinished()));
     m_currentScript->deleteLater();
   }
 
@@ -180,13 +186,14 @@ void Command::run()
     // @todo - need a cleaner way to get a script pointer from the widget
     QString scriptFilePath =
       m_currentInterface->interfaceScript().scriptFilePath();
- 
+
     m_currentScript = new InterfaceScript(scriptFilePath, parent());
     connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
 
     // no cancel button - just an indication we're waiting...
     QString title = tr("Processing %1").arg(m_currentScript->displayName());
-    m_progress = new QProgressDialog(title, QString(), 0, 0, qobject_cast<QWidget*>(parent()));
+    m_progress = new QProgressDialog(title, QString(), 0, 0,
+                                     qobject_cast<QWidget*>(parent()));
     m_progress->setMinimumDuration(1000); // 1 second
 
     m_currentScript->runCommand(options, m_molecule);
@@ -217,10 +224,10 @@ void Command::configurePython()
   // Create objects
   QSettings settings;
   QDialog dlg(qobject_cast<QWidget*>(parent()));
-  QLabel* label = new QLabel;
-  QVBoxLayout* layout = new QVBoxLayout;
-  QtGui::FileBrowseWidget* browser = new QtGui::FileBrowseWidget;
-  QDialogButtonBox* buttonBox = new QDialogButtonBox;
+  auto* label = new QLabel;
+  auto* layout = new QVBoxLayout;
+  auto* browser = new QtGui::FileBrowseWidget;
+  auto* buttonBox = new QDialogButtonBox;
 
   // Configure objects
   // Check for python interpreter in env var
@@ -255,7 +262,7 @@ void Command::configurePython()
   connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
 
   // Show dialog
-  QDialog::DialogCode response = static_cast<QDialog::DialogCode>(dlg.exec());
+  auto response = static_cast<QDialog::DialogCode>(dlg.exec());
   if (response != QDialog::Accepted)
     return;
 
@@ -292,12 +299,11 @@ void Command::updateActions()
 
 void Command::addAction(const QString& label, const QString& scriptFilePath)
 {
-  QAction* action = new QAction(label, this);
+  auto* action = new QAction(tr(label.toUtf8()), this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
   connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
   m_actions << action;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

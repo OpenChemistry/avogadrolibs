@@ -1,25 +1,12 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "zipextracter.h"
 
 #include <QtCore/QString>
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ZipExtracter::ZipExtracter() {}
 
@@ -49,7 +36,7 @@ int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
 char* ZipExtracter::convert(const std::string& str)
 {
   char* result = new char[str.length() + 1];
-  strcpy(result, str.c_str());
+  strncpy(result, str.c_str(), str.length()+1); // make sure to nul-terminate
   return result;
 }
 
@@ -96,7 +83,7 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   int flags;
   int r;
   QList<QString> toReturn;
-  std::string extractdirectory = extractdir;
+  const std::string& extractdirectory = extractdir;
   std::string newFilename;
   std::string currentFilename;
 
@@ -167,5 +154,4 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   return toReturn;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2007-2009 by Marcus D. Hanwell
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "periodictablescene_p.h"
@@ -26,8 +14,7 @@
 #include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtWidgets/QStyleOption>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 PeriodicTableScene::PeriodicTableScene(QObject* parent_)
   : QGraphicsScene(parent_)
@@ -39,7 +26,7 @@ PeriodicTableScene::PeriodicTableScene(QObject* parent_)
   m_detail->setPos(6.5 * width_, 0.75 * height_);
   addItem(m_detail);
 
-  ElementItem* item = new ElementItem(1);
+  auto* item = new ElementItem(1);
   item->setPos(0 * width_, 0 * height_);
   addItem(item);
 
@@ -197,5 +184,4 @@ void PeriodicTableScene::changeElement(int element)
   m_detail->setElement(element);
 }
 
-} // End namespace QtGui
 } // End namespace Avogadro

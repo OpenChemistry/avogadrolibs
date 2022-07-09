@@ -1,19 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gaussianset.h"
@@ -28,8 +15,7 @@ using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
 {
@@ -219,7 +205,7 @@ void GaussianSet::outputAll(ElectronType type)
     index = 1;
 
   // Can be called to print out a summary of the basis set as read in
-  unsigned int numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
+  auto numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
   cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << endl;
   switch (m_scfType) {
     case Rhf:
@@ -565,5 +551,4 @@ bool GaussianSet::generateSpinDensity()
   return true;
 }
 
-} // End namespace Core
 } // End namespace Avogadro

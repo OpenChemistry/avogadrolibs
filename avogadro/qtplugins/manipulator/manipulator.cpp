@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "manipulator.h"
@@ -33,18 +22,12 @@
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QAction>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
-using QtGui::RWBond;
-using QtGui::RWMolecule;
-using Rendering::Identifier;
 
 #define ROTATION_SPEED 0.5
 
@@ -263,5 +246,4 @@ void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

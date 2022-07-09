@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "resetview.h"
@@ -27,8 +16,7 @@
 
 #define CAMERA_NEAR_DISTANCE 13.35f // Experimental number
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::QtGui::ExtensionPlugin;
 using Core::Array;
@@ -142,7 +130,7 @@ void ResetView::animationCameraDefault(bool animate)
   linearGoal.row(1) = Vector3f::UnitY();
   linearGoal.row(2) = Vector3f::UnitZ();
   // calculate the translation matrix
-  Affine3f goal = Affine3f(linearGoal);
+  auto goal = Affine3f(linearGoal);
 
   const Array<Vector3>& mols = m_molecule->atomPositions3d();
   Vector3 min, max;
@@ -161,13 +149,13 @@ void ResetView::animationCamera(const Affine3f& goal, bool animate)
   if (animate) {
     Matrix3f rot_aux = goal.rotation();
     Vector3f posGoal = goal.translation();
-    Quaternionf rotGoal = Quaternionf(rot_aux);
+    auto rotGoal = Quaternionf(rot_aux);
 
     Affine3f start = m_camera->modelView();
 
     rot_aux = start.rotation();
     Vector3f posStart = start.translation();
-    Quaternionf rotStart = Quaternionf(rot_aux);
+    auto rotStart = Quaternionf(rot_aux);
 
     for (int frame = 0; frame <= ResetView::TOTAL_FRAMES; ++frame) {
       Affine3f interpolation;
@@ -196,19 +184,19 @@ inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
 {
   centroid = Vector3::Zero();
 
-  for (unsigned int i = 0; i < mols.size(); ++i)
-    centroid += mols[i];
+  for (const auto & mol : mols)
+    centroid += mol;
 
   centroid /= (double)mols.size();
   Matrix3d covariance = Matrix3::Zero();
 
-  for (unsigned int i = 0; i < mols.size(); ++i) {
-    Vector3d adjusted = mols[i] - centroid;
+  for (const auto & mol : mols) {
+    Vector3d adjusted = mol - centroid;
     covariance += adjusted * adjusted.transpose();
   }
   covariance /= (double)mols.size();
 
-  EigenSolver<Matrix3d> solver = EigenSolver<Matrix3>(covariance);
+  auto solver = EigenSolver<Matrix3>(covariance);
   Eigen::Matrix3d vectors = solver.eigenvectors().real();
 
   max = vectors.row(0);
@@ -230,7 +218,7 @@ void ResetView::centerView()
   linearGoal.col(1) = (mid.normalized()).cast<float>(); // y
   linearGoal.col(2) = (min.normalized()).cast<float>(); // z
   // calculate the translation matrix
-  Affine3f goal = Affine3f(linearGoal);
+  auto goal = Affine3f(linearGoal);
 
   // eigen return the eigenvectors normalized, but we need a non-normalized
   // so we project all the points to the axis and get the min/max
@@ -265,5 +253,4 @@ void ResetView::alignToAxes()
   animationCameraDefault();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

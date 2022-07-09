@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright (C) 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gaussianfchk.h"
@@ -28,8 +16,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::BasisSet;
@@ -37,7 +24,6 @@ using Core::GaussianSet;
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
-using Core::Unknown;
 
 GaussianFchk::GaussianFchk() : m_scftype(Rhf)
 {
@@ -50,7 +36,7 @@ GaussianFchk::~GaussianFchk()
 std::vector<std::string> GaussianFchk::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("fchk");
+  extensions.emplace_back("fchk");
   return extensions;
 }
 
@@ -66,7 +52,7 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in);
 
-  GaussianSet* basis = new GaussianSet;
+  auto* basis = new GaussianSet;
 
   int nAtom = 0;
   for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
@@ -312,15 +298,15 @@ vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
       return tmp;
 
     vector<string> list = Core::split(line, ' ');
-    for (size_t i = 0; i < list.size(); ++i) {
+    for (auto & i : list) {
       if (tmp.size() >= n) {
         cout << "Too many variables read in. File may be inconsistent. "
              << tmp.size() << " of " << n << endl;
         return tmp;
       }
-      tmp.push_back(Core::lexicalCast<int>(list[i], ok));
+      tmp.push_back(Core::lexicalCast<int>(i, ok));
       if (!ok) {
-        cout << "Warning: problem converting string to integer: " << list[i]
+        cout << "Warning: problem converting string to integer: " << i
              << " in GaussianFchk::readArrayI.\n";
         return tmp;
       }
@@ -347,15 +333,15 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
 
     if (width == 0) { // we can split by spaces
       vector<string> list = Core::split(line, ' ');
-      for (size_t i = 0; i < list.size(); ++i) {
+      for (auto & i : list) {
         if (tmp.size() >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Core::lexicalCast<double>(list[i], ok));
+        tmp.push_back(Core::lexicalCast<double>(i, ok));
         if (!ok) {
-          cout << "Warning: problem converting string to integer: " << list[i]
+          cout << "Warning: problem converting string to integer: " << i
                << " in GaussianFchk::readArrayD.\n";
           return tmp;
         }
@@ -404,14 +390,14 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
 
     if (width == 0) { // we can split by spaces
       vector<string> list = Core::split(line, ' ');
-      for (size_t k = 0; k < list.size(); ++k) {
+      for (auto & k : list) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << cnt << " of " << n << endl;
           return false;
         }
         // Read in lower half matrix
-        m_density(i, j) = Core::lexicalCast<double>(list[k], ok);
+        m_density(i, j) = Core::lexicalCast<double>(k, ok);
         if (ok) { // Valid double converted, carry on
           ++j;
           ++cnt;
@@ -422,7 +408,7 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
             ++i;
           }
         } else { // Invalid conversion of a string to double
-          cout << "Warning: problem converting string to double: " << list.at(k)
+          cout << "Warning: problem converting string to double: " << k
                << "\nIn GaussianFchk::readDensityMatrix.\n";
           return false;
         }
@@ -480,14 +466,14 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
 
     if (width == 0) { // we can split by spaces
       vector<string> list = Core::split(line, ' ');
-      for (size_t k = 0; k < list.size(); ++k) {
+      for (auto & k : list) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << cnt << " of " << n << endl;
           return false;
         }
         // Read in lower half matrix
-        m_spinDensity(i, j) = Core::lexicalCast<double>(list[k], ok);
+        m_spinDensity(i, j) = Core::lexicalCast<double>(k, ok);
         if (ok) { // Valid double converted, carry on
           ++j;
           ++cnt;
@@ -498,7 +484,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
             ++i;
           }
         } else { // Invalid conversion of a string to double
-          cout << "Warning: problem converting string to double: " << list[k]
+          cout << "Warning: problem converting string to double: " << k
                << "\nIn GaussianFchk::readDensityMatrix.\n";
           return false;
         }
@@ -558,22 +544,21 @@ void GaussianFchk::outputAll()
          << ", atom = " << m_shelltoAtom.at(i) << endl;
   if (m_MOcoeffs.size()) {
     cout << "MO coefficients:\n";
-    for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-      cout << m_MOcoeffs.at(i) << "\t";
+    for (double m_MOcoeff : m_MOcoeffs)
+      cout << m_MOcoeff << "\t";
     cout << endl << endl;
   }
   if (m_alphaMOcoeffs.size()) {
     cout << "Alpha MO coefficients:\n";
-    for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
-      cout << m_alphaMOcoeffs.at(i) << "\t";
+    for (double m_alphaMOcoeff : m_alphaMOcoeffs)
+      cout << m_alphaMOcoeff << "\t";
     cout << endl << endl;
   }
   if (m_betaMOcoeffs.size()) {
     cout << "Beta MO coefficients:\n";
-    for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
-      cout << m_betaMOcoeffs.at(i) << "\t";
+    for (double m_betaMOcoeff : m_betaMOcoeffs)
+      cout << m_betaMOcoeff << "\t";
     cout << endl << endl;
   }
-}
 }
 }

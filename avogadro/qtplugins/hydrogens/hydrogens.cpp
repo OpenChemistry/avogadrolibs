@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "hydrogens.h"
@@ -24,13 +13,12 @@
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Hydrogens::Hydrogens(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("&Adjust Hydrogens"), this);
+  auto* action = new QAction(tr("&Adjust Hydrogens"), this);
   action->setShortcut(QKeySequence("Ctrl+Alt+H"));
   connect(action, SIGNAL(triggered()), SLOT(adjustHydrogens()));
   m_actions.append(action);
@@ -115,5 +103,4 @@ void Hydrogens::removeAllHydrogens()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

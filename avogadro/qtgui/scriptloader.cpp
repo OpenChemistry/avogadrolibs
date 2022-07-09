@@ -25,8 +25,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QStandardPaths>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ScriptLoader::ScriptLoader(QObject* parent_)
   : QObject(parent_)
@@ -98,8 +97,8 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
               if (commands.type() == QJsonValue::Array) {
                 // check if "command.*" exists as a file
                 QJsonArray list = commands.toArray();
-                for (int i = 0; i < list.size(); ++i) {
-                  QJsonValue command = list[i].toObject()["command"];
+                for (auto && i : list) {
+                  QJsonValue command = i.toObject()["command"];
                   QString name = command.toString();
                   if (name.isEmpty() || name.isNull())
                     continue;
@@ -154,5 +153,4 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   return scriptList;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

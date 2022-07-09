@@ -14,8 +14,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
@@ -89,7 +88,7 @@ QByteArray PythonScript::execute(const QStringList& args,
 
   // Add the global language / locale to *all* calls
   realArgs.append("--lang");
-  realArgs.append(QLocale::system().name());
+  realArgs.append(QLocale().name());
 
   // Start script
   realArgs.prepend(m_scriptFilePath);
@@ -174,7 +173,7 @@ void PythonScript::asyncExecute(const QStringList& args,
 
   // Add the global language / locale to *all* calls
   realArgs.append("--lang");
-  realArgs.append(QLocale::system().name());
+  realArgs.append(QLocale().name());
 
   // Start script
   realArgs.prepend(m_scriptFilePath);
@@ -256,5 +255,4 @@ QString PythonScript::processErrorString(const QProcess& proc) const
   return result;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

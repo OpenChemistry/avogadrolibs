@@ -18,13 +18,12 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PropertyTables::PropertyTables(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setText(tr("Atom Properties…"));
   action->setData(PropertyType::AtomType);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
@@ -92,7 +91,7 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
 
 void PropertyTables::showDialog()
 {
-  QAction* action = qobject_cast<QAction*>(sender());
+  auto* action = qobject_cast<QAction*>(sender());
   if (action == nullptr || m_molecule == nullptr)
     return;
 
@@ -100,21 +99,21 @@ void PropertyTables::showDialog()
       m_molecule->residueCount() == 0)
     return;
 
-  QDialog* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
-  QVBoxLayout* layout = new QVBoxLayout(dialog);
+  auto* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
+  auto* layout = new QVBoxLayout(dialog);
   dialog->setLayout(layout);
   // Don't show whitespace around the PropertiesView
   layout->setSpacing(0);
   layout->setContentsMargins(0, 0, 0, 0);
 
   PropertyType i = static_cast<PropertyType>(action->data().toInt());
-  PropertyModel* model = new PropertyModel(i);
+  auto* model = new PropertyModel(i);
   model->setMolecule(m_molecule);
   // view will delete itself & model in PropertiesView::hideEvent using
   // deleteLater().
-  PropertyView* view = new PropertyView(i, dialog);
+  auto* view = new PropertyView(i, dialog);
 
-  QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+  auto* proxyModel = new QSortFilterProxyModel(this);
   proxyModel->setSourceModel(model);
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSortLocaleAware(true);
@@ -145,5 +144,4 @@ void PropertyTables::showDialog()
   dialog->show();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

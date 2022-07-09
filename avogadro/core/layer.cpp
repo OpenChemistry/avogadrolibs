@@ -6,8 +6,7 @@
 #include "layer.h"
 #include <cassert>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::swap;
 
@@ -121,5 +120,4 @@ size_t Layer::layerCount() const
   return m_maxLayer + 1;
 }
 
-} // namespace Core
 } // namespace Avogadro

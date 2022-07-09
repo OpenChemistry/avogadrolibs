@@ -10,8 +10,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using namespace std;
 
@@ -85,5 +84,4 @@ Angle AngleIterator::operator++()
   return make_tuple(MaxIndex, MaxIndex, MaxIndex);
 } // end ++ operator
 
-} // namespace Core
 } // namespace Avogadro

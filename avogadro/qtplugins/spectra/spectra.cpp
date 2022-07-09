@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "spectra.h"
@@ -26,14 +15,13 @@
 #include <QtWidgets/QFileDialog>
 #include <avogadro/qtgui/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
     m_timer(nullptr), m_mode(0), m_amplitude(20)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Vibrational Modes…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
@@ -180,6 +168,5 @@ void Spectra::advanceFrame()
     m_currentFrame = 0;
   m_molecule->setCoordinate3d(m_currentFrame);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
-}
 }
 }

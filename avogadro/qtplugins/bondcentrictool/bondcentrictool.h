@@ -1,24 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  Adapted from Avogadro 1.x with the following authors' permission:
-  Copyright (C) 2007 by Shahzad Ali
-  Copyright (C) 2007 by Ross Braithwaite
-  Copyright (C) 2007 by James Bunt
-  Copyright (C) 2007,2008 by Marcus D. Hanwell
-  Copyright (C) 2006,2007 by Benoit Jacob
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_BONDCENTRICTOOL_H
@@ -137,8 +119,6 @@ private:
   // Bond utilities
   bool bondContainsAtom(const QtGui::RWBond& bond,
                         const QtGui::RWAtom& atom) const;
-  QtGui::RWAtom otherBondedAtom(const QtGui::RWBond& bond,
-                                const QtGui::RWAtom& atom) const;
 
   // The 'fragment' is the SkeletonTree of the 1.x implementation. It is a list
   // of atoms created by buildFragment(bond, startAtom), which walks the bonds

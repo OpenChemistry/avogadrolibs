@@ -21,8 +21,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Elements;
 using QtGui::PluginLayerManager;
@@ -49,19 +48,19 @@ struct LayerBallAndStick : Core::LayerData
     showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
   }
 
-  ~LayerBallAndStick()
+  ~LayerBallAndStick() override
   {
     if (widget)
       widget->deleteLater();
   }
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(atomScale) + " " + std::to_string(bondRadius);
   }
 
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
@@ -79,10 +78,10 @@ struct LayerBallAndStick : Core::LayerData
   {
     if (!widget) {
       widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
-      QVBoxLayout* v = new QVBoxLayout;
+      auto* v = new QVBoxLayout;
 
-      QFormLayout* f = new QFormLayout;
-      QSlider* atomRadiusSlider = new QSlider(Qt::Horizontal);
+      auto* f = new QFormLayout;
+      auto* atomRadiusSlider = new QSlider(Qt::Horizontal);
       atomRadiusSlider->setMinimum(1);
       atomRadiusSlider->setMaximum(9);
       atomRadiusSlider->setTickInterval(1);
@@ -91,7 +90,7 @@ struct LayerBallAndStick : Core::LayerData
                        &BallAndStick::atomRadiusChanged);
       f->addRow(QObject::tr("Atom scale"), atomRadiusSlider);
 
-      QSlider* bondRadiusSlider = new QSlider(Qt::Horizontal);
+      auto* bondRadiusSlider = new QSlider(Qt::Horizontal);
       bondRadiusSlider->setMinimum(1);
       bondRadiusSlider->setMaximum(8);
       bondRadiusSlider->setTickInterval(1);
@@ -101,7 +100,7 @@ struct LayerBallAndStick : Core::LayerData
       f->addRow(QObject::tr("Bond scale"), bondRadiusSlider);
       v->addLayout(f);
 
-      QCheckBox* check = new QCheckBox(QObject::tr("Show multiple bonds"));
+      auto* check = new QCheckBox(QObject::tr("Show multiple bonds"));
       check->setChecked(multiBonds);
       QObject::connect(check, &QCheckBox::clicked, slot,
                        &BallAndStick::multiBonds);
@@ -132,9 +131,9 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   m_layerManager.load<LayerBallAndStick>();
   // Add a sphere node to contain all of the spheres.
   m_group = &node;
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   auto selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
@@ -148,13 +147,13 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
-    LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>(
+    auto& interface = m_layerManager.getSetting<LayerBallAndStick>(
       m_layerManager.getLayerID(i));
     if (atomicNumber == 1 && !interface.showHydrogens)
       continue;
 
     Vector3ub color = atom.color();
-    float radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
+    auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
     float scale = interface.atomScale;
     spheres->addSphere(atom.position3d().cast<float>(), color, radius * scale,
                        i);
@@ -166,7 +165,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     }
   }
 
-  CylinderGeometry* cylinders = new CylinderGeometry;
+  auto* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
@@ -177,10 +176,10 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
 
-    LayerBallAndStick& interface1 =
+    auto& interface1 =
       m_layerManager.getSetting<LayerBallAndStick>(
         m_layerManager.getLayerID(bond.atom1().index()));
-    LayerBallAndStick& interface2 =
+    auto& interface2 =
       m_layerManager.getSetting<LayerBallAndStick>(
         m_layerManager.getLayerID(bond.atom2().index()));
 
@@ -224,7 +223,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
 
 QWidget* BallAndStick::setupWidget()
 {
-  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
   interface.setupWidget(this);
   return interface.widget;
 }
@@ -233,7 +232,7 @@ void BallAndStick::atomRadiusChanged(int value)
 {
   m_atomScale = static_cast<float>(value) / 10.0f;
 
-  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
   if (m_atomScale != interface.atomScale) {
     interface.atomScale = m_atomScale;
     emit drawablesChanged();
@@ -247,7 +246,7 @@ void BallAndStick::bondRadiusChanged(int value)
 {
   m_bondRadius = static_cast<float>(value) / 10.0f;
 
-  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
   if (m_bondRadius != interface.bondRadius) {
     interface.bondRadius = m_bondRadius;
     emit drawablesChanged();
@@ -259,7 +258,7 @@ void BallAndStick::bondRadiusChanged(int value)
 
 void BallAndStick::multiBonds(bool show)
 {
-  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
   if (show != interface.multiBonds) {
     interface.multiBonds = show;
     emit drawablesChanged();
@@ -270,7 +269,7 @@ void BallAndStick::multiBonds(bool show)
 
 void BallAndStick::showHydrogens(bool show)
 {
-  LayerBallAndStick& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
   if (show != interface.showHydrogens) {
     interface.showHydrogens = show;
     emit drawablesChanged();
@@ -279,5 +278,4 @@ void BallAndStick::showHydrogens(bool show)
   settings.setValue("ballandstick/showHydrogens", show);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

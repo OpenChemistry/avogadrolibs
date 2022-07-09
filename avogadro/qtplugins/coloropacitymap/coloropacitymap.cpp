@@ -29,12 +29,9 @@
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtOpenGL::ActiveObjects;
 
-using std::map;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
-using Core::Array;
 
 vtkImageData* cubeImageData(Core::Cube* cube)
 {
@@ -46,10 +43,10 @@ vtkImageData* cubeImageData(Core::Cube* cube)
   // Translate origin, spacing, and types from Avogadro to VTK.
   data->SetOrigin(cube->min().x(), cube->min().y(), cube->min().z());
   data->SetSpacing(cube->spacing().data());
-  data->AllocateScalars(VTK_DOUBLE, 1);
+  data->AllocateScalars(VTK_FLOAT, 1);
 
-  double* dataPtr = static_cast<double*>(data->GetScalarPointer());
-  std::vector<double>* cubePtr = cube->data();
+  auto* dataPtr = static_cast<float*>(data->GetScalarPointer());
+  std::vector<float>* cubePtr = cube->data();
 
   // Reorder our cube for VTK's Fortran ordering in vtkImageData.
   for (int i = 0; i < dim.x(); ++i) {
@@ -139,7 +136,7 @@ void ColorOpacityMap::updateHistogram()
 
   if (widget && vtkWidget && widget != m_activeWidget) {
     if (m_activeWidget)
-      disconnect(widget, 0, this, 0);
+      disconnect(widget, nullptr, this, nullptr);
     connect(widget, SIGNAL(imageDataUpdated()), SLOT(updateHistogram()));
     m_activeWidget = widget;
   }
@@ -180,10 +177,9 @@ void ColorOpacityMap::render()
   auto widget = ActiveObjects::instance().activeWidget();
   auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
   if (vtkWidget) {
-    vtkWidget->GetRenderWindow()->Render();
+    vtkWidget->renderWindow()->Render();
     vtkWidget->update();
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -1,18 +1,7 @@
-/*******************************************************************************
-
+/******************************************************************************
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
-*******************************************************************************/
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
 
 #ifndef AVOGADRO_VTK_VTKPLOT_H
 #define AVOGADRO_VTK_VTKPLOT_H
@@ -26,7 +15,7 @@
 #include <string>
 #include <vector>
 
-class QVTKOpenGLWidget;
+class QVTKOpenGLStereoWidget;
 class vtkAxis;
 class vtkChartXY;
 class vtkContextView;
@@ -99,7 +88,7 @@ private:
   // Get a pointer to a particular axis. Returns nullptr if invalid.
   vtkAxis* getAxis(Axis axis);
 
-  std::unique_ptr<QVTKOpenGLWidget> m_widget;
+  std::unique_ptr<QVTKOpenGLStereoWidget> m_widget;
   vtkNew<vtkTable> m_table;
   vtkNew<vtkGenericOpenGLRenderWindow> m_renderWindow;
   vtkNew<vtkContextView> m_view;

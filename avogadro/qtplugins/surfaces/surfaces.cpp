@@ -1,19 +1,8 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-2013 Kitware, Inc.
-  Copyright 2018 Geoffrey Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+
 #include "surfaces.h"
 #include "surfacedialog.h"
 
@@ -28,11 +17,14 @@ namespace {
 #include <gwavi.h>
 
 #include <avogadro/core/variant.h>
+#include <avogadro/core/vector.h>
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/neighborperceiver.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -48,6 +40,8 @@ namespace {
 #include <avogadro/quantumio/nwchemjson.h>
 #include <avogadro/quantumio/nwchemlog.h>
 
+#include <QtConcurrent/QtConcurrentMap>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -58,11 +52,11 @@ namespace {
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
-using Core::Cube;
+using Core::Array;
 using Core::GaussianSet;
+using Core::NeighborPerceiver;
 using QtGui::Molecule;
 
 class Surfaces::PIMPL
@@ -77,6 +71,9 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   auto action = new QAction(this);
   action->setText(tr("Create Surfaces…"));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
+  connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(displayMesh()));
+  connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
+  
   m_actions.push_back(action);
 
   // Register quantum file formats
@@ -145,14 +142,35 @@ void Surfaces::surfacesActivated()
   }
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
-    for (unsigned int i = 0; i < m_cubes.size(); ++i) {
-      cubeNames << m_cubes[i]->name().c_str();
+    for (auto & m_cube : m_cubes) {
+      cubeNames << m_cube->name().c_str();
     }
     m_dialog->setupCubes(cubeNames);
   }
   m_dialog->setupSteps(m_molecule->coordinate3dCount());
 
   m_dialog->show();
+}
+
+float Surfaces::resolution()
+{
+  if (!m_dialog->automaticResolution())
+    return m_dialog->resolution();
+
+  float r = 0.02 * powf(m_molecule->atomCount(), 1.0f / 3.0f);
+  float minimum = 0.05;
+  float maximum = 0.5;
+
+  switch (m_dialog->surfaceType()) {
+    case SolventExcluded:
+      minimum = 0.1;
+      break;
+    default:
+      ;
+  }
+
+  r = std::max(minimum, std::min(maximum, r));
+  return r;
 }
 
 void Surfaces::calculateSurface()
@@ -170,8 +188,6 @@ void Surfaces::calculateSurface()
     case SolventAccessible:
     case SolventExcluded:
       calculateEDT();
-      // pass a molecule and return a Cube for m_cube
-      //   displayMesh();
       break;
 
     case ElectronDensity:
@@ -188,10 +204,150 @@ void Surfaces::calculateSurface()
   }
 }
 
+float inline square(float x) { return x * x; }
+
 void Surfaces::calculateEDT()
 {
-  // pass the molecule to the EDT, plus the surface type
-  // get back a Cube object in m_cube
+  QFuture future = QtConcurrent::run([=]() {
+    double probeRadius = 0.0;
+    switch (m_dialog->surfaceType()) {
+      case VanDerWaals:
+          break;
+      case SolventAccessible:
+      case SolventExcluded:
+          probeRadius = 1.4;
+          break;
+    }
+
+    // first, make a list of all atom positions and radii
+    Array<Vector3> atomPositions = m_molecule->atomPositions3d();
+    auto *atoms =
+      new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
+    double max_radius = probeRadius;
+    QtGui::RWLayerManager layerManager;
+    for (size_t i = 0; i < m_molecule->atomCount(); i++) {
+      if (!layerManager.visible(m_molecule->layer(i)))
+        continue;
+      auto radius = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+      atoms->emplace_back(atomPositions[i], radius);
+      if (radius > max_radius)
+        max_radius = radius;
+    }
+
+    double padding = max_radius + probeRadius;
+    m_cube->setLimits(*m_molecule, resolution(), padding);
+    m_cube->fill(-1.0);
+
+    const float res = resolution();
+    const Vector3 min = m_cube->min();
+    const float mdist = probeRadius;
+
+    // then, for each atom, set cubes around it up to a certain radius
+    QFuture innerFuture = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
+      double startPosX = in.first(0) - in.second;
+      double endPosX = in.first(0) + in.second;
+      int startIndexX = (startPosX - min(0)) / res;
+      int endIndexX = (endPosX - min(0)) / res + 1;
+      for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+        double posX = indexX * res + min(0);
+        double radiusXsq = square(in.second) - square(posX - in.first(0));
+        if (radiusXsq < 0.0)
+          continue;
+        double radiusX = sqrt(radiusXsq);
+        double startPosY = in.first(1) - radiusX;
+        double endPosY = in.first(1) + radiusX;
+        int startIndexY = (startPosY - min(1)) / res;
+        int endIndexY = (endPosY - min(1)) / res + 1;
+        for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
+          double posY = indexY * res + min(1);
+          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+          if (lengthXYsq < 0.0)
+            continue;
+          double lengthXY = sqrt(lengthXYsq);
+          double startPosZ = in.first(2) - lengthXY;
+          double endPosZ = in.first(2) + lengthXY;
+          int startIndexZ = (startPosZ - min(2)) / res;
+          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1, 1.0f);
+        }
+      }
+    });
+    
+    innerFuture.waitForFinished();
+  });
+  
+  // SolventExcluded requires an extra pass
+  if (m_dialog->surfaceType() == SolventExcluded) {
+    m_performEDTStepWatcher.setFuture(future);
+  } else {
+    m_displayMeshWatcher.setFuture(future);
+  }
+}
+
+void Surfaces::performEDTStep()
+{
+  QFuture future = QtConcurrent::run([=]() {
+    const double probeRadius = 1.4;
+    const double scaledProbeRadius = probeRadius / resolution();
+    
+    // make a list of all "outside" cubes in contact with an "inside" cube
+    // these are the only ones that can be "nearest" to an "inside" cube
+    Array<Vector3> relativePositions;
+    // also make a list of all "inside" cubes
+    auto *insideIndices = new std::vector<Vector3i>;
+    Vector3i size = m_cube->dimensions();
+    relativePositions.reserve(size(0) * size(1) * 4); // O(n^2)
+    insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
+    for (int z = 0; z < size(2); z++) {
+      int zp = std::max(z - 1, 0);
+      int zn = std::min(z + 1, size(2) - 1);
+      for (int y = 0; y < size(1); y++) {
+        int yp = std::max(y - 1, 0);
+        int yn = std::min(y + 1, size(1) - 1);
+        for (int x = 0; x < size(0); x++) {
+          if (m_cube->value(x, y, z) > 0.0) {
+            insideIndices->emplace_back(x, y, z);
+            continue;
+          }
+          int xp = std::max(x - 1, 0);
+          int xn = std::min(x + 1, size(0) - 1);
+          if (m_cube->value(xp, y, z) > 0.0
+            || m_cube->value(xn, y, z) > 0.0
+            || m_cube->value(x, yp, z) > 0.0
+            || m_cube->value(x, yn, z) > 0.0
+            || m_cube->value(x, y, zp) > 0.0
+            || m_cube->value(x, y, zn) > 0.0
+          ) {
+            relativePositions.push_back(Vector3(x, y, z));
+          }
+        }
+      }
+    }
+    
+    // pass the list to a NeighborPerceiver so it's faster to look up
+    NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
+    
+    // now, exclude all "inside" cubes too close to any "outside" cube
+    thread_local Array<Index> *neighbors = nullptr;
+    QFuture innerFuture = QtConcurrent::map(*insideIndices, [=](Vector3i &in) {
+      Vector3 pos = in.cast<double>();
+      if (neighbors == nullptr)
+        neighbors = new Array<Index>;
+      perceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
+      for (Index neighbor: *neighbors) {
+        const Vector3 &npos = relativePositions[neighbor];
+        float distance = (npos - pos).norm();
+        if (distance <= scaledProbeRadius) {
+          m_cube->setValue(in(0), in(1), in(2), -1.0f);
+          break;
+        }
+      }
+    });
+    
+    innerFuture.waitForFinished();
+  });
+  
+  m_displayMeshWatcher.setFuture(future);
 }
 
 void Surfaces::calculateQM()
@@ -237,12 +393,12 @@ void Surfaces::calculateQM()
   Type type = m_dialog->surfaceType();
   int index = m_dialog->surfaceIndex();
   m_isoValue = m_dialog->isosurfaceValue();
-  m_cube->setLimits(*m_molecule, m_dialog->resolution(), 5.0);
+  m_cube->setLimits(*m_molecule, resolution(), 5.0);
 
   QString progressText;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
-    m_cube->setName("Electron Denisty");
+    m_cube->setName("Electron Density");
     if (dynamic_cast<GaussianSet*>(m_basis)) {
       m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
@@ -330,13 +486,17 @@ void Surfaces::displayMesh()
   if (!m_cube)
     return;
 
+  qDebug() << " running displayMesh";
+
+  m_smoothingPasses = m_dialog->smoothingPassesValue();
+
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
   if (!m_meshGenerator1) {
     m_meshGenerator1 = new QtGui::MeshGenerator;
     connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue);
+  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue, m_smoothingPasses);
 
   // TODO - only do this if we're generating an orbital
   //    and we need two meshes
@@ -347,7 +507,7 @@ void Surfaces::displayMesh()
     m_meshGenerator2 = new QtGui::MeshGenerator;
     connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, true);
+  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses, true);
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have
@@ -370,6 +530,9 @@ void Surfaces::meshFinished()
       movieFrame();
     } else {
       m_dialog->reenableCalculateButton();
+
+      qDebug() << " mesh finished";
+
       m_molecule->emitChanged(QtGui::Molecule::Added);
     }
   }
@@ -453,7 +616,7 @@ void Surfaces::movieFrame()
 
   if (d->gifWriter) {
     int pixelCount = exportImage.width() * exportImage.height();
-    uint8_t* imageData = new uint8_t[pixelCount * 4];
+    auto* imageData = new uint8_t[pixelCount * 4];
     int imageIndex = 0;
     for (int j = 0; j < exportImage.height(); ++j) {
       for (int k = 0; k < exportImage.width(); ++k) {
@@ -541,5 +704,4 @@ void Surfaces::movieFrame()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

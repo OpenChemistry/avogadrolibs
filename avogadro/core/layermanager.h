@@ -14,6 +14,7 @@
 #include <cassert>
 #include <map>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -51,7 +52,7 @@ protected:
 /**
  * @class MoleculeInfo layermanager.h <avogadro/core/layermanager.h>
  * @brief All layer dependent data. Original molecule @p mol, is layer hidden
- * @p visible, accepts eddits @p locked, and key-value data like @p enable,
+ * @p visible, accepts edits @p locked, and key-value data like @p enable,
  * and custom data @p settings.
  */
 struct MoleculeInfo

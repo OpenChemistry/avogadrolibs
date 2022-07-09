@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "cylindergeometry.h"
@@ -39,8 +28,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class CylinderGeometry::Private
 {
@@ -97,8 +85,8 @@ void CylinderGeometry::update()
     // cylinderIndices.reserve(m_indices.size() * 4);
     // cylinderVertices.reserve(m_cylinders.size() * 4);
 
-    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
-    std::vector<CylinderColor>::const_iterator itCylinder = m_cylinders.begin();
+    auto itIndex = m_indices.begin();
+    auto itCylinder = m_cylinders.begin();
 
     for (unsigned int i = 0;
          itIndex != m_indices.end() && itCylinder != m_cylinders.end();
@@ -121,16 +109,14 @@ void CylinderGeometry::update()
       // Cylinder
       ColorNormalVertex vert(itCylinder->color, -direction, position1);
       ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
-      const unsigned int tubeStart =
+      const auto tubeStart =
         static_cast<unsigned int>(cylinderVertices.size());
-      for (std::vector<Vector3f>::const_iterator it = radials.begin(),
-                                                 itEnd = radials.end();
-           it != itEnd; ++it) {
-        vert.normal = *it;
-        vert.vertex = position1 + *it;
+      for (auto & radial : radials) {
+        vert.normal = radial;
+        vert.vertex = position1 + radial;
         cylinderVertices.push_back(vert);
         vert2.normal = vert.normal;
-        vert2.vertex = position2 + *it;
+        vert2.vertex = position2 + radial;
         cylinderVertices.push_back(vert2);
       }
       // Now to stitch it together.
@@ -169,6 +155,11 @@ void CylinderGeometry::update()
     d->program.attachShader(d->fragmentShader);
     if (!d->program.link())
       cout << d->program.error() << endl;
+
+    d->program.detachShader(d->vertexShader);
+    d->program.detachShader(d->fragmentShader);
+    d->vertexShader.cleanup();
+    d->fragmentShader.cleanup();
   }
 }
 
@@ -303,8 +294,7 @@ void CylinderGeometry::addCylinder(const Vector3f& pos1, const Vector3f& pos2,
                                    const Vector3ub& colorEnd)
 {
   m_dirty = true;
-  m_cylinders.push_back(
-    CylinderColor(pos1, pos2, radius, colorStart, colorEnd));
+  m_cylinders.emplace_back(pos1, pos2, radius, colorStart, colorEnd);
   m_indices.push_back(m_indices.size());
 }
 
@@ -331,5 +321,4 @@ void CylinderGeometry::clear()
   m_indexMap.clear();
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

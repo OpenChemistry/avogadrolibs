@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "vrmlvisitor.h"
@@ -25,12 +14,9 @@
 #include <iostream>
 #include <ostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
-using std::cout;
 using std::string;
-using std::endl;
 using std::ostringstream;
 using std::ostream;
 using std::ofstream;
@@ -110,9 +96,7 @@ void VRMLVisitor::visit(Drawable& geometry)
 void VRMLVisitor::visit(SphereGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.spheres().size(); ++i) {
-    Rendering::SphereColor s = geometry.spheres()[i];
-
+  for (auto s : geometry.spheres()) {
     str << "Transform {\n"
         << "\ttranslation\t" << s.center[0] << "\t" << s.center[1] << "\t"
         << s.center[2] << "\n\tchildren Shape {\n"
@@ -132,9 +116,7 @@ void VRMLVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
 void VRMLVisitor::visit(CylinderGeometry& geometry)
 {
   ostringstream str;
-  for (size_t i = 0; i < geometry.cylinders().size(); ++i) {
-    Rendering::CylinderColor c = geometry.cylinders()[i];
-
+  for (auto c : geometry.cylinders()) {
     // double scale = 1.0;
     double x1, x2, y1, y2, z1, z2;
     x1 = c.end1[0];
@@ -231,5 +213,4 @@ void VRMLVisitor::visit(LineStripGeometry& geometry)
   // geometry.render(m_camera);
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

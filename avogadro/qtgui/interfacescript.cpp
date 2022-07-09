@@ -21,8 +21,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
@@ -226,7 +225,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       return false;
     }
 
-    QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
     QtGui::Molecule newMol(guiMol->parent());
     if (m_moleculeExtension == "cjson") {
       // convert the "cjson" field to a string
@@ -341,7 +340,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj[QStringLiteral("highlightStyles")].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -546,7 +545,7 @@ void InterfaceScript::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
+  QRegExp coordParser(R"(\$\$coords:([^\$]*)\$\$)");
   int ind = 0;
   while ((ind = coordParser.indexIn(str, ind)) != -1) {
     // Extract spec and prepare the replacement
@@ -601,10 +600,10 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value(QStringLiteral("rules")).toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InterfaceScript*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
-      qDebug() << "Error parsing style" << styleName << endl
+      qDebug() << "Error parsing style" << styleName << '\n'
                << QString(QJsonDocument(styleObj).toJson());
       highlighter->deleteLater();
       result = false;
@@ -629,13 +628,13 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     QJsonObject ruleObj(ruleVal.toObject());
 
     if (!ruleObj.contains(QStringLiteral("patterns"))) {
-      qDebug() << "Rule missing 'patterns' array:" << endl
+      qDebug() << "Rule missing 'patterns' array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value(QStringLiteral("patterns")).isArray()) {
-      qDebug() << "Rule 'patterns' member is not an array:" << endl
+      qDebug() << "Rule 'patterns' member is not an array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -644,13 +643,13 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
       ruleObj.value(QStringLiteral("patterns")).toArray());
 
     if (!ruleObj.contains(QStringLiteral("format"))) {
-      qDebug() << "Rule missing 'format' object:" << endl
+      qDebug() << "Rule missing 'format' object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value(QStringLiteral("format")).isObject()) {
-      qDebug() << "Rule 'format' member is not an object:" << endl
+      qDebug() << "Rule 'format' member is not an object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -662,7 +661,7 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     foreach (QJsonValue patternVal, patternsArray) {
       QRegExp pattern;
       if (!parsePattern(patternVal, pattern)) {
-        qDebug() << "Error while parsing pattern:" << endl
+        qDebug() << "Error while parsing pattern:" << '\n'
                  << QString(QJsonDocument(patternVal.toObject()).toJson());
         result = false;
         continue;
@@ -672,7 +671,7 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
 
     QTextCharFormat format;
     if (!parseFormat(formatObj, format)) {
-      qDebug() << "Error while parsing format:" << endl
+      qDebug() << "Error while parsing format:" << '\n'
                << QString(QJsonDocument(formatObj).toJson());
       result = false;
     }
@@ -822,5 +821,4 @@ bool InterfaceScript::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

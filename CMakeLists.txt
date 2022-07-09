@@ -4,15 +4,10 @@ project(AvogadroLibs)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-# Request C++11 standard when building Python wheels due to old compiler/glibc.
-# Use C++17 otherwise, and hopefully globally once the pip infra is updated.
+# Use C++17 when possible
 option(PYTHON_WHEEL_BUILD "Is this a Python wheel build?" OFF)
 mark_as_advanced(PYTHON_WHEEL_BUILD)
-if(PYTHON_WHEEL_BUILD)
-  set(CMAKE_CXX_STANDARD 11)
-else()
-  set(CMAKE_CXX_STANDARD 17)
-endif()
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS False)
 # Set symbol visibility defaults for all targets.
@@ -27,8 +22,8 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "95")
-set(AvogadroLibs_VERSION_PATCH   "1")
+set(AvogadroLibs_VERSION_MINOR   "96")
+set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
 find_package(Git)

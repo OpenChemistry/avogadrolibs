@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013-2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_RWMOLECULE_H
@@ -842,11 +831,13 @@ inline Core::Array<RWMolecule::BondType> RWMolecule::bonds(
 inline Core::Array<RWMolecule::BondType> RWMolecule::bonds(
   const Index& atomId) const
 {
+  auto atomBonds = m_molecule.bonds(atomId);
   Core::Array<RWMolecule::BondType> result;
-  for (Index i = 0; i < m_molecule.bondCount(); ++i)
-    if (m_molecule.bondPair(i).first == atomId ||
-        m_molecule.bondPair(i).second == atomId)
-      result.push_back(BondType(const_cast<RWMolecule*>(this), i));
+  for (Index i = 0; i < atomBonds.size(); ++i) {
+    result.push_back(BondType(
+      const_cast<RWMolecule *>(this), atomBonds[i].index()
+    ));
+  }
   return result;
 }
 

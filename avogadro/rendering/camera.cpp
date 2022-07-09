@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "camera.h"
@@ -20,12 +9,12 @@
 
 #include <cmath>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Camera::Camera()
   : m_width(0), m_height(0), m_projectionType(Perspective),
-    m_orthographicScale(1.0), m_data(new EigenData)
+    m_orthographicScale(1.0), m_data(new EigenData),
+    m_focus(NAN, NAN, NAN)
 {
   m_data->projection.setIdentity();
   m_data->modelView.setIdentity();
@@ -195,5 +184,4 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
   m_data->modelView = transform;
 }
 
-} // namespace Rendering
 } // namespace Avogadro

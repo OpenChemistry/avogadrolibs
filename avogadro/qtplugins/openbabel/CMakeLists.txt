@@ -1,6 +1,7 @@
 include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
 set(openbabel_srcs
+  obcharges.cpp
   obfileformat.cpp
   obforcefielddialog.cpp
   obprocess.cpp
@@ -20,4 +21,4 @@ avogadro_plugin(OpenBabel
   "${openbabel_uis}"
 )
 
-target_link_libraries(OpenBabel PRIVATE AvogadroIO)
+target_link_libraries(OpenBabel PRIVATE AvogadroIO AvogadroCalc)

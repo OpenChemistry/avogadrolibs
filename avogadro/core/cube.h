@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_CUBE_H
@@ -91,7 +79,7 @@ public:
    * @param max The maximum point in the cube.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3& min, const Vector3& max, double spacing);
+  bool setLimits(const Vector3& min, const Vector3& max, float spacing);
 
   /**
    * Set the limits of the cube.
@@ -99,7 +87,7 @@ public:
    * @param dim The integer dimensions of the cube in x, y and z.
    * @param spacing The interval between points in the cube.
    */
-  bool setLimits(const Vector3& min, const Vector3i& dim, double spacing);
+  bool setLimits(const Vector3& min, const Vector3i& dim, float spacing);
 
   /**
    * Set the limits of the cube.
@@ -122,23 +110,23 @@ public:
    * @param spacing The spacing of the regular grid
    * @param padding Padding around the molecule
    */
-  bool setLimits(const Molecule& mol, double spacing, double padding);
+  bool setLimits(const Molecule& mol, float spacing, float padding);
 
   /**
    * @return Vector containing all the data in a one-dimensional array.
    */
-  std::vector<double>* data();
-  const std::vector<double>* data() const;
+  std::vector<float>* data();
+  const std::vector<float>* data() const;
 
   /**
    * Set the values in the cube to those passed in the vector.
    */
-  bool setData(const std::vector<double>& values);
+  bool setData(const std::vector<float>& values);
 
   /**
    * Adds the values in the cube to those passed in the vector.
    */
-  bool addData(const std::vector<double>& values);
+  bool addData(const std::vector<float>& values);
 
   /**
    * @return Index of the point closest to the position supplied.
@@ -162,13 +150,13 @@ public:
    * This function is very quick as it just returns the value at the point.
    * @return Cube value at the integer point i, j, k.
    */
-  double value(int i, int j, int k) const;
+  float value(int i, int j, int k) const;
 
   /**
    * This function is very quick as it just returns the value at the point.
    * @return Cube value at the integer point pos.
    */
-  double value(const Vector3i& pos) const;
+  float value(const Vector3i& pos) const;
 
   /**
    * This function uses trilinear interpolation to find the value at points
@@ -186,7 +174,7 @@ public:
    * @warning This function is quite computationally expensive and should be
    * avoided where possible.
    */
-  double value(const Vector3& pos) const;
+  float value(const Vector3& pos) const;
 
   /**
    * Sets the value at the specified point in the cube.
@@ -195,23 +183,41 @@ public:
    * @param k z component of the position.
    * @param value Value at the specified position.
    */
-  bool setValue(int i, int j, int k, double value);
+  bool setValue(unsigned int i, unsigned int j, unsigned int k, float value);
 
   /**
    * Sets the value at the specified index in the cube.
    * @param i 1-dimensional index of the point to set in the cube.
    */
-  bool setValue(unsigned int i, double value);
+  bool setValue(unsigned int i, float value);
+
+  /**
+   * Sets all indices in the cube to the specified value.
+   * @param value Value to fill the cube with.
+   */
+  void fill(float value);
+  
+  /**
+   * Sets all indices in a Z stripe of the cube to the specified value.
+   * @param i x component of the position.
+   * @param j y component of the position.
+   * @param kfirst first z position to fill.
+   * @param klast last z position to fill.
+   * @param value Value to fill the stripe with.
+   */
+  bool fillStripe(
+    unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, float value
+  );
 
   /**
    * @return The minimum  value at any point in the Cube.
    */
-  double minValue() const { return m_minValue; }
+  float minValue() const { return m_minValue; }
 
   /**
    * @return The maximum  value at any point in the Cube.
    */
-  double maxValue() const { return m_maxValue; }
+  float maxValue() const { return m_maxValue; }
 
   void setName(const std::string& name_) { m_name = name_; }
   std::string name() const { return m_name; }
@@ -225,16 +231,16 @@ public:
   Mutex* lock() const { return m_lock; }
 
 protected:
-  std::vector<double> m_data;
+  std::vector<float> m_data;
   Vector3 m_min, m_max, m_spacing;
   Vector3i m_points;
-  double m_minValue, m_maxValue;
+  float m_minValue, m_maxValue;
   std::string m_name;
   Type m_cubeType;
   Mutex* m_lock;
 };
 
-inline bool Cube::setValue(unsigned int i, double value_)
+inline bool Cube::setValue(unsigned int i, float value_)
 {
   if (i < m_data.size()) {
     m_data[i] = value_;

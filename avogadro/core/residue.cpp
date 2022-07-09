@@ -8,8 +8,7 @@
 #include "residuecolors.h"
 #include "residuedata.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 Residue::Residue() {}
 
@@ -56,9 +55,8 @@ void Residue::addResidueAtom(const std::string& name, const Atom& atom)
 std::vector<Atom> Residue::residueAtoms() const
 {
   std::vector<Atom> res;
-  for (AtomNameMap::const_iterator it = m_atomNameMap.begin();
-       it != m_atomNameMap.end(); ++it) {
-    res.push_back(it->second);
+  for (const auto & it : m_atomNameMap) {
+    res.push_back(it.second);
   }
   return res;
 }
@@ -114,7 +112,7 @@ void Residue::setColor(const Vector3ub color)
   m_color = color;
 }
 
-const Vector3ub Residue::color() const
+Vector3ub Residue::color() const
 {
   if (m_customColorSet)
     return m_color;
@@ -141,5 +139,4 @@ bool Residue::hasAtomByIndex(Index index) const
   return false;
 }
 
-} // namespace Core
 } // namespace Avogadro

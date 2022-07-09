@@ -31,7 +31,7 @@ PYBIND11_MODULE(core, m)
     .def("atom1", &Bond::atom1, "The first atom")
     .def("atom2", &Bond::atom2, "The second atom");
 
-  bool (Cube::*setLimits0)(const Molecule&, double, double) = &Cube::setLimits;
+  bool (Cube::*setLimits0)(const Molecule&, float, float) = &Cube::setLimits;
   py::class_<Cube>(m, "Cube").def(
     "set_limits", setLimits0, "Set the limits based on the molecule geometry");
 

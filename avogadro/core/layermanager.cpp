@@ -6,8 +6,7 @@
 #include "layermanager.h"
 #include <cassert>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::make_shared;
 using std::map;
@@ -26,6 +25,7 @@ Layer& LayerManager::getMoleculeLayer()
 
 Layer& LayerManager::getMoleculeLayer(const Molecule* mol)
 {
+  assert(mol != nullptr);
   auto it = m_molToInfo.find(mol);
   if (it == m_molToInfo.end()) {
     m_molToInfo[mol] = make_shared<MoleculeInfo>(mol);
@@ -41,6 +41,7 @@ shared_ptr<MoleculeInfo> LayerManager::getMoleculeInfo()
 
 shared_ptr<MoleculeInfo> LayerManager::getMoleculeInfo(const Molecule* mol)
 {
+  assert(mol != nullptr);
   auto it = m_molToInfo.find(mol);
   if (it == m_molToInfo.end()) {
     m_molToInfo[mol] = make_shared<MoleculeInfo>(mol);
@@ -51,6 +52,9 @@ shared_ptr<MoleculeInfo> LayerManager::getMoleculeInfo(const Molecule* mol)
 Layer& LayerManager::getMoleculeLayer(const Molecule* original,
                                       const Molecule* copy)
 {
+  assert(original != nullptr);
+  assert(copy != nullptr);
+
   auto it = m_molToInfo.find(original);
   if (it == m_molToInfo.end()) {
     auto molecule = make_shared<MoleculeInfo>(original);
@@ -65,6 +69,8 @@ Layer& LayerManager::getMoleculeLayer(const Molecule* original,
 
 void LayerManager::deleteMolecule(const Molecule* mol)
 {
+  assert(mol != nullptr);
+
   auto aux = m_molToInfo.find(mol);
   if (aux != m_molToInfo.end()) {
     auto id = aux->second->mol;
@@ -92,5 +98,4 @@ size_t LayerManager::layerCount()
   return m_molToInfo[m_activeMolecule]->layer.maxLayer() + 1;
 }
 
-} // namespace Core
 } // namespace Avogadro

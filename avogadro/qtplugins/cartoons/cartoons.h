@@ -27,11 +27,11 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override { return tr("Cartoons", "protein ribbon / cartoon rendering"); }
 
   QString description() const override
   {
-    return tr("Simple display of Cartoons family.");
+    return tr("Display of biomolecule ribbons / cartoons.");
   }
 
   QWidget* setupWidget() override;

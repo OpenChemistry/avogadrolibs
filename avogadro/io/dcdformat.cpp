@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "dcdformat.h"
@@ -30,28 +19,19 @@
 #include <sstream>
 #include <string>
 
-using std::endl;
-using std::getline;
 using std::map;
-using std::pair;
 using std::string;
 using std::to_string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
-using Core::Elements;
-using Core::lexicalCast;
 using Core::Molecule;
-using Core::split;
-using Core::trimmed;
 using Core::UnitCell;
 
 #ifndef _WIN32
-using std::isalpha;
 #endif
 
 #define DCD_EOF -1
@@ -243,10 +223,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     if (leadingNum == 48) {
       double unitcell[6];
-      for (int aa = 0; aa < 6; ++aa) {
+      for (double & aa : unitcell) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
         inStream.read(buff, struct_calcsize(fmt));
-        struct_unpack(buff, fmt, &unitcell[aa]);
+        struct_unpack(buff, fmt, &aa);
       }
       if (unitcell[1] >= -1.0 && unitcell[1] <= 1.0 && unitcell[3] >= -1.0 &&
           unitcell[3] <= 1.0 && unitcell[4] >= -1.0 && unitcell[4] <= 1.0) {
@@ -346,10 +326,8 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+    for (const auto & atomType : atomTypes) {
+      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }
@@ -434,16 +412,15 @@ bool DcdFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> DcdFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("dcd");
+  ext.emplace_back("dcd");
   return ext;
 }
 
 std::vector<std::string> DcdFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("application/octet-stream");
+  mime.emplace_back("application/octet-stream");
   return mime;
 }
 
-} // end Io namespace
 } // end Avogadro namespace

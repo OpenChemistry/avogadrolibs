@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2010 Geoffrey R. Hutchison
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "molden.h"
@@ -28,16 +16,10 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
-using Core::BasisSet;
 using Core::GaussianSet;
-using Core::Rhf;
-using Core::Uhf;
-using Core::Rohf;
-using Core::Unknown;
 
 MoldenFile::MoldenFile()
   : m_coordFactor(1.0), m_electrons(0), m_mode(Unrecognized)
@@ -51,9 +33,9 @@ MoldenFile::~MoldenFile()
 std::vector<std::string> MoldenFile::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("mold");
-  extensions.push_back("molf");
-  extensions.push_back("molden");
+  extensions.emplace_back("mold");
+  extensions.emplace_back("molf");
+  extensions.emplace_back("molden");
   return extensions;
 }
 
@@ -69,7 +51,7 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
   while (!in.eof())
     processLine(in);
 
-  GaussianSet* basis = new GaussianSet;
+  auto* basis = new GaussianSet;
 
   int nAtom = 0;
   for (unsigned int i = 0; i < m_aPos.size(); i += 3) {
@@ -251,9 +233,8 @@ void MoldenFile::outputAll()
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
   cout << "MO coefficients:\n";
-  for (unsigned int i = 0; i < m_MOcoeffs.size(); ++i)
-    cout << m_MOcoeffs.at(i) << "\t";
+  for (double m_MOcoeff : m_MOcoeffs)
+    cout << m_MOcoeff << "\t";
   cout << endl;
-}
 }
 }

@@ -158,4 +158,13 @@ TEST(GraphTest, connectedComponents)
 
   graph.addEdge(3, 2);
   EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
+
+  graph.addEdge(1, 4);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
+
+  graph.removeEdge(2, 3);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(1));
+
+  graph.removeEdges(4);
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(4));
 }

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "navigator.h"
@@ -34,8 +23,7 @@
 
 #include <Eigen/Geometry>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
@@ -64,9 +52,9 @@ QWidget* Navigator::toolWidget() const
 {
   if (!m_toolWidget) {
     m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
 
-    QCheckBox* swapZoom =
+    auto* swapZoom =
       new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
     swapZoom->setToolTip(
       tr("Default:\t Scroll down to shrink, scroll up to zoom\n"
@@ -126,23 +114,23 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
   switch (m_currentAction) {
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      rotate(m_renderer->scene().center(), delta.y(), delta.x(), 0);
+      rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
       e->accept();
       break;
     }
     case Translation: {
       Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
       Vector2f toScreen(e->localPos().x(), e->localPos().y());
-      translate(m_renderer->scene().center(), fromScreen, toScreen);
+      translate(m_renderer->camera().focus(), fromScreen, toScreen);
       e->accept();
       break;
     }
     case ZoomTilt: {
       QPoint delta = e->pos() - m_lastMousePosition;
       // Tilt
-      rotate(m_renderer->scene().center(), 0, 0, delta.x());
+      rotate(m_renderer->camera().focus(), 0, 0, delta.x());
       // Zoom
-      zoom(m_renderer->scene().center(), delta.y());
+      zoom(m_renderer->camera().focus(), delta.y());
       e->accept();
       break;
     }
@@ -184,7 +172,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
   else if (!numDegrees.isNull())
     d = numDegrees.y();
 
-  zoom(m_renderer->scene().center(), m_zoomDirection * d);
+  zoom(m_renderer->camera().focus(), m_zoomDirection * d);
 
   e->accept();
   emit updateRequested();
@@ -193,7 +181,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
-  Vector3f ref = m_renderer->scene().center();
+  Vector3f ref = m_renderer->camera().focus();
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
@@ -309,5 +297,4 @@ inline void Navigator::translate(const Vector3f& ref, const Vector2f& fromScr,
   m_renderer->camera().translate(to - from);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

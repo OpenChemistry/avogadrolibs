@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "mdlformat.h"
@@ -22,35 +11,34 @@
 #include <avogadro/core/vector.h>
 
 #include <iomanip>
+#include <iostream>
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <utility>
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::lexicalCast;
+using Avogadro::Core::Molecule;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 
-using std::string;
-using std::istringstream;
 using std::getline;
-using std::setw;
+using std::istringstream;
 using std::setprecision;
+using std::setw;
+using std::string;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
-MdlFormat::MdlFormat()
-{
-}
+typedef std::pair<size_t, signed int> chargePair;
 
-MdlFormat::~MdlFormat()
-{
-}
+MdlFormat::MdlFormat() {}
+
+MdlFormat::~MdlFormat() {}
 
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {
@@ -91,6 +79,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Parse the atom block.
+  std::vector<chargePair> chargeList;
   for (int i = 0; i < numAtoms; ++i) {
     Vector3 pos;
     getline(in, buffer);
@@ -111,10 +100,16 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     string element(trimmed(buffer.substr(31, 3)));
+    auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
+      // In case there's no CHG property
+      charge = (charge > 4) ? ((charge <= 7) ? 4 - charge : 0)
+                            : ((charge < 4) ? charge : 0);
+      if (charge)
+        chargeList.emplace_back(newAtom.index(), charge);
       continue;
     } else {
       appendError("Error parsing atom block: " + buffer);
@@ -149,17 +144,48 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                 static_cast<unsigned char>(order));
   }
 
-  // Look for the end tag.
+  // Parse the properties block until the end of the file.
+  // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
+  bool foundChgProperty(false);
   while (getline(in, buffer)) {
-    if (trimmed(buffer) == "M  END") {
+    string prefix = buffer.substr(0, 6);
+    if (prefix == "M  END") {
       foundEnd = true;
       break;
+    } else if (prefix == "M  CHG") {
+      if (!foundChgProperty)
+        chargeList.clear(); // Forget old-style charges
+      size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      for (size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        if (!ok) {
+          appendError("Error parsing charged atom index:" +
+                      buffer.substr(10 + 8 * i, 3));
+          return false;
+        }
+        auto charge(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        if (!ok) {
+          appendError("Error parsing atom charge:" +
+                      buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        if (charge)
+          chargeList.emplace_back(index, charge);
+      }
     }
   }
+
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
     return false;
+  }
+
+  // Apply charges.
+  for (auto & i : chargeList) {
+    size_t index = i.first;
+    signed int charge = i.second;
+    mol.setFormalCharge(index, charge);
   }
 
   // Check that all atoms were handled.
@@ -210,13 +236,20 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out << setw(3) << std::right << mol.atomCount() << setw(3) << mol.bondCount()
       << "  0  0  0  0  0  0  0  0999 V2000\n";
   // Atom block.
+  std::vector<chargePair> chargeList;
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Atom atom = mol.atom(i);
+    signed int charge = atom.formalCharge();
+    if (charge)
+      chargeList.emplace_back(atom.index(), charge);
+    unsigned int chargeField = (charge < 0) ? ((charge >= -3) ? 4 - charge : 0)
+                                            : ((charge <= 3) ? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
         << setw(10) << atom.position3d().z() << " " << setw(3) << std::left
-        << Elements::symbol(atom.atomicNumber())
-        << "  0  0  0  0  0  0  0  0  0  0  0  0\n";
+        << Elements::symbol(atom.atomicNumber()) << " 0" << setw(3)
+        << std::right << chargeField /* for compatibility */
+        << "  0  0  0  0  0  0  0  0  0  0\n";
   }
   // Bond block.
   for (size_t i = 0; i < mol.bondCount(); ++i) {
@@ -225,6 +258,13 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
     out << setw(3) << std::right << bond.atom1().index() + 1 << setw(3)
         << bond.atom2().index() + 1 << setw(3) << static_cast<int>(bond.order())
         << "  0  0  0  0\n";
+  }
+  // Properties block.
+  for (auto & i : chargeList) {
+    Index atomIndex = i.first;
+    signed int atomCharge = i.second;
+    out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
+        << setw(3) << atomCharge << "\n";
   }
   out << "M  END\n";
 
@@ -237,17 +277,16 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
 std::vector<std::string> MdlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("mol");
-  ext.push_back("sdf");
+  ext.emplace_back("mol");
+  ext.emplace_back("sdf");
   return ext;
 }
 
 std::vector<std::string> MdlFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-mdl-molfile");
+  mime.emplace_back("chemical/x-mdl-molfile");
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro

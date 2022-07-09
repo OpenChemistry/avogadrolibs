@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "arrowgeometry.h"
@@ -37,13 +26,11 @@ namespace {
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
-using Avogadro::Core::Array;
 
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class ArrowGeometry::Private
 {
@@ -108,13 +95,12 @@ void ArrowGeometry::render(const Camera& camera)
   }
 
   // Render the arrows using the shader.
-  for (unsigned int startIndex = 0; startIndex < m_vertices.size();
-       ++startIndex) {
+  for (auto & m_vertice : m_vertices) {
     Vector3f v3 =
-      m_vertices[startIndex].first +
-      0.8 * (m_vertices[startIndex].second - m_vertices[startIndex].first);
-    drawLine(m_vertices[startIndex].first, v3, 2);
-    drawCone(v3, m_vertices[startIndex].second, 0.05, 1.0);
+      m_vertice.first +
+      0.8 * (m_vertice.second - m_vertice.first);
+    drawLine(m_vertice.first, v3, 2);
+    drawCone(v3, m_vertice.second, 0.05, 1.0);
   }
 
   d->program.release();
@@ -202,5 +188,4 @@ void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2)
   m_dirty = true;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

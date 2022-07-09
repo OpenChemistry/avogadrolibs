@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <iostream>
@@ -34,23 +23,21 @@
 #include <vtkTextProperty.h>
 
 #include <QSurfaceFormat>
-#include <QVTKOpenGLWidget.h>
+#include <QVTKOpenGLStereoWidget.h>
 
 #include "vtkplot.h"
 
-using std::array;
 using std::string;
 using std::vector;
 
-namespace Avogadro {
-namespace VTK {
+namespace Avogadro::VTK {
 
-VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLWidget)
+VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLStereoWidget)
 {
-  m_widget->SetRenderWindow(m_renderWindow);
+  m_widget->setRenderWindow(m_renderWindow);
 
   // Set up the view
-  m_widget->setFormat(QVTKOpenGLWidget::defaultFormat());
+  m_widget->setFormat(QVTKOpenGLStereoWidget::defaultFormat());
   m_view->SetRenderWindow(m_renderWindow);
   m_view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
   m_view->GetRenderWindow()->SetSize(600, 600);
@@ -236,5 +223,4 @@ vtkAxis* VtkPlot::getAxis(Axis axis)
   return nullptr;
 }
 
-} // namespace VTK
 } // namespace Avogadro
