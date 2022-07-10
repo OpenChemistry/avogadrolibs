@@ -74,18 +74,12 @@ double SlaterSetTools::calculateSpinDensity(const Vector3&) const
 
 bool SlaterSetTools::isValid() const
 {
-  if (m_molecule && dynamic_cast<SlaterSet*>(m_molecule->basisSet()))
-    return true;
-  else
-    return false;
+  return m_molecule && dynamic_cast<SlaterSet*>(m_molecule->basisSet());
 }
 
 inline bool SlaterSetTools::isSmall(double val) const
 {
-  if (val > -1e-20 && val < 1e-20)
-    return true;
-  else
-    return false;
+  return val > -1e-20 && val < 1e-20;
 }
 
 vector<double> SlaterSetTools::calculateValues(const Vector3& position) const

@@ -157,7 +157,6 @@ void OBProcess::queryReadFormatsPrepare()
 
   releaseProcess();
   emit queryReadFormatsFinished(result);
-  return;
 }
 
 void OBProcess::queryWriteFormatsPrepare()
@@ -182,7 +181,6 @@ void OBProcess::queryWriteFormatsPrepare()
 
   releaseProcess();
   emit queryWriteFormatsFinished(result);
-  return;
 }
 
 bool OBProcess::convert(const QByteArray& input, const QString& inFormat,

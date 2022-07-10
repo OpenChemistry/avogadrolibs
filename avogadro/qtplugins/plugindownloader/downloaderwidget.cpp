@@ -35,8 +35,6 @@ void setRawHeaders(QNetworkRequest* request)
                         "AppleWebKit/537.36 (KHTML, like Gecko) "
                         "Chrome/54.0.2840.71 Safari/537.36");
   request->setRawHeader("Accept-Language", "en - US, en; q = 0.8");
-
-  return;
 }
 
 DownloaderWidget::DownloaderWidget(QWidget* parent)

@@ -73,12 +73,8 @@ QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
   Matrix<qreal, 3, 1> xyz;
   xyz << result.x(), result.y(), result.z();
 
-  if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-        eval.hessianOfElectronDensity(xyz)) == -3) {
-    correctSignature = true;
-  } else {
-    correctSignature = false;
-  }
+  correctSignature = QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+        eval.hessianOfElectronDensity(xyz)) == -3;
 
   QList<QVariant> value;
 
@@ -221,12 +217,8 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   qint64 backwardNucleusIndex = smallestDistanceIndex;
 
   bool bondPathConnectsPair;
-  if ((forwardNucleusIndex == nucleusA && backwardNucleusIndex == nucleusB) ||
-      (forwardNucleusIndex == nucleusB && backwardNucleusIndex == nucleusA)) {
-    bondPathConnectsPair = true;
-  } else {
-    bondPathConnectsPair = false;
-  }
+  bondPathConnectsPair = (forwardNucleusIndex == nucleusA && backwardNucleusIndex == nucleusB) ||
+      (forwardNucleusIndex == nucleusB && backwardNucleusIndex == nucleusA);
 
   if (bondPathConnectsPair) {
     value.append(true);
@@ -320,12 +312,8 @@ QList<QVariant> QTAIMLocateElectronDensitySink(QList<QVariant> input)
 
     if (eval.electronDensity(xyz_) > 1.e-1 &&
         eval.gradientOfElectronDensityLaplacian(xyz_).norm() < 1.e-3) {
-      if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-            eval.hessianOfElectronDensityLaplacian(xyz_)) == -3) {
-        correctSignature = true;
-      } else {
-        correctSignature = false;
-      }
+      correctSignature = QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+            eval.hessianOfElectronDensityLaplacian(xyz_)) == -3;
     } else {
       correctSignature = false;
     }
@@ -384,12 +372,8 @@ QList<QVariant> QTAIMLocateElectronDensitySource(QList<QVariant> input)
 
     if (eval.electronDensity(xyz_) > 1.e-1 &&
         eval.gradientOfElectronDensityLaplacian(xyz_).norm() < 1.e-3) {
-      if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
-            eval.hessianOfElectronDensityLaplacian(xyz_)) == 3) {
-        correctSignature = true;
-      } else {
-        correctSignature = false;
-      }
+      correctSignature = QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+            eval.hessianOfElectronDensityLaplacian(xyz_)) == 3;
     } else {
       correctSignature = false;
     }

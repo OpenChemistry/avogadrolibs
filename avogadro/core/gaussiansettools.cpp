@@ -120,18 +120,12 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 
 bool GaussianSetTools::isValid() const
 {
-  if (m_molecule && dynamic_cast<GaussianSet*>(m_molecule->basisSet()))
-    return true;
-  else
-    return false;
+  return m_molecule && dynamic_cast<GaussianSet*>(m_molecule->basisSet());
 }
 
 inline bool GaussianSetTools::isSmall(double val) const
 {
-  if (val > -1e-20 && val < 1e-20)
-    return true;
-  else
-    return false;
+  return val > -1e-20 && val < 1e-20;
 }
 
 inline vector<double> GaussianSetTools::calculateValues(

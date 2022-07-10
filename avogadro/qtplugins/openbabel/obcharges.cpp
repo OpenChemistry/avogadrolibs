@@ -26,7 +26,7 @@ class OBCharges::ProcessListener : public QObject
 {
   Q_OBJECT
 public:
-  ProcessListener() : QObject(), m_finished(false) {}
+  ProcessListener() :  m_finished(false) {}
 
   bool waitForOutput(Array<double>& output, int msTimeout = 120000)
   {
@@ -38,7 +38,7 @@ public:
     return true;
   }
 
-public slots:
+
   void responseReceived(const Array<double> output)
   {
     m_finished = true;
@@ -62,7 +62,7 @@ private:
   Array<double> m_output;
 };
 
-OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel()
+OBCharges::OBCharges(const std::string& id) : m_identifier(id) 
 {
   // set the element mask based on our type / identifier
   m_elements.reset();

@@ -62,7 +62,7 @@ vtkImageData* cubeImageData(Core::Cube* cube)
 }
 
 ColorOpacityMap::ColorOpacityMap(QObject* p)
-  : Avogadro::QtGui::ExtensionPlugin(p), m_actions(QList<QAction*>()),
+  : Avogadro::QtGui::ExtensionPlugin(p), 
     m_displayDialogAction(new QAction(this))
 {
   m_displayDialogAction->setText(tr("Edit Color Opacity Map…"));
