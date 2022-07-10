@@ -15,6 +15,7 @@
 #include "mdlformat.h"
 #include "pdbformat.h"
 #include "trrformat.h"
+#include "turbomoleformat.h"
 #include "vaspformat.h"
 #include "xyzformat.h"
 
@@ -284,16 +285,17 @@ FileFormatManager::FileFormatManager()
 {
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
+  addFormat(new DcdFormat);
   addFormat(new GromacsFormat);
+  addFormat(new LammpsTrajectoryFormat);
+  addFormat(new LammpsDataFormat);
   addFormat(new MdlFormat);
   addFormat(new OutcarFormat);
   addFormat(new PdbFormat);
   addFormat(new PoscarFormat);
   addFormat(new TrrFormat);
+  addFormat(new TurbomoleFormat);
   addFormat(new XyzFormat);
-  addFormat(new DcdFormat);
-  addFormat(new LammpsTrajectoryFormat);
-  addFormat(new LammpsDataFormat);
 #ifdef AVO_USE_MMTF
   addFormat(new MMTFFormat);
 #endif

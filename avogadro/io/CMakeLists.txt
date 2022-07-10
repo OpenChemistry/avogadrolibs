@@ -41,6 +41,7 @@ set(HEADERS
   pdbformat.h
   xyzformat.h
   trrformat.h
+  turbomoleformat.h
   lammpsformat.h
 )
 
@@ -56,6 +57,7 @@ set(SOURCES
   pdbformat.cpp
   xyzformat.cpp
   trrformat.cpp
+  turbomoleformat.cpp
   lammpsformat.cpp
 )
 
