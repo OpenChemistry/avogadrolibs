@@ -166,6 +166,14 @@ MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
     return charges;
   }
 
+  // check to see if we already have them in the molecule
+  charges = molecule.partialCharges(m_identifier);
+  // if there's a non-zero charge, then we're done
+  for (unsigned int i = 0; i < charges.rows(); ++i) {
+    if (charges(i, 0) != 0)
+      return charges;
+  }
+
   // otherwise, we're going to run obprocess to get the charges
   OBProcess process;
   ProcessListener listener;

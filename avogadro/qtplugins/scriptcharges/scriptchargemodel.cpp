@@ -52,6 +52,14 @@ MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
 {
   MatrixX charges(mol.atomCount(), 1);
 
+  // check to see if we already have them in the molecule
+  charges = mol.partialCharges(m_identifier);
+  // if there's a non-zero charge, then we're done
+  for (unsigned int i = 0; i < charges.rows(); ++i) {
+    if (charges(i, 0) != 0)
+      return charges;
+  }
+
   // Create the intermediate format writer
   std::string intermediate;
   QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
