@@ -586,23 +586,20 @@ void Surfaces::colorMeshByPotential()
   const auto model = *(identifiers.begin());
   const auto colormap = getColormapFromString(m_dialog->colormapName());
   
-  const auto positions = m_mesh1->vertices();
-  auto potentials = new Core::Array<double>(positions.size());
-  (*potentials)[0] = // Avoid calling any initialization routines once per thread
-    Calc::ChargeManager::instance().potential(model, *m_molecule, positions[0].cast<double>());
-  QtConcurrent::map(positions, [=](const Vector3f &pos) {
-    ptrdiff_t index = &pos - &(*positions.begin());
-    (*potentials)[index] =
-      Calc::ChargeManager::instance().potential(model, *m_molecule, pos.cast<double>());
-  }).waitForFinished();
+  const auto positionsf = m_mesh1->vertices();
+  Core::Array<Vector3> positions(positionsf.size());
+  std::transform(positionsf.begin(), positionsf.end(), positions.begin(),
+    [](const Vector3f &pos) { return pos.cast<double>(); }
+  );
+  const auto potentials = Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
   
-  double minPotential = *std::min_element(potentials->begin(), potentials->end());
-  double maxPotential = *std::max_element(potentials->begin(), potentials->end());
+  double minPotential = *std::min_element(potentials.begin(), potentials.end());
+  double maxPotential = *std::max_element(potentials.begin(), potentials.end());
   double clamp = std::max(std::abs(minPotential), std::abs(minPotential));
   
   Core::Array<Core::Color3f> colors(positions.size());
-  for (size_t i = 0; i < potentials->size(); i++)
-    colors[i] = chargeGradient((*potentials)[i], clamp, colormap);
+  for (size_t i = 0; i < potentials.size(); i++)
+    colors[i] = chargeGradient(potentials[i], clamp, colormap);
   
   m_mesh1->setColors(colors);
 }
