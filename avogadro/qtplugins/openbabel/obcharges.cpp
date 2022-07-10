@@ -170,7 +170,7 @@ MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
   charges = molecule.partialCharges(m_identifier);
   // if there's a non-zero charge, then we're done
   for (unsigned int i = 0; i < charges.rows(); ++i) {
-    if (charges(i, 0) != 0)
+    if (abs(charges(i, 0)) > 0.00001)
       return charges;
   }
 
