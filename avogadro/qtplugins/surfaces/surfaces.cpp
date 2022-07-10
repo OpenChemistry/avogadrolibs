@@ -6,6 +6,8 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
+#include "tinycolormap.hpp"
+
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
 
@@ -16,6 +18,9 @@ namespace {
 
 #include <gwavi.h>
 
+#include <avogadro/calc/chargemanager.h>
+
+#include <avogadro/core/color3f.h>
 #include <avogadro/core/variant.h>
 #include <avogadro/core/vector.h>
 
@@ -51,6 +56,8 @@ namespace {
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+
+using namespace tinycolormap;
 
 namespace Avogadro::QtPlugins {
 
@@ -519,10 +526,100 @@ void Surfaces::displayMesh()
   m_meshesLeft = 2;
 }
 
+Core::Color3f Surfaces::chargeGradient(double value, double clamp, ColormapType colormap) const
+{
+  // okay, typically color scales have blue at the bottom, red at the top.
+  // so we need to invert, so blue is positive charge, red is negative charge.
+  // we also need to scale the color to the range of the charge.
+  double scaledValue = value / clamp; // from -1 to 1.0
+  double scaledValue2 =
+    1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+
+  auto color = tinycolormap::GetColor(scaledValue2, colormap);
+  Core::Color3f r(float(color.r()), color.g(), color.b());
+
+  return r;
+}
+
+ColormapType Surfaces::getColormapFromString(const QString& name) const
+{
+  // Just do all of them, even though we won't use them all
+  if (name == tr("Parula", "colormap"))
+    return ColormapType::Parula;
+  else if (name == tr("Heat", "colormap"))
+    return ColormapType::Heat;
+  else if (name == tr("Hot", "colormap"))
+    return ColormapType::Hot;
+  else if (name == tr("Gray", "colormap"))
+    return ColormapType::Gray;
+  else if (name == tr("Magma", "colormap"))
+    return ColormapType::Magma;
+  else if (name == tr("Inferno", "colormap"))
+    return ColormapType::Inferno;
+  else if (name == tr("Plasma", "colormap"))
+    return ColormapType::Plasma;
+  else if (name == tr("Viridis", "colormap"))
+    return ColormapType::Viridis;
+  else if (name == tr("Cividis", "colormap"))
+    return ColormapType::Cividis;
+  else if (name == tr("Spectral", "colormap"))
+    return ColormapType::Spectral;
+  else if (name == tr("Coolwarm", "colormap"))
+    return ColormapType::Coolwarm;
+  else if (name == tr("Balance", "colormap"))
+    return ColormapType::Balance;
+  else if (name == tr("Blue-DarkRed", "colormap"))
+    return ColormapType::BlueDkRed;
+  else if (name == tr("Turbo", "colormap"))
+    return ColormapType::Turbo;
+
+  return ColormapType::Turbo;
+}
+
+void Surfaces::colorMeshByPotential()
+{
+  const auto identifiers =
+    Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  if (identifiers.empty())
+    return;
+  
+  const auto model = *(identifiers.begin());
+  const auto colormap = getColormapFromString(m_dialog->colormapName());
+  
+  const auto positionsf = m_mesh1->vertices();
+  Core::Array<Vector3> positions(positionsf.size());
+  std::transform(positionsf.begin(), positionsf.end(), positions.begin(),
+    [](const Vector3f &pos) { return pos.cast<double>(); }
+  );
+  const auto potentials = Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
+  
+  double minPotential = *std::min_element(potentials.begin(), potentials.end());
+  double maxPotential = *std::max_element(potentials.begin(), potentials.end());
+  double clamp = std::max(std::abs(minPotential), std::abs(minPotential));
+  
+  Core::Array<Core::Color3f> colors(positions.size());
+  for (size_t i = 0; i < potentials.size(); i++)
+    colors[i] = chargeGradient(potentials[i], clamp, colormap);
+  
+  m_mesh1->setColors(colors);
+}
+
+void Surfaces::colorMesh()
+{
+  switch (m_dialog->colorProperty()) {
+    case None:
+      break;
+    case ByElectrostaticPotential:
+      colorMeshByPotential();
+      break;
+  }
+}
+
 void Surfaces::meshFinished()
 {
   --m_meshesLeft;
   if (m_meshesLeft == 0) {
+    colorMesh();
     if (m_recordingMovie) {
       // Move to the next frame.
       qDebug() << "Let's get to the next frame…";

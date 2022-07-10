@@ -39,6 +39,9 @@ public:
   void enableRecord();
 
   Surfaces::Type surfaceType();
+  
+  Surfaces::ColorProperty colorProperty();
+  QString colormapName();
 
   /**
    * This holds the value of the molecular orbital at present.
@@ -65,6 +68,7 @@ public slots:
 
 protected slots:
   void surfaceComboChanged(int n);
+  void propertyComboChanged(int n);
   void resolutionComboChanged(int n);
   void smoothingComboChanged(int n);
   void calculateClicked();

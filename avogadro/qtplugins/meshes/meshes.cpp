@@ -13,6 +13,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QFormLayout>
@@ -78,9 +79,16 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 
     auto* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
-    mesh1->setColor(m_color1);
+    //mesh1->setColor(m_color1);
     mesh1->setOpacity(m_opacity);
-    mesh1->addVertices(mesh->vertices(), mesh->normals());
+
+    auto colors = mesh->colors();
+    Core::Array<Vector3ub> colorsRGB(colors.size());
+    for (size_t i = 0; i < colors.size(); i++)
+      colorsRGB[i] = Vector3ub(
+        colors[i].red() * 255, colors[i].green() * 255, colors[i].blue() * 255
+      );
+    mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
     mesh1->addTriangles(indices);
     mesh1->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
                                         : Rendering::TranslucentPass);

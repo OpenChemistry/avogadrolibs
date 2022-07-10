@@ -8,6 +8,10 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
+#include "tinycolormap.hpp"
+
+#include <avogadro/core/color3f.h>
+
 #include <QtCore/QFutureWatcher>
 
 class QAction;
@@ -57,6 +61,12 @@ public:
     FromFile,
     Unknown
   };
+  
+  enum ColorProperty
+  {
+    None,
+    ByElectrostaticPotential
+  };
 
   QString name() const override { return tr("Surfaces"); }
   QString description() const override { return tr("Read and render surfaces."); }
@@ -79,12 +89,19 @@ private slots:
 
   void displayMesh();
   void meshFinished();
+  
+  void colorMesh();
+  void colorMeshByPotential();
 
   void recordMovie();
   void movieFrame();
 
 private:
   float resolution();
+  Core::Color3f chargeGradient(
+    double value, double clamp, tinycolormap::ColormapType colormap
+  ) const;
+  tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
   QProgressDialog* m_progressDialog = nullptr;

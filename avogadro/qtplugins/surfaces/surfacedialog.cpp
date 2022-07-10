@@ -31,6 +31,8 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
 
   connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(surfaceComboChanged(int)));
+  connect(m_ui->propertyCombo, SIGNAL(currentIndexChanged(int)),
+          SLOT(propertyComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
   connect(m_ui->smoothingCombo, SIGNAL(currentIndexChanged(int)),
@@ -53,6 +55,18 @@ void SurfaceDialog::surfaceComboChanged(int n)
     m_ui->orbitalCombo->setEnabled(true);
   } else {
     m_ui->orbitalCombo->setEnabled(false);
+  }
+}
+
+void SurfaceDialog::propertyComboChanged(int n)
+{
+  m_ui->colormapCombo->setEnabled(true);
+  switch (n) {
+    case 0: // None
+      m_ui->colormapCombo->setEnabled(false);
+      break;
+    default:
+      ;
   }
 }
 
@@ -215,6 +229,16 @@ void SurfaceDialog::setupSteps(int stepCount)
 Surfaces::Type SurfaceDialog::surfaceType()
 {
   return static_cast<Surfaces::Type>(m_ui->surfaceCombo->currentData().toInt());
+}
+
+Surfaces::ColorProperty SurfaceDialog::colorProperty()
+{
+  return static_cast<Surfaces::ColorProperty>(m_ui->propertyCombo->currentIndex());
+}
+
+QString SurfaceDialog::colormapName()
+{
+  return m_ui->colormapCombo->currentText();
 }
 
 int SurfaceDialog::surfaceIndex()
