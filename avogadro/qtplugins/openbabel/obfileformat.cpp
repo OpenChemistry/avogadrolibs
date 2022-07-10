@@ -56,7 +56,6 @@ private:
     return m_finished;
   }
 
-  OBProcess* m_process;
   bool m_finished;
   QByteArray m_output;
 };
