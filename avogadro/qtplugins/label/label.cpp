@@ -274,7 +274,7 @@ void Label::processResidue(const Core::Molecule& molecule,
 
     auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
     Vector3ub color = interface.color;
-    std::string text = "";
+    std::string text;
     if (interface.residueOptions & LayerLabel::LabelOptions::Index) {
       text = std::to_string(residue.residueId());
     }
@@ -308,7 +308,7 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
 
     auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    std::string text = "";
+    std::string text;
     if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + atom.label();
     }

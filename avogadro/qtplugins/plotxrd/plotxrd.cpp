@@ -25,7 +25,7 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro::QtPlugins {
 
 PlotXrd::PlotXrd(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), 
     m_molecule(nullptr),
     m_xrdOptionsDialog(new XrdOptionsDialog(qobject_cast<QWidget*>(parent()))),
     m_displayDialogAction(new QAction(this))

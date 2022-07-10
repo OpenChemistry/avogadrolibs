@@ -150,8 +150,7 @@ QList<Molecule*> MoleculeModel::activeMolecules() const
 {
   QList<Molecule*> result;
   foreach (Molecule* mol, m_molecules) {
-    if (true)
-      result << mol;
+    result << mol;
   }
   return result;
 }

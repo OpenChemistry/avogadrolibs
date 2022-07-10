@@ -36,7 +36,7 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro::QtPlugins {
 
 SpaceGroup::SpaceGroup(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), 
     m_molecule(nullptr), m_spgTol(1e-5),
     m_perceiveSpaceGroupAction(new QAction(this)),
     m_reduceToPrimitiveAction(new QAction(this)),

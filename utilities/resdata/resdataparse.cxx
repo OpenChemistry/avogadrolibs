@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  string buffer, currResidue = "";
+  string buffer, currResidue;
   vector<string> atoms, residueClassNames;
   vector<pair<string, string>> singleBonds, doubleBonds;
   while (getline(file, buffer)) {

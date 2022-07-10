@@ -11,8 +11,9 @@ Checks: 'clang-analyzer*,modernize-avoid-bind,modernize-concat-nested-namespaces
         performance-move-const-arg,
         readability-const-return-type,
         readability-delete-null-pointer,
-        readability-redundant-string-cstr,
-        readability-simplify*
+        readability-redundant*,
+        readability-simplify*,
+        bugprone-virtual-near-miss, bugprone-suspicious*,
         -readability-else-after-return,
         -portability-restrict-system-includes,
         -modernize-use-trailing-return-type'

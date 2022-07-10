@@ -25,7 +25,7 @@ class OBFileFormat::ProcessListener : public QObject
 {
   Q_OBJECT
 public:
-  ProcessListener() : QObject(), m_finished(false) {}
+  ProcessListener() :  m_finished(false) {}
 
   bool waitForOutput(QByteArray& output, int msTimeout = 120000)
   {
@@ -37,7 +37,7 @@ public:
     return true;
   }
 
-public slots:
+
   void responseReceived(const QByteArray& output)
   {
     m_finished = true;
@@ -68,7 +68,7 @@ OBFileFormat::OBFileFormat(const std::string& name_,
                            const std::vector<std::string> fileExtensions_,
                            const std::vector<std::string> mimeTypes_,
                            const std::string& defaultFormat_, bool fileOnly_)
-  : Io::FileFormat(), m_description(description_),
+  :  m_description(description_),
     m_fileExtensions(fileExtensions_), m_mimeTypes(mimeTypes_),
     m_identifier(identifier_), m_name(name_),
     m_specificationUrl(specificationUrl_), m_defaultFormat(defaultFormat_),
