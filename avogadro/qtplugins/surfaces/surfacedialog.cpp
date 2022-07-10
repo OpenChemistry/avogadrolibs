@@ -60,13 +60,17 @@ void SurfaceDialog::surfaceComboChanged(int n)
 
 void SurfaceDialog::propertyComboChanged(int n)
 {
-  m_ui->colormapCombo->setEnabled(true);
   switch (n) {
     case 0: // None
       m_ui->colormapCombo->setEnabled(false);
+      m_ui->modelCombo->setEnabled(false);
+      m_ui->modelCombo->clear();
       break;
-    default:
-      ;
+    case 1: // Electrostatic Potential
+      m_ui->colormapCombo->setEnabled(true);
+      m_ui->modelCombo->setEnabled(true);
+      for (const auto &model: m_chargeModels)
+        m_ui->modelCombo->addItem(model.first.c_str(), model.second.c_str());
   }
 }
 
@@ -226,6 +230,12 @@ void SurfaceDialog::setupSteps(int stepCount)
   }
 }
 
+void SurfaceDialog::setupModels(
+    std::set<std::pair<std::string, std::string>> chargeModels
+) {
+  m_chargeModels = chargeModels;
+}
+
 Surfaces::Type SurfaceDialog::surfaceType()
 {
   return static_cast<Surfaces::Type>(m_ui->surfaceCombo->currentData().toInt());
@@ -234,6 +244,11 @@ Surfaces::Type SurfaceDialog::surfaceType()
 Surfaces::ColorProperty SurfaceDialog::colorProperty()
 {
   return static_cast<Surfaces::ColorProperty>(m_ui->propertyCombo->currentIndex());
+}
+
+QString SurfaceDialog::colorModel()
+{
+  return m_ui->modelCombo->currentData().toString();
 }
 
 QString SurfaceDialog::colormapName()
