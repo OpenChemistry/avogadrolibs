@@ -184,7 +184,7 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
                           formatPrefix);
 }
 
-const QString FileFormatDialog::readFileFilter()
+QString FileFormatDialog::readFileFilter()
 {
   static QString readFilter;
   if (readFilter.isEmpty()) {
@@ -198,7 +198,7 @@ const QString FileFormatDialog::readFileFilter()
   return readFilter;
 }
 
-const QString FileFormatDialog::writeFileFilter()
+QString FileFormatDialog::writeFileFilter()
 {
   static QString writeFilter;
   if (writeFilter.isEmpty()) {

@@ -48,9 +48,17 @@ Calc::ChargeModel* ScriptChargeModel::newInstance() const
   return new ScriptChargeModel(m_interpreter->scriptFilePath());
 }
 
-const MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
+MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
 {
   MatrixX charges(mol.atomCount(), 1);
+
+  // check to see if we already have them in the molecule
+  charges = mol.partialCharges(m_identifier);
+  // if there's a non-zero charge, then we're done
+  for (unsigned int i = 0; i < charges.rows(); ++i) {
+    if (charges(i, 0) != 0)
+      return charges;
+  }
 
   // Create the intermediate format writer
   std::string intermediate;
@@ -85,7 +93,7 @@ const MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
   // (e.g., "normal termination, etc.")
   unsigned int atom = 0;
   for (unsigned int i = 0; i < lines.size(); ++i) {
-    const QString line = lines.at(i);
+    const QString& line = lines.at(i);
     if (line.isEmpty())
       continue;
 
@@ -168,7 +176,7 @@ Core::Array<double> ScriptChargeModel::potentials(
   // parse the result - each potential should be on a line
   QString resultString = QString(result);
   QStringList lines = resultString.split('\n');
-  for (const QString line : lines) {
+  for (const QString& line : lines) {
     if (line.isEmpty())
       continue;
 

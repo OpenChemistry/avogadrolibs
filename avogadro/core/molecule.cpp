@@ -73,26 +73,26 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_data(std::move(other.m_data)),
+  : m_data(other.m_data),
     m_partialCharges(std::move(other.m_partialCharges)),
     m_customElementMap(std::move(other.m_customElementMap)),
-    m_elements(other.m_elements), m_positions2d(std::move(other.m_positions2d)),
-    m_positions3d(std::move(other.m_positions3d)),
-    m_label(std::move(other.m_label)),
-    m_coordinates3d(std::move(other.m_coordinates3d)),
-    m_timesteps(std::move(other.m_timesteps)),
-    m_hybridizations(std::move(other.m_hybridizations)),
-    m_formalCharges(std::move(other.m_formalCharges)),
-    m_colors(std::move(other.m_colors)),
-    m_vibrationFrequencies(std::move(other.m_vibrationFrequencies)),
-    m_vibrationIRIntensities(std::move(other.m_vibrationIRIntensities)),
-    m_vibrationRamanIntensities(std::move(other.m_vibrationRamanIntensities)),
-    m_vibrationLx(std::move(other.m_vibrationLx)),
+    m_elements(other.m_elements), m_positions2d(other.m_positions2d),
+    m_positions3d(other.m_positions3d),
+    m_label(other.m_label),
+    m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
+    m_formalCharges(other.m_formalCharges),
+    m_colors(other.m_colors),
+    m_vibrationFrequencies(other.m_vibrationFrequencies),
+    m_vibrationIRIntensities(other.m_vibrationIRIntensities),
+    m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
+    m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_residues(std::move(other.m_residues)), m_graph(std::move(other.m_graph)),
-    m_bondOrders(std::move(other.m_bondOrders)),
-    m_atomicNumbers(std::move(other.m_atomicNumbers)),
+    m_residues(other.m_residues), m_graph(other.m_graph),
+    m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
@@ -175,28 +175,28 @@ Molecule& Molecule::operator=(const Molecule& other)
 Molecule& Molecule::operator=(Molecule&& other) noexcept
 {
   if (this != &other) {
-    m_data = std::move(other.m_data);
+    m_data = other.m_data;
     m_partialCharges = std::move(other.m_partialCharges);
     m_customElementMap = std::move(other.m_customElementMap);
-    m_elements = std::move(other.m_elements);
-    m_positions2d = std::move(other.m_positions2d);
-    m_positions3d = std::move(other.m_positions3d);
-    m_label = std::move(other.m_label);
-    m_coordinates3d = std::move(other.m_coordinates3d);
-    m_timesteps = std::move(other.m_timesteps);
-    m_hybridizations = std::move(other.m_hybridizations);
-    m_formalCharges = std::move(other.m_formalCharges);
-    m_colors = std::move(other.m_colors);
-    m_vibrationFrequencies = std::move(other.m_vibrationFrequencies);
-    m_vibrationIRIntensities = std::move(other.m_vibrationIRIntensities);
-    m_vibrationRamanIntensities = std::move(other.m_vibrationRamanIntensities);
-    m_vibrationLx = std::move(other.m_vibrationLx);
+    m_elements = other.m_elements;
+    m_positions2d = other.m_positions2d;
+    m_positions3d = other.m_positions3d;
+    m_label = other.m_label;
+    m_coordinates3d = other.m_coordinates3d;
+    m_timesteps = other.m_timesteps;
+    m_hybridizations = other.m_hybridizations;
+    m_formalCharges = other.m_formalCharges;
+    m_colors = other.m_colors;
+    m_vibrationFrequencies = other.m_vibrationFrequencies;
+    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
+    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
+    m_vibrationLx = other.m_vibrationLx;
     m_selectedAtoms = std::move(other.m_selectedAtoms);
-    m_residues = std::move(other.m_residues);
-    m_graph = std::move(other.m_graph);
-    m_bondOrders = std::move(other.m_bondOrders);
-    m_atomicNumbers = std::move(other.m_atomicNumbers);
-    m_hallNumber = std::move(other.m_hallNumber);
+    m_residues = other.m_residues;
+    m_graph = other.m_graph;
+    m_bondOrders = other.m_bondOrders;
+    m_atomicNumbers = other.m_atomicNumbers;
+    m_hallNumber = other.m_hallNumber;
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
@@ -251,7 +251,7 @@ void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
   m_partialCharges[type] = value;
 }
 
-const MatrixX Molecule::partialCharges(const std::string& type) const
+MatrixX Molecule::partialCharges(const std::string& type) const
 {
   auto search = m_partialCharges.find(type);
   if (search != m_partialCharges.end()) {

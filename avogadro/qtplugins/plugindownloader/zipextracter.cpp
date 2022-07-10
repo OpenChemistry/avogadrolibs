@@ -83,7 +83,7 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   int flags;
   int r;
   QList<QString> toReturn;
-  std::string extractdirectory = extractdir;
+  const std::string& extractdirectory = extractdir;
   std::string newFilename;
   std::string currentFilename;
 

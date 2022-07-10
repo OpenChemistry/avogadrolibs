@@ -71,7 +71,7 @@ bool ChargeManager::removeModel(const std::string& identifier)
   return true;
 }
 
-const std::string ChargeManager::nameForModel(const std::string& identifier) const
+std::string ChargeManager::nameForModel(const std::string& identifier) const
 {
   auto it = m_identifierToName.find(identifier);
   if (it == m_identifierToName.end()) {
@@ -113,7 +113,7 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   return identifiers;
 }
 
-const MatrixX ChargeManager::partialCharges(
+MatrixX ChargeManager::partialCharges(
   const std::string& identifier, Core::Molecule& molecule) const
 {
   // first check if the type is found in the molecule

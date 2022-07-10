@@ -104,13 +104,13 @@ public:
   std::set<std::string> identifiersForMolecule(
     const Core::Molecule& molecule) const;
 
-  const std::string nameForModel(const std::string& identifier) const;
+  std::string nameForModel(const std::string& identifier) const;
 
   /**
    * Note that some models do not have well-defined atomic partial charges
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
-  const MatrixX partialCharges(const std::string& identifier,
+  MatrixX partialCharges(const std::string& identifier,
                                Core::Molecule& mol) const;
 
   /**

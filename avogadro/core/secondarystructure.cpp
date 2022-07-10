@@ -174,7 +174,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   // Loop over the backbone atoms
   // we're just considering N and O (on a peptide)
   unsigned int i = 0; // track the residue index
-  for (auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     unsigned int residueId = i++;
     if (residue.isHeterogen())
       continue;

@@ -156,7 +156,7 @@ std::string OBCharges::name() const
     return "";
 }
 
-const MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
+MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
 {
   // get the charges from obabel
   MatrixX charges(molecule.atomCount(), 1);
@@ -164,6 +164,14 @@ const MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
   if (m_identifier.empty()) {
     // no identifier, so we can't get the charges
     return charges;
+  }
+
+  // check to see if we already have them in the molecule
+  charges = molecule.partialCharges(m_identifier);
+  // if there's a non-zero charge, then we're done
+  for (unsigned int i = 0; i < charges.rows(); ++i) {
+    if (charges(i, 0) != 0)
+      return charges;
   }
 
   // otherwise, we're going to run obprocess to get the charges

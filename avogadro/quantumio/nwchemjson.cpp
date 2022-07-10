@@ -72,7 +72,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   int numberOfElectrons = 0;
   string theory;
   string xcFunctional;
-  for (auto calcObj : calculations) {
+  for (const auto& calcObj : calculations) {
     if (calcObj.is_object()) {
       string calcType = calcObj.value("calculationType", "");
       // Store the last vibrational frequencies calculation object.
@@ -275,7 +275,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       Array<double> frequencies;
       Array<double> intensities;
       Array<Array<Vector3>> Lx;
-      for (auto mode : normalModes) {
+      for (const auto& mode : normalModes) {
         frequencies.push_back(
           mode.value("normalModeFrequency", json()).value("value", 0.0));
         intensities.push_back(mode.value("normalModeInfraRedIntensity", json())

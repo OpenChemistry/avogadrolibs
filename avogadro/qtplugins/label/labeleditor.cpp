@@ -87,7 +87,7 @@ QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
     m_selected = (clickedObject.type == Rendering::AtomType);
     if (m_selected) {
       m_selectedAtom = m_molecule->atom(clickedObject.index);
-      m_text = QString::fromStdString(m_selectedAtom.label().c_str());
+      m_text = QString::fromStdString(m_selectedAtom.label());
     }
     emit drawablesChanged();
   }

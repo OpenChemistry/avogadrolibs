@@ -28,7 +28,7 @@ public:
                                 Qt::WindowFlags f = 0);
   ~InsertFragmentDialog() override;
 
-  const QString fileName();
+  QString fileName();
 
 public Q_SLOTS:
   void refresh();

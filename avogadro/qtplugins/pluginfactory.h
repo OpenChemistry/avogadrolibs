@@ -9,8 +9,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @class PluginFactory pluginfactory.h <avogadro/qtplugins/pluginfactory.h>
@@ -27,7 +26,6 @@ public:
   virtual QString description() const = 0;
 };
 
-} /* namespace QtPlugins */
 } /* namespace Avogadro */
 
 #endif /* AVOGADRO_QTPLUGINS_PLUGINFACTORY_H */

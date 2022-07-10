@@ -11,6 +11,7 @@
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
 #include <QtGui/QKeySequence>
@@ -64,8 +65,28 @@ Select::Select(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
   m_actions.append(action);
 
-  action = new QAction(this);
+  action = new QAction(tr("Select Water…"), this);
   action->setProperty("menu priority", 850);
+  connect(action, SIGNAL(triggered()), SLOT(selectWater()));
+  m_actions.append(action);
+
+  action = new QAction(this);
+  action->setProperty("menu priority", 840);
+  action->setSeparator(true);
+  m_actions.append(action);
+
+  action = new QAction(tr("Enlarge Selection"), this);
+  action->setProperty("menu priority", 790);
+  connect(action, SIGNAL(triggered()), SLOT(enlargeSelection()));
+  m_actions.append(action);
+
+  action = new QAction(tr("Shrink Selection"), this);
+  action->setProperty("menu priority", 780);
+  connect(action, SIGNAL(triggered()), SLOT(shrinkSelection()));
+  m_actions.append(action);
+
+  action = new QAction(this);
+  action->setProperty("menu priority", 700);
   action->setSeparator(true);
   m_actions.append(action);
 
@@ -151,6 +172,131 @@ void Select::selectElement(int element)
       m_molecule->atom(i).setSelected(evalSelect(true, i));
     } else
       m_molecule->atom(i).setSelected(false);
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
+bool Select::isWaterOxygen(Index i)
+{
+  if (m_molecule->atomicNumber(i) != 8)
+    return false;
+
+  // check to see if it has two bonds
+  auto bonds = m_molecule->bonds(i);
+  if (bonds.size() != 2)
+    return false;
+
+  // check to see that both bonds are to hydrogens
+  for (auto& bond : bonds) {
+    if (m_molecule->atomicNumber(bond.getOtherAtom(i).index()) != 1)
+      return false;
+  }
+
+  return true;
+}
+
+void Select::selectWater()
+{
+  if (!m_molecule)
+    return;
+
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    auto atomicNumber = m_molecule->atomicNumber(i);
+    if (atomicNumber == 8 && isWaterOxygen(i)) {
+      m_molecule->atom(i).setSelected(evalSelect(true, i));
+      continue;
+    } else if (atomicNumber == 1) {
+      // check if it's attached to a water oxygen
+      auto bonds = m_molecule->bonds(i);
+      if (bonds.size() != 1 || !isWaterOxygen(bonds[0].getOtherAtom(i).index()))
+        m_molecule->atom(i).setSelected(evalSelect(false, i));
+      else
+        m_molecule->atom(i).setSelected(evalSelect(true, i));
+
+      continue;
+    }
+
+    m_molecule->atom(i).setSelected(evalSelect(false, i));
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
+Vector3 Select::getSelectionCenter()
+{
+  Vector3 center(0, 0, 0);
+  int count = 0;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i)) {
+      center += m_molecule->atomPosition3d(i);
+      ++count;
+    }
+  }
+
+  if (count > 0)
+    center /= count;
+
+  return center;
+}
+
+void Select::enlargeSelection()
+{
+  Vector3 center = getSelectionCenter();
+  // find the current max distance of the selection
+  Real maxDistance = 0.0;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i)) {
+      // we'll use the squaredNorm to save a bunch of square roots
+      Vector3 displacement = m_molecule->atomPosition3d(i) - center;
+      Real distance = displacement.squaredNorm();
+      if (distance > maxDistance)
+        maxDistance = distance;
+    }
+  }
+  maxDistance = sqrt(maxDistance) + 2.5;
+  maxDistance *= maxDistance; // square to compare with .squaredNorm() values
+
+  // now select all atoms within the NEW max distance
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (!m_molecule->atomSelected(i)) {
+      Vector3 displacement = m_molecule->atomPosition3d(i) - center;
+      Real distance = displacement.squaredNorm();
+      if (distance < maxDistance)
+        m_molecule->atom(i).setSelected(evalSelect(true, i));
+    }
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
+void Select::shrinkSelection()
+{
+  Vector3 center = getSelectionCenter();
+  // find the current max distance of the selection
+  Real maxDistance = 0.0;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i)) {
+      // we'll use the squaredNorm to save a bunch of square roots
+      Vector3 displacement = m_molecule->atomPosition3d(i) - center;
+      Real distance = displacement.squaredNorm();
+      if (distance > maxDistance)
+        maxDistance = distance;
+    }
+  }
+  maxDistance = sqrt(maxDistance) - 2.5;
+  if (maxDistance < 0.0)
+    maxDistance = 0.0;
+  maxDistance *= maxDistance; // square to compare with .squaredNorm() values
+
+  // now select ONLY atoms within the NEW max distance
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    Vector3 displacement = m_molecule->atomPosition3d(i) - center;
+    Real distance = displacement.squaredNorm();
+    if (distance < maxDistance)
+      m_molecule->atom(i).setSelected(evalSelect(true, i));
+    else
+      m_molecule->atom(i).setSelected(evalSelect(false, i));
   }
 
   m_molecule->emitChanged(Molecule::Atoms);
@@ -242,7 +388,7 @@ void Select::selectResidue()
       }   // index makes sense
     } else {
       // standard residue name
-      for (auto residue : m_molecule->residues()) {
+      for (const auto& residue : m_molecule->residues()) {
         if (label == residue.residueName().c_str()) {
           // select the atoms of the residue
           for (auto atom : residue.residueAtoms()) {
@@ -292,4 +438,4 @@ void Select::createLayerFromSelection()
   rwmol->emitChanged(changes);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

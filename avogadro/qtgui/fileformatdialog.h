@@ -111,7 +111,7 @@ private:
    * "catch-all" entry with all known formats, and an "All files (*)" entry.
    * Only formats registered with (Read | File) will be used.
    */
-  static const QString readFileFilter();
+  static QString readFileFilter();
 
   /**
    * @return A filter string for use with a QFileDialog, containing entries
@@ -119,7 +119,7 @@ private:
    * "All files (*)" entry is added as well.
    * Only formats registered with (Write | File) will be used.
    */
-  static const QString writeFileFilter();
+  static QString writeFileFilter();
 
   /**
    * Used internally by readFileFilter() and writeFileFilter().
