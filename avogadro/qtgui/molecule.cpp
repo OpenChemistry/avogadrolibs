@@ -14,13 +14,13 @@ using std::swap;
 
 Molecule::Molecule(QObject* parent_)
   : QObject(parent_),
-    m_undoMolecule(new RWMolecule(*this, this)) 
+    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
 {
   m_undoMolecule->setInteractive(true);
 }
 
 Molecule::Molecule(const Molecule& other)
-  :  Core::Molecule(other),
+  : QObject(), Core::Molecule(other),
     m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(true);
@@ -33,7 +33,7 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  :  Core::Molecule(other)
+  : QObject(), Core::Molecule(other)
 {
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)

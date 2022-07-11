@@ -321,6 +321,7 @@ defined in a similar way using incy.
 
   for (i = 1; i <= n_ * incx; i = i + incx)
     dy[i] = da * dx[i] + dy[i];
+  return;
 }
 
 double QTAIMLSODAIntegrator::ddot(int n_, double* dx, int incx, double* dy,
@@ -645,7 +646,8 @@ da * dx[1+i*incx].
     dx[i + 3] = da * dx[i + 3];
     dx[i + 4] = da * dx[i + 4];
   }
-  }
+  return;
+}
 
 int QTAIMLSODAIntegrator::idamax(int n_, double* dx, int incx)
 
@@ -787,6 +789,7 @@ void QTAIMLSODAIntegrator::terminate2(double* y, double* t)
   *t = tn;
   illin = 0;
   freevectors();
+  return;
 
 } /*   end terminate2   */
 
@@ -2126,7 +2129,8 @@ void QTAIMLSODAIntegrator::cfode(int meth_)
     tesco[nq_][3] = ((double)(nq_ + 2)) / elco[nq_][1];
     rq1fac /= fnq;
   }
-  
+  return;
+
 } /*   end cfode   */
 
 void QTAIMLSODAIntegrator::scaleh(double* rh, double* pdh)
@@ -2475,6 +2479,7 @@ y = the right-hand side vector on input, and the solution vector
 
   if (miter == 2)
     dgesl(wm, n, ipvt, y, 0);
+  return;
 
 } /*   end solsy   */
 

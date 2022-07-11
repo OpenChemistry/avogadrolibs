@@ -481,7 +481,8 @@ void QTAIMODEIntegrator::r8_fehl(qint64 neqn, qreal y[], qreal t, qreal h_,
                  (3953664.0 * f2[i] + 277020.0 * f5[i]));
   }
 
-  }
+  return;
+}
 //****************************************************************************80
 
 qreal QTAIMODEIntegrator::r8_max(qreal x, qreal y)

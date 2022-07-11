@@ -28,6 +28,8 @@ using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
+using std::numeric_limits;
+using std::pair;
 using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;

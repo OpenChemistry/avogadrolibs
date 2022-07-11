@@ -62,7 +62,10 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   m_ui->setupUi(this);
 
   m_implementation->currentFileName.clear();
-  m_implementation->crystalFiles = directory.contains(QLatin1String("crystals"));
+  if (directory.contains(QLatin1String("crystals")))
+    m_implementation->crystalFiles = true;
+  else
+    m_implementation->crystalFiles = false;
 
   // we check for the downloaded version first
   QStringList dirs;

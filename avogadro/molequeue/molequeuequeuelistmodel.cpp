@@ -306,8 +306,11 @@ void MoleQueueQueueListModel::removeProgram(int queueRow, int progRow)
 
 bool MoleQueueQueueListModel::isQueueIndex(const QModelIndex& i) const
 {
-  return i.isValid() && static_cast<quint32>(i.internalId()) == QueueInternalId &&
-      i.row() < m_queueList.size() && i.column() == 0;
+  if (i.isValid() && static_cast<quint32>(i.internalId()) == QueueInternalId &&
+      i.row() < m_queueList.size() && i.column() == 0) {
+    return true;
+  }
+  return false;
 }
 
 bool MoleQueueQueueListModel::isProgramIndex(const QModelIndex& i) const
