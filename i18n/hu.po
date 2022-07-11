@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-10 13:12+0000\n"
-"PO-Revision-Date: 2022-07-03 19:37+0000\n"
+"PO-Revision-Date: 2022-07-12 10:16+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3970,10 +3970,8 @@ msgid "Atom 4"
 msgstr "4. atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:657
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Töredék beillesztése"
+msgstr "Töredék beállítása"
 
 #: qtplugins/propertytables/propertymodel.cpp:782
 msgctxt "pi helix"
@@ -4147,16 +4145,12 @@ msgid "Manipulate the view camera."
 msgstr "Nézet kamera manipulálása."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge Model:"
 msgid "Script Charge Models"
-msgstr "Töltés-modell:"
+msgstr "Parancsfájl töltési modellek"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
-#, fuzzy
-#| msgid "Load file reader/writers from external scripts."
 msgid "Load electrostatic models from external scripts."
-msgstr "Fájlolvasók/fájlírók betöltése külső parancsfájlokből."
+msgstr "Elektrosztatikus modellek betöltése külső parancsfájlokból."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
@@ -4191,22 +4185,16 @@ msgid "Select by Residue…"
 msgstr "Maradék szerint kijelölése…"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Water…"
-msgstr "Atomindex szerint kijelölése…"
+msgstr "Víz kijelölése…"
 
 #: qtplugins/select/select.cpp:78
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Kijelölés megszűntetése"
+msgstr "Kijelölés nagyítása"
 
 #: qtplugins/select/select.cpp:83
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "Kijelölés"
+msgstr "Kijelölés csökkentése"
 
 #: qtplugins/select/select.cpp:93
 msgid "Create New Layer from Selection"
@@ -7007,9 +6995,6 @@ msgstr "Szín szerint:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#, fuzzy
-#| msgctxt "Electrostatic potential surface type"
-#| msgid "Electrostatic Potential"
 msgid "Electrostatic Potential"
 msgstr "Elektrosztatikus potenciál"
 
