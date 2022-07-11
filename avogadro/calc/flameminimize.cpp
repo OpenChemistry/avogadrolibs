@@ -59,7 +59,7 @@ bool FlameMinimize::minimize(EnergyCalculator& calc,
 
   for (unsigned int i = 0; i < 20; ++i) {
     verletIntegrate(positions, deltaT);
-    qDebug() << "vvi forces " << m_forces.norm() << " vel " << m_velocities.norm();
+    //qDebug() << "vvi forces " << m_forces.norm() << " vel " << m_velocities.norm();
 
     // Step 1
     double power = m_forces.dot(m_velocities);
