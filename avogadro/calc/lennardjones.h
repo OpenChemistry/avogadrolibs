@@ -1,18 +1,19 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTGUI_LENNARDJONES_H
-#define AVOGADRO_QTGUI_LENNARDJONES_H
+#ifndef AVOGADRO_CALC_LENNARDJONES_H
+#define AVOGADRO_CALC_LENNARDJONES_H
 
 #include "energycalculator.h"
 
 namespace Avogadro {
-namespace QtGui {
+namespace Core {
 class Molecule;
 }
+
+namespace Calc {
 
 class LennardJones : public EnergyCalculator
 {
@@ -22,30 +23,33 @@ public:
   explicit LennardJones(QObject* parent_ = 0);
   ~LennardJones();
 
-  virtual QString name() const override
-  { return tr("Lennard-Jones"); }
+  virtual std::string identifier() const overrride
+  { return "LJ"; }
 
-  virtual QString description() const override
-  { return tr("Universal Lennard-Jones potential"); }
+  virtual std::string name() const override
+  { return "Lennard-Jones"; }
+
+  virtual std::string description() const override
+  { return "Universal Lennard-Jones potential"; }
 
   virtual Real value(const Eigen::VectorXd& x) override;
   virtual void gradient(const Eigen::VectorXd& x,
                         Eigen::VectorXd& grad) override;
 
-public slots:
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(QtGui::Molecule* mol) override;
+  virtual void setMolecule(Core::Molecule* mol) override;
 
 protected:
-  QtGui::Molecule* m_molecule;
+  Core::Molecule* m_molecule;
   Eigen::MatrixXd m_radii;
   bool m_vdw;
   Real m_depth;
   int m_exponent;
 };
 
+} // namespace Calc
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTGUI_LENNARDJONES_H
+#endif // AVOGADRO_CALC_LENNARDJONES_H

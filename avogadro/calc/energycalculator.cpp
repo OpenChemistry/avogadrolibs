@@ -1,14 +1,11 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "energycalculator.h"
 
-#include <QtCore/QDebug>
-
-namespace Avogadro {
+namespace Avogadro::Calc {
 
 void EnergyCalculator::gradient(const TVector& x, TVector& grad)
 {

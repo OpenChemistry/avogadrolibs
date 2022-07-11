@@ -8,12 +8,16 @@ set(HEADERS
   chargemodel.h
   chargemanager.h
   defaultmodel.h
+  energycalculator.h
+  lennardjones.h
 )
 
 set(SOURCES
   chargemodel.cpp
   chargemanager.cpp
   defaultmodel.cpp
+  energycalculator.cpp
+  lennardjones.cpp
 )
 
 avogadro_add_library(AvogadroCalc ${HEADERS} ${SOURCES})

@@ -1,44 +1,46 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_ENERGYCALCULATOR_H
-#define AVOGADRO_ENERGYCALCULATOR_H
+#ifndef AVOGADRO_CALC_ENERGYCALCULATOR_H
+#define AVOGADRO_CALC_ENERGYCALCULATOR_H
 
 #include <avogadro/core/vector.h>
-#include <avogadro/qtgui/rwmolecule.h>
 
 #include <cppoptlib/problem.h>
 
 namespace Avogadro {
-namespace QtGui {
+namespace Core {
 class Molecule;
 }
 
+namespace Calc {
+
 class EnergyCalculator
-  : public QObject
-  , public cppoptlib::Problem<Real>
+  : public cppoptlib::Problem<Real>
 {
-  Q_OBJECT
 public:
-  EnergyCalculator(QObject* parent_ = 0)
-    : QObject(parent_){};
+  EnergyCalculator() {}
   ~EnergyCalculator() { }
+
+  /**
+   * @return a unique identifier for this calculator.
+   */
+  virtual std::string identifier() const = 0;
 
   /**
    * @return A short translatable name for this method (e.g., MMFF94, UFF, etc.)
    */
-  virtual QString name() const = 0;
+  virtual std::string name() const = 0;
 
   /**
    * @return a description of the method
    */
-  virtual QString description() const = 0;
+  virtual std::string description() const = 0;
 
   /**
-   * Called to set the configuration (e.g., from a GUI options dialog)
+   * Called to set the configuration (e.g., for a GUI options dialog)
    */
   virtual bool setConfiguration(Core::VariantMap& config) { return true; }
 
@@ -53,19 +55,28 @@ public:
    */
   void cleanGradients(TVector& grad);
 
+  /**
+   * Freeze a particular atom (e.g., during editing / manipulation)
+   * @param atomId the atom to freeze
+   */
   void freezeAtom(Index atomId);
+
+  /**
+   * Unfreeze a particular atom (e.g., during editing / manipulation)
+   * @param atomId the atom to unfreeze
+   */
   void unfreezeAtom(Index atomId);
 
-public slots:
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(QtGui::Molecule* mol) = 0;
+  virtual void setMolecule(Core::Molecule* mol) = 0;
 
 protected:
   TVector   m_mask; // optimize or frozen atom mask
 };
 
-} // namespace Avogadro
+} // end namespace Calc
+} // end namespace Avogadro
 
-#endif // AVOGADRO_ENERGYCALCULATOR_H
+#endif // AVOGADRO_CALC_ENERGYCALCULATOR_H

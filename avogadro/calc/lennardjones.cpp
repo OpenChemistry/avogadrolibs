@@ -1,19 +1,16 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "lennardjones.h"
 
 #include <avogadro/core/elements.h>
 
-#include <QtCore/QDebug>
-
 namespace Avogadro {
 
-LennardJones::LennardJones(QObject* parent_)
-  : EnergyCalculator(parent_)
+LennardJones::LennardJones()
+  : 
   , m_vdw(true)
   , m_depth(100.0)
   , m_exponent(6)
@@ -21,7 +18,7 @@ LennardJones::LennardJones(QObject* parent_)
 
 LennardJones::~LennardJones() {}
 
-void LennardJones::setMolecule(QtGui::Molecule* mol)
+void LennardJones::setMolecule(Core::Molecule* mol)
 {
   m_molecule = mol;
 
