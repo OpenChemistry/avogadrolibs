@@ -539,6 +539,7 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
+  return;
 }
 
 void JsonWidget::setStringListOption(const QString& name,

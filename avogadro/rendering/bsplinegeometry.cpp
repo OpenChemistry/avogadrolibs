@@ -7,7 +7,7 @@
 
 namespace Avogadro::Rendering {
 
-BSplineGeometry::BSplineGeometry()  {}
+BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
 BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
 
 float B(float i, float k, float t, float knot)

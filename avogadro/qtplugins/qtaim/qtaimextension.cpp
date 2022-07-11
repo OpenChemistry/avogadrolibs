@@ -90,7 +90,11 @@ void QTAIMExtension::triggered()
 
   bool wavefunctionAlreadyLoaded;
 
-  wavefunctionAlreadyLoaded = m_molecule->property("QTAIMComment").isValid();
+  if (m_molecule->property("QTAIMComment").isValid()) {
+    wavefunctionAlreadyLoaded = true;
+  } else {
+    wavefunctionAlreadyLoaded = false;
+  }
 
   int i = action->data().toInt();
 
@@ -737,6 +741,8 @@ void QTAIMExtension::triggered()
 
   emit requestActiveTool("Navigator");
   emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
+
+  return;
 }
 
 } // end namespace Avogadro
