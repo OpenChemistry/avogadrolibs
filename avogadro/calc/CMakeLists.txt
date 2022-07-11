@@ -9,6 +9,7 @@ set(HEADERS
   chargemanager.h
   defaultmodel.h
   energycalculator.h
+  flameminimize.h
   lennardjones.h
 )
 
@@ -17,6 +18,7 @@ set(SOURCES
   chargemanager.cpp
   defaultmodel.cpp
   energycalculator.cpp
+  flameminimize.cpp
   lennardjones.cpp
 )
 
