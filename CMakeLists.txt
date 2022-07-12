@@ -37,6 +37,9 @@ set_property(GLOBAL PROPERTY AvogadroLibs_STATIC_PLUGINS)
 
 if(MSVC)
   add_definitions("-D_CRT_SECURE_NO_WARNINGS" "-DNOMINMAX -D_USE_MATH_DEFINES")
+  # Ensure __cplusplus is correct, otherwise it defaults to 199711L which isn't true
+  # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 endif()
 
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
