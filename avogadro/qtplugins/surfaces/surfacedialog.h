@@ -38,7 +38,7 @@ public:
   void setupCubes(QStringList cubeNames);
   void setupSteps(int stepCount);
   void setupModels(
-    std::set<std::pair<std::string, std::string>> chargeModels
+    const std::set<std::pair<std::string, std::string>> &chargeModels
   );
   void reenableCalculateButton();
   void enableRecord();

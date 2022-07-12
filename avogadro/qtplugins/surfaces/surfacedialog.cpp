@@ -231,7 +231,7 @@ void SurfaceDialog::setupSteps(int stepCount)
 }
 
 void SurfaceDialog::setupModels(
-    std::set<std::pair<std::string, std::string>> chargeModels
+    const std::set<std::pair<std::string, std::string>> &chargeModels
 ) {
   m_chargeModels = chargeModels;
 }
