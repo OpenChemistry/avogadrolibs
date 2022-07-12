@@ -156,6 +156,12 @@ void Surfaces::surfacesActivated()
   }
   m_dialog->setupSteps(m_molecule->coordinate3dCount());
 
+  const auto identifiers = Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  std::set<std::pair<std::string, std::string>> chargeModels;
+  for (const auto &identifier: identifiers)
+    chargeModels.emplace(Calc::ChargeManager::instance().nameForModel(identifier), identifier);
+  m_dialog->setupModels(chargeModels);
+
   m_dialog->show();
 }
 
@@ -578,12 +584,7 @@ ColormapType Surfaces::getColormapFromString(const QString& name) const
 
 void Surfaces::colorMeshByPotential()
 {
-  const auto identifiers =
-    Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
-  if (identifiers.empty())
-    return;
-  
-  const auto model = *(identifiers.begin());
+  const auto model = m_dialog->colorModel().toStdString();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
   
   const auto positionsf = m_mesh1->vertices();

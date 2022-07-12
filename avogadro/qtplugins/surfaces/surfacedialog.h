@@ -9,6 +9,8 @@
 #include <QtCore/QStringList>
 #include <QtWidgets/QDialog>
 
+#include <set>
+
 #include "surfaces.h"
 // for the enum
 
@@ -35,12 +37,16 @@ public:
   void setupBasis(int numElectrons, int numMOs, bool beta);
   void setupCubes(QStringList cubeNames);
   void setupSteps(int stepCount);
+  void setupModels(
+    const std::set<std::pair<std::string, std::string>> &chargeModels
+  );
   void reenableCalculateButton();
   void enableRecord();
 
   Surfaces::Type surfaceType();
   
   Surfaces::ColorProperty colorProperty();
+  QString colorModel();
   QString colormapName();
 
   /**
@@ -82,6 +88,7 @@ signals:
 private:
   Ui::SurfaceDialog* m_ui;
   bool m_automaticResolution;
+  std::set<std::pair<std::string, std::string>> m_chargeModels;
 };
 
 } // End namespace QtPlugins

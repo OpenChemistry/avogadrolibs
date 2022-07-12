@@ -116,6 +116,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QComboBox" name="modelCombo">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QComboBox" name="chargeCombo">
          <property name="enabled">
           <bool>false</bool>
