@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+# Set up our version.
+set(AvogadroLibs_VERSION_MAJOR   "1")
+set(AvogadroLibs_VERSION_MINOR   "96")
+set(AvogadroLibs_VERSION_PATCH   "0")
+set(AvogadroLibs_VERSION
+  "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
 
-project(AvogadroLibs)
+project(AvogadroLibs VERSION ${AvogadroLibs_VERSION})
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -20,12 +26,7 @@ include(CompilerFlags)
 include(InstallLocation)
 include(DetermineVersion)
 
-# Set up our version.
-set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "96")
-set(AvogadroLibs_VERSION_PATCH   "0")
-set(AvogadroLibs_VERSION
-  "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
+
 find_package(Git)
 determine_version(${AvogadroLibs_SOURCE_DIR} ${GIT_EXECUTABLE} "AvogadroLibs")
 
