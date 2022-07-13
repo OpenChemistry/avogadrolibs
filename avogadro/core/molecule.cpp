@@ -258,6 +258,7 @@ MatrixX Molecule::partialCharges(const std::string& type) const
     return search->second; // value from the map
   } else {
     MatrixX charges(atomCount(), 1);
+    charges.fill(0.0);
     return charges;
   }
 }
