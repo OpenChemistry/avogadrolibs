@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-10 13:12+0000\n"
-"PO-Revision-Date: 2022-07-08 20:31+0000\n"
+"PO-Revision-Date: 2022-07-13 21:50+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -451,11 +451,11 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Délai de soumission de tâche expiré"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadro s'est arrêté dans l'attente d'un retour de MolQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
@@ -473,7 +473,7 @@ msgstr "Récupération des informations sur les tâches terminées…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Délai de tâche dépassé"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
@@ -503,11 +503,11 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Erreur interne."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Impossible de sélectionner un programme. Ceci est un bug."
 
 #: qtgui/backgroundfileformat.cpp:28 qtgui/backgroundfileformat.cpp:53
 msgid "No molecule set in BackgroundFileFormat!"
@@ -1023,6 +1023,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"L'extension de fichier est manquante et le format ne peut être défini. "
+"Voulez-vous l'ajouter ?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
@@ -7352,17 +7354,17 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr ""
+msgstr "Zero femtomètre ?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "# of k-points connecting special k-points:"
-msgstr ""
+msgstr "# de points k reliant des points k spéciaux :"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Special k-points"
-msgstr ""
+msgstr "Points k spéciaux"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
