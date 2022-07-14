@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>447</width>
-    <height>428</height>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -276,6 +276,9 @@
       </item>
       <item row="3" column="1">
        <widget class="QLabel" name="label_2">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Stereochemistry:</string>
         </property>
@@ -295,8 +298,14 @@
         </item>
         <item>
          <widget class="QRadioButton" name="dStereoButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>D</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -320,6 +329,14 @@
         </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="nGroupCombo">
+          <property name="currentIndex">
+           <number>2</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>CH₃CONH</string>
+           </property>
+          </item>
           <item>
            <property name="text">
             <string>NH₂</string>
@@ -334,6 +351,9 @@
         </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="cGroupCombo">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
           <item>
            <property name="text">
             <string>CO₂H</string>
@@ -342,6 +362,11 @@
           <item>
            <property name="text">
             <string>CO₂⁻</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CONHCH₃</string>
            </property>
           </item>
          </widget>
