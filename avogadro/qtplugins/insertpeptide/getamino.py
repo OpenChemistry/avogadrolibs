@@ -34,6 +34,7 @@ ligands = [
     "TYR",
     "VAL",
     # extra
+    "PYL",
     "SEC",  # "MLY", "MLZ", "PYL",
     # caps
     "NME",
@@ -62,7 +63,10 @@ for ligand in ligands:
     elif ligand == "SEC":
         new_order = [1, 2, 5, 6, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14]
         mol_pdb.OBMol.RenumberAtoms(new_order)
-    # TODO: PYL, MLY, MLZ and others
+    elif ligand == "PYL":
+        new_order = [18, 14, 15, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,36, 37, 38, 39]
+        mol_pdb.OBMol.RenumberAtoms(new_order)
+    # TODO: MLY, MLZ and others
 
     # remove the "extra" atoms (H2, OXT, HXT)
     removeAtoms = []
