@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InsertPeptideDialog</class>
+ <widget class="QDialog" name="InsertPeptideDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>447</width>
+    <height>428</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Insert Peptide</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Peptide Builder</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="aminoLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QToolButton" name="toolButton">
+            <property name="toolTip">
+             <string>Alanine</string>
+            </property>
+            <property name="text">
+             <string>Ala</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="toolButton_2">
+            <property name="toolTip">
+             <string>Arginine</string>
+            </property>
+            <property name="text">
+             <string>Arg</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="toolButton_3">
+            <property name="toolTip">
+             <string>Asparagine</string>
+            </property>
+            <property name="text">
+             <string>Asn</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="toolButton_4">
+            <property name="toolTip">
+             <string>Aspartic acid</string>
+            </property>
+            <property name="text">
+             <string>Asp</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QToolButton" name="toolButton_5">
+            <property name="toolTip">
+             <string>Cysteine</string>
+            </property>
+            <property name="text">
+             <string>Cys</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QToolButton" name="toolButton_6">
+            <property name="toolTip">
+             <string>Glutamic acid</string>
+            </property>
+            <property name="text">
+             <string>Glu</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="toolButton_7">
+            <property name="toolTip">
+             <string>Glutamine</string>
+            </property>
+            <property name="text">
+             <string>Gln</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QToolButton" name="toolButton_8">
+            <property name="toolTip">
+             <string>Glycine</string>
+            </property>
+            <property name="text">
+             <string>Gly</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QToolButton" name="toolButton_9">
+            <property name="toolTip">
+             <string>Histidine</string>
+            </property>
+            <property name="text">
+             <string>His</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QToolButton" name="toolButton_10">
+            <property name="toolTip">
+             <string>Isoleucine</string>
+            </property>
+            <property name="text">
+             <string>Ile</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QToolButton" name="toolButton_19">
+            <property name="toolTip">
+             <string>Valine</string>
+            </property>
+            <property name="text">
+             <string>Val</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QToolButton" name="toolButton_18">
+            <property name="toolTip">
+             <string>Tyrosine</string>
+            </property>
+            <property name="text">
+             <string>Tyr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QToolButton" name="toolButton_17">
+            <property name="toolTip">
+             <string>Tryptophan</string>
+            </property>
+            <property name="text">
+             <string>Trp</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QToolButton" name="toolButton_16">
+            <property name="toolTip">
+             <string>Threonine</string>
+            </property>
+            <property name="text">
+             <string>Thr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QToolButton" name="toolButton_15">
+            <property name="toolTip">
+             <string>Serine</string>
+            </property>
+            <property name="text">
+             <string>Ser</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QToolButton" name="toolButton_14">
+            <property name="toolTip">
+             <string>Proline</string>
+            </property>
+            <property name="text">
+             <string>Pro</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QToolButton" name="toolButton_13">
+            <property name="toolTip">
+             <string>Phenylalanine</string>
+            </property>
+            <property name="text">
+             <string>Phe</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QToolButton" name="toolButton_12">
+            <property name="toolTip">
+             <string>Methionine</string>
+            </property>
+            <property name="text">
+             <string>Met</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QToolButton" name="toolButton_11">
+            <property name="toolTip">
+             <string>Lysine</string>
+            </property>
+            <property name="text">
+             <string>Lys</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QToolButton" name="toolButton_20">
+            <property name="toolTip">
+             <string>Leucine</string>
+            </property>
+            <property name="text">
+             <string>Leu</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Amino Acids:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Sequence (N to C):</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPlainTextEdit" name="sequenceText"/>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Stereochemistry:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QRadioButton" name="lStereoButton">
+          <property name="text">
+           <string>L</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="dStereoButton">
+          <property name="text">
+           <string>D</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="5" column="1">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>N Terminus:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>C Terminus:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="nGroupCombo">
+          <item>
+           <property name="text">
+            <string>NH₂</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NH₃⁺</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="cGroupCombo">
+          <item>
+           <property name="text">
+            <string>CO₂H</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CO₂⁻</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Structure:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QComboBox" name="structureCombo">
+        <item>
+         <property name="text">
+          <string>Straight Chain</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Alpha Helix</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Beta Sheet</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>3-10 Helix</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Pi Helix</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Other</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Phi:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="phiSpin">
+          <property name="suffix">
+           <string>°</string>
+          </property>
+          <property name="minimum">
+           <double>-180.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>180.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>180.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="psiSpin">
+          <property name="suffix">
+           <string>°</string>
+          </property>
+          <property name="minimum">
+           <double>-180.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>180.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>180.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Psi:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Chain Number:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="chainNumberCombo">
+       <property name="toolTip">
+        <string>The chain number for the new peptide</string>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>A</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>B</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>C</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>D</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>E</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>F</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>G</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="insertButton">
+       <property name="text">
+        <string>Insert Peptide</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
