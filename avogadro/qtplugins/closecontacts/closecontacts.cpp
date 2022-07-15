@@ -9,6 +9,7 @@
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/dashedlinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -70,6 +71,7 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 {
   Vector3ub color(128, 128, 128);
 
+  //Add general contacts
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
   std::vector<bool> isAtomEnabled(molecule.atomCount());
   for (Index i = 0; i < molecule.atomCount(); ++i)
@@ -100,6 +102,91 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
       double distance = (npos - pos).norm();
       if (distance < m_maximumDistance)
         lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
+    }
+  }
+
+  // Add charged atoms
+  Array<Vector3> positions;
+  Array<signed char> charges;
+  Array<Index> residues;
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
+    if (molecule.formalCharge(i) != 0) {
+      if (!isAtomEnabled[i])
+        continue;
+      positions.push_back(molecule.atomPosition3d(i));
+      charges.push_back(molecule.formalCharge(i));
+      residues.push_back(Index(0) - 1);
+    }
+  }
+
+  // Add predicted charged atoms from residues
+  for (const auto &r: molecule.residues()) {
+    for (const auto &a: r.residueAtoms()) {
+      if (molecule.formalCharge(a.index()) != 0)
+        continue;
+      bool gammaOxygen = false;
+      bool doubleBond = false;
+      bool alphaDoubleBond = false;
+      auto bonds = molecule.getAtomBonds(a.index());
+      auto orders = molecule.getAtomOrders(a.index());
+      for (Index i = 0; i < bonds.size(); i++) {
+        Index b = bonds[i].first == a.index() ? bonds[i].second : bonds[i].first;
+        if (molecule.atomicNumber(b) == 6) {
+          if (orders[i] == 2)
+            alphaDoubleBond = true;
+          auto bonds2 = molecule.getAtomBonds(b);
+          auto orders2 = molecule.getAtomOrders(b);
+          for (Index j = 0; j < orders2.size(); j++) {
+            if (orders2[j] == 2)
+              doubleBond = true;
+            Index c = bonds2[j].first == b ? bonds2[j].second : bonds2[j].first;
+            if (molecule.atomicNumber(c) == 8 && c != a.index())
+              gammaOxygen = true;
+          }
+        }
+      }
+      // Check what residue atom we are on
+      switch (molecule.atomicNumber(a.index())) {
+        case 7:
+          if (!gammaOxygen && !(
+            !r.residueName().compare("HIS") && !alphaDoubleBond ||
+            !r.residueName().compare("TRP") && doubleBond
+          )) {
+            positions.push_back(molecule.atomPosition3d(a.index()));
+            charges.push_back(1.0);
+            residues.push_back(r.residueId());
+          }
+          break;
+        case 8:
+          if (gammaOxygen && doubleBond) {
+            positions.push_back(molecule.atomPosition3d(a.index()));
+            charges.push_back(-1.0);
+            residues.push_back(r.residueId());
+          }
+          break;
+      }
+    }
+  }
+
+  // detect contacts among them
+  NeighborPerceiver ionPerceiver(positions, 4.0);
+  for (Index i = 0; i < positions.size(); ++i) {
+    const Vector3 &pos = positions[i];
+    ionPerceiver.getNeighborsInclusiveInPlace(neighbors, pos);
+    for (Index n: neighbors) {
+      if (n <= i) // check each pair only once
+        continue;
+      if (residues[n] == residues[i] && residues[i] != Index(0) - 1)
+        continue; // ignore intra-residue interactions
+
+      Vector3 npos = positions[n];
+      double distance = (npos - pos).norm();
+      if (distance < 4.0) {
+        if (charges[i] * charges[n] > 0.0)
+          lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), Vector3ub(255, 0, 0), 8);
+        else
+          lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), Vector3ub(255, 0, 255), 8);
+      }
     }
   }
 }
