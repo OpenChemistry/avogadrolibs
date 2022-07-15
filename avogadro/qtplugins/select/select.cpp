@@ -219,6 +219,14 @@ void Select::selectWater()
 
     m_molecule->atom(i).setSelected(evalSelect(false, i));
   }
+  // also select water residues (which may be isolated "O" atoms)
+  for (const auto residue : m_molecule->residues()) {
+    if (residue.residueName() == "HOH") {
+      for (auto atom : residue.residueAtoms()) {
+        atom.setSelected(evalSelect(true, atom.index()));
+      }
+    }
+  }
 
   m_molecule->emitChanged(Molecule::Atoms);
 }
