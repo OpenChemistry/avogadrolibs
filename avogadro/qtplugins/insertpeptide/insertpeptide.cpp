@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "insertpeptide.h"
+#include "ui_insertpeptidedialog.h"
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -16,8 +17,17 @@ using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
+  class InsertPeptideDialog : public QDialog, public Ui::InsertPeptideDialog
+    {
+    public:
+    InsertPeptideDialog(QWidget *parent=0) : QDialog(parent) {
+        setWindowFlags(Qt::Dialog | Qt::Tool);
+        setupUi(this);
+      }
+    };
+
 InsertPeptide::InsertPeptide(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_dialog(nullptr)
 {
   auto* action = new QAction(tr("Peptide…"), this);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));

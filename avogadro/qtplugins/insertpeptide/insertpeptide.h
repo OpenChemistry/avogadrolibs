@@ -41,6 +41,7 @@ private slots:
 private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
+  InsertPeptideDialog* m_dialog;
 };
 
 } // namespace QtPlugins
