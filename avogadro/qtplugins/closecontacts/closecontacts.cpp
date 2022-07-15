@@ -6,6 +6,7 @@
 #include "closecontacts.h"
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
@@ -24,6 +25,7 @@
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
+using Core::Atom;
 using Core::Bond;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
@@ -65,6 +67,24 @@ static bool checkPairNot1213(const Molecule &molecule, Index i, Index n)
         return false;
   }
   return true;
+}
+
+void addChargedAtom(
+  Array<Vector3> &positions, Array<signed char> &charges, Array<Index> &residues,
+  const Molecule &molecule, Index residueId, Atom atom, double charge
+) {
+  auto pos = molecule.atomPosition3d(atom.index());
+  if (molecule.formalCharge(atom.index()) != 0) {
+    for (Index i = 0; i < positions.size(); i++) {
+      if ((positions[i] - pos).norm() < 0.00001) {
+        residues[i] = residueId;
+        return;
+      }
+    }
+  }
+  positions.push_back(pos);
+  charges.push_back(charge);
+  residues.push_back(residueId);
 }
 
 void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node)
@@ -121,50 +141,20 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 
   // Add predicted charged atoms from residues
   for (const auto &r: molecule.residues()) {
-    for (const auto &a: r.residueAtoms()) {
-      if (molecule.formalCharge(a.index()) != 0)
-        continue;
-      bool gammaOxygen = false;
-      bool doubleBond = false;
-      bool alphaDoubleBond = false;
-      auto bonds = molecule.getAtomBonds(a.index());
-      auto orders = molecule.getAtomOrders(a.index());
-      for (Index i = 0; i < bonds.size(); i++) {
-        Index b = bonds[i].first == a.index() ? bonds[i].second : bonds[i].first;
-        if (molecule.atomicNumber(b) == 6) {
-          if (orders[i] == 2)
-            alphaDoubleBond = true;
-          auto bonds2 = molecule.getAtomBonds(b);
-          auto orders2 = molecule.getAtomOrders(b);
-          for (Index j = 0; j < orders2.size(); j++) {
-            if (orders2[j] == 2)
-              doubleBond = true;
-            Index c = bonds2[j].first == b ? bonds2[j].second : bonds2[j].first;
-            if (molecule.atomicNumber(c) == 8 && c != a.index())
-              gammaOxygen = true;
-          }
-        }
-      }
-      // Check what residue atom we are on
-      switch (molecule.atomicNumber(a.index())) {
-        case 7:
-          if (!gammaOxygen && !(
-            !r.residueName().compare("HIS") && !alphaDoubleBond ||
-            !r.residueName().compare("TRP") && doubleBond
-          )) {
-            positions.push_back(molecule.atomPosition3d(a.index()));
-            charges.push_back(1.0);
-            residues.push_back(r.residueId());
-          }
-          break;
-        case 8:
-          if (gammaOxygen && doubleBond) {
-            positions.push_back(molecule.atomPosition3d(a.index()));
-            charges.push_back(-1.0);
-            residues.push_back(r.residueId());
-          }
-          break;
-      }
+    if (!r.residueName().compare("LYS")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NZ"), 1.0);
+    } else if (!r.residueName().compare("ARG")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NE"), 1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NH1"), 1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NH2"), 1.0);
+    } else if (!r.residueName().compare("HIS")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("ND1"), 1.0);
+    } else if (!r.residueName().compare("ASP")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OD1"), -1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OD2"), -1.0);
+    } else if (!r.residueName().compare("GLU")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OE1"), -1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OE2"), -1.0);
     }
   }
 
