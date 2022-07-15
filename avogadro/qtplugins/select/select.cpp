@@ -65,6 +65,16 @@ Select::Select(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
   m_actions.append(action);
 
+  action = new QAction(tr("Select Backbone Atoms…"), this);
+  action->setProperty("menu priority", 858);
+  connect(action, SIGNAL(triggered()), SLOT(selectBackboneAtoms()));
+  m_actions.append(action);
+
+  action = new QAction(tr("Select Sidechain Atoms…"), this);
+  action->setProperty("menu priority", 855);
+  connect(action, SIGNAL(triggered()), SLOT(selectSidechainAtoms()));
+  m_actions.append(action);
+
   action = new QAction(tr("Select Water…"), this);
   action->setProperty("menu priority", 850);
   connect(action, SIGNAL(triggered()), SLOT(selectWater()));
@@ -224,6 +234,71 @@ void Select::selectWater()
     if (residue.residueName() == "HOH") {
       for (auto atom : residue.residueAtoms()) {
         atom.setSelected(evalSelect(true, atom.index()));
+      }
+    }
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
+void Select::selectBackboneAtoms()
+{
+  // unselect everything
+  selectNone();
+
+  for (const auto residue : m_molecule->residues()) {
+    auto atom = residue.getAtomByName("CA");
+    if (atom.isValid())
+      atom.setSelected(evalSelect(true, atom.index()));
+
+    atom = residue.getAtomByName("C");
+    if (atom.isValid())
+      atom.setSelected(evalSelect(true, atom.index()));
+
+    atom = residue.getAtomByName("N");
+    if (atom.isValid())
+      atom.setSelected(evalSelect(true, atom.index()));
+
+    atom = residue.getAtomByName("O");
+    if (atom.isValid())
+      atom.setSelected(evalSelect(true, atom.index()));
+
+    // also select hydrogens connected to the backbone atoms
+    if (atom.atomicNumber() == 1) {
+      auto bonds = m_molecule->bonds(atom.index());
+      if (bonds.size() == 1) {
+        auto otherAtom = bonds[0].getOtherAtom(atom.index());
+        auto name = residue.getAtomName(otherAtom);
+        if (name == "CA" || name == "C" || name == "N" || name == "O")
+          atom.setSelected(evalSelect(true, atom.index()));
+      }
+    }
+  }
+
+  m_molecule->emitChanged(Molecule::Atoms);
+}
+
+void Select::selectSidechainAtoms()
+{
+  // unselect everything
+  selectNone();
+
+  for (const auto residue : m_molecule->residues()) {
+    for (auto atom : residue.residueAtoms()) {
+      auto name = residue.getAtomName(atom);
+      if (name != "CA" && name != "C" && name != "N" && name != "O")
+        atom.setSelected(evalSelect(true, atom.index()));
+
+      // or is it a hydrogen connected to a backbone atom?
+      // (then we don't want to select it)
+      if (atom.atomicNumber() == 1) {
+        auto bonds = m_molecule->bonds(atom.index());
+        if (bonds.size() == 1) {
+          auto otherAtom = bonds[0].getOtherAtom(atom.index());
+          auto name = residue.getAtomName(otherAtom);
+          if (name == "CA" || name == "C" || name == "N" || name == "O")
+            atom.setSelected(evalSelect(false, atom.index()));
+        }
       }
     }
   }
