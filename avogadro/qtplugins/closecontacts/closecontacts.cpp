@@ -6,9 +6,11 @@
 #include "closecontacts.h"
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/neighborperceiver.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/dashedlinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -23,6 +25,7 @@
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
+using Core::Atom;
 using Core::Bond;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
@@ -66,10 +69,29 @@ static bool checkPairNot1213(const Molecule &molecule, Index i, Index n)
   return true;
 }
 
+void addChargedAtom(
+  Array<Vector3> &positions, Array<signed char> &charges, Array<Index> &residues,
+  const Molecule &molecule, Index residueId, Atom atom, double charge
+) {
+  auto pos = molecule.atomPosition3d(atom.index());
+  if (molecule.formalCharge(atom.index()) != 0) {
+    for (Index i = 0; i < positions.size(); i++) {
+      if ((positions[i] - pos).norm() < 0.00001) {
+        residues[i] = residueId;
+        return;
+      }
+    }
+  }
+  positions.push_back(pos);
+  charges.push_back(charge);
+  residues.push_back(residueId);
+}
+
 void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
   Vector3ub color(128, 128, 128);
 
+  //Add general contacts
   NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
   std::vector<bool> isAtomEnabled(molecule.atomCount());
   for (Index i = 0; i < molecule.atomCount(); ++i)
@@ -100,6 +122,61 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
       double distance = (npos - pos).norm();
       if (distance < m_maximumDistance)
         lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
+    }
+  }
+
+  // Add charged atoms
+  Array<Vector3> positions;
+  Array<signed char> charges;
+  Array<Index> residues;
+  for (Index i = 0; i < molecule.atomCount(); ++i) {
+    if (molecule.formalCharge(i) != 0) {
+      if (!isAtomEnabled[i])
+        continue;
+      positions.push_back(molecule.atomPosition3d(i));
+      charges.push_back(molecule.formalCharge(i));
+      residues.push_back(Index(0) - 1);
+    }
+  }
+
+  // Add predicted charged atoms from residues
+  for (const auto &r: molecule.residues()) {
+    if (!r.residueName().compare("LYS")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NZ"), 1.0);
+    } else if (!r.residueName().compare("ARG")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NE"), 1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NH1"), 1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("NH2"), 1.0);
+    } else if (!r.residueName().compare("HIS")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("ND1"), 1.0);
+    } else if (!r.residueName().compare("ASP")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OD1"), -1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OD2"), -1.0);
+    } else if (!r.residueName().compare("GLU")) {
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OE1"), -1.0);
+      addChargedAtom(positions, charges, residues, molecule, r.residueId(), r.getAtomByName("OE2"), -1.0);
+    }
+  }
+
+  // detect contacts among them
+  NeighborPerceiver ionPerceiver(positions, 4.0);
+  for (Index i = 0; i < positions.size(); ++i) {
+    const Vector3 &pos = positions[i];
+    ionPerceiver.getNeighborsInclusiveInPlace(neighbors, pos);
+    for (Index n: neighbors) {
+      if (n <= i) // check each pair only once
+        continue;
+      if (residues[n] == residues[i] && residues[i] != Index(0) - 1)
+        continue; // ignore intra-residue interactions
+
+      Vector3 npos = positions[n];
+      double distance = (npos - pos).norm();
+      if (distance < 4.0) {
+        if (charges[i] * charges[n] > 0.0)
+          lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), Vector3ub(255, 0, 0), 8);
+        else
+          lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), Vector3ub(255, 0, 255), 8);
+      }
     }
   }
 }
