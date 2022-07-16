@@ -19,6 +19,7 @@
 #include <QtCore/QSettings>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -39,7 +40,24 @@ CloseContacts::CloseContacts(QObject *p) : ScenePlugin(p)
   m_layerManager = PluginLayerManager(m_name);
   
   QSettings settings;
-  m_maximumDistance = settings.value("closeContacts/maximumDistance", 2.5).toDouble();
+  m_maximumDistances = {
+    settings.value("closeContacts/maximumDistance0", 2.0).toDouble(),
+    settings.value("closeContacts/maximumDistance1", 4.0).toDouble(),
+    settings.value("closeContacts/maximumDistance2", 4.0).toDouble()
+  };
+  auto contactColor = settings.value("closeContacts/lineColor0", QColor(128, 128, 128)).value<QColor>();
+  auto saltBColor = settings.value("closeContacts/lineColor1", QColor(192, 0, 255)).value<QColor>();
+  auto repulsiveColor = settings.value("closeContacts/lineColor2", QColor(255, 64, 64)).value<QColor>();
+  m_lineColors = {
+    Vector3ub(contactColor.red(), contactColor.green(), contactColor.blue()),
+    Vector3ub(saltBColor.red(), saltBColor.green(), saltBColor.blue()),
+    Vector3ub(repulsiveColor.red(), repulsiveColor.green(), repulsiveColor.blue())
+  };
+  m_lineWidths = {
+    settings.value("closeContacts/lineWidth0", 2.0).toFloat(),
+    settings.value("closeContacts/lineWidth1", 5.0).toFloat(),
+    settings.value("closeContacts/lineWidth2", 5.0).toFloat()
+  };
 }
 
 CloseContacts::~CloseContacts() {}
@@ -89,21 +107,23 @@ void addChargedAtom(
 
 void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node)
 {
-  Vector3ub color(128, 128, 128);
-
   //Add general contacts
-  NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistance);
+  NeighborPerceiver perceiver(molecule.atomPositions3d(), m_maximumDistances[0]);
   std::vector<bool> isAtomEnabled(molecule.atomCount());
   for (Index i = 0; i < molecule.atomCount(); ++i)
     isAtomEnabled[i] = m_layerManager.atomEnabled(i);
 
   auto *geometry = new GeometryNode;
   node.addChild(geometry);
-  auto *lines = new DashedLineGeometry;
-  lines->identifier().molecule = &molecule;
-  lines->identifier().type = Rendering::BondType;
-  lines->setLineWidth(2.0);
-  geometry->addDrawable(lines);
+  std::array<DashedLineGeometry *, 3> lineGroups;
+  for (Index type = 0; type < 3; type++) {
+    lineGroups[type] = new DashedLineGeometry;
+    lineGroups[type]->identifier().molecule = &molecule;
+    lineGroups[type]->identifier().type = Rendering::BondType;
+    lineGroups[type]->setLineWidth(m_lineWidths[type]);
+    geometry->addDrawable(lineGroups[type]);
+  }
+  
   Array<Index> neighbors;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     if (!isAtomEnabled[i])
@@ -120,8 +140,8 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 
       Vector3 npos = molecule.atomPosition3d(n);
       double distance = (npos - pos).norm();
-      if (distance < m_maximumDistance)
-        lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), color, 8);
+      if (distance < m_maximumDistances[0])
+        lineGroups[0]->addDashedLine(pos.cast<float>(), npos.cast<float>(), m_lineColors[0], 8);
     }
   }
 
@@ -159,7 +179,7 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
   }
 
   // detect contacts among them
-  NeighborPerceiver ionPerceiver(positions, 4.0);
+  NeighborPerceiver ionPerceiver(positions, std::max(m_maximumDistances[1], m_maximumDistances[2]));
   for (Index i = 0; i < positions.size(); ++i) {
     const Vector3 &pos = positions[i];
     ionPerceiver.getNeighborsInclusiveInPlace(neighbors, pos);
@@ -171,12 +191,11 @@ void CloseContacts::process(const Molecule &molecule, Rendering::GroupNode &node
 
       Vector3 npos = positions[n];
       double distance = (npos - pos).norm();
-      if (distance < 4.0) {
-        if (charges[i] * charges[n] > 0.0)
-          lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), Vector3ub(255, 0, 0), 8);
-        else
-          lines->addDashedLine(pos.cast<float>(), npos.cast<float>(), Vector3ub(255, 0, 255), 8);
-      }
+      
+      if (charges[i] * charges[n] > 0.0 && distance < m_maximumDistances[2])
+        lineGroups[2]->addDashedLine(pos.cast<float>(), npos.cast<float>(), m_lineColors[2], 8);
+      else if (distance < m_maximumDistances[1])
+        lineGroups[1]->addDashedLine(pos.cast<float>(), npos.cast<float>(), m_lineColors[1], 8);
     }
   }
 }
@@ -185,32 +204,61 @@ QWidget *CloseContacts::setupWidget()
 {
   auto *widget = new QWidget(qobject_cast<QWidget *>(this->parent()));
   auto *v = new QVBoxLayout;
+  auto *tabs = new QTabWidget;
 
-  // maximum distance
-  auto *spin = new QDoubleSpinBox;
-  spin->setRange(1.5, 10.0);
-  spin->setSingleStep(0.1);
-  spin->setDecimals(1);
-  spin->setSuffix(tr(" Å"));
-  spin->setValue(m_maximumDistance);
-  QObject::connect(spin, SIGNAL(valueChanged(double)), this,
-                   SLOT(setMaximumDistance(double)));
-  auto *form = new QFormLayout;
-  form->addRow(QObject::tr("Maximum distance:"), spin);
-  v->addLayout(form);
+  for (Index i = 0; i < 3; i++) {
+    // maximum distance
+    auto *distance_spin = new QDoubleSpinBox;
+    distance_spin->setRange(1.5, 10.0);
+    distance_spin->setSingleStep(0.1);
+    distance_spin->setDecimals(1);
+    distance_spin->setSuffix(tr(" Å"));
+    distance_spin->setValue(m_maximumDistances[i]);
+    QObject::connect(distance_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, 
+			[this, i](float distance){ return setMaximumDistance(distance, i); }
+		);
+    
+    // line width
+		auto* lineWidth_spin = new QDoubleSpinBox;
+		lineWidth_spin->setRange(1.0, 10.0);
+		lineWidth_spin->setSingleStep(0.5);
+		lineWidth_spin->setDecimals(1);
+		lineWidth_spin->setValue(m_lineWidths[i]);
+		QObject::connect(lineWidth_spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, 
+		    [this, i](float width){ return setLineWidth(width, i); }
+		);
+    
+    auto *form = new QFormLayout;
+    form->addRow(QObject::tr("Maximum distance:"), distance_spin);
+    form->addRow(QObject::tr("Line width:"), lineWidth_spin);
+    
+    auto *page = new QWidget;
+  	page->setLayout(form);
+  	tabs->addTab(page, INTERACTION_NAMES[i]);
+  }
 
+  v->addWidget(tabs);
   v->addStretch(1);
   widget->setLayout(v);
   return widget;
 }
 
-void CloseContacts::setMaximumDistance(double maximumDistance)
+void CloseContacts::setMaximumDistance(float maximumDistance, Index index)
 {
-  m_maximumDistance = float(maximumDistance);
+  m_maximumDistances[index] = maximumDistance;
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("closeContacts/maximumDistance", m_maximumDistance);
+  settings.setValue(QString("closeContacts/maximumDistance%1").arg(index), maximumDistance);
+}
+
+void CloseContacts::setLineWidth(float width, Index index)
+{
+  m_lineWidths[index] = width;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue(QString("closeContacts/lineWidth%1").arg(index), width);
 }
 
 } // namespace Avogadro

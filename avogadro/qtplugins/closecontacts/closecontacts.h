@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_CLOSECONTACTS_H
 #define AVOGADRO_QTPLUGINS_CLOSECONTACTS_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
 namespace Avogadro {
@@ -41,12 +42,19 @@ public:
   }
 
 public slots:
-  void setMaximumDistance(double maximumDistance);
+  void setMaximumDistance(float maximumDistance, Index index);
+  void setLineWidth(float width, Index index);
 
 private:
   std::string m_name = "Close Contacts";
   
-  double m_maximumDistance;
+  const std::array<QString, 3> INTERACTION_NAMES = {
+	tr("Contact"), tr("Salt Bridge"), tr("Repulsive")
+  };
+
+  std::array<double, 3> m_maximumDistances;
+  std::array<Vector3ub, 3> m_lineColors;
+  std::array<float, 3> m_lineWidths;
 };
 
 } // end namespace QtPlugins
