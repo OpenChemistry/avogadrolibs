@@ -72,6 +72,26 @@ Atom Residue::getAtomByName(std::string name) const
   return empty;
 }
 
+std::string Residue::getAtomName(const Atom atom) const
+{
+  for (const auto & it : m_atomNameMap) {
+    if (it.second == atom) {
+      return it.first;
+    }
+  }
+  return "";
+}
+
+std::string Residue::getAtomName(const Index index) const
+{
+  for (const auto & it : m_atomNameMap) {
+    if (it.second.index() == index) {
+      return it.first;
+    }
+  }
+  return "";
+}
+
 void Residue::resolveResidueBonds(Molecule& mol)
 {
   std::vector<std::pair<std::string, std::string>> bondSeq;

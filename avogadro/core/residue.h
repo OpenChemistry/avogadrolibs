@@ -104,6 +104,16 @@ public:
    */
   int getAtomicNumber(std::string name) const;
 
+  /**
+   * \return the name of @p atom or an empty string if not in this residue
+   */
+  std::string getAtomName(const Atom atom) const;
+
+  /**
+   * \return the name of atom @p index or an empty string if not in this residue
+   */
+  std::string getAtomName(const Index index) const;
+
   bool hasAtomByIndex(Index index) const;
   /** Set whether this residue is a "HET" / "HETATOM" ligand
    */
