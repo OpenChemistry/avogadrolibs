@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-16 04:29+0000\n"
-"PO-Revision-Date: 2022-07-12 10:16+0000\n"
+"PO-Revision-Date: 2022-07-16 21:45+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -4185,16 +4185,12 @@ msgid "Select by Residue…"
 msgstr "Maradék szerint kijelölése…"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Backbone Atoms…"
-msgstr "Atomindex szerint kijelölése…"
+msgstr "Gerincatomok kijelölése…"
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Sidechain Atoms…"
-msgstr "Atomindex szerint kijelölése…"
+msgstr "Oldalláncatomok kijelölése…"
 
 #: qtplugins/select/select.cpp:78
 msgid "Select Water…"
