@@ -36,6 +36,7 @@ InsertFragment::InsertFragment(QObject* parent_)
 
   action = new QAction(tr("Crystal…"), this);
   action->setData("crystals"); // will also work for crystals
+  action->setProperty("menu priority", 170);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 }
