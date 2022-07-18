@@ -25,6 +25,7 @@ FetchPDB::FetchPDB(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText("Fetch from &PDB…");
+  m_action->setProperty("menu priority", 180);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
