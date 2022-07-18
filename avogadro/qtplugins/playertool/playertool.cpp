@@ -269,6 +269,7 @@ void PlayerTool::recordMovie()
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
              EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -312,6 +313,7 @@ void PlayerTool::recordMovie()
     gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
                        EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), nullptr);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -343,6 +345,7 @@ void PlayerTool::recordMovie()
     gwavi_close(gwavi);
   } else if (selfFilter == tr("Movie (*.mp4)")) {
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
