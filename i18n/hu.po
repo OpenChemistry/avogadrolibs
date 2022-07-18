@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-16 04:29+0000\n"
+"POT-Creation-Date: 2022-07-17 03:22+0000\n"
 "PO-Revision-Date: 2022-07-16 21:45+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -1224,7 +1224,7 @@ msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Fehérje szalagok"
 
-#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:29
+#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "Szoros érintkezések"
@@ -2088,19 +2088,44 @@ msgstr "Fájlnév"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:272
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:194
+#: qtplugins/closecontacts/closecontacts.cpp:215
 #: qtplugins/noncovalent/noncovalent.cpp:350:189 rc.cpp:192 rc.cpp:408
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/closecontacts/closecontacts.cpp:199
+#: qtplugins/closecontacts/closecontacts.cpp:232
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Maximum distance:"
 msgstr "Legnagyobb távolság:"
 
-#: qtplugins/closecontacts/closecontacts.h:33
+#: qtplugins/closecontacts/closecontacts.cpp:233
+#: qtplugins/crystal/crystalscene.cpp:133
+#: qtplugins/noncovalent/noncovalent.cpp:369
+#: qtplugins/wireframe/wireframe.cpp:88
+msgid "Line width:"
+msgstr "Vonalvastagság:"
+
+#: qtplugins/closecontacts/closecontacts.h:34
 msgid "Render close contacts between atoms."
 msgstr "Atomok között szoros érintkezések megjelenítése."
+
+#: qtplugins/closecontacts/closecontacts.h:52
+#, fuzzy
+#| msgctxt "rendering of non-covalent close contacts"
+#| msgid "Close Contacts"
+msgid "Contact"
+msgstr "Szoros érintkezések"
+
+#: qtplugins/closecontacts/closecontacts.h:52
+#, fuzzy
+#| msgctxt "beta bridge"
+#| msgid "β Bridge"
+msgid "Salt Bridge"
+msgstr "β-híd"
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Repulsive"
+msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:68
 msgid "Edit Color Opacity Map…"
@@ -2595,12 +2620,6 @@ msgstr "Kristály"
 #: qtplugins/crystal/crystal.h:64
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "Kristályspecifikus szerkesztő/elemző eszközök."
-
-#: qtplugins/crystal/crystalscene.cpp:133
-#: qtplugins/noncovalent/noncovalent.cpp:369
-#: qtplugins/wireframe/wireframe.cpp:88
-msgid "Line width:"
-msgstr "Vonalvastagság:"
 
 #: qtplugins/crystal/crystalscene.cpp:138
 msgid "Line color:"

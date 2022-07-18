@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-16 04:29+0000\n"
+"POT-Creation-Date: 2022-07-17 03:22+0000\n"
 "PO-Revision-Date: 2021-07-16 14:24+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1224,7 +1224,7 @@ msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Ilustração"
 
-#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:29
+#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr ""
@@ -2122,23 +2122,43 @@ msgstr "Nome do arquivo"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:272
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:194
+#: qtplugins/closecontacts/closecontacts.cpp:215
 #: qtplugins/noncovalent/noncovalent.cpp:350:189 rc.cpp:192 rc.cpp:408
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/closecontacts/closecontacts.cpp:199
+#: qtplugins/closecontacts/closecontacts.cpp:232
 #: qtplugins/noncovalent/noncovalent.cpp:368
 #, fuzzy
 #| msgid "Minimum Distance:"
 msgid "Maximum distance:"
 msgstr "Distância Mínima:"
 
-#: qtplugins/closecontacts/closecontacts.h:33
+#: qtplugins/closecontacts/closecontacts.cpp:233
+#: qtplugins/crystal/crystalscene.cpp:133
+#: qtplugins/noncovalent/noncovalent.cpp:369
+#: qtplugins/wireframe/wireframe.cpp:88
+#, fuzzy
+msgid "Line width:"
+msgstr "Largura do pico:"
+
+#: qtplugins/closecontacts/closecontacts.h:34
 #, fuzzy
 #| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
 msgstr "Renderiza a força de deslocamento em átomos"
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Contact"
+msgstr ""
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Salt Bridge"
+msgstr ""
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Repulsive"
+msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:68
 #, fuzzy
@@ -2645,13 +2665,6 @@ msgstr "Cristal"
 #: qtplugins/crystal/crystal.h:64
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "Ferramentas para edição/análise específica de cristal."
-
-#: qtplugins/crystal/crystalscene.cpp:133
-#: qtplugins/noncovalent/noncovalent.cpp:369
-#: qtplugins/wireframe/wireframe.cpp:88
-#, fuzzy
-msgid "Line width:"
-msgstr "Largura do pico:"
 
 #: qtplugins/crystal/crystalscene.cpp:138
 #, fuzzy

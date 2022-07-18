@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-16 04:29+0000\n"
+"POT-Creation-Date: 2022-07-17 03:22+0000\n"
 "PO-Revision-Date: 2021-12-22 05:54+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
@@ -1167,7 +1167,7 @@ msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Kartun"
 
-#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:29
+#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr ""
@@ -2058,23 +2058,43 @@ msgstr "Nama berkas:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:272
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:194
+#: qtplugins/closecontacts/closecontacts.cpp:215
 #: qtplugins/noncovalent/noncovalent.cpp:350:189 rc.cpp:192 rc.cpp:408
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/closecontacts/closecontacts.cpp:199
+#: qtplugins/closecontacts/closecontacts.cpp:232
 #: qtplugins/noncovalent/noncovalent.cpp:368
 #, fuzzy
 #| msgid "Maximum Radius:"
 msgid "Maximum distance:"
 msgstr "Radius Maksimum:"
 
-#: qtplugins/closecontacts/closecontacts.h:33
+#: qtplugins/closecontacts/closecontacts.cpp:233
+#: qtplugins/crystal/crystalscene.cpp:133
+#: qtplugins/noncovalent/noncovalent.cpp:369
+#: qtplugins/wireframe/wireframe.cpp:88
+#, fuzzy
+msgid "Line width:"
+msgstr "luas terpuncak:"
+
+#: qtplugins/closecontacts/closecontacts.h:34
 #, fuzzy
 #| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
 msgstr "Menggambarkan gaya pemindahan pada atom"
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Contact"
+msgstr ""
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Salt Bridge"
+msgstr ""
+
+#: qtplugins/closecontacts/closecontacts.h:52
+msgid "Repulsive"
+msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:68
 msgid "Edit Color Opacity Map…"
@@ -2572,13 +2592,6 @@ msgstr "Kristal"
 #: qtplugins/crystal/crystal.h:64
 msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
-
-#: qtplugins/crystal/crystalscene.cpp:133
-#: qtplugins/noncovalent/noncovalent.cpp:369
-#: qtplugins/wireframe/wireframe.cpp:88
-#, fuzzy
-msgid "Line width:"
-msgstr "luas terpuncak:"
 
 #: qtplugins/crystal/crystalscene.cpp:138
 #, fuzzy
