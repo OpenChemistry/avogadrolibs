@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-17 03:22+0000\n"
-"PO-Revision-Date: 2022-06-13 20:21+0000\n"
+"PO-Revision-Date: 2022-07-20 02:53+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -970,7 +970,7 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:162
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "დამმუშავებლები"
 
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "e.g. file handlers that can 'handle' this file."
@@ -980,7 +980,7 @@ msgstr "სახელური"
 #: qtgui/fileformatdialog.cpp:167
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "მკითხველები"
 
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "e.g. file readers that can 'read' this file."
@@ -990,7 +990,7 @@ msgstr "კითხვა"
 #: qtgui/fileformatdialog.cpp:172
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "ჩამწერები"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "e.g. file writers that can 'write' this file."
@@ -1129,19 +1129,15 @@ msgid "Layer"
 msgstr "ფენა"
 
 #: qtgui/layermodel.cpp:77
-#, fuzzy, qt-format
-#| msgid "Layer"
+#, qt-format
 msgid "Layer %1"
-msgstr "ფენა"
+msgstr "ფენა %1"
 
 #: qtgui/layermodel.cpp:127 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
 msgstr ""
 
 #: qtgui/layermodel.cpp:129 qtplugins/cartoons/cartoons.h:30
-#, fuzzy
-#| msgctxt "protein rendering style"
-#| msgid "Cartoon"
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "მულტფილმი"
@@ -1433,7 +1429,7 @@ msgstr "&გატანა"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "3DMol"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
@@ -1452,8 +1448,9 @@ msgid "&Input"
 msgstr "&შეყვანა"
 
 #: qtplugins/apbs/apbs.cpp:49
+#, fuzzy
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:72
@@ -1490,8 +1487,9 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:31:84
+#, fuzzy
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:34
 msgid "Interact with APBS utilities."
@@ -1584,10 +1582,8 @@ msgid "By Chain"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
-#| msgid "Charge"
 msgid "By Partial Charge…"
-msgstr "მუხტი"
+msgstr "ნაწილობრივი მუხტით…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
@@ -1675,11 +1671,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
 #: qtplugins/surfaces/surfaces.cpp:571:171 rc.cpp:1621
-#, fuzzy
-#| msgid "Neutral"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "ნეიტრალური"
+msgstr "სპექტრალური"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1697,11 +1691,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
 #: qtplugins/surfaces/surfaces.cpp:575:162 rc.cpp:1612
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "გაუქმება"
+msgstr "ბალანსი"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1746,10 +1738,8 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308
-#, fuzzy
-#| msgid "Select All"
 msgid "Select Colormap"
-msgstr "ყველას მონიშვნა"
+msgstr "აირჩიეთ ფერების რუკა"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1757,14 +1747,12 @@ msgstr "ყველას მონიშვნა"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308:159 rc.cpp:1609
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "ფერი:"
+msgstr "ფერების რუკა:"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
-msgstr ""
+msgstr "ფერებისგადატარება"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
 msgid "Atom scale"
@@ -1860,7 +1848,7 @@ msgstr "ბმა"
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
-msgstr ""
+msgstr "მიბმა"
 
 #: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
@@ -1879,12 +1867,12 @@ msgstr ""
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "მილი"
 
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
 msgid "Ribbon"
-msgstr ""
+msgstr "ლენტა"
 
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
@@ -1899,7 +1887,7 @@ msgstr "მულტფილმი"
 #: qtplugins/cartoons/cartoons.cpp:99
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "თოკი"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Display of biomolecule ribbons / cartoons."
@@ -2019,11 +2007,8 @@ msgid "Contact"
 msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:52
-#, fuzzy
-#| msgctxt "beta bridge"
-#| msgid "β Bridge"
 msgid "Salt Bridge"
-msgstr "β ხიდი"
+msgstr "მარილის ხიდი"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
@@ -2035,7 +2020,7 @@ msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:26
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "ფერისგაუმჭვირვლობისრუკა"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:58
 msgid "Edit color opacity maps, primarily for volume rendering."
@@ -2352,53 +2337,58 @@ msgid "Hybrid quantum classical (Not yet supported)"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
+#, fuzzy
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:719
 msgid "NONE"
-msgstr ""
+msgstr "არცერთი"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1297
+#, fuzzy
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
+#, fuzzy
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
+#, fuzzy
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMIC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
-msgstr ""
+msgstr "ბირთვი"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
 msgid "DENSITIES"
-msgstr ""
+msgstr "სიმკვრივეები"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
+#, fuzzy
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "RANDOM"
-msgstr ""
+msgstr "შემთხვევითი"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
 msgid "RESTART"
-msgstr ""
+msgstr "გადატვირთვა"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
 msgid "SPARSE"
@@ -3095,10 +3085,8 @@ msgid "Render polygon meshes."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
-#, fuzzy
-#| msgid "Molecule"
 msgid "&Molecular…"
-msgstr "მოლეკულა"
+msgstr "&მოლეკულარული…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:31
 msgid "View general properties of a molecule."
@@ -3181,26 +3169,20 @@ msgid "Interact with online databases, query structures etc."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:339
-#, fuzzy
-#| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:367
-#, fuzzy
-#| msgid "Angle Properties"
 msgid "Angle tolerance:"
-msgstr "კუთხის თვისებები"
+msgstr "კუთხის თვისებები:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:53
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "წყალბადი"
+msgstr "ჰალოგენი"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Chalcogen"
@@ -3734,10 +3716,8 @@ msgid "Formal Charge"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:385
-#, fuzzy
-#| msgid "Charge"
 msgid "Partial Charge"
-msgstr "მუხტი"
+msgstr "ნაწილობრივი მუხტი"
 
 #: qtplugins/propertytables/propertymodel.cpp:387
 msgid "X (Å)"
@@ -3824,10 +3804,8 @@ msgid "Atom 4"
 msgstr "ატომი 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:657
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "ფრაგმენტის ჩასმა"
+msgstr "ფრაგმენტის მორგება"
 
 #: qtplugins/propertytables/propertymodel.cpp:782
 msgctxt "pi helix"
@@ -3994,10 +3972,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge"
 msgid "Script Charge Models"
-msgstr "მუხტი"
+msgstr "დამუხტული მოდელების სკრიპტი"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4036,34 +4012,24 @@ msgid "Select by Residue…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Backbone Atoms…"
-msgstr "ატომის ინდექსის მიხედვით მონიშვნა…"
+msgstr "აირჩიეთ ხერხემალი ატომები…"
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Sidechain Atoms…"
-msgstr "ატომის ინდექსის მიხედვით მონიშვნა…"
+msgstr "აირჩიეთ გვერდითი ატომები…"
 
 #: qtplugins/select/select.cpp:78
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Water…"
-msgstr "ატომის ინდექსის მიხედვით მონიშვნა…"
+msgstr "აირჩიეთ წყალი…"
 
 #: qtplugins/select/select.cpp:88
-#, fuzzy
-#| msgid "Invert Selection"
 msgid "Enlarge Selection"
-msgstr "მონიშვნის ინვერსია"
+msgstr "მონიშვნის გადიდება"
 
 #: qtplugins/select/select.cpp:93
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "მონიშნული"
+msgstr "მონიშნულის დაპატარავება"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4707,17 +4673,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
-#| msgid "Charge"
 msgid "Partial Charges"
-msgstr "მუხტი"
+msgstr "ნაწილობრივი მუხტები"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
-#, fuzzy
-#| msgid "Charge"
 msgid "Charge Model:"
-msgstr "მუხტი"
+msgstr "მუხტის მოდელი:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6813,10 +6775,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:389
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "სტრონციუმი"
+msgstr "ძლიერი"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
