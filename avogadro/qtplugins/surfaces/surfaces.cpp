@@ -234,8 +234,7 @@ void Surfaces::calculateEDT()
 
     // first, make a list of all atom positions and radii
     Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    auto *atoms =
-      new std::vector<std::pair<Vector3, double>>(m_molecule->atomCount());
+    auto *atoms = new std::vector<std::pair<Vector3, double>>();
     double max_radius = probeRadius;
     QtGui::RWLayerManager layerManager;
     for (size_t i = 0; i < m_molecule->atomCount(); i++) {

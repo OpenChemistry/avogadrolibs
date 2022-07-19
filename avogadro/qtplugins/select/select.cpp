@@ -247,30 +247,20 @@ void Select::selectBackboneAtoms()
   selectNone();
 
   for (const auto residue : m_molecule->residues()) {
-    auto atom = residue.getAtomByName("CA");
-    if (atom.isValid())
-      atom.setSelected(evalSelect(true, atom.index()));
+    for (auto atom : residue.residueAtoms()) {
+      auto name = residue.getAtomName(atom);
+      if (name == "CA" || name == "C" || name == "N" || name == "O")
+        atom.setSelected(evalSelect(true, atom.index()));
 
-    atom = residue.getAtomByName("C");
-    if (atom.isValid())
-      atom.setSelected(evalSelect(true, atom.index()));
-
-    atom = residue.getAtomByName("N");
-    if (atom.isValid())
-      atom.setSelected(evalSelect(true, atom.index()));
-
-    atom = residue.getAtomByName("O");
-    if (atom.isValid())
-      atom.setSelected(evalSelect(true, atom.index()));
-
-    // also select hydrogens connected to the backbone atoms
-    if (atom.atomicNumber() == 1) {
-      auto bonds = m_molecule->bonds(atom.index());
-      if (bonds.size() == 1) {
-        auto otherAtom = bonds[0].getOtherAtom(atom.index());
-        auto name = residue.getAtomName(otherAtom);
-        if (name == "CA" || name == "C" || name == "N" || name == "O")
-          atom.setSelected(evalSelect(true, atom.index()));
+      // also select hydrogens connected to the backbone atoms
+      if (atom.atomicNumber() == 1) {
+        auto bonds = m_molecule->bonds(atom.index());
+        if (bonds.size() == 1) {
+          auto otherAtom = bonds[0].getOtherAtom(atom.index());
+          auto otherName = residue.getAtomName(otherAtom);
+          if (otherName == "CA" || otherName == "C" || otherName == "N" || otherName == "O")
+            atom.setSelected(evalSelect(true, atom.index()));
+        }
       }
     }
   }
