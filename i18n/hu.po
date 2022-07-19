@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-17 03:22+0000\n"
-"PO-Revision-Date: 2022-07-16 21:45+0000\n"
+"PO-Revision-Date: 2022-07-20 02:53+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2110,22 +2110,16 @@ msgid "Render close contacts between atoms."
 msgstr "Atomok között szoros érintkezések megjelenítése."
 
 #: qtplugins/closecontacts/closecontacts.h:52
-#, fuzzy
-#| msgctxt "rendering of non-covalent close contacts"
-#| msgid "Close Contacts"
 msgid "Contact"
-msgstr "Szoros érintkezések"
+msgstr "Érintkezés"
 
 #: qtplugins/closecontacts/closecontacts.h:52
-#, fuzzy
-#| msgctxt "beta bridge"
-#| msgid "β Bridge"
 msgid "Salt Bridge"
-msgstr "β-híd"
+msgstr "Sóhíd"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
-msgstr ""
+msgstr "Taszító"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:68
 msgid "Edit Color Opacity Map…"
