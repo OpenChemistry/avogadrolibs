@@ -257,8 +257,8 @@ void Select::selectBackboneAtoms()
         auto bonds = m_molecule->bonds(atom.index());
         if (bonds.size() == 1) {
           auto otherAtom = bonds[0].getOtherAtom(atom.index());
-          auto name = residue.getAtomName(otherAtom);
-          if (name == "CA" || name == "C" || name == "N" || name == "O")
+          auto otherName = residue.getAtomName(otherAtom);
+          if (otherName == "CA" || otherName == "C" || otherName == "N" || otherName == "O")
             atom.setSelected(evalSelect(true, atom.index()));
         }
       }
