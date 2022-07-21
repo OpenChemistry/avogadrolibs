@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "manipulator.h"
@@ -33,18 +22,12 @@
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QAction>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
-using QtGui::RWBond;
-using QtGui::RWMolecule;
-using Rendering::Identifier;
 
 #define ROTATION_SPEED 0.5
 
@@ -55,6 +38,10 @@ Manipulator::Manipulator(QObject* parent_)
 {
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setIcon(QIcon(":/icons/manipulator.png"));
+  m_activateAction->setToolTip(
+    tr("Manipulation Tool\n\n"
+       "Left Mouse: \tClick and drag to move atoms\n"
+       "Right Mouse: \tClick and drag to rotate selected atoms.\n"));
 }
 
 Manipulator::~Manipulator() {}
@@ -129,7 +116,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
   if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
-      m_object.molecule == mol) {
+      m_object.molecule == &m_molecule->molecule()) {
     // translate single atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector3f oldPos(atom.position3d().cast<float>());
@@ -142,8 +129,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
 
     if (m_currentAction == Translation) {
       translate(delta);
-    }
-    else {
+    } else {
       // get the center of the selected atoms
       Vector3 centroid(0.0, 0.0, 0.0);
       unsigned long selectedAtomCount = 0;
@@ -151,7 +137,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
         if (!m_molecule->atomSelected(i))
           continue;
 
-      centroid += m_molecule->atomPosition3d(i);
+        centroid += m_molecule->atomPosition3d(i);
         selectedAtomCount++;
       }
       if (selectedAtomCount > 0)
@@ -260,5 +246,4 @@ void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

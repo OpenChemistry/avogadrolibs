@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "lammpsinputdialog.h"
@@ -37,8 +26,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
   : QDialog(parent, flag), m_molecule(nullptr),
@@ -207,7 +195,7 @@ void LammpsInputDialog::addMoleculeDataTab()
 
 void LammpsInputDialog::textEditModified()
 {
-  if (QTextEdit* edit = qobject_cast<QTextEdit*>(sender())) {
+  if (auto* edit = qobject_cast<QTextEdit*>(sender())) {
     if (edit->document()->isModified()) {
       deckDirty(true);
     } else {
@@ -975,6 +963,5 @@ void LammpsInputDialog::determineAtomTypesSPC(int& hyd, int& oxy)
   // returns a different order for O and H.
   hyd = AtomType.value("O");
   oxy = AtomType.value("H");
-}
 }
 }

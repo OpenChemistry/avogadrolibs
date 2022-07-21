@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "fileformat.h"
@@ -20,8 +9,7 @@
 #include <locale>
 #include <sstream>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using std::ifstream;
 using std::locale;
@@ -46,7 +34,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
     // Imbue the standard C locale.
     locale cLocale("C");
     if (m_mode & Read) {
-      ifstream* file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
+      auto* file = new ifstream(m_fileName.c_str(), std::ifstream::binary);
       m_in = file;
       if (file->is_open()) {
         m_in->imbue(cLocale);
@@ -56,7 +44,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
         return false;
       }
     } else if (m_mode & Write) {
-      ofstream* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
+      auto* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
       m_out = file;
       if (file->is_open()) {
         m_out->imbue(cLocale);
@@ -155,5 +143,4 @@ void FileFormat::appendError(const std::string& errorString, bool newLine)
     m_error += "\n";
 }
 
-} // namespace Io
 } // namespace Avogadro

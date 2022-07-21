@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Marcus Johansson <mcodev31@gmail.com>
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "symmetryscene.h"
@@ -34,8 +23,7 @@
 
 using namespace Avogadro;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Rendering::CylinderGeometry;
@@ -76,9 +64,9 @@ void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
                              float resolutionDeg)
 {
   // Prepare rotation, calculate sizes
-  const unsigned int numTriangles =
+  const auto numTriangles =
     static_cast<unsigned int>(std::fabs(std::ceil(degreesCCW / resolutionDeg)));
-  const size_t numVerts = static_cast<size_t>(numTriangles + 2);
+  const auto numVerts = static_cast<size_t>(numTriangles + 2);
   const float stepAngleRads =
     (degreesCCW / static_cast<float>(numTriangles)) * DEG_TO_RAD_F;
   const Eigen::AngleAxisf rot(stepAngleRads, normal);
@@ -88,8 +76,8 @@ void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
 
   // Generate vertices
   Array<Vector3f> verts(numVerts);
-  Array<Vector3f>::iterator vertsInserter(verts.begin());
-  Array<Vector3f>::iterator vertsEnd(verts.end());
+  auto vertsInserter(verts.begin());
+  auto vertsEnd(verts.end());
   Vector3f radial = startEdge;
   *(vertsInserter++) = origin;
   *(vertsInserter++) = origin + radial;
@@ -98,8 +86,8 @@ void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
 
   // Generate indices
   Array<unsigned int> indices(numTriangles * 3);
-  Array<unsigned int>::iterator indexInserter(indices.begin());
-  Array<unsigned int>::iterator indexEnd(indices.end());
+  auto indexInserter(indices.begin());
+  auto indexEnd(indices.end());
   for (unsigned int i = 1; indexInserter != indexEnd; ++i) {
     *(indexInserter++) = 0;
     *(indexInserter++) = i;
@@ -119,46 +107,41 @@ SymmetryScene::SymmetryScene(QObject* p)
 
 SymmetryScene::~SymmetryScene() {}
 
-void SymmetryScene::process(const Core::Molecule& coreMolecule,
+void SymmetryScene::process(const QtGui::Molecule& molecule,
                             Rendering::GroupNode& node)
 {
-  const QtGui::Molecule* molecule =
-    dynamic_cast<const QtGui::Molecule*>(&coreMolecule);
-  if (!molecule)
-    return;
-
-  QVariant origo = molecule->property("SymmetryOrigo");
-  QVariant radius = molecule->property("SymmetryRadius");
-  QVariant inversion = molecule->property("SymmetryInversion");
+  QVariant origo = molecule.property("SymmetryOrigo");
+  QVariant radius = molecule.property("SymmetryRadius");
+  QVariant inversion = molecule.property("SymmetryInversion");
   QVariant properRotation =
-    molecule->property("SymmetryProperRotationVariantList");
+    molecule.property("SymmetryProperRotationVariantList");
   QVariant improperRotation =
-    molecule->property("SymmetryImproperRotationVariantList");
-  QVariant reflection = molecule->property("SymmetryReflectionVariantList");
+    molecule.property("SymmetryImproperRotationVariantList");
+  QVariant reflection = molecule.property("SymmetryReflectionVariantList");
   if (!origo.isValid() || !radius.isValid()) {
     return;
   }
 
-  QVector3D qorigo = origo.value<QVector3D>();
+  auto qorigo = origo.value<QVector3D>();
   Vector3f forigo = Vector3f(qorigo.x(), qorigo.y(), qorigo.z());
   float fradius = radius.toFloat();
 
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  SphereGeometry* spheres = new SphereGeometry;
+  auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
   geometry->addDrawable(spheres);
 
-  CylinderGeometry* cylinders = new CylinderGeometry;
+  auto* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
   geometry->addDrawable(cylinders);
 
   if (inversion.isValid()) {
     Vector3ub color(0, 0, 255);
-    QVector3D qvec = inversion.value<QVector3D>();
+    auto qvec = inversion.value<QVector3D>();
     Vector3f fvec = Vector3f(qvec.x(), qvec.y(), qvec.z());
     spheres->addSphere(fvec, color, 0.3f);
   }
@@ -167,7 +150,7 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
     Vector3ub color(255, 0, 0);
     QVariantList properRotationVariantList = properRotation.toList();
     foreach (QVariant qv, properRotationVariantList) {
-      QVector3D qvec = qv.value<QVector3D>();
+      auto qvec = qv.value<QVector3D>();
       Vector3f fvec = Vector3f(qvec.x(), qvec.y(), qvec.z());
       cylinders->addCylinder(forigo, forigo + 1.1 * fradius * fvec, 0.05f,
                              color);
@@ -183,7 +166,7 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
     QVariantList reflectionVariantList = reflection.toList();
 
     foreach (QVariant qv, reflectionVariantList) {
-      QVector3D qvec = qv.value<QVector3D>();
+      auto qvec = qv.value<QVector3D>();
       // normal to the mirror plane
       Vector3f vecNormal = Vector3f(qvec.x(), qvec.y(), qvec.z());
 
@@ -196,7 +179,7 @@ void SymmetryScene::process(const Core::Molecule& coreMolecule,
 
       vecPlane = vecPlane.normalized() * fradius;
 
-      ArcSector* sect = new ArcSector;
+      auto* sect = new ArcSector;
       geometry->addDrawable(sect);
       sect->setColor(Vector3ub(color));
       sect->setOpacity(127); // 50%
@@ -229,5 +212,4 @@ void SymmetryScene::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

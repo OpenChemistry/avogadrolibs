@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gaussiansetconcurrent.h"
@@ -25,8 +14,7 @@
 
 #include <QtConcurrent/QtConcurrentMap>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::BasisSet;
 using Core::Cube;
@@ -68,7 +56,7 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
   if (!mol)
     return;
   m_set = dynamic_cast<GaussianSet*>(mol->basisSet());
-  if (m_tools)
+  
     delete m_tools;
   m_tools = new GaussianSetTools(mol);
 }
@@ -152,6 +140,5 @@ void GaussianSetConcurrent::processSpinDensity(GaussianShell& shell)
 {
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
-}
 }
 }

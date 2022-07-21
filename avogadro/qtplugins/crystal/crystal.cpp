@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "crystal.h"
@@ -33,11 +22,9 @@
 #include <QtCore/QStringList>
 
 using Avogadro::Core::CrystalTools;
-using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Crystal::Crystal(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
@@ -51,7 +38,7 @@ Crystal::Crystal(QObject* parent_)
     m_toggleUnitCellAction(new QAction(this)),
     m_wrapAtomsToCellAction(new QAction(this))
 {
-  m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard"));
+  m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard…"));
   connect(m_importCrystalClipboardAction, SIGNAL(triggered()),
           SLOT(importCrystalClipboard()));
   m_actions.push_back(m_importCrystalClipboardAction);
@@ -63,7 +50,7 @@ Crystal::Crystal(QObject* parent_)
   m_actions.push_back(m_toggleUnitCellAction);
   m_toggleUnitCellAction->setProperty("menu priority", 210);
 
-  m_editUnitCellAction->setText(tr("Edit Unit Cell..."));
+  m_editUnitCellAction->setText(tr("Edit Unit Cell…"));
   connect(m_editUnitCellAction, SIGNAL(triggered()), SLOT(editUnitCell()));
   m_actions.push_back(m_editUnitCellAction);
   m_editUnitCellAction->setProperty("menu priority", 190);
@@ -80,12 +67,12 @@ Crystal::Crystal(QObject* parent_)
   m_actions.push_back(m_standardOrientationAction);
   m_standardOrientationAction->setProperty("menu priority", 170);
 
-  m_scaleVolumeAction->setText(tr("Scale Cell &Volume"));
+  m_scaleVolumeAction->setText(tr("Scale Cell &Volume…"));
   connect(m_scaleVolumeAction, SIGNAL(triggered()), SLOT(scaleVolume()));
   m_actions.push_back(m_scaleVolumeAction);
   m_scaleVolumeAction->setProperty("menu priority", 160);
 
-  m_buildSupercellAction->setText(tr("Build &Supercell"));
+  m_buildSupercellAction->setText(tr("Build &Supercell…"));
   connect(m_buildSupercellAction, SIGNAL(triggered()), SLOT(buildSupercell()));
   m_actions.push_back(m_buildSupercellAction);
   m_buildSupercellAction->setProperty("menu priority", 150);
@@ -139,7 +126,7 @@ void Crystal::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -247,5 +234,4 @@ void Crystal::wrapAtomsToCell()
   m_molecule->undoMolecule()->wrapAtomsToCell();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

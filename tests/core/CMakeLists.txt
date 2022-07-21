@@ -14,6 +14,7 @@ set(tests
   Mesh
   Molecule
   Mutex
+  NeighborPerceiver
   RingPerceiver
   Spacegroup
   Utilities

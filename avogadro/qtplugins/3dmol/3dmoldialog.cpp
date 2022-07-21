@@ -28,8 +28,7 @@
 
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ThreeDMolDialog::ThreeDMolDialog(QtGui::Molecule* mol, QWidget* parent_)
   : QDialog(parent_), m_molecule(nullptr), m_ui(new Ui::ThreeDMolDialog)
@@ -58,7 +57,7 @@ void ThreeDMolDialog::setMolecule(QtGui::Molecule* mol)
 
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateLabels()));
   connect(m_molecule, SIGNAL(destroyed()), SLOT(moleculeDestroyed()));
-  connect(m_ui->exitButton, SIGNAL(clicked()), SLOT(close()));
+  connect(m_ui->closeButton, SIGNAL(clicked()), SLOT(close()));
   connect(m_ui->copyButton, SIGNAL(clicked()), SLOT(copyToClipboard()));
 
   updateLabels();
@@ -124,5 +123,4 @@ void ThreeDMolDialog::copyToClipboard()
   QApplication::clipboard()->setText(m_ui->plainTextEdit->toPlainText());
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

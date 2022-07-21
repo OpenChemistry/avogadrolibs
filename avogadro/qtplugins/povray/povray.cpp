@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "povray.h"
@@ -33,12 +22,11 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 POVRay::POVRay(QObject* p)
   : Avogadro::QtGui::ExtensionPlugin(p), m_molecule(nullptr), m_scene(nullptr),
-    m_camera(nullptr), m_action(new QAction(tr("POV-Ray Render"), this))
+    m_camera(nullptr), m_action(new QAction(tr("POV-Ray Render…"), this))
 {
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
@@ -94,5 +82,4 @@ void POVRay::render()
   file.close();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

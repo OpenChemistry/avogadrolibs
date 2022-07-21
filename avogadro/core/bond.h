@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_BOND_H
@@ -103,6 +92,16 @@ public:
   AtomType atom1() const;
   AtomType atom2() const;
   /** @} */
+
+  /**
+   * @return The atom in the bond such that returned.index() != index.
+   */
+  AtomType getOtherAtom(Index index) const;
+
+  /**
+   * @return The atom in the bond such that returned.index() != atom.index().
+   */
+  AtomType getOtherAtom(AtomType atom) const;
 
   /**
    * The bond's order (single = 1, double = 2, etc.)
@@ -202,6 +201,24 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
   const
 {
   return AtomType(m_molecule, m_molecule->bondPairs()[m_index].second);
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(Index index)
+  const
+{
+  if (atom1().index() == index)
+    return atom2();
+  else
+    return atom1();
+}
+
+template <class Molecule_T>
+typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(
+    BondTemplate<Molecule_T>::AtomType atom
+) const
+{
+  return getOtherAtom(atom.index());
 }
 
 template <class Molecule_T>

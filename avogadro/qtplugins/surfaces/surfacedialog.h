@@ -1,24 +1,15 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2009 Marcus D. Hanwell
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+
 #ifndef AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 #define AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 
 #include <QtCore/QStringList>
 #include <QtWidgets/QDialog>
+
+#include <set>
 
 #include "surfaces.h"
 // for the enum
@@ -46,10 +37,17 @@ public:
   void setupBasis(int numElectrons, int numMOs, bool beta);
   void setupCubes(QStringList cubeNames);
   void setupSteps(int stepCount);
+  void setupModels(
+    const std::set<std::pair<std::string, std::string>> &chargeModels
+  );
   void reenableCalculateButton();
   void enableRecord();
 
   Surfaces::Type surfaceType();
+  
+  Surfaces::ColorProperty colorProperty();
+  QString colorModel();
+  QString colormapName();
 
   /**
    * This holds the value of the molecular orbital at present.
@@ -63,7 +61,11 @@ public:
 
   float isosurfaceValue();
 
+  int smoothingPassesValue();
+
   float resolution();
+
+  bool automaticResolution();
 
   int step();
   void setStep(int step);
@@ -72,7 +74,9 @@ public slots:
 
 protected slots:
   void surfaceComboChanged(int n);
+  void propertyComboChanged(int n);
   void resolutionComboChanged(int n);
+  void smoothingComboChanged(int n);
   void calculateClicked();
   void record();
 
@@ -83,6 +87,8 @@ signals:
 
 private:
   Ui::SurfaceDialog* m_ui;
+  bool m_automaticResolution;
+  std::set<std::pair<std::string, std::string>> m_chargeModels;
 };
 
 } // End namespace QtPlugins

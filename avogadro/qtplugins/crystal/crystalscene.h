@@ -10,6 +10,7 @@
 #include <avogadro/qtgui/sceneplugin.h>
 
 #include <QtGui/QColor> 
+
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -24,7 +25,7 @@ public:
   explicit CrystalScene(QObject* parent = nullptr);
   ~CrystalScene() override;
 
-  void process(const Core::Molecule& molecule,
+  void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Crystal Lattice"); }
@@ -34,12 +35,6 @@ public:
     return tr("Render the unit cell boundaries.");
   }
 
-  bool isEnabled() const override;
-
-  bool isActiveLayerEnabled() const override;
-
-  void setEnabled(bool enable) override;
-
   QWidget* setupWidget() override;
 
 private slots:
@@ -47,7 +42,7 @@ private slots:
   void setLineWidth(double width);
 
 private:
-  bool m_enabled;
+  std::string m_name = "Crystal Lattice";
 
   QWidget* m_setupWidget;
   float m_lineWidth;

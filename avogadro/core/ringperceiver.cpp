@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2011-2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "ringperceiver.h"
@@ -25,8 +14,7 @@
 #include <set>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 namespace {
 
@@ -134,28 +122,22 @@ std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
     path.push_back(j);
     splicedPaths.push_back(path);
   } else if (ijPaths.empty()) {
-    for (std::vector<std::vector<size_t>>::iterator iter = jkPaths.begin();
-         iter != jkPaths.end(); ++iter) {
+    for (auto & jkPath : jkPaths) {
       std::vector<size_t> path;
       path.push_back(j);
-      path.insert(path.end(), iter->begin(), iter->end());
+      path.insert(path.end(), jkPath.begin(), jkPath.end());
       splicedPaths.push_back(path);
     }
   } else if (jkPaths.empty()) {
-    for (std::vector<std::vector<size_t>>::iterator iter = ijPaths.begin();
-         iter != ijPaths.end(); ++iter) {
-      std::vector<size_t> path = *iter;
+    for (auto path : ijPaths) {
       path.push_back(j);
       splicedPaths.push_back(path);
     }
   } else {
-    for (std::vector<std::vector<size_t>>::iterator ijIter = ijPaths.begin();
-         ijIter != ijPaths.end(); ++ijIter) {
-      for (std::vector<std::vector<size_t>>::iterator jkIter = jkPaths.begin();
-           jkIter != jkPaths.end(); ++jkIter) {
-        std::vector<size_t> path = *ijIter;
+    for (auto path : ijPaths) {
+      for (auto & jkPath : jkPaths) {
         path.push_back(j);
-        path.insert(path.end(), jkIter->begin(), jkIter->end());
+        path.insert(path.end(), jkPath.begin(), jkPath.end());
         splicedPaths.push_back(path);
       }
     }
@@ -289,10 +271,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
   std::set<size_t> pathSet;
   pathSet.insert(path.begin(), path.end());
 
-  for (std::vector<std::vector<size_t>>::const_iterator iter = m_rings.begin();
-       iter != m_rings.end(); ++iter) {
-    const std::vector<size_t>& ring = *iter;
-
+  for (const auto & ring : m_rings) {
     std::set<size_t> ringSet;
     ringSet.insert(ring.begin(), ring.end());
 
@@ -319,10 +298,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
                                   std::max(path.front(), path.back())));
 
   // Remove bonds from path bonds that are already in a smaller ring.
-  for (std::vector<std::vector<size_t>>::const_iterator iter = m_rings.begin();
-       iter != m_rings.end(); ++iter) {
-    const std::vector<size_t>& ring = *iter;
-
+  for (const auto & ring : m_rings) {
     if (ring.size() >= path.size())
       continue;
 
@@ -336,10 +312,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
   }
 
   // Check if any other ring contains the same bonds.
-  for (std::vector<std::vector<size_t>>::const_iterator iter = m_rings.begin();
-       iter != m_rings.end(); ++iter) {
-    const std::vector<size_t>& ring = *iter;
-
+  for (const auto & ring : m_rings) {
     std::set<std::pair<size_t, size_t>> ringBonds;
 
     // Add ring bonds.
@@ -427,7 +400,7 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
           size = 2 * D(i, j) + 1;
 
         if (size > 2)
-          candidates.push_back(RingCandidate(size, i, j));
+          candidates.emplace_back(size, i, j);
       }
     }
   }
@@ -438,10 +411,7 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
   // Algorithm 3 - find sssr from the ring candidate set.
   Sssr sssr;
 
-  for (std::vector<RingCandidate>::iterator iter = candidates.begin();
-       iter != candidates.end(); ++iter) {
-    const RingCandidate& candidate = *iter;
-
+  for (auto & candidate : candidates) {
     // odd sized ring
     if (candidate.size() & 1) {
       for (size_t i = 0; i < Pt(candidate.start(), candidate.end()).size();
@@ -527,5 +497,4 @@ std::vector<std::vector<size_t>>& RingPerceiver::rings()
   return m_rings;
 }
 
-} // end Core namespace
 } // end Avogadro namespace

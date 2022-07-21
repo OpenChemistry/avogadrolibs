@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "generichighlighter.h"
 
 #include <cassert>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 GenericHighlighter::GenericHighlighter(QObject* parent_)
   : QSyntaxHighlighter(parent_)
@@ -80,22 +68,21 @@ QList<GenericHighlighter::Rule> GenericHighlighter::rules() const
 void GenericHighlighter::highlightBlock(const QString& text)
 {
   typedef QList<Rule>::iterator RuleIter;
-  for (RuleIter it = m_rules.begin(), end = m_rules.end(); it != end; ++it)
-    it->apply(text, *this);
+  for (auto & m_rule : m_rules)
+    m_rule.apply(text, *this);
 }
 
 void GenericHighlighter::Rule::apply(const QString& text,
                                      GenericHighlighter& highlighter)
 {
   typedef QList<QRegExp>::iterator PatternIter;
-  for (PatternIter it = m_patterns.begin(), end = m_patterns.end(); it != end;
-       ++it) {
-    int index = it->indexIn(text);
+  for (auto & m_pattern : m_patterns) {
+    int index = m_pattern.indexIn(text);
     while (index >= 0) {
       // If using a regex with capture groups defined, only highlight the
       // capture groups.
-      if (it->captureCount() > 0) {
-        QStringList capturedTexts(it->capturedTexts());
+      if (m_pattern.captureCount() > 0) {
+        QStringList capturedTexts(m_pattern.capturedTexts());
         QString match(capturedTexts.takeFirst());
         foreach (const QString& capture, capturedTexts) {
           int capOffset(match.indexOf(capture));
@@ -105,11 +92,11 @@ void GenericHighlighter::Rule::apply(const QString& text,
             capOffset = match.indexOf(capture, capOffset + capLength);
           }
         }
-        index = it->indexIn(text, index + match.size());
+        index = m_pattern.indexIn(text, index + match.size());
       } else {
-        int length(it->matchedLength());
+        int length(m_pattern.matchedLength());
         highlighter.setFormat(index, length, m_format);
-        index = it->indexIn(text, index + length);
+        index = m_pattern.indexIn(text, index + length);
       }
     }
   }
@@ -125,5 +112,4 @@ void GenericHighlighter::Rule::setFormat(const QTextCharFormat& format)
   m_format = format;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

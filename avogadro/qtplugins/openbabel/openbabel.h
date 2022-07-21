@@ -8,7 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include <QtCore/QMap>
+#include <QtCore/QMultiMap>
 
 class QAction;
 class QProgressDialog;
@@ -94,10 +94,11 @@ private:
   QList<QByteArray> m_moleculeQueue;
   bool m_readFormatsPending;
   bool m_writeFormatsPending;
-  QMap<QString, QString> m_readFormats;
-  QMap<QString, QString> m_writeFormats;
-  QMap<QString, QString> m_forceFields;
-  QMap<QString, QString> m_charges;
+  QMultiMap<QString, QString> m_readFormats;
+  QMultiMap<QString, QString> m_writeFormats;
+  QMultiMap<QString, QString> m_forceFields;
+  QMultiMap<QString, QString> m_charges;
+  std::string m_defaultFormat;
   QProgressDialog* m_progress;
 };
 }

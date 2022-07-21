@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "linestripgeometry.h"
@@ -43,8 +32,7 @@ using Avogadro::Vector4ub;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 const size_t LineStripGeometry::InvalidIndex =
   std::numeric_limits<size_t>::max();
@@ -109,6 +97,11 @@ void LineStripGeometry::update()
     d->program.attachShader(d->fragmentShader);
     if (!d->program.link())
       cout << d->program.error() << endl;
+
+    d->program.detachShader(d->vertexShader);
+    d->program.detachShader(d->fragmentShader);
+    d->vertexShader.cleanup();
+    d->fragmentShader.cleanup();
   }
 }
 
@@ -151,9 +144,9 @@ void LineStripGeometry::render(const Camera& camera)
   }
 
   // Render the linestrips using the shader and bound VBO.
-  Array<unsigned int>::const_iterator startIter = m_lineStarts.begin();
-  Array<unsigned int>::const_iterator startEnd = m_lineStarts.end();
-  Array<float>::const_iterator widthIter = m_lineWidths.begin();
+  auto startIter = m_lineStarts.begin();
+  auto startEnd = m_lineStarts.end();
+  auto widthIter = m_lineWidths.begin();
   unsigned int startIndex;
   unsigned int endIndex;
   while (startIter + 1 != startEnd) {
@@ -200,9 +193,9 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
   m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
   m_lineWidths.push_back(lineWidth);
 
-  Array<Vector4ub>::const_iterator colorIter(rgba.begin());
-  Array<Vector3f>::const_iterator vertIter(vertices.begin());
-  Array<Vector3f>::const_iterator vertEnd(vertices.end());
+  auto colorIter(rgba.begin());
+  auto vertIter(vertices.begin());
+  auto vertEnd(vertices.end());
 
   m_vertices.reserve(m_vertices.size() + vertices.size());
   while (vertIter != vertEnd)
@@ -223,9 +216,9 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
   m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
   m_lineWidths.push_back(lineWidth);
 
-  Array<Vector3ub>::const_iterator colorIter(rgb.begin());
-  Array<Vector3f>::const_iterator vertIter(vertices.begin());
-  Array<Vector3f>::const_iterator vertEnd(vertices.end());
+  auto colorIter(rgb.begin());
+  auto vertIter(vertices.begin());
+  auto vertEnd(vertices.end());
 
   m_vertices.reserve(m_vertices.size() + vertices.size());
   Vector4ub tmpColor(0, 0, 0, m_opacity);
@@ -248,8 +241,8 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
   m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
   m_lineWidths.push_back(lineWidth);
 
-  Array<Vector3f>::const_iterator vertIter(vertices.begin());
-  Array<Vector3f>::const_iterator vertEnd(vertices.end());
+  auto vertIter(vertices.begin());
+  auto vertEnd(vertices.end());
 
   m_vertices.reserve(m_vertices.size() + vertices.size());
   Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
@@ -260,5 +253,4 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
   return result;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

@@ -18,8 +18,7 @@
 
 #include "qtaimwavefunctionevaluator.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMWavefunctionEvaluator::QTAIMWavefunctionEvaluator(QTAIMWavefunction& wfn)
 {
@@ -163,7 +162,7 @@ qreal QTAIMWavefunctionEvaluator::electronDensity(const Matrix<qreal, 3, 1> xyz)
   return value;
 }
 
-const Matrix<qreal, 3, 1> QTAIMWavefunctionEvaluator::gradientOfElectronDensity(
+Matrix<qreal, 3, 1> QTAIMWavefunctionEvaluator::gradientOfElectronDensity(
   Matrix<qreal, 3, 1> xyz)
 {
 
@@ -252,7 +251,7 @@ const Matrix<qreal, 3, 1> QTAIMWavefunctionEvaluator::gradientOfElectronDensity(
   return value;
 }
 
-const Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::hessianOfElectronDensity(
+Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::hessianOfElectronDensity(
   const Matrix<qreal, 3, 1> xyz)
 {
 
@@ -404,7 +403,7 @@ const Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::hessianOfElectronDensity(
   return value;
 }
 
-const Matrix<qreal, 3, 4>
+Matrix<qreal, 3, 4>
 QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensity(
   const Matrix<qreal, 3, 1> xyz)
 {
@@ -711,7 +710,7 @@ qreal QTAIMWavefunctionEvaluator::laplacianOfElectronDensity(
   return value;
 }
 
-const Matrix<qreal, 3, 1>
+Matrix<qreal, 3, 1>
 QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
   const Matrix<qreal, 3, 1> xyz)
 {
@@ -964,7 +963,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
   return value;
 }
 
-const Matrix<qreal, 3, 3>
+Matrix<qreal, 3, 3>
 QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
   const Matrix<qreal, 3, 1> xyz)
 {
@@ -1371,7 +1370,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
   return value;
 }
 
-const Matrix<qreal, 3, 4>
+Matrix<qreal, 3, 4>
 QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
   const Matrix<qreal, 3, 1> xyz)
 {
@@ -2043,7 +2042,7 @@ qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK(
   return value;
 }
 
-const Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
+Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
   const Matrix<qreal, 3, 1> xyz)
 {
 
@@ -2195,5 +2194,4 @@ const Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
   return 0.25 * value;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

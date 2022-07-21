@@ -13,12 +13,12 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cctype>
 #include <istream>
 #include <string>
 
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
@@ -33,8 +33,7 @@ using std::istringstream;
 using std::string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 PdbFormat::PdbFormat() {}
 
@@ -74,13 +73,13 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       Real beta = lexicalCast<Real>(buffer.substr(40, 7), ok) * DEG_TO_RAD;
       Real gamma = lexicalCast<Real>(buffer.substr(47, 8), ok) * DEG_TO_RAD;
 
-      Core::UnitCell* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
       mol.setUnitCell(cell);
     }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
       // First we initialize the residue instance
-      size_t residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
+      auto residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
       if (!ok) {
         appendError("Failed to parse residue sequence number: " +
                     buffer.substr(22, 4));
@@ -90,7 +89,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (residueId != currentResidueId) {
         currentResidueId = residueId;
 
-        string residueName = lexicalCast<string>(buffer.substr(17, 3), ok);
+        auto residueName = lexicalCast<string>(buffer.substr(17, 3), ok);
         if (!ok) {
           appendError("Failed to parse residue name: " + buffer.substr(17, 3));
           return false;
@@ -106,7 +105,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           r->setHeterogen(true);
       }
 
-      string atomName = lexicalCast<string>(buffer.substr(12, 4), ok);
+      auto atomName = lexicalCast<string>(buffer.substr(12, 4), ok);
       if (!ok) {
         appendError("Failed to parse atom name: " + buffer.substr(12, 4));
         return false;
@@ -136,6 +135,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       element = trimmed(element);
       if (element == "SE") // For Sulphur
         element = 'S';
+      if (element.length() == 2)
+        element[1] = std::tolower(element[1]);
 
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       if (atomicNum == 255)
@@ -203,6 +204,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   } // End while loop
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
+  perceiveSubstitutedCations(mol);
   SecondaryStructureAssigner ssa;
   ssa.assign(&mol);
 
@@ -212,16 +214,54 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 std::vector<std::string> PdbFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("pdb");
+  ext.emplace_back("pdb");
   return ext;
 }
 
 std::vector<std::string> PdbFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("chemical/x-pdb");
+  mime.emplace_back("chemical/x-pdb");
   return mime;
 }
 
-} // namespace Io
+void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
+{
+  for (Index i = 0; i < molecule.atomCount(); i++) {
+    unsigned char requiredBondCount(0);
+    switch(molecule.atomicNumber(i)) {
+      case 7:
+      case 15:
+      case 33:
+      case 51:
+        requiredBondCount = 4;
+        break;
+      case 8:
+      case 16:
+      case 34:
+      case 52:
+        requiredBondCount = 3;
+    }
+    if (!requiredBondCount)
+      continue;
+
+    unsigned char bondCount(0);
+    Index j = 0;
+    for (const auto &bond : molecule.bonds(i)) {
+      unsigned char otherAtomicNumber(0);
+      otherAtomicNumber = molecule.atomicNumber(bond.getOtherAtom(i).index());
+      bondCount += bond.order();
+      if (otherAtomicNumber && otherAtomicNumber != 6) {
+        bondCount = 0;
+        break;
+      }
+      j++;
+    }
+
+    if (bondCount == requiredBondCount) {
+      molecule.setFormalCharge(i, 1);
+    }
+  }
+}
+
 } // namespace Avogadro

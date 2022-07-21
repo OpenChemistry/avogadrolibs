@@ -67,6 +67,7 @@ public slots:
   void updateRows();
 
 private:
+  QString getTranslatedName(const std::string& name) const;
   size_t m_item;
 };
 

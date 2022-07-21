@@ -19,9 +19,9 @@ set(HEADERS
   atom.h
   atomtyper.h
   atomtyper-inline.h
+  atomutilities.h
   avogadrocore.h
   basisset.h
-  connectedgroup.h
   bond.h
   color3f.h
   coordinateset.h
@@ -40,6 +40,7 @@ set(HEADERS
   molecule.h
   mutex.h
   nameatomtyper.h
+  neighborperceiver.h
   residue.h
   ringperceiver.h
   secondarystructure.h
@@ -59,7 +60,7 @@ set(HEADERS
 
 set(SOURCES
   angleiterator.cpp
-  connectedgroup.cpp
+  atomutilities.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp
   cube.cpp
@@ -75,6 +76,7 @@ set(SOURCES
   molecule.cpp
   mutex.cpp
   nameatomtyper.cpp
+  neighborperceiver.cpp
   residue.cpp
   ringperceiver.cpp
   secondarystructure.cpp

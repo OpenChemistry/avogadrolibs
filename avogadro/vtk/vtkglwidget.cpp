@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "vtkglwidget.h"
@@ -44,8 +33,7 @@
 
 #include <QtGui/QSurfaceFormat>
 
-namespace Avogadro {
-namespace VTK {
+namespace Avogadro::VTK {
 
 using QtGui::Molecule;
 
@@ -60,10 +48,10 @@ vtkImageData* createCubeImageData(Core::Cube* cube)
   data->SetOrigin(cube->min().x(), cube->min().y(), cube->min().z());
   data->SetSpacing(cube->spacing().data());
 
-  data->AllocateScalars(VTK_DOUBLE, 1);
+  data->AllocateScalars(VTK_FLOAT, 1);
 
-  double* dataPtr = static_cast<double*>(data->GetScalarPointer());
-  std::vector<double>* cubePtr = cube->data();
+  auto* dataPtr = static_cast<double*>(data->GetScalarPointer());
+  std::vector<float>* cubePtr = cube->data();
 
   for (int i = 0; i < dim.x(); ++i) {
     for (int j = 0; j < dim.y(); ++j) {
@@ -123,7 +111,7 @@ void vtkGLWidget::cubeVolume(Core::Cube* cube)
 }
 
 vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
-  : QVTKOpenGLWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
+  : QVTKOpenGLStereoWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
@@ -131,16 +119,15 @@ vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
           SLOT(updateScene()));
 
   // Set up our renderer, window, scene, etc.
-  vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
-  SetRenderWindow(renderWindow);
-  GetRenderWindow()->AddRenderer(m_vtkRenderer);
-  setFormat(QVTKOpenGLWidget::defaultFormat());
-  vtkNew<vtkInteractorStyleTrackballCamera> interactor;
-  GetInteractor()->SetInteractorStyle(interactor);
-  GetInteractor()->Initialize();
+  vtkNew<vtkGenericOpenGLRenderWindow> renderWin;
+  setRenderWindow(renderWin);
+  renderWindow()->AddRenderer(m_vtkRenderer);
+  setFormat(QVTKOpenGLStereoWidget::defaultFormat());
+  vtkNew<vtkInteractorStyleTrackballCamera> interact;
+  interactor()->SetInteractorStyle(interact);
+  interactor()->Initialize();
   m_vtkRenderer->SetBackground(1.0, 1.0, 1.0);
 
-  // m_actor->setScene(&this->renderer().scene());
   m_moleculeMapper->UseBallAndStickSettings();
   m_actor->SetMapper(m_moleculeMapper);
   m_actor->GetProperty()->SetAmbient(0.0);
@@ -164,7 +151,7 @@ void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
 {
   clearScene();
   if (m_molecule)
-    disconnect(m_molecule, 0, 0, 0);
+    disconnect(m_molecule, nullptr, nullptr, nullptr);
   m_molecule = mol;
   foreach (QtGui::ToolPlugin* tool, m_tools)
     tool->setMolecule(m_molecule);
@@ -175,7 +162,7 @@ void vtkGLWidget::setMolecule(QtGui::Molecule* mol)
   updateCube();
   // Reset the camera, re-render.
   m_vtkRenderer->ResetCamera();
-  GetRenderWindow()->Render();
+  renderWindow()->Render();
 }
 
 void vtkGLWidget::updateCube()
@@ -205,7 +192,7 @@ void vtkGLWidget::moleculeChanged(unsigned int c)
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Added || changes & Molecule::Removed) {
     updateCube();
-    GetRenderWindow()->Render();
+    renderWindow()->Render();
   }
 }
 
@@ -282,22 +269,22 @@ void vtkGLWidget::updateScene()
   if (mol) {
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
-    Rendering::GroupNode* moleculeNode = new Rendering::GroupNode(&node);
+    auto* moleculeNode = new Rendering::GroupNode(&node);
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
-      Rendering::GroupNode* engineNode = new Rendering::GroupNode(moleculeNode);
+      auto* engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*mol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
     if (m_activeTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_activeTool->draw(*toolNode);
     }
 
     if (m_defaultTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_defaultTool->draw(*toolNode);
     }
 
@@ -323,5 +310,4 @@ void vtkGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
-} // namespace VTK
 } // namespace Avogadro

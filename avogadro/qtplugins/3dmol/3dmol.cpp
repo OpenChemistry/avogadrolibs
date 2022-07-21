@@ -22,15 +22,14 @@
 
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ThreeDMol::ThreeDMol(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
     m_dialog(nullptr), m_molecule(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("&3DMol HTML Snippet...");
+  m_action->setText("&3DMol HTML Snippet…");
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -40,7 +39,7 @@ ThreeDMol::~ThreeDMol()
 
 QString ThreeDMol::description() const
 {
-  return tr("ThreeDMol HTML Block.");
+  return tr("3DMol HTML Block.");
 }
 
 QList<QAction*> ThreeDMol::actions() const
@@ -72,5 +71,4 @@ void ThreeDMol::showDialog()
   m_dialog->show();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

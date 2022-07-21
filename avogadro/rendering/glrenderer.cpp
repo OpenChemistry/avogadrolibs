@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "glrenderer.h"
@@ -31,8 +20,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -120,6 +108,7 @@ void GLRenderer::render()
 void GLRenderer::resetCamera()
 {
   resetGeometry();
+  m_camera.setFocus(m_center);
   m_camera.setIdentity();
   m_camera.translate(-m_center);
   m_camera.preTranslate(-2.22f * m_radius * Vector3f::UnitZ());
@@ -128,6 +117,8 @@ void GLRenderer::resetCamera()
 void GLRenderer::resetGeometry()
 {
   m_scene.setDirty(true);
+  if (m_camera.focus()(0) != m_camera.focus()(0) || m_camera.focus() == m_center)
+    m_camera.setFocus(m_scene.center());
   m_center = m_scene.center();
   m_radius = m_scene.radius();
 }
@@ -188,17 +179,16 @@ std::multimap<float, Identifier> GLRenderer::hits(
   if (!group)
     return result;
 
-  for (auto it = group->children().begin(); it != group->children().end();
-       ++it) {
+  for (auto it : group->children()) {
     std::multimap<float, Identifier> loopHits;
-    const Node* itNode = it->node;
-    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    const Node* itNode = it.node;
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
       continue;
     }
-    const GeometryNode* childGeometry = itNode->cast<GeometryNode>();
+    const auto* childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
       result.insert(loopHits.begin(), loopHits.end());
@@ -234,11 +224,10 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
 {
   Array<Identifier> result;
 
-  for (auto it = group->children().begin(); it != group->children().end();
-       ++it) {
+  for (auto it : group->children()) {
     Array<Identifier> loopHits;
-    const Node* itNode = it->node;
-    const GroupNode* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    const Node* itNode = it.node;
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
     if (childGroup) {
       loopHits = hits(childGroup, f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());
@@ -285,5 +274,4 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
   return hits(&m_scene.rootNode(), f);
 }
 
-} // namespace Rendering
 } // namespace Avogadro

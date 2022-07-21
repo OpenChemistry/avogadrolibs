@@ -34,8 +34,7 @@
 
 #include <QtCore/QDebug>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class InsertFragmentDialog::Private
 {
@@ -49,7 +48,7 @@ public:
 
   ~Private()
   {
-    if (model)
+    
       delete model; // proxy is handled through the model
   }
 };
@@ -153,7 +152,7 @@ InsertFragmentDialog::~InsertFragmentDialog()
   delete m_implementation;
 }
 
-const QString InsertFragmentDialog::fileName()
+QString InsertFragmentDialog::fileName()
 {
   if (m_implementation == nullptr || m_implementation->model == nullptr)
     return QString();
@@ -202,5 +201,4 @@ void InsertFragmentDialog::activated()
   emit performInsert(currentFileName, m_implementation->crystalFiles);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

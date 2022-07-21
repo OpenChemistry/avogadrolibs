@@ -7,8 +7,7 @@ name: CMake Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  BUILD_TYPE: Release
-  QT_VERSION: 5.12.10
+  QT_VERSION: 5.15.2
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
@@ -26,20 +25,23 @@ jobs:
             name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
             cpack: "",
           }
         - {
             name: "Ubuntu 18.04 AppImage", artifact: "Avogadro2.AppImage",
             os: ubuntu-18.04,
             cc: "gcc", cxx: "g++",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
             cpack: "",
           }
         - {
             name: "macOS Latest Clang", artifact: "macOS.dmg",
             os: macos-latest,
             cc: "clang", cxx: "clang++",
+            build_type: "Release",
             cmake_flags: "-G Ninja",
             cpack_flags: "-G DragNDrop",
           }
@@ -47,9 +49,42 @@ jobs:
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
+            build_type: "Release",
             cmake_flags: '-DOPENSSL_ROOT_DIR=D:\a\avogadrolibs\Qt\Tools\OpenSSL\Win_x64',
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
+          }
+        - {
+            name: "Ubuntu Address Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "asan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Leak Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "lsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Thread Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "tsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
+            os: ubuntu-20.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "ubsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cpack: "",
           }
 
     steps:
@@ -62,7 +97,11 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install ninja eigen glew
+        if uname -p | grep -q "arm" ; then
+           export PATH=/opt/homebrew/bin:$PATH
+        else # not self-hosted runner
+          brew install ninja eigen glew
+        fi
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -96,6 +135,7 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
+        setup-python: 'false'
 
     - name: Install OpenSSL (Win64)
       if: runner.os == 'Windows'
@@ -126,12 +166,12 @@ jobs:
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{env.BUILD_TYPE}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
@@ -164,6 +204,7 @@ jobs:
         include(ProcessorCount)
         ProcessorCount(N)
         set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
+        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
         execute_process(
           COMMAND ctest -j ${N}
           WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
@@ -174,12 +215,55 @@ jobs:
         endif()
 
     - name: Setup tmate session
-      if: ${{ failure() }}
+      if: runner.os == 'Windows'
       uses: mxschmitt/action-tmate@v3
+
+    - name: Install the Apple certificate
+      # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
+      if: runner.os == 'macOS'
+      working-directory: ${{ runner.workspace }}/build
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
+        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+      run: |
+        # create variables
+        if [ -n "${P12_PASSWORD}" ]; then
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+
+          # create temporary keychain if the cert is non-zero
+          if [ -s $CERTIFICATE_PATH ]; then
+            security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+            security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+            # import certificate to keychain
+            security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security list-keychain -d user -s $KEYCHAIN_PATH
+
+            # signing occurs via avogadroapp cpack instructions
+          fi # certificate exists
+        fi # password exists
 
     - name: Pack
       if: matrix.config.artifact != 0
-      run: cpack ${{ matrix.config.cpack_flags }}
+      shell: bash
+      run: |
+        if [ -z "${P12_PASSWORD}" ]; then
+          unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
+        fi
+        cpack ${{ matrix.config.cpack_flags }}
+      env:
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: AppImage
@@ -189,12 +273,40 @@ jobs:
         mkdir appdir
         mv prefix appdir/usr
         wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines
-        mv *.AppImage avogadroapp # for upload
+        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+        chmod a+x *.AppImage
+        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
+        # add the custom AppRun
+        rm appdir/AppRun
+        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
+        chmod a+x appdir/AppRun
+        ./appimagetool-x86_64.AppImage appdir
+        mv Avogadro2*.AppImage avogadroapp # for upload
         # remove the cpack files
         rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Notarize Mac DMG
+      if: runner.os == 'macOS'
+      run: |
+        # check current directory (failing signing)
+        echo `pwd`
+        ls -ld
+        # check if we have the password and the username
+        if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
+          codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
+          npx notarize-cli --file Avogadro2*.dmg
+        fi
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+      env:
+        NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
+        NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
+        CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
 
     - name: Upload
       if: matrix.config.artifact != 0
@@ -203,76 +315,12 @@ jobs:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
 
-  release:
-    if: contains(github.ref, 'tags/')
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Avogadro ${{ github.ref }}
-        draft: true
-        prerelease: true
-
-    - name: Store Release url
+    - name: Cleanup
+      if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+      shell: bash
       run: |
-        echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
-    - uses: actions/upload-artifact@v2
-      with:
-        path: ./upload_url
-        name: upload_url
-
-  publish:
-    if: contains(github.ref, 'tags/')
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - {
-            name: "Ubuntu Latest GCC", artifact: "Ubuntu-2004.tar.gz",
-            os: ubuntu-latest
-          }
-        - {
-            name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: ubuntu-latest
-          }
-        - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
-            os: ubuntu-latest
-          }
-    needs: release
-
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v1
-      with:
-        name: ${{ matrix.config.artifact }}
-        path: ./
-
-    - name: Download URL
-      uses: actions/download-artifact@v1
-      with:
-        name: upload_url
-        path: ./
-    - id: set_upload_url
-      run: |
-        upload_url=`cat ./upload_url`
-        echo ::set-output name=upload_url::$upload_url
-    - name: Upload to Release
-      id: upload_to_release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
-        asset_path: ./${{ matrix.config.artifact }}
-        asset_name: ${{ matrix.config.artifact }}
-        asset_content_type: application/x-gtar
+        ls -la ./
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        ls -la ./
+ 

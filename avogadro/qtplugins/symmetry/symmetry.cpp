@@ -27,8 +27,7 @@ using Avogadro::QtGui::Molecule;
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_)
@@ -39,7 +38,7 @@ Symmetry::Symmetry(QObject* parent_)
 
   m_ctx = msymCreateContext();
 
-  m_viewSymmetryAction->setText(tr("Symmetry..."));
+  m_viewSymmetryAction->setText(tr("Symmetry…"));
   connect(m_viewSymmetryAction, SIGNAL(triggered()), SLOT(viewSymmetry()));
   m_actions.push_back(m_viewSymmetryAction);
   m_viewSymmetryAction->setProperty("menu priority", -50);
@@ -106,7 +105,7 @@ void Symmetry::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::Added || changes & Molecule::Removed)
     updateActions();
@@ -378,5 +377,4 @@ void Symmetry::standardOrientation()
                           | Molecule::Atoms | Molecule::UnitCell);
 }*/
 
-} // namespace QtPlugins
 } // namespace Avogadro

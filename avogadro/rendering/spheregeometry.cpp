@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "spheregeometry.h"
@@ -38,8 +27,7 @@ namespace {
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -88,8 +76,8 @@ void SphereGeometry::update()
     sphereIndices.reserve(m_indices.size() * 4);
     sphereVertices.reserve(m_spheres.size() * 4);
 
-    std::vector<size_t>::const_iterator itIndex = m_indices.begin();
-    std::vector<SphereColor>::const_iterator itSphere = m_spheres.begin();
+    auto itIndex = m_indices.begin();
+    auto itSphere = m_spheres.begin();
 
     for (size_t i = 0;
          itIndex != m_indices.end() && itSphere != m_spheres.end();
@@ -144,6 +132,11 @@ void SphereGeometry::update()
     d->program.attachShader(d->fragmentShader);
     if (!d->program.link())
       cout << d->program.error() << endl;
+
+    d->program.detachShader(d->vertexShader);
+    d->program.detachShader(d->fragmentShader);
+    d->vertexShader.cleanup();
+    d->fragmentShader.cleanup();
   }
 }
 
@@ -238,7 +231,7 @@ std::multimap<float, Identifier> SphereGeometry::hits(
     id.type = m_identifier.type;
     id.index = m_indices[i];
     if (id.type != InvalidType) {
-      float rootD = static_cast<float>(sqrt(D));
+      auto rootD = static_cast<float>(sqrt(D));
       float depth = std::min(std::abs(B + rootD), std::abs(B - rootD));
       result.insert(std::pair<float, Identifier>(depth, id));
     }
@@ -287,5 +280,4 @@ void SphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

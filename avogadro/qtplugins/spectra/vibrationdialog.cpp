@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "vibrationdialog.h"
@@ -21,8 +10,7 @@
 
 #include <avogadro/core/molecule.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::VibrationDialog)
@@ -54,7 +42,7 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
                SLOT(selectRow(QModelIndex)));
   }
 
-  VibrationModel* model = new VibrationModel(this);
+  auto* model = new VibrationModel(this);
   model->setMolecule(molecule);
   m_ui->tableView->setModel(model);
   connect(m_ui->tableView->selectionModel(),
@@ -81,5 +69,4 @@ void VibrationDialog::selectRow(QModelIndex idx)
   emit modeChanged(idx.row());
 }
 
-} // End namespace QtPlugins
 } // End namespace Avogadro

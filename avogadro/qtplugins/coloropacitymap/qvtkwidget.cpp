@@ -12,17 +12,17 @@
 namespace Avogadro {
 
 QVTKGLWidget::QVTKGLWidget(QWidget* parent, Qt::WindowFlags f)
-  : QVTKOpenGLWidget(parent, f)
+  : QVTKOpenGLStereoWidget(parent, f)
 {
   // Set some defaults for our render window.
   vtkNew<vtkGenericOpenGLRenderWindow> window;
-  SetRenderWindow(window);
-  auto glFormat = QVTKOpenGLWidget::defaultFormat();
+  setRenderWindow(window);
+  auto glFormat = QVTKOpenGLStereoWidget::defaultFormat();
   glFormat.setSamples(8);
   setFormat(glFormat);
 }
 
 QVTKGLWidget::~QVTKGLWidget() = default;
 
-void QVTKGLWidget::setEnableHiDPI(bool) {}
+//void QVTKGLWidget::setEnableHiDPI(bool) {}
 } // namespace Avogadro

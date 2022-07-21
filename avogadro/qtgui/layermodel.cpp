@@ -7,14 +7,13 @@
 #include "molecule.h"
 #include "rwmolecule.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
-using Core::Layer;
 using Core::LayerManager;
 
 namespace {
@@ -68,14 +67,14 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     }
     return QVariant();
   }
-  auto name = tr(names[idx.row()].second.c_str()).toStdString();
+  auto name = names[idx.row()].second;
   auto layer = names[idx.row()].first;
-  bool isLayer = name == tr("Layer").toStdString();
+  bool isLayer = (name == "Layer");
   if (isLayer) {
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return QString("%1 %2").arg(name.c_str()).arg(layer + 1); // count starts at 0 internally
+          return QString(tr("Layer %1")).arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
           if (layer == static_cast<int>(getMoleculeLayer().activeLayer()))
@@ -110,13 +109,50 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return ("  " + name).c_str();
+          return "  " + getTranslatedName(name); // should already be translated
         }
       }
     }
   }
 
   return QVariant();
+}
+
+QString LayerModel::getTranslatedName(const std::string& name) const
+{
+  // This is a bad hack, but whatever..
+  // Put all the strings that show up as layer options
+
+  if (name == "Ball and Stick")
+    return tr("Ball and Stick");
+  else if (name == "Cartoons")
+    return tr("Cartoons", "protein ribbon / cartoon rendering");
+  else if (name == "Close Contacts")
+    return tr("Close Contacts", "rendering of non-covalent close contacts");
+  else if (name == "Crystal Lattice")
+    return tr("Crystal Lattice");
+  else if (name == "Force")
+    return tr("Force");
+  else if (name == "Labels")
+    return tr("Labels");
+  else if (name == "Licorice")
+    return tr("Licorice", "stick / licorice rendering");
+  else if (name == "Meshes")
+    return tr("Meshes");
+  else if (name == "Non-Covalent")
+    return tr("Non-Covalent");
+  else if (name == "Symmetry Elements")
+    return tr("Symmetry Elements");
+  else if (name == "Van der Waals")
+    return tr("Van der Waals");
+  else if (name == "Van der Waals (AO)")
+    return tr("Van der Waals (AO)", "ambient occlusion");
+  else if (name == "Wireframe")
+    return tr("Wireframe");
+
+  qDebug() << "LayerModel: name didn't match: " << name.c_str();
+
+  return QString(name.c_str());
 }
 
 QModelIndex LayerModel::index(int row, int column, const QModelIndex& p) const
@@ -158,6 +194,8 @@ void LayerModel::addMolecule(const Molecule* mol)
   RWLayerManager::addMolecule(mol);
   m_item = 0;
   updateRows();
+
+  connect(mol, &Molecule::changed, this, &LayerModel::updateRows);
 }
 
 void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
@@ -199,5 +237,4 @@ size_t LayerModel::layerCount() const
   return LayerManager::layerCount();
 }
 
-} // namespace QtGui
 } // namespace Avogadro

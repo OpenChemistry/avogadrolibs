@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2019 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "calculationwatcher.h"
@@ -25,8 +14,7 @@
 
 #include <QDebug>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 static void deleteRequestWhenFinished(GirderRequest* r)
 {
@@ -57,7 +45,7 @@ void CalculationWatcher::checkCalculation()
     new GirderRequest(m_networkManager.data(), url, m_girderToken);
   request->get();
 
-  qDebug() << "Checking calculation status...";
+  qDebug() << "Checking calculation status…";
 
   connect(request, &GirderRequest::result, this,
           &CalculationWatcher::finishCheckCalculation);
@@ -83,7 +71,7 @@ void CalculationWatcher::finishCheckCalculation(const QVariant& results)
   // We assume the calculation is done when the cjson is present
   QVariantMap cjson = results.toMap()["cjson"].toMap();
   if (cjson.isEmpty()) {
-    qDebug() << "Calculation still running. Trying again in 5 seconds...";
+    qDebug() << "Calculation still running. Trying again in 5 seconds…";
     // No results yet. Try again in 5 seconds.
     QTimer::singleShot(5000, this, &CalculationWatcher::checkCalculation);
     return;
@@ -106,5 +94,4 @@ void CalculationWatcher::handleError(const QString& msg,
   emit error(message, networkReply);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

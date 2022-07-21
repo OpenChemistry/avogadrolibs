@@ -1,19 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gaussiansettools.h"
@@ -24,13 +11,10 @@
 
 #include <iostream>
 
-using std::cout;
-using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
 {
@@ -168,7 +152,7 @@ inline vector<double> GaussianSetTools::calculateValues(
 
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
-    deltas.push_back(pos -
+    deltas.emplace_back(pos -
                      (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
     dr2.push_back(deltas[i].squaredNorm());
   }
@@ -262,8 +246,8 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 6; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   double componentsD[6] = { delta.x() * delta.x(),   // xx
@@ -295,8 +279,8 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 5; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   // Calculate the prefactors
@@ -334,8 +318,8 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 10; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   double xxx = delta.x() * delta.x() * delta.x(); // xxx
@@ -387,8 +371,8 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (int j = 0; j < 7; ++j)
-      components[j] += gtoCN[cIndex++] * tmpGTO;
+    for (double & component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
   }
 
   double xxx = delta.x() * delta.x() * delta.x(); // xxx
@@ -434,5 +418,4 @@ final normalization
     values[baseIndex + i] += components[i] * componentsF[i];
 }
 
-} // End Core namespace
 } // End Avogadro namespace

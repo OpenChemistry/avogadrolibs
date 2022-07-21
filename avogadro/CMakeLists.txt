@@ -39,7 +39,8 @@ endfunction()
 
 add_subdirectory(core)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
-
+add_subdirectory(calc)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/calc)
 add_subdirectory(io)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)

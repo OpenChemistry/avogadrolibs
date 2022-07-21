@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "coordinateeditordialog.h"
@@ -54,7 +43,6 @@
 #endif // ENABLE_FORMAT_DEBUG
 
 using Avogadro::QtGui::Molecule;
-using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Vector3;
 
@@ -110,8 +98,7 @@ struct AtomStruct
 
 } // end anon namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 // Storage class used to hold state while validating input.
 class CoordinateEditorDialog::ValidateStorage
@@ -154,7 +141,7 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
 
   // Setup spec edit
   QRegExp specRegExp("[#ZGSNabcxyz01_]*");
-  QRegExpValidator* specValidator = new QRegExpValidator(specRegExp, this);
+  auto* specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
           SLOT(presetChanged(int)));
@@ -819,5 +806,4 @@ void CoordinateEditorDialog::clearClicked()
   m_ui->text->document()->clear();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

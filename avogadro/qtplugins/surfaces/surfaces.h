@@ -1,23 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-2013 Kitware, Inc.
-  Copyright 2018 Geoffrey Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+
 #ifndef AVOGADRO_QTPLUGINS_SURFACES_H
 #define AVOGADRO_QTPLUGINS_SURFACES_H
 
 #include <avogadro/qtgui/extensionplugin.h>
+
+#include "tinycolormap.hpp"
+
+#include <avogadro/core/color3f.h>
+
+#include <QtCore/QFutureWatcher>
 
 class QAction;
 class QDialog;
@@ -66,9 +61,15 @@ public:
     FromFile,
     Unknown
   };
+  
+  enum ColorProperty
+  {
+    None,
+    ByElectrostaticPotential
+  };
 
-  QString name() const { return tr("Surfaces"); }
-  QString description() const { return tr("Read and render surfaces."); }
+  QString name() const override { return tr("Surfaces"); }
+  QString description() const override { return tr("Read and render surfaces."); }
 
   QList<QAction*> actions() const override;
 
@@ -80,6 +81,7 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT();
+  void performEDTStep(); // EDT step for SolventExcluded
   void calculateQM();
   void calculateCube();
 
@@ -87,11 +89,20 @@ private slots:
 
   void displayMesh();
   void meshFinished();
+  
+  void colorMesh();
+  void colorMeshByPotential();
 
   void recordMovie();
   void movieFrame();
 
 private:
+  float resolution();
+  Core::Color3f chargeGradient(
+    double value, double clamp, tinycolormap::ColormapType colormap
+  ) const;
+  tinycolormap::ColormapType getColormapFromString(const QString& name) const;
+
   QList<QAction*> m_actions;
   QProgressDialog* m_progressDialog = nullptr;
 
@@ -103,12 +114,18 @@ private:
 
   Core::Cube* m_cube = nullptr;
   std::vector<Core::Cube*> m_cubes;
+  /* One QFutureWatcher per asynchronous slot function, e.g.:*/
+  /* calculateEDT() -> [performEDTStep()] -> displayMesh() */
+  QFutureWatcher<void> m_performEDTStepWatcher;
+  QFutureWatcher<void> m_displayMeshWatcher;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
+  /* displayMesh() -> meshFinished() */
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
 
   float m_isoValue = 0.01;
+  int m_smoothingPasses = 6;
   int m_meshesLeft = 0;
 
   bool m_recordingMovie = false;

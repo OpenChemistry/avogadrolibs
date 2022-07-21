@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "filebrowsewidget.h"
@@ -27,8 +16,7 @@
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QRegExp>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   : QWidget(theParent)
@@ -39,7 +27,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   , m_button(new QPushButton(tr("Browse")))
   , m_edit(new QLineEdit)
 {
-  QHBoxLayout* hbox = new QHBoxLayout;
+  auto* hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
   hbox->addWidget(m_button);
   setLayout(hbox);
@@ -51,7 +39,7 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
 
   // Setup completion
   m_fileSystemModel->setRootPath(QDir::rootPath());
-  QCompleter* fsCompleter = new QCompleter(m_fileSystemModel, this);
+  auto* fsCompleter = new QCompleter(m_fileSystemModel, this);
   m_edit->setCompleter(fsCompleter);
 
   // Connections:
@@ -213,5 +201,4 @@ FileBrowseWidget::Mode FileBrowseWidget::mode() const
   return m_mode;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

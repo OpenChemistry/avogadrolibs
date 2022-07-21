@@ -1,23 +1,16 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_OBFILEFORMAT_H
 #define AVOGADRO_QTPLUGINS_OBFILEFORMAT_H
 
 #include <avogadro/io/fileformat.h>
+
+#include <avogadro/io/cjsonformat.h>
+#include <avogadro/io/cmlformat.h>
+#include <avogadro/io/pdbformat.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -34,6 +27,7 @@ public:
                const std::string& specificationUrl_,
                const std::vector<std::string> fileExtensions_,
                const std::vector<std::string> mimeTypes_,
+               const std::string& defaultFormat_,
                bool fileOnly_ = false);
   ~OBFileFormat() override;
 
@@ -81,7 +75,13 @@ private:
   std::string m_identifier;
   std::string m_name;
   std::string m_specificationUrl;
+  std::string m_defaultFormat;
   bool m_fileOnly;
+
+  // internal format objects for interchange with obabel
+  Io::CjsonFormat m_cjsonFormat;
+  Io::CmlFormat m_cmlFormat;
+  Io::PdbFormat m_pdbFormat;
 };
 
 } // namespace QtPlugins

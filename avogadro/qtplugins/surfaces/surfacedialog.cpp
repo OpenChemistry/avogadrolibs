@@ -1,29 +1,17 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2009 Marcus D. Hanwell
-  Copyright 2012-2013 Kitware, Inc.
-  Copyright 2018 Geoffrey Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
+
 #include "surfacedialog.h"
 
 #include "ui_surfacedialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
-  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog)
+  : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog),
+  m_automaticResolution(true)
 {
   m_ui->setupUi(this);
 
@@ -35,18 +23,20 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   m_ui->recordButton->setVisible(false);
 
   // set the data for the default items
-  /* Don't add surface types that aren't available yet, uncomment once they are.
   m_ui->surfaceCombo->addItem(tr("Van der Waals"), Surfaces::Type::VanDerWaals);
   m_ui->surfaceCombo->addItem(tr("Solvent Accessible"),
                               Surfaces::Type::SolventAccessible);
   m_ui->surfaceCombo->addItem(tr("Solvent Excluded"),
                               Surfaces::Type::SolventExcluded);
-  */
 
   connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(surfaceComboChanged(int)));
+  connect(m_ui->propertyCombo, SIGNAL(currentIndexChanged(int)),
+          SLOT(propertyComboChanged(int)));
   connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(resolutionComboChanged(int)));
+  connect(m_ui->smoothingCombo, SIGNAL(currentIndexChanged(int)),
+          SLOT(smoothingComboChanged(int)));
   connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
   connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
@@ -68,8 +58,25 @@ void SurfaceDialog::surfaceComboChanged(int n)
   }
 }
 
+void SurfaceDialog::propertyComboChanged(int n)
+{
+  switch (n) {
+    case 0: // None
+      m_ui->colormapCombo->setEnabled(false);
+      m_ui->modelCombo->setEnabled(false);
+      m_ui->modelCombo->clear();
+      break;
+    case 1: // Electrostatic Potential
+      m_ui->colormapCombo->setEnabled(true);
+      m_ui->modelCombo->setEnabled(true);
+      for (const auto &model: m_chargeModels)
+        m_ui->modelCombo->addItem(model.first.c_str(), model.second.c_str());
+  }
+}
+
 void SurfaceDialog::resolutionComboChanged(int n)
 {
+  m_automaticResolution = false;
   // resolutions are in Angstrom
   switch (n) {
     case 0: // Very low resolution
@@ -92,13 +99,47 @@ void SurfaceDialog::resolutionComboChanged(int n)
       m_ui->resolutionDoubleSpinBox->setValue(0.05);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
       break;
-    case 5: // Custom resolution
+    case 5: // Automatic resolution
+      m_automaticResolution = true;
+      m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+    case 6: // Custom resolution
       m_ui->resolutionDoubleSpinBox->setValue(0.18);
       m_ui->resolutionDoubleSpinBox->setEnabled(true);
       break;
     default:
       m_ui->resolutionDoubleSpinBox->setValue(0.18);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
+      break;
+  }
+}
+
+void SurfaceDialog::smoothingComboChanged(int n)
+{
+  switch (n) {
+    case 0: // No smoothing
+      m_ui->smoothingPassesSpinBox->setValue(0);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 1: // Light smoothing
+      m_ui->smoothingPassesSpinBox->setValue(1);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 2: // Medium smoothing
+      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 3: // Strong smoothing
+      m_ui->smoothingPassesSpinBox->setValue(9);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
+      break;
+    case 4: // Custom smoothing
+      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setEnabled(true);
+      break;
+    default:
+      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setEnabled(false);
       break;
   }
 }
@@ -189,9 +230,30 @@ void SurfaceDialog::setupSteps(int stepCount)
   }
 }
 
+void SurfaceDialog::setupModels(
+    const std::set<std::pair<std::string, std::string>> &chargeModels
+) {
+  m_chargeModels = chargeModels;
+}
+
 Surfaces::Type SurfaceDialog::surfaceType()
 {
   return static_cast<Surfaces::Type>(m_ui->surfaceCombo->currentData().toInt());
+}
+
+Surfaces::ColorProperty SurfaceDialog::colorProperty()
+{
+  return static_cast<Surfaces::ColorProperty>(m_ui->propertyCombo->currentIndex());
+}
+
+QString SurfaceDialog::colorModel()
+{
+  return m_ui->modelCombo->currentData().toString();
+}
+
+QString SurfaceDialog::colormapName()
+{
+  return m_ui->colormapCombo->currentText();
 }
 
 int SurfaceDialog::surfaceIndex()
@@ -209,9 +271,19 @@ float SurfaceDialog::isosurfaceValue()
   return static_cast<float>(m_ui->isosurfaceDoubleSpinBox->value());
 }
 
+int SurfaceDialog::smoothingPassesValue()
+{
+  return static_cast<int>(m_ui->smoothingPassesSpinBox->value());
+}
+
 float SurfaceDialog::resolution()
 {
   return static_cast<float>(m_ui->resolutionDoubleSpinBox->value());
+}
+
+bool SurfaceDialog::automaticResolution()
+{
+  return m_automaticResolution;
 }
 
 int SurfaceDialog::step()
@@ -248,5 +320,4 @@ void SurfaceDialog::enableRecord()
   m_ui->recordButton->setEnabled(true);
 }
 
-} // End namespace QtPlugins
 } // End namespace Avogadro

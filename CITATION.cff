@@ -1,0 +1,42 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Avogadro
+message: >-
+  Please cite this software using the metadata from
+  'preferred-citation'.
+type: software
+authors:
+  - given-names: Marcus
+    family-names: Hanwell
+    orcid: 'https://orcid.org/0000-0002-5851-5272'
+  - given-names: Geoffrey
+    family-names: Hutchison
+    affiliation: University of Pittsburgh
+    orcid: 'https://orcid.org/0000-0002-1757-1980'
+identifiers:
+  - type: doi
+    value: 10.1186/1758-2946-4-17
+    description: Avogadro Paper
+  - type: doi
+    value: 10.1186/1758-2946-5-25
+    description: Avogadro2 Chemical Markup Language
+repository-code: 'https://github.com/openchemistry/avogadrolibs'
+url: 'https://two.avogadro.cc/'
+abstract: >-
+  Avogadro is an advanced molecule editor and
+  visualizer designed for cross-platform use in
+  computational chemistry, molecular modeling,
+  bioinformatics, materials science, and related
+  areas. It offers flexible high quality rendering
+  and a powerful plugin architecture.
+keywords:
+  - open source
+  - cheminformatics
+  - computational chemistry
+  - scientific visualization
+  - open chemistry
+  - open science
+  - OpenGL
+license: BSD-3-Clause

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "trrformat.h"
@@ -29,27 +18,20 @@
 #include <sstream>
 #include <string>
 
-using std::endl;
-using std::getline;
 using std::map;
 using std::pair;
 using std::string;
 using std::to_string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
-using Core::Elements;
 using Core::Molecule;
-using Core::split;
-using Core::trimmed;
 using Core::UnitCell;
 
 #ifndef _WIN32
-using std::isalpha;
 #endif
 
 #define GROMACS_MAGIC 1993
@@ -83,13 +65,13 @@ int isDouble(map<string, int>& header)
   int size = 0;
   string headerKeys[] = { "box_size", "x_size", "v_size", "f_size" };
 
-  for (int i = 0; i < (int)(sizeof(headerKeys) / sizeof(*headerKeys)); i++) {
-    if (header[headerKeys[i]] != 0) {
-      if (headerKeys[i] == "box_size") {
-        size = (int)(header[headerKeys[i]] / DIM * DIM);
+  for (auto & headerKey : headerKeys) {
+    if (header[headerKey] != 0) {
+      if (headerKey == "box_size") {
+        size = (int)(header[headerKey] / DIM * DIM);
         break;
       } else {
-        size = (int)(header[headerKeys[i]] / (header["natoms"] * DIM));
+        size = (int)(header[headerKey] / (header["natoms"] * DIM));
         break;
       }
     }
@@ -174,8 +156,8 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
-  for (int _kid = 0; _kid < 3; ++_kid) {
-    if (header[keyCheck[_kid]] != 0) {
+  for (auto & _kid : keyCheck) {
+    if (header[_kid] != 0) {
       if (doubleStatus) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, DIM * DIM);
         double mat[DIM][DIM];
@@ -183,7 +165,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
         struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2], &mat[1][0],
                       &mat[1][1], &mat[1][2], &mat[2][0], &mat[2][1],
                       &mat[2][2]);
-        if (keyCheck[_kid] == "box_size") {
+        if (_kid == "box_size") {
           mol.setUnitCell(new UnitCell(
             Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                     mat[0][2] * NM_TO_ANGSTROM),
@@ -199,7 +181,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
         struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2], &mat[1][0],
                       &mat[1][1], &mat[1][2], &mat[2][0], &mat[2][1],
                       &mat[2][2]);
-        if (keyCheck[_kid] == "box_size") {
+        if (_kid == "box_size") {
           mol.setUnitCell(new UnitCell(
             Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                     mat[0][2] * NM_TO_ANGSTROM),
@@ -217,12 +199,12 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   unsigned char customElementCounter = CustomElementMin;
 
   // Reading the coordinates of positions, velocities and forces
-  for (int _kid = 0; _kid < 3; ++_kid) {
+  for (auto & _kid : keyCheck2) {
     natoms = header["natoms"];
     double coordsDouble[DIM];
     float coordsFloat[DIM];
     for (int i = 0; i < natoms; ++i) {
-      if (header[keyCheck2[_kid]] != 0) {
+      if (header[_kid] != 0) {
         memset(coordsDouble, 0, sizeof(coordsDouble));
         memset(coordsFloat, 0, sizeof(coordsFloat));
         if (doubleStatus) {
@@ -237,7 +219,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                         &coordsFloat[2]);
         }
 
-        if (keyCheck2[_kid] == "x_size") {
+        if (_kid == "x_size") {
           // If parsed coordinates are fractional, the corresponding unscaling
           // is done. Else the positions are assigned as parsed.
           Vector3 pos(
@@ -263,10 +245,8 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     // Set the custom element map if needed
     if (!atomTypes.empty()) {
       Molecule::CustomElementMap elementMap;
-      for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                       itEnd = atomTypes.end();
-           it != itEnd; ++it) {
-        elementMap.insert(std::make_pair(it->second, "Atom " + it->first));
+      for (const auto & atomType : atomTypes) {
+        elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
       }
       mol.setCustomElementMap(elementMap);
     }
@@ -337,8 +317,8 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
-    for (int _kid = 0; _kid < 3; ++_kid) {
-      if (header[keyCheck[_kid]] != 0) {
+    for (auto & _kid : keyCheck) {
+      if (header[_kid] != 0) {
         natoms = header["natoms"];
         if (doubleStatus) {
           snprintf(fmt, sizeof(fmt), "%c%dd", endian, DIM * DIM);
@@ -347,7 +327,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
           struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2],
                         &mat[1][0], &mat[1][1], &mat[1][2], &mat[2][0],
                         &mat[2][1], &mat[2][2]);
-          if (keyCheck[_kid] == "box_size") {
+          if (_kid == "box_size") {
             mol.setUnitCell(new UnitCell(
               Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                       mat[0][2] * NM_TO_ANGSTROM),
@@ -363,7 +343,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
           struct_unpack(buff, fmt, &mat[0][0], &mat[0][1], &mat[0][2],
                         &mat[1][0], &mat[1][1], &mat[1][2], &mat[2][0],
                         &mat[2][1], &mat[2][2]);
-          if (keyCheck[_kid] == "box_size") {
+          if (_kid == "box_size") {
             mol.setUnitCell(new UnitCell(
               Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                       mat[0][2] * NM_TO_ANGSTROM),
@@ -381,11 +361,11 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     positions.reserve(natoms);
 
     // Reading the coordinates of positions, velocities and forces
-    for (int _kid = 0; _kid < 3; ++_kid) {
+    for (auto & _kid : keyCheck2) {
       double coordsDouble[DIM];
       float coordsFloat[DIM];
       for (int i = 0; i < natoms; ++i) {
-        if (header[keyCheck2[_kid]] != 0) {
+        if (header[_kid] != 0) {
           memset(coordsDouble, 0, sizeof(coordsDouble));
           memset(coordsFloat, 0, sizeof(coordsFloat));
           if (doubleStatus) {
@@ -400,7 +380,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                           &coordsFloat[2]);
           }
 
-          if (keyCheck2[_kid] == "x_size") {
+          if (_kid == "x_size") {
             // If parsed coordinates are fractional, the corresponding unscaling
             // is done. Else the positions are assigned as parsed.
             Vector3 pos(coordsDouble[0] * NM_TO_ANGSTROM +
@@ -428,16 +408,15 @@ bool TrrFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> TrrFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("trr");
+  ext.emplace_back("trr");
   return ext;
 }
 
 std::vector<std::string> TrrFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("application/octet-stream");
+  mime.emplace_back("application/octet-stream");
   return mime;
 }
 
-} // end Io namespace
 } // end Avogadro namespace

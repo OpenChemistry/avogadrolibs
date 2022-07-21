@@ -89,7 +89,7 @@ public:
   {
     assert(m_molecule.atomCount() == m_atomId);
     if (m_usingPositions)
-      m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomId);
+      m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomUid);
     else
       m_molecule.addAtom(m_atomicNumber, m_atomUid);
     m_molecule.layer().addAtom(m_layer, m_atomId);

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "navigator.h"
@@ -24,35 +13,68 @@
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/scene.h>
 
+#include <QtCore/QSettings>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QAction>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QVBoxLayout>
 
 #include <Eigen/Geometry>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 const float ZOOM_SPEED = 0.02f;
 const float ROTATION_SPEED = 0.005f;
 
 Navigator::Navigator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
-    m_pressedButtons(Qt::NoButton), m_currentAction(Nothing)
+    m_molecule(nullptr), m_glWidget(nullptr), m_toolWidget(nullptr),
+    m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
+    m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setIcon(QIcon(":/icons/navigator.png"));
+  m_activateAction->setToolTip(
+    tr("Navigation Tool\n\n"
+       "Left Mouse: \tClick and drag to rotate the view.\n"
+       "Middle Mouse: \tClick and drag to zoom in or out.\n"
+       "Right Mouse: \tClick and drag to move the view.\n"));
+      
+  QSettings settings;
+  m_zoomDirection = settings.value("navigator/zoom", 1).toInt();
 }
 
-Navigator::~Navigator()
-{
-}
+Navigator::~Navigator() {}
 
 QWidget* Navigator::toolWidget() const
 {
-  return nullptr;
+  if (!m_toolWidget) {
+    m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    auto* layout = new QVBoxLayout;
+
+    auto* swapZoom =
+      new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
+    swapZoom->setToolTip(
+      tr("Default:\t Scroll down to shrink, scroll up to zoom\n"
+         "Reversed:\t Scroll up to shrink, scroll down to zoom"));
+    connect(swapZoom, SIGNAL(toggled(bool)), this,
+            SLOT(swapZoomDirection(bool)));
+    layout->addWidget(swapZoom);
+
+    layout->addStretch(1);
+    m_toolWidget->setLayout(layout);
+  }
+  return m_toolWidget;
+}
+
+void Navigator::swapZoomDirection(bool checked)
+{
+  m_zoomDirection = (checked ? -1 : 1);
+
+  QSettings settings;
+  settings.setValue("navigator/zoom", m_zoomDirection);
 }
 
 QUndoCommand* Navigator::mousePressEvent(QMouseEvent* e)
@@ -92,23 +114,23 @@ QUndoCommand* Navigator::mouseMoveEvent(QMouseEvent* e)
   switch (m_currentAction) {
     case Rotation: {
       QPoint delta = e->pos() - m_lastMousePosition;
-      rotate(m_renderer->scene().center(), delta.y(), delta.x(), 0);
+      rotate(m_renderer->camera().focus(), delta.y(), delta.x(), 0);
       e->accept();
       break;
     }
     case Translation: {
       Vector2f fromScreen(m_lastMousePosition.x(), m_lastMousePosition.y());
       Vector2f toScreen(e->localPos().x(), e->localPos().y());
-      translate(m_renderer->scene().center(), fromScreen, toScreen);
+      translate(m_renderer->camera().focus(), fromScreen, toScreen);
       e->accept();
       break;
     }
     case ZoomTilt: {
       QPoint delta = e->pos() - m_lastMousePosition;
       // Tilt
-      rotate(m_renderer->scene().center(), 0, 0, delta.x());
+      rotate(m_renderer->camera().focus(), 0, 0, delta.x());
       // Zoom
-      zoom(m_renderer->scene().center(), delta.y());
+      zoom(m_renderer->camera().focus(), delta.y());
       e->accept();
       break;
     }
@@ -139,8 +161,18 @@ QUndoCommand* Navigator::mouseDoubleClickEvent(QMouseEvent* e)
 QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 {
   /// @todo Use scale for orthographic projections
-  // Zoom
-  zoom(m_renderer->scene().center(), e->delta() * 0.1);
+  // Amount to zoom
+  float d = 0.0f;
+
+  QPoint numPixels = e->pixelDelta();
+  QPoint numDegrees = e->angleDelta() * 0.125;
+
+  if (!numPixels.isNull())
+    d = numPixels.y();
+  else if (!numDegrees.isNull())
+    d = numDegrees.y();
+
+  zoom(m_renderer->camera().focus(), m_zoomDirection * d);
 
   e->accept();
   emit updateRequested();
@@ -149,7 +181,7 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
 
 QUndoCommand* Navigator::keyPressEvent(QKeyEvent* e)
 {
-  Vector3f ref = m_renderer->scene().center();
+  Vector3f ref = m_renderer->camera().focus();
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
@@ -265,5 +297,4 @@ inline void Navigator::translate(const Vector3f& ref, const Vector2f& fromScr,
   m_renderer->camera().translate(to - from);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

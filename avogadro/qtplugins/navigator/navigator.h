@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_NAVIGATOR_H
@@ -60,6 +49,9 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
   QUndoCommand* keyReleaseEvent(QKeyEvent* e) override;
 
+protected slots:
+  void swapZoomDirection(bool checked);
+
 private:
   /**
    * Update the currently pressed buttons, accounting for modifier keys.
@@ -75,9 +67,11 @@ private:
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
+  mutable QWidget* m_toolWidget;
   Rendering::GLRenderer* m_renderer;
   Qt::MouseButtons m_pressedButtons;
   QPoint m_lastMousePosition;
+  int m_zoomDirection;
 
   enum ToolAction
   {

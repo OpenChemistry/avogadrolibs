@@ -26,8 +26,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
   : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
@@ -136,14 +135,14 @@ void JsonWidget::buildOptionGui()
 
     // create a layout for inserting the tabs
     tabs = new QTabWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
     layout->addWidget(tabs);
     m_centralWidget->setLayout(layout);
   } else {
     size = 1;
 
     // create the form layout for the widget
-    QFormLayout* layout = new QFormLayout();
+    auto* layout = new QFormLayout();
     m_currentLayout = layout;
     m_centralWidget->setLayout(layout);
   }
@@ -160,7 +159,7 @@ void JsonWidget::buildOptionGui()
         userOptions.take("tabName");
       }
       currentPage = new QWidget(this);
-      QFormLayout* layout = new QFormLayout(currentPage);
+      auto* layout = new QFormLayout(currentPage);
       currentPage->setLayout(layout);
       m_currentLayout = layout;
     } else if (m_options["userOptions"].isObject()) {
@@ -172,19 +171,19 @@ void JsonWidget::buildOptionGui()
 
     // Title first
     if (userOptions.contains("Title"))
-      addOptionRow(tr("Title"), userOptions.take("Title"));
+      addOptionRow("Title", tr("Title"), userOptions.take("Title"));
 
     // File basename next:
     if (userOptions.contains("Filename Base"))
-      addOptionRow(tr("Filename Base"), userOptions.take("Filename Base"));
+      addOptionRow("Filename Base", tr("Filename Base"), userOptions.take("Filename Base"));
 
     // Number of cores next:
     if (userOptions.contains("Processor Cores"))
-      addOptionRow(tr("Processor Cores"), userOptions.take("Processor Cores"));
+      addOptionRow("Processor Cores", tr("Processor Cores"), userOptions.take("Processor Cores"));
 
     // Calculation Type next:
     if (userOptions.contains("Calculation Type"))
-      addOptionRow(tr("Calculation Type"),
+      addOptionRow("Calculation Type", tr("Calculation Type"),
                    userOptions.take("Calculation Type"));
 
     // Theory/basis next. Combine into one row if both present.
@@ -193,30 +192,30 @@ void JsonWidget::buildOptionGui()
 
     // Other special cases: Charge / Multiplicity
     if (userOptions.contains("Charge"))
-      addOptionRow(tr("Charge"), userOptions.take("Charge"));
+      addOptionRow("Charge", tr("Charge"), userOptions.take("Charge"));
 
     if (userOptions.contains("Multiplicity"))
-      addOptionRow(tr("Multiplicity"), userOptions.take("Multiplicity"));
+      addOptionRow("Multiplicity", tr("Multiplicity"), userOptions.take("Multiplicity"));
 
     // Add remaining keys at bottom.
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
                                      itEnd = userOptions.constEnd();
          it != itEnd; ++it) {
-      addOptionRow(it.key(), it.value());
+      addOptionRow(it.key(), it.key(), it.value());
     }
 
     // Make connections for standard options:
-    if (QComboBox* combo = qobject_cast<QComboBox*>(
+    if (auto* combo = qobject_cast<QComboBox*>(
           m_widgets.value("Calculation Type", nullptr))) {
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
     }
-    if (QComboBox* combo =
+    if (auto* combo =
           qobject_cast<QComboBox*>(m_widgets.value("Theory", nullptr))) {
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
     }
-    if (QComboBox* combo =
+    if (auto* combo =
           qobject_cast<QComboBox*>(m_widgets.value("Basis", nullptr))) {
       connect(combo, SIGNAL(currentIndexChanged(int)),
               SLOT(updateTitlePlaceholder()));
@@ -243,7 +242,7 @@ void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
   if (option1 && option2) {
     QWidget* widget1 = createOptionWidget(options.take(label1));
     QWidget* widget2 = createOptionWidget(options.take(label2));
-    QHBoxLayout* hbox = new QHBoxLayout;
+    auto* hbox = new QHBoxLayout;
     if (option1) {
       widget1->setObjectName(label1);
       hbox->addWidget(widget1);
@@ -259,13 +258,13 @@ void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
     m_currentLayout->addRow(tr1, hbox);
   } else {
     if (option1)
-      addOptionRow(tr1, options.take(label1));
+      addOptionRow(label1, tr1, options.take(label1));
     if (option2)
-      addOptionRow(tr2, options.take(label2));
+      addOptionRow(label2, tr2, options.take(label2));
   }
 }
 
-void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
+void JsonWidget::addOptionRow(const QString& key, const QString& name, const QJsonValue& option)
 {
   QWidget* widget = createOptionWidget(option);
   if (!widget)
@@ -280,7 +279,7 @@ void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
   }
 
   // For lookups during unit testing:
-  widget->setObjectName(name);
+  widget->setObjectName(key);
   QString label(name);
 
   QJsonObject obj = option.toObject();
@@ -291,7 +290,7 @@ void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
   }
 
   form->addRow(label + ":", widget);
-  m_widgets.insert(name, widget);
+  m_widgets.insert(key, widget);
 
   // optionally hide rows .. can be shown by the script later
   bool hide = false;
@@ -349,7 +348,7 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
 
   QJsonArray valueArray = obj[QStringLiteral("values")].toArray();
 
-  QComboBox* combo = new QComboBox(this);
+  auto* combo = new QComboBox(this);
   for (QJsonArray::const_iterator vit = valueArray.constBegin(),
                                   vitEnd = valueArray.constEnd();
        vit != vitEnd; ++vit) {
@@ -374,7 +373,7 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
 
 QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
 {
-  QLineEdit* edit = new QLineEdit(this);
+  auto* edit = new QLineEdit(this);
   connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
   if (obj.contains(QStringLiteral("toolTip")) &&
       obj.value(QStringLiteral("toolTip")).isString()) {
@@ -386,7 +385,7 @@ QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
 
 QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
 {
-  QtGui::FileBrowseWidget* fileBrowse = new QtGui::FileBrowseWidget(this);
+  auto* fileBrowse = new QtGui::FileBrowseWidget(this);
   connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
           SLOT(updatePreviewText()));
 
@@ -399,7 +398,7 @@ QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
 
 QWidget* JsonWidget::createIntegerWidget(const QJsonObject& obj)
 {
-  QSpinBox* spin = new QSpinBox(this);
+  auto* spin = new QSpinBox(this);
   if (obj.contains(QStringLiteral("minimum")) &&
       obj.value(QStringLiteral("minimum")).isDouble()) {
     spin->setMinimum(
@@ -428,7 +427,7 @@ QWidget* JsonWidget::createIntegerWidget(const QJsonObject& obj)
 
 QWidget* JsonWidget::createFloatWidget(const QJsonObject& obj)
 {
-  QDoubleSpinBox* spin = new QDoubleSpinBox(this);
+  auto* spin = new QDoubleSpinBox(this);
   if (obj.contains(QStringLiteral("minimum")) &&
       obj.value(QStringLiteral("minimum")).isDouble()) {
     spin->setMinimum(obj[QStringLiteral("minimum")].toDouble());
@@ -460,7 +459,7 @@ QWidget* JsonWidget::createFloatWidget(const QJsonObject& obj)
 
 QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
 {
-  QCheckBox* checkBox = new QCheckBox(this);
+  auto* checkBox = new QCheckBox(this);
   connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
 
   if (obj.contains(QStringLiteral("toolTip")) &&
@@ -546,7 +545,7 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
 void JsonWidget::setStringListOption(const QString& name,
                                      const QJsonValue& value)
 {
-  QComboBox* combo = qobject_cast<QComboBox*>(m_widgets.value(name, nullptr));
+  auto* combo = qobject_cast<QComboBox*>(m_widgets.value(name, nullptr));
   if (!combo) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -581,7 +580,7 @@ void JsonWidget::setStringListOption(const QString& name,
 
 void JsonWidget::setStringOption(const QString& name, const QJsonValue& value)
 {
-  QLineEdit* lineEdit =
+  auto* lineEdit =
     qobject_cast<QLineEdit*>(m_widgets.value(name, nullptr));
   if (!lineEdit) {
     qWarning() << tr("Error setting default for option '%1'. "
@@ -603,7 +602,7 @@ void JsonWidget::setStringOption(const QString& name, const QJsonValue& value)
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
 {
-  QtGui::FileBrowseWidget* fileBrowse =
+  auto* fileBrowse =
     qobject_cast<QtGui::FileBrowseWidget*>(m_widgets.value(name, nullptr));
   if (!fileBrowse) {
     qWarning() << tr("Error setting default for option '%1'. "
@@ -625,7 +624,7 @@ void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
 
 void JsonWidget::setIntegerOption(const QString& name, const QJsonValue& value)
 {
-  QSpinBox* spin = qobject_cast<QSpinBox*>(m_widgets.value(name, nullptr));
+  auto* spin = qobject_cast<QSpinBox*>(m_widgets.value(name, nullptr));
   if (!spin) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -647,7 +646,7 @@ void JsonWidget::setIntegerOption(const QString& name, const QJsonValue& value)
 
 void JsonWidget::setFloatOption(const QString& name, const QJsonValue& value)
 {
-  QDoubleSpinBox* spin =
+  auto* spin =
     qobject_cast<QDoubleSpinBox*>(m_widgets.value(name, nullptr));
   if (!spin) {
     qWarning() << tr("Error setting default for option '%1'. "
@@ -669,7 +668,7 @@ void JsonWidget::setFloatOption(const QString& name, const QJsonValue& value)
 
 void JsonWidget::setBooleanOption(const QString& name, const QJsonValue& value)
 {
-  QCheckBox* checkBox =
+  auto* checkBox =
     qobject_cast<QCheckBox*>(m_widgets.value(name, nullptr));
   if (!checkBox) {
     qWarning() << tr("Error setting default for option '%1'. "
@@ -695,19 +694,19 @@ bool JsonWidget::optionString(const QString& option, QString& value) const
   bool retval = false;
   value.clear();
 
-  if (QLineEdit* edit = qobject_cast<QLineEdit*>(widget)) {
+  if (auto* edit = qobject_cast<QLineEdit*>(widget)) {
     retval = true;
     value = edit->text();
-  } else if (QComboBox* combo = qobject_cast<QComboBox*>(widget)) {
+  } else if (auto* combo = qobject_cast<QComboBox*>(widget)) {
     retval = true;
     value = combo->currentText();
-  } else if (QSpinBox* spinbox = qobject_cast<QSpinBox*>(widget)) {
+  } else if (auto* spinbox = qobject_cast<QSpinBox*>(widget)) {
     retval = true;
     value = QString::number(spinbox->value());
-  } else if (QDoubleSpinBox* dspinbox = qobject_cast<QDoubleSpinBox*>(widget)) {
+  } else if (auto* dspinbox = qobject_cast<QDoubleSpinBox*>(widget)) {
     retval = true;
     value = QString::number(dspinbox->value());
-  } else if (QtGui::FileBrowseWidget* fileBrowse =
+  } else if (auto* fileBrowse =
                qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
     retval = true;
     value = fileBrowse->fileName();
@@ -722,21 +721,21 @@ QJsonObject JsonWidget::collectOptions() const
 
   foreach (QString label, m_widgets.keys()) {
     QWidget* widget = m_widgets.value(label, nullptr);
-    if (QComboBox* combo = qobject_cast<QComboBox*>(widget)) {
+    if (auto* combo = qobject_cast<QComboBox*>(widget)) {
       ret.insert(label, combo->currentText());
-    } else if (QLineEdit* lineEdit = qobject_cast<QLineEdit*>(widget)) {
+    } else if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
       QString value(lineEdit->text());
       if (value.isEmpty() && label == QLatin1String("Title"))
         value = generateJobTitle();
       ret.insert(label, value);
-    } else if (QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
+    } else if (auto* spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
-    } else if (QDoubleSpinBox* spinBox =
+    } else if (auto* spinBox =
                  qobject_cast<QDoubleSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
-    } else if (QCheckBox* checkBox = qobject_cast<QCheckBox*>(widget)) {
+    } else if (auto* checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
-    } else if (QtGui::FileBrowseWidget* fileBrowse =
+    } else if (auto* fileBrowse =
                  qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
       ret.insert(label, fileBrowse->fileName());
     } else {
@@ -791,5 +790,4 @@ QString JsonWidget::generateJobTitle() const
     .arg(haveTheory ? " | " + theory : QString());
 }
 
-} // namespace QtGui
 } // namespace Avogadro

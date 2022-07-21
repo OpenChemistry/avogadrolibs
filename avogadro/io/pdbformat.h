@@ -52,6 +52,8 @@ public:
     // Writing a PDB file is not currently supported
     return false;
   }
+
+  void perceiveSubstitutedCations(Core::Molecule& molecule);
 };
 
 } // namespace Io

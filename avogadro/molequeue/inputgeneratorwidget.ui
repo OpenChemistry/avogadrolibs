@@ -66,7 +66,7 @@
         <item>
          <widget class="QPushButton" name="warningTextButton">
           <property name="text">
-           <string>Placeholder text...</string>
+           <string>Placeholder text…</string>
           </property>
          </widget>
         </item>
@@ -90,7 +90,7 @@
      <item>
       <widget class="QCheckBox" name="debugCheckBox">
        <property name="text">
-        <string>Debug script...</string>
+        <string>Debug Script…</string>
        </property>
       </widget>
      </item>
@@ -113,14 +113,14 @@
      <item>
       <widget class="QPushButton" name="computeButton">
        <property name="text">
-        <string>Submit Calculation...</string>
+        <string>Submit Calculation…</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="generateButton">
        <property name="text">
-        <string>Save Input...</string>
+        <string>Save Input…</string>
        </property>
       </widget>
      </item>

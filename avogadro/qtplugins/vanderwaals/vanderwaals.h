@@ -26,11 +26,16 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override { return tr("Van der Waals"); }
 
   QString description() const override
   {
     return tr("Simple display of VdW spheres.");
+  }
+
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::False;
   }
 
 private:

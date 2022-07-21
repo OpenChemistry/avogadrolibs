@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "lineformatinput.h"
@@ -33,19 +22,18 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::FileFormatDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
     m_molecule(nullptr)
 {
-  QAction* action = new QAction(tr("SMILES..."), this);
+  auto* action = new QAction(tr("SMILES…"), this);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
-  action = new QAction(tr("InChI..."), this);
+  action = new QAction(tr("InChI…"), this);
   action->setData("InChI");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -82,7 +70,7 @@ void LineFormatInput::showDialog()
     return;
 
   QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
-  QAction* theSender = qobject_cast<QAction*>(sender());
+  auto* theSender = qobject_cast<QAction*>(sender());
 
   // Create a list of file formats that we can read:
   QStringList availableFormats;
@@ -115,7 +103,7 @@ void LineFormatInput::showDialog()
   const std::string& ext = m_formats[dlg.format()];
 
   const FileFormat* fmt = FileFormatDialog::findFileFormat(
-    parentAsWidget, tr("Insert Molecule..."),
+    parentAsWidget, tr("Insert Molecule…"),
     QString("file.%1").arg(QString::fromStdString(ext)), ops);
 
   if (fmt == nullptr) {
@@ -130,8 +118,8 @@ void LineFormatInput::showDialog()
 
   QProgressDialog progDlg(parentAsWidget);
   progDlg.setModal(true);
-  progDlg.setWindowTitle(tr("Insert Molecule..."));
-  progDlg.setLabelText(tr("Generating 3D molecule..."));
+  progDlg.setWindowTitle(tr("Insert Molecule…"));
+  progDlg.setLabelText(tr("Generating 3D molecule…"));
   progDlg.setRange(0, 0);
   progDlg.setValue(0);
   progDlg.show();
@@ -147,5 +135,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

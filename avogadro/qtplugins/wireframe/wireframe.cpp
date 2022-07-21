@@ -21,8 +21,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -48,18 +47,18 @@ struct LayerWireframe : Core::LayerData
     lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
   }
 
-  ~LayerWireframe()
+  ~LayerWireframe() override
   {
     if (widget)
       widget->deleteLater();
   }
 
-  std::string serialize() override final
+  std::string serialize() final
   {
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(lineWidth);
   }
-  void deserialize(std::string text) override final
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
@@ -75,22 +74,22 @@ struct LayerWireframe : Core::LayerData
   {
     if (!widget) {
       widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
-      QVBoxLayout* v = new QVBoxLayout;
+      auto* v = new QVBoxLayout;
 
       // line width
-      QDoubleSpinBox* spin = new QDoubleSpinBox;
+      auto* spin = new QDoubleSpinBox;
       spin->setRange(0.5, 5.0);
       spin->setSingleStep(0.25);
       spin->setDecimals(2);
       spin->setValue(lineWidth);
       QObject::connect(spin, SIGNAL(valueChanged(double)), slot,
                        SLOT(setWidth(double)));
-      QFormLayout* form = new QFormLayout;
+      auto* form = new QFormLayout;
       form->addRow(QObject::tr("Line width:"), spin);
       v->addLayout(form);
 
       // options
-      QCheckBox* check = new QCheckBox(QObject::tr("Show multiple bonds"));
+      auto* check = new QCheckBox(QObject::tr("Show multiple bonds"));
       check->setChecked(multiBonds);
       QObject::connect(check, &QCheckBox::clicked, slot,
                        &Wireframe::multiBonds);
@@ -121,10 +120,10 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   m_layerManager.load<LayerWireframe>();
   // Add a node to contain all of the lines.
   m_group = &node;
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  LineStripGeometry* lines = new LineStripGeometry;
+  auto* lines = new LineStripGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   auto selectedAtoms = new SphereGeometry;
@@ -139,9 +138,9 @@ void Wireframe::process(const QtGui::Molecule& molecule,
                                     bond.atom2().index())) {
       continue;
     }
-    LayerWireframe& interface1 = m_layerManager.getSetting<LayerWireframe>(
+    auto& interface1 = m_layerManager.getSetting<LayerWireframe>(
       m_layerManager.getLayerID(bond.atom1().index()));
-    LayerWireframe& interface2 = m_layerManager.getSetting<LayerWireframe>(
+    auto& interface2 = m_layerManager.getSetting<LayerWireframe>(
       m_layerManager.getLayerID(bond.atom2().index()));
     if (!interface1.showHydrogens && !interface2.showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
@@ -172,14 +171,14 @@ void Wireframe::process(const QtGui::Molecule& molecule,
 
 QWidget* Wireframe::setupWidget()
 {
-  LayerWireframe& interface = m_layerManager.getSetting<LayerWireframe>();
+  auto& interface = m_layerManager.getSetting<LayerWireframe>();
   interface.setupWidget(this);
   return interface.widget;
 }
 
 void Wireframe::multiBonds(bool show)
 {
-  LayerWireframe& interface = m_layerManager.getSetting<LayerWireframe>();
+  auto& interface = m_layerManager.getSetting<LayerWireframe>();
   if (show != interface.multiBonds) {
     interface.multiBonds = show;
     emit drawablesChanged();
@@ -190,7 +189,7 @@ void Wireframe::multiBonds(bool show)
 
 void Wireframe::showHydrogens(bool show)
 {
-  LayerWireframe& interface = m_layerManager.getSetting<LayerWireframe>();
+  auto& interface = m_layerManager.getSetting<LayerWireframe>();
   if (show != interface.showHydrogens) {
     interface.showHydrogens = show;
     emit drawablesChanged();
@@ -201,7 +200,7 @@ void Wireframe::showHydrogens(bool show)
 
 void Wireframe::setWidth(double width)
 {
-  LayerWireframe& interface = m_layerManager.getSetting<LayerWireframe>();
+  auto& interface = m_layerManager.getSetting<LayerWireframe>();
   interface.lineWidth = float(width);
   emit drawablesChanged();
 
@@ -209,5 +208,4 @@ void Wireframe::setWidth(double width)
   settings.setValue("wireframe/lineWidth", interface.lineWidth);
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

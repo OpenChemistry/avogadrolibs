@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "vtkAvogadroActor.h"
@@ -36,8 +25,8 @@ vtkStandardNewMacro(vtkAvogadroActor)
 vtkAvogadroActor::vtkAvogadroActor()
   : m_scene(nullptr), m_initialized(false)
 {
-  for (short i = 0; i < 6; ++i)
-    m_bounds[i] = 0.0;
+  for (double & m_bound : m_bounds)
+    m_bound = 0.0;
 }
 
 vtkAvogadroActor::~vtkAvogadroActor()

@@ -17,15 +17,15 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 FetchPDB::FetchPDB(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
     m_network(nullptr), m_progressDialog(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("Fetch from &PDB...");
+  m_action->setText("Fetch from &PDB…");
+  m_action->setProperty("menu priority", 180);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -122,5 +122,4 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   emit moleculeReady(1);
   reply->deleteLater();
 }
-} // namespace QtPlugins
 } // namespace Avogadro

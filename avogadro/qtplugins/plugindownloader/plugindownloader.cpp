@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "plugindownloader.h"
@@ -28,15 +17,14 @@
 #include <QtWidgets/QProgressDialog>
 
 //#include <libarchive/archive.h>
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PluginDownloader::PluginDownloader(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
     m_network(nullptr), m_widget(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("Download Plugins..."));
+  m_action->setText(tr("Download Plugins…"));
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -71,6 +59,5 @@ void PluginDownloader::showDialog()
 
 void PluginDownloader::replyFinished(QNetworkReply* reply)
 {
-}
 }
 }

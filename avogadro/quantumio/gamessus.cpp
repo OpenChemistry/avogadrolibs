@@ -26,8 +26,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::BasisSet;
@@ -35,7 +34,6 @@ using Core::GaussianSet;
 using Core::Rhf;
 using Core::Uhf;
 using Core::Rohf;
-using Core::Unknown;
 
 GAMESSUSOutput::GAMESSUSOutput() : m_coordFactor(1.0), m_scftype(Rhf)
 {
@@ -48,10 +46,10 @@ GAMESSUSOutput::~GAMESSUSOutput()
 std::vector<std::string> GAMESSUSOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.push_back("gamout");
-  extensions.push_back("gamess");
-  extensions.push_back("log");
-  extensions.push_back("out");
+  extensions.emplace_back("gamout");
+  extensions.emplace_back("gamess");
+  extensions.emplace_back("log");
+  extensions.emplace_back("out");
   return extensions;
 }
 
@@ -99,12 +97,16 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       readEigenvectors(in);
     }
   }
-
+  if (!atomsRead){
+    appendError("Could not find any atomic coordinates! Are you sure this is a GAMESS-US output file?");
+    return false;
+  }
+  
   // f functions and beyond need to be reordered
   reorderMOs();
 
   molecule.perceiveBondsSimple();
-  GaussianSet* basis = new GaussianSet;
+  auto* basis = new GaussianSet;
   load(basis);
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
@@ -132,7 +134,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
     }
     bool ok(false);
     Vector3 pos;
-    unsigned char atomicNumber(
+    auto atomicNumber(
       static_cast<unsigned char>(Core::lexicalCast<int>(parts[1], ok)));
     if (!ok)
       appendError("Failed to cast to int for atomic number: " + parts[1]);
@@ -238,9 +240,9 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
     if (parts.size() > 5 && buffer.substr(0, 16) != "                ") {
       if (newBlock) {
         // Reorder the columns/rows, add them and then prepare
-        for (size_t i = 0; i < eigenvectors.size(); ++i)
-          for (size_t j = 0; j < eigenvectors[i].size(); ++j)
-            m_MOcoeffs.push_back(eigenvectors[i][j]);
+        for (auto & eigenvector : eigenvectors)
+          for (double j : eigenvector)
+            m_MOcoeffs.push_back(j);
         eigenvectors.clear();
         eigenvectors.resize(parts.size() - 4);
         numberOfMos += eigenvectors.size();
@@ -260,9 +262,9 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
     parts = Core::split(buffer, ' ');
   }
   m_nMOs = numberOfMos;
-  for (size_t i = 0; i < eigenvectors.size(); ++i)
-    for (size_t j = 0; j < eigenvectors[i].size(); ++j)
-      m_MOcoeffs.push_back(eigenvectors[i][j]);
+  for (auto & eigenvector : eigenvectors)
+    for (double j : eigenvector)
+      m_MOcoeffs.push_back(j);
 
   // Now we just need to transpose the matrix, as GAMESS uses a different order.
   // We know the number of columns (MOs), and the number of rows (primitives).
@@ -326,13 +328,13 @@ void GAMESSUSOutput::reorderMOs()
   unsigned int GTOcounter = 0;
   for (int iMO = 0; iMO < m_nMOs; iMO++) {
     // loop over the basis set shells
-    for (unsigned int i = 0; i < m_shellTypes.size(); i++) {
+    for (auto & m_shellType : m_shellTypes) {
       // The angular momentum of the shell
       // determines the number of primitive GTOs.
       // GAMESS always prints the full cartesian set.
       double yyy, zzz, xxy, xxz, yyx, yyz, zzx, zzy, xyz;
       unsigned int nPrimGTOs = 0;
-      switch (m_shellTypes.at(i)) {
+      switch (m_shellType) {
         case GaussianSet::S:
           nPrimGTOs = 1;
           GTOcounter += nPrimGTOs;
@@ -427,13 +429,12 @@ void GAMESSUSOutput::outputAll()
 
   if (m_alphaMOcoeffs.size())
     cout << "Alpha MO coefficients.\n";
-  for (unsigned int i = 0; i < m_alphaMOcoeffs.size(); ++i)
-    cout << m_alphaMOcoeffs.at(i);
+  for (double m_alphaMOcoeff : m_alphaMOcoeffs)
+    cout << m_alphaMOcoeff;
   if (m_betaMOcoeffs.size())
     cout << "Beta MO coefficients.\n";
-  for (unsigned int i = 0; i < m_betaMOcoeffs.size(); ++i)
-    cout << m_betaMOcoeffs.at(i);
+  for (double m_betaMOcoeff : m_betaMOcoeffs)
+    cout << m_betaMOcoeff;
   cout << std::flush;
-}
 }
 }

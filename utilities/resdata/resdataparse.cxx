@@ -169,9 +169,9 @@ int main(int argc, char* argv[])
                       params[2].end());
 
         if (params[3] == "1") {
-          singleBonds.push_back(make_pair(params[1], params[2]));
+          singleBonds.emplace_back(params[1], params[2]);
         } else if (params[3] == "2") {
-          doubleBonds.push_back(make_pair(params[1], params[2]));
+          doubleBonds.emplace_back(params[1], params[2]);
         }
       }
     }

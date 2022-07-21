@@ -16,19 +16,5 @@ avogadro_plugin(commands
 
 target_link_libraries(commands PRIVATE AvogadroIO)
 
-# Bundled command scripts
-set(commands
-  scripts/scale.py
-)
-
-option(INSTALL_TEST_COMMANDS
-  "Install a dummy command that is to test scripts."
-  OFF
-)
-
-if(INSTALL_TEST_COMMANDS)
-  list(APPEND commands scripts/test.py)
-endif()
-
-install(PROGRAMS ${commands}
-DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/commands/")
+# We no longer bundle scripts because they should be downloaded separately.
+# This also helps base translations.

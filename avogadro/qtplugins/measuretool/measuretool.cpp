@@ -37,7 +37,6 @@
 
 #include <cmath>
 
-using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -46,8 +45,7 @@ using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MeasureTool::MeasureTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -55,11 +53,16 @@ MeasureTool::MeasureTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setIcon(QIcon(":/icons/measuretool.png"));
+  m_activateAction->setToolTip(
+    tr("Measure Tool\n\n"
+       "Left Mouse: \tSelect up to four Atoms.\n"
+       "\tDistances are measured between 1-2 and 2-3\n"
+       "\tAngle is measured between 1-3 using 2 as the common point\n"
+       "\tDihedral is measured between 1-2-3-4\n"
+       "Right Mouse: \tReset the measurements."));
 }
 
-MeasureTool::~MeasureTool()
-{
-}
+MeasureTool::~MeasureTool() {}
 
 QWidget* MeasureTool::toolWidget() const
 {
@@ -132,7 +135,7 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
     const unsigned char* color = Elements::color(atomicNumber);
     atomLabelProp.setColorRgb(contrastingColor(Vector3ub(color)).data());
 
-    TextLabel3D* label = new TextLabel3D;
+    auto* label = new TextLabel3D;
     label->setText(QString("#%1").arg(i + 1).toStdString());
     label->setTextProperties(atomLabelProp);
     label->setAnchor(positions[i].cast<float>());
@@ -147,7 +150,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   if (m_atoms.size() == 0)
     return;
 
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   node.addChild(geo);
 
   // Add labels, extract positions
@@ -203,8 +206,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
         QString("%1 %L2 %L3\n")
           .arg(tr("Angles:"), labelWidth)
           .arg(tr("%L1°").arg(angle12, 9, 'f', 3), 9)
-          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 9, 'f', 3)
-                               : QString(),
+          .arg(angle23 < 360.f ? tr("%L1°").arg(angle23, 9, 'f', 3) : QString(),
                10);
     // fall through
     case 2:
@@ -228,7 +230,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  TextLabel2D* label = new TextLabel2D;
+  auto* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);
@@ -274,5 +276,4 @@ bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

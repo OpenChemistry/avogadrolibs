@@ -12,8 +12,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using namespace std;
 
@@ -79,7 +78,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Then assign the beta sheet - but only if a residue isn't assigned
-  const Residue::SecondaryStructure maybeBeta =
+  const auto maybeBeta =
     static_cast<const Residue::SecondaryStructure>(-3);
   for (auto hBond : m_hBonds) {
     if (hBond->distSquared < infinity) {
@@ -175,14 +174,14 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   // Loop over the backbone atoms
   // we're just considering N and O (on a peptide)
   unsigned int i = 0; // track the residue index
-  for (auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     unsigned int residueId = i++;
     if (residue.isHeterogen())
       continue;
 
     auto oxygen = residue.getAtomByName("O");
     if (oxygen.isValid()) {
-      hBondRecord* oRecord = new hBondRecord();
+      auto* oRecord = new hBondRecord();
       oRecord->atom = oxygen.index();
       oRecord->atomZ = oxygen.position3d()[2];
       oRecord->distSquared = std::numeric_limits<float>::max();
@@ -193,7 +192,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
     auto nitrogen = residue.getAtomByName("N");
     if (nitrogen.isValid()) {
-      hBondRecord* nRecord = new hBondRecord();
+      auto* nRecord = new hBondRecord();
       nRecord->atom = nitrogen.index();
       nRecord->atomZ = nitrogen.position3d()[2];
       nRecord->distSquared = std::numeric_limits<float>::max();
@@ -217,11 +216,11 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   int n = m_hBonds.size();
   for (unsigned int i = 0; i < n; ++i) {
     auto recordI = m_hBonds[i];
-    auto residueI = m_molecule->residue(recordI->residue);
+    const Residue &residueI = m_molecule->residue(recordI->residue);
 
     for (unsigned int j = i + 1; j < n; ++j) {
       auto recordJ = m_hBonds[j];
-      auto residueJ = m_molecule->residue(recordJ->residue);
+      const Residue &residueJ = m_molecule->residue(recordJ->residue);
 
       // skip if we're not on the same chain
       if (residueI.chainId() != residueJ.chainId())
@@ -266,5 +265,4 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   }   // end for(i)
 }
 
-} // namespace Core
 } // namespace Avogadro
