@@ -59,6 +59,35 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
+
+  // check if there is vibrational data
+  if (m_frequencies.size() > 0) {
+    // convert the std::vector to Array
+    Core::Array<double> frequencies(m_frequencies.size());
+    for (unsigned int i = 0; i < m_frequencies.size(); ++i)
+      frequencies[i] = m_frequencies[i];
+    molecule.setVibrationFrequencies(frequencies);
+
+    // convert the std::vector to Array
+    Core::Array<double> intensities(m_irIntensities.size());
+    for (unsigned int i = 0; i < m_irIntensities.size(); ++i)
+      intensities[i] = m_irIntensities[i];
+    molecule.setVibrationIRIntensities(intensities);
+
+    // wrap the normal modes into a vector of vectors
+    Core::Array<Core::Array<Vector3>> normalModes;
+    Core::Array<Vector3> normalMode;
+    Index atomCount = molecule.atomCount();
+    for (unsigned int i = 0; i < m_normalModes.size(); ++i) {
+      normalMode.push_back(m_normalModes[i]);
+      if (i % atomCount == 0 && normalMode.size() > 0) {
+        normalModes.push_back(normalMode);
+        normalMode.clear();
+      }
+    }
+    molecule.setVibrationLx(normalModes);
+  }
+
   return true;
 }
 
@@ -120,6 +149,15 @@ void MopacAux::processLine(std::istream& in)
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
     cout << "Size of lower half triangle of density matrix = " << tmp << endl;
     readDensityMatrix(in, tmp);
+  } else if (Core::contains(key, "VIB._FREQ")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    readVibrationFrequencies(in, tmp);
+  } else if (Core::contains(key, "VIB._T_DIP")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    readVibrationIntensities(in, tmp);
+  } else if (Core::contains(key, "NORMAL_MODES")) {
+    int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6));
+    readNormalModes(in, tmp);
   }
 }
 
@@ -230,6 +268,27 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
       ptr[cnt++] = Core::lexicalCast<double>(i);
   }
   return tmp;
+}
+
+bool MopacAux::readVibrationFrequencies(std::istream& in, unsigned int n)
+{
+  vector<double> tmp = readArrayD(in, n);
+  m_frequencies.insert(m_frequencies.end(), tmp.begin(), tmp.end());
+  return true;
+}
+
+bool MopacAux::readVibrationIntensities(std::istream& in, unsigned int n)
+{
+  vector<double> tmp = readArrayD(in, n);
+  m_irIntensities.insert(m_irIntensities.end(), tmp.begin(), tmp.end());
+  return true;
+}
+
+bool MopacAux::readNormalModes(std::istream& in, unsigned int n)
+{
+  vector<Vector3> tmp = readArrayVec(in, n);
+  m_normalModes.insert(m_normalModes.end(), tmp.begin(), tmp.end());
+  return true;
 }
 
 bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
