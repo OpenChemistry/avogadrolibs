@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-17 03:22+0000\n"
+"POT-Creation-Date: 2022-07-20 02:51+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
@@ -209,14 +209,14 @@ msgid "No input files to save!"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:285
-#: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
+#: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:976
 #: qtplugins/gamessinput/gamessinputdialog.cpp:685
 msgid "Cannot connect to MoleQueue"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:286
-#: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
+#: molequeue/inputgeneratorwidget.cpp:594 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:977
 #: qtplugins/gamessinput/gamessinputdialog.cpp:686
 msgid ""
@@ -261,18 +261,13 @@ msgstr ""
 msgid "Select output filename"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:457
-#, qt-format
-msgid "%1: File exists and is not writable."
-msgstr ""
-
-#: molequeue/inputgeneratorwidget.cpp:463
+#: molequeue/inputgeneratorwidget.cpp:454
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:479
-#: molequeue/inputgeneratorwidget.cpp:590
+#: molequeue/inputgeneratorwidget.cpp:470
+#: molequeue/inputgeneratorwidget.cpp:581
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:966
 #: qtplugins/gamessinput/gamessinputdialog.cpp:675
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:324
@@ -284,8 +279,8 @@ msgstr ""
 msgid "Output Error"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:480
-#: molequeue/inputgeneratorwidget.cpp:591
+#: molequeue/inputgeneratorwidget.cpp:471
+#: molequeue/inputgeneratorwidget.cpp:582
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:967
 #: qtplugins/gamessinput/gamessinputdialog.cpp:676
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:355
@@ -296,27 +291,27 @@ msgstr ""
 msgid "Failed to write to file %1."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:491
+#: molequeue/inputgeneratorwidget.cpp:482
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:508
+#: molequeue/inputgeneratorwidget.cpp:499
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:514
+#: molequeue/inputgeneratorwidget.cpp:505
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:524
+#: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:287
 #: qtplugins/openmminput/openmminputdialog.cpp:370
@@ -325,7 +320,7 @@ msgstr ""
 msgid "%1: File will be overwritten."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:529
+#: molequeue/inputgeneratorwidget.cpp:520
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:294
 #: qtplugins/openmminput/openmminputdialog.cpp:377
@@ -334,13 +329,13 @@ msgstr ""
 msgid "%1: File is not writable."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:542
+#: molequeue/inputgeneratorwidget.cpp:533
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:546
+#: molequeue/inputgeneratorwidget.cpp:537
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
 #: qtplugins/openmminput/openmminputdialog.cpp:408
 #, qt-format
@@ -350,7 +345,7 @@ msgid ""
 "%1"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:555
+#: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
 #: qtplugins/openmminput/openmminputdialog.cpp:417
 #, qt-format
@@ -364,7 +359,7 @@ msgid ""
 "%2"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:566
+#: molequeue/inputgeneratorwidget.cpp:557
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
 #: qtplugins/openmminput/openmminputdialog.cpp:428
 #, qt-format
@@ -376,13 +371,13 @@ msgid ""
 "Would you like to continue?"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:570
+#: molequeue/inputgeneratorwidget.cpp:561
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
 msgstr ""
 
-#: molequeue/inputgeneratorwidget.cpp:617
+#: molequeue/inputgeneratorwidget.cpp:608
 msgid "Configure Job"
 msgstr ""
 
@@ -1288,7 +1283,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
-#: qtplugins/select/select.cpp:506
+#: qtplugins/select/select.cpp:496
 #: qtplugins/selectiontool/selectiontool.cpp:252:1573
 #, fuzzy
 msgid "Change Layer"
@@ -1435,10 +1430,10 @@ msgstr ""
 msgid "3DMol HTML Block."
 msgstr ""
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:40
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
-#: qtplugins/insertfragment/insertfragment.cpp:56
-#: qtplugins/networkdatabases/networkdatabases.cpp:40
+#: qtplugins/insertfragment/insertfragment.cpp:57
+#: qtplugins/networkdatabases/networkdatabases.cpp:41
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
@@ -1536,7 +1531,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:104
 #: qtplugins/cp2kinput/cp2kinput.cpp:85
 #: qtplugins/gamessinput/gamessinput.cpp:88
-#: qtplugins/insertfragment/insertfragment.cpp:105
+#: qtplugins/insertfragment/insertfragment.cpp:106
 #: qtplugins/lammpsinput/lammpsinput.cpp:64
 #: qtplugins/openbabel/openbabel.cpp:197 qtplugins/openbabel/openbabel.cpp:206
 #: qtplugins/openbabel/openbabel.cpp:216 qtplugins/openbabel/openbabel.cpp:353
@@ -1630,25 +1625,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:553
+#: qtplugins/surfaces/surfaces.cpp:552
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:555
+#: qtplugins/surfaces/surfaces.cpp:554
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:557
+#: qtplugins/surfaces/surfaces.cpp:556
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:559
+#: qtplugins/surfaces/surfaces.cpp:558
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
@@ -1656,7 +1651,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:561
+#: qtplugins/surfaces/surfaces.cpp:560
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
@@ -1664,7 +1659,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:303
-#: qtplugins/surfaces/surfaces.cpp:563
+#: qtplugins/surfaces/surfaces.cpp:562
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
@@ -1672,7 +1667,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:303
-#: qtplugins/surfaces/surfaces.cpp:565
+#: qtplugins/surfaces/surfaces.cpp:564
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
@@ -1680,7 +1675,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:304
-#: qtplugins/surfaces/surfaces.cpp:567
+#: qtplugins/surfaces/surfaces.cpp:566
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
@@ -1688,7 +1683,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:304
-#: qtplugins/surfaces/surfaces.cpp:569
+#: qtplugins/surfaces/surfaces.cpp:568
 msgctxt "colormap"
 msgid "Cividis"
 msgstr ""
@@ -1700,7 +1695,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
-#: qtplugins/surfaces/surfaces.cpp:571:171 rc.cpp:1621
+#: qtplugins/surfaces/surfaces.cpp:570:171 rc.cpp:1621
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1712,7 +1707,7 @@ msgstr "Spectra"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:573:168 rc.cpp:1618
+#: qtplugins/surfaces/surfaces.cpp:572:168 rc.cpp:1618
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1722,7 +1717,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:575:162 rc.cpp:1612
+#: qtplugins/surfaces/surfaces.cpp:574:162 rc.cpp:1612
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1734,7 +1729,7 @@ msgstr "Cancel"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:171
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:577:165 rc.cpp:1615
+#: qtplugins/surfaces/surfaces.cpp:576:165 rc.cpp:1615
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1746,7 +1741,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
-#: qtplugins/surfaces/surfaces.cpp:579:174 rc.cpp:1624
+#: qtplugins/surfaces/surfaces.cpp:578:174 rc.cpp:1624
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -1883,7 +1878,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:33
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:55 qtplugins/insertdna/insertdna.cpp:61
-#: qtplugins/insertfragment/insertfragment.cpp:58
+#: qtplugins/insertfragment/insertfragment.cpp:59
 #: qtplugins/lineformatinput/lineformatinput.cpp:59
 msgid "&Build"
 msgstr "&Build"
@@ -2659,40 +2654,40 @@ msgstr "Double"
 msgid "Triple"
 msgstr "Triple"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:40 qtplugins/importpqr/importpqr.cpp:47
-#: qtplugins/insertfragment/insertfragment.cpp:56
-#: qtplugins/networkdatabases/networkdatabases.cpp:40
+#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:47
+#: qtplugins/insertfragment/insertfragment.cpp:57
+#: qtplugins/networkdatabases/networkdatabases.cpp:41
 msgid "&Import"
 msgstr "&Import"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:74
+#: qtplugins/fetchpdb/fetchpdb.cpp:75
 msgid "PDB Code"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:75
-#: qtplugins/networkdatabases/networkdatabases.cpp:75
+#: qtplugins/fetchpdb/fetchpdb.cpp:76
+#: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
 msgstr "Chemical structure to download."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:87
-#: qtplugins/networkdatabases/networkdatabases.cpp:89
+#: qtplugins/fetchpdb/fetchpdb.cpp:88
+#: qtplugins/networkdatabases/networkdatabases.cpp:90
 #, qt-format
 msgid "Querying for %1"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:98 qtplugins/fetchpdb/fetchpdb.cpp:116
-#: qtplugins/networkdatabases/networkdatabases.cpp:100
-#: qtplugins/networkdatabases/networkdatabases.cpp:111
+#: qtplugins/fetchpdb/fetchpdb.cpp:99 qtplugins/fetchpdb/fetchpdb.cpp:117
+#: qtplugins/networkdatabases/networkdatabases.cpp:101
+#: qtplugins/networkdatabases/networkdatabases.cpp:112
 msgid "Network Download Failed"
 msgstr "Network Download Failed"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:99
-#: qtplugins/networkdatabases/networkdatabases.cpp:101
+#: qtplugins/fetchpdb/fetchpdb.cpp:100
+#: qtplugins/networkdatabases/networkdatabases.cpp:102
 msgid "Network timeout or other error."
 msgstr "Network timeout or other error."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:117
-#: qtplugins/networkdatabases/networkdatabases.cpp:112
+#: qtplugins/fetchpdb/fetchpdb.cpp:118
+#: qtplugins/networkdatabases/networkdatabases.cpp:113
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr "Specified molecule could not be found: %1"
@@ -2860,7 +2855,7 @@ msgid "DNA/RNA..."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:61
-#: qtplugins/insertfragment/insertfragment.cpp:58
+#: qtplugins/insertfragment/insertfragment.cpp:59
 #: qtplugins/lineformatinput/lineformatinput.cpp:59
 msgid "&Insert"
 msgstr "&Insert"
@@ -2925,18 +2920,18 @@ msgstr "Fragment..."
 msgid "Crystal…"
 msgstr ""
 
-#: qtplugins/insertfragment/insertfragment.cpp:106
+#: qtplugins/insertfragment/insertfragment.cpp:107
 #, qt-format
 msgid "Error reading file (%1)."
 msgstr ""
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:115:381
+#: qtplugins/insertfragment/insertfragment.cpp:116:381
 msgid "Import Crystal"
 msgstr ""
 
-#: qtplugins/insertfragment/insertfragment.cpp:119
+#: qtplugins/insertfragment/insertfragment.cpp:120
 msgid "Insert Fragment"
 msgstr "Insert Fragment"
 
@@ -3269,7 +3264,7 @@ msgstr ""
 msgid "Navigate tool"
 msgstr "Navigate tool"
 
-#: qtplugins/networkdatabases/networkdatabases.cpp:74
+#: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
 msgstr "Chemical Name"
 
@@ -3644,7 +3639,7 @@ msgid "Frame:"
 msgstr "Parameters:"
 
 #: qtplugins/playertool/playertool.cpp:120
-#: qtplugins/playertool/playertool.cpp:405
+#: qtplugins/playertool/playertool.cpp:408
 #: qtplugins/surfaces/surfacedialog.cpp:219
 #, qt-format
 msgid " of %0"
@@ -3660,7 +3655,7 @@ msgid "Record Movie…"
 msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:243
-#: qtplugins/playertool/playertool.cpp:344
+#: qtplugins/playertool/playertool.cpp:346
 msgid "Movie (*.mp4)"
 msgstr ""
 
@@ -3672,7 +3667,7 @@ msgstr ""
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:669
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:668
 msgid "GIF (*.gif)"
 msgstr ""
 
@@ -3684,22 +3679,22 @@ msgstr ""
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:310
+#: qtplugins/playertool/playertool.cpp:311
 #, fuzzy
 msgid "Movie (*.avi)"
 msgstr "video files (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:339
-#: qtplugins/playertool/playertool.cpp:369 qtplugins/surfaces/surfaces.cpp:697
-#: qtplugins/surfaces/surfaces.cpp:740 qtplugins/surfaces/surfaces.cpp:752
+#: qtplugins/playertool/playertool.cpp:341
+#: qtplugins/playertool/playertool.cpp:372 qtplugins/surfaces/surfaces.cpp:696
+#: qtplugins/surfaces/surfaces.cpp:739 qtplugins/surfaces/surfaces.cpp:751
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:340 qtplugins/surfaces/surfaces.cpp:741
+#: qtplugins/playertool/playertool.cpp:342 qtplugins/surfaces/surfaces.cpp:740
 msgid "Error: cannot add frame to video."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:370 qtplugins/surfaces/surfaces.cpp:753
+#: qtplugins/playertool/playertool.cpp:373 qtplugins/surfaces/surfaces.cpp:752
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -4237,19 +4232,19 @@ msgstr ""
 msgid "&Select"
 msgstr "&Select"
 
-#: qtplugins/select/select.cpp:396
+#: qtplugins/select/select.cpp:386
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:397
+#: qtplugins/select/select.cpp:387
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:434
+#: qtplugins/select/select.cpp:424
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:435
+#: qtplugins/select/select.cpp:425
 msgid "Residues to Select:"
 msgstr ""
 
@@ -4453,26 +4448,26 @@ msgstr ""
 msgid "Create Surfaces…"
 msgstr "Create Surfaces"
 
-#: qtplugins/surfaces/surfaces.cpp:413
+#: qtplugins/surfaces/surfaces.cpp:412
 #, fuzzy
 msgid "Calculating electron density"
 msgstr "Calculating Electron Density"
 
-#: qtplugins/surfaces/surfaces.cpp:423
+#: qtplugins/surfaces/surfaces.cpp:422
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:646 qtplugins/surfaces/surfaces.cpp:674
+#: qtplugins/surfaces/surfaces.cpp:645 qtplugins/surfaces/surfaces.cpp:673
 msgid "Movie AVI (*.avi)"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:648
+#: qtplugins/surfaces/surfaces.cpp:647
 #, fuzzy
 msgid "Export Movie"
 msgstr "E&xport Image"
 
-#: qtplugins/surfaces/surfaces.cpp:649
+#: qtplugins/surfaces/surfaces.cpp:648
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr ""
 
