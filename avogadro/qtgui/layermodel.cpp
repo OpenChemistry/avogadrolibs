@@ -67,9 +67,9 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     }
     return QVariant();
   }
-  auto name = tr(names[idx.row()].second.c_str()).toStdString();
+  auto name = names[idx.row()].second;
   auto layer = names[idx.row()].first;
-  bool isLayer = name == tr("Layer").toStdString();
+  bool isLayer = (name == "Layer");
   if (isLayer) {
     if (idx.column() == ColumnType::Name) {
       switch (role) {
