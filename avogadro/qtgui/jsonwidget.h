@@ -83,7 +83,7 @@ protected:
   void combinedOptionRow(const QString& label1, const QString& label2,
                          const QString& tr1, const QString& tr2,
                          QJsonObject& options);
-  void addOptionRow(const QString& label, const QJsonValue& option);
+  void addOptionRow(const QString& key, const QString& label, const QJsonValue& option);
 
   QWidget* createOptionWidget(const QJsonValue& option);
   QWidget* createStringListWidget(const QJsonObject& obj);
