@@ -171,19 +171,19 @@ void JsonWidget::buildOptionGui()
 
     // Title first
     if (userOptions.contains("Title"))
-      addOptionRow(tr("Title"), userOptions.take("Title"));
+      addOptionRow("Title", tr("Title"), userOptions.take("Title"));
 
     // File basename next:
     if (userOptions.contains("Filename Base"))
-      addOptionRow(tr("Filename Base"), userOptions.take("Filename Base"));
+      addOptionRow("Filename Base", tr("Filename Base"), userOptions.take("Filename Base"));
 
     // Number of cores next:
     if (userOptions.contains("Processor Cores"))
-      addOptionRow(tr("Processor Cores"), userOptions.take("Processor Cores"));
+      addOptionRow("Processor Cores", tr("Processor Cores"), userOptions.take("Processor Cores"));
 
     // Calculation Type next:
     if (userOptions.contains("Calculation Type"))
-      addOptionRow(tr("Calculation Type"),
+      addOptionRow("Calculation Type", tr("Calculation Type"),
                    userOptions.take("Calculation Type"));
 
     // Theory/basis next. Combine into one row if both present.
@@ -192,16 +192,16 @@ void JsonWidget::buildOptionGui()
 
     // Other special cases: Charge / Multiplicity
     if (userOptions.contains("Charge"))
-      addOptionRow(tr("Charge"), userOptions.take("Charge"));
+      addOptionRow("Charge", tr("Charge"), userOptions.take("Charge"));
 
     if (userOptions.contains("Multiplicity"))
-      addOptionRow(tr("Multiplicity"), userOptions.take("Multiplicity"));
+      addOptionRow("Multiplicity", tr("Multiplicity"), userOptions.take("Multiplicity"));
 
     // Add remaining keys at bottom.
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
                                      itEnd = userOptions.constEnd();
          it != itEnd; ++it) {
-      addOptionRow(it.key(), it.value());
+      addOptionRow(it.key(), it.key(), it.value());
     }
 
     // Make connections for standard options:
@@ -258,13 +258,13 @@ void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
     m_currentLayout->addRow(tr1, hbox);
   } else {
     if (option1)
-      addOptionRow(tr1, options.take(label1));
+      addOptionRow(label1, tr1, options.take(label1));
     if (option2)
-      addOptionRow(tr2, options.take(label2));
+      addOptionRow(label2, tr2, options.take(label2));
   }
 }
 
-void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
+void JsonWidget::addOptionRow(const QString& key, const QString& name, const QJsonValue& option)
 {
   QWidget* widget = createOptionWidget(option);
   if (!widget)
@@ -279,7 +279,7 @@ void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
   }
 
   // For lookups during unit testing:
-  widget->setObjectName(name);
+  widget->setObjectName(key);
   QString label(name);
 
   QJsonObject obj = option.toObject();
@@ -290,7 +290,7 @@ void JsonWidget::addOptionRow(const QString& name, const QJsonValue& option)
   }
 
   form->addRow(label + ":", widget);
-  m_widgets.insert(name, widget);
+  m_widgets.insert(key, widget);
 
   // optionally hide rows .. can be shown by the script later
   bool hide = false;
