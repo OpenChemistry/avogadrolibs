@@ -11,23 +11,19 @@
 
 #include <iostream>
 
-using std::vector;
-using std::string;
 using std::cout;
 using std::endl;
+using std::string;
+using std::vector;
 
 namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::SlaterSet;
 
-MopacAux::MopacAux()
-{
-}
+MopacAux::MopacAux() {}
 
-MopacAux::~MopacAux()
-{
-}
+MopacAux::~MopacAux() {}
 
 std::vector<std::string> MopacAux::fileExtensions() const
 {
@@ -69,9 +65,11 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
     molecule.setVibrationFrequencies(frequencies);
 
     // convert the std::vector to Array
-    Core::Array<double> intensities(m_irIntensities.size());
-    for (unsigned int i = 0; i < m_irIntensities.size(); ++i)
-      intensities[i] = m_irIntensities[i];
+    Core::Array<double> intensities(m_frequencies.size(), 0.0);
+    if (m_irIntensities.size() == m_frequencies.size()) {
+      for (unsigned int i = 0; i < m_irIntensities.size(); ++i)
+        intensities[i] = m_irIntensities[i];
+    }
     molecule.setVibrationIRIntensities(intensities);
 
     // wrap the normal modes into a vector of vectors
@@ -109,7 +107,7 @@ void MopacAux::processLine(std::istream& in)
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
     cout << "Number of atomic orbitals = " << tmp << endl;
     m_atomIndex = readArrayI(in, tmp);
-    for (int & i : m_atomIndex)
+    for (int& i : m_atomIndex)
       --i;
   } else if (Core::contains(key, "ATOM_SYMTYPE")) {
     int tmp = Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4));
@@ -186,7 +184,7 @@ vector<int> MopacAux::readArrayElements(std::istream& in, unsigned int n)
     string line;
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & i : list) {
+    for (auto& i : list) {
       tmp.push_back(
         static_cast<int>(Core::Elements::atomicNumberFromSymbol(i)));
     }
@@ -201,7 +199,7 @@ vector<int> MopacAux::readArrayI(std::istream& in, unsigned int n)
     string line;
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & i : list)
+    for (auto& i : list)
       tmp.push_back(Core::lexicalCast<int>(i));
   }
   return tmp;
@@ -214,7 +212,7 @@ vector<double> MopacAux::readArrayD(std::istream& in, unsigned int n)
     string line;
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & i : list)
+    for (auto& i : list)
       tmp.push_back(Core::lexicalCast<double>(i));
   }
   return tmp;
@@ -228,7 +226,7 @@ vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
     string line;
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & i : list) {
+    for (auto& i : list) {
       if (i == "S")
         type = SlaterSet::S;
       else if (i == "PX")
@@ -264,7 +262,7 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
     string line;
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & i : list)
+    for (auto& i : list)
       ptr[cnt++] = Core::lexicalCast<double>(i);
   }
   return tmp;
@@ -303,7 +301,7 @@ bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
   while (cnt < n) {
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & k : list) {
+    for (auto& k : list) {
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
       m_overlap(i, j) = m_overlap(j, i) = Core::lexicalCast<double>(k);
       ++i;
@@ -328,7 +326,7 @@ bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
     string line;
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & k : list) {
+    for (auto& k : list) {
       m_eigenVectors(i, j) = Core::lexicalCast<double>(k);
       ++i;
       ++cnt;
@@ -354,7 +352,7 @@ bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
   while (cnt < n) {
     getline(in, line);
     vector<string> list = Core::split(line, ' ');
-    for (auto & k : list) {
+    for (auto& k : list) {
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
       m_density(i, j) = m_density(j, i) = Core::lexicalCast<double>(k);
       ++i;
@@ -382,4 +380,4 @@ void MopacAux::outputAll()
     cout << m_MOcoeff << "\t";
   cout << endl;
 }
-}
+} // namespace Avogadro::QuantumIO
