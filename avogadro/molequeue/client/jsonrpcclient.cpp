@@ -103,7 +103,7 @@ void JsonRpcClient::readPacket(const QByteArray message)
   QJsonDocument reader = QJsonDocument::fromJson(message, &error);
 
   if (error.error != QJsonParseError::NoError) {
-    emit badPacketReceived("Unparseable message received\n:"
+    emit badPacketReceived("Unparsable message received\n:"
                            + error.errorString() + "\nContent: " + message);
     return;
   }

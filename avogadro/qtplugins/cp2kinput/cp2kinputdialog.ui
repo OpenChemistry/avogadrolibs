@@ -396,7 +396,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
-          <string>Poiosson EWALD GMAX</string>
+          <string>Poisson EWALD GMAX</string>
          </property>
         </widget>
        </item>

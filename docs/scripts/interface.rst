@@ -120,7 +120,7 @@ This block will result in a QSpinBox, configured as follows:
 Floating-point values
 ~~~~~~~~~~~~~~~~~~~~~
 
-Scripts may request floating-point values from a specififed range by
+Scripts may request floating-point values from a specified range by
 adding:
 
 ::

@@ -757,7 +757,7 @@
      <item row="11" column="6">
       <widget class="QLabel" name="label_equilibriationSteps">
        <property name="text">
-        <string>Equilibriation Steps:</string>
+        <string>Equilibration Steps:</string>
        </property>
       </widget>
      </item>
