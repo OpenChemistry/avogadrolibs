@@ -3,7 +3,7 @@
 Contribute
 ==========
 
-Avgoadro is an open community, made better by all of us.
+Avogadro is an open community, made better by all of us.
 
 If you're an Avogadro user who wants to give back, a great
 place to start is supporting your fellow users on the `Avogadro

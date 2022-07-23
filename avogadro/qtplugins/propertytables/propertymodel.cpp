@@ -388,7 +388,7 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
         case AtomDataY:
           return tr("Y (Å)");
         case AtomDataZ:
-          return tr("Z Å)");
+          return tr("Z (Å)");
         case AtomDataColor:
           return tr("Color");
       }
