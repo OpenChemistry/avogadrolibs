@@ -48,6 +48,12 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   bool ok(false);
   int coordSet = 0;
   Array<Vector3> positions;
+  Array<size_t> rawToAtomId;
+  Array<size_t> altAtomIds;
+  Array<int> altAtomCoordSets;
+  Array<char> altAtomLocs;
+  std::set<char> altLocs;
+  Array<Vector3> altAtomPositions;
 
   while (getline(in, buffer)) { // Read Each line one by one
 
@@ -130,6 +136,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         return false;
       }
 
+      auto altLoc = lexicalCast<string>(buffer.substr(16, 1), ok);
+
       string element; // Element symbol, right justified
       element = buffer.substr(76, 2);
       element = trimmed(element);
@@ -142,12 +150,24 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (atomicNum == 255)
         appendError("Invalid element");
 
-      if (coordSet == 0) {
+      if (altLoc.compare("") && altLoc.compare("A")) {
+        if (coordSet == 0) {
+          rawToAtomId.push_back(-1);
+          altAtomIds.push_back(mol.atomCount() - 1);
+        } else {
+          altAtomIds.push_back(positions.size() - 1);
+        }
+        altAtomCoordSets.push_back(coordSet);
+        altAtomLocs.push_back(altLoc[0]);
+        altLocs.insert(altLoc[0]);
+        altAtomPositions.push_back(pos);
+      } else if (coordSet == 0) {
         Atom newAtom = mol.addAtom(atomicNum);
         newAtom.setPosition3d(pos);
         if (r) {
           r->addResidueAtom(atomName, newAtom);
         }
+        rawToAtomId.push_back(mol.atomCount() - 1);
       } else {
         positions.push_back(pos);
       }
@@ -176,6 +196,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
            ++terCount)
         ; // semicolon is intentional
       a = a - terCount;
+      a = rawToAtomId[a];
 
       int bCoords[] = { 11, 16, 21, 26 };
       for (int i = 0; i < 4; i++) {
@@ -194,14 +215,32 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
                ++terCount)
             ; // semicolon is intentional
           b = b - terCount;
+          b = rawToAtomId[b];
 
-          if (a < b) {
+          if (a < b && a >= 0 && b >= 0) {
             mol.Avogadro::Core::Molecule::addBond(a, b, 1);
           }
         }
       }
     }
   } // End while loop
+
+  size_t count = mol.coordinate3dCount();
+  for (size_t c = 0; c < count; c++) {
+    for (char l: altLocs) {
+      Array<Vector3> coordinateSet = mol.coordinate3d(c);
+      bool found = false;
+      for (size_t i = 0; i < altAtomCoordSets.size(); i++) {
+        if (altAtomCoordSets[i] == c && altAtomLocs[i] == l) {
+          found = true;
+          coordinateSet[altAtomIds[i]] = altAtomPositions[i];
+        }
+      }
+      if (found)
+        mol.setCoordinate3d(coordinateSet, mol.coordinate3dCount());
+    }
+  }
+
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
   perceiveSubstitutedCations(mol);
