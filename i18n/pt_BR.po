@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
 "PO-Revision-Date: 2021-07-16 14:24+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -1199,10 +1199,6 @@ msgstr "Widget não tratado em collectOptions para a opção '%1'."
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[sem molécula]"
-
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr ""
 
 #: qtgui/layermodel.cpp:77
 #, qt-format
@@ -2954,7 +2950,9 @@ msgid "Download a molecule from PQR."
 msgstr "Baixar uma molécula de PQR."
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+#, fuzzy
+#| msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr "DNA/RNA..."
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2966,7 +2964,7 @@ msgstr "&Inserir"
 #: qtplugins/insertdna/insertdna.cpp:78
 #, fuzzy
 #| msgid "Insert DNA/RNA"
-msgid "Insert DNA/RNA..."
+msgid "Insert DNA/RNA…"
 msgstr "Inserir DNA/RNA"
 
 #: qtplugins/insertdna/insertdna.cpp:159
@@ -2989,16 +2987,21 @@ msgstr "T"
 msgid "Thymine"
 msgstr "Timina"
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
 #, fuzzy
 #| msgid "Insert Molecule..."
-msgid "Insert Molecule..."
+msgid "Insert Molecule…"
 msgstr "Inserir Molécula..."
 
 #: qtplugins/insertdna/insertdna.cpp:201
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
 #, fuzzy
 #| msgid "Generating 3D molecule..."
-msgid "Generating 3D molecule..."
+msgid "Generating 3D molecule…"
 msgstr "A criar molécula 3D..."
 
 #: qtplugins/insertdna/insertdna.h:33
@@ -3208,24 +3211,9 @@ msgstr "Nenhum descritor encontrado!"
 msgid "No line format readers found!"
 msgstr "Nenhum leitor de formato de linha encontrado!"
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-#, fuzzy
-#| msgid "Insert Molecule..."
-msgid "Insert Molecule…"
-msgstr "Inserir Molécula..."
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
 msgstr "Não foi possível carregar o leitor de formato solicitado."
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-#, fuzzy
-#| msgid "Generating 3D molecule..."
-msgid "Generating 3D molecule…"
-msgstr "A criar molécula 3D..."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -4016,8 +4004,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
-msgstr ""
+msgid "Z (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -5388,7 +5376,9 @@ msgstr "Poisson EWALD Alfa"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+#, fuzzy
+#| msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr "Poisson EWALD GMAX"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -6193,7 +6183,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+#, fuzzy
+#| msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Selecionar estilos de borda nas direções X, Y e Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6940,7 +6932,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+#, fuzzy
+#| msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr "Etapas de Equilíbrio:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7470,6 +7464,16 @@ msgstr "Seus nomes"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Seus e-mails"
+
+#, fuzzy
+#~| msgid "Insert Molecule..."
+#~ msgid "Insert Molecule..."
+#~ msgstr "Inserir Molécula..."
+
+#, fuzzy
+#~| msgid "Generating 3D molecule..."
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "A criar molécula 3D..."
 
 #, qt-format
 #~ msgid "%1: File exists and is not writable."
@@ -10210,9 +10214,6 @@ msgstr "Seus e-mails"
 
 #~ msgid "&Length:"
 #~ msgstr "&Duração:"
-
-#~ msgid "Z (Å)"
-#~ msgstr "Z (Å)"
 
 #~ msgid "Y-axis"
 #~ msgstr "Eixo Y"
