@@ -459,7 +459,7 @@ void CoordinateEditorDialog::validateInputWorker()
           if (!isReal)
             m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
           else
-            m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
+            m_ui->text->markValid(tokenCursor, tr("'c' lattice coordinate."));
           break;
         }
 
