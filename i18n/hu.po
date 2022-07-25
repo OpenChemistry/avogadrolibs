@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-24 03:19+0000\n"
-"PO-Revision-Date: 2022-07-20 02:53+0000\n"
+"PO-Revision-Date: 2022-07-25 19:16+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2892,8 +2892,6 @@ msgid "Download a molecule from PQR."
 msgstr "PQR-molekula letöltése."
 
 #: qtplugins/insertdna/insertdna.cpp:43
-#, fuzzy
-#| msgid "DNA/RNA..."
 msgid "DNA/RNA…"
 msgstr "DNS/RNS…"
 
@@ -2904,8 +2902,6 @@ msgid "&Insert"
 msgstr "&Beszúrás"
 
 #: qtplugins/insertdna/insertdna.cpp:78
-#, fuzzy
-#| msgid "Insert DNA/RNA..."
 msgid "Insert DNA/RNA…"
 msgstr "DNS/RNS beszúrása…"
 
@@ -3896,10 +3892,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-#, fuzzy
-#| msgid "X (Å)"
 msgid "Z (Å)"
-msgstr "X (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -5205,8 +5199,6 @@ msgstr "Poisson EWALD alfa"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-#, fuzzy
-#| msgid "Poiosson EWALD GMAX"
 msgid "Poisson EWALD GMAX"
 msgstr "Poisson EWALD GMAX"
 
@@ -6005,8 +5997,6 @@ msgstr "X végpont stílusának módosítása."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
-#| msgid "Select bondary Styles in X, Y and Z directions."
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Határstílusok az X, Y és Z irányok kijelölésében."
 
@@ -6776,8 +6766,6 @@ msgstr "Jelentési időköz:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-#, fuzzy
-#| msgid "Equilibriation Steps:"
 msgid "Equilibration Steps:"
 msgstr "Kiegyensúlyozási lépések:"
 
