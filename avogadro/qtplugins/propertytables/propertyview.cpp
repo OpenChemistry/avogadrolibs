@@ -78,7 +78,7 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
 
   // Start by clearing the molecule selection
   for (Index i = 0; i < m_molecule->atomCount(); ++i)
-    m_molecule->atom(i).setSelected(false);
+    m_molecule->undoMolecule()->setAtomSelected(i, false);
 
   foreach (const QModelIndex& index, selected.indexes()) {
     if (!index.isValid())
@@ -106,24 +106,24 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
         return;
 
       auto bondPair = m_molecule->bondPair(rowNum);
-      m_molecule->setAtomSelected(bondPair.first, true);
-      m_molecule->setAtomSelected(bondPair.second, true);
+      m_molecule->undoMolecule()->setAtomSelected(bondPair.first, true);
+      m_molecule->undoMolecule()->setAtomSelected(bondPair.second, true);
     } else if (m_type == PropertyType::AngleType) {
 
       if (m_model != nullptr) {
         auto angle = m_model->getAngle(index.row());
-        m_molecule->setAtomSelected(std::get<0>(angle), true);
-        m_molecule->setAtomSelected(std::get<1>(angle), true);
-        m_molecule->setAtomSelected(std::get<2>(angle), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<0>(angle), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<1>(angle), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<2>(angle), true);
       }
     } else if (m_type == PropertyType::TorsionType) {
 
       if (m_model != nullptr) {
         auto torsion = m_model->getTorsion(index.row());
-        m_molecule->setAtomSelected(std::get<0>(torsion), true);
-        m_molecule->setAtomSelected(std::get<1>(torsion), true);
-        m_molecule->setAtomSelected(std::get<2>(torsion), true);
-        m_molecule->setAtomSelected(std::get<3>(torsion), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<0>(torsion), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<1>(torsion), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<2>(torsion), true);
+        m_molecule->undoMolecule()->setAtomSelected(std::get<3>(torsion), true);
       }
     }
   } // end loop through selected
