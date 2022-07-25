@@ -5,6 +5,7 @@ set(tests
   FileFormatManager
   Lammps
   Mdl
+  Pdb
   Vasp
   Xyz
   )
