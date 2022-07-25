@@ -182,10 +182,13 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
   return true;
 }
 
-void RWMolecule::setAtomSelected(Index atomId, bool selected)
+void RWMolecule::setAtomSelected(Index atomId, bool selected, const QString& undoText)
 {
-  // FIXME: Add in an implementation (and use it from the selection tool).
-  m_molecule.setAtomSelected(atomId, selected);
+  auto* comm = new ModifySelectionCommand(*this, atomId, selected);
+  comm->setText(undoText);
+  comm->setCanMerge(true);
+  m_undoStack.push(comm);
+//  m_molecule.setAtomSelected(atomId, selected);
 }
 
 bool RWMolecule::atomSelected(Index atomId) const

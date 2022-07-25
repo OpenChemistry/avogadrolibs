@@ -287,25 +287,25 @@ void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)
 void SelectionTool::clearAtoms()
 {
   for (Index i = 0; i < m_molecule->atomCount(); ++i)
-    m_molecule->atom(i).setSelected(false);
+    m_molecule->undoMolecule()->setAtomSelected(i, false);
 }
 
 bool SelectionTool::addAtom(const Index& atom)
 {
-  m_molecule->atom(atom).setSelected(true);
+  m_molecule->undoMolecule()->setAtomSelected(atom, true);
   return true;
 }
 
 bool SelectionTool::removeAtom(const Index& atom)
 {
-  m_molecule->atom(atom).setSelected(false);
+  m_molecule->undoMolecule()->setAtomSelected(atom, false);
   return true;
 }
 
 bool SelectionTool::toggleAtom(const Index& atom)
 {
   Atom a = m_molecule->atom(atom);
-  a.setSelected(!a.selected());
+  m_molecule->undoMolecule()->setAtomSelected(atom, !a.selected());
   return a.selected();
 }
 

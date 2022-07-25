@@ -6,6 +6,7 @@
 #define AVOGADRO_QTGUI_RWMOLECULE_UNDO_H
 
 #include "rwmolecule.h"
+#include <QtCore/QDebug>
 #include <QtWidgets/QUndoCommand>
 #include <cassert>
 
@@ -28,7 +29,8 @@ class RWMolecule::UndoCommand : public QUndoCommand
 public:
   UndoCommand(RWMolecule& m)
     : QUndoCommand(tr("Modify Molecule")), m_mol(m), m_molecule(m.m_molecule)
-  {}
+  {
+  }
 
 protected:
   Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
@@ -45,7 +47,9 @@ enum MergeIds
   SetPositions3dMergeId = 0,
   SetPosition3dMergeId,
   SetForceVectorMergeId,
-  SetBondOrderMergeId
+  SetBondOrderMergeId,
+  ModifySelectionMergeId,
+  ModifyColorsMergeId
 };
 
 // Base class for undo commands that can be merged together, overriding the
@@ -120,7 +124,8 @@ public:
                     const Vector3& pos)
     : UndoCommand(m), m_atomId(atomId), m_atomUid(uid), m_atomicNumber(aN),
       m_position3d(pos)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -156,7 +161,8 @@ public:
                           const Core::Array<unsigned char>& newAtomicNumbers)
     : UndoCommand(m), m_oldAtomicNumbers(oldAtomicNumbers),
       m_newAtomicNumbers(newAtomicNumbers)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setAtomicNumbers(m_newAtomicNumbers); }
 
@@ -177,7 +183,8 @@ public:
                          unsigned char newAtomicNumber)
     : UndoCommand(m), m_atomId(atomId), m_oldAtomicNumber(oldAtomicNumber),
       m_newAtomicNumber(newAtomicNumber)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -203,7 +210,8 @@ public:
                         const Core::Array<Vector3>& newPositions3d)
     : MergeUndoCommand<SetPositions3dMergeId>(m),
       m_oldPositions3d(oldPositions3d), m_newPositions3d(newPositions3d)
-  {}
+  {
+  }
 
   void redo() override { positions3d() = m_newPositions3d; }
 
@@ -235,7 +243,8 @@ public:
                        const Vector3& newPosition3d)
     : MergeUndoCommand<SetPosition3dMergeId>(m), m_atomIds(1, atomId),
       m_oldPosition3ds(1, oldPosition3d), m_newPosition3ds(1, newPosition3d)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -302,7 +311,8 @@ public:
                               AtomHybridization newHybridization)
     : UndoCommand(m), m_atomId(atomId), m_oldHybridization(oldHybridization),
       m_newHybridization(newHybridization)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -328,7 +338,8 @@ public:
                              signed char newCharge)
     : UndoCommand(m), m_atomId(atomId), m_oldCharge(oldCharge),
       m_newCharge(newCharge)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setFormalCharge(m_atomId, m_newCharge); }
 
@@ -348,7 +359,8 @@ public:
                       Vector3ub newColor)
     : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
       m_newColor(newColor)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setColor(m_atomId, m_newColor); }
 
@@ -365,7 +377,8 @@ public:
   SetLayerCommand(RWMolecule& m, Index atomId, size_t oldLayer, size_t newLayer)
     : UndoCommand(m), m_atomId(atomId), m_oldLayer(oldLayer),
       m_newLayer(newLayer)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setLayer(m_atomId, m_newLayer); }
 
@@ -385,7 +398,8 @@ public:
                  Index uid)
     : UndoCommand(m), m_bondOrder(order), m_bondPair(bondPair),
       m_bondId(bondId), m_bondUid(uid)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -415,13 +429,15 @@ public:
                     unsigned char bondOrder)
     : UndoCommand(m), m_bondId(bondId), m_bondUid(bondUid),
       m_bondPair(bondPair), m_bondOrder(bondOrder)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.removeBond(m_bondId); }
 
   void undo() override
   {
-    m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder, m_bondUid);
+    m_molecule.addBond(m_bondPair.first, m_bondPair.second, m_bondOrder,
+                       m_bondUid);
     Index movedId = m_molecule.bondCount() - 1;
     m_molecule.swapBond(m_bondId, movedId);
   }
@@ -439,7 +455,8 @@ public:
                        const Array<unsigned char>& newBondOrders)
     : UndoCommand(m), m_oldBondOrders(oldBondOrders),
       m_newBondOrders(newBondOrders)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setBondOrders(m_newBondOrders); }
 
@@ -459,7 +476,8 @@ public:
                       unsigned char newBondOrder)
     : MergeUndoCommand<SetBondOrderMergeId>(m), m_bondId(bondId),
       m_oldBondOrder(oldBondOrder), m_newBondOrder(newBondOrder)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setBondOrder(m_bondId, m_newBondOrder); }
 
@@ -490,7 +508,8 @@ public:
                       const Array<std::pair<Index, Index>>& oldBondPairs,
                       const Array<std::pair<Index, Index>>& newBondPairs)
     : UndoCommand(m), m_oldBondPairs(oldBondPairs), m_newBondPairs(newBondPairs)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setBondPairs(m_newBondPairs); }
 
@@ -511,7 +530,8 @@ public:
                      const std::pair<Index, Index>& newBondPair)
     : UndoCommand(m), m_bondId(bondId), m_oldBondPair(oldBondPair),
       m_newBondPair(newBondPair)
-  {}
+  {
+  }
 
   void redo() override { m_molecule.setBondPair(m_bondId, m_newBondPair); }
 
@@ -527,7 +547,8 @@ class AddUnitCellCommand : public RWMolecule::UndoCommand
 public:
   AddUnitCellCommand(RWMolecule& m, const UnitCell& newUnitCell)
     : UndoCommand(m), m_newUnitCell(newUnitCell)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -546,7 +567,8 @@ class RemoveUnitCellCommand : public RWMolecule::UndoCommand
 public:
   RemoveUnitCellCommand(RWMolecule& m, const UnitCell& oldUnitCell)
     : UndoCommand(m), m_oldUnitCell(oldUnitCell)
-  {}
+  {
+  }
 
   void redo() override { m_mol.molecule().setUnitCell(nullptr); }
 
@@ -567,7 +589,8 @@ public:
   ModifyMoleculeCommand(RWMolecule& m, const Molecule& oldMolecule,
                         const Molecule& newMolecule)
     : UndoCommand(m), m_oldMolecule(oldMolecule), m_newMolecule(newMolecule)
-  {}
+  {
+  }
 
   void redo() override { m_mol.molecule() = m_newMolecule; }
 
@@ -588,7 +611,8 @@ public:
                         const Vector3& newForceVector)
     : MergeUndoCommand<SetForceVectorMergeId>(m), m_atomIds(1, atomId),
       m_oldForceVectors(1, oldForceVector), m_newForceVectors(1, newForceVector)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -661,6 +685,124 @@ public:
   void undo() override { m_mol.molecule().setLabel(m_atomId, m_oldLabel); }
 };
 } // namespace
+
+namespace {
+class ModifySelectionCommand : public MergeUndoCommand<ModifySelectionMergeId>
+{
+  std::vector<bool> m_newSelectedAtoms;
+  std::vector<bool> m_oldSelectedAtoms;
+
+public:
+  ModifySelectionCommand(RWMolecule& m, Index atomId, bool selected)
+    : MergeUndoCommand<ModifySelectionMergeId>(m)
+  {
+    Index atomCount = m_mol.molecule().atomCount();
+    m_oldSelectedAtoms.resize(atomCount);
+    m_newSelectedAtoms.resize(atomCount);
+
+    for (Index i = 0; i < atomCount; ++i) {
+      m_oldSelectedAtoms[i] = m_molecule.atomSelected(i);
+      m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
+    }
+
+    m_newSelectedAtoms[atomId] = selected;
+  }
+
+  void redo() override
+  {
+    Index atomCount = m_mol.molecule().atomCount();
+    for (Index i = 0; i < atomCount; ++i)
+      m_mol.molecule().setAtomSelected(i, m_newSelectedAtoms[i]);
+  }
+
+  void undo() override
+  {
+    Index atomCount = m_mol.molecule().atomCount();
+    for (Index i = 0; i < atomCount; ++i)
+      m_mol.molecule().setAtomSelected(i, m_oldSelectedAtoms[i]);
+  }
+
+  bool mergeWith(const QUndoCommand* other) override
+  {
+    const ModifySelectionCommand* o =
+      dynamic_cast<const ModifySelectionCommand*>(other);
+    if (!o)
+      return false;
+
+    // check if the atom count matches
+    Index numAtoms = m_oldSelectedAtoms.size();
+
+    if (numAtoms != o->m_oldSelectedAtoms.size() ||
+        numAtoms != o->m_newSelectedAtoms.size())
+      return false;
+
+    // merge these, by grabbing the new selected atoms
+    m_newSelectedAtoms = o->m_newSelectedAtoms;
+    return true;
+  }
+};
+} // namespace
+
+/*
+namespace {
+class ModifyColorCommand : public MergeUndoCommand<ModifyColorMergeId>
+{
+  Array<Vector3ub> m_newSelectedAtoms;
+  Array<Vector3ub> m_oldSelectedAtoms;
+
+public:
+  ModifySelectionCommand(RWMolecule& m, Index atomId, bool selected)
+    : MergeUndoCommand<ModifySelectionMergeId>(m)
+  {
+    Index atomCount = m_mol.molecule().atomCount();
+    m_oldSelectedAtoms.reserve(atomCount);
+    m_newSelectedAtoms.reserve(atomCount);
+
+    for (Index i = 0; i < atomCount; ++i) {
+      m_oldSelectedAtoms[i] = m_molecule.atomSelected(i);
+      m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
+    }
+
+    m_newSelectedAtoms[atomId] = selected;
+  }
+
+  void redo() override
+  {
+    Index atomCount = m_mol.molecule().atomCount();
+    for (Index i = 0; i < atomCount; ++i)
+      m_mol.molecule().setAtomSelected(i, m_newSelectedAtoms[i]);
+  }
+
+  void undo() override
+  {
+    Index atomCount = m_mol.molecule().atomCount();
+    for (Index i = 0; i < atomCount; ++i)
+      m_mol.molecule().setAtomSelected(i, m_oldSelectedAtoms[i]);
+  }
+
+  bool mergeWith(const QUndoCommand* other) override
+  {
+    const ModifySelectionCommand* o =
+      dynamic_cast<const ModifySelectionCommand*>(other);
+    if (o) {
+      // check if the atom count matches
+      Index numAtoms = m_oldSelectedAtoms.size();
+      if (numAtoms != o->m_oldSelectedAtoms.size() ||
+          numAtoms != o->m_newSelectedAtoms.size()) {
+        return false;
+      }
+
+      // merge these, by grabbing the new selected atoms
+      for (Index i = 0; i < numAtoms; ++i)
+        m_newSelectedAtoms[i] = o->m_newSelectedAtoms[i];
+
+      return true;
+    }
+    return false;
+  }
+};
+} // namespace
+*/
 
 } // namespace QtGui
 } // namespace Avogadro
