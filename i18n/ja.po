@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-24 03:19+0000\n"
-"PO-Revision-Date: 2022-07-24 14:01+0000\n"
+"PO-Revision-Date: 2022-07-25 19:16+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -2832,10 +2832,8 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-#, fuzzy
-#| msgid "DNA/RNA..."
 msgid "DNA/RNA…"
-msgstr "DNA/RNA..."
+msgstr "DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:61
 #: qtplugins/insertfragment/insertfragment.cpp:59
@@ -2844,10 +2842,8 @@ msgid "&Insert"
 msgstr "挿入 (&I)"
 
 #: qtplugins/insertdna/insertdna.cpp:78
-#, fuzzy
-#| msgid "Insert DNA/RNA..."
 msgid "Insert DNA/RNA…"
-msgstr "DNA/RNAを挿入..."
+msgstr "DNA/RNAを挿入…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -2999,7 +2995,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:215
 #, fuzzy
 msgid "Residue Label:"
-msgstr "残基名:"
+msgstr "残基のラベル:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3926,7 +3922,6 @@ msgid "Adjust Fragment"
 msgstr "フラグメントを調整"
 
 #: qtplugins/propertytables/propertymodel.cpp:782
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "πヘリックス"
@@ -5926,8 +5921,6 @@ msgstr "Z 境界スタイルを変更"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
-#| msgid "Select bondary Styles in X, Y and Z directions."
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "X, Y, Z 方向の境界スタイルを選択"
 
