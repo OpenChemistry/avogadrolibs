@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
-"PO-Revision-Date: 2022-07-23 02:23+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
+"PO-Revision-Date: 2022-07-25 19:16+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1120,10 +1120,6 @@ msgstr ""
 msgid "[no molecule]"
 msgstr "[分子がありません]"
 
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr "レイヤー"
-
 #: qtgui/layermodel.cpp:77
 #, qt-format
 msgid "Layer %1"
@@ -1396,9 +1392,8 @@ msgid "Symmetrize Cell"
 msgstr "セルを対称化"
 
 #: qtgui/rwmolecule.cpp:655
-#, fuzzy
 msgid "Fill Unit Cell"
-msgstr "ユニットセルを構成"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:675
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1698,11 +1693,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
 #: qtplugins/surfaces/surfaces.cpp:574:162 rc.cpp:1612
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "バランス"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1864,7 +1857,7 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Remove Bonds"
-msgstr ""
+msgstr "結合を削除"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Configure Bonding…"
@@ -1915,10 +1908,9 @@ msgid "Ribbon"
 msgstr "リボン"
 
 #: qtplugins/cartoons/cartoons.cpp:97
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "カートゥーン"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
@@ -2051,7 +2043,7 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Salt Bridge"
-msgstr ""
+msgstr "塩橋"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
@@ -2188,12 +2180,14 @@ msgid "Z coordinate."
 msgstr "Z座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#, fuzzy
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a' 格子座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#, fuzzy
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'b' 格子座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 msgid "'c' coordinate."
@@ -2357,11 +2351,11 @@ msgstr "エネルギー"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
-msgstr ""
+msgstr "エネルギーと力"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
-msgstr "分子動力学法"
+msgstr "分子動力学"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 msgid "Geometry Optimization"
@@ -2491,7 +2485,6 @@ msgid "Rotate to Standard &Orientation"
 msgstr "標準配向に回転 (&O)"
 
 #: qtplugins/crystal/crystal.cpp:70
-#, fuzzy
 msgid "Scale Cell &Volume…"
 msgstr "セル体積を拡大縮小 (&V)…"
 
@@ -2558,8 +2551,9 @@ msgstr ""
 
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
+#, fuzzy
 msgid "No unit cell present."
-msgstr ""
+msgstr "ユニットセルがありません。"
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -2658,7 +2652,7 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:76
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
-msgstr "化学構造のダウンロード"
+msgstr "ダウンロードする化学構造"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:88
 #: qtplugins/networkdatabases/networkdatabases.cpp:90
@@ -2700,11 +2694,11 @@ msgstr "選択にフォーカス"
 
 #: qtplugins/focus/focus.cpp:21
 msgid "Unfocus"
-msgstr ""
+msgstr "フォーカスを解除"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "フォーカス"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
@@ -2838,8 +2832,8 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
-msgstr "DNA/RNA..."
+msgid "DNA/RNA…"
+msgstr "DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:61
 #: qtplugins/insertfragment/insertfragment.cpp:59
@@ -2848,8 +2842,8 @@ msgid "&Insert"
 msgstr "挿入 (&I)"
 
 #: qtplugins/insertdna/insertdna.cpp:78
-msgid "Insert DNA/RNA..."
-msgstr "DNA/RNAを挿入..."
+msgid "Insert DNA/RNA…"
+msgstr "DNA/RNAを挿入…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -2871,16 +2865,20 @@ msgstr "T"
 msgid "Thymine"
 msgstr "チミン"
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
 #, fuzzy
 #| msgid "Molecule"
-msgid "Insert Molecule..."
-msgstr "分子を挿入..."
+msgid "Insert Molecule…"
+msgstr "分子を挿入…"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#, fuzzy
-msgid "Generating 3D molecule..."
-msgstr "3D分子を生成中..."
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+msgid "Generating 3D molecule…"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
@@ -2893,14 +2891,10 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Fragments"
 msgid "Fragment…"
 msgstr "フラグメント…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:37
-#, fuzzy
-#| msgid "Crystal"
 msgid "Crystal…"
 msgstr "結晶…"
 
@@ -3001,7 +2995,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:215
 #, fuzzy
 msgid "Residue Label:"
-msgstr "残基名:"
+msgstr "残基のラベル:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3072,29 +3066,15 @@ msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:86
 #: qtplugins/lineformatinput/lineformatinput.cpp:110
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "説明なし!"
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:87
 msgid "No line format readers found!"
 msgstr ""
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-#, fuzzy
-#| msgid "Molecule"
-msgid "Insert Molecule…"
-msgstr "分子を挿入…"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
-msgstr ""
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
@@ -3213,11 +3193,11 @@ msgstr "分子の性質"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:68
 msgid "Formula"
-msgstr ""
+msgstr "化学式"
 
 #: qtplugins/mongochem/listmoleculesmodel.cpp:74
 msgid "InChIKey"
-msgstr ""
+msgstr "InChIKey"
 
 #: qtplugins/mongochem/mongochem.cpp:23
 msgid "&MongoChem"
@@ -3301,19 +3281,18 @@ msgstr "ハロゲン"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Chalcogen"
-msgstr ""
+msgstr "カルコゲン"
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "自動検出 (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:43 qtplugins/openbabel/openbabel.cpp:516
 msgid "Optimize Geometry"
 msgstr "構造最適化"
 
 #: qtplugins/openbabel/openbabel.cpp:50
-#, fuzzy
 msgid "Configure Force Field…"
 msgstr "力場の設定…"
 
@@ -3328,13 +3307,12 @@ msgid "Add Hydrogens for pH…"
 msgstr "pHを指定して水素を付加…"
 
 #: qtplugins/openbabel/openbabel.cpp:74
-#, fuzzy
 msgid "Remove Hydrogens"
 msgstr "水素を取り除く"
 
 #: qtplugins/openbabel/openbabel.cpp:105
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "The Open Babel file formats are not ready to be added."
@@ -3506,7 +3484,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
@@ -3529,8 +3507,9 @@ msgstr ""
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
-msgstr "プレビューテキストを更新しますか? "
-"OpenMMインプットプレビュー画面での変更は失われます。"
+msgstr ""
+"プレビューテキストを更新しますか? OpenMMインプットプレビュー画面での変更は失"
+"われます。"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -3606,21 +3585,23 @@ msgid "Animation Tool"
 msgstr "アニメーションツール"
 
 #: qtplugins/playertool/playertool.cpp:69
+#, fuzzy
 msgid "Play"
-msgstr ""
+msgstr "再生"
 
 #: qtplugins/playertool/playertool.cpp:72
+#, fuzzy
 msgid "Stop"
-msgstr "ストップ"
+msgstr "停止"
 
 #: qtplugins/playertool/playertool.cpp:83
 msgid "Frame rate:"
-msgstr ""
+msgstr "フレームレート:"
 
 #: qtplugins/playertool/playertool.cpp:89
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -3647,7 +3628,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:243
 #: qtplugins/playertool/playertool.cpp:346
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "動画 (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:245
 msgid "Export Bitmap Graphics"
@@ -3659,7 +3640,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:668
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:266
 msgid "GIF FPS support warning"
@@ -3852,8 +3833,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
-msgstr ""
+msgid "Z (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -3941,7 +3922,6 @@ msgid "Adjust Fragment"
 msgstr "フラグメントを調整"
 
 #: qtplugins/propertytables/propertymodel.cpp:782
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "πヘリックス"
@@ -3999,7 +3979,7 @@ msgstr "二面角のプロパティ…"
 
 #: qtplugins/propertytables/propertytables.cpp:51
 msgid "Residue Properties…"
-msgstr "残基の性質…"
+msgstr "残基のプロパティ…"
 
 #: qtplugins/propertytables/propertytables.cpp:62
 #, fuzzy
@@ -4281,7 +4261,6 @@ msgid "Reduce to Asymmetric Unit"
 msgstr "非対称要素に縮約"
 
 #: qtplugins/spacegroup/spacegroup.cpp:83
-#, fuzzy
 msgid "Set Tolerance…"
 msgstr "許容値を設定…"
 
@@ -4355,9 +4334,8 @@ msgid "Hermann-Mauguin"
 msgstr "ヘルマン・モーガン記号"
 
 #: qtplugins/spacegroup/spacegroup.cpp:345
-#, fuzzy
 msgid "Select Space Group"
-msgstr "空間群の選択"
+msgstr "空間群を選択"
 
 #: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
@@ -4368,12 +4346,10 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:26
-#, fuzzy
 msgid "Vibrational Modes…"
 msgstr "振動モード…"
 
 #: qtplugins/spectra/spectra.h:32
-#, fuzzy
 msgid "Spectra and Vibrations"
 msgstr "スペクトルと振動"
 
@@ -4434,7 +4410,7 @@ msgstr "第%L1分子軌道を計算中"
 
 #: qtplugins/surfaces/surfaces.cpp:645 qtplugins/surfaces/surfaces.cpp:673
 msgid "Movie AVI (*.avi)"
-msgstr ""
+msgstr "動画 AVI (*.avi)"
 
 #: qtplugins/surfaces/surfaces.cpp:647
 msgid "Export Movie"
@@ -4454,7 +4430,7 @@ msgstr ""
 
 #: qtplugins/svg/svg.cpp:30
 msgid "&SVG…"
-msgstr ""
+msgstr "&SVG…"
 
 #: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
@@ -4487,8 +4463,9 @@ msgid "Provide symmetry functionality."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:37
+#, fuzzy
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "対称要素を描画する。"
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
 msgid "∞"
@@ -4505,8 +4482,9 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
+#, fuzzy
 msgid "Simple display of VdW spheres."
-msgstr ""
+msgstr "VdW 球の簡単な表示"
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:33
 msgid "Simple display of VdW spheres with ambient occlusion."
@@ -4563,7 +4541,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:352
 msgid "Fermi Level"
-msgstr ""
+msgstr "フェルミ準位"
 
 #: qtplugins/yaehmop/yaehmop.cpp:361
 msgid "Energy (eV)"
@@ -4589,7 +4567,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:585
 msgid "Yaehmop Input"
-msgstr ""
+msgstr "Yaehmop インプット"
 
 #: qtplugins/yaehmop/yaehmop.h:40
 msgid "Yaehmop"
@@ -4741,7 +4719,7 @@ msgstr ""
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
 msgid "&Copy to Clipboard"
-msgstr ""
+msgstr "クリップボードにコピー（&C）"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
@@ -4761,7 +4739,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
 msgid "PDB File:"
-msgstr ""
+msgstr "PDB ファイル:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
@@ -5019,7 +4997,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help..."
-msgstr ""
+msgstr "ヘルプ..."
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:131
 #. i18n: ectx: property (text), widget (QPushButton, revert)
@@ -5110,7 +5088,7 @@ msgstr "計算:"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:164
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Method:"
-msgstr "方法:"
+msgstr "手法:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:197
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5149,7 +5127,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -5500,7 +5478,7 @@ msgstr "配列:"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
 msgid "the number of base pairs per helix turn"
-msgstr "1ヘリックスターンの塩基ペア数"
+msgstr "1ヘリックスターンの塩基対の数"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -5817,7 +5795,7 @@ msgstr "NVE"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
 #. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
 msgid "Temperature"
-msgstr "テンプレート"
+msgstr "温度"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:347
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -5943,7 +5921,7 @@ msgstr "Z 境界スタイルを変更"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "X, Y, Z 方向の境界スタイルを選択"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -5981,12 +5959,12 @@ msgstr "Z 方向の複製数"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:659
 #. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
 msgid "Total number of timesteps to run the simulation."
-msgstr "シミュレーションの全ステップ数"
+msgstr "シミュレーションの全タイムステップ数"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Steps"
-msgstr "エネルギー"
+msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:685
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6027,6 +6005,7 @@ msgstr "この温度に適合するように原子の初期速度をセット"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:768
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
+#, fuzzy
 msgid "Remove system linear momentum from initial velocities."
 msgstr "系の並進運動量を除去するように初期速度をセット"
 
@@ -6228,12 +6207,12 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "構造最適化パラメータ"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Optimization Method"
-msgstr ""
+msgstr "構造最適化法"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6437,7 +6416,7 @@ msgstr "参照"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "OpenCL"
-msgstr ""
+msgstr "OpenCL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -6687,7 +6666,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -6964,7 +6943,7 @@ msgstr "平滑化:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:379
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 msgid "Light"
-msgstr "明るく"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:389
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
@@ -7165,8 +7144,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7251,6 +7230,18 @@ msgstr ""
 "sourceforge.net,,ktns.87@gmail.com,ken.i54k@gmail.com,,iwao.aoyama@gmail."
 "com,,,,,avogadro-devel@lists.sourceforge.net,,ktns.87@gmail.com,ken."
 "i54k@gmail.com,,iwao.aoyama@gmail.com,,"
+
+#~ msgid "Layer"
+#~ msgstr "レイヤー"
+
+#, fuzzy
+#~| msgid "Molecule"
+#~ msgid "Insert Molecule..."
+#~ msgstr "分子を挿入..."
+
+#, fuzzy
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "3D分子を生成中..."
 
 #, fuzzy
 #~ msgid "Run APBS..."
@@ -11958,9 +11949,6 @@ msgstr ""
 
 #~ msgid "Molecular Symmetry"
 #~ msgstr "分子の対称性"
-
-#~ msgid "Z (Å)"
-#~ msgstr "Z (Å)"
 
 #~ msgid "Translate by:"
 #~ msgstr "並進操作の距離:"

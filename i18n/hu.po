@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
-"PO-Revision-Date: 2022-07-20 02:53+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
+"PO-Revision-Date: 2022-07-25 19:16+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1200,10 +1200,6 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[nincs molekula]"
-
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr "Réteg"
 
 #: qtgui/layermodel.cpp:77
 #, qt-format
@@ -2896,7 +2892,7 @@ msgid "Download a molecule from PQR."
 msgstr "PQR-molekula letöltése."
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr "DNS/RNS…"
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2906,7 +2902,7 @@ msgid "&Insert"
 msgstr "&Beszúrás"
 
 #: qtplugins/insertdna/insertdna.cpp:78
-msgid "Insert DNA/RNA..."
+msgid "Insert DNA/RNA…"
 msgstr "DNS/RNS beszúrása…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
@@ -2929,12 +2925,17 @@ msgstr "T"
 msgid "Thymine"
 msgstr "Timin"
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
-msgid "Insert Molecule..."
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
+msgid "Insert Molecule…"
 msgstr "Molekula beszúrása…"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-msgid "Generating 3D molecule..."
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+msgid "Generating 3D molecule…"
 msgstr "3D molekula létrehozása…"
 
 #: qtplugins/insertdna/insertdna.h:33
@@ -3126,20 +3127,9 @@ msgstr "Leírók nem találhatók!"
 msgid "No line format readers found!"
 msgstr "Nem található sorformátumú olvasó!"
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-msgid "Insert Molecule…"
-msgstr "Molekula beszúrása…"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
 msgstr "A kért formátumolvasó betöltése nem sikerült."
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-msgid "Generating 3D molecule…"
-msgstr "3D molekula létrehozása…"
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3902,7 +3892,7 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
+msgid "Z (Å)"
 msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
@@ -5209,7 +5199,7 @@ msgstr "Poisson EWALD alfa"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr "Poisson EWALD GMAX"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -6007,7 +5997,7 @@ msgstr "X végpont stílusának módosítása."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Határstílusok az X, Y és Z irányok kijelölésében."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6776,7 +6766,7 @@ msgstr "Jelentési időköz:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr "Kiegyensúlyozási lépések:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7342,6 +7332,18 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Layer"
+#~ msgstr "Réteg"
+
+#~ msgid "Insert Molecule..."
+#~ msgstr "Molekula beszúrása…"
+
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "3D molekula létrehozása…"
+
+#~ msgid "Z Å)"
+#~ msgstr "Z (Å)"
 
 #, qt-format
 #~ msgid "%1: File exists and is not writable."

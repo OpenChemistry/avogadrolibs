@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
 "PO-Revision-Date: 2022-06-22 19:15+0000\n"
 "Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
@@ -1149,10 +1149,6 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[molekularik ez]"
-
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr "Geruza"
 
 #: qtgui/layermodel.cpp:77
 #, fuzzy, qt-format
@@ -2902,7 +2898,9 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+#, fuzzy
+#| msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr "ADN/ARN..."
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2914,7 +2912,7 @@ msgstr "&Txertatu"
 #: qtplugins/insertdna/insertdna.cpp:78
 #, fuzzy
 #| msgid "Insert DNA/RNA"
-msgid "Insert DNA/RNA..."
+msgid "Insert DNA/RNA…"
 msgstr "ADN/ARN-a sartu"
 
 #: qtplugins/insertdna/insertdna.cpp:159
@@ -2937,16 +2935,20 @@ msgstr "T"
 msgid "Thymine"
 msgstr "Timina"
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
 #, fuzzy
 #| msgid "Molecule"
-msgid "Insert Molecule..."
+msgid "Insert Molecule…"
 msgstr "Molekula"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#, fuzzy
-msgid "Generating 3D molecule..."
-msgstr "Setatutako Molekularik ez"
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+msgid "Generating 3D molecule…"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
@@ -3153,21 +3155,8 @@ msgstr "Azalpenik Ez"
 msgid "No line format readers found!"
 msgstr ""
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-#, fuzzy
-#| msgid "Molecule"
-msgid "Insert Molecule…"
-msgstr "Molekula"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
-msgstr ""
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
@@ -3942,8 +3931,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
-msgstr ""
+msgid "Z (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -5278,7 +5267,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -6093,7 +6082,9 @@ msgstr "X mugaren estiloa aldatu."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+#, fuzzy
+#| msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Muga estiloak aukeratu X, Y eta Z norabideetan."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6844,7 +6835,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7404,6 +7395,18 @@ msgstr ""
 "sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-"
 "devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,"
 "avogadro-devel@lists.sourceforge.net,julenl@gmail.com"
+
+#~ msgid "Layer"
+#~ msgstr "Geruza"
+
+#, fuzzy
+#~| msgid "Molecule"
+#~ msgid "Insert Molecule..."
+#~ msgstr "Molekula"
+
+#, fuzzy
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "Setatutako Molekularik ez"
 
 #, qt-format
 #~ msgid "%1: File exists and is not writable."
@@ -11955,9 +11958,6 @@ msgstr ""
 
 #~ msgid "Calculate Size..."
 #~ msgstr "Tamaina kalkulatu..."
-
-#~ msgid "Z (Å)"
-#~ msgstr "Z (Å)"
 
 #~ msgid "Translate by:"
 #~ msgstr "Translatu honen beste:"

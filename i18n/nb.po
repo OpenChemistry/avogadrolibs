@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
 "PO-Revision-Date: 2021-09-15 07:38+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
@@ -1128,11 +1128,6 @@ msgstr ""
 #, fuzzy
 msgid "[no molecule]"
 msgstr "Molekyl"
-
-#: qtgui/layermodel.cpp:72
-#, fuzzy
-msgid "Layer"
-msgstr "Spiller"
 
 #: qtgui/layermodel.cpp:77
 #, fuzzy, qt-format
@@ -2835,7 +2830,7 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2845,7 +2840,7 @@ msgid "&Insert"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:78
-msgid "Insert DNA/RNA..."
+msgid "Insert DNA/RNA…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:159
@@ -2871,16 +2866,21 @@ msgstr ""
 msgid "Thymine"
 msgstr ""
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
 #, fuzzy
 #| msgid "Molecule"
-msgid "Insert Molecule..."
+msgid "Insert Molecule…"
 msgstr "Molekyl"
 
 #: qtplugins/insertdna/insertdna.cpp:201
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
 #, fuzzy
 #| msgid "Generating 3D molecule..."
-msgid "Generating 3D molecule..."
+msgid "Generating 3D molecule…"
 msgstr "Genererer 3D-molekyl …"
 
 #: qtplugins/insertdna/insertdna.h:33
@@ -3081,24 +3081,9 @@ msgstr "Ingen beskrivelse"
 msgid "No line format readers found!"
 msgstr ""
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-#, fuzzy
-#| msgid "Molecule"
-msgid "Insert Molecule…"
-msgstr "Molekyl"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
 msgstr "Kunne ikke laste inn forespurt formatleser."
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-#, fuzzy
-#| msgid "Generating 3D molecule..."
-msgid "Generating 3D molecule…"
-msgstr "Genererer 3D-molekyl …"
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3851,8 +3836,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
-msgstr ""
+msgid "Z (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -5165,7 +5150,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -5961,7 +5946,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6708,7 +6693,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7236,6 +7221,20 @@ msgid "Your emails"
 msgstr ""
 "epost@anotheragency.no, anders.oftedal@gmail.com, simen@simenh.com, "
 "simenheg@gmail.com, sol-moe@online.no"
+
+#, fuzzy
+#~ msgid "Layer"
+#~ msgstr "Spiller"
+
+#, fuzzy
+#~| msgid "Molecule"
+#~ msgid "Insert Molecule..."
+#~ msgstr "Molekyl"
+
+#, fuzzy
+#~| msgid "Generating 3D molecule..."
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "Genererer 3D-molekyl …"
 
 #, fuzzy
 #~ msgid "Crystal..."
@@ -7996,9 +7995,6 @@ msgstr ""
 
 #~ msgid "Advanced..."
 #~ msgstr "Avansert …"
-
-#~ msgid "Z (Å)"
-#~ msgstr "Z (Å)"
 
 #~ msgid "Python Settings"
 #~ msgstr "Python-innstillinger"

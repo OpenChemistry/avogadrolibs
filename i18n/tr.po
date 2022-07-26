@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
 "PO-Revision-Date: 2021-10-03 18:38+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -1178,10 +1178,6 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[molekül yok]"
-
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr "Katman"
 
 #: qtgui/layermodel.cpp:77
 #, fuzzy, qt-format
@@ -2876,7 +2872,7 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2886,8 +2882,10 @@ msgid "&Insert"
 msgstr "&Ekle"
 
 #: qtplugins/insertdna/insertdna.cpp:78
-msgid "Insert DNA/RNA..."
-msgstr ""
+#, fuzzy
+#| msgid "&Insert"
+msgid "Insert DNA/RNA…"
+msgstr "&Ekle"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -2909,16 +2907,17 @@ msgstr ""
 msgid "Thymine"
 msgstr ""
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
-#, fuzzy
-#| msgid "Insert Molecule…"
-msgid "Insert Molecule..."
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
+msgid "Insert Molecule…"
 msgstr "Molekül Ekle…"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#, fuzzy
-#| msgid "Generating 3D molecule…"
-msgid "Generating 3D molecule..."
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+msgid "Generating 3D molecule…"
 msgstr "3D molekül üretiliyor…"
 
 #: qtplugins/insertdna/insertdna.h:33
@@ -3107,20 +3106,9 @@ msgstr "Tanımlayıcı bulunamadı!"
 msgid "No line format readers found!"
 msgstr "Satır biçimi okuyucu bulunamadı!"
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-msgid "Insert Molecule…"
-msgstr "Molekül Ekle…"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
 msgstr "İstenen biçim okuyucusu yüklenemiyor."
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-msgid "Generating 3D molecule…"
-msgstr "3D molekül üretiliyor…"
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3868,7 +3856,7 @@ msgid "Y (Å)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
+msgid "Z (Å)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:393
@@ -5155,7 +5143,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -5937,7 +5925,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6681,7 +6669,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7246,6 +7234,19 @@ msgstr ""
 "abdurrahmanolgac@bireczaci.com,avogadro-devel@lists.sourceforge.net,,efe."
 "ciftci@linux.org.tr,,,,,kudretemre@hotmail.com,apshalasha@gmail.com,rainman."
 "neu@gmail.com,para4360@gmail.com,,ytopcu@gmail.com,,hhaydarakdag@gmail.com,"
+
+#~ msgid "Layer"
+#~ msgstr "Katman"
+
+#, fuzzy
+#~| msgid "Insert Molecule…"
+#~ msgid "Insert Molecule..."
+#~ msgstr "Molekül Ekle…"
+
+#, fuzzy
+#~| msgid "Generating 3D molecule…"
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "3D molekül üretiliyor…"
 
 #, qt-format
 #~ msgid "%1: File exists and is not writable."

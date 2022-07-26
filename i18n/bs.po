@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
 "PO-Revision-Date: 2021-07-12 15:33+0000\n"
 "Last-Translator: Emin Macanović <macanovic.emin@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
@@ -1124,10 +1124,6 @@ msgstr ""
 #, fuzzy
 msgid "[no molecule]"
 msgstr "Nema postavljene molekule"
-
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr ""
 
 #: qtgui/layermodel.cpp:77
 #, qt-format
@@ -2850,7 +2846,7 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2860,8 +2856,10 @@ msgid "&Insert"
 msgstr "&Ubaci"
 
 #: qtplugins/insertdna/insertdna.cpp:78
-msgid "Insert DNA/RNA..."
-msgstr ""
+#, fuzzy
+#| msgid "&Insert"
+msgid "Insert DNA/RNA…"
+msgstr "&Ubaci"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -2885,16 +2883,20 @@ msgstr "T"
 msgid "Thymine"
 msgstr ""
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
 #, fuzzy
 #| msgid "Molecule"
-msgid "Insert Molecule..."
+msgid "Insert Molecule…"
 msgstr "Molekul"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#, fuzzy
-msgid "Generating 3D molecule..."
-msgstr "Nema postavljene molekule"
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+msgid "Generating 3D molecule…"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
@@ -3099,21 +3101,8 @@ msgstr "Nema opisa"
 msgid "No line format readers found!"
 msgstr ""
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-#, fuzzy
-#| msgid "Molecule"
-msgid "Insert Molecule…"
-msgstr "Molekul"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
-msgstr ""
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
@@ -3866,7 +3855,7 @@ msgid "Y (Å)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
+msgid "Z (Å)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:393
@@ -5186,7 +5175,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -5986,7 +5975,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6736,7 +6725,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7269,6 +7258,15 @@ msgstr ""
 ",,,,avogadro-devel@lists.sourceforge.net,,,avogadro-devel@lists.sourceforge."
 "net,,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-devel@lists."
 "sourceforge.net,,"
+
+#, fuzzy
+#~| msgid "Molecule"
+#~ msgid "Insert Molecule..."
+#~ msgstr "Molekul"
+
+#, fuzzy
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "Nema postavljene molekule"
 
 #~ msgid "Other..."
 #~ msgstr "Ostalo..."

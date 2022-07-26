@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-20 02:51+0000\n"
+"POT-Creation-Date: 2022-07-24 03:19+0000\n"
 "PO-Revision-Date: 2021-09-12 03:33+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
@@ -1124,10 +1124,6 @@ msgstr ""
 #, fuzzy
 msgid "[no molecule]"
 msgstr "Nessuna molecola impostata"
-
-#: qtgui/layermodel.cpp:72
-msgid "Layer"
-msgstr ""
 
 #: qtgui/layermodel.cpp:77
 #, qt-format
@@ -2862,7 +2858,9 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-msgid "DNA/RNA..."
+#, fuzzy
+#| msgid "DNA/RNA..."
+msgid "DNA/RNA…"
 msgstr "DNA/RNA..."
 
 #: qtplugins/insertdna/insertdna.cpp:61
@@ -2874,7 +2872,7 @@ msgstr "&Inserisci"
 #: qtplugins/insertdna/insertdna.cpp:78
 #, fuzzy
 #| msgid "Insert DNA/RNA"
-msgid "Insert DNA/RNA..."
+msgid "Insert DNA/RNA…"
 msgstr "Inserisci DNA/RNA"
 
 #: qtplugins/insertdna/insertdna.cpp:159
@@ -2897,16 +2895,20 @@ msgstr "T"
 msgid "Thymine"
 msgstr "Timina"
 
+#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
+#: qtplugins/lineformatinput/lineformatinput.cpp:106
+#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
 #, fuzzy
 #| msgid "Insert Molecule..."
-msgid "Insert Molecule..."
+msgid "Insert Molecule…"
 msgstr "Inserisci molecola..."
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#, fuzzy
-msgid "Generating 3D molecule..."
-msgstr "Nessuna molecola impostata"
+#: qtplugins/lineformatinput/lineformatinput.cpp:122
+msgid "Generating 3D molecule…"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
@@ -3116,21 +3118,8 @@ msgstr "Nessuna descrizione trovata!"
 msgid "No line format readers found!"
 msgstr ""
 
-#. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/lineformatinput/lineformatinput.cpp:106
-#: qtplugins/lineformatinput/lineformatinput.cpp:121:1021
-#, fuzzy
-#| msgid "Insert Molecule..."
-msgid "Insert Molecule…"
-msgstr "Inserisci molecola..."
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:111
 msgid "Unable to load requested format reader."
-msgstr ""
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:122
-msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
@@ -3888,8 +3877,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-msgid "Z Å)"
-msgstr ""
+msgid "Z (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -5216,7 +5205,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-msgid "Poiosson EWALD GMAX"
+msgid "Poisson EWALD GMAX"
 msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
@@ -6004,7 +5993,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-msgid "Select bondary Styles in X, Y and Z directions."
+msgid "Select boundary Styles in X, Y and Z directions."
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
@@ -6755,7 +6744,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
-msgid "Equilibriation Steps:"
+msgid "Equilibration Steps:"
 msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:780
@@ -7360,6 +7349,15 @@ msgstr ""
 "michel_gatti@yahoo.it,aegnor_isilra@hotmail.com,hattory@ubuntu.com,,"
 "primes2h@ubuntu.com,vito.fasano@gmail.com,mcarlo.95@gmail.com,,,"
 "lexluxsox@hotmail.it"
+
+#, fuzzy
+#~| msgid "Insert Molecule..."
+#~ msgid "Insert Molecule..."
+#~ msgstr "Inserisci molecola..."
+
+#, fuzzy
+#~ msgid "Generating 3D molecule..."
+#~ msgstr "Nessuna molecola impostata"
 
 #~ msgid "Other..."
 #~ msgstr "Altro..."
@@ -11333,9 +11331,6 @@ msgstr ""
 
 #~ msgid "Find &double bonds"
 #~ msgstr "Trova i &doppi legami"
-
-#~ msgid "Z (Å)"
-#~ msgstr "Z (Å)"
 
 #~ msgid "Display visual cues"
 #~ msgstr "Visualizza i segnali visivi"
