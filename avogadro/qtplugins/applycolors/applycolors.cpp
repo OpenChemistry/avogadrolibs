@@ -12,6 +12,7 @@
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
@@ -229,7 +230,8 @@ void ApplyColors::applyIndexColors()
 
     float indexFraction = float(i) / float(numAtoms);
 
-    m_molecule->atom(i).setColor(rainbowGradient(indexFraction, type));
+    m_molecule->undoMolecule()->setColor(
+      i, rainbowGradient(indexFraction, type), tr("Index Color"));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -250,14 +252,14 @@ void ApplyColors::applyChargeColors()
 
   // populate the dialog to choose the model and colormap
   ChargeColorDialog dialog;
-  for (const auto &model : identifiers) {
+  for (const auto& model : identifiers) {
     auto name = Calc::ChargeManager::instance().nameForModel(model);
     dialog.modelCombo->addItem(name.c_str(), model.c_str());
   }
   dialog.exec();
   if (dialog.result() != QDialog::Accepted)
     return;
-  
+
   // get the model and colormap
   const auto model = dialog.modelCombo->currentData().toString().toStdString();
   const auto colormapName = dialog.colorMapCombo->currentText();
@@ -282,7 +284,8 @@ void ApplyColors::applyChargeColors()
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    m_molecule->atom(i).setColor(chargeGradient(charges(i, 0), clamp, type));
+    m_molecule->undoMolecule()->setColor(
+      i, chargeGradient(charges(i, 0), clamp, type), tr("Charge Color"));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -325,7 +328,8 @@ void ApplyColors::applyDistanceColors()
     Real distance = diff.norm();
     Real distanceFraction = distance / size;
 
-    m_molecule->atom(i).setColor(rainbowGradient(distanceFraction, type));
+    m_molecule->undoMolecule()->setColor(
+      i, rainbowGradient(distanceFraction, type), tr("Distance Color"));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -344,7 +348,7 @@ void ApplyColors::resetColors()
       continue;
 
     Vector3ub color(Core::Elements::color(m_molecule->atomicNumber(i)));
-    m_molecule->atom(i).setColor(color);
+    m_molecule->undoMolecule()->setColor(i, color, tr("Reset Color"));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -367,7 +371,7 @@ void ApplyColors::applyCustomColor(const QColor& new_color)
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    m_molecule->atom(i).setColor(color);
+    m_molecule->undoMolecule()->setColor(i, color, tr("Custom Color"));
   }
 
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
@@ -570,4 +574,4 @@ void ApplyColors::applyShapelyColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

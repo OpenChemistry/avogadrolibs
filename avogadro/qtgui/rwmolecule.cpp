@@ -23,8 +23,10 @@ using Core::CrystalTools;
 using Core::UnitCell;
 using std::swap;
 
-RWMolecule::RWMolecule(Molecule& mol, QObject* p) : QObject(p), m_molecule(mol), m_interactive(false)
-{}
+RWMolecule::RWMolecule(Molecule& mol, QObject* p)
+  : QObject(p), m_molecule(mol), m_interactive(false)
+{
+}
 
 RWMolecule::~RWMolecule() {}
 
@@ -33,8 +35,7 @@ RWMolecule::AtomType RWMolecule::addAtom(unsigned char num, bool usingPositions)
   auto atomId = static_cast<Index>(m_molecule.atomCount());
   auto atomUid = static_cast<Index>(m_molecule.m_atomUniqueIds.size());
 
-  auto* comm =
-    new AddAtomCommand(*this, num, usingPositions, atomId, atomUid);
+  auto* comm = new AddAtomCommand(*this, num, usingPositions, atomId, atomUid);
   comm->setText(tr("Add Atom"));
   m_undoStack.push(comm);
   return AtomType(this, atomId);
@@ -135,8 +136,8 @@ bool RWMolecule::setAtomicNumber(Index atomId, unsigned char num)
   if (atomId >= atomCount())
     return false;
 
-  auto* comm = new SetAtomicNumberCommand(
-    *this, atomId, m_molecule.atomicNumber(atomId), num);
+  auto* comm = new SetAtomicNumberCommand(*this, atomId,
+                                          m_molecule.atomicNumber(atomId), num);
   comm->setText(tr("Change Element"));
   m_undoStack.push(comm);
   return true;
@@ -148,8 +149,7 @@ bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3>& pos,
   if (pos.size() != m_molecule.atomCount())
     return false;
 
-  auto* comm =
-    new SetPositions3dCommand(*this, m_molecule.m_positions3d, pos);
+  auto* comm = new SetPositions3dCommand(*this, m_molecule.m_positions3d, pos);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
@@ -174,21 +174,21 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
   if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
     m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
 
-  auto* comm = new SetPosition3dCommand(
-    *this, atomId, m_molecule.m_positions3d[atomId], pos);
+  auto* comm = new SetPosition3dCommand(*this, atomId,
+                                        m_molecule.m_positions3d[atomId], pos);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
   return true;
 }
 
-void RWMolecule::setAtomSelected(Index atomId, bool selected, const QString& undoText)
+void RWMolecule::setAtomSelected(Index atomId, bool selected,
+                                 const QString& undoText)
 {
-  auto* comm = new ModifySelectionCommand(*this, atomId, selected);
+  auto* comm = new SetSelectionCommand(*this, atomId, selected);
   comm->setText(undoText);
   comm->setCanMerge(true);
   m_undoStack.push(comm);
-//  m_molecule.setAtomSelected(atomId, selected);
 }
 
 bool RWMolecule::atomSelected(Index atomId) const
@@ -220,14 +220,15 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
   return true;
 }
 
-bool RWMolecule::setColor(Index atomId, Vector3ub color)
+bool RWMolecule::setColor(Index atomId, Vector3ub color,
+                          const QString& undoText)
 {
   if (atomId >= atomCount())
     return false;
 
-  auto* comm =
-    new SetAtomColorCommand(*this, atomId, m_molecule.color(atomId), color);
-  comm->setText(tr("Change Atom Color"));
+  auto* comm = new SetAtomColorCommand(*this, atomId, color);
+  comm->setText(undoText);
+  comm->setCanMerge(true);
   m_undoStack.push(comm);
   return true;
 }
@@ -301,8 +302,7 @@ bool RWMolecule::setBondOrders(const Core::Array<unsigned char>& orders)
   if (orders.size() != m_molecule.bondCount())
     return false;
 
-  auto* comm =
-    new SetBondOrdersCommand(*this, m_molecule.bondOrders(), orders);
+  auto* comm = new SetBondOrdersCommand(*this, m_molecule.bondOrders(), orders);
   comm->setText(tr("Set Bond Orders"));
   m_undoStack.push(comm);
   return true;
@@ -336,8 +336,7 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
     if (p_const[i].first > p_const[i].second)
       swap(p[i].first, p[i].second);
 
-  auto* comm =
-    new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
+  auto* comm = new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
   comm->setText(tr("Update Bonds"));
   m_undoStack.push(comm);
   return true;
@@ -375,8 +374,7 @@ void RWMolecule::addUnitCell()
     static_cast<Real>(90.0) * DEG_TO_RAD);
   m_molecule.setUnitCell(cell);
 
-  auto* comm =
-    new AddUnitCellCommand(*this, *m_molecule.unitCell());
+  auto* comm = new AddUnitCellCommand(*this, *m_molecule.unitCell());
   comm->setText(tr("Add Unit Cell"));
   m_undoStack.push(comm);
   emitChanged(Molecule::UnitCell | Molecule::Added);
@@ -388,8 +386,7 @@ void RWMolecule::removeUnitCell()
   if (!m_molecule.unitCell())
     return;
 
-  auto* comm =
-    new RemoveUnitCellCommand(*this, *m_molecule.unitCell());
+  auto* comm = new RemoveUnitCellCommand(*this, *m_molecule.unitCell());
   comm->setText(tr("Remove Unit Cell"));
   m_undoStack.push(comm);
 
@@ -401,8 +398,7 @@ void RWMolecule::modifyMolecule(const Molecule& newMolecule,
                                 Molecule::MoleculeChanges changes,
                                 const QString& undoText)
 {
-  auto* comm =
-    new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
+  auto* comm = new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
 
   comm->setText(undoText);
   m_undoStack.push(comm);
@@ -470,8 +466,7 @@ void RWMolecule::wrapAtomsToCell()
   CrystalTools::wrapAtomsToUnitCell(m_molecule);
   Core::Array<Vector3> newPos = m_molecule.atomPositions3d();
 
-  auto* comm =
-    new SetPositions3dCommand(*this, oldPos, newPos);
+  auto* comm = new SetPositions3dCommand(*this, oldPos, newPos);
   comm->setText(tr("Wrap Atoms to Cell"));
   m_undoStack.push(comm);
 
@@ -713,4 +708,4 @@ bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
