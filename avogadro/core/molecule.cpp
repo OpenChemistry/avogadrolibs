@@ -321,6 +321,23 @@ const Array<signed char>& Molecule::formalCharges() const
   return m_formalCharges;
 }
 
+signed char Molecule::totalCharge() const
+{
+  signed char charge = 0;
+
+  // check the data map first
+  if (m_data.hasValue("totalCharge")) {
+    charge = m_data.value("totalCharge").toInt();
+  }
+
+  if (m_formalCharges.size() > 0) {
+    for (Index i = 0; i < m_formalCharges.size(); ++i)
+      charge += m_formalCharges[i];
+    return charge;
+  }
+  return charge; // should be zero
+}
+
 Array<Vector3ub>& Molecule::colors()
 {
   return m_colors;

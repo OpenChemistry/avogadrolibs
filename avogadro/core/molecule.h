@@ -137,6 +137,15 @@ public:
   const Array<signed char>& formalCharges() const;
 
   /**
+   * Get the total charge on the molecule.
+   * The method will first check to see if a total charge has been set. If not,
+   * it will calculate the total charge from the formal charges (if set).
+   * If neither has been set, it will assume the total charge is zero.
+   * @return The total charge of the molecule.
+   */
+  signed char totalCharge() const;
+
+  /**
    * Get the formal charge for the requested atom.
    * @param atomId The index of the atom.
    * @return The formal charge of the atom indexed at @a atomId, or
@@ -159,7 +168,7 @@ public:
    */
   bool setFormalCharge(Index atomId, signed char charge);
 
-  /** Returns a vector of colors for the atoms in the moleucle. */
+  /** \returns a vector of colors for the atoms in the moleucle. */
   Array<Vector3ub>& colors();
 
   /** \overload */
