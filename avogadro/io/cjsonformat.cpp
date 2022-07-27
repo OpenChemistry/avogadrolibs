@@ -119,7 +119,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   // This represents our minimal spec for a molecule - atoms that have an
   // atomic number.
   if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
-    for (auto & atomicNumber : atomicNumbers)
+    for (auto& atomicNumber : atomicNumbers)
       molecule.addAtom(atomicNumber);
   } else {
     appendError("Malformed array for in atoms.elements.number");
@@ -367,21 +367,21 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       json occupations = orbitals["occupations"];
       if (isNumericArray(occupations)) {
         std::vector<unsigned char> occs;
-        for (auto & occupation : occupations)
+        for (auto& occupation : occupations)
           occs.push_back(static_cast<unsigned char>(occupation));
         basis->setMolecularOrbitalOccupancy(occupations);
       }
       json energies = orbitals["energies"];
       if (isNumericArray(energies)) {
         std::vector<double> energyArray;
-        for (auto & energie : energies)
+        for (auto& energie : energies)
           energyArray.push_back(static_cast<double>(energie));
         basis->setMolecularOrbitalEnergy(energyArray);
       }
       json numbers = orbitals["numbers"];
       if (isNumericArray(numbers)) {
         std::vector<unsigned int> numArray;
-        for (auto & number : numbers)
+        for (auto& number : numbers)
           numArray.push_back(static_cast<unsigned int>(number));
         basis->setMolecularOrbitalNumber(numArray);
       }
@@ -390,16 +390,16 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       json moCoefficientsB = orbitals["betaCoefficients"];
       if (isNumericArray(moCoefficients)) {
         std::vector<double> coeffs;
-        for (auto & moCoefficient : moCoefficients)
+        for (auto& moCoefficient : moCoefficients)
           coeffs.push_back(static_cast<double>(moCoefficient));
         basis->setMolecularOrbitals(coeffs);
       } else if (isNumericArray(moCoefficientsA) &&
                  isNumericArray(moCoefficientsB)) {
         std::vector<double> coeffsA;
-        for (auto & i : moCoefficientsA)
+        for (auto& i : moCoefficientsA)
           coeffsA.push_back(static_cast<double>(i));
         std::vector<double> coeffsB;
-        for (auto & i : moCoefficientsB)
+        for (auto& i : moCoefficientsB)
           coeffsB.push_back(static_cast<double>(i));
         basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
         basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
@@ -416,16 +416,16 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
           moCoefficientsB = orbSets[idx]["betaCoefficients"];
           if (isNumericArray(moCoefficients)) {
             std::vector<double> coeffs;
-            for (auto & moCoefficient : moCoefficients)
+            for (auto& moCoefficient : moCoefficients)
               coeffs.push_back(static_cast<double>(moCoefficient));
             basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
           } else if (isNumericArray(moCoefficientsA) &&
                      isNumericArray(moCoefficientsB)) {
             std::vector<double> coeffsA;
-            for (auto & i : moCoefficientsA)
+            for (auto& i : moCoefficientsA)
               coeffsA.push_back(static_cast<double>(i));
             std::vector<double> coeffsB;
-            for (auto & i : moCoefficientsB)
+            for (auto& i : moCoefficientsB)
               coeffsB.push_back(static_cast<double>(i));
             basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
             basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
@@ -444,7 +444,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     json frequencies = vibrations["frequencies"];
     if (isNumericArray(frequencies)) {
       Array<double> freqs;
-      for (auto & frequencie : frequencies) {
+      for (auto& frequencie : frequencies) {
         freqs.push_back(static_cast<double>(frequencie));
       }
       molecule.setVibrationFrequencies(freqs);
@@ -452,7 +452,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     json intensities = vibrations["intensities"];
     if (isNumericArray(intensities)) {
       Array<double> intens;
-      for (auto & intensitie : intensities) {
+      for (auto& intensitie : intensities) {
         intens.push_back(static_cast<double>(intensitie));
       }
       molecule.setVibrationIRIntensities(intens);
@@ -460,7 +460,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     json raman = vibrations["ramanIntensities"];
     if (isNumericArray(raman)) {
       Array<double> intens;
-      for (auto & i : raman) {
+      for (auto& i : raman) {
         intens.push_back(static_cast<double>(i));
       }
       molecule.setVibrationRamanIntensities(intens);
@@ -473,13 +473,29 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
           Array<Vector3> mode;
           mode.resize(arr.size() / 3);
           double* ptr = &mode[0][0];
-          for (auto & j : arr) {
+          for (auto& j : arr) {
             *(ptr++) = static_cast<double>(j);
           }
           disps.push_back(mode);
         }
       }
       molecule.setVibrationLx(disps);
+    }
+  }
+
+  // properties
+  if (jsonRoot.find("properties") != jsonRoot.end()) {
+    json properties = jsonRoot["properties"];
+    if (properties.is_object()) {
+      if (properties.find("totalCharge") != properties.end()) {
+        molecule.setData("totalCharge",
+                         static_cast<int>(properties["totalCharge"]));
+      }
+      if (properties.find("totalSpinMultiplicity") != properties.end()) {
+        molecule.setData("totalSpinMultiplicity",
+                         static_cast<int>(properties["totalSpinMultiplicity"]));
+      }
+      // todo - put everything into the data map
     }
   }
 
@@ -536,6 +552,15 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     if (molecule.data("inchi").type() == Variant::String)
       root["inchi"] = molecule.data("inchi").toString().c_str();
   }
+
+  json properties;
+  properties["totalCharge"] = molecule.totalCharge();
+  if (molecule.data("totalSpinMultiplicity").type() == Variant::Int)
+    properties["totalSpinMultiplicity"] =
+      molecule.data("totalSpinMultiplicity").toInt();
+  else
+    properties["totalSpinMultiplicity"] = 1; // assume singlet if not specified
+  root["properties"] = properties;
 
   if (molecule.unitCell()) {
     json unitCell;
@@ -605,7 +630,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
-      for (unsigned int & atomIndice : atomIndices)
+      for (unsigned int& atomIndice : atomIndices)
         shellToAtomMap.push_back(atomIndice);
       basis["shellToAtomMap"] = shellToAtomMap;
 
@@ -648,7 +673,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     auto energies = gaussian->moEnergy();
     if (energies.size() > 0) {
       json energyData;
-      for (double & energie : energies) {
+      for (double& energie : energies) {
         energyData.push_back(energie);
       }
       root["orbitals"]["energies"] = energyData;
@@ -656,14 +681,14 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     auto occ = gaussian->moOccupancy();
     if (occ.size() > 0) {
       json occData;
-      for (unsigned char & it : occ)
+      for (unsigned char& it : occ)
         occData.push_back(static_cast<int>(it));
       root["orbitals"]["occupations"] = occData;
     }
     auto num = gaussian->moNumber();
     if (num.size() > 0) {
       json numData;
-      for (unsigned int & it : num)
+      for (unsigned int& it : num)
         numData.push_back(it);
       root["orbitals"]["numbers"] = numData;
     }
@@ -726,7 +751,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       // everything gets real-space Cartesians
       json coords3d;
-      for (const auto & it : molecule.atomPositions3d()) {
+      for (const auto& it : molecule.atomPositions3d()) {
         coords3d.push_back(it.x());
         coords3d.push_back(it.y());
         coords3d.push_back(it.z());
@@ -739,7 +764,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
         Array<Vector3> fcoords;
         CrystalTools::fractionalCoordinates(
           *molecule.unitCell(), molecule.atomPositions3d(), fcoords);
-        for (auto & fcoord : fcoords) {
+        for (auto& fcoord : fcoords) {
           coordsFractional.push_back(fcoord.x());
           coordsFractional.push_back(fcoord.y());
           coordsFractional.push_back(fcoord.z());
@@ -751,7 +776,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     // 2d positions:
     if (molecule.atomPositions2d().size() == molecule.atomCount()) {
       json coords2d;
-      for (const auto & it : molecule.atomPositions2d()) {
+      for (const auto& it : molecule.atomPositions2d()) {
         coords2d.push_back(it.x());
         coords2d.push_back(it.y());
       }
@@ -903,4 +928,4 @@ vector<std::string> CjsonFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io
