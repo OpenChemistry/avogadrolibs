@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-24 03:19+0000\n"
-"PO-Revision-Date: 2022-07-27 12:01+0000\n"
-"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
+"PO-Revision-Date: 2022-07-28 15:41+0000\n"
+"Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2452,7 +2452,7 @@ msgstr "Optimisation de la géométrie"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Méthodes de la structure éléctronique (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
@@ -2497,7 +2497,7 @@ msgstr "DENSITÉS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "REDEMARRER_L'HISTORIQUE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
@@ -2520,7 +2520,6 @@ msgid "BROYDEN"
 msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
-#, fuzzy
 msgid "Conjugate Gradients"
 msgstr "Gradients conjugués"
 
@@ -2529,7 +2528,6 @@ msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
-#, fuzzy
 msgid "Steepest descent"
 msgstr "Plus grande pente"
 
@@ -2539,6 +2537,8 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Le fichier d'entrée a été modifié. Voulez-vous écraser vos modifications "
+"pour utiliser la nouvelle géométrie ou les options de travail ?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
@@ -2547,28 +2547,25 @@ msgstr "Écraser le fichier d'entrée modifié ?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:948
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "Sauvegarder le fichier d'entrée CP2K"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:997
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "Soumettre le calcul CP2K"
 
 #: qtplugins/crystal/crystal.cpp:41
-#, fuzzy
 msgid "Import Crystal from Clipboard…"
-msgstr "I&mporter un cristal à partir du presse-papier..."
+msgstr "Importer un cristal à partir du presse-papier…"
 
 #: qtplugins/crystal/crystal.cpp:48
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Changer de maille"
 
 #: qtplugins/crystal/crystal.cpp:53
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Afficher la &maille conventionnelle"
+msgstr "Modifier la maille…"
 
 #: qtplugins/crystal/crystal.cpp:58
-#, fuzzy
 msgid "&Wrap Atoms to Unit Cell"
 msgstr "&Regrouper les atomes dans la maille"
 
@@ -2577,9 +2574,8 @@ msgid "Rotate to Standard &Orientation"
 msgstr "Pivoter vers l'&orientation standard"
 
 #: qtplugins/crystal/crystal.cpp:70
-#, fuzzy
 msgid "Scale Cell &Volume…"
-msgstr "Mettre la maille à l'échelle du @volume..."
+msgstr "Mettre à l'échelle la maille &Volume…"
 
 #: qtplugins/crystal/crystal.cpp:75
 #, fuzzy
@@ -2610,7 +2606,7 @@ msgstr "Importer un cristal depuis le presse-papiers"
 
 #: qtplugins/crystal/crystal.cpp:194
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Réduire le cristal Niggli"
 
 #: qtplugins/crystal/crystal.cpp:195
 msgid "The unit cell is already reduced."
@@ -2622,7 +2618,7 @@ msgstr "Cristal"
 
 #: qtplugins/crystal/crystal.h:64
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Outils pour la modification/l'analyse spécifique des crystaux."
 
 #: qtplugins/crystal/crystalscene.cpp:138
 msgid "Line color:"
@@ -2630,7 +2626,7 @@ msgstr "Couleur de ligne :"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Afficher les limites des mailles."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
@@ -2638,20 +2634,21 @@ msgstr "Impossible d'analyser le texte"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:69
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Échec lors de la lecture des données avec le format fourni."
 
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
 msgid "No unit cell present."
-msgstr ""
+msgstr "Aucune maille presente."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Réassigner des éléments personnifiés…"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
 msgstr ""
+"Manipuler les types des éléments personnalisés dans la molécule actuelle."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
@@ -2680,7 +2677,7 @@ msgstr "Dessiner un atome"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Changer le type de liaison"
 
 #: qtplugins/editor/editor.cpp:126
 msgid "Remove Bond"
@@ -2694,7 +2691,7 @@ msgstr "Distance :"
 #: qtplugins/editor/editor.cpp:235
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -2743,7 +2740,7 @@ msgstr "Structure chimique à télécharger."
 #: qtplugins/networkdatabases/networkdatabases.cpp:90
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Requête pour %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:99 qtplugins/fetchpdb/fetchpdb.cpp:117
 #: qtplugins/networkdatabases/networkdatabases.cpp:101
@@ -2769,6 +2766,7 @@ msgstr "Récupérer depuis le PDB"
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
+"Télécharger des modèles PDB depuis la banque de données sur les protéines"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
@@ -3435,6 +3433,8 @@ msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Une erreur interne s'est produite lors de la génération d'une représentation "
+"OpenBabel de la molécule actuelle."
 
 #: qtplugins/openbabel/openbabel.cpp:449
 #, qt-format
@@ -3449,6 +3449,9 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Pas %1 de %2\n"
+"Énergie actuel : %3\n"
+"dE : %4"
 
 #: qtplugins/openbabel/openbabel.cpp:485
 msgid "Updating molecule…"
@@ -3457,7 +3460,7 @@ msgstr "Mise à jour de la molécule…"
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:574
 #: qtplugins/openbabel/openbabel.cpp:756
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Erreur lors de l'interprétation de la sortie de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:586
 #, qt-format
@@ -3470,23 +3473,23 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Impossible d'ouvrir le fichier avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:531
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Molécule invalide : Impossible de déceler les liaisons."
 
 #: qtplugins/openbabel/openbabel.cpp:537
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Déceler les liaisons (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:538
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Génération une représantation XYZ…"
 
 #: qtplugins/openbabel/openbabel.cpp:545
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Erreur lors de la génération de la chaîne XYZ."
 
 #: qtplugins/openbabel/openbabel.cpp:556
 #, qt-format
@@ -3494,26 +3497,24 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr "Conversion de XYZ en Open Babel avec %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:566
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "Pas de molécule définie"
+msgstr "Actualisation de la molécule depuis Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:618 qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Impossible d'ajouter des hydrogènes avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:623 qtplugins/openbabel/openbabel.cpp:673
-#, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Ajouter les hydrogènes"
+msgstr "Ajouter des hydrogènes (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:624
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Génération de l'entrée de Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:682
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Erreur lors de la génération de l'entrée de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:645 qtplugins/openbabel/openbabel.cpp:695
 #: qtplugins/openbabel/openbabel.cpp:737
@@ -3531,30 +3532,31 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:674 qtplugins/openbabel/openbabel.cpp:716
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Génération de l'entrée d'Obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Impossible de supprimer les hydrogènes avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:715
-#, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Retirer LES Hydrogènes"
+msgstr "Retirer les hydrogènes (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:724
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Erreur lors de la génération des données de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:747
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Lecture des résultats de Obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:810
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel est déjà en cours d'exécution. Attendez que l'opération soit "
+"terminée et réessayez."
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
@@ -3562,7 +3564,7 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Intéragir avec les fonctionnalitées de Open Babel."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -3574,7 +3576,7 @@ msgstr "Entrée OpenMM"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Générer les données pour OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 msgid ""
@@ -3643,7 +3645,7 @@ msgstr "Référence des axes"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
-msgstr ""
+msgstr "Recouvrir des axes de référence"
 
 #: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
