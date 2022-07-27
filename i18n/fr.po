@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-24 03:19+0000\n"
-"PO-Revision-Date: 2022-07-27 05:24+0000\n"
+"PO-Revision-Date: 2022-07-27 12:01+0000\n"
 "Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -494,7 +494,7 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Échec du client de soumettre une tâche à MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
@@ -1562,7 +1562,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Erreur de lecture du fichier OpenDX : aucun cube trouvé"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -2613,11 +2613,8 @@ msgid "Niggli Reduce Crystal"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:195
-#, fuzzy
 msgid "The unit cell is already reduced."
-msgstr ""
-"Cette maille conventionnelle est déjà réduite à sa représentation canonique "
-"de Niggli."
+msgstr "Cette maille conventionnelle est déjà réduite."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
@@ -3002,10 +2999,9 @@ msgid "InsertFragment"
 msgstr "Insérer fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:60
-#, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
 msgstr ""
-"Insérer des fragments moléculaires pour construire de plus grandes molécules"
+"Insérer des fragments moléculaires pour construire de plus grandes molécules."
 
 #: qtplugins/label/label.cpp:133 qtplugins/meshes/meshes.cpp:170
 #: qtplugins/meshes/meshes.cpp:176
@@ -4364,6 +4360,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"La tolérance est actuellement définie à: %1.\n"
+"Continuer avec cette tolérance ?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid ""
@@ -6005,8 +6003,6 @@ msgstr "Modifier le style de la limite en X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
-#| msgid "Select bondary Styles in X, Y and Z directions."
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Sélectionner les styles des limites en X, Y et Z."
 
