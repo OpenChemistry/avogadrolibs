@@ -328,14 +328,41 @@ signed char Molecule::totalCharge() const
   // check the data map first
   if (m_data.hasValue("totalCharge")) {
     charge = m_data.value("totalCharge").toInt();
-  }
-
-  if (m_formalCharges.size() > 0) {
+  } else if (m_formalCharges.size() > 0) {
     for (Index i = 0; i < m_formalCharges.size(); ++i)
       charge += m_formalCharges[i];
     return charge;
   }
   return charge; // should be zero
+}
+
+char Molecule::totalSpinMultiplicity() const
+{
+  char spin = 1;
+
+  // check the data map first
+  if (m_data.hasValue("totalSpinMultiplicity")) {
+    spin = m_data.value("totalSpinMultiplicity").toInt();
+  } else {
+    // add up the electrons
+    unsigned long electrons = 0;
+    for (Index i = 0; i < m_atomicNumbers.size(); ++i)
+      electrons += m_atomicNumbers[i];
+
+    // adjust by the total charge
+    electrons -= totalCharge();
+
+    // if there are an even number of electrons, the spin is 1
+    // if there are an odd number of electrons, the spin is 2
+    // (might not be true, but a good default for many molecules)
+    // %todo - adjust for inorganic / organometallics
+    if (electrons % 2 == 0)
+      spin = 1;
+    else
+      spin = 2;
+  }
+
+  return spin; // should be zero
 }
 
 Array<Vector3ub>& Molecule::colors()

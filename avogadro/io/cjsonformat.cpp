@@ -554,12 +554,10 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   }
 
   json properties;
+  // these methods assume neutral singlet if not set
+  // or approximate from formal charges and # of electrons
   properties["totalCharge"] = molecule.totalCharge();
-  if (molecule.data("totalSpinMultiplicity").type() == Variant::Int)
-    properties["totalSpinMultiplicity"] =
-      molecule.data("totalSpinMultiplicity").toInt();
-  else
-    properties["totalSpinMultiplicity"] = 1; // assume singlet if not specified
+  properties["totalSpinMultiplicity"] = molecule.totalSpinMultiplicity();
   root["properties"] = properties;
 
   if (molecule.unitCell()) {
