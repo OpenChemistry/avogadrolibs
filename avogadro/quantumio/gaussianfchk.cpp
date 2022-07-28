@@ -95,6 +95,10 @@ void GaussianFchk::processLine(std::istream& in)
     m_scftype = Uhf;
   } else if (key == "Number of atoms" && list.size() > 1) {
     cout << "Number of atoms = " << Core::lexicalCast<int>(list[1]) << endl;
+  } else if (key == "Charge" && list.size() > 1) {
+    m_charge = Core::lexicalCast<signed char>(list[1]);
+  } else if (key == "Multiplicity" && list.size() > 1) {
+    m_spin = Core::lexicalCast<char>(list[1]);
   } else if (key == "Number of electrons" && list.size() > 1) {
     m_electrons = Core::lexicalCast<int>(list[1]);
   } else if (key == "Number of alpha electrons" && list.size() > 1) {

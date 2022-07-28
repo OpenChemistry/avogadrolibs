@@ -146,6 +146,15 @@ public:
   signed char totalCharge() const;
 
   /**
+   * Get the total spin multiplicity of the molecule.
+   * The method will first check to see if a total spin has been set. If not,
+   * it will either suggest a singlet if an even number of electrons are
+   * present, or a doublet if an odd number of electrons are present.
+   * @return The total spin multiplicity of the molecule.
+   */
+  char totalSpinMultiplicity() const;
+
+  /**
    * Get the formal charge for the requested atom.
    * @param atomId The index of the atom.
    * @return The formal charge of the atom indexed at @a atomId, or
