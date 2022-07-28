@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-24 03:19+0000\n"
-"PO-Revision-Date: 2022-07-28 15:41+0000\n"
+"PO-Revision-Date: 2022-07-28 20:34+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -3649,7 +3649,7 @@ msgstr "Recouvrir des axes de référence"
 
 #: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Afficher les références des axes dans le coin de l'écran."
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
@@ -3669,7 +3669,7 @@ msgstr "Arrêter"
 
 #: qtplugins/playertool/playertool.cpp:83
 msgid "Frame rate:"
-msgstr ""
+msgstr "Fréquence d'images :"
 
 #: qtplugins/playertool/playertool.cpp:89
 msgctxt "frames per second"
@@ -3721,6 +3721,8 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:267
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
+"Le format de ficher GIF ne supporte pas les fréquences d'images supérieur à "
+"100 IPS."
 
 #: qtplugins/playertool/playertool.cpp:311
 msgid "Movie (*.avi)"
@@ -3747,7 +3749,7 @@ msgstr "Outil lecteur"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Lecture des trajectoires"
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -3787,7 +3789,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:118
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Échec lors de la génération du modèle XRD"
 
 #: qtplugins/plotxrd/plotxrd.cpp:161
 msgid "Failed to convert molecule to CIF format."
