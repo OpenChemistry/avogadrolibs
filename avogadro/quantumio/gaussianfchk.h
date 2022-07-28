@@ -67,6 +67,8 @@ private:
   int m_electrons;
   int m_electronsAlpha;
   int m_electronsBeta;
+  unsigned char m_spin;
+  signed char m_charge;
   unsigned int m_numBasisFunctions;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
