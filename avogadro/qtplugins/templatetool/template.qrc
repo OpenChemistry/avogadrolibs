@@ -1,16 +1,16 @@
 <RCC>
   <qresource prefix="/icons">
-    <file>centers/1-lin.svg</file>
-    <file>centers/2-lin.svg</file>
-    <file>centers/3-tpl.svg</file>
-    <file>centers/4-sqp.svg</file>
-    <file>centers/4-tet.svg</file>
-    <file>centers/5-spy.svg</file>
-    <file>centers/5-tbp.svg</file>
-    <file>centers/6-oct.svg</file>
-    <file>centers/6-tpr.svg</file>
-    <file>centers/7-pbp.svg</file>
-    <file>centers/8-sqa.svg</file>
+    <file>centers/1-lin.png</file>
+    <file>centers/2-lin.png</file>
+    <file>centers/3-tpl.png</file>
+    <file>centers/4-sqp.png</file>
+    <file>centers/4-tet.png</file>
+    <file>centers/5-spy.png</file>
+    <file>centers/5-tbp.png</file>
+    <file>centers/6-oct.png</file>
+    <file>centers/6-tpr.png</file>
+    <file>centers/7-pbp.png</file>
+    <file>centers/8-sqa.png</file>
     <file>template.png</file>
     <file>template@2x.png</file>
   </qresource>
