@@ -135,9 +135,11 @@
    </item>
    <item row="3" column="1">
     <widget class="QComboBox" name="ligandComboBox">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+     <item>
+      <property name="text">
+       <string>Ammine</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="2" column="1">

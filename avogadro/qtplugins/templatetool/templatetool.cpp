@@ -20,7 +20,10 @@
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
+
+#include <avogadro/io/cjsonformat.h>
 
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -38,14 +41,15 @@
 #include <avogadro/rendering/textproperties.h>
 
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QComboBox>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
+#include <QtCore/QFile>
 #include <QtCore/QTimer>
 #include <QtCore/QDebug>
 
@@ -72,6 +76,7 @@ using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 using Avogadro::Core::Elements;
+using Avogadro::Io::CjsonFormat;
 
 TemplateTool::TemplateTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
@@ -267,15 +272,45 @@ void TemplateTool::reset()
 
 void TemplateTool::emptyLeftClick(QMouseEvent *e)
 {
+  QFile templ(":/templates/centers/" + m_toolWidget->coordinationString() + ".cjson");
+  if (!templ.open(QFile::ReadOnly | QFile::Text))
+    return;
+  QTextStream templateStream(&templ);
+
+  CjsonFormat ff;
+  Molecule templateMolecule;
+  if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
+    return;
+
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
   RWAtom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(),
                                        atomPos.cast<double>());
 
-  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+  // Add hydrogens around it following template
+  Vector3 center(0.0f, 0.0f, 0.0f);
+  std::vector<Vector3> positions;
+  for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+    if (templateMolecule.atomicNumber(i) != 1) {
+      center = templateMolecule.atomPosition3d(i);
+      continue;
+    } else {
+      positions.push_back(templateMolecule.atomPosition3d(i));
+    }
+  }
 
-  m_fixValenceLater = true; // add hydrogens
+  for (const Vector3 &pos: positions) {
+    RWAtom newHydrogen = m_molecule->addAtom(
+      1, pos - center + m_molecule->atomPosition3d(newAtom.index())
+    );
+    m_molecule->addBond(newHydrogen.index(), newAtom.index());
+  }
+
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Bonds | Molecule::Added;
+
+  //m_fixValenceLater = true; // add hydrogens
+  m_fixValenceLater = false;
 
   // Update the clicked object
   m_clickedObject.type = Rendering::AtomType;
@@ -288,24 +323,68 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
   e->accept();
 }
 
+Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector) {
+  Vector3 axis = centerVector.cross(outVector);
+  axis.normalize();
+  double angle = acos(centerVector.dot(outVector) / centerVector.norm() / outVector.norm());
+  Matrix3 rot = Eigen::AngleAxisd(angle, axis).toRotationMatrix();
+  return rot * in;
+}
+
 void TemplateTool::atomLeftClick(QMouseEvent *e)
 {
   RWAtom atom = m_molecule->atom(m_clickedObject.index);
-  if (atom.isValid()) {
-    // Store the original atomic number of the clicked atom before updating it.
-    unsigned char atomicNumber = m_toolWidget->atomicNumber();
-    if (atom.atomicNumber() != atomicNumber) {
-      m_clickedAtomicNumber = atom.atomicNumber();
-      atom.setAtomicNumber(atomicNumber);
+  if (atom.isValid() && m_molecule->atomicNumber(atom.index()) == 1) {
+    QFile templ(":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson");
+    if (!templ.open(QFile::ReadOnly | QFile::Text))
+      return;
+    QTextStream templateStream(&templ);
 
-      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+    CjsonFormat ff;
+    Molecule templateMolecule;
+    if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
+      return;
 
-      // add hydrogens later
-      m_fixValenceLater = true;
-
-      m_molecule->emitChanged(changes);
+    size_t centerIndex;
+    Vector3 centerVector;
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+      if (templateMolecule.atomicNumber(i) == 2) {
+        centerIndex = templateMolecule.bonds(i)[0].getOtherAtom(i).index();
+        centerVector = templateMolecule.atomPosition3d(centerIndex)
+          - templateMolecule.atomPosition3d(i);
+      }
     }
-    e->accept();
+
+    size_t templateCenterIndex = m_molecule->bonds(atom.index())[0].getOtherAtom(atom.index()).index();
+    size_t templateBaseIndex = m_molecule->atomCount();
+    std::vector<size_t> templateToMolecule;
+    m_molecule->setAtomicNumber(atom.index(), templateMolecule.atomicNumber(centerIndex));
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+      if (templateMolecule.atomicNumber(i) != 2) {
+        if (i != centerIndex) {
+          templateToMolecule.push_back(m_molecule->atomCount());
+          m_molecule->addAtom(
+            templateMolecule.atomicNumber(i),
+            rotateLigandCoords(
+              templateMolecule.atomPosition3d(i)
+              - templateMolecule.atomPosition3d(centerIndex),
+              centerVector,
+              m_molecule->atomPosition3d(atom.index())
+              - m_molecule->atomPosition3d(templateCenterIndex)
+            ) + m_molecule->atomPosition3d(atom.index())
+          );
+        } else {
+          templateToMolecule.push_back(atom.index());
+        }
+        for (const auto &bond: templateMolecule.bonds(i)) {
+          size_t n = bond.getOtherAtom(i).index();
+          if (n < i)
+            m_molecule->addBond(templateToMolecule[i], templateToMolecule[n], bond.order());
+        }
+      } else {
+        templateToMolecule.push_back(templateCenterIndex);
+      }
+    }
   }
 }
 
