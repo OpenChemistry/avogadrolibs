@@ -111,7 +111,7 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
     } else if (m_type == PropertyType::AngleType) {
 
       if (m_model != nullptr) {
-        auto angle = m_model->getAngle(index.row());
+        auto angle = m_model->getAngle(rowNum);
         m_molecule->undoMolecule()->setAtomSelected(std::get<0>(angle), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<1>(angle), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<2>(angle), true);
@@ -119,7 +119,7 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
     } else if (m_type == PropertyType::TorsionType) {
 
       if (m_model != nullptr) {
-        auto torsion = m_model->getTorsion(index.row());
+        auto torsion = m_model->getTorsion(rowNum);
         m_molecule->undoMolecule()->setAtomSelected(std::get<0>(torsion), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<1>(torsion), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<2>(torsion), true);
