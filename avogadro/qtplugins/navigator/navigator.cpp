@@ -13,6 +13,7 @@
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/scene.h>
 
+#include <QtGui/QGuiApplication>
 #include <QtCore/QSettings>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
@@ -167,10 +168,11 @@ QUndoCommand* Navigator::wheelEvent(QWheelEvent* e)
   QPoint numPixels = e->pixelDelta();
   QPoint numDegrees = e->angleDelta() * 0.125;
 
-  if (!numPixels.isNull())
-    d = numPixels.y();
+  // see https://doc.qt.io/qt-5/qwheelevent.html#pixelDelta
+  if (!numPixels.isNull() && QGuiApplication::platformName().toStdString().compare("xcb"))
+    d = numPixels.y(); // use pixelDelta() when available, except on X11
   else if (!numDegrees.isNull())
-    d = numDegrees.y();
+    d = numDegrees.y(); // fall back to angleDelta()
 
   zoom(m_renderer->camera().focus(), m_zoomDirection * d);
 
