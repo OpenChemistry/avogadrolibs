@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-24 03:19+0000\n"
-"PO-Revision-Date: 2022-07-26 11:56+0000\n"
-"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
+"PO-Revision-Date: 2022-07-28 20:34+0000\n"
+"Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -494,7 +494,7 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Échec du client de soumettre une tâche à MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
@@ -1291,6 +1291,11 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Erreur lors de l'exécution du script '%1 %2': Code de sortie anormal %3 (%4: "
+"%5)\n"
+"\n"
+"Sortie :\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:236
 msgid "Script failed to start."
@@ -1557,7 +1562,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Erreur de lecture du fichier OpenDX : aucun cube trouvé"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -2447,7 +2452,7 @@ msgstr "Optimisation de la géométrie"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Méthodes de la structure éléctronique (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
@@ -2492,7 +2497,7 @@ msgstr "DENSITÉS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "REDEMARRER_L'HISTORIQUE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
@@ -2515,7 +2520,6 @@ msgid "BROYDEN"
 msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
-#, fuzzy
 msgid "Conjugate Gradients"
 msgstr "Gradients conjugués"
 
@@ -2524,7 +2528,6 @@ msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
-#, fuzzy
 msgid "Steepest descent"
 msgstr "Plus grande pente"
 
@@ -2534,6 +2537,8 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Le fichier d'entrée a été modifié. Voulez-vous écraser vos modifications "
+"pour utiliser la nouvelle géométrie ou les options de travail ?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
@@ -2542,28 +2547,25 @@ msgstr "Écraser le fichier d'entrée modifié ?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:948
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "Sauvegarder le fichier d'entrée CP2K"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:997
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "Soumettre le calcul CP2K"
 
 #: qtplugins/crystal/crystal.cpp:41
-#, fuzzy
 msgid "Import Crystal from Clipboard…"
-msgstr "I&mporter un cristal à partir du presse-papier..."
+msgstr "Importer un cristal à partir du presse-papier…"
 
 #: qtplugins/crystal/crystal.cpp:48
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Changer de maille"
 
 #: qtplugins/crystal/crystal.cpp:53
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Afficher la &maille conventionnelle"
+msgstr "Modifier la maille…"
 
 #: qtplugins/crystal/crystal.cpp:58
-#, fuzzy
 msgid "&Wrap Atoms to Unit Cell"
 msgstr "&Regrouper les atomes dans la maille"
 
@@ -2572,9 +2574,8 @@ msgid "Rotate to Standard &Orientation"
 msgstr "Pivoter vers l'&orientation standard"
 
 #: qtplugins/crystal/crystal.cpp:70
-#, fuzzy
 msgid "Scale Cell &Volume…"
-msgstr "Mettre la maille à l'échelle du @volume..."
+msgstr "Mettre à l'échelle la maille &Volume…"
 
 #: qtplugins/crystal/crystal.cpp:75
 #, fuzzy
@@ -2605,14 +2606,11 @@ msgstr "Importer un cristal depuis le presse-papiers"
 
 #: qtplugins/crystal/crystal.cpp:194
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Réduire le cristal Niggli"
 
 #: qtplugins/crystal/crystal.cpp:195
-#, fuzzy
 msgid "The unit cell is already reduced."
-msgstr ""
-"Cette maille conventionnelle est déjà réduite à sa représentation canonique "
-"de Niggli."
+msgstr "Cette maille conventionnelle est déjà réduite."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
@@ -2620,7 +2618,7 @@ msgstr "Cristal"
 
 #: qtplugins/crystal/crystal.h:64
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Outils pour la modification/l'analyse spécifique des crystaux."
 
 #: qtplugins/crystal/crystalscene.cpp:138
 msgid "Line color:"
@@ -2628,7 +2626,7 @@ msgstr "Couleur de ligne :"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Afficher les limites des mailles."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
@@ -2636,20 +2634,21 @@ msgstr "Impossible d'analyser le texte"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:69
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Échec lors de la lecture des données avec le format fourni."
 
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
 msgid "No unit cell present."
-msgstr ""
+msgstr "Aucune maille presente."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Réassigner des éléments personnifiés…"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
 msgstr ""
+"Manipuler les types des éléments personnalisés dans la molécule actuelle."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
@@ -2660,22 +2659,16 @@ msgid "Draw"
 msgstr "Dessiner"
 
 #: qtplugins/editor/editor.cpp:73
-#, fuzzy
-#| msgid ""
-#| "Draw Tool (F8)\n"
-#| "\n"
-#| "Left Mouse: \tClick and Drag to create Atoms and Bonds\n"
-#| "Right Mouse: \tDelete Atom"
 msgid ""
 "Draw Tool\n"
 "\n"
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
-"Outil de dessin (F8)\n"
+"Outil de dessin\n"
 "\n"
 "Bouton gauche ;\tcliquer et glisser-déposer pour ajouter des atomes et des "
-"liaisons.\n"
+"liaison.\n"
 "Bouton droit :\teffacer un atome."
 
 #: qtplugins/editor/editor.cpp:103
@@ -2684,7 +2677,7 @@ msgstr "Dessiner un atome"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Changer le type de liaison"
 
 #: qtplugins/editor/editor.cpp:126
 msgid "Remove Bond"
@@ -2698,7 +2691,7 @@ msgstr "Distance :"
 #: qtplugins/editor/editor.cpp:235
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -2747,7 +2740,7 @@ msgstr "Structure chimique à télécharger."
 #: qtplugins/networkdatabases/networkdatabases.cpp:90
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Requête pour %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:99 qtplugins/fetchpdb/fetchpdb.cpp:117
 #: qtplugins/networkdatabases/networkdatabases.cpp:101
@@ -2773,6 +2766,7 @@ msgstr "Récupérer depuis le PDB"
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
+"Télécharger des modèles PDB depuis la banque de données sur les protéines"
 
 #: qtplugins/focus/focus.cpp:20
 msgid "Focus Selection"
@@ -3003,10 +2997,9 @@ msgid "InsertFragment"
 msgstr "Insérer fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:60
-#, fuzzy
 msgid "Insert molecular fragments for building larger molecules."
 msgstr ""
-"Insérer des fragments moléculaires pour construire de plus grandes molécules"
+"Insérer des fragments moléculaires pour construire de plus grandes molécules."
 
 #: qtplugins/label/label.cpp:133 qtplugins/meshes/meshes.cpp:170
 #: qtplugins/meshes/meshes.cpp:176
@@ -3177,28 +3170,17 @@ msgid "Manipulate"
 msgstr "Manipuler"
 
 #: qtplugins/manipulator/manipulator.cpp:42
-#, fuzzy
-#| msgid ""
-#| "Manipulation Tool (F10)\n"
-#| "\n"
-#| "Left Mouse: \tClick and drag to move atoms\n"
-#| "Middle Mouse: Click and drag to move atoms further away or closer\n"
-#| "Right Mouse: \tClick and drag to rotate selected atoms.\n"
-#| "Double-Click: \tReset the view."
 msgid ""
 "Manipulation Tool\n"
 "\n"
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate selected atoms.\n"
 msgstr ""
-"Outil de manipulation (F10)\n"
+"Outil de manipulation\n"
 "\n"
 "Bouton gauche :\tcliquer et glisser-déposer pour déplacer des atomes.\n"
-"Bouton central :\tcliquer et glisser-déposer pour déplacer des atomes vers "
-"ou plus loin de vous.\n"
 "Bouton droit :\tcliquer et glisser-déposer pour effectuer une rotation des "
-"atomes sélectionnés. \n"
-"Double-clic :\tréinitialisation de la vue."
+"atomes sélectionnés.\n"
 
 #: qtplugins/manipulator/manipulator.h:33
 #: qtplugins/manipulator/manipulator.h:34
@@ -3210,14 +3192,6 @@ msgid "Measure"
 msgstr "Mesure"
 
 #: qtplugins/measuretool/measuretool.cpp:57
-#, fuzzy
-#| msgid ""
-#| "Click to Measure (F12)\n"
-#| "\n"
-#| "Left Mouse: \tSelect up to three Atoms.\n"
-#| "\tDistances are measured between 1-2 and 2-3\n"
-#| "\tAngle is measured between 1-3 using 2 as the common point\n"
-#| "Right Mouse: \tReset the measurements.Double-Click: \tReset the view."
 msgid ""
 "Measure Tool\n"
 "\n"
@@ -3227,14 +3201,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
-"Cliquer pour mesurer (F12)\n"
+"Outil de mesure\n"
 "\n"
 "Bouton gauche :\tsélectionner jusqu'à trois atomes.\n"
-"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le "
-"3ème.\n"
+"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le 3ème."
+"\n"
 "\tL'angle est mesuré entre le 1et le 3ème  autour du 2ème.\n"
-"Bouton droit :\teffacement des mesures.\n"
-"Double clic :\tréinitialisation de la vue."
+"Bouton droit :\teffacement des mesures."
 
 #: qtplugins/measuretool/measuretool.cpp:188
 #: qtplugins/measuretool/measuretool.cpp:199
@@ -3314,14 +3287,6 @@ msgid "Navigate"
 msgstr "Naviguer"
 
 #: qtplugins/navigator/navigator.cpp:40
-#, fuzzy
-#| msgid ""
-#| "Navigation Tool (F9)\n"
-#| "\n"
-#| "Left Mouse: \tClick and drag to rotate the view.\n"
-#| "Middle Mouse: Click and drag to zoom in or out.\n"
-#| "Right Mouse: \tClick and drag to move the view.\n"
-#| "Double-Click: \tReset the view."
 msgid ""
 "Navigation Tool\n"
 "\n"
@@ -3329,13 +3294,12 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
-"Outil de navigation (F9)\n"
+"Outil de navigation\n"
 "\n"
 "Bouton gauche :\tcliquer et glisser-déposer pour tourner la vue.\n"
 "Bouton central :\tcliquer et glisser-déposer pour effectuer un zoom avant ou "
 "arrière.\n"
 "Bouton droit :\tcliquer et glisser déposer pour déplacer la vue.\n"
-"Double-clic :\tréinitialisation de la vue."
 
 #: qtplugins/navigator/navigator.cpp:58
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3469,6 +3433,8 @@ msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Une erreur interne s'est produite lors de la génération d'une représentation "
+"OpenBabel de la molécule actuelle."
 
 #: qtplugins/openbabel/openbabel.cpp:449
 #, qt-format
@@ -3483,6 +3449,9 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Pas %1 de %2\n"
+"Énergie actuel : %3\n"
+"dE : %4"
 
 #: qtplugins/openbabel/openbabel.cpp:485
 msgid "Updating molecule…"
@@ -3491,7 +3460,7 @@ msgstr "Mise à jour de la molécule…"
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:574
 #: qtplugins/openbabel/openbabel.cpp:756
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Erreur lors de l'interprétation de la sortie de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:586
 #, qt-format
@@ -3504,23 +3473,23 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Impossible d'ouvrir le fichier avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:531
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Molécule invalide : Impossible de déceler les liaisons."
 
 #: qtplugins/openbabel/openbabel.cpp:537
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Déceler les liaisons (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:538
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Génération une représantation XYZ…"
 
 #: qtplugins/openbabel/openbabel.cpp:545
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Erreur lors de la génération de la chaîne XYZ."
 
 #: qtplugins/openbabel/openbabel.cpp:556
 #, qt-format
@@ -3528,26 +3497,24 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr "Conversion de XYZ en Open Babel avec %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:566
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "Pas de molécule définie"
+msgstr "Actualisation de la molécule depuis Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:618 qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Impossible d'ajouter des hydrogènes avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:623 qtplugins/openbabel/openbabel.cpp:673
-#, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Ajouter les hydrogènes"
+msgstr "Ajouter des hydrogènes (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:624
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Génération de l'entrée de Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:682
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Erreur lors de la génération de l'entrée de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:645 qtplugins/openbabel/openbabel.cpp:695
 #: qtplugins/openbabel/openbabel.cpp:737
@@ -3565,30 +3532,31 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:674 qtplugins/openbabel/openbabel.cpp:716
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Génération de l'entrée d'Obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Impossible de supprimer les hydrogènes avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:715
-#, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Retirer LES Hydrogènes"
+msgstr "Retirer les hydrogènes (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:724
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Erreur lors de la génération des données de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:747
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Lecture des résultats de Obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:810
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel est déjà en cours d'exécution. Attendez que l'opération soit "
+"terminée et réessayez."
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
@@ -3596,7 +3564,7 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Intéragir avec les fonctionnalitées de Open Babel."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -3608,16 +3576,15 @@ msgstr "Entrée OpenMM"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Générer les données pour OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
-#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
 "Souhaitez-vous mettre à jour le texte pré-visualisé, en perdant tous les "
-"changements apportés dans le panneau de pré-visualisation de MOPAC ?"
+"changements apportés dans le panneau de pré-visualisation de OpenMM ?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -3678,11 +3645,11 @@ msgstr "Référence des axes"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
-msgstr ""
+msgstr "Recouvrir des axes de référence"
 
 #: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Afficher les références des axes dans le coin de l'écran."
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
@@ -3702,7 +3669,7 @@ msgstr "Arrêter"
 
 #: qtplugins/playertool/playertool.cpp:83
 msgid "Frame rate:"
-msgstr ""
+msgstr "Fréquence d'images :"
 
 #: qtplugins/playertool/playertool.cpp:89
 msgctxt "frames per second"
@@ -3754,6 +3721,8 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:267
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
+"Le format de ficher GIF ne supporte pas les fréquences d'images supérieur à "
+"100 IPS."
 
 #: qtplugins/playertool/playertool.cpp:311
 msgid "Movie (*.avi)"
@@ -3780,7 +3749,7 @@ msgstr "Outil lecteur"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Lecture des trajectoires"
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -3820,7 +3789,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:118
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Échec lors de la génération du modèle XRD"
 
 #: qtplugins/plotxrd/plotxrd.cpp:161
 msgid "Failed to convert molecule to CIF format."
@@ -4308,15 +4277,6 @@ msgid "Selection"
 msgstr "Sélection"
 
 #: qtplugins/selectiontool/selectiontool.cpp:54
-#, fuzzy
-#| msgid ""
-#| "Selection Tool (F11)\n"
-#| "\n"
-#| "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
-#| "\tDrag to select a range of atoms\n"
-#| "Right Mouse: \tClick outside the molecule to clear selection\n"
-#| "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-#| "Double-Click: \tSelect an entire fragment."
 msgid ""
 "Selection Tool\n"
 "\n"
@@ -4326,7 +4286,7 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
-"Outil de sélection (F11)\n"
+"Outil de sélection\n"
 "\n"
 "Bouton gauche :\tcliquer pour sélectionner des atomes, des résidus ou des "
 "fragments.\n"
@@ -4385,13 +4345,11 @@ msgid "Failure"
 msgstr "Échec"
 
 #: qtplugins/spacegroup/spacegroup.cpp:179
-#, fuzzy
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
 "La détection du groupe d'espace a échoué.\n"
-"\n"
 "Souhaitez-vous réessayer avec une tolérance différente ?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:194
@@ -4406,6 +4364,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"La tolérance est actuellement définie à: %1.\n"
+"Continuer avec cette tolérance ?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid ""
@@ -6047,8 +6007,6 @@ msgstr "Modifier le style de la limite en X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
-#| msgid "Select bondary Styles in X, Y and Z directions."
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Sélectionner les styles des limites en X, Y et Z."
 
@@ -7253,18 +7211,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
-#, fuzzy
-#| msgid ""
-#| "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
-#| "REC-html40/strict.dtd\">\n"
-#| "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
-#| "css\">\n"
-#| "p, li { white-space: pre-wrap; }\n"
-#| "</style></head><body style=\" font-family:'Monospace'; font-size:12pt; "
-#| "font-weight:400; font-style:normal;\">\n"
-#| "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
-#| "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; "
-#| "font-family:'Courier New,courier'; font-size:10pt;\"></p></body></html>"
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
@@ -7279,14 +7225,14 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Monospace'; font-size:12pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
-"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-"
-"family:'Courier New,courier'; font-size:10pt;\"></p></body></html>"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
+"size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
