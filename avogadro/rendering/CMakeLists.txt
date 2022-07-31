@@ -11,6 +11,8 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
 endif()
 
 set(HEADERS
+  arcsector.h
+  arcstrip.h
   arrowgeometry.h
   avogadrogl.h
   avogadrorendering.h
@@ -33,6 +35,8 @@ set(HEADERS
   node.h
   povrayvisitor.h
   primitive.h
+  quad.h
+  quadoutline.h
   scene.h
   shader.h
   shaderprogram.h
@@ -50,6 +54,8 @@ set(HEADERS
 )
 
 set(SOURCES
+  arcsector.cpp
+  arcstrip.cpp
   arrowgeometry.cpp
   beziergeometry.cpp
   bufferobject.cpp
@@ -69,6 +75,8 @@ set(SOURCES
   meshgeometry.cpp
   node.cpp
   povrayvisitor.cpp
+  quad.cpp
+  quadoutline.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
