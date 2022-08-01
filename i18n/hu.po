@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-07-31 03:22+0000\n"
-"PO-Revision-Date: 2022-07-25 19:16+0000\n"
+"PO-Revision-Date: 2022-08-02 09:21+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -1490,28 +1490,20 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Sejt csökkentése aszimmetriaegységre"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Atom hibridizáció módosítása"
+msgstr "Atompozíciók módosítása"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "Atom színének módosítása"
+msgstr "Atompozíció módosítása"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "Atomréteg módosítása"
+msgstr "Atomfelirat módosítása"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Change selections"
 msgid "Change Selection"
-msgstr "Kijelölések módosítása"
+msgstr "Kijelölés módosítása"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -4239,28 +4231,20 @@ msgid "&Select"
 msgstr "Ki&jelölés"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Select by Element…"
 msgid "Select Element"
-msgstr "Elem szerinti kijelölése…"
+msgstr "Elem kijelölése"
 
 #: qtplugins/select/select.cpp:216
-#, fuzzy
-#| msgid "Select Water…"
 msgid "Select Water"
-msgstr "Víz kijelölése…"
+msgstr "Víz kijelölése"
 
 #: qtplugins/select/select.cpp:254
-#, fuzzy
-#| msgid "Select Backbone Atoms…"
 msgid "Select Backbone"
-msgstr "Gerincatomok kijelölése…"
+msgstr "Gerincatomok kijelölése"
 
 #: qtplugins/select/select.cpp:288
-#, fuzzy
-#| msgid "Select Sidechain Atoms…"
 msgid "Select Sidechain"
-msgstr "Oldalláncatomok kijelölése…"
+msgstr "Oldalláncatomok kijelölése"
 
 #: qtplugins/select/select.cpp:409
 msgid "Select Atoms by Index"
@@ -4271,10 +4255,8 @@ msgid "Atoms to Select:"
 msgstr "Atomok kijelölése:"
 
 #: qtplugins/select/select.cpp:415
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Atom törlése"
+msgstr "Atom kijelölése"
 
 #: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
@@ -4285,10 +4267,8 @@ msgid "Residues to Select:"
 msgstr "Maradékok kijelölésondó:"
 
 #: qtplugins/select/select.cpp:454
-#, fuzzy
-#| msgid "Select by Residue…"
 msgid "Select Residue"
-msgstr "Maradék szerint kijelölése…"
+msgstr "Maradékatomok kijelölése"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
