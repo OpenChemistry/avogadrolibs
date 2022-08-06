@@ -14,4 +14,17 @@
     <file>template.png</file>
     <file>template@2x.png</file>
   </qresource>
+  <qresource prefix="/templates">
+    <file>centers/1-lin.cjson</file>
+    <file>centers/2-lin.cjson</file>
+    <file>centers/3-tpl.cjson</file>
+    <file>centers/4-sqp.cjson</file>
+    <file>centers/4-tet.cjson</file>
+    <file>centers/5-spy.cjson</file>
+    <file>centers/5-tbp.cjson</file>
+    <file>centers/6-oct.cjson</file>
+    <file>centers/6-tpr.cjson</file>
+    <file>centers/7-pbp.cjson</file>
+    <file>centers/8-sqa.cjson</file>
+  </qresource>
 </RCC>
