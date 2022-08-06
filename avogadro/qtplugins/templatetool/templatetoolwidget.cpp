@@ -50,6 +50,9 @@ TemplateToolWidget::TemplateToolWidget(QWidget *parent_) :
   // append ".png" for the icon and ".cjson" for the template
   m_centers << "1-lin" << "2-lin" << "3-tpl" << "4-tet" << "4-sqp" << "5-tbp"
   << "5-spy" << "6-oct" << "6-tpr" << "7-pbp" << "8-sqa";
+
+  m_ligands << "ammine" << "aqua" << "carbonyl" << "phosphine" << "thiol"
+   << "methyl" << "ethyl" << "propyl" << "isopropyl" << "t-butyl";
 }
 
 TemplateToolWidget::~TemplateToolWidget()
@@ -95,6 +98,16 @@ unsigned char TemplateToolWidget::coordination() const
 QString TemplateToolWidget::coordinationString() const
 {
   return m_centers.at(m_ui->coordinationComboBox->currentIndex());
+}
+
+unsigned char TemplateToolWidget::ligand() const
+{
+  return static_cast<unsigned char>(m_ui->ligandComboBox->currentIndex());
+}
+
+QString TemplateToolWidget::ligandString() const
+{
+  return m_ligands.at(m_ui->ligandComboBox->currentIndex());
 }
 
 void TemplateToolWidget::coordinationChanged(int index)
@@ -194,7 +207,7 @@ void TemplateToolWidget::selectElement(unsigned char element)
     m_ui->elementComboBox->setCurrentIndex(curIndex);
   else {
     addUserElement(element);
-    int curIndex = m_ui->elementComboBox->findData(element);
+    curIndex = m_ui->elementComboBox->findData(element);
     if (curIndex >= 0)
       m_ui->elementComboBox->setCurrentIndex(curIndex);
     // if we can't find it after adding it, something is very wrong!

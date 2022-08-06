@@ -34,6 +34,9 @@ public:
   unsigned char coordination() const;
   QString coordinationString() const;
 
+  unsigned char ligand() const;
+  QString ligandString() const;
+
 private slots:
   void elementChanged(int index);
   void updateElementCombo();
@@ -54,6 +57,7 @@ private:
   QList<unsigned char> m_userElements;
   unsigned char m_currentElement;
   QStringList m_centers;
+  QStringList m_ligands;
 };
 
 } // namespace QtPlugins

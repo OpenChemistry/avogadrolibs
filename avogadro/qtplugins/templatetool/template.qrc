@@ -26,5 +26,15 @@
     <file>centers/6-tpr.cjson</file>
     <file>centers/7-pbp.cjson</file>
     <file>centers/8-sqa.cjson</file>
+    <file>ligands/ammine.cjson</file>
+    <file>ligands/aqua.cjson</file>
+    <file>ligands/carbonyl.cjson</file>
+    <file>ligands/phosphine.cjson</file>
+    <file>ligands/thiol.cjson</file>
+    <file>ligands/methyl.cjson</file>
+    <file>ligands/ethyl.cjson</file>
+    <file>ligands/propyl.cjson</file>
+    <file>ligands/isopropyl.cjson</file>
+    <file>ligands/t-butyl.cjson</file>
   </qresource>
 </RCC>
