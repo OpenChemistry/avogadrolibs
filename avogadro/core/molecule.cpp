@@ -73,17 +73,13 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_data(other.m_data),
-    m_partialCharges(std::move(other.m_partialCharges)),
+  : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d),
-    m_label(other.m_label),
-    m_coordinates3d(other.m_coordinates3d),
-    m_timesteps(other.m_timesteps),
+    m_positions3d(other.m_positions3d), m_label(other.m_label),
+    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
     m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges),
-    m_colors(other.m_colors),
+    m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
     m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
@@ -91,8 +87,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
@@ -890,6 +885,73 @@ void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
   m_vibrationLx = lx;
 }
 
+void Molecule::perceiveBondOrders()
+{
+  /*
+  // check for coordinates
+  if (m_positions3d.size() != atomCount() || m_positions3d.size() < 2 ||
+      m_graph.edgeCount() == 0)
+    return;
+
+  // first calculate the unsaturated valence for every atom
+  Array<unsigned char> unsaturatedValence(atomCount(), 0);
+  for (Index i = 0; i < atomCount(); ++i) {
+    AtomType atom = atom(i);
+    auto bonds = bonds(i);
+    unsigned char boSum = 0;
+    for (auto bond : bonds) {
+      boSum += bond.order();
+    }
+    unsaturatedValence[i] = atomValence(atom.atomicNumber()) - boSum;
+  }
+
+  // current sum of formal charges
+  signed char targetCharge = totalCharge();
+  // we'll assign at the end of the do/while loop
+  signed char currentCharge = 0;
+
+  bool isRadical = (totalSpin() != 1);
+
+  Index startIndex = 0;
+  do {
+    // find the first atom with unsaturated valence of ONE
+    //  .. also skip oxygen atoms (e.g., -CO2 or -NO2 which are hard)
+    bool foundStart = false;
+    for (Index i = 0; i < atomCount(); ++i) {
+      if (unsaturatedValence[i] == 1 && atomicNumber(i) != 6) {
+        startIndex = i;
+        foundStart = true;
+        break;
+      }
+    }
+
+    // if we didn't find an atom with unsaturated valence of ONE,
+    // .. then find *something*
+    if (!foundStart) {
+      for (Index i = 0; i < atomCount(); ++i) {
+        if (unsaturatedValence[i] > 0) {
+          startIndex = i;
+          foundStart = true;
+          break;
+        }
+      }
+    }
+
+    // if we didn't find anything, then we're done
+    if (!foundStart)
+      break;
+
+    // look at the neighbors of our start atom
+    Index bestIndex = 0;
+    unsigned bestValence = 0;
+    float bestDistance = 100.0f;
+    for (auto neighbor : graph.neighbors(startIndex)) {
+    }
+
+  } while (currentCharge != targetCharge);
+  */
+}
+
 void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 {
   // check for coordinates
@@ -938,7 +1000,7 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 
 void Molecule::perceiveBondsFromResidueData()
 {
-  for (auto & m_residue : m_residues) {
+  for (auto& m_residue : m_residues) {
     m_residue.resolveResidueBonds(*this);
   }
 }
@@ -1191,4 +1253,4 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

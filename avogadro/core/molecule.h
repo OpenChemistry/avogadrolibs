@@ -524,8 +524,13 @@ public:
 
   /**
    * Perceives bonds in the molecule based on preset residue data.
+   * 
+   * Use this if you have residue data available (e.g., reading PDB or MMTF files)
+   * Otherwise consider @sa perceiveBondsSimple and @sa perceiveBondOrders
    */
   void perceiveBondsFromResidueData();
+
+  void perceiveBondOrders();
 
   /**
    * Perceives all-carbon-substituted onium ions of nitrogen, oxygen,
