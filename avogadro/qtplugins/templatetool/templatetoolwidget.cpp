@@ -51,7 +51,8 @@ TemplateToolWidget::TemplateToolWidget(QWidget *parent_) :
   m_centers << "1-lin" << "2-lin" << "3-tpl" << "4-tet" << "4-sqp" << "5-tbp"
   << "5-spy" << "6-oct" << "6-tpr" << "7-pbp" << "8-sqa";
 
-  m_ligands << "ammine";
+  m_ligands << "ammine" << "aqua" << "carbonyl" << "phosphine" << "thiol"
+   << "methyl" << "ethyl" << "propyl" << "isopropyl" << "t-butyl";
 }
 
 TemplateToolWidget::~TemplateToolWidget()

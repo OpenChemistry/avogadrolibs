@@ -348,7 +348,7 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     size_t centerIndex;
     Vector3 centerVector;
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
-      if (templateMolecule.atomicNumber(i) == 2) {
+      if (templateMolecule.atomicNumber(i) == 0) {
         centerIndex = templateMolecule.bonds(i)[0].getOtherAtom(i).index();
         centerVector = templateMolecule.atomPosition3d(centerIndex)
           - templateMolecule.atomPosition3d(i);
@@ -360,7 +360,7 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     std::vector<size_t> templateToMolecule;
     m_molecule->setAtomicNumber(atom.index(), templateMolecule.atomicNumber(centerIndex));
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
-      if (templateMolecule.atomicNumber(i) != 2) {
+      if (templateMolecule.atomicNumber(i) != 0) {
         if (i != centerIndex) {
           templateToMolecule.push_back(m_molecule->atomCount());
           m_molecule->addAtom(
