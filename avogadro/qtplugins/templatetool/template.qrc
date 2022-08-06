@@ -26,5 +26,6 @@
     <file>centers/6-tpr.cjson</file>
     <file>centers/7-pbp.cjson</file>
     <file>centers/8-sqa.cjson</file>
+    <file>ligands/ammine.cjson</file>
   </qresource>
 </RCC>
