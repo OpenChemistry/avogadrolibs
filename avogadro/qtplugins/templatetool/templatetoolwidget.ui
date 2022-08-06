@@ -140,6 +140,51 @@
        <string>Ammine</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Aqua</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Carbonyl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Phosphine</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Thiol</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Methyl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Ethyl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Propyl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Isopropyl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>t-Butyl</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="2" column="1">
