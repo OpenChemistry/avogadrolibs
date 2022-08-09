@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-24 03:19+0000\n"
+"POT-Creation-Date: 2022-07-31 03:22+0000\n"
 "PO-Revision-Date: 2022-06-22 19:15+0000\n"
 "Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
@@ -130,7 +130,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:506
+#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:512
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -139,7 +139,7 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:515
+#: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:521
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1041,13 +1041,13 @@ msgstr ""
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:486
+#: qtgui/interfacescript.cpp:492
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:494
+#: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
@@ -1316,7 +1316,7 @@ msgstr "Geruza Informazioa Gehitu"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
-#: qtplugins/select/select.cpp:496
+#: qtplugins/select/select.cpp:528
 #: qtplugins/selectiontool/selectiontool.cpp:252:1573
 msgid "Change Layer"
 msgstr "Geruza aldatu"
@@ -1348,104 +1348,128 @@ msgstr "Elementuak Aldatu"
 msgid "Change Element"
 msgstr "Aldatu Elementua"
 
-#: qtgui/rwmolecule.cpp:203
+#: qtgui/rwmolecule.cpp:206
 msgid "Change Atom Hybridization"
 msgstr "Aldatu Atomoaren Hibridazioa"
 
-#: qtgui/rwmolecule.cpp:215
+#: qtgui/rwmolecule.cpp:218
 msgid "Change Atom Formal Charge"
 msgstr "Aldatu Atomoaren Karga Formala"
 
-#: qtgui/rwmolecule.cpp:227
+#: qtgui/rwmolecule.cpp:230
 msgid "Change Atom Color"
 msgstr "Aldatu Atomoaren Kolorea"
 
-#: qtgui/rwmolecule.cpp:239
+#: qtgui/rwmolecule.cpp:242
 msgid "Change Atom Layer"
 msgstr "Aldatu Atomoaren Geruza"
 
-#: qtgui/rwmolecule.cpp:255
+#: qtgui/rwmolecule.cpp:258
 msgid "Add Bond"
 msgstr "Gehitu Lotura Bat"
 
-#: qtgui/rwmolecule.cpp:281
+#: qtgui/rwmolecule.cpp:284
 msgid "Removed Bond"
 msgstr "Lotura Ezabatua"
 
-#: qtgui/rwmolecule.cpp:288
+#: qtgui/rwmolecule.cpp:291
 msgid "Clear Bonds"
 msgstr "Ezabatu Loturak"
 
-#: qtgui/rwmolecule.cpp:303
+#: qtgui/rwmolecule.cpp:306
 msgid "Set Bond Orders"
 msgstr "Lotura Ordenak Ezarri"
 
-#: qtgui/rwmolecule.cpp:315
+#: qtgui/rwmolecule.cpp:318
 msgid "Change Bond Order"
 msgstr "Aldatu Loturen Ordena"
 
-#: qtgui/rwmolecule.cpp:338
+#: qtgui/rwmolecule.cpp:341
 msgid "Update Bonds"
 msgstr "Loturak Eguneratu"
 
-#: qtgui/rwmolecule.cpp:357
+#: qtgui/rwmolecule.cpp:360
 msgid "Update Bond"
 msgstr "Lotura Eguneratu"
 
-#: qtgui/rwmolecule.cpp:377
+#: qtgui/rwmolecule.cpp:380
 msgid "Add Unit Cell"
 msgstr "Gelaxka Unitatea gehitu"
 
-#: qtgui/rwmolecule.cpp:390
+#: qtgui/rwmolecule.cpp:393
 msgid "Remove Unit Cell"
 msgstr "Gelaxka Unitatea kendu"
 
-#: qtgui/rwmolecule.cpp:455
+#: qtgui/rwmolecule.cpp:458
 msgid "Edit Unit Cell"
 msgstr "Gelaxka Unitatea Eraldatu"
 
-#: qtgui/rwmolecule.cpp:472
+#: qtgui/rwmolecule.cpp:475
 msgid "Wrap Atoms to Cell"
 msgstr "Atomoak Gelaxkan Multzotu"
 
-#: qtgui/rwmolecule.cpp:495
+#: qtgui/rwmolecule.cpp:498
 msgid "Scale Cell Volume"
 msgstr "Gelaxkaren Bolumena Eskalatu"
 
-#: qtgui/rwmolecule.cpp:515
+#: qtgui/rwmolecule.cpp:518
 msgid "Build Super Cell"
 msgstr "Super Gelaxka Eraiki"
 
-#: qtgui/rwmolecule.cpp:539
+#: qtgui/rwmolecule.cpp:542
 msgid "Niggli Reduction"
 msgstr "Niggli Erredukzioa"
 
-#: qtgui/rwmolecule.cpp:561
+#: qtgui/rwmolecule.cpp:564
 msgid "Rotate to Standard Orientation"
 msgstr "Orientazio Estandarderaino Errotatu"
 
-#: qtgui/rwmolecule.cpp:586 qtplugins/spacegroup/spacegroup.cpp:55
+#: qtgui/rwmolecule.cpp:589 qtplugins/spacegroup/spacegroup.cpp:55
 msgid "Reduce to Primitive"
 msgstr "Jatorrizko Gelaxkara Murriztu"
 
-#: qtgui/rwmolecule.cpp:611 qtplugins/spacegroup/spacegroup.cpp:61
+#: qtgui/rwmolecule.cpp:614 qtplugins/spacegroup/spacegroup.cpp:61
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:636 qtplugins/spacegroup/spacegroup.cpp:244
+#: qtgui/rwmolecule.cpp:639 qtplugins/spacegroup/spacegroup.cpp:244
 msgid "Symmetrize Cell"
 msgstr "Gelaxka Simetrizatu"
 
-#: qtgui/rwmolecule.cpp:655
+#: qtgui/rwmolecule.cpp:658
 msgid "Fill Unit Cell"
 msgstr "Bete Gelatxo Unitarioa"
 
-#: qtgui/rwmolecule.cpp:675
+#: qtgui/rwmolecule.cpp:678
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Gelaxka Unitate Asimetrikora Murriztu"
 
-#: qtgui/rwmolecule_undo.h:30
+#: qtgui/rwmolecule.h:214
+#, fuzzy
+#| msgid "Change Atom Hybridization"
+msgid "Change Atom Positions"
+msgstr "Aldatu Atomoaren Hibridazioa"
+
+#: qtgui/rwmolecule.h:224
+#, fuzzy
+#| msgid "Change Atom Color"
+msgid "Change Atom Position"
+msgstr "Aldatu Atomoaren Kolorea"
+
+#: qtgui/rwmolecule.h:228
+#, fuzzy
+#| msgid "Change Atom Layer"
+msgid "Change Atom Label"
+msgstr "Aldatu Atomoaren Geruza"
+
+#: qtgui/rwmolecule.h:234
+#, fuzzy
+#| msgid "Ignore Selection"
+msgid "Change Selection"
+msgstr "Ez Hartu Kontuan Hautatutakoa"
+
+#: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "Molekula Aldatu"
 
@@ -3302,11 +3326,11 @@ msgstr ""
 msgid "Interface with Mongo Chem Server."
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:37
+#: qtplugins/navigator/navigator.cpp:38
 msgid "Navigate"
 msgstr "Nabigatu"
 
-#: qtplugins/navigator/navigator.cpp:40
+#: qtplugins/navigator/navigator.cpp:41
 msgid ""
 "Navigation Tool\n"
 "\n"
@@ -3315,11 +3339,11 @@ msgid ""
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:58
+#: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:60
+#: qtplugins/navigator/navigator.cpp:61
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
@@ -4239,7 +4263,7 @@ msgstr ""
 msgid "Select None"
 msgstr ""
 
-#: qtplugins/select/select.cpp:48
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:517
 msgid "Invert Selection"
 msgstr ""
 
@@ -4275,13 +4299,13 @@ msgstr "Atomo Aurkibideak"
 msgid "Select Water…"
 msgstr "Atomo Aurkibideak"
 
-#: qtplugins/select/select.cpp:88
+#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
 #, fuzzy
 #| msgid "Ignore Selection"
 msgid "Enlarge Selection"
 msgstr "Ez Hartu Kontuan Hautatutakoa"
 
-#: qtplugins/select/select.cpp:93
+#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
 #, fuzzy
 #| msgid "Selection"
 msgid "Shrink Selection"
@@ -4299,21 +4323,54 @@ msgstr ""
 msgid "&Select"
 msgstr "&Hautatu"
 
-#: qtplugins/select/select.cpp:386
+#: qtplugins/select/select.cpp:180
+#, fuzzy
+#| msgid "Select by Element..."
+msgid "Select Element"
+msgstr "Elementuz Hautatu..."
+
+#: qtplugins/select/select.cpp:216
+#, fuzzy
+msgid "Select Water"
+msgstr "Atomo Aurkibideak"
+
+#: qtplugins/select/select.cpp:254
+#, fuzzy
+msgid "Select Backbone"
+msgstr "Atomo Aurkibideak"
+
+#: qtplugins/select/select.cpp:288
+#, fuzzy
+msgid "Select Sidechain"
+msgstr "Atomo Aurkibideak"
+
+#: qtplugins/select/select.cpp:409
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:387
+#: qtplugins/select/select.cpp:410
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:424
+#: qtplugins/select/select.cpp:415
+#, fuzzy
+#| msgid "Delete Atom"
+msgid "Select Atom"
+msgstr "Ezabatu Atomoa"
+
+#: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:425
+#: qtplugins/select/select.cpp:449
 msgid "Residues to Select:"
 msgstr ""
+
+#: qtplugins/select/select.cpp:454
+#, fuzzy
+#| msgid "Select by Residue..."
+msgid "Select Residue"
+msgstr "Hondakinez Hautatu..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -9390,9 +9447,6 @@ msgstr ""
 
 #~ msgid "Measure bond lengths, angles, and dihedrals"
 #~ msgstr "Loturaren luzera, angeluak eta diedroak neurtu"
-
-#~ msgid "Delete Atom"
-#~ msgstr "Ezabatu Atomoa"
 
 #~ msgid "Draw Bond"
 #~ msgstr "Marraztu Lotura"

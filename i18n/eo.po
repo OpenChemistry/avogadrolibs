@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-24 03:19+0000\n"
+"POT-Creation-Date: 2022-07-31 03:22+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -141,7 +141,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "Eraro pri skribado de molekula prezento sur signoĉenon: %1"
 
-#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:506
+#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:512
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -154,7 +154,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:515
+#: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:521
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1074,7 +1074,7 @@ msgstr "Ĉiuj subtenataj dosierformoj (%1);;"
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr "Eraro pri legado de molekula prezento: Nekonata dosierformo: %1"
 
-#: qtgui/interfacescript.cpp:486
+#: qtgui/interfacescript.cpp:492
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
@@ -1082,7 +1082,7 @@ msgstr ""
 "Eraro pri skribado de molekula prezento sur signoĉenon: Nekonata "
 "dosierformo: %1"
 
-#: qtgui/interfacescript.cpp:494
+#: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr "Eraro pri skribado de molekula prezento sur signoĉenon: %1"
@@ -1355,7 +1355,7 @@ msgstr "Aldoni informojn pri tavolo"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
-#: qtplugins/select/select.cpp:496
+#: qtplugins/select/select.cpp:528
 #: qtplugins/selectiontool/selectiontool.cpp:252:1573
 msgid "Change Layer"
 msgstr "Ŝanĝi tavolon"
@@ -1387,104 +1387,128 @@ msgstr "Ŝanĝi Elementojn"
 msgid "Change Element"
 msgstr "Ŝanĝi Elementon"
 
-#: qtgui/rwmolecule.cpp:203
+#: qtgui/rwmolecule.cpp:206
 msgid "Change Atom Hybridization"
 msgstr "Ŝanĝi Atoman Hibridiĝon"
 
-#: qtgui/rwmolecule.cpp:215
+#: qtgui/rwmolecule.cpp:218
 msgid "Change Atom Formal Charge"
 msgstr "Ŝanĝi Formalan Ŝargon de Atomo"
 
-#: qtgui/rwmolecule.cpp:227
+#: qtgui/rwmolecule.cpp:230
 msgid "Change Atom Color"
 msgstr "Ŝanĝi Atoman Koloron"
 
-#: qtgui/rwmolecule.cpp:239
+#: qtgui/rwmolecule.cpp:242
 msgid "Change Atom Layer"
 msgstr "Ŝanĝi atoman tavolon"
 
-#: qtgui/rwmolecule.cpp:255
+#: qtgui/rwmolecule.cpp:258
 msgid "Add Bond"
 msgstr "Aldoni Ligon"
 
-#: qtgui/rwmolecule.cpp:281
+#: qtgui/rwmolecule.cpp:284
 msgid "Removed Bond"
 msgstr "Forigis Ligon"
 
-#: qtgui/rwmolecule.cpp:288
+#: qtgui/rwmolecule.cpp:291
 msgid "Clear Bonds"
 msgstr "Forviŝi Ligojn"
 
-#: qtgui/rwmolecule.cpp:303
+#: qtgui/rwmolecule.cpp:306
 msgid "Set Bond Orders"
 msgstr "Agordi Ligan Ordon"
 
-#: qtgui/rwmolecule.cpp:315
+#: qtgui/rwmolecule.cpp:318
 msgid "Change Bond Order"
 msgstr "Ŝanĝi Ligan Ordon"
 
-#: qtgui/rwmolecule.cpp:338
+#: qtgui/rwmolecule.cpp:341
 msgid "Update Bonds"
 msgstr "Ĝisdatigi Ligojn"
 
-#: qtgui/rwmolecule.cpp:357
+#: qtgui/rwmolecule.cpp:360
 msgid "Update Bond"
 msgstr "Ĝisdatigi Ligon"
 
-#: qtgui/rwmolecule.cpp:377
+#: qtgui/rwmolecule.cpp:380
 msgid "Add Unit Cell"
 msgstr "Aldoni Unitan Ĉelon"
 
-#: qtgui/rwmolecule.cpp:390
+#: qtgui/rwmolecule.cpp:393
 msgid "Remove Unit Cell"
 msgstr "Forigi Unitan Ĉelon"
 
-#: qtgui/rwmolecule.cpp:455
+#: qtgui/rwmolecule.cpp:458
 msgid "Edit Unit Cell"
 msgstr "Redakti Unitan Ĉelon"
 
-#: qtgui/rwmolecule.cpp:472
+#: qtgui/rwmolecule.cpp:475
 msgid "Wrap Atoms to Cell"
 msgstr "Faldi Atomojn en Ĉelon"
 
-#: qtgui/rwmolecule.cpp:495
+#: qtgui/rwmolecule.cpp:498
 msgid "Scale Cell Volume"
 msgstr "Ŝanĝi Ĉelan Volumon"
 
-#: qtgui/rwmolecule.cpp:515
+#: qtgui/rwmolecule.cpp:518
 msgid "Build Super Cell"
 msgstr "Konstrui Superĉelon"
 
-#: qtgui/rwmolecule.cpp:539
+#: qtgui/rwmolecule.cpp:542
 msgid "Niggli Reduction"
 msgstr "Niggli-Redukto"
 
-#: qtgui/rwmolecule.cpp:561
+#: qtgui/rwmolecule.cpp:564
 msgid "Rotate to Standard Orientation"
 msgstr "Turni al Norma Orientiĝo"
 
-#: qtgui/rwmolecule.cpp:586 qtplugins/spacegroup/spacegroup.cpp:55
+#: qtgui/rwmolecule.cpp:589 qtplugins/spacegroup/spacegroup.cpp:55
 msgid "Reduce to Primitive"
 msgstr "Redukti Primitiven"
 
-#: qtgui/rwmolecule.cpp:611 qtplugins/spacegroup/spacegroup.cpp:61
+#: qtgui/rwmolecule.cpp:614 qtplugins/spacegroup/spacegroup.cpp:61
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid "Conventionalize Cell"
 msgstr "Konvenciigi Ĉelon"
 
-#: qtgui/rwmolecule.cpp:636 qtplugins/spacegroup/spacegroup.cpp:244
+#: qtgui/rwmolecule.cpp:639 qtplugins/spacegroup/spacegroup.cpp:244
 msgid "Symmetrize Cell"
 msgstr "Simetriigi Ĉelon"
 
-#: qtgui/rwmolecule.cpp:655
+#: qtgui/rwmolecule.cpp:658
 msgid "Fill Unit Cell"
 msgstr "Plenigi Unitan Ĉelon"
 
-#: qtgui/rwmolecule.cpp:675
+#: qtgui/rwmolecule.cpp:678
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Redukti Ĉelon al Nesimetria Unito"
 
-#: qtgui/rwmolecule_undo.h:30
+#: qtgui/rwmolecule.h:214
+#, fuzzy
+#| msgid "Change Atom Hybridization"
+msgid "Change Atom Positions"
+msgstr "Ŝanĝi Atoman Hibridiĝon"
+
+#: qtgui/rwmolecule.h:224
+#, fuzzy
+#| msgid "Change Atom Color"
+msgid "Change Atom Position"
+msgstr "Ŝanĝi Atoman Koloron"
+
+#: qtgui/rwmolecule.h:228
+#, fuzzy
+#| msgid "Change Atom Layer"
+msgid "Change Atom Label"
+msgstr "Ŝanĝi atoman tavolon"
+
+#: qtgui/rwmolecule.h:234
+#, fuzzy
+#| msgid "Change selections"
+msgid "Change Selection"
+msgstr "Ŝanĝi elektojn"
+
+#: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "Modifi Molekulon"
 
@@ -3288,11 +3312,11 @@ msgstr "MongoChem-Servilo"
 msgid "Interface with Mongo Chem Server."
 msgstr "Interfaco al MongoChem-Servilo."
 
-#: qtplugins/navigator/navigator.cpp:37
+#: qtplugins/navigator/navigator.cpp:38
 msgid "Navigate"
 msgstr "Navigi"
 
-#: qtplugins/navigator/navigator.cpp:40
+#: qtplugins/navigator/navigator.cpp:41
 msgid ""
 "Navigation Tool\n"
 "\n"
@@ -3301,11 +3325,11 @@ msgid ""
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:58
+#: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:60
+#: qtplugins/navigator/navigator.cpp:61
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
@@ -4255,7 +4279,7 @@ msgstr "Elekti Ĉion"
 msgid "Select None"
 msgstr "Elekti Nenion"
 
-#: qtplugins/select/select.cpp:48
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:517
 msgid "Invert Selection"
 msgstr "Inversigi Elekton"
 
@@ -4295,13 +4319,13 @@ msgstr "Elekti laŭ Atoma Indico…"
 msgid "Select Water…"
 msgstr "Elekti laŭ Atoma Indico…"
 
-#: qtplugins/select/select.cpp:88
+#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
 #, fuzzy
 #| msgid "Invert Selection"
 msgid "Enlarge Selection"
 msgstr "Inversigi Elekton"
 
-#: qtplugins/select/select.cpp:93
+#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
 #, fuzzy
 #| msgid "Selection"
 msgid "Shrink Selection"
@@ -4319,21 +4343,57 @@ msgstr "Ŝanĝi elektojn"
 msgid "&Select"
 msgstr "Elekti (&S)"
 
-#: qtplugins/select/select.cpp:386
+#: qtplugins/select/select.cpp:180
+#, fuzzy
+#| msgid "Select by Element..."
+msgid "Select Element"
+msgstr "Elekti laŭ Elemento…"
+
+#: qtplugins/select/select.cpp:216
+#, fuzzy
+#| msgid "Select by Atom Index..."
+msgid "Select Water"
+msgstr "Elekti laŭ Atoma Indico…"
+
+#: qtplugins/select/select.cpp:254
+#, fuzzy
+#| msgid "Select by Atom Index..."
+msgid "Select Backbone"
+msgstr "Elekti laŭ Atoma Indico…"
+
+#: qtplugins/select/select.cpp:288
+#, fuzzy
+#| msgid "Select by Atom Index..."
+msgid "Select Sidechain"
+msgstr "Elekti laŭ Atoma Indico…"
+
+#: qtplugins/select/select.cpp:409
 msgid "Select Atoms by Index"
 msgstr "Elekti Atomojn laŭ Indico"
 
-#: qtplugins/select/select.cpp:387
+#: qtplugins/select/select.cpp:410
 msgid "Atoms to Select:"
 msgstr "Elektotaj Atomoj:"
 
-#: qtplugins/select/select.cpp:424
+#: qtplugins/select/select.cpp:415
+#, fuzzy
+#| msgid "Select All"
+msgid "Select Atom"
+msgstr "Elekti Ĉion"
+
+#: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
 msgstr "Elekti atomojn laŭ restaĵo"
 
-#: qtplugins/select/select.cpp:425
+#: qtplugins/select/select.cpp:449
 msgid "Residues to Select:"
 msgstr "Elektotaj restaĵoj:"
+
+#: qtplugins/select/select.cpp:454
+#, fuzzy
+#| msgid "Select by Residue..."
+msgid "Select Residue"
+msgstr "Elekti laŭ restaĵo…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)

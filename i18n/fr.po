@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-07-24 03:19+0000\n"
+"POT-Creation-Date: 2022-07-31 03:22+0000\n"
 "PO-Revision-Date: 2022-07-28 20:34+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -141,7 +141,7 @@ msgstr ""
 "Erreur à l'écriture de la représentation de la molécule en chaîne de "
 "caractère : %1"
 
-#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:506
+#: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:512
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -155,7 +155,7 @@ msgstr ""
 "\n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:515
+#: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:521
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -1073,13 +1073,13 @@ msgstr "Tous les formats supportés (%1);;"
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:486
+#: qtgui/interfacescript.cpp:492
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: qtgui/interfacescript.cpp:494
+#: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
@@ -1346,7 +1346,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
-#: qtplugins/select/select.cpp:496
+#: qtplugins/select/select.cpp:528
 #: qtplugins/selectiontool/selectiontool.cpp:252:1573
 msgid "Change Layer"
 msgstr "Changer le calque"
@@ -1378,114 +1378,136 @@ msgstr "Changer les éléments"
 msgid "Change Element"
 msgstr "Changer un élément"
 
-#: qtgui/rwmolecule.cpp:203
+#: qtgui/rwmolecule.cpp:206
 msgid "Change Atom Hybridization"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:215
+#: qtgui/rwmolecule.cpp:218
 msgid "Change Atom Formal Charge"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:227
+#: qtgui/rwmolecule.cpp:230
 msgid "Change Atom Color"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:239
+#: qtgui/rwmolecule.cpp:242
 #, fuzzy
 msgid "Change Atom Layer"
 msgstr "Changer l'ordre des liaisons"
 
-#: qtgui/rwmolecule.cpp:255
+#: qtgui/rwmolecule.cpp:258
 msgid "Add Bond"
 msgstr "Ajouter une liaison"
 
-#: qtgui/rwmolecule.cpp:281
+#: qtgui/rwmolecule.cpp:284
 msgid "Removed Bond"
 msgstr "Liaison supprimée"
 
-#: qtgui/rwmolecule.cpp:288
+#: qtgui/rwmolecule.cpp:291
 #, fuzzy
 msgid "Clear Bonds"
 msgstr "Supprimer une liaison"
 
-#: qtgui/rwmolecule.cpp:303
+#: qtgui/rwmolecule.cpp:306
 #, fuzzy
 msgid "Set Bond Orders"
 msgstr "Multiplicité de la liaison"
 
-#: qtgui/rwmolecule.cpp:315
+#: qtgui/rwmolecule.cpp:318
 msgid "Change Bond Order"
 msgstr "Changer l'ordre des liaisons"
 
-#: qtgui/rwmolecule.cpp:338
+#: qtgui/rwmolecule.cpp:341
 msgid "Update Bonds"
 msgstr "Ajuster aux liaisons"
 
-#: qtgui/rwmolecule.cpp:357
+#: qtgui/rwmolecule.cpp:360
 msgid "Update Bond"
 msgstr "Mettre à jour la liaison"
 
-#: qtgui/rwmolecule.cpp:377
+#: qtgui/rwmolecule.cpp:380
 #, fuzzy
 msgid "Add Unit Cell"
 msgstr "Afficher la &maille conventionnelle"
 
-#: qtgui/rwmolecule.cpp:390
+#: qtgui/rwmolecule.cpp:393
 #, fuzzy
 msgid "Remove Unit Cell"
 msgstr "Effacer la &maille conventionnelle"
 
-#: qtgui/rwmolecule.cpp:455
+#: qtgui/rwmolecule.cpp:458
 msgid "Edit Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:472
+#: qtgui/rwmolecule.cpp:475
 #, fuzzy
 msgid "Wrap Atoms to Cell"
 msgstr "&Regrouper les atomes dans la maille"
 
-#: qtgui/rwmolecule.cpp:495
+#: qtgui/rwmolecule.cpp:498
 #, fuzzy
 msgid "Scale Cell Volume"
 msgstr "Mettre le volume de maille conventionnelle à l'échelle"
 
-#: qtgui/rwmolecule.cpp:515
+#: qtgui/rwmolecule.cpp:518
 #, fuzzy
 msgid "Build Super Cell"
 msgstr "Maille étendue"
 
-#: qtgui/rwmolecule.cpp:539
+#: qtgui/rwmolecule.cpp:542
 msgid "Niggli Reduction"
 msgstr "Réduction de Niggli"
 
-#: qtgui/rwmolecule.cpp:561
+#: qtgui/rwmolecule.cpp:564
 msgid "Rotate to Standard Orientation"
 msgstr "Tourner vers l'orientation standard"
 
-#: qtgui/rwmolecule.cpp:586 qtplugins/spacegroup/spacegroup.cpp:55
+#: qtgui/rwmolecule.cpp:589 qtplugins/spacegroup/spacegroup.cpp:55
 #, fuzzy
 msgid "Reduce to Primitive"
 msgstr "Réduire à une maille primitive"
 
-#: qtgui/rwmolecule.cpp:611 qtplugins/spacegroup/spacegroup.cpp:61
+#: qtgui/rwmolecule.cpp:614 qtplugins/spacegroup/spacegroup.cpp:61
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:636 qtplugins/spacegroup/spacegroup.cpp:244
+#: qtgui/rwmolecule.cpp:639 qtplugins/spacegroup/spacegroup.cpp:244
 msgid "Symmetrize Cell"
 msgstr "Symétriser la cellule"
 
-#: qtgui/rwmolecule.cpp:655
+#: qtgui/rwmolecule.cpp:658
 msgid "Fill Unit Cell"
 msgstr "Remplir la maille conventionnelle"
 
-#: qtgui/rwmolecule.cpp:675
+#: qtgui/rwmolecule.cpp:678
 #, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Réduire à l'unité asymétrique"
 
-#: qtgui/rwmolecule_undo.h:30
+#: qtgui/rwmolecule.h:214
+#, fuzzy
+#| msgid "Change selections"
+msgid "Change Atom Positions"
+msgstr "Changer les sélections"
+
+#: qtgui/rwmolecule.h:224
+#, fuzzy
+msgid "Change Atom Position"
+msgstr "Changer l'ordre des liaisons"
+
+#: qtgui/rwmolecule.h:228
+#, fuzzy
+msgid "Change Atom Label"
+msgstr "Changer l'ordre des liaisons"
+
+#: qtgui/rwmolecule.h:234
+#, fuzzy
+#| msgid "Change selections"
+msgid "Change Selection"
+msgstr "Changer les sélections"
+
+#: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "Modifier la molécule"
 
@@ -3204,8 +3226,8 @@ msgstr ""
 "Outil de mesure\n"
 "\n"
 "Bouton gauche :\tsélectionner jusqu'à trois atomes.\n"
-"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le 3ème."
-"\n"
+"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le "
+"3ème.\n"
 "\tL'angle est mesuré entre le 1et le 3ème  autour du 2ème.\n"
 "Bouton droit :\teffacement des mesures."
 
@@ -3282,11 +3304,11 @@ msgstr ""
 msgid "Interface with Mongo Chem Server."
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:37
+#: qtplugins/navigator/navigator.cpp:38
 msgid "Navigate"
 msgstr "Naviguer"
 
-#: qtplugins/navigator/navigator.cpp:40
+#: qtplugins/navigator/navigator.cpp:41
 msgid ""
 "Navigation Tool\n"
 "\n"
@@ -3301,11 +3323,11 @@ msgstr ""
 "arrière.\n"
 "Bouton droit :\tcliquer et glisser déposer pour déplacer la vue.\n"
 
-#: qtplugins/navigator/navigator.cpp:58
+#: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:60
+#: qtplugins/navigator/navigator.cpp:61
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
@@ -4195,7 +4217,7 @@ msgstr "Tout sélectionner"
 msgid "Select None"
 msgstr "Ne rien sélectionner"
 
-#: qtplugins/select/select.cpp:48
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:517
 msgid "Invert Selection"
 msgstr "Inverser la sélection"
 
@@ -4230,11 +4252,11 @@ msgstr "Indices des atomes"
 msgid "Select Water…"
 msgstr "Indices des atomes"
 
-#: qtplugins/select/select.cpp:88
+#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
 msgid "Enlarge Selection"
 msgstr "Augmenter la sélection"
 
-#: qtplugins/select/select.cpp:93
+#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
 msgid "Shrink Selection"
 msgstr "Réduire sélection"
 
@@ -4250,21 +4272,54 @@ msgstr "Changer les sélections"
 msgid "&Select"
 msgstr "&Sélectionner"
 
-#: qtplugins/select/select.cpp:386
+#: qtplugins/select/select.cpp:180
+#, fuzzy
+#| msgid "Select by Element..."
+msgid "Select Element"
+msgstr "Sélectionner par élément..."
+
+#: qtplugins/select/select.cpp:216
+#, fuzzy
+msgid "Select Water"
+msgstr "Indices des atomes"
+
+#: qtplugins/select/select.cpp:254
+#, fuzzy
+msgid "Select Backbone"
+msgstr "Indices des atomes"
+
+#: qtplugins/select/select.cpp:288
+#, fuzzy
+msgid "Select Sidechain"
+msgstr "Indices des atomes"
+
+#: qtplugins/select/select.cpp:409
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:387
+#: qtplugins/select/select.cpp:410
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:424
+#: qtplugins/select/select.cpp:415
+#, fuzzy
+#| msgid "Delete Atom"
+msgid "Select Atom"
+msgstr "Supprimer un atome"
+
+#: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:425
+#: qtplugins/select/select.cpp:449
 msgid "Residues to Select:"
 msgstr ""
+
+#: qtplugins/select/select.cpp:454
+#, fuzzy
+#| msgid "Select by Residue..."
+msgid "Select Residue"
+msgstr "Sélectionner par résidu..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -7225,8 +7280,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -9453,9 +9508,6 @@ msgstr ""
 
 #~ msgid "Measure bond lengths, angles, and dihedrals"
 #~ msgstr "Mesurer des distances de liaison, des angles et des angles dièdres"
-
-#~ msgid "Delete Atom"
-#~ msgstr "Supprimer un atome"
 
 #~ msgid "Draw Bond"
 #~ msgstr "Dessiner une liaison"
