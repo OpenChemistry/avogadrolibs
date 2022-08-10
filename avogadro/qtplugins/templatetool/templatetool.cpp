@@ -345,45 +345,46 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
       return;
 
-    size_t centerIndex;
-    Vector3 centerVector;
+    size_t ligandIndex;
+    size_t ligandUID;
+    Vector3 ligandPos;
+    Vector3 ligandVector;
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (templateMolecule.atomicNumber(i) == 0) {
-        centerIndex = templateMolecule.bonds(i)[0].getOtherAtom(i).index();
-        centerVector = templateMolecule.atomPosition3d(centerIndex)
-          - templateMolecule.atomPosition3d(i);
+        ligandIndex = templateMolecule.bonds(i)[0].getOtherAtom(i).index();
+        ligandUID = templateMolecule.atomUniqueId(ligandIndex);
+        ligandPos = templateMolecule.atomPosition3d(ligandIndex);
+        ligandVector = ligandPos - templateMolecule.atomPosition3d(i);
       }
     }
 
     size_t templateCenterIndex = m_molecule->bonds(atom.index())[0].getOtherAtom(atom.index()).index();
-    std::vector<size_t> templateToMolecule;
-    m_molecule->setAtomicNumber(atom.index(), templateMolecule.atomicNumber(centerIndex));
+    size_t templateCenterUID = m_molecule->atomUniqueId(templateCenterIndex);
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (templateMolecule.atomicNumber(i) != 0) {
-        if (i != centerIndex) {
-          templateToMolecule.push_back(m_molecule->atomCount());
-          m_molecule->addAtom(
-            templateMolecule.atomicNumber(i),
-            rotateLigandCoords(
-              templateMolecule.atomPosition3d(i)
-              - templateMolecule.atomPosition3d(centerIndex),
-              centerVector,
-              m_molecule->atomPosition3d(atom.index())
-              - m_molecule->atomPosition3d(templateCenterIndex)
-            ) + m_molecule->atomPosition3d(atom.index())
-          );
-        } else {
-          templateToMolecule.push_back(atom.index());
-        }
-        for (const auto &bond: templateMolecule.bonds(i)) {
-          size_t n = bond.getOtherAtom(i).index();
-          if (n < i)
-            m_molecule->addBond(templateToMolecule[i], templateToMolecule[n], bond.order());
-        }
-      } else {
-        templateToMolecule.push_back(templateCenterIndex);
+        templateMolecule.setAtomPosition3d(
+          i,
+          rotateLigandCoords(
+            templateMolecule.atomPosition3d(i) - ligandPos,
+            ligandVector,
+            m_molecule->atomPosition3d(atom.index())
+            - m_molecule->atomPosition3d(templateCenterIndex)
+          ) + m_molecule->atomPosition3d(atom.index())
+        );
       }
     }
+
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++)
+      if (templateMolecule.atomicNumber(i) == 0)
+        templateMolecule.removeAtom(i);
+
+    size_t ligandNewIndex = templateMolecule.atomByUniqueId(ligandUID).index();
+    m_molecule->removeAtom(atom.index());
+    ligandNewIndex += m_molecule->atomCount();
+    m_molecule->appendMolecule(templateMolecule, tr("Insert Ligand"));
+
+    size_t templateCenterNewIndex = m_molecule->atomByUniqueId(templateCenterUID).index();
+    m_molecule->addBond(ligandNewIndex, templateCenterNewIndex);
   }
 }
 
