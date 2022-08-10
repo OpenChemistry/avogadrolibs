@@ -285,27 +285,27 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
-  RWAtom newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(),
-                                       atomPos.cast<double>());
 
   // Add hydrogens around it following template
   Vector3 center(0.0f, 0.0f, 0.0f);
+  size_t centerIndex = 0;
   std::vector<Vector3> positions;
   for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
     if (templateMolecule.atomicNumber(i) != 1) {
       center = templateMolecule.atomPosition3d(i);
+      centerIndex = i;
+      templateMolecule.setAtomicNumber(i, m_toolWidget->atomicNumber());
       continue;
-    } else {
-      positions.push_back(templateMolecule.atomPosition3d(i));
     }
   }
 
-  for (const Vector3 &pos: positions) {
-    RWAtom newHydrogen = m_molecule->addAtom(
-      1, pos - center + m_molecule->atomPosition3d(newAtom.index())
-    );
-    m_molecule->addBond(newHydrogen.index(), newAtom.index());
+  for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+    Vector3 pos = templateMolecule.atomPosition3d(i) - center + atomPos.cast<double>();
+    templateMolecule.setAtomPosition3d(i, pos);
   }
+
+  size_t firstIndex = m_molecule->atomCount();
+  m_molecule->appendMolecule(templateMolecule, tr("Insert Template"));
 
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Bonds | Molecule::Added;
 
@@ -315,7 +315,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
   // Update the clicked object
   m_clickedObject.type = Rendering::AtomType;
   m_clickedObject.molecule = m_molecule;
-  m_clickedObject.index = newAtom.index();
+  m_clickedObject.index = firstIndex + centerIndex;
 
   // Emit changed signal
   m_molecule->emitChanged(changes);
@@ -356,7 +356,6 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     }
 
     size_t templateCenterIndex = m_molecule->bonds(atom.index())[0].getOtherAtom(atom.index()).index();
-    size_t templateBaseIndex = m_molecule->atomCount();
     std::vector<size_t> templateToMolecule;
     m_molecule->setAtomicNumber(atom.index(), templateMolecule.atomicNumber(centerIndex));
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {

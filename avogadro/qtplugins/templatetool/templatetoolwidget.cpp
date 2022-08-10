@@ -207,7 +207,7 @@ void TemplateToolWidget::selectElement(unsigned char element)
     m_ui->elementComboBox->setCurrentIndex(curIndex);
   else {
     addUserElement(element);
-    int curIndex = m_ui->elementComboBox->findData(element);
+    curIndex = m_ui->elementComboBox->findData(element);
     if (curIndex >= 0)
       m_ui->elementComboBox->setCurrentIndex(curIndex);
     // if we can't find it after adding it, something is very wrong!
