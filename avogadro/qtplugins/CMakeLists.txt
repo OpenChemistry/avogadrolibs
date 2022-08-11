@@ -130,6 +130,7 @@ endif()
 add_subdirectory(surfaces)
 add_subdirectory(svg)
 add_subdirectory(spectra)
+add_subdirectory(templatetool)
 add_subdirectory(vrml)
 
 # Plugins that require VTK
