@@ -20,6 +20,7 @@ avogadro_plugin(Surfaces
 
 target_link_libraries(Surfaces
   PRIVATE
+    AvogadroCalc
     AvogadroQuantumIO
     AvogadroQtOpenGL
     Qt5::Concurrent
