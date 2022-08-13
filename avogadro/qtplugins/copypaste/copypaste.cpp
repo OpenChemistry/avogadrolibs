@@ -34,20 +34,24 @@ CopyPaste::CopyPaste(QObject* parent_)
     m_clearAction(new QAction(tr("Clear"), this)),
     m_pasteAction(new QAction(tr("Paste"), this))
 {
-  m_copyAction->setShortcut(QKeySequence::Copy);
-  m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
-  connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
-
   m_cutAction->setShortcut(QKeySequence::Cut);
   m_cutAction->setIcon(QIcon::fromTheme("edit-cut"));
+  m_cutAction->setProperty("menu priority", 550);
   connect(m_cutAction, SIGNAL(triggered()), SLOT(cut()));
+
+  m_copyAction->setShortcut(QKeySequence::Copy);
+  m_copyAction->setIcon(QIcon::fromTheme("edit-copy"));
+  m_copyAction->setProperty("menu priority", 540);
+  connect(m_copyAction, SIGNAL(triggered()), SLOT(copy()));
 
   m_pasteAction->setShortcut(QKeySequence::Paste);
   m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
+  m_pasteAction->setProperty("menu priority", 510);
   connect(m_pasteAction, SIGNAL(triggered()), SLOT(paste()));
 
   m_clearAction->setShortcut(QKeySequence::Delete);
   m_clearAction->setIcon(QIcon::fromTheme("edit-clear"));
+  m_clearAction->setProperty("menu priority", 500);
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clear()));
 }
 

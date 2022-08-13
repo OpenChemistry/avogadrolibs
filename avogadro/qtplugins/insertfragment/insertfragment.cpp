@@ -30,6 +30,7 @@ InsertFragment::InsertFragment(QObject* parent_)
     m_moleculeDialog(nullptr), m_reader(nullptr), m_molecule(nullptr)
 {
   auto* action = new QAction(tr("Fragment…"), this);
+  action->setProperty("menu priority", 890);
   action->setData("molecules"); // will also work for crystals
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);

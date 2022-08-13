@@ -20,9 +20,13 @@ Centroid::Centroid(QObject* parent_)
     m_centroidAction(new QAction(tr("Add Centroid"), this)),
     m_comAction(new QAction(tr("Add Center of Mass"), this)),
     m_normalAction(new QAction(
-      tr("Add Normal", "add a point normal to the plane of the molecule"),
+      tr("Add Perpendicular", "add a point normal to the plane of the molecule"),
       this))
 {
+  m_centroidAction->setProperty("menu priority", 190);
+  m_comAction->setProperty("menu priority", 180);
+  m_normalAction->setProperty("menu priority", 170);
+
   connect(m_centroidAction, SIGNAL(triggered()), SLOT(addCentroid()));
   connect(m_comAction, SIGNAL(triggered()), SLOT(addCenterOfMass()));
   connect(m_normalAction, SIGNAL(triggered()), SLOT(normal()));
@@ -33,8 +37,7 @@ Centroid::~Centroid() {}
 QList<QAction*> Centroid::actions() const
 {
   QList<QAction*> result;
-  return result << m_centroidAction << m_comAction;
-  // << m_normal;
+  return result << m_centroidAction << m_comAction << m_normalAction;
 }
 
 QStringList Centroid::menuPath(QAction*) const
