@@ -35,6 +35,9 @@ Bonding::Bonding(QObject* parent_)
   m_minDistance = settings.value("bonding/minDistance", 0.32).toDouble();
 
   m_action->setShortcut(QKeySequence("Ctrl+B"));
+  m_action->setProperty("menu priority", 750);
+  m_clearAction->setProperty("menu priority", 740);
+
   connect(m_action, SIGNAL(triggered()), SLOT(bond()));
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
   connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
