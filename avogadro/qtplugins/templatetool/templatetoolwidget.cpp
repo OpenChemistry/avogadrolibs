@@ -41,6 +41,9 @@ TemplateToolWidget::TemplateToolWidget(QWidget *parent_) :
   connect(m_ui->coordinationComboBox, SIGNAL(currentIndexChanged(int)),
           this, SLOT(coordinationChanged(int)));
 
+  connect(m_ui->denticityComboBox, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(denticityChanged(int)));
+
   // Show carbon at startup.
   selectElement(6);
   // default coordination = octahedral
@@ -51,8 +54,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget *parent_) :
   m_centers << "1-lin" << "2-lin" << "3-tpl" << "4-tet" << "4-sqp" << "5-tbp"
   << "5-spy" << "6-oct" << "6-tpr" << "7-pbp" << "8-sqa";
 
-  m_ligands << "ammine" << "aqua" << "carbonyl" << "phosphine" << "thiol"
-   << "methyl" << "ethyl" << "propyl" << "isopropyl" << "t-butyl";
+  denticityChanged(0);
 }
 
 TemplateToolWidget::~TemplateToolWidget()
@@ -118,6 +120,37 @@ void TemplateToolWidget::coordinationChanged(int index)
   // get the icon name
   QString iconName = m_centers[index];
   m_ui->preview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
+}
+
+void TemplateToolWidget::denticityChanged(int index)
+{
+  m_selectedIndices.clear();
+  m_ui->ligandComboBox->clear();
+  m_ligands = QStringList();
+  QStringList ligandNames;
+  switch (index) {
+    case 0: // Monodentate
+      ligandNames << "Ammine" << "Aqua" << "Carbonyl" << "Phosphine" << "Thiol";
+      m_ligands << "1-ammine" << "1-aqua" << "1-carbonyl" << "1-phosphine" << "1-thiol";
+      m_denticity = 1;
+      break;
+    case 1: // Bidentate
+      ligandNames << "Bipyridine" << "Ethylenediamine";
+      m_ligands << "2-bipyridine" << "2-ethylenediamine";
+      m_denticity = 2;
+      break;
+    case 2: // Tridentate
+      ligandNames << "Terpyridine";
+      m_ligands << "3-terpyridine";
+      m_denticity = 3;
+      break;
+    case 3: // Tetradentate
+      ligandNames << "Phthalocyanine" << "Porphin";
+      m_ligands << "4-phthalocyanine" << "4-porphin";
+      m_denticity = 4;
+      break;
+  }
+  m_ui->ligandComboBox->addItems(ligandNames);
 }
 
 void TemplateToolWidget::elementChanged(int index)
@@ -247,6 +280,16 @@ void TemplateToolWidget::saveElements()
     atomicNums << QVariant(m_userElements[i]);
 
   QSettings().setValue("templatetool/userElements", atomicNums);
+}
+
+int TemplateToolWidget::denticity() const
+{
+  return m_denticity;
+}
+
+std::vector<size_t> &TemplateToolWidget::selectedIndices()
+{
+  return m_selectedIndices;
 }
 
 } // namespace QtPlugins

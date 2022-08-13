@@ -26,15 +26,20 @@
     <file>centers/6-tpr.cjson</file>
     <file>centers/7-pbp.cjson</file>
     <file>centers/8-sqa.cjson</file>
-    <file>ligands/ammine.cjson</file>
-    <file>ligands/aqua.cjson</file>
-    <file>ligands/carbonyl.cjson</file>
-    <file>ligands/phosphine.cjson</file>
-    <file>ligands/thiol.cjson</file>
-    <file>ligands/methyl.cjson</file>
-    <file>ligands/ethyl.cjson</file>
-    <file>ligands/propyl.cjson</file>
-    <file>ligands/isopropyl.cjson</file>
-    <file>ligands/t-butyl.cjson</file>
+    <file>ligands/1-ammine.cjson</file>
+    <file>ligands/1-aqua.cjson</file>
+    <file>ligands/1-carbonyl.cjson</file>
+    <file>ligands/1-phosphine.cjson</file>
+    <file>ligands/1-thiol.cjson</file>
+    <file>ligands/1-methyl.cjson</file>
+    <file>ligands/1-ethyl.cjson</file>
+    <file>ligands/1-propyl.cjson</file>
+    <file>ligands/1-isopropyl.cjson</file>
+    <file>ligands/1-t-butyl.cjson</file>
+    <file>ligands/2-bipyridine.cjson</file>
+    <file>ligands/2-ethylenediamine.cjson</file>
+    <file>ligands/3-terpyridine.cjson</file>
+    <file>ligands/4-phthalocyanine.cjson</file>
+    <file>ligands/4-porphin.cjson</file>
   </qresource>
 </RCC>

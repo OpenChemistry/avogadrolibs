@@ -270,6 +270,8 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
   Molecule templateMolecule;
   if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
     return;
+  
+  m_toolWidget->selectedIndices().clear();
 
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
@@ -319,10 +321,34 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector) 
   return rot * in;
 }
 
+Matrix3 applyKabsch(std::vector<Vector3> templatePoints, std::vector<Vector3> moleculePoints)
+{
+  assert(templatePoints.size() == moleculePoints.size());
+  MatrixX TP(templatePoints.size(), 3);
+  MatrixX MP(templatePoints.size(), 3);
+  for (size_t i = 0; i < templatePoints.size(); i++) {
+    TP.row(i) = templatePoints[i];
+    MP.row(i) = moleculePoints[i];
+  }
+  Matrix3 H = TP.transpose() * MP;
+  Eigen::JacobiSVD<MatrixX> svd(H, Eigen::ComputeFullU | Eigen::ComputeFullV);
+  MatrixX U = svd.matrixU();
+  Matrix3 V = svd.matrixV();
+  Matrix3 Idd = Matrix3::Identity();
+  Idd(2, 2) = copysign(1.0, (V * U.transpose()).determinant());
+  Matrix3 r = V * Idd * U.transpose();
+  return r;
+}
+
 void TemplateTool::atomLeftClick(QMouseEvent *e)
 {
-  RWAtom atom = m_molecule->atom(m_clickedObject.index);
-  if (atom.isValid() && m_molecule->atomicNumber(atom.index()) == 1) {
+  size_t selectedIndex = m_clickedObject.index;
+  if (m_molecule->atom(selectedIndex).isValid()
+  && m_molecule->atomicNumber(selectedIndex) == 1) {
+    m_toolWidget->selectedIndices().push_back(selectedIndex);
+    if (m_toolWidget->selectedIndices().size() != m_toolWidget->denticity())
+      return;
+  
     QFile templ(":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson");
     if (!templ.open(QFile::ReadOnly | QFile::Text))
       return;
@@ -333,46 +359,108 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
       return;
 
-    size_t ligandIndex;
-    size_t ligandUID;
-    Vector3 ligandPos;
-    Vector3 ligandVector;
+    // Find dummy atom in template and get all necessary info
+    size_t templateDummyIndex;
+    std::vector<size_t> templateLigandIndices;
+    std::vector<size_t> templateLigandUIDs;
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (templateMolecule.atomicNumber(i) == 0) {
-        ligandIndex = templateMolecule.bonds(i)[0].getOtherAtom(i).index();
-        ligandUID = templateMolecule.atomUniqueId(ligandIndex);
-        ligandPos = templateMolecule.atomPosition3d(ligandIndex);
-        ligandVector = ligandPos - templateMolecule.atomPosition3d(i);
+        templateDummyIndex = i;
+        for (const auto &bond: templateMolecule.bonds(i)) {
+          size_t newIndex = bond.getOtherAtom(i).index();
+          templateLigandIndices.push_back(newIndex);
+          templateLigandUIDs.push_back(templateMolecule.atomUniqueId(newIndex));
+        }
       }
     }
 
-    size_t templateCenterIndex = m_molecule->bonds(atom.index())[0].getOtherAtom(atom.index()).index();
-    size_t templateCenterUID = m_molecule->atomUniqueId(templateCenterIndex);
+    // Find center atom in molecule and get all necessary info
+    size_t moleculeCenterIndex = m_molecule->bonds(selectedIndex)[0]
+      .getOtherAtom(selectedIndex).index();
+    size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterUID);
+    Vector3 moleculeLigandOutVector(0.0, 0.0, 0.0);
+    for (size_t index: m_toolWidget->selectedIndices()) {
+      Vector3 newPos = m_molecule->atomPosition3d(index);
+      moleculeLigandOutVector += newPos - m_molecule->atomPosition3d(moleculeCenterIndex);
+    }
+    
+    // Translate template so dummy atom is brought to center atom
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+      if (templateMolecule.atomicNumber(i) != 0) {
+        templateMolecule.setAtomPosition3d(
+          i,
+          templateMolecule.atomPosition3d(i)
+          - templateMolecule.atomPosition3d(templateDummyIndex)
+          + m_molecule->atomPosition3d(moleculeCenterIndex)
+        );
+      }
+    }
+    
+    // Create arrays with the points to align and apply Kabsch algorithm
+    std::vector<Vector3> templateLigandPositions;
+    for (size_t index: templateLigandIndices)
+      templateLigandPositions.push_back(templateMolecule.atomPosition3d(index)
+      - m_molecule->atomPosition3d(moleculeCenterIndex));
+    std::vector<Vector3> moleculeLigandPositions;
+    for (size_t index: m_toolWidget->selectedIndices())
+      moleculeLigandPositions.push_back(m_molecule->atomPosition3d(index)
+      - m_molecule->atomPosition3d(moleculeCenterIndex));
+    Matrix3 rotation = applyKabsch(templateLigandPositions, moleculeLigandPositions);
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+      if (templateMolecule.atomicNumber(i) != 0) {
+        templateMolecule.setAtomPosition3d(
+          i,
+          rotation * (templateMolecule.atomPosition3d(i)
+          - m_molecule->atomPosition3d(moleculeCenterIndex))
+          + m_molecule->atomPosition3d(moleculeCenterIndex)
+        );
+      }
+    }
+    
+    // Rotate partially aligned template to align "out" vectors
+    Vector3 templateLigandOutVector(0.0, 0.0, 0.0);
+    for (size_t index: templateLigandIndices) {
+      Vector3 pos = templateMolecule.atomPosition3d(index);
+      templateLigandOutVector += pos - m_molecule->atomPosition3d(moleculeCenterIndex);
+    }
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (templateMolecule.atomicNumber(i) != 0) {
         templateMolecule.setAtomPosition3d(
           i,
           rotateLigandCoords(
-            templateMolecule.atomPosition3d(i) - ligandPos,
-            ligandVector,
-            m_molecule->atomPosition3d(atom.index())
-            - m_molecule->atomPosition3d(templateCenterIndex)
-          ) + m_molecule->atomPosition3d(atom.index())
+            templateMolecule.atomPosition3d(i)
+            - m_molecule->atomPosition3d(moleculeCenterIndex),
+            templateLigandOutVector,
+            moleculeLigandOutVector
+          ) + m_molecule->atomPosition3d(moleculeCenterIndex)
         );
       }
     }
 
+    // Remove dummy atoms
     for (size_t i = 0; i < templateMolecule.atomCount(); i++)
       if (templateMolecule.atomicNumber(i) == 0)
         templateMolecule.removeAtom(i);
 
-    size_t ligandNewIndex = templateMolecule.atomByUniqueId(ligandUID).index();
-    m_molecule->removeAtom(atom.index());
-    ligandNewIndex += m_molecule->atomCount();
+    std::vector<size_t> templateNewLigandIndices;
+    for (size_t UID: templateLigandUIDs) {
+      auto atom = templateMolecule.atomByUniqueId(UID);
+      if (atom.isValid())
+        templateNewLigandIndices.push_back(atom.index());
+    }
+    
+    // Remove selected atoms and insert ligand
+    for (size_t index: m_toolWidget->selectedIndices())
+      m_molecule->removeAtom(index);
+    size_t moleculeBaseIndex = m_molecule->atomCount();
     m_molecule->appendMolecule(templateMolecule, tr("Insert Ligand"));
 
-    size_t templateCenterNewIndex = m_molecule->atomByUniqueId(templateCenterUID).index();
-    m_molecule->addBond(ligandNewIndex, templateCenterNewIndex);
+    // Create new bonds
+    size_t moleculeCenterNewIndex = m_molecule->atomByUniqueId(moleculeCenterUID).index();
+    for (size_t index: templateNewLigandIndices)
+      m_molecule->addBond(index + moleculeBaseIndex, moleculeCenterNewIndex);
+    
+    m_toolWidget->selectedIndices().clear();
   }
 }
 
