@@ -247,7 +247,7 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Denticity:</string>
+           <string>Type:</string>
           </property>
          </widget>
         </item>
