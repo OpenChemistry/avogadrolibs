@@ -11,6 +11,26 @@
     <file>centers/6-tpr.png</file>
     <file>centers/7-pbp.png</file>
     <file>centers/8-sqa.png</file>
+    <file>ligands/1-ammine.png</file>
+    <file>ligands/1-aqua.png</file>
+    <file>ligands/1-carbonyl.png</file>
+    <file>ligands/1-cyano.png</file>
+    <file>ligands/1-ethyl.png</file>
+    <file>ligands/1-isopropyl.png</file>
+    <file>ligands/1-methyl.png</file>
+    <file>ligands/1-phosphine.png</file>
+    <file>ligands/1-propyl.png</file>
+    <file>ligands/1-pyridyl.png</file>
+    <file>ligands/1-t-butyl.png</file>
+    <file>ligands/1-thiol.png</file>
+    <file>ligands/2-acetylacetonate.png</file>
+    <file>ligands/2-bipyridine.png</file>
+    <file>ligands/2-ethylenediamine.png</file>
+    <file>ligands/3-terpyridine.png</file>
+    <file>ligands/4-phthalocyanine.png</file>
+    <file>ligands/4-porphin.png</file>
+    <file>ligands/4-salen.png</file>
+    <file>ligands/6-edta.png</file>
     <file>template.png</file>
     <file>template@2x.png</file>
   </qresource>
@@ -37,10 +57,14 @@
     <file>ligands/1-propyl.cjson</file>
     <file>ligands/1-isopropyl.cjson</file>
     <file>ligands/1-t-butyl.cjson</file>
+    <file>ligands/1-pyridyl.cjson</file>
+  	<file>ligands/2-acetylacetonate.cjson</file>
     <file>ligands/2-bipyridine.cjson</file>
     <file>ligands/2-ethylenediamine.cjson</file>
     <file>ligands/3-terpyridine.cjson</file>
     <file>ligands/4-phthalocyanine.cjson</file>
     <file>ligands/4-porphin.cjson</file>
+  	<file>ligands/4-salen.cjson</file>
+  	<file>ligands/6-edta.cjson</file>
   </qresource>
 </RCC>

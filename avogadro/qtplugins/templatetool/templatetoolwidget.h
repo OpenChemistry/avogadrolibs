@@ -52,6 +52,7 @@ private slots:
   void coordinationChanged(int index);
   
   void typeChanged(int index);
+  void ligandChanged(int index);
 
 private:
   void buildElements();

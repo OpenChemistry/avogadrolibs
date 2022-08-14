@@ -40,8 +40,11 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)), this,
           SLOT(typeChanged(int)));
 
-  // Show carbon at startup.
-  selectElement(6);
+  connect(m_ui->ligandComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(ligandChanged(int)));
+
+  // Show iron at startup.
+  selectElement(26);
   // default coordination = octahedral
   m_ui->centerPreview->setIcon(QIcon(":/icons/centers/6-oct.png"));
 
@@ -132,6 +135,16 @@ void TemplateToolWidget::coordinationChanged(int index)
   m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
 }
 
+void TemplateToolWidget::ligandChanged(int index)
+{
+  if (index < 0 || index > m_ui->ligandComboBox->count())
+    return;
+
+  // get the icon name
+  QString iconName = m_ligands[index];
+  m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+}
+
 void TemplateToolWidget::typeChanged(int index)
 {
   m_selectedIndices.clear();
@@ -155,9 +168,11 @@ void TemplateToolWidget::typeChanged(int index)
       m_denticity = 1;
       break;
     case 1: // Bidentate
-      ligandNames << "bipyridine"
+      ligandNames << "acetylacetonate"
+                  << "bipyridine"
                   << "ethylenediamine";
-      m_ligands << "2-bipyridine"
+      m_ligands << "2-acetylacetonate"
+                << "2-bipyridine"
                 << "2-ethylenediamine";
       m_denticity = 2;
       break;
@@ -168,11 +183,17 @@ void TemplateToolWidget::typeChanged(int index)
       break;
     case 3: // Tetradentate
       ligandNames << "phthalocyanine"
-                  << "porphin";
+                  << "porphin"
+                  << "salen";
       m_ligands << "4-phthalocyanine"
-                << "4-porphin";
+                << "4-porphin"
+                << "4-salen";
       m_denticity = 4;
       break;
+    case 4: // Hexadentate
+      ligandNames << "edta";
+      m_ligands << "6-edta";
+      m_denticity = 6;
   }
   m_ui->ligandComboBox->addItems(ligandNames);
 }
