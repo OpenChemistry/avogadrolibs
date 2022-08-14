@@ -887,13 +887,14 @@ void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
 
 void Molecule::perceiveBondOrders()
 {
-  /*
-  // check for coordinates
+  // check for coordinates and that there are some bonds
   if (m_positions3d.size() != atomCount() || m_positions3d.size() < 2 ||
       m_graph.edgeCount() == 0)
     return;
 
+  // save the existing bonds and bond orders
   // first calculate the unsaturated valence for every atom
+  Array<unsigned char> originalBonds = m_bondOrders;
   Array<unsigned char> unsaturatedValence(atomCount(), 0);
   for (Index i = 0; i < atomCount(); ++i) {
     AtomType atom = atom(i);
@@ -949,7 +950,6 @@ void Molecule::perceiveBondOrders()
     }
 
   } while (currentCharge != targetCharge);
-  */
 }
 
 void Molecule::perceiveBondsSimple(const double tolerance, const double min)

@@ -26,7 +26,7 @@ typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
 Bonding::Bonding(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_action(new QAction(tr("Bond Atoms"), this)),
-    m_orderAction(new QAction(tr("Bond Orders"), this)),
+    m_orderAction(new QAction(tr("Perceive Bond Orders"), this)),
     m_clearAction(new QAction(tr("Remove Bonds"), this)),
     m_configAction(new QAction(tr("Configure Bonding…"), this)),
     m_dialog(nullptr), m_ui(nullptr)
