@@ -74,7 +74,8 @@ inline QString torsionTypeString(unsigned char a, unsigned char b,
 
 PropertyModel::PropertyModel(PropertyType type, QObject* parent)
   : QAbstractTableModel(parent), m_type(type), m_molecule(nullptr)
-{}
+{
+}
 
 int PropertyModel::rowCount(const QModelIndex& parent) const
 {
@@ -484,7 +485,8 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   // for the types and columns that can be edited
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
   if (m_type == AtomType) {
-    if (index.column() == AtomDataElement || index.column() == AtomDataX ||
+    if (index.column() == AtomDataElement ||
+        index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
         index.column() == AtomDataY || index.column() == AtomDataZ)
       return editable;
     // TODO: Color
@@ -693,7 +695,8 @@ void PropertyModel::setBondLength(unsigned int index, double length)
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
 }
 
-void PropertyModel::setAngle(unsigned int index, double newValue) {
+void PropertyModel::setAngle(unsigned int index, double newValue)
+{
   // the index refers to the angle
 
   auto angle = m_angles[index];
@@ -728,7 +731,8 @@ void PropertyModel::setAngle(unsigned int index, double newValue) {
   transformFragment();
 }
 
-void PropertyModel::setTorsion(unsigned int index, double newValue) {
+void PropertyModel::setTorsion(unsigned int index, double newValue)
+{
 
   auto torsion = m_torsions[index];
   auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(torsion));
@@ -760,7 +764,6 @@ void PropertyModel::setTorsion(unsigned int index, double newValue) {
 
   // Perform transformation
   transformFragment();
-
 }
 
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)
