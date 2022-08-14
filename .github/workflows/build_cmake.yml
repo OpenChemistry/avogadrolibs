@@ -298,7 +298,7 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}
