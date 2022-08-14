@@ -30,6 +30,8 @@ public:
   void setAtomicNumber(unsigned char atomicNum);
   unsigned char atomicNumber() const;
 
+  signed char formalCharge() const;
+
   void setCoordination(unsigned char order);
   unsigned char coordination() const;
   QString coordinationString() const;

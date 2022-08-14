@@ -285,6 +285,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
       center = templateMolecule.atomPosition3d(i);
       centerIndex = i;
       templateMolecule.setAtomicNumber(i, m_toolWidget->atomicNumber());
+      templateMolecule.setFormalCharge(i, m_toolWidget->formalCharge());
       continue;
     }
   }
