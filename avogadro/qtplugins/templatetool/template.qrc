@@ -29,6 +29,7 @@
     <file>ligands/1-ammine.cjson</file>
     <file>ligands/1-aqua.cjson</file>
     <file>ligands/1-carbonyl.cjson</file>
+    <file>ligands/1-cyano.cjson</file>
     <file>ligands/1-phosphine.cjson</file>
     <file>ligands/1-thiol.cjson</file>
     <file>ligands/1-methyl.cjson</file>
