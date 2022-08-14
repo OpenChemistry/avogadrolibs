@@ -86,6 +86,11 @@ unsigned char TemplateToolWidget::atomicNumber() const
   return atomicNum;
 }
 
+signed char TemplateToolWidget::formalCharge() const
+{
+  return m_ui->chargeComboBox->currentIndex() - 0;
+}
+
 void TemplateToolWidget::setCoordination(unsigned char order)
 {
   if (order < m_ui->coordinationComboBox->count())
