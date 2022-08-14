@@ -36,6 +36,9 @@ public:
 
   unsigned char ligand() const;
   QString ligandString() const;
+  
+  int denticity() const;
+  std::vector<size_t> &selectedIndices();
 
 private slots:
   void elementChanged(int index);
@@ -45,6 +48,8 @@ private slots:
   void selectElement(unsigned char element);
   
   void coordinationChanged(int index);
+  
+  void denticityChanged(int index);
 
 private:
   void buildElements();
@@ -58,6 +63,9 @@ private:
   unsigned char m_currentElement;
   QStringList m_centers;
   QStringList m_ligands;
+  
+  int m_denticity;
+  std::vector<size_t> m_selectedIndices;
 };
 
 } // namespace QtPlugins
