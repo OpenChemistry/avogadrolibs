@@ -60,7 +60,7 @@ jobs:
         path: avogadro-i18n
 
     - name: Grab cache files
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           ${{ runner.workspace }}/build/thirdparty
