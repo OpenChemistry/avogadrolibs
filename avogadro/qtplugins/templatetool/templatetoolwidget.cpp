@@ -194,6 +194,23 @@ void TemplateToolWidget::typeChanged(int index)
       ligandNames << "edta";
       m_ligands << "6-edta";
       m_denticity = 6;
+      break;
+    case 5: // Haptic
+      ligandNames << "η2-ethylene"
+                  << "η5-cyclopentyl"
+                  << "η6-benzene";
+      m_ligands = ligandNames;
+      m_denticity = 1;
+      break;
+    case 6: // Functional Groups
+      ligandNames << "amide"
+                  << "carboxylate"
+                  << "ester"
+                  << "nitro"
+                  << "sulfonate";
+      m_ligands = ligandNames;
+      m_denticity = 1;
+      break;
   }
   m_ui->ligandComboBox->addItems(ligandNames);
 }
