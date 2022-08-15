@@ -40,7 +40,7 @@ public:
   QString ligandString() const;
   
   int denticity() const;
-  std::vector<size_t> &selectedIndices();
+  std::vector<size_t> &selectedUIDs();
 
 private slots:
   void elementChanged(int index);
@@ -68,7 +68,7 @@ private:
   QStringList m_ligands;
   
   int m_denticity;
-  std::vector<size_t> m_selectedIndices;
+  std::vector<size_t> m_selectedUIDs;
 };
 
 } // namespace QtPlugins
