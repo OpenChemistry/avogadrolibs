@@ -18,43 +18,51 @@
 namespace {
 // The ItemData of the "Other" entry in the combo box
 const int ELEMENT_SELECTOR_TAG = 255;
-}
+} // namespace
 
 namespace Avogadro {
 namespace QtPlugins {
 
-
-
-TemplateToolWidget::TemplateToolWidget(QWidget *parent_) :
-  QWidget(parent_),
-  m_ui(new Ui::TemplateToolWidget),
-  m_elementSelector(NULL),
-  m_currentElement(26)
+TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
+  : QWidget(parent_), m_ui(new Ui::TemplateToolWidget), m_elementSelector(NULL),
+    m_currentElement(26)
 {
   m_ui->setupUi(this);
 
   buildElements();
 
-  connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(elementChanged(int)));
+  connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(elementChanged(int)));
 
-  connect(m_ui->coordinationComboBox, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(coordinationChanged(int)));
+  connect(m_ui->coordinationComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(coordinationChanged(int)));
 
-  connect(m_ui->denticityComboBox, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(denticityChanged(int)));
+  connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(typeChanged(int)));
 
-  // Show carbon at startup.
-  selectElement(6);
+  connect(m_ui->ligandComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(ligandChanged(int)));
+
+  // Show iron at startup.
+  selectElement(26);
   // default coordination = octahedral
-  m_ui->preview->setIcon(QIcon(":/icons/centers/6-oct.png"));
+  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/6-oct.png"));
 
   // In the same order of the coordinationComboBox
   // append ".png" for the icon and ".cjson" for the template
-  m_centers << "1-lin" << "2-lin" << "3-tpl" << "4-tet" << "4-sqp" << "5-tbp"
-  << "5-spy" << "6-oct" << "6-tpr" << "7-pbp" << "8-sqa";
+  m_centers << "1-lin"
+            << "2-lin"
+            << "3-tpl"
+            << "4-tet"
+            << "4-sqp"
+            << "5-tbp"
+            << "5-spy"
+            << "6-oct"
+            << "6-tpr"
+            << "7-pbp"
+            << "8-sqa";
 
-  denticityChanged(0);
+  typeChanged(0);
 }
 
 TemplateToolWidget::~TemplateToolWidget()
@@ -121,13 +129,23 @@ void TemplateToolWidget::coordinationChanged(int index)
 {
   if (index < 0 || index > m_ui->coordinationComboBox->count())
     return;
-  
+
   // get the icon name
   QString iconName = m_centers[index];
-  m_ui->preview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
+  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
 }
 
-void TemplateToolWidget::denticityChanged(int index)
+void TemplateToolWidget::ligandChanged(int index)
+{
+  if (index < 0 || index > m_ui->ligandComboBox->count())
+    return;
+
+  // get the icon name
+  QString iconName = m_ligands[index];
+  m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+}
+
+void TemplateToolWidget::typeChanged(int index)
 {
   m_selectedIndices.clear();
   m_ui->ligandComboBox->clear();
@@ -135,24 +153,63 @@ void TemplateToolWidget::denticityChanged(int index)
   QStringList ligandNames;
   switch (index) {
     case 0: // Monodentate
-      ligandNames << "Ammine" << "Aqua" << "Carbonyl" << "Phosphine" << "Thiol";
-      m_ligands << "1-ammine" << "1-aqua" << "1-carbonyl" << "1-phosphine" << "1-thiol";
+      ligandNames << "ammine"
+                  << "aqua"
+                  << "carbonyl"
+                  << "cyano"
+                  << "phosphine"
+                  << "thiol";
+      m_ligands << "1-ammine"
+                << "1-aqua"
+                << "1-carbonyl"
+                << "1-cyano"
+                << "1-phosphine"
+                << "1-thiol";
       m_denticity = 1;
       break;
     case 1: // Bidentate
-      ligandNames << "Bipyridine" << "Ethylenediamine";
-      m_ligands << "2-bipyridine" << "2-ethylenediamine";
+      ligandNames << "acetylacetonate"
+                  << "bipyridine"
+                  << "ethylenediamine";
+      m_ligands << "2-acetylacetonate"
+                << "2-bipyridine"
+                << "2-ethylenediamine";
       m_denticity = 2;
       break;
     case 2: // Tridentate
-      ligandNames << "Terpyridine";
+      ligandNames << "terpyridine";
       m_ligands << "3-terpyridine";
       m_denticity = 3;
       break;
     case 3: // Tetradentate
-      ligandNames << "Phthalocyanine" << "Porphin";
-      m_ligands << "4-phthalocyanine" << "4-porphin";
+      ligandNames << "phthalocyanine"
+                  << "porphin"
+                  << "salen";
+      m_ligands << "4-phthalocyanine"
+                << "4-porphin"
+                << "4-salen";
       m_denticity = 4;
+      break;
+    case 4: // Hexadentate
+      ligandNames << "edta";
+      m_ligands << "6-edta";
+      m_denticity = 6;
+      break;
+    case 5: // Haptic
+      ligandNames << "η2-ethylene"
+                  << "η5-cyclopentyl"
+                  << "η6-benzene";
+      m_ligands = ligandNames;
+      m_denticity = 1;
+      break;
+    case 6: // Functional Groups
+      ligandNames << "amide"
+                  << "carboxylate"
+                  << "ester"
+                  << "nitro"
+                  << "sulfonate";
+      m_ligands = ligandNames;
+      m_denticity = 1;
       break;
   }
   m_ui->ligandComboBox->addItems(ligandNames);
@@ -165,13 +222,12 @@ void TemplateToolWidget::elementChanged(int index)
     if (itemData.toInt() == ELEMENT_SELECTOR_TAG) {
       if (!m_elementSelector) {
         m_elementSelector = new QtGui::PeriodicTableView(this);
-        connect(m_elementSelector, SIGNAL(elementChanged(int)),
-                this, SLOT(elementSelectedFromTable(int)));
+        connect(m_elementSelector, SIGNAL(elementChanged(int)), this,
+                SLOT(elementSelectedFromTable(int)));
       }
       m_elementSelector->setElement(m_currentElement);
       m_elementSelector->show();
-    }
-    else {
+    } else {
       if (m_elementSelector)
         m_elementSelector->setElement(itemData.toInt());
       m_currentElement = static_cast<unsigned char>(itemData.toInt());
@@ -196,16 +252,16 @@ void TemplateToolWidget::updateElementCombo()
   // Clear and repopulate combo
   m_ui->elementComboBox->clear();
   foreach (unsigned char atomicNum, allElements) {
-    m_ui->elementComboBox->addItem(QString("%1 (%2)")
-                           .arg(Core::Elements::name(atomicNum))
-                           .arg(atomicNum), atomicNum);
+    m_ui->elementComboBox->addItem(
+      QString("%1 (%2)").arg(Core::Elements::name(atomicNum)).arg(atomicNum),
+      atomicNum);
   }
   m_ui->elementComboBox->insertSeparator(m_ui->elementComboBox->count());
   m_ui->elementComboBox->addItem(tr("Other..."), ELEMENT_SELECTOR_TAG);
 
   // Reset the element if it still exists
-  selectElement(static_cast<unsigned char>(selectedData.isValid()
-                                           ? selectedData.toInt() : -1));
+  selectElement(static_cast<unsigned char>(
+    selectedData.isValid() ? selectedData.toInt() : -1));
 }
 
 void TemplateToolWidget::addUserElement(unsigned char element)
@@ -271,8 +327,8 @@ void TemplateToolWidget::buildElements()
 
   // User-added elements
   QVariantList userElementsVar =
-      QSettings().value("templatetool/userElements").toList();
-  foreach (const QVariant &var, userElementsVar)
+    QSettings().value("templatetool/userElements").toList();
+  foreach (const QVariant& var, userElementsVar)
     m_userElements << static_cast<unsigned char>(var.toUInt());
 
   updateElementCombo();
@@ -292,7 +348,7 @@ int TemplateToolWidget::denticity() const
   return m_denticity;
 }
 
-std::vector<size_t> &TemplateToolWidget::selectedIndices()
+std::vector<size_t>& TemplateToolWidget::selectedIndices()
 {
   return m_selectedIndices;
 }

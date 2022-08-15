@@ -51,7 +51,8 @@ private slots:
   
   void coordinationChanged(int index);
   
-  void denticityChanged(int index);
+  void typeChanged(int index);
+  void ligandChanged(int index);
 
 private:
   void buildElements();
