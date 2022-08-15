@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-14 04:13+0000\n"
-"PO-Revision-Date: 2022-07-20 02:53+0000\n"
+"PO-Revision-Date: 2022-08-15 10:21+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -1405,28 +1405,20 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "ატომის ჰიბრიდიზაციის შეცვლა"
+msgstr "ატომის მდებარეობის შეცვლა"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "ატომის ფერის შეცვლა"
+msgstr "ატომის მდებარეობის შეცვლა"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "ატომის ფენის შეცვლა"
+msgstr "ატომის ჭდის შეცვლა"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Change selections"
 msgid "Change Selection"
-msgstr "მონიშნულების შეცვლა"
+msgstr "მონიშნულის შეცვლა"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1471,7 +1463,6 @@ msgid "&Input"
 msgstr "&შეყვანა"
 
 #: qtplugins/apbs/apbs.cpp:49
-#, fuzzy
 msgid "&APBS"
 msgstr "&APBS"
 
@@ -1510,7 +1501,6 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:31:84
-#, fuzzy
 msgid "APBS"
 msgstr "APBS"
 
@@ -1917,10 +1907,8 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add Atom"
 msgid "Add Centroid"
-msgstr "ატომის დამატება"
+msgstr "ცენტრის მასის დამატება"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
@@ -1932,10 +1920,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "ცენტრი"
+msgstr "მართვა"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -2385,7 +2371,6 @@ msgid "Hybrid quantum classical (Not yet supported)"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
-#, fuzzy
 msgid "EWALD"
 msgstr "EWALD"
 
@@ -2399,17 +2384,14 @@ msgstr "არცერთი"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1297
-#, fuzzy
 msgid "PME"
 msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
-#, fuzzy
 msgid "SPME"
 msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
-#, fuzzy
 msgid "ATOMIC"
 msgstr "ATOMIC"
 
@@ -2426,7 +2408,6 @@ msgid "HISTORY_RESTART"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
-#, fuzzy
 msgid "MOPAC"
 msgstr "MOPAC"
 
@@ -2826,10 +2807,8 @@ msgid "Download a molecule from PQR."
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
-#, fuzzy
-#| msgid "DNA/RNA..."
 msgid "DNA/RNA…"
-msgstr "DNA/RNA..."
+msgstr "DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -2838,10 +2817,8 @@ msgid "&Insert"
 msgstr "&ჩასმა"
 
 #: qtplugins/insertdna/insertdna.cpp:79
-#, fuzzy
-#| msgid "Insert DNA/RNA..."
 msgid "Insert DNA/RNA…"
-msgstr "DNA/RNA-ის ჩასმა..."
+msgstr "DNA/RNA-ის ჩასმა…"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3774,10 +3751,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:391
-#, fuzzy
-#| msgid "X (Å)"
 msgid "Z (Å)"
-msgstr "X (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:393
 #: qtplugins/propertytables/propertymodel.cpp:432
@@ -4092,28 +4067,20 @@ msgid "&Select"
 msgstr "&მონიშვნა"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Select by Element…"
 msgid "Select Element"
-msgstr "ელემენტის მიხედვით მონიშვნა…"
+msgstr "მონიშნეთ ელემენტი"
 
 #: qtplugins/select/select.cpp:216
-#, fuzzy
-#| msgid "Select Water…"
 msgid "Select Water"
-msgstr "აირჩიეთ წყალი…"
+msgstr "აირჩიეთ წყალი"
 
 #: qtplugins/select/select.cpp:254
-#, fuzzy
-#| msgid "Select Backbone Atoms…"
 msgid "Select Backbone"
-msgstr "აირჩიეთ ხერხემალი ატომები…"
+msgstr "აირჩიეთ ხერხემალი"
 
 #: qtplugins/select/select.cpp:288
-#, fuzzy
-#| msgid "Select Sidechain Atoms…"
 msgid "Select Sidechain"
-msgstr "აირჩიეთ გვერდითი ატომები…"
+msgstr "აირჩიეთ გვერდები"
 
 #: qtplugins/select/select.cpp:409
 msgid "Select Atoms by Index"
@@ -4124,10 +4091,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:415
-#, fuzzy
-#| msgid "Select All"
 msgid "Select Atom"
-msgstr "ყველას მონიშვნა"
+msgstr "აირჩიეთ ატომი"
 
 #: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
@@ -4138,10 +4103,8 @@ msgid "Residues to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:454
-#, fuzzy
-#| msgid "Select file:"
 msgid "Select Residue"
-msgstr "აირჩიეთ ფაილი:"
+msgstr "აირჩიეთ ნარჩენი"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4413,35 +4376,25 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:82
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "ტემპერატურა"
+msgstr "შაბლონი"
 
 #: qtplugins/templatetool/templatetool.cpp:298
-#, fuzzy
-#| msgid "Insert Molecule…"
 msgid "Insert Template"
-msgstr "მოლეკულის ჩასმა…"
+msgstr "შაბლონის ჩასმა"
 
 #: qtplugins/templatetool/templatetool.cpp:456
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Insert Ligand"
-msgstr "ფრაგმენტის ჩასმა"
+msgstr "ლიგანდის ჩასმა"
 
 #: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
-#, fuzzy
-#| msgid "Navigate tool"
 msgid "Template tool"
-msgstr "ნავიგაციის ხელსაწყო"
+msgstr "შაბლონის ხელსაწყო"
 
 #: qtplugins/templatetool/templatetoolwidget.cpp:199
-#, fuzzy
-#| msgid "Other"
 msgid "Other..."
-msgstr "სხვები"
+msgstr "სხვები…"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -6979,10 +6932,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:24
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Center"
 msgid "Centers"
-msgstr "ცენტრი"
+msgstr "ცენტრები"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:47
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -7043,10 +6994,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:181
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "კოორდინატების რედაქტორი"
+msgstr "კოორდინაცია:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:188
 #. i18n: ectx: property (text), widget (QToolButton, preview)
@@ -7065,10 +7014,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:250
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Type"
 msgid "Type:"
-msgstr "ტიპი"
+msgstr "ტიპი:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:260
 #. i18n: ectx: property (text), item, widget (QComboBox, denticityComboBox)
