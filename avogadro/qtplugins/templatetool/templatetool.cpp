@@ -318,8 +318,16 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector) 
   if (centerVector.norm() == 0.0 || outVector.norm() == 0.0)
     return in;
   Vector3 axis = centerVector.cross(outVector);
+  if (axis.norm() < 1e-12) { // vectors are parallel, let's pick an arbitrary perpendicular axis
+    Matrix3 rotx = Eigen::AngleAxisd(M_PI / 2.0, Vector3(1.0, 0.0, 0.0)).toRotationMatrix();
+    Matrix3 roty = Eigen::AngleAxisd(M_PI / 2.0, Vector3(0.0, 1.0, 0.0)).toRotationMatrix();
+    axis = centerVector.cross(rotx * outVector);
+    if (axis.norm() < 1e-12)
+      axis = centerVector.cross(roty * outVector);
+  }
   axis.normalize();
-  double angle = acos(centerVector.dot(outVector) / centerVector.norm() / outVector.norm());
+  double cosine = centerVector.dot(outVector) / centerVector.norm() / outVector.norm();
+  double angle = (abs(cosine) < 1.0)? acos(cosine) : 0.0;
   Matrix3 rot = Eigen::AngleAxisd(angle, axis).toRotationMatrix();
   return rot * in;
 }
