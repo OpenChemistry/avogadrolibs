@@ -26,6 +26,7 @@ typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
 Bonding::Bonding(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_action(new QAction(tr("Bond Atoms"), this)),
+    m_orderAction(new QAction(tr("Perceive Bond Orders"), this)),
     m_clearAction(new QAction(tr("Remove Bonds"), this)),
     m_configAction(new QAction(tr("Configure Bonding…"), this)),
     m_dialog(nullptr), m_ui(nullptr)
@@ -39,6 +40,7 @@ Bonding::Bonding(QObject* parent_)
   m_clearAction->setProperty("menu priority", 740);
 
   connect(m_action, SIGNAL(triggered()), SLOT(bond()));
+  connect(m_orderAction, SIGNAL(triggered()), SLOT(bondOrders()));
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
   connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
 }
@@ -48,7 +50,7 @@ Bonding::~Bonding() {}
 QList<QAction*> Bonding::actions() const
 {
   QList<QAction*> result;
-  return result << m_action << m_clearAction << m_configAction;
+  return result << m_action << m_orderAction << m_clearAction << m_configAction;
 }
 
 QStringList Bonding::menuPath(QAction*) const
@@ -143,6 +145,12 @@ void Bonding::bond()
         m_molecule->addBond(m_molecule->atom(i), m_molecule->atom(j), 1);
     }
   }
+  m_molecule->emitChanged(QtGui::Molecule::Bonds);
+}
+
+void Bonding::bondOrders()
+{
+  m_molecule->perceiveBondOrders();
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 

@@ -62,6 +62,7 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   return true;
 }

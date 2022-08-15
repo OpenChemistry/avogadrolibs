@@ -100,6 +100,7 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
   reorderMOs();
 
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
   auto* basis = new GaussianSet;
   load(basis);
   molecule.setBasisSet(basis);
