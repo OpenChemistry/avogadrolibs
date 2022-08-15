@@ -315,6 +315,8 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
 }
 
 Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector) {
+  if (centerVector.norm() == 0.0 || outVector.norm() == 0.0)
+    return in;
   Vector3 axis = centerVector.cross(outVector);
   axis.normalize();
   double angle = acos(centerVector.dot(outVector) / centerVector.norm() / outVector.norm());
