@@ -374,6 +374,7 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
           templateLigandIndices.push_back(newIndex);
           templateLigandUIDs.push_back(templateMolecule.atomUniqueId(newIndex));
         }
+        break; // only use first dummy atom
       }
     }
 
@@ -389,7 +390,7 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     
     // Translate template so dummy atom is brought to center atom
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
-      if (templateMolecule.atomicNumber(i) != 0) {
+      if (i != templateDummyIndex) {
         templateMolecule.setAtomPosition3d(
           i,
           templateMolecule.atomPosition3d(i)
@@ -410,7 +411,7 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
       - m_molecule->atomPosition3d(moleculeCenterIndex));
     Matrix3 rotation = applyKabsch(templateLigandPositions, moleculeLigandPositions);
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
-      if (templateMolecule.atomicNumber(i) != 0) {
+      if (i != templateDummyIndex) {
         templateMolecule.setAtomPosition3d(
           i,
           rotation * (templateMolecule.atomPosition3d(i)
@@ -441,9 +442,12 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     }
 
     // Remove dummy atoms
-    for (size_t i = 0; i < templateMolecule.atomCount(); i++)
-      if (templateMolecule.atomicNumber(i) == 0)
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+      if (templateMolecule.atomicNumber(i) == 0) {
         templateMolecule.removeAtom(i);
+        i--; // repeat index to counteract swapping
+      }
+    }
 
     std::vector<size_t> templateNewLigandIndices;
     for (size_t UID: templateLigandUIDs) {
