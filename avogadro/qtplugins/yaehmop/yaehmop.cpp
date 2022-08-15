@@ -46,7 +46,48 @@ Yaehmop::Yaehmop(QObject* parent_)
       new BandDialog(qobject_cast<QWidget*>(parent()), m_yaehmopSettings)),
     m_displayBandDialogAction(new QAction(this))
 {
+  // first off, look for the program
+  // either as eht_bind or yaehmop
+  bool found = false;
+
+  // If the YAEHMOP_EXECUTABLE environment variable is set, then
+  // use that
+  QByteArray yaehmopExec = qgetenv("YAEHMOP_EXECUTABLE");
+  if (!yaehmopExec.isEmpty()) {
+    m_programPath = yaehmopExec;
+  } else {
+    // otherwise look in the current directory, ../bin and the PATH environment
+
+#ifdef _WIN32
+    QStringList programs = QStringList() << "eht_bind.exe"
+                                         << "yaehmop.exe";
+#else
+    QStringList programs = QStringList() << "eht_bind"
+                                         << "yaehmop";
+#endif
+    QStringList paths;
+    paths << QCoreApplication::applicationDirPath()
+          << QCoreApplication::applicationDirPath() + "/../bin";
+
+    // add the PATH environment variable
+    auto environment = QProcessEnvironment::systemEnvironment().value("PATH");
+    paths << environment.split(':');
+
+    foreach (QString binary, programs) {
+      foreach (QString path, paths) {
+        if (QFile::exists(path + "/" + binary)) {
+          m_programPath = path + "/" + binary;
+          found = true;
+          break;
+        }
+      }
+      if (found)
+        break;
+    }
+  }
+
   m_displayBandDialogAction->setText(tr("Calculate Band Structure…"));
+  m_displayBandDialogAction->setEnabled(found);
   connect(m_displayBandDialogAction.get(), &QAction::triggered, this,
           &Yaehmop::displayBandDialog);
   m_actions.push_back(m_displayBandDialogAction.get());
@@ -254,7 +295,7 @@ void Yaehmop::calculateBandStructure()
   if (!executeYaehmop(input.toLocal8Bit(), output, err)) {
     QMessageBox::warning(
       nullptr, tr("Avogadro2"),
-      tr("Yaehmop execution failed with the following error:\n%1").arg(err);
+      tr("Yaehmop execution failed with the following error:\n%1").arg(err));
     qDebug() << "Yaehmop execution failed with the following error:\n" << err;
     return;
   }
@@ -328,7 +369,7 @@ void Yaehmop::calculateBandStructure()
   size_t curBandNum = 1;
   for (const auto& band : bands) {
     data.push_back(band.toStdVector());
-    lineLabels.push_back("Band " + std::to_string(curBandNum));
+    lineLabels.push_back(tr("Band %1").arg(curBandNum).toStdString());
     lineColors.push_back(color);
     lineStyles.push_back(style);
     ++curBandNum;
@@ -349,7 +390,7 @@ void Yaehmop::calculateBandStructure()
     }
 
     // Create a horizontal, black, dashed line for the fermi level
-    lineLabels.push_back(tr("Fermi Level"));
+    lineLabels.push_back(tr("Fermi Level").toStdString());
     lineColors.push_back({ 0, 0, 0, 255 });
     lineStyles.push_back(VtkPlot::LineStyle::dashLine);
 
@@ -358,8 +399,8 @@ void Yaehmop::calculateBandStructure()
   }
 
   const char* xTitle = "";
-  const char* yTitle = tr("Energy (eV)");
-  const char* windowName = tr("YAeHMOP Band Structure");
+  const char* yTitle = tr("Energy (eV)").toUtf8().constData();
+  const char* windowName = tr("YAeHMOP Band Structure").toUtf8().constData();
 
   m_bandPlot.reset(new VtkPlot);
   m_bandPlot->setData(data);
@@ -486,7 +527,7 @@ QString Yaehmop::createGeometryAndLatticeInput() const
 }
 
 // Uncomment this for executeYaehmop debugging
-//#define AVOGADRO_YAEHMOP_EXECUTE_DEBUG
+// #define AVOGADRO_YAEHMOP_EXECUTE_DEBUG
 
 bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
                              QString& err)
@@ -495,29 +536,10 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   qDebug() << "executeYaehmop() input is:\n" << qPrintable(input);
 #endif
 
-  QString program;
-  // If the YAEHMOP_EXECUTABLE environment variable is set, then
-  // use that
-  QByteArray yaehmopExec = qgetenv("YAEHMOP_EXECUTABLE");
-  if (!yaehmopExec.isEmpty()) {
-    program = yaehmopExec;
-  } else {
-// Otherwise, search in the current directory, and then ../bin
-#ifdef _WIN32
-    QString executable = "yaehmop.exe";
-#else
-    QString executable = "yaehmop";
-#endif
-    QString path = QCoreApplication::applicationDirPath();
-    if (QFile::exists(path + "/" + executable))
-      program = path + "/" + executable;
-    else if (QFile::exists(path + "/../bin/" + executable))
-      program = path + "/../bin/" + executable;
-    else {
-      err = tr("Error: could not find yaehmop executable!");
-      qDebug() << err;
-      return false;
-    }
+  QString program = m_programPath;
+  if (program.isEmpty()) {
+    QMessageBox::warning(nullptr, tr("Avogadro"), tr("Cannot find Yaehmop"));
+    return false;
   }
 
   QStringList args;
@@ -527,8 +549,7 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   p.start(program, args);
 
   if (!p.waitForStarted()) {
-    err = tr("Error: " + program.toLocal8Bit() + " failed to start");
-    qDebug() << err;
+    qDebug() << tr("Error: %1 failed to start").arg(program);
     return false;
   }
 
@@ -541,26 +562,23 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   if (!p.waitForFinished()) {
     err = tr("Error: " + program.toLocal8Bit() + " failed to finish");
     qDebug() << err;
-    output = p.readAll();
+    output = p.readAllStandardOutput();
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
 
   int exitStatus = p.exitStatus();
-  output = p.readAll();
+  output = p.readAllStandardOutput();
 
   if (exitStatus == QProcess::CrashExit) {
-    err = tr("Error: %1 crashed!").arg(program.toLocal8Bit());
-    qDebug() << err;
+    qDebug() << "Error: Yahemop crashed!";
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
 
   if (exitStatus != QProcess::NormalExit) {
-    err = tr("Error: %1 finished abnormally with exit code %2")
-            .arg(program.toLocal8Bit())
-            .arg(exitStatus);
-    qDebug() << err;
+    qDebug() << "Error: Yahemop finished abnormally with exit code "
+             << exitStatus;
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
