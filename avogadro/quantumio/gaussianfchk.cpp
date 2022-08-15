@@ -63,6 +63,7 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   }
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
