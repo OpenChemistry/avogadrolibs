@@ -397,23 +397,24 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
       moleculeLigandOutVector += newPos - m_molecule->atomPosition3d(moleculeCenterIndex);
     }
     
-    // For monodentate and haptic ligands and groups, set distance
-    if (templateLigandIndices.size() == 1) {
-      unsigned char ligandAtomicNumber = templateMolecule.atomicNumber(templateLigandIndices[0]);
+    // Estimate and try to realize bond distances
+    Vector3 displacement(0.0, 0.0, 0.0);
+    for (size_t i = 0; i < templateLigandIndices.size(); i++) {
+      unsigned char ligandAtomicNumber = templateMolecule.atomicNumber(templateLigandIndices[i]);
       ligandAtomicNumber = (ligandAtomicNumber == 0)? 6 : ligandAtomicNumber;
       // Estimate as the sum of covalent radii
       double bondDistance = Elements::radiusCovalent(ligandAtomicNumber)
         + Elements::radiusCovalent(m_molecule->atomicNumber(moleculeCenterIndex));
       Vector3 inVector = templateMolecule.atomPosition3d(templateDummyIndex)
-        - templateMolecule.atomPosition3d(templateLigandIndices[0]);
-      inVector.normalize();
-      inVector *= bondDistance;
-      Vector3 newPos = templateMolecule.atomPosition3d(templateLigandIndices[0])
-        + inVector;
-      templateMolecule.setAtomPosition3d(
-        templateDummyIndex, newPos
-      );
+        - templateMolecule.atomPosition3d(templateLigandIndices[i]);
+      Vector3 correctionVector = inVector;
+      correctionVector.normalize();
+      correctionVector *= bondDistance - inVector.norm();
+      displacement += correctionVector;
     }
+    displacement *= 1.0 / templateLigandIndices.size();
+    Vector3 newPos = templateMolecule.atomPosition3d(templateDummyIndex) + displacement;
+    templateMolecule.setAtomPosition3d(templateDummyIndex, newPos);
     
     // Translate template so dummy atom is brought to center atom
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
