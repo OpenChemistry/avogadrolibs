@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-14 04:13+0000\n"
-"PO-Revision-Date: 2022-08-02 09:21+0000\n"
+"PO-Revision-Date: 2022-08-15 03:44+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2016,31 +2016,25 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr "Biomolekula szalagok / fehérje szalagok megjelenítése."
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Centroid"
-msgstr "Megszorítások hozzáadása"
+msgstr "Súlypont hozzáadása"
 
 #: qtplugins/centroid/centroid.cpp:21
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Center of Mass"
-msgstr "Megszorítások hozzáadása"
+msgstr "Tömegközéppont hozzáadása"
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Merőleges hozzáadása"
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "Középre"
+msgstr "Súlypont"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Súlypontok és tömegközéppont hozzáadása."
 
 #: qtplugins/clientserver/clientserver.cpp:62
 msgid "Client server operations."
@@ -4594,29 +4588,21 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:82
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Hőmérséklet"
+msgstr "Sablon"
 
 #: qtplugins/templatetool/templatetool.cpp:298
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Peptid beillesztése"
+msgstr "Sablon beszúrása"
 
 #: qtplugins/templatetool/templatetool.cpp:456
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Peptid beillesztése"
+msgstr "Ligand beszúrása"
 
 #: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
-#, fuzzy
-#| msgid "Manipulate tool"
 msgid "Template tool"
-msgstr "Manipuláló eszköz"
+msgstr "Sabloneszköz"
 
 #: qtplugins/templatetool/templatetoolwidget.cpp:199
 msgid "Other..."
@@ -7248,8 +7234,6 @@ msgstr "Szimmetria észlelése"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:24
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Center"
 msgid "Centers"
 msgstr "Középre"
 
@@ -7258,105 +7242,97 @@ msgstr "Középre"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:92
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Octahedral"
-msgstr ""
+msgstr "6: Nyolcoldalú"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:57
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "1: Linear"
-msgstr ""
+msgstr "1: Lineáris"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:62
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "2: Linear"
-msgstr ""
+msgstr "2: Lineáris"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "3: Trigonal Planar"
-msgstr ""
+msgstr "3: Trigonális sík"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Tetrahedral"
-msgstr ""
+msgstr "4: Tetraéderes"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:77
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Square Planar"
-msgstr ""
+msgstr "4: Négyzetes sík"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:82
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Trigonal Bipyramidal"
-msgstr ""
+msgstr "5: Trigonális bipiramis"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:87
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Square Pyramidal"
-msgstr ""
+msgstr "5: Négyzetes piramis"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:97
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Trigonal Prism"
-msgstr ""
+msgstr "6: Trigonális prizma"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:102
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "7: Pentagonal Bipyramidal"
-msgstr ""
+msgstr "7: Ötszögletű bipiramis"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:107
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "8: Square Antiprism"
-msgstr ""
+msgstr "8: Négyzetes antiprizma"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:181
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Koordináta-szerkesztő"
+msgstr "Koordináció:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:188
 #. i18n: ectx: property (text), widget (QToolButton, preview)
-#, fuzzy
-#| msgid "Dihedral:"
 msgid "octahedral"
-msgstr "Diéderes:"
+msgstr "nyolcoldalú"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:207
 #. i18n: ectx: attribute (title), widget (QWidget, tab_2)
 msgid "Ligands"
-msgstr ""
+msgstr "Ligands"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:222
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
 msgid "Ligand:"
-msgstr ""
+msgstr "Ligand:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:250
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Type"
 msgid "Type:"
-msgstr "Típus"
+msgstr "Típus:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:260
 #. i18n: ectx: property (text), item, widget (QComboBox, denticityComboBox)
 msgid "Monodentate"
-msgstr ""
+msgstr "Egyesfogas"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:265
 #. i18n: ectx: property (text), item, widget (QComboBox, denticityComboBox)
 msgid "Bidentate"
-msgstr ""
+msgstr "Kettesfogas"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:270
 #. i18n: ectx: property (text), item, widget (QComboBox, denticityComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Átmeneti állapot"
+msgstr "Hármasfogas"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
