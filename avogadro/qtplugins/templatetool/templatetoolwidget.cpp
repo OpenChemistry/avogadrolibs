@@ -147,7 +147,7 @@ void TemplateToolWidget::ligandChanged(int index)
 
 void TemplateToolWidget::typeChanged(int index)
 {
-  m_selectedIndices.clear();
+  m_selectedUIDs.clear();
   m_ui->ligandComboBox->clear();
   m_ligands = QStringList();
   QStringList ligandNames;
@@ -348,9 +348,9 @@ int TemplateToolWidget::denticity() const
   return m_denticity;
 }
 
-std::vector<size_t>& TemplateToolWidget::selectedIndices()
+std::vector<size_t>& TemplateToolWidget::selectedUIDs()
 {
-  return m_selectedIndices;
+  return m_selectedUIDs;
 }
 
 } // namespace QtPlugins
