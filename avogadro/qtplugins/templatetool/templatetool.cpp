@@ -271,7 +271,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent *e)
   if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
     return;
   
-  m_toolWidget->selectedIndices().clear();
+  m_toolWidget->selectedUIDs().clear();
 
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
@@ -318,8 +318,16 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector) 
   if (centerVector.norm() == 0.0 || outVector.norm() == 0.0)
     return in;
   Vector3 axis = centerVector.cross(outVector);
+  if (axis.norm() < 1e-12) { // vectors are parallel, let's pick an arbitrary perpendicular axis
+    Matrix3 rotx = Eigen::AngleAxisd(M_PI / 2.0, Vector3(1.0, 0.0, 0.0)).toRotationMatrix();
+    Matrix3 roty = Eigen::AngleAxisd(M_PI / 2.0, Vector3(0.0, 1.0, 0.0)).toRotationMatrix();
+    axis = centerVector.cross(rotx * outVector);
+    if (axis.norm() < 1e-12)
+      axis = centerVector.cross(roty * outVector);
+  }
   axis.normalize();
-  double angle = acos(centerVector.dot(outVector) / centerVector.norm() / outVector.norm());
+  double cosine = centerVector.dot(outVector) / centerVector.norm() / outVector.norm();
+  double angle = (abs(cosine) < 1.0)? acos(cosine) : 0.0;
   Matrix3 rot = Eigen::AngleAxisd(angle, axis).toRotationMatrix();
   return rot * in;
 }
@@ -348,8 +356,8 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
   size_t selectedIndex = m_clickedObject.index;
   if (m_molecule->atom(selectedIndex).isValid()
   && m_molecule->atomicNumber(selectedIndex) == 1) {
-    m_toolWidget->selectedIndices().push_back(selectedIndex);
-    if (m_toolWidget->selectedIndices().size() != m_toolWidget->denticity())
+    m_toolWidget->selectedUIDs().push_back(m_molecule->atomUniqueId(selectedIndex));
+    if (m_toolWidget->selectedUIDs().size() != m_toolWidget->denticity())
       return;
   
     QFile templ(":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson");
@@ -381,9 +389,10 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     // Find center atom in molecule and get all necessary info
     size_t moleculeCenterIndex = m_molecule->bonds(selectedIndex)[0]
       .getOtherAtom(selectedIndex).index();
-    size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterUID);
+    size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
     Vector3 moleculeLigandOutVector(0.0, 0.0, 0.0);
-    for (size_t index: m_toolWidget->selectedIndices()) {
+    for (size_t UID: m_toolWidget->selectedUIDs()) {
+      size_t index = m_molecule->atomByUniqueId(UID).index();
       Vector3 newPos = m_molecule->atomPosition3d(index);
       moleculeLigandOutVector += newPos - m_molecule->atomPosition3d(moleculeCenterIndex);
     }
@@ -424,9 +433,10 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
       templateLigandPositions.push_back(templateMolecule.atomPosition3d(index)
       - m_molecule->atomPosition3d(moleculeCenterIndex));
     std::vector<Vector3> moleculeLigandPositions;
-    for (size_t index: m_toolWidget->selectedIndices())
-      moleculeLigandPositions.push_back(m_molecule->atomPosition3d(index)
-      - m_molecule->atomPosition3d(moleculeCenterIndex));
+    for (size_t UID: m_toolWidget->selectedUIDs())
+      moleculeLigandPositions.push_back(m_molecule->atomPosition3d(
+        m_molecule->atomByUniqueId(UID).index()
+      ) - m_molecule->atomPosition3d(moleculeCenterIndex));
     Matrix3 rotation = applyKabsch(templateLigandPositions, moleculeLigandPositions);
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (i != templateDummyIndex) {
@@ -475,8 +485,8 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     }
     
     // Remove selected atoms and insert ligand
-    for (size_t index: m_toolWidget->selectedIndices())
-      m_molecule->removeAtom(index);
+    for (size_t UID: m_toolWidget->selectedUIDs())
+      m_molecule->removeAtom(m_molecule->atomByUniqueId(UID).index());
     size_t moleculeBaseIndex = m_molecule->atomCount();
     m_molecule->appendMolecule(templateMolecule, tr("Insert Ligand"));
 
@@ -485,7 +495,7 @@ void TemplateTool::atomLeftClick(QMouseEvent *e)
     for (size_t index: templateNewLigandIndices)
       m_molecule->addBond(index + moleculeBaseIndex, moleculeCenterNewIndex);
     
-    m_toolWidget->selectedIndices().clear();
+    m_toolWidget->selectedUIDs().clear();
   }
 }
 
