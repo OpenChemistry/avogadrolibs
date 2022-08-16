@@ -7,7 +7,12 @@
 #include "ui_molecularpropertiesdialog.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
+
+#include <QtCore/QRegExp>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 
 using Avogadro::QtGui::Molecule;
 
@@ -19,6 +24,10 @@ MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule* mol,
     m_ui(new Ui::MolecularPropertiesDialog)
 {
   m_ui->setupUi(this);
+
+  m_network = new QNetworkAccessManager(this);
+  connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
+          SLOT(replyFinished(QNetworkReply*)));
 
   setMolecule(mol);
 }
@@ -51,6 +60,7 @@ void MolecularPropertiesDialog::updateLabels()
   if (m_molecule) {
     updateMassLabel();
     updateFormulaLabel();
+    updateName();
     m_ui->atomCountLabel->setText(QString::number(m_molecule->atomCount()));
     m_ui->bondCountLabel->setText(QString::number(m_molecule->bondCount()));
   } else {
@@ -59,6 +69,62 @@ void MolecularPropertiesDialog::updateLabels()
     m_ui->atomCountLabel->clear();
     m_ui->bondCountLabel->clear();
   }
+}
+
+void MolecularPropertiesDialog::updateName()
+{
+  QString name = tr("(pending)", "asking server for molecule name");
+
+  if (!m_molecule || m_molecule->atomCount() == 0) {
+    m_ui->moleculeNameLabel->clear();
+    return;
+  }
+
+  m_ui->moleculeNameLabel->setText(name); // while we wait
+
+  // InChI is intentionally designed to avoid issues with URL encoding
+  std::string smiles;
+  Io::FileFormatManager::instance().writeString(*m_molecule, smiles, "smi");
+  QString smilesString = QString::fromStdString(smiles);
+  smilesString.remove(QRegExp("\\s+.*"));
+  QString requestURL =
+    QString("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/" +
+            QUrl::toPercentEncoding(smilesString) + "/property/IUPACName/TXT");
+
+  // qDebug() << "Requesting" << requestURL;
+
+  m_network->get(QNetworkRequest(QUrl(requestURL)));
+
+  // TODO: fetch and parse JSON eventually
+  // https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/…/json
+}
+
+void MolecularPropertiesDialog::replyFinished(QNetworkReply* reply)
+{
+  // Read in all the data
+  if (!reply->isReadable()) {
+    reply->deleteLater();
+    m_ui->moleculeNameLabel->setText(tr("unknown molecule"));
+    return;
+  }
+
+  // check if the data came through
+  QByteArray data = reply->readAll();
+  if (data.contains("Error report") || data.contains("<h1>")) {
+    reply->deleteLater();
+    m_ui->moleculeNameLabel->setText(tr("unknown molecule"));
+    return;
+  }
+
+  QString name = QString(data).trimmed().toLower();
+  if (!name.isEmpty()) {
+    m_ui->moleculeNameLabel->setText(name);
+    // TODO: set the name in the molecule
+  } else {
+    m_ui->moleculeNameLabel->setText(tr("unknown molecule"));
+  }
+
+  reply->deleteLater();
 }
 
 void MolecularPropertiesDialog::updateMassLabel()
@@ -90,4 +156,4 @@ void MolecularPropertiesDialog::moleculeDestroyed()
   updateLabels();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
