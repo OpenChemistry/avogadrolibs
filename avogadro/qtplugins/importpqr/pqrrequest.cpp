@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 namespace Avogadro::QtPlugins {
 /**
-* @brief Constructor to initialize the NetworkAcessManager and set pointers to
+* @brief Constructor to initialize the NetworkAccessManager and set pointers to
 * the widget's ui elements.
 */
 PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,

@@ -10,4 +10,4 @@ jobs:
     - name: misspell-fixer check for code and comments
       uses: sobolevn/misspell-fixer-action@master
       with:
-        options: '-rsvn avogadro/'
+        options: '-rsnuRVd avogadro/'
