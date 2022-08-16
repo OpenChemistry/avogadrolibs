@@ -139,21 +139,17 @@ void MolecularPropertiesDialog::replyFinished(QNetworkReply* reply)
     QJsonObject urn = obj["urn"].toObject();
 
     if (urn["name"].toString() == "Markup") {
-      QJsonObject value = obj["value"].toObject();
-      m_ui->moleculeNameLabel->setText(value["sval"].toString());
+      // HTML version for dialog
+      QJsonObject nameValue = obj["value"].toObject();
+      m_ui->moleculeNameLabel->setText(nameValue["sval"].toString());
+      break;
+    } else if (urn["name"].toString() == "Preferred") {
+      // save this text version for files and copy/paste
+      QJsonObject nameValue = obj["value"].toObject();
+      m_molecule->setData("name", nameValue["sval"].toString());
       break;
     }
   }
-
-/*
-  QString name = QString(data).trimmed().toLower();
-  if (!name.isEmpty()) {
-    m_ui->moleculeNameLabel->setText(name);
-    // TODO: set the name in the molecule
-  } else {
-    m_ui->moleculeNameLabel->setText(tr("unknown molecule"));
-  }
-  */
 
   reply->deleteLater();
 }
