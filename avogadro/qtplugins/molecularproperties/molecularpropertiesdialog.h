@@ -8,6 +8,10 @@
 
 #include <QtWidgets/QDialog>
 
+// Forward declarations
+class QNetworkAccessManager;
+class QNetworkReply;
+
 namespace Avogadro {
 
 namespace QtGui {
@@ -44,6 +48,7 @@ public slots:
   void setMolecule(QtGui::Molecule* mol);
 
 private slots:
+  void updateName();
   void updateLabels();
   void updateMassLabel();
   void updateFormulaLabel();
@@ -52,6 +57,14 @@ private slots:
 private:
   QtGui::Molecule* m_molecule;
   Ui::MolecularPropertiesDialog* m_ui;
+
+  QString m_inchi;
+  QNetworkAccessManager *m_network;
+  bool m_nameRequestPending;
+  
+private slots:
+  void replyFinished(QNetworkReply*);
+
 };
 
 } // namespace QtPlugins
