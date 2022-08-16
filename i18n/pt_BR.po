@@ -2,7 +2,7 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021.
+# Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021, 2022.
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
 # Alexandre R Soares <ntegti@zipmail.com.br>, 2021.
 msgid ""
@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-14 04:13+0000\n"
-"PO-Revision-Date: 2021-07-16 14:24+0000\n"
-"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
+"PO-Revision-Date: 2022-08-17 20:21+0000\n"
+"Last-Translator: Gustavo Sousa Jr <grsousajunior@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1037,6 +1037,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"A extensão do arquivo está faltando, então o formato do arquivo não pôde ser "
+"determinado. Você quer adicioná-la?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1052,7 +1054,7 @@ msgstr "manipuladores"
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "lidar"
 
 #: qtgui/fileformatdialog.cpp:167
 msgctxt "File readers"
@@ -1131,7 +1133,7 @@ msgstr "Não foi possível rodar povray."
 #: qtgui/jsonwidget.cpp:151
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "Aba %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1211,7 +1213,7 @@ msgstr "[sem molécula]"
 #: qtgui/layermodel.cpp:77
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Camada %1"
 
 #: qtgui/layermodel.cpp:127 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
@@ -1250,7 +1252,7 @@ msgstr "Bastão"
 
 #: qtgui/layermodel.cpp:141 qtplugins/meshes/meshes.h:29
 msgid "Meshes"
-msgstr ""
+msgstr "Malhas"
 
 #: qtgui/layermodel.cpp:143 qtplugins/noncovalent/noncovalent.h:30
 #, fuzzy
@@ -1353,7 +1355,7 @@ msgstr "Erro desconhecido."
 #: qtgui/rwlayermanager.cpp:33 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
-msgstr ""
+msgstr "Modificar Camadas"
 
 #: qtgui/rwlayermanager.cpp:195
 #, fuzzy
@@ -1367,7 +1369,7 @@ msgstr "Remover Hidrogênios"
 
 #: qtgui/rwlayermanager.cpp:211
 msgid "Add Layer"
-msgstr ""
+msgstr "Adicionar Camada"
 
 #: qtgui/rwlayermanager.cpp:214
 msgid "Add Layer Info"
@@ -1744,25 +1746,25 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:552
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:554
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:556
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:113
 #: qtplugins/surfaces/surfaces.cpp:558
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Cinza"
 
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
@@ -1770,7 +1772,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:560
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1778,7 +1780,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:562
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1786,7 +1788,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:564
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1794,7 +1796,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:566
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1802,7 +1804,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:568
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1826,7 +1828,7 @@ msgstr "Espectro"
 #: qtplugins/surfaces/surfaces.cpp:572:168 rc.cpp:1618
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1848,7 +1850,7 @@ msgstr "Cancelar"
 #: qtplugins/surfaces/surfaces.cpp:576:165 rc.cpp:1615
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Azul-VermelhoEscuro"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
