@@ -199,7 +199,9 @@ void TemplateToolWidget::typeChanged(int index)
       ligandNames << "η2-ethylene"
                   << "η5-cyclopentyl"
                   << "η6-benzene";
-      m_ligands = ligandNames;
+      m_ligands << "eta2-ethylene"
+                << "eta5-cyclopentyl"
+                << "eta6-benzene";
       m_denticity = 1;
       break;
     case 6: // Functional Groups
@@ -207,6 +209,7 @@ void TemplateToolWidget::typeChanged(int index)
                   << "carboxylate"
                   << "ester"
                   << "nitro"
+                  << "phenyl"
                   << "sulfonate";
       m_ligands = ligandNames;
       m_denticity = 1;
