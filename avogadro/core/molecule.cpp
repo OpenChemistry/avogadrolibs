@@ -920,11 +920,14 @@ void Molecule::perceiveBondOrders()
   Index startIndex = 0;
   Index initialAtom = 0;
   while (anyUnsaturated) {
+
+    // okay, we're first going to try placing *one* bond from our start atom
+    // .. then we can try placing bonds anywhere
+
     // find the first atom with unsaturated valence of ONE
-    //  .. also skip oxygen atoms (e.g., -CO2 or -NO2 which are hard)
     bool foundStart = false;
     for (Index i = startIndex; i < atomCount(); ++i) {
-      if (unsaturatedValence[i] == 1 && atomicNumber(i) != 8) {
+      if (unsaturatedValence[i] == 1) {
         startIndex = i;
         foundStart = true;
         break;
@@ -944,6 +947,8 @@ void Molecule::perceiveBondOrders()
     }
 
     if (foundStart) {
+      // std::cerr << "Found start index " << startIndex << std::endl;
+
       // look at the neighbors of our start atom
       Index bestIndex = MaxIndex;
       unsigned bestValence = 256; // something impossible
@@ -974,12 +979,17 @@ void Molecule::perceiveBondOrders()
       // if we found a neighbor, then we can assign a bond order and update
       // charges
       if (bestIndex != MaxIndex) {
+        /*std::cerr << "Assigning bond " << startIndex << " " << bestIndex
+                  << std::endl; */
+
         // assign the bond order
         m_bondOrders[bond(startIndex, bestIndex).index()] += 1;
         // update the unsaturated valence of the start atom
         unsaturatedValence[startIndex] -= 1;
         // update the unsaturated valence of the neighbor atom
         unsaturatedValence[bestIndex] -= 1;
+
+        startIndex = 0; // we can now try placing bonds anywhere
       } else {
         startIndex += 1;
       }
@@ -998,6 +1008,8 @@ void Molecule::perceiveBondOrders()
     if (!foundStart && anyUnsaturated) {
       // we've gone through and it's not working
       // try a new starting atom and reset the bond orders
+      // std::cerr << " didn't work " << initialAtom << std::endl;
+
       initialAtom += 1;
       startIndex = initialAtom;
       for (Index i = 0; i < m_bondOrders.size(); ++i) {
