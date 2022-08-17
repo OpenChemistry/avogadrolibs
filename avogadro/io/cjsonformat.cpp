@@ -546,10 +546,12 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
   root["chemicalJson"] = 1;
 
-  if (molecule.data("name").type() == Variant::String)
+  if (opts.value("properties", true)) {
+    if (molecule.data("name").type() == Variant::String)
       root["name"] = molecule.data("name").toString().c_str();
-  if (molecule.data("inchi").type() == Variant::String)
-    root["inchi"] = molecule.data("inchi").toString().c_str();
+    if (molecule.data("inchi").type() == Variant::String)
+      root["inchi"] = molecule.data("inchi").toString().c_str();
+  }
 
   json properties;
   // these methods assume neutral singlet if not set
