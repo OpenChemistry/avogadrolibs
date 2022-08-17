@@ -245,7 +245,7 @@ void SelectionTool::applyColor(Vector3ub color)
 
 void SelectionTool::applyLayer(int layer)
 {
-  if (layer < 0 || m_molecule == nullptr) {
+  if (layer <= 0 || m_molecule == nullptr) {
     return;
   }
   RWMolecule* rwmol = m_molecule->undoMolecule();
