@@ -90,7 +90,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
       );
     mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
     mesh1->addTriangles(indices);
-    mesh1->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
+    mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
                                         : Rendering::TranslucentPass);
 
     if (mol.meshCount() >= 2) {
@@ -108,7 +108,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
       mesh2->setOpacity(m_opacity);
       mesh2->addVertices(mesh->vertices(), mesh->normals());
       mesh2->addTriangles(indices);
-      mesh2->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
+      mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
                                           : Rendering::TranslucentPass);
     }
   }
