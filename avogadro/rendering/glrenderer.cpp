@@ -73,10 +73,14 @@ void GLRenderer::render()
   applyProjection();
 
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
-  // Setup for opaque geometry
-  visitor.setRenderPass(OpaquePass);
+  // Setup for solid geometry
+  visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
+  m_scene.rootNode().accept(visitor);
+
+  // Setup for opaque geometry
+  visitor.setRenderPass(OpaquePass);
   m_scene.rootNode().accept(visitor);
 
   // Setup for transparent geometry
