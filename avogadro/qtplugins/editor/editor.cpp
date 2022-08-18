@@ -266,15 +266,20 @@ void Editor::reset()
     Index a2 = m_bondedAtom.index;
     Index a3 = m_clickedObject.index;
 
-    // order them
+    // don't order them
+    // this caused bug:
+    // https://github.com/OpenChemistry/avogadrolibs/issues/678
+    /*
     if (a1 > a2)
       std::swap(a1, a2);
     if (a1 > a3)
       std::swap(a1, a3);
     if (a2 > a3)
       std::swap(a2, a3);
+    */
 
     // This preserves the order so they are adjusted in order.
+    // This is important for the undo stack to work correctly.
     Core::Array<Index> atomIds;
     atomIds.push_back(a3);
     atomIds.push_back(a2);
