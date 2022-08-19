@@ -10,6 +10,10 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
 #include <QtCore/QRegExp>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
@@ -89,14 +93,11 @@ void MolecularPropertiesDialog::updateName()
   smilesString.remove(QRegExp("\\s+.*"));
   QString requestURL =
     QString("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/" +
-            QUrl::toPercentEncoding(smilesString) + "/property/IUPACName/TXT");
+            QUrl::toPercentEncoding(smilesString) + "/json");
 
   // qDebug() << "Requesting" << requestURL;
 
   m_network->get(QNetworkRequest(QUrl(requestURL)));
-
-  // TODO: fetch and parse JSON eventually
-  // https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/…/json
 }
 
 void MolecularPropertiesDialog::replyFinished(QNetworkReply* reply)
@@ -116,12 +117,38 @@ void MolecularPropertiesDialog::replyFinished(QNetworkReply* reply)
     return;
   }
 
-  QString name = QString(data).trimmed().toLower();
-  if (!name.isEmpty()) {
-    m_ui->moleculeNameLabel->setText(name);
-    // TODO: set the name in the molecule
-  } else {
+  // parse the JSON
+  // https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/…/json
+
+  // PC_Compounds[0].props
+  // iterate // get "urn" / "name" == "Markup" and "Preferred"
+  //    ..       get "value" / "sval"
+
+  QJsonDocument doc = QJsonDocument::fromJson(data);
+  QJsonObject obj = doc.object();
+  QJsonArray array = obj["PC_Compounds"].toArray();
+  if (array.isEmpty()) {
+    reply->deleteLater();
     m_ui->moleculeNameLabel->setText(tr("unknown molecule"));
+    return;
+  }
+  obj = array.first().toObject();
+  array = obj["props"].toArray(); // props is an array of objects
+  for (const QJsonValue& value : array) {
+    obj = value.toObject();
+    QJsonObject urn = obj["urn"].toObject();
+
+    if (urn["name"].toString() == "Markup") {
+      // HTML version for dialog
+      QJsonObject nameValue = obj["value"].toObject();
+      m_ui->moleculeNameLabel->setText(nameValue["sval"].toString());
+      break;
+    } else if (urn["name"].toString() == "Preferred") {
+      // save this text version for files and copy/paste
+      QJsonObject nameValue = obj["value"].toObject();
+      m_molecule->setData("name", nameValue["sval"].toString());
+      break;
+    }
   }
 
   reply->deleteLater();
