@@ -40,6 +40,7 @@ set(HEADERS
   scene.h
   shader.h
   shaderprogram.h
+  solidpipeline.h
   spheregeometry.h
   textlabel2d.h
   textlabel3d.h
@@ -80,6 +81,7 @@ set(SOURCES
   scene.cpp
   shader.cpp
   shaderprogram.cpp
+  solidpipeline.cpp
   spheregeometry.cpp
   textlabel2d.cpp
   textlabel3d.cpp
