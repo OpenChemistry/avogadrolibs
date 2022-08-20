@@ -14,6 +14,7 @@
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "solidpipeline.h"
 
 #include <avogadro/core/array.h>
 
@@ -127,6 +128,7 @@ private:
   Camera m_overlayCamera;
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
+  SolidPipeline m_solidPipeline;
 
   Vector3f m_center;
   float m_radius;

@@ -1,0 +1,102 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#include "solidpipeline.h"
+
+#include "solid_vs.h"
+
+#include "solid_first_fs.h"
+
+#include <iostream>
+
+namespace Avogadro::Rendering {
+
+SolidPipeline::SolidPipeline()
+{
+}
+
+void SolidPipeline::initialize()
+{
+  glGenTextures(1, &m_renderTexture);
+  glBindTexture(GL_TEXTURE_2D, m_renderTexture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  resize(1366, 768);
+  glGenFramebuffers(1, &m_renderFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, m_renderFBO);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderTexture, 0);
+
+  glGenBuffers(1, &m_screenVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(m_fullscreenQuad), m_fullscreenQuad, GL_STATIC_DRAW);
+
+  m_screenVertexShader.setType(Shader::Vertex);
+  m_screenVertexShader.setSource(solid_vs);
+  if (!m_screenVertexShader.compile())
+    std::cout << m_screenVertexShader.error() << std::endl;
+
+  m_firstFragmentShader.setType(Shader::Fragment);
+  m_firstFragmentShader.setSource(solid_first_fs);
+  if (!m_firstFragmentShader.compile())
+    std::cout << m_firstFragmentShader.error() << std::endl;
+
+  m_firstStageShaders.attachShader(m_screenVertexShader);
+  m_firstStageShaders.attachShader(m_firstFragmentShader);
+  if (!m_firstStageShaders.link())
+    std::cout << m_firstStageShaders.error() << std::endl;
+
+  m_firstStageShaders.bind();
+  GLuint programID;
+  glGetIntegerv(GL_CURRENT_PROGRAM, (GLint *) &programID);
+  m_firstTexAttributeID = glGetUniformLocation(programID, "inRGBtex");
+}
+
+void SolidPipeline::begin()
+{
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint *) &m_defaultFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, m_renderFBO);
+  GLenum drawBuffersList[1] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, drawBuffersList);
+
+  GLfloat tmp[4];
+  glGetFloatv(GL_COLOR_CLEAR_VALUE, tmp);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(tmp[0], tmp[1], tmp[2], tmp[3]);
+}
+
+void SolidPipeline::end()
+{
+  // Render color component to a texture
+  if (glIsFramebuffer(m_defaultFBO)) {
+    glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
+    GLenum drawBuffersList[1] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, drawBuffersList);
+  } else {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDrawBuffer(GL_BACK);
+  }
+
+  // Draw fullscreen quad
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+  m_firstStageShaders.bind();
+  glActiveTexture(GL_TEXTURE0 + 1);
+  glBindTexture(GL_TEXTURE_2D, m_renderTexture);
+  glUniform1i(m_firstTexAttributeID, 1);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+
+  glDisableVertexAttribArray(0);
+}
+
+void SolidPipeline::resize(int width, int height)
+{
+  glBindTexture(GL_TEXTURE_2D, m_renderTexture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+}
+
+} // End namespace Avogadro::Rendering
