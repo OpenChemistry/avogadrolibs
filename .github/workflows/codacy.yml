@@ -56,7 +56,7 @@ jobs:
       - name: Filter out MISRA
         run: |
           pip install globber
-          python3 scripts/github-actions/filter_sarif.py --input results.sarif --output filtered.sarif --split-lines -- "-**/*.*:cppcheck_misra*"
+          python3 scripts/github-actions/filter_sarif.py --input results.sarif --output filtered.sarif --split-lines -- "-**/*.*:cppcheck_misra* -**/*.*:markdownlint* -**/*.*:remark*"
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file

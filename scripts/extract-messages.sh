@@ -12,23 +12,23 @@ WDIR=`pwd`		# working dir
 I18NDIR="i18n/"          # i18n dir
 
 echo "Preparing rc files"
-cd ${BASEDIR}
+cd ${BASEDIR} || exit
 # we use simple sorting to make sure the lines do not jump around too much from system to system
 find . -name '*.rc' -o -name '*.ui' -o -name '*.kcfg' | grep -v 'test' | grep -v 'example' | sort > ${WDIR}/rcfiles.list
 cat ${WDIR}/rcfiles.list | xargs ${WDIR}/scripts/extractrc.sh > ${WDIR}/rc.cpp
 # additional string for KAboutData
 echo 'i18nc("NAME OF TRANSLATORS","Your names");' >> ${WDIR}/rc.cpp
 echo 'i18nc("EMAIL OF TRANSLATORS","Your emails");' >> ${WDIR}/rc.cpp
-cd ${WDIR}
+cd ${WDIR} || exit
 echo "Done preparing rc files"
 
 
 echo "Extracting messages"
-cd ${BASEDIR}
+cd ${BASEDIR} || exit
 # see above on sorting
 find . -name '*.cpp' -o -name '*.h' -o -name '*.c' | grep -v 'test' | grep -v "example" | sort > ${WDIR}/infiles.list
 echo "rc.cpp" >> ${WDIR}/infiles.list
-cd ${WDIR}
+cd ${WDIR} || exit
 xgettext --from-code=UTF-8 -C -T --qt -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1 \
 	-kI18N_NOOP:1 -kI18N_NOOP2:1c,2 -kaliasLocale -kki18n:1 -kki18nc:1c,2 -kki18np:1,2 -kki18ncp:1c,2,3 \
   -ktrUtf8:1,2c -ktr:1,1t -ktr:1,2c,2t -ktr:1,1,2c,3t -ktrUtf8:1 \
@@ -70,7 +70,7 @@ mv ${PROJECT}.pot ${I18NDIR}
 
 
 echo "Cleaning up"
-cd ${WDIR}
+cd ${WDIR} || exit
 rm rcfiles.list
 rm infiles.list
 rm rc.cpp
