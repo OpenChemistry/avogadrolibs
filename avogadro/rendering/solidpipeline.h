@@ -49,8 +49,9 @@ public:
 
 private:
   GLuint m_defaultFBO;
-  GLuint m_renderTexture;
   GLuint m_renderFBO;
+  GLuint m_renderTexture;
+  GLuint m_depthTexture;
   GLuint m_screenVBO;
   ShaderProgram m_firstStageShaders;
   Shader m_screenVertexShader;

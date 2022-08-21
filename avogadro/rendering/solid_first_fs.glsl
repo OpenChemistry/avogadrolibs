@@ -18,9 +18,12 @@ varying vec2 UV;
 //
 
 // RGB rendered texture
-uniform sampler2D inRGBtex;
+uniform sampler2D inRGBTex;
+// Depth rendered texture
+uniform sampler2D inDepthTex;
 
 void main()
 {
-  gl_FragColor = texture2D(inRGBtex, UV);
+  gl_FragColor = texture2D(inRGBTex, UV);
+  gl_FragDepth = texture2D(inDepthTex, UV).x;
 }
