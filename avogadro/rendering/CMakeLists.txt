@@ -107,6 +107,8 @@ set(shader_files
   "mesh_fs.glsl"
   "mesh_opaque_fs.glsl"
   "mesh_vs.glsl"
+  "solid_vs.glsl"
+  "solid_first_fs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
   "sphere_ao_depth_vs.glsl"

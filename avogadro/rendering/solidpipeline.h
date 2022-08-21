@@ -7,6 +7,17 @@
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
 #include "avogadrogl.h"
+#include "shader.h"
+#include "shaderprogram.h"
+
+static const GLfloat m_fullscreenQuad[] = {
+  -1.0f, -1.0f, 0.0f,
+  1.0f, -1.0f, 0.0f,
+  -1.0f,  1.0f, 0.0f,
+  -1.0f,  1.0f, 0.0f,
+  1.0f, -1.0f, 0.0f,
+  1.0f,  1.0f, 0.0f,
+};
 
 namespace Avogadro {
 namespace Rendering {
@@ -40,6 +51,11 @@ private:
   GLuint m_defaultFBO;
   GLuint m_renderTexture;
   GLuint m_renderFBO;
+  GLuint m_screenVBO;
+  ShaderProgram m_firstStageShaders;
+  Shader m_screenVertexShader;
+  Shader m_firstFragmentShader;
+  GLuint m_firstTexAttributeID;
 };
 
 } // End namespace Rendering
