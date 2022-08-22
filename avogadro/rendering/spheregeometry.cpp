@@ -47,12 +47,16 @@ public:
   size_t numberOfIndices;
 };
 
-SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private) {}
+SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private) {
+  setRenderPass(SolidPass);
+}
 
 SphereGeometry::SphereGeometry(const SphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{}
+{
+  setRenderPass(SolidPass);
+}
 
 SphereGeometry::~SphereGeometry()
 {

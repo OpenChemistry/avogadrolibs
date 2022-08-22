@@ -2,7 +2,7 @@
 //
 // First-stage screen-space fragment shader for the solid pipeline
 //
-// At the moment, it does not offer any additional shading functionality.
+// It offers ambient occlusion and edge detection capabilities.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -64,13 +64,11 @@ const vec2 SSAOkernel[16] = vec2[16](
 
 const float SSAOstrength = 0.1;
 
-float computeSSAOLuminosity()
+float computeSSAOLuminosity(vec3 normal)
 {
-  vec3 normal = getNormalAt(UV);
-  
   float totalOcclusion = 0.0;
   for (int i = 0; i < 16; i++) {
-    vec2 samplePoint = SSAOkernel[i];
+    vec2 samplePoint = SSAOkernel[i] * 10.0;
     float depth = texture2D(inDepthTex, UV + samplePoint).x;
     vec3 occluder = vec3(samplePoint.xy, depth);
     float d = length(occluder);
@@ -81,10 +79,18 @@ float computeSSAOLuminosity()
   return max(0.0, 1.0 - SSAOstrength * totalOcclusion);
 }
 
+float computeEdgeLuminosity(vec3 normal)
+{
+  return max(0.0, pow(normal.z - 0.1, 1.0 / 3.0));
+}
+
 void main()
 {
+  vec3 normal = getNormalAt(UV);
+
   float luminosity = 1.0;
-  luminosity *= computeSSAOLuminosity();
+  luminosity *= computeSSAOLuminosity(normal);
+  luminosity *= computeEdgeLuminosity(normal);
   vec4 color = texture2D(inRGBTex, UV);
   gl_FragColor = vec4(color.xyz * luminosity, color.w);
   gl_FragDepth = texture2D(inDepthTex, UV).x;
