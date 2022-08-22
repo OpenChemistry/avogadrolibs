@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Liu Tao <lyuutau@outlook.com>, 2021.
 # 刘韬 <lyuutau@outlook.com>, 2021.
+# Hugel <qihu@nfschina.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-21 03:21+0000\n"
-"PO-Revision-Date: 2021-12-07 16:50+0000\n"
-"Last-Translator: 刘韬 <lyuutau@outlook.com>\n"
+"PO-Revision-Date: 2022-08-22 16:48+0000\n"
+"Last-Translator: Hugel <qihu@nfschina.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -28,7 +29,7 @@ msgstr "批处理作业 #%L1 （%2）"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
-msgstr ""
+msgstr "未指定消息。"
 
 #: molequeue/inputgenerator.cpp:69 qtgui/interfacescript.cpp:68
 #, qt-format
@@ -46,7 +47,7 @@ msgstr "返回非字符串警告。"
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:208
 #: qtgui/interfacescript.cpp:304
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' 成员不是数组。"
 
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:324
 #, qt-format
@@ -78,7 +79,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:375
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' 成员不是数组。"
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:379
 msgid "'files' member missing."
