@@ -45,6 +45,9 @@ public:
   /** Resize the context in response to window management events. */
   void resize(int width, int height);
 
+  /** Set the ratio of physical to logical pixels. */
+  void setPixelRatio(float ratio);
+
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
 

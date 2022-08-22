@@ -169,7 +169,8 @@ add_subdirectory(licorice)
 add_subdirectory(meshes)
 add_subdirectory(noncovalent)
 add_subdirectory(vanderwaals)
-add_subdirectory(vanderwaalsao)
+# redundant since there's universal AO
+# add_subdirectory(vanderwaalsao)
 add_subdirectory(wireframe)
 if (USE_OPENGL)
   # needs some raw OpenGL code
