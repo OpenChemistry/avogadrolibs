@@ -44,39 +44,40 @@ float lerp(float a, float b, float f)
 }
 
 const vec2 SSAOkernel[16] = vec2[16](
-  vec2(-0.00053, 0.00050),
-  vec2(-1.41e-05, 0.00078),
-  vec2(-0.00041, -0.00078),
-  vec2(7.1e-06, 0.00091),
-  vec2(0.00067, -3.03e-05),
-  vec2(-0.00091, 0.00048),
-  vec2(-3.0e-05, 0.00025),
-  vec2(-0.00090, -0.00044),
-  vec2(-0.00078, 0.00090),
-  vec2(-0.00015, 0.00052),
-  vec2(-6.6e-05, -0.00090),
-  vec2(0.00034, 0.00082),
-  vec2(-0.00046, -0.00092),
-  vec2(-0.00033, -0.00082),
-  vec2(4.6e-05, 2.97e-05),
-  vec2(-0.00051, -1.66e-05)
+  vec2(0.072170, 0.081556),
+  vec2(-0.035126, 0.056701),
+  vec2(-0.034186, -0.083598),
+  vec2(-0.056102, -0.009235),
+  vec2(0.017487, -0.099822),
+  vec2(0.071065, 0.015921),
+  vec2(0.040950, 0.079834),
+  vec2(-0.087751, 0.065326),
+  vec2(0.061108, -0.025829),
+  vec2(0.081262, -0.025854),
+  vec2(-0.063816, 0.083857),
+  vec2(0.043747, -0.068586),
+  vec2(-0.089848, 0.049046),
+  vec2(-0.065370, 0.058761),
+  vec2(0.099581, -0.089322),
+  vec2(-0.032077, -0.042826)
 );
 
-const float SSAOstrength = 0.1;
+const float SSAOstrength = 1.0;
 
 float computeSSAOLuminosity(vec3 normal)
 {
   float totalOcclusion = 0.0;
+  float depth = texture2D(inDepthTex, UV).x;
   for (int i = 0; i < 16; i++) {
-    vec2 samplePoint = SSAOkernel[i] * 10.0;
-    float depth = texture2D(inDepthTex, UV + samplePoint).x;
-    vec3 occluder = vec3(samplePoint.xy, depth);
+    vec2 samplePoint = SSAOkernel[i];
+    float occluderDepth = texture2D(inDepthTex, UV + samplePoint).x;
+    vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
     float d = length(occluder);
     float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
     totalOcclusion += occlusion;
   }
   
-  return max(0.0, 1.0 - SSAOstrength * totalOcclusion);
+  return max(0.0, 1.2 - SSAOstrength * totalOcclusion);
 }
 
 float computeEdgeLuminosity(vec3 normal)
