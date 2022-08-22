@@ -14,6 +14,7 @@
 namespace Avogadro::Rendering {
 
 SolidPipeline::SolidPipeline()
+: m_pixelRatio(1.0f)
 {
 }
 
@@ -121,11 +122,19 @@ void SolidPipeline::end()
 
 void SolidPipeline::resize(int width, int height)
 {
+  width *= m_pixelRatio;
+  height *= m_pixelRatio;
+
   glBindTexture(GL_TEXTURE_2D, m_renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
   glBindTexture(GL_TEXTURE_2D, m_depthTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+}
+
+void SolidPipeline::setPixelRatio(float ratio)
+{
+  m_pixelRatio = ratio;
 }
 
 } // End namespace Avogadro::Rendering

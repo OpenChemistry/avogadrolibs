@@ -65,6 +65,11 @@ void GLRenderer::resize(int width, int height)
   m_solidPipeline.resize(width, height);
 }
 
+void GLRenderer::setPixelRatio(float ratio)
+{
+  m_solidPipeline.setPixelRatio(ratio);
+}
+
 void GLRenderer::render()
 {
   if (!m_valid)

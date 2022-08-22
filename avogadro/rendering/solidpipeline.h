@@ -47,6 +47,11 @@ public:
    */
   void resize(int width, int height);
 
+  /**
+   * @brief Set pixel ratio (1.0 on standard displays, 2.0 on Retina, etc.).
+   */
+  void setPixelRatio(float ratio);
+
 private:
   GLuint m_defaultFBO;
   GLuint m_renderFBO;
@@ -57,6 +62,7 @@ private:
   Shader m_screenVertexShader;
   Shader m_firstFragmentShader;
   GLuint m_firstTexAttributeID;
+  float m_pixelRatio;
 };
 
 } // End namespace Rendering

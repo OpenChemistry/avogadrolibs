@@ -21,6 +21,7 @@
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtGui/QWindow>
 
 namespace Avogadro::QtOpenGL {
 
@@ -224,6 +225,8 @@ void GLWidget::initializeGL()
 void GLWidget::resizeGL(int width_, int height_)
 {
   m_renderer.resize(width_, height_);
+  float pixelRatio = window()->windowHandle()->devicePixelRatio();
+  m_renderer.setPixelRatio(pixelRatio);
 }
 
 void GLWidget::paintGL()
