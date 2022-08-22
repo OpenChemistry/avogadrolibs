@@ -48,12 +48,14 @@ public:
 
 CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
 {
+  setRenderPass(SolidPass);
 }
 
 CylinderGeometry::CylinderGeometry(const CylinderGeometry& other)
   : Drawable(other), m_cylinders(other.m_cylinders), m_indices(other.m_indices),
     m_indexMap(other.m_indexMap), m_dirty(true), d(new Private)
 {
+  setRenderPass(SolidPass);
 }
 
 CylinderGeometry::~CylinderGeometry()
