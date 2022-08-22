@@ -38,7 +38,6 @@ void initializeFramebuffer(GLuint *outFBO, GLuint *texRGB, GLuint *texDepth)
 void SolidPipeline::initialize()
 {
   initializeFramebuffer(&m_renderFBO, &m_renderTexture, &m_depthTexture);
-  resize(1024, 768);
 
   glGenBuffers(1, &m_screenVBO);
   glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
@@ -73,7 +72,7 @@ void SolidPipeline::begin()
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(tmp[0], tmp[1], tmp[2], tmp[3]);
-  glClearDepthf(tmp[4]);
+  glClearDepth(tmp[4]);
 }
 
 void attachStage(
