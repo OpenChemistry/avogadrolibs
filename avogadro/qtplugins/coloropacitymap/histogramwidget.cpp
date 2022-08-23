@@ -3,11 +3,11 @@
 
 #include "histogramwidget.h"
 
-#include "qvtkwidget.h"
-
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
+
+#include "qvtkwidget.h"
 
 #include "vtkChartHistogramColorOpacityEditor.h"
 
