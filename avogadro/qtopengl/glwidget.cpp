@@ -224,9 +224,9 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int width_, int height_)
 {
-  m_renderer.resize(width_, height_);
   float pixelRatio = window()->windowHandle()->devicePixelRatio();
   m_renderer.setPixelRatio(pixelRatio);
+  m_renderer.resize(width_, height_);
 }
 
 void GLWidget::paintGL()
