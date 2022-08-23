@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-21 03:21+0000\n"
-"PO-Revision-Date: 2022-08-22 16:48+0000\n"
+"PO-Revision-Date: 2022-08-24 20:21+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -1703,9 +1703,8 @@ msgid "By Secondary Structure"
 msgstr "Affiche de la structure secondaire d'une protéine"
 
 #: qtplugins/applycolors/applycolors.cpp:87
-#, fuzzy
 msgid "By Amino Acid"
-msgstr "Acides aminés :"
+msgstr "Par acides aminés"
 
 #: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
@@ -1904,18 +1903,6 @@ msgid "Bond-Centric Manipulation"
 msgstr "Manipulation des liaisons"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:124
-#, fuzzy
-#| msgid ""
-#| "Bond Centric Manipulation Tool\n"
-#| "\n"
-#| "Left Mouse: \tClick and drag to rotate the view.\n"
-#| "Middle Mouse: Click and drag to zoom in or out.\n"
-#| "Right Mouse: \tClick and drag to move the view.\n"
-#| "Double-Click: \tReset the view.\n"
-#| "\n"
-#| "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
-#| "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
-#| "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgid ""
 "Bond Centric Manipulation Tool\n"
 "\n"
@@ -1928,18 +1915,18 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Outil de manipulation des liaisons\n"
+"Outil de manipulation centrique des liaisons\n"
 "\n"
 "Bouton gauche :\tcliquer et glisser pour tourner la vue.\n"
-"Bouton central :\tcliquer et glisser pour effectuer un zoom avant ou "
-"arrière.\n"
+"Bouton central :\tcliquer et glisser pour effectuer un zoom avant ou arrière."
+"\n"
 "Bouton droit :\tcliquer et glisser pour déplacer la vue.\n"
 "Double clic :\tréinitialisation de la vue.\n"
 "\n"
-"Clic gauche et glisser sur une liaison pour définir le plan de "
-"manipulation.\n"
-"Clic gauche et glisser un des atomes de la liaison pour modifier son angle.\n"
-"Clic droit et glisser un des atomes de la liaison pour modifier sa distance."
+"Clic gauche et glisser sur une liaison pour définir le plan de manipulation :"
+"\n"
+"Clic gauche et glisser un des atomes de la liaison pour modifier son angle\n"
+"Clic droit et glisser un des atomes de la liaison pour modifier sa distance"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:776
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:864
@@ -1959,9 +1946,8 @@ msgid "%L1 Å"
 msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:168
-#, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Manipulation des liaisons"
+msgstr "Outil de manipulation centrique des liaisons."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:173
 msgid ""
@@ -3067,9 +3053,8 @@ msgid "Color:"
 msgstr "Couleur :"
 
 #: qtplugins/label/label.cpp:143
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Distance"
+msgstr "Distance du centre :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3088,9 +3073,8 @@ msgid "Index"
 msgstr "Indice"
 
 #: qtplugins/label/label.cpp:160
-#, fuzzy
 msgid "In."
-msgstr "Pouce"
+msgstr "In."
 
 #: qtplugins/label/label.cpp:164 qtplugins/propertytables/propertymodel.cpp:380
 #: qtplugins/symmetry/operationstablemodel.cpp:63
@@ -3099,16 +3083,15 @@ msgstr "Élément"
 
 #: qtplugins/label/label.cpp:165
 msgid "El."
-msgstr ""
+msgstr "Él."
 
 #: qtplugins/label/label.cpp:169
-#, fuzzy
 msgid "Element & Ordinal"
-msgstr "Nom de l'élément"
+msgstr "Élément & Ordinal"
 
 #: qtplugins/label/label.cpp:170
 msgid "El.&Or."
-msgstr ""
+msgstr "Él.&Or."
 
 #: qtplugins/label/label.cpp:173
 msgid ", "
@@ -3133,9 +3116,8 @@ msgid " & "
 msgstr " & "
 
 #: qtplugins/label/label.cpp:215
-#, fuzzy
 msgid "Residue Label:"
-msgstr "Nom du résidu"
+msgstr "Étiquette du résidu :"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3205,9 +3187,8 @@ msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "Pas de description"
+msgstr "Aucune description trouvée !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
@@ -3263,10 +3244,11 @@ msgid ""
 msgstr ""
 "Outil de mesure\n"
 "\n"
-"Bouton gauche :\tsélectionner jusqu'à trois atomes.\n"
-"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le "
-"3ème.\n"
-"\tL'angle est mesuré entre le 1et le 3ème  autour du 2ème.\n"
+"Bouton gauche :\tsélectionner jusqu'à quatre atomes.\n"
+"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le 3ème."
+"\n"
+"\tL'angle est mesuré entre le 1er et le 3ème autour du 2ème.\n"
+"\tLe dièdre est mesuré entre le 1er, le 2ème, le 3ème et le 4ème.\n"
 "Bouton droit :\teffacement des mesures."
 
 #: qtplugins/measuretool/measuretool.cpp:188
@@ -4057,9 +4039,8 @@ msgid "End Atom"
 msgstr "Atome d'arrivée"
 
 #: qtplugins/propertytables/propertymodel.cpp:410
-#, fuzzy
 msgid "Bond Order"
-msgstr "Multiplicité :"
+msgstr "Ordre de la liaison"
 
 #: qtplugins/propertytables/propertymodel.cpp:412
 msgctxt "in Angstrom"
@@ -4461,7 +4442,7 @@ msgstr "Outil de sélection"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr "Nouveau calque :"
+msgstr "Nouveau calque"
 
 #: qtplugins/spacegroup/spacegroup.cpp:49
 #, fuzzy
@@ -4769,10 +4750,8 @@ msgid "Render the molecule as a wireframe."
 msgstr "Faire une rendu de la molécule en fil de fer."
 
 #: qtplugins/yaehmop/yaehmop.cpp:89
-#, fuzzy
-#| msgid "Calculated Spectra:"
 msgid "Calculate Band Structure…"
-msgstr "Spectres calculés :"
+msgstr "Calcule de la structure de bandes…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:110
 msgid "&Yaehmop"
@@ -7299,9 +7278,8 @@ msgstr "Centrer"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "Charge formelle"
+msgstr "Charge formelle :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7345,10 +7323,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Éditeur de coordonnées"
+msgstr "Coordination :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -7418,10 +7394,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:321
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
-#, fuzzy
-#| msgid "Type"
 msgid "Type:"
-msgstr "Type"
+msgstr "Type :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
