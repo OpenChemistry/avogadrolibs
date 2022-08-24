@@ -83,7 +83,7 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
   json jsonRoot = json::parse(file, nullptr, false);
   if (jsonRoot.is_discarded()) {
-    appendError("Error parsing JSON.");
+    appendError("Error reading CJSON file.");
     return false;
   }
 
@@ -122,8 +122,8 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     for (auto& atomicNumber : atomicNumbers)
       molecule.addAtom(atomicNumber);
   } else {
-    appendError("Malformed array for in atoms.elements.number");
-    return false;
+    // we're done, actually - this is an empty file
+    return true;
   }
   Index atomCount = molecule.atomCount();
 
