@@ -220,6 +220,28 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
+inline Vector3ub contrastingColor(const Vector3ub& rgb)
+{
+  // If we're far 'enough' (+/-32) away from 128, just invert the component.
+  // If we're close to 128, inverting the color will end up too close to the
+  // input -- adjust the component before inverting.
+  const unsigned char minVal = 32;
+  const unsigned char maxVal = 223;
+  Vector3ub result;
+  for (size_t i = 0; i < 3; ++i) {
+    unsigned char input = rgb[i];
+    if (input > 160 || input < 96)
+      result[i] = static_cast<unsigned char>(255 - input);
+    else
+      result[i] = static_cast<unsigned char>(255 - (input / 4));
+
+    // Clamp to 32-->223 to prevent pure black/white
+    result[i] = std::min(maxVal, std::max(minVal, result[i]));
+  }
+
+  return result;
+}
+
 void Editor::draw(Rendering::GroupNode& node)
 {
   if (fabs(m_bondDistance) < 0.3)
@@ -236,9 +258,16 @@ void Editor::draw(Rendering::GroupNode& node)
                           .arg(distanceLabel, labelWidth)
                           .arg(tr("%L1 Å").arg(m_bondDistance, 9, 'f', 3), 9);
 
+  Vector3ub color(64, 255, 220);
+  if (m_renderer) {
+    auto backgroundColor = m_renderer->scene().backgroundColor();
+    color = contrastingColor(Vector3ub(backgroundColor[0], backgroundColor[1],
+                             backgroundColor[2]));
+  }
+
   TextProperties overlayTProp;
   overlayTProp.setFontFamily(TextProperties::Mono);
-  overlayTProp.setColorRgb(64, 255, 220);
+  overlayTProp.setColorRgb(color[0], color[1], color[2]);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
   auto* label = new TextLabel2D;
@@ -423,7 +452,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
   // Check if the previously clicked atom is still under the mouse.
   float depth = -1.0f;
-  for (const auto & hit : hits) {
+  for (const auto& hit : hits) {
     if (hit.second == m_clickedObject) {
       depth = hit.first;
       break;
@@ -467,7 +496,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (m_bondedAtom.isValid()) {
     // Is it still under the mouse?
     depth = -1.0f;
-    for (const auto & hit : hits) {
+    for (const auto& hit : hits) {
       if (hit.second == m_bondedAtom) {
         depth = hit.first;
         break;
@@ -489,7 +518,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   // Is there another atom under the cursor, besides newAtom? If so, we'll draw
   // a bond to it.
   Identifier atomToBond;
-  for (const auto & hit : hits) {
+  for (const auto& hit : hits) {
     const Identifier& ident = hit.second;
     // Are we on an atom
     if (ident.type == Rendering::AtomType)
@@ -633,4 +662,4 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   return;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
