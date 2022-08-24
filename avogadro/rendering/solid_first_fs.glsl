@@ -72,8 +72,15 @@ float computeSSAOLuminosity(vec3 normal)
 {
   float totalOcclusion = 0.0;
   float depth = texture2D(inDepthTex, UV).x;
+  float A = 1000.0 * (UV.x + UV.y);
+  float S = sin(A);
+  float C = cos(A);
+  mat2 rotation = mat2(
+    C, -S,
+    S, C
+  );
   for (int i = 0; i < 16; i++) {
-    vec2 samplePoint = SSAOkernel[i];
+    vec2 samplePoint = rotation * SSAOkernel[i];
     float occluderDepth = texture2D(inDepthTex, UV + samplePoint).x;
     vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
     float d = length(occluder);
