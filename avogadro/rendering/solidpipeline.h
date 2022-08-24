@@ -52,6 +52,24 @@ public:
    */
   void setPixelRatio(float ratio);
 
+  /**
+   * @brief Get or set whether Ambient Occlusion is enabled.
+   */
+  bool getAoEnabled() { return m_aoEnabled; }
+  void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
+
+  /**
+   * @brief Get or set shadow strength for Ambient Occlusion.
+   */
+  float getAoStrength() { return m_aoStrength; }
+  void setAoStrength(float strength) { m_aoStrength = strength; }
+
+  /**
+   * @brief Get or set whether Edge Detection is enabled.
+   */
+  bool getEdEnabled() { return m_edEnabled; }
+  void setEdEnabled(bool enabled) { m_edEnabled = enabled; }
+
 private:
   GLuint m_defaultFBO;
   GLuint m_renderFBO;
@@ -63,6 +81,9 @@ private:
   Shader m_firstFragmentShader;
   GLuint m_firstTexAttributeID;
   float m_pixelRatio;
+  bool m_aoEnabled;
+  float m_aoStrength;
+  bool m_edEnabled;
 };
 
 } // End namespace Rendering
