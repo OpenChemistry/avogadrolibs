@@ -126,11 +126,16 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   auto* lines = new LineStripGeometry;
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
+  // add tiny atom sites for selection
+  auto atoms = new SphereGeometry;
+  atoms->identifier().molecule = &molecule;
+  atoms->identifier().type = Rendering::AtomType;
   auto selectedAtoms = new SphereGeometry;
   selectedAtoms->setOpacity(0.42);
   Vector3ub selectedColor(0, 0, 255);
 
   geometry->addDrawable(lines);
+  geometry->addDrawable(atoms);
   geometry->addDrawable(selectedAtoms);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
@@ -162,6 +167,10 @@ void Wireframe::process(const QtGui::Molecule& molecule,
     if (interface1.multiBonds || interface2.multiBonds)
       lineWidth *= bond.order();
     lines->addLineStrip(points, colors, lineWidth);
+    // add small spheres to allow the selection tool to work
+    // smaller than this gets ignored
+    atoms->addSphere(pos1, color1, 0.001f, bond.atom1().index());
+    atoms->addSphere(pos2, color2, 0.001f, bond.atom2().index());
     if (bond.atom1().selected())
       selectedAtoms->addSphere(pos1, selectedColor, 0.3f, i);
     if (bond.atom2().selected())
