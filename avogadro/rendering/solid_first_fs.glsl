@@ -29,18 +29,18 @@ uniform float inAoEnabled;
 uniform float inAoStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdEnabled;
-
-const float sampleStep = 0.001;
+// Rendering surface dimensions, in pixels
+uniform float width, height;
 
 vec3 getNormalAt(vec2 normalUV)
 {
-  float xpos = texture2D(inDepthTex, normalUV + vec2(sampleStep, 0.0)).x;
-  float xneg = texture2D(inDepthTex, normalUV - vec2(sampleStep, 0.0)).x;
-  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, sampleStep)).x;
-  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, sampleStep)).x;
+  float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
+  float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
+  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
+  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
   float xdelta = xpos - xneg;
   float ydelta = ypos - yneg;
-  vec3 r = vec3(xdelta, ydelta, 2.0 * sampleStep);
+  vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
   return normalize(r);
 }
 
@@ -72,7 +72,7 @@ float computeSSAOLuminosity(vec3 normal)
 {
   float totalOcclusion = 0.0;
   float depth = texture2D(inDepthTex, UV).x;
-  float A = 1000.0 * (UV.x + UV.y);
+  float A = (width * UV.x + 10 * height * UV.y) * 2.0 * 3.14159265358979 * 5.0 / 16.0;
   float S = sin(A);
   float C = cos(A);
   mat2 rotation = mat2(

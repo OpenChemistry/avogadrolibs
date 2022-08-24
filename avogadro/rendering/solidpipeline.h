@@ -71,6 +71,10 @@ public:
   void setEdEnabled(bool enabled) { m_edEnabled = enabled; }
 
 private:
+  void attachStage(
+    ShaderProgram &prog, const GLchar *nameRGB, GLuint texRGB, const GLchar *nameDepth, GLuint texDepth
+  );
+
   GLuint m_defaultFBO;
   GLuint m_renderFBO;
   GLuint m_renderTexture;
@@ -79,11 +83,11 @@ private:
   ShaderProgram m_firstStageShaders;
   Shader m_screenVertexShader;
   Shader m_firstFragmentShader;
-  GLuint m_firstTexAttributeID;
   float m_pixelRatio;
   bool m_aoEnabled;
   float m_aoStrength;
   bool m_edEnabled;
+  int m_width, m_height;
 };
 
 } // End namespace Rendering

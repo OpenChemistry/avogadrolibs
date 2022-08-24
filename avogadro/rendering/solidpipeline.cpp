@@ -31,8 +31,10 @@ void initializeFramebuffer(GLuint *outFBO, GLuint *texRGB, GLuint *texDepth)
 
   glGenTextures(1, texDepth);
   glBindTexture(GL_TEXTURE_2D, *texDepth);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, *texDepth, 0);
 }
 
@@ -76,7 +78,7 @@ void SolidPipeline::begin()
   glClearDepth(tmp[4]);
 }
 
-void attachStage(
+void SolidPipeline::attachStage(
   ShaderProgram &prog, const GLchar *nameRGB, GLuint texRGB, const GLchar *nameDepth, GLuint texDepth
 ) {
   prog.bind();
@@ -92,11 +94,19 @@ void attachStage(
   glActiveTexture(GL_TEXTURE0 + 2);
   glBindTexture(GL_TEXTURE_2D, texDepth);
   glUniform1i(attrDepth, 2);
+
+  prog.setUniformValue("width", float(m_width));
+  prog.setUniformValue("height", float(m_height));
 }
 
 void SolidPipeline::end()
 {
-  // Render color component to a texture
+  // Draw fullscreen quad
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+  // Draw to screen
   if (glIsFramebuffer(m_defaultFBO)) {
     glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
     GLenum drawBuffersList[1] = {GL_COLOR_ATTACHMENT0};
@@ -105,12 +115,6 @@ void SolidPipeline::end()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
   }
-
-  // Draw fullscreen quad
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
   attachStage(m_firstStageShaders,
     "inRGBTex", m_renderTexture,
     "inDepthTex", m_depthTexture
@@ -125,14 +129,14 @@ void SolidPipeline::end()
 
 void SolidPipeline::resize(int width, int height)
 {
-  width *= m_pixelRatio;
-  height *= m_pixelRatio;
+  m_width = width * m_pixelRatio;
+  m_height = height * m_pixelRatio;
 
   glBindTexture(GL_TEXTURE_2D, m_renderTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
   glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 }
 
 void SolidPipeline::setPixelRatio(float ratio)
