@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
             cpack: "",
           }
         - {
@@ -59,7 +59,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
             cpack: "",
           }
         - {
@@ -67,7 +67,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "lsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
             cpack: "",
           }
         - {
@@ -75,7 +75,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "tsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
             cpack: "",
           }
         - {
@@ -83,7 +83,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
             cpack: "",
           }
 
@@ -131,11 +131,10 @@ jobs:
         key: ${{ runner.os }}-QtCache
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
-        setup-python: 'false'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'

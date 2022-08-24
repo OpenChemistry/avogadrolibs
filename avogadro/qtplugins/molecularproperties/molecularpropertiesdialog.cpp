@@ -14,9 +14,13 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonValue>
+#include <QtCore/QMimeData>
 #include <QtCore/QRegExp>
+#include <QtGui/QClipboard>
+#include <QtGui/QKeyEvent>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <QtWidgets/QPushButton>
 
 using Avogadro::QtGui::Molecule;
 
@@ -28,6 +32,10 @@ MolecularPropertiesDialog::MolecularPropertiesDialog(QtGui::Molecule* mol,
     m_ui(new Ui::MolecularPropertiesDialog)
 {
   m_ui->setupUi(this);
+  m_ui->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("&Copy"));
+
+  connect(m_ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
+          SLOT(buttonClicked(QAbstractButton*)));
 
   m_network = new QNetworkAccessManager(this);
   connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
@@ -142,12 +150,11 @@ void MolecularPropertiesDialog::replyFinished(QNetworkReply* reply)
       // HTML version for dialog
       QJsonObject nameValue = obj["value"].toObject();
       m_ui->moleculeNameLabel->setText(nameValue["sval"].toString());
-      break;
     } else if (urn["name"].toString() == "Preferred") {
       // save this text version for files and copy/paste
       QJsonObject nameValue = obj["value"].toObject();
-      m_molecule->setData("name", nameValue["sval"].toString());
-      break;
+      m_molecule->setData("name", nameValue["sval"].toString().toStdString());
+      m_name = nameValue["sval"].toString();
     }
   }
 
@@ -181,6 +188,60 @@ void MolecularPropertiesDialog::moleculeDestroyed()
 {
   m_molecule = nullptr;
   updateLabels();
+}
+
+void MolecularPropertiesDialog::keyPressEvent(QKeyEvent* event)
+{
+  if (event->key() == Qt::Key_Escape)
+    close();
+
+  if (event->matches(QKeySequence::Copy)) {
+    copy();
+    event->accept();
+  }
+}
+
+void MolecularPropertiesDialog::buttonClicked(QAbstractButton* button)
+{
+  if (button->text() == tr("&Copy"))
+    copy();
+}
+
+void MolecularPropertiesDialog::copy()
+{
+  // format the text for copy:
+  // name, mass, formula, atom count, bond count
+  QString p("<p>");
+  QString endP("</p>");
+
+  QString html = p + tr("Molecule Name:") +
+                 QString(" %1").arg(m_ui->moleculeNameLabel->text()) + endP;
+  html += p + tr("Molecular Mass (g/mol):") +
+          QString(" %1\n").arg(m_ui->molMassLabel->text()) + endP;
+  html += p + tr("Chemical Formula:") +
+          QString(" %1\n").arg(m_ui->formulaLabel->text()) + endP;
+  html += p + tr("Number of Atoms:") +
+          QString(" %1\n").arg(m_molecule->atomCount()) + endP;
+  html += p + tr("Number of Bonds:") +
+          QString(" %1\n").arg(m_molecule->bondCount()) + endP;
+
+  QString text = tr("Molecule Name:") +
+                 QString(" %1\n").arg(
+                   QString::fromStdString(m_molecule->data("name").toString()));
+  text += tr("Molecular Mass (g/mol):") +
+          QString(" %1\n").arg(m_ui->molMassLabel->text());
+  text += tr("Chemical Formula:") +
+          QString(" %1\n").arg(QString::fromStdString(m_molecule->formula()));
+  text +=
+    tr("Number of Atoms:") + QString(" %1\n").arg(m_molecule->atomCount());
+  text +=
+    tr("Number of Bonds:") + QString(" %1\n").arg(m_molecule->bondCount());
+
+  // include both HTML and plain text
+  QMimeData* mimeData = new QMimeData();
+  mimeData->setText(text);
+  mimeData->setHtml(html);
+  QApplication::clipboard()->setMimeData(mimeData);
 }
 
 } // namespace Avogadro::QtPlugins
