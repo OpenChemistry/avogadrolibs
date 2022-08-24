@@ -23,6 +23,12 @@ varying vec2 UV;
 uniform sampler2D inRGBTex;
 // Depth rendered texture
 uniform sampler2D inDepthTex;
+// 1.0 if enabled, 0.0 if disabled
+uniform float inAoEnabled;
+// Shadow strength for SSAO
+uniform float inAoStrength;
+// 1.0 if enabled, 0.0 if disabled
+uniform float inEdEnabled;
 
 const float sampleStep = 0.001;
 
@@ -62,8 +68,6 @@ const vec2 SSAOkernel[16] = vec2[16](
   vec2(-0.032077, -0.042826)
 );
 
-const float SSAOstrength = 1.0;
-
 float computeSSAOLuminosity(vec3 normal)
 {
   float totalOcclusion = 0.0;
@@ -77,7 +81,7 @@ float computeSSAOLuminosity(vec3 normal)
     totalOcclusion += occlusion;
   }
   
-  return max(0.0, 1.2 - SSAOstrength * totalOcclusion);
+  return max(0.0, 1.2 - inAoStrength * totalOcclusion);
 }
 
 float computeEdgeLuminosity(vec3 normal)
@@ -90,8 +94,8 @@ void main()
   vec3 normal = getNormalAt(UV);
 
   float luminosity = 1.0;
-  luminosity *= computeSSAOLuminosity(normal);
-  luminosity *= computeEdgeLuminosity(normal);
+  luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(normal));
+  luminosity *= max(1.0 - inEdEnabled, computeEdgeLuminosity(normal));
   vec4 color = texture2D(inRGBTex, UV);
   gl_FragColor = vec4(color.xyz * luminosity, color.w);
   gl_FragDepth = texture2D(inDepthTex, UV).x;

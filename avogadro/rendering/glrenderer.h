@@ -91,6 +91,10 @@ public:
   const Scene& scene() const { return m_scene; }
   Scene& scene() { return m_scene; }
 
+  /** Get the solid pipeline for this renderer. */
+  const SolidPipeline& solidPipeline() const { return m_solidPipeline; }
+  SolidPipeline& solidPipeline() { return m_solidPipeline; }
+
   /**
    * Get/set the text rendering strategy for this object. The renderer takes
    * ownership of the strategy object. @{
