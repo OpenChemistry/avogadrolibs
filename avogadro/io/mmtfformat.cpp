@@ -54,7 +54,11 @@ bool is_polymer(const unsigned int chain_index,
 bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 {
   mmtf::StructureData structure;
-  mmtf::decodeFromStream(structure, file);
+  try {
+    mmtf::decodeFromStream(structure, file);
+  } catch (...) { // if decoding failed, the file is broken
+    return false;
+  }
 
   // This controls which model we load, currently just the first?
   size_t modelIndex = 0;
