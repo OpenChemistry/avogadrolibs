@@ -14,11 +14,12 @@
 namespace Avogadro::Rendering {
 
 SolidPipeline::SolidPipeline()
-: m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f), m_edEnabled(true)
+  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
+    m_edEnabled(true), m_width(0), m_height(0)
 {
 }
 
-void initializeFramebuffer(GLuint *outFBO, GLuint *texRGB, GLuint *texDepth)
+void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 {
   glGenFramebuffers(1, outFBO);
   glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
@@ -27,7 +28,8 @@ void initializeFramebuffer(GLuint *outFBO, GLuint *texRGB, GLuint *texDepth)
   glBindTexture(GL_TEXTURE_2D, *texRGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texRGB, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                         *texRGB, 0);
 
   glGenTextures(1, texDepth);
   glBindTexture(GL_TEXTURE_2D, *texDepth);
@@ -35,7 +37,8 @@ void initializeFramebuffer(GLuint *outFBO, GLuint *texRGB, GLuint *texDepth)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, *texDepth, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                         *texDepth, 0);
 }
 
 void SolidPipeline::initialize()
@@ -44,7 +47,8 @@ void SolidPipeline::initialize()
 
   glGenBuffers(1, &m_screenVBO);
   glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(m_fullscreenQuad), m_fullscreenQuad, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(m_fullscreenQuad), m_fullscreenQuad,
+               GL_STATIC_DRAW);
 
   m_screenVertexShader.setType(Shader::Vertex);
   m_screenVertexShader.setSource(solid_vs);
@@ -64,9 +68,9 @@ void SolidPipeline::initialize()
 
 void SolidPipeline::begin()
 {
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint *) &m_defaultFBO);
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&m_defaultFBO);
   glBindFramebuffer(GL_FRAMEBUFFER, m_renderFBO);
-  GLenum drawBuffersList[1] = {GL_COLOR_ATTACHMENT0};
+  GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
   glDrawBuffers(1, drawBuffersList);
 
   GLfloat tmp[5];
@@ -78,12 +82,13 @@ void SolidPipeline::begin()
   glClearDepth(tmp[4]);
 }
 
-void SolidPipeline::attachStage(
-  ShaderProgram &prog, const GLchar *nameRGB, GLuint texRGB, const GLchar *nameDepth, GLuint texDepth
-) {
+void SolidPipeline::attachStage(ShaderProgram& prog, const GLchar* nameRGB,
+                                GLuint texRGB, const GLchar* nameDepth,
+                                GLuint texDepth)
+{
   prog.bind();
   GLuint programID;
-  glGetIntegerv(GL_CURRENT_PROGRAM, (GLint *) &programID);
+  glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
 
   GLuint attrRGB = glGetUniformLocation(programID, nameRGB);
   glActiveTexture(GL_TEXTURE0 + 1);
@@ -109,19 +114,17 @@ void SolidPipeline::end()
   // Draw to screen
   if (glIsFramebuffer(m_defaultFBO)) {
     glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
-    GLenum drawBuffersList[1] = {GL_COLOR_ATTACHMENT0};
+    GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, drawBuffersList);
   } else {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
   }
-  attachStage(m_firstStageShaders,
-    "inRGBTex", m_renderTexture,
-    "inDepthTex", m_depthTexture
-  );
-  m_firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled? 1.0f : 0.0f);
+  attachStage(m_firstStageShaders, "inRGBTex", m_renderTexture, "inDepthTex",
+              m_depthTexture);
+  m_firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
   m_firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
-  m_firstStageShaders.setUniformValue("inEdEnabled", m_edEnabled? 1.0f : 0.0f);
+  m_firstStageShaders.setUniformValue("inEdEnabled", m_edEnabled ? 1.0f : 0.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glDisableVertexAttribArray(0);
@@ -133,10 +136,12 @@ void SolidPipeline::resize(int width, int height)
   m_height = height * m_pixelRatio;
 
   glBindTexture(GL_TEXTURE_2D, m_renderTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, 0);
 
   glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
+               GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 }
 
 void SolidPipeline::setPixelRatio(float ratio)
