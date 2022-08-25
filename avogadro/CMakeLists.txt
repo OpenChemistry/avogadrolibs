@@ -55,6 +55,10 @@ if(USE_OPENGL)
 endif()
 
 if(USE_QT)
+  if (NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+  endif()
+
   add_subdirectory(qtgui)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/qtgui)
   if(USE_OPENGL)
