@@ -31,7 +31,8 @@ namespace Avogadro::QtGui {
 JsonWidget::JsonWidget(QWidget* parent_)
   : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
     m_centralWidget(nullptr)
-{}
+{
+}
 
 JsonWidget::~JsonWidget() {}
 
@@ -175,11 +176,13 @@ void JsonWidget::buildOptionGui()
 
     // File basename next:
     if (userOptions.contains("Filename Base"))
-      addOptionRow("Filename Base", tr("Filename Base"), userOptions.take("Filename Base"));
+      addOptionRow("Filename Base", tr("Filename Base"),
+                   userOptions.take("Filename Base"));
 
     // Number of cores next:
     if (userOptions.contains("Processor Cores"))
-      addOptionRow("Processor Cores", tr("Processor Cores"), userOptions.take("Processor Cores"));
+      addOptionRow("Processor Cores", tr("Processor Cores"),
+                   userOptions.take("Processor Cores"));
 
     // Calculation Type next:
     if (userOptions.contains("Calculation Type"))
@@ -191,11 +194,16 @@ void JsonWidget::buildOptionGui()
                       userOptions);
 
     // Other special cases: Charge / Multiplicity
-    if (userOptions.contains("Charge"))
-      addOptionRow("Charge", tr("Charge"), userOptions.take("Charge"));
-
-    if (userOptions.contains("Multiplicity"))
-      addOptionRow("Multiplicity", tr("Multiplicity"), userOptions.take("Multiplicity"));
+    if (userOptions.contains("Charge") && userOptions.contains("Multiplicity"))
+      combinedOptionRow("Charge", "Multiplicity", tr("Charge"),
+                        tr("Multiplicity"), userOptions, true); // both labels
+    else {
+      if (userOptions.contains("Charge"))
+        addOptionRow("Charge", tr("Charge"), userOptions.take("Charge"));
+      if (userOptions.contains("Multiplicity"))
+        addOptionRow("Multiplicity", tr("Multiplicity"),
+                     userOptions.take("Multiplicity"));
+    }
 
     // Add remaining keys at bottom.
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
@@ -232,7 +240,7 @@ void JsonWidget::buildOptionGui()
 
 void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
                                    const QString& tr1, const QString& tr2,
-                                   QJsonObject& options)
+                                   QJsonObject& options, bool bothLabels)
 {
   if (m_currentLayout == nullptr)
     return;
@@ -247,6 +255,10 @@ void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
       widget1->setObjectName(label1);
       hbox->addWidget(widget1);
       m_widgets.insert(label1, widget1);
+    }
+    if (bothLabels) {
+      QLabel* label = new QLabel(tr2 + ":");
+      hbox->addWidget(label);
     }
     if (option2) {
       widget2->setObjectName(label2);
@@ -264,7 +276,8 @@ void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
   }
 }
 
-void JsonWidget::addOptionRow(const QString& key, const QString& name, const QJsonValue& option)
+void JsonWidget::addOptionRow(const QString& key, const QString& name,
+                              const QJsonValue& option)
 {
   QWidget* widget = createOptionWidget(option);
   if (!widget)
@@ -580,8 +593,7 @@ void JsonWidget::setStringListOption(const QString& name,
 
 void JsonWidget::setStringOption(const QString& name, const QJsonValue& value)
 {
-  auto* lineEdit =
-    qobject_cast<QLineEdit*>(m_widgets.value(name, nullptr));
+  auto* lineEdit = qobject_cast<QLineEdit*>(m_widgets.value(name, nullptr));
   if (!lineEdit) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -646,8 +658,7 @@ void JsonWidget::setIntegerOption(const QString& name, const QJsonValue& value)
 
 void JsonWidget::setFloatOption(const QString& name, const QJsonValue& value)
 {
-  auto* spin =
-    qobject_cast<QDoubleSpinBox*>(m_widgets.value(name, nullptr));
+  auto* spin = qobject_cast<QDoubleSpinBox*>(m_widgets.value(name, nullptr));
   if (!spin) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -668,8 +679,7 @@ void JsonWidget::setFloatOption(const QString& name, const QJsonValue& value)
 
 void JsonWidget::setBooleanOption(const QString& name, const QJsonValue& value)
 {
-  auto* checkBox =
-    qobject_cast<QCheckBox*>(m_widgets.value(name, nullptr));
+  auto* checkBox = qobject_cast<QCheckBox*>(m_widgets.value(name, nullptr));
   if (!checkBox) {
     qWarning() << tr("Error setting default for option '%1'. "
                      "Bad widget type.")
@@ -730,8 +740,7 @@ QJsonObject JsonWidget::collectOptions() const
       ret.insert(label, value);
     } else if (auto* spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
-    } else if (auto* spinBox =
-                 qobject_cast<QDoubleSpinBox*>(widget)) {
+    } else if (auto* spinBox = qobject_cast<QDoubleSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
     } else if (auto* checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
@@ -790,4 +799,4 @@ QString JsonWidget::generateJobTitle() const
     .arg(haveTheory ? " | " + theory : QString());
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
