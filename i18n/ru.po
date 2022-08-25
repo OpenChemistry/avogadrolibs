@@ -1154,7 +1154,7 @@ msgstr "Шаро-стержневая модель"
 #, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Мультипликация"
+msgstr "Структурные мотивы"
 
 #: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
@@ -1172,7 +1172,7 @@ msgstr "Градиент"
 #: qtgui/layermodel.cpp:137 qtplugins/label/label.h:25
 #, fuzzy
 msgid "Labels"
-msgstr "Метка"
+msgstr "Отображать символы элементов"
 
 #: qtgui/layermodel.cpp:139 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1187,7 +1187,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Ковалентный"
+msgstr "Нековалентные взаимодействия"
 
 #: qtgui/layermodel.cpp:145 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
@@ -1196,13 +1196,13 @@ msgstr ""
 #: qtgui/layermodel.cpp:147 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
-msgstr "Ван-дер-Ваальсова"
+msgstr "Ван-дер-Ваальсовы сферы"
 
 #: qtgui/layermodel.cpp:149 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 #, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Ван-дер-Ваальсова"
+msgstr "Ван-дер-Ваальсовы АО"
 
 #: qtgui/layermodel.cpp:151 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -2673,6 +2673,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Инструмент построение молекулы\n"
+"\n"
+"Нажатием и зажатием левой кнопки мыши можно создавать атомы и связи\n"
+"Нажатием правой кнопки мыши можно удалить атом"
 
 #: qtplugins/editor/editor.cpp:103
 msgid "Draw Atom"
@@ -2713,7 +2717,7 @@ msgstr "Другая"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/editor/editortoolwidget.cpp:206:1636 rc.cpp:1654
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматический"
 
 #: qtplugins/editor/editortoolwidget.cpp:207
 msgid "Single"
@@ -3054,7 +3058,7 @@ msgstr "Отсутствует"
 
 #: qtplugins/label/label.cpp:159
 msgid "Index"
-msgstr ""
+msgstr "Нумерация"
 
 #: qtplugins/label/label.cpp:160
 #, fuzzy
@@ -3124,6 +3128,10 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"Инструмент для пометки атомов\n"
+"\n"
+"Нажатием левой кнопки мыши на определенном атоме можно инициировать\n"
+"текстовое поле для создания текстовой метки на атоме"
 
 #: qtplugins/label/labeleditor.cpp:68
 #, fuzzy
@@ -3210,6 +3218,10 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate selected atoms.\n"
 msgstr ""
+"Инструмент для манипуляций над структурой\n"
+"\n"
+"Зажмите левую кнопку мыши, чтобы передвинуть атом\n"
+"Зажмите правую кнопку мыши, чтобы вращать выбранный атом\n"
 
 #: qtplugins/manipulator/manipulator.h:33
 #: qtplugins/manipulator/manipulator.h:34
@@ -3230,6 +3242,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"Линейка\n"
+"\n"
+"Левой кнопкой мыши: \t Выберите до 4 атомов.\n"
+"\tДлины связей измеряются между 1-2 и 2-3 атомами\n"
+"\tУгол связи измеряется между атомами 1-2-3, где 2 - центр угла\n"
+"\tДвугранный угол измеряется между 1-2-3-4\n"
+"Правой кнопкой мыши: \tОбнулить измерения."
 
 #: qtplugins/measuretool/measuretool.cpp:188
 #: qtplugins/measuretool/measuretool.cpp:199
@@ -3243,13 +3262,13 @@ msgstr "Угол:"
 #: qtplugins/measuretool/measuretool.cpp:207
 #, fuzzy
 msgid "Angles:"
-msgstr "Угол:"
+msgstr "Углы:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
 #, fuzzy
 msgid "Measure tool"
-msgstr "Измерение"
+msgstr "Линейка"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -3378,10 +3397,15 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"Инструмент изменения обзора\n"
+"\n"
+"Зажатием левой кнопки мыши вы можете вращать молекулу\n"
+"Прокруткой (или зажимая Shift) вы можете масштабировать молекулу\n"
+"Правой кнопкой мыши вы можете перемещать молекулу.\n"
 
 #: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Инвертировать направление масштабирования при прокрутке"
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid ""
@@ -4431,6 +4455,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"Инструмент для выделения атомов\n"
+"\n"
+"Нажатием левой кнопки мыши вы можете выделить отдельные атомы или фрагменты\n"
+"\tЗажав ЛКМ и передвигая курсор вы можете выделить сразу несколько атомов\n"
+"Нажатием правой кнопки мыши в пространстве за молекулой можно снять выделение\n"
+"Нажатием Ctrl (Command) вы можете инвертировать выделение, а зажатием Shift добавить к текущему выделению.\n"
+"Двойным нажатием вы можете выделить весь фрагмент целиком."
 
 #: qtplugins/selectiontool/selectiontool.cpp:236
 #, fuzzy
@@ -4700,7 +4731,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Temperature"
 msgid "Template"
-msgstr "Температура"
+msgstr "Шаблоны"
 
 #: qtplugins/templatetool/templatetool.cpp:299
 #, fuzzy
@@ -8901,7 +8932,7 @@ msgstr ""
 
 #~ msgctxt "Van der Waals surface type"
 #~ msgid "Van der Waals"
-#~ msgstr "Ван-дер-Ваальсова"
+#~ msgstr "Ван-дер-Ваальсовы сферы"
 
 #~ msgctxt "Electron density surface type"
 #~ msgid "Electron Density"
