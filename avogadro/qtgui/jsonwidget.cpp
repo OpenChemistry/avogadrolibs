@@ -246,12 +246,12 @@ void JsonWidget::combinedOptionRow(const QString& label1, const QString& label2,
     if (option1) {
       widget1->setObjectName(label1);
       hbox->addWidget(widget1);
-      m_widgets.insert(tr1, widget1);
+      m_widgets.insert(label1, widget1);
     }
     if (option2) {
-      widget2->setObjectName(label1);
+      widget2->setObjectName(label2);
       hbox->addWidget(widget2);
-      m_widgets.insert(tr2, widget2);
+      m_widgets.insert(label2, widget2);
     }
     hbox->addStretch();
 
