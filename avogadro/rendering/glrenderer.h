@@ -14,6 +14,7 @@
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "solidpipeline.h"
 
 #include <avogadro/core/array.h>
 
@@ -43,6 +44,9 @@ public:
 
   /** Resize the context in response to window management events. */
   void resize(int width, int height);
+
+  /** Set the ratio of physical to logical pixels. */
+  void setPixelRatio(float ratio);
 
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
@@ -87,6 +91,10 @@ public:
   const Scene& scene() const { return m_scene; }
   Scene& scene() { return m_scene; }
 
+  /** Get the solid pipeline for this renderer. */
+  const SolidPipeline& solidPipeline() const { return m_solidPipeline; }
+  SolidPipeline& solidPipeline() { return m_solidPipeline; }
+
   /**
    * Get/set the text rendering strategy for this object. The renderer takes
    * ownership of the strategy object. @{
@@ -127,6 +135,7 @@ private:
   Camera m_overlayCamera;
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
+  SolidPipeline m_solidPipeline;
 
   Vector3f m_center;
   float m_radius;

@@ -8,12 +8,13 @@
 
 #include "avogadrovtkexport.h"
 
+#include <avogadro/rendering/glrenderer.h>
+
 #include <QVTKOpenGLStereoWidget.h>
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
 #include <avogadro/qtgui/scenepluginmodel.h>
-#include <avogadro/rendering/glrenderer.h>
 
 #include <QtCore/QPointer>
 

@@ -40,6 +40,7 @@ set(HEADERS
   scene.h
   shader.h
   shaderprogram.h
+  solidpipeline.h
   spheregeometry.h
   textlabel2d.h
   textlabel3d.h
@@ -80,6 +81,7 @@ set(SOURCES
   scene.cpp
   shader.cpp
   shaderprogram.cpp
+  solidpipeline.cpp
   spheregeometry.cpp
   textlabel2d.cpp
   textlabel3d.cpp
@@ -105,6 +107,8 @@ set(shader_files
   "mesh_fs.glsl"
   "mesh_opaque_fs.glsl"
   "mesh_vs.glsl"
+  "solid_vs.glsl"
+  "solid_first_fs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
   "sphere_ao_depth_vs.glsl"
