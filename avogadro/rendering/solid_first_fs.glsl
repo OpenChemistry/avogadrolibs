@@ -28,7 +28,7 @@ uniform float inAoEnabled;
 // Shadow strength for SSAO
 uniform float inAoStrength;
 // 1.0 if enabled, 0.0 if disabled
-uniform float inEdEnabled;
+uniform float inEdStrength;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
 
@@ -102,7 +102,7 @@ void main()
 
   float luminosity = 1.0;
   luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(normal));
-  luminosity *= max(1.0 - inEdEnabled, computeEdgeLuminosity(normal));
+  luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(normal));
   vec4 color = texture2D(inRGBTex, UV);
   gl_FragColor = vec4(color.xyz * luminosity, color.w);
   gl_FragDepth = texture2D(inDepthTex, UV).x;

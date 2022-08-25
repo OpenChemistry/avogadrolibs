@@ -36,12 +36,12 @@ public:
    * @brief Begin solid geometry rendering.
    */
   void begin();
-  
+
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
    */
   void end();
-  
+
   /**
    * @brief Resize buffers for width x height viewport.
    */
@@ -68,12 +68,21 @@ public:
    * @brief Get or set whether Edge Detection is enabled.
    */
   bool getEdEnabled() { return m_edEnabled; }
-  void setEdEnabled(bool enabled) { m_edEnabled = enabled; }
+  void setEdEnabled(bool enabled)
+  {
+    m_edEnabled = enabled;
+    m_edStrength = (m_edEnabled) ? 1.0 : 0.0;
+  }
+
+  /**
+   * @brief Get or set the strength of the edge effect
+   */
+  bool getEdStrength() { return m_edStrength; }
+  void setEdStrength(float strength) { m_edStrength = strength; }
 
 private:
-  void attachStage(
-    ShaderProgram &prog, const GLchar *nameRGB, GLuint texRGB, const GLchar *nameDepth, GLuint texDepth
-  );
+  void attachStage(ShaderProgram& prog, const GLchar* nameRGB, GLuint texRGB,
+                   const GLchar* nameDepth, GLuint texDepth);
 
   GLuint m_defaultFBO;
   GLuint m_renderFBO;
@@ -87,6 +96,7 @@ private:
   bool m_aoEnabled;
   float m_aoStrength;
   bool m_edEnabled;
+  float m_edStrength;
   int m_width, m_height;
 };
 
