@@ -1,13 +1,13 @@
 # Translations for the Avogadro molecular builder.
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
-# Milo Ivir <mail@milotype.de>, 2021.
+# Milo Ivir <mail@milotype.de>, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-21 03:21+0000\n"
-"PO-Revision-Date: 2021-11-07 22:51+0000\n"
+"PO-Revision-Date: 2022-08-25 21:59+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -2644,7 +2644,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:101
 #: qtplugins/networkdatabases/networkdatabases.cpp:112
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Mrežno preuzimanje nije uspjelo"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:100
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
@@ -3598,19 +3598,19 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:243
 #: qtplugins/playertool/playertool.cpp:346
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Film (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:245
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Izvezi bitmap slike"
 
 #: qtplugins/playertool/playertool.cpp:246
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Film (*.mp4);;Film (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:668
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:266
 msgid "GIF FPS support warning"
@@ -3622,14 +3622,14 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:311
 msgid "Movie (*.avi)"
-msgstr ""
+msgstr "Film (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:341
 #: qtplugins/playertool/playertool.cpp:372 qtplugins/surfaces/surfaces.cpp:696
 #: qtplugins/surfaces/surfaces.cpp:739 qtplugins/surfaces/surfaces.cpp:751
 #: qtplugins/yaehmop/yaehmop.cpp:541
 msgid "Avogadro"
-msgstr ""
+msgstr "Avogadro"
 
 #: qtplugins/playertool/playertool.cpp:342 qtplugins/surfaces/surfaces.cpp:740
 msgid "Error: cannot add frame to video."
@@ -3638,7 +3638,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:373 qtplugins/surfaces/surfaces.cpp:752
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Nije moguće spremiti datoteku %1."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -3658,7 +3658,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
-msgstr ""
+msgstr "Poruka greške: "
 
 #: qtplugins/plotpdf/plotpdf.h:37
 msgid "PlotPdf"
@@ -4442,10 +4442,8 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
-#, fuzzy
-#| msgid "Navigate tool"
 msgid "Template tool"
-msgstr "Alat za kretanje"
+msgstr "Alat za predloške"
 
 #: qtplugins/templatetool/templatetoolwidget.cpp:263
 msgid "Other..."
