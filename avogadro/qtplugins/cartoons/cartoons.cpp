@@ -124,13 +124,13 @@ struct LayerCartoon : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    showBackbone = settings.value("cartoon/backbone", true).toBool();
+    showBackbone = settings.value("cartoon/backbone", false).toBool();
     showCartoon = settings.value("cartoon/cartoon", true).toBool();
     showTrace = settings.value("cartoon/trace", false).toBool();
     showTube = settings.value("cartoon/tube", false).toBool();
     showRibbon = settings.value("cartoon/ribbon", false).toBool();
     showRope = settings.value("cartoon/rope", false).toBool();
-    showSimpleCartoon = settings.value("cartoon/simplecartoon", true).toBool();
+    showSimpleCartoon = settings.value("cartoon/simplecartoon", false).toBool();
   }
 
   ~LayerCartoon() override
