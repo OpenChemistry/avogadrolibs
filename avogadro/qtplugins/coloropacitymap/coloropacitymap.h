@@ -23,13 +23,13 @@ public:
   explicit ColorOpacityMap(QObject* parent_ = nullptr);
   ~ColorOpacityMap();
 
-  QString name() const { return tr("ColorOpacityMap"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("ColorOpacityMap"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 
