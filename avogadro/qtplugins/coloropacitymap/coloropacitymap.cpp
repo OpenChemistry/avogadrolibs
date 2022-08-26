@@ -118,8 +118,11 @@ void ColorOpacityMap::moleculeChanged(unsigned int c)
 
 void ColorOpacityMap::updateActions()
 {
-  // Disable everything unless we have a real molecule and cubes
-  if (!m_molecule || m_molecule->cubeCount() == 0) {
+  // Disable everything unless we have VTK and a real molecule and cubes
+  auto widget = ActiveObjects::instance().activeWidget();
+  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+
+  if (!vtkWidget || !m_molecule || m_molecule->cubeCount() == 0) {
     foreach (QAction* action, m_actions)
       action->setEnabled(false);
     return;
