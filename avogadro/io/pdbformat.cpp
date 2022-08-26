@@ -254,6 +254,7 @@ std::vector<std::string> PdbFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("pdb");
+  ext.emplace_back("ent");
   return ext;
 }
 
