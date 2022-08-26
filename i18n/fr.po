@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-21 03:21+0000\n"
-"PO-Revision-Date: 2022-08-24 20:21+0000\n"
+"PO-Revision-Date: 2022-08-27 15:18+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3448,7 +3448,7 @@ msgstr "Halogène"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Chalcogen"
-msgstr ""
+msgstr "Chalcogène"
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
@@ -3460,19 +3460,16 @@ msgid "Optimize Geometry"
 msgstr "Optimisation de la géométrie"
 
 #: qtplugins/openbabel/openbabel.cpp:50
-#, fuzzy
 msgid "Configure Force Field…"
-msgstr "Configurer le champ de force..."
+msgstr "Configurer le champ de force…"
 
 #: qtplugins/openbabel/openbabel.cpp:56
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Interpréter les ordres de liaison ?"
+msgstr "Percevoir les liaisons"
 
 #: qtplugins/openbabel/openbabel.cpp:68
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Ajuster le pH"
+msgstr "Ajout d'hydrogène pour ajuster le pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:74
 msgid "Remove Hydrogens"
@@ -3480,30 +3477,33 @@ msgstr "Retirer les Hydrogènes"
 
 #: qtplugins/openbabel/openbabel.cpp:105
 msgid "&Open Babel"
-msgstr "&Ouvrir Babel"
+msgstr "&OpenBabel"
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Les formats de fichiers de OpenBabel ne sont pas prêt à être ajouté."
 
 #: qtplugins/openbabel/openbabel.cpp:192
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "Chargement de la molécule depuis OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:198
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Une erreur interne s'est produite : OpenBabel::readMolecule a été appelé, "
+"mais aucun résultat n'est disponible pour être analysé !"
 
 #: qtplugins/openbabel/openbabel.cpp:207
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr ""
+"Une erreur interne s'est produite pendant l'exécution de OpenBabel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:217
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Erreur lors de l'analyse des résultats de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:354 qtplugins/openbabel/openbabel.cpp:389
 #, qt-format
@@ -3511,6 +3511,8 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
+"Une erreur s'est produite lors de la récupération de la liste des champs de "
+"force pris en charge. (Utilisant « %1 »)."
 
 #: qtplugins/openbabel/openbabel.cpp:380
 msgid "Molecule invalid. Cannot optimize geometry."
@@ -3518,12 +3520,11 @@ msgstr "Molécule invalide. La géométrie ne peut pas être optimisée."
 
 #: qtplugins/openbabel/openbabel.cpp:398
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Impossible d'optimiser la géométrie avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:423
-#, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Optimisation de la géométrie"
+msgstr "Optimisation de la géométrie (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:424
 msgid "Generating MDL…"
@@ -3561,7 +3562,7 @@ msgstr "Mise à jour de la molécule…"
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:574
 #: qtplugins/openbabel/openbabel.cpp:756
 msgid "Error interpreting Open Babel output."
-msgstr "Erreur lors de l'interprétation de la sortie de Open Babel."
+msgstr "Erreur lors de l'interprétation de la sortie de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:586
 #, qt-format
@@ -3569,12 +3570,12 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"Le fichier de trajectoire %1 ne contient pas le même nombre d'atomes que la "
-"molécule actuelle"
+"Le résultat (%1) ne contient pas le même nombre d'atomes que la molécule "
+"d'origine (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Cannot open file with Open Babel."
-msgstr "Impossible d'ouvrir le fichier avec Open Babel."
+msgstr "Impossible d'ouvrir le fichier avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:531
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3582,7 +3583,7 @@ msgstr "Molécule invalide : Impossible de déceler les liaisons."
 
 #: qtplugins/openbabel/openbabel.cpp:537
 msgid "Perceiving Bonds (Open Babel)"
-msgstr "Déceler les liaisons (Open Babel)"
+msgstr "Déceler les liaisons (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:538
 msgid "Generating XYZ representation…"
@@ -3599,23 +3600,23 @@ msgstr "Conversion de XYZ en Open Babel avec %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:566
 msgid "Updating molecule from Open Babel…"
-msgstr "Actualisation de la molécule depuis Open Babel…"
+msgstr "Actualisation de la molécule depuis OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:618 qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot add hydrogens with Open Babel."
-msgstr "Impossible d'ajouter des hydrogènes avec Open Babel."
+msgstr "Impossible d'ajouter des hydrogènes avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:623 qtplugins/openbabel/openbabel.cpp:673
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Ajouter des hydrogènes (Open Babel)"
+msgstr "Ajouter des hydrogènes (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:624
 msgid "Generating Open Babel input…"
-msgstr "Génération de l'entrée de Open Babel…"
+msgstr "Génération de l'entrée de OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:682
 msgid "Error generating Open Babel input."
-msgstr "Erreur lors de la génération de l'entrée de Open Babel."
+msgstr "Erreur lors de la génération de l'entrée de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:645 qtplugins/openbabel/openbabel.cpp:695
 #: qtplugins/openbabel/openbabel.cpp:737
@@ -3637,15 +3638,15 @@ msgstr "Génération de l'entrée d'Obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr "Impossible de supprimer les hydrogènes avec Open Babel."
+msgstr "Impossible de supprimer les hydrogènes avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:715
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Retirer les hydrogènes (Open Babel)"
+msgstr "Retirer les hydrogènes (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:724
 msgid "Error generating Open Babel data."
-msgstr "Erreur lors de la génération des données de Open Babel."
+msgstr "Erreur lors de la génération des données de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:747
 msgid "Reading obabel output…"
@@ -3656,7 +3657,7 @@ msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
-"Open Babel est déjà en cours d'exécution. Attendez que l'opération soit "
+"OpenBabel est déjà en cours d'exécution. Attendez que l'opération soit "
 "terminée et réessayez."
 
 #: qtplugins/openbabel/openbabel.h:36
@@ -3665,7 +3666,7 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
-msgstr "Intéragir avec les fonctionnalitées de Open Babel."
+msgstr "Intéragir avec les fonctionnalitées de OpenBabel."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -4052,9 +4053,8 @@ msgid "Chain"
 msgstr "Chaine"
 
 #: qtplugins/propertytables/propertymodel.cpp:429
-#, fuzzy
 msgid "Secondary Structure"
-msgstr "Ouvrir le fichier"
+msgstr "Structure secondaire"
 
 #: qtplugins/propertytables/propertymodel.cpp:431
 msgid "Heterogen"
@@ -4132,7 +4132,7 @@ msgstr "Tourne"
 #: qtplugins/propertytables/propertymodel.cpp:799
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Ressort hélicoïdal"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -4151,22 +4151,19 @@ msgid "Torsion Properties…"
 msgstr "Propriétés de torsion…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Propriétés de la molécule"
+msgstr "Propriétés des résidus…"
 
 #: qtplugins/propertytables/propertytables.cpp:67
-#, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
-"Fenêtre d'affichage de propriétés d'atomes, de liaisons, d'angles et d'angle "
-"de torsion. Elle inclut également un éditeur de coordonnées cartésiennes."
+"Tableaux d'affichage et de modification des propriétés des atomes, des "
+"liaisons, des angles et des angles de torsion."
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "Propriétés"
+msgstr "Tableaux des Propriétés"
 
 #: qtplugins/propertytables/propertyview.cpp:31
 msgid "Atom Properties"
@@ -4189,9 +4186,8 @@ msgid "Conformer Properties"
 msgstr "Propriétés des conformères"
 
 #: qtplugins/propertytables/propertyview.cpp:46
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Propriétés de la molécule"
+msgstr "Propriétés des résidus"
 
 #: qtplugins/propertytables/propertyview.cpp:49
 msgid "Molecule Properties"
@@ -4207,22 +4203,16 @@ msgid "Renders primitives using QTAIM properties"
 msgstr "Affiche les primitives selon les propriétés QTAIM"
 
 #: qtplugins/qtaim/qtaimextension.cpp:46
-#, fuzzy
-#| msgid "Molecular Graph..."
 msgid "Molecular Graph…"
-msgstr "Modèle moléculaire…"
+msgstr "Graphe moléculaire…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
-#, fuzzy
-#| msgid "Molecular Graph with Lone Pairs..."
 msgid "Molecular Graph with Lone Pairs…"
-msgstr "Modèle moléculaire avec paires libres..."
+msgstr "Graphe moléculaire avec les doublets non liant…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:60
-#, fuzzy
-#| msgid "Atomic Charge..."
 msgid "Atomic Charge…"
-msgstr "Charge atomique..."
+msgstr "Charge partielle…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:109
 msgid "Open WFN File"
@@ -4241,10 +4231,13 @@ msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Sélectionnez l'interpréteur Python utilisé pour exécuter les programmes de "
+"génération des données d'entrées.\n"
+"Avogadro doit être redémarré pour que les changements prennent effet."
 
 #: qtplugins/quantuminput/quantuminput.cpp:230
 msgid "Set Python Path…"
-msgstr ""
+msgstr "Sélection du chemin d'accès à python…"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
@@ -4252,7 +4245,7 @@ msgstr "Entrée quantique"
 
 #: qtplugins/quantuminput/quantuminput.h:46
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Générer les données d'entrées pour les codes quantiques."
 
 #: qtplugins/resetview/resetview.cpp:36
 msgid "Center"
@@ -4260,7 +4253,7 @@ msgstr "Centrer"
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Aligner la vue sur les axes"
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4271,10 +4264,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipuler la caméra de la vue."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Charge :"
+msgstr "Programme de la modélisation des charges"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -5425,6 +5416,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
+"Extension de fichier pour les conversions d'OpenBabel (par défaut - "
+"Avogadro::POSCAR) :"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
