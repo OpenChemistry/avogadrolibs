@@ -275,10 +275,10 @@ QString FileFormatDialog::generateFilterString(
   }
 
   if (options & AllFiles)
-    filterString.prepend(tr("All files (*);;"));
+    filterString.prepend(tr("All files") + " (*);;");
 
   if (options & AllFormats) {
-    filterString.prepend(tr("All supported formats (%1);;")
+    filterString.prepend((tr("All supported formats") + " (%1);;")
                            .arg(allExtensions.join(QStringLiteral(" "))));
   }
 
