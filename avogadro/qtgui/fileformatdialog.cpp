@@ -12,7 +12,6 @@
 #include <QtWidgets/QMessageBox>
 
 #include <QtCore/QSettings>
-#include <QDebug>
 
 #include <vector>
 
@@ -279,11 +278,9 @@ QString FileFormatDialog::generateFilterString(
     filterString.prepend(tr("All files") + " (*);;");
 
   if (options & AllFormats) {
-    filterString.prepend(tr("All supported formats") + " (%1);;")
+    filterString.prepend((tr("All supported formats") + " (%1);;")
                            .arg(allExtensions.join(QStringLiteral(" "))));
   }
-
-  qDebug() << " generate export " << filterString;
 
   return filterString;
 }
