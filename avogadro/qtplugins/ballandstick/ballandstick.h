@@ -7,6 +7,10 @@
 #define AVOGADRO_QTPLUGINS_BALLANDSTICK_H
 
 #include <avogadro/qtgui/sceneplugin.h>
+#include <avogadro/rendering/cylindergeometry.h>
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/spheregeometry.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -51,6 +55,13 @@ private:
   std::string m_name = "Ball and Stick";
   float m_atomScale = 0.3f;
   float m_bondRadius = 0.1f;
+
+  void initialize();
+
+  Rendering::GeometryNode* m_geometry;
+  Rendering::SphereGeometry* m_spheres;
+  Rendering::SphereGeometry* m_selectedSpheres;
+  Rendering::CylinderGeometry* m_cylinders;
 };
 
 } // end namespace QtPlugins
