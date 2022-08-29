@@ -213,6 +213,9 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
 
 void TextLabelBase::RenderImpl::compileShaders()
 {
+  if (vertexShader != nullptr && fragmentShader != nullptr && shaderProgram != nullptr)
+    return;
+
   if (vertexShader == nullptr)
     vertexShader = new Shader;
   vertexShader->setType(Shader::Vertex);
