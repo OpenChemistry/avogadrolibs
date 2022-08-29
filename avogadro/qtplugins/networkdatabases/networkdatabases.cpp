@@ -82,9 +82,7 @@ void NetworkDatabases::showDialog()
   // services
   m_network->get(QNetworkRequest(
     QUrl("https://cactus.nci.nih.gov/chemical/structure/" + structureName +
-         "/sdf?get3d=true" +
-         "&resolver=name_by_opsin,name_by_cir,name_by_chemspider" +
-         "&requester=Avogadro2")));
+         "/file?format=sdf&get3d=true")));
 
   m_moleculeName = structureName;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(structureName));
