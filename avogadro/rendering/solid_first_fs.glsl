@@ -44,6 +44,23 @@ vec3 getNormalAt(vec2 normalUV)
   return normalize(r);
 }
 
+vec3 getNormalNear(vec2 normalUV)
+{
+  float cent = texture2D(inDepthTex, normalUV).x;
+  float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
+  float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
+  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
+  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float xposdelta = xpos - cent;
+  float xnegdelta = cent - xneg;
+  float yposdelta = ypos - cent;
+  float ynegdelta = cent - yneg;
+  float xdelta = abs(xposdelta) > abs(xnegdelta) ? xnegdelta : xposdelta;
+  float ydelta = abs(yposdelta) > abs(ynegdelta) ? ynegdelta : yposdelta;
+  vec3 r = vec3(xdelta, ydelta, 0.5 / width + 0.5 / height);
+  return normalize(r);
+}
+
 float lerp(float a, float b, float f)
 {
     return a + f * (b - a);
@@ -98,11 +115,10 @@ float computeEdgeLuminosity(vec3 normal)
 
 void main()
 {
-  vec3 normal = getNormalAt(UV);
-
   float luminosity = 1.0;
-  luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(normal));
-  luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(normal));
+  luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
+  luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
+
   vec4 color = texture2D(inRGBTex, UV);
   gl_FragColor = vec4(color.xyz * luminosity, color.w);
   gl_FragDepth = texture2D(inDepthTex, UV).x;

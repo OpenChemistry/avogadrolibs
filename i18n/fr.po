@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-08-21 03:21+0000\n"
-"PO-Revision-Date: 2022-08-22 16:48+0000\n"
+"POT-Creation-Date: 2022-08-28 03:35+0000\n"
+"PO-Revision-Date: 2022-08-27 15:18+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1068,12 +1068,15 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Plusieurs %1 trouvés qui peuvent %2 ce format. Lequel utiliser ?"
 
 #: qtgui/fileformatdialog.cpp:278
-msgid "All files (*);;"
-msgstr "Tous les fichiers (*);;"
+#, fuzzy
+#| msgid "All Files"
+msgid "All files"
+msgstr "Tous les fichiers"
 
 #: qtgui/fileformatdialog.cpp:281
-#, qt-format
-msgid "All supported formats (%1);;"
+#, fuzzy
+#| msgid "All supported formats (%1);;"
+msgid "All supported formats"
 msgstr "Tous les formats supportés (%1);;"
 
 #: qtgui/interfacescript.cpp:222
@@ -1092,90 +1095,90 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:52
+#: qtgui/jsonwidget.cpp:53
 msgid "'userOptions' missing."
 msgstr "'userOptions' manquant."
 
-#: qtgui/jsonwidget.cpp:83
+#: qtgui/jsonwidget.cpp:84
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "L'option '%1' n'est pas une référence vers un objet."
 
-#: qtgui/jsonwidget.cpp:90
+#: qtgui/jsonwidget.cpp:91
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'type' n'est pas une chaine pour l'option '%1'."
 
-#: qtgui/jsonwidget.cpp:97
+#: qtgui/jsonwidget.cpp:98
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "Impossible de trouver l'option « %1 »."
 
-#: qtgui/jsonwidget.cpp:151
+#: qtgui/jsonwidget.cpp:152
 #, qt-format
 msgid "Tab %1"
 msgstr "Onglet %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:174:666
+#: qtgui/jsonwidget.cpp:175:666
 msgid "Title"
 msgstr "Titre"
 
-#: qtgui/jsonwidget.cpp:178
+#: qtgui/jsonwidget.cpp:179
 msgid "Filename Base"
 msgstr "Base du nom de fichier"
 
-#: qtgui/jsonwidget.cpp:182
+#: qtgui/jsonwidget.cpp:184
 msgid "Processor Cores"
 msgstr "Cœurs du processeur"
 
-#: qtgui/jsonwidget.cpp:186
+#: qtgui/jsonwidget.cpp:189
 msgid "Calculation Type"
 msgstr "Type de calcul"
 
-#: qtgui/jsonwidget.cpp:190
+#: qtgui/jsonwidget.cpp:193
 msgid "Theory"
 msgstr "Théorie"
 
-#: qtgui/jsonwidget.cpp:190
+#: qtgui/jsonwidget.cpp:193
 msgid "Basis"
 msgstr "Base"
 
-#: qtgui/jsonwidget.cpp:195
+#: qtgui/jsonwidget.cpp:198 qtgui/jsonwidget.cpp:202
 msgid "Charge"
 msgstr "Charge"
 
-#: qtgui/jsonwidget.cpp:198
+#: qtgui/jsonwidget.cpp:199 qtgui/jsonwidget.cpp:204
 msgid "Multiplicity"
 msgstr "Multiplicité"
 
-#: qtgui/jsonwidget.cpp:510
+#: qtgui/jsonwidget.cpp:523
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Erreur : la valeur doit être un objet pour la clé '%1'."
 
-#: qtgui/jsonwidget.cpp:541
+#: qtgui/jsonwidget.cpp:554
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Type de l'option « %1 » non reconnu pour l'option « %2 »."
 
-#: qtgui/jsonwidget.cpp:550 qtgui/jsonwidget.cpp:586 qtgui/jsonwidget.cpp:608
-#: qtgui/jsonwidget.cpp:629 qtgui/jsonwidget.cpp:652 qtgui/jsonwidget.cpp:674
+#: qtgui/jsonwidget.cpp:563 qtgui/jsonwidget.cpp:598 qtgui/jsonwidget.cpp:620
+#: qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:663 qtgui/jsonwidget.cpp:684
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Erreur du paramètre par défaut pour l'option « %1 ». Type du widget invalide."
 
-#: qtgui/jsonwidget.cpp:557 qtgui/jsonwidget.cpp:593 qtgui/jsonwidget.cpp:615
-#: qtgui/jsonwidget.cpp:636 qtgui/jsonwidget.cpp:659 qtgui/jsonwidget.cpp:681
+#: qtgui/jsonwidget.cpp:570 qtgui/jsonwidget.cpp:605 qtgui/jsonwidget.cpp:627
+#: qtgui/jsonwidget.cpp:648 qtgui/jsonwidget.cpp:670 qtgui/jsonwidget.cpp:691
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Erreur du paramètre par défaut pour l'option « %1 ». Valeur par défaut "
 "incorrecte :"
 
-#: qtgui/jsonwidget.cpp:571
+#: qtgui/jsonwidget.cpp:584
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1184,77 +1187,77 @@ msgstr ""
 "Erreur du paramètre par défaut pour l'option « %1 ». Impossible de trouver "
 "l'index d'entrée de combo valide avec la valeur :"
 
-#: qtgui/jsonwidget.cpp:743
+#: qtgui/jsonwidget.cpp:752
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 "Widget non supporté dans les options de collection pour l'option « %1 »."
 
-#: qtgui/jsonwidget.cpp:785 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:794 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[pas de molécule]"
 
-#: qtgui/layermodel.cpp:77
+#: qtgui/layermodel.cpp:85
 #, qt-format
 msgid "Layer %1"
 msgstr "Calque %1"
 
-#: qtgui/layermodel.cpp:127 qtplugins/ballandstick/ballandstick.h:29
+#: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
 msgstr "Boule et bâtonnet"
 
-#: qtgui/layermodel.cpp:129 qtplugins/cartoons/cartoons.h:30
+#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
 #, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Animation"
 
-#: qtgui/layermodel.cpp:131 qtplugins/closecontacts/closecontacts.h:30
+#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "Contacts proches"
 
-#: qtgui/layermodel.cpp:133 qtplugins/crystal/crystalscene.h:31
+#: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
 msgstr ""
 
-#: qtgui/layermodel.cpp:135 qtplugins/force/force.h:28
+#: qtgui/layermodel.cpp:143 qtplugins/force/force.h:28
 msgid "Force"
 msgstr "Force"
 
-#: qtgui/layermodel.cpp:137 qtplugins/label/label.h:25
+#: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
 msgid "Labels"
 msgstr "Étiquette"
 
-#: qtgui/layermodel.cpp:139 qtplugins/licorice/licorice.h:29
+#: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "Acide glycyrrhizique"
 
-#: qtgui/layermodel.cpp:141 qtplugins/meshes/meshes.h:29
+#: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 msgid "Meshes"
 msgstr "Maillages"
 
-#: qtgui/layermodel.cpp:143 qtplugins/noncovalent/noncovalent.h:30
+#: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
 msgstr "Non covalente"
 
-#: qtgui/layermodel.cpp:145 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:153 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr ""
 
-#: qtgui/layermodel.cpp:147 qtplugins/surfaces/surfacedialog.cpp:26
+#: qtgui/layermodel.cpp:155 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "Van der Waals"
 
-#: qtgui/layermodel.cpp:149 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:157 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "Van der Waals (OA)"
 
-#: qtgui/layermodel.cpp:151 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:159 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Fil de fer"
 
@@ -1703,9 +1706,8 @@ msgid "By Secondary Structure"
 msgstr "Affiche de la structure secondaire d'une protéine"
 
 #: qtplugins/applycolors/applycolors.cpp:87
-#, fuzzy
 msgid "By Amino Acid"
-msgstr "Acides aminés :"
+msgstr "Par acides aminés"
 
 #: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
@@ -1904,18 +1906,6 @@ msgid "Bond-Centric Manipulation"
 msgstr "Manipulation des liaisons"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:124
-#, fuzzy
-#| msgid ""
-#| "Bond Centric Manipulation Tool\n"
-#| "\n"
-#| "Left Mouse: \tClick and drag to rotate the view.\n"
-#| "Middle Mouse: Click and drag to zoom in or out.\n"
-#| "Right Mouse: \tClick and drag to move the view.\n"
-#| "Double-Click: \tReset the view.\n"
-#| "\n"
-#| "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
-#| "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
-#| "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgid ""
 "Bond Centric Manipulation Tool\n"
 "\n"
@@ -1928,7 +1918,7 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Outil de manipulation des liaisons\n"
+"Outil de manipulation centrique des liaisons\n"
 "\n"
 "Bouton gauche :\tcliquer et glisser pour tourner la vue.\n"
 "Bouton central :\tcliquer et glisser pour effectuer un zoom avant ou "
@@ -1937,9 +1927,9 @@ msgstr ""
 "Double clic :\tréinitialisation de la vue.\n"
 "\n"
 "Clic gauche et glisser sur une liaison pour définir le plan de "
-"manipulation.\n"
-"Clic gauche et glisser un des atomes de la liaison pour modifier son angle.\n"
-"Clic droit et glisser un des atomes de la liaison pour modifier sa distance."
+"manipulation :\n"
+"Clic gauche et glisser un des atomes de la liaison pour modifier son angle\n"
+"Clic droit et glisser un des atomes de la liaison pour modifier sa distance"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:776
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:864
@@ -1951,7 +1941,7 @@ msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:798
-#: qtplugins/editor/editor.cpp:237 qtplugins/measuretool/measuretool.cpp:216
+#: qtplugins/editor/editor.cpp:259 qtplugins/measuretool/measuretool.cpp:216
 #: qtplugins/measuretool/measuretool.cpp:217
 #: qtplugins/measuretool/measuretool.cpp:219
 #, qt-format
@@ -1959,9 +1949,8 @@ msgid "%L1 Å"
 msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:168
-#, fuzzy
 msgid "Bond centric manipulation tool."
-msgstr "Manipulation des liaisons"
+msgstr "Outil de manipulation centrique des liaisons."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:173
 msgid ""
@@ -2079,7 +2068,7 @@ msgid "Client server operations."
 msgstr ""
 
 #: qtplugins/clientserver/clientserver.cpp:72
-#: qtplugins/coloropacitymap/coloropacitymap.cpp:86
+#: qtplugins/coloropacitymap/coloropacitymap.cpp:85
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72 qtplugins/mongochem/mongochem.cpp:33
 #: qtplugins/openbabel/openbabel.cpp:105
@@ -2197,7 +2186,7 @@ msgstr ""
 msgid "Repulsive"
 msgstr "Répulsif"
 
-#: qtplugins/coloropacitymap/coloropacitymap.cpp:68
+#: qtplugins/coloropacitymap/coloropacitymap.cpp:67
 msgid "Edit Color Opacity Map…"
 msgstr ""
 
@@ -2403,37 +2392,54 @@ msgstr "Format Turbomole"
 msgid "Copy"
 msgstr "Copier"
 
+#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:80
+#: qtplugins/lineformatinput/lineformatinput.cpp:46
+#: qtplugins/mongochem/listmoleculesmodel.cpp:71
+msgid "SMILES"
+msgstr "SMILES"
+
+#: qtplugins/copypaste/copypaste.cpp:34 qtplugins/copypaste/copypaste.cpp:80
+#: qtplugins/lineformatinput/lineformatinput.cpp:45
+msgid "InChI"
+msgstr "InChI"
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:33:276
+#: qtplugins/copypaste/copypaste.cpp:35:276
 msgid "Cut"
 msgstr "Couper"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:34:288
+#: qtplugins/copypaste/copypaste.cpp:36:288
 msgid "Clear"
 msgstr "Effacer"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
-#. i18n: ectx: property (text), widget (QToolButton, paste)
-#: qtplugins/copypaste/copypaste.cpp:35:282
-msgid "Paste"
+#: qtplugins/copypaste/copypaste.cpp:37
+#, fuzzy
+#| msgid "Paste"
+msgid "&Paste"
 msgstr "Coller"
 
-#: qtplugins/copypaste/copypaste.cpp:72
+#: qtplugins/copypaste/copypaste.cpp:81 qtplugins/copypaste/copypaste.cpp:83
 msgid "&Edit"
 msgstr "&Éditer"
 
-#: qtplugins/copypaste/copypaste.cpp:117
+#: qtplugins/copypaste/copypaste.cpp:83
+#, fuzzy
+#| msgid "Copy"
+msgid "Copy As"
+msgstr "Copier"
+
+#: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error Clipping Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:118
+#: qtplugins/copypaste/copypaste.cpp:152
 msgid "Error generating clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:119
+#: qtplugins/copypaste/copypaste.cpp:153
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2443,7 +2449,7 @@ msgstr ""
 "Format de sortie : %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:123 qtplugins/copypaste/copypaste.cpp:241
+#: qtplugins/copypaste/copypaste.cpp:157 qtplugins/copypaste/copypaste.cpp:275
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2452,19 +2458,19 @@ msgstr ""
 "Erreur du lecteur :\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:202 qtplugins/copypaste/copypaste.cpp:235
+#: qtplugins/copypaste/copypaste.cpp:236 qtplugins/copypaste/copypaste.cpp:269
 msgid "Error Pasting Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:203
+#: qtplugins/copypaste/copypaste.cpp:237
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:236
+#: qtplugins/copypaste/copypaste.cpp:270
 msgid "Error reading clipboard data."
 msgstr "Erreur de lecture des données du presse-papiers."
 
-#: qtplugins/copypaste/copypaste.cpp:237
+#: qtplugins/copypaste/copypaste.cpp:271
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2743,12 +2749,12 @@ msgstr "Changer le type de liaison"
 msgid "Remove Bond"
 msgstr "Supprimer liaison"
 
-#: qtplugins/editor/editor.cpp:232 qtplugins/measuretool/measuretool.cpp:190
+#: qtplugins/editor/editor.cpp:254 qtplugins/measuretool/measuretool.cpp:190
 #: qtplugins/measuretool/measuretool.cpp:215
 msgid "Distance:"
 msgstr "Distance :"
 
-#: qtplugins/editor/editor.cpp:235
+#: qtplugins/editor/editor.cpp:257
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -2787,33 +2793,45 @@ msgstr "Triple"
 msgid "&Import"
 msgstr "&Importer"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:75
+#: qtplugins/fetchpdb/fetchpdb.cpp:61
+#, fuzzy
+#| msgid "Fetch from PDB"
+msgid "Fetch PDB"
+msgstr "Récupérer depuis le PDB"
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:62
+#, fuzzy, qt-format
+#| msgid "Cannot read molecular file %1."
+msgid "Could not read the PDB molecule: %1"
+msgstr "Impossible de lire le fichier moléculaire %1."
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
 msgstr "Code PDB"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:76
+#: qtplugins/fetchpdb/fetchpdb.cpp:81
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
 msgstr "Structure chimique à télécharger."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:88
+#: qtplugins/fetchpdb/fetchpdb.cpp:93
 #: qtplugins/networkdatabases/networkdatabases.cpp:90
 #, qt-format
 msgid "Querying for %1"
 msgstr "Requête pour %1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:99 qtplugins/fetchpdb/fetchpdb.cpp:117
+#: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
 #: qtplugins/networkdatabases/networkdatabases.cpp:101
 #: qtplugins/networkdatabases/networkdatabases.cpp:112
 msgid "Network Download Failed"
 msgstr "Le téléchargement depuis le réseau a échoué"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:100
+#: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:102
 msgid "Network timeout or other error."
 msgstr "Délai d'attente réseau expiré, ou autre erreur."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:118
+#: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:113
 #, qt-format
 msgid "Specified molecule could not be found: %1"
@@ -3061,15 +3079,14 @@ msgid "Insert molecular fragments for building larger molecules."
 msgstr ""
 "Insérer des fragments moléculaires pour construire de plus grandes molécules."
 
-#: qtplugins/label/label.cpp:133 qtplugins/meshes/meshes.cpp:170
-#: qtplugins/meshes/meshes.cpp:176
+#: qtplugins/label/label.cpp:133 qtplugins/meshes/meshes.cpp:176
+#: qtplugins/meshes/meshes.cpp:182
 msgid "Color:"
 msgstr "Couleur :"
 
 #: qtplugins/label/label.cpp:143
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Distance"
+msgstr "Distance du centre :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3088,9 +3105,8 @@ msgid "Index"
 msgstr "Indice"
 
 #: qtplugins/label/label.cpp:160
-#, fuzzy
 msgid "In."
-msgstr "Pouce"
+msgstr "In."
 
 #: qtplugins/label/label.cpp:164 qtplugins/propertytables/propertymodel.cpp:380
 #: qtplugins/symmetry/operationstablemodel.cpp:63
@@ -3099,16 +3115,15 @@ msgstr "Élément"
 
 #: qtplugins/label/label.cpp:165
 msgid "El."
-msgstr ""
+msgstr "Él."
 
 #: qtplugins/label/label.cpp:169
-#, fuzzy
 msgid "Element & Ordinal"
-msgstr "Nom de l'élément"
+msgstr "Élément & Ordinal"
 
 #: qtplugins/label/label.cpp:170
 msgid "El.&Or."
-msgstr ""
+msgstr "Él.&Or."
 
 #: qtplugins/label/label.cpp:173
 msgid ", "
@@ -3133,9 +3148,8 @@ msgid " & "
 msgstr " & "
 
 #: qtplugins/label/label.cpp:215
-#, fuzzy
 msgid "Residue Label:"
-msgstr "Nom du résidu"
+msgstr "Étiquette du résidu :"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3194,20 +3208,10 @@ msgstr "SMILES…"
 msgid "InChI…"
 msgstr "InChI…"
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:45
-msgid "InChI"
-msgstr "InChI"
-
-#: qtplugins/lineformatinput/lineformatinput.cpp:46
-#: qtplugins/mongochem/listmoleculesmodel.cpp:71
-msgid "SMILES"
-msgstr "SMILES"
-
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "Pas de description"
+msgstr "Aucune description trouvée !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
@@ -3263,10 +3267,11 @@ msgid ""
 msgstr ""
 "Outil de mesure\n"
 "\n"
-"Bouton gauche :\tsélectionner jusqu'à trois atomes.\n"
+"Bouton gauche :\tsélectionner jusqu'à quatre atomes.\n"
 "\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le "
 "3ème.\n"
-"\tL'angle est mesuré entre le 1et le 3ème  autour du 2ème.\n"
+"\tL'angle est mesuré entre le 1er et le 3ème autour du 2ème.\n"
+"\tLe dièdre est mesuré entre le 1er, le 2ème, le 3ème et le 4ème.\n"
 "Bouton droit :\teffacement des mesures."
 
 #: qtplugins/measuretool/measuretool.cpp:188
@@ -3289,7 +3294,7 @@ msgstr "Outil de mesure"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:164:1570
+#: qtplugins/meshes/meshes.cpp:170:1570
 msgid "Opacity:"
 msgstr "Opacité :"
 
@@ -3466,7 +3471,7 @@ msgstr "Halogène"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Chalcogen"
-msgstr ""
+msgstr "Chalcogène"
 
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
@@ -3478,19 +3483,16 @@ msgid "Optimize Geometry"
 msgstr "Optimisation de la géométrie"
 
 #: qtplugins/openbabel/openbabel.cpp:50
-#, fuzzy
 msgid "Configure Force Field…"
-msgstr "Configurer le champ de force..."
+msgstr "Configurer le champ de force…"
 
 #: qtplugins/openbabel/openbabel.cpp:56
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Interpréter les ordres de liaison ?"
+msgstr "Percevoir les liaisons"
 
 #: qtplugins/openbabel/openbabel.cpp:68
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Ajuster le pH"
+msgstr "Ajout d'hydrogène pour ajuster le pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:74
 msgid "Remove Hydrogens"
@@ -3498,30 +3500,33 @@ msgstr "Retirer les Hydrogènes"
 
 #: qtplugins/openbabel/openbabel.cpp:105
 msgid "&Open Babel"
-msgstr "&Ouvrir Babel"
+msgstr "&OpenBabel"
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Les formats de fichiers de OpenBabel ne sont pas prêt à être ajouté."
 
 #: qtplugins/openbabel/openbabel.cpp:192
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "Chargement de la molécule depuis OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:198
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Une erreur interne s'est produite : OpenBabel::readMolecule a été appelé, "
+"mais aucun résultat n'est disponible pour être analysé !"
 
 #: qtplugins/openbabel/openbabel.cpp:207
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr ""
+"Une erreur interne s'est produite pendant l'exécution de OpenBabel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:217
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Erreur lors de l'analyse des résultats de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:354 qtplugins/openbabel/openbabel.cpp:389
 #, qt-format
@@ -3529,6 +3534,8 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
+"Une erreur s'est produite lors de la récupération de la liste des champs de "
+"force pris en charge. (Utilisant « %1 »)."
 
 #: qtplugins/openbabel/openbabel.cpp:380
 msgid "Molecule invalid. Cannot optimize geometry."
@@ -3536,12 +3543,11 @@ msgstr "Molécule invalide. La géométrie ne peut pas être optimisée."
 
 #: qtplugins/openbabel/openbabel.cpp:398
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Impossible d'optimiser la géométrie avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:423
-#, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Optimisation de la géométrie"
+msgstr "Optimisation de la géométrie (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:424
 msgid "Generating MDL…"
@@ -3579,7 +3585,7 @@ msgstr "Mise à jour de la molécule…"
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:574
 #: qtplugins/openbabel/openbabel.cpp:756
 msgid "Error interpreting Open Babel output."
-msgstr "Erreur lors de l'interprétation de la sortie de Open Babel."
+msgstr "Erreur lors de l'interprétation de la sortie de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:586
 #, qt-format
@@ -3587,12 +3593,12 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
-"Le fichier de trajectoire %1 ne contient pas le même nombre d'atomes que la "
-"molécule actuelle"
+"Le résultat (%1) ne contient pas le même nombre d'atomes que la molécule "
+"d'origine (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Cannot open file with Open Babel."
-msgstr "Impossible d'ouvrir le fichier avec Open Babel."
+msgstr "Impossible d'ouvrir le fichier avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:531
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3600,7 +3606,7 @@ msgstr "Molécule invalide : Impossible de déceler les liaisons."
 
 #: qtplugins/openbabel/openbabel.cpp:537
 msgid "Perceiving Bonds (Open Babel)"
-msgstr "Déceler les liaisons (Open Babel)"
+msgstr "Déceler les liaisons (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:538
 msgid "Generating XYZ representation…"
@@ -3617,23 +3623,23 @@ msgstr "Conversion de XYZ en Open Babel avec %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:566
 msgid "Updating molecule from Open Babel…"
-msgstr "Actualisation de la molécule depuis Open Babel…"
+msgstr "Actualisation de la molécule depuis OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:618 qtplugins/openbabel/openbabel.cpp:660
 msgid "Cannot add hydrogens with Open Babel."
-msgstr "Impossible d'ajouter des hydrogènes avec Open Babel."
+msgstr "Impossible d'ajouter des hydrogènes avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:623 qtplugins/openbabel/openbabel.cpp:673
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Ajouter des hydrogènes (Open Babel)"
+msgstr "Ajouter des hydrogènes (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:624
 msgid "Generating Open Babel input…"
-msgstr "Génération de l'entrée de Open Babel…"
+msgstr "Génération de l'entrée de OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:682
 msgid "Error generating Open Babel input."
-msgstr "Erreur lors de la génération de l'entrée de Open Babel."
+msgstr "Erreur lors de la génération de l'entrée de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:645 qtplugins/openbabel/openbabel.cpp:695
 #: qtplugins/openbabel/openbabel.cpp:737
@@ -3655,15 +3661,15 @@ msgstr "Génération de l'entrée d'Obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr "Impossible de supprimer les hydrogènes avec Open Babel."
+msgstr "Impossible de supprimer les hydrogènes avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:715
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Retirer les hydrogènes (Open Babel)"
+msgstr "Retirer les hydrogènes (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:724
 msgid "Error generating Open Babel data."
-msgstr "Erreur lors de la génération des données de Open Babel."
+msgstr "Erreur lors de la génération des données de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:747
 msgid "Reading obabel output…"
@@ -3674,7 +3680,7 @@ msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
-"Open Babel est déjà en cours d'exécution. Attendez que l'opération soit "
+"OpenBabel est déjà en cours d'exécution. Attendez que l'opération soit "
 "terminée et réessayez."
 
 #: qtplugins/openbabel/openbabel.h:36
@@ -3683,7 +3689,7 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
-msgstr "Intéragir avec les fonctionnalitées de Open Babel."
+msgstr "Intéragir avec les fonctionnalitées de OpenBabel."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -4057,9 +4063,8 @@ msgid "End Atom"
 msgstr "Atome d'arrivée"
 
 #: qtplugins/propertytables/propertymodel.cpp:410
-#, fuzzy
 msgid "Bond Order"
-msgstr "Multiplicité :"
+msgstr "Ordre de la liaison"
 
 #: qtplugins/propertytables/propertymodel.cpp:412
 msgctxt "in Angstrom"
@@ -4071,9 +4076,8 @@ msgid "Chain"
 msgstr "Chaine"
 
 #: qtplugins/propertytables/propertymodel.cpp:429
-#, fuzzy
 msgid "Secondary Structure"
-msgstr "Ouvrir le fichier"
+msgstr "Structure secondaire"
 
 #: qtplugins/propertytables/propertymodel.cpp:431
 msgid "Heterogen"
@@ -4151,7 +4155,7 @@ msgstr "Tourne"
 #: qtplugins/propertytables/propertymodel.cpp:799
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Ressort hélicoïdal"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -4170,22 +4174,19 @@ msgid "Torsion Properties…"
 msgstr "Propriétés de torsion…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Propriétés de la molécule"
+msgstr "Propriétés des résidus…"
 
 #: qtplugins/propertytables/propertytables.cpp:67
-#, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
-"Fenêtre d'affichage de propriétés d'atomes, de liaisons, d'angles et d'angle "
-"de torsion. Elle inclut également un éditeur de coordonnées cartésiennes."
+"Tableaux d'affichage et de modification des propriétés des atomes, des "
+"liaisons, des angles et des angles de torsion."
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "Propriétés"
+msgstr "Tableaux des Propriétés"
 
 #: qtplugins/propertytables/propertyview.cpp:31
 msgid "Atom Properties"
@@ -4208,9 +4209,8 @@ msgid "Conformer Properties"
 msgstr "Propriétés des conformères"
 
 #: qtplugins/propertytables/propertyview.cpp:46
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Propriétés de la molécule"
+msgstr "Propriétés des résidus"
 
 #: qtplugins/propertytables/propertyview.cpp:49
 msgid "Molecule Properties"
@@ -4226,22 +4226,16 @@ msgid "Renders primitives using QTAIM properties"
 msgstr "Affiche les primitives selon les propriétés QTAIM"
 
 #: qtplugins/qtaim/qtaimextension.cpp:46
-#, fuzzy
-#| msgid "Molecular Graph..."
 msgid "Molecular Graph…"
-msgstr "Modèle moléculaire…"
+msgstr "Graphe moléculaire…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
-#, fuzzy
-#| msgid "Molecular Graph with Lone Pairs..."
 msgid "Molecular Graph with Lone Pairs…"
-msgstr "Modèle moléculaire avec paires libres..."
+msgstr "Graphe moléculaire avec les doublets non liant…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:60
-#, fuzzy
-#| msgid "Atomic Charge..."
 msgid "Atomic Charge…"
-msgstr "Charge atomique..."
+msgstr "Charge partielle…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:109
 msgid "Open WFN File"
@@ -4260,10 +4254,13 @@ msgid ""
 "Select the python interpreter used to run input generator scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Sélectionnez l'interpréteur Python utilisé pour exécuter les programmes de "
+"génération des données d'entrées.\n"
+"Avogadro doit être redémarré pour que les changements prennent effet."
 
 #: qtplugins/quantuminput/quantuminput.cpp:230
 msgid "Set Python Path…"
-msgstr ""
+msgstr "Sélection du chemin d'accès à python…"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
@@ -4271,7 +4268,7 @@ msgstr "Entrée quantique"
 
 #: qtplugins/quantuminput/quantuminput.h:46
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Générer les données d'entrées pour les codes quantiques."
 
 #: qtplugins/resetview/resetview.cpp:36
 msgid "Center"
@@ -4279,7 +4276,7 @@ msgstr "Centrer"
 
 #: qtplugins/resetview/resetview.cpp:37
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Aligner la vue sur les axes"
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4290,10 +4287,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipuler la caméra de la vue."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Charge :"
+msgstr "Programme de la modélisation des charges"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4461,7 +4456,7 @@ msgstr "Outil de sélection"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr "Nouveau calque :"
+msgstr "Nouveau calque"
 
 #: qtplugins/spacegroup/spacegroup.cpp:49
 #, fuzzy
@@ -4769,10 +4764,8 @@ msgid "Render the molecule as a wireframe."
 msgstr "Faire une rendu de la molécule en fil de fer."
 
 #: qtplugins/yaehmop/yaehmop.cpp:89
-#, fuzzy
-#| msgid "Calculated Spectra:"
 msgid "Calculate Band Structure…"
-msgstr "Spectres calculés :"
+msgstr "Calcule de la structure de bandes…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:110
 msgid "&Yaehmop"
@@ -5264,6 +5257,11 @@ msgstr ""
 msgid "Help..."
 msgstr "Aide..."
 
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
+#. i18n: ectx: property (text), widget (QToolButton, paste)
+msgid "Paste"
+msgstr "Coller"
+
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:131
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
@@ -5446,6 +5444,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
+"Extension de fichier pour les conversions d'OpenBabel (par défaut - "
+"Avogadro::POSCAR) :"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
@@ -7299,9 +7299,8 @@ msgstr "Centrer"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "Charge formelle"
+msgstr "Charge formelle :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7345,10 +7344,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Éditeur de coordonnées"
+msgstr "Coordination :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -7418,10 +7415,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:321
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
-#, fuzzy
-#| msgid "Type"
 msgid "Type:"
-msgstr "Type"
+msgstr "Type :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -7644,10 +7639,13 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"benoitjacob@users.sourceforge.net, louis.ricard@polytechnique.fr, psycojoker@"
-"gmail.com, louis.ricard@polytechnique.edu nizar.kerkeni@gmail.com, jacob."
-"benoit.1@gmail.com, nizarus@nizarus.org, nizarus@nizarus.tn, pierre.slamich@"
-"gmail.com, etc"
+"benoitjacob@users.sourceforge.net, louis.ricard@polytechnique.fr, "
+"psycojoker@gmail.com, louis.ricard@polytechnique.edu nizar.kerkeni@gmail."
+"com, jacob.benoit.1@gmail.com, nizarus@nizarus.org, nizarus@nizarus.tn, "
+"pierre.slamich@gmail.com, etc"
+
+#~ msgid "All files (*);;"
+#~ msgstr "Tous les fichiers (*);;"
 
 #, fuzzy
 #~| msgctxt "Lattice type"
@@ -8441,9 +8439,6 @@ msgstr ""
 #~ msgid "Insert DNA/RNA chains"
 #~ msgstr "Insérer une chaîne d'ADN/ARN"
 
-#~ msgid "Cannot read molecular file %1."
-#~ msgstr "Impossible de lire le fichier moléculaire %1."
-
 #~ msgid "Peptide..."
 #~ msgstr "Peptides..."
 
@@ -8517,9 +8512,6 @@ msgstr ""
 
 #~ msgid "extended Geometry File"
 #~ msgstr "Fichier de géométrie étendue"
-
-#~ msgid "All Files"
-#~ msgstr "Tous les fichiers"
 
 #~ msgid "Read Orca Outputfile"
 #~ msgstr "Lire le fichier de résultat d'Orca"

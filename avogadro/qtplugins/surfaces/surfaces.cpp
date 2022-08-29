@@ -498,7 +498,7 @@ void Surfaces::displayMesh()
   if (!m_cube)
     return;
 
-  qDebug() << " running displayMesh";
+  // qDebug() << " running displayMesh";
 
   m_smoothingPasses = m_dialog->smoothingPassesValue();
 

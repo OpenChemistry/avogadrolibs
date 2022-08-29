@@ -530,10 +530,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
       }
   }
 
-  if (atomToBond.isValid()) {
+  if (atomToBond.isValid() && (atomToBond.index != m_newObject.index)) {
     // If we have a newAtom, destroy it
-    if (m_newObject.isValid() && atomToBond.index != m_newObject.index &&
-        m_newObject.type == Rendering::AtomType) {
+    if (m_newObject.isValid() && m_newObject.type == Rendering::AtomType) {
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();

@@ -11,6 +11,7 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QString>
+#include <QDebug>
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
@@ -29,9 +30,7 @@
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtOpenGL::ActiveObjects;
 
-
 namespace Avogadro::QtPlugins {
-
 
 vtkImageData* cubeImageData(Core::Cube* cube)
 {
@@ -119,12 +118,16 @@ void ColorOpacityMap::moleculeChanged(unsigned int c)
 
 void ColorOpacityMap::updateActions()
 {
-  // Disable everything for nullptr molecules.
-  if (!m_molecule) {
+  // Disable everything unless we have VTK and a real molecule and cubes
+  auto widget = ActiveObjects::instance().activeWidget();
+  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+
+  if (!vtkWidget || !m_molecule || m_molecule->cubeCount() == 0) {
     foreach (QAction* action, m_actions)
       action->setEnabled(false);
     return;
   }
+
   foreach (QAction* action, m_actions)
     action->setEnabled(true);
 }
@@ -182,4 +185,4 @@ void ColorOpacityMap::render()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
