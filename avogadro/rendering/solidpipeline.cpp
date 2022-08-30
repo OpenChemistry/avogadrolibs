@@ -15,7 +15,7 @@ namespace Avogadro::Rendering {
 
 SolidPipeline::SolidPipeline()
   : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
-    m_edEnabled(true), m_width(0), m_height(0)
+    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0)
 {
 }
 
@@ -124,7 +124,7 @@ void SolidPipeline::end()
               m_depthTexture);
   m_firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
   m_firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
-  m_firstStageShaders.setUniformValue("inEdEnabled", m_edEnabled ? 1.0f : 0.0f);
+  m_firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glDisableVertexAttribArray(0);
