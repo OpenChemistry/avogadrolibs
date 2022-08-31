@@ -5,13 +5,14 @@
 # Liu Tao <lyuutau@outlook.com>, 2021.
 # 刘韬 <lyuutau@outlook.com>, 2021.
 # Hugel <qihu@nfschina.com>, 2022.
+# FAN JI <sifan95.ji@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-28 03:35+0000\n"
-"PO-Revision-Date: 2022-08-22 16:48+0000\n"
-"Last-Translator: Hugel <qihu@nfschina.com>\n"
+"PO-Revision-Date: 2022-09-01 20:17+0000\n"
+"Last-Translator: FAN JI <sifan95.ji@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -427,14 +428,15 @@ msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr "Avogadro 等待 MoleQueue 的回复超时。"
 
 #: molequeue/molequeuedialog.cpp:83
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "等待工作%1 “%2”运行结束……"
 
 #: molequeue/molequeuedialog.cpp:86
+#, fuzzy
 msgid "Stop waiting"
-msgstr ""
+msgstr "停止等待"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -445,8 +447,9 @@ msgid "Job Retrieval Timeout"
 msgstr "作业检索超时"
 
 #: molequeue/molequeuedialog.cpp:118
+#, fuzzy
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
-msgstr ""
+msgstr "Avogadro等待MoleQueue结束作业内容反馈超时"
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
@@ -456,7 +459,7 @@ msgstr "提交作业时出错"
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueue已拒绝作业：%1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
@@ -464,19 +467,20 @@ msgstr "没有选择程序。"
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "请从Queue and Program列表选择目标程序"
 
 #: molequeue/molequeuewidget.cpp:97
+#, fuzzy
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "用户提交作业至MoleQueue失败"
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "网络故障。"
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "无法解决程序选择二。这是一个bug。"
 
 #: qtgui/backgroundfileformat.cpp:28 qtgui/backgroundfileformat.cpp:53
 msgid "No molecule set in BackgroundFileFormat!"
@@ -496,7 +500,7 @@ msgstr ""
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "纵向分裂"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
