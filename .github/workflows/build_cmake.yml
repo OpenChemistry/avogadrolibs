@@ -42,7 +42,7 @@ jobs:
             os: macos-latest,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             cpack_flags: "-G DragNDrop",
           }
         - {
