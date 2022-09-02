@@ -6,15 +6,11 @@
 #include "lennardjones.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
 
-namespace Avogadro {
+namespace Avogadro::Calc {
 
-LennardJones::LennardJones()
-  : 
-  , m_vdw(true)
-  , m_depth(100.0)
-  , m_exponent(6)
-{}
+LennardJones::LennardJones() : m_vdw(true), m_depth(100.0), m_exponent(6) {}
 
 LennardJones::~LennardJones() {}
 
@@ -30,20 +26,6 @@ void LennardJones::setMolecule(Core::Molecule* mol)
   // track atomic radii for this molecule
   m_radii.setZero();
   Eigen::MatrixXd radii(numAtoms, numAtoms);
-
-  // handle the frozen atoms
-  // set a clean mask (everything can move)
-  m_mask = Eigen::MatrixXd::Constant(numAtoms * 3, 1, 1.0);
-
-  // now freeze the specified atoms
-  for (Index i = 0; i < numAtoms; ++i) {
-    if (mol->atomFrozen(i)) {
-      // zero out the gradients for these atoms
-      m_mask[i*3] = 0.0;
-      m_mask[i*3+1] = 0.0;
-      m_mask[i*3+2] = 0.0;
-    }
-  }
 
   for (Index i = 0; i < numAtoms; ++i) {
     Core::Atom atom1 = mol->atom(i);
@@ -138,4 +120,4 @@ void LennardJones::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   cleanGradients(grad);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Calc

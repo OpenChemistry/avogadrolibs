@@ -17,13 +17,11 @@ namespace Calc {
 
 class LennardJones : public EnergyCalculator
 {
-  Q_OBJECT
-
 public:
-  explicit LennardJones(QObject* parent_ = 0);
+  LennardJones();
   ~LennardJones();
 
-  virtual std::string identifier() const overrride
+  virtual std::string identifier() const override
   { return "LJ"; }
 
   virtual std::string name() const override

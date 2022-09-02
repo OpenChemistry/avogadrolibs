@@ -7,6 +7,7 @@
 #define AVOGADRO_CALC_ENERGYCALCULATOR_H
 
 #include <avogadro/core/vector.h>
+#include <avogadro/core/variantmap.h>
 
 #include <cppoptlib/problem.h>
 
