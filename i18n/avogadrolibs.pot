@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.97.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-08-28 03:35+0000\n"
+"POT-Creation-Date: 2022-09-04 03:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2654,24 +2654,24 @@ msgid "Chemical structure to download."
 msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:93
-#: qtplugins/networkdatabases/networkdatabases.cpp:90
+#: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
-#: qtplugins/networkdatabases/networkdatabases.cpp:101
-#: qtplugins/networkdatabases/networkdatabases.cpp:112
+#: qtplugins/networkdatabases/networkdatabases.cpp:99
+#: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
-#: qtplugins/networkdatabases/networkdatabases.cpp:102
+#: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
-#: qtplugins/networkdatabases/networkdatabases.cpp:113
+#: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr ""
