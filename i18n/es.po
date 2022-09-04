@@ -2,7 +2,7 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# M3CG <cgmario1999@gmail.com>, 2021.
+# M3CG <cgmario1999@gmail.com>, 2021, 2022.
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
 # Aritz Erkiaga <aerkiaga3@gmail.com>, 2022.
 # Andrés Henao <andreshenao31@gmail.com>, 2022.
@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-28 03:35+0000\n"
-"PO-Revision-Date: 2022-06-29 08:17+0000\n"
-"Last-Translator: Andrés Henao <andreshenao31@gmail.com>\n"
+"PO-Revision-Date: 2022-09-05 17:18+0000\n"
+"Last-Translator: M3CG <cgmario1999@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1435,9 +1435,8 @@ msgid "Change Bond Order"
 msgstr "Cambiar orden de enlace"
 
 #: qtgui/rwmolecule.cpp:355
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Romper enlaces"
+msgstr "actualizar enlaces"
 
 #: qtgui/rwmolecule.cpp:374
 msgid "Update Bond"
@@ -3558,10 +3557,8 @@ msgid "Interact with online databases, query structures etc."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:339
-#, fuzzy
-#| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:367
 #, fuzzy
@@ -7680,9 +7677,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxY)
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:123
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
-#, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
