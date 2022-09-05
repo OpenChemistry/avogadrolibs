@@ -67,11 +67,17 @@ private slots:
   void handleChargesUpdate(const QMultiMap<QString, QString>& chargeMap);
 
   void onConfigureGeometryOptimization();
+  void onConfigureConformerSearch();
 
   void onOptimizeGeometry();
   void onOptimizeGeometryStatusUpdate(int step, int numSteps, double energy,
                                       double lastEnergy);
   void onOptimizeGeometryFinished(const QByteArray& output);
+
+  void onGenerateConformers();
+  void onConformerStatusUpdate(int step, int numSteps, double energy,
+                                      double lastEnergy);
+  void onGenerateConformersFinished(const QByteArray& output);
 
   void onPerceiveBonds();
   void onPerceiveBondsFinished(const QByteArray& output);
