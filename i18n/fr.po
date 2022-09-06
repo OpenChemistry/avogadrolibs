@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-08-28 03:35+0000\n"
-"PO-Revision-Date: 2022-08-27 15:18+0000\n"
+"PO-Revision-Date: 2022-09-05 17:18+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -1461,9 +1461,8 @@ msgid "Scale Cell Volume"
 msgstr "Mettre le volume de maille conventionnelle à l'échelle"
 
 #: qtgui/rwmolecule.cpp:532
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Maille étendue"
+msgstr "Construire les supercellules"
 
 #: qtgui/rwmolecule.cpp:556
 msgid "Niggli Reduction"
@@ -2416,28 +2415,24 @@ msgid "Clear"
 msgstr "Effacer"
 
 #: qtplugins/copypaste/copypaste.cpp:37
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "Coller"
+msgstr "&Coller"
 
 #: qtplugins/copypaste/copypaste.cpp:81 qtplugins/copypaste/copypaste.cpp:83
 msgid "&Edit"
 msgstr "&Éditer"
 
 #: qtplugins/copypaste/copypaste.cpp:83
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "Copier"
+msgstr "Copier comme"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Erreur pour couper la molécule"
 
 #: qtplugins/copypaste/copypaste.cpp:152
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Erreur de la génération des données du presse-papier."
 
 #: qtplugins/copypaste/copypaste.cpp:153
 #, qt-format
@@ -2460,11 +2455,11 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:236 qtplugins/copypaste/copypaste.cpp:269
 msgid "Error Pasting Molecule"
-msgstr ""
+msgstr "Erreur pour coller la molécule"
 
 #: qtplugins/copypaste/copypaste.cpp:237
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "Impossible de coller la molécule : presse-papier vide !"
 
 #: qtplugins/copypaste/copypaste.cpp:270
 msgid "Error reading clipboard data."
@@ -2486,11 +2481,11 @@ msgstr "Copier et coller"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Interagir avec le presse-papier."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
-msgstr ""
+msgstr "&CP2K…"
 
 #: qtplugins/cp2kinput/cp2kinput.h:34
 msgid "CP2K input"
@@ -2498,7 +2493,7 @@ msgstr "Entrée CP2K"
 
 #: qtplugins/cp2kinput/cp2kinput.h:36
 msgid "Generate input for CP2K."
-msgstr ""
+msgstr "Générer les données d’entrées pour CP2K."
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
 msgid "Energy"
@@ -2506,7 +2501,7 @@ msgstr "Énergie"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
-msgstr ""
+msgstr "Énergie et Forces"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
@@ -2644,9 +2639,8 @@ msgid "Scale Cell &Volume…"
 msgstr "Mettre à l'échelle la maille &Volume…"
 
 #: qtplugins/crystal/crystal.cpp:75
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "Maille étendue"
+msgstr "Construction &de la supercellule…"
 
 #: qtplugins/crystal/crystal.cpp:80
 msgid "Reduce Cell (&Niggli)"
@@ -2709,7 +2703,7 @@ msgstr "Aucune maille presente."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr "Réassigner des éléments personnifiés…"
+msgstr "Réassigner &des éléments personnifiés…"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
@@ -2800,10 +2794,9 @@ msgid "Fetch PDB"
 msgstr "Récupérer depuis le PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Impossible de lire le fichier moléculaire %1."
+msgstr "Impossible de lire la molécule PDB : %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
@@ -5450,12 +5443,12 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
 msgid "Supercell Parameters"
-msgstr ""
+msgstr "Paramètres des supercellules"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Super Cell Options"
-msgstr "Options de maille étendue"
+msgstr "Options des supercellules"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
