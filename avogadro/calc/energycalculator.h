@@ -57,16 +57,14 @@ public:
   void cleanGradients(TVector& grad);
 
   /**
-   * Freeze a particular atom (e.g., during editing / manipulation)
-   * @param atomId the atom to freeze
+   * Called to update the "frozen" mask (e.g., during editing)
    */
-  void freezeAtom(Index atomId);
+  void setMask(TVector mask) { m_mask = mask; }
 
   /**
-   * Unfreeze a particular atom (e.g., during editing / manipulation)
-   * @param atomId the atom to unfreeze
+   * @return the frozen atoms mask
    */
-  void unfreezeAtom(Index atomId);
+  TVector mask() const { return m_mask; }
 
   /**
    * Called when the current molecule changes.
