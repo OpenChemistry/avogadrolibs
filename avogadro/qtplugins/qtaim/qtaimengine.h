@@ -30,10 +30,6 @@ public:
     return tr("Renders primitives using QTAIM properties");
   }
 
-  bool isEnabled() const override { return m_enabled; }
-
-  void setEnabled(bool enable) override { m_enabled = enable; }
-
 private:
   bool m_enabled;
 };
