@@ -740,7 +740,7 @@ void QTAIMExtension::triggered()
   }
 
   emit requestActiveTool("Navigator");
-  emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
+//  emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
 
   return;
 }
