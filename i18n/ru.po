@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-18 03:57+0000\n"
-"PO-Revision-Date: 2022-09-23 00:20+0000\n"
+"PO-Revision-Date: 2022-09-24 03:17+0000\n"
 "Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -154,7 +154,7 @@ msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Генератор ввода (ошибка)"
 
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
