@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-08-28 03:35+0000\n"
+"POT-Creation-Date: 2022-09-18 03:57+0000\n"
 "PO-Revision-Date: 2021-08-20 01:04+0000\n"
 "Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -1261,23 +1261,30 @@ msgstr "Mreže"
 msgid "Non-Covalent"
 msgstr "Kovalentna"
 
-#: qtgui/layermodel.cpp:153 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:153
+#, fuzzy
+#| msgid "QTAIM"
+msgctxt "quantum theory of atoms in molecules"
+msgid "QTAIM"
+msgstr "QTAIM"
+
+#: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr "Elementi simetrije"
 
-#: qtgui/layermodel.cpp:155 qtplugins/surfaces/surfacedialog.cpp:26
+#: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "Van Der Vals"
 
-#: qtgui/layermodel.cpp:157 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 #, fuzzy
 #| msgid "Van der Waals (AO)"
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "Van Der Vals (AO)"
 
-#: qtgui/layermodel.cpp:159 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Žičani okvir"
 
@@ -2890,24 +2897,24 @@ msgid "Chemical structure to download."
 msgstr "Hemijska struktura za preuzimanje."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:93
-#: qtplugins/networkdatabases/networkdatabases.cpp:90
+#: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr "Upit za %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
-#: qtplugins/networkdatabases/networkdatabases.cpp:101
-#: qtplugins/networkdatabases/networkdatabases.cpp:112
+#: qtplugins/networkdatabases/networkdatabases.cpp:99
+#: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr "Preuzimanje sa mreže nije uspelo"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
-#: qtplugins/networkdatabases/networkdatabases.cpp:102
+#: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr "Isteklo je vreme mreže ili neka druga greška."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
-#: qtplugins/networkdatabases/networkdatabases.cpp:113
+#: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr "Ne mogu da pronađem navedeni molekul: %1"

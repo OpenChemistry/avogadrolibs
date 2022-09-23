@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-08-28 03:35+0000\n"
-"PO-Revision-Date: 2022-08-15 15:09+0000\n"
+"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"PO-Revision-Date: 2022-09-22 05:18+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -100,6 +100,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"სკრიპტის გამოტანა:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:326 qtgui/interfacescript.cpp:454
 #, qt-format
@@ -120,7 +122,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "მოლეკულის წარმოდგენის სტრიქონში შენახვის შეცდომა: %1"
 
 #: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:512
 #, qt-format
@@ -400,7 +402,7 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "ლოდინის შეწყვეტა"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -1006,16 +1008,12 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:278
-#, fuzzy
-#| msgid "All files (*);;"
 msgid "All files"
-msgstr "ყველა ფაილი (*);;"
+msgstr "ყველა ფაილი"
 
 #: qtgui/fileformatdialog.cpp:281
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "ყველა მხარდაჭერილი ფორმატი (%1);;"
+msgstr "ყველა მხარდაჭერილი ფორმატი"
 
 #: qtgui/interfacescript.cpp:222
 #, qt-format
@@ -1147,7 +1145,7 @@ msgstr "მულტფილმი"
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "კონტაქტების დახურვა"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1174,21 +1172,26 @@ msgstr "ბადეები"
 msgid "Non-Covalent"
 msgstr ""
 
-#: qtgui/layermodel.cpp:153 qtplugins/symmetry/symmetryscene.h:33
-msgid "Symmetry Elements"
-msgstr ""
+#: qtgui/layermodel.cpp:153
+msgctxt "quantum theory of atoms in molecules"
+msgid "QTAIM"
+msgstr "QTAIM"
 
-#: qtgui/layermodel.cpp:155 qtplugins/surfaces/surfacedialog.cpp:26
+#: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
+msgid "Symmetry Elements"
+msgstr "სიმეტრიის ელემენტები"
+
+#: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "ვან დერ ვაალსი"
 
-#: qtgui/layermodel.cpp:157 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr ""
 
-#: qtgui/layermodel.cpp:159 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr ""
 
@@ -1619,13 +1622,13 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:552
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "პარულა"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:554
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "სითბო"
 
 #: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:556
@@ -1699,7 +1702,7 @@ msgstr "სპექტრალური"
 #: qtplugins/surfaces/surfaces.cpp:572:168 rc.cpp:1624
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "ნელთბილი"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1746,7 +1749,7 @@ msgstr "&ხედი"
 
 #: qtplugins/applycolors/applycolors.cpp:152
 msgid "Color Atoms"
-msgstr ""
+msgstr "ფერადი ატომები"
 
 #: qtplugins/applycolors/applycolors.cpp:154
 msgid "Color Residues"
@@ -1841,10 +1844,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
-#| msgid "Set Bond Orders"
 msgid "Perceive Bond Orders"
-msgstr "ბმის მიმდევრობის დაყენება"
+msgstr "ბმის მიმდევრობის აღქმა"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -1884,7 +1885,7 @@ msgstr ""
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "ტრეისი"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
@@ -2089,7 +2090,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:194
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "%1-ის დამუშავება"
 
 #: qtplugins/commandscripts/command.cpp:249
 #: qtplugins/quantuminput/quantuminput.cpp:178
@@ -2284,20 +2285,16 @@ msgid "Clear"
 msgstr "გასუფთავება"
 
 #: qtplugins/copypaste/copypaste.cpp:37
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "ჩასმა"
+msgstr "&ჩასმა"
 
 #: qtplugins/copypaste/copypaste.cpp:81 qtplugins/copypaste/copypaste.cpp:83
 msgid "&Edit"
 msgstr "&ჩასწორება"
 
 #: qtplugins/copypaste/copypaste.cpp:83
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "კოპირება"
+msgstr "კოპირება, როგორც"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error Clipping Molecule"
@@ -2653,10 +2650,8 @@ msgid "&Import"
 msgstr "&შემოტანა"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
-#| msgid "Fetch from PDB"
 msgid "Fetch PDB"
-msgstr "PDB-დან გადმოწერა"
+msgstr "PDB-ის გადმოწერა"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -2673,24 +2668,24 @@ msgid "Chemical structure to download."
 msgstr "გადმოსაწერი ქიმიური სტრუქტურა."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:93
-#: qtplugins/networkdatabases/networkdatabases.cpp:90
+#: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr "%1-ის გამოთხოვა"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
-#: qtplugins/networkdatabases/networkdatabases.cpp:101
-#: qtplugins/networkdatabases/networkdatabases.cpp:112
+#: qtplugins/networkdatabases/networkdatabases.cpp:99
+#: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr "ქსელიდან გადმოწერის შეცდომა"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
-#: qtplugins/networkdatabases/networkdatabases.cpp:102
+#: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "ქსელის დრო ამოიწურა ან სხვა შეცდომა."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
-#: qtplugins/networkdatabases/networkdatabases.cpp:113
+#: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr ""
@@ -2936,7 +2931,7 @@ msgstr "ფერი:"
 
 #: qtplugins/label/label.cpp:143
 msgid "Distance from center:"
-msgstr ""
+msgstr "მანძილი ცენტრიდან:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3164,34 +3159,26 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
-#, fuzzy
-#| msgid "Copy"
 msgid "&Copy"
-msgstr "კოპირება"
+msgstr "&კოპირება"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:88
-#, fuzzy
-#| msgid "Bonding"
 msgctxt "asking server for molecule name"
 msgid "(pending)"
-msgstr "მიბმა"
+msgstr "(დარჩენილი)"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:116
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:124
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:140
-#, fuzzy
-#| msgid "[no molecule]"
 msgid "unknown molecule"
-msgstr "[მოლეკულის გარეშე]"
+msgstr "უცნობი მოლეკულა"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1060
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule Name:"
-msgstr "მოლეკულა"
+msgstr "მოლეკულის სახელი:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3397,7 +3384,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:485
 msgid "Updating molecule…"
-msgstr ""
+msgstr "მოლეკულის განახლება…"
 
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:574
 #: qtplugins/openbabel/openbabel.cpp:756
@@ -4382,16 +4369,16 @@ msgstr "ფაილიდან"
 
 #: qtplugins/surfaces/surfaces.cpp:79
 msgid "Create Surfaces…"
-msgstr ""
+msgstr "ზედაპირების შექმნა…"
 
 #: qtplugins/surfaces/surfaces.cpp:412
 msgid "Calculating electron density"
-msgstr ""
+msgstr "ელექტრონების სიმკვრივის გამოთვლა"
 
 #: qtplugins/surfaces/surfaces.cpp:422
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "მოლეკულური ორბიტალის %L1 გამოთვლა"
 
 #: qtplugins/surfaces/surfaces.cpp:645 qtplugins/surfaces/surfaces.cpp:673
 msgid "Movie AVI (*.avi)"
@@ -4565,10 +4552,9 @@ msgid "Cannot find Yaehmop"
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:552
-#, fuzzy, qt-format
-#| msgid "Script failed to start."
+#, qt-format
 msgid "Error: %1 failed to start"
-msgstr "სკრიპტის გაშვების შეცდომა."
+msgstr "შეცდომა: %1-ის გაშვების შეცდომა"
 
 #: qtplugins/yaehmop/yaehmop.cpp:603
 msgid "Yaehmop Input"
@@ -4721,7 +4707,7 @@ msgstr ""
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
 msgid "&Copy to Clipboard"
-msgstr ""
+msgstr "ბუფერში კოპირება"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:37
 #. i18n: ectx: property (shortcut), widget (QPushButton, copyButton)
@@ -4853,7 +4839,7 @@ msgstr ""
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
 msgid "Server settings"
-msgstr ""
+msgstr "სერვერის მორგება"
 
 #. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label7)
@@ -4878,12 +4864,12 @@ msgstr "ჩაიხედე:"
 #. i18n: file: qtplugins/clientserver/filedialog.ui:66
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
 msgid "Navigate Back"
-msgstr ""
+msgstr "უკან გადასვლა"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
 msgid "Navigate Forward"
-msgstr ""
+msgstr "წინ გადასვლა"
 
 #. i18n: file: qtplugins/clientserver/filedialog.ui:92
 #. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
@@ -5285,7 +5271,7 @@ msgstr "გამოყენება"
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:307
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "&Revert"
-msgstr ""
+msgstr "&დაბრუნება"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:314
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -5701,7 +5687,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:221
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "bond"
-msgstr ""
+msgstr "გადაბმა"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:226
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -5773,7 +5759,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
 msgid "Ensemble"
-msgstr ""
+msgstr "ანსამბლი"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:314
 #. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
@@ -6090,7 +6076,7 @@ msgstr "დესკრიპტორი:"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:84
 #. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
 msgid "TODO"
-msgstr ""
+msgstr "განრიგის სია"
 
 #. i18n: file: qtplugins/mongochem/configdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConfigDialog)
@@ -7013,15 +6999,13 @@ msgstr "ცენტრები"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "Formal Charge:"
-msgstr "ნაწილობრივი მუხტი"
+msgstr "ფორმალური მუხტი:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7031,17 +7015,17 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+2"
-msgstr ""
+msgstr "+2"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:124
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+3"
-msgstr ""
+msgstr "+3"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:129
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+4"
-msgstr ""
+msgstr "+4"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:134
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7147,17 +7131,13 @@ msgstr "ტრიდენტატური"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Tridentate"
 msgid "Tetradentate"
-msgstr "ტრიდენტატური"
+msgstr "ტეტრადენტატური"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Bidentate"
 msgid "Hexadentate"
-msgstr "ბიდენტატური"
+msgstr "ჰექსადენტატური"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-08-28 03:35+0000\n"
+"POT-Creation-Date: 2022-09-18 03:57+0000\n"
 "PO-Revision-Date: 2016-06-29 05:59+0000\n"
 "Last-Translator: fri <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -1180,22 +1180,29 @@ msgstr ""
 msgid "Non-Covalent"
 msgstr "Kovalentní"
 
-#: qtgui/layermodel.cpp:153 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:153
+#, fuzzy
+#| msgid "QTAIM"
+msgctxt "quantum theory of atoms in molecules"
+msgid "QTAIM"
+msgstr "QTAIM"
+
+#: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr ""
 
-#: qtgui/layermodel.cpp:155 qtplugins/surfaces/surfacedialog.cpp:26
+#: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "Van der Waals"
 
-#: qtgui/layermodel.cpp:157 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 #, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "Van der Waals"
 
-#: qtgui/layermodel.cpp:159 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Drátěná kostra"
 
@@ -2806,24 +2813,24 @@ msgid "Chemical structure to download."
 msgstr "Chemická struktura ke stažení."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:93
-#: qtplugins/networkdatabases/networkdatabases.cpp:90
+#: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
-#: qtplugins/networkdatabases/networkdatabases.cpp:101
-#: qtplugins/networkdatabases/networkdatabases.cpp:112
+#: qtplugins/networkdatabases/networkdatabases.cpp:99
+#: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr "Stažení přes síť selhalo"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
-#: qtplugins/networkdatabases/networkdatabases.cpp:102
+#: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr "Vypršení času na síti nebo jiná chyba."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
-#: qtplugins/networkdatabases/networkdatabases.cpp:113
+#: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr "Zadanou molekulu nelze najít: %1"
