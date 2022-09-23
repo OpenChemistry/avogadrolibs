@@ -9,13 +9,14 @@
 # Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022.
 # Alex Brohovsky <san4ito94@gmail.com>, 2021.
 # МАН69К <weblate@mah69k.net>, 2022.
+# Kateryna Golovanvoa <kasya8888@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-18 03:57+0000\n"
-"PO-Revision-Date: 2022-06-04 20:23+0000\n"
-"Last-Translator: МАН69К <weblate@mah69k.net>\n"
+"PO-Revision-Date: 2022-09-23 00:20+0000\n"
+"Last-Translator: Kateryna Golovanvoa <kasya8888@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.14.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -34,7 +35,7 @@ msgstr ""
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
-msgstr ""
+msgstr "Сообщение не указано."
 
 #: molequeue/inputgenerator.cpp:69 qtgui/interfacescript.cpp:68
 #, qt-format
@@ -103,7 +104,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:406
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Ответ должен быть объектом JSON наивысшего уровня."
 
 #: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:410
 #, qt-format
