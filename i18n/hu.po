@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-09-18 03:57+0000\n"
-"PO-Revision-Date: 2022-08-22 16:48+0000\n"
+"PO-Revision-Date: 2022-09-25 11:19+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1076,16 +1076,12 @@ msgstr ""
 "használni?"
 
 #: qtgui/fileformatdialog.cpp:278
-#, fuzzy
-#| msgid "All files (*);;"
 msgid "All files"
-msgstr "Minden fájl (*);;"
+msgstr "Minden fájl"
 
 #: qtgui/fileformatdialog.cpp:281
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Minden támogatott formátum (%1);;"
+msgstr "Minden támogatott formátum"
 
 #: qtgui/interfacescript.cpp:222
 #, qt-format
@@ -1257,8 +1253,6 @@ msgid "Non-Covalent"
 msgstr "Nem kovalens kötések"
 
 #: qtgui/layermodel.cpp:153
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "Molekulák atomjainak kvantumelmélete"
@@ -2411,20 +2405,16 @@ msgid "Clear"
 msgstr "Törlés"
 
 #: qtplugins/copypaste/copypaste.cpp:37
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "Beillesztés"
+msgstr "&Beillesztés"
 
 #: qtplugins/copypaste/copypaste.cpp:81 qtplugins/copypaste/copypaste.cpp:83
 msgid "&Edit"
 msgstr "S&zerkesztés"
 
 #: qtplugins/copypaste/copypaste.cpp:83
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "Másolás"
+msgstr "Másolás másként"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error Clipping Molecule"
@@ -2788,15 +2778,13 @@ msgid "&Import"
 msgstr "&Importálás"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
-#| msgid "Fetch from PDB"
 msgid "Fetch PDB"
 msgstr "PDB (Protein Data Bank - Fehérje adatbank) lekérése"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr ""
+msgstr "A PDB-molekula nem olvasható: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
