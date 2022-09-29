@@ -34,7 +34,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT PLYVisitor : public Visitor
 {
 public:
-  PLYVisitor(const Camera& camera);
+  explicit PLYVisitor(const Camera& camera);
   ~PLYVisitor() override;
 
   void begin();
