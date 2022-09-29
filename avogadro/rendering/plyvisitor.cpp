@@ -213,7 +213,7 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
   }
 
   //Adjust the counts and add the new vertices and faces
-  m_vertexCount += vertices.size();
+   m_vertexCount += vertices.size();
   m_faceCount += faces.size();
   m_sceneVertices += vertexStr.str();
   m_sceneFaces += faceStr.str();
@@ -313,29 +313,29 @@ void PLYVisitor::visitCylinderLateralMethod(const CylinderColor& geometry, unsig
       //2 * i gives the index of the first vertex, plus 1 for second vertex, plus 2 or 3 for next faces vertex
         //Modulo included for +2 or +3 to prevent going out of bounds
 
-    //Lateral face made up of first vertex, next face's first vertex, and second vertex
+    //Lateral face made up of the next face's first vertex, first vertex, and second vertex
     faceStr << 3 << " "
+            << (2 * i + 2) % (2 * lateralFaces) + m_vertexCount << " "
             << 2 * i + m_vertexCount << " "
-            << (2 * i + 2) % (2 * lateralFaces) + m_vertexCount << " "
             << 2 * i + 1 + m_vertexCount << '\n';
-    //Lateral face made up of second vertex, next face's first vertex, and next face's second vertex
+    //Lateral face made up of next face's first vertex, second vertex, and next face's second vertex
     faceStr << 3 << " "
-            << 2 * i + 1 + m_vertexCount << " "
             << (2 * i + 2) % (2 * lateralFaces) + m_vertexCount << " "
+            << 2 * i + 1 + m_vertexCount << " "
             << (2 * i + 3) % (2 * lateralFaces) + m_vertexCount << '\n';
 
     //Code needs to deal with faces on top and bottom of cylinder
       //To turn local indices to the indices of the PLY file, -2 is used for end1 and -1 is used for end2
 
-    //Top face made up of first vertex, end1, and next face's first vertex
+    //Top face made up of end1, first vertex, and next face's first vertex
     faceStr << 3 << " "
-            << 2 * i + m_vertexCount << " "
             << -2 + m_vertexCount << " "
+            << 2 * i + m_vertexCount << " "
             << (2 * i + 2) % (2 * lateralFaces) + m_vertexCount << '\n';
-    //Bottom face made up of second vertex, next face's second vertex, and end2
+    //Bottom face made up of next face's second vertex, second vertex, and end2
     faceStr << 3 << " "
-            << 2 * i + 1 + m_vertexCount << " "
             << (2 * i + 3) % (2 * lateralFaces) + m_vertexCount << " "
+            << 2 * i + 1 + m_vertexCount << " "
             << -1 + m_vertexCount << '\n';
   }
 
