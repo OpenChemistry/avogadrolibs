@@ -213,7 +213,7 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
   }
 
   //Adjust the counts and add the new vertices and faces
-   m_vertexCount += vertices.size();
+  m_vertexCount += vertices.size();
   m_faceCount += faces.size();
   m_sceneVertices += vertexStr.str();
   m_sceneFaces += faceStr.str();
@@ -286,10 +286,6 @@ void PLYVisitor::visitCylinderLateralMethod(const CylinderColor& geometry, unsig
 
   //Angle between each lateral face
   float baseAngle = 2 * 3.14159265359 / lateralFaces;
-
-  //Local Counts of the number of vertices/faces
-  int vertexCount = 0;
-  int faceCount = 0;
 
   //Find the vertices and faces for each lateral face
   for (int i = 0; i < lateralFaces; ++i) {
