@@ -33,6 +33,7 @@ set(HEADERS
   linestripgeometry.h
   meshgeometry.h
   node.h
+  plyvisitor.h
   povrayvisitor.h
   primitive.h
   quad.h
@@ -75,6 +76,7 @@ set(SOURCES
   linestripgeometry.cpp
   meshgeometry.cpp
   node.cpp
+  plyvisitor.cpp
   povrayvisitor.cpp
   quad.cpp
   quadoutline.cpp
