@@ -60,12 +60,12 @@
  * FourCC is a sequence of four chars used to uniquely identify data formats.
  * For more information, you can visit www.fourcc.org.
  * @param fps Number of frames per second of your video. It needs to be > 0.
- * @param audio This parameter is optionnal. It is used for the audio track. If
+ * @param audio This parameter is optional. It is used for the audio track. If
  * you do not want to add an audio track to your AVI file, simply pass NULL for
  * this argument.
  *
  * @return Structure containing required information in order to create the AVI
- * file. If an error occured, NULL is returned.
+ * file. If an error occurred, NULL is returned.
  */
 struct gwavi_t* gwavi_open(const char* filename, unsigned int width,
                            unsigned int height, const char* fourcc,

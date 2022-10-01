@@ -190,7 +190,7 @@ class PythonScript;
 }
 ~~~
  * This will result in a QCheckBox in the dynamically generated GUI, with
- * the inital check state shown in `default`.
+ * the initial check state shown in `default`.
  *
  * Special Parameters
  * ------------------

@@ -311,7 +311,7 @@ bool SelectionTool::toggleAtom(const Index& atom)
 
 bool SelectionTool::shouldClean(QMouseEvent* e)
 {
-  // acumulate the selection if shift or ctrl are presset
+  // accumulate the selection if shift or ctrl are presset
   if (!(e->modifiers() & Qt::ControlModifier) &&
       !(e->modifiers() & Qt::ShiftModifier)) {
     clearAtoms();

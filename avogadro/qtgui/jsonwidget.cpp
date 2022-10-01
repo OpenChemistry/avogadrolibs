@@ -165,7 +165,7 @@ void JsonWidget::buildOptionGui()
       m_currentLayout = layout;
     } else if (m_options["userOptions"].isObject()) {
       userOptions = m_options["userOptions"].toObject();
-      // don't need to set layout, we aready did that
+      // don't need to set layout, we already did that
     } else {
       break;
     }

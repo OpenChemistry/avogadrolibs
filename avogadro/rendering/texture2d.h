@@ -144,7 +144,7 @@ public:
    * use std::vector or Avogadro::Core::Array):
    * - ContainerT must have tightly packed values of ContainerT::value_type
    * - elements must be accessible by reference via ContainerT::operator[].
-   * - ContainterT::size() must return the number of elements in the container
+   * - ContainerT::size() must return the number of elements in the container
    *   as integral type ContainerT::size_type.
    */
   template <class ContainerT>
