@@ -9,6 +9,10 @@
 #include "gaussianset.h"
 #include "molecule.h"
 
+#include <iostream>
+
+using std::vector;
+
 namespace Avogadro::Core {
 
 GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
@@ -227,6 +231,12 @@ inline std::vector<double> GaussianSetTools::calculateValues(
       case GaussianSet::F7:
         pointF7(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
         break;
+      case GaussianSet::G:
+        pointG(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        break;
+      case GaussianSet::G9:
+        pointG9(i, deltas[atomIndices[i]], dr2[atomIndices[i]], values);
+        break;
       default:
         // Not handled - return a zero contribution
         ;
@@ -259,7 +269,7 @@ inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
   Vector3 components(Vector3::Zero());
 
-  // Now iterate through the P type GTOs and sum their contributions
+  // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
@@ -283,10 +293,10 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
 
   double components[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  std::vector<double>& gtoA = m_basis->gtoA();
-  std::vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
 
-  // Now iterate through the D type GTOs and sum their contributions
+  // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
@@ -316,8 +326,8 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
   double components[5] = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  std::vector<double>& gtoA = m_basis->gtoA();
-  std::vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
 
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
@@ -356,10 +366,10 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
 
   double components[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  std::vector<double>& gtoA = m_basis->gtoA();
-  std::vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
 
-  // Now iterate through the D type GTOs and sum their contributions
+  // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
@@ -400,10 +410,10 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
 
   double components[7] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  std::vector<double>& gtoA = m_basis->gtoA();
-  std::vector<double>& gtoCN = m_basis->gtoCN();
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
 
-  // Now iterate through the D type GTOs and sum their contributions
+  // Now iterate through the F type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
@@ -454,6 +464,102 @@ final normalization
 
   for (int i = 0; i < 7; ++i)
     values[baseIndex + i] += components[i] * componentsF[i];
+}
+
+inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
+                                     double dr2, vector<double>& values) const
+{
+  // G type orbitals have 15 components and each component has a different
+  // independent MO weighting. Many things can be cached to save time though.
+  unsigned int baseIndex = m_basis->moIndices()[moIndex];
+
+  double components[15] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+
+  // Now iterate through the G type GTOs and sum their contributions
+  unsigned int cIndex = m_basis->cIndices()[moIndex];
+  for (unsigned int i = m_basis->gtoIndices()[moIndex];
+       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+    // Calculate the common factor
+    double tmpGTO = exp(-gtoA[i] * dr2);
+    for (double& component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
+  }
+
+  // e.g. XXXX YYYY ZZZZ XXXY XXXZ XYYY YYYZ ZZZX ZZZY XXYY XXZZ YYZZ XXYZ XYYZ
+  // XYZZ
+  const double xxxx = delta.x() * delta.x() * delta.x() * delta.x();
+  const double yyyy = delta.y() * delta.y() * delta.y() * delta.y();
+  const double zzzz = delta.z() * delta.z() * delta.z() * delta.z();
+  const double xxxy = delta.x() * delta.x() * delta.x() * delta.y();
+  const double xxxz = delta.x() * delta.x() * delta.x() * delta.z();
+  const double xyyy = delta.x() * delta.y() * delta.y() * delta.y();
+  const double yyyz = delta.y() * delta.y() * delta.y() * delta.z();
+  const double zzzx = delta.z() * delta.z() * delta.z() * delta.x();
+  const double zzzy = delta.z() * delta.z() * delta.z() * delta.y();
+  const double xxyy = delta.x() * delta.x() * delta.y() * delta.y();
+  const double xxzz = delta.x() * delta.x() * delta.z() * delta.z();
+  const double yyzz = delta.y() * delta.y() * delta.z() * delta.z();
+  const double xxyz = delta.x() * delta.x() * delta.y() * delta.z();
+  const double xyyz = delta.x() * delta.y() * delta.y() * delta.z();
+  const double xyzz = delta.x() * delta.y() * delta.z() * delta.z();
+
+  // molden order
+  // https://www.theochem.ru.nl/molden/molden_format.html
+  // https://gau2grid.readthedocs.io/en/latest/order.html
+  // xxxx yyyy zzzz xxxy xxxz yyyx yyyz zzzx zzzy,
+  // xxyy xxzz yyzz xxyz yyxz zzxy
+  double componentsG[15] = { xxxx, yyyy, zzzz, xxxy, xxxz, yyyx, yyyz, zzzx,
+                             zzzy, xxyy, xxzz, yyzz, xxyz, yyxz, zzxy };
+
+  for (int i = 0; i < 15; ++i)
+    values[baseIndex + i] += components[i] * componentsG[i];
+}
+
+inline void GaussianSetTools::pointG9(unsigned int moIndex,
+                                      const Vector3& delta, double dr2,
+                                      vector<double>& values) const
+{
+  // G type orbitals have 9 spherical components and each component
+  // has a different independent MO weighting.
+  // Many things can be cached to save time though.
+  unsigned int baseIndex = m_basis->moIndices()[moIndex];
+
+  double components[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+  const vector<double>& gtoA = m_basis->gtoA();
+  const vector<double>& gtoCN = m_basis->gtoCN();
+
+  // Now iterate through the GTOs and sum their contributions
+  unsigned int cIndex = m_basis->cIndices()[moIndex];
+  for (unsigned int i = m_basis->gtoIndices()[moIndex];
+       i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
+    // Calculate the common factor
+    double tmpGTO = exp(-gtoA[i] * dr2);
+    for (double& component : components)
+      component += gtoCN[cIndex++] * tmpGTO;
+  }
+
+  double x2(delta.x() * delta.x()), y2(delta.y() * delta.y()),
+    z2(delta.z() * delta.z());
+
+  double componentsG[9] = {
+    3.0 * dr2 * dr2 - 30.0 * dr2 * z2 + 35.0 * z2 * z2 * (1.0 / 8.0),
+    delta.x() * delta.z() * (7.0 * z2 - 3.0 * dr2) * (sqrt(5.0) / 8.0),
+    delta.y() * delta.z() * (7.0 * z2 - 3.0 * dr2) * (sqrt(5.0) / 8.0),
+    (x2 - y2) * (7.0 * z2 - dr2) * (sqrt(5.0) / 4.0),
+    delta.x() * delta.y() * (7.0 * z2 - dr2) * (sqrt(5.0) / 2.0),
+    delta.x() * delta.z() * (x2 - 3.0 * y2) * (sqrt(7.0) / 4.0),
+    delta.y() * delta.z() * (3.0 * x2 - y2) * (sqrt(7.0) / 4.0),
+    (x2 * x2 - 6.0 * x2 * y2 + y2 * y2) * (sqrt(35.0) / 8.0),
+    delta.x() * delta.y() * (x2 - y2) * (sqrt(35.0) / 2.0)
+  };
+
+  for (int i = 0; i < 9; ++i)
+    values[baseIndex + i] += components[i] * componentsG[i];
 }
 
 } // namespace Avogadro::Core

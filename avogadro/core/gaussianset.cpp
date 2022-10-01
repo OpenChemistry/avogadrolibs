@@ -44,6 +44,24 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
     case F7:
       m_numMOs += 7;
       break;
+    case G:
+      m_numMOs += 15;
+      break;
+    case G9:
+      m_numMOs += 9;
+      break;
+    case H:
+      m_numMOs += 21;
+      break;
+    case H11:
+      m_numMOs += 11;
+      break;
+    case I:
+      m_numMOs += 28;
+      break;
+    case I13:
+      m_numMOs += 13;
+      break;
     default:
       // Should never hit here
       ;
