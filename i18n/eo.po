@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -1537,14 +1537,15 @@ msgstr "HTML-Bloko de 3DMol."
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "Dosiero (&F)"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
 msgstr "&Eksporti"
 
@@ -2332,8 +2333,10 @@ msgid "'b' lattice coordinate."
 msgstr "Krada koordinato 'b'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
-msgstr "Krada koordinato 'c'."
+#, fuzzy
+#| msgid "'a' lattice coordinate."
+msgid "'c' lattice coordinate."
+msgstr "Krada koordinato 'a'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -4060,16 +4063,38 @@ msgstr "Elŝuti kromprogramojn"
 msgid "Download plugins from GitHub repositories."
 msgstr "Elŝuti kromprogramojn el GitHub-deponejoj."
 
+#: qtplugins/ply/ply.cpp:29
+#, fuzzy
+#| msgid "VRML Render"
+msgid "PLY Render…"
+msgstr "VRML-Bildigo"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+msgid "Save File"
+msgstr "Konservi Dosieron"
+
+#: qtplugins/ply/ply.cpp:71
+#, fuzzy
+#| msgid "VRML (*.wrl);;Text file (*.txt)"
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr "VRML (*.wrl);;Teksta dosiero (*.txt)"
+
+#: qtplugins/ply/ply.h:25
+msgid "PLY"
+msgstr ""
+
+#: qtplugins/ply/ply.h:29
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the scene using PLY."
+msgstr "Bildigi ĉi tiun scenon per VRML."
+
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
 #| msgid "POV-Ray Render"
 msgid "POV-Ray Render…"
 msgstr "Bildigi per POV-Ray"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-msgid "Save File"
-msgstr "Konservi Dosieron"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -7893,6 +7918,9 @@ msgstr "phlostically"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "phlostically@example.com"
+
+#~ msgid "'c' coordinate."
+#~ msgstr "Krada koordinato 'c'."
 
 #~ msgid "Error: could not find yaehmop executable!"
 #~ msgstr "Eraro: ne troviĝis ruleblaĵo Yaehmop!"

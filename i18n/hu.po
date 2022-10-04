@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2022-09-25 11:19+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -1528,14 +1528,15 @@ msgstr "3Dmol HTML-blokk."
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "&Fájl"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
 msgstr "&Exportálás"
 
@@ -2307,8 +2308,10 @@ msgid "'b' lattice coordinate."
 msgstr "b-rácskoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
-msgstr "c-hálókoordináta."
+#, fuzzy
+#| msgid "'a' lattice coordinate."
+msgid "'c' lattice coordinate."
+msgstr "a-rácskoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -3969,14 +3972,36 @@ msgstr "Beépülő modulok letöltése"
 msgid "Download plugins from GitHub repositories."
 msgstr "Beépülő modulok letöltése a GitHub adattáraiból."
 
+#: qtplugins/ply/ply.cpp:29
+#, fuzzy
+#| msgid "VRML Render…"
+msgid "PLY Render…"
+msgstr "Virtuális valóságot modellező nyelv megjelenítése…"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+msgid "Save File"
+msgstr "Fájl mentése"
+
+#: qtplugins/ply/ply.cpp:71
+#, fuzzy
+#| msgid "VRML (*.wrl);;Text file (*.txt)"
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr "VRML-fájl (*.wrl);;Szövegfájl (*.txt)"
+
+#: qtplugins/ply/ply.h:25
+msgid "PLY"
+msgstr ""
+
+#: qtplugins/ply/ply.h:29
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the scene using PLY."
+msgstr "A jelenet megjelenítése a virtuális valóságot modellező nyelvvel."
+
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
 msgstr "POV-Ray megjelenítése…"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-msgid "Save File"
-msgstr "Fájl mentése"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -7649,6 +7674,9 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "'c' coordinate."
+#~ msgstr "c-hálókoordináta."
 
 #~ msgid "Error: could not find yaehmop executable!"
 #~ msgstr ""

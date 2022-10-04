@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2021-09-15 07:38+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
@@ -1460,14 +1460,15 @@ msgstr ""
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "&Fil"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
 msgstr "&Eksporter"
 
@@ -2253,8 +2254,10 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
-msgstr ""
+#, fuzzy
+#| msgid "Invalid coordinate."
+msgid "'c' lattice coordinate."
+msgstr "Ugyldig koordinat."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -3919,17 +3922,39 @@ msgstr "Laster ned programtillegg"
 msgid "Download plugins from GitHub repositories."
 msgstr "Last ned programtillegg fra GitHub-pakkebrønner."
 
+#: qtplugins/ply/ply.cpp:29
+#, fuzzy
+#| msgid "VRML Render"
+msgid "PLY Render…"
+msgstr "VRML-opptegner"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+#, fuzzy
+msgid "Save File"
+msgstr "Lagre videofil"
+
+#: qtplugins/ply/ply.cpp:71
+#, fuzzy
+#| msgid "VRML (*.wrl);;Text file (*.txt)"
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr "VRML (*.wrl);;Tekstfil (*.txt)"
+
+#: qtplugins/ply/ply.h:25
+msgid "PLY"
+msgstr ""
+
+#: qtplugins/ply/ply.h:29
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the scene using PLY."
+msgstr "Tegn scenen ved bruk av VRML."
+
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
 #| msgid "VRML Render"
 msgid "POV-Ray Render…"
 msgstr "VRML-opptegner"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-#, fuzzy
-msgid "Save File"
-msgstr "Lagre videofil"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"

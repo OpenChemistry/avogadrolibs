@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2022-09-28 09:24+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -63,8 +63,9 @@ msgstr "%1 파일 채우는 중 오류: %2"
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
-msgstr "'%1' 파일의 형식이 잘못되었습니다. 문자열 '내용' 또는 '파일경로' 멤버가 "
-"누락되었습니다."
+msgstr ""
+"'%1' 파일의 형식이 잘못되었습니다. 문자열 '내용' 또는 '파일경로' 멤버가 누락"
+"되었습니다."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:363
 #, qt-format
@@ -126,7 +127,8 @@ msgstr ""
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
-msgstr "분자 표현을 문자열로 저장하는 중 오류 발생: 인식할 수 없는 파일 형식: %1"
+msgstr ""
+"분자 표현을 문자열로 저장하는 중 오류 발생: 인식할 수 없는 파일 형식: %1"
 
 #: molequeue/inputgenerator.cpp:358
 #, qt-format
@@ -449,7 +451,8 @@ msgstr "작업 검색 시간초과"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
-msgstr "아보가드로가 몰큐에서 완료된 작업 세부 정보를 기다리는 시간이 초과되었습니다."
+msgstr ""
+"아보가드로가 몰큐에서 완료된 작업 세부 정보를 기다리는 시간이 초과되었습니다."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
@@ -1040,7 +1043,8 @@ msgstr "쓰기"
 #: qtgui/fileformatdialog.cpp:178
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
-msgstr "이 형식을 %2 할 수 있는 여러 %1을(를) 찾았습니다. 어떤 것을 사용해야 합니까?"
+msgstr ""
+"이 형식을 %2 할 수 있는 여러 %1을(를) 찾았습니다. 어떤 것을 사용해야 합니까?"
 
 #: qtgui/fileformatdialog.cpp:278
 msgid "All files"
@@ -1138,8 +1142,9 @@ msgstr "옵션 '%2'에 대해 인식할 수 없는 옵션 유형 '%1'입니다."
 #: qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:663 qtgui/jsonwidget.cpp:684
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
-msgstr "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 위젯 "
-"유형입니다."
+msgstr ""
+"옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 위젯 유형입니"
+"다."
 
 #: qtgui/jsonwidget.cpp:570 qtgui/jsonwidget.cpp:605 qtgui/jsonwidget.cpp:627
 #: qtgui/jsonwidget.cpp:648 qtgui/jsonwidget.cpp:670 qtgui/jsonwidget.cpp:691
@@ -1152,8 +1157,9 @@ msgstr "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습�
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
-msgstr "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 값에서 유효한 콤보 "
-"항목 인덱스를 찾을 수 없습니다:"
+msgstr ""
+"옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 값에서 유효한 콤보 항"
+"목 인덱스를 찾을 수 없습니다:"
 
 #: qtgui/jsonwidget.cpp:752
 #, qt-format
@@ -1255,8 +1261,8 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
-"스크립트 '%1 %2' 실행 중 오류: 표준 입력(len=%3, %4바이트 쓰기, QProcess "
-"오류: %5)에 쓰지 못했습니다."
+"스크립트 '%1 %2' 실행 중 오류: 표준 입력(len=%3, %4바이트 쓰기, QProcess 오"
+"류: %5)에 쓰지 못했습니다."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
@@ -1480,14 +1486,15 @@ msgstr "3DMol HTML 블록입니다."
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "파일(&F)"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
 msgstr "내보내기(&E)"
 
@@ -1890,7 +1897,8 @@ msgstr "결합 중심 조작 도구입니다."
 #: qtplugins/bondcentrictool/bondcentrictool.h:173
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
-msgstr "결합 길이와 각도를 변경하여 분자 기하학을 편집하는 데 사용되는 도구입니다."
+msgstr ""
+"결합 길이와 각도를 변경하여 분자 기하학을 편집하는 데 사용되는 도구입니다."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
@@ -2188,8 +2196,9 @@ msgstr "변경 사항을 덮어쓰겠습니까?"
 msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
-msgstr "텍스트 문서가 수정되었습니다. 변경 사항을 취소하고 현재 분자로 "
-"되돌리겠습니까?"
+msgstr ""
+"텍스트 문서가 수정되었습니다. 변경 사항을 취소하고 현재 분자로 되돌리겠습니"
+"까?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:352
 msgid "Too few entries on line."
@@ -2249,8 +2258,10 @@ msgid "'b' lattice coordinate."
 msgstr "'b' 격자 좌표입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
-msgstr "'c' 좌표입니다."
+#, fuzzy
+#| msgid "'a' lattice coordinate."
+msgid "'c' lattice coordinate."
+msgstr "'a' 격자 좌표입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -2263,8 +2274,8 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
-"기하학 사양을 구문 분석할 수 없습니다. 강조 표시된 오류를 수정하고 다시 "
-"시도하세요. \n"
+"기하학 사양을 구문 분석할 수 없습니다. 강조 표시된 오류를 수정하고 다시 시도"
+"하세요. \n"
 " \n"
 "(힌트: 오류에 대한 설명을 보려면 빨간색 텍스트 위에 마우스를 가져가세요.)"
 
@@ -2529,8 +2540,9 @@ msgstr "최급강하"
 msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
-msgstr "입력 파일이 수정되었습니다. 새로운 기하학 또는 작업 옵션을 반영하도록 변경 "
-"사항을 덮어쓰겠습니까?"
+msgstr ""
+"입력 파일이 수정되었습니다. 새로운 기하학 또는 작업 옵션을 반영하도록 변경 사"
+"항을 덮어쓰겠습니까?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
@@ -3105,7 +3117,8 @@ msgstr "LAMMPS에 대한 입력을 생성합니다."
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
-msgstr "미리보기 텍스트를 업데이트하고 Lamps 입력 데크 미리보기 창에서 변경한 사항을 "
+msgstr ""
+"미리보기 텍스트를 업데이트하고 Lamps 입력 데크 미리보기 창에서 변경한 사항을 "
 "모두 잃게 하겠습니까?"
 
 #: qtplugins/licorice/licorice.h:33
@@ -3435,7 +3448,8 @@ msgstr "openbabel 출력을 구문 분석하는 동안 오류가 발생했습니
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
-msgstr "지원되는 forcefields 목록을 검색하는 동안 오류가 발생했습니다. ('%1' 사용)."
+msgstr ""
+"지원되는 forcefields 목록을 검색하는 동안 오류가 발생했습니다. ('%1' 사용)."
 
 #: qtplugins/openbabel/openbabel.cpp:380
 msgid "Molecule invalid. Cannot optimize geometry."
@@ -3490,7 +3504,8 @@ msgstr "바벨 열기 출력을 해석하는 동안 오류가 발생했습니다
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
-msgstr "obabel 출력의 원자 수 (%1)가 원래 분자의 원자 수 (%2)와 일치하지 않습니다."
+msgstr ""
+"obabel 출력의 원자 수 (%1)가 원래 분자의 원자 수 (%2)와 일치하지 않습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Cannot open file with Open Babel."
@@ -3575,8 +3590,9 @@ msgstr "obabel 출력을 읽는 중…"
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
-msgstr "이미 바벨 열기를 실행 중입니다. 다른 작업이 완료될 때까지 기다렸다가 다시 "
-"시도하세요."
+msgstr ""
+"이미 바벨 열기를 실행 중입니다. 다른 작업이 완료될 때까지 기다렸다가 다시 시"
+"도하세요."
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
@@ -3602,8 +3618,9 @@ msgstr "OpenMM에 대한 입력을 생성합니다."
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
-msgstr "OpenMM 입력 데크 미리보기 창에서 변경한 내용을 모두 잃고 미리보기 텍스트를 "
-"업데이트하겠습니까?"
+msgstr ""
+"OpenMM 입력 데크 미리보기 창에서 변경한 내용을 모두 잃고 미리보기 텍스트를 업"
+"데이트하겠습니까?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -3882,14 +3899,36 @@ msgstr "플러그인 다운로드"
 msgid "Download plugins from GitHub repositories."
 msgstr "깃허브 리포지토리에서 플러그인을 다운로드합니다."
 
+#: qtplugins/ply/ply.cpp:29
+#, fuzzy
+#| msgid "VRML Render…"
+msgid "PLY Render…"
+msgstr "VRML 렌더…"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+msgid "Save File"
+msgstr "파일 저장"
+
+#: qtplugins/ply/ply.cpp:71
+#, fuzzy
+#| msgid "VRML (*.wrl);;Text file (*.txt)"
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr "VRML (*.wrl);;텍스트 파일 (*.txt)"
+
+#: qtplugins/ply/ply.h:25
+msgid "PLY"
+msgstr ""
+
+#: qtplugins/ply/ply.h:29
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the scene using PLY."
+msgstr "VRML을 사용하여 장면을 렌더링합니다."
+
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
 msgstr "POV-Ray 렌더…"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-msgid "Save File"
-msgstr "파일 저장"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4645,8 +4684,9 @@ msgstr "야에모프에서 출력된 밴드 구조를 읽지 못했습니다!"
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
-msgstr "야에모프 출력에서 단 하나의 특수 k 포인트가 발견되었습니다! 2개 이상이 "
-"필요합니다!"
+msgstr ""
+"야에모프 출력에서 단 하나의 특수 k 포인트가 발견되었습니다! 2개 이상이 필요합"
+"니다!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:372
 #, qt-format
@@ -4763,8 +4803,9 @@ msgstr "새로 고침"
 msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
-msgstr "<html><head/><body><p>이 작업을 위해 예약할 프로세서 코어 "
-"수입니다.</p></body></html>"
+msgstr ""
+"<html><head/><body><p>이 작업을 위해 예약할 프로세서 코어 수입니다.</p></"
+"body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -4778,8 +4819,8 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>작업 완료 시 원격 작업 파일을 삭제합니다. 결과는 "
-"여전히 로컬 몰큐 작업 캐시에 먼저 복사됩니다.</p></body></html>"
+"<html><head/><body><p>작업 완료 시 원격 작업 파일을 삭제합니다. 결과는 여전"
+"히 로컬 몰큐 작업 캐시에 먼저 복사됩니다.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4805,8 +4846,9 @@ msgstr "몰큐에서 작업 숨기기:"
 msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
-msgstr "<html><head/><body><p>작업 상태가 변경되면 시스템 팝업 알림을 "
-"표시합니다.</p></body></html>"
+msgstr ""
+"<html><head/><body><p>작업 상태가 변경되면 시스템 팝업 알림을 표시합니다.</"
+"p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -5105,23 +5147,22 @@ msgid ""
 "\">1</span> - A literal 1 (\"1\"), useful for optimization flags<br/></p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>형식 사양입니다. 각 문자는 원자당 쓸 값을 "
-"나타냅니다.:</p><p><span style=\" font-weight:600;\">#</span> - 원자 색인 ("
-"1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\">Z</span> - 원자 "
-"번호 (예: 탄소의 경우 \"6\")<br/><span style=\" font-weight:600;\">G</span> -"
-" GAMESS-스타일 원자 번호 (예: 탄소의 경우 \"6.0\")<br/><span style=\" font-"
-"weight:600;\">N</span> - 원소 이름 (예: \"탄소\")<br/><span style=\" font-"
-"weight:600;\">S</span> - 요소 기호 (예: 탄소의 경우 \"C\")<br/><span style=\""
-" font-weight:600;\">x</span> - X 위치 좌표<br/><span style=\" font-"
-"weight:600;\">y</span> - Y 위치 좌표<br/><span style=\" font-weight:600;\""
-">z</span> - Z 위치 좌표<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"격자 좌표 (결정체만 해당)<br/><span style=\" font-weight:600;\">b</span> - "
-"'b' 격자 좌표 (결정체만 해당)<br/><span style=\" font-weight:600;\">c</span> "
-"- 'c' 격자 좌표 (결정체만 해당)<br/><span style=\" font-weight:600;\">_</"
-"span> - 정렬에 유용한 리터럴 공백 (\" \")<br/><span style=\" font-weight:600;"
-"\">0</span> - 최적화 플래그에 유용한 리터럴 0 (\"0\")<br/><span style=\" "
-"font-weight:600;\">1</span> - 최적화 플래그에 유용한 리터럴 1 (\"1\")<br/"
-"></p></body></html>"
+"<html><head/><body><p>형식 사양입니다. 각 문자는 원자당 쓸 값을 나타냅니다.:"
+"</p><p><span style=\" font-weight:600;\">#</span> - 원자 색인 (1, 2, ..., "
+"numAtoms)<br/><span style=\" font-weight:600;\">Z</span> - 원자 번호 (예: 탄"
+"소의 경우 \"6\")<br/><span style=\" font-weight:600;\">G</span> - GAMESS-스타"
+"일 원자 번호 (예: 탄소의 경우 \"6.0\")<br/><span style=\" font-weight:600;"
+"\">N</span> - 원소 이름 (예: \"탄소\")<br/><span style=\" font-weight:600;"
+"\">S</span> - 요소 기호 (예: 탄소의 경우 \"C\")<br/><span style=\" font-"
+"weight:600;\">x</span> - X 위치 좌표<br/><span style=\" font-weight:600;"
+"\">y</span> - Y 위치 좌표<br/><span style=\" font-weight:600;\">z</span> - Z "
+"위치 좌표<br/><span style=\" font-weight:600;\">a</span> - 'a' 격자 좌표 (결"
+"정체만 해당)<br/><span style=\" font-weight:600;\">b</span> - 'b' 격자 좌표 "
+"(결정체만 해당)<br/><span style=\" font-weight:600;\">c</span> - 'c' 격자 좌"
+"표 (결정체만 해당)<br/><span style=\" font-weight:600;\">_</span> - 정렬에 유"
+"용한 리터럴 공백 (\" \")<br/><span style=\" font-weight:600;\">0</span> - 최"
+"적화 플래그에 유용한 리터럴 0 (\"0\")<br/><span style=\" font-weight:600;"
+"\">1</span> - 최적화 플래그에 유용한 리터럴 1 (\"1\")<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -5719,16 +5760,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\"> \n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -5811,16 +5852,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\"> \n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -6317,8 +6358,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -6901,7 +6942,8 @@ msgstr "이론적 XRD 패턴 옵션"
 msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
-msgstr "<html><head/><body><p>베이스에서 피크의 확장 (도)입니다.</p></body></html>"
+msgstr ""
+"<html><head/><body><p>베이스에서 피크의 확장 (도)입니다.</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -6909,8 +6951,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>최대 2세타 값 (도)입니다.</p><p>기본값: 162."
-"00°</p></body></html>"
+"<html><head/><body><p>최대 2세타 값 (도)입니다.</p><p>기본값: 162.00°</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -6918,8 +6960,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>베이스에서 피크의 확장 (도)입니다.</p><p>기본값: 0."
-"52958°</p></body></html>"
+"<html><head/><body><p>베이스에서 피크의 확장 (도)입니다.</p><p>기본값: "
+"0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6951,8 +6993,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>생성할 2세타 포인트의 수입니다.</p><p>기본값: "
-"1000</p></body></html>"
+"<html><head/><body><p>생성할 2세타 포인트의 수입니다.</p><p>기본값: 1000</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7376,12 +7418,12 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
-"<html><head/><body><p>이 상자를 선택하기 전에 페르미 준위를 알아야 합니다. "
-"상태 밀도 계산을 수행하고 데이터를 표시하여 페르미 준위를 발견할 수 있습니다 "
+"<html><head/><body><p>이 상자를 선택하기 전에 페르미 준위를 알아야 합니다. 상"
+"태 밀도 계산을 수행하고 데이터를 표시하여 페르미 준위를 발견할 수 있습니다 "
 "(데이터 맨 위에 있음). 또한, 상태 밀도 계산을 수행하면 여기의 페르미 준위가 "
 "상태 밀도 계산 중에 감지된 값으로 자동 설정됩니다.</p><p>이 상자가 선택되면 "
-"오른쪽 회전 상자에 올바른 페르미 준위가 설정되어 있는지 "
-"확인하십시오.</p><p>기본값: 끔</p></body></html>"
+"오른쪽 회전 상자에 올바른 페르미 준위가 설정되어 있는지 확인하십시오.</p><p>"
+"기본값: 끔</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -7396,8 +7438,8 @@ msgid ""
 "p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>0이 페르미가 되도록 에너지를 조정하세요. 페르미 준위를 "
-"플로팅하는 경우에만 사용할 수 있습니다.</p><p><br/></p><p>기본값: "
-"끔</p></body></html>"
+"플로팅하는 경우에만 사용할 수 있습니다.</p><p><br/></p><p>기본값: 끔</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -7440,14 +7482,14 @@ msgid ""
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>다음과 같이 특수 k-포인트를 입력합니다:</p><p>L 0.5 "
-"0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>즉, &lt;symbol&gt; "
-"&lt;x&gt; &lt;y&gt; &lt;z&gt; 여기서 x, y, z는 소수 역 공간 좌표입니다. 이 k-"
-"point를 그래프에 있는 순서대로 연결하는 선이 그려집니다. 격자의 방향은 "
-"이러한 상호 공간 점의 위치에 영향을 줄 수 있습니다.</p><p>결정체의 공간 "
-"그룹이 감지되거나 설정되면 특수 k 포인트는 해당 공간 그룹에 대한 기본 격자 "
-"높은 대칭 포인트로 자동 채워집니다. 몇 개의 공간 그룹은 (a &gt; b 또는 a &lt;"
-" b와 같은 경우) 격자에 따라 다른 높은 대칭점이 있습니다 - 이는 자동으로 "
-"고려됩니다.</p></body></html>"
+"0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>즉, &lt;symbol&gt; &lt;"
+"x&gt; &lt;y&gt; &lt;z&gt; 여기서 x, y, z는 소수 역 공간 좌표입니다. 이 k-"
+"point를 그래프에 있는 순서대로 연결하는 선이 그려집니다. 격자의 방향은 이러"
+"한 상호 공간 점의 위치에 영향을 줄 수 있습니다.</p><p>결정체의 공간 그룹이 감"
+"지되거나 설정되면 특수 k 포인트는 해당 공간 그룹에 대한 기본 격자 높은 대칭 "
+"포인트로 자동 채워집니다. 몇 개의 공간 그룹은 (a &gt; b 또는 a &lt; b와 같은 "
+"경우) 격자에 따라 다른 높은 대칭점이 있습니다 - 이는 자동으로 고려됩니다.</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -7465,8 +7507,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7481,9 +7523,9 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
-"<html><head/><body><p>특수 k-포인트를 연결할 k-포인트의 수를 입력합니다. "
-"이러한 k-포인트가 많을수록 그래프가 부드러워지지만 계산 시간이 더 오래 걸릴 "
-"수 있습니다.</p><p>기본값: 40</p></body></html>"
+"<html><head/><body><p>특수 k-포인트를 연결할 k-포인트의 수를 입력합니다. 이러"
+"한 k-포인트가 많을수록 그래프가 부드러워지지만 계산 시간이 더 오래 걸릴 수 있"
+"습니다.</p><p>기본값: 40</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -7491,8 +7533,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>플롯에서 y 범위를 제한하겠습니까?</p><p>기본값: "
-"끔</p></body></html>"
+"<html><head/><body><p>플롯에서 y 범위를 제한하겠습니까?</p><p>기본값: 끔</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -7511,11 +7553,11 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
-"<html><head/><body><p>주기적 차원의 수입니다.</p><p><br/></p><p>이것이 1로 "
-"설정되면 재료는 결정체의 A 벡터를 따라 주기적으로만 나타납니다.</p><p><br/></"
-"p><p>이것이 2로 설정되면 재료는 결정체의 A 및 B 벡터를 따라 주기적으로 "
-"됩니다.</p><p><br/></p><p>이것이 3으로 설정되면 재료는 결정체의 A, B 및 C "
-"벡터를 따라 주기적입니다.</p><p><br/></p></body></html>"
+"<html><head/><body><p>주기적 차원의 수입니다.</p><p><br/></p><p>이것이 1로 설"
+"정되면 재료는 결정체의 A 벡터를 따라 주기적으로만 나타납니다.</p><p><br/></"
+"p><p>이것이 2로 설정되면 재료는 결정체의 A 및 B 벡터를 따라 주기적으로 됩니"
+"다.</p><p><br/></p><p>이것이 3으로 설정되면 재료는 결정체의 A, B 및 C 벡터를 "
+"따라 주기적입니다.</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7530,12 +7572,15 @@ msgstr "야에모프 입력을 표시하겠습니까?"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Launchpad Contributions:,Avogadro Team,Bundo,Kim Hanjo,Para, Sang-hyeon "
-"Lee,dlonie, park gong gu, seokhyun an"
+"Launchpad Contributions:,Avogadro Team,Bundo,Kim Hanjo,Para, Sang-hyeon Lee,"
+"dlonie, park gong gu, seokhyun an"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com"
+
+#~ msgid "'c' coordinate."
+#~ msgstr "'c' 좌표입니다."
 
 #, fuzzy
 #~ msgid "All files (*);;"

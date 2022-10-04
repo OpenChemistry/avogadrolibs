@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2021-08-20 01:04+0000\n"
 "Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -1554,14 +1554,15 @@ msgstr "ThreeDMol HTML Blok."
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "&Datoteka"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
 msgstr "&Izvezi"
 
@@ -2383,8 +2384,10 @@ msgid "'b' lattice coordinate."
 msgstr "'b' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
-msgstr "'c' koordinata."
+#, fuzzy
+#| msgid "'a' lattice coordinate."
+msgid "'c' lattice coordinate."
+msgstr "'a' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -4170,16 +4173,40 @@ msgstr "Preuzmite dodatke"
 msgid "Download plugins from GitHub repositories."
 msgstr "Preuzmite dodatke iz spremišta GitHub."
 
+#: qtplugins/ply/ply.cpp:29
+#, fuzzy
+#| msgid "VRML Render"
+msgid "PLY Render…"
+msgstr "VRML Render"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+msgid "Save File"
+msgstr "Sačuvaj Datoteku"
+
+#: qtplugins/ply/ply.cpp:71
+#, fuzzy
+#| msgid "VRML (*.wrl);;Text file (*.txt)"
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr "VRML (*.wrl);;Tekstualna datoteka (*.txt)"
+
+#: qtplugins/ply/ply.h:25
+#, fuzzy
+#| msgid "B2PLYP"
+msgid "PLY"
+msgstr "B2PLYP"
+
+#: qtplugins/ply/ply.h:29
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the scene using PLY."
+msgstr "Renderirajte scenu pomoću VRML -a."
+
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
 #| msgid "POV-Ray Render"
 msgid "POV-Ray Render…"
 msgstr "POV-Ray Render"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-msgid "Save File"
-msgstr "Sačuvaj Datoteku"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -8022,6 +8049,9 @@ msgstr ""
 "\"miroslavnikolic@rocketmail.com\",\"ivanstar61@gmail.com\","
 "\"nikolamatic225@gmail.com\""
 
+#~ msgid "'c' coordinate."
+#~ msgstr "'c' koordinata."
+
 #~ msgid "All files (*);;"
 #~ msgstr "Sve datoteke (*);;"
 
@@ -11379,9 +11409,6 @@ msgstr ""
 
 #~ msgid "q-"
 #~ msgstr "q-"
-
-#~ msgid "B2PLYP"
-#~ msgstr "B2PLYP"
 
 #~ msgid "B3LYP"
 #~ msgstr "B3LYP"

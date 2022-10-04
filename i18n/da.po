@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-09-18 03:57+0000\n"
+"POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2016-06-10 06:28+0000\n"
 "Last-Translator: jvd <jvd@tuta.io>\n"
 "Language-Team: Danish <da@li.org>\n"
@@ -1464,14 +1464,15 @@ msgstr ""
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "&Fil"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 #, fuzzy
 msgid "&Export"
 msgstr "Eksportér"
@@ -2265,7 +2266,7 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
+msgid "'c' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
@@ -3941,16 +3942,33 @@ msgstr ""
 msgid "Download plugins from GitHub repositories."
 msgstr ""
 
+#: qtplugins/ply/ply.cpp:29
+#, fuzzy
+msgid "PLY Render…"
+msgstr "POV-Ray"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+#, fuzzy
+msgid "Save File"
+msgstr "Gem video fil"
+
+#: qtplugins/ply/ply.cpp:71
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr ""
+
+#: qtplugins/ply/ply.h:25
+msgid "PLY"
+msgstr ""
+
+#: qtplugins/ply/ply.h:29
+msgid "Render the scene using PLY."
+msgstr ""
+
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
 msgid "POV-Ray Render…"
 msgstr "POV-Ray"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-#, fuzzy
-msgid "Save File"
-msgstr "Gem video fil"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
