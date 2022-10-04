@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-09-25 11:19+0000\n"
+"PO-Revision-Date: 2022-10-07 13:28+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -2301,17 +2301,15 @@ msgstr "Z koordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "'a' lattice coordinate."
-msgstr "a-rácskoordináta."
+msgstr "a-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "'b' lattice coordinate."
-msgstr "b-rácskoordináta."
+msgstr "b-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "a-rácskoordináta."
+msgstr "c-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -2356,15 +2354,15 @@ msgstr "XYZ-formátum (atomszámok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:603
 msgid "Lattice coordinates (symbols)"
-msgstr "Rács koordinátái (szimbólumok)"
+msgstr "Hálókoordináták (szimbólumok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:604
 msgid "Lattice coordinates (names)"
-msgstr "Rács koordinátái (nevek)"
+msgstr "Hálókoordináták (nevek)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
 msgid "Lattice coordinates (atomic numbers)"
-msgstr "Rács koordinátái (atomszámok)"
+msgstr "Hálókoordináták (atomszámok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
 msgid "GAMESS format (symbols)"
@@ -3973,10 +3971,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr "Beépülő modulok letöltése a GitHub adattáraiból."
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
-#| msgid "VRML Render…"
 msgid "PLY Render…"
-msgstr "Virtuális valóságot modellező nyelv megjelenítése…"
+msgstr "PLY megjelenítése…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -3984,20 +3980,16 @@ msgid "Save File"
 msgstr "Fájl mentése"
 
 #: qtplugins/ply/ply.cpp:71
-#, fuzzy
-#| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML-fájl (*.wrl);;Szövegfájl (*.txt)"
+msgstr "PLY-fájl (*.ply);;Szövegfájl (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
-msgstr ""
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
-#, fuzzy
-#| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "A jelenet megjelenítése a virtuális valóságot modellező nyelvvel."
+msgstr "A jelenet megjelenítése a PLY használatával."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
@@ -5236,21 +5228,21 @@ msgstr ""
 "írandó értéket jelzi:</p><p><span style=\" font-weight:600;\">#</span> - "
 "Atomi tárgymutató (1, 2, …, atomok száma)<br/><span style=\" font-weight:600;"
 "\">Z</span> - Atomszám (pl. „6” a szén esetében)<br/><span style=\" font-"
-"weight:600;\">G</span> - GAMESS-stílusú atomszám (pl. „6.0” a szén "
-"esetében)<br/><span style=\" font-weight:600;\">N</span> - Elem neve (pl. "
-"„Szén”)<br/><span style=\" font-weight:600;\">S</span> - Elem szimbólum (pl. "
-"\"C\" a szén esetében)<br/><span style=\" font-weight:600;\">x</span> - X "
-"pozíció koordináta<br/><span style=\" font-weight:600;\">y</span> - Y "
-"pozíció koordináta<br/><span style=\" font-weight:600;\">z</span> - Z "
-"pozíció koordináta<br/><span style=\" font-weight:600;\">a</span> - a-"
-"rácskoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">b</"
-"span> - b-rácskoordináta (csak kristályok)<br/><span style=\" font-"
-"weight:600;\">c</span> - c-rácskoordináta (csak kristályok)<br/><span style="
-"\" font-weight:600;\">_</span> - Szó szerinti szóköz („”), hasznos az "
-"igazításhoz<br/><span style=\" font-weight:600;\">0</span> - Szó szerinti 0 "
-"(„0”), hasznos az optimalizálási zászlókhoz<br/><span style=\" font-"
-"weight:600;\">1</span> - Szó szerinti 1 („1”), hasznos az optimalizálási "
-"zászlókhoz<br/></p></body></html>"
+"weight:600;\">G</span> - GAMESS-stílusú atomszám (pl. „6.0” a szén esetében)<"
+"br/><span style=\" font-weight:600;\">N</span> - Elem neve (pl. „Szén”)<br/"
+"><span style=\" font-weight:600;\">S</span> - Elem szimbólum (pl. \"C\" a "
+"szén esetében)<br/><span style=\" font-weight:600;\">x</span> - X pozíció "
+"koordináta<br/><span style=\" font-weight:600;\">y</span> - Y pozíció "
+"koordináta<br/><span style=\" font-weight:600;\">z</span> - Z pozíció "
+"koordináta<br/><span style=\" font-weight:600;\">a</span> - a-hálókoordináta "
+"(csak kristályok)<br/><span style=\" font-weight:600;\">b</span> - b-"
+"hálókoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">c</"
+"span> - c-hálókoordináta (csak kristályok)<br/><span style=\" font-"
+"weight:600;\">_</span> - Szó szerinti szóköz („”), hasznos az igazításhoz<br/"
+"><span style=\" font-weight:600;\">0</span> - Szó szerinti 0 („0”), hasznos "
+"az optimalizálási zászlókhoz<br/><span style=\" font-weight:600;\">1</span> -"
+" Szó szerinti 1 („1”), hasznos az optimalizálási zászlókhoz<br/"
+"></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
