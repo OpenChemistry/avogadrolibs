@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-09-28 09:24+0000\n"
+"PO-Revision-Date: 2022-10-07 13:28+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -2258,10 +2258,8 @@ msgid "'b' lattice coordinate."
 msgstr "'b' 격자 좌표입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "'a' 격자 좌표입니다."
+msgstr "'c' 격자 좌표입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -3900,10 +3898,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr "깃허브 리포지토리에서 플러그인을 다운로드합니다."
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
-#| msgid "VRML Render…"
 msgid "PLY Render…"
-msgstr "VRML 렌더…"
+msgstr "PLY 렌더…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -3911,20 +3907,16 @@ msgid "Save File"
 msgstr "파일 저장"
 
 #: qtplugins/ply/ply.cpp:71
-#, fuzzy
-#| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;텍스트 파일 (*.txt)"
+msgstr "PLY (*.ply);;텍스트 파일 (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
-msgstr ""
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
-#, fuzzy
-#| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "VRML을 사용하여 장면을 렌더링합니다."
+msgstr "PLY를 사용하여 장면을 렌더링합니다."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
