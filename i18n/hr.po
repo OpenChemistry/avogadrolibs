@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-09-28 09:24+0000\n"
+"PO-Revision-Date: 2022-10-14 10:56+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -2259,7 +2259,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:32:279
 msgid "Copy"
-msgstr ""
+msgstr "Kopiraj"
 
 #: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:80
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
