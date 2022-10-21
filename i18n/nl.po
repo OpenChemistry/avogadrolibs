@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-07 13:28+0000\n"
+"PO-Revision-Date: 2022-10-14 10:56+0000\n"
 "Last-Translator: Koen Roggemans <koen@roggemans.net>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1124,9 +1124,8 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:794 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Geen molecule geset"
+msgstr "[geen molecule]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
@@ -1138,10 +1137,9 @@ msgid "Ball and Stick"
 msgstr "Bal en staaf"
 
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Cartoon"
+msgstr "Cartoons"
 
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
@@ -1157,9 +1155,8 @@ msgid "Force"
 msgstr "Kracht"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Label"
+msgstr "Labels"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1175,11 +1172,9 @@ msgid "Non-Covalent"
 msgstr ""
 
 #: qtgui/layermodel.cpp:153
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
-msgstr "(QTAIM) Quantumtheorie van atomen in moleculen"
+msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
@@ -1191,10 +1186,9 @@ msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waals"
+msgstr "Van der Waals (AO)"
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1268,14 +1262,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:195
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Verwijder Waterstof"
+msgstr "Verwijder laag"
 
 #: qtgui/rwlayermanager.cpp:202
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Verwijder Waterstof"
+msgstr "Verwijder laaginfo"
 
 #: qtgui/rwlayermanager.cpp:211
 msgid "Add Layer"
@@ -1290,9 +1282,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
 #: qtplugins/select/select.cpp:528
 #: qtplugins/selectiontool/selectiontool.cpp:252:1579
-#, fuzzy
 msgid "Change Layer"
-msgstr "Wijzig bindings Orde"
+msgstr "Wijzig laag"
 
 #: qtgui/rwmolecule.cpp:38 qtgui/rwmolecule.cpp:47
 msgid "Add Atom"
@@ -1314,9 +1305,8 @@ msgid "Adjust Hydrogens"
 msgstr "Pas Waterstoffen aan"
 
 #: qtgui/rwmolecule.cpp:142
-#, fuzzy
 msgid "Change Elements"
-msgstr "Wijzig Element"
+msgstr "Wijzig Elementen"
 
 #: qtgui/rwmolecule.cpp:154
 msgid "Change Element"
@@ -1335,9 +1325,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:256
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Wijzig bindings Orde"
+msgstr "Wijzig atoomlaag"
 
 #: qtgui/rwmolecule.cpp:272
 msgid "Add Bond"
@@ -1348,14 +1337,12 @@ msgid "Removed Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:305
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Verwijder Binding"
+msgstr "Verwijder bindingen"
 
 #: qtgui/rwmolecule.cpp:320
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Bindings Orde"
+msgstr "Bindingsvolgorde instellen"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
@@ -1370,14 +1357,12 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:394
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "Voeg toe &Unit Cell"
+msgstr "Voeg Unit Cell toe"
 
 #: qtgui/rwmolecule.cpp:407
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Verwijder &Unit Cell"
+msgstr "Verwijder Unit Cell"
 
 #: qtgui/rwmolecule.cpp:472
 msgid "Edit Unit Cell"
@@ -1389,14 +1374,12 @@ msgid "Wrap Atoms to Cell"
 msgstr "Wikkel Atomen om Cel"
 
 #: qtgui/rwmolecule.cpp:512
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Schaal Celeenheidsvolume"
+msgstr "Schaal Celvolume"
 
 #: qtgui/rwmolecule.cpp:532
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Super Cel"
+msgstr "Bouw supercel"
 
 #: qtgui/rwmolecule.cpp:556
 msgid "Niggli Reduction"
@@ -1407,9 +1390,8 @@ msgid "Rotate to Standard Orientation"
 msgstr "Draai naar Standaardweergave"
 
 #: qtgui/rwmolecule.cpp:603 qtplugins/spacegroup/spacegroup.cpp:55
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Verklein naar Primitieve Cel"
+msgstr "Verklein naar Primitieve"
 
 #: qtgui/rwmolecule.cpp:628 qtplugins/spacegroup/spacegroup.cpp:61
 #: qtplugins/spacegroup/spacegroup.cpp:219
@@ -1417,33 +1399,28 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:653 qtplugins/spacegroup/spacegroup.cpp:244
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Kristal Symmetrisch maken"
+msgstr "Cel symmetrisch maken"
 
 #: qtgui/rwmolecule.cpp:672
 msgid "Fill Unit Cell"
 msgstr "Vul Celeenheid"
 
 #: qtgui/rwmolecule.cpp:692
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Verkleinen naar Asymmetrische Eenheid"
+msgstr "Verklein cel naar asymmetrische eenheid"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Wijzig bindings Orde"
+msgstr "Wijzig atoompositie"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Wijzig bindings Orde"
+msgstr "Wijzig atoompostitie"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Wijzig bindings Orde"
+msgstr "Wijzig atoomlabel"
 
 #: qtgui/rwmolecule.h:234
 #, fuzzy
@@ -1509,9 +1486,8 @@ msgid "OpenDX File (*.dx)"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:115
-#, fuzzy
 msgid "IO Error"
-msgstr "FOUT"
+msgstr "IO-fout"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
@@ -1608,34 +1584,28 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "Willekeurig Kleur"
+msgstr "Op aangepaste kleur…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
-#, fuzzy
 msgid "By Atomic Index"
-msgstr "Atoom Indices"
+msgstr "Op atoomindex"
 
 #: qtplugins/applycolors/applycolors.cpp:56
-#, fuzzy
 msgid "By Distance"
-msgstr "Afstand"
+msgstr "Op afstand"
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
-msgstr "Element"
+msgstr "Op element"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
-#| msgid "Partial charge"
 msgid "By Partial Charge…"
-msgstr "gedeeltelijke verandering"
+msgstr "Op deellading…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
@@ -1723,11 +1693,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
 #: qtplugins/surfaces/surfaces.cpp:570:171 rc.cpp:1627
-#, fuzzy
-#| msgid "Spectra"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Spectra"
+msgstr "Spectraal"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1745,11 +1713,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
 #: qtplugins/surfaces/surfaces.cpp:574:162 rc.cpp:1618
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Annuleren"
+msgstr "Balans"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1785,21 +1751,17 @@ msgid "&View"
 msgstr "Bekijk"
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Kleuren"
+msgstr "Kleur atomen"
 
 #: qtplugins/applycolors/applycolors.cpp:154
-#, fuzzy
 msgid "Color Residues"
-msgstr "Kleur per Residu"
+msgstr "Kleurresidus"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Geselecteerde Kleuren"
+msgstr "Selecteer kleurkaart"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1807,36 +1769,30 @@ msgstr "Geselecteerde Kleuren"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308:159 rc.cpp:1615
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Kleur:"
+msgstr "Kleurkaart:"
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Kleuren"
+msgstr "Kleuren toepassen"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
 msgid "Atom scale"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
-#, fuzzy
 msgid "Bond scale"
-msgstr "Bindingshoek"
+msgstr "Bindingsschaal"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
-#, fuzzy
 msgid "Show multiple bonds"
-msgstr "Toon Meervoudige Bindingen"
+msgstr "Toon meervoudige bindingen"
 
 #: qtplugins/ballandstick/ballandstick.cpp:109
 #: qtplugins/wireframe/wireframe.cpp:98
-#, fuzzy
 msgid "Show hydrogens"
-msgstr "Waterstoffen"
+msgstr "Toon waterstof"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
