@@ -7,13 +7,14 @@
 # Ludovico Besana <ludovicobesanaguide@gmail.com>, 2021.
 # Giacomo <gradaellig@gmail.com>, 2021.
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
+# Alex B <alessandrobrugnera16@protonmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2021-09-12 03:33+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2022-10-22 18:04+0000\n"
+"Last-Translator: Alex B <alessandrobrugnera16@protonmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -31,7 +32,7 @@ msgstr "Processo Batch #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
-msgstr ""
+msgstr "Nessun messaggio specificato."
 
 #: molequeue/inputgenerator.cpp:69 qtgui/interfacescript.cpp:68
 #, qt-format
@@ -2785,12 +2786,12 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Download dalla rete fallito"
+msgstr "Download dalla Rete Fallito"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr "Timeout della rete o altro errore."
+msgstr "Timeout di rete o altro errore."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
