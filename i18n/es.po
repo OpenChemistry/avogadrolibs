@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-20 20:06+0000\n"
+"PO-Revision-Date: 2022-10-23 19:04+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -4342,12 +4342,11 @@ msgid "Residue Properties…"
 msgstr "Propiedades de la molécula"
 
 #: qtplugins/propertytables/propertytables.cpp:67
-#, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
-"Ventanas para mostrar las propiedades  de átomos, enlaces, ángulos de "
-"énlaces y torsión. También incluye un editor de coordenadas cartesianas."
+"Tablas para visualizar y editar propiedades de átomos, enlaces, ángulos y "
+"torsiones."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
