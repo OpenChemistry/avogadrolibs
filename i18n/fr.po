@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-24 08:41+0000\n"
+"PO-Revision-Date: 2022-10-24 14:52+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -1358,7 +1358,7 @@ msgstr "Ajouter un claque"
 
 #: qtgui/rwlayermanager.cpp:214
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Ajouter des informations au calque"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1408,9 +1408,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:256
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Changer l'ordre des liaisons"
+msgstr "Changer le calque des atomes"
 
 #: qtgui/rwmolecule.cpp:272
 msgid "Add Bond"
@@ -4381,7 +4380,7 @@ msgstr "Réduire sélection"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Créer un nouveau calque avec la selection"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
