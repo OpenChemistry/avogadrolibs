@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:18+0000\n"
+"PO-Revision-Date: 2022-10-24 14:52+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -2192,10 +2192,8 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-#, fuzzy
-#| msgid "'c' coordinate."
 msgid "'c' lattice coordinate."
-msgstr "'c' კოორდინატი."
+msgstr "'c' ბადის კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -3790,10 +3788,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr "დამატებების გადმოწერა GitHub რეპოზიტორიებიდან."
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
-#| msgid "VRML Render…"
 msgid "PLY Render…"
-msgstr "VRML რენდერი…"
+msgstr "PLY რენდერი…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -3801,10 +3797,8 @@ msgid "Save File"
 msgstr "ფაილის შენახვა"
 
 #: qtplugins/ply/ply.cpp:71
-#, fuzzy
-#| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;ტექსტური ფაილი (*.txt)"
+msgstr "PLY (*.wrl);;ტექსტური ფაილი (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
