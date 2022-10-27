@@ -7,13 +7,14 @@
 # Aritz Erkiaga <aerkiaga3@gmail.com>, 2022.
 # Andrés Henao <andreshenao31@gmail.com>, 2022.
 # gallegonovato <fran-carro@hotmail.es>, 2022.
+# William <eduardo.957@hotmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-23 19:04+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2022-10-28 23:07+0000\n"
+"Last-Translator: William <eduardo.957@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1081,10 +1082,8 @@ msgid "All files"
 msgstr "Todos los archivos"
 
 #: qtgui/fileformatdialog.cpp:281
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Todos los formatos soportados (%1);;"
+msgstr "Todos los formatos soportados"
 
 #: qtgui/interfacescript.cpp:222
 #, qt-format
@@ -1244,24 +1243,20 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 msgid "Meshes"
-msgstr ""
+msgstr "Mallas"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Covalente"
+msgstr "No covalente"
 
 #: qtgui/layermodel.cpp:153
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
-msgstr "QTAIM - Quantum Theory of Atoms in Molecules"
+msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Elementos de Simetría"
 
 #: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1323,9 +1318,8 @@ msgid "Script failed to start."
 msgstr "Inicio de Script ha fallado."
 
 #: qtgui/pythonscript.cpp:239
-#, fuzzy
 msgid "Script crashed."
-msgstr "Script colapsó."
+msgstr "El script colapsó."
 
 #: qtgui/pythonscript.cpp:242
 #, fuzzy
@@ -1395,9 +1389,8 @@ msgid "Adjust Hydrogens"
 msgstr "Ajustar Hidrógenos"
 
 #: qtgui/rwmolecule.cpp:142
-#, fuzzy
 msgid "Change Elements"
-msgstr "Cambiar Elemento"
+msgstr "Cambiar Elementos"
 
 #: qtgui/rwmolecule.cpp:154
 msgid "Change Element"
@@ -1451,18 +1444,16 @@ msgid "Update Bond"
 msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:394
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "Añador &Celda"
+msgstr "Añadir Célula Unitaria"
 
 #: qtgui/rwmolecule.cpp:407
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Eliminar &celda"
+msgstr "Eliminar Célula Unitaria"
 
 #: qtgui/rwmolecule.cpp:472
 msgid "Edit Unit Cell"
-msgstr "Editar Celda Unidad"
+msgstr "Editar Célula Unitaria"
 
 #: qtgui/rwmolecule.cpp:489
 #, fuzzy
@@ -1504,7 +1495,7 @@ msgstr "Dar simetría al cristal"
 
 #: qtgui/rwmolecule.cpp:672
 msgid "Fill Unit Cell"
-msgstr "Llenar Celda Unitaria"
+msgstr "Llenar Célula Unitaria"
 
 #: qtgui/rwmolecule.cpp:692
 #, fuzzy
@@ -1563,7 +1554,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
-msgstr ""
+msgstr "Ejecutar APBS…"
 
 #: qtplugins/apbs/apbs.cpp:36
 #, fuzzy
@@ -1590,12 +1581,11 @@ msgstr "Abrir Archivo de Salida"
 
 #: qtplugins/apbs/apbs.cpp:62
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "Archivo OpenDX (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
-#, fuzzy
 msgid "IO Error"
-msgstr "Error"
+msgstr "Error de E/S"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
@@ -1604,12 +1594,12 @@ msgstr "Error de lectura de estructura de archivo (%1)."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
-msgstr ""
+msgstr "Error de OpenDX"
 
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Error leyendo archivo OpenDX: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
@@ -1619,7 +1609,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:31:84
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:34
 msgid "Interact with APBS utilities."
@@ -1693,34 +1683,28 @@ msgstr "Archivo de entrada escrito a '%1'"
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "Color personalizado"
+msgstr "Por Color personalizado…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
-#, fuzzy
 msgid "By Atomic Index"
-msgstr "Índices Atómicos"
+msgstr "Por Índices Atómicos"
 
 #: qtplugins/applycolors/applycolors.cpp:56
-#, fuzzy
 msgid "By Distance"
-msgstr "Distancia"
+msgstr "Por Distancia"
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
-msgstr "Elemento"
+msgstr "Por Elemento"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
 msgstr "Por Cadena"
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Carga parcial"
+msgstr "Por Carga Parcial…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
