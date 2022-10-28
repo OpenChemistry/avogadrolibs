@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-09-05 17:18+0000\n"
+"PO-Revision-Date: 2022-10-24 14:52+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -506,7 +506,7 @@ msgstr "Impossible de sélectionner un programme. Ceci est un bug."
 
 #: qtgui/backgroundfileformat.cpp:28 qtgui/backgroundfileformat.cpp:53
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "Aucune molécule définie dans le format du fichier d’arrière-plan !"
+msgstr "Aucune molécule définie dans « BackgroundFileFormat » !"
 
 #: qtgui/backgroundfileformat.cpp:31 qtgui/backgroundfileformat.cpp:56
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -514,7 +514,7 @@ msgstr "Aucun Io::FileFormat défini dans le format du fichier d’arrière-plan
 
 #: qtgui/backgroundfileformat.cpp:34 qtgui/backgroundfileformat.cpp:59
 msgid "No file name set in BackgroundFileFormat!"
-msgstr "Aucun nom de fichier défini dans le format du fichier d’arrière-plan !"
+msgstr "Aucun nom de fichier défini dans « BackgroundFileFormat » !"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
@@ -1349,9 +1349,8 @@ msgid "Remove Layer"
 msgstr "Retirer le calque"
 
 #: qtgui/rwlayermanager.cpp:202
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Retirer LES Hydrogènes"
+msgstr "Retirer les informations du calque"
 
 #: qtgui/rwlayermanager.cpp:211
 msgid "Add Layer"
@@ -1359,7 +1358,7 @@ msgstr "Ajouter un claque"
 
 #: qtgui/rwlayermanager.cpp:214
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Ajouter des informations au calque"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1409,9 +1408,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:256
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Changer l'ordre des liaisons"
+msgstr "Changer le calque des atomes"
 
 #: qtgui/rwmolecule.cpp:272
 msgid "Add Bond"
@@ -4382,7 +4380,7 @@ msgstr "Réduire sélection"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Créer un nouveau calque avec la selection"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
