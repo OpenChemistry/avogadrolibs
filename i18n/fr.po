@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-24 14:52+0000\n"
+"PO-Revision-Date: 2022-10-31 15:03+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -331,7 +331,7 @@ msgstr "Erreur à la sortie"
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr "L'écriture dans le fichier %1 a échoué."
+msgstr "L'écriture du fichier %1 a échoué."
 
 #: molequeue/inputgeneratorwidget.cpp:482
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
@@ -1019,28 +1019,32 @@ msgstr "Sélectionner un exécutable :"
 #: qtgui/fileformatdialog.cpp:51
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
+"Impossible de trouver un lecteur de fichier approprié pour le fichier "
+"sélectionné."
 
 #: qtgui/fileformatdialog.cpp:99
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
-"L'extension de fichier est manquante et le format ne peut être défini. "
+"L'extension de fichier est manquante et le format ne peut pas être défini. "
 "Voulez-vous l'ajouter ?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
+"Impossible de trouver un éditeur de fichiers approprié pour le format "
+"sélectionné."
 
 #: qtgui/fileformatdialog.cpp:162
 msgctxt "File handlers"
 msgid "handlers"
-msgstr "manupulateurs"
+msgstr "responsable"
 
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr "poignet"
+msgstr "gérer"
 
 #: qtgui/fileformatdialog.cpp:167
 msgctxt "File readers"
@@ -1055,7 +1059,7 @@ msgstr "lire"
 #: qtgui/fileformatdialog.cpp:172
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "auteurs"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "e.g. file writers that can 'write' this file."
@@ -1068,32 +1072,32 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Plusieurs %1 trouvés qui peuvent %2 ce format. Lequel utiliser ?"
 
 #: qtgui/fileformatdialog.cpp:278
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
 msgstr "Tous les fichiers"
 
 #: qtgui/fileformatdialog.cpp:281
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Tous les formats supportés (%1);;"
+msgstr "Tous les formats supportés"
 
 #: qtgui/interfacescript.cpp:222
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
+"Erreur lors de la lecture de la représentation de la molécule : format de "
+"fichier non reconnu : %1"
 
 #: qtgui/interfacescript.cpp:492
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Erreur lors de la modification de la représentation de la molécule : format "
+"de fichier non reconnu : %1"
 
 #: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "Erreur lors de la modification de la représentation de la molécule : %1"
 
 #: qtgui/jsonwidget.cpp:53
 msgid "'userOptions' missing."
@@ -1205,7 +1209,7 @@ msgstr "Calque %1"
 
 #: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
-msgstr "Boule et bâtonnet"
+msgstr "Boules-bâtonnets"
 
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
 #, fuzzy
@@ -1220,7 +1224,7 @@ msgstr "Contacts proches"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Réseau de Bravais"
 
 #: qtgui/layermodel.cpp:143 qtplugins/force/force.h:28
 msgid "Force"
@@ -1244,8 +1248,6 @@ msgid "Non-Covalent"
 msgstr "Non covalente"
 
 #: qtgui/layermodel.cpp:153
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
