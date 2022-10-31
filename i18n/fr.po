@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-31 15:03+0000\n"
+"PO-Revision-Date: 2022-11-01 20:31+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -510,7 +510,7 @@ msgstr "Aucune molécule définie dans « BackgroundFileFormat » !"
 
 #: qtgui/backgroundfileformat.cpp:31 qtgui/backgroundfileformat.cpp:56
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr "Aucun Io::FileFormat défini dans le format du fichier d’arrière-plan !"
+msgstr "Aucun Io::FileFormat défini dans « BackgroundFileFormat » !"
 
 #: qtgui/backgroundfileformat.cpp:34 qtgui/backgroundfileformat.cpp:59
 msgid "No file name set in BackgroundFileFormat!"
@@ -1237,7 +1237,7 @@ msgstr "Étiquette"
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr "Acide glycyrrhizique"
+msgstr "Dreiding"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 msgid "Meshes"
@@ -1295,6 +1295,8 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Erreur lors de l'exécution du programme « %1 %2 » : la modification de stdin "
+"a échoué (longueur=%3, %4 bytes modifié, erreur QProcess : %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
@@ -1311,8 +1313,8 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Erreur lors de l'exécution du script '%1 %2': Code de sortie anormal %3 (%4: "
-"%5)\n"
+"Erreur lors de l'exécution du script « %1 %2 » : Code de sortie anormal %3 ("
+"%4 : %5)\n"
 "\n"
 "Sortie :\n"
 "%6"
@@ -1327,7 +1329,7 @@ msgstr "Plantage du script."
 
 #: qtgui/pythonscript.cpp:242
 msgid "Script timed out."
-msgstr ""
+msgstr "Délai d'attente du programme écoulé."
 
 #: qtgui/pythonscript.cpp:245
 msgid "Read error."
@@ -1399,15 +1401,15 @@ msgstr "Changer un élément"
 
 #: qtgui/rwmolecule.cpp:220
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Modifier l'hybridation de l'atome"
 
 #: qtgui/rwmolecule.cpp:232
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Modifier la charge formelle de l'atome"
 
 #: qtgui/rwmolecule.cpp:244
 msgid "Change Atom Color"
-msgstr ""
+msgstr "Modifier la couleur de l'atome"
 
 #: qtgui/rwmolecule.cpp:256
 msgid "Change Atom Layer"
@@ -1422,14 +1424,12 @@ msgid "Removed Bond"
 msgstr "Liaison supprimée"
 
 #: qtgui/rwmolecule.cpp:305
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Supprimer une liaison"
+msgstr "Supprimer les liaisons"
 
 #: qtgui/rwmolecule.cpp:320
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Multiplicité de la liaison"
+msgstr "Définir l'ordre de liaison"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
@@ -1444,18 +1444,16 @@ msgid "Update Bond"
 msgstr "Mettre à jour la liaison"
 
 #: qtgui/rwmolecule.cpp:394
-#, fuzzy
 msgid "Add Unit Cell"
-msgstr "Afficher la &maille conventionnelle"
+msgstr "Ajouter une maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:407
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Effacer la &maille conventionnelle"
+msgstr "Supprimer la maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:472
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Modifier la maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:489
 #, fuzzy
@@ -1463,9 +1461,8 @@ msgid "Wrap Atoms to Cell"
 msgstr "&Regrouper les atomes dans la maille"
 
 #: qtgui/rwmolecule.cpp:512
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Mettre le volume de maille conventionnelle à l'échelle"
+msgstr "Redimensionner le volume de maille"
 
 #: qtgui/rwmolecule.cpp:532
 msgid "Build Super Cell"
@@ -1503,15 +1500,12 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Réduire à l'unité asymétrique"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change selections"
 msgid "Change Atom Positions"
-msgstr "Changer les sélections"
+msgstr "Changer les positions des atomes"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Changer l'ordre des liaisons"
+msgstr "Changer la position de l'atome"
 
 #: qtgui/rwmolecule.h:228
 #, fuzzy
@@ -1519,10 +1513,8 @@ msgid "Change Atom Label"
 msgstr "Changer l'ordre des liaisons"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Change selections"
 msgid "Change Selection"
-msgstr "Changer les sélections"
+msgstr "Modifier la sélection"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1530,7 +1522,7 @@ msgstr "Modifier la molécule"
 
 #: qtplugins/3dmol/3dmol.cpp:42
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "Bloque HTML 3DMol."
 
 #: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:47
@@ -1556,9 +1548,8 @@ msgid "Run APBS…"
 msgstr "Lancer APBS…"
 
 #: qtplugins/apbs/apbs.cpp:36
-#, fuzzy
 msgid "Open Output File…"
-msgstr "Ouvrir un fichier WFN"
+msgstr "Ouvrir le fichier de sortie…"
 
 #: qtplugins/apbs/apbs.cpp:49 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:52
@@ -1589,7 +1580,7 @@ msgstr "Erreur IO"
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Erreur lors de la lecture du fichier de structure (%1)."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
@@ -1598,7 +1589,7 @@ msgstr "Erreur OpenDX"
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Erreur lors de la lecture du fichier OpenDX : %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
@@ -1677,13 +1668,12 @@ msgstr "Succès"
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Fichier d'entrée écrit dans « %1 »"
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "Couleur personnalisée"
+msgstr "Par couleur personnalisée…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index"
@@ -1702,15 +1692,12 @@ msgid "By Chain"
 msgstr "Par chaine"
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Charge partielle"
+msgstr "Par charge partielle…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
-#, fuzzy
 msgid "By Secondary Structure"
-msgstr "Affiche de la structure secondaire d'une protéine"
+msgstr "Par la structure secondaire"
 
 #: qtplugins/applycolors/applycolors.cpp:87
 msgid "By Amino Acid"
@@ -3656,7 +3643,7 @@ msgstr "Ajouter de l'hydrogène au pH"
 
 #: qtplugins/openbabel/openbabel.cpp:667
 msgid "pH:"
-msgstr "pH:"
+msgstr "pH :"
 
 #: qtplugins/openbabel/openbabel.cpp:674 qtplugins/openbabel/openbabel.cpp:716
 msgid "Generating obabel input…"
@@ -3819,7 +3806,7 @@ msgstr " sur %0"
 
 #: qtplugins/playertool/playertool.cpp:131
 msgid "Dynamic bonding?"
-msgstr "Liaisons dynamiques?"
+msgstr "Liaisons dynamiques ?"
 
 #: qtplugins/playertool/playertool.cpp:139
 msgid "Record Movie…"
@@ -4539,7 +4526,7 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
-"La tolérance est actuellement définie à: %1.\n"
+"La tolérance est actuellement définie à : %1.\n"
 "Continuer avec cette tolérance ?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
