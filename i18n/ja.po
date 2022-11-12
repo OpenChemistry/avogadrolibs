@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-10-04 18:39+0000\n"
+"PO-Revision-Date: 2022-11-13 17:48+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1054,7 +1054,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:152
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "タブ %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1437,7 +1437,7 @@ msgstr "原子のレイヤーを変更"
 #, fuzzy
 #| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "選択を拡大"
+msgstr "選択を変更"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1824,7 +1824,7 @@ msgstr "水素を表示"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "原子を球、結合を筒として表示する。"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:121
 msgid "Bond-Centric Manipulation"
@@ -2251,19 +2251,16 @@ msgid "Z coordinate."
 msgstr "Z座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
-#, fuzzy
 msgid "'a' lattice coordinate."
 msgstr "'a' 格子座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
-#, fuzzy
 msgid "'b' lattice coordinate."
 msgstr "'b' 格子座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-#, fuzzy
 msgid "'c' lattice coordinate."
-msgstr "'a' 格子座標"
+msgstr "'c' 格子座標"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
