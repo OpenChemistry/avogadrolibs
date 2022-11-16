@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-11-01 20:31+0000\n"
+"PO-Revision-Date: 2022-11-17 16:48+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1644,7 +1644,7 @@ msgstr "Erreur"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Erreur lors exécution de APBS : %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
@@ -1739,7 +1739,7 @@ msgstr "Gris"
 #: qtplugins/surfaces/surfaces.cpp:560
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1888,7 +1888,7 @@ msgstr "Afficher les liaisons multiples"
 #: qtplugins/ballandstick/ballandstick.cpp:109
 #: qtplugins/wireframe/wireframe.cpp:98
 msgid "Show hydrogens"
-msgstr "Afficher hydrogènes"
+msgstr "Afficher les hydrogènes"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
