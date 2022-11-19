@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-11-17 16:48+0000\n"
+"PO-Revision-Date: 2022-11-20 16:47+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -442,7 +442,7 @@ msgstr "Configurer la tâche"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Soumettre la tâche à MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -450,7 +450,7 @@ msgstr "Délai de soumission de tâche expiré"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr "Avogadro s'est arrêté dans l'attente d'un retour de MolQueue."
+msgstr "Avogadro a arrêté d'attendre la réponse de MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
@@ -473,10 +473,11 @@ msgstr "Délai de tâche dépassé"
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro a arrêté d'attendre les détails de la tâche finis par MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Erreur lors de la soumission de la tâche"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
@@ -491,6 +492,7 @@ msgstr "Aucun programme sélectionné."
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
 msgstr ""
+"Veuillez sélectionner le programme cible de la liste « Queue and Program »."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
@@ -1713,7 +1715,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:552
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:554
@@ -1745,10 +1747,9 @@ msgstr "Magma"
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:303
 #: qtplugins/surfaces/surfaces.cpp:562
-#, fuzzy
 msgctxt "colormap"
 msgid "Inferno"
-msgstr "Enfer"
+msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1830,7 +1831,7 @@ msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:141
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Appliquer les schémas de couleurs aux atomes et aux résidus."
 
 #: qtplugins/applycolors/applycolors.cpp:152
 #: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
@@ -1840,21 +1841,17 @@ msgid "&View"
 msgstr "&Vue"
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Couleurs"
+msgstr "Atomes colorés"
 
 #: qtplugins/applycolors/applycolors.cpp:154
-#, fuzzy
 msgid "Color Residues"
-msgstr "Colorier selon le résidu"
+msgstr "Résidus colorés"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Couleurs sélectionnées"
+msgstr "Sélectionner la palette de couleur"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1866,9 +1863,8 @@ msgid "Colormap:"
 msgstr "Carte des couleurs :"
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Couleurs"
+msgstr "Appliquer les couleurs"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
 msgid "Atom scale"
@@ -1881,7 +1877,6 @@ msgstr "Angle de la liaison"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
-#, fuzzy
 msgid "Show multiple bonds"
 msgstr "Afficher les liaisons multiples"
 
@@ -1895,9 +1890,8 @@ msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "Afficher les atomes avec des sphères et les liens avec des cylindres."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:121
-#, fuzzy
 msgid "Bond-Centric Manipulation"
-msgstr "Manipulation des liaisons"
+msgstr "Manipulation centrique des liaisons"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:124
 msgid ""
