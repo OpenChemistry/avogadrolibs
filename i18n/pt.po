@@ -7,13 +7,14 @@
 # Joana Vieira <joanaoliveiravieira8@gmail.com>, 2020.
 # João Tiago Antunes <jtiago.cbr@gmail.com>, 2020.
 # Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
+# Gustavo Sousa Jr <grsousajunior@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2021-08-30 09:54+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2022-11-27 00:47+0000\n"
+"Last-Translator: Gustavo Sousa Jr <grsousajunior@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -130,22 +131,18 @@ msgstr ""
 "%3"
 
 #: molequeue/inputgenerator.cpp:350
-#, fuzzy, qt-format
-#| msgid ""
-#| "Error writing molecule representation to string: Unrecognized file "
-#| "format: %1"
+#, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Erro ao gravar a representação da molécula como string: Formato de ficheiro "
+"Erro ao salvar a representação da molécula como string: Formato de arquivo "
 "não reconhecido: %1"
 
 #: molequeue/inputgenerator.cpp:358
-#, fuzzy, qt-format
-#| msgid "Error writing molecule representation to string: %1"
+#, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr "Erro ao gravar a representação da molécula na string: %1"
+msgstr "Erro ao salvar a representação da molécula como string: %1"
 
 #: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:512
 #, qt-format
@@ -444,10 +441,8 @@ msgid "Configure Job"
 msgstr "Configurar trabalho"
 
 #: molequeue/molequeuedialog.cpp:57
-#, fuzzy
-#| msgid "Submitting job to MoleQueue..."
 msgid "Submitting job to MoleQueue…"
-msgstr "Enviar trabalho para MoleQueue..."
+msgstr "Enviar trabalho para MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -458,21 +453,18 @@ msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr "Avogadro esgotou o tempo aguardando uma resposta de MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
-#, fuzzy, qt-format
-#| msgid "Waiting for job %1 '%2' to finish..."
+#, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr "Esperando o trabalho %1 '%2' para terminar..."
+msgstr "Esperando o trabalho %1 '%2' para terminar…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
 msgstr "Parar de esperar"
 
 #: molequeue/molequeuedialog.cpp:105
-#, fuzzy
-#| msgid "Fetching completed job information..."
 msgid "Fetching completed job information…"
-msgstr "Obter informação sobre o trabalho concluído..."
+msgstr "Obtendo informações sobre o trabalho concluído…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -489,8 +481,7 @@ msgid "Error Submitting Job"
 msgstr "Erro ao submeter trabalho"
 
 #: molequeue/molequeuedialog.cpp:128
-#, fuzzy, qt-format
-#| msgid "The job has been rejected by MoleQueue: %1"
+#, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
 msgstr "O trabalho foi recusado por MoleQueue: %1"
