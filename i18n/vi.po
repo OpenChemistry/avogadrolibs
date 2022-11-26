@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 # Tsuki <danghoangtuan526@gmail.com>, 2022.
+# Minh P <phandinhminh@protonmail.ch>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-03-14 05:09+0000\n"
-"Last-Translator: Tsuki <danghoangtuan526@gmail.com>\n"
+"PO-Revision-Date: 2022-11-27 00:47+0000\n"
+"Last-Translator: Minh P <phandinhminh@protonmail.ch>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/vi/>\n"
 "Language: vi\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -447,7 +448,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:28 qtgui/backgroundfileformat.cpp:53
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "Không có phần tử nào được cài đặt trong BackgroundFileFormat!"
+msgstr "Không có phân tử nào được cài đặt trong BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:31 qtgui/backgroundfileformat.cpp:56
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -2334,9 +2335,8 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:32:279
-#, fuzzy
 msgid "Copy"
-msgstr "Chép tất cả"
+msgstr "Sao chép"
 
 #: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:80
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2359,9 +2359,8 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:36:288
-#, fuzzy
 msgid "Clear"
-msgstr "Xoá hết"
+msgstr "Xóa"
 
 #: qtplugins/copypaste/copypaste.cpp:37
 msgid "&Paste"
@@ -2729,9 +2728,8 @@ msgstr "Ba"
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:47
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
-#, fuzzy
 msgid "&Import"
-msgstr "Nhập"
+msgstr "&Nhập"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
@@ -2762,7 +2760,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Việc tải xuống từ mạng không thành công"
+msgstr "Việc tải qua mạng đã thất bại"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
