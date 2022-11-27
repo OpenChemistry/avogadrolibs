@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Urszula <urszula127@gmail.com>, 2021.
+# Dominik Florjan <dominik.florjan@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2021-09-08 11:10+0000\n"
-"Last-Translator: Urszula <urszula127@gmail.com>\n"
+"PO-Revision-Date: 2022-11-17 16:48+0000\n"
+"Last-Translator: Dominik Florjan <dominik.florjan@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pl/>\n"
 "Language: pl\n"
@@ -18,13 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Zadanie #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
@@ -51,18 +52,20 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:324
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Plik referencyjny '%1' nie istnieje."
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:326
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Błąd podczas zapisywania do pliku %1:%2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:330
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Plik '%1' słabo sformatowany. Brakuje ciągu znaków w polach 'contents' oraz "
+"'filePath'."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:363
 #, qt-format
