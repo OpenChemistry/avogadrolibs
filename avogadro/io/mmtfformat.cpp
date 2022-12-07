@@ -35,8 +35,10 @@ MMTFFormat::MMTFFormat() = default;
 
 MMTFFormat::~MMTFFormat() = default;
 
+namespace {
 // from latest MMTF code, under the MIT license
 // https://github.com/rcsb/mmtf-cpp/blob/master/include/mmtf/structure_data.hpp
+#if MMTF_SPEC_VERSION_MAJOR <= 1 && MMTF_SPEC_VERSION_MINOR < 1
 bool is_polymer(const unsigned int chain_index,
                 const std::vector<mmtf::Entity>& entity_list)
 {
@@ -50,6 +52,8 @@ bool is_polymer(const unsigned int chain_index,
   }
   return false;
 }
+#endif
+} // namespace
 
 bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 {
