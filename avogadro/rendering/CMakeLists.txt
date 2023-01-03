@@ -140,3 +140,7 @@ avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES} ${shader_h_files})
 target_link_libraries(AvogadroRendering
   ${GLEW_LIBRARY}
   ${OPENGL_LIBRARIES})
+
+if(USE_TDX)
+  target_compile_definitions(AvogadroRendering PUBLIC TDX_INTEGRATION)
+endif()
