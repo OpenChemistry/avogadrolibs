@@ -104,6 +104,16 @@ public:
   void setTextRenderStrategy(TextRenderStrategy* tren);
   /** @} */
 
+#ifdef TDX_INTEGRATION
+  std::array<float, 6> m_perspectiveFrustum;  // L, R, B, T, N, F (planes order)
+  std::array<float, 6> m_orthographicFrustum; // L, R, B, T, N, F (planes order)
+  bool m_drawIcon;
+  void *m_iconData;
+  uint32_t m_iconWidth;
+  uint32_t m_iconHeight;
+  Eigen::Vector3f m_iconPosition;
+#endif
+
 private:
   /**
    * Apply the projection matrix.
@@ -136,7 +146,7 @@ private:
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
   SolidPipeline m_solidPipeline;
-
+  
   Vector3f m_center;
   float m_radius;
 };

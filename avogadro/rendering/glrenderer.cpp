@@ -27,8 +27,33 @@ using Core::Array;
 GLRenderer::GLRenderer()
   : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
     m_radius(20.0)
+#ifdef TDX_INTEGRATION
+   ,m_drawIcon(false),
+	m_iconData(nullptr),
+	m_iconWidth(0u),
+	m_iconHeight(0u),
+    m_iconPosition(Eigen::Vector3f::Zero())
+#endif 
 {
   m_overlayCamera.setIdentity();
+#ifdef TDX_INTEGRATION
+  float aspectRatio = static_cast<float>(m_camera.width()) /
+                      static_cast<float>(m_camera.height());
+  float distance = m_camera.distance(m_center);
+  float offset = distance + m_radius;
+  m_perspectiveFrustum = {-aspectRatio, 
+						  aspectRatio,
+						  -1.0f,
+						  1.0f,
+						  2.0f,
+						  offset};
+  m_orthographicFrustum = {-5.0f * aspectRatio,
+						   5.0f * aspectRatio,
+						   -5.0f,
+						   5.0f, 
+						   -offset,
+						   offset};
+#endif
 }
 
 GLRenderer::~GLRenderer()
@@ -117,6 +142,35 @@ void GLRenderer::render()
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
   m_scene.rootNode().accept(visitor);
+
+#ifdef TDX_INTEGRATION
+  if (m_drawIcon && (m_iconData != nullptr)) {
+    glPushMatrix();
+    Eigen::Vector4f pivotPosition =
+      m_camera.projection().matrix() * 
+	  m_camera.modelView().matrix() *
+      Eigen::Vector4f(m_iconPosition.x(), 
+					  m_iconPosition.y(),
+					  m_iconPosition.z(),
+					  1.0);
+    pivotPosition /= pivotPosition.w();
+    glRasterPos3d(pivotPosition.x(), pivotPosition.y(), pivotPosition.z());
+    glPixelZoom(1.0f, -1.0f);
+    glBitmap(0.0f, 
+			 0.0f, 
+			 0.0f,
+			 0.0f, 
+			 -static_cast<float>(m_iconWidth >> 1),
+			 static_cast<float>(m_iconHeight >> 1), 
+			 NULL);
+    glDrawPixels(m_iconWidth, 
+				 m_iconHeight, 
+				 GL_BGRA_EXT,
+				 GL_UNSIGNED_BYTE,
+				 m_iconData);
+    glPopMatrix();
+  }
+#endif
 }
 
 void GLRenderer::resetCamera()
@@ -169,16 +223,43 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
+#ifdef TDX_INTEGRATION
+  float aspectRatio = static_cast<float>(m_camera.width()) /
+                      static_cast<float>(m_camera.height());
+#endif
   if (m_camera.projectionType() == Perspective) {
+#ifdef TDX_INTEGRATION
+    m_perspectiveFrustum[0] = m_perspectiveFrustum[2] * aspectRatio;
+    m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
+    m_perspectiveFrustum[5] = distance + m_radius;
+    m_camera.calculatePerspective(
+      m_perspectiveFrustum[0], m_perspectiveFrustum[1],
+	  m_perspectiveFrustum[2], m_perspectiveFrustum[3],
+	  m_perspectiveFrustum[4], m_perspectiveFrustum[5]);
+#else
     m_camera.calculatePerspective(40.0f, std::max(2.0f, distance - m_radius),
                                   distance + m_radius);
+#endif
   } else {
     // Renders the orthographic projection of the molecule
+#ifdef TDX_INTEGRATION
+    m_orthographicFrustum[0] = m_orthographicFrustum[2] * aspectRatio;
+    m_orthographicFrustum[1] = m_orthographicFrustum[3] * aspectRatio;
+    m_orthographicFrustum[5] = distance + m_radius;
+    m_orthographicFrustum[4] = -m_orthographicFrustum[5];
+    m_camera.calculateOrthographic(m_orthographicFrustum[0],  // L
+                                   m_orthographicFrustum[1],  // R
+                                   m_orthographicFrustum[2],  // B
+                                   m_orthographicFrustum[3],  // T
+                                   m_orthographicFrustum[4],  // N
+                                   m_orthographicFrustum[5]); // F
+#else
     const double halfHeight = m_radius;
     const double halfWidth = halfHeight * m_camera.width() / m_camera.height();
     m_camera.calculateOrthographic(
       -halfWidth, halfWidth, -halfHeight, halfHeight,
       std::max(2.0f, distance - m_radius), distance + m_radius);
+#endif
   }
   m_overlayCamera.calculateOrthographic(
     0.f, static_cast<float>(m_overlayCamera.width()), 0.f,

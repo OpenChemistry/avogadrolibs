@@ -144,3 +144,7 @@ target_link_libraries(Rendering
     Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
     GLEW::GLEW
     OpenGL::GL)
+
+if(USE_TDX)
+  target_compile_definitions(AvogadroRendering PUBLIC TDX_INTEGRATION)
+endif()

@@ -100,7 +100,7 @@ public:
    * reference point (defaults to the origin if nothing is supplied).
    */
   Vector3f unProject(const Vector2f& point,
-                     const Vector3f& reference = Vector3f::Zero()) const;
+					 const Vector3f& reference = Vector3f::Zero()) const;
 
   /**
    * Calculate the perspective projection matrix.
@@ -110,7 +110,7 @@ public:
    * @param zFar is the distance from the viewer to the far clipping plane.
    */
   void calculatePerspective(float fieldOfView, float aspectRatio, float zNear,
-                            float zFar);
+							float zFar);
 
   /**
    * Calculate the perspective projection matrix. Computes the aspect ratio
@@ -120,7 +120,19 @@ public:
    * @param zFar is the distance from the viewer to the far clipping plane.
    */
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
-
+#ifdef TDX_INTEGRATION
+  /**
+   * << API Extension for TDX >> 
+   * Calculate the perspective projection matrix using frustum planes coordinates.
+   * @param left left vertical clipping plane.
+   * @param right right vertical clipping plane.
+   * @param bottom bottom horizontal clipping plane.
+   * @param top top horizontal clipping plane.
+   * @param zNear distance to the near clipping plane.
+   * @param zFar distance to the far clipping plane.
+   */
+  void calculatePerspective(float left, float right, float bottom, float top, float zNear, float zFar);
+#endif
   /**
    * Calculate the orthographic projection matrix.
    * @param left left vertical clipping plane.
@@ -131,7 +143,7 @@ public:
    * @param zFar distance to the far clipping plane.
    */
   void calculateOrthographic(float left, float right, float bottom, float top,
-                             float zNear, float zFar);
+							 float zNear, float zFar);
 
   /**
    * Set the dimensions of the viewport in pixels.

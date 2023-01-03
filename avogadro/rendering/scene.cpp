@@ -52,5 +52,29 @@ void Scene::clear()
   m_rootNode.clear();
   m_dirty = true;
 }
+#ifdef TDX_INTEGRATION
+void Scene::getBoundingBox(double &minX,
+						   double &minY,
+						   double &minZ,
+						   double &maxX,
+						   double &maxY,
+						   double &maxZ,
+						   const std::vector<bool> &flags)
+{
+  GeometryVisitor visitor;
 
+  m_rootNode.accept(visitor);
+  visitor.boundingBox(minX, minY, minZ, maxX, maxY, maxZ, flags);
+}
+
+float Scene::getHitDistance(const Vector3f& rayOrigin,
+                            const Vector3f& rayDirection,
+                            const float rayLength)
+{
+  GeometryVisitor visitor;
+
+  m_rootNode.accept(visitor);
+  return visitor.hit(rayOrigin, rayDirection, rayLength);
+}
+#endif
 } // End Avogadro namespace
