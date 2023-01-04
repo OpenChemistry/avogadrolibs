@@ -150,21 +150,7 @@ void Camera::calculatePerspective(float fieldOfView, float zNear, float zFar)
     fieldOfView, static_cast<float>(m_width) / static_cast<float>(m_height),
     zNear, zFar);
 }
-#ifdef TDX_INTEGRATION
-void Camera::calculatePerspective(float left, float right, float bottom, float top, float zNear, float zFar) 
-{
-  m_data->projection.setIdentity();
 
-  m_data->projection(0, 0) = (2.0f * zNear) / (right - left);
-  m_data->projection(1, 1) = (2.0f * zNear) / (top - bottom);
-  m_data->projection(0, 2) = (right + left) / (right - left);
-  m_data->projection(1, 2) = (top + bottom) / (top - bottom);
-  m_data->projection(2, 2) = -(zFar + zNear) / (zFar - zNear);
-  m_data->projection(3, 2) = -1.0f;
-  m_data->projection(2, 3) = -(2.0f * zFar * zNear) / (zFar - zNear);
-  m_data->projection(3, 3) = 0.0f;
-}
-#endif
 void Camera::calculateOrthographic(float left, float right, float bottom,
 								   float top, float zNear, float zFar)
 {

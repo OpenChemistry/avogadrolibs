@@ -130,7 +130,7 @@ public:
 
   /** Clear the scene of all elements. */
   void clear();
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   /**
    * <<API Extension for TDX>>
    * Calculte and return bounding box of the scene objects.

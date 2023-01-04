@@ -25,7 +25,7 @@ namespace Rendering {
  * notably the center and radius of the bounding sphere.
  */
 
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
 struct SphereColor;
 class SphereGeometry;
 class CylinderGeometry;
@@ -47,7 +47,7 @@ public:
   void visit(SphereGeometry&) override;
   void visit(AmbientOcclusionSphereGeometry&) override;
   void visit(CurveGeometry&) override;
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   void visit(CylinderGeometry&) override;
 #else
   void visit(CylinderGeometry&) override { return; }
@@ -71,7 +71,7 @@ public:
    * Get the radius of the scene.
    */
   float radius();
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   /** 
    * <<API Extension for TDX>>
    * Calculates the bounding box of the molecule.
@@ -116,7 +116,7 @@ private:
 
   std::vector<Vector3f> m_centers;
   std::vector<float> m_radii;
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   std::vector<SphereColor> m_spheres;
   std::vector<SphereGeometry> m_sphereGeometries;
   std::vector<CylinderGeometry> m_cylinderGeometries;
