@@ -120,7 +120,7 @@ public:
    * @param zFar is the distance from the viewer to the far clipping plane.
    */
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   /**
    * << API Extension for TDX >> 
    * Calculate the perspective projection matrix using frustum planes coordinates.

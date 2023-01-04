@@ -94,6 +94,10 @@ target_sources(Rendering PRIVATE
   ambientocclusionspheregeometry.cpp
 )
 
+if(USE_3DCONNEXION)
+  list(APPEND SOURCES tdxextensions.cpp)
+endif()
+
 set(shader_files
   "arrow_vs.glsl"
   "cylinders_fs.glsl"
@@ -145,6 +149,6 @@ target_link_libraries(Rendering
     GLEW::GLEW
     OpenGL::GL)
 
-if(USE_TDX)
-  target_compile_definitions(AvogadroRendering PUBLIC TDX_INTEGRATION)
+if(USE_3DCONNEXION)
+  target_compile_definitions(AvogadroRendering PUBLIC _3DCONNEXION)
 endif()

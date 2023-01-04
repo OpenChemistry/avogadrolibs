@@ -27,7 +27,7 @@ using Core::Array;
 GLRenderer::GLRenderer()
   : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
     m_radius(20.0)
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
    ,m_drawIcon(false),
 	m_iconData(nullptr),
 	m_iconWidth(0u),
@@ -36,7 +36,7 @@ GLRenderer::GLRenderer()
 #endif 
 {
   m_overlayCamera.setIdentity();
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
   float distance = m_camera.distance(m_center);
@@ -143,7 +143,7 @@ void GLRenderer::render()
   glDisable(GL_DEPTH_TEST);
   m_scene.rootNode().accept(visitor);
 
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   if (m_drawIcon && (m_iconData != nullptr)) {
     glPushMatrix();
     Eigen::Vector4f pivotPosition =
@@ -223,12 +223,12 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
 #endif
   if (m_camera.projectionType() == Perspective) {
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
     m_perspectiveFrustum[0] = m_perspectiveFrustum[2] * aspectRatio;
     m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
     m_perspectiveFrustum[5] = distance + m_radius;
@@ -242,7 +242,7 @@ void GLRenderer::applyProjection()
 #endif
   } else {
     // Renders the orthographic projection of the molecule
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
     m_orthographicFrustum[0] = m_orthographicFrustum[2] * aspectRatio;
     m_orthographicFrustum[1] = m_orthographicFrustum[3] * aspectRatio;
     m_orthographicFrustum[5] = distance + m_radius;

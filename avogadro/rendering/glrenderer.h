@@ -104,7 +104,7 @@ public:
   void setTextRenderStrategy(TextRenderStrategy* tren);
   /** @} */
 
-#ifdef TDX_INTEGRATION
+#ifdef _3DCONNEXION
   std::array<float, 6> m_perspectiveFrustum;  // L, R, B, T, N, F (planes order)
   std::array<float, 6> m_orthographicFrustum; // L, R, B, T, N, F (planes order)
   bool m_drawIcon;
