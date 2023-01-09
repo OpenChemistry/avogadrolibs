@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-11-20 16:47+0000\n"
+"PO-Revision-Date: 2022-12-23 18:51+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1458,9 +1458,8 @@ msgid "Edit Unit Cell"
 msgstr "Modifier la maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:489
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "&Regrouper les atomes dans la maille"
+msgstr "Regrouper les atomes dans la maille"
 
 #: qtgui/rwmolecule.cpp:512
 msgid "Scale Cell Volume"
@@ -1479,14 +1478,13 @@ msgid "Rotate to Standard Orientation"
 msgstr "Tourner vers l'orientation standard"
 
 #: qtgui/rwmolecule.cpp:603 qtplugins/spacegroup/spacegroup.cpp:55
-#, fuzzy
 msgid "Reduce to Primitive"
 msgstr "Réduire à une maille primitive"
 
 #: qtgui/rwmolecule.cpp:628 qtplugins/spacegroup/spacegroup.cpp:61
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:653 qtplugins/spacegroup/spacegroup.cpp:244
 msgid "Symmetrize Cell"
@@ -1497,9 +1495,8 @@ msgid "Fill Unit Cell"
 msgstr "Remplir la maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:692
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Réduire à l'unité asymétrique"
+msgstr "Réduire la maille à l'unité asymétrique"
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
@@ -1605,7 +1602,7 @@ msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:34
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Intéragir avec les outils de APBS."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
@@ -1658,7 +1655,7 @@ msgstr "Enregistrer le fichier d'entrée APBS"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "ABPS Input (*.in)"
-msgstr ""
+msgstr "Fichier d'entrée APBS (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
