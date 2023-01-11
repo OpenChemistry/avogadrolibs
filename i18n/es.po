@@ -8,13 +8,14 @@
 # Andrés Henao <andreshenao31@gmail.com>, 2022.
 # gallegonovato <fran-carro@hotmail.es>, 2022.
 # William <eduardo.957@hotmail.com>, 2022.
+# Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-11-01 20:31+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-01-11 10:11+0000\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1030,7 +1031,7 @@ msgid ""
 "want to add it?"
 msgstr ""
 "Falta la extensión de archivo, por lo que no se puede determinar el formato. "
-"Desea añadirlo?"
+"¿Desea añadirlo?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1046,7 +1047,7 @@ msgstr "manipuladores"
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr "manipulador"
+msgstr "manipular"
 
 #: qtgui/fileformatdialog.cpp:167
 msgctxt "File readers"
@@ -1072,8 +1073,8 @@ msgstr "escribir"
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
-"Múltiples %1 hallados capaces de %2 este formato de archivo. Cuál se debería "
-"usar?"
+"Múltiples %1 hallados capaces de %2 este formato de archivo. ¿Cuál se "
+"debería usar?"
 
 #: qtgui/fileformatdialog.cpp:278
 #, fuzzy
@@ -1089,30 +1090,30 @@ msgstr "Todos los formatos soportados"
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
-"Error al leer representación de molécula: Formato de archivo no reconocido: "
-"%1"
+"Error al leer representación de la molécula: Formato de archivo no "
+"reconocido: %1"
 
 #: qtgui/interfacescript.cpp:492
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Error al escribir representación de molécula a cadena: Formato de archivo no "
-"reconocido:%1"
+"Error al escribir representación de la molécula a cadena: Formato de archivo "
+"no reconocido:%1"
 
 #: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr "Error al escribir representación de molécula a cadena de texto:%1"
+msgstr "Error al escribir la representación de la molécula a cadena de texto:%1"
 
 #: qtgui/jsonwidget.cpp:53
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "\"Opciones de usuario\" no encontradas."
 
 #: qtgui/jsonwidget.cpp:84
 #, qt-format
 msgid "Option '%1' does not refer to an object."
-msgstr "Opción '%1' no se refiere a un objeto."
+msgstr "La opción '%1' no se refiere a un objeto."
 
 #: qtgui/jsonwidget.cpp:91
 #, fuzzy, qt-format
@@ -1122,7 +1123,7 @@ msgstr "'type' no es una cadena de texto para la opción '%1'."
 #: qtgui/jsonwidget.cpp:98
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr "No se pudo ejecutar '%1'."
+msgstr "No se encontró la opción '%1'."
 
 #: qtgui/jsonwidget.cpp:152
 #, qt-format
@@ -1137,7 +1138,7 @@ msgstr "Título"
 
 #: qtgui/jsonwidget.cpp:179
 msgid "Filename Base"
-msgstr ""
+msgstr "Nombre de archivo Base"
 
 #: qtgui/jsonwidget.cpp:184
 msgid "Processor Cores"
@@ -1166,12 +1167,12 @@ msgstr "Multiplicidad"
 #: qtgui/jsonwidget.cpp:523
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr "Error: valor debe ser objeto para clave '%1'."
+msgstr "Error: el valor debe ser objeto de la clave '%1'."
 
 #: qtgui/jsonwidget.cpp:554
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr "Opción no reconocide de tipo '%1' para la opción '%2'."
+msgstr "Opción de tipo '%1' no reconocida para la opción '%2'."
 
 #: qtgui/jsonwidget.cpp:563 qtgui/jsonwidget.cpp:598 qtgui/jsonwidget.cpp:620
 #: qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:663 qtgui/jsonwidget.cpp:684
@@ -1186,6 +1187,8 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Error al establecer el valor predeterminado para la opción '%1'. Valor "
+"predeterminado incorrecto:"
 
 #: qtgui/jsonwidget.cpp:584
 #, qt-format
@@ -1193,6 +1196,8 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Error al establecer el valor predeterminado para la opción '%1'. No se "
+"encontró un índice de entrada combinado válido para el valor:"
 
 #: qtgui/jsonwidget.cpp:752
 #, qt-format
@@ -1233,9 +1238,8 @@ msgid "Force"
 msgstr "Fuerza"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Etiqueta"
+msgstr "Etiquetas"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1265,10 +1269,9 @@ msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waals"
+msgstr "Van der Waals (AO)"
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1298,6 +1301,8 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Error al correr script '%1 %2': Fallo al escribir en stdin (len=%3, escribió "
+"%4 bytes, QProcess error: %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, fuzzy, qt-format
@@ -1313,10 +1318,14 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Error al correr script '%1 %2': Estatus de salida anormal %3 (%4: %5)\n"
+"\n"
+"Salida:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:236
 msgid "Script failed to start."
-msgstr "Inicio de Script ha fallado."
+msgstr "Fallo de inicio del script."
 
 #: qtgui/pythonscript.cpp:239
 msgid "Script crashed."
@@ -1333,7 +1342,7 @@ msgstr "Error de lectura."
 
 #: qtgui/pythonscript.cpp:248
 msgid "Write error."
-msgstr "Error de lectura."
+msgstr "Error de escritura."
 
 #: qtgui/pythonscript.cpp:252
 msgid "Unknown error."
@@ -1349,9 +1358,8 @@ msgid "Remove Layer"
 msgstr "Eliminar Capas"
 
 #: qtgui/rwlayermanager.cpp:202
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Eliminar hidrógenos"
+msgstr "Eliminar Información de la Capa"
 
 #: qtgui/rwlayermanager.cpp:211
 msgid "Add Layer"
@@ -1359,25 +1367,24 @@ msgstr "Añadir Capa"
 
 #: qtgui/rwlayermanager.cpp:214
 msgid "Add Layer Info"
-msgstr "Añadir Información de Capa"
+msgstr "Añadir Información de la Capa"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
 #: qtplugins/select/select.cpp:528
 #: qtplugins/selectiontool/selectiontool.cpp:252:1579
-#, fuzzy
 msgid "Change Layer"
-msgstr "Cambiar orden de enlace"
+msgstr "Cambiar Capa"
 
 #: qtgui/rwmolecule.cpp:38 qtgui/rwmolecule.cpp:47
 msgid "Add Atom"
-msgstr "Añadir átomo"
+msgstr "Añadir Átomo"
 
 #: qtgui/rwmolecule.cpp:69 qtgui/rwmolecule.cpp:84
 #: qtplugins/editor/editor.cpp:122
 msgid "Remove Atom"
-msgstr "Eliminar átomo"
+msgstr "Eliminar Átomo"
 
 #: qtgui/rwmolecule.cpp:94
 msgid "Clear Atoms"
@@ -1399,46 +1406,43 @@ msgstr "Cambiar Elemento"
 
 #: qtgui/rwmolecule.cpp:220
 msgid "Change Atom Hybridization"
-msgstr "Cambiar Hibridización de Átomos"
+msgstr "Cambiar Hibridación de un Átomo"
 
 #: qtgui/rwmolecule.cpp:232
 msgid "Change Atom Formal Charge"
-msgstr "Cambiar Carga Formal de Átomo"
+msgstr "Cambiar Carga Formal de un Átomo"
 
 #: qtgui/rwmolecule.cpp:244
 msgid "Change Atom Color"
-msgstr "Cambiar Color de Átomo"
+msgstr "Cambiar Color de un Átomo"
 
 #: qtgui/rwmolecule.cpp:256
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Cambiar orden de enlace"
+msgstr "Cambiar Capa de un Átomo"
 
 #: qtgui/rwmolecule.cpp:272
 msgid "Add Bond"
-msgstr "Añadir enlace"
+msgstr "Añadir Enlace"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Removed Bond"
 msgstr "Remover Enlace"
 
 #: qtgui/rwmolecule.cpp:305
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Borrar enlace"
+msgstr "Eliminar Enlaces"
 
 #: qtgui/rwmolecule.cpp:320
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Orden de enlace"
+msgstr "Establecer Órdenes de Enlace"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
-msgstr "Cambiar orden de enlace"
+msgstr "Cambiar Orden de Enlace"
 
 #: qtgui/rwmolecule.cpp:355
 msgid "Update Bonds"
-msgstr "actualizar enlaces"
+msgstr "Actualizar Enlaces"
 
 #: qtgui/rwmolecule.cpp:374
 msgid "Update Bond"
@@ -1446,30 +1450,27 @@ msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:394
 msgid "Add Unit Cell"
-msgstr "Añadir Célula Unitaria"
+msgstr "Añadir Celda Unidad"
 
 #: qtgui/rwmolecule.cpp:407
 msgid "Remove Unit Cell"
-msgstr "Eliminar Célula Unitaria"
+msgstr "Eliminar Celda Unidad"
 
 #: qtgui/rwmolecule.cpp:472
 msgid "Edit Unit Cell"
-msgstr "Editar Célula Unitaria"
+msgstr "Editar Celda Unidad"
 
 #: qtgui/rwmolecule.cpp:489
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "&Envolver Atomos a Célula"
+msgstr "Envolver Átomos en Celda"
 
 #: qtgui/rwmolecule.cpp:512
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Escalar el volumen unitario de la celda"
+msgstr "Escalar el Volumen de la Celda"
 
 #: qtgui/rwmolecule.cpp:532
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Súper Celda"
+msgstr "Construir Súper Celda"
 
 #: qtgui/rwmolecule.cpp:556
 msgid "Niggli Reduction"
@@ -1477,12 +1478,11 @@ msgstr "Reducción de Niggli"
 
 #: qtgui/rwmolecule.cpp:578
 msgid "Rotate to Standard Orientation"
-msgstr "Rotar a la orientación estándar"
+msgstr "Rotar a la Orientación Estándar"
 
 #: qtgui/rwmolecule.cpp:603 qtplugins/spacegroup/spacegroup.cpp:55
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Reducir a una celda primitiva"
+msgstr "Reducir a una Celda Primitiva"
 
 #: qtgui/rwmolecule.cpp:628 qtplugins/spacegroup/spacegroup.cpp:61
 #: qtplugins/spacegroup/spacegroup.cpp:219
@@ -1490,41 +1490,32 @@ msgid "Conventionalize Cell"
 msgstr "Convencionalizar Celda"
 
 #: qtgui/rwmolecule.cpp:653 qtplugins/spacegroup/spacegroup.cpp:244
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Dar simetría al cristal"
+msgstr "Dar Simetría a la Celda"
 
 #: qtgui/rwmolecule.cpp:672
 msgid "Fill Unit Cell"
-msgstr "Llenar Célula Unitaria"
+msgstr "Llenar Celda Unidad"
 
 #: qtgui/rwmolecule.cpp:692
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Reducir a una unidad asimétrica"
+msgstr "Reducir Celda a una Unidad Asimétrica"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Cambiar Hibridización de Átomos"
+msgstr "Cambiar las Posiciones de los Átomos"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "Cambiar Color de Átomo"
+msgstr "Cambiar la Posición de un Átomo"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Cambiar orden de enlace"
+msgstr "Cambiar la Etiqueta de un Átomo"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "Ignorar Selección"
+msgstr "Cambiar Selección"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1551,16 +1542,15 @@ msgstr "&Exportar"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
 msgstr "Ejecutar APBS…"
 
 #: qtplugins/apbs/apbs.cpp:36
-#, fuzzy
 msgid "Open Output File…"
-msgstr "Abrir archivo WFN"
+msgstr "Abrir Archivo de Salida…"
 
 #: qtplugins/apbs/apbs.cpp:49 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:52
@@ -1591,7 +1581,7 @@ msgstr "Error de E/S"
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr "Error de lectura de estructura de archivo (%1)."
+msgstr "Error de lectura del archivo de estrucutura (%1)."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
@@ -1600,11 +1590,11 @@ msgstr "Error de OpenDX"
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr "Error leyendo archivo OpenDX: %1"
+msgstr "Error de lectura del archivo OpenDX: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Error de lectura del archivo OpenDX: No se encontró ningún cubo"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -1614,7 +1604,7 @@ msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:34
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Interacciona con utilidades APBS."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
@@ -1626,11 +1616,11 @@ msgstr "Archivos PDB (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:90
 msgid "Open PQR File"
-msgstr ""
+msgstr "Abrir Archivo PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "Archivos PQR (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/commandscripts/command.cpp:104
@@ -1655,19 +1645,19 @@ msgstr "Error"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Error ejecutando APBS: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
-msgstr "Por favor especifique archivo PDB"
+msgstr "Por favor, especifique archivo PDB"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Guardar Archivo de Entrada APBS"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "ABPS Input (*.in)"
-msgstr ""
+msgstr "Archivo de Entrada APBS (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -1679,16 +1669,16 @@ msgstr "Éxito"
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr "Archivo de entrada escrito a '%1'"
+msgstr "Archivo de entrada escrito en '%1'"
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
 msgid "By Custom Color…"
-msgstr "Por Color personalizado…"
+msgstr "Por Color Personalizado…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index"
-msgstr "Por Índices Atómicos"
+msgstr "Por Índice Atómico"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance"
@@ -1707,9 +1697,8 @@ msgid "By Partial Charge…"
 msgstr "Por Carga Parcial…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
-#, fuzzy
 msgid "By Secondary Structure"
-msgstr "Renderiza la estructura secundaria de la proteina"
+msgstr "Por Estructura Secundaria"
 
 #: qtplugins/applycolors/applycolors.cpp:87
 msgid "By Amino Acid"
@@ -1725,25 +1714,25 @@ msgstr "Por Esquema de Forma"
 #: qtplugins/surfaces/surfaces.cpp:552
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:554
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Calor"
 
 #: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:556
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Caliente"
 
 #: qtplugins/applycolors/applycolors.cpp:113
 #: qtplugins/surfaces/surfaces.cpp:558
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Gris"
 
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
@@ -1751,7 +1740,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:560
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1759,7 +1748,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:562
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Infierno"
 
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1767,7 +1756,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:564
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1775,7 +1764,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:566
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1783,7 +1772,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:568
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1793,11 +1782,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
 #: qtplugins/surfaces/surfaces.cpp:570:171 rc.cpp:1627
-#, fuzzy
-#| msgid "Spectra"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Espectros"
+msgstr "Espectral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1807,7 +1794,7 @@ msgstr "Espectros"
 #: qtplugins/surfaces/surfaces.cpp:572:168 rc.cpp:1624
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Templado"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1815,11 +1802,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
 #: qtplugins/surfaces/surfaces.cpp:574:162 rc.cpp:1618
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Cancelar"
+msgstr "Equilibrar"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1829,7 +1814,7 @@ msgstr "Cancelar"
 #: qtplugins/surfaces/surfaces.cpp:576:165 rc.cpp:1621
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Azúl-Rojo Oscuro"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1841,11 +1826,11 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:578:174 rc.cpp:1630
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:141
 msgid "Apply color schemes to atoms and residues."
-msgstr "Aplicar esquema de colores a átomos y residuos."
+msgstr "Aplicar esquemas de color a átomos y residuos."
 
 #: qtplugins/applycolors/applycolors.cpp:152
 #: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
@@ -1855,21 +1840,17 @@ msgid "&View"
 msgstr "&Ver"
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Colores"
+msgstr "Átomos coloreados"
 
 #: qtplugins/applycolors/applycolors.cpp:154
-#, fuzzy
 msgid "Color Residues"
-msgstr "Color por radical"
+msgstr "Residuos Coloreados"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Colores seleccionados"
+msgstr "Seleccionar Mapa de Color"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1877,25 +1858,20 @@ msgstr "Colores seleccionados"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:308:159 rc.cpp:1615
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Color:"
+msgstr "Mapa de Color:"
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Colores"
+msgstr "Aplicar Colores"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
-#, fuzzy
 msgid "Atom scale"
-msgstr "Etiquetas del atomo"
+msgstr "Escala de átomos"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
-#, fuzzy
 msgid "Bond scale"
-msgstr "Angulo de cadena"
+msgstr "Escala de enlace"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
