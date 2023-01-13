@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2023-01-13 15:37+0000\n"
+"PO-Revision-Date: 2023-01-14 15:48+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -3175,9 +3175,8 @@ msgid "Render atoms as licorice / sticks."
 msgstr "Representar átomos como regaliz/palos."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
-#, fuzzy
 msgid "SMILES…"
-msgstr "SMILES…"
+msgstr "SONRISAS…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
@@ -3259,9 +3258,8 @@ msgid "Angle:"
 msgstr "Ángulo:"
 
 #: qtplugins/measuretool/measuretool.cpp:207
-#, fuzzy
 msgid "Angles:"
-msgstr "Ángulo:"
+msgstr "Ángulos:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
@@ -4563,22 +4561,20 @@ msgid "Electron Density"
 msgstr "Densidad Electrónica"
 
 #: qtplugins/surfaces/surfacedialog.cpp:177
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr "OM %L1"
+msgstr "MO %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:179
-#, fuzzy
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr "(HOMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:181
-#, fuzzy
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr "(LUMO)"
+msgstr "(LIGERO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:196
 msgid "From File"
@@ -4589,9 +4585,8 @@ msgid "Create Surfaces…"
 msgstr "Crear Superficies…"
 
 #: qtplugins/surfaces/surfaces.cpp:412
-#, fuzzy
 msgid "Calculating electron density"
-msgstr "Calculando densidad electrónica"
+msgstr "Calcular la densidad electrónica"
 
 #: qtplugins/surfaces/surfaces.cpp:422
 #, qt-format
@@ -5684,8 +5679,6 @@ msgstr "Adenina"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "A"
 msgctxt "adenine (A)"
 msgid "A"
 msgstr "A"
@@ -5697,8 +5690,6 @@ msgstr "Citosina"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "C"
 msgctxt "cytosine (C)"
 msgid "C"
 msgstr "C"
@@ -5710,16 +5701,12 @@ msgstr "Guanina"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
-#, fuzzy
-#| msgid "G"
 msgctxt "guanine (G)"
 msgid "G"
 msgstr "G"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
-#, fuzzy
-#| msgid "T"
 msgctxt "thymine (T)"
 msgid "T"
 msgstr "T"
@@ -5753,8 +5740,6 @@ msgstr "Z"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "Other"
 msgid "Other"
 msgstr "Otro"
 
@@ -5776,8 +5761,6 @@ msgstr "Única"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
-#, fuzzy
-#| msgid "Double"
 msgctxt "double-strand DNA"
 msgid "Double"
 msgstr "Doble"
@@ -7174,9 +7157,6 @@ msgstr "Colorear por:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#, fuzzy
-#| msgctxt "Electrostatic potential surface type"
-#| msgid "Electrostatic Potential"
 msgid "Electrostatic Potential"
 msgstr "Potencial Electrostático"
 
@@ -7512,6 +7492,14 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>El nivel de Fermi debe conocerse antes de marcar esta "
+"casilla. Puede descubrir el nivel de Fermi realizando un cálculo de densidad "
+"de estados y mostrando los datos (estará en la parte superior de los datos). "
+"Además, si se realiza un cálculo de la densidad de estados, el nivel de "
+"Fermi aquí se establecerá automáticamente a lo que se detectó durante el "
+"cálculo de la densidad de estados.</p><p>Si se marca esta casilla, asegúrese "
+"de que el nivel de Fermi correcto se establece en el spinbox a la derecha.</"
+"p><p>Por defecto: apagado</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -7615,6 +7603,9 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Introduzca el número de puntos k que conectarán los "
+"puntos k especiales. Más de estos puntos k suavizarán el gráfico, pero el "
+"cálculo puede llevar más tiempo.</p><p>Por defecto: 40</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -7642,6 +7633,12 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>El número de dimensiones periódicas.</p><p><br/></"
+"p><p>Si se establece en 1, el material sigue el vector A del cristal. "
+"Aparece solo periódicamente.</p><p><br/></p><p>Si se establece en 2, el "
+"material será periódico a lo largo de los vectores A y B del cristal.</ "
+"p><p> <br/></p><p>Si se establece en 3, el material es periódico a lo largo "
+"de los vectores A, B y C del cristal.</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
