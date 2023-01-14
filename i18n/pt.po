@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Editor Do Sonic BR <sonicbr12345@gmail.com>, 2020.
-# ssantos <ssantos@web.de>, 2020, 2021.
+# ssantos <ssantos@web.de>, 2020, 2021, 2023.
 # Joana Vieira <joanaoliveiravieira8@gmail.com>, 2020.
 # João Tiago Antunes <jtiago.cbr@gmail.com>, 2020.
 # Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-11-27 00:47+0000\n"
-"Last-Translator: Gustavo Sousa Jr <grsousajunior@gmail.com>\n"
+"PO-Revision-Date: 2023-01-11 10:11+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -135,14 +135,14 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Erro ao salvar a representação da molécula como string: Formato de arquivo "
+"Erro ao salvar a representação da molécula como cadeia: Formato de ficheiro "
 "não reconhecido: %1"
 
 #: molequeue/inputgenerator.cpp:358
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr "Erro ao salvar a representação da molécula como string: %1"
+msgstr "Erro ao salvar a representação da molécula como cadeia: %1"
 
 #: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:512
 #, qt-format
@@ -195,7 +195,7 @@ msgstr "Continuar"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:114 qtgui/containerwidget.cpp:35
 msgid "Close"
-msgstr "Fechar"
+msgstr "Fe&char"
 
 #: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:374
 msgid "Unknown"
@@ -1029,6 +1029,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"A extensão do ficheiro está faltando, então o formato do ficheiro não pôde "
+"ser determinado. Quer adicioná-la?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1044,7 +1046,7 @@ msgstr "manipuladores"
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "lidar"
 
 #: qtgui/fileformatdialog.cpp:167
 msgctxt "File readers"
@@ -1095,13 +1097,13 @@ msgstr ""
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Erro ao gravar a representação da molécula como string: Formato de ficheiro "
+"Erro ao gravar a representação da molécula como cadeia: Formato de ficheiro "
 "não reconhecido: %1"
 
 #: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr "Erro ao gravar a representação da molécula na string: %1"
+msgstr "Erro ao gravar a representação da molécula como cadeia: %1"
 
 #: qtgui/jsonwidget.cpp:53
 #, fuzzy
@@ -1116,7 +1118,7 @@ msgstr "A opção '%1' não se refere a um objeto."
 #: qtgui/jsonwidget.cpp:91
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr "'type' não é uma string para a opção '%1'."
+msgstr "'type' não é uma cadeia para a opção '%1'."
 
 #: qtgui/jsonwidget.cpp:98
 #, fuzzy, qt-format
@@ -1126,7 +1128,7 @@ msgstr "Não é possível executar povray."
 #: qtgui/jsonwidget.cpp:152
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "Guia %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1206,7 +1208,7 @@ msgstr "[sem molécula]"
 #: qtgui/layermodel.cpp:85
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Camada %1"
 
 #: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
@@ -1245,7 +1247,7 @@ msgstr "Bastão"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 msgid "Meshes"
-msgstr ""
+msgstr "Malhas"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 #, fuzzy
@@ -1254,8 +1256,6 @@ msgid "Non-Covalent"
 msgstr "Covalente"
 
 #: qtgui/layermodel.cpp:153
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
@@ -1355,7 +1355,7 @@ msgstr "Erro desconhecido."
 #: qtgui/rwlayermanager.cpp:33 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
-msgstr ""
+msgstr "Modificar Camadas"
 
 #: qtgui/rwlayermanager.cpp:195
 #, fuzzy
@@ -1369,7 +1369,7 @@ msgstr "Remover Hidrogénios"
 
 #: qtgui/rwlayermanager.cpp:211
 msgid "Add Layer"
-msgstr ""
+msgstr "Adicionar Camada"
 
 #: qtgui/rwlayermanager.cpp:214
 msgid "Add Layer Info"
@@ -1746,25 +1746,25 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:552
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:554
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:556
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:113
 #: qtplugins/surfaces/surfaces.cpp:558
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Cinzento"
 
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
@@ -1772,7 +1772,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:560
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1780,7 +1780,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:562
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1788,7 +1788,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:564
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1796,7 +1796,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:566
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1804,7 +1804,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:568
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1828,7 +1828,7 @@ msgstr "Espectro"
 #: qtplugins/surfaces/surfaces.cpp:572:168 rc.cpp:1624
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1850,7 +1850,7 @@ msgstr "Cancelar"
 #: qtplugins/surfaces/surfaces.cpp:576:165 rc.cpp:1621
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Azul-VermelhoEscuro"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1958,7 +1958,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:209
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:798
 #: qtplugins/editor/editor.cpp:259 qtplugins/measuretool/measuretool.cpp:216
@@ -1966,7 +1966,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:219
 #, qt-format
 msgid "%L1 Å"
-msgstr ""
+msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:168
 msgid "Bond centric manipulation tool."
@@ -2379,8 +2379,8 @@ msgstr ""
 "Não foi possível analisar a especificação da geometria. Corrija os erros "
 "destacados e tente novamente.\n"
 "\n"
-"(Dica: mantenha o mouse sobre o texto em vermelho para obter uma descrição "
-"do erro.)"
+"(Dica: mantenha o rato sobre o texto em vermelho para obter uma descrição do "
+"erro.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:581
 msgid "Edit Atomic Coordinates"
@@ -3132,7 +3132,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:117:381
 msgid "Import Crystal"
-msgstr ""
+msgstr "Importar Cristal"
 
 #: qtplugins/insertfragment/insertfragment.cpp:121
 msgid "Insert Fragment"
@@ -3551,7 +3551,7 @@ msgstr ""
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Autodetectar (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:43 qtplugins/openbabel/openbabel.cpp:516
 msgid "Optimize Geometry"
@@ -3707,7 +3707,7 @@ msgstr "Criando representação XYZ..."
 
 #: qtplugins/openbabel/openbabel.cpp:545
 msgid "Error generating XYZ string."
-msgstr "Erro ao criar string XYZ."
+msgstr "Erro ao criar a cadeia XYZ."
 
 #: qtplugins/openbabel/openbabel.cpp:556
 #, fuzzy, qt-format
@@ -4919,8 +4919,6 @@ msgid "Template tool"
 msgstr "Ferramenta de manipulação"
 
 #: qtplugins/templatetool/templatetoolwidget.cpp:263
-#, fuzzy
-#| msgid "Other..."
 msgid "Other..."
 msgstr "Outro..."
 
@@ -5976,19 +5974,14 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
-#, fuzzy
-#| msgctxt "thymine"
-#| msgid "T"
 msgctxt "thymine (T)"
 msgid "T"
 msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Frequencies"
 msgid "Sequence:"
-msgstr "Frequências"
+msgstr "Sequencia:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
@@ -5999,22 +5992,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "A:"
 msgid "A"
-msgstr "A:"
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "B:"
 msgid "B"
-msgstr "B:"
+msgstr "B"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -6035,19 +6024,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
-#| msgid "Single"
 msgctxt "single-strand DNA"
 msgid "Single"
 msgstr "Simples"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
-#, fuzzy
-#| msgid "Double"
 msgctxt "double-strand DNA"
 msgid "Double"
-msgstr "Duplo"
+msgstr "Dupla"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
@@ -6705,17 +6690,17 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Optimization Method"
-msgstr ""
+msgstr "Método de Otimização"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force field:"
-msgstr ""
+msgstr "Campo de força:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Optimization algorithm:"
-msgstr ""
+msgstr "Algoritmo de otimização:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -6745,7 +6730,7 @@ msgstr "Método de Newton"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
 msgid "Autodetect"
-msgstr ""
+msgstr "Autodetectar"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -6784,12 +6769,12 @@ msgstr " passos"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "Critérios de Convergência"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "\"Energia\" de convergência:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6804,7 +6789,7 @@ msgstr " unidades"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:230
 #. i18n: ectx: property (prefix), widget (QSpinBox, energyConv)
 msgid "10^"
-msgstr ""
+msgstr "10^"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
@@ -7717,10 +7702,8 @@ msgstr "Funcional"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:366
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "&Copy to Clipboard"
 msgid "From Clipboard"
-msgstr "&Copiar para a Área de Transferência"
+msgstr "Da área de transferéncia"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:389
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
