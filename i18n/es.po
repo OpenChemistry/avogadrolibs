@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2023-01-16 12:22+0000\n"
+"PO-Revision-Date: 2023-01-16 12:24+0000\n"
 "Last-Translator: Andrés Henao <andreshenao31@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1957,7 +1957,7 @@ msgstr "Eliminar Enlaces"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
-msgstr "Configurar enlaces…"
+msgstr "Configurar Enlaces…"
 
 #: qtplugins/bonding/bonding.cpp:58 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
