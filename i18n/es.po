@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
 "PO-Revision-Date: 2023-01-16 12:24+0000\n"
-"Last-Translator: Andrés Henao <andreshenao31@gmail.com>\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1180,7 +1180,9 @@ msgstr "Opción de tipo «%1» no reconocida para la opción «%2»."
 #: qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:663 qtgui/jsonwidget.cpp:684
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
-msgstr "Error al establecer opción por defecto para opción '%1'."
+msgstr ""
+"Error al establecer el valor por defecto para la opción «%1». Tipo de "
+"aplicación incorrecto."
 
 #: qtgui/jsonwidget.cpp:570 qtgui/jsonwidget.cpp:605 qtgui/jsonwidget.cpp:627
 #: qtgui/jsonwidget.cpp:648 qtgui/jsonwidget.cpp:670 qtgui/jsonwidget.cpp:691
