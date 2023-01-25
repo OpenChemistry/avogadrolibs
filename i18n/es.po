@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2023-01-16 12:24+0000\n"
+"PO-Revision-Date: 2023-01-17 16:47+0000\n"
 "Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1223,7 +1223,7 @@ msgstr "Bola y Varilla"
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Caricaturas"
+msgstr "Esquemático"
 
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
@@ -1293,7 +1293,9 @@ msgstr "Tabla periódica"
 #: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:189
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
-msgstr "Error al ejecutar el script '%1 %2': Tiempo de espera agotado (%3)."
+msgstr ""
+"Error al ejecutar la secuencia de comandos «%1 %2»: Se agotó el tiempo de "
+"espera para comenzar (%3)."
 
 #: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:199
 #, qt-format
@@ -1301,15 +1303,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
-"Error al correr script '%1 %2': Fallo al escribir en stdin (len=%3, escribió "
-"%4 bytes, QProcess error: %5)."
+"Error al ejecutar la secuencia de comandos «%1 %2»: Fallo al escribir en "
+"stdin (len=%3, escribió %4 bytes, error de QProcess: %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
-"Error al ejecutar el script '%1 %2': se agotó el tiempo de espera para "
-"finalizar (%3)."
+"Error al ejecutar la secuencia de comandos «%1 %2»: se agotó el tiempo de "
+"espera para finalizar (%3)."
 
 #: qtgui/pythonscript.cpp:135
 #, qt-format
@@ -1319,22 +1321,23 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Error al correr script '%1 %2': Estatus de salida anormal %3 (%4: %5)\n"
+"Error al ejecutar la secuencia de comandos «%1 %2»: Estatus de salida "
+"anormal %3 (%4: %5)\n"
 "\n"
 "Salida:\n"
 "%6"
 
 #: qtgui/pythonscript.cpp:236
 msgid "Script failed to start."
-msgstr "Fallo de inicio del script."
+msgstr "Fallo al iniciar la secuencia de comandos."
 
 #: qtgui/pythonscript.cpp:239
 msgid "Script crashed."
-msgstr "El script colapsó."
+msgstr "La secuencia de comandos colapsó."
 
 #: qtgui/pythonscript.cpp:242
 msgid "Script timed out."
-msgstr "Se ha agotado el tiempo de espera."
+msgstr "La secuencia de comandos agotó el tiempo de espera."
 
 #: qtgui/pythonscript.cpp:245
 msgid "Read error."
@@ -1876,7 +1879,7 @@ msgstr "Escala de enlace"
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
 msgid "Show multiple bonds"
-msgstr "Mostrar varios enlaces"
+msgstr "Mostrar enlaces múltiples"
 
 #: qtplugins/ballandstick/ballandstick.cpp:109
 #: qtplugins/wireframe/wireframe.cpp:98
@@ -1973,7 +1976,7 @@ msgstr "&Construir"
 #: qtplugins/bonding/bonding.cpp:58
 #: qtplugins/propertytables/propertymodel.cpp:416
 msgid "Bond"
-msgstr "Bono"
+msgstr "Enlace"
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -1986,7 +1989,7 @@ msgstr "Ejecutar operaciones de enlazado."
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr "Espina dorsal"
+msgstr "Esqueleto"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
@@ -2802,12 +2805,12 @@ msgstr "Consultando para %1"
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Descarga de Red Fallida"
+msgstr "Fallo al Descargar desde la Red"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr "Venció el tiempo de red u otro error."
+msgstr "Se superó el tiempo de espera de la red u otro error."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -2851,7 +2854,7 @@ msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
-msgstr "Entrada GAMESS"
+msgstr "Entrada de GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
@@ -3176,7 +3179,7 @@ msgstr "Representar átomos como regaliz/palos."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
-msgstr "SONRISAS…"
+msgstr "SMILES…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
@@ -4564,7 +4567,7 @@ msgstr "Densidad Electrónica"
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr "MO %L1"
+msgstr "Orbital Molecular %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:179
 msgctxt "Highest occupied molecular orbital"
@@ -4574,7 +4577,7 @@ msgstr "(HOMO)"
 #: qtplugins/surfaces/surfacedialog.cpp:181
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr "(LIGERO)"
+msgstr "(LUMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:196
 msgid "From File"
@@ -4586,7 +4589,7 @@ msgstr "Crear Superficies…"
 
 #: qtplugins/surfaces/surfaces.cpp:412
 msgid "Calculating electron density"
-msgstr "Calcular la densidad electrónica"
+msgstr "Calculando densidad electrónica"
 
 #: qtplugins/surfaces/surfaces.cpp:422
 #, qt-format
