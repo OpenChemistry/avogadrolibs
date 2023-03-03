@@ -4,10 +4,7 @@
 
 ## Introduction
 
-Avogadro is an advanced molecular editor designed for cross-platform use in
-computational chemistry, molecular modeling, bioinformatics, materials science,
-and related areas. It offers flexible rendering and a powerful plugin
-architecture.
+Avogadro is a highly sophisticated molecular editor that is versatile and can be used across different platforms. It has been specifically designed to cater to the needs of various scientific disciplines such as computational chemistry, molecular modeling, bioinformatics, materials science, and related fields. One of its key strengths is its ability to offer flexible rendering options and its powerful plugin architecture, making it a valuable tool for researchers in these areas.
 
 Core features and goals of the Avogadro project include:
 
