@@ -6,13 +6,14 @@
 # 刘韬 <lyuutau@outlook.com>, 2021.
 # Hugel <qihu@nfschina.com>, 2022.
 # FAN JI <sifan95.ji@gmail.com>, 2022.
+# Shusong Zhang <sszhang@mail.nwpu.edu.cn>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-09-01 20:17+0000\n"
-"Last-Translator: FAN JI <sifan95.ji@gmail.com>\n"
+"PO-Revision-Date: 2023-02-16 16:36+0000\n"
+"Last-Translator: Shusong Zhang <sszhang@mail.nwpu.edu.cn>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -33,12 +34,14 @@ msgid "No message specified."
 msgstr "未指定消息。"
 
 #: molequeue/inputgenerator.cpp:69 qtgui/interfacescript.cpp:68
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "script --print-options output must be an JSON object at top level. "
 "Received:\n"
 "%1"
 msgstr ""
+"脚本 --print-options 输出必须是顶级的JSON对象。接收:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:205
 #: qtgui/interfacescript.cpp:301
@@ -53,18 +56,18 @@ msgstr "'warnings' 成员不是数组。"
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:324
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "目标文件'%1'不存在。"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:326
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "从%1 到%2的文件填充错误"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:330
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
-msgstr ""
+msgstr "文件'%1'格式错误。缺少字符串 'contents' 或 'filePath'成员。"
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:363
 #, qt-format
