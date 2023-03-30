@@ -2,13 +2,13 @@
 # Boris Faure <billiob@gmail.com>, 2020.
 # Maxime Leroy <lisacintosh@gmail.com>, 2021, 2022.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
-# Translator <kvb@tuta.io>, 2022.
+# Translator <kvb@tuta.io>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2022-10-02 03:55+0000\n"
-"PO-Revision-Date: 2022-12-23 18:51+0000\n"
+"PO-Revision-Date: 2023-03-31 19:37+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1947,9 +1947,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "Interpréter les ordres de liaison ?"
+msgstr "Afficher les indices de liaison"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -4320,20 +4319,16 @@ msgid "Invert Selection"
 msgstr "Inverser la sélection"
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
-#| msgid "Select by Element..."
 msgid "Select by Element…"
-msgstr "Sélectionner par élément..."
+msgstr "Sélectionner par élément…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
 msgstr "Sélectionner par l'indice de l'atome…"
 
 #: qtplugins/select/select.cpp:63
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select by Residue…"
-msgstr "Sélectionner par résidu..."
+msgstr "Sélectionner par résidu…"
 
 #: qtplugins/select/select.cpp:68
 #, fuzzy
@@ -4820,10 +4815,9 @@ msgid "Cannot find Yaehmop"
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:552
-#, fuzzy, qt-format
-#| msgid "G03 failed to start."
+#, qt-format
 msgid "Error: %1 failed to start"
-msgstr "G03 n'a pas démarré."
+msgstr "Erreur : %1 n'a pas pu démarrer"
 
 #: qtplugins/yaehmop/yaehmop.cpp:603
 msgid "Yaehmop Input"
