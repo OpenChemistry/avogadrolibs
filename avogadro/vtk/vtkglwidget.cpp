@@ -50,7 +50,7 @@ vtkImageData* createCubeImageData(Core::Cube* cube)
 
   data->AllocateScalars(VTK_FLOAT, 1);
 
-  auto* dataPtr = static_cast<double*>(data->GetScalarPointer());
+  auto* dataPtr = static_cast<float*>(data->GetScalarPointer());
   std::vector<float>* cubePtr = cube->data();
 
   for (int i = 0; i < dim.x(); ++i) {
