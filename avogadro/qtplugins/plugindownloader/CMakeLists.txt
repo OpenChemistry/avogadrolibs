@@ -1,6 +1,6 @@
 include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
-find_package(LibArchive REQUIRED)
+find_package(LIBARCHIVE REQUIRED)
 include_directories(SYSTEM ${LIBARCHIVE_INCLUDE_DIRS})
 # Extension
 set(plugindownloader_srcs
