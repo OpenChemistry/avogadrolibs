@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.23 FATAL_ERROR)
 
 project(AvogadroLibs)
 
@@ -113,7 +113,7 @@ if (NOT SKBUILD)
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLibArchive.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLIBARCHIVE.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
   install(EXPORT "AvogadroLibsTargets"
