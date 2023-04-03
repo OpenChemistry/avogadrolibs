@@ -166,8 +166,8 @@ struct LayerLabel : Core::LayerData
             val |= LabelOptions::Name;
           }
           if (option & LabelOptions::Ordinal) {
-            text << ((text.size() == 0) ? QObject::tr("Element & Ordinal")
-                                        : QObject::tr("El.&Or."));
+            text << ((text.size() == 0) ? QObject::tr("Element & Number")
+                                        : QObject::tr("El.&No."));
             val |= LabelOptions::Ordinal;
           }
           QString join = QObject::tr(", ");
@@ -313,7 +313,7 @@ void Label::processAtom(const Core::Molecule& molecule,
       text += (text == "" ? "" : " / ") + atom.label();
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Name) {
       text +=
