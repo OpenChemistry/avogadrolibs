@@ -1,16 +1,11 @@
-/******************************************************************************
-  This source file is part of the Avogadro project.
-  This source code is released under the 3-Clause BSD License, (see "LICENSE").
-******************************************************************************/
+/* This source file is part of the Avogadro project.
+   It is released under the 3-Clause BSD License, see "LICENSE". */
 
-#ifndef AVOGADRO_VTKGLWIDGET_H
-#define AVOGADRO_VTKGLWIDGET_H
+#pragma once
 
 #include "avogadrovtkexport.h"
+#include "qvtkwidget.h"
 
-#include <avogadro/rendering/glrenderer.h>
-
-#include <QVTKOpenGLStereoWidget.h>
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
@@ -40,7 +35,7 @@ class ToolPlugin;
 
 namespace VTK {
 
-class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKOpenGLStereoWidget
+class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKWidget
 {
   Q_OBJECT
 
@@ -177,5 +172,3 @@ private:
 };
 } // namespace VTK
 } // namespace Avogadro
-
-#endif // AVOGADRO_VTKGLWIDGET_H

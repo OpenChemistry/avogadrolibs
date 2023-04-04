@@ -9,9 +9,9 @@
 
 #include <QtGui/QSurfaceFormat>
 
-namespace Avogadro {
+namespace Avogadro::VTK {
 
-QVTKGLWidget::QVTKGLWidget(QWidget* parent, Qt::WindowFlags f)
+QVTKWidget::QVTKWidget(QWidget* parent, Qt::WindowFlags f)
   : QVTKOpenGLStereoWidget(parent, f)
 {
   // Set some defaults for our render window.
@@ -22,7 +22,6 @@ QVTKGLWidget::QVTKGLWidget(QWidget* parent, Qt::WindowFlags f)
   setFormat(glFormat);
 }
 
-QVTKGLWidget::~QVTKGLWidget() = default;
+QVTKWidget::~QVTKWidget() = default;
 
-//void QVTKGLWidget::setEnableHiDPI(bool) {}
-} // namespace Avogadro
+} // namespace Avogadro::VTK
