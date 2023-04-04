@@ -29,7 +29,7 @@ set(HEADERS
 
 set(SOURCES
   qvtkwidget.cpp
-  vtkAvogadroActor.cxx
+  vtkAvogadroActor.cpp
   vtkglwidget.cpp
   vtkplot.cpp
 )
