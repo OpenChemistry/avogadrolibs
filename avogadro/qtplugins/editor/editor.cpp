@@ -407,6 +407,23 @@ void Editor::bondLeftClick(QMouseEvent* e)
 void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
+  // check to see if we need to adjust hydrogens
+  if (m_toolWidget->adjustHydrogens()) {
+    // before we remove the atom, we need to delete any H atoms
+    // that are bonded to it
+    RWAtom atom = m_molecule->atom(m_clickedObject.index);
+    if (atom.isValid()) {
+      // get the list of bonded atoms
+      Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
+      for (const RWBond& bond : atomBonds) {
+        RWAtom bondedAtom = bond.getOtherAtom(atom);
+        if (bondedAtom.atomicNumber() == Core::Hydrogen) {
+          // remove the H atom
+          m_molecule->removeAtom(bondedAtom.index());
+        }
+      }
+    }
+  }
   m_molecule->removeAtom(m_clickedObject.index);
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
 }
