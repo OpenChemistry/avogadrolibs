@@ -35,6 +35,9 @@ namespace Avogadro::VTK {
 VtkPlot::VtkPlot() : m_widget(new QVTKOpenGLStereoWidget)
 {
   m_widget->setRenderWindow(m_renderWindow);
+  // This is a hack to ensure something is displayed.
+  m_widget->setMinimumWidth(600);
+  m_widget->setMinimumHeight(600);
 
   // Set up the view
   m_widget->setFormat(QVTKOpenGLStereoWidget::defaultFormat());
