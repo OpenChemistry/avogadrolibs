@@ -12,6 +12,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/vtk/vtkplot.h>
+#include <avogadro/vtk/chartdialog.h>
 #include <avogadro/vtk/chartwidget.h>
 
 #include "pdfoptionsdialog.h"
@@ -154,9 +155,10 @@ void PlotPdf::displayDialog()
 
   std::vector<float> x(xData.begin(), xData.end());
   std::vector<float> y(yData.begin(), yData.end());
-  auto* chart = new VTK::ChartWidget();
+  auto* chartDialog = new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent()));
+  auto* chart = chartDialog->chartWidget();
   chart->addPlot(x, y);
-  chart->show();
+  chartDialog->show();
 }
 
 bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,

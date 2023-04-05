@@ -21,6 +21,7 @@ find_package(VTK
   REQUIRED)
 
 set(HEADERS
+  chartdialog.h
   chartwidget.h
   qvtkwidget.h
   vtkAvogadroActor.h
@@ -29,6 +30,7 @@ set(HEADERS
 )
 
 set(SOURCES
+  chartdialog.cpp
   chartwidget.cpp
   qvtkwidget.cpp
   vtkAvogadroActor.cpp
