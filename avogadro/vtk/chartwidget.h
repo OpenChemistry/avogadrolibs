@@ -15,6 +15,8 @@ class vtkTable;
 
 namespace Avogadro::VTK {
 
+typedef std::array<unsigned char, 4> color4ub;
+
 class QVTKWidget;
 
 class AVOGADROVTK_EXPORT ChartWidget : public QWidget
@@ -25,7 +27,12 @@ public:
   explicit ChartWidget(QWidget* p = nullptr);
   ~ChartWidget() override;
 
-  bool addPlot(const std::vector<float>& x, const std::vector<float>& y);
+  bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
+               const color4ub& color = color4ub{0, 0, 0, 255});
+
+  void setXAxisTitle(const char* title);
+
+  void setYAxisTitle(const char* title);
 
 private:
   void renderViews();

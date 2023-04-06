@@ -5,6 +5,7 @@
 
 #include "qvtkwidget.h"
 
+#include <vtkAxis.h>
 #include <vtkChartXY.h>
 #include <vtkContextScene.h>
 #include <vtkContextView.h>
@@ -32,7 +33,8 @@ ChartWidget::ChartWidget(QWidget* p) : QWidget(p), m_qvtk(new QVTKWidget(this))
 ChartWidget::~ChartWidget() = default;
 
 bool ChartWidget::addPlot(const std::vector<float>& x,
-                          const std::vector<float>& y)
+                          const std::vector<float>& y,
+                          const std::array<unsigned char, 4>& color)
 {
   // The x and y arrays must be of the same length, otherwise it is not x, y...
   if (x.size() != y.size())
@@ -54,7 +56,20 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
 
   auto* line = m_chart->AddPlot(vtkChart::LINE);
   line->SetInputData(m_table, 0, 1);
+  line->SetColor(color[0], color[1], color[2], color[3]);
   return true;
+}
+
+void ChartWidget::setXAxisTitle(const char* title)
+{
+  auto* axis = m_chart->GetAxis(vtkAxis::BOTTOM);
+  axis->SetTitle(title);
+}
+
+void ChartWidget::setYAxisTitle(const char* title)
+{
+  auto* axis = m_chart->GetAxis(vtkAxis::LEFT);
+  axis->SetTitle(title);
 }
 
 } // namespace Avogadro::VTK
