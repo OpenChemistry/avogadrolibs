@@ -24,10 +24,11 @@ ChartWidget::ChartWidget(QWidget* p) : QWidget(p), m_qvtk(new QVTKWidget(this))
   m_view->SetInteractor(m_qvtk->interactor());
   m_view->GetScene()->AddItem(m_chart);
   auto hLayout = new QHBoxLayout(this);
+  hLayout->setContentsMargins(0, 0, 0, 0);
   hLayout->addWidget(m_qvtk);
   setLayout(hLayout);
-  setMinimumWidth(400);
-  setMinimumHeight(400);
+  setMinimumWidth(100);
+  setMinimumHeight(100);
 }
 
 ChartWidget::~ChartWidget() = default;
@@ -58,6 +59,11 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
   line->SetInputData(m_table, 0, 1);
   line->SetColor(color[0], color[1], color[2], color[3]);
   return true;
+}
+
+void ChartWidget::clearPlots()
+{
+  m_chart->ClearPlots();
 }
 
 void ChartWidget::setXAxisTitle(const char* title)

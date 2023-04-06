@@ -21,6 +21,9 @@ public:
 
   ChartWidget* chartWidget();
 
+  QSize sizeHint() const override;
+  QSize minimumSizeHint() const override;
+
 private:
   ChartWidget* m_chartWidget;
 };

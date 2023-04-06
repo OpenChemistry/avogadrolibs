@@ -156,6 +156,7 @@ void PlotPdf::displayDialog()
   std::vector<float> x(xData.begin(), xData.end());
   std::vector<float> y(yData.begin(), yData.end());
   auto* chartDialog = new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent()));
+  chartDialog->setWindowTitle(windowName);
   auto* chart = chartDialog->chartWidget();
   chart->addPlot(x, y, VTK::color4ub{255, 0, 0, 255});
   chart->setXAxisTitle(xTitle);
