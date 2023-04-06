@@ -124,18 +124,12 @@ void PlotPdf::displayDialog()
   }
 
   // Now generate a plot with the data
-  std::vector<double> xData;
-  std::vector<double> yData;
+  std::vector<float> xData;
+  std::vector<float> yData;
   for (const auto& item : results) {
     xData.push_back(item.first);
     yData.push_back(item.second);
   }
-  std::vector<std::vector<double>> data{ xData, yData };
-
-  std::vector<std::string> lineLabels{ "PdfData" };
-
-  std::array<double, 4> color = { 255, 0, 0, 255 };
-  std::vector<std::array<double, 4>> lineColors{ color };
 
   const char* xTitle = "r (Å)";
   const char* yTitle = "g(r)";
@@ -144,12 +138,10 @@ void PlotPdf::displayDialog()
   if (!m_chart)
     m_chart.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
-  std::vector<float> x(xData.begin(), xData.end());
-  std::vector<float> y(yData.begin(), yData.end());
   m_chart->setWindowTitle(windowName);
   auto* chart = m_chart->chartWidget();
   chart->clearPlots();
-  chart->addPlot(x, y, VTK::color4ub{255, 0, 0, 255});
+  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
   m_chart->show();
