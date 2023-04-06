@@ -64,6 +64,7 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
 void ChartWidget::clearPlots()
 {
   m_chart->ClearPlots();
+  m_table->RemoveAllColumns();
 }
 
 void ChartWidget::setXAxisTitle(const char* title)
