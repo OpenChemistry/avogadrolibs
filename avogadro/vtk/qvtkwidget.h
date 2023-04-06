@@ -16,7 +16,8 @@ class AVOGADROVTK_EXPORT QVTKWidget : public QVTKOpenGLStereoWidget
   Q_OBJECT
 
 public:
-  QVTKWidget(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  explicit QVTKWidget(QWidget* parent = nullptr,
+                      Qt::WindowFlags f = Qt::WindowFlags());
   ~QVTKWidget() override;
 };
 } // namespace Avogadro::VTK
