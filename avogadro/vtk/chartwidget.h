@@ -28,7 +28,7 @@ public:
   ~ChartWidget() override;
 
   bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
-               const color4ub& color = color4ub{0, 0, 0, 255});
+               const color4ub& color = color4ub{ 0, 0, 0, 255 });
 
   void clearPlots();
 

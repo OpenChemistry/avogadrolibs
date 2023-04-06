@@ -308,4 +308,4 @@ void vtkGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
-} // namespace Avogadro
+} // namespace Avogadro::VTK
