@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2022-10-07 13:28+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -2587,7 +2587,7 @@ msgstr "슈퍼격자 빌드(&S)…"
 msgid "Reduce Cell (&Niggli)"
 msgstr "셀 감소(니글리&N)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3040,11 +3040,15 @@ msgid "El."
 msgstr "El."
 
 #: qtplugins/label/label.cpp:169
-msgid "Element & Ordinal"
-msgstr "원소 및 서수"
+#, fuzzy
+#| msgid "Element name."
+msgid "Element & Number"
+msgstr "원소 이름입니다."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+#, fuzzy
+#| msgid "El.&Or."
+msgid "El.&No."
 msgstr "El.&Or."
 
 #: qtplugins/label/label.cpp:173
@@ -3783,15 +3787,15 @@ msgstr "플레이어 도구"
 msgid "Play back trajectories"
 msgstr "궤적 재생"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr "플롯 쌍 분포 함수…"
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "PDF 패턴 생성 실패"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr "오류 메시지: "
 
@@ -7570,6 +7574,9 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com"
+
+#~ msgid "Element & Ordinal"
+#~ msgstr "원소 및 서수"
 
 #~ msgid "'c' coordinate."
 #~ msgstr "'c' 좌표입니다."

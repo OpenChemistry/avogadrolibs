@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2022-10-14 10:56+0000\n"
 "Last-Translator: Koen Roggemans <koen@roggemans.net>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
@@ -2537,7 +2537,7 @@ msgstr "Super Cel"
 msgid "Reduce Cell (&Niggli)"
 msgstr ""
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 #, fuzzy
@@ -3015,11 +3015,12 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:169
 #, fuzzy
-msgid "Element & Ordinal"
-msgstr "Element naam"
+#| msgid "Element name."
+msgid "Element & Number"
+msgstr "Elementnaam."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+msgid "El.&No."
 msgstr ""
 
 #: qtplugins/label/label.cpp:173
@@ -3760,15 +3761,15 @@ msgstr ""
 msgid "Play back trajectories"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr ""
 
@@ -7552,45 +7553,48 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, "
-",Launchpad Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, "
-",Launchpad Contributions:,Kristof Bal,Sander Deryckere, ,Launchpad "
+",Launchpad Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, ,"
+"Launchpad Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, ,"
+"Launchpad Contributions:,Kristof Bal,Sander Deryckere, ,Launchpad "
 "Contributions:,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, ,Launchpad "
-"Contributions:,Joostkam,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, "
-",Launchpad Contributions:,Joostkam,Kristof Bal,Sander Deryckere,Vincent "
-"Tijms,arisos,ubby, ,Launchpad Contributions:,Avogadro Team,Joostkam,Kristof "
-"Bal,Sander Deryckere,Vincent Tijms,arisos,ubby, ,Launchpad Contributions:"
-",Avogadro Team,Joostkam,Kristof Bal,Sander Deryckere,Vincent "
-"Tijms,arisos,ubby, ,Launchpad Contributions:,Avogadro Team,Joostkam,Kristof "
-"Bal,Sander Deryckere,Vincent Tijms,arisos,ubby, ,Launchpad Contributions:"
-",Avogadro Team,Ewout De cat,Joostkam,Kristof Bal,Sander Deryckere,Vincent "
-"Tijms,arisos,ubby, ,Launchpad Contributions:,Avogadro Team,Ewout De "
-"cat,Joostkam,Kristof Bal,Sander Deryckere,Vincent Tijms,Willem Sonke, "
-",Launchpad Contributions:,Avogadro Team,Ewout De cat,Joostkam,Kristof "
-"Bal,Sander Deryckere,Vincent Tijms,Willem Sonke, ,Launchpad Contributions:"
-",Avogadro Team,Ewout De cat,Joostkam,Kristof Bal,Maarten van Druten,Sander "
-"Deryckere,Vincent Tijms,Willem Sonke,Koen Roggemans"
+"Contributions:,Joostkam,Kristof Bal,Sander Deryckere,Vincent Tijms,ubby, ,"
+"Launchpad Contributions:,Joostkam,Kristof Bal,Sander Deryckere,Vincent Tijms,"
+"arisos,ubby, ,Launchpad Contributions:,Avogadro Team,Joostkam,Kristof Bal,"
+"Sander Deryckere,Vincent Tijms,arisos,ubby, ,Launchpad Contributions:,"
+"Avogadro Team,Joostkam,Kristof Bal,Sander Deryckere,Vincent Tijms,arisos,"
+"ubby, ,Launchpad Contributions:,Avogadro Team,Joostkam,Kristof Bal,Sander "
+"Deryckere,Vincent Tijms,arisos,ubby, ,Launchpad Contributions:,Avogadro Team,"
+"Ewout De cat,Joostkam,Kristof Bal,Sander Deryckere,Vincent Tijms,arisos,"
+"ubby, ,Launchpad Contributions:,Avogadro Team,Ewout De cat,Joostkam,Kristof "
+"Bal,Sander Deryckere,Vincent Tijms,Willem Sonke, ,Launchpad Contributions:,"
+"Avogadro Team,Ewout De cat,Joostkam,Kristof Bal,Sander Deryckere,Vincent "
+"Tijms,Willem Sonke, ,Launchpad Contributions:,Avogadro Team,Ewout De cat,"
+"Joostkam,Kristof Bal,Maarten van Druten,Sander Deryckere,Vincent Tijms,"
+"Willem Sonke,Koen Roggemans"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,kristof.bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet."
-"nl,,,,kristof.bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet."
-"nl,,,,kristof.bal@gmail.com,sanderd17@gmail.com,,,kristof.bal@gmail."
-"com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,,kristof.bal@gmail."
-"com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,,kristof.bal@gmail."
-"com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,,avogadro-devel@lists."
-"sourceforge.net,,kristof.bal@gmail.com,sanderd17@gmail."
-"com,vincent_tijms@zonnet.nl,,,,,avogadro-devel@lists.sourceforge.net,,kristof"
-".bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,,avogadro-"
-"devel@lists.sourceforge.net,,kristof.bal@gmail.com,sanderd17@gmail."
-"com,vincent_tijms@zonnet.nl,,,,,avogadro-devel@lists.sourceforge."
-"net,,,kristof.bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet.nl"
-",,,,,avogadro-devel@lists.sourceforge.net,,,kristof.bal@gmail."
-"com,sanderd17@gmail.com,vtijms@gmail.com,,,,avogadro-devel@lists.sourceforge."
-"net,,,kristof.bal@gmail.com,sanderd17@gmail.com,vtijms@gmail.com,,,,avogadro-"
-"devel@lists.sourceforge.net,,,kristof.bal@gmail.com,m.vandruten@smoose."
-"nl,sanderd17@gmail.com,vtijms@gmail.com,"
+",,kristof.bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,"
+"kristof.bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,kristof."
+"bal@gmail.com,sanderd17@gmail.com,,,kristof.bal@gmail.com,sanderd17@gmail."
+"com,vincent_tijms@zonnet.nl,,,,,kristof.bal@gmail.com,sanderd17@gmail.com,"
+"vincent_tijms@zonnet.nl,,,,,kristof.bal@gmail.com,sanderd17@gmail.com,"
+"vincent_tijms@zonnet.nl,,,,,avogadro-devel@lists.sourceforge.net,,kristof."
+"bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,,avogadro-"
+"devel@lists.sourceforge.net,,kristof.bal@gmail.com,sanderd17@gmail.com,"
+"vincent_tijms@zonnet.nl,,,,,avogadro-devel@lists.sourceforge.net,,kristof."
+"bal@gmail.com,sanderd17@gmail.com,vincent_tijms@zonnet.nl,,,,,avogadro-"
+"devel@lists.sourceforge.net,,,kristof.bal@gmail.com,sanderd17@gmail.com,"
+"vincent_tijms@zonnet.nl,,,,,avogadro-devel@lists.sourceforge.net,,,kristof."
+"bal@gmail.com,sanderd17@gmail.com,vtijms@gmail.com,,,,avogadro-devel@lists."
+"sourceforge.net,,,kristof.bal@gmail.com,sanderd17@gmail.com,vtijms@gmail."
+"com,,,,avogadro-devel@lists.sourceforge.net,,,kristof.bal@gmail.com,m."
+"vandruten@smoose.nl,sanderd17@gmail.com,vtijms@gmail.com,"
+
+#, fuzzy
+#~ msgid "Element & Ordinal"
+#~ msgstr "Element naam"
 
 #, fuzzy
 #~ msgid "All files (*);;"

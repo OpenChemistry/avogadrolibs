@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2023-03-31 19:37+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -1099,7 +1099,8 @@ msgstr ""
 #: qtgui/interfacescript.cpp:500
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr "Erreur lors de la modification de la représentation de la molécule : %1"
+msgstr ""
+"Erreur lors de la modification de la représentation de la molécule : %1"
 
 #: qtgui/jsonwidget.cpp:53
 msgid "'userOptions' missing."
@@ -1315,8 +1316,8 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Erreur lors de l'exécution du script « %1 %2 » : Code de sortie anormal %3 ("
-"%4 : %5)\n"
+"Erreur lors de l'exécution du script « %1 %2 » : Code de sortie anormal %3 "
+"(%4 : %5)\n"
 "\n"
 "Sortie :\n"
 "%6"
@@ -2633,7 +2634,7 @@ msgstr "Construction &de la supercellule…"
 msgid "Reduce Cell (&Niggli)"
 msgstr "Réduire la maille (&Niggli)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3098,11 +3099,15 @@ msgid "El."
 msgstr "Él."
 
 #: qtplugins/label/label.cpp:169
-msgid "Element & Ordinal"
-msgstr "Élément & Ordinal"
+#, fuzzy
+#| msgid "Element name."
+msgid "Element & Number"
+msgstr "Nom de l'élément."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+#, fuzzy
+#| msgid "El.&Or."
+msgid "El.&No."
 msgstr "Él.&Or."
 
 #: qtplugins/label/label.cpp:173
@@ -3857,15 +3862,15 @@ msgstr "Outil lecteur"
 msgid "Play back trajectories"
 msgstr "Lecture des trajectoires"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "Échec de génération d'un motif PDF"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr "Message d'erreur : "
 
@@ -7642,6 +7647,9 @@ msgstr ""
 "psycojoker@gmail.com, louis.ricard@polytechnique.edu nizar.kerkeni@gmail."
 "com, jacob.benoit.1@gmail.com, nizarus@nizarus.org, nizarus@nizarus.tn, "
 "pierre.slamich@gmail.com, etc"
+
+#~ msgid "Element & Ordinal"
+#~ msgstr "Élément & Ordinal"
 
 #~ msgid "All files (*);;"
 #~ msgstr "Tous les fichiers (*);;"

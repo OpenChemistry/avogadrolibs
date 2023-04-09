@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2023-02-13 19:36+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
@@ -2638,7 +2638,7 @@ msgstr "Construir &Súper Celda…"
 msgid "Reduce Cell (&Niggli)"
 msgstr "Reducir Celda (&Niggli)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3093,11 +3093,15 @@ msgid "El."
 msgstr "El."
 
 #: qtplugins/label/label.cpp:169
-msgid "Element & Ordinal"
-msgstr "Elemento y Ordinal"
+#, fuzzy
+#| msgid "Element name."
+msgid "Element & Number"
+msgstr "Nombre de elemento."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+#, fuzzy
+#| msgid "El.&Or."
+msgid "El.&No."
 msgstr "El.&Or."
 
 #: qtplugins/label/label.cpp:173
@@ -3504,8 +3508,8 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
-"Ocurrió un error recuperando la lista de campos de fuerza soportados. ("
-"usando '%1')."
+"Ocurrió un error recuperando la lista de campos de fuerza soportados. "
+"(usando '%1')."
 
 #: qtplugins/openbabel/openbabel.cpp:380
 msgid "Molecule invalid. Cannot optimize geometry."
@@ -3844,15 +3848,15 @@ msgstr "Herramienta de reproducción"
 msgid "Play back trajectories"
 msgstr "Rebobinar trayectorias"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr "Trazar Función de Distribución por Pares…"
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "Fallo al generar un patrón de PDF"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr "Mensaje de error: "
 
@@ -5213,8 +5217,8 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Especificación de Formato. Cada carácter indica un "
 "valor a escribir por átomo:</p><p><span style=\" font-weight:600;\">#</span> "
-"- Índice atómico (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\""
-">Z</span> - Número atómico (e.g. «6» para el carbono)<br/><span style=\" "
+"- Índice atómico (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
+"\">Z</span> - Número atómico (e.g. «6» para el carbono)<br/><span style=\" "
 "font-weight:600;\">G</span> - Número atómico estilo GAMESS (e.g. «6.0» para "
 "el carbono)<br/><span style=\" font-weight:600;\">N</span> - Nombre del "
 "elemento (e.g. «Carbono»)<br/><span style=\" font-weight:600;\">S</span> - "
@@ -5421,8 +5425,8 @@ msgstr "OT T MINIMIZER"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
-"Extensión de archivo para conversión de Open Babel (por defecto - "
-"Avogadro::POSCAR):"
+"Extensión de archivo para conversión de Open Babel (por defecto - Avogadro::"
+"POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
@@ -5809,7 +5813,8 @@ msgstr "Comentarios del archivo de entrada"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QComboBox, unitsCombo)
 msgid "Select the unit style to be used during the simulation."
-msgstr "Seleccionar el estilo de unidad que se utilizará durante la simulación."
+msgstr ""
+"Seleccionar el estilo de unidad que se utilizará durante la simulación."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:84
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_units)
@@ -5831,16 +5836,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -5923,16 +5928,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -6434,8 +6439,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -7019,8 +7024,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>Ensanchamiento del pico en la base (en "
-"grados).</p></body></html>"
+"<html><head/><body><p>Ensanchamiento del pico en la base (en grados).</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7517,8 +7522,8 @@ msgid ""
 "p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>¿Ajustar las energías para que el nivel de Fermi "
-"corresponda a cero? Solo disponible si se muestra el nivel de Fermi.</p><p><"
-"br/></p><p>Por defecto: desactivado</p></body></html>"
+"corresponda a cero? Solo disponible si se muestra el nivel de Fermi.</"
+"p><p><br/></p><p>Por defecto: desactivado</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -7561,18 +7566,17 @@ msgid ""
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Introducir puntos k especiales tales como:</p><p>L 0.5 "
-"0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Esto es, "
-"&lt;símbolo&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; donde x, y, y z son "
-"coordenadas espaciales recíprocas fraccionales. Se dibujarán líneas "
-"conectando los puntos k del gráfico en el orden en que sean introducidos. "
-"Por favor, tenga en cuenta que la orientación de la celda puede afectar a la "
-"localización de estos puntos espaciales recíprocos.</p><p>Si el grupo "
-"espacial del cristal ha sido determinado o establecido, los puntos k "
-"especiales serán completados automáticamente con los puntos de alta simetría "
-"de la celda primitiva para ese grupo espacial. Hay algunos grupos espaciales "
-"con puntos de alta simetría diferentes dependiendo de la rejilla (por "
-"ejemplo un &gt; b o un &lt; b) - esto se tiene en cuenta "
-"automáticamente.</p></body></html>"
+"0.5 0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>Esto es, &lt;"
+"símbolo&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; donde x, y, y z son coordenadas "
+"espaciales recíprocas fraccionales. Se dibujarán líneas conectando los "
+"puntos k del gráfico en el orden en que sean introducidos. Por favor, tenga "
+"en cuenta que la orientación de la celda puede afectar a la localización de "
+"estos puntos espaciales recíprocos.</p><p>Si el grupo espacial del cristal "
+"ha sido determinado o establecido, los puntos k especiales serán completados "
+"automáticamente con los puntos de alta simetría de la celda primitiva para "
+"ese grupo espacial. Hay algunos grupos espaciales con puntos de alta "
+"simetría diferentes dependiendo de la rejilla (por ejemplo un &gt; b o un "
+"&lt; b) - esto se tiene en cuenta automáticamente.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -7590,8 +7594,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
+"\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7616,8 +7620,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>¿Limitar el rango «y» en el trazado?</p><p>Por defecto:"
-" desactivado</p></body></html>"
+"<html><head/><body><p>¿Limitar el rango «y» en el trazado?</p><p>Por "
+"defecto: desactivado</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -7787,6 +7791,9 @@ msgstr ""
 "grovertapia@hotmail.com,,joseb.gutierrez@gmail.com,,,,meilan@adinet.com.uy,"
 "tres.14159@gmail.com,monkey.libre@gmail.com,nzahlut@live.com,,paco@byasl."
 "com,,victorhera@gmail.com,memaljo@yahoo.com,"
+
+#~ msgid "Element & Ordinal"
+#~ msgstr "Elemento y Ordinal"
 
 #~ msgid "'c' coordinate."
 #~ msgstr "'c' coordenada."
