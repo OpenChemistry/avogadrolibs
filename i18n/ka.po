@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-09 02:11+0000\n"
-"PO-Revision-Date: 2023-04-10 14:34+0000\n"
+"PO-Revision-Date: 2023-04-10 19:35+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -1193,7 +1193,7 @@ msgstr ""
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
-msgstr ""
+msgstr "მოდელი"
 
 #: qtgui/moleculemodel.cpp:92
 msgid "Untitled"
@@ -3014,7 +3014,7 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:68
 msgid "Create Label"
-msgstr ""
+msgstr "ჭდის შექმნა"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3549,7 +3549,7 @@ msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "მწვერვალი"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3802,7 +3802,7 @@ msgstr "PLY (*.wrl);;ტექსტური ფაილი (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
-msgstr ""
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
@@ -3957,7 +3957,7 @@ msgstr "β ხიდი"
 #: qtplugins/propertytables/propertymodel.cpp:797
 msgctxt "protein turn secondary structure"
 msgid "Turn"
-msgstr ""
+msgstr "გრუპეტო"
 
 #: qtplugins/propertytables/propertymodel.cpp:799
 msgctxt "protein coil secondary structure"
@@ -4228,7 +4228,7 @@ msgstr ""
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "მონიშვნის ხელსაწყო"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
@@ -5143,47 +5143,47 @@ msgstr ""
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
 #. i18n: ectx: attribute (title), widget (QWidget, tab_2)
 msgid "QM"
-msgstr ""
+msgstr "QM"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:440
 #. i18n: ectx: property (text), widget (QLabel, LSD_label)
 msgid "LSD"
-msgstr ""
+msgstr "LSD"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:449
 #. i18n: ectx: property (text), widget (QCheckBox, lsdcheckBox)
 msgid "TRUE"
-msgstr ""
+msgstr "TRUE"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:471
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "MAX SCF"
-msgstr ""
+msgstr "MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:505
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "EPS SCF"
-msgstr ""
+msgstr "EPS SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "SCF GUESS"
-msgstr ""
+msgstr "SCF GUESS"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
-msgstr ""
+msgstr "OUTER MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
 #. i18n: ectx: property (text), widget (QLabel, label_25)
 msgid "OUTER EPS SCF"
-msgstr ""
+msgstr "OUTER EPS SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
-msgstr ""
+msgstr "OT T MINIMIZER"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5898,7 +5898,7 @@ msgstr "მილი"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "fs"
-msgstr ""
+msgstr "ფწმ"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:478
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -5907,7 +5907,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:558
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "fm"
-msgstr ""
+msgstr "ფმ"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
@@ -5994,7 +5994,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "uniform"
-msgstr ""
+msgstr "ფორმა"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:742
 #. i18n: ectx: property (toolTip), widget (QLabel, label_9)
@@ -6075,7 +6075,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Generate..."
-msgstr ""
+msgstr "გენერაცია..."
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6417,7 +6417,7 @@ msgstr "სიზუსტე:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "single"
-msgstr ""
+msgstr "ერთი"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
@@ -6917,7 +6917,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:352
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Smoothing:"
-msgstr ""
+msgstr "მოგლუვება:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:379
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
@@ -7047,7 +7047,7 @@ msgstr "+4"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:134
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+5"
-msgstr ""
+msgstr "+5"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:139
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7169,7 +7169,7 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:366
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "From Clipboard"
-msgstr ""
+msgstr "გაცვლის ბუფერიდან"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:389
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
