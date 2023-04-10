@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-09 02:11+0000\n"
-"PO-Revision-Date: 2023-04-10 13:08+0000\n"
+"PO-Revision-Date: 2023-04-10 14:33+0000\n"
 "Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -3095,7 +3095,7 @@ msgstr "El."
 
 #: qtplugins/label/label.cpp:169
 msgid "Element & Number"
-msgstr "Elemento y número"
+msgstr "Elemento y Número"
 
 #: qtplugins/label/label.cpp:170
 msgid "El.&No."
@@ -3328,7 +3328,7 @@ msgstr "Molécula desconocida"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1060
 msgid "Molecule Name:"
-msgstr "Nombre de la molécula:"
+msgstr "Nombre de la Molécula:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3430,7 +3430,7 @@ msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:367
 msgid "Angle tolerance:"
-msgstr "Tolerancia del ángulo:"
+msgstr "Tolerancia del Ángulo:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -4319,11 +4319,11 @@ msgstr "Seleccionar Agua…"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
 msgid "Enlarge Selection"
-msgstr "Agradar Selección"
+msgstr "Agrandar Selección"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
 msgid "Shrink Selection"
-msgstr "Disminuir Selección"
+msgstr "Encoger Selección"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
