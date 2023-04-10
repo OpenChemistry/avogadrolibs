@@ -6,6 +6,7 @@
 #include "avogadrovtkexport.h"
 
 #include <QWidget>
+#include <array>
 
 #include <vtkNew.h>
 
