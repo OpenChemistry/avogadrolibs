@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2023-04-10 13:08+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1911,7 +1911,7 @@ msgstr ""
 "\n"
 "Botón Izquierdo del Ratón: \tPresionar y arrastrar para rotar la vista.\n"
 "Botón Central del Ratón: \tPresionar y arrastrar para acercar o alejar. \n"
-"Botón Derecho del ratón: \tPresionar y arrastrar para mover la vista. \n"
+"Botón Derecho del Ratón: \tPresionar y arrastrar para mover la vista. \n"
 "Doble Clic: \t Restablecer la vista. \n"
 "\n"
 "Clic Izquierdo y Arrastrar sobre un Enlace para establecer el Plano de "
@@ -2027,7 +2027,7 @@ msgstr "Mostrar cintas/dibujos de biomoléculas."
 
 #: qtplugins/centroid/centroid.cpp:20
 msgid "Add Centroid"
-msgstr "Añadir centroide"
+msgstr "Añadir Centroide"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
@@ -2153,7 +2153,7 @@ msgstr "Ancho de línea:"
 
 #: qtplugins/closecontacts/closecontacts.h:34
 msgid "Render close contacts between atoms."
-msgstr "Representa contactos cercanos entre átomos."
+msgstr "Representar contactos cercanos entre átomos."
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Contact"
@@ -2718,7 +2718,8 @@ msgid ""
 msgstr ""
 "Herramienta de dibujo\n"
 "\n"
-"Botón Izquierdo del Ratón: \tClic y Arrastrar para crear Átomos y Enlaces\n"
+"Botón Izquierdo del Ratón: \tPresionar y Arrastrar para crear Átomos y "
+"Enlaces\n"
 "Botón Derecho del Ratón: \tBorrar Átomo"
 
 #: qtplugins/editor/editor.cpp:103
