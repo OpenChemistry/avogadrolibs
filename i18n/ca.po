@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2023-03-20 18:38+0000\n"
 "Last-Translator: victor dargallo <victordargallo@disroot.org>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
@@ -2612,7 +2612,7 @@ msgstr "Super cel·la"
 msgid "Reduce Cell (&Niggli)"
 msgstr ""
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 #, fuzzy
@@ -3099,11 +3099,11 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:169
 #, fuzzy
-msgid "Element & Ordinal"
+msgid "Element & Number"
 msgstr "Nom d'element"
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+msgid "El.&No."
 msgstr ""
 
 #: qtplugins/label/label.cpp:173
@@ -3859,15 +3859,15 @@ msgstr ""
 msgid "Play back trajectories"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr ""
 
@@ -7768,6 +7768,10 @@ msgstr ""
 "planella@ubuntu.com,,,el.libre@gmail.com,,,avogadro-devel@lists.sourceforge."
 "net,,david.planella@ubuntu.com,,,el.libre@gmail.com,,,avogadro-devel@lists."
 "sourceforge.net,,david.planella@gmail.com,,,el.libre@gmail.com"
+
+#, fuzzy
+#~ msgid "Element & Ordinal"
+#~ msgstr "Nom d'element"
 
 #, fuzzy
 #~ msgid "All files (*);;"

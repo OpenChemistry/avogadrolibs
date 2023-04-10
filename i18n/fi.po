@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2016-06-10 06:32+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -2562,7 +2562,7 @@ msgstr ""
 msgid "Reduce Cell (&Niggli)"
 msgstr ""
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3027,11 +3027,11 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:169
 #, fuzzy
-msgid "Element & Ordinal"
+msgid "Element & Number"
 msgstr "Alkuaineen nimi"
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+msgid "El.&No."
 msgstr ""
 
 #: qtplugins/label/label.cpp:173
@@ -3767,15 +3767,15 @@ msgstr ""
 msgid "Play back trajectories"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr ""
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr ""
 
@@ -7528,6 +7528,10 @@ msgstr ""
 "net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-devel@lists."
 "sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-"
 "devel@lists.sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,"
+
+#, fuzzy
+#~ msgid "Element & Ordinal"
+#~ msgstr "Alkuaineen nimi"
 
 #, fuzzy
 #~| msgid "Molecule"

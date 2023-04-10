@@ -21,13 +21,19 @@ find_package(VTK
   REQUIRED)
 
 set(HEADERS
+  chartdialog.h
+  chartwidget.h
+  qvtkwidget.h
   vtkAvogadroActor.h
   vtkglwidget.h
   vtkplot.h
 )
 
 set(SOURCES
-  vtkAvogadroActor.cxx
+  chartdialog.cpp
+  chartwidget.cpp
+  qvtkwidget.cpp
+  vtkAvogadroActor.cpp
   vtkglwidget.cpp
   vtkplot.cpp
 )

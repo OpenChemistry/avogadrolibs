@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2022-11-27 00:47+0000\n"
 "Last-Translator: Gustavo Sousa Jr <grsousajunior@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -2719,7 +2719,7 @@ msgstr "Construir &Supercélula"
 msgid "Reduce Cell (&Niggli)"
 msgstr "Reduzir Célula (&Niggli)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3201,11 +3201,12 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:169
 #, fuzzy
-msgid "Element & Ordinal"
+#| msgid "Element name."
+msgid "Element & Number"
 msgstr "Nome do Elemento."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+msgid "El.&No."
 msgstr ""
 
 #: qtplugins/label/label.cpp:173
@@ -3999,17 +4000,17 @@ msgstr "Ferramenta Player"
 msgid "Play back trajectories"
 msgstr "Reproduzir trajetórias"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 #, fuzzy
 #| msgid "Plot Pair Distribution Function..."
 msgid "Plot Pair Distribution Function…"
 msgstr "Traçar Função de Distribuição de Pares..."
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "Falha ao criar padrão PDF"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr "Mensagem de erro: "
 
@@ -7880,6 +7881,10 @@ msgstr "Seus nomes"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Seus e-mails"
+
+#, fuzzy
+#~ msgid "Element & Ordinal"
+#~ msgstr "Nome do Elemento."
 
 #~ msgid "'c' coordinate."
 #~ msgstr "coordenada de rede 'c'."

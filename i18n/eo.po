@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -2677,7 +2677,7 @@ msgstr "Konstrui &Superĉelon"
 msgid "Reduce Cell (&Niggli)"
 msgstr "Redukti Ĉelon (&Niggli)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3154,11 +3154,12 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:169
 #, fuzzy
-msgid "Element & Ordinal"
+#| msgid "Element name."
+msgid "Element & Number"
 msgstr "Nomo de elemento."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+msgid "El.&No."
 msgstr ""
 
 #: qtplugins/label/label.cpp:173
@@ -3941,17 +3942,17 @@ msgstr "Ludila ilo"
 msgid "Play back trajectories"
 msgstr "Reludi trajektorion"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 #, fuzzy
 #| msgid "Plot Pair Distribution Function..."
 msgid "Plot Pair Distribution Function…"
 msgstr "Desegni Paro-Distribuan Funkcion…"
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "Malsukcesis generado de paro-distribua funkcio"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr "Erarmesaĝo: "
 
@@ -7918,6 +7919,10 @@ msgstr "phlostically"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "phlostically@example.com"
+
+#, fuzzy
+#~ msgid "Element & Ordinal"
+#~ msgstr "Nomo de elemento."
 
 #~ msgid "'c' coordinate."
 #~ msgstr "Krada koordinato 'c'."

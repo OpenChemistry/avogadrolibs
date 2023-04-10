@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-10-02 03:55+0000\n"
+"POT-Creation-Date: 2023-04-09 02:11+0000\n"
 "PO-Revision-Date: 2022-10-07 13:28+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -2639,7 +2639,7 @@ msgstr "&Felsősejt összeállítása…"
 msgid "Reduce Cell (&Niggli)"
 msgstr "Sejtcsökkentés (&Niggli)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
+#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
@@ -3092,11 +3092,15 @@ msgid "El."
 msgstr "El."
 
 #: qtplugins/label/label.cpp:169
-msgid "Element & Ordinal"
-msgstr "Elemnév és elemszáma"
+#, fuzzy
+#| msgid "Element name."
+msgid "Element & Number"
+msgstr "Elemnév."
 
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
+#, fuzzy
+#| msgid "El.&Or."
+msgid "El.&No."
 msgstr "El.&Or."
 
 #: qtplugins/label/label.cpp:173
@@ -3852,15 +3856,15 @@ msgstr "Lejátszó eszköz"
 msgid "Play back trajectories"
 msgstr "Pályák lejátszása"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr "Pár eloszlásfüggvény ábrázolása…"
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "Nem sikerült létrehozni a pár eloszlásfüggvény (PDF) mintát"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:119
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
@@ -5228,21 +5232,21 @@ msgstr ""
 "írandó értéket jelzi:</p><p><span style=\" font-weight:600;\">#</span> - "
 "Atomi tárgymutató (1, 2, …, atomok száma)<br/><span style=\" font-weight:600;"
 "\">Z</span> - Atomszám (pl. „6” a szén esetében)<br/><span style=\" font-"
-"weight:600;\">G</span> - GAMESS-stílusú atomszám (pl. „6.0” a szén esetében)<"
-"br/><span style=\" font-weight:600;\">N</span> - Elem neve (pl. „Szén”)<br/"
-"><span style=\" font-weight:600;\">S</span> - Elem szimbólum (pl. \"C\" a "
-"szén esetében)<br/><span style=\" font-weight:600;\">x</span> - X pozíció "
-"koordináta<br/><span style=\" font-weight:600;\">y</span> - Y pozíció "
-"koordináta<br/><span style=\" font-weight:600;\">z</span> - Z pozíció "
-"koordináta<br/><span style=\" font-weight:600;\">a</span> - a-hálókoordináta "
-"(csak kristályok)<br/><span style=\" font-weight:600;\">b</span> - b-"
-"hálókoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">c</"
-"span> - c-hálókoordináta (csak kristályok)<br/><span style=\" font-"
-"weight:600;\">_</span> - Szó szerinti szóköz („”), hasznos az igazításhoz<br/"
-"><span style=\" font-weight:600;\">0</span> - Szó szerinti 0 („0”), hasznos "
-"az optimalizálási zászlókhoz<br/><span style=\" font-weight:600;\">1</span> -"
-" Szó szerinti 1 („1”), hasznos az optimalizálási zászlókhoz<br/"
-"></p></body></html>"
+"weight:600;\">G</span> - GAMESS-stílusú atomszám (pl. „6.0” a szén "
+"esetében)<br/><span style=\" font-weight:600;\">N</span> - Elem neve (pl. "
+"„Szén”)<br/><span style=\" font-weight:600;\">S</span> - Elem szimbólum (pl. "
+"\"C\" a szén esetében)<br/><span style=\" font-weight:600;\">x</span> - X "
+"pozíció koordináta<br/><span style=\" font-weight:600;\">y</span> - Y "
+"pozíció koordináta<br/><span style=\" font-weight:600;\">z</span> - Z "
+"pozíció koordináta<br/><span style=\" font-weight:600;\">a</span> - a-"
+"hálókoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">b</"
+"span> - b-hálókoordináta (csak kristályok)<br/><span style=\" font-"
+"weight:600;\">c</span> - c-hálókoordináta (csak kristályok)<br/><span style="
+"\" font-weight:600;\">_</span> - Szó szerinti szóköz („”), hasznos az "
+"igazításhoz<br/><span style=\" font-weight:600;\">0</span> - Szó szerinti 0 "
+"(„0”), hasznos az optimalizálási zászlókhoz<br/><span style=\" font-"
+"weight:600;\">1</span> - Szó szerinti 1 („1”), hasznos az optimalizálási "
+"zászlókhoz<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -7666,6 +7670,9 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Element & Ordinal"
+#~ msgstr "Elemnév és elemszáma"
 
 #~ msgid "'c' coordinate."
 #~ msgstr "c-hálókoordináta."
