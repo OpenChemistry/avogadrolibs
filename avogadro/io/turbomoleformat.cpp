@@ -176,8 +176,10 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // This format has no connectivity information, so perceive basics at least.
-  if (opts.value("perceiveBonds", true))
+  if (opts.value("perceiveBonds", true)) {
     mol.perceiveBondsSimple();
+    mol.perceiveBondOrders();
+  }
 
   return true;
 }

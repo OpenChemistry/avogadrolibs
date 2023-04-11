@@ -910,7 +910,7 @@ public:
     // draw
     glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(m_numVertices),
                         static_cast<GLsizei>(m_numIndices), GL_UNSIGNED_INT,
-                        reinterpret_cast<const GLvoid*>(NULL));
+                        (const GLvoid*)nullptr);
 
     m_vbo.release();
     m_ibo.release();
@@ -984,7 +984,7 @@ public:
     // draw
     glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(m_numVertices),
                         static_cast<GLsizei>(m_numIndices), GL_UNSIGNED_INT,
-                        reinterpret_cast<const GLvoid*>(NULL));
+                        (const GLvoid*)nullptr);
 
     m_vbo.release();
     m_ibo.release();
@@ -1298,7 +1298,7 @@ void AmbientOcclusionSphereGeometry::render(const Camera& camera)
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
                       static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(NULL));
+                      (const GLvoid*)nullptr);
 
   d->vbo.release();
   d->ibo.release();

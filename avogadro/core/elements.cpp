@@ -268,4 +268,12 @@ const unsigned char* Elements::color(unsigned char atomicNumber)
     return element_color[0];
 }
 
+unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
+{
+  if (atomicNumber < element_count)
+    return valence_electrons[atomicNumber];
+  else
+    return valence_electrons[0];
+}
+
 } // end Avogadro namespace

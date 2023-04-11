@@ -20,7 +20,15 @@ namespace {
 const int QTTY_COLUMNS = 6;
 }
 
-LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {}
+LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {
+  m_plusIcon = QIcon(":/icons/fallback/32x32/plus.png");
+  m_dotsIcon = QIcon(":/icons/fallback/32x32/dots.png");
+  m_previewIcon = QIcon(":/icons/fallback/32x32/preview.png");
+  m_previewDashedIcon = QIcon(":/icons/fallback/32x32/dashed-preview.png");
+  m_lockIcon = QIcon(":/icons/fallback/32x32/lock.png");
+  m_openLockIcon = QIcon(":/icons/fallback/32x32/lock-open.png");
+  m_removeIcon = QIcon(":/icons/fallback/32x32/cross.png");
+}
 
 QModelIndex LayerModel::parent(const QModelIndex&) const
 {
@@ -60,7 +68,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == 0) {
       switch (role) {
         case Qt::DecorationRole:
-          return QIcon(":/icons/fallback/32x32/plus.png");
+          return m_plusIcon;
         default:
           return QVariant();
       }
@@ -86,24 +94,24 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
       }
     } else if (idx.column() == ColumnType::Menu) {
       if (role == Qt::DecorationRole)
-        return QIcon(":/icons/fallback/32x32/dots.png");
+        return m_dotsIcon;
     } else if (idx.column() == ColumnType::Visible) {
       if (role == Qt::DecorationRole) {
         if (visible(layer))
-          return QIcon(":/icons/fallback/32x32/preview.png");
+          return m_previewIcon;
         else
-          return QIcon(":/icons/fallback/32x32/dashed-preview.png");
+          return m_previewDashedIcon;
       }
     } else if (idx.column() == ColumnType::Lock) {
       if (role == Qt::DecorationRole) {
         if (locked(layer))
-          return QIcon(":/icons/fallback/32x32/lock.png");
+          return m_lockIcon;
         else
-          return QIcon(":/icons/fallback/32x32/lock-open.png");
+          return m_openLockIcon;
       }
     } else if (idx.column() == ColumnType::Remove) {
       if (role == Qt::DecorationRole)
-        return QIcon(":/icons/fallback/32x32/cross.png");
+        return m_removeIcon;
     }
   } else {
     if (idx.column() == ColumnType::Name) {
@@ -141,6 +149,8 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Meshes");
   else if (name == "Non-Covalent")
     return tr("Non-Covalent");
+  else if (name == "QTAIM")
+    return tr("QTAIM", "quantum theory of atoms in molecules");
   else if (name == "Symmetry Elements")
     return tr("Symmetry Elements");
   else if (name == "Van der Waals")

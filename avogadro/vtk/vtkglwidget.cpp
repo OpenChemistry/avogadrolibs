@@ -1,7 +1,5 @@
-/******************************************************************************
-  This source file is part of the Avogadro project.
-  This source code is released under the 3-Clause BSD License, (see "LICENSE").
-******************************************************************************/
+/* This source file is part of the Avogadro project.
+   It is released under the 3-Clause BSD License, see "LICENSE". */
 
 #include "vtkglwidget.h"
 
@@ -50,7 +48,7 @@ vtkImageData* createCubeImageData(Core::Cube* cube)
 
   data->AllocateScalars(VTK_FLOAT, 1);
 
-  auto* dataPtr = static_cast<double*>(data->GetScalarPointer());
+  auto* dataPtr = static_cast<float*>(data->GetScalarPointer());
   std::vector<float>* cubePtr = cube->data();
 
   for (int i = 0; i < dim.x(); ++i) {
@@ -111,7 +109,7 @@ void vtkGLWidget::cubeVolume(Core::Cube* cube)
 }
 
 vtkGLWidget::vtkGLWidget(QWidget* p, Qt::WindowFlags f)
-  : QVTKOpenGLStereoWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
+  : QVTKWidget(p, f), m_activeTool(nullptr), m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
@@ -310,4 +308,4 @@ void vtkGLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
-} // namespace Avogadro
+} // namespace Avogadro::VTK

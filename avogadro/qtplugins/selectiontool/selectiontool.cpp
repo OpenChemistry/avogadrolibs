@@ -245,7 +245,7 @@ void SelectionTool::applyColor(Vector3ub color)
 
 void SelectionTool::applyLayer(int layer)
 {
-  if (layer < 0 || m_molecule == nullptr) {
+  if (layer <= 0 || m_molecule == nullptr) {
     return;
   }
   RWMolecule* rwmol = m_molecule->undoMolecule();
@@ -311,7 +311,7 @@ bool SelectionTool::toggleAtom(const Index& atom)
 
 bool SelectionTool::shouldClean(QMouseEvent* e)
 {
-  // acumulate the selection if shift or ctrl are presset
+  // accumulate the selection if shift or ctrl are presset
   if (!(e->modifiers() & Qt::ControlModifier) &&
       !(e->modifiers() & Qt::ShiftModifier)) {
     clearAtoms();

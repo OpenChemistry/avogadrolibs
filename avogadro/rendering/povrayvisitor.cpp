@@ -16,10 +16,10 @@
 
 namespace Avogadro::Rendering {
 
-using std::string;
-using std::ostringstream;
-using std::ostream;
 using std::ofstream;
+using std::ostream;
+using std::ostringstream;
+using std::string;
 
 namespace {
 ostream& operator<<(ostream& os, const Vector3f& v)
@@ -34,7 +34,7 @@ ostream& operator<<(ostream& os, const Vector3ub& color)
      << color[2] / 255.0f;
   return os;
 }
-}
+} // namespace
 
 POVRayVisitor::POVRayVisitor(const Camera& c)
   : m_camera(c), m_backgroundColor(255, 255, 255),
@@ -42,9 +42,7 @@ POVRayVisitor::POVRayVisitor(const Camera& c)
 {
 }
 
-POVRayVisitor::~POVRayVisitor()
-{
-}
+POVRayVisitor::~POVRayVisitor() {}
 
 void POVRayVisitor::begin()
 {
@@ -108,7 +106,7 @@ string POVRayVisitor::end()
 
 void POVRayVisitor::visit(Drawable& geometry)
 {
-  // geometry.render(m_camera);
+  return;
 }
 
 void POVRayVisitor::visit(SphereGeometry& geometry)
@@ -159,8 +157,16 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  for (auto & i : v)
-    str << "texture{pigment{rgb<" << i.normal << ">}\n";
+  int r, g, b;
+  int t = geometry.opacity();
+
+  for (auto& i : v) {
+    r = i.color[0];
+    g = i.color[1];
+    b = i.color[2];
+    str << "texture{pigment{rgbt<" << r << ", " << g << ", " << b << "," << t
+        << ">}}\n";
+  }
   str << "\n}\n";
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {
@@ -173,6 +179,8 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   str << "\n}\n";
   str << "\tpigment { rgbt <1.0, 0.0, 0.0, 1.0> }\n"
       << "}\n\n";
+
+  m_sceneData += str.str();
 }
 
 void POVRayVisitor::visit(LineStripGeometry& geometry)
@@ -180,4 +188,4 @@ void POVRayVisitor::visit(LineStripGeometry& geometry)
   // geometry.render(m_camera);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

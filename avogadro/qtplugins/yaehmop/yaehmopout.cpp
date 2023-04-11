@@ -41,6 +41,8 @@ bool YaehmopOut::readBandData(const QString& data,
   foreach (const QString& line, lines) {
     if (line.contains("Error value from Diagonalization"))
       lines.removeOne(line);
+    if (line.contains("On entry to ZHEGV , parameter number  6 had an illegal value"))
+      lines.removeOne(line);
   }
 
   // Right here, lines.size() must be at least 8

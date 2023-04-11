@@ -45,6 +45,7 @@ public slots:
 
 private slots:
   void bond();
+  void bondOrders();
   void clearBonds();
   void configure();
   void setValues();
@@ -56,6 +57,7 @@ private:
   double m_minDistance;
 
   QAction* m_action;
+  QAction* m_orderAction;
   QAction* m_clearAction;
   QAction* m_configAction;
 

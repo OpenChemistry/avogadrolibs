@@ -11,6 +11,8 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
 endif()
 
 set(HEADERS
+  arcsector.h
+  arcstrip.h
   arrowgeometry.h
   avogadrogl.h
   avogadrorendering.h
@@ -31,11 +33,15 @@ set(HEADERS
   linestripgeometry.h
   meshgeometry.h
   node.h
+  plyvisitor.h
   povrayvisitor.h
   primitive.h
+  quad.h
+  quadoutline.h
   scene.h
   shader.h
   shaderprogram.h
+  solidpipeline.h
   spheregeometry.h
   textlabel2d.h
   textlabel3d.h
@@ -50,6 +56,8 @@ set(HEADERS
 )
 
 set(SOURCES
+  arcsector.cpp
+  arcstrip.cpp
   arrowgeometry.cpp
   beziergeometry.cpp
   bufferobject.cpp
@@ -68,10 +76,14 @@ set(SOURCES
   linestripgeometry.cpp
   meshgeometry.cpp
   node.cpp
+  plyvisitor.cpp
   povrayvisitor.cpp
+  quad.cpp
+  quadoutline.cpp
   scene.cpp
   shader.cpp
   shaderprogram.cpp
+  solidpipeline.cpp
   spheregeometry.cpp
   textlabel2d.cpp
   textlabel3d.cpp
@@ -97,6 +109,8 @@ set(shader_files
   "mesh_fs.glsl"
   "mesh_opaque_fs.glsl"
   "mesh_vs.glsl"
+  "solid_vs.glsl"
+  "solid_first_fs.glsl"
   "spheres_fs.glsl"
   "spheres_vs.glsl"
   "sphere_ao_depth_vs.glsl"

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2010 Geoffrey R. Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "gamessus.h"
@@ -21,10 +10,10 @@
 
 #include <iostream>
 
-using std::vector;
-using std::string;
 using std::cout;
 using std::endl;
+using std::string;
+using std::vector;
 
 namespace Avogadro::QuantumIO {
 
@@ -32,16 +21,12 @@ using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
 using Core::Rhf;
-using Core::Uhf;
 using Core::Rohf;
+using Core::Uhf;
 
-GAMESSUSOutput::GAMESSUSOutput() : m_coordFactor(1.0), m_scftype(Rhf)
-{
-}
+GAMESSUSOutput::GAMESSUSOutput() : m_coordFactor(1.0), m_scftype(Rhf) {}
 
-GAMESSUSOutput::~GAMESSUSOutput()
-{
-}
+GAMESSUSOutput::~GAMESSUSOutput() {}
 
 std::vector<std::string> GAMESSUSOutput::fileExtensions() const
 {
@@ -77,6 +62,14 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       readAtomBlock(in, molecule, true);
     } else if (Core::contains(buffer, "ATOMIC BASIS SET")) {
       readBasisSet(in);
+    } else if (Core::contains(buffer, "CHARGE OF MOLECULE")) {
+      vector<string> parts = Core::split(buffer, '=');
+      if (parts.size() == 2)
+                molecule.setData("totalCharge", Core::lexicalCast<int>(parts[1]));
+    } else if (Core::contains(buffer, "SPIN MULTIPLICITY")) {
+      vector<string> parts = Core::split(buffer, '=');
+      if (parts.size() == 2)
+                molecule.setData("totalSpinMultiplicity", Core::lexicalCast<int>(parts[1]));
     } else if (Core::contains(buffer, "NUMBER OF ELECTRONS")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
@@ -97,15 +90,17 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       readEigenvectors(in);
     }
   }
-  if (!atomsRead){
-    appendError("Could not find any atomic coordinates! Are you sure this is a GAMESS-US output file?");
+  if (!atomsRead) {
+    appendError("Could not find any atomic coordinates! Are you sure this is a "
+                "GAMESS-US output file?");
     return false;
   }
-  
+
   // f functions and beyond need to be reordered
   reorderMOs();
 
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
   auto* basis = new GaussianSet;
   load(basis);
   molecule.setBasisSet(basis);
@@ -240,7 +235,7 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
     if (parts.size() > 5 && buffer.substr(0, 16) != "                ") {
       if (newBlock) {
         // Reorder the columns/rows, add them and then prepare
-        for (auto & eigenvector : eigenvectors)
+        for (auto& eigenvector : eigenvectors)
           for (double j : eigenvector)
             m_MOcoeffs.push_back(j);
         eigenvectors.clear();
@@ -262,7 +257,7 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
     parts = Core::split(buffer, ' ');
   }
   m_nMOs = numberOfMos;
-  for (auto & eigenvector : eigenvectors)
+  for (auto& eigenvector : eigenvectors)
     for (double j : eigenvector)
       m_MOcoeffs.push_back(j);
 
@@ -328,7 +323,7 @@ void GAMESSUSOutput::reorderMOs()
   unsigned int GTOcounter = 0;
   for (int iMO = 0; iMO < m_nMOs; iMO++) {
     // loop over the basis set shells
-    for (auto & m_shellType : m_shellTypes) {
+    for (auto& m_shellType : m_shellTypes) {
       // The angular momentum of the shell
       // determines the number of primitive GTOs.
       // GAMESS always prints the full cartesian set.
@@ -437,4 +432,4 @@ void GAMESSUSOutput::outputAll()
     cout << m_betaMOcoeff;
   cout << std::flush;
 }
-}
+} // namespace Avogadro::QuantumIO

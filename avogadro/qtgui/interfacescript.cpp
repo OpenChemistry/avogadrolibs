@@ -478,6 +478,12 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   }
   json.insert("selectedatoms", selectedList);
 
+  // insert the total charge
+  json.insert("charge", mol.totalCharge());
+
+  // insert the spin multiplicity
+  json.insert("spin", mol.totalSpinMultiplicity());
+
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));

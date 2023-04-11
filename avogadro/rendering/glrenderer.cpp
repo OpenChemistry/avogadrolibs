@@ -50,6 +50,8 @@ void GLRenderer::initialize()
     m_valid = false;
     return;
   }
+  
+  m_solidPipeline.initialize();
 }
 
 void GLRenderer::resize(int width, int height)
@@ -60,6 +62,12 @@ void GLRenderer::resize(int width, int height)
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
+  m_solidPipeline.resize(width, height);
+}
+
+void GLRenderer::setPixelRatio(float ratio)
+{
+  m_solidPipeline.setPixelRatio(ratio);
 }
 
 void GLRenderer::render()
@@ -73,10 +81,16 @@ void GLRenderer::render()
   applyProjection();
 
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
-  // Setup for opaque geometry
-  visitor.setRenderPass(OpaquePass);
+  // Setup for solid geometry
+  m_solidPipeline.begin();
+  visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
+  m_scene.rootNode().accept(visitor);
+  m_solidPipeline.end();
+
+  // Setup for opaque geometry
+  visitor.setRenderPass(OpaquePass);
   m_scene.rootNode().accept(visitor);
 
   // Setup for transparent geometry

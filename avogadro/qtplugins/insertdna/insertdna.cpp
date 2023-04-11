@@ -41,6 +41,7 @@ InsertDna::InsertDna(QObject* parent_)
     m_molecule(nullptr), m_dialog(nullptr)
 {
   auto* action = new QAction(tr("DNA/RNA…"), this);
+  action->setProperty("menu priority", 870);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
 
   m_actions.append(action);

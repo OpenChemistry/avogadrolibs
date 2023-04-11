@@ -85,6 +85,7 @@ bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
 
   if (m_bondOnRead) {
     molecule.perceiveBondsSimple();
+    molecule.perceiveBondOrders();
   }
 
   return true;

@@ -113,8 +113,22 @@ void RWMolecule::adjustHydrogens(Index atomId)
 void RWMolecule::adjustHydrogens(const Core::Array<Index>& atomIds)
 {
   m_undoStack.beginMacro(tr("Adjust Hydrogens"));
-  for (unsigned long atomId : atomIds) {
-    adjustHydrogens(atomId);
+
+  // convert the indexes to unique ids
+  // since we're adding and removing atoms
+  // (so the index will change)
+  Core::Array<Index> uniqueIds;
+  for (auto id : atomIds) {
+    Index uniqueId = findAtomUniqueId(id);
+    if (uniqueId != MaxIndex)
+      uniqueIds.push_back(uniqueId);
+  }
+
+  for (auto uniqueId : uniqueIds) {
+    RWAtom atom = this->atomByUniqueId(uniqueId);
+    if (atom.isValid()) {
+      QtGui::HydrogenTools::adjustHydrogens(atom);
+    }
   }
   m_undoStack.endMacro();
 }

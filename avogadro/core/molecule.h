@@ -137,6 +137,24 @@ public:
   const Array<signed char>& formalCharges() const;
 
   /**
+   * Get the total charge on the molecule.
+   * The method will first check to see if a total charge has been set. If not,
+   * it will calculate the total charge from the formal charges (if set).
+   * If neither has been set, it will assume the total charge is zero.
+   * @return The total charge of the molecule.
+   */
+  signed char totalCharge() const;
+
+  /**
+   * Get the total spin multiplicity of the molecule.
+   * The method will first check to see if a total spin has been set. If not,
+   * it will either suggest a singlet if an even number of electrons are
+   * present, or a doublet if an odd number of electrons are present.
+   * @return The total spin multiplicity of the molecule.
+   */
+  char totalSpinMultiplicity() const;
+
+  /**
    * Get the formal charge for the requested atom.
    * @param atomId The index of the atom.
    * @return The formal charge of the atom indexed at @a atomId, or
@@ -159,7 +177,7 @@ public:
    */
   bool setFormalCharge(Index atomId, signed char charge);
 
-  /** Returns a vector of colors for the atoms in the moleucle. */
+  /** \returns a vector of colors for the atoms in the moleucle. */
   Array<Vector3ub>& colors();
 
   /** \overload */
@@ -506,8 +524,13 @@ public:
 
   /**
    * Perceives bonds in the molecule based on preset residue data.
+   * 
+   * Use this if you have residue data available (e.g., reading PDB or MMTF files)
+   * Otherwise consider @sa perceiveBondsSimple and @sa perceiveBondOrders
    */
   void perceiveBondsFromResidueData();
+
+  void perceiveBondOrders();
 
   /**
    * Perceives all-carbon-substituted onium ions of nitrogen, oxygen,

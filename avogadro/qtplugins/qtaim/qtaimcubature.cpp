@@ -122,7 +122,7 @@
  scratch as part of a larger code-cleanup, and in order to have
  a single code path for the vectorized and non-vectorized APIs.  I
  subsequently implemented the algorithm by Gladwell to extract
- even more parallelism by evalutating many hypercubes at once.)
+ even more parallelism by evaluating many hypercubes at once.)
 
  TODO:
 
@@ -1872,7 +1872,7 @@ QList<QVariant> QTAIMEvaluatePropertyTP(QList<QVariant> variantList)
   ode.setBetaSpheres(betaSpheres);
 
   // Determine radial basin limit via bisection
-  // Bisection Algorithm courtesey of Wikipedia
+  // Bisection Algorithm courtesy of Wikipedia
 
   qint64 thisBasin = basinList.at(0);
   Matrix<qreal, 3, 1> origin;

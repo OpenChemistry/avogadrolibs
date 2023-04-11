@@ -94,6 +94,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 
   // Render molecule
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   // Cube block, set limits and populate data
   // min and spacing are in bohr units, convert to ANGSTROM

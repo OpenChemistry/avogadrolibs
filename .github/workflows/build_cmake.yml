@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON
 
 jobs:
   build:
@@ -22,16 +22,16 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
-            os: ubuntu-20.04,
+            name: "Ubuntu GCC", artifact: "Ubuntu-Latest.tar.gz",
+            os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
             cpack: "",
           }
         - {
-            name: "Ubuntu 18.04 AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-18.04,
+            name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
+            os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
@@ -50,7 +50,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: " ",
+            cmake_flags: "",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -93,7 +93,8 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -107,35 +108,34 @@ jobs:
       run: choco install ninja
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: avogadrolibs
 
     - name: Cache Qt
       id: cache-qt
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ../Qt
         key: ${{ runner.os }}-QtCache
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
-        setup-python: 'false'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -144,7 +144,7 @@ jobs:
         arch: x64
 
     - name: Grab cache files
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       if: runner.os != 'Windows'
       with:
         path: |
@@ -298,7 +298,7 @@ jobs:
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}

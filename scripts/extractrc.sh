@@ -252,7 +252,7 @@ for my $file_name ( @ARGV )
              push @atts, [$ectx_att, $aval];
            }
          }
-         # Kill all tags in element-context with level higer or equal to this,
+         # Kill all tags in element-context with level higher or equal to this,
          # and add it to the end.
          my $clevel = ECTX_SPEC->{$ectx_ext}{$tag}[0];
          for ( my $i = 0; $i < @ectx; ++$i )
@@ -350,7 +350,7 @@ for my $file_name ( @ARGV )
              for my $agr ( @{$tgr->[2]} )
              {
                #push @attr_gr, "$agr->[0]=$agr->[1]";
-               push @attr_gr, "$agr->[1]"; # no real nead for attribute name
+               push @attr_gr, "$agr->[1]"; # no real need for attribute name
              }
              my $attr = join(", ", @attr_gr);
              push @tag_gr, "$tgr->[1] ($attr)" if $attr;
