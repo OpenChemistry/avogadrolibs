@@ -125,6 +125,8 @@ if(USE_SPGLIB)
   add_subdirectory(spacegroup)
 endif()
 add_subdirectory(surfaces)
+add_subdirectory(lammpsinput)
+add_subdirectory(openmminput)
 if(QT_VERSION EQUAL 5)
   # This will need some work on the QRegExp migration
   add_subdirectory(coordinateeditor)
@@ -132,8 +134,6 @@ if(QT_VERSION EQUAL 5)
   add_subdirectory(molecularproperties)
   add_subdirectory(openbabel)
   # This is some changes in QTextStream that need addressing
-  add_subdirectory(lammpsinput)
-  add_subdirectory(openmminput)
   # Use of deleted operators for alignment
   add_subdirectory(propertytables)
   # The SVG library is not available in Qt 6
