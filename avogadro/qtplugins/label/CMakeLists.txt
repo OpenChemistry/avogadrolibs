@@ -33,4 +33,4 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
 endif()
 
 target_link_libraries(Label LINK_PRIVATE AvogadroRendering)
-target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering)
+target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering AvogadroQtOpenGL)

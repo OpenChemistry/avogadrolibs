@@ -15,7 +15,7 @@
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QInputDialog>
 
 #include <QtCore/QStringList>

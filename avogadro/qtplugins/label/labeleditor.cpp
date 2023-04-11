@@ -10,9 +10,8 @@
 #include <avogadro/rendering/primitive.h>
 #include <avogadro/rendering/textlabel3d.h>
 
-#include <QRegExp>
-#include <QtGui/QKeyEvent>
-#include <QtWidgets/QAction>
+#include <QKeyEvent>
+#include <QAction>
 
 namespace Avogadro::QtPlugins {
 

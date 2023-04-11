@@ -21,7 +21,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>

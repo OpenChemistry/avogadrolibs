@@ -34,9 +34,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtGui/QIcon>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
+#include <QIcon>
+#include <QMouseEvent>
 
 #include <Eigen/Geometry>
 

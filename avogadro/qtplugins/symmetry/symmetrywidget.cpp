@@ -11,7 +11,7 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QRegExp>
+
 #include <QtWidgets/QPlainTextEdit>
 
 using Avogadro::QtGui::Molecule;

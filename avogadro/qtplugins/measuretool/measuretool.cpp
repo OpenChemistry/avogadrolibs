@@ -31,7 +31,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <QDebug>
 

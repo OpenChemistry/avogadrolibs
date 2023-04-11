@@ -14,7 +14,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QInputDialog>

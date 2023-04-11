@@ -32,12 +32,13 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
+
+#include <QDebug>
 
 #include <limits>
 

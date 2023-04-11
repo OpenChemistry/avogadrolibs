@@ -9,10 +9,11 @@
 #include "avogadroqtopenglexport.h"
 
 #include <avogadro/qtgui/scenepluginmodel.h>
+#include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QOpenGLWidget>
+#include <QPointer>
+#include <QOpenGLWidget>
 
 class QTimer;
 
@@ -20,7 +21,6 @@ namespace Avogadro {
 
 namespace QtGui {
 class Molecule;
-class ToolPlugin;
 }
 
 namespace QtOpenGL {

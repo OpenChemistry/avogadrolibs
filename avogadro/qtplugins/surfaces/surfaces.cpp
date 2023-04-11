@@ -51,11 +51,14 @@ namespace {
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QProcess>
-#include <QtGui/QOpenGLFramebufferObject>
-#include <QtWidgets/QAction>
+#include <QOpenGLFramebufferObject>
+#include <QAction>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+
+#include <QGuiApplication>
+#include <QScreen>
 
 using namespace tinycolormap;
 
@@ -149,8 +152,8 @@ void Surfaces::surfacesActivated()
   }
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
-    for (auto & m_cube : m_cubes) {
-      cubeNames << m_cube->name().c_str();
+    for (auto* cube : m_cubes) {
+      cubeNames << cube->name().c_str();
     }
     m_dialog->setupCubes(cubeNames);
   }
@@ -707,7 +710,8 @@ void Surfaces::movieFrame()
   if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
     exportImage = glWidget->grabFramebuffer();
   } else {
-    QPixmap pixmap = QPixmap::grabWindow(glWidget->winId());
+    auto* screen = QGuiApplication::primaryScreen();
+    auto pixmap = screen->grabWindow(glWidget->winId());
     exportImage = pixmap.toImage();
   }
 

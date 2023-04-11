@@ -15,12 +15,11 @@
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 using Avogadro::QtGui::Molecule;
 
@@ -234,7 +233,7 @@ void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
   // check for modifier keys (e.g., Mac)
   if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
     m_currentAction = Translation;
-  } else if (e->buttons() & Qt::MidButton ||
+  } else if (e->buttons() & Qt::MiddleButton ||
              (e->buttons() & Qt::LeftButton &&
               e->modifiers() == Qt::ShiftModifier)) {
     m_currentAction = ZoomTilt;

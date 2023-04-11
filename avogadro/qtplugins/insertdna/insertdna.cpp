@@ -13,10 +13,10 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
+#include <QAction>
+#include <QButtonGroup>
+#include <QMessageBox>
+#include <QProgressDialog>
 
 #include <nlohmann/json.hpp>
 

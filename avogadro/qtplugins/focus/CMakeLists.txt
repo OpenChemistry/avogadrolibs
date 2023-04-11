@@ -9,4 +9,4 @@ avogadro_plugin(Focus
   ""
 )
 
-target_link_libraries(Focus PRIVATE AvogadroRendering)
+target_link_libraries(Focus PRIVATE AvogadroRendering AvogadroQtOpenGL)

@@ -6,8 +6,6 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-class QStringList;
-
 namespace Avogadro {
 class HistogramWidget;
 namespace QtPlugins {

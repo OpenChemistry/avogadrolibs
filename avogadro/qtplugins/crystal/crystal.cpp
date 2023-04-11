@@ -16,10 +16,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
-
-#include <QtCore/QStringList>
+#include <QAction>
+#include <QMessageBox>
+#include <QStringList>
 
 using Avogadro::Core::CrystalTools;
 using Avogadro::QtGui::Molecule;

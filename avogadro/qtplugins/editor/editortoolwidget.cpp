@@ -14,6 +14,8 @@
 #include <QtCore/QList>
 #include <QtCore/QSettings>
 
+#include <algorithm>
+
 namespace {
 // The ItemData of the "Other" entry in the combo box
 const int ELEMENT_SELECTOR_TAG = 255;
@@ -108,7 +110,7 @@ void EditorToolWidget::updateElementCombo()
   QList<unsigned char> allElements;
   allElements << m_defaultElements;
   allElements << m_userElements;
-  qSort(allElements);
+  std::sort(allElements.begin(), allElements.end());
 
   // Cache selected atomic number for later
   QVariant selectedData;

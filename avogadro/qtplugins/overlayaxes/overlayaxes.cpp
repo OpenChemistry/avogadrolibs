@@ -16,8 +16,8 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-#include <QtCore/QSettings>
-#include <QtWidgets/QAction>
+#include <QSettings>
+#include <QAction>
 
 #include <Eigen/Geometry>
 
