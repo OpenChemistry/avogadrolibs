@@ -3,7 +3,12 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+if(QT_VERSION EQUAL 6)
+  find_package(Qt6 COMPONENTS  Widgets OpenGLWidgets REQUIRED)
+else()
+  find_package(Qt5 COMPONENTS Widgets REQUIRED)
+endif()
+
 
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -25,4 +30,7 @@ set(SOURCES
 )
 
 avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui Qt5::Widgets)
+target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui Qt::Widgets)
+if(QT_VERSION EQUAL 6)
+  target_link_libraries(AvogadroQtOpenGL Qt::OpenGLWidgets)
+endif()
