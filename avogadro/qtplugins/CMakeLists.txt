@@ -133,7 +133,6 @@ if(QT_VERSION EQUAL 5)
   add_subdirectory(insertfragment)
   add_subdirectory(molecularproperties)
   add_subdirectory(openbabel)
-  # This is some changes in QTextStream that need addressing
   # Use of deleted operators for alignment
   add_subdirectory(propertytables)
   # The SVG library is not available in Qt 6
