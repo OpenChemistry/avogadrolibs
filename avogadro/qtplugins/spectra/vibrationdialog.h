@@ -28,8 +28,8 @@ class VibrationDialog : public QDialog
   Q_OBJECT
 
 public:
-  VibrationDialog(QWidget* parent = nullptr,
-                  Qt::WindowFlags f = Qt::WindowFlags());
+  explicit VibrationDialog(QWidget* parent = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
   ~VibrationDialog() override;
 
   void setMolecule(QtGui::Molecule* molecule);

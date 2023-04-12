@@ -22,8 +22,8 @@ class ComDialog : public QDialog
   Q_OBJECT
 
 public:
-  ComDialog(QWidget* parent = nullptr,
-            Qt::WindowFlags f = Qt::WindowFlags());
+  explicit ComDialog(QWidget* parent = nullptr,
+                     Qt::WindowFlags f = Qt::WindowFlags());
   ~ComDialog() override;
 
   HistogramWidget* histogramWidget();
