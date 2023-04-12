@@ -169,6 +169,7 @@ jobs:
         NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+      continue-on-error: true
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: Upload
