@@ -11,7 +11,7 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION} COMPONENTS Widgets REQUIRED)
 
 find_package(VTK
   COMPONENTS
@@ -43,9 +43,9 @@ set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
 target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
   VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
   VTK::RenderingFreeType VTK::InteractionStyle VTK::ChartsCore VTK::ViewsContext2D
-  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt5::Widgets)
+  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt::Widgets)
 
 vtk_module_autoinit(TARGETS AvogadroVtk MODULES
   VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
   VTK::RenderingFreeType VTK::InteractionStyle VTK::ChartsCore VTK::ViewsContext2D
-  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt5::Widgets)
+  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2)

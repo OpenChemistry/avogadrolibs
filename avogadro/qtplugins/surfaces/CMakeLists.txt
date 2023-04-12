@@ -30,5 +30,5 @@ target_link_libraries(Surfaces
     AvogadroCalc
     AvogadroQuantumIO
     AvogadroQtOpenGL
-    Qt5::Concurrent
+    Qt::Concurrent
     gwavi)

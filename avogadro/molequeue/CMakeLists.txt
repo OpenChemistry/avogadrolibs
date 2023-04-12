@@ -3,7 +3,11 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
+if(QT_VERSION EQUAL 6)
+  find_package(Qt6 COMPONENTS  Widgets Network Core5Compat REQUIRED)
+else()
+  find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
+endif()
 
 set(HEADERS
   batchjob.h
@@ -36,9 +40,12 @@ set(UIS
   molequeuedialog.ui
   molequeuewidget.ui
 )
-qt5_wrap_ui(UI_SOURCES ${UIS})
+qt_wrap_ui(UI_SOURCES ${UIS})
 list(APPEND SOURCES ${UI_SOURCES})
 
 avogadro_add_library(AvogadroMoleQueue ${HEADERS} ${SOURCES})
 set_target_properties(AvogadroMoleQueue PROPERTIES AUTOMOC TRUE)
-target_link_libraries(AvogadroMoleQueue AvogadroQtGui Qt5::Widgets Qt5::Network)
+target_link_libraries(AvogadroMoleQueue PUBLIC AvogadroQtGui Qt::Widgets Qt::Network)
+if(QT_VERSION EQUAL 6)
+  target_link_libraries(AvogadroMoleQueue PRIVATE Qt6::Core5Compat)
+endif()

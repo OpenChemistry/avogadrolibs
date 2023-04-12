@@ -14,7 +14,7 @@
 
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 #include <QtCore/QDebug>

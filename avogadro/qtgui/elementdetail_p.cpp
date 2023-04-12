@@ -69,7 +69,7 @@ void ElementDetail::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
   font.setPixelSize(24);
   QFontMetrics fm2(font);
   pixelHeight = fm2.height();
-  int pixelWidth = fm2.width(symbol);
+  int pixelWidth = fm2.horizontalAdvance(symbol);
   painter->setFont(font);
   QRectF symbolRect(-10, -m_height / 2 + 8, pixelWidth, pixelHeight);
   painter->drawText(symbolRect, Qt::AlignCenter, symbol);

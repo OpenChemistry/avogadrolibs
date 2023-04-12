@@ -10,8 +10,9 @@
 #include <avogadro/rendering/camera.h>
 
 #include <QTimer>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QOpenGLWidget>
+#include <QAction>
+#include <QOpenGLWidget>
+
 #include <limits>
 
 #define CAMERA_NEAR_DISTANCE 13.35f // Experimental number

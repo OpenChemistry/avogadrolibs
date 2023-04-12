@@ -11,7 +11,7 @@
 #include <avogadro/core/vector.h>
 
 #include <QtCore/QTimer>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QFileDialog>
 #include <avogadro/qtgui/molecule.h>
 

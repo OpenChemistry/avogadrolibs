@@ -8,9 +8,9 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtCore/QSettings>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QDialog>
+#include <QAction>
+#include <QDialog>
+#include <QSettings>
 
 #include <vector>
 

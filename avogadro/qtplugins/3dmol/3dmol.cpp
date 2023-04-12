@@ -18,9 +18,8 @@
 
 #include "3dmoldialog.h"
 
-#include <QtWidgets/QAction>
-
-#include <QtCore/QStringList>
+#include <QAction>
+#include <QStringList>
 
 namespace Avogadro::QtPlugins {
 

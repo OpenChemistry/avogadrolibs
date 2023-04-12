@@ -10,10 +10,6 @@
 
 #include <memory>
 
-// Forward declarations
-class QByteArray;
-class QStringList;
-
 namespace VTK {
 class VtkPlot;
 }

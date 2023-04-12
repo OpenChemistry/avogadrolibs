@@ -26,6 +26,8 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
+#include <QRegularExpression>
+
 namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
@@ -778,7 +780,7 @@ QString JsonWidget::generateJobTitle() const
     if (haveTheory)
       theory += "/";
     theory += basis;
-    theory.replace(QRegExp("\\s+"), "");
+    theory.replace(QRegularExpression("\\s+"), "");
     haveTheory = true;
   }
 

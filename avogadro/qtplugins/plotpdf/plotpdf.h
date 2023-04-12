@@ -8,10 +8,6 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-// Forward declarations
-class QByteArray;
-class QStringList;
-
 namespace VTK {
 class ChartDialog;
 }

@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QSvgGenerator>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/scene.h>

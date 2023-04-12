@@ -21,7 +21,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
-#include <QtWidgets/QUndoStack>
+#include <QUndoStack>
 
 namespace Avogadro {
 namespace QtGui {

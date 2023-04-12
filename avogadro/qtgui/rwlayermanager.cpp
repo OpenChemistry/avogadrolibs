@@ -8,10 +8,9 @@
 
 #include <avogadro/core/molecule.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QDebug>
-#include <QtWidgets/QUndoCommand>
-#include <QtWidgets/QUndoStack>
+#include <QObject>
+#include <QUndoCommand>
+#include <QUndoStack>
 #include <cassert>
 
 namespace Avogadro::QtGui {

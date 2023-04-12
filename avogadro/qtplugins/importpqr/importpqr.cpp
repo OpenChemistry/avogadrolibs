@@ -11,10 +11,8 @@
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtCore/QDebug>
-
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
+#include <QAction>
+#include <QMessageBox>
 
 namespace Avogadro::QtPlugins {
 
