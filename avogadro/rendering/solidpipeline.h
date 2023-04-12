@@ -16,6 +16,12 @@ public:
   ~SolidPipeline();
 
   /**
+   * @brief Probably don't want to support copy/assignment.
+   */
+  SolidPipeline(const SolidPipeline&) = delete;
+  SolidPipeline& operator= (const SolidPipeline&) = delete;
+
+  /**
    * @brief Initialize OpenGL objects.
    */
   void initialize();
