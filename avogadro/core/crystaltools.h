@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_CRYSTALTOOLS_H
 #define AVOGADRO_CORE_CRYSTALTOOLS_H
 
+#include "avogadrocoreexport.h"
+
 #include "array.h"
 #include "avogadrocore.h"
 #include "matrix.h"

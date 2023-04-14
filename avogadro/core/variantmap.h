@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_VARIANTMAP_H
 #define AVOGADRO_CORE_VARIANTMAP_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include "variant.h"
 

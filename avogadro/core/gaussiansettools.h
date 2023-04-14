@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 #define AVOGADRO_CORE_GAUSSIANSETTOOLS_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include "basisset.h"
