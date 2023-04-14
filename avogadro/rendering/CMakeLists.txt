@@ -138,5 +138,6 @@ endforeach()
 
 avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES} ${shader_h_files})
 target_link_libraries(AvogadroRendering
+  AvogadroCore # Needed for an emum in residue.h that we should move, maybe others.
   ${GLEW_LIBRARY}
   ${OPENGL_LIBRARIES})

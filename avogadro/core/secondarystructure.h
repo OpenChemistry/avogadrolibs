@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_SECONDARYSTRUCTURE_H
 #define AVOGADRO_CORE_SECONDARYSTRUCTURE_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include <tuple>

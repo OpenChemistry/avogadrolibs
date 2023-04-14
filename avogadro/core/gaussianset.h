@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_GAUSSIANSET_H
 #define AVOGADRO_CORE_GAUSSIANSET_H
 
+#include "avogadrocoreexport.h"
+
 #include "basisset.h"
 
 #include <avogadro/core/matrix.h>
