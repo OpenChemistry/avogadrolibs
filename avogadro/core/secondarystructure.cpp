@@ -60,7 +60,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Plug gaps in the helix
-  for (auto i = 1; i < residueCount - 1; ++i) {
+  for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
     if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
@@ -110,7 +110,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Plug gaps in the beta sheet
-  for (auto i = 1; i < residueCount - 1; ++i) {
+  for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
     if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
@@ -128,7 +128,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // remove singletons
-  for (auto i = 1; i < residueCount - 1; ++i) {
+  for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
     if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
@@ -173,9 +173,9 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
   // Loop over the backbone atoms
   // we're just considering N and O (on a peptide)
-  unsigned int i = 0; // track the residue index
+  unsigned int idx = 0; // track the residue index
   for (const auto& residue : m_molecule->residues()) {
-    unsigned int residueId = i++;
+    unsigned int residueId = idx++;
     if (residue.isHeterogen())
       continue;
 
@@ -214,11 +214,11 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
   // now loop through the sorted list (so we can exit quickly)
   int n = m_hBonds.size();
-  for (unsigned int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     auto recordI = m_hBonds[i];
     const Residue &residueI = m_molecule->residue(recordI->residue);
 
-    for (unsigned int j = i + 1; j < n; ++j) {
+    for (int j = i + 1; j < n; ++j) {
       auto recordJ = m_hBonds[j];
       const Residue &residueJ = m_molecule->residue(recordJ->residue);
 
