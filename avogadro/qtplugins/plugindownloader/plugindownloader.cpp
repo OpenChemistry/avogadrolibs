@@ -40,11 +40,11 @@ QStringList PluginDownloader::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
-void PluginDownloader::setMolecule(QtGui::Molecule* mol)
+void PluginDownloader::setMolecule(QtGui::Molecule*)
 {
 }
 
-bool PluginDownloader::readMolecule(QtGui::Molecule& mol)
+bool PluginDownloader::readMolecule(QtGui::Molecule&)
 {
   return true;
 }
@@ -57,7 +57,7 @@ void PluginDownloader::showDialog()
   m_widget->show();
 }
 
-void PluginDownloader::replyFinished(QNetworkReply* reply)
+void PluginDownloader::replyFinished(QNetworkReply*)
 {
 }
 }

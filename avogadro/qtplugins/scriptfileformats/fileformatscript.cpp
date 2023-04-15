@@ -217,7 +217,6 @@ void FileFormatScript::readMetaData()
 
   // validate operations:
   Operations operationsTmp = Io::FileFormat::None;
-  typedef std::vector<std::string>::const_iterator StringVectorIter;
   for (auto & it : opStringsTmp) {
     if (it == "read")
       operationsTmp |= Io::FileFormat::Read;

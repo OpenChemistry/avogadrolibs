@@ -136,7 +136,7 @@ void PlotRmsd::generateRmsdPattern(RmsdData& results)
   m_molecule->setCoordinate3d(0);
   Array<Vector3> ref = m_molecule->atomPositions3d();
 
-  for (size_t i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+  for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
     m_molecule->setCoordinate3d(i);
     Array<Vector3> positions = m_molecule->atomPositions3d();
     double sum = 0;

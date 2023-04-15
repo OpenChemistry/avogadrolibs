@@ -254,7 +254,7 @@ void SelectionTool::applyLayer(int layer)
 
   // qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " <<
   // m_layerManager.layerCount();
-  if (layer >= m_layerManager.layerCount()) {
+  if (layer >= static_cast<int>(m_layerManager.layerCount())) {
     // add a new layer
     auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
     QtGui::RWLayerManager rwLayerManager;

@@ -228,11 +228,13 @@ void Surfaces::calculateEDT()
     double probeRadius = 0.0;
     switch (m_dialog->surfaceType()) {
       case VanDerWaals:
-          break;
+        break;
       case SolventAccessible:
       case SolventExcluded:
-          probeRadius = 1.4;
-          break;
+        probeRadius = 1.4;
+        break;
+      default:
+        break;
     }
 
     // first, make a list of all atom positions and radii
@@ -255,7 +257,6 @@ void Surfaces::calculateEDT()
 
     const float res = resolution();
     const Vector3 min = m_cube->min();
-    const float mdist = probeRadius;
 
     // then, for each atom, set cubes around it up to a certain radius
     QFuture innerFuture = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
@@ -598,7 +599,7 @@ void Surfaces::colorMeshByPotential()
   
   double minPotential = *std::min_element(potentials.begin(), potentials.end());
   double maxPotential = *std::max_element(potentials.begin(), potentials.end());
-  double clamp = std::max(std::abs(minPotential), std::abs(minPotential));
+  double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
   
   Core::Array<Core::Color3f> colors(positions.size());
   for (size_t i = 0; i < potentials.size(); i++)

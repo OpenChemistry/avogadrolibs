@@ -95,6 +95,7 @@ struct LayerLabel : Core::LayerData
 
   std::string serialize() final
   {
+    /// FIXME: What is this attempting to do? It causes compiler warnings.
     std::string aux = (const char*)atomOptions;
     std::string aux2 = (const char*)residueOptions;
     return aux + " " + aux2 + " " + std::to_string(radiusScalar) + " " +
@@ -179,7 +180,7 @@ struct LayerLabel : Core::LayerData
       }
       QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(atomLabelType(int)));
-      int index = atom->findData(int(atomOptions));
+
       atom->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Atom Label:"), atom);
 
@@ -210,7 +211,7 @@ struct LayerLabel : Core::LayerData
       }
       QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(residueLabelType(int)));
-      index = residue->findData(int(residueOptions));
+
       residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
 
