@@ -208,6 +208,8 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
                                color1, color2, i);
         cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.15,
                                color1, color2, i);
+        // This relies upon the single bond case below for the third cylinder.
+        [[fallthrough]];
       }
       default:
       case 1:
