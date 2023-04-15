@@ -235,13 +235,13 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
   } // End while loop
 
-  size_t count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
-  for (size_t c = 0; c < count; c++) {
+  int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
+  for (int c = 0; c < count; ++c) {
     for (char l : altLocs) {
       Array<Vector3> coordinateSet =
-        c == size_t(0) ? mol.atomPositions3d() : mol.coordinate3d(c);
+        c == 0 ? mol.atomPositions3d() : mol.coordinate3d(c);
       bool found = false;
-      for (size_t i = 0; i < altAtomCoordSets.size(); i++) {
+      for (size_t i = 0; i < altAtomCoordSets.size(); ++i) {
         if (altAtomCoordSets[i] == c && altAtomLocs[i] == l) {
           found = true;
           coordinateSet[altAtomIds[i]] = altAtomPositions[i];
