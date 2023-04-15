@@ -56,7 +56,7 @@ private:
   class RenderImpl;
   RenderImpl* const m_render;
   std::map<QWidget*, Rendering::GroupNode*> m_widgetToNode;
-  QtGui::Molecule* m_molecule;
+  QtGui::Molecule* m_molecule = nullptr;
   Rendering::Scene* m_scene;
   QWidget* m_glWidget;
   QAction* m_axesAction;
