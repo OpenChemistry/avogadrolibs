@@ -1,5 +1,9 @@
 include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
+if(QT_VERSION EQUAL 6)
+  find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
+endif()
+
 set(openbabel_srcs
   obcharges.cpp
   obfileformat.cpp
@@ -22,3 +26,6 @@ avogadro_plugin(OpenBabel
 )
 
 target_link_libraries(OpenBabel PRIVATE AvogadroIO AvogadroCalc)
+if(QT_VERSION EQUAL 6)
+  target_link_libraries(OpenBabel PRIVATE Qt6::Core5Compat)
+endif()
