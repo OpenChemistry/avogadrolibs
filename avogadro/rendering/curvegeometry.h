@@ -38,7 +38,7 @@ struct Point
 struct Line
 {
   Line() : dirty(true), flat(true), radius(0.0f) {}
-  Line(float r) : dirty(true), radius(r) { flat = r < 0.0f; }
+  explicit Line(float r) : dirty(true), radius(r) { flat = r < 0.0f; }
 
   ~Line()
   {
@@ -57,7 +57,6 @@ struct Line
   float radius;
   BufferObject vbo;
   BufferObject ibo; // EBO/IBO
-  size_t order;
   size_t numberOfVertices;
   size_t numberOfIndices;
 };
