@@ -10,7 +10,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
-#include <QtCore/QRegExp>
+
+#include <QRegExp>
+#include <QRegularExpression>
 
 namespace Avogadro::QtPlugins {
 
@@ -142,7 +144,7 @@ void OBProcess::queryReadFormatsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
@@ -167,7 +169,7 @@ void OBProcess::queryWriteFormatsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
@@ -229,7 +231,7 @@ void OBProcess::convertPrepareOutput()
 
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b"
+  QRegularExpression errorChecker("\\b0 molecules converted\\b"
                        "|"
                        "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
@@ -267,7 +269,7 @@ void OBProcess::queryForceFieldsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
@@ -306,7 +308,7 @@ void OBProcess::queryChargesPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
@@ -361,7 +363,7 @@ void OBProcess::chargesPrepareOutput()
 
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b"
+  QRegularExpression errorChecker("\\b0 molecules converted\\b"
                        "|"
                        "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
@@ -472,8 +474,8 @@ void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
   // Setup exit handler
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)), this,
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver, slot);
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
             SLOT(obError()));
   }
 
