@@ -277,7 +277,6 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
 
   // Check if the texture is already bound:
   GLint textureUnitId = 0;
-  typedef std::map<const Texture2D*, int>::const_iterator TMapIter;
   auto result = m_textureUnitBindings.find(&texture);
   if (result == m_textureUnitBindings.end()) {
     // Not bound. Attempt to bind the texture to an available texture unit.
