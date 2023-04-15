@@ -316,9 +316,9 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
   if (hide) {
     widget->hide();
     // find the label and hide that too
-    auto label = form->labelForField(widget);
-    if (label)
-      label->hide();
+    auto fLabel = form->labelForField(widget);
+    if (fLabel)
+      fLabel->hide();
   }
 }
 
@@ -742,8 +742,8 @@ QJsonObject JsonWidget::collectOptions() const
       ret.insert(label, value);
     } else if (auto* spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
-    } else if (auto* spinBox = qobject_cast<QDoubleSpinBox*>(widget)) {
-      ret.insert(label, spinBox->value());
+    } else if (auto* doubleSpinBox = qobject_cast<QDoubleSpinBox*>(widget)) {
+      ret.insert(label, doubleSpinBox->value());
     } else if (auto* checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
     } else if (auto* fileBrowse =

@@ -227,7 +227,6 @@ void HydrogenTools::generateNewHydrogenPositions(
   // Get a list of all bond vectors (normalized, pointing away from 'atom')
   std::vector<Vector3> allVectors;
   const NeighborListType bonds(atom.molecule()->bonds(atom));
-  const int explicitBonds = bonds.size();
   allVectors.reserve(bonds.size() + static_cast<size_t>(numberOfHydrogens));
   for (auto bond : bonds) {
     RWAtom otherAtom = bond.getOtherAtom(atom);
