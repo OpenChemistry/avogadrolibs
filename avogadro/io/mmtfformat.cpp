@@ -246,7 +246,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
   return true;
 }
 
-bool MMTFFormat::write(std::ostream& out, const Core::Molecule& molecule)
+bool MMTFFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }
