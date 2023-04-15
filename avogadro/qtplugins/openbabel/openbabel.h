@@ -55,16 +55,16 @@ public slots:
 
 private slots:
   void refreshReadFormats();
-  void handleReadFormatUpdate(const QMap<QString, QString>& fmts);
+  void handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts);
 
   void refreshWriteFormats();
-  void handleWriteFormatUpdate(const QMap<QString, QString>& fmts);
+  void handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts);
 
   void refreshForceFields();
-  void handleForceFieldsUpdate(const QMap<QString, QString>& ffMap);
+  void handleForceFieldsUpdate(const QMultiMap<QString, QString>& ffMap);
 
   void refreshCharges();
-  void handleChargesUpdate(const QMap<QString, QString>& chargeMap);
+  void handleChargesUpdate(const QMultiMap<QString, QString>& chargeMap);
 
   void onConfigureGeometryOptimization();
 

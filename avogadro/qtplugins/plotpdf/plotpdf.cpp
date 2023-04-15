@@ -135,16 +135,16 @@ void PlotPdf::displayDialog()
   const char* yTitle = "g(r)";
   const char* windowName = "Pair Distribution Function";
 
-  if (!m_chart)
-    m_chart.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+  if (!m_chartDialog)
+    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
-  m_chart->setWindowTitle(windowName);
-  auto* chart = m_chart->chartWidget();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
   chart->clearPlots();
   chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
   chart->setXAxisTitle(xTitle);
   chart->setYAxisTitle(yTitle);
-  m_chart->show();
+  m_chartDialog->show();
 }
 
 bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,

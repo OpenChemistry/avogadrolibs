@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_MOLECULE_H
 #define AVOGADRO_CORE_MOLECULE_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include "array.h"

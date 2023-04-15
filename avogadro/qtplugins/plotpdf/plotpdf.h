@@ -60,7 +60,7 @@ private:
 
   QScopedPointer<PdfOptionsDialog> m_pdfOptionsDialog;
   QScopedPointer<QAction> m_displayDialogAction;
-  QScopedPointer<VTK::ChartDialog> m_chart;
+  QScopedPointer<VTK::ChartDialog> m_chartDialog;
 };
 
 inline QString PlotPdf::description() const

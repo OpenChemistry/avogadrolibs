@@ -14,7 +14,10 @@ function(avogadro_add_library name)
   # Generate the necessary export headers.
   generate_export_header(${name} EXPORT_FILE_NAME ${lowerName}export.h)
   list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/${lowerName}export.h")
-  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  target_include_directories(${name}
+                             PUBLIC
+                               "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+                               "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
   # Now install everything.
   string(REGEX REPLACE "^avogadro" "" module ${lowerName})
 
@@ -34,24 +37,20 @@ function(avogadro_add_library name)
     EXPORT "AvogadroLibsTargets"
     RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}"
+    INCLUDES DESTINATION "${INSTALL_INCLUDE_DIR}")
 endfunction()
 
 add_subdirectory(core)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
 add_subdirectory(calc)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/calc)
 add_subdirectory(io)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/quantumio)
 # SKBUILD is set for binary wheel
 if (NOT SKBUILD)
   add_subdirectory(command)
 endif()
 if(USE_OPENGL)
   add_subdirectory(rendering)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/rendering)
 endif()
 
 if(USE_QT)
@@ -60,17 +59,13 @@ if(USE_QT)
   endif()
 
   add_subdirectory(qtgui)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/qtgui)
   if(USE_OPENGL)
     add_subdirectory(qtopengl)
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/qtopengl)
   endif()
   # Add unconditionally as this talks to MoleQueue, but doesn't depend on it.
   add_subdirectory(molequeue)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/molequeue)
   if(USE_VTK)
     add_subdirectory(vtk)
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/vtk)
   endif()
   add_subdirectory(qtplugins)
 endif()

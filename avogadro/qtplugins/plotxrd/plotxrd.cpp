@@ -11,11 +11,13 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QString>
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/vtkplot.h>
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
 
 #include "plotxrd.h"
 #include "xrdoptionsdialog.h"
@@ -121,33 +123,27 @@ void PlotXrd::displayDialog()
   }
 
   // Now generate a plot with the data
-  std::vector<double> xData;
-  std::vector<double> yData;
+  std::vector<float> xData;
+  std::vector<float> yData;
   for (const auto& item : results) {
     xData.push_back(item.first);
     yData.push_back(item.second);
   }
-  std::vector<std::vector<double>> data{ xData, yData };
-
-  std::vector<std::string> lineLabels{ "XrdData" };
-
-  std::array<double, 4> color = { 255, 0, 0, 255 };
-  std::vector<std::array<double, 4>> lineColors{ color };
 
   const char* xTitle = "2 Theta";
   const char* yTitle = "Intensity";
   const char* windowName = "Theoretical XRD Pattern";
 
-  if (!m_plot)
-    m_plot.reset(new VTK::VtkPlot);
+  if (!m_chartDialog)
+    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
-  m_plot->setData(data);
-  m_plot->setWindowName(windowName);
-  m_plot->setXTitle(xTitle);
-  m_plot->setYTitle(yTitle);
-  m_plot->setLineLabels(lineLabels);
-  m_plot->setLineColors(lineColors);
-  m_plot->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
+  m_chartDialog->show();
 }
 
 bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,
@@ -183,7 +179,7 @@ bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,
   // Find the section of data in the output
   bool dataStarted = false;
   QStringList lines =
-    QString(output).split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    QString(output).split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
   for (const auto& line : lines) {
     if (!dataStarted && line.contains("#    2Theta/TOF    ICalc")) {
       dataStarted = true;
@@ -191,7 +187,7 @@ bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,
     }
 
     if (dataStarted) {
-      QStringList rowData = line.split(" ", QString::SkipEmptyParts);
+      QStringList rowData = line.split(" ", Qt::SkipEmptyParts);
       if (rowData.size() != 2) {
         err = tr("Data read from genXrdPattern appears to be corrupt!");
         qDebug() << "Error in" << __FUNCTION__ << err;

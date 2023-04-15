@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_AVO_SPGLIB_H
 #define AVOGADRO_CORE_AVO_SPGLIB_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 #include "molecule.h"
 
