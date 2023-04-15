@@ -34,8 +34,8 @@ public:
   };
   struct NodeInfo
   {
-    NodeInfo() : node(nullptr), ui(NONE) {}
-    NodeInfo(Node* n, NodeType u) : node(n), ui(u) {}
+    NodeInfo() : ui(NONE), node(nullptr) {}
+    NodeInfo(Node* n, NodeType u) : ui(u), node(n) {}
     NodeType ui;
     Node* node;
   };
