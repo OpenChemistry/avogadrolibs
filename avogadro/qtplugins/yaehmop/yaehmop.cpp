@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QString>
 #include <QTextEdit>
@@ -282,7 +283,7 @@ void Yaehmop::calculateBandStructure()
 
   // Num special k points
   int numSK = m_yaehmopSettings.specialKPoints
-                .split(QRegExp("[\r\n]"), QString::SkipEmptyParts)
+                .split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts)
                 .size();
   input += (QString::number(numSK) + "\n"); // num special k points
 
@@ -311,7 +312,6 @@ void Yaehmop::calculateBandStructure()
   }
 
   int numKPoints = kpoints.size();
-  int numOrbitals = bands.size();
   int numSpecialKPoints = specialKPoints.size();
 
   // If there is only one special k point, there is nothing to graph. Just
@@ -368,7 +368,8 @@ void Yaehmop::calculateBandStructure()
 
   size_t curBandNum = 1;
   for (const auto& band : bands) {
-    data.push_back(band.toStdVector());
+    std::vector<double> tmp(band.begin(), band.end());
+    data.push_back(tmp);
     lineLabels.push_back(tr("Band %1").arg(curBandNum).toStdString());
     lineColors.push_back(color);
     lineStyles.push_back(style);
@@ -399,8 +400,8 @@ void Yaehmop::calculateBandStructure()
   }
 
   const char* xTitle = "";
-  const char* yTitle = tr("Energy (eV)").toUtf8().constData();
-  const char* windowName = tr("YAeHMOP Band Structure").toUtf8().constData();
+  const char* yTitle = "Energy (eV)";
+  const char* windowName = "YAeHMOP Band Structure";
 
   m_bandPlot.reset(new VtkPlot);
   m_bandPlot->setData(data);
