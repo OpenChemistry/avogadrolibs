@@ -27,9 +27,7 @@ ImportPQR::ImportPQR(QObject* parent_)
 
 ImportPQR::~ImportPQR()
 {
-  delete (m_outputFormat);
-  delete (m_molecule);
-  delete (m_action);
+  delete m_outputFormat;
 }
 
 QList<QAction*> ImportPQR::actions() const
