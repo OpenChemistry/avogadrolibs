@@ -20,7 +20,6 @@
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
-#include <avogadro/vtk/vtkplot.h>
 
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
