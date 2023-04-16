@@ -81,6 +81,8 @@ jobs:
     
     - name: Analyze
       run: |
+        git fetch
+        pip install pyyaml
         git diff -U0 HEAD^ | clang-tidy-diff -p1 -path ../build -export-fixes ../clang-tidy-result/fixes.yml
       working-directory: ${{ runner.workspace }}/avogadrolibs
     
