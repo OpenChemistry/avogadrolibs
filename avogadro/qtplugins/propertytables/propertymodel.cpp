@@ -184,22 +184,19 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   if (role == Qt::DecorationRole) {
     // color for atom and residue
     if (m_type == AtomType && col == AtomDataColor &&
-        row < m_molecule->atomCount()) {
+        row < static_cast<int>(m_molecule->atomCount())) {
 
       auto c = m_molecule->color(row);
       QColor color(c[0], c[1], c[2]);
       return color;
     } else if (m_type == ResidueType && col == ResidueDataColor &&
-               row < m_molecule->residueCount()) {
+               row < static_cast<int>(m_molecule->residueCount())) {
 
       auto c = m_molecule->residue(row).color();
       QColor color(c[0], c[1], c[2]);
       return color;
     }
   }
-
-  bool sortRole =
-    (role == Qt::UserRole); // from the proxy model to handle floating-point
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
@@ -210,7 +207,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
 
-    if (row >= m_molecule->atomCount() || column > AtomColumns)
+    if (row >= static_cast<int>(m_molecule->atomCount()) || column > AtomColumns)
       return QVariant(); // invalid index
 
     QString format("%L1");
@@ -243,7 +240,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     auto column = static_cast<BondColumn>(index.column());
 
-    if (row >= m_molecule->bondCount() || column > BondColumns)
+    if (row >= static_cast<int>(m_molecule->bondCount()) || column > BondColumns)
       return QVariant(); // invalid index
 
     auto bond = m_molecule->bond(row);
@@ -268,7 +265,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     auto column = static_cast<ResidueColumn>(index.column());
 
-    if (row >= m_molecule->residueCount() || column > ResidueColumns)
+    if (row >= static_cast<int>(m_molecule->residueCount()) || column > ResidueColumns)
       return QVariant(); // invalid index
 
     auto residue = m_molecule->residue(row);
@@ -291,7 +288,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   } else if (m_type == AngleType) {
 
     auto column = static_cast<AngleColumn>(index.column());
-    if (row > m_angles.size() || column > AngleColumns)
+    if (row > static_cast<int>(m_angles.size()) || column > AngleColumns)
       return QVariant(); // invalid index
 
     auto angle = m_angles[row];
@@ -321,7 +318,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   } else if (m_type == TorsionType) {
 
     auto column = static_cast<TorsionColumn>(index.column());
-    if (row > m_torsions.size() || column > TorsionColumns)
+    if (row > static_cast<int>(m_torsions.size()) || column > TorsionColumns)
       return QVariant(); // invalid index
 
     auto torsion = m_torsions[row];
@@ -624,7 +621,6 @@ bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
   auto* undoMolecule = m_molecule->undoMolecule();
 
   Core::Array<RWBond> bonds = undoMolecule->bonds(currentAtom);
-  typedef std::vector<RWBond>::const_iterator BondIter;
 
   for (auto& it : bonds) {
     if (it != bond) { // Skip the current bond
