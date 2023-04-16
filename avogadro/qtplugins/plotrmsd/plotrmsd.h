@@ -10,11 +10,12 @@
 
 #include <memory>
 
+namespace Avogadro {
+
 namespace VTK {
-class VtkPlot;
+class ChartDialog;
 }
 
-namespace Avogadro {
 namespace QtPlugins {
 
 // First item in the pair is the frame number. Second is the RMSD value.
@@ -55,7 +56,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   std::unique_ptr<QAction> m_displayDialogAction;
-  QScopedPointer<VTK::VtkPlot> m_plot;
+  QScopedPointer<VTK::ChartDialog> m_chartDialog;
 };
 
 inline QString PlotRmsd::description() const
