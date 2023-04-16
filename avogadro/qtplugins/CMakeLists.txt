@@ -136,8 +136,6 @@ if(QT_VERSION EQUAL 5)
   add_subdirectory(molecularproperties)
   # The SVG library is not available in Qt 6
   add_subdirectory(svg)
-  # Should probably just be removed.
-  add_subdirectory(mongochem)
 endif()
 add_subdirectory(spectra)
 add_subdirectory(templatetool)
