@@ -119,6 +119,7 @@ add_subdirectory(openbabel)
 add_subdirectory(playertool)
 add_subdirectory(ply)
 add_subdirectory(povray)
+add_subdirectory(propertytables)
 add_subdirectory(resetview)
 add_subdirectory(select)
 add_subdirectory(selectiontool)
@@ -133,8 +134,6 @@ if(QT_VERSION EQUAL 5)
   add_subdirectory(coordinateeditor)
   add_subdirectory(insertfragment)
   add_subdirectory(molecularproperties)
-  # Use of deleted operators for alignment
-  add_subdirectory(propertytables)
   # The SVG library is not available in Qt 6
   add_subdirectory(svg)
   # Should probably just be removed.
