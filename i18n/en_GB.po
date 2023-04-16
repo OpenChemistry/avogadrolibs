@@ -4,13 +4,14 @@
 # My Random Thoughts <weblate@myrandomthoughts.co.uk>, 2021.
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
 # ovari <ovari123@zoho.com>, 2022.
+# Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-09 02:11+0000\n"
-"PO-Revision-Date: 2022-07-23 02:23+0000\n"
-"Last-Translator: ovari <ovari123@zoho.com>\n"
+"PO-Revision-Date: 2023-04-17 02:51+0000\n"
+"Last-Translator: Geoff Hutchison <geoff.hutchison@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1831,14 +1832,12 @@ msgid "ApplyColors"
 msgstr "Colours"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
-#, fuzzy
 msgid "Atom scale"
-msgstr "Atom Style"
+msgstr "Atom scale"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
-#, fuzzy
 msgid "Bond scale"
-msgstr "Bond Angle"
+msgstr "Bond scale"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
@@ -2370,9 +2369,8 @@ msgstr "Turbomole Input"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:32:279
-#, fuzzy
 msgid "Copy"
-msgstr "Copy All"
+msgstr "Copy"
 
 #: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:80
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2407,9 +2405,8 @@ msgid "&Edit"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:83
-#, fuzzy
 msgid "Copy As"
-msgstr "Copy All"
+msgstr "Copy As"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error Clipping Molecule"
@@ -3094,9 +3091,8 @@ msgid "Color:"
 msgstr "Colour:"
 
 #: qtplugins/label/label.cpp:143
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Distance"
+msgstr "Distance from center:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3129,9 +3125,8 @@ msgid "El."
 msgstr ""
 
 #: qtplugins/label/label.cpp:169
-#, fuzzy
 msgid "Element & Number"
-msgstr "Element name"
+msgstr "Element & Number"
 
 #: qtplugins/label/label.cpp:170
 msgid "El.&No."
@@ -3371,9 +3366,8 @@ msgstr "Molecular Properties"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
-#, fuzzy
 msgid "&Copy"
-msgstr "Copy All"
+msgstr "&Copy"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:88
 msgctxt "asking server for molecule name"
