@@ -10,6 +10,7 @@
 
 #include <vtkNew.h>
 
+class vtkAxis;
 class vtkChartXY;
 class vtkContextView;
 class vtkTable;
@@ -28,8 +29,17 @@ public:
   explicit ChartWidget(QWidget* p = nullptr);
   ~ChartWidget() override;
 
+  enum class Axis
+  {
+    x,
+    y
+  };
+
   bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
                const color4ub& color = color4ub{ 0, 0, 0, 255 });
+
+  bool addPlots(const std::vector< std::vector<float> >& plotData,
+                const color4ub& color = color4ub{ 0, 0, 0, 255 });
 
   void clearPlots();
 
@@ -37,8 +47,15 @@ public:
 
   void setYAxisTitle(const char* title);
 
+  void setTickLabels(Axis a, const std::vector<float>& tickPositions,
+                     const std::vector<std::string>& tickLabels);
+
+  void setAxisLimits(Axis a, float min, float max);
+
 private:
   void renderViews();
+  vtkAxis* axis(Axis a);
+
   vtkNew<vtkContextView> m_view;
   vtkNew<vtkChartXY> m_chart;
   vtkNew<vtkTable> m_table;

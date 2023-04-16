@@ -26,7 +26,6 @@ set(HEADERS
   qvtkwidget.h
   vtkAvogadroActor.h
   vtkglwidget.h
-  vtkplot.h
 )
 
 set(SOURCES
@@ -35,7 +34,6 @@ set(SOURCES
   qvtkwidget.cpp
   vtkAvogadroActor.cpp
   vtkglwidget.cpp
-  vtkplot.cpp
 )
 
 avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})

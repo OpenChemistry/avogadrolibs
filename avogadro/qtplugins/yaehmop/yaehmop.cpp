@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QString>
 #include <QTextEdit>
@@ -21,7 +22,8 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/vtkplot.h>
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
 
 #include "banddialog.h"
 #include "specialkpoints.h"
@@ -282,7 +284,7 @@ void Yaehmop::calculateBandStructure()
 
   // Num special k points
   int numSK = m_yaehmopSettings.specialKPoints
-                .split(QRegExp("[\r\n]"), QString::SkipEmptyParts)
+                .split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts)
                 .size();
   input += (QString::number(numSK) + "\n"); // num special k points
 
@@ -311,7 +313,6 @@ void Yaehmop::calculateBandStructure()
   }
 
   int numKPoints = kpoints.size();
-  int numOrbitals = bands.size();
   int numSpecialKPoints = specialKPoints.size();
 
   // If there is only one special k point, there is nothing to graph. Just
@@ -326,12 +327,12 @@ void Yaehmop::calculateBandStructure()
   }
 
   // Calculate the k-space distances
-  std::vector<double> xVals{ 0.0 };
+  std::vector<float> xVals{ 0.0 };
   for (int i = 1; i < numKPoints; ++i)
     xVals.push_back(kpointDistance(kpoints[i - 1], kpoints[i]) + xVals.back());
 
   // Calculate the special k point distances
-  std::vector<double> specialKPointVals{ 0.0 };
+  std::vector<float> specialKPointVals{ 0.0 };
   for (int i = 1; i < numSpecialKPoints; ++i) {
     specialKPointVals.push_back(
       kpointDistance(specialKPoints[i - 1].coords, specialKPoints[i].coords) +
@@ -350,10 +351,8 @@ void Yaehmop::calculateBandStructure()
   }
 
   // Now generate a plot with the data
-  std::vector<std::vector<double>> data;
+  std::vector<std::vector<float>> data;
   data.push_back(xVals);
-
-  using VtkPlot = VTK::VtkPlot;
 
   // Make some labels
   std::vector<std::string> lineLabels;
@@ -362,16 +361,12 @@ void Yaehmop::calculateBandStructure()
   std::array<double, 4> color = { 255, 0, 0, 255 };
   std::vector<std::array<double, 4>> lineColors;
 
-  // Set the line styles. Most should be solid
-  VtkPlot::LineStyle style = VtkPlot::LineStyle::solidLine;
-  std::vector<VtkPlot::LineStyle> lineStyles;
-
   size_t curBandNum = 1;
   for (const auto& band : bands) {
-    data.push_back(band.toStdVector());
+    std::vector<float> tmp(band.begin(), band.end());
+    data.push_back(tmp);
     lineLabels.push_back(tr("Band %1").arg(curBandNum).toStdString());
     lineColors.push_back(color);
-    lineStyles.push_back(style);
     ++curBandNum;
   }
 
@@ -392,36 +387,34 @@ void Yaehmop::calculateBandStructure()
     // Create a horizontal, black, dashed line for the fermi level
     lineLabels.push_back(tr("Fermi Level").toStdString());
     lineColors.push_back({ 0, 0, 0, 255 });
-    lineStyles.push_back(VtkPlot::LineStyle::dashLine);
 
-    std::vector<double> fermiVals(xVals.size(), fermi);
+    std::vector<float> fermiVals(xVals.size(), fermi);
     data.push_back(std::move(fermiVals));
   }
 
   const char* xTitle = "";
-  const char* yTitle = tr("Energy (eV)").toUtf8().constData();
-  const char* windowName = tr("YAeHMOP Band Structure").toUtf8().constData();
+  const char* yTitle = "Energy (eV)";
+  const char* windowName = "YAeHMOP Band Structure";
 
-  m_bandPlot.reset(new VtkPlot);
-  m_bandPlot->setData(data);
-  m_bandPlot->setWindowName(windowName);
-  m_bandPlot->setXTitle(xTitle);
-  m_bandPlot->setYTitle(yTitle);
-  m_bandPlot->setLineLabels(lineLabels);
-  m_bandPlot->setLineColors(lineColors);
-  m_bandPlot->setLineStyles(lineStyles);
-  m_bandPlot->setCustomTickLabels(VtkPlot::Axis::xAxis, specialKPointVals,
-                                  specialKPointLabels);
-
-  // It makes more sense to stop the x axis exactly at its limits
-  m_bandPlot->setAxisLimits(VtkPlot::Axis::xAxis, xVals.front(), xVals.back());
-
-  if (m_yaehmopSettings.limitY) {
-    m_bandPlot->setAxisLimits(VtkPlot::Axis::yAxis, m_yaehmopSettings.minY,
-                              m_yaehmopSettings.maxY);
+  if (!m_chartDialog) {
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
   }
 
-  m_bandPlot->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->addPlots(data, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
+  chart->setTickLabels(VTK::ChartWidget::Axis::x, specialKPointVals,
+                       specialKPointLabels);
+  chart->setAxisLimits(VTK::ChartWidget::Axis::x, xVals.front(), xVals.back());
+  if (m_yaehmopSettings.limitY) {
+    chart->setAxisLimits(VTK::ChartWidget::Axis::y, m_yaehmopSettings.minY,
+                         m_yaehmopSettings.maxY);
+  }
+  m_chartDialog->show();
 
   // Show the yaehmop input if we are to do so
   if (m_yaehmopSettings.displayYaehmopInput)
@@ -593,7 +586,7 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
 
 void Yaehmop::showYaehmopInput(const QString& input)
 {
-  QDialog* dialog = new QDialog;
+  QDialog* dialog = new QDialog(qobject_cast<QWidget*>(this->parent()));
 
   // Make sure this gets deleted upon closing
   dialog->setAttribute(Qt::WA_DeleteOnClose);

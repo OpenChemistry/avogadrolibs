@@ -143,14 +143,11 @@ add_subdirectory(vrml)
 
 # Plugins that require VTK
 if(USE_VTK)
+  add_subdirectory(coloropacitymap)
   add_subdirectory(plotpdf)
   add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
-  if(QT_VERSION EQUAL 5)
-    # This will need some work on the QRegExp migration
-    add_subdirectory(yaehmop)
-  endif()
-  add_subdirectory(coloropacitymap)
+  add_subdirectory(yaehmop)
 endif()
 
 if(QT_VERSION EQUAL 5)

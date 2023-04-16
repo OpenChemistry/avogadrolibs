@@ -18,7 +18,7 @@
 class QByteArray;
 
 namespace VTK {
-class VtkPlot;
+class ChartDialog;
 }
 
 namespace Avogadro {
@@ -70,7 +70,7 @@ private:
   // used for the executable. Otherwise, it will search for the executable in
   // some common places and use it if it can be found.
   bool executeYaehmop(const QByteArray& input, QByteArray& output,
-                             QString& err);
+                      QString& err);
 
   QString m_programPath;
   QList<QAction*> m_actions;
@@ -80,7 +80,7 @@ private:
 
   std::unique_ptr<BandDialog> m_bandDialog;
   std::unique_ptr<QAction> m_displayBandDialogAction;
-  std::unique_ptr<VTK::VtkPlot> m_bandPlot;
+  QScopedPointer<VTK::ChartDialog> m_chartDialog;
 };
 
 inline QString Yaehmop::description() const
