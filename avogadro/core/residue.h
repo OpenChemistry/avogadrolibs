@@ -46,6 +46,7 @@ public:
     betaBridge = 5, // DSSP "B"
     turn = 6,       // DSSP "T"
     coil = 7,       // DSSP "C"
+    maybeBeta = -3, // potential beta strand
     undefined = -1
   };
 

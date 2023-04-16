@@ -75,9 +75,8 @@ string PLYVisitor::end()
   return header.str() + m_sceneVertices + m_sceneFaces;
 }
 
-void PLYVisitor::visit(Drawable& geometry)
+void PLYVisitor::visit(Drawable&)
 {
-  // geometry.render(m_camera);
 }
 
 void PLYVisitor::visit(SphereGeometry& geometry)
@@ -134,7 +133,7 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
                                          vector<unsigned int>{ 10, 8, 4 } }; 
 
   //For every subdivision
-  for (int i = 0; i < subdivisions; ++i) {
+  for (unsigned int i = 0; i < subdivisions; ++i) {
     //Prerecord face size so doesn't change mid loop
     int facesSize = faces.size();
 
@@ -185,7 +184,7 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
   ostringstream faceStr;
 
   //Project every vertex onto the sphere and record it
-  for (int i = 0; i < vertices.size(); ++i) {
+  for (unsigned int i = 0; i < vertices.size(); ++i) {
     //Normalize the vertex and then project it
     float x = vertices.at(i)[0];
     float y = vertices.at(i)[1];
@@ -205,7 +204,7 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
   }
 
   //Adjust every face to have indices for the PLY file and add it
-  for (int i = 0; i < faces.size(); ++i) {
+  for (unsigned int i = 0; i < faces.size(); ++i) {
     faceStr << 3 << " "
             << faces.at(i)[0] + m_vertexCount << " "
             << faces.at(i)[1] + m_vertexCount << " "
@@ -219,9 +218,8 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
   m_sceneFaces += faceStr.str();
 }
 
-void PLYVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
+void PLYVisitor::visit(AmbientOcclusionSphereGeometry&)
 {
-  // geometry.render(m_camera);
 }
 
 void PLYVisitor::visit(CylinderGeometry& geometry)
@@ -288,7 +286,7 @@ void PLYVisitor::visitCylinderLateralMethod(const CylinderColor& geometry, unsig
   float baseAngle = 2 * 3.14159265359 / lateralFaces;
 
   //Find the vertices and faces for each lateral face
-  for (int i = 0; i < lateralFaces; ++i) {
+  for (unsigned int i = 0; i < lateralFaces; ++i) {
     //Current angle
     float angle = baseAngle * i;
 
@@ -371,9 +369,8 @@ void PLYVisitor::visit(MeshGeometry& geometry)
   m_sceneFaces += faceStr.str();
 }
 
-void PLYVisitor::visit(LineStripGeometry& geometry)
+void PLYVisitor::visit(LineStripGeometry&)
 {
-  // geometry.render(m_camera);
 }
 
 } // End namespace Avogadro

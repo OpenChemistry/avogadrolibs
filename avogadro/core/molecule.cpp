@@ -46,9 +46,9 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues), m_graph(other.m_graph),
+    m_residues(other.m_residues),
+    m_hallNumber(other.m_hallNumber), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -87,9 +87,9 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_residues(other.m_residues), m_graph(other.m_graph),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -241,7 +241,7 @@ const Layer& Molecule::layer() const
 
 void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
 {
-  if (value.size() != atomCount())
+  if (static_cast<Index>(value.size()) != atomCount())
     return;
 
   m_partialCharges[type] = value;
@@ -647,8 +647,8 @@ Array<const Molecule::BondType*> Molecule::bonds(Index a) const
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](const BondType*& a, const BondType*& b) {
-              return a->index() < b->index();
+            [](const BondType*& ba, const BondType*& bb) {
+              return ba->index() < bb->index();
             });
   return atomBonds;
 }
@@ -666,7 +666,7 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](BondType& a, BondType& b) { return a.index() < b.index(); });
+            [](BondType& ba, BondType& bb) { return ba.index() < bb.index(); });
   return atomBonds;
 }
 
@@ -909,13 +909,6 @@ void Molecule::perceiveBondOrders()
     if (unsaturatedValence[i] > 0)
       anyUnsaturated = true;
   }
-
-  // current sum of formal charges
-  signed char targetCharge = totalCharge();
-  // we'll assign at the end of the do/while loop
-  signed char currentCharge = 0;
-
-  bool isRadical = (totalSpinMultiplicity() != 1);
 
   Index startIndex = 0;
   Index initialAtom = 0;

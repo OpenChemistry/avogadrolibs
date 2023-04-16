@@ -53,6 +53,9 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
          tilt_xy = 0, tilt_xz = 0, tilt_yz = 0, scale_x = 0., scale_y = 0.,
          scale_z = 0.;
 
+  // This can likely be removed as it is clearly not used anywhere, supress for now.
+  AVO_UNUSED(id_idx);
+
   string buffer;
   getline(inStream, buffer); // Finish the first line
   buffer = trimmed(buffer);
@@ -154,10 +157,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     } else if (labels[i] == "zs" || labels[i] == "zsu") {
       z_idx = i;
       scale_z = 1.;
-    } else if (labels[i] == "type")
+    } else if (labels[i] == "type") {
       type_idx = i;
-    else if (labels[i] == "id")
+    } else if (labels[i] == "id") {
       id_idx = i;
+    }
   }
 
   // Parse atoms
@@ -339,10 +343,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       } else if (labels[i] == "zs" || labels[i] == "zsu") {
         z_idx = i;
         scale_z = 1.;
-      } else if (labels[i] == "type")
+      } else if (labels[i] == "type") {
         type_idx = i;
-      else if (labels[i] == "id")
+      } else if (labels[i] == "id") {
         id_idx = i;
+      }
     }
 
     Array<Vector3> positions;
@@ -379,8 +384,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   return true;
 }
 
-bool LammpsTrajectoryFormat::write(std::ostream& outStream,
-                                   const Core::Molecule& mol)
+bool LammpsTrajectoryFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }
@@ -403,7 +407,7 @@ LammpsDataFormat::LammpsDataFormat() {}
 
 LammpsDataFormat::~LammpsDataFormat() {}
 
-bool LammpsDataFormat::read(std::istream& inStream, Core::Molecule& mol)
+bool LammpsDataFormat::read(std::istream&, Core::Molecule&)
 {
   return false;
 }

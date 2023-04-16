@@ -35,12 +35,12 @@ LabelEditor::LabelEditor(QObject* parent_)
 
 LabelEditor::~LabelEditor() {}
 
-QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent* e)
+QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent* e)
+QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent*)
 {
   return nullptr;
 }

@@ -5,8 +5,6 @@
 
 #include "atomutilities.h"
 
-#include "mdlvalence_p.h"
-
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -106,12 +104,10 @@ Vector3 AtomUtilities::generateNewBondVector(
 
     Vector3 v1, v2;
     v1 = bond1.cross(bond2);
-    bool noA2 = false;
+
     if (bond2.norm() < 1.0e-5 || v1.norm() < 1.0e-5) {
       //        std::cout << " creating a random paired atom " << std::endl;
 
-      // there is no a-2 atom
-      noA2 = true;
       v2 = Vector3::Random().normalized();
 
       double angle = fabs(acos(bond1.dot(v2)));

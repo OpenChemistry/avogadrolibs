@@ -52,7 +52,7 @@ void PQRWidget::searchAction()
 * @param row The row of the result selected.
 * @param col The column of the result selected.
 */
-void PQRWidget::molSelected(int row, int col)
+void PQRWidget::molSelected(int row, int)
 {
   currentlySelectedMol = request->molSelected(row);
   if (currentlySelectedMol == "N/A")
@@ -64,10 +64,10 @@ void PQRWidget::molSelected(int row, int col)
 /**
 * @brief Called when PNG data is ready to be loaded
 */
-void PQRWidget::loadPNG(QByteArray& data)
+void PQRWidget::loadPNG(QByteArray& pngData)
 {
   QPixmap pixmap;
-  pixmap.loadFromData(data, "PNG");
+  pixmap.loadFromData(pngData, "PNG");
   pixmap = pixmap.scaled(300, 300);
   ui->pngPreview->setPixmap(pixmap);
   ui->pngPreview->show();

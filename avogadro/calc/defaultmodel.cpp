@@ -15,7 +15,7 @@ using Core::Molecule;
 namespace Calc {
 
 DefaultModel::DefaultModel(const std::string& id)
-  : m_identifier(id), ChargeModel()
+  : ChargeModel(), m_identifier(id)
 {
   // we don't know which elements are in the molecule
   // but we can just say all of them are okay

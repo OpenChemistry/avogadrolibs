@@ -108,7 +108,7 @@ struct LayerCartoon : Core::LayerData
       jumpTable[4] = &Cartoons::showSimpleCartoon;
       jumpTable[5] = &Cartoons::showCartoon;
       jumpTable[6] = &Cartoons::showRope;
-      for (size_t i = 0; i < boxesText.size(); ++i) {
+      for (int i = 0; i < boxesText.size(); ++i) {
         auto* check = new QCheckBox(boxesText[i]);
         check->setChecked(boxesBools[i]);
         QObject::connect(check, &QCheckBox::clicked, slot, jumpTable[i]);

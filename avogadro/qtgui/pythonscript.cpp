@@ -213,8 +213,7 @@ void PythonScript::asyncExecute(const QStringList& args,
           SLOT(processFinished(int, QProcess::ExitStatus)));
 }
 
-void PythonScript::processFinished(int exitCode,
-                                   QProcess::ExitStatus exitStatus)
+void PythonScript::processFinished(int, QProcess::ExitStatus)
 {
   emit finished();
 }

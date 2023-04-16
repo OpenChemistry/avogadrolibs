@@ -176,7 +176,7 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
   }
 }
 
-void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
+void NWChemLog::readIntensities(std::istream& in, Core::Molecule&)
 {
   string line;
   bool ok = false;

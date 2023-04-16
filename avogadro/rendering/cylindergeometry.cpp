@@ -100,12 +100,12 @@ void CylinderGeometry::update()
       float radius = itCylinder->radius;
 
       // Generate the radial vectors
-      Vector3f radial = direction.unitOrthogonal() * radius;
+      Vector3f radialVec = direction.unitOrthogonal() * radius;
       Eigen::AngleAxisf transform(resolutionRadians, direction);
       radials.clear();
       for (unsigned int j = 0; j < resolution; ++j) {
-        radials.push_back(radial);
-        radial = transform * radial;
+        radials.push_back(radialVec);
+        radialVec = transform * radialVec;
       }
 
       // Cylinder

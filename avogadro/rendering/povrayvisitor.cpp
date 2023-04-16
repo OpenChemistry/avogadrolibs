@@ -104,7 +104,7 @@ string POVRayVisitor::end()
   return m_sceneData;
 }
 
-void POVRayVisitor::visit(Drawable& geometry)
+void POVRayVisitor::visit(Drawable&)
 {
   return;
 }
@@ -119,9 +119,8 @@ void POVRayVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
+void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&)
 {
-  // geometry.render(m_camera);
 }
 
 void POVRayVisitor::visit(CylinderGeometry& geometry)
@@ -183,9 +182,8 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(LineStripGeometry& geometry)
+void POVRayVisitor::visit(LineStripGeometry&)
 {
-  // geometry.render(m_camera);
 }
 
 } // namespace Avogadro::Rendering

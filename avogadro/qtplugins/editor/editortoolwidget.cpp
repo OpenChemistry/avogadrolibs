@@ -170,7 +170,7 @@ void EditorToolWidget::selectElement(unsigned char element)
     m_ui->element->setCurrentIndex(curIndex);
   else {
     addUserElement(element);
-    int curIndex = m_ui->element->findData(element);
+    curIndex = m_ui->element->findData(element);
     if (curIndex >= 0)
       m_ui->element->setCurrentIndex(curIndex);
     // if we can't find it after adding it, something is very wrong!
