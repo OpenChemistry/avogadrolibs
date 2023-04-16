@@ -149,35 +149,38 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   int row = index.row();
   int col = index.column();
 
-  // qDebug() << " data: " << row << " " << col << " " << role;
+  // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
+  auto toVariant = [&](auto flags) {
+    return static_cast<Qt::Alignment::Int>(flags);
+  };
 
   // handle text alignments
   if (role == Qt::TextAlignmentRole) {
     if (m_type == ConformerType) {
-      return Qt::AlignRight + Qt::AlignVCenter; // energies
+      return toVariant(Qt::AlignRight | Qt::AlignVCenter); // energies
     } else if (m_type == AtomType) {
       if ((index.column() == AtomDataCharge) ||
           (index.column() == AtomDataColor))
-        return Qt::AlignRight + Qt::AlignVCenter;
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter);
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == BondType) {
       if (index.column() == BondDataLength)
-        return Qt::AlignRight + Qt::AlignVCenter; // bond length
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter); // bond length
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == AngleType) {
       if (index.column() == AngleDataValue)
-        return Qt::AlignRight + Qt::AlignVCenter; // angle
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter); // angle
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == TorsionType) {
       if (index.column() == TorsionDataValue)
-        return Qt::AlignRight + Qt::AlignVCenter; // dihedral angle
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter); // dihedral angle
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == ResidueType) {
-      return Qt::AlignHCenter + Qt::AlignVCenter;
+      return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     }
   }
 
