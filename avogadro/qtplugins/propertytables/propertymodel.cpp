@@ -210,8 +210,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
 
-    if (row >= static_cast<int>(m_molecule->atomCount()) || column > AtomColumns)
+    if (row >= static_cast<int>(m_molecule->atomCount()) ||
+        column > AtomColumns) {
       return QVariant(); // invalid index
+    }
 
     QString format("%L1");
 
@@ -243,8 +245,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     auto column = static_cast<BondColumn>(index.column());
 
-    if (row >= static_cast<int>(m_molecule->bondCount()) || column > BondColumns)
+    if (row >= static_cast<int>(m_molecule->bondCount()) ||
+        column > BondColumns) {
       return QVariant(); // invalid index
+    }
 
     auto bond = m_molecule->bond(row);
     auto atom1 = bond.atom1();
@@ -268,8 +272,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     auto column = static_cast<ResidueColumn>(index.column());
 
-    if (row >= static_cast<int>(m_molecule->residueCount()) || column > ResidueColumns)
+    if (row >= static_cast<int>(m_molecule->residueCount()) ||
+        column > ResidueColumns) {
       return QVariant(); // invalid index
+    }
 
     auto residue = m_molecule->residue(row);
     // name, number, chain, secondary structure
