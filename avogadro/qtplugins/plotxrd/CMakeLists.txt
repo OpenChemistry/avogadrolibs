@@ -1,8 +1,10 @@
 # Download the executable if we are not to use the system one
+option(USE_SYSTEM_GENXRDPATTERN "Use the system genxrdpattern" ON)
+mark_as_advanced(USE_SYSTEM_GENXRDPATTERN)
 if(NOT USE_SYSTEM_GENXRDPATTERN)
   include(DownloadGenXrdPattern)
   DownloadGenXrdPattern()
-endif(NOT USE_SYSTEM_GENXRDPATTERN)
+endif()
 
 set(plotxrd_srcs
   plotxrd.cpp
