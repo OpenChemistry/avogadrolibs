@@ -1,0 +1,3 @@
+query-filters:
+  - exclude:
+      id: cpp/integer-multiplication-cast-to-long

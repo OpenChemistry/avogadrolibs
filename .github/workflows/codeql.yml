@@ -99,7 +99,8 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         source-root: ${{ github.workspace }}/avogadrolibs
-        # queries: security-extended,security-and-quality
+        queries: security-extended,security-and-quality
+        config-file: ${{ github.workspace }}/avogadrolibs/.github/codeql-config.yml
 
     - name: Build
       run: |
