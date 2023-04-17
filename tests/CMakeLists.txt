@@ -45,6 +45,3 @@ if(USE_OPENGL)
   endif()
 endif()
 
-if(USE_PROTOCALL)
-  add_subdirectory(protocall)
-endif()

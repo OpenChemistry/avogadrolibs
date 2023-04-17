@@ -69,7 +69,3 @@ if(USE_QT)
   endif()
   add_subdirectory(qtplugins)
 endif()
-
-if(USE_PROTOCALL)
-  add_subdirectory(protocall)
-endif()
