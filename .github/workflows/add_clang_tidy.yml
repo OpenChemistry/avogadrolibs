@@ -16,6 +16,7 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
+          try{
           let artifacts = await github.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -32,10 +33,18 @@ jobs:
           });
           let fs = require("fs");
           fs.writeFileSync("${{github.workspace}}/clang-tidy-result.zip", Buffer.from(download.data));
+          } catch (e) {
+            // no artifact
+          }
     - name: Set environment variables
       run: |
         mkdir clang-tidy-result
-        unzip clang-tidy-result.zip -d clang-tidy-result
+        if [ -f clang-tidy-result.zip ]; 
+          unzip clang-tidy-result.zip -d clang-tidy-result
+        else
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        fi
         echo "pr_id=$(cat clang-tidy-result/pr-id.txt)" >> $GITHUB_ENV
         echo "pr_head_repo=$(cat clang-tidy-result/pr-head-repo.txt)" >> $GITHUB_ENV
         echo "pr_head_ref=$(cat clang-tidy-result/pr-head-ref.txt)" >> $GITHUB_ENV
@@ -48,6 +57,7 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
+          try{
           let artifacts = await github.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -64,10 +74,19 @@ jobs:
           });
           let fs = require("fs");
           fs.writeFileSync("${{github.workspace}}/clang-tidy-result.zip", Buffer.from(download.data));
+          } catch (e) {
+            // no artifact
+          }
     - name: Extract analysis results
       run: |
         mkdir clang-tidy-result
-        unzip clang-tidy-result.zip -d clang-tidy-result
+        if [ - f clang-tidy-result.zip ];
+          unzip clang-tidy-result.zip -d clang-tidy-result
+        else
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        fi
+  
     - name: Run clang-tidy-pr-comments action
       uses: platisd/clang-tidy-pr-comments@master
       with:
