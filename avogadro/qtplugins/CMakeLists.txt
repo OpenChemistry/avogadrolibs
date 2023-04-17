@@ -192,10 +192,6 @@ if (USE_OPENGL)
 endif()
 
 # other optional plugins
-if (USE_PROTOCALL)
-  add_subdirectory(clientserver)
-endif()
-
 if(BUILD_GPL_PLUGINS)
   # qtaimcurvature.h/cpp contains GPL licensed code:
   add_subdirectory(qtaim)
