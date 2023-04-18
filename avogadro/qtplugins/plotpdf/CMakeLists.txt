@@ -16,4 +16,4 @@ avogadro_plugin(PlotPdf
   "${plotpdf_uis}"
 )
 
-target_link_libraries(PlotPdf PRIVATE AvogadroVtk)
+target_link_libraries(PlotPdf PRIVATE Avogadro::Vtk)

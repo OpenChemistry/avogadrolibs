@@ -31,5 +31,5 @@ endif()
 
 target_link_libraries(ColorOpacityMap
   PRIVATE
-    AvogadroQtOpenGL
-    AvogadroVtk)
+    Avogadro::QtOpenGL
+    Avogadro::Vtk)

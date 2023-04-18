@@ -6,4 +6,4 @@ avogadro_plugin(Cartoons
   cartoons.cpp
   "")
 
-target_link_libraries(Cartoons LINK_PRIVATE AvogadroRendering)
+target_link_libraries(Cartoons LINK_PRIVATE Avogadro::Rendering)

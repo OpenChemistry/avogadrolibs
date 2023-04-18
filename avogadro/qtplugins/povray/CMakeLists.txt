@@ -9,4 +9,4 @@ avogadro_plugin(POVRay
   ""
 )
 
-target_link_libraries(POVRay PRIVATE AvogadroRendering)
+target_link_libraries(POVRay PRIVATE Avogadro::Rendering)

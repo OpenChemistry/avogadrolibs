@@ -34,4 +34,4 @@ avogadro_plugin(QTAIMScenePlugin
 
 target_link_libraries(QTAIMScenePlugin
   PRIVATE
-    AvogadroRendering)
+    Avogadro::Rendering)

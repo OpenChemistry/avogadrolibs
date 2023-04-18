@@ -11,4 +11,4 @@ avogadro_plugin(PlayerTool
   playertool.qrc
 )
 
-target_link_libraries(PlayerTool PRIVATE gwavi AvogadroQtOpenGL)
+target_link_libraries(PlayerTool PRIVATE gwavi Avogadro::QtOpenGL)

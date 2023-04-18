@@ -27,8 +27,8 @@ endif()
 
 target_link_libraries(Surfaces
   PRIVATE
-    AvogadroCalc
-    AvogadroQuantumIO
-    AvogadroQtOpenGL
+    Avogadro::Calc
+    Avogadro::QuantumIO
+    Avogadro::QtOpenGL
     Qt::Concurrent
     gwavi)

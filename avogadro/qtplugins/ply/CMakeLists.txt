@@ -9,4 +9,4 @@ avogadro_plugin(PLY
   ""
 )
 
-target_link_libraries(PLY PRIVATE AvogadroRendering)
+target_link_libraries(PLY PRIVATE Avogadro::Rendering)

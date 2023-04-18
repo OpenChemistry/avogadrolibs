@@ -14,7 +14,7 @@ avogadro_plugin(commands
   "${command_srcs}"
 )
 
-target_link_libraries(commands PRIVATE AvogadroIO)
+target_link_libraries(commands PRIVATE Avogadro::IO)
 
 # We no longer bundle scripts because they should be downloaded separately.
 # This also helps base translations.

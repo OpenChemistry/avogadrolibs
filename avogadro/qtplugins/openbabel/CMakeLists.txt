@@ -25,7 +25,7 @@ avogadro_plugin(OpenBabel
   "${openbabel_uis}"
 )
 
-target_link_libraries(OpenBabel PRIVATE AvogadroIO AvogadroCalc)
+target_link_libraries(OpenBabel PRIVATE Avogadro::IO Avogadro::Calc)
 if(QT_VERSION EQUAL 6)
   target_link_libraries(OpenBabel PRIVATE Qt6::Core5Compat)
 endif()

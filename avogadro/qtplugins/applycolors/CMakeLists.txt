@@ -10,4 +10,4 @@ avogadro_plugin(ApplyColors
   chargedialog.ui
 )
 
-target_link_libraries(ApplyColors PRIVATE AvogadroCalc)
+target_link_libraries(ApplyColors PRIVATE Avogadro::Calc)

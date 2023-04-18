@@ -6,4 +6,4 @@ avogadro_plugin(Licorice
   licorice.cpp
   "")
 
-target_link_libraries(Licorice PRIVATE AvogadroRendering)
+target_link_libraries(Licorice PRIVATE Avogadro::Rendering)
