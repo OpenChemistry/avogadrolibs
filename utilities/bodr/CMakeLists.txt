@@ -4,3 +4,4 @@ include_directories(SYSTEM
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/pugixml")
 
 add_executable(bodrparse bodrparse.cxx)
+target_link_libraries(bodrparse PRIVATE Avogadro::Headers)

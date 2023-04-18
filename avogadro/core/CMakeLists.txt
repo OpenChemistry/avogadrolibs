@@ -12,19 +12,42 @@ endif()
 configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
 
-set(HEADERS
-  angletools.h
-  angleiterator.h
-  array.h
+# Separate out header only components into an interface library.
+add_library(Headers INTERFACE)
+add_library(Avogadro::Headers ALIAS Headers)
+target_include_directories(Headers
+  INTERFACE
+    "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
+
+target_sources(Headers PUBLIC
+  FILE_SET HEADERS
+  BASE_DIRS ${PROJECT_SOURCE_DIR}
+  FILES
+    angletools.h
+    angleiterator.h
+    array.h
+    avogadrocore.h
+    color3f.h
+    coordinateset.h
+    matrix.h
+    types.h
+    utilities.h
+    vector.h
+)
+install(TARGETS Headers
+  EXPORT "AvogadroLibsTargets"
+  FILE_SET HEADERS DESTINATION "${INSTALL_INCLUDE_DIR}")
+
+# Now add the main core library for Avogadro.
+add_library(Core)
+
+avogadro_headers(Core
   atom.h
   atomtyper.h
   atomtyper-inline.h
   atomutilities.h
-  avogadrocore.h
   basisset.h
   bond.h
-  color3f.h
-  coordinateset.h
   coordinateblockgenerator.h
   crystaltools.h
   cube.h
@@ -35,7 +58,6 @@ set(HEADERS
   graph.h
   layer.h
   layermanager.h
-  matrix.h
   mesh.h
   molecule.h
   mutex.h
@@ -48,17 +70,14 @@ set(HEADERS
   slatersettools.h
   spacegroups.h
   symbolatomtyper.h
-  types.h
   unitcell.h
-  utilities.h
   variant.h
   variant-inline.h
   variantmap.h
-  vector.h
   "${CMAKE_CURRENT_BINARY_DIR}/version.h"
 )
 
-set(SOURCES
+target_sources(Core PRIVATE
   angleiterator.cpp
   atomutilities.cpp
   coordinateblockgenerator.cpp
@@ -91,23 +110,22 @@ set(SOURCES
 
 # We currently build core without shared_mutex for Python wheels.
 if(NOT PYTHON_WHEEL_BUILD)
-  list(APPEND HEADERS sharedmutex.h)
-  list(APPEND SOURCES sharedmutex.cpp)
+  avogadro_headers(Core sharedmutex.h)
+  target_sources(Core PRIVATE sharedmutex.cpp)
 endif()
 
 if(USE_SPGLIB)
-  list(APPEND HEADERS avospglib.h)
-  list(APPEND SOURCES avospglib.cpp)
+  avogadro_headers(Core avospglib.h)
+  target_sources(Core PRIVATE avospglib.cpp)
 endif()
 
 # The std::shared_mutex class needs pthreads on Linux.
 if(UNIX AND NOT APPLE AND NOT PYTHON_WHEEL_BUILD)
   find_package(Threads)
-  set(EXTRA_LINK_LIB ${CMAKE_THREAD_LIBS_INIT})
-else()
-  set(EXTRA_LINK_LIB "")
+  target_link_libraries(Core PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
-avogadro_add_library(AvogadroCore ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroCore
-  PRIVATE ${SPGLIB_LIBRARY} ${EXTRA_LINK_LIB})
+avogadro_add_library(Core)
+target_link_libraries(Core
+  PUBLIC Avogadro::Headers
+  PRIVATE ${SPGLIB_LIBRARY})

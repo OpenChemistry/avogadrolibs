@@ -17,20 +17,22 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-set(HEADERS
+add_library(QtOpenGL)
+
+avogadro_headers(QtOpenGL
   activeobjects.h
   glwidget.h
   qttextrenderstrategy.h
 )
 
-set(SOURCES
+target_sources(QtOpenGL PRIVATE
   activeobjects.cpp
   glwidget.cpp
   qttextrenderstrategy.cpp
 )
 
-avogadro_add_library(AvogadroQtOpenGL ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtOpenGL AvogadroRendering AvogadroQtGui Qt::Widgets)
+avogadro_add_library(QtOpenGL)
+target_link_libraries(QtOpenGL Avogadro::Rendering Avogadro::QtGui Qt::Widgets)
 if(QT_VERSION EQUAL 6)
-  target_link_libraries(AvogadroQtOpenGL Qt::OpenGLWidgets)
+  target_link_libraries(QtOpenGL Qt::OpenGLWidgets)
 endif()

@@ -34,7 +34,9 @@ static const char *pythonInterpreterPath = \"${PYTHON_EXECUTABLE}\";
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h")
 
-set(HEADERS
+add_library(QtGui)
+
+avogadro_headers(QtGui
   backgroundfileformat.h
   colorbutton.h
   containerwidget.h
@@ -68,7 +70,7 @@ set(HEADERS
   viewfactory.h
 )
 
-set(SOURCES
+target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
   colorbutton.cpp
   containerwidget.cpp
@@ -107,16 +109,16 @@ set(UIS
   customelementdialog.ui
 )
 qt_wrap_ui(UI_SOURCES ${UIS})
-list(APPEND SOURCES ${UI_SOURCES})
+target_sources(QtGui PRIVATE ${UI_SOURCES})
 
 set(RCS
   qtgui.qrc
 )
 qt_add_resources(RC_SOURCES ${RCS})
-list(APPEND SOURCES ${RC_SOURCES})
+target_sources(QtGui PRIVATE ${RC_SOURCES})
 
-avogadro_add_library(AvogadroQtGui ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtGui PUBLIC AvogadroIO Qt::Widgets)
+avogadro_add_library(QtGui)
+target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets)
 if(QT_VERSION EQUAL 6)
-  target_link_libraries(AvogadroQtGui PRIVATE Qt6::Core5Compat)
+  target_link_libraries(QtGui PRIVATE Qt6::Core5Compat)
 endif()

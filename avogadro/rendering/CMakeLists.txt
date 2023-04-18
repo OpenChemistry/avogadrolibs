@@ -10,7 +10,9 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-set(HEADERS
+add_library(Rendering)
+
+avogadro_headers(Rendering
   arcsector.h
   arcstrip.h
   arrowgeometry.h
@@ -55,7 +57,7 @@ set(HEADERS
   vrmlvisitor.h
 )
 
-set(SOURCES
+target_sources(Rendering PRIVATE
   arcsector.cpp
   arcstrip.cpp
   arrowgeometry.cpp
@@ -135,9 +137,14 @@ foreach(file ${shader_files})
     COMMENT "Encoding ${src}"
     )
 endforeach()
+target_sources(Rendering PRIVATE
+  FILE_SET shaders TYPE HEADERS
+  BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}
+  FILES ${shader_h_files})
 
-avogadro_add_library(AvogadroRendering ${HEADERS} ${SOURCES} ${shader_h_files})
-target_link_libraries(AvogadroRendering
-  AvogadroCore # Needed for an emum in residue.h that we should move, maybe others.
-  ${GLEW_LIBRARY}
-  ${OPENGL_LIBRARIES})
+avogadro_add_library(Rendering)
+target_link_libraries(Rendering
+  PRIVATE
+    Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
+    ${GLEW_LIBRARY}
+    ${OPENGL_LIBRARIES})

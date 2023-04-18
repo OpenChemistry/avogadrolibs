@@ -29,7 +29,9 @@ if(DEFINED AvogadroLibs_MEMORY_INCLUDE_DIRS)
   include_directories(SYSTEM ${AvogadroLibs_MEMORY_INCLUDE_DIRS})
 endif()
 
-set(HEADERS
+add_library(IO)
+
+avogadro_headers(IO
   cjsonformat.h
   cmlformat.h
   dcdformat.h
@@ -45,7 +47,7 @@ set(HEADERS
   lammpsformat.h
 )
 
-set(SOURCES
+target_sources(IO PRIVATE
   cjsonformat.cpp
   cmlformat.cpp
   dcdformat.cpp
@@ -62,23 +64,21 @@ set(SOURCES
 )
 
 if(USE_HDF5)
-  list(APPEND HEADERS hdf5dataformat.h)
-  list(APPEND SOURCES hdf5dataformat.cpp)
+  avogadro_headers(IO hdf5dataformat.h)
+  target_sources(IO PRIVATE hdf5dataformat.cpp)
+  target_link_libraries(IO PRIVATE ${HDF5_LIBRARIES})
 endif()
 
 if(USE_MMTF)
-  list(APPEND HEADERS mmtfformat.h)
-  list(APPEND SOURCES mmtfformat.cpp)
+  avogadro_headers(IO mmtfformat.h)
+  target_sources(IO PRIVATE mmtfformat.cpp)
 endif()
 
-avogadro_add_library(AvogadroIO ${HEADERS} ${SOURCES})
+avogadro_add_library(IO)
 
-target_link_libraries(AvogadroIO
-  PUBLIC AvogadroCore
+target_link_libraries(IO
+  PUBLIC Avogadro::Core
   PRIVATE struct)
-if(USE_HDF5)
-  target_link_libraries(AvogadroIO PRIVATE ${HDF5_LIBRARIES})
-endif()
 if(WIN32)
-  target_link_libraries(AvogadroIO PRIVATE ws2_32)
+  target_link_libraries(IO PRIVATE ws2_32)
 endif()
