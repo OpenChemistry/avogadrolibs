@@ -49,7 +49,7 @@ endforeach()
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroQtGuiTests ${testSrcs})
-target_link_libraries(AvogadroQtGuiTests AvogadroQtGui AvogadroMoleQueue
+target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui Avogadro::MoleQueue
   MoleQueueClient ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB} Qt5::Widgets Qt5::Test)
 
 # Now add all of the tests, using the gtest_filter argument so that only those

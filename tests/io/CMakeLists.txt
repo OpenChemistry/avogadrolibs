@@ -42,7 +42,7 @@ message(STATUS "Test source files: ${testSrcs}")
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroIOTests ${testSrcs})
-target_link_libraries(AvogadroIOTests AvogadroIO
+target_link_libraries(AvogadroIOTests Avogadro::IO
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
