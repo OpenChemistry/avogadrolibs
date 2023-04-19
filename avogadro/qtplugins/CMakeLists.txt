@@ -1,6 +1,3 @@
-find_package(Eigen3 REQUIRED)
-include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
-
 find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Concurrent REQUIRED)
 if(QT_VERSION EQUAL 6)
   find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
