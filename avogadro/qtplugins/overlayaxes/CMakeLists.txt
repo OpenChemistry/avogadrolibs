@@ -15,4 +15,5 @@ avogadro_plugin(OverlayAxes
   overlayaxes.cpp
   "")
 
-target_link_libraries(OverlayAxes PRIVATE Avogadro::Rendering Avogadro::QtOpenGL)
+target_link_libraries(OverlayAxes
+  PRIVATE Avogadro::Rendering Avogadro::QtOpenGL ${OPENGL_LIBRARIES})
