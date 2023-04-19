@@ -9,7 +9,9 @@ else()
   find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 endif()
 
-set(HEADERS
+add_library(MoleQueue)
+
+avogadro_headers(MoleQueue
   batchjob.h
   inputgenerator.h
   inputgeneratordialog.h
@@ -20,7 +22,7 @@ set(HEADERS
   molequeuewidget.h
 )
 
-set(SOURCES
+target_sources(MoleQueue PRIVATE
   batchjob.cpp
   inputgenerator.cpp
   inputgeneratordialog.cpp
@@ -41,11 +43,11 @@ set(UIS
   molequeuewidget.ui
 )
 qt_wrap_ui(UI_SOURCES ${UIS})
-list(APPEND SOURCES ${UI_SOURCES})
+target_sources(MoleQueue PRIVATE ${UI_SOURCES})
 
-avogadro_add_library(AvogadroMoleQueue ${HEADERS} ${SOURCES})
-set_target_properties(AvogadroMoleQueue PROPERTIES AUTOMOC TRUE)
-target_link_libraries(AvogadroMoleQueue PUBLIC AvogadroQtGui Qt::Widgets Qt::Network)
+avogadro_add_library(MoleQueue ${HEADERS} ${SOURCES})
+set_target_properties(MoleQueue PROPERTIES AUTOMOC TRUE)
+target_link_libraries(MoleQueue PUBLIC Avogadro::QtGui Qt::Widgets Qt::Network)
 if(QT_VERSION EQUAL 6)
-  target_link_libraries(AvogadroMoleQueue PRIVATE Qt6::Core5Compat)
+  target_link_libraries(MoleQueue PRIVATE Qt6::Core5Compat)
 endif()

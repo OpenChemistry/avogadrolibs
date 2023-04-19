@@ -12,7 +12,7 @@ avogadro_plugin(ScriptFileFormats
   ""
 )
 
-target_link_libraries(ScriptFileFormats PRIVATE AvogadroQuantumIO)
+target_link_libraries(ScriptFileFormats PRIVATE Avogadro::QuantumIO)
 
 # Bundled format scripts:
 set(format_scripts

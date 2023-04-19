@@ -4,19 +4,21 @@ find_package(Eigen3 REQUIRED)
 # compilers that support that notion.
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}")
 
-set(HEADERS
+add_library(Calc)
+
+avogadro_headers(Calc
   chargemodel.h
   chargemanager.h
   defaultmodel.h
 )
 
-set(SOURCES
+target_sources(Calc PRIVATE
   chargemodel.cpp
   chargemanager.cpp
   defaultmodel.cpp
 )
 
-avogadro_add_library(AvogadroCalc ${HEADERS} ${SOURCES})
+avogadro_add_library(Calc)
 
-target_link_libraries(AvogadroCalc
-  PUBLIC AvogadroCore)
+target_link_libraries(Calc
+  PUBLIC Avogadro::Core)

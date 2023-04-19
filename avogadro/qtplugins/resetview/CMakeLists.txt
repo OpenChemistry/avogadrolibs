@@ -16,4 +16,4 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-target_link_libraries(ResetView PRIVATE AvogadroQtOpenGL)
+target_link_libraries(ResetView PRIVATE Avogadro::QtOpenGL)

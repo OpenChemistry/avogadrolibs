@@ -36,5 +36,5 @@ avogadro_plugin(SymmetryScene
   symmetryscene.cpp)
 
 target_link_libraries(Symmetry PRIVATE ${LIBMSYM_LIBRARIES})
-target_link_libraries(SymmetryScene PRIVATE AvogadroRendering)
+target_link_libraries(SymmetryScene PRIVATE Avogadro::Rendering)
 

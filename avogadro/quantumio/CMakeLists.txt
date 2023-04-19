@@ -4,10 +4,9 @@ find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+add_library(QuantumIO)
 
-# Headers for our public API
-set(HEADERS
+avogadro_headers(QuantumIO
   gamessus.h
   gaussianfchk.h
   gaussiancube.h
@@ -18,8 +17,7 @@ set(HEADERS
 )
 
 # Source files for our data.
-set(SOURCES
-  #gamessukout.cpp
+target_sources(QuantumIO PRIVATE
   gamessus.cpp
   gaussianfchk.cpp
   gaussiancube.cpp
@@ -29,5 +27,5 @@ set(SOURCES
   nwchemlog.cpp
 )
 
-avogadro_add_library(AvogadroQuantumIO ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQuantumIO PUBLIC AvogadroIO)
+avogadro_add_library(QuantumIO)
+target_link_libraries(QuantumIO PUBLIC Avogadro::IO)

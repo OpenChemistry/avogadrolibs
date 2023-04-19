@@ -29,4 +29,4 @@ avogadro_plugin(CrystalScene
   CrystalScene
   crystalscene.cpp)
 
-target_link_libraries(CrystalScene PRIVATE AvogadroRendering)
+target_link_libraries(CrystalScene PRIVATE Avogadro::Rendering)

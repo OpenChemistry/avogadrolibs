@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.23 FATAL_ERROR)
 
 project(AvogadroLibs)
 
@@ -41,9 +41,6 @@ if(MSVC)
   # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 endif()
-
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR})
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
 option(TEST_QTGL "Build the Qt OpenGL test application" OFF)
@@ -122,5 +119,6 @@ if (NOT SKBUILD)
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
   install(EXPORT "AvogadroLibsTargets"
+    NAMESPACE Avogadro::
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
 endif()

@@ -75,7 +75,7 @@ function(avogadro_plugin name description type header pluginClass sources)
     ${rc_srcs}
     ${name}Plugin.cpp
   )
-  target_link_libraries(${name} PRIVATE AvogadroCore AvogadroQtGui)
+  target_link_libraries(${name} PRIVATE Avogadro::QtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
     set_target_properties(${name} PROPERTIES COMPILE_DEFINITIONS
@@ -235,20 +235,21 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
 # Now to build the plugin library, which can also statically link plugins
 # and initialize them for the application. If Avogadro is built statically
 # then the static plugin header must be included by the application.
-set(HEADERS
+add_library(QtPlugins)
+avogadro_headers(QtPlugins
   pluginmanager.h
   pluginfactory.h
   "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
 )
 
-set(SOURCES
+target_sources(QtPlugins PRIVATE
   pluginmanager.cpp
 )
 
-avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtPlugins PUBLIC ${Qt5Core_LIBRARIES}
-  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)
+avogadro_add_library(QtPlugins ${HEADERS} ${SOURCES})
+target_link_libraries(QtPlugins PUBLIC Qt::Core
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} Avogadro::QtGui)
 
 if(QT_VERSION EQUAL 6)
-  target_link_libraries(AvogadroQtPlugins PUBLIC Qt6::OpenGLWidgets Qt6::Network)
+  target_link_libraries(QtPlugins PRIVATE Qt6::OpenGLWidgets Qt6::Network)
 endif()

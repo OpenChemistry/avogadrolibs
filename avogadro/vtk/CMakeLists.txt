@@ -20,7 +20,9 @@ find_package(VTK
   ChartsCore ViewsContext2D RenderingContextOpenGL2
   REQUIRED)
 
-set(HEADERS
+add_library(Vtk)
+
+avogadro_headers(Vtk
   chartdialog.h
   chartwidget.h
   qvtkwidget.h
@@ -28,7 +30,7 @@ set(HEADERS
   vtkglwidget.h
 )
 
-set(SOURCES
+target_sources(Vtk PRIVATE
   chartdialog.cpp
   chartwidget.cpp
   qvtkwidget.cpp
@@ -36,14 +38,15 @@ set(SOURCES
   vtkglwidget.cpp
 )
 
-avogadro_add_library(AvogadroVtk ${HEADERS} ${SOURCES})
-set_target_properties(AvogadroVtk PROPERTIES AUTOMOC TRUE)
-target_link_libraries(AvogadroVtk AvogadroRendering AvogadroQtGui
+avogadro_add_library(Vtk ${HEADERS} ${SOURCES})
+set_target_properties(Vtk PROPERTIES AUTOMOC TRUE)
+target_link_libraries(Vtk PUBLIC Avogadro::Rendering Avogadro::QtGui
   VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
   VTK::RenderingFreeType VTK::InteractionStyle VTK::ChartsCore VTK::ViewsContext2D
-  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt::Widgets)
+  VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt::Widgets
+  PRIVATE ${GLEW_LIBRARY})
 
-vtk_module_autoinit(TARGETS AvogadroVtk MODULES
+vtk_module_autoinit(TARGETS Vtk MODULES
   VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
   VTK::RenderingFreeType VTK::InteractionStyle VTK::ChartsCore VTK::ViewsContext2D
   VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2)

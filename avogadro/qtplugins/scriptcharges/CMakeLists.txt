@@ -12,7 +12,7 @@ avogadro_plugin(ScriptCharges
   ""
 )
 
-target_link_libraries(ScriptCharges PRIVATE AvogadroCalc )
+target_link_libraries(ScriptCharges PRIVATE Avogadro::Calc )
 
 # Bundled format scripts:
 set(charge_scripts

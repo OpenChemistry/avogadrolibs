@@ -32,5 +32,5 @@ if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
 
-target_link_libraries(Label LINK_PRIVATE AvogadroRendering)
-target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering AvogadroQtOpenGL)
+target_link_libraries(Label LINK_PRIVATE Avogadro::Rendering)
+target_link_libraries(LabelEditor LINK_PRIVATE Avogadro::QtOpenGL)
