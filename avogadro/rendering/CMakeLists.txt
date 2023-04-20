@@ -139,7 +139,9 @@ target_sources(Rendering PRIVATE
 
 avogadro_add_library(Rendering)
 target_link_libraries(Rendering
+  PUBLIC
+    Avogadro::Headers
   PRIVATE
     Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
-    ${GLEW_LIBRARY}
-    ${OPENGL_LIBRARIES})
+    GLEW::GLEW
+    OpenGL::GL)
