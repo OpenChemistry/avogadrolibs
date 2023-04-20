@@ -1,12 +1,7 @@
-find_package(Eigen3 REQUIRED)
-include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
-
 find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Concurrent REQUIRED)
 if(QT_VERSION EQUAL 6)
   find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
 endif()
-#include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
-#add_definitions(${Qt5Widgets_DEFINITIONS})
 
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
