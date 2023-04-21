@@ -1,10 +1,5 @@
 find_package(Eigen3 REQUIRED)
 
-if(USE_SPGLIB)
-  find_package(SPGLIB REQUIRED)
-  include_directories(SYSTEM ${SPGLIB_INCLUDE_DIR})
-endif()
-
 # configure the version header
 configure_file("${PROJECT_SOURCE_DIR}/cmake/version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/version.h")
@@ -113,8 +108,10 @@ if(NOT PYTHON_WHEEL_BUILD)
 endif()
 
 if(USE_SPGLIB)
+  find_package(SPGLIB REQUIRED)
   avogadro_headers(Core avospglib.h)
   target_sources(Core PRIVATE avospglib.cpp)
+  target_link_libraries(Core PRIVATE spglib::spglib)
 endif()
 
 # The std::shared_mutex class needs pthreads on Linux.
@@ -125,5 +122,4 @@ endif()
 
 avogadro_add_library(Core)
 target_link_libraries(Core
-  PUBLIC Avogadro::Headers
-  PRIVATE ${SPGLIB_LIBRARY})
+  PUBLIC Avogadro::Headers)
