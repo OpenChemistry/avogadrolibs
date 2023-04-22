@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
-# ovari <ovari123@zoho.com>, 2021, 2022.
+# ovari <ovari123@zoho.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-09 02:11+0000\n"
-"PO-Revision-Date: 2022-10-07 13:28+0000\n"
+"PO-Revision-Date: 2023-04-23 18:45+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.18-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3092,16 +3092,12 @@ msgid "El."
 msgstr "El."
 
 #: qtplugins/label/label.cpp:169
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Elemnév."
+msgstr "Elemnév és elemszám"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
-#| msgid "El.&Or."
 msgid "El.&No."
-msgstr "El.&Or."
+msgstr "El.&Sz."
 
 #: qtplugins/label/label.cpp:173
 msgid ", "
