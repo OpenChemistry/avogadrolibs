@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-09 02:11+0000\n"
-"PO-Revision-Date: 2023-03-31 19:37+0000\n"
+"PO-Revision-Date: 2023-04-23 18:45+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3099,16 +3099,12 @@ msgid "El."
 msgstr "Él."
 
 #: qtplugins/label/label.cpp:169
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Nom de l'élément."
+msgstr "Élément et nombre"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
-#| msgid "El.&Or."
 msgid "El.&No."
-msgstr "Él.&Or."
+msgstr "Él.&No."
 
 #: qtplugins/label/label.cpp:173
 msgid ", "
@@ -3155,11 +3151,11 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:68
 msgid "Create Label"
-msgstr "Créer label"
+msgstr "Créer une étiquette"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Outil éditeur d'étiquettes"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
