@@ -1,2 +1,3 @@
 [build-system]
-requires = ["setuptools", "wheel", "scikit-build", "pybind11"]
+requires = ["setuptools>=40.8.0", "wheel", "scikit-build", "pybind11"]
+build-backend = "setuptools.build_meta:__legacy__"
