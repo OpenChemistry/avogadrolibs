@@ -1,32 +1,18 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
 
-if (NOT TARGET AvogadroCore)
+if (NOT TARGET Avogadro::Core)
   find_package(AvogadroLibs REQUIRED)
 endif()
-find_package(PythonInterp 3 REQUIRED)
-find_package(PythonLibs 3 REQUIRED)
+find_package(Python COMPONENTS Interpreter Development)
 set(PYBIND11_PYTHON_VERSION "3" CACHE STRING "")
-set(PYBIND11_CPP_STANDARD "-std=c++11" CACHE STRING "")
+set(PYBIND11_CPP_STANDARD "-std=c++17" CACHE STRING "")
 find_package(pybind11 REQUIRED)
-
-find_package(Eigen3 REQUIRED)
-
-include_directories(SYSTEM
-  ${AvogadroLibs_SOURCE_DIR}
-  ${AvogadroLibs_BINARY_DIR}/avogadro/core
-  ${AvogadroLibs_BINARY_DIR}/avogadro/io
-  ${AvogadroLibs_BINARY_DIR}/avogadro/quantumio
-  ${PYTHON_INCLUDE_PATH}
-  ${EIGEN3_INCLUDE_DIR}
-  ${pybind11_INCLUDE_DIRS}
-  )
 
 set(wrapper_SRCS
   main.cpp
   core.cpp
   io.cpp
   )
-
 
 set(_python_module_install_dir "avogadro")
 # SKBUILD is set for binary wheel
@@ -42,7 +28,7 @@ set_target_properties(avogadrocorepython
     OUTPUT_NAME core)
 target_link_libraries(avogadrocorepython
   PRIVATE
-    AvogadroCore
+    Avogadro::Core
     pybind11::module
 )
 
@@ -55,8 +41,8 @@ set_target_properties(avogadroiopython
     OUTPUT_NAME io)
 target_link_libraries(avogadroiopython
   PRIVATE
-    AvogadroIO
-    AvogadroQuantumIO
+    Avogadro::IO
+    Avogadro::QuantumIO
     pybind11::module
 )
 install(TARGETS avogadroiopython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
