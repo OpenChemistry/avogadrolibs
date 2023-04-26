@@ -142,7 +142,7 @@ jobs:
       with:
         version: ${{ env.QT_VERSION }}
         tools-only: true
-        tools: "tools_openssl_x64,1.1.1-10,qt.tools.openssl.win_x64"
+        tools: "tools_open_ssl_x64"
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
