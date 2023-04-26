@@ -50,7 +50,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "",
+            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSL\\Win_x64",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -134,8 +134,15 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
         version: ${{ env.QT_VERSION }}
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ env.QT_VERSION }}
+        tools-only: true
+        tools: "tools_openssl_x64,1.1.1-10,qt.tools.openssl.win_x64"
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'

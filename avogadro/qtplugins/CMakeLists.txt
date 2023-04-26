@@ -3,6 +3,11 @@ if(QT_VERSION EQUAL 6)
   find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
 endif()
 
+if(WIN32)
+  # used for HTTPS (e.g., PQR, downloads, etc.)
+  find_package(OpenSSL REQUIRED)
+endif()
+
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
