@@ -54,9 +54,7 @@ target_link_libraries(avogadroiopython
 install(TARGETS avogadroiopython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
 
 # Set the RPATH so the dependent libraries can be found in the wheel.
-if(APPLE)
-  set(_rpath_value "@loader_path")
-elseif(UNIX)
+if(UNIX)
   set(_rpath_value "$ORIGIN")
 endif()
 
