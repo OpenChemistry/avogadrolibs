@@ -20,6 +20,12 @@ if (NOT SKBUILD)
   set(_python_module_install_dir "${INSTALL_LIBRARY_DIR}/avogadro")
 endif()
 
+# Mac build seems to want "lib"
+if (APPLE)
+  # SKBUILD seems to expect at "lib" not "avogadro"
+  set(_python_module_install_dir "lib")
+endif()
+
 set(CMAKE_MODULE_LINKER_FLAGS "")
 # Core
 pybind11_add_module(avogadrocorepython core.cpp)
@@ -54,7 +60,7 @@ elseif(UNIX)
   set(_rpath_value "$ORIGIN")
 endif()
 
-if (NOT WIN32)
+if (UNIX)
   set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
                         INSTALL_RPATH ${_rpath_value})
 endif()
