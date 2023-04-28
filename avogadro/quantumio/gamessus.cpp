@@ -58,11 +58,12 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
     } else if (Core::contains(buffer, "CHARGE OF MOLECULE")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
-                molecule.setData("totalCharge", Core::lexicalCast<int>(parts[1]));
+        molecule.setData("totalCharge", Core::lexicalCast<int>(parts[1]));
     } else if (Core::contains(buffer, "SPIN MULTIPLICITY")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
-                molecule.setData("totalSpinMultiplicity", Core::lexicalCast<int>(parts[1]));
+        molecule.setData("totalSpinMultiplicity",
+                         Core::lexicalCast<int>(parts[1]));
     } else if (Core::contains(buffer, "NUMBER OF ELECTRONS")) {
       vector<string> parts = Core::split(buffer, '=');
       if (parts.size() == 2)
@@ -116,7 +117,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
       return;
     vector<string> parts = Core::split(buffer, ' ');
     if (parts.size() != 5) {
-      appendError("Poorly formed atom line: " + buffer + " length: " + std::to_string(buffer.length()));
+      appendError("Poorly formed atom line: " + buffer);
       return;
     }
     bool ok(false);
@@ -134,7 +135,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
     pos.z() = Core::lexicalCast<Real>(parts[4], ok) * coordFactor;
     if (!ok)
       appendError("Failed to cast to double for position: " + parts[4]);
-  
+
     Atom atom;
     if (!atomsExist) {
       atom = molecule.addAtom(atomicNumber, pos);
