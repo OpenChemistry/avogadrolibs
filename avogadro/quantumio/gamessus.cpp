@@ -47,18 +47,11 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
-  bool atomsRead(false);
   string buffer;
   while (getline(in, buffer)) {
     if (Core::contains(buffer, "COORDINATES (BOHR)")) {
-      if (atomsRead)
-        continue;
-      atomsRead = true;
       readAtomBlock(in, molecule, false);
     } else if (Core::contains(buffer, "COORDINATES OF ALL ATOMS ARE (ANGS)")) {
-      if (atomsRead)
-        continue;
-      atomsRead = true;
       readAtomBlock(in, molecule, true);
     } else if (Core::contains(buffer, "ATOMIC BASIS SET")) {
       readBasisSet(in);
@@ -90,11 +83,6 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       readEigenvectors(in);
     }
   }
-  if (!atomsRead) {
-    appendError("Could not find any atomic coordinates! Are you sure this is a "
-                "GAMESS-US output file?");
-    return false;
-  }
 
   // f functions and beyond need to be reordered
   reorderMOs();
@@ -117,14 +105,18 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
   // We read the atom block in until it terminates with a blank line.
   double coordFactor = angs ? 1.0 : BOHR_TO_ANGSTROM_D;
   string buffer;
+
+  bool atomsExist = molecule.atomCount() > 0;
+  Index index = 0;
+  //@TODO - store all the coordinates
   while (getline(in, buffer)) {
     if (Core::contains(buffer, "CHARGE") || Core::contains(buffer, "------"))
       continue;
-    else if (buffer == "\n") // Our work here is done.
+    else if (buffer.length() == 0 || buffer == "\n") // Our work here is done.
       return;
     vector<string> parts = Core::split(buffer, ' ');
     if (parts.size() != 5) {
-      appendError("Poorly formed atom line: " + buffer);
+      appendError("Poorly formed atom line: " + buffer + " length: " + std::to_string(buffer.length()));
       return;
     }
     bool ok(false);
@@ -142,8 +134,15 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
     pos.z() = Core::lexicalCast<Real>(parts[4], ok) * coordFactor;
     if (!ok)
       appendError("Failed to cast to double for position: " + parts[4]);
-    Atom atom = molecule.addAtom(atomicNumber);
-    atom.setPosition3d(pos);
+  
+    Atom atom;
+    if (!atomsExist) {
+      atom = molecule.addAtom(atomicNumber, pos);
+    } else {
+      atom = molecule.atom(index);
+      atom.setPosition3d(pos);
+      index++;
+    }
   }
 }
 
