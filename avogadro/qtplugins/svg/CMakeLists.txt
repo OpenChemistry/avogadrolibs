@@ -1,4 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 find_package(Qt${QT_VERSION} COMPONENTS Svg REQUIRED)
 
 avogadro_plugin(SVG

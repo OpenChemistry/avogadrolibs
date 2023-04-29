@@ -1,5 +1,4 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR}
-"${AvogadroLibs_SOURCE_DIR}/thirdparty/tinycolormap/include")
+include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty/tinycolormap/include")
 
 avogadro_plugin(ApplyColors
   "Extension to apply color schemes to atoms and residues."
