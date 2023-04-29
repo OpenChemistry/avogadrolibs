@@ -44,6 +44,7 @@ namespace {
 #include <avogadro/quantumio/mopacaux.h>
 #include <avogadro/quantumio/nwchemjson.h>
 #include <avogadro/quantumio/nwchemlog.h>
+#include <avogadro/quantumio/orca.h>
 
 #include <QtConcurrent/QtConcurrentMap>
 #include <QtConcurrent/QtConcurrentRun>
@@ -94,6 +95,7 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
   Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
   Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
+  Io::FileFormatManager::registerFormat(new QuantumIO::ORCAOutput);
 }
 
 Surfaces::~Surfaces()

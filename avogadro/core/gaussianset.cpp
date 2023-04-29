@@ -184,12 +184,6 @@ bool GaussianSet::setSpinDensityMatrix(const MatrixX& m)
   return true;
 }
 
-bool GaussianSet::generateDensityMatrix()
-{
-  // FIXME: Finish me!
-  return true;
-}
-
 unsigned int GaussianSet::molecularOrbitalCount(ElectronType type)
 {
   size_t index(0);
@@ -479,7 +473,7 @@ void GaussianSet::initCalculation()
   m_init = true;
 }
 
-bool GaussianSet::generateDensity()
+bool GaussianSet::generateDensityMatrix()
 {
   if (m_scfType == Unknown)
     return false;
@@ -499,6 +493,7 @@ bool GaussianSet::generateDensity()
           cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
                << endl;
           break;
+        case Rohf: // ROHF is handled similarly to UHF
         case Uhf:
           for (unsigned int iaMO = 0; iaMO < m_electrons[0]; ++iaMO) {
             double icoeff = m_moMatrix[0](iBasis, iaMO);
@@ -523,7 +518,7 @@ bool GaussianSet::generateDensity()
   return true;
 }
 
-bool GaussianSet::generateSpinDensity()
+bool GaussianSet::generateSpinDensityMatrix()
 {
   if (m_scfType != Uhf)
     return false;
