@@ -17,4 +17,4 @@ avogadro_plugin(ImportPQR
   ""
 )
 
-target_link_libraries(ImportPQR PRIVATE ${Qt5Network_LIBRARIES})
+target_link_libraries(ImportPQR PRIVATE Qt::Network)

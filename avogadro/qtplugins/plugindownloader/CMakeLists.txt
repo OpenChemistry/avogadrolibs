@@ -19,5 +19,5 @@ avogadro_plugin(PluginDownloader
   ""
 )
 
-target_link_libraries(PluginDownloader PRIVATE ${Qt5Network_LIBRARIES}
+target_link_libraries(PluginDownloader PRIVATE Qt::Network
   ${LIBARCHIVE_LIBRARIES})
