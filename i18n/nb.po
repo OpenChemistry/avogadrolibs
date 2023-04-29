@@ -2,13 +2,13 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Allan Nordhøy <epost@anotheragency.no>, 2020, 2021, 2022.
+# Allan Nordhøy <epost@anotheragency.no>, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2022-12-16 22:51+0000\n"
+"PO-Revision-Date: 2023-04-27 21:50+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 4.18-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -171,7 +171,7 @@ msgstr "Fortsett"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:114 qtgui/containerwidget.cpp:35
 msgid "Close"
-msgstr ""
+msgstr "Lukk"
 
 #: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:374
 msgid "Unknown"
