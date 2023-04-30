@@ -759,13 +759,13 @@ void Cp2kInputDialog::updatePreviewText()
   file += "&END FORCE_EVAL\n";
 
   if (m_molecule) {
-    std::vector<int> atomList;
+    std::vector<unsigned int> atomList;
     bool inlist = true;
 
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
       Core::Atom atom = m_molecule->atom(i);
-      for (int i : atomList) {
-        if (i == atom.atomicNumber()) {
+      for (unsigned iat : atomList) {
+        if (iat == atom.atomicNumber()) {
           inlist = false;
           break;
         } else {
