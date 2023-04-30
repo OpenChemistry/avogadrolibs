@@ -3,8 +3,8 @@ name: Build Wheels
 on: [push, pull_request]
 
 env:
-  # Don't build python 2.7, pypy, or 32-bit wheels
-  CIBW_SKIP: "cp36-* cp37-* cp311-* pp* *-musllinux_* *-manylinux_i686 *-win32"
+  # Don't build python 2.7, pypy, or 32-bit wheels or Mac arm64 on Py3.8
+  CIBW_SKIP: "cp36-* cp37-* cp311-* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
 
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
@@ -14,10 +14,16 @@ env:
   # Specify eigen location for windows
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEigen3_INCLUDE_DIR:PATH=/c/eigen"
 
+  # On Mac build both x64 and arm64
+  CIBW_ARCHS_MACOS: "x86_64 arm64"
+
   CIBW_TEST_REQUIRES: pytest
 
   # Run a very simple test to make sure the wheels are working
   CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
+
+  # We can't currently test Mac arm64 builds on x64
+  CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
 
 
 # Use bash by default for the run command
