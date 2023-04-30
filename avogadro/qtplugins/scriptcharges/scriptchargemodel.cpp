@@ -358,11 +358,11 @@ void ScriptChargeModel::processElementString(const QString& str)
   str2.replace(',', ' ');
   // then split on whitespace
   QStringList strList = str2.split(QRegExp("\\s+"), QString::SkipEmptyParts);
-  foreach (QString str, strList) {
+  foreach (QString sstr, strList) {
     // these should be numbers or ranges (e.g., 1-84)
-    if (str.contains('-')) {
+    if (sstr.contains('-')) {
       // range, so split on the dash
-      QStringList strList2 = str.split('-');
+      QStringList strList2 = sstr.split('-');
       if (strList2.size() != 2)
         return;
 
@@ -379,7 +379,7 @@ void ScriptChargeModel::processElementString(const QString& str)
     }
 
     bool ok;
-    int i = str.toInt(&ok);
+    int i = sstr.toInt(&ok);
     if (!ok || i < 1 || i > 119)
       return;
 
