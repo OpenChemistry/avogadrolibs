@@ -115,7 +115,6 @@ if (NOT SKBUILD)
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLIBARCHIVE.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
   install(EXPORT "AvogadroLibsTargets"

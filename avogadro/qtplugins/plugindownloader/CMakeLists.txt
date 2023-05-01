@@ -1,7 +1,7 @@
 include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
 
-find_package(LIBARCHIVE REQUIRED)
-include_directories(SYSTEM ${LIBARCHIVE_INCLUDE_DIRS})
+find_package(LibArchive REQUIRED)
+
 # Extension
 set(plugindownloader_srcs
   plugindownloader.cpp
@@ -20,4 +20,4 @@ avogadro_plugin(PluginDownloader
 )
 
 target_link_libraries(PluginDownloader PRIVATE Qt::Network
-  ${LIBARCHIVE_LIBRARIES})
+  LibArchive::LibArchive)
