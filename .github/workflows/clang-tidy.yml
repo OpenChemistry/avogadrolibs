@@ -76,24 +76,24 @@ jobs:
         
     - name: Create results directory
       run: |
-        mkdir clang-tidy-result
+        mkdir ${{ runner.workspace }}/clang-tidy-result
     
     - name: Analyze
       run: |
         pip install pyyaml
-        clang-tidy -p ../build --export-fixes ../clang-tidy-result/fixes.yml
+        run-clang-tidy -p ../build -export-fixes ${{ runner.workspace }}/clang-tidy-result/fixes.yml
       working-directory: ${{ runner.workspace }}/avogadrolibs
     
     - name: Save PR metadata
       run: |
-        echo ${{ github.event.number }} > clang-tidy-result/pr-id.txt
-        echo ${{ github.event.pull_request.head.repo.full_name }} > clang-tidy-result/pr-head-repo.txt
-        echo ${{ github.event.pull_request.head.ref }} > clang-tidy-result/pr-head-ref.txt
+        echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
+        echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
+        echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
     
     - uses: actions/upload-artifact@v3
       with:
         name: clang-tidy-result
-        path: clang-tidy-result/
+        path: ${{ runner.workspace }}/clang-tidy-result/
         
     - name: Setup tmate session
       if: ${{ failure() }}
