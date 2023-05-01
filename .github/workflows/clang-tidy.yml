@@ -57,6 +57,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: avogadrolibs
+        fetch-depth: 2
 
     - name: Configure
       run: |
@@ -83,6 +84,8 @@ jobs:
         # generate the fixes and we'll make a diff
         run-clang-tidy -p ../build -fix
         cd avogadrolibs
+        pwd
+        echo "Generating diff"
         git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
       working-directory: ${{ runner.workspace }}/avogadrolibs
     
