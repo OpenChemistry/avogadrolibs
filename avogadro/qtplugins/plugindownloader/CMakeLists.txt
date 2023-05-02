@@ -1,5 +1,3 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
-
 find_package(LibArchive REQUIRED)
 
 # Extension

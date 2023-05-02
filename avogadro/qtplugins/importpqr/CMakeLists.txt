@@ -1,5 +1,3 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
-
 # Extension
 set(importpqr_srcs
   importpqr.cpp
