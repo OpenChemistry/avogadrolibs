@@ -76,8 +76,8 @@ function(avogadro_plugin name description type header pluginClass sources)
   if("${_plugin_object}" STREQUAL "STATIC")
     set_target_properties(${name} PROPERTIES COMPILE_DEFINITIONS
       "QT_STATICPLUGIN")
-    if(UNIX) # Need -fPIC for static plugins linked to shared libs on Unix.
-      set_target_properties(${name} PROPERTIES COMPILE_FLAGS "-fPIC")
+    if(UNIX)
+      set_target_properties(${name} PROPERTIES POSITION_INDEPENDENT_CODE ON)
     endif()
   endif()
 
