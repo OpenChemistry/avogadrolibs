@@ -20,4 +20,6 @@ avogadro_plugin(PluginDownloader
 )
 
 target_link_libraries(PluginDownloader PRIVATE Qt::Network
-  LibArchive::LibArchive)
+  LibArchive::LibArchive
+  nlohmann_json::nlohmann_json
+)

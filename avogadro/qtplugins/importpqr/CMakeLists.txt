@@ -17,4 +17,4 @@ avogadro_plugin(ImportPQR
   ""
 )
 
-target_link_libraries(ImportPQR PRIVATE Qt::Network)
+target_link_libraries(ImportPQR PRIVATE Qt::Network nlohmann_json::nlohmann_json)

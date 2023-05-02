@@ -4,6 +4,15 @@ if (USE_QT)
   add_subdirectory(libgwavi)
 endif()
 
+if(USE_EXTERNAL_NLOHMANN)
+  find_package(nlohmann_json 3.3.0 REQUIRED GLOBAL)
+else()
+  add_library(nlohmann_json INTERFACE IMPORTED GLOBAL)
+  target_include_directories(nlohmann_json
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/nlohmann>)
+  add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
+endif(USE_EXTERNAL_NLOHMANN)
+
 if(USE_EXTERNAL_PUGIXML)
   find_package(pugixml 1.12 REQUIRED GLOBAL)
 else()
