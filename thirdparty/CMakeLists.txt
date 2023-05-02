@@ -1,4 +1,3 @@
-add_subdirectory(struct)
 # Only used by Qt plugin
 if (USE_QT)
   add_subdirectory(libgwavi)
@@ -23,3 +22,16 @@ else()
   add_library(pugixml::pugixml ALIAS pugixml)
   unset(_PUGIXML_ROOT)
 endif(USE_EXTERNAL_PUGIXML)
+
+if(USE_EXTERNAL_STRUCT)
+  find_package(struct REQUIRED GLOBAL)
+else()
+  set(_STRUCT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/struct)
+  add_library(struct STATIC
+    ${_STRUCT_ROOT}/struct.c
+    ${_STRUCT_ROOT}/struct_endian.c
+  )
+  set_target_properties(struct PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+  target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
+  unset(_STRUCT_ROOT)
+endif(USE_EXTERNAL_STRUCT)
