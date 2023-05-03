@@ -3,6 +3,7 @@ if(NOT TARGET gif-h)
   target_include_directories(gif-h INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gif-h>)
 endif(NOT TARGET gif-h)
+
 # Only used by Qt plugin
 if (USE_QT)
   add_subdirectory(libgwavi)
@@ -40,3 +41,9 @@ else()
   target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
   unset(_STRUCT_ROOT)
 endif(USE_EXTERNAL_STRUCT)
+
+if(NOT TARGET tinycolormap)
+  add_library(tinycolormap INTERFACE IMPORTED GLOBAL)
+  target_include_directories(tinycolormap INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tinycolormap/include>)
+endif(NOT TARGET tinycolormap)

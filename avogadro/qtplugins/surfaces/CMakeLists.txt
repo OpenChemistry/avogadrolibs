@@ -1,6 +1,3 @@
-include_directories(SYSTEM
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/tinycolormap/include")
-
 set(surfaces_srcs
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
@@ -23,5 +20,6 @@ target_link_libraries(Surfaces
     Avogadro::QuantumIO
     Avogadro::QtOpenGL
     Qt::Concurrent
+    gif-h
     gwavi
-    gif-h)
+    tinycolormap)
