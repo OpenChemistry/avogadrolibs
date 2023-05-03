@@ -36,7 +36,6 @@ using Rendering::BSplineGeometry;
 using Rendering::Cartoon;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using std::list;
 using std::map;
@@ -143,10 +142,10 @@ struct LayerCartoon : Core::LayerData
 struct BackboneResidue
 {
   BackboneResidue() {}
-  BackboneResidue(const Vector3f p, const Vector3ub& c1, const Vector3ub& c2,
+  BackboneResidue(const Vector3f p, Vector3ub  c1, Vector3ub  c2,
                   const size_t& g, size_t id, bool sel,
                   Residue::SecondaryStructure sec)
-    : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
+    : pos(p), color1(std::move(c1)), color2(std::move(c2)), group(g), residueID(id), selected(sel),
       secondaryStructure(sec)
 
   {}
@@ -357,10 +356,10 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
         interface.showRibbon || interface.showSimpleCartoon ||
         interface.showCartoon || interface.showRope) {
       map<size_t, AtomsPairList> backbones;
-      if (molecule.residues().size() > 0) {
+      if (!molecule.residues().empty()) {
         backbones = getBackboneByResidues(molecule, layer);
       }
-      if (backbones.size() == 0) {
+      if (backbones.empty()) {
         continue; // maybe something in a different layer
       }
       size_t i = 0;

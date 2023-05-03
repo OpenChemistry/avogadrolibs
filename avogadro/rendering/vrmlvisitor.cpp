@@ -164,7 +164,7 @@ void VRMLVisitor::visit(MeshGeometry& geometry)
   Core::Array<Rendering::MeshGeometry::PackedVertex> v = geometry.vertices();
 
   // If there are no triangles then don't bother doing anything
-  if (v.size() == 0)
+  if (v.empty())
     return;
 
   ostringstream str, verts, iverts, colors;

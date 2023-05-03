@@ -8,8 +8,7 @@
 
 #include <QSettings>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 BandDialog::BandDialog(QWidget* aParent, YaehmopSettings& yaehmopSettings)
   : QDialog(aParent), m_ui(new Ui::BandDialog),
@@ -56,5 +55,4 @@ void BandDialog::accept()
   QDialog::accept();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

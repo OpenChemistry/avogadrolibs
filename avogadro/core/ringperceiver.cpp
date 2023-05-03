@@ -384,7 +384,7 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
   std::vector<RingCandidate> candidates;
   for (size_t i = 0; i < n; i++) {
     for (size_t j = i + 1; j < n; j++) {
-      if (P(i, j).size() == 1 && Pt(i, j).size() == 0) {
+      if (P(i, j).size() == 1 && Pt(i, j).empty()) {
         continue;
       } else {
         size_t size;

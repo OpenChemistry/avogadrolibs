@@ -29,7 +29,6 @@ using Core::Array;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
-using Core::Residue;
 
 MMTFFormat::MMTFFormat() = default;
 
@@ -87,7 +86,7 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
     molecule.setUnitCell(unitCellObject);
   }
   // spaceGroup
-  if (structure.spaceGroup.size() > 0) {
+  if (!structure.spaceGroup.empty()) {
     unsigned short hall = 0;
     hall = Core::SpaceGroups::hallNumber(structure.spaceGroup);
 

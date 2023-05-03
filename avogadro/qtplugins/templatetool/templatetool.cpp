@@ -48,30 +48,20 @@ const unsigned char INVALID_ATOMIC_NUMBER =
     std::numeric_limits<unsigned char>::max();
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
-using QtGui::RWAtom;
-using QtGui::RWBond;
 using QtGui::Molecule;
-using QtGui::RWMolecule;
-using QtOpenGL::GLWidget;
 
-using Avogadro::Rendering::GeometryNode;
-using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
-using Avogadro::Rendering::TextLabel2D;
-using Avogadro::Rendering::TextLabel3D;
-using Avogadro::Rendering::TextProperties;
 using Avogadro::Core::Elements;
 using Avogadro::Io::CjsonFormat;
 
 TemplateTool::TemplateTool(QObject *parent_)
   : QtGui::ToolPlugin(parent_),
     m_activateAction(new QAction(this)),
-    m_molecule(NULL),
-    m_glWidget(NULL),
-    m_renderer(NULL),
+    m_molecule(nullptr),
+    m_glWidget(nullptr),
+    m_renderer(nullptr),
     m_toolWidget(new TemplateToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER),
@@ -96,7 +86,7 @@ QUndoCommand *TemplateTool::mousePressEvent(QMouseEvent *e)
 {
   clearKeyPressBuffer();
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
@@ -111,10 +101,10 @@ QUndoCommand *TemplateTool::mousePressEvent(QMouseEvent *e)
     switch (m_clickedObject.type) {
     case Rendering::InvalidType:
       emptyLeftClick(e);
-      return NULL;
+      return nullptr;
     case Rendering::AtomType:
       atomLeftClick(e);
-      return NULL;
+      return nullptr;
     default:
       break;
     }
@@ -125,19 +115,19 @@ QUndoCommand *TemplateTool::mousePressEvent(QMouseEvent *e)
     switch (m_clickedObject.type) {
     case Rendering::AtomType:
       atomRightClick(e);
-      return NULL;
+      return nullptr;
     default:
       break;
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *TemplateTool::mouseReleaseEvent(QMouseEvent *e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, true);
 
@@ -146,7 +136,7 @@ QUndoCommand *TemplateTool::mouseReleaseEvent(QMouseEvent *e)
   }
 
   if (m_clickedObject.type == Rendering::InvalidType)
-    return NULL;
+    return nullptr;
 
   switch (e->button()) {
   case Qt::LeftButton:
@@ -158,25 +148,25 @@ QUndoCommand *TemplateTool::mouseReleaseEvent(QMouseEvent *e)
     break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *TemplateTool::mouseMoveEvent(QMouseEvent *e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   if (m_pressedButtons & Qt::LeftButton)
     if (m_clickedObject.type == Rendering::AtomType)
       atomLeftDrag(e);
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand *TemplateTool::keyPressEvent(QKeyEvent *e)
 {
   if (e->text().isEmpty())
-    return NULL;
+    return nullptr;
 
   e->accept();
 
@@ -190,7 +180,7 @@ QUndoCommand *TemplateTool::keyPressEvent(QKeyEvent *e)
 
   if (m_keyPressBuffer.size() >= 3) {
     clearKeyPressBuffer();
-    return NULL;
+    return nullptr;
   }
 
   int atomicNum = Core::Elements::atomicNumberFromSymbol(
@@ -199,7 +189,7 @@ QUndoCommand *TemplateTool::keyPressEvent(QKeyEvent *e)
   if (atomicNum != Avogadro::InvalidElement)
     m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
 
-  return NULL;
+  return nullptr;
 }
 
 void TemplateTool::draw(Rendering::GroupNode&)
@@ -398,14 +388,14 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     
     // Estimate and try to realize bond distances
     Vector3 displacement(0.0, 0.0, 0.0);
-    for (size_t i = 0; i < templateLigandIndices.size(); i++) {
-      unsigned char ligandAtomicNumber = templateMolecule.atomicNumber(templateLigandIndices[i]);
+    for (unsigned long templateLigandIndice : templateLigandIndices) {
+      unsigned char ligandAtomicNumber = templateMolecule.atomicNumber(templateLigandIndice);
       ligandAtomicNumber = (ligandAtomicNumber == 0)? 6 : ligandAtomicNumber;
       // Estimate as the sum of covalent radii
       double bondDistance = Elements::radiusCovalent(ligandAtomicNumber)
         + Elements::radiusCovalent(m_molecule->atomicNumber(moleculeCenterIndex));
       Vector3 inVector = templateMolecule.atomPosition3d(templateDummyIndex)
-        - templateMolecule.atomPosition3d(templateLigandIndices[i]);
+        - templateMolecule.atomPosition3d(templateLigandIndice);
       Vector3 correctionVector = inVector;
       correctionVector.normalize();
       correctionVector *= bondDistance - inVector.norm();
@@ -429,12 +419,13 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     
     // Create arrays with the points to align and apply Kabsch algorithm
     std::vector<Vector3> templateLigandPositions;
-    for (size_t index: templateLigandIndices)
-      templateLigandPositions.push_back(templateMolecule.atomPosition3d(index)
+    templateLigandPositions.reserve(templateLigandIndices.size());
+for (size_t index: templateLigandIndices)
+      templateLigandPositions.emplace_back(templateMolecule.atomPosition3d(index)
       - m_molecule->atomPosition3d(moleculeCenterIndex));
     std::vector<Vector3> moleculeLigandPositions;
     for (size_t UID: m_toolWidget->selectedUIDs())
-      moleculeLigandPositions.push_back(m_molecule->atomPosition3d(
+      moleculeLigandPositions.emplace_back(m_molecule->atomPosition3d(
         m_molecule->atomByUniqueId(UID).index()
       ) - m_molecule->atomPosition3d(moleculeCenterIndex));
     Matrix3 rotation = applyKabsch(templateLigandPositions, moleculeLigandPositions);
@@ -512,5 +503,4 @@ void TemplateTool::atomLeftDrag(QMouseEvent*)
   return;
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

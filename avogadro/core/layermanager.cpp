@@ -73,7 +73,7 @@ void LayerManager::deleteMolecule(const Molecule* mol)
 
   auto aux = m_molToInfo.find(mol);
   if (aux != m_molToInfo.end()) {
-    auto id = aux->second->mol;
+    const auto *id = aux->second->mol;
     if (id == mol) {
       auto it = m_molToInfo.begin();
       while (it != m_molToInfo.end()) {

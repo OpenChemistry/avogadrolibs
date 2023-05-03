@@ -8,14 +8,12 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 
-namespace Avogadro {
+#include <utility>
 
-using Core::Molecule;
+namespace Avogadro::Calc {
 
-namespace Calc {
-
-DefaultModel::DefaultModel(const std::string& id)
-  : ChargeModel(), m_identifier(id)
+DefaultModel::DefaultModel(std::string  id)
+  : ChargeModel(), m_identifier(std::move(id))
 {
   // we don't know which elements are in the molecule
   // but we can just say all of them are okay
@@ -30,5 +28,4 @@ MatrixX DefaultModel::partialCharges(Core::Molecule& mol) const
   return mol.partialCharges(m_identifier);
 }
 
-} // namespace Calc
 } // namespace Avogadro

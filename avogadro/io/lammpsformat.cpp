@@ -18,7 +18,6 @@
 #include <sstream>
 #include <string>
 
-using std::endl;
 using std::getline;
 using std::map;
 using std::string;

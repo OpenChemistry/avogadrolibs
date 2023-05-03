@@ -121,7 +121,7 @@ const Color3f* Mesh::color(int n) const
 {
   // If there is only one color return that, otherwise colored by vertex.
   if (m_colors.size() == 1)
-    return &(m_colors[0]);
+    return m_colors.data();
   else
     return &(m_colors[n * 3]);
 }
@@ -149,10 +149,7 @@ bool Mesh::addColors(const Core::Array<Color3f>& values)
 bool Mesh::valid() const
 {
   if (m_vertices.size() == m_normals.size()) {
-    if (m_colors.size() == 1 || m_colors.size() == m_vertices.size())
-      return true;
-    else
-      return false;
+    return m_colors.size() == 1 || m_colors.size() == m_vertices.size();
   } else {
     return false;
   }
@@ -179,7 +176,7 @@ Mesh& Mesh::operator=(const Mesh& other)
 
 void Mesh::smooth(int iterationCount)
 {
-  if (m_vertices.size() == 0)
+  if (m_vertices.empty())
     return;
   if (iterationCount <= 0)
     return;

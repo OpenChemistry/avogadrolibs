@@ -112,7 +112,7 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
 {
   CartoonType ct = secondaryToCartoonType(sec);
   size_t idCartoon = 0;
-  if (m_type.size() > 0) {
+  if (!m_type.empty()) {
     idCartoon = ct == m_type.back().first && m_type.size() > (SKIPPED + 1)
                   ? m_type.back().second + 1
                   : 0;

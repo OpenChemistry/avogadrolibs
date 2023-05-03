@@ -58,7 +58,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   load(basis);
 
   // check if there is vibrational data
-  if (m_frequencies.size() > 0) {
+  if (!m_frequencies.empty()) {
     // convert the std::vector to Array
     Core::Array<double> frequencies(m_frequencies.size());
     for (unsigned int i = 0; i < m_frequencies.size(); ++i)
@@ -79,7 +79,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
     Index atomCount = molecule.atomCount();
     for (unsigned int i = 0; i < m_normalModes.size(); ++i) {
       normalMode.push_back(m_normalModes[i]);
-      if (i % atomCount == 0 && normalMode.size() > 0) {
+      if (i % atomCount == 0 && !normalMode.empty()) {
         normalModes.push_back(normalMode);
         normalMode.clear();
       }
@@ -162,7 +162,7 @@ void MopacAux::processLine(std::istream& in)
 
 void MopacAux::load(SlaterSet* basis)
 {
-  if (m_atomPos.size() == 0) {
+  if (m_atomPos.empty()) {
     cout << "No atoms found in .aux file. Bailing out." << endl;
     // basis->setIsValid(false);
     return;

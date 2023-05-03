@@ -53,28 +53,28 @@ void ComDialog::setMolecule(QtGui::Molecule* mol)
 
 void ComDialog::enableVolume(int enable)
 {
-  auto w = ActiveObjects::instance().activeWidget();
-  auto vtkgl = qobject_cast<vtkGLWidget*>(w);
+  auto *w = ActiveObjects::instance().activeWidget();
+  auto *vtkgl = qobject_cast<vtkGLWidget*>(w);
   if (vtkgl) {
-    vtkgl->renderVolume(enable == 0 ? false : true);
+    vtkgl->renderVolume(enable != 0);
     emit renderNeeded();
   }
 }
 
 void ComDialog::enableIsosurface(int enable)
 {
-  auto w = ActiveObjects::instance().activeWidget();
-  auto vtkgl = qobject_cast<vtkGLWidget*>(w);
+  auto *w = ActiveObjects::instance().activeWidget();
+  auto *vtkgl = qobject_cast<vtkGLWidget*>(w);
   if (vtkgl) {
-    vtkgl->renderIsosurface(enable == 0 ? false : true);
+    vtkgl->renderIsosurface(enable != 0);
     emit renderNeeded();
   }
 }
 
 void ComDialog::setIsoValue(double value)
 {
-  auto w = ActiveObjects::instance().activeWidget();
-  auto vtkgl = qobject_cast<vtkGLWidget*>(w);
+  auto *w = ActiveObjects::instance().activeWidget();
+  auto *vtkgl = qobject_cast<vtkGLWidget*>(w);
   if (vtkgl) {
     vtkgl->setIsoValue(value);
     emit renderNeeded();
@@ -83,8 +83,8 @@ void ComDialog::setIsoValue(double value)
 
 void ComDialog::setOpacity(double value)
 {
-  auto w = ActiveObjects::instance().activeWidget();
-  auto vtkgl = qobject_cast<vtkGLWidget*>(w);
+  auto *w = ActiveObjects::instance().activeWidget();
+  auto *vtkgl = qobject_cast<vtkGLWidget*>(w);
   if (vtkgl) {
     vtkgl->setOpacity(value);
     emit renderNeeded();

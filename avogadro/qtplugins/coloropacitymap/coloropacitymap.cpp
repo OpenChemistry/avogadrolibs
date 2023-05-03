@@ -33,7 +33,7 @@ namespace Avogadro::QtPlugins {
 
 vtkImageData* cubeImageData(Core::Cube* cube)
 {
-  auto data = vtkImageData::New();
+  auto *data = vtkImageData::New();
   // data->SetNumberOfScalarComponents(1, nullptr);
   Eigen::Vector3i dim = cube->dimensions();
   data->SetExtent(0, dim.x() - 1, 0, dim.y() - 1, 0, dim.z() - 1);
@@ -121,8 +121,8 @@ void ColorOpacityMap::updateActions()
 
 void ColorOpacityMap::updateHistogram()
 {
-  auto widget = ActiveObjects::instance().activeWidget();
-  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+  auto *widget = ActiveObjects::instance().activeWidget();
+  auto *vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
 
   if (widget && vtkWidget && widget != m_activeWidget) {
     if (m_activeWidget)
@@ -133,9 +133,9 @@ void ColorOpacityMap::updateHistogram()
 
   if (vtkWidget && m_molecule && m_molecule->cubeCount()) {
     vtkNew<vtkTable> table;
-    auto imageData = vtkWidget->imageData();
-    auto lut = vtkWidget->lut();
-    auto opacity = vtkWidget->opacityFunction();
+    auto *imageData = vtkWidget->imageData();
+    auto *lut = vtkWidget->lut();
+    auto *opacity = vtkWidget->opacityFunction();
 
     m_histogramWidget->setLUT(lut);
     m_histogramWidget->setOpacityFunction(opacity);
@@ -149,7 +149,7 @@ void ColorOpacityMap::updateHistogram()
 void ColorOpacityMap::displayDialog()
 {
   if (!m_comDialog) {
-    auto p = qobject_cast<QWidget*>(parent());
+    auto *p = qobject_cast<QWidget*>(parent());
     m_comDialog = new ComDialog(p);
     m_comDialog->setMolecule(m_molecule);
     m_histogramWidget = m_comDialog->histogramWidget();
@@ -164,8 +164,8 @@ void ColorOpacityMap::displayDialog()
 
 void ColorOpacityMap::render()
 {
-  auto widget = ActiveObjects::instance().activeWidget();
-  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+  auto *widget = ActiveObjects::instance().activeWidget();
+  auto *vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
   if (vtkWidget) {
     vtkWidget->renderWindow()->Render();
     vtkWidget->update();

@@ -13,6 +13,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
+#include <utility>
 
 using json = nlohmann::json;
 
@@ -37,7 +38,7 @@ public:
     return true;
   }
 
-public slots:
+
   void responseReceived(const QByteArray& output)
   {
     m_finished = true;
@@ -61,17 +62,17 @@ private:
   QByteArray m_output;
 };
 
-OBFileFormat::OBFileFormat(const std::string& name_,
-                           const std::string& identifier_,
-                           const std::string& description_,
-                           const std::string& specificationUrl_,
+OBFileFormat::OBFileFormat(std::string  name_,
+                           std::string  identifier_,
+                           std::string  description_,
+                           std::string  specificationUrl_,
                            const std::vector<std::string> fileExtensions_,
                            const std::vector<std::string> mimeTypes_,
-                           const std::string& defaultFormat_, bool fileOnly_)
-  : Io::FileFormat(), m_description(description_),
+                           std::string  defaultFormat_, bool fileOnly_)
+  : Io::FileFormat(), m_description(std::move(description_)),
     m_fileExtensions(fileExtensions_), m_mimeTypes(mimeTypes_),
-    m_identifier(identifier_), m_name(name_),
-    m_specificationUrl(specificationUrl_), m_defaultFormat(defaultFormat_),
+    m_identifier(std::move(identifier_)), m_name(std::move(name_)),
+    m_specificationUrl(std::move(specificationUrl_)), m_defaultFormat(std::move(defaultFormat_)),
     m_fileOnly(fileOnly_)
 {}
 
