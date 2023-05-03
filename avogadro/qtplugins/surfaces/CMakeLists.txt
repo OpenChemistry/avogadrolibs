@@ -1,5 +1,4 @@
 include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/gif-h"
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/tinycolormap/include")
 
 set(surfaces_srcs
@@ -24,4 +23,5 @@ target_link_libraries(Surfaces
     Avogadro::QuantumIO
     Avogadro::QtOpenGL
     Qt::Concurrent
-    gwavi)
+    gwavi
+    gif-h)

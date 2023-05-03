@@ -1,3 +1,8 @@
+if(NOT TARGET gif-h)
+  add_library(gif-h INTERFACE IMPORTED GLOBAL)
+  target_include_directories(gif-h INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gif-h>)
+endif(NOT TARGET gif-h)
 # Only used by Qt plugin
 if (USE_QT)
   add_subdirectory(libgwavi)
