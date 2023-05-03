@@ -1,5 +1,3 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi")
-
 avogadro_plugin(PlayerTool
   "Player tool"
   ToolPlugin

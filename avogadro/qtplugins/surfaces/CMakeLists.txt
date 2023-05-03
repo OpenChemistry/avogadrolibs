@@ -1,4 +1,4 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi"
+include_directories(SYSTEM
   "${AvogadroLibs_SOURCE_DIR}/thirdparty/tinycolormap/include")
 
 set(surfaces_srcs
