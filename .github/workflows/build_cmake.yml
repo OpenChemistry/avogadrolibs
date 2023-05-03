@@ -26,7 +26,7 @@ jobs:
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
             cpack: "",
           }
         - {
@@ -34,7 +34,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
             cpack: "",
           }
         - {
@@ -56,7 +56,7 @@ jobs:
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
-            os: ubuntu-20.04,
+            os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
@@ -64,7 +64,7 @@ jobs:
           }
         - {
             name: "Ubuntu Leak Sanitizer", artifact: "",
-            os: ubuntu-20.04,
+            os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "lsan",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
@@ -72,7 +72,7 @@ jobs:
           }
         - {
             name: "Ubuntu Thread Sanitizer", artifact: "",
-            os: ubuntu-20.04,
+            os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "tsan",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
@@ -80,7 +80,7 @@ jobs:
           }
         - {
             name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
-            os: ubuntu-20.04,
+            os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
             cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
@@ -190,7 +190,7 @@ jobs:
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
 
     - name: Run tests
-      if: matrix.config.os == 'ubuntu-20.04'
+      if: matrix.config.os == 'ubuntu-latest'
       shell: cmake -P {0}
       run: |
         include(ProcessorCount)
