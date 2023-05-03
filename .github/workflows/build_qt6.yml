@@ -92,18 +92,13 @@ jobs:
       with:
         path: avogadrolibs
 
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v3
-      with:
-        path: ../Qt
-        key: ${{ runner.os }}-QtCache
-
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        cache: true
         version: ${{ env.QT_VERSION }}
+        aqtversion: '==3.1.*'
+        modules: 'qt5compat'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
