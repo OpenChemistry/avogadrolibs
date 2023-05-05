@@ -8,9 +8,6 @@ env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
   BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.15.2
-  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
-  SCCACHE_GHA_ENABLED: "true"
-  LAUNCHER: CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache
 
 jobs:
   build:
@@ -71,19 +68,16 @@ jobs:
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-thirdparty
 
-    - name: Run sccache-cache
-      uses: mozilla-actions/sccache-action@main
-
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.CACHE}} ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} ${{env.LAUNCHER}} ninja
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} ninja
         # only re-compile avogadrolibs
         (cd avogadrolibs; ninja clean)
         bear -- ninja
