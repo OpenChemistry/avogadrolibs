@@ -3,13 +3,14 @@
 # Maxime Leroy <lisacintosh@gmail.com>, 2021, 2022.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
 # Translator <kvb@tuta.io>, 2022, 2023.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-04-29 03:13+0000\n"
-"Last-Translator: Translator <kvb@tuta.io>\n"
+"PO-Revision-Date: 2023-05-06 15:51+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1257,7 +1258,7 @@ msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "éléments de symétrie"
 
 #: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -2083,10 +2084,8 @@ msgid "Line width:"
 msgstr "Épaisseur ligne :"
 
 #: qtplugins/closecontacts/closecontacts.h:34
-#, fuzzy
-#| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
-msgstr "Affiche les forces de déplacement sur les atomes"
+msgstr "Affiche les forces de déplacement sur les atomes."
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Contact"
@@ -2655,8 +2654,8 @@ msgstr ""
 "Outil de dessin\n"
 "\n"
 "Bouton gauche ;\tcliquer et glisser-déposer pour ajouter des atomes et des "
-"liaison.\n"
-"Bouton droit :\teffacer un atome."
+"liaison\n"
+"Bouton droit :\teffacer un atome"
 
 #: qtplugins/editor/editor.cpp:104
 msgid "Draw Atom"
@@ -3818,7 +3817,7 @@ msgstr "Échec lors de la génération du modèle XRD"
 
 #: qtplugins/plotxrd/plotxrd.cpp:157
 msgid "Failed to convert molecule to CIF format."
-msgstr "Échec de conversion de la molécule au format CIF"
+msgstr "Échec de conversion de la molécule au format CIF."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
@@ -4285,10 +4284,8 @@ msgid "&Select"
 msgstr "&Sélectionner"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Select by Element..."
 msgid "Select Element"
-msgstr "Sélectionner par élément..."
+msgstr "Sélectionner l'élément"
 
 #: qtplugins/select/select.cpp:216
 #, fuzzy
@@ -4328,10 +4325,8 @@ msgid "Residues to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:454
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "Sélectionner par résidu..."
+msgstr "Sélectionner le résidu"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6256,7 +6251,7 @@ msgstr "Méthode de Newton"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
 msgid "Autodetect"
-msgstr "Détection auto."
+msgstr "Détection automatique"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
