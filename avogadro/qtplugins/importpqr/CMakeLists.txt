@@ -17,7 +17,7 @@ avogadro_plugin(ImportPQR
   ""
 )
 
-target_link_libraries(ImportPQR PRIVATE ${Qt5Network_LIBRARIES})
+target_link_libraries(ImportPQR PRIVATE Qt::Network)
 
 if(WIN32)
   # for https support

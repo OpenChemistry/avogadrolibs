@@ -19,5 +19,9 @@ avogadro_plugin(PluginDownloader
   ""
 )
 
-target_link_libraries(PluginDownloader PRIVATE ${Qt5Network_LIBRARIES}
-  ${LIBARCHIVE_LIBRARIES})
+target_link_libraries(PluginDownloader PRIVATE Qt::Network ${LIBARCHIVE_LIBRARIES})
+
+if(WIN32)
+  # for https support
+  target_link_libraries(PluginDownloader PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
+endif()
