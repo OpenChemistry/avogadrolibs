@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-04-23 18:45+0000\n"
+"PO-Revision-Date: 2023-04-29 03:13+0000\n"
 "Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -1275,7 +1275,7 @@ msgstr "Fil de fer"
 
 #: qtgui/moleculemodel.cpp:92
 msgid "Untitled"
-msgstr "Sans titre"
+msgstr "Sans nom"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
@@ -2146,13 +2146,15 @@ msgstr "Traitement %1"
 #: qtplugins/commandscripts/command.cpp:249
 #: qtplugins/quantuminput/quantuminput.cpp:178
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Définir le chemin d'accès à l'interpréteur Python :"
 
 #: qtplugins/commandscripts/command.cpp:251
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Sélectionnez l'interpréteur Python pour exécuter des scripts externes\n"
+"Avogadro doit être redémarré pour que les modifications prennent effet."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
@@ -2875,13 +2877,12 @@ msgid "Add Hydrogens"
 msgstr "Ajouter les hydrogènes"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Retirer LES Hydrogènes"
+msgstr "Retirer les hydrogènes &supplémentaires"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "&Retirer tous les hydrogènes"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
@@ -4182,7 +4183,7 @@ msgstr ""
 
 #: qtplugins/quantuminput/quantuminput.cpp:230
 msgid "Set Python Path…"
-msgstr "Sélection du chemin d'accès à python…"
+msgstr "Définir le chemin d'accès à python…"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
@@ -4957,7 +4958,7 @@ msgstr "Fichier PQR :"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "APBS Input File"
-msgstr ""
+msgstr "Fichier d'entrée APBS"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
@@ -5427,7 +5428,7 @@ msgstr "Élément :"
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr "Multiplicité :"
+msgstr "Ordre de liaison :"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, GamessInputDialog)
@@ -7209,10 +7210,8 @@ msgstr "Fonctionnel"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:366
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Import Crystal from Clipboard"
 msgid "From Clipboard"
-msgstr "Importer un cristal depuis le presse-papiers"
+msgstr "Du presse-papiers"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:389
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)

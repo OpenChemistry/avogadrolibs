@@ -1,3 +1,5 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel", "scikit-build", "pybind11"]
+requires = ["setuptools>=40.8.0", "wheel", "scikit-build", "pybind11", "ninja"]
 build-backend = "setuptools.build_meta:__legacy__"
+[tool.cibuildwheel]
+build-verbosity = "1"

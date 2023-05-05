@@ -4,13 +4,14 @@
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
 # matterhorn103 <milner94@live.co.uk>, 2022.
 # Sebastian Ehlert <awvwgk@gmail.com>, 2022.
+# "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2022-08-07 09:23+0000\n"
-"Last-Translator: Sebastian Ehlert <awvwgk@gmail.com>\n"
+"PO-Revision-Date: 2023-04-29 03:13+0000\n"
+"Last-Translator: \"Jörg S.\" <joerg.schwerdtfeger@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2733,7 +2734,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Herunterladen übers Netzwerk fehlgeschlagen"
+msgstr "Download gescheitert"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100

@@ -1,11 +1,11 @@
-name: Static Analysis
+name: Clang-Tidy Static Analysis
 
 on: 
   pull_request:
   workflow_dispatch:
 
 env:
-  FEATURES: -DUSE_VTK=OFF -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
   BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.15.2
 
@@ -77,25 +77,28 @@ jobs:
         
     - name: Create results directory
       run: |
-        mkdir clang-tidy-result
+        mkdir ${{ runner.workspace }}/clang-tidy-result
     
     - name: Analyze
       run: |
-        git fetch
-        pip install pyyaml
-        git diff -U0 HEAD^ | clang-tidy-diff -p1 -path ../build -export-fixes ../clang-tidy-result/fixes.yml
+        # generate the fixes and we'll make a diff
+        run-clang-tidy -p ../build -fix
+        cd avogadrolibs
+        pwd
+        echo "Generating diff"
+        git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
       working-directory: ${{ runner.workspace }}/avogadrolibs
     
     - name: Save PR metadata
       run: |
-        echo ${{ github.event.number }} > clang-tidy-result/pr-id.txt
-        echo ${{ github.event.pull_request.head.repo.full_name }} > clang-tidy-result/pr-head-repo.txt
-        echo ${{ github.event.pull_request.head.ref }} > clang-tidy-result/pr-head-ref.txt
-    
+        echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
+        echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
+        echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
+
     - uses: actions/upload-artifact@v3
       with:
         name: clang-tidy-result
-        path: clang-tidy-result/
+        path: ${{ runner.workspace }}/clang-tidy-result/
         
     - name: Setup tmate session
       if: ${{ failure() }}

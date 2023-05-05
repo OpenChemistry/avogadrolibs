@@ -17,7 +17,7 @@ set(wrapper_SRCS
 set(_python_module_install_dir "avogadro")
 # SKBUILD is set for binary wheel
 if (NOT SKBUILD)
-  set(_python_module_install_dir "${INSTALL_LIBRARY_DIR}/avogadro")
+  set(_python_module_install_dir "${Python_STDARCH}/avogadro")
 endif()
 
 set(CMAKE_MODULE_LINKER_FLAGS "")

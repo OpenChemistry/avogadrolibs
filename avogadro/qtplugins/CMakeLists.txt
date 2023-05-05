@@ -8,6 +8,8 @@ if(WIN32)
   find_package(OpenSSL REQUIRED)
 endif()
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -42,7 +44,6 @@ function(avogadro_plugin name description type header pluginClass sources)
   endif()
   qt_wrap_ui(ui_srcs ${uis})
   qt_add_resources(rc_srcs ${rcs})
-  include_directories(${CMAKE_CURRENT_BINARY_DIR})
   unset(PluginIncludes)
   foreach(_header ${header})
     set(PluginIncludes

@@ -13,9 +13,12 @@
 
 #include <QtCore/QPoint>
 #include <QtCore/Qt> // for Qt:: namespace
+#include <QtWidgets/QAbstractButton>
 
 namespace Avogadro {
 namespace QtPlugins {
+
+class ManipulateWidget;
 
 /**
  * @class Manipulator manipulator.h
@@ -52,6 +55,10 @@ public:
   QUndoCommand* mousePressEvent(QMouseEvent* e) override;
   QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
   QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
+
+public slots:
+  void buttonClicked(QAbstractButton* button);
 
 private:
   /**
@@ -72,6 +79,7 @@ private:
   QPoint m_lastMousePosition;
   Vector3f m_lastMouse3D;
   Qt::MouseButtons m_pressedButtons;
+  ManipulateWidget* m_toolWidget;
 
   enum ToolAction
   {
@@ -84,7 +92,7 @@ private:
   ToolAction m_currentAction;
 };
 
-} // namespace QtOpenGL
+} // namespace QtPlugins
 } // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_MANIPULATOR_H
