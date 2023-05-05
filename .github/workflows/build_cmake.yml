@@ -12,6 +12,8 @@ env:
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
   build:
@@ -26,7 +28,7 @@ jobs:
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -34,7 +36,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -59,7 +61,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -67,7 +69,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "lsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -75,7 +77,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "tsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -83,7 +85,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
 
@@ -124,16 +126,10 @@ jobs:
       with:
         path: avogadrolibs
 
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v3
-      with:
-        path: ../Qt
-        key: ${{ runner.os }}-QtCache
-
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
+        cache: True
         version: ${{ env.QT_VERSION }}
 
     - name: Install OpenSSL (Win64)
@@ -156,18 +152,21 @@ jobs:
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-thirdparty
 
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@main
+
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
