@@ -21,3 +21,8 @@ target_link_libraries(PluginDownloader PRIVATE Qt::Network
   LibArchive::LibArchive
   nlohmann_json::nlohmann_json
 )
+
+if(WIN32)
+  # for https support
+  target_link_libraries(PluginDownloader PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
+endif()

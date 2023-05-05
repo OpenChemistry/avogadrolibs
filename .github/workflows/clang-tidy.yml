@@ -1,7 +1,6 @@
 name: Clang-Tidy Static Analysis
 
 on: 
-  pull_request:
   workflow_dispatch:
 
 env:
@@ -58,6 +57,15 @@ jobs:
       with:
         path: avogadrolibs
         fetch-depth: 2
+
+    - name: Grab cache files
+      uses: actions/cache@v3
+      if: runner.os != 'Windows'
+      with:
+        path: |
+          ${{ runner.workspace }}/build/thirdparty
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
