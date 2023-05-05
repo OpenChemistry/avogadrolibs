@@ -1,7 +1,6 @@
 name: Clang-Tidy Static Analysis
 
 on: 
-  pull_request:
   workflow_dispatch:
 
 env:
