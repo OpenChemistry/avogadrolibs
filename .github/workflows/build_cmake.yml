@@ -52,7 +52,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "",
+            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\\a\\Tools\\OpenSSL\\Win_x64",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -131,6 +131,11 @@ jobs:
       with:
         cache: True
         version: ${{ env.QT_VERSION }}
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      run: aqt install-tool windows desktop tools_openssl_x64
+      shell: bash
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'

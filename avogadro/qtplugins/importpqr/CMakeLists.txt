@@ -18,3 +18,8 @@ avogadro_plugin(ImportPQR
 )
 
 target_link_libraries(ImportPQR PRIVATE Qt::Network)
+
+if(WIN32)
+  # for https support
+  target_link_libraries(ImportPQR PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
+endif()
