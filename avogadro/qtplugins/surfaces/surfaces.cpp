@@ -6,8 +6,6 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
-#include "tinycolormap.hpp"
-
 #include "gaussiansetconcurrent.h"
 #include "slatersetconcurrent.h"
 

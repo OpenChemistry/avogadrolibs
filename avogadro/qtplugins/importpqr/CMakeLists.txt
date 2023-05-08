@@ -1,5 +1,3 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
-
 # Extension
 set(importpqr_srcs
   importpqr.cpp
@@ -17,7 +15,7 @@ avogadro_plugin(ImportPQR
   ""
 )
 
-target_link_libraries(ImportPQR PRIVATE Qt::Network)
+target_link_libraries(ImportPQR PRIVATE Qt::Network nlohmann_json::nlohmann_json)
 
 if(WIN32)
   # for https support

@@ -8,7 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-#include "tinycolormap.hpp"
+#include <tinycolormap.hpp>
 
 #include <avogadro/core/color3f.h>
 
