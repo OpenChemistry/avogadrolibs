@@ -143,9 +143,8 @@ jobs:
       if: runner.os != 'Windows'
       with:
         path: |
-          ${{ runner.workspace }}/build/thirdparty
           ${{ runner.workspace }}/build/Downloads
-        key: ${{ matrix.config.name }}-thirdparty
+        key: ${{ matrix.config.name }}-downloads
 
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@main
