@@ -134,8 +134,14 @@ jobs:
 
     - name: Install OpenSSL (Win64)
       if: runner.os == 'Windows'
-      run: aqt install-tool windows desktop tools_openssl_x64
-      shell: bash
+      uses: jurplel/install-qt-action@v3
+      with:
+        cache: True
+        tools: 'tools_openssl_x64'
+        version: ${{ env.QT_VERSION }}
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
