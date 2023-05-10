@@ -5,13 +5,14 @@
 # matterhorn103 <milner94@live.co.uk>, 2022.
 # Sebastian Ehlert <awvwgk@gmail.com>, 2022.
 # "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-04-29 03:13+0000\n"
-"Last-Translator: \"Jörg S.\" <joerg.schwerdtfeger@gmail.com>\n"
+"PO-Revision-Date: 2023-05-06 15:51+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1027,10 +1028,8 @@ msgid "All files"
 msgstr "Alle Dateien"
 
 #: qtgui/fileformatdialog.cpp:281
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Alle unterstützte Formate (%1);;"
+msgstr "Alle unterstützte Formate"
 
 #: qtgui/interfacescript.cpp:222
 #, qt-format
@@ -2710,10 +2709,9 @@ msgid "Fetch PDB"
 msgstr "Aus PDB abrufen"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Moleküldatei %1 kann nicht gelesen werden."
+msgstr "Moleküldatei %1 kann nicht gelesen werden"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
@@ -3290,7 +3288,7 @@ msgstr "Molkülgewicht (g/mol):"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1003
 msgid "Chemical Formula:"
-msgstr "chemische Formel"
+msgstr "chemische Formel:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7075,9 +7073,8 @@ msgstr "Mitte"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "Formalladung"
+msgstr "Formalladung:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7193,10 +7190,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:321
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
-#, fuzzy
-#| msgid "Type"
 msgid "Type:"
-msgstr "Typ"
+msgstr "Typ:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)

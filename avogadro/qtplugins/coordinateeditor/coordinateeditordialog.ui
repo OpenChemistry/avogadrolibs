@@ -87,7 +87,11 @@
     </layout>
    </item>
    <item>
-    <widget class="Avogadro::QtPlugins::CoordinateTextEdit" name="text"/>
+    <widget class="Avogadro::QtPlugins::CoordinateTextEdit" name="text">
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">

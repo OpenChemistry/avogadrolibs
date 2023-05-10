@@ -1,5 +1,3 @@
-include_directories("${AvogadroLibs_SOURCE_DIR}/thirdparty")
-
 avogadro_plugin(NucleicInput
   "Insert DNA/RNA sequences."
   ExtensionPlugin
@@ -8,3 +6,5 @@ avogadro_plugin(NucleicInput
   "insertdna.cpp"
   "insertdnadialog.ui"
 )
+
+target_link_libraries(NucleicInput PRIVATE nlohmann_json::nlohmann_json)

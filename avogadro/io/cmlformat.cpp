@@ -17,7 +17,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
-#include <pugixml.cpp>
+#include <pugixml.hpp>
 
 #include <bitset>
 #include <cmath>
