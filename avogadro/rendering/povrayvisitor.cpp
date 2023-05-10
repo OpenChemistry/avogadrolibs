@@ -154,7 +154,9 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  float r, g, b;
+  float r = 0.0;
+  float g = 0.0;
+  float b = 0.0;
   float t = 1.0 - geometry.opacity() / 255.0;
 
   for (auto& i : v) {
@@ -168,6 +170,8 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {
     str << "<" << tris[i] << "," << tris[i + 1] << "," << tris[i + 2] << ">";
+    // this represents the texture color from the vertex
+    str << ", " << (i / 3);
     if (i != tris.size() - 3)
       str << ", ";
     if (i != 0 && ((i + 1) / 3) % 3 == 0)
