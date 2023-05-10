@@ -119,9 +119,7 @@ void POVRayVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&)
-{
-}
+void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
@@ -156,13 +154,13 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  int r, g, b;
-  int t = geometry.opacity();
+  float r, g, b;
+  float t = 1.0 - geometry.opacity() / 255.0;
 
   for (auto& i : v) {
-    r = i.color[0];
-    g = i.color[1];
-    b = i.color[2];
+    r = i.color[0] / 255.0;
+    g = i.color[1] / 255.0;
+    b = i.color[2] / 255.0;
     str << "texture{pigment{rgbt<" << r << ", " << g << ", " << b << "," << t
         << ">}}\n";
   }
@@ -176,14 +174,13 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
       str << '\n';
   }
   str << "\n}\n";
-  str << "\tpigment { rgbt <1.0, 0.0, 0.0, 1.0> }\n"
+  str << "\tpigment { rgbt <" << r << ", " << g << "," << b << "," << t
+      << "> }\n"
       << "}\n\n";
 
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(LineStripGeometry&)
-{
-}
+void POVRayVisitor::visit(LineStripGeometry&) {}
 
 } // namespace Avogadro::Rendering
