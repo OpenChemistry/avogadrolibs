@@ -284,7 +284,7 @@ void Graph::removeEdge(size_t a, size_t b)
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
-  auto iter =
+  std::vector<size_t>::iterator iter =
     std::find(neighborsA.begin(), neighborsA.end(), b);
 
   if (iter == neighborsA.end())
@@ -360,8 +360,8 @@ void Graph::removeEdges(size_t index)
     m_subgraphDirty[m_vertexToSubgraph[index]] = true;
 
   const std::vector<size_t>& edges = m_edgeMap[index];
-  for (unsigned long edge : edges)
-    removeEdge(edge);
+  for (size_t i = 0; i < edges.size(); ++i)
+    removeEdge(edges[i]);
 }
 
 void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
@@ -473,7 +473,7 @@ int Graph::createNewSubgraph() const
 {
   // Try to find an empty subgraph to reuse
   for (size_t i = 0; i < m_subgraphToVertices.size(); i++) {
-    if (m_subgraphToVertices[i].empty()) {
+    if (!m_subgraphToVertices[i].size()) {
       m_subgraphDirty[i] = false;
       return int(i);
     }
@@ -515,7 +515,7 @@ void Graph::checkSplitSubgraph(int subgraph) const
           verticesToVisit.insert(verticesToVisit.end(), neighborList.begin(),
                                  neighborList.end());
         }
-      } while (!verticesToVisit.empty());
+      } while (verticesToVisit.size());
       currentSubgraph = -1;
     }
   }
@@ -538,7 +538,7 @@ std::vector<std::set<size_t>> Graph::connectedComponents() const
 {
   updateSubgraphs();
   std::vector<std::set<size_t>> r;
-  for (const std::set<size_t>& s : m_subgraphToVertices) {
+  for (std::set<size_t> s : m_subgraphToVertices) {
     if (!s.empty())
       r.push_back(s);
   }
@@ -555,7 +555,7 @@ size_t Graph::subgraphsCount() const
 {
   updateSubgraphs();
   size_t r = 0;
-  for (const std::set<size_t>& s : m_subgraphToVertices) {
+  for (std::set<size_t> s : m_subgraphToVertices) {
     if (!s.empty())
       r++;
   }
@@ -568,7 +568,7 @@ size_t Graph::subgraph(size_t element) const
   // Index -1 means disconnected (its own subgraph)
   if (r < 0) {
     r = m_subgraphToVertices.size();
-    m_subgraphToVertices.emplace_back();
+    m_subgraphToVertices.push_back(std::set<size_t>());
     m_subgraphToVertices[r].insert(element);
     m_subgraphDirty[r] = false;
     return r;
