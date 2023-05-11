@@ -27,6 +27,7 @@ using Avogadro::Core::Array;
 using Avogadro::Core::atomValence;
 using Avogadro::QtGui::RWAtom;
 using Avogadro::QtGui::RWBond;
+using Avogadro::QtGui::RWMolecule;
 
 namespace {
 

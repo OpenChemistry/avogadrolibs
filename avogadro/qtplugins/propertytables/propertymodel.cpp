@@ -28,6 +28,9 @@ using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
+using std::numeric_limits;
+using std::pair;
+using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
@@ -128,7 +131,7 @@ QString partialCharge(Molecule* molecule, int atom)
   // TODO: we need to track type and/or calling the charge calculator
   float charge = 0.0;
   std::set<std::string> types = molecule->partialChargeTypes();
-  if (!types.empty()) {
+  if (types.size() > 0) {
     auto first = types.cbegin();
     MatrixX charges = molecule->partialCharges((*first));
     charge = charges(atom, 0);

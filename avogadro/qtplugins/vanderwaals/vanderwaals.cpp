@@ -16,6 +16,7 @@ namespace Avogadro::QtPlugins {
 using Core::Elements;
 using QtGui::PluginLayerManager;
 using Rendering::GeometryNode;
+using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
 VanDerWaals::VanDerWaals(QObject* p) : ScenePlugin(p)
@@ -34,7 +35,7 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
-  auto *selectedSpheres = new SphereGeometry;
+  auto selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
 
   geometry->addDrawable(spheres);

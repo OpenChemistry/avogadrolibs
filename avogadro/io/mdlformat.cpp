@@ -22,6 +22,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
+using Avogadro::Core::Molecule;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 

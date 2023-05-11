@@ -20,10 +20,11 @@ namespace {
 const int ELEMENT_SELECTOR_TAG = 255;
 } // namespace
 
-namespace Avogadro::QtPlugins {
+namespace Avogadro {
+namespace QtPlugins {
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
-  : QWidget(parent_), m_ui(new Ui::TemplateToolWidget), m_elementSelector(nullptr),
+  : QWidget(parent_), m_ui(new Ui::TemplateToolWidget), m_elementSelector(NULL),
     m_currentElement(26)
 {
   m_ui->setupUi(this);
@@ -84,7 +85,7 @@ unsigned char TemplateToolWidget::atomicNumber() const
   if (!itemData.isValid())
     return 0;
 
-  auto atomicNum = static_cast<unsigned char>(itemData.toUInt());
+  unsigned char atomicNum = static_cast<unsigned char>(itemData.toUInt());
 
   // "Other..." selected....
   if (atomicNum == 0 && m_elementSelector)
@@ -339,8 +340,8 @@ void TemplateToolWidget::buildElements()
 void TemplateToolWidget::saveElements()
 {
   QVariantList atomicNums;
-  for (unsigned char m_userElement : m_userElements)
-    atomicNums << QVariant(m_userElement);
+  for (int i = 0; i < m_userElements.size(); ++i)
+    atomicNums << QVariant(m_userElements[i]);
 
   QSettings().setValue("templatetool/userElements", atomicNums);
 }
@@ -355,4 +356,5 @@ std::vector<size_t>& TemplateToolWidget::selectedUIDs()
   return m_selectedUIDs;
 }
 
+} // namespace QtPlugins
 } // namespace Avogadro

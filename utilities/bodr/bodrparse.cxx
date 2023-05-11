@@ -19,9 +19,8 @@
 #include <avogadro/core/utilities.h>
 
 #include <fstream>
-#include <iostream>
 #include <string>
-#include <utility>
+#include <iostream>
 #include <vector>
 
 using std::ifstream;
@@ -45,7 +44,7 @@ struct Color {
 };
 
 struct Element {
-  Element(string _id) : symbol(std::move(_id)), atomicNumber(0), mass(-1.0),
+  Element(const string &_id) : symbol(_id), atomicNumber(0), mass(-1.0),
     radiusCovalent(-1.0), radiusVDW(-1.0)
   {
   }

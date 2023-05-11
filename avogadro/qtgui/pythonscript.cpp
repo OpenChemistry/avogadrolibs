@@ -13,13 +13,12 @@
 #include <QtCore/QLocale>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
-#include <utility>
 
 namespace Avogadro::QtGui {
 
-PythonScript::PythonScript(QString  scriptFilePath_, QObject* parent_)
+PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
-    m_scriptFilePath(std::move(scriptFilePath_)), m_process(nullptr)
+    m_scriptFilePath(scriptFilePath_), m_process(nullptr)
 {
   setDefaultPythonInterpretor();
 }

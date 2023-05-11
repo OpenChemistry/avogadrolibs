@@ -54,7 +54,7 @@ OBProcess::OBProcess(QObject* parent_)
       }
       dir.setPath(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
       dirs = dir.entryList(filters);
-      if (dirs.empty()) {
+      if (dirs.size() == 0) {
         env.insert("BABEL_LIBDIR", QCoreApplication::applicationDirPath() +
                                      "/../lib/openbabel/");
       } else if (dirs.size() == 1) {

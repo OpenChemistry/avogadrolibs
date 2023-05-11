@@ -192,12 +192,12 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
 
   for (k = 0; k < static_cast<size_t>(maxRadius / rStep); k++) {
     if (pdfCount.find(k) == pdfCount.end()) {
-      results.emplace_back(k * rStep, 0.0);
+      results.push_back(std::make_pair(k * rStep, 0.0));
     } else {
-      results.emplace_back(
+      results.push_back(std::make_pair(
         k * rStep, pdfCount[k] * newMolecule.unitCell()->volume() /
                      (4 * M_PI * pow(k * rStep, 2) * rStep *
-                      refAtomCoords.size() * newAtomCoords.size()));
+                      refAtomCoords.size() * newAtomCoords.size())));
     }
   }
 

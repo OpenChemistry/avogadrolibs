@@ -20,6 +20,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
+using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {

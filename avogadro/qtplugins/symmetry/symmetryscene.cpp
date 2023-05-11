@@ -26,9 +26,12 @@ using namespace Avogadro;
 
 namespace Avogadro::QtPlugins {
 
+using Core::Array;
 using Rendering::ArcSector;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
+using Rendering::GroupNode;
+using Rendering::MeshGeometry;
 using Rendering::SphereGeometry;
 
 SymmetryScene::SymmetryScene(QObject* p)
