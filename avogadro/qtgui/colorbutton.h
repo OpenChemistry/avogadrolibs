@@ -35,7 +35,7 @@ class AVOGADROQTGUI_EXPORT ColorButton : public QAbstractButton
 
 public:
   ColorButton(QWidget* parent = 0);
-  explicit ColorButton(const QColor& initial, QWidget* parent = 0);
+  explicit ColorButton(QColor  initial, QWidget* parent = 0);
 
   /**
    *  Redraw the widget (i.e., refresh the colored rectangle)

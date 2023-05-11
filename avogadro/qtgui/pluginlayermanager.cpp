@@ -10,6 +10,7 @@
 
 #include <QtCore/QSettings>
 #include <cassert>
+#include <utility>
 #include <vector>
 
 namespace Avogadro::QtGui {
@@ -17,7 +18,7 @@ namespace Avogadro::QtGui {
 using std::string;
 using std::vector;
 
-PluginLayerManager::PluginLayerManager(const string& name) : m_name(name) {}
+PluginLayerManager::PluginLayerManager(string  name) : m_name(std::move(name)) {}
 
 PluginLayerManager::~PluginLayerManager()
 {

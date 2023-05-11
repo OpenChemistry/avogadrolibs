@@ -101,7 +101,7 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   std::set<std::string> identifiers = molecule.partialChargeTypes();
 
   // check our models for compatibility
-  for (auto m_model : m_models) {
+  for (auto *m_model : m_models) {
 
     // We check that every element in the molecule
     // is handled by the model

@@ -35,7 +35,6 @@ using Avogadro::Core::Atom;
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::RWMolecule;
 using Avogadro::Rendering::GeometryNode;
-using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::MeshGeometry;
 

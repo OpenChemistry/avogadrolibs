@@ -44,7 +44,7 @@ Qt::ItemFlags VibrationModel::flags(const QModelIndex&) const
 void VibrationModel::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
-  m_hasRaman = mol->vibrationRamanIntensities().size() > 0;
+  m_hasRaman = !mol->vibrationRamanIntensities().empty();
 }
 
 QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,

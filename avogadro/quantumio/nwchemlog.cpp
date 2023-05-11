@@ -16,7 +16,6 @@ using std::string;
 
 namespace Avogadro::QuantumIO {
 
-using Core::Atom;
 
 NWChemLog::NWChemLog()
 {
@@ -51,7 +50,7 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  if (m_frequencies.size() > 0 && m_frequencies.size() == m_Lx.size() &&
+  if (!m_frequencies.empty() && m_frequencies.size() == m_Lx.size() &&
       m_frequencies.size() == m_intensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
     molecule.setVibrationIRIntensities(m_intensities);

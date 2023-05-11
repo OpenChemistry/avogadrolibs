@@ -22,7 +22,6 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QPushButton>
 
-using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
@@ -238,7 +237,7 @@ void MolecularPropertiesDialog::copy()
     tr("Number of Bonds:") + QString(" %1\n").arg(m_molecule->bondCount());
 
   // include both HTML and plain text
-  QMimeData* mimeData = new QMimeData();
+  auto* mimeData = new QMimeData();
   mimeData->setText(text);
   mimeData->setHtml(html);
   QApplication::clipboard()->setMimeData(mimeData);

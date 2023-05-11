@@ -170,11 +170,11 @@ void SolidPipeline::resize(int width, int height)
 
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, 0);
+               GL_UNSIGNED_BYTE, nullptr);
 
   glBindTexture(GL_TEXTURE_2D, d->depthTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
-               GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+               GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

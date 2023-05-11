@@ -27,7 +27,6 @@ using Core::Elements;
 using QtGui::PluginLayerManager;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
 struct LayerBallAndStick : Core::LayerData
@@ -134,7 +133,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
   auto* spheres = new SphereGeometry;
-  auto selectedSpheres = new SphereGeometry;
+  auto *selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;

@@ -287,7 +287,7 @@ void ApplyColors::applyChargeColors()
 
 void ApplyColors::applyDistanceColors()
 {
-  if (m_molecule == nullptr && m_molecule->atomCount() == 0)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool isSelection = !m_molecule->isSelectionEmpty();

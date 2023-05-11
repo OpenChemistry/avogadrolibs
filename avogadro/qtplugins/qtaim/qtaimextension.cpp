@@ -90,11 +90,7 @@ void QTAIMExtension::triggered()
 
   bool wavefunctionAlreadyLoaded;
 
-  if (m_molecule->property("QTAIMComment").isValid()) {
-    wavefunctionAlreadyLoaded = true;
-  } else {
-    wavefunctionAlreadyLoaded = false;
-  }
+  wavefunctionAlreadyLoaded = m_molecule->property("QTAIMComment").isValid();
 
   int i = action->data().toInt();
 

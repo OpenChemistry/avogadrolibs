@@ -10,6 +10,7 @@
 
 #include <QColorDialog>
 #include <QPainter>
+#include <utility>
 
 namespace Avogadro::QtGui {
 
@@ -21,8 +22,8 @@ ColorButton::ColorButton(QWidget* parent)
   connect(this, SIGNAL(clicked()), this, SLOT(changeColor()));
 }
 
-ColorButton::ColorButton(const QColor& initial, QWidget* parent)
-  : QAbstractButton(parent), m_color(initial)
+ColorButton::ColorButton(QColor  initial, QWidget* parent)
+  : QAbstractButton(parent), m_color(std::move(initial))
 {
   setMinimumSize(35, 20);
 

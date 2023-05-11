@@ -21,12 +21,10 @@ using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::SecondaryStructureAssigner;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
-using Avogadro::Core::UnitCell;
 
 using std::getline;
 using std::istringstream;
@@ -209,7 +207,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
       int bCoords[] = { 11, 16, 21, 26 };
       for (int i = 0; i < 4; i++) {
-        if (trimmed(buffer.substr(bCoords[i], 5)) == "")
+        if (trimmed(buffer.substr(bCoords[i], 5)).empty())
           break;
 
         else {

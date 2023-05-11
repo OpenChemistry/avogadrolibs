@@ -13,7 +13,6 @@
 #include <cctype>
 #include <vector>
 
-using Avogadro::Core::isCustomElement;
 
 namespace Avogadro::Core {
 

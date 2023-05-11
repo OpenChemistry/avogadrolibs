@@ -21,8 +21,7 @@ using Avogadro::Core::Molecule;
 using Avogadro::Core::SpaceGroups;
 using Avogadro::Core::UnitCell;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QString SpecialKPoints::getSpecialKPoints(Molecule& mol)
 {
@@ -223,5 +222,4 @@ void SpecialKPoints::processConditionKPoints(QString& specialKPoints,
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

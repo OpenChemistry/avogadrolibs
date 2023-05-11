@@ -12,8 +12,7 @@
 
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 inline bool printAndReturnFalse(const QString& error)
 {
@@ -134,5 +133,4 @@ bool YaehmopOut::readBandData(const QString& data,
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -455,10 +455,7 @@ void LammpsInputDialog::setWaterPotential(int n)
 void LammpsInputDialog::setReadData()
 {
   m_readData = ui.readDataLine->text();
-  if (m_readData != "")
-    readData = true;
-  else
-    readData = false;
+  readData = m_readData != "";
   updatePreviewText();
 }
 

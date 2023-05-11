@@ -32,7 +32,6 @@ namespace Avogadro::Io {
 using Core::Array;
 using Core::Atom;
 using Core::Elements;
-using Core::Molecule;
 using Core::lexicalCast;
 using Core::split;
 using Core::trimmed;

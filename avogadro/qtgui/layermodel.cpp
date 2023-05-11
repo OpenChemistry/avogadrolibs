@@ -14,7 +14,6 @@
 
 namespace Avogadro::QtGui {
 
-using Core::LayerManager;
 
 namespace {
 const int QTTY_COLUMNS = 6;

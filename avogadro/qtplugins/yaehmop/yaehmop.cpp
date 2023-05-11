@@ -38,8 +38,7 @@ using Avogadro::Core::Elements;
 using Avogadro::Core::UnitCell;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Yaehmop::Yaehmop(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -132,7 +131,7 @@ void Yaehmop::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
 
-  Molecule::MoleculeChanges changes = static_cast<Molecule::MoleculeChanges>(c);
+  auto changes = static_cast<Molecule::MoleculeChanges>(c);
 
   if (changes & Molecule::UnitCell) {
     if (changes & Molecule::Added || changes & Molecule::Removed)
@@ -586,15 +585,15 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
 
 void Yaehmop::showYaehmopInput(const QString& input)
 {
-  QDialog* dialog = new QDialog(qobject_cast<QWidget*>(this->parent()));
+  auto* dialog = new QDialog(qobject_cast<QWidget*>(this->parent()));
 
   // Make sure this gets deleted upon closing
   dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-  QVBoxLayout* layout = new QVBoxLayout(dialog);
+  auto* layout = new QVBoxLayout(dialog);
   dialog->setLayout(layout);
   dialog->setWindowTitle(tr("Yaehmop Input"));
-  QTextEdit* edit = new QTextEdit(dialog);
+  auto* edit = new QTextEdit(dialog);
   layout->addWidget(edit);
   dialog->resize(500, 500);
 
@@ -603,5 +602,4 @@ void Yaehmop::showYaehmopInput(const QString& input)
   dialog->show();
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

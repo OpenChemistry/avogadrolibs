@@ -30,7 +30,6 @@ using Core::Elements;
 using Core::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 using std::map;
 
 typedef Array<Molecule::BondType> NeighborListType;
@@ -95,12 +94,9 @@ struct LayerLabel : Core::LayerData
 
   std::string serialize() final
   {
-    /// FIXME: What is this attempting to do? It causes compiler warnings.
-    std::string aux = (const char*)atomOptions;
-    std::string aux2 = (const char*)residueOptions;
-    return aux + " " + aux2 + " " + std::to_string(radiusScalar) + " " +
-           std::to_string(color[0]) + " " + std::to_string(color[1]) + " " +
-           std::to_string(color[2]);
+    return std::to_string(atomOptions) + " " + std::to_string(residueOptions) +
+           " " + std::to_string(radiusScalar) + " " + std::to_string(color[0]) +
+           " " + std::to_string(color[1]) + " " + std::to_string(color[2]);
   }
   void deserialize(std::string text) final
   {
@@ -157,17 +153,17 @@ struct LayerLabel : Core::LayerData
             val = LabelOptions::Custom;
           }
           if (option & LabelOptions::Index) {
-            text << ((text.size() == 0) ? QObject::tr("Index")
+            text << ((text.empty()) ? QObject::tr("Index")
                                         : QObject::tr("In."));
             val |= LabelOptions::Index;
           }
           if (option & LabelOptions::Name) {
-            text << ((text.size() == 0) ? QObject::tr("Element")
+            text << ((text.empty()) ? QObject::tr("Element")
                                         : QObject::tr("El."));
             val |= LabelOptions::Name;
           }
           if (option & LabelOptions::Ordinal) {
-            text << ((text.size() == 0) ? QObject::tr("Element & Number")
+            text << ((text.empty()) ? QObject::tr("Element & Number")
                                         : QObject::tr("El.&No."));
             val |= LabelOptions::Ordinal;
           }
@@ -275,12 +271,12 @@ void Label::processResidue(const Core::Molecule& molecule,
 
     auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
     Vector3ub color = interface.color;
-    std::string text = "";
+    std::string text;
     if (interface.residueOptions & LayerLabel::LabelOptions::Index) {
       text = std::to_string(residue.residueId());
     }
     if (interface.residueOptions & LayerLabel::LabelOptions::Name) {
-      text += (text == "" ? "" : " / ") + name;
+      text += (text.empty() ? "" : " / ") + name;
     }
     TextLabel3D* residueLabel = createLabel(text, pos, radius, color);
     geometry->addDrawable(residueLabel);
@@ -309,23 +305,23 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
 
     auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    std::string text = "";
+    std::string text;
     if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
-      text += (text == "" ? "" : " / ") + atom.label();
+      text += (text.empty() ? "" : " / ") + atom.label();
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
+      text += (text.empty() ? "" : " / ") + std::to_string(atom.index() + 1);
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Name) {
       text +=
-        (text == "" ? "" : " / ") + std::string(Elements::symbol(atomicNumber));
+        (text.empty() ? "" : " / ") + std::string(Elements::symbol(atomicNumber));
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Ordinal) {
-      text += (text == "" ? "" : " / ") +
+      text += (text.empty() ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
     }
-    if (text != "") {
+    if (!text.empty()) {
       const Vector3f pos(atom.position3d().cast<float>());
       Vector3ub color = interface.color;
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
@@ -388,4 +384,4 @@ QWidget* Label::setupWidget()
   return interface.widget;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

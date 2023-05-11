@@ -196,8 +196,7 @@ bool PlotXrd::generateXrdPattern(const QtGui::Molecule& mol, XrdData& results,
           qDebug() << lineTmp;
         return false;
       }
-      results.push_back(
-        std::make_pair(rowData[0].toDouble(), rowData[1].toDouble()));
+      results.emplace_back(rowData[0].toDouble(), rowData[1].toDouble());
     }
   }
 

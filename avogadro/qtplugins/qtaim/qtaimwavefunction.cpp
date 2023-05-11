@@ -136,8 +136,8 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
     QString line(fileContentsByLine.first().mid(20, -1));
     QStringList splitLine(line.split(" ", QString::SkipEmptyParts));
 
-    for (qint64 i = 0; i < splitLine.length(); ++i) {
-      typeAssignmentsList.append(splitLine.at(i).toLongLong());
+    for (const auto & i : splitLine) {
+      typeAssignmentsList.append(i.toLongLong());
     }
 
     fileContentsByLine.removeFirst();
@@ -263,8 +263,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
     QString line(fileContentsByLine.first().mid(9, -1));
     QStringList splitLine(line.split(" ", QString::SkipEmptyParts));
 
-    for (qint64 i = 0; i < splitLine.length(); ++i) {
-      QString str(splitLine.at(i));
+    for (auto str : splitLine) {
       QString replacedString(str.replace("d", "e", Qt::CaseSensitive)
                                .replace("D", "e", Qt::CaseSensitive)
                                .replace("E", "e", Qt::CaseSensitive));
@@ -294,22 +293,22 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
 
   QList<qreal> moCoefficientsList;
 
-  for (qint64 i = 0; i < fileContentsByLine.length(); ++i) {
-    if (fileContentsByLine.at(i).trimmed().startsWith("MO")) {
-      moHeaderStringList.append(fileContentsByLine.at(i));
+  for (const auto & i : fileContentsByLine) {
+    if (i.trimmed().startsWith("MO")) {
+      moHeaderStringList.append(i);
     } else {
-      moCoefficientsStringList.append(fileContentsByLine.at(i));
+      moCoefficientsStringList.append(i);
     }
   }
 
   QList<qreal> molecularOrbitalOccupationNumbersList;
   QList<qreal> molecularOrbitalEigenvaluesList;
 
-  for (qint64 i = 0; i < moHeaderStringList.length(); ++i) {
+  for (const auto & i : moHeaderStringList) {
     molecularOrbitalOccupationNumbersList.append(
-      moHeaderStringList.at(i).mid(34, 13).toDouble());
+      i.mid(34, 13).toDouble());
     molecularOrbitalEigenvaluesList.append(
-      moHeaderStringList.at(i).mid(62, -1).toDouble());
+      i.mid(62, -1).toDouble());
   }
 
   m_molecularOrbitalOccupationNumbers.resize(m_numberOfMolecularOrbitals);
@@ -326,8 +325,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
   moCoefficientsStringList =
     moCoefficientsStringList.join(" ").split(" ", QString::SkipEmptyParts);
 
-  for (qint64 i = 0; i < moCoefficientsStringList.length(); ++i) {
-    QString str(moCoefficientsStringList.at(i));
+  for (auto str : moCoefficientsStringList) {
     QString replacedString(str.replace("d", "e", Qt::CaseSensitive)
                              .replace("D", "e", Qt::CaseSensitive)
                              .replace("E", "e", Qt::CaseSensitive));

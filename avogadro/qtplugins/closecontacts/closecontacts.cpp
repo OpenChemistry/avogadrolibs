@@ -33,7 +33,6 @@ using QtGui::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 
 CloseContacts::CloseContacts(QObject *p) : ScenePlugin(p)
 {

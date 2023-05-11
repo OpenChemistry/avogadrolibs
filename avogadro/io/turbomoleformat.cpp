@@ -21,20 +21,16 @@
 
 using json = nlohmann::json;
 
-using std::endl;
 using std::getline;
 using std::string;
 using std::vector;
 
 namespace Avogadro::Io {
 
-using Core::Array;
 using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
-using Core::Molecule;
 using Core::split;
-using Core::trimmed;
 
 #ifndef _WIN32
 using std::isalpha;

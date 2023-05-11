@@ -141,7 +141,7 @@ void PlotRmsd::generateRmsdPattern(RmsdData& results)
              (positions[j][2] - ref[j][2]) * (positions[j][2] - ref[j][2]);
     }
     sum = sqrt(sum / m_molecule->coordinate3dCount());
-    results.push_back(std::make_pair(static_cast<double>(i), sum));
+    results.emplace_back(static_cast<double>(i), sum);
   }
 }
 

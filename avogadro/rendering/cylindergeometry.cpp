@@ -281,7 +281,7 @@ std::multimap<float, Identifier> CylinderGeometry::hits(
     id.molecule = m_identifier.molecule;
     id.type = m_identifier.type;
     id.index = i;
-    if (m_indexMap.size())
+    if (!m_indexMap.empty())
       id.index = m_indexMap.find(i)->second;
     if (id.type != InvalidType) {
       float depth = distance.norm();

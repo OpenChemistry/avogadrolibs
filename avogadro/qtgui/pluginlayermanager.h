@@ -23,7 +23,7 @@ namespace QtGui {
 class AVOGADROQTGUI_EXPORT PluginLayerManager : protected Core::LayerManager
 {
 public:
-  PluginLayerManager(const std::string& name = "undef");
+  PluginLayerManager(std::string  name = "undef");
 
   ~PluginLayerManager();
 
