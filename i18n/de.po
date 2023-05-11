@@ -6,13 +6,14 @@
 # Sebastian Ehlert <awvwgk@gmail.com>, 2022.
 # "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
 # Norwid Behrnd <nbehrnd@yahoo.com>, 2023.
+# Jörn Weigend <das.jott@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-06 15:51+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2023-05-12 06:49+0000\n"
+"Last-Translator: Jörn Weigend <das.jott@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -64,10 +65,12 @@ msgid "Error populating file %1: %2"
 msgstr "Fehler beim Schreiben der Datei %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:330
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Datei '%1' schlecht formatiert. Fehlende Begriffgruppen 'contents' oder "
+"'filePath'."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:363
 #, qt-format
@@ -75,11 +78,14 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Fehlerhafter Dateieintrag: Dateiname/Inhalt fehlt oder ist keine "
+"Zeichenfolgen:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:369
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Fehlerhafter Dateieintrag bei Index %1: Kein Objekt."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:375
 msgid "'files' member not an array."
