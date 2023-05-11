@@ -159,7 +159,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
       vector<string> parts = split(desc, ' ');
       assert(parts.size() == 3);
       int num = Core::lexicalCast<int>(parts[0]);
-      if (!atomNumber.empty() && atomNumber.back() == num)
+      if (atomNumber.size() > 0 && atomNumber.back() == num)
         continue;
       atomNumber.push_back(num);
       atomSymbol.push_back(parts[1]);

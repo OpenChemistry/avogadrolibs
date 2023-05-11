@@ -118,7 +118,7 @@ const std::vector<float>* Cube::data() const
 
 bool Cube::setData(const std::vector<float>& values)
 {
-  if (values.empty())
+  if (!values.size())
     return false;
 
   if (static_cast<int>(values.size()) ==
@@ -141,9 +141,9 @@ bool Cube::setData(const std::vector<float>& values)
 bool Cube::addData(const std::vector<float>& values)
 {
   // Initialise the cube to zero if necessary
-  if (m_data.empty())
+  if (!m_data.size())
     m_data.resize(m_points.x() * m_points.y() * m_points.z());
-  if (values.size() != m_data.size() || values.empty())
+  if (values.size() != m_data.size() || !values.size())
     return false;
   for (unsigned int i = 0; i < m_data.size(); i++) {
     m_data[i] += values[i];

@@ -32,7 +32,7 @@ namespace Calc {
 class AVOGADROCALC_EXPORT DefaultModel : public ChargeModel
 {
 public:
-  DefaultModel(std::string  identifier = "");
+  DefaultModel(const std::string& identifier = "");
   virtual ~DefaultModel();
 
   /**

@@ -56,6 +56,10 @@ using QtGui::RWMolecule;
 using Rendering::ArcSector;
 using Rendering::ArcStrip;
 using Rendering::GeometryNode;
+using Rendering::GroupNode;
+using Rendering::Identifier;
+using Rendering::LineStripGeometry;
+using Rendering::MeshGeometry;
 using Rendering::Quad;
 using Rendering::QuadOutline;
 

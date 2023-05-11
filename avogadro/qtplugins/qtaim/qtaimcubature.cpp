@@ -60,10 +60,14 @@
 #include <QVariantList>
 #include <QVector3D>
 
+#include <QDataStream>
+#include <QDir>
+#include <QFile>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
 #include <QProgressDialog>
+#include <QTemporaryFile>
 #include <QVariant>
 #include <QtConcurrent/QtConcurrentMap>
 
@@ -149,10 +153,8 @@
 using namespace Avogadro::QtPlugins;
 
 /* error return codes */
-enum {
-SUCCESS = 0,
-FAILURE = 1
-};
+#define SUCCESS 0
+#define FAILURE 1
 
 /***************************************************************************/
 /* Basic datatypes */

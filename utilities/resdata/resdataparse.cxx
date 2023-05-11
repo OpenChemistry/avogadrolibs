@@ -112,16 +112,16 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  string buffer, currResidue;
+  string buffer, currResidue = "";
   vector<string> atoms, residueClassNames;
   vector<pair<string, string>> singleBonds, doubleBonds;
   while (getline(file, buffer)) {
     vector<string> params(Avogadro::Core::split(buffer, ' '));
-    if (params.empty()) {
+    if (params.size() == 0) {
 
     } else {
       if (params[0] == "RES") {
-        if (!currResidue.empty()) {
+        if (currResidue != "") {
           output << "ResidueData " << currResidue << "Data(\"" << currResidue
                  << "\",\n"
                  << "// Atoms\n{";

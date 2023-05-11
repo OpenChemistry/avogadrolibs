@@ -55,6 +55,7 @@ using QtGui::RWBond;
 
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextProperties;

@@ -25,7 +25,7 @@ ChartWidget::ChartWidget(QWidget* p) : QWidget(p), m_qvtk(new QVTKWidget(this))
   m_view->SetRenderWindow(m_qvtk->renderWindow());
   m_view->SetInteractor(m_qvtk->interactor());
   m_view->GetScene()->AddItem(m_chart);
-  auto *hLayout = new QHBoxLayout(this);
+  auto hLayout = new QHBoxLayout(this);
   hLayout->setContentsMargins(0, 0, 0, 0);
   hLayout->addWidget(m_qvtk);
   setLayout(hLayout);
@@ -92,7 +92,7 @@ bool ChartWidget::addPlots(const std::vector< std::vector<float> >& plotData,
   m_table->SetNumberOfRows(xSize);
 
   for (size_t i = 0; i < plotData.size(); ++i) {
-    const auto& s = plotData[i];
+    auto& s = plotData[i];
     auto* d = vtkArrays[i];
     // This is a fast path in VTK for setting array values with a known type.
     for (size_t j = 0; j < s.size(); ++j) {
@@ -128,7 +128,7 @@ void ChartWidget::setYAxisTitle(const char* title)
 void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,
                                 const std::vector<std::string>& tickLabels)
 {
-  auto *customAxis = axis(a);
+  auto customAxis = axis(a);
 
   // We need a valid axis and equal sizes vectors of points/labels.
   if (!customAxis)
@@ -151,7 +151,7 @@ void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,
 
 void ChartWidget::setAxisLimits(Axis a, float min, float max)
 {
-  auto *customAxis = axis(a);
+  auto customAxis = axis(a);
 
   // We need a valid axis and equal sizes vectors of points/labels.
   if (!customAxis)

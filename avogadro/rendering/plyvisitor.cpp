@@ -184,31 +184,31 @@ void PLYVisitor::visitSphereIcosphereRecursionMethod(const SphereColor& sphere, 
   ostringstream faceStr;
 
   //Project every vertex onto the sphere and record it
-  for (auto & vertice : vertices) {
+  for (unsigned int i = 0; i < vertices.size(); ++i) {
     //Normalize the vertex and then project it
-    float x = vertice[0];
-    float y = vertice[1];
-    float z = vertice[2];
+    float x = vertices.at(i)[0];
+    float y = vertices.at(i)[1];
+    float z = vertices.at(i)[2];
     float distance = sqrt(pow(x, 2.0f) + pow(y, 2.0f) + pow(z, 2.0f));
-    vertice[0] = (x / distance) * radius;
-    vertice[1] = (y / distance) * radius;
-    vertice[2] = (z / distance) * radius;
+    vertices.at(i)[0] = (x / distance) * radius;
+    vertices.at(i)[1] = (y / distance) * radius;
+    vertices.at(i)[2] = (z / distance) * radius;
 
     //Adjust to be around sphere's radius
-    vertice[0] += center[0];
-    vertice[1] += center[1];
-    vertice[2] += center[2];
+    vertices.at(i)[0] += center[0];
+    vertices.at(i)[1] += center[1];
+    vertices.at(i)[2] += center[2];
 
     //Add the vertex
-    vertexStr << vertice << " " << sphere.color << '\n';
+    vertexStr << vertices.at(i) << " " << sphere.color << '\n';
   }
 
   //Adjust every face to have indices for the PLY file and add it
-  for (auto & face : faces) {
+  for (unsigned int i = 0; i < faces.size(); ++i) {
     faceStr << 3 << " "
-            << face[0] + m_vertexCount << " "
-            << face[1] + m_vertexCount << " "
-            << face[2] + m_vertexCount << '\n';
+            << faces.at(i)[0] + m_vertexCount << " "
+            << faces.at(i)[1] + m_vertexCount << " "
+            << faces.at(i)[2] + m_vertexCount << '\n';
   }
 
   //Adjust the counts and add the new vertices and faces
@@ -348,8 +348,8 @@ void PLYVisitor::visit(MeshGeometry& geometry)
   ostringstream faceStr;
 
   //Record every vertex in the mesh
-  for (auto & i : v) {
-    vertexStr << i.vertex << " " << i.color << '\n';
+  for (size_t i = 0; i < v.size(); ++i) {
+    vertexStr << v[i].vertex << " " << v[i].color << '\n';
   }
 
   //Record every face and adjust the indices

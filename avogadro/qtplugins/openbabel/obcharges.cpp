@@ -18,6 +18,7 @@
 namespace Avogadro {
 
 using Core::Array;
+using Core::Molecule;
 
 namespace QtPlugins {
 
@@ -37,7 +38,7 @@ public:
     return true;
   }
 
-
+public slots:
   void responseReceived(const Array<double> output)
   {
     m_finished = true;

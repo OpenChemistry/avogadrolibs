@@ -77,7 +77,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     Core::Array<unsigned int> indices(mesh->numVertices());
     std::generate(indices.begin(), indices.end(), indexGenerator);
 
-    bool hasColors = (!mesh->colors().empty());
+    bool hasColors = (mesh->colors().size() != 0);
 
     auto* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);

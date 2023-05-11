@@ -10,7 +10,7 @@ namespace Avogadro::Core {
 NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDistance)
  : m_maxDistance(maxDistance), m_cachedArray(nullptr)
 {
-  if (points.empty()) return;
+  if (!points.size()) return;
 
   // find bounding box
   m_minPos = points[0];

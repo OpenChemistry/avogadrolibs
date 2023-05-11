@@ -54,7 +54,7 @@ HistogramWidget::HistogramWidget(QWidget* parent)
                        vtkControlPointsItem::CurrentPointEditEvent, this,
                        SLOT(onCurrentPointEditEvent()));
 
-  auto *hLayout = new QHBoxLayout(this);
+  auto hLayout = new QHBoxLayout(this);
   hLayout->addWidget(m_qvtk);
   setLayout(hLayout);
 }

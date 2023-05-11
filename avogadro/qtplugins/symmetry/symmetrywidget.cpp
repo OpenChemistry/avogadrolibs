@@ -14,6 +14,7 @@
 
 #include <QtWidgets/QPlainTextEdit>
 
+using Avogadro::QtGui::Molecule;
 
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
@@ -137,8 +138,8 @@ void SymmetryWidget::moleculeChanged(unsigned int changes)
 }
 
 void SymmetryWidget::operationsSelectionChanged(
-  const QItemSelection&  /*selected*/,
-  const QItemSelection&  /*deselected*/)
+  const QItemSelection& selected,
+  const QItemSelection& deselected)
 {
 
   if (!m_molecule)
@@ -168,7 +169,7 @@ void SymmetryWidget::operationsSelectionChanged(
 
   // qDebug() << "cleared elements";
 
-  if (m_sopsl > 0 && !selection.empty()) {
+  if (m_sopsl > 0 && selection.size() > 0) {
     m_molecule->setProperty("SymmetryOrigo", m_cm);
     m_molecule->setProperty("SymmetryRadius", m_radius);
   }
@@ -197,13 +198,13 @@ void SymmetryWidget::operationsSelectionChanged(
         break;
     }
   }
-  if (!properRotationVariantList.empty())
+  if (properRotationVariantList.size() > 0)
     m_molecule->setProperty("SymmetryProperRotationVariantList",
                             properRotationVariantList);
-  if (!improperRotationVariantList.empty())
+  if (improperRotationVariantList.size() > 0)
     m_molecule->setProperty("SymmetryImproperRotationVariantList",
                             improperRotationVariantList);
-  if (!reflectionVariantList.empty())
+  if (reflectionVariantList.size() > 0)
     m_molecule->setProperty("SymmetryReflectionVariantList",
                             reflectionVariantList);
 
@@ -211,8 +212,8 @@ void SymmetryWidget::operationsSelectionChanged(
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection&  /*selected*/,
-                                               const QItemSelection&  /*deselected*/)
+void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
+                                               const QItemSelection& deselected)
 {
   // QModelIndexList selection =
   // m_ui->subgroupsTree->selectionModel()->selectedIndexes();
@@ -255,8 +256,8 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection&  /*selected
 }
 
 void SymmetryWidget::equivalenceSelectionChanged(
-  const QItemSelection&  /*selected*/,
-  const QItemSelection&  /*deselected*/)
+  const QItemSelection& selected,
+  const QItemSelection& deselected)
 {
   QModelIndex i =
     m_ui->equivalenceTree->selectionModel()->selectedIndexes().first();
@@ -364,7 +365,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
     parent->setText(pointGroupSymbol(sg[i].name));
     parent->setData(i, Qt::UserRole);
     m_subgroupsTreeModel->appendRow(parent);
-    for (auto *generator : sg[i].generators) {
+    for (auto generator : sg[i].generators) {
       if (generator == nullptr)
         continue;
       // qDebug() << "child " << sg[i].generators[j] - m_sg << " "

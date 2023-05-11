@@ -247,7 +247,7 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
       result.insert(result.end(), loopHits.begin(), loopHits.end());
       continue;
     }
-    const auto *const childGeometry = itNode->cast<GeometryNode>();
+    const auto childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = childGeometry->areaHits(f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());

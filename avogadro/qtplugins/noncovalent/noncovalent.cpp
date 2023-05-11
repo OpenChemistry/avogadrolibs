@@ -44,6 +44,7 @@ using QtGui::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
+using Rendering::GroupNode;
 
 NonCovalent::NonCovalent(QObject *p) : ScenePlugin(p)
 {

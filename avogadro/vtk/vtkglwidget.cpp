@@ -38,7 +38,7 @@ using QtGui::Molecule;
 // The caller assumes ownership of the vtkImageData returned.
 vtkImageData* createCubeImageData(Core::Cube* cube)
 {
-  auto *data = vtkImageData::New();
+  auto data = vtkImageData::New();
   // data->SetNumberOfScalarComponents(1, nullptr);
   Eigen::Vector3i dim = cube->dimensions();
   data->SetExtent(0, dim.x() - 1, 0, dim.y() - 1, 0, dim.z() - 1);
@@ -79,8 +79,8 @@ void vtkGLWidget::cubeVolume(Core::Cube* cube)
   volumeProperty->ShadeOff();
   volumeProperty->SetInterpolationTypeToLinear();
 
-  auto *compositeOpacity = m_opacityFunction.Get();
-  auto *color = m_lut.Get();
+  auto compositeOpacity = m_opacityFunction.Get();
+  auto color = m_lut.Get();
   if (color->GetSize() == 0) {
     // Initialize the color and opacity function.
     double range[2];

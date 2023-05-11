@@ -26,6 +26,7 @@
 
 #include <QtGui/QClipboard>
 
+using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
