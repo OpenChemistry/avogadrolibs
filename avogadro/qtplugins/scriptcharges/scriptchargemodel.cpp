@@ -92,7 +92,8 @@ MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
   // keep a separate atom counter in case there is other text
   // (e.g., "normal termination, etc.")
   unsigned int atom = 0;
-  for (const auto & line : lines) {
+  for (unsigned int i = 0; i < lines.size(); ++i) {
+    const QString& line = lines.at(i);
     if (line.isEmpty())
       continue;
 

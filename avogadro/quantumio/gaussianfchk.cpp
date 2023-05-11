@@ -270,13 +270,13 @@ void GaussianFchk::load(GaussianSet* basis)
   }
   // Now to load in the MO coefficients
   if (basis->isValid()) {
-    if (!m_MOcoeffs.empty())
+    if (m_MOcoeffs.size())
       basis->setMolecularOrbitals(m_MOcoeffs);
     else
       cout << "Error no MO coefficients...\n";
-    if (!m_alphaMOcoeffs.empty())
+    if (m_alphaMOcoeffs.size())
       basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
-    if (!m_betaMOcoeffs.empty())
+    if (m_betaMOcoeffs.size())
       basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
     if (m_density.rows())
       basis->setDensityMatrix(m_density);
@@ -547,19 +547,19 @@ void GaussianFchk::outputAll()
     cout << i << " : type = " << m_shellTypes.at(i)
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
-  if (!m_MOcoeffs.empty()) {
+  if (m_MOcoeffs.size()) {
     cout << "MO coefficients:\n";
     for (double m_MOcoeff : m_MOcoeffs)
       cout << m_MOcoeff << "\t";
     cout << endl << endl;
   }
-  if (!m_alphaMOcoeffs.empty()) {
+  if (m_alphaMOcoeffs.size()) {
     cout << "Alpha MO coefficients:\n";
     for (double m_alphaMOcoeff : m_alphaMOcoeffs)
       cout << m_alphaMOcoeff << "\t";
     cout << endl << endl;
   }
-  if (!m_betaMOcoeffs.empty()) {
+  if (m_betaMOcoeffs.size()) {
     cout << "Beta MO coefficients:\n";
     for (double m_betaMOcoeff : m_betaMOcoeffs)
       cout << m_betaMOcoeff << "\t";

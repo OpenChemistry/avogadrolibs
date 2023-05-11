@@ -187,7 +187,7 @@ void SurfaceDialog::setupBasis(int numElectrons, int numMOs, bool beta)
 
 void SurfaceDialog::setupCubes(QStringList cubeNames)
 {
-  if (cubeNames.empty())
+  if (cubeNames.size() < 1)
     return;
 
   m_ui->orbitalCombo->setVisible(true);
@@ -195,8 +195,8 @@ void SurfaceDialog::setupCubes(QStringList cubeNames)
 
   m_ui->surfaceCombo->addItem(tr("From File"), Surfaces::Type::FromFile);
 
-  for (const auto & cubeName : cubeNames) {
-    m_ui->orbitalCombo->addItem(cubeName);
+  for (int i = 0; i < cubeNames.size(); ++i) {
+    m_ui->orbitalCombo->addItem(cubeNames[i]);
   }
   m_ui->orbitalCombo->setCurrentIndex(0);
 }

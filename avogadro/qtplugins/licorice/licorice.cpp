@@ -18,6 +18,7 @@ using QtGui::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
+using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
 Licorice::Licorice(QObject* p) : ScenePlugin(p)
@@ -39,7 +40,7 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
-  auto *selectedSpheres = new SphereGeometry;
+  auto selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(spheres);
   geometry->addDrawable(selectedSpheres);

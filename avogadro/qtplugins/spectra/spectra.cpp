@@ -47,7 +47,7 @@ QStringList Spectra::menuPath(QAction*) const
 void Spectra::setMolecule(QtGui::Molecule* mol)
 {
   bool isVibrational(false);
-  if (!mol->vibrationFrequencies().empty())
+  if (mol->vibrationFrequencies().size())
     isVibrational = true;
 
   m_actions[0]->setEnabled(isVibrational);

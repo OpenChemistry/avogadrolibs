@@ -137,7 +137,7 @@ MoleQueue::JobObject MoleQueueWidget::configuredJob() const
 
   // get queue/program
   QModelIndexList sel(m_ui->queueListView->selectionModel()->selectedIndexes());
-  if (sel.empty()) {
+  if (sel.size() < 1) {
     QMessageBox::information(parentWidget(), tr("No program selected."),
                              tr("Please select the target program from the "
                                 "\"Queue and Program\" list."));
@@ -296,7 +296,7 @@ void MoleQueueWidget::listenForJobStateChange(bool listen)
 bool MoleQueueWidget::programSelected()
 {
   QModelIndexList sel(m_ui->queueListView->selectionModel()->selectedIndexes());
-  return !sel.empty();
+  return sel.size() > 0;
 }
 
 } // namespace Avogadro

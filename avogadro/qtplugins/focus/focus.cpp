@@ -15,6 +15,7 @@
 
 namespace Avogadro::QtPlugins {
 
+using Avogadro::QtGui::ExtensionPlugin;
 
 Focus::Focus(QObject* parent_)
   : ExtensionPlugin(parent_),

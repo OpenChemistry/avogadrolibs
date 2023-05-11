@@ -19,6 +19,7 @@
 
 namespace Avogadro::QtPlugins {
 
+using Avogadro::QtGui::ExtensionPlugin;
 using Core::Array;
 using Eigen::Affine3f;
 using Eigen::EigenSolver;
@@ -105,7 +106,7 @@ inline float getZDistance(const Affine3f& projection, float x,
 }
 inline void getBB(const Array<Vector3>& mols, Vector3& min, Vector3& max)
 {
-  if (!mols.empty()) {
+  if (mols.size() > 0) {
     min = mols[0];
     max = mols[0];
     for (size_t i = 1; i < mols.size(); ++i) {

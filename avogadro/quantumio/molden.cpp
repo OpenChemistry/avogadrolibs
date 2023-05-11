@@ -108,7 +108,7 @@ void MoldenFile::processLine(std::istream& in)
         line = Core::trimmed(line);
         while (!line.empty()) { // Read the shell types in this GTO.
           list = Core::split(line, ' ');
-          if (list.empty())
+          if (list.size() < 1)
             break;
           shell = list[0];
           shellType = GaussianSet::UU;
@@ -222,7 +222,7 @@ void MoldenFile::load(GaussianSet* basis)
     }
   }
   // Now to load in the MO coefficients
-  if (!m_MOcoeffs.empty())
+  if (m_MOcoeffs.size())
     basis->setMolecularOrbitals(m_MOcoeffs);
 }
 

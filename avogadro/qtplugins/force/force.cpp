@@ -20,8 +20,10 @@
 
 namespace Avogadro::QtPlugins {
 
+using QtGui::Molecule;
 using Rendering::ArrowGeometry;
 using Rendering::GeometryNode;
+using Rendering::GroupNode;
 
 Force::Force(QObject* p) : ScenePlugin(p)
 {

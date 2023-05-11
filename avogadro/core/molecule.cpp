@@ -262,7 +262,7 @@ MatrixX Molecule::partialCharges(const std::string& type) const
 std::set<std::string> Molecule::partialChargeTypes() const
 {
   std::set<std::string> types;
-  for (const auto& it : m_partialCharges)
+  for (auto& it : m_partialCharges)
     types.insert(it.first);
   return types;
 }
@@ -324,9 +324,9 @@ signed char Molecule::totalCharge() const
   // check the data map first
   if (m_data.hasValue("totalCharge")) {
     charge = m_data.value("totalCharge").toInt();
-  } else if (!m_formalCharges.empty()) {
-    for (signed char m_formalCharge : m_formalCharges)
-      charge += m_formalCharge;
+  } else if (m_formalCharges.size() > 0) {
+    for (Index i = 0; i < m_formalCharges.size(); ++i)
+      charge += m_formalCharges[i];
     return charge;
   }
   return charge; // should be zero
@@ -342,8 +342,8 @@ char Molecule::totalSpinMultiplicity() const
   } else {
     // add up the electrons
     unsigned long electrons = 0;
-    for (unsigned char m_atomicNumber : m_atomicNumbers)
-      electrons += m_atomicNumber;
+    for (Index i = 0; i < m_atomicNumbers.size(); ++i)
+      electrons += m_atomicNumbers[i];
 
     // adjust by the total charge
     electrons -= totalCharge();
@@ -1274,7 +1274,7 @@ bool Molecule::removeBonds(Index atom)
 
   while (true) {
     const std::vector<size_t>& bondList = m_graph.edges(atom);
-    if (bondList.empty())
+    if (!bondList.size())
       break;
     size_t bond = bondList[0];
     removeBond(bond);

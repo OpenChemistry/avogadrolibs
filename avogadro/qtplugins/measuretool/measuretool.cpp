@@ -39,6 +39,7 @@
 
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
@@ -146,7 +147,7 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
 
 void MeasureTool::draw(Rendering::GroupNode& node)
 {
-  if (m_atoms.empty())
+  if (m_atoms.size() == 0)
     return;
 
   auto* geo = new GeometryNode;
