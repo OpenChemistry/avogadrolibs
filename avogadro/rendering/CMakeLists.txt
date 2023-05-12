@@ -2,7 +2,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
 if(USE_3DCONNEXION)
-  find_package(TDxWare_SDK 4.0 REQUIRED)
+  find_package(TDxWare_SDK 4.0)
 endif()
 
 if(WIN32 AND NOT BUILD_SHARED_LIBS)
