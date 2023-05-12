@@ -54,7 +54,7 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
       if (distance > tmpRadius)
         tmpRadius = distance;
 #ifdef _3DCONNEXION
-	  m_spheres.push_back(*it);
+      m_spheres.push_back(*it);
 #endif
     }
   }

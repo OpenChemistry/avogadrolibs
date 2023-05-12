@@ -143,25 +143,21 @@ public:
    * @param flags [in] flags informing which atoms will be included
    * in the bounding box
    */
-  void getBoundingBox(double &minX, 
-					  double &minY,
-					  double &minZ,
-					  double &maxX,
-					  double &maxY,
-					  double &maxZ,
-					  const std::vector<bool> &flags);
+  void getBoundingBox(double& minX, double& minY, double& minZ, double& maxX,
+                      double& maxY, double& maxZ,
+                      const std::vector<bool>& flags);
 
   /** <<API Extension for TDX>>
-   * Return distance from ray origin to the ray with scene content instersection point.
+   * Return distance from ray origin to the ray with scene content instersection
+   * point.
    * @param rayOrigin Origin of the ray.
    * @param rayEnd End point of the ray.
    * @param rayDirection Normalized direction of the ray.
    * @return Distance to the intersection point lying on the passed ray. If
    * returned value is less than zero, then there is no intersection.
    */
-  float getHitDistance(const Vector3f &rayOrigin,
-					   const Vector3f &rayDirection,
-					   const float rayLength);
+  float getHitDistance(const Vector3f& rayOrigin, const Vector3f& rayDirection,
+                       const float rayLength);
 #endif
 private:
   GroupNode m_rootNode;

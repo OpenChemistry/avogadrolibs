@@ -1,11 +1,12 @@
 #include "camera.h"
-#include "scene.h"
-#include "geometryvisitor.h"
 #include "cylindergeometry.h"
+#include "geometryvisitor.h"
+#include "scene.h"
 #include "spheregeometry.h"
 
-void Avogadro::Rendering::Camera::calculatePerspective(float left, float right, float bottom,
-                                  float top, float zNear, float zFar)
+void Avogadro::Rendering::Camera::calculatePerspective(float left, float right,
+                                                       float bottom, float top,
+                                                       float zNear, float zFar)
 {
   m_data->projection.setIdentity();
 
@@ -20,9 +21,9 @@ void Avogadro::Rendering::Camera::calculatePerspective(float left, float right, 
 }
 
 void Avogadro::Rendering::Scene::getBoundingBox(double& minX, double& minY,
-                                                double& minZ,
-                           double& maxX, double& maxY, double& maxZ,
-                           const std::vector<bool>& flags)
+                                                double& minZ, double& maxX,
+                                                double& maxY, double& maxZ,
+                                                const std::vector<bool>& flags)
 {
   GeometryVisitor visitor;
 
@@ -31,7 +32,8 @@ void Avogadro::Rendering::Scene::getBoundingBox(double& minX, double& minY,
 }
 
 float Avogadro::Rendering::Scene::getHitDistance(const Vector3f& rayOrigin,
-                            const Vector3f& rayDirection, const float rayLength)
+                                                 const Vector3f& rayDirection,
+                                                 const float rayLength)
 {
   GeometryVisitor visitor;
 
@@ -44,9 +46,9 @@ void Avogadro::Rendering::GeometryVisitor::visit(CylinderGeometry& geometry)
   m_cylinderGeometries.push_back(geometry);
 }
 
-void Avogadro::Rendering::GeometryVisitor::boundingBox(double& minX, double& minY, double& minZ,
-                                  double& maxX, double& maxY, double& maxZ,
-                                  const std::vector<bool>& flags) const
+void Avogadro::Rendering::GeometryVisitor::boundingBox(
+  double& minX, double& minY, double& minZ, double& maxX, double& maxY,
+  double& maxZ, const std::vector<bool>& flags) const
 {
   minX = std::numeric_limits<double>::max();
   minY = minX;
@@ -99,7 +101,8 @@ void Avogadro::Rendering::GeometryVisitor::boundingBox(double& minX, double& min
 }
 
 float Avogadro::Rendering::GeometryVisitor::hit(const Vector3f& rayOrigin,
-                           const Vector3f& rayDirection, const float rayLength)
+                                                const Vector3f& rayDirection,
+                                                const float rayLength)
 {
   auto minDistance = [rayOrigin, rayDirection, rayLength](
                        const std::vector<const Drawable*>& drawables) -> float {

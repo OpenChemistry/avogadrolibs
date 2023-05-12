@@ -72,7 +72,7 @@ public:
    */
   float radius();
 #ifdef _3DCONNEXION
-  /** 
+  /**
    * <<API Extension for TDX>>
    * Calculates the bounding box of the molecule.
    * @param minX [out] minimum X coordinate of the box diagonal
@@ -84,13 +84,9 @@ public:
    * @param flags [in] flags informing which atoms will be included
    * in the bounding box.
    */
-  void boundingBox(double &minX, 
-				   double &minY,
-				   double &minZ,
-				   double &maxX,
-                   double &maxY,
-				   double &maxZ,
-                   const std::vector<bool> &flags) const;
+  void boundingBox(double& minX, double& minY, double& minZ, double& maxX,
+                   double& maxY, double& maxZ,
+                   const std::vector<bool>& flags) const;
 
   /**
    * <<API Extension for TDX>>
@@ -100,9 +96,8 @@ public:
    * @return Distance to the intersection point lying on the passed ray.
    * If returned value is less than zero, then there is no intersection.
    */
-  float hit(const Vector3f &rayOrigin, 
-			const Vector3f &rayDirection,
-			const float rayLength);
+  float hit(const Vector3f& rayOrigin, const Vector3f& rayDirection,
+            const float rayLength);
 #endif
 private:
   /**

@@ -28,12 +28,10 @@ GLRenderer::GLRenderer()
   : m_valid(false), m_textRenderStrategy(nullptr), m_center(Vector3f::Zero()),
     m_radius(20.0)
 #ifdef _3DCONNEXION
-   ,m_drawIcon(false),
-	m_iconData(nullptr),
-	m_iconWidth(0u),
-	m_iconHeight(0u),
+    ,
+    m_drawIcon(false), m_iconData(nullptr), m_iconWidth(0u), m_iconHeight(0u),
     m_iconPosition(Eigen::Vector3f::Zero())
-#endif 
+#endif
 {
   m_overlayCamera.setIdentity();
 #ifdef _3DCONNEXION
@@ -41,18 +39,12 @@ GLRenderer::GLRenderer()
                       static_cast<float>(m_camera.height());
   float distance = m_camera.distance(m_center);
   float offset = distance + m_radius;
-  m_perspectiveFrustum = {-aspectRatio, 
-						  aspectRatio,
-						  -1.0f,
-						  1.0f,
-						  2.0f,
-						  offset};
-  m_orthographicFrustum = {-5.0f * aspectRatio,
-						   5.0f * aspectRatio,
-						   -5.0f,
-						   5.0f, 
-						   -offset,
-						   offset};
+  m_perspectiveFrustum = {
+    -aspectRatio, aspectRatio, -1.0f, 1.0f, 2.0f, offset
+  };
+  m_orthographicFrustum = {
+    -5.0f * aspectRatio, 5.0f * aspectRatio, -5.0f, 5.0f, -offset, offset
+  };
 #endif
 }
 
@@ -147,27 +139,16 @@ void GLRenderer::render()
   if (m_drawIcon && (m_iconData != nullptr)) {
     glPushMatrix();
     Eigen::Vector4f pivotPosition =
-      m_camera.projection().matrix() * 
-	  m_camera.modelView().matrix() *
-      Eigen::Vector4f(m_iconPosition.x(), 
-					  m_iconPosition.y(),
-					  m_iconPosition.z(),
-					  1.0);
+      m_camera.projection().matrix() * m_camera.modelView().matrix() *
+      Eigen::Vector4f(m_iconPosition.x(), m_iconPosition.y(),
+                      m_iconPosition.z(), 1.0);
     pivotPosition /= pivotPosition.w();
     glRasterPos3d(pivotPosition.x(), pivotPosition.y(), pivotPosition.z());
     glPixelZoom(1.0f, -1.0f);
-    glBitmap(0.0f, 
-			 0.0f, 
-			 0.0f,
-			 0.0f, 
-			 -static_cast<float>(m_iconWidth >> 1),
-			 static_cast<float>(m_iconHeight >> 1), 
-			 NULL);
-    glDrawPixels(m_iconWidth, 
-				 m_iconHeight, 
-				 GL_BGRA_EXT,
-				 GL_UNSIGNED_BYTE,
-				 m_iconData);
+    glBitmap(0.0f, 0.0f, 0.0f, 0.0f, -static_cast<float>(m_iconWidth >> 1),
+             static_cast<float>(m_iconHeight >> 1), NULL);
+    glDrawPixels(m_iconWidth, m_iconHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE,
+                 m_iconData);
     glPopMatrix();
   }
 #endif
@@ -233,9 +214,9 @@ void GLRenderer::applyProjection()
     m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
     m_perspectiveFrustum[5] = distance + m_radius;
     m_camera.calculatePerspective(
-      m_perspectiveFrustum[0], m_perspectiveFrustum[1],
-	  m_perspectiveFrustum[2], m_perspectiveFrustum[3],
-	  m_perspectiveFrustum[4], m_perspectiveFrustum[5]);
+      m_perspectiveFrustum[0], m_perspectiveFrustum[1], m_perspectiveFrustum[2],
+      m_perspectiveFrustum[3], m_perspectiveFrustum[4],
+      m_perspectiveFrustum[5]);
 #else
     m_camera.calculatePerspective(40.0f, std::max(2.0f, distance - m_radius),
                                   distance + m_radius);

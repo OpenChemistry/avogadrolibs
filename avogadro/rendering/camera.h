@@ -122,8 +122,9 @@ public:
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
 #ifdef _3DCONNEXION
   /**
-   * << API Extension for TDX >> 
-   * Calculate the perspective projection matrix using frustum planes coordinates.
+   * << API Extension for TDX >>
+   * Calculate the perspective projection matrix using frustum planes
+   * coordinates.
    * @param left left vertical clipping plane.
    * @param right right vertical clipping plane.
    * @param bottom bottom horizontal clipping plane.
@@ -131,7 +132,8 @@ public:
    * @param zNear distance to the near clipping plane.
    * @param zFar distance to the far clipping plane.
    */
-  void calculatePerspective(float left, float right, float bottom, float top, float zNear, float zFar);
+  void calculatePerspective(float left, float right, float bottom, float top,
+                            float zNear, float zFar);
 #endif
   /**
    * Calculate the orthographic projection matrix.
