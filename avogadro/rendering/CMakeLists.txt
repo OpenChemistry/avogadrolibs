@@ -1,5 +1,10 @@
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+
+if(USE_3DCONNEXION)
+  find_package(TDxWare_SDK 4.0 REQUIRED)
+endif()
+
 if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
@@ -94,8 +99,8 @@ target_sources(Rendering PRIVATE
   ambientocclusionspheregeometry.cpp
 )
 
-if(USE_3DCONNEXION)
-  list(APPEND SOURCES tdxextensions.cpp)
+if(TDxWare_SDK_FOUND)
+  target_sources(Rendering PRIVATE tdxextensions.cpp)
 endif()
 
 set(shader_files
@@ -149,6 +154,6 @@ target_link_libraries(Rendering
     GLEW::GLEW
     OpenGL::GL)
 
-if(USE_3DCONNEXION)
-  target_compile_definitions(AvogadroRendering PUBLIC _3DCONNEXION)
+if(TDxWare_SDK_FOUND)
+  target_compile_definitions(Rendering PUBLIC _3DCONNEXION)
 endif()
