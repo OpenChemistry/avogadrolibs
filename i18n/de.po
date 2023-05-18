@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-12 06:49+0000\n"
-"Last-Translator: Jörn Weigend <das.jott@gmail.com>\n"
+"PO-Revision-Date: 2023-05-18 18:31+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -65,11 +65,11 @@ msgid "Error populating file %1: %2"
 msgstr "Fehler beim Schreiben der Datei %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:330
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
-"Datei '%1' schlecht formatiert. Fehlende Begriffgruppen 'contents' oder "
+"Datei '%1' schlecht formatiert. Fehlende Zeichenketten 'contents' oder "
 "'filePath'."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:363
@@ -251,25 +251,25 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1013
 #: qtplugins/gamessinput/gamessinputdialog.cpp:722
 msgid "Job Failed"
-msgstr ""
+msgstr "Auftrag fehlgeschlagen"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1014
 #: qtplugins/gamessinput/gamessinputdialog.cpp:723
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Der Auftrag wurde nicht erfolgreich abgeschlossen."
 
 #: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Das Skript gibt Warnungen zurück\n"
 
 #: molequeue/inputgeneratorwidget.cpp:368
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "&Warnungen ausblenden"
 
 #: molequeue/inputgeneratorwidget.cpp:374
 msgid "Show &Warnings"
-msgstr ""
+msgstr "&Warnungen anzeigen"
 
 #: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
@@ -322,14 +322,14 @@ msgstr "Ausgabeverzeichnis wählen"
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Verzeichnis existiert nicht!"
 
 #: molequeue/inputgeneratorwidget.cpp:505
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Verzeichnis kann nicht gelesen werden!"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -338,7 +338,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Datei wird überschrieben."
 
 #: molequeue/inputgeneratorwidget.cpp:520
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -347,13 +347,15 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Datei kann nicht geschrieben werden."
 
 #: molequeue/inputgeneratorwidget.cpp:533
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
+"Die Eingabedateien können aufgrund eines unbekannten Fehlers nicht "
+"geschrieben werden."
 
 #: molequeue/inputgeneratorwidget.cpp:537
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -364,6 +366,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Die Eingabedateien können nicht geschrieben werden:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -378,6 +383,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Die Eingabedateien können nicht geschrieben werden:\n"
+"\n"
+"%1\n"
+"\n"
+"Warnungen:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:557
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -390,6 +402,11 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Warnung:\n"
+"\n"
+"%1\n"
+"\n"
+"Möchten Sie fortfahren?"
 
 #: molequeue/inputgeneratorwidget.cpp:561
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
@@ -417,7 +434,7 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Warten auf Abschlus der Aufgabe %1 \"%2\"…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
@@ -2738,7 +2755,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Download gescheitert"
+msgstr "Herunterladen über das Netzwerk fehlgeschlagen"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
