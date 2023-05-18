@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-18 18:37+0000\n"
+"PO-Revision-Date: 2023-05-18 18:43+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -1345,7 +1345,7 @@ msgstr "Atom entfernen"
 
 #: qtgui/rwmolecule.cpp:94
 msgid "Clear Atoms"
-msgstr "Atomen löschen"
+msgstr "Atome löschen"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1354,9 +1354,8 @@ msgid "Adjust Hydrogens"
 msgstr "Wasserstoffatome adjustieren"
 
 #: qtgui/rwmolecule.cpp:142
-#, fuzzy
 msgid "Change Elements"
-msgstr "Element ändern"
+msgstr "Elemente ändern"
 
 #: qtgui/rwmolecule.cpp:154
 msgid "Change Element"
@@ -1463,26 +1462,20 @@ msgid "Fill Unit Cell"
 msgstr "Elementarzelle ausfüllen"
 
 #: qtgui/rwmolecule.cpp:692
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Zu asymmetrischer Einheit reduzieren"
+msgstr "Zelle auf die asymmetrische Einheit reduzieren"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Hybridisierung ändern"
+msgstr "Atompositionen ändern"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "Atomfarbe ändern"
+msgstr "Atomposition ändern"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Anzahl der Bindungen ändern"
+msgstr "Atombezeichnung ändern"
 
 #: qtgui/rwmolecule.h:234
 #, fuzzy
@@ -1545,7 +1538,7 @@ msgstr "Ausgabedatei öffnen"
 
 #: qtplugins/apbs/apbs.cpp:62
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX Datei (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
