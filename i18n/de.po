@@ -2,7 +2,7 @@
 # Alex <alexandersimm2@googlemail.com>, 2021.
 # Jörg S. <joerg.schwerdtfeger@gmail.com>, 2021.
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
-# matterhorn103 <milner94@live.co.uk>, 2022.
+# matterhorn103 <milner94@live.co.uk>, 2022, 2023.
 # Sebastian Ehlert <awvwgk@gmail.com>, 2022.
 # "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
 # Norwid Behrnd <nbehrnd@yahoo.com>, 2023.
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-18 18:31+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -438,7 +438,7 @@ msgstr "Warten auf Abschlus der Aufgabe %1 \"%2\"…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Nicht mehr warten"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -1004,6 +1004,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"Eine Dateierweiterung fehlt und das Format konnte deswegen nicht bestimmt "
+"werden. Wollen Sie eine jetzt zufügen?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
