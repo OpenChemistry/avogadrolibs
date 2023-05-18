@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-18 18:31+0000\n"
+"PO-Revision-Date: 2023-05-18 18:37+0000\n"
 "Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -1060,6 +1060,7 @@ msgstr "Alle unterstützte Formate"
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
+"Lesen von Moleküldarstellung fehlgeschlagen: Unbekanntes Dateiformat: %1"
 
 #: qtgui/interfacescript.cpp:492
 #, qt-format
@@ -1079,7 +1080,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:86
 #, qt-format
 msgid "Option '%1' does not refer to an object."
-msgstr ""
+msgstr "Option '%1' bezieht sich auf kein Objekt."
 
 #: qtgui/jsonwidget.cpp:93
 #, qt-format
@@ -1094,7 +1095,7 @@ msgstr "Option '%1' wurde nicht gefunden."
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "Registerkarte %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1247,7 +1248,7 @@ msgstr "Unbenannt"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
-msgstr ""
+msgstr "Neue Ansicht erstellen"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1345,7 +1346,7 @@ msgstr "Atom entfernen"
 
 #: qtgui/rwmolecule.cpp:94
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Atomen löschen"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
