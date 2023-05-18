@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-18 18:43+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1391,9 +1391,8 @@ msgid "Clear Bonds"
 msgstr "Bindungen entfernen"
 
 #: qtgui/rwmolecule.cpp:320
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Anzahl der Bindungen"
+msgstr "Bindungsordnungen setzen"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
@@ -1430,9 +1429,8 @@ msgid "Scale Cell Volume"
 msgstr "Skaliere Volumen der Einheitszelle"
 
 #: qtgui/rwmolecule.cpp:532
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Superzelle"
+msgstr "Superzelle erstellen"
 
 #: qtgui/rwmolecule.cpp:556
 msgid "Niggli Reduction"
@@ -1556,7 +1554,7 @@ msgstr "OpenDX Fehler"
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Lesen von OpenDX-Datei %1 fehlgeschlagen"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
@@ -1797,7 +1795,7 @@ msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:140
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Farbschema auf Atomen und Resten anwenden."
 
 #: qtplugins/applycolors/applycolors.cpp:151
 #: qtplugins/applycolors/applycolors.cpp:153 qtplugins/focus/focus.cpp:42
