@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-18 18:52+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1795,7 +1795,7 @@ msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:140
 msgid "Apply color schemes to atoms and residues."
-msgstr "Farbschema auf Atomen und Resten anwenden."
+msgstr "Farbschemata auf Atome und Reste anwenden."
 
 #: qtplugins/applycolors/applycolors.cpp:151
 #: qtplugins/applycolors/applycolors.cpp:153 qtplugins/focus/focus.cpp:42
@@ -1814,10 +1814,8 @@ msgstr "Reste färben"
 
 #: qtplugins/applycolors/applycolors.cpp:215
 #: qtplugins/applycolors/applycolors.cpp:307
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "ausgewählte Farben"
+msgstr "Farbschema auswählen"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1825,10 +1823,8 @@ msgstr "ausgewählte Farben"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:215
 #: qtplugins/applycolors/applycolors.cpp:307:159 rc.cpp:1513
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Farbe:"
+msgstr "Farbschema:"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2066,25 +2062,19 @@ msgstr "Maximale Distanz:"
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:88
 msgid "Line width:"
-msgstr ""
+msgstr "Linienbreite:"
 
 #: qtplugins/closecontacts/closecontacts.h:34
 msgid "Render close contacts between atoms."
 msgstr "Enge Kontakten zwischen Atomen rendern."
 
 #: qtplugins/closecontacts/closecontacts.h:52
-#, fuzzy
-#| msgctxt "rendering of non-covalent close contacts"
-#| msgid "Close Contacts"
 msgid "Contact"
-msgstr "Enge Kontakte"
+msgstr "Kontakt"
 
 #: qtplugins/closecontacts/closecontacts.h:52
-#, fuzzy
-#| msgctxt "beta bridge"
-#| msgid "β Bridge"
 msgid "Salt Bridge"
-msgstr "β-Brücke"
+msgstr "Salzbrücke"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
@@ -2127,6 +2117,8 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"Fehler beim Lesen der Ergebnisdatei '%1':\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:194
 #, qt-format
