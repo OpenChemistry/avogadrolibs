@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-18 18:37+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1005,7 +1005,7 @@ msgid ""
 "want to add it?"
 msgstr ""
 "Eine Dateierweiterung fehlt und das Format konnte deswegen nicht bestimmt "
-"werden. Wollen Sie eine jetzt zufügen?"
+"werden. Wollen Sie jetzt eine hinzufügen?"
 
 #: qtgui/fileformatdialog.cpp:113
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1193,16 +1193,15 @@ msgstr "Enge Kontakte"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Kristallgitter"
 
 #: qtgui/layermodel.cpp:143 qtplugins/force/force.h:28
 msgid "Force"
 msgstr "Kraft"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Beschriftung"
+msgstr "Beschriftungen"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1226,7 +1225,7 @@ msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Symmetrieelemente"
 
 #: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1282,7 +1281,7 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:235
 msgid "Script failed to start."
-msgstr ""
+msgstr "Das Skript konnte nicht gestartet werden."
 
 #: qtgui/pythonscript.cpp:238
 msgid "Script crashed."
