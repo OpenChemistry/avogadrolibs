@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-19 07:39+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1169,9 +1169,8 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:796 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Kein Molekülsatz"
+msgstr "[Kein Molekül]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
@@ -3323,6 +3322,10 @@ msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
 msgstr ""
+"Standard:\tNach unten scrollen zu verkleinern, nach oben scrollen zu "
+"vergrößern\n"
+"Umgekehrt:\tNach oben scrollen zu verkleinern, nach unten scrollen zu "
+"vergrößern"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -3345,14 +3348,12 @@ msgid " °"
 msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "SCF tolerance type:"
 msgid "Angle tolerance:"
-msgstr "SCF-Toleranztyp:"
+msgstr "Winkeltoleranz:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Einige nicht-kovalente Wechselwirkungen rendern."
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Halogen"
@@ -3365,7 +3366,7 @@ msgstr "Chalkogen"
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Automatische Erkennung (%1)"
 
 #: qtplugins/openbabel/openbabel.cpp:45 qtplugins/openbabel/openbabel.cpp:523
 msgid "Optimize Geometry"
@@ -3409,7 +3410,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:214
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Ein Fehler ist aufgetreten beim ausführen von Open Babel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:224
 msgid "Error parsing openbabel output."
