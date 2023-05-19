@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-19 07:17+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1067,6 +1067,8 @@ msgstr ""
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Schreiben von Moleküldarstellung in String fehlgeschlagen: Unbekanntes "
+"Dateiformat: %1"
 
 #: qtgui/interfacescript.cpp:500
 #, qt-format
@@ -1075,7 +1077,7 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "'userOptions' fehlt."
 
 #: qtgui/jsonwidget.cpp:86
 #, qt-format
@@ -1139,7 +1141,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:556
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Unbekannte Optionstyp '%1' von Option '%2'."
 
 #: qtgui/jsonwidget.cpp:565 qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:622
 #: qtgui/jsonwidget.cpp:643 qtgui/jsonwidget.cpp:665 qtgui/jsonwidget.cpp:686
@@ -2235,7 +2237,7 @@ msgstr "'c' Gitterkoordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Fehler beim Anwenden der Geometrie"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:547
 msgid ""
@@ -2478,7 +2480,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "RANDOM"
@@ -2946,7 +2948,7 @@ msgstr "Molekül einfügen…"
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr ""
+msgstr "3D-Molekül wird generiert…"
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
