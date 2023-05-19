@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 08:11+0000\n"
+"PO-Revision-Date: 2023-05-19 12:20+0000\n"
 "Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -309,7 +309,7 @@ msgstr "Ausgang Fehler"
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr "Fehler beim Schreiben in Datei %1."
+msgstr "Schreiben in Datei %1 fehlgeschlagen."
 
 #: molequeue/inputgeneratorwidget.cpp:482
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
@@ -1045,6 +1045,8 @@ msgstr "schreiben"
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
+"Mehrere %1 gefunden, die dieses Format %2 können. Welcher soll verwendet "
+"werden?"
 
 #: qtgui/fileformatdialog.cpp:278
 #, fuzzy
@@ -1136,7 +1138,7 @@ msgstr "Multiplizität"
 #: qtgui/jsonwidget.cpp:525
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr ""
+msgstr "Fehler: Wert muss Objekt für Schlüssel '%1' sein."
 
 #: qtgui/jsonwidget.cpp:556
 #, qt-format
@@ -1202,7 +1204,7 @@ msgstr "Kraft"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
 msgid "Labels"
-msgstr "Beschriftungen"
+msgstr "Bezeichnungen"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1537,7 +1539,7 @@ msgstr "Ausgabedatei öffnen"
 
 #: qtplugins/apbs/apbs.cpp:62
 msgid "OpenDX File (*.dx)"
-msgstr "OpenDX Datei (*.dx)"
+msgstr "OpenDX-Datei (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
@@ -1555,7 +1557,7 @@ msgstr "OpenDX Fehler"
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr "Lesen von OpenDX-Datei %1 fehlgeschlagen"
+msgstr "Lesen von OpenDX file %1 fehlgeschlagen"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
@@ -4825,7 +4827,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Job in MoleQueue ausblenden:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -4951,7 +4953,7 @@ msgstr "Eingabedatei speichern"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
 msgid "Run APBS"
-msgstr ""
+msgstr "APBS ausführen"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4986,7 +4988,7 @@ msgstr "Ladung:"
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Distance Tolerance:"
-msgstr ""
+msgstr "Distanztoleranz:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
