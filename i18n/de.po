@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 07:17+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"PO-Revision-Date: 2023-05-19 07:39+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1141,7 +1141,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:556
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr "Unbekannte Optionstyp '%1' von Option '%2'."
+msgstr "Unbekannter Optionstyp '%1' von Option '%2'."
 
 #: qtgui/jsonwidget.cpp:565 qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:622
 #: qtgui/jsonwidget.cpp:643 qtgui/jsonwidget.cpp:665 qtgui/jsonwidget.cpp:686
@@ -1489,7 +1489,7 @@ msgstr "Molekül ändern"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "3DMol HTML Block."
 
 #: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
@@ -1679,7 +1679,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:556
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:558
@@ -1759,7 +1759,7 @@ msgstr "Spektral"
 #: qtplugins/surfaces/surfaces.cpp:576:168 rc.cpp:1522
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1928,10 +1928,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
-#| msgid "Perceive Bonds"
 msgid "Perceive Bond Orders"
-msgstr "Bindungen erkennen"
+msgstr "Bindungsordnungen erkennen"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2022,10 +2020,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "Mitte"
+msgstr "Geometrischer Schwerpunkt"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -2403,7 +2399,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
-msgstr ""
+msgstr "&CP2K…"
 
 #: qtplugins/cp2kinput/cp2kinput.h:34
 msgid "CP2K input"
@@ -2676,7 +2672,7 @@ msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
-msgstr ""
+msgstr "Bearbeitungswerkzeug"
 
 #: qtplugins/editor/editortoolwidget.cpp:129
 msgid "Other…"
@@ -2958,7 +2954,7 @@ msgstr "DNA einfügen"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "DNA- / RNA-Fragmente über einen Dialog einfügen."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
@@ -2974,7 +2970,7 @@ msgstr "Kristall …"
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "Fehler beim Lesen von Datei (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3045,7 +3041,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:174
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/label/label.cpp:185
 #, fuzzy
@@ -3053,19 +3049,18 @@ msgid "Atom Label:"
 msgstr "Atombezeichnungen"
 
 #: qtplugins/label/label.cpp:196 qtplugins/propertytables/propertymodel.cpp:431
-#, fuzzy
 msgid "ID"
-msgstr "D"
+msgstr "ID"
 
 #: qtplugins/label/label.cpp:200
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
 #: qtplugins/propertytables/propertymodel.cpp:429
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: qtplugins/label/label.cpp:204
 msgid " & "
-msgstr ""
+msgstr " & "
 
 #: qtplugins/label/label.cpp:216
 #, fuzzy
@@ -3252,10 +3247,8 @@ msgstr "Molekulareigenschaften"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
-#, fuzzy
-#| msgid "Copy"
 msgid "&Copy"
-msgstr "Kopieren"
+msgstr "&Kopieren"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:88
 msgctxt "asking server for molecule name"
@@ -3265,26 +3258,22 @@ msgstr "(ausstehend)"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:116
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:124
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:140
-#, fuzzy
 msgid "unknown molecule"
-msgstr "Kein Molekülsatz"
+msgstr "unbekanntes Molekül"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1021
-#, fuzzy
-#| msgid "IUPAC Molecule Name:"
 msgid "Molecule Name:"
-msgstr "IUPAC-Molekülname:"
+msgstr "Molekülname:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:219
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:997
-#, fuzzy
 msgid "Molecular Mass (g/mol):"
-msgstr "Molkülgewicht (g/mol):"
+msgstr "Molare Masse (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -3345,7 +3334,7 @@ msgstr "chemischer Name"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr ""
+msgstr "Netzwerk Datenbanken"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
