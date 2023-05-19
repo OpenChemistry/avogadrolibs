@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-19 07:41+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3410,7 +3410,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:214
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr "Ein Fehler ist aufgetreten beim ausführen von Open Babel (%1)."
+msgstr "Beim Ausführen von Open Babel ist ein Fehler aufgetreten (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:224
 msgid "Error parsing openbabel output."
