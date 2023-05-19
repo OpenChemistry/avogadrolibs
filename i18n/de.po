@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 07:39+0000\n"
+"PO-Revision-Date: 2023-05-19 07:41+0000\n"
 "Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3429,7 +3429,7 @@ msgstr "Molekül ungültig. Geometrie kann nicht optimiert werden."
 
 #: qtplugins/openbabel/openbabel.cpp:405
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Geometrie kann mit Open Babel nicht optimiert werden."
 
 #: qtplugins/openbabel/openbabel.cpp:430
 msgid "Optimizing Geometry (Open Babel)"
@@ -3437,7 +3437,7 @@ msgstr "Geometrie wird optimiert (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:431
 msgid "Generating MDL…"
-msgstr ""
+msgstr "MDL wird generiert…"
 
 #: qtplugins/openbabel/openbabel.cpp:450
 msgid ""
@@ -3482,7 +3482,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:532
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Datei kann mit Open Babel nicht geöffnet werden."
 
 #: qtplugins/openbabel/openbabel.cpp:538
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3512,7 +3512,7 @@ msgstr "Kein Molekülsatz"
 
 #: qtplugins/openbabel/openbabel.cpp:625 qtplugins/openbabel/openbabel.cpp:667
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Wasserstoffatome konnten nicht mit Open Babel hinzugefügt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:630 qtplugins/openbabel/openbabel.cpp:680
 msgid "Adding Hydrogens (Open Babel)"
