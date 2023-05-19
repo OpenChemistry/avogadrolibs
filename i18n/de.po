@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-19 08:04+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4286,7 +4286,7 @@ msgstr "Atome nach Indiz auswählen"
 
 #: qtplugins/select/select.cpp:410
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Auszuwählende Atome:"
 
 #: qtplugins/select/select.cpp:415
 msgid "Select Atom"
@@ -4294,11 +4294,11 @@ msgstr "Atom auswählen"
 
 #: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Atome nach Resten auswählen"
 
 #: qtplugins/select/select.cpp:449
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Auszuwählende Reste:"
 
 #: qtplugins/select/select.cpp:454
 #, fuzzy
@@ -4352,7 +4352,7 @@ msgstr "Atom starten"
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "Auswahlwerkzeug"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
@@ -4410,6 +4410,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Die Toleranz liegtt aktuell bei: %1.\n"
+"Mit dieser Toleranz weiterführen?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid ""
