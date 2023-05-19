@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 07:41+0000\n"
+"PO-Revision-Date: 2023-05-19 07:51+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3512,7 +3512,7 @@ msgstr "Kein Molekülsatz"
 
 #: qtplugins/openbabel/openbabel.cpp:625 qtplugins/openbabel/openbabel.cpp:667
 msgid "Cannot add hydrogens with Open Babel."
-msgstr "Wasserstoffatome konnten nicht mit Open Babel hinzugefügt werden."
+msgstr "Wasserstoffatome konnten mit Open Babel nicht hinzugefügt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:630 qtplugins/openbabel/openbabel.cpp:680
 msgid "Adding Hydrogens (Open Babel)"
@@ -3547,7 +3547,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:717
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Open Babel kann keine Wasserstoffatome entfernen."
 
 #: qtplugins/openbabel/openbabel.cpp:722
 msgid "Removing Hydrogens (Open Babel)"
@@ -3569,7 +3569,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.h:36
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:40
 msgid "Interact with OpenBabel utilities."
@@ -3626,7 +3626,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1042
 #: qtplugins/openmminput/openmminputdialog.cpp:1049
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
@@ -3683,7 +3683,7 @@ msgstr "Bildfrequenz:"
 #: qtplugins/playertool/playertool.cpp:89
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -3731,12 +3731,11 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:267
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "Das GIF Dateiformat unterstützt keine Bildrate von mehr als 100 FPS."
 
 #: qtplugins/playertool/playertool.cpp:312
-#, fuzzy
 msgid "Movie (*.avi)"
-msgstr "Video-Dateien (*.avi)"
+msgstr "Video-Datei (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:700
@@ -3784,7 +3783,7 @@ msgstr ""
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
-msgstr ""
+msgstr "Zeichne RMSD Diagramm…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
@@ -3796,7 +3795,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
-msgstr ""
+msgstr "Zeichne theoretisches XRD Diffraktogramm…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
@@ -3889,16 +3888,12 @@ msgid "Save File"
 msgstr "Datei speichern"
 
 #: qtplugins/ply/ply.cpp:71
-#, fuzzy
-#| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Textdatei (*.txt)"
+msgstr "PLY (*.wrl);;Textdatei (*.txt)"
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
