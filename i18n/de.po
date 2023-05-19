@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-18 18:52+0000\n"
+"PO-Revision-Date: 2023-05-19 07:17+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -245,7 +245,7 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:317
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Berechnung %1 senden"
 
 #: molequeue/inputgeneratorwidget.cpp:333
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1013
@@ -412,15 +412,15 @@ msgstr ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Eingabedateien schreiben"
 
 #: molequeue/inputgeneratorwidget.cpp:608
 msgid "Configure Job"
-msgstr ""
+msgstr "Aufgabe konfigurieren"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Aufgabe an MoleQueue übermitteln…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -2169,8 +2169,8 @@ msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
-"Der Textdatei wurde geändert. Sollen die Änderungen weggeworfen werden und "
-"zum aktuellen Molekül zurückgekehrt werden?"
+"Die Textdatei wurde geändert. Möchten Sie Ihre Änderungen verwerfen und zum "
+"gegenwärtigen Molekül zurückkehren?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:352
 msgid "Too few entries on line."
@@ -2223,17 +2223,15 @@ msgstr "Z-Koordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a' Gitterkoordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'b' Gitterkoordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-#, fuzzy
-#| msgid "Invalid coordinate."
 msgid "'c' lattice coordinate."
-msgstr "Koordinate ungültig."
+msgstr "'c' Gitterkoordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
@@ -2287,7 +2285,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Gitterkoordinaten (Atomnummern)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
 msgid "GAMESS format (symbols)"
@@ -2341,10 +2339,8 @@ msgid "&Edit"
 msgstr "&Ändern"
 
 #: qtplugins/copypaste/copypaste.cpp:82
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "Kopieren"
+msgstr "Kopieren als"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2552,9 +2548,8 @@ msgid "&Wrap Atoms to Unit Cell"
 msgstr "Atome um Zelle &wickeln"
 
 #: qtplugins/crystal/crystal.cpp:63
-#, fuzzy
 msgid "Rotate to Standard &Orientation"
-msgstr "In Standardrichtung drehen"
+msgstr "In Standardorientierung drehen"
 
 #: qtplugins/crystal/crystal.cpp:69
 #, fuzzy
@@ -2562,9 +2557,8 @@ msgid "Scale Cell &Volume…"
 msgstr "Zelle auf &Volumen skalieren …"
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "Superzelle"
+msgstr "Superzelle bauen…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2626,7 +2620,7 @@ msgstr ""
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
 msgid "No unit cell present."
-msgstr ""
+msgstr "Keine Einheitszelle gegenwärtig."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -2638,7 +2632,7 @@ msgstr ""
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
-msgstr ""
+msgstr "Benutzerdefinierte Elemente"
 
 #: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:110
 msgid "Draw"
@@ -2662,11 +2656,11 @@ msgstr "Atom zeichnen"
 
 #: qtplugins/editor/editor.cpp:114
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Bindungstyp ändern"
 
 #: qtplugins/editor/editor.cpp:127
 msgid "Remove Bond"
-msgstr ""
+msgstr "Bindung entfernen"
 
 #: qtplugins/editor/editor.cpp:255 qtplugins/measuretool/measuretool.cpp:193
 #: qtplugins/measuretool/measuretool.cpp:218
@@ -2676,7 +2670,7 @@ msgstr "Distanz:"
 #: qtplugins/editor/editor.cpp:258
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -2692,7 +2686,7 @@ msgstr "Andere…"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/editor/editortoolwidget.cpp:208:1534 rc.cpp:1552
 msgid "Automatic"
-msgstr ""
+msgstr "automatisch"
 
 #: qtplugins/editor/editortoolwidget.cpp:209
 msgid "Single"
@@ -2713,10 +2707,8 @@ msgid "&Import"
 msgstr "Importieren"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
-#| msgid "Fetch from PDB"
 msgid "Fetch PDB"
-msgstr "Aus PDB abrufen"
+msgstr "PDB abrufen"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -2725,7 +2717,7 @@ msgstr "Moleküldatei %1 kann nicht gelesen werden"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB Code"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2761,7 +2753,7 @@ msgstr "Aus PDB abrufen"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "PDB Modelle von der Protein Data Bank laden"
 
 #: qtplugins/focus/focus.cpp:22
 #, fuzzy
@@ -2796,7 +2788,7 @@ msgstr "GAMESS Eingabe"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Eingabedatei für GAMESS vorbereiten."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:225
 #, fuzzy
@@ -2829,15 +2821,15 @@ msgstr "Wasser"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:336
 msgid "Singlet"
-msgstr "Singlet"
+msgstr "Singulett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:339
 msgid "Doublet"
-msgstr "Doublet"
+msgstr "Doublett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:342
 msgid "Triplet"
-msgstr "Triplet"
+msgstr "Triplett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:357
 msgid "Dication"
@@ -2861,16 +2853,15 @@ msgstr "Dianion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:656
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "GAMESS Eingabedatei abspeichern"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:706
 msgid "Submit GAMESS Calculation"
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
-#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "Wasserstoffatome adjustieren"
+msgstr "Wasserstoffatome anpassen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:64
 msgid "Add Hydrogens"
@@ -2883,7 +2874,7 @@ msgstr "Wasserstoffatome entfernen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "&entferne alle Wasserstoffatome"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
