@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 07:51+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"PO-Revision-Date: 2023-05-19 08:04+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3913,7 +3913,7 @@ msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
-msgstr "Szene mittels POV-Ray rendern."
+msgstr "Szene mit POV-Ray rendern."
 
 #: qtplugins/propertytables/propertymodel.cpp:388
 msgid "Valence"
@@ -3983,9 +3983,8 @@ msgid "Secondary Structure"
 msgstr "Sekundärstruktur"
 
 #: qtplugins/propertytables/propertymodel.cpp:437
-#, fuzzy
 msgid "Heterogen"
-msgstr "Wasserstoff"
+msgstr "Heterogen"
 
 #: qtplugins/propertytables/propertymodel.cpp:451
 #: qtplugins/propertytables/propertymodel.cpp:468
@@ -4015,10 +4014,8 @@ msgid "Atom 4"
 msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:664
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Fragment einfügen"
+msgstr "Fragment anpassen"
 
 #: qtplugins/propertytables/propertymodel.cpp:790
 msgctxt "pi helix"
@@ -4062,16 +4059,12 @@ msgid "Coil"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:27
-#, fuzzy
-#| msgid "Atom Properties"
 msgid "Atom Properties…"
-msgstr "Atomeigenschaften"
+msgstr "Atomeigenschaften…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
-#, fuzzy
-#| msgid "Bond Properties"
 msgid "Bond Properties…"
-msgstr "Bindungseigenschaften"
+msgstr "Bindungseigenschaften…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 msgid "Angle Properties…"
@@ -4143,10 +4136,8 @@ msgid "Molecular Graph with Lone Pairs…"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:60
-#, fuzzy
-#| msgid "Atomic Charge..."
 msgid "Atomic Charge…"
-msgstr "Atomladung"
+msgstr "Atomladung…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:109
 msgid "Open WFN File"
@@ -4187,9 +4178,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
-#, fuzzy
 msgid "Reset view"
-msgstr "Zurücksetzen"
+msgstr "Ansicht zurücksetzen"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
@@ -4226,15 +4216,12 @@ msgid "Invert Selection"
 msgstr "Auswahl umkehren"
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
-#| msgid "Color by Element"
 msgid "Select by Element…"
-msgstr "Farbe nach Element"
+msgstr "Auswahl nach Element …"
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "Atomindizes"
+msgstr "Auswahl nach Atomindex …"
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
@@ -4256,16 +4243,12 @@ msgid "Select Water…"
 msgstr "Wasser auswählen…"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Auswahl ignorieren"
+msgstr "Auswahl erweitern"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "Auswahl"
+msgstr "Auswahl verringern"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4280,15 +4263,12 @@ msgid "&Select"
 msgstr "Au&swahl"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Color by Element"
 msgid "Select Element"
-msgstr "Farbe nach Element"
+msgstr "Auswahl nach Element"
 
 #: qtplugins/select/select.cpp:216
-#, fuzzy
 msgid "Select Water"
-msgstr "Atomindizes"
+msgstr "Wasser auswählen"
 
 #: qtplugins/select/select.cpp:254
 #, fuzzy
@@ -4309,10 +4289,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:415
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Atom entfernen"
+msgstr "Atom auswählen"
 
 #: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
@@ -4331,9 +4309,8 @@ msgstr "Auswahl nach Rest …"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1624
-#, fuzzy
 msgid "Select"
-msgstr "Au&swahl"
+msgstr "Auswahl"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
