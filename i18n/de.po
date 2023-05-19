@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 08:04+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"PO-Revision-Date: 2023-05-19 08:11+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4410,8 +4410,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
-"Die Toleranz liegtt aktuell bei: %1.\n"
-"Mit dieser Toleranz weiterführen?"
+"Die momentan gewählte Toleranz beträgt: %1.\n"
+"Mit dieser Toleranz fortfahren?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:208
 msgid ""
@@ -4434,9 +4434,8 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:315 qtplugins/yaehmop/yaehmop.cpp:209
 #: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
-#, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:316
 msgid "Select tolerance in Å:"
@@ -4455,14 +4454,12 @@ msgid "Hermann-Mauguin"
 msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:345
-#, fuzzy
 msgid "Select Space Group"
-msgstr "Raumgruppe festlegen"
+msgstr "Raumgruppe auswählen"
 
 #: qtplugins/spacegroup/spacegroup.h:24
-#, fuzzy
 msgid "SpaceGroup"
-msgstr "Raum&gruppe"
+msgstr "Raumgruppe"
 
 #: qtplugins/spacegroup/spacegroup.h:65
 msgid "Space group features for crystals."
@@ -4544,7 +4541,7 @@ msgstr "E&xportiere Bild"
 
 #: qtplugins/surfaces/surfaces.cpp:652
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Video MP4 (*.mp4);;Video AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
@@ -4608,10 +4605,8 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Temperatur"
+msgstr "Template"
 
 #: qtplugins/templatetool/templatetool.cpp:298
 #, fuzzy
@@ -4620,10 +4615,8 @@ msgid "Insert Template"
 msgstr "Peptid einfügen"
 
 #: qtplugins/templatetool/templatetool.cpp:491
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Peptid einfügen"
+msgstr "Liganden einfügen"
 
 #: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
