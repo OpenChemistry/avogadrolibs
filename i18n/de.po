@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
 "PO-Revision-Date: 2023-05-19 08:11+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4475,7 +4475,7 @@ msgstr "Spektren und Schwingungen"
 
 #: qtplugins/spectra/spectra.h:36
 msgid "Display spectra and vibrational modes."
-msgstr ""
+msgstr "Spektren und Schwingungsmoden anzeigen."
 
 #: qtplugins/surfaces/surfacedialog.cpp:27
 msgid "Solvent Accessible"
@@ -4656,7 +4656,7 @@ msgstr ""
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Molekül als Drahtgitter rendern."
 
 #: qtplugins/yaehmop/yaehmop.cpp:91
 msgid "Calculate Band Structure…"
