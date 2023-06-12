@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-19 12:20+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2023-06-13 10:48+0000\n"
+"Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2652,9 +2652,9 @@ msgid ""
 msgstr ""
 "Outil de dessin\n"
 "\n"
-"Bouton gauche ;\tcliquer et glisser-déposer pour ajouter des atomes et des "
-"liaison\n"
-"Bouton droit :\teffacer un atome"
+"Clic gauche :\tCliquer et glisser-déposer pour ajouter des atomes et des "
+"liaisons\n"
+"Clic droit :\tEffacer un atome"
 
 #: qtplugins/editor/editor.cpp:104
 msgid "Draw Atom"
@@ -2666,7 +2666,7 @@ msgstr "Changer le type de liaison"
 
 #: qtplugins/editor/editor.cpp:127
 msgid "Remove Bond"
-msgstr "Supprimer liaison"
+msgstr "Supprimer la liaison"
 
 #: qtplugins/editor/editor.cpp:255 qtplugins/measuretool/measuretool.cpp:193
 #: qtplugins/measuretool/measuretool.cpp:218
@@ -2680,7 +2680,7 @@ msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
-msgstr "Outil d'éditeur"
+msgstr "Outil d’édition"
 
 #: qtplugins/editor/editortoolwidget.cpp:129
 msgid "Other…"
@@ -2757,7 +2757,7 @@ msgstr "La molécule spécifiée n'a pas pu être trouvée : %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
-msgstr "Récupérer depuis le PDB"
+msgstr "Récupérer depuis la PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -2795,7 +2795,7 @@ msgstr "Entrée GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Générer les données d'entrées pour GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:225
 #, fuzzy
@@ -2860,7 +2860,7 @@ msgstr "Dianion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:656
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Sauvegarder le fichier d’entrée GAMESS"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:706
 msgid "Submit GAMESS Calculation"
@@ -2900,7 +2900,7 @@ msgstr "&Recherche PQR…"
 
 #: qtplugins/importpqr/importpqr.h:34
 msgid "Import From PQR"
-msgstr ""
+msgstr "Importer de PQR"
 
 #: qtplugins/importpqr/importpqr.h:38
 msgid "Download a molecule from PQR."
@@ -2946,12 +2946,12 @@ msgstr "Thymine"
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:982
 msgid "Insert Molecule…"
-msgstr "Insérer Molécule…"
+msgstr "Insérer une molécule…"
 
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr ""
+msgstr "Génération d’une molécule en 3D…"
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
