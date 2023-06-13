@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2023-05-06 15:51+0000\n"
+"PO-Revision-Date: 2023-05-19 12:20+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -2164,9 +2164,8 @@ msgid "Run external script commands"
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Éditeur de coordonnées cartésiennes"
+msgstr "Éditeur des coordonnées cartésiennes …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -4373,9 +4372,8 @@ msgid "New Layer"
 msgstr "Nouveau calque"
 
 #: qtplugins/spacegroup/spacegroup.cpp:49
-#, fuzzy
 msgid "Perceive Space Group…"
-msgstr "Détecter le groupe d'espace"
+msgstr "Détecter le groupe d'espace …"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -4384,10 +4382,8 @@ msgid "Symmetrize"
 msgstr "Symétriser"
 
 #: qtplugins/spacegroup/spacegroup.cpp:72
-#, fuzzy
-#| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Remplir la maille conventionnelle"
+msgstr "Remplir la maille élémentaire…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:77
 #: qtplugins/spacegroup/spacegroup.cpp:294
