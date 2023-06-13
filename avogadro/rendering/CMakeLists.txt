@@ -1,10 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
-if(USE_3DCONNEXION)
-  find_package(TDxWare_SDK 4.0)
-endif()
-
 if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
@@ -99,7 +95,7 @@ target_sources(Rendering PRIVATE
   ambientocclusionspheregeometry.cpp
 )
 
-if(TDxWare_SDK_FOUND)
+if(USE_3DCONNEXION AND (WIN32 OR APPLE))
   target_sources(Rendering PRIVATE tdxextensions.cpp)
 endif()
 
@@ -154,6 +150,6 @@ target_link_libraries(Rendering
     GLEW::GLEW
     OpenGL::GL)
 
-if(TDxWare_SDK_FOUND)
+if(USE_3DCONNEXION AND (WIN32 OR APPLE))
   target_compile_definitions(Rendering PUBLIC _3DCONNEXION)
 endif()
