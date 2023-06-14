@@ -23,7 +23,7 @@ Camera::Camera()
 Camera::Camera(const Camera& o)
   : m_width(o.m_width), m_height(o.m_height),
     m_projectionType(o.m_projectionType),
-    m_orthographicScale(o.m_orthographicScale), m_data(new EigenData(*o.m_data))
+    m_orthographicScale(o.m_orthographicScale), m_data(new EigenData(*o.m_data)) 
 {}
 
 Camera& Camera::operator=(const Camera& o)
@@ -132,7 +132,7 @@ Vector3f Camera::unProject(const Vector2f& point,
 }
 
 void Camera::calculatePerspective(float fieldOfView, float aspectRatio,
-                                  float zNear, float zFar)
+								  float zNear, float zFar)
 {
   m_data->projection.setIdentity();
   float f = 1.0f / std::tan(fieldOfView * float(M_PI) / 360.0f);
@@ -152,7 +152,7 @@ void Camera::calculatePerspective(float fieldOfView, float zNear, float zFar)
 }
 
 void Camera::calculateOrthographic(float left, float right, float bottom,
-                                   float top, float zNear, float zFar)
+								   float top, float zNear, float zFar)
 {
   left *= m_orthographicScale;
   right *= m_orthographicScale;

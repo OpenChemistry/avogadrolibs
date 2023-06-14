@@ -9,6 +9,9 @@
 #include "curvegeometry.h"
 #include "linestripgeometry.h"
 #include "spheregeometry.h"
+#ifdef _3DCONNEXION
+#include "cylindergeometry.h"
+#endif
 
 namespace Avogadro::Rendering {
 
@@ -27,6 +30,9 @@ void GeometryVisitor::visit(Drawable&)
 
 void GeometryVisitor::visit(SphereGeometry& geometry)
 {
+#ifdef _3DCONNEXION
+  m_sphereGeometries.push_back(geometry);
+#endif
   const Core::Array<SphereColor>& spheres = geometry.spheres();
   if (!spheres.size())
     return;
@@ -47,6 +53,9 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
       float distance = (it->center - tmpCenter).squaredNorm();
       if (distance > tmpRadius)
         tmpRadius = distance;
+#ifdef _3DCONNEXION
+      m_spheres.push_back(*it);
+#endif
     }
   }
   tmpRadius = std::sqrt(tmpRadius);
@@ -145,6 +154,11 @@ void GeometryVisitor::clear()
   m_dirty = false;
   m_centers.clear();
   m_radii.clear();
+#ifdef _3DCONNEXION
+  m_spheres.clear();
+  m_sphereGeometries.clear();
+  m_cylinderGeometries.clear();
+#endif
 }
 
 Vector3f GeometryVisitor::center()

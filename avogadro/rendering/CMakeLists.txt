@@ -1,5 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+
 if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
@@ -94,6 +95,10 @@ target_sources(Rendering PRIVATE
   ambientocclusionspheregeometry.cpp
 )
 
+if(USE_3DCONNEXION AND (WIN32 OR APPLE))
+  target_sources(Rendering PRIVATE tdxextensions.cpp)
+endif()
+
 set(shader_files
   "arrow_vs.glsl"
   "cylinders_fs.glsl"
@@ -144,3 +149,7 @@ target_link_libraries(Rendering
     Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
     GLEW::GLEW
     OpenGL::GL)
+
+if(USE_3DCONNEXION AND (WIN32 OR APPLE))
+  target_compile_definitions(Rendering PUBLIC _3DCONNEXION)
+endif()
