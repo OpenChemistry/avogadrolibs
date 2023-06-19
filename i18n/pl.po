@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Urszula <urszula127@gmail.com>, 2021.
 # Dominik Florjan <dominik.florjan@gmail.com>, 2022.
+# Jakub Brzeski <jakubbrzeski4@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-04-23 02:23+0000\n"
-"PO-Revision-Date: 2022-11-17 16:48+0000\n"
-"Last-Translator: Dominik Florjan <dominik.florjan@gmail.com>\n"
+"PO-Revision-Date: 2023-06-20 10:49+0000\n"
+"Last-Translator: Jakub Brzeski <jakubbrzeski4@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pl/>\n"
 "Language: pl\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -29,7 +30,7 @@ msgstr "Zadanie #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
-msgstr ""
+msgstr "Nie określono komunikatu."
 
 #: molequeue/inputgenerator.cpp:69 qtgui/interfacescript.cpp:68
 #, qt-format
