@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-06-28 10:54+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2023-06-30 09:52+0000\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3527,7 +3527,7 @@ msgstr "Wasserstoffatome hinzufügen (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:631
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Open-Babel-Eingabe wird erstellt…"
 
 #: qtplugins/openbabel/openbabel.cpp:639 qtplugins/openbabel/openbabel.cpp:689
 msgid "Error generating Open Babel input."
@@ -4202,7 +4202,7 @@ msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skriptendateiformate"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
@@ -4844,7 +4844,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Nach Abschluss Ausgabe öffnen:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
