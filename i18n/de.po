@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
 "PO-Revision-Date: 2023-06-30 09:52+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1424,9 +1424,8 @@ msgid "Wrap Atoms to Cell"
 msgstr "Atome um Zelle &wickeln"
 
 #: qtgui/rwmolecule.cpp:512
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Skaliere Volumen der Einheitszelle"
+msgstr "Skaliere Volumen der Zelle"
 
 #: qtgui/rwmolecule.cpp:532
 msgid "Build Super Cell"
@@ -1936,10 +1935,8 @@ msgid "Configure Bonding…"
 msgstr "Bindung einrichten…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Ausgewählte Atome sperren"
+msgstr "Ausgewählte Atome verbinden"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2158,9 +2155,8 @@ msgid "Atomic &Coordinate Editor…"
 msgstr "Kartesischer &Koordinaten-Editor…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Kartesischer Koordinaten-Editor"
+msgstr "Koordinaten-Editor"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -2335,10 +2331,8 @@ msgid "Clear"
 msgstr "Löschen"
 
 #: qtplugins/copypaste/copypaste.cpp:36
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "Einfügen"
+msgstr "&Einfügen"
 
 #: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
 msgid "&Edit"
@@ -3422,7 +3416,7 @@ msgstr "Beim Ausführen von Open Babel ist ein Fehler aufgetreten (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:224
 msgid "Error parsing openbabel output."
-msgstr "Parsen von openbabel-Ausgabe fehlgeschlagen."
+msgstr "Das Parsen der openbabel-Ausgabe ist fehlgeschlagen."
 
 #: qtplugins/openbabel/openbabel.cpp:361 qtplugins/openbabel/openbabel.cpp:396
 #, qt-format
@@ -4565,7 +4559,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Render die Szene in eine .svg Datei."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Class"
