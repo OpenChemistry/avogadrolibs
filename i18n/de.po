@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
 "PO-Revision-Date: 2023-06-28 10:31+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -62,7 +62,7 @@ msgstr "Die Referenzdatei '%1' ist nicht vorhanden."
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:326
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr "Fehler beim Schreiben der Datei %1: %2"
+msgstr "Fehler beim Schreiben in die Datei %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:330
 #, qt-format
@@ -222,7 +222,7 @@ msgstr "Bei der Eingabegenerierung sind Probleme aufgetreten:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
-msgstr "Keine Eingabedateien zum Speichern!"
+msgstr "Keine Eingabedateien zum Speichern vorhanden!"
 
 #: molequeue/inputgeneratorwidget.cpp:285
 #: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
@@ -3515,9 +3515,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:573
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "Kein Molekülsatz"
+msgstr "Aktualisierung des Moleküls von Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:625 qtplugins/openbabel/openbabel.cpp:667
 msgid "Cannot add hydrogens with Open Babel."
@@ -4237,9 +4236,8 @@ msgid "Select by Residue…"
 msgstr "Auswahl nach Rest …"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "Atomindizes"
+msgstr "Wähle Gerüstatome …"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
@@ -4308,10 +4306,8 @@ msgid "Residues to Select:"
 msgstr "Auszuwählende Reste:"
 
 #: qtplugins/select/select.cpp:454
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "Auswahl nach Rest …"
+msgstr "Auswahl nach Rest"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6210,17 +6206,13 @@ msgstr "Z-Achse"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Vordergrund"
+msgstr "Rotiere um:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-#, fuzzy
-#| msgid "Origin:"
 msgid "Origin"
-msgstr "Herkunft:"
+msgstr "Ursprung"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
