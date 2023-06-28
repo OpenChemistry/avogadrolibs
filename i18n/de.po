@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
 "PO-Revision-Date: 2023-06-28 10:52+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2164,7 +2164,7 @@ msgstr "Kartesischer Koordinaten-Editor"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr "Atomische Koordinaten ändern mit einem Text-Editor"
+msgstr "Atomkoordinaten mit einem Texteditor bearbeiten."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:224
 msgid "Overwrite changes?"
@@ -2468,7 +2468,7 @@ msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMIC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
@@ -3093,9 +3093,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:67
-#, fuzzy
 msgid "Create Label"
-msgstr "Oberflächen erzeugen"
+msgstr "Beschriftung erzeugen"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
