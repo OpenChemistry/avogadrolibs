@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
 "PO-Revision-Date: 2023-06-28 10:54+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3323,7 +3323,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr "Richtung von Zoomen beim Scrollen invertieren"
+msgstr "Richtung von Zoomen beim Scrollen umkehren"
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid ""
