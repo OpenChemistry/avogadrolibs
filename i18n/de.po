@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-06-28 10:31+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2023-06-28 10:52+0000\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2447,7 +2447,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -3140,7 +3140,7 @@ msgstr "Keine Deskriptoren gefunden!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Kein Zeilenformatleser gefunden!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "Unable to load requested format reader."
@@ -3219,7 +3219,7 @@ msgstr "Messwerkzeug"
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/meshes/meshes.cpp:170:1519
 msgid "Opacity:"
-msgstr "Transparenz:"
+msgstr "Intransparenz:"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
@@ -3227,7 +3227,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
-msgstr "Molekülorbital…"
+msgstr "&Molekular…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:33
 msgid "View general properties of a molecule."
@@ -3324,7 +3324,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Richtung von Zoomen beim Scrollen invertieren"
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid ""
