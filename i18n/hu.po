@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-04-23 18:45+0000\n"
+"PO-Revision-Date: 2023-06-30 09:52+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1963,10 +1963,8 @@ msgid "Configure Bonding…"
 msgstr "Kötési beállítások…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Fix kiválasztott atomok"
+msgstr "Kijelölt atomok kötése"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -6205,51 +6203,47 @@ msgstr "Leíró:"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr ""
+msgstr "Fordító:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "X-axis"
-msgstr ""
+msgstr "X-tengely"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:166
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Y-axis"
-msgstr ""
+msgstr "Y-tengely"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Z-axis"
-msgstr ""
+msgstr "Z-tengely"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Előtér:"
+msgstr "Forgatás a következő körül:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Origin"
-msgstr ""
+msgstr "Eredet"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-#, fuzzy
-#| msgid "Optimize Geometry"
 msgid "Geometry"
-msgstr "Geometria optimalizálása"
+msgstr "Geometria"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, moleculeNameLabel)
