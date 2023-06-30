@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-05-20 18:51+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"PO-Revision-Date: 2023-06-30 09:52+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -62,7 +62,7 @@ msgstr "Die Referenzdatei '%1' ist nicht vorhanden."
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:326
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr "Fehler beim Schreiben der Datei %1: %2"
+msgstr "Fehler beim Schreiben in die Datei %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:330
 #, qt-format
@@ -222,7 +222,7 @@ msgstr "Bei der Eingabegenerierung sind Probleme aufgetreten:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
-msgstr "Keine Eingabedateien zum Speichern!"
+msgstr "Keine Eingabedateien zum Speichern vorhanden!"
 
 #: molequeue/inputgeneratorwidget.cpp:285
 #: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
@@ -998,6 +998,7 @@ msgstr "Ausführbares Programm auswählen:"
 #: qtgui/fileformatdialog.cpp:51
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
+"Ein für die ausgewählte Datei geeigneter Dateileser wurde nicht gefunden."
 
 #: qtgui/fileformatdialog.cpp:99
 msgid ""
@@ -1314,9 +1315,8 @@ msgid "Remove Layer"
 msgstr "Schicht entfernen"
 
 #: qtgui/rwlayermanager.cpp:201
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Wasserstoffatome entfernen"
+msgstr "Schichtinfos entfernen"
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1324,7 +1324,7 @@ msgstr "Schicht hinzufügen"
 
 #: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Schichtinfos hinzufügen"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1375,9 +1375,8 @@ msgid "Change Atom Color"
 msgstr "Atomfarbe ändern"
 
 #: qtgui/rwmolecule.cpp:256
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Anzahl der Bindungen ändern"
+msgstr "Atomschicht ändern"
 
 #: qtgui/rwmolecule.cpp:272
 msgid "Add Bond"
@@ -1425,9 +1424,8 @@ msgid "Wrap Atoms to Cell"
 msgstr "Atome um Zelle &wickeln"
 
 #: qtgui/rwmolecule.cpp:512
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Skaliere Volumen der Einheitszelle"
+msgstr "Skaliere Volumen der Zelle"
 
 #: qtgui/rwmolecule.cpp:532
 msgid "Build Super Cell"
@@ -1559,7 +1557,7 @@ msgstr "Fehler beim Lesen von OpenDX-Datei: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Lesen von OpenDX-Datei fehlgeschlagen: kein Cube gefunden"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -1837,9 +1835,8 @@ msgid "Atom scale"
 msgstr "Atomstil"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
-#, fuzzy
 msgid "Bond scale"
-msgstr "Bindungswinkel"
+msgstr "Bindung skalieren"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
@@ -1856,9 +1853,8 @@ msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "Atome als Sphären und Bindungen als Zylinder rendern."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:121
-#, fuzzy
 msgid "Bond-Centric Manipulation"
-msgstr "Bindungsorientiertes Bearbeiten"
+msgstr "Bindungsorientierte Manipulation"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:124
 #, fuzzy
@@ -1939,10 +1935,8 @@ msgid "Configure Bonding…"
 msgstr "Bindung einrichten…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Ausgewählte Atome sperren"
+msgstr "Ausgewählte Atome verbinden"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2161,13 +2155,12 @@ msgid "Atomic &Coordinate Editor…"
 msgstr "Kartesischer &Koordinaten-Editor…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Kartesischer Koordinaten-Editor"
+msgstr "Koordinaten-Editor"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Atomkoordinaten mit einem Texteditor bearbeiten."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:224
 msgid "Overwrite changes?"
@@ -2338,10 +2331,8 @@ msgid "Clear"
 msgstr "Löschen"
 
 #: qtplugins/copypaste/copypaste.cpp:36
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "Einfügen"
+msgstr "&Einfügen"
 
 #: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
 msgid "&Edit"
@@ -2450,7 +2441,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -2471,7 +2462,7 @@ msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMIC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
@@ -3096,9 +3087,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:67
-#, fuzzy
 msgid "Create Label"
-msgstr "Oberflächen erzeugen"
+msgstr "Beschriftung erzeugen"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3143,7 +3133,7 @@ msgstr "Keine Deskriptoren gefunden!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Kein Zeilenformatleser gefunden!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "Unable to load requested format reader."
@@ -3222,7 +3212,7 @@ msgstr "Messwerkzeug"
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/meshes/meshes.cpp:170:1519
 msgid "Opacity:"
-msgstr "Transparenz:"
+msgstr "Intransparenz:"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
@@ -3230,7 +3220,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
-msgstr "Molekülorbital…"
+msgstr "&Molekular…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:33
 msgid "View general properties of a molecule."
@@ -3327,7 +3317,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:59
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Richtung von Zoomen beim Scrollen umkehren"
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid ""
@@ -3426,7 +3416,7 @@ msgstr "Beim Ausführen von Open Babel ist ein Fehler aufgetreten (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:224
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Das Parsen der openbabel-Ausgabe ist fehlgeschlagen."
 
 #: qtplugins/openbabel/openbabel.cpp:361 qtplugins/openbabel/openbabel.cpp:396
 #, qt-format
@@ -3518,9 +3508,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:573
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "Kein Molekülsatz"
+msgstr "Aktualisierung des Moleküls von Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:625 qtplugins/openbabel/openbabel.cpp:667
 msgid "Cannot add hydrogens with Open Babel."
@@ -3532,7 +3521,7 @@ msgstr "Wasserstoffatome hinzufügen (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:631
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Open-Babel-Eingabe wird erstellt…"
 
 #: qtplugins/openbabel/openbabel.cpp:639 qtplugins/openbabel/openbabel.cpp:689
 msgid "Error generating Open Babel input."
@@ -4003,7 +3992,7 @@ msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:453
 msgid "Vertex"
-msgstr "Vertex"
+msgstr "Ecke"
 
 #: qtplugins/propertytables/propertymodel.cpp:455
 #: qtplugins/propertytables/propertymodel.cpp:472
@@ -4207,7 +4196,7 @@ msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skriptendateiformate"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
@@ -4240,9 +4229,8 @@ msgid "Select by Residue…"
 msgstr "Auswahl nach Rest …"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "Atomindizes"
+msgstr "Wähle Gerüstatome …"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
@@ -4311,10 +4299,8 @@ msgid "Residues to Select:"
 msgstr "Auszuwählende Reste:"
 
 #: qtplugins/select/select.cpp:454
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "Auswahl nach Rest …"
+msgstr "Auswahl nach Rest"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4573,7 +4559,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Render die Szene in eine .svg Datei."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Class"
@@ -4852,7 +4838,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Nach Abschluss Ausgabe öffnen:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
@@ -6213,17 +6199,13 @@ msgstr "Z-Achse"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Vordergrund"
+msgstr "Rotiere um:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-#, fuzzy
-#| msgid "Origin:"
 msgid "Origin"
-msgstr "Herkunft:"
+msgstr "Ursprung"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)

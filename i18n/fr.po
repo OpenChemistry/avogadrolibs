@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-06-13 10:48+0000\n"
-"Last-Translator: Translator <kvb@tuta.io>\n"
+"PO-Revision-Date: 2023-06-30 09:52+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -4260,19 +4260,16 @@ msgid "Select by Residue…"
 msgstr "Sélectionner par résidu…"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "Indices des atomes"
+msgstr "Sélectionner les atomes du résidu…"
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
 msgid "Select Sidechain Atoms…"
-msgstr "Indices des atomes"
+msgstr "Sélectioner les atomes du résidu…"
 
 #: qtplugins/select/select.cpp:78
-#, fuzzy
 msgid "Select Water…"
-msgstr "Indices des atomes"
+msgstr "Sélectionner d'eau…"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
 msgid "Enlarge Selection"
