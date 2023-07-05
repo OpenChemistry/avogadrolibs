@@ -95,10 +95,6 @@ target_sources(Rendering PRIVATE
   ambientocclusionspheregeometry.cpp
 )
 
-if(USE_3DCONNEXION AND (WIN32 OR APPLE))
-  target_sources(Rendering PRIVATE tdxextensions.cpp)
-endif()
-
 set(shader_files
   "arrow_vs.glsl"
   "cylinders_fs.glsl"

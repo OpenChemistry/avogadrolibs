@@ -34,7 +34,7 @@ GLRenderer::GLRenderer()
 #endif
 {
   m_overlayCamera.setIdentity();
-#ifdef _3DCONNEXION
+
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
   float distance = m_camera.distance(m_center);
@@ -45,7 +45,7 @@ GLRenderer::GLRenderer()
   m_orthographicFrustum = {
     -5.0f * aspectRatio, 5.0f * aspectRatio, -5.0f, 5.0f, -offset, offset
   };
-#endif
+
 }
 
 GLRenderer::~GLRenderer()
@@ -204,12 +204,9 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
 void GLRenderer::applyProjection()
 {
   float distance = m_camera.distance(m_center);
-#ifdef _3DCONNEXION
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
-#endif
   if (m_camera.projectionType() == Perspective) {
-#ifdef _3DCONNEXION
     m_perspectiveFrustum[0] = m_perspectiveFrustum[2] * aspectRatio;
     m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
     m_perspectiveFrustum[5] = distance + m_radius;
@@ -217,13 +214,8 @@ void GLRenderer::applyProjection()
       m_perspectiveFrustum[0], m_perspectiveFrustum[1], m_perspectiveFrustum[2],
       m_perspectiveFrustum[3], m_perspectiveFrustum[4],
       m_perspectiveFrustum[5]);
-#else
-    m_camera.calculatePerspective(40.0f, std::max(2.0f, distance - m_radius),
-                                  distance + m_radius);
-#endif
   } else {
     // Renders the orthographic projection of the molecule
-#ifdef _3DCONNEXION
     m_orthographicFrustum[0] = m_orthographicFrustum[2] * aspectRatio;
     m_orthographicFrustum[1] = m_orthographicFrustum[3] * aspectRatio;
     m_orthographicFrustum[5] = distance + m_radius;
@@ -234,13 +226,6 @@ void GLRenderer::applyProjection()
                                    m_orthographicFrustum[3],  // T
                                    m_orthographicFrustum[4],  // N
                                    m_orthographicFrustum[5]); // F
-#else
-    const double halfHeight = m_radius;
-    const double halfWidth = halfHeight * m_camera.width() / m_camera.height();
-    m_camera.calculateOrthographic(
-      -halfWidth, halfWidth, -halfHeight, halfHeight,
-      std::max(2.0f, distance - m_radius), distance + m_radius);
-#endif
   }
   m_overlayCamera.calculateOrthographic(
     0.f, static_cast<float>(m_overlayCamera.width()), 0.f,
@@ -318,6 +303,17 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
   }
 
   return result;
+}
+
+float GLRenderer::hit(const Vector3f& rayOrigin,
+                      const Vector3f& rayEnd,
+                      const Vector3f& rayDirection) const
+{
+  std::multimap<float, Identifier> results =
+    hits(&m_scene.rootNode(), rayOrigin, rayEnd, rayDirection);
+  if (results.size())
+    return results.begin()->first;
+  return std::numeric_limits<float>::max();
 }
 
 Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const

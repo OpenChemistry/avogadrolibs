@@ -132,7 +132,7 @@ Vector3f Camera::unProject(const Vector2f& point,
 }
 
 void Camera::calculatePerspective(float fieldOfView, float aspectRatio,
-								  float zNear, float zFar)
+                                  float zNear, float zFar)
 {
   m_data->projection.setIdentity();
   float f = 1.0f / std::tan(fieldOfView * float(M_PI) / 360.0f);
@@ -152,7 +152,7 @@ void Camera::calculatePerspective(float fieldOfView, float zNear, float zFar)
 }
 
 void Camera::calculateOrthographic(float left, float right, float bottom,
-								   float top, float zNear, float zFar)
+                                   float top, float zNear, float zFar)
 {
   left *= m_orthographicScale;
   right *= m_orthographicScale;
@@ -182,6 +182,22 @@ void Camera::setProjection(const Eigen::Affine3f& transform)
 void Camera::setModelView(const Eigen::Affine3f& transform)
 {
   m_data->modelView = transform;
+}
+
+void Camera::calculatePerspective(float left, float right,
+                                  float bottom, float top,
+                                  float zNear, float zFar)
+{
+  m_data->projection.setIdentity();
+
+  m_data->projection(0, 0) = (2.0f * zNear) / (right - left);
+  m_data->projection(1, 1) = (2.0f * zNear) / (top - bottom);
+  m_data->projection(0, 2) = (right + left) / (right - left);
+  m_data->projection(1, 2) = (top + bottom) / (top - bottom);
+  m_data->projection(2, 2) = -(zFar + zNear) / (zFar - zNear);
+  m_data->projection(3, 2) = -1.0f;
+  m_data->projection(2, 3) = -(2.0f * zFar * zNear) / (zFar - zNear);
+  m_data->projection(3, 3) = 0.0f;
 }
 
 } // namespace Avogadro
