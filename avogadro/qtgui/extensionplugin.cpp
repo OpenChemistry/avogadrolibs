@@ -41,4 +41,11 @@ void ExtensionPlugin::setActiveWidget(QWidget* widget)
 {
 }
 
+bool ExtensionPlugin::handleCommand(const QString& command, const QVariantMap& options)
+{
+  Q_UNUSED(command);
+  Q_UNUSED(options);
+  return false;
+}
+
 } // End Avogadro namespace

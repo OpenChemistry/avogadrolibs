@@ -91,6 +91,17 @@ public:
    */
   virtual void draw(Rendering::GroupNode& node);
 
+  /**
+   * Called by the app to handle a command registered by the plugin.
+   * (e.g., "renderMovie" or "drawAtom", etc.)
+   * 
+   * The app will turn the command into a string and pass it to the tool.
+   * and any options will go from a JSON dictionary to a QVariantMap.
+   * 
+   * @return true if the command was handled, false otherwise.
+   */
+  virtual bool handleCommand(const QString& command, const QVariantMap& options);
+
 signals:
   /**
    * Emitted when draw() needs to be called again due to updates.
@@ -102,6 +113,17 @@ signals:
    * redrawn.
    */
   void updateRequested();
+
+  /**
+   * Register a new command with the application. The command will be available
+   * through scripting (e.g., "renderMovie" or "generateSurface", etc.)
+   * 
+   * @param command The name of the command to register.
+   * @param description A description of the command.
+   * 
+   * @sa handleCommand
+   */
+  void registerCommand(QString command, QString description);
 
 public slots:
   /**

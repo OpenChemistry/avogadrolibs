@@ -42,6 +42,8 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  bool handleCommand(const QString& command, const QVariantMap& options) override;
+
 public slots:
   void setMode(int mode);
   void setAmplitude(int amplitude);

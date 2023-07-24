@@ -54,6 +54,13 @@ void ToolPlugin::draw(Rendering::GroupNode&)
 {
 }
 
+bool ToolPlugin::handleCommand(const QString& command, const QVariantMap& options)
+{
+  Q_UNUSED(command);
+  Q_UNUSED(options);
+  return false;
+}
+
 ToolPluginFactory::~ToolPluginFactory()
 {
 }
