@@ -110,7 +110,7 @@ void Spectra::setMode(int mode)
     double factor = 0.01 * m_amplitude;
     Index atom = 0;
     for (Vector3& v : atomDisplacements) {
-      v *= 10.0*factor;
+      v *= 10.0 * factor;
       m_molecule->setForceVector(atom, v);
       ++atom;
     }

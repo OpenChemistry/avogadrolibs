@@ -42,7 +42,8 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
-  bool handleCommand(const QString& command, const QVariantMap& options) override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
 
 public slots:
   void setMode(int mode);
@@ -68,7 +69,7 @@ private:
   int m_mode;
   int m_amplitude;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_Spectra_H
