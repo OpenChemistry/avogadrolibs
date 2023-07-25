@@ -107,13 +107,18 @@ void Spectra::setMode(int mode)
     Core::Array<Vector3> atomPositions = m_molecule->atomPositions3d();
     Core::Array<Vector3> atomDisplacements = m_molecule->vibrationLx(mode);
     // TODO: needs an option (show forces or not)
-    m_molecule->setForceVectors(atomDisplacements);
+    double factor = 0.01 * m_amplitude;
+    Index atom = 0;
+    for (Vector3& v : atomDisplacements) {
+      v *= 10.0*factor;
+      m_molecule->setForceVector(atom, v);
+      ++atom;
+    }
+    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 
     int frames = 5; // TODO: needs an option
     int frameCounter = 0;
     m_molecule->setCoordinate3d(atomPositions, frameCounter++);
-
-    double factor = 0.01 * m_amplitude;
 
     // Current coords + displacement.
     for (int i = 1; i <= frames; ++i) {
