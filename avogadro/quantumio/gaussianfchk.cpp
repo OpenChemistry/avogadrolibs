@@ -11,10 +11,10 @@
 
 #include <iostream>
 
-using std::vector;
-using std::string;
 using std::cout;
 using std::endl;
+using std::string;
+using std::vector;
 
 namespace Avogadro::QuantumIO {
 
@@ -22,16 +22,12 @@ using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
 using Core::Rhf;
-using Core::Uhf;
 using Core::Rohf;
+using Core::Uhf;
 
-GaussianFchk::GaussianFchk() : m_scftype(Rhf)
-{
-}
+GaussianFchk::GaussianFchk() : m_scftype(Rhf) {}
 
-GaussianFchk::~GaussianFchk()
-{
-}
+GaussianFchk::~GaussianFchk() {}
 
 std::vector<std::string> GaussianFchk::fileExtensions() const
 {
@@ -282,6 +278,10 @@ void GaussianFchk::load(GaussianSet* basis)
       basis->setDensityMatrix(m_density);
     if (m_spinDensity.rows())
       basis->setSpinDensityMatrix(m_spinDensity);
+    if (m_alphaOrbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_alphaOrbitalEnergy, BasisSet::Alpha);
+    if (m_betaOrbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
   } else {
     cout << "Basis set is not valid!\n";
   }
@@ -303,7 +303,7 @@ vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
       return tmp;
 
     vector<string> list = Core::split(line, ' ');
-    for (auto & i : list) {
+    for (auto& i : list) {
       if (tmp.size() >= n) {
         cout << "Too many variables read in. File may be inconsistent. "
              << tmp.size() << " of " << n << endl;
@@ -338,7 +338,7 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
 
     if (width == 0) { // we can split by spaces
       vector<string> list = Core::split(line, ' ');
-      for (auto & i : list) {
+      for (auto& i : list) {
         if (tmp.size() >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << tmp.size() << " of " << n << endl;
@@ -395,7 +395,7 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
 
     if (width == 0) { // we can split by spaces
       vector<string> list = Core::split(line, ' ');
-      for (auto & k : list) {
+      for (auto& k : list) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << cnt << " of " << n << endl;
@@ -471,7 +471,7 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
 
     if (width == 0) { // we can split by spaces
       vector<string> list = Core::split(line, ' ');
-      for (auto & k : list) {
+      for (auto& k : list) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << cnt << " of " << n << endl;
@@ -566,4 +566,4 @@ void GaussianFchk::outputAll()
     cout << endl << endl;
   }
 }
-}
+} // namespace Avogadro::QuantumIO
