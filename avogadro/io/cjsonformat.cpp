@@ -560,9 +560,9 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
                   break;
                 }
               }
-            } else if (jrow.type() == json::value_t::number_float || 
-                       jrow.type() == json::value_t::number_integer || 
-                       jrow.type() == json::value_t::number_unsigned) { 
+            } else if (jrow.type() == json::value_t::number_float ||
+                       jrow.type() == json::value_t::number_integer ||
+                       jrow.type() == json::value_t::number_unsigned) {
               // just a row vector
               matrix(row, 0) = jrow.get<double>();
             } else {
