@@ -161,6 +161,9 @@ void MoldenFile::processLine(std::istream& in)
           list = Core::split(line, ' ');
           if (Core::contains(line, "Occup"))
             m_electrons += Core::lexicalCast<int>(list[1]);
+          else if (Core::contains(line, "Ene"))
+            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[1]));
+          // TODO: track alpha beta spin
         }
 
         // Parse the molecular orbital coefficients.
@@ -224,6 +227,8 @@ void MoldenFile::load(GaussianSet* basis)
   // Now to load in the MO coefficients
   if (m_MOcoeffs.size())
     basis->setMolecularOrbitals(m_MOcoeffs);
+  if (m_orbitalEnergy.size())
+    basis->setOrbitalEnergy(m_orbitalEnergy);
 }
 
 void MoldenFile::outputAll()

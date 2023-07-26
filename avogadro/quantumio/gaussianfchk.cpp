@@ -282,6 +282,10 @@ void GaussianFchk::load(GaussianSet* basis)
       basis->setDensityMatrix(m_density);
     if (m_spinDensity.rows())
       basis->setSpinDensityMatrix(m_spinDensity);
+    if (m_alphaOrbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_alphaOrbitalEnergy, BasisSet::Alpha);
+    if (m_betaOrbitalEnergy.size())
+      basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
   } else {
     cout << "Basis set is not valid!\n";
   }
