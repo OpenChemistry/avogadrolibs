@@ -11,10 +11,10 @@
 
 #include <iostream>
 
-using std::vector;
-using std::string;
 using std::cout;
 using std::endl;
+using std::string;
+using std::vector;
 
 namespace Avogadro::QuantumIO {
 
@@ -26,9 +26,7 @@ MoldenFile::MoldenFile()
 {
 }
 
-MoldenFile::~MoldenFile()
-{
-}
+MoldenFile::~MoldenFile() {}
 
 std::vector<std::string> MoldenFile::fileExtensions() const
 {
@@ -228,7 +226,7 @@ void MoldenFile::load(GaussianSet* basis)
   if (m_MOcoeffs.size())
     basis->setMolecularOrbitals(m_MOcoeffs);
   if (m_orbitalEnergy.size())
-    basis->setOrbitalEnergy(m_orbitalEnergy);
+    basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
 }
 
 void MoldenFile::outputAll()
@@ -243,4 +241,4 @@ void MoldenFile::outputAll()
     cout << m_MOcoeff << "\t";
   cout << endl;
 }
-}
+} // namespace Avogadro::QuantumIO
