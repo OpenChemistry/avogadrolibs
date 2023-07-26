@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-07-26 20:56+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
+"PO-Revision-Date: 2023-07-27 22:09+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2553,7 +2553,7 @@ msgstr "In Standardorientierung drehen"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr "Zelle auf &Volum skalieren…"
+msgstr "Zelle auf &Volumen skalieren…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
@@ -2781,7 +2781,6 @@ msgid "&GAMESS…"
 msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
-#, fuzzy
 msgid "GAMESS input"
 msgstr "GAMESS Eingabe"
 
@@ -2958,13 +2957,10 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "DNA- / RNA-Fragmente über einen Dialog einfügen."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Fragment..."
 msgid "Fragment…"
 msgstr "Fragment …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
-#, fuzzy
 msgid "Crystal…"
 msgstr "Kristall …"
 
@@ -3386,7 +3382,6 @@ msgid "Add Hydrogens for pH…"
 msgstr "Füge Wasserstoffatome für den pH-Wert hinzu…"
 
 #: qtplugins/openbabel/openbabel.cpp:76
-#, fuzzy
 msgid "Remove Hydrogens"
 msgstr "Wasserstoffatome entfernen"
 
@@ -3719,7 +3714,6 @@ msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Video (*.mp4);;Video (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:670
-#, fuzzy
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -3830,7 +3824,6 @@ msgid "Update"
 msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
-#, fuzzy
 msgid "Version"
 msgstr "Version"
 
@@ -3875,10 +3868,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr "Plugins von GitHub-Repositories herunterladen."
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
-#| msgid "VRML Render…"
 msgid "PLY Render…"
-msgstr "VRML-Render…"
+msgstr "PLY-Render…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -3918,7 +3909,6 @@ msgid "Valence"
 msgstr "Valenz"
 
 #: qtplugins/propertytables/propertymodel.cpp:390
-#, fuzzy
 msgid "Formal Charge"
 msgstr "Formalladung"
 
@@ -4222,8 +4212,6 @@ msgid "Select by Atom Index…"
 msgstr "Auswahl nach Atomindex …"
 
 #: qtplugins/select/select.cpp:63
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select by Residue…"
 msgstr "Auswahl nach Rest …"
 
@@ -4480,7 +4468,6 @@ msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:156
-#, fuzzy
 msgid "Molecular Orbital"
 msgstr "Molekülorbital"
 
@@ -4489,19 +4476,17 @@ msgid "Electron Density"
 msgstr "Elektronendichte"
 
 #: qtplugins/surfaces/surfacedialog.cpp:177
-#, fuzzy, qt-format
+#, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
 msgstr "MO %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:179
-#, fuzzy
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr "(HOMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:181
-#, fuzzy
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
 msgstr "(LUMO)"
@@ -4583,7 +4568,6 @@ msgid "Render symmetry elements."
 msgstr ""
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
-#, fuzzy
 msgid "∞"
 msgstr "∞"
 
@@ -4593,7 +4577,7 @@ msgid "Group %1"
 msgstr "Gruppe %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:348
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 %2"
 msgstr "%1 %2"
 
@@ -4602,10 +4586,8 @@ msgid "Template"
 msgstr "Template"
 
 #: qtplugins/templatetool/templatetool.cpp:298
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Peptid einfügen"
+msgstr "Templat einfügen"
 
 #: qtplugins/templatetool/templatetool.cpp:491
 msgid "Insert Ligand"
@@ -4613,10 +4595,8 @@ msgstr "Liganden einfügen"
 
 #: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
-#, fuzzy
-#| msgid "Measure tool"
 msgid "Template tool"
-msgstr "Messwerkzeug"
+msgstr "Templatwerkzeug"
 
 #: qtplugins/templatetool/templatetoolwidget.cpp:263
 msgid "Other..."
@@ -4639,7 +4619,6 @@ msgid "VRML (*.wrl);;Text file (*.txt)"
 msgstr "VRML (*.wrl);;Textdatei (*.txt)"
 
 #: qtplugins/vrml/vrml.h:25
-#, fuzzy
 msgid "VRML"
 msgstr "VRML"
 
@@ -4888,13 +4867,11 @@ msgstr "Kraftfeld:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
-#, fuzzy
 msgid "AMBER"
 msgstr "AMBER"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:80
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
-#, fuzzy
 msgid "CHARMM"
 msgstr "CHARMM"
 
@@ -5210,7 +5187,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
 #. i18n: ectx: attribute (title), widget (QWidget, tab_2)
-#, fuzzy
 msgid "QM"
 msgstr "QM"
 
@@ -5484,7 +5460,6 @@ msgstr "Herunterladen"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Name:"
 msgstr "Name:"
 
@@ -5520,8 +5495,6 @@ msgstr "Adenin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "A"
 msgctxt "adenine (A)"
 msgid "A"
 msgstr "A"
@@ -5533,8 +5506,6 @@ msgstr "Cytosin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "C"
 msgctxt "cytosine (C)"
 msgid "C"
 msgstr "C"
@@ -5546,16 +5517,12 @@ msgstr "Guanin"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
-#, fuzzy
-#| msgid "G"
 msgctxt "guanine (G)"
 msgid "G"
 msgstr "G"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:82
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_TU)
-#, fuzzy
-#| msgid "T"
 msgctxt "thymine (T)"
 msgid "T"
 msgstr "T"
@@ -5591,8 +5558,6 @@ msgstr "Z"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "Other"
 msgid "Other"
 msgstr "Andere"
 
@@ -5708,7 +5673,6 @@ msgstr "si"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:131
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
-#, fuzzy
 msgid "cgs"
 msgstr "cgs"
 
@@ -5975,7 +5939,6 @@ msgstr "m"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "fs"
 msgstr "fs"
 
@@ -5985,7 +5948,6 @@ msgstr "fs"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:558
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "fm"
 msgstr "fm"
 
@@ -6001,8 +5963,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
-#| msgid "Select bondary Styles in X, Y and Z directions."
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Den Stil der Begrenzung in x-, y- und z-Richtung auswählen."
 
@@ -6300,7 +6260,6 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:166
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, eleCutoff)
-#, fuzzy
 msgid "Å"
 msgstr "Å"
 
@@ -6368,13 +6327,11 @@ msgstr "Eingabetopologie:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
 msgstr "Kraftfeld:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
-#, fuzzy
 msgid "AMBER96"
 msgstr "AMBER96"
 
@@ -6440,19 +6397,16 @@ msgstr "Referenz"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
-#, fuzzy
 msgid "OpenCL"
 msgstr "OpenCL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
-#, fuzzy
 msgid "CPU"
 msgstr "CPU"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
-#, fuzzy
 msgid "CUDA"
 msgstr "CUDA"
 
@@ -6649,7 +6603,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
-#, fuzzy
 msgid "Monte Carlo"
 msgstr "Monte Carlo"
 
