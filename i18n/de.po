@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
 "PO-Revision-Date: 2023-07-26 20:56+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -466,7 +466,7 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Job-Abgabe fehlgeschlagen"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
@@ -2552,9 +2552,8 @@ msgid "Rotate to Standard &Orientation"
 msgstr "In Standardorientierung drehen"
 
 #: qtplugins/crystal/crystal.cpp:69
-#, fuzzy
 msgid "Scale Cell &Volume…"
-msgstr "Zelle auf &Volumen skalieren …"
+msgstr "Zelle auf &Volum skalieren…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
