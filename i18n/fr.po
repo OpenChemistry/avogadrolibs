@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-06-30 09:52+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2023-08-01 17:09+0000\n"
+"Last-Translator: Translator <kvb@tuta.io>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.0-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1219,7 +1219,7 @@ msgstr "Boules-bâtonnets"
 #, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Animation"
+msgstr "Animations"
 
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
@@ -1869,9 +1869,8 @@ msgid "Atom scale"
 msgstr "Échelle de l'atome"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
-#, fuzzy
 msgid "Bond scale"
-msgstr "Angle de la liaison"
+msgstr "Échelle de liaison"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
@@ -1942,10 +1941,12 @@ msgstr "Outil de manipulation centrique des liaisons."
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Outil utilisé pour modifier la géométrie des molécules en changeant la "
+"longueur des liaisons et des angles."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Lier les atomes"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
@@ -1960,10 +1961,8 @@ msgid "Configure Bonding…"
 msgstr "Configurer les liaisons…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Fixer les atomes sélectionnés"
+msgstr "Lier les atomes sélectionnés"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -1985,13 +1984,12 @@ msgstr "Liens"
 
 #: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
-msgstr ""
+msgstr "Effectuer les opérations de liaison."
 
 #: qtplugins/cartoons/cartoons.cpp:93
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr "Squelette"
+msgstr "Structure"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
@@ -2009,13 +2007,11 @@ msgid "Ribbon"
 msgstr "Ruban"
 
 #: qtplugins/cartoons/cartoons.cpp:97
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Animation"
+msgstr "Animation simple"
 
 #: qtplugins/cartoons/cartoons.cpp:98
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "Animation"
@@ -2045,14 +2041,12 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "Centrer"
+msgstr "Centroïde"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Ajouter des centroïdes et centres de masse."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -2105,7 +2099,7 @@ msgstr "Contact"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Salt Bridge"
-msgstr ""
+msgstr "Pont salin"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
@@ -2113,7 +2107,7 @@ msgstr "Répulsif"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
-msgstr ""
+msgstr "Modifier la carte d'opacité des couleurs…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2131,6 +2125,8 @@ msgstr "ColorOpacityMap"
 #: qtplugins/coloropacitymap/coloropacitymap.h:56
 msgid "Edit color opacity maps, primarily for volume rendering."
 msgstr ""
+"Modifier la carte d'opacité des couleurs, principalement pour la "
+"modélisation des volumes."
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
@@ -2148,6 +2144,8 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"Erreur lors de la lecture du fichier produit « %1 » :\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:194
 #, qt-format
@@ -2169,11 +2167,11 @@ msgstr ""
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr ""
+msgstr "Commandes de programme"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
-msgstr ""
+msgstr "Exécuter des commandes de programme externe"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
@@ -2185,7 +2183,7 @@ msgstr "Éditeur de coordonnées"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Modifier le texte des coordonnées de l’atome."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:224
 msgid "Overwrite changes?"
@@ -2201,7 +2199,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:352
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Trop peu d’entrées en ligne."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:368
 msgid "Invalid element name."
@@ -2249,22 +2247,24 @@ msgid "Z coordinate."
 msgstr "Coordonnée Z."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#, fuzzy
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "coordonnée « a » du réseau."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#, fuzzy
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "coordonnée « b » du réseau."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 #, fuzzy
 #| msgid "'c' coordinate."
 msgid "'c' lattice coordinate."
-msgstr "coordonnées 'c'."
+msgstr "coordonnée « c » du réseau."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Erreur lorsque la géométrie est appliquée"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:547
 msgid ""
@@ -2273,10 +2273,15 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
+"Impossible d’analyser les spécifications de la géométrie. Corrigez les "
+"erreurs surlignées et ressayez.\n"
+"\n"
+"(Aide : passez la souris sur le texte rouge pour obtenir une description de "
+"l’erreur.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:581
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Modifier les coordonnées de l’atome"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -2300,24 +2305,25 @@ msgid "XYZ format (atomic numbers)"
 msgstr "Format XYZ (numéros atomiques)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:603
+#, fuzzy
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Coordonnées du réseau (symboles)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:604
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Coordonnées du réseau (noms)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Coordonnées du réseau (nombres atomiques)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "Format GAMESS (symboles)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:608
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "Format GAMESS (noms)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
 msgid "Turbomole format"
@@ -2725,10 +2731,8 @@ msgid "&Import"
 msgstr "&Importer"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
-#| msgid "Fetch from PDB"
 msgid "Fetch PDB"
-msgstr "Récupérer depuis le PDB"
+msgstr "Récupérer la PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -2737,7 +2741,7 @@ msgstr "Impossible de lire la molécule PDB : %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
-msgstr "Code PDB"
+msgstr "Identifiant PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2795,24 +2799,23 @@ msgstr ""
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
+"Modéliser la visualisation du champs de force pour les atomes de la molécule."
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
 msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
-#, fuzzy
 msgid "GAMESS input"
-msgstr "Entrée GAMESS"
+msgstr "Données d’entrée GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
 msgstr "Générer les données d'entrées pour GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:225
-#, fuzzy
 msgid "Single Point"
-msgstr "Simple point"
+msgstr "Point simple"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:228
 msgid "Equilibrium Geometry"
@@ -2876,7 +2879,7 @@ msgstr "Sauvegarder le fichier d’entrée GAMESS"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:706
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Soumettre le calcul GAMESS"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
@@ -2966,14 +2969,12 @@ msgid "Generating 3D molecule…"
 msgstr "Génération d’une molécule en 3D…"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "Insert DNA"
 msgid "InsertDNA"
-msgstr "Insérer un ADN"
+msgstr "Insérer de l’ADN"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "Insérer des fragments d’ADN/ARN par une boîte de dialogue."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 msgid "Fragment…"
@@ -2996,7 +2997,7 @@ msgstr "Importer un cristal"
 
 #: qtplugins/insertfragment/insertfragment.cpp:121
 msgid "Insert Fragment"
-msgstr "Insérer fragment"
+msgstr "Insérer un fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:35
 #, fuzzy
