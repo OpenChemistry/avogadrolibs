@@ -53,14 +53,4 @@ void Scene::clear()
   m_dirty = true;
 }
 
-void Scene::getBoundingBox(double& minX, double& minY, double& minZ,
-                           double& maxX, double& maxY, double& maxZ,
-                           const std::vector<bool>& flags)
-{
-  GeometryVisitor visitor;
-
-  m_rootNode.accept(visitor);
-  visitor.boundingBox(minX, minY, minZ, maxX, maxY, maxZ, flags);
-}
-
-} // End Avogadro namespace
+} // namespace Avogadro::Rendering

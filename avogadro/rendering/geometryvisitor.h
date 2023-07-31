@@ -25,8 +25,6 @@ namespace Rendering {
  * notably the center and radius of the bounding sphere.
  */
 
-struct SphereColor;
-
 class GeometryVisitor : public Visitor
 {
 public:
@@ -64,22 +62,6 @@ public:
    */
   float radius();
 
-  /**
-   * <<API Extension for TDX>>
-   * Calculates the bounding box of the molecule.
-   * @param minX [out] minimum X coordinate of the box diagonal
-   * @param minY [out] minimum Y coordinate of the box diagonal
-   * @param minZ [out] minimum Z coordinate of the box diagonal
-   * @param maxX [out] maximum X coordinate of the box diagonal
-   * @param maxY [out] maximum Y coordinate of the box diagonal
-   * @param maxZ [out] maximum Z coordinate of the box diagonal
-   * @param flags [in] flags informing which atoms will be included
-   * in the bounding box.
-   */
-  void boundingBox(double& minX, double& minY, double& minZ, double& maxX,
-                   double& maxY, double& maxZ,
-                   const std::vector<bool>& flags) const;
-
 private:
   /**
    * Get the average of the accumulated spherical centers and minimal radius.
@@ -92,7 +74,6 @@ private:
 
   std::vector<Vector3f> m_centers;
   std::vector<float> m_radii;
-  std::vector<SphereColor> m_spheres;
 };
 
 } // End namespace Rendering

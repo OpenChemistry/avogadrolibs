@@ -131,26 +131,10 @@ public:
   /** Clear the scene of all elements. */
   void clear();
 
-  /**
-   * <<API Extension for TDX>>
-   * Calculte and return bounding box of the scene objects.
-   * @param minX [out] minimum X coordinate of the box diagonal
-   * @param minY [out] minimum Y coordinate of the box diagonal
-   * @param minZ [out] minimum Z coordinate of the box diagonal
-   * @param maxX [out] maximum X coordinate of the box diagonal
-   * @param maxY [out] maximum Y coordinate of the box diagonal
-   * @param maxZ [out] maximum Z coordinate of the box diagonal
-   * @param flags [in] flags informing which atoms will be included
-   * in the bounding box
-   */
-  void getBoundingBox(double& minX, double& minY, double& minZ, double& maxX,
-                      double& maxY, double& maxZ,
-                      const std::vector<bool>& flags);
-
 private:
   GroupNode m_rootNode;
   Vector4ub m_backgroundColor;
-   
+
   mutable bool m_dirty;
   mutable Vector3f m_center;
   mutable float m_radius;

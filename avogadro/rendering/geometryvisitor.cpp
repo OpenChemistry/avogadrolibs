@@ -17,13 +17,9 @@ GeometryVisitor::GeometryVisitor()
 {
 }
 
-GeometryVisitor::~GeometryVisitor()
-{
-}
+GeometryVisitor::~GeometryVisitor() {}
 
-void GeometryVisitor::visit(Drawable&)
-{
-}
+void GeometryVisitor::visit(Drawable&) {}
 
 void GeometryVisitor::visit(SphereGeometry& geometry)
 {
@@ -47,7 +43,6 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
       float distance = (it->center - tmpCenter).squaredNorm();
       if (distance > tmpRadius)
         tmpRadius = distance;
-      m_spheres.push_back(*it);
     }
   }
   tmpRadius = std::sqrt(tmpRadius);
@@ -123,13 +118,13 @@ void GeometryVisitor::visit(LineStripGeometry& lsg)
   m_dirty = true;
 
   Vector3f tmpCenter(Vector3f::Zero());
-  for (const auto & vert : verts) {
+  for (const auto& vert : verts) {
     tmpCenter += vert.vertex;
   }
   tmpCenter /= static_cast<float>(verts.size());
 
   float tmpRadius(0.f);
-  for (const auto & vert : verts) {
+  for (const auto& vert : verts) {
     float distance = (vert.vertex - tmpCenter).squaredNorm();
     if (distance > tmpRadius)
       tmpRadius = distance;
@@ -146,7 +141,6 @@ void GeometryVisitor::clear()
   m_dirty = false;
   m_centers.clear();
   m_radii.clear();
-  m_spheres.clear();
 }
 
 Vector3f GeometryVisitor::center()
@@ -189,55 +183,4 @@ void GeometryVisitor::average()
   }
 }
 
-void GeometryVisitor::boundingBox(double& minX, double& minY, double& minZ,
-                                  double& maxX, double& maxY, double& maxZ,
-                                  const std::vector<bool>& flags) const
-{
-  minX = std::numeric_limits<double>::max();
-  minY = minX;
-  minZ = minX;
-  maxX = -minX;
-  maxY = maxX;
-  maxZ = maxX;
-
-  bool noSelection = true;
-
-  for (uint32_t i = 0; i < flags.size(); i++) {
-    if (flags[i]) {
-      noSelection = false;
-      break;
-    }
-  }
-
-  for (uint32_t i = 0; i < m_spheres.size(); i++) {
-    if (flags.empty() || noSelection || flags[i]) {
-      float radius = m_spheres[i].radius + 0.5f;
-      double bufferMinX = m_spheres[i].center.x() - radius;
-      double bufferMinY = m_spheres[i].center.y() - radius;
-      double bufferMinZ = m_spheres[i].center.z() - radius;
-      double bufferMaxX = m_spheres[i].center.x() + radius;
-      double bufferMaxY = m_spheres[i].center.y() + radius;
-      double bufferMaxZ = m_spheres[i].center.z() + radius;
-
-      if (bufferMinX < minX)
-        minX = bufferMinX;
-
-      if (bufferMinY < minY)
-        minY = bufferMinY;
-
-      if (bufferMinZ < minZ)
-        minZ = bufferMinZ;
-
-      if (bufferMaxX > maxX)
-        maxX = bufferMaxX;
-
-      if (bufferMaxY > maxY)
-        maxY = bufferMaxY;
-
-      if (bufferMaxZ > maxZ)
-        maxZ = bufferMaxZ;
-    }
-  }
-}
-
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

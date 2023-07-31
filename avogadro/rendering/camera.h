@@ -122,7 +122,6 @@ public:
   void calculatePerspective(float fieldOfView, float zNear, float zFar);
 
   /**
-   * << API Extension for TDX >>
    * Calculate the perspective projection matrix using frustum planes
    * coordinates.
    * @param left left vertical clipping plane.

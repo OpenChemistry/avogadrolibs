@@ -46,9 +46,9 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues),
-    m_hallNumber(other.m_hallNumber), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -88,8 +88,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -1322,6 +1322,55 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
     }
   }
   return result;
+}
+
+void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax) const
+{
+  boxMin.setConstant(std::numeric_limits<double>::max());
+  boxMax.setConstant(-std::numeric_limits<double>::max());
+
+  bool noSelection = true;
+
+  for (uint32_t i = 0; i < m_selectedAtoms.size(); i++) {
+    if (m_selectedAtoms[i]) {
+      noSelection = false;
+      break;
+    }
+  }
+
+  for (uint32_t i = 0; i < atomCount(); i++) {
+    if (noSelection || m_selectedAtoms[i]) {
+      double radius = 1.0;
+
+      Vector3 boxMinBuffer;
+      Vector3 boxMaxBuffer;
+
+      boxMinBuffer.x() = atom(i).position3d().x() - radius;
+      boxMinBuffer.y() = atom(i).position3d().y() - radius;
+      boxMinBuffer.z() = atom(i).position3d().z() - radius;
+      boxMaxBuffer.x() = atom(i).position3d().x() + radius;
+      boxMaxBuffer.y() = atom(i).position3d().y() + radius;
+      boxMaxBuffer.z() = atom(i).position3d().z() + radius;
+
+      if (boxMinBuffer.x() < boxMin.x())
+        boxMin.x() = boxMinBuffer.x();
+
+      if (boxMinBuffer.y() < boxMin.y())
+        boxMin.y() = boxMinBuffer.y();
+
+      if (boxMinBuffer.z() < boxMin.z())
+        boxMin.z() = boxMinBuffer.z();
+
+      if (boxMaxBuffer.x() > boxMax.x())
+        boxMax.x() = boxMaxBuffer.x();
+
+      if (boxMaxBuffer.y() > boxMax.y())
+        boxMax.y() = boxMaxBuffer.y();
+
+      if (boxMaxBuffer.z() > boxMax.z())
+        boxMax.z() = boxMaxBuffer.z();
+    }
+  }
 }
 
 } // namespace Avogadro::Core
