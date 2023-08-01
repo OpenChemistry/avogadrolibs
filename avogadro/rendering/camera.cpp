@@ -23,7 +23,7 @@ Camera::Camera()
 Camera::Camera(const Camera& o)
   : m_width(o.m_width), m_height(o.m_height),
     m_projectionType(o.m_projectionType),
-    m_orthographicScale(o.m_orthographicScale), m_data(new EigenData(*o.m_data)) 
+    m_orthographicScale(o.m_orthographicScale), m_data(new EigenData(*o.m_data))
 {}
 
 Camera& Camera::operator=(const Camera& o)
@@ -116,10 +116,10 @@ Vector3f Camera::unProject(const Vector3f& point) const
     m_data->projection.matrix() * m_data->modelView.matrix();
   Vector4f result(
     2.0f * point.x() / static_cast<float>(m_width) - 1.0f,
-    2.0f * (static_cast<float>(m_height) - point.y()) /
-        static_cast<float>(m_height) -
-      1.0f,
-    2.0f * point.z() - 1.0f, 1.0f);
+                  2.0f * (static_cast<float>(m_height) - point.y()) /
+                      static_cast<float>(m_height) -
+                    1.0f,
+                  2.0f * point.z() - 1.0f, 1.0f);
   result = mvp.matrix().inverse() * result;
   return Vector3f(result.x() / result.w(), result.y() / result.w(),
                   result.z() / result.w());
@@ -184,9 +184,8 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
   m_data->modelView = transform;
 }
 
-void Camera::calculatePerspective(float left, float right,
-                                  float bottom, float top,
-                                  float zNear, float zFar)
+void Camera::calculatePerspective(float left, float right, float bottom,
+                                  float top, float zNear, float zFar)
 {
   m_data->projection.setIdentity();
 

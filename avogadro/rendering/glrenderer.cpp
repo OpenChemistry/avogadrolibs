@@ -67,7 +67,7 @@ void GLRenderer::initialize()
     m_valid = false;
     return;
   }
-  
+
   m_solidPipeline.initialize();
 }
 
@@ -305,8 +305,7 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
   return result;
 }
 
-float GLRenderer::hit(const Vector3f& rayOrigin,
-                      const Vector3f& rayEnd,
+float GLRenderer::hit(const Vector3f& rayOrigin, const Vector3f& rayEnd,
                       const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> results =

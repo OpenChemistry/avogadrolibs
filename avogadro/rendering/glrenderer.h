@@ -70,8 +70,7 @@ public:
 
   /** Return the depth of provided ray - geometry hit test.
    */
-  float hit(const Vector3f& rayOrigin,
-            const Vector3f& rayEnd,
+  float hit(const Vector3f& rayOrigin, const Vector3f& rayEnd,
             const Vector3f& rayDirection) const;
 
   /** Return the primitives in the rectangular area provided. */
@@ -152,7 +151,7 @@ private:
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
   SolidPipeline m_solidPipeline;
-  
+
   Vector3f m_center;
   float m_radius;
 };
