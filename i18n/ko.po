@@ -2,15 +2,15 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Hoseok Seo <ddinghoya@gmail.com>, 2022.
+# Hoseok Seo <ddinghoya@gmail.com>, 2022, 2023.
 # simmon <simmon@nplob.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-04-26 08:48+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"PO-Revision-Date: 2023-08-05 21:51+0000\n"
+"Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1917,10 +1917,8 @@ msgid "Configure Bonding…"
 msgstr "결합 구성…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "선택한 원자를 고정"
+msgstr "선택된 원자 결합"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -6114,51 +6112,47 @@ msgstr "설명 문구:"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr ""
+msgstr "번역가:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "X-axis"
-msgstr ""
+msgstr "X 축"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:166
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Y-axis"
-msgstr ""
+msgstr "Y 축"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Z-axis"
-msgstr ""
+msgstr "Z 축"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "배경색:"
+msgstr "주위 회전:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Origin"
-msgstr ""
+msgstr "근원"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-#, fuzzy
-#| msgid "Optimize Geometry"
 msgid "Geometry"
-msgstr "기하학 최적화"
+msgstr "기하학"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, moleculeNameLabel)
