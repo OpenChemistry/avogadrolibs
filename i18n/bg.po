@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Apostol Penkov <apostol.penkov@gmail.com>, 2020.
+# Salif Mehmed <mail@salif.eu>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2020-12-09 12:29+0000\n"
-"Last-Translator: Apostol Penkov <apostol.penkov@gmail.com>\n"
+"PO-Revision-Date: 2023-08-05 21:51+0000\n"
+"Last-Translator: Salif Mehmed <mail@salif.eu>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
 "Language: bg\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1590,9 +1591,8 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:178:144
-#, fuzzy
 msgid "Success"
-msgstr "Успех!"
+msgstr "Успех"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -4514,9 +4514,9 @@ msgid "∞"
 msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:340
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "Име на група"
+msgstr "Група %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:348
 #, qt-format
