@@ -1324,51 +1324,27 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   return result;
 }
 
-void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax) const
+void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax,
+                           const double radius) const
 {
   boxMin.setConstant(std::numeric_limits<double>::max());
   boxMax.setConstant(-std::numeric_limits<double>::max());
 
-  bool noSelection = true;
-
-  for (uint32_t i = 0; i < m_selectedAtoms.size(); i++) {
-    if (m_selectedAtoms[i]) {
-      noSelection = false;
-      break;
-    }
-  }
+  const bool noSelection = isSelectionEmpty();
 
   for (uint32_t i = 0; i < atomCount(); i++) {
     if (noSelection || m_selectedAtoms[i]) {
-      double radius = 1.0;
 
-      Vector3 boxMinBuffer;
-      Vector3 boxMaxBuffer;
+      const Vector3 boxMinBuffer = atom(i).position3d().array() - radius;
+      const Vector3 boxMaxBuffer = atom(i).position3d().array() + radius;
 
-      boxMinBuffer.x() = atom(i).position3d().x() - radius;
-      boxMinBuffer.y() = atom(i).position3d().y() - radius;
-      boxMinBuffer.z() = atom(i).position3d().z() - radius;
-      boxMaxBuffer.x() = atom(i).position3d().x() + radius;
-      boxMaxBuffer.y() = atom(i).position3d().y() + radius;
-      boxMaxBuffer.z() = atom(i).position3d().z() + radius;
+      boxMin.x() = std::min(boxMinBuffer.x(), boxMin.x());
+      boxMin.y() = std::min(boxMinBuffer.y(), boxMin.y());
+      boxMin.z() = std::min(boxMinBuffer.z(), boxMin.z());
 
-      if (boxMinBuffer.x() < boxMin.x())
-        boxMin.x() = boxMinBuffer.x();
-
-      if (boxMinBuffer.y() < boxMin.y())
-        boxMin.y() = boxMinBuffer.y();
-
-      if (boxMinBuffer.z() < boxMin.z())
-        boxMin.z() = boxMinBuffer.z();
-
-      if (boxMaxBuffer.x() > boxMax.x())
-        boxMax.x() = boxMaxBuffer.x();
-
-      if (boxMaxBuffer.y() > boxMax.y())
-        boxMax.y() = boxMaxBuffer.y();
-
-      if (boxMaxBuffer.z() > boxMax.z())
-        boxMax.z() = boxMaxBuffer.z();
+      boxMax.x() = std::max(boxMaxBuffer.x(), boxMax.x());
+      boxMax.y() = std::max(boxMaxBuffer.y(), boxMax.y());
+      boxMax.z() = std::max(boxMaxBuffer.z(), boxMax.z());
     }
   }
 }

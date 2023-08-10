@@ -723,8 +723,10 @@ public:
    * only.
    * @param boxMin [out] the minimum corner (first end of the box diagonal)
    * @param boxMax [out] the maximum corner (second end of the box diagonal)
+   * @param radius [in] radius of a single sphere
    */
-  void boundingBox(Vector3& boxMin, Vector3& boxMax) const;
+  void boundingBox(Vector3& boxMin, Vector3& boxMax,
+                   const double radius = 1.0) const;
 
 protected:
   VariantMap m_data;
