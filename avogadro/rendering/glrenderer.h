@@ -68,6 +68,11 @@ public:
    */
   Identifier hit(int x, int y) const;
 
+  /** Return the depth of provided ray - geometry hit test.
+   */
+  float hit(const Vector3f& rayOrigin, const Vector3f& rayEnd,
+            const Vector3f& rayDirection) const;
+
   /** Return the primitives in the rectangular area provided. */
   Core::Array<Identifier> hits(int x1, int y1, int x2, int y2) const;
 
@@ -103,6 +108,16 @@ public:
   TextRenderStrategy* textRenderStrategy();
   void setTextRenderStrategy(TextRenderStrategy* tren);
   /** @} */
+
+  std::array<float, 6> m_perspectiveFrustum;  // L, R, B, T, N, F (planes order)
+  std::array<float, 6> m_orthographicFrustum; // L, R, B, T, N, F (planes order)
+#ifdef _3DCONNEXION
+  bool m_drawIcon;
+  void* m_iconData;
+  uint32_t m_iconWidth;
+  uint32_t m_iconHeight;
+  Eigen::Vector3f m_iconPosition;
+#endif
 
 private:
   /**

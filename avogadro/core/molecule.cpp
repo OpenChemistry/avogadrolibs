@@ -46,9 +46,9 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues),
-    m_hallNumber(other.m_hallNumber), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -88,8 +88,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -1322,6 +1322,31 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
     }
   }
   return result;
+}
+
+void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax,
+                           const double radius) const
+{
+  boxMin.setConstant(std::numeric_limits<double>::max());
+  boxMax.setConstant(-std::numeric_limits<double>::max());
+
+  const bool noSelection = isSelectionEmpty();
+
+  for (uint32_t i = 0; i < atomCount(); i++) {
+    if (noSelection || m_selectedAtoms[i]) {
+
+      const Vector3 boxMinBuffer = atom(i).position3d().array() - radius;
+      const Vector3 boxMaxBuffer = atom(i).position3d().array() + radius;
+
+      boxMin.x() = std::min(boxMinBuffer.x(), boxMin.x());
+      boxMin.y() = std::min(boxMinBuffer.y(), boxMin.y());
+      boxMin.z() = std::min(boxMinBuffer.z(), boxMin.z());
+
+      boxMax.x() = std::max(boxMaxBuffer.x(), boxMax.x());
+      boxMax.y() = std::max(boxMaxBuffer.y(), boxMax.y());
+      boxMax.z() = std::max(boxMaxBuffer.z(), boxMax.z());
+    }
+  }
 }
 
 } // namespace Avogadro::Core

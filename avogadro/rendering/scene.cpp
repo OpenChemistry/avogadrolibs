@@ -53,4 +53,4 @@ void Scene::clear()
   m_dirty = true;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Rendering
