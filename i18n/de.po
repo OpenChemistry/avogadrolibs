@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-07-27 22:09+0000\n"
+"PO-Revision-Date: 2023-08-16 14:54+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -1992,7 +1992,6 @@ msgid "Simple Cartoon"
 msgstr "Einfaches Cartoon"
 
 #: qtplugins/cartoons/cartoons.cpp:98
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "Cartoon"
@@ -2586,11 +2585,8 @@ msgid "Niggli Reduce Crystal"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:194
-#, fuzzy
 msgid "The unit cell is already reduced."
-msgstr ""
-"Diese Elementarzelle wurde bereits auf ihre kanonische Niggli-Repräsentation "
-"reduziert."
+msgstr "Diese Elementarzelle wurde bereits reduziert."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
@@ -2598,7 +2594,7 @@ msgstr "Kristall"
 
 #: qtplugins/crystal/crystal.h:64
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Werkzeuge für Kristall-spezifische Bearbeitung und Analyse."
 
 #: qtplugins/crystal/crystalscene.cpp:138
 msgid "Line color:"
@@ -2606,7 +2602,7 @@ msgstr "Linienfarbe:"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Darstellung der Grenzen der Einheitszelle."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
@@ -2614,7 +2610,7 @@ msgstr "Text kann nicht ausgewertet werden"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:69
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Die Daten können nicht im angegebenen Format gelesen werden."
 
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
@@ -6136,10 +6132,8 @@ msgstr "Y"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "&Translate "
 msgid "Translate by:"
-msgstr "&Verschiebe "
+msgstr "Verschiebe um:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
 #. i18n: ectx: property (text), widget (QLabel, label_6)
