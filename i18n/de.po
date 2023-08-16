@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-08-16 14:54+0000\n"
+"PO-Revision-Date: 2023-08-17 15:50+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3817,7 +3817,7 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
 msgid "Version"
@@ -4159,7 +4159,7 @@ msgstr "Mitte"
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Ansicht an den Achsen ausrichten"
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4408,6 +4408,9 @@ msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Die Symmetrisierung ist fehlgeschlagen.\n"
+"Überprüfen Sie Ihren Kristall und versuchen Sie es abermals mit einer "
+"anderen Toleranz."
 
 #: qtplugins/spacegroup/spacegroup.cpp:315 qtplugins/yaehmop/yaehmop.cpp:209
 #: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
@@ -4441,7 +4444,7 @@ msgstr "Raumgruppe"
 
 #: qtplugins/spacegroup/spacegroup.h:65
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Raumgruppenmerkmale für Kristalle."
 
 #: qtplugins/spectra/spectra.cpp:26
 msgid "Vibrational Modes…"
@@ -4620,7 +4623,7 @@ msgstr "VRML"
 
 #: qtplugins/vrml/vrml.h:29
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Die Ansicht mit VRML wiedergeben."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
@@ -4631,7 +4634,6 @@ msgid "Calculate Band Structure…"
 msgstr "Bandstruktur berechnen…"
 
 #: qtplugins/yaehmop/yaehmop.cpp:112
-#, fuzzy
 msgid "&Yaehmop"
 msgstr "&Yaehmop"
 
@@ -5897,7 +5899,6 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:533
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "p"
 msgstr "p"
 
@@ -5907,7 +5908,6 @@ msgstr "p"
 #. i18n: ectx: property (text), item, widget (QComboBox, yBoundaryCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:538
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "s"
 msgstr "s"
 
@@ -6213,7 +6213,7 @@ msgstr "Tiefster Abstieg"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Conjugate Gradient"
-msgstr ""
+msgstr "conjugierter Gradient"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -6223,7 +6223,7 @@ msgstr "Einfach"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
-msgstr ""
+msgstr "Newtonverfahren"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
