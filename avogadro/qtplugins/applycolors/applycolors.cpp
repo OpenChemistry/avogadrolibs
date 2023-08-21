@@ -6,8 +6,6 @@
 #include "applycolors.h"
 #include "ui_chargedialog.h"
 
-#include "tinycolormap.hpp"
-
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>

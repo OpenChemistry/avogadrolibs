@@ -3,6 +3,7 @@ set(manipulator_srcs
 )
 
 set(manipulator_uis
+  manipulatewidget.ui
 )
 
 set(manipulator_rcs

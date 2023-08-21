@@ -1,6 +1,6 @@
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
-include_directories(SYSTEM ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
+
 if(WIN32 AND NOT BUILD_SHARED_LIBS)
   add_definitions(-DGLEW_STATIC)
 endif()
@@ -145,3 +145,7 @@ target_link_libraries(Rendering
     Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
     GLEW::GLEW
     OpenGL::GL)
+
+if(USE_3DCONNEXION AND (WIN32 OR APPLE))
+  target_compile_definitions(Rendering PUBLIC _3DCONNEXION)
+endif()

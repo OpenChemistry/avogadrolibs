@@ -183,15 +183,14 @@ void Symmetry::detectSymmetry()
   // interface with libmsym
   msym_error_t ret = MSYM_SUCCESS;
   msym_element_t* elements = nullptr;
-  const char* error = nullptr;
   char point_group[6];
-  double cm[3], radius = 0.0, symerr = 0.0;
+  double cm[3], radius = 0.0;
 
   /* Do not free these variables */
   const msym_symmetry_operation_t* msops = nullptr;
   const msym_subgroup_t* msg = nullptr;
   const msym_equivalence_set_t* mes = nullptr;
-  int mesl = 0, msgl = 0, msopsl = 0, mlength = 0;
+  int mesl = 0, msgl = 0, msopsl = 0;
 
   // initialize the c-style array of atom names and coordinates
   msym_element_t* a;

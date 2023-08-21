@@ -4,8 +4,6 @@ if(NOT DEFINED LIBMSYM_INCLUDE_DIRS)
 endif()
 include_directories(${LIBMSYM_INCLUDE_DIRS})
 
-message("msym include dir " ${LIBMSYM_INCLUDE_DIRS})
-
 set(symmetry_srcs
   symmetry.cpp
   symmetrywidget.cpp

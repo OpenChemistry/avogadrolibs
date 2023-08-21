@@ -32,8 +32,6 @@ features, and can be found [here][Avogadro1]. We are actively porting more
 features to the Avogadro 2 code base, and making regular releases to get
 feedback from the community.
 
-We are actively working to finish Avogadro 2.0 in 2022.
-
 ## Installing
 
 We provide nightly binaries built by GitHub actions for:

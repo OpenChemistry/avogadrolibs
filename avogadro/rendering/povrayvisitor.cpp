@@ -119,9 +119,7 @@ void POVRayVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&)
-{
-}
+void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
@@ -156,13 +154,15 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  int r, g, b;
-  int t = geometry.opacity();
+  float r = 0.0;
+  float g = 0.0;
+  float b = 0.0;
+  float t = 1.0 - geometry.opacity() / 255.0;
 
   for (auto& i : v) {
-    r = i.color[0];
-    g = i.color[1];
-    b = i.color[2];
+    r = i.color[0] / 255.0;
+    g = i.color[1] / 255.0;
+    b = i.color[2] / 255.0;
     str << "texture{pigment{rgbt<" << r << ", " << g << ", " << b << "," << t
         << ">}}\n";
   }
@@ -170,20 +170,21 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {
     str << "<" << tris[i] << "," << tris[i + 1] << "," << tris[i + 2] << ">";
+    // this represents the texture color from the vertex
+    str << ", " << (i / 3);
     if (i != tris.size() - 3)
       str << ", ";
     if (i != 0 && ((i + 1) / 3) % 3 == 0)
       str << '\n';
   }
   str << "\n}\n";
-  str << "\tpigment { rgbt <1.0, 0.0, 0.0, 1.0> }\n"
+  str << "\tpigment { rgbt <" << r << ", " << g << "," << b << "," << t
+      << "> }\n"
       << "}\n\n";
 
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(LineStripGeometry&)
-{
-}
+void POVRayVisitor::visit(LineStripGeometry&) {}
 
 } // namespace Avogadro::Rendering

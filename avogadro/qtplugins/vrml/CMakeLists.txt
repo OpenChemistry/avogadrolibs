@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 avogadro_plugin(VRML
   "Render the scene using VRML."
   ExtensionPlugin

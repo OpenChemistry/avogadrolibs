@@ -4,9 +4,9 @@
 ******************************************************************************/
 
 #include "playertool.h"
-#include "gif.h"
 
-#include "gwavi.h"
+#include <gif.h>
+#include <gwavi.h>
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
