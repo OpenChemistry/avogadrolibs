@@ -1043,7 +1043,10 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   }
 
   // Write out the file, use a two space indent to "pretty print".
-  file << std::setw(2) << root;
+  if (m_json)
+    file << std::setw(2) << root;
+  else // write msgpack
+    json::to_msgpack(root, file);
 
   return true;
 }
