@@ -5,11 +5,16 @@
 
 #include "cmsgpackformat.h"
 
+#include <iostream>
+
 using namespace std;
 
 namespace Avogadro::Io {
 
-CMsgPackFormat::CMsgPackFormat() = default;
+CMsgPackFormat::CMsgPackFormat(): CjsonFormat()
+{
+  m_json = false;
+}
 
 CMsgPackFormat::~CMsgPackFormat() = default;
 
@@ -26,5 +31,16 @@ vector<std::string> CMsgPackFormat::mimeTypes() const
   mime.emplace_back("chemical/x-cmpack");
   return mime;
 }
+
+  bool CMsgPackFormat::read(std::istream& in, Core::Molecule& molecule)
+  {
+    return CjsonFormat::deserialize(in, molecule, false);
+  }
+
+  bool CMsgPackFormat::write(std::ostream& out, const Core::Molecule& molecule)
+  {
+    std::cerr << "CMsgPackFormat::write" << std::endl;
+    return CjsonFormat::serialize(out, molecule, false);
+  }
 
 } // namespace Avogadro::Io

@@ -50,8 +50,9 @@ public:
   bool read(std::istream& in, Core::Molecule& molecule) override;
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
-  // write JSON or MessagePack
-  bool m_json = true;
+  // internal - to allow JSON or MsgPack to be written
+  bool deserialize(std::istream& in, Core::Molecule& molecule, bool json);
+  bool serialize(std::ostream& out, const Core::Molecule& molecule, bool json);
 };
 
 } // end Io namespace

@@ -81,6 +81,11 @@ bool isBooleanArray(json& j)
 
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
+  return deserialize(file, molecule, true);
+}
+
+bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule, bool isJson)
+{
   json jsonRoot = json::parse(file, nullptr, false);
   if (jsonRoot.is_discarded()) {
     appendError("Error reading CJSON file.");
@@ -623,6 +628,11 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
 bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 {
+  return serialize(file, molecule, true);
+}
+
+bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule, bool isJson)
+{
   json opts;
   if (!options().empty())
     opts = json::parse(options(), nullptr, false);
@@ -1042,8 +1052,7 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     root["layer"]["settings"][settings.first] = setting;
   }
 
-  // Write out the file, use a two space indent to "pretty print".
-  if (m_json)
+  if (isJson)
     file << std::setw(2) << root;
   else // write msgpack
     json::to_msgpack(root, file);

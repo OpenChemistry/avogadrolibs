@@ -9,6 +9,7 @@
 
 #include "cjsonformat.h"
 #include "cmlformat.h"
+#include "cmsgpackformat.h"
 #include "dcdformat.h"
 #include "gromacsformat.h"
 #include "lammpsformat.h"
@@ -284,6 +285,7 @@ FileFormatManager::FileFormatManager()
 {
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
+  addFormat(new CMsgPackFormat);
   addFormat(new DcdFormat);
   addFormat(new GromacsFormat);
   addFormat(new LammpsTrajectoryFormat);
