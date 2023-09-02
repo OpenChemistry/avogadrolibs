@@ -9,8 +9,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 using std::string;
 using std::vector;
@@ -59,12 +59,22 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
+  // add the partial charges
+  if (m_partialCharges.size() > 0) {
+    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
+         ++it) {
+      molecule.setPartialCharges(it->first, it->second);
+    }
+  }
+
   if (m_frequencies.size() > 0 &&
       m_frequencies.size() == m_vibDisplacements.size() &&
-      m_frequencies.size() == m_intensities.size()) {
+      m_frequencies.size() == m_IRintensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
-    molecule.setVibrationIRIntensities(m_intensities);
+    molecule.setVibrationIRIntensities(m_IRintensities);
     molecule.setVibrationLx(m_vibDisplacements);
+    if (m_RamanIntensities.size())
+      molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
   // Do simple bond perception.
@@ -88,6 +98,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   string key = Core::trimmed(line);
   vector<string> list;
   int nGTOs = 0;
+  float vibScaling = 1.0f;
 
   if (Core::contains(key, "CARTESIAN COORDINATES (A.U.)")) {
     m_coordFactor = 1.; // leave the coords in BOHR ....
@@ -137,10 +148,50 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     list = Core::split(key, ' ');
     m_electrons = Core::lexicalCast<int>(list[5]);
   } else if (Core::contains(key, "SPIN UP ORBITALS") && !m_openShell) {
-    m_openShell = true; // not yet implemented
+    m_openShell = true; // TODO
   } else if (Core::contains(key, "MOLECULAR ORBITALS")) {
     m_currentMode = MO;
     getline(in, key); //------------
+  } else if (Core::contains(key, "ATOMIC CHARGES")) {
+    m_currentMode = Charges;
+    // figure out what type of charges we have
+    list = Core::split(key, ' ');
+    if (list.size() > 2) {
+      m_chargeType = Core::trimmed(list[0]); // e.g. MULLIKEN or LOEWDIN
+    }
+    getline(in, key); // skip ------------
+  } else if (Core::contains(key, "VIBRATIONAL FREQUENCIES")) {
+    m_currentMode = Frequencies;
+    getline(in, key); // skip ------------
+    getline(in, key); // skip blank line
+    getline(in, key); // scaling factor
+    // Scaling factor for frequencies =  1.000000000
+    list = Core::split(key, ' ');
+    if (list.size() > 6)
+      vibScaling = Core::lexicalCast<float>(list[5]);
+    getline(in, key); // skip blank line
+  } else if (Core::contains(key, "NORMAL MODES")) {
+    m_currentMode = VibrationalModes;
+
+    getline(in, key); // skip ------------
+    getline(in, key); // skip blank line
+    getline(in, key); // skip comment
+    getline(in, key); // skip more comments
+    getline(in, key); // skip even more comment
+    getline(in, key); // skip blank line
+  } else if (Core::contains(key, "IR SPECTRUM")) {
+    m_currentMode = IR;
+    getline(in, key); // skip ------------
+    getline(in, key); // skip blank line
+    getline(in, key); // skip column titles
+    getline(in, key); // skip more column titles
+    getline(in, key); // skip ------------
+  } else if (Core::contains(key, "RAMAN SPECTRUM")) {
+    m_currentMode = Raman;
+    getline(in, key); // skip ------------
+    getline(in, key); // skip blank line
+    getline(in, key); // skip column titles
+    getline(in, key); // skip ------------
   } else {
 
     vector<vector<double>> columns;
@@ -158,9 +209,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           if (list.size() < 8) {
             break;
           }
-          Eigen::Vector3d pos(Core::lexicalCast<double>(list[5]) * m_coordFactor,
-                              Core::lexicalCast<double>(list[6]) * m_coordFactor,
-                              Core::lexicalCast<double>(list[7]) * m_coordFactor);
+          Eigen::Vector3d pos(
+            Core::lexicalCast<double>(list[5]) * m_coordFactor,
+            Core::lexicalCast<double>(list[6]) * m_coordFactor,
+            Core::lexicalCast<double>(list[7]) * m_coordFactor);
 
           m_atomNums.push_back(Core::lexicalCast<int>(list[2]));
           m_atomPos.push_back(pos);
@@ -169,6 +221,156 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
+        m_currentMode = NotParsing;
+        break;
+      }
+      case Charges: {
+        // should start at the first atom
+        if (key.empty())
+          break;
+
+        Eigen::MatrixXd charges(m_atomNums.size(), 1);
+        charges.setZero();
+
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          if (list.size() != 4) {
+            break;
+          }
+          // e.g. 0 O :   -0.714286
+          int atomIndex = Core::lexicalCast<int>(list[0]);
+          double charge = Core::lexicalCast<double>(list[3]);
+          charges(atomIndex, 0) = charge;
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+        m_partialCharges[m_chargeType] = charges;
+        m_currentMode = NotParsing;
+        break;
+      }
+      case Frequencies: {
+        // should start at the first frequency - include zeros
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          if (list.size() != 3) {
+            break;
+          }
+          // e.g. 0:         0.00 cm**-1
+          double freq = Core::lexicalCast<double>(list[1]);
+          m_frequencies.push_back(freq);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        // okay, now set up the normal mode arrays
+        m_vibDisplacements.resize(m_frequencies.size());
+        m_IRintensities.reserve(m_frequencies.size());
+        // we don't bother with Raman, because that's less common
+        for (unsigned int i = 0; i < m_frequencies.size(); i++) {
+          m_vibDisplacements[i].resize(m_atomNums.size());
+          for (unsigned int j = 0; j < m_atomNums.size(); j++)
+            m_vibDisplacements[i].push_back(Eigen::Vector3d());
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
+      case VibrationalModes: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        vector<int> modeIndex;
+        while (!key.empty()) {
+          // first we get a set of column numbers
+          // e.g. 1  2  3  4  5  6  7  8  9 10
+          modeIndex.clear();
+          for (unsigned int i = 0; i < list.size(); i++) {
+            modeIndex.push_back(Core::lexicalCast<int>(list[i]));
+          }
+          // now we read the displacements .. there should be 3N lines
+          // x,y,z for each atom
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+          for (unsigned int i = 0; i < 3*m_atomNums.size(); i++) {
+            unsigned int atomIndex = i / 3;
+            unsigned int coordIndex = i % 3;
+            for (unsigned int j = 0; j < modeIndex.size(); j++) {
+              m_vibDisplacements[modeIndex[j]][atomIndex][coordIndex] =
+                Core::lexicalCast<double>(list[j+1]);
+            }
+
+            getline(in, key);
+            key = Core::trimmed(key);
+            list = Core::split(key, ' ');
+          }
+
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
+      case IR: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          // e.g. 6:   1711.76   0.014736   74.47  0.002686  (-0.021704 0.027180
+          // 0.038427)
+          if (list.size() != 8) {
+            break;
+          }
+          // the first entry might be 5 or 6 because of removed rotations /
+          // translations
+          int index = Core::lexicalCast<double>(list[0]);
+          if (m_IRintensities.size() == 0 && index > 0) {
+            while (m_IRintensities.size() < index + 1) {
+              m_IRintensities.push_back(0.0);
+            }
+          }
+          double intensity = Core::lexicalCast<double>(list[3]);
+          m_IRintensities.push_back(intensity);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
+      case Raman: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          // e.g.    6:        76.62      0.000000      0.465517
+          if (list.size() != 4) {
+            break;
+          }
+          // the first entry might be 5 or 6 because of removed rotations /
+          // translations
+          int index = Core::lexicalCast<double>(list[0]);
+          if (m_RamanIntensities.size() == 0 && index > 0) {
+            while (m_RamanIntensities.size() < index) {
+              m_RamanIntensities.push_back(0.0);
+            }
+          }
+          // index, frequency, activity, depolarization
+          double activity = Core::lexicalCast<double>(list[2]);
+          m_RamanIntensities.push_back(activity);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
         m_currentMode = NotParsing;
         break;
       }
@@ -228,7 +430,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
             list = Core::split(key, ' ');
           }
-          m_orcaShellTypes.push_back(std::vector<GaussianSet::orbital>(shellTypes.size()));
+          m_orcaShellTypes.push_back(
+            std::vector<GaussianSet::orbital>(shellTypes.size()));
           m_orcaShellTypes.at(nGTOs) = shellTypes;
           m_orcaNumShells.push_back(std::vector<int>(shellFunctions.size()));
           m_orcaNumShells.at(nGTOs) = shellFunctions;
@@ -439,15 +642,15 @@ void ORCAOutput::load(GaussianSet* basis)
   int nSP = 0; // number of SP shells
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
     // Handle the SP case separately - this should possibly be a distinct type
-    if (m_shellTypes.at(i) == Core::GaussianSet::SP) {
+    if (m_shellTypes.at(i) == GaussianSet::SP) {
       // SP orbital type - currently have to unroll into two shells
       int tmpGTO = nGTO;
-      int s = basis->addBasis(m_shelltoAtom.at(i) - 1, Core::GaussianSet::S);
+      int s = basis->addBasis(m_shelltoAtom.at(i) - 1, GaussianSet::S);
       for (int j = 0; j < m_shellNums.at(i); ++j) {
         basis->addGto(s, m_c.at(nGTO), m_a.at(nGTO));
         ++nGTO;
       }
-      int p = basis->addBasis(m_shelltoAtom.at(i) - 1, Core::GaussianSet::P);
+      int p = basis->addBasis(m_shelltoAtom.at(i) - 1, GaussianSet::P);
       for (int j = 0; j < m_shellNums.at(i); ++j) {
         basis->addGto(p, m_csp.at(nSP), m_a.at(tmpGTO));
         ++tmpGTO;
@@ -470,21 +673,37 @@ void ORCAOutput::load(GaussianSet* basis)
   basis->generateDensityMatrix();
 }
 
-Core::GaussianSet::orbital ORCAOutput::orbitalIdx(std::string txt) {
-    if (txt == "S") return Core::GaussianSet::S;
-    if (txt == "SP") return Core::GaussianSet::SP;
-    if (txt == "P") return Core::GaussianSet::P;
-    if (txt == "D") return Core::GaussianSet::D5;  //// orca only uses Spherical - 5 d components
-    if (txt == "D5") return Core::GaussianSet::D5;
-    if (txt == "F") return Core::GaussianSet::F7;  //// orca only uses Spherical - 7 f components
-    if (txt == "F7") return Core::GaussianSet::F7;
-    if (txt == "G") return Core::GaussianSet::G9;  //// orca only uses Spherical - 9 g components
-    if (txt == "G9") return Core::GaussianSet::G9;
-    if (txt == "H") return Core::GaussianSet::H11; //// orca only uses Spherical - 11 h components
-    if (txt == "H11") return Core::GaussianSet::H11;
-    if (txt == "I") return Core::GaussianSet::I13; //// orca only uses Spherical - 13 i components
-    if (txt == "I13") return Core::GaussianSet::I13;
-    return Core::GaussianSet::UU;
+GaussianSet::orbital ORCAOutput::orbitalIdx(std::string txt)
+{
+  if (txt == "S")
+    return GaussianSet::S;
+  if (txt == "SP")
+    return GaussianSet::SP;
+  if (txt == "P")
+    return GaussianSet::P;
+  if (txt == "D")
+    return GaussianSet::D5; //// orca only uses Spherical - 5 d components
+  if (txt == "D5")
+    return GaussianSet::D5;
+  if (txt == "F")
+    return GaussianSet::F7; //// orca only uses Spherical - 7 f components
+  if (txt == "F7")
+    return GaussianSet::F7;
+  if (txt == "G")
+    return GaussianSet::G9; //// orca only uses Spherical - 9 g components
+  if (txt == "G9")
+    return GaussianSet::G9;
+  if (txt == "H")
+    return GaussianSet::H11; //// orca only uses Spherical - 11 h
+                             /// components
+  if (txt == "H11")
+    return GaussianSet::H11;
+  if (txt == "I")
+    return GaussianSet::I13; //// orca only uses Spherical - 13 i
+                             /// components
+  if (txt == "I13")
+    return GaussianSet::I13;
+  return GaussianSet::UU;
 }
 
 } // namespace Avogadro::QuantumIO

@@ -11,6 +11,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/io/fileformat.h>
 
+#include <map>
 #include <vector>
 
 namespace Avogadro {
@@ -51,7 +52,7 @@ private:
   void load(Core::GaussianSet* basis);
 
   // OrcaStuff
-  void orcaWarningMessage(const std::string &m);
+  void orcaWarningMessage(const std::string& m);
   Core::GaussianSet::orbital orbitalIdx(std::string txt);
   bool m_orcaSuccess;
 
@@ -63,17 +64,24 @@ private:
 
   std::vector<int> shellFunctions;
   std::vector<Core::GaussianSet::orbital> shellTypes;
-  std::vector<std::vector<int> > m_orcaNumShells;
-  std::vector<std::vector<Core::GaussianSet::orbital> > m_orcaShellTypes;
+  std::vector<std::vector<int>> m_orcaNumShells;
+  std::vector<std::vector<Core::GaussianSet::orbital>> m_orcaShellTypes;
   int m_nGroups;
 
-  std::vector<std::vector<std::vector<Eigen::Vector2d> *> *> m_basisFunctions;
+  std::vector<std::vector<std::vector<Eigen::Vector2d>*>*> m_basisFunctions;
 
   enum mode
   {
     Atoms,
     GTO,
     MO,
+    Charges,
+    Frequencies,
+    VibrationalModes,
+    IR,
+    Raman,
+    Electronic,
+    NMR,
     NotParsing,
     Unrecognized
   };
@@ -98,8 +106,12 @@ private:
   std::vector<double> m_orbitalEnergy;
   std::vector<double> m_MOcoeffs;
 
+  std::string m_chargeType;
+  std::map<std::string, MatrixX> m_partialCharges;
+
   Core::Array<double> m_frequencies;
-  Core::Array<double> m_intensities;
+  Core::Array<double> m_IRintensities;
+  Core::Array<double> m_RamanIntensities;
   Core::Array<Core::Array<Vector3>> m_vibDisplacements;
 };
 
