@@ -126,7 +126,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         getline(in, key); // skip group information
       }
       getline(in, key); // skip blank line
-      for (uint i = 0; i < m_atomNums.size(); ++i) {
+      for (unsigned int i = 0; i < m_atomNums.size(); ++i) {
         getline(in, key); // skip group information
       }
 
@@ -450,7 +450,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           m_currentAtom++;
           for (int j = 0; j < nBasis; j++) {
             if (m_atomLabel.at(i) == m_basisAtomLabel.at(j)) {
-              for (uint k = 0; k < m_orcaNumShells.at(j).size(); k++) {
+              for (unsigned int k = 0; k < m_orcaNumShells.at(j).size(); k++) {
                 for (int l = 0; l < m_orcaNumShells.at(j).at(k); l++) {
                   m_a.push_back(m_basisFunctions.at(j)->at(k)->at(l).x());
                   m_c.push_back(m_basisFunctions.at(j)->at(k)->at(l).y());
@@ -511,11 +511,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           int idx = 0;
           while (idx < orcaOrbitals.size()) {
             if (Core::contains(orcaOrbitals.at(idx), "pz")) {
-              for (uint i = 0; i < numColumns; i++) {
+              for (unsigned int i = 0; i < numColumns; i++) {
                 std::swap(columns[i].at(idx), columns[i].at(idx + 1));
               }
               idx++;
-              for (uint i = 0; i < numColumns; i++) {
+              for (unsigned int i = 0; i < numColumns; i++) {
                 std::swap(columns[i].at(idx), columns[i].at(idx + 1));
               }
               idx++;
@@ -584,11 +584,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             int idx = 0;
             while (idx < orcaOrbitals.size()) {
               if (Core::contains(orcaOrbitals.at(idx), "pz")) {
-                for (uint i = 0; i < numColumns; i++) {
+                for (unsigned int i = 0; i < numColumns; i++) {
                   std::swap(columns[i].at(idx), columns[i].at(idx + 1));
                 }
                 idx++;
-                for (uint i = 0; i < numColumns; i++) {
+                for (unsigned int i = 0; i < numColumns; i++) {
                   std::swap(columns[i].at(idx), columns[i].at(idx + 1));
                 }
                 idx++;
