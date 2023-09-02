@@ -11,7 +11,9 @@
 
 #include <algorithm>
 #include <iostream>
+#include <regex>
 
+using std::regex;
 using std::string;
 using std::vector;
 
@@ -478,12 +480,13 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           getline(in, key); // skip -----------
           getline(in, key); // now we've got coefficients
 
-          /* TODO
-          QRegExp rx("[.][0-9]{6}[0-9-]");
-          while (rx.indexIn(key) != -1) { // avoid wrong splitting
-            key.insert(rx.indexIn(key) + 1, " ");
+          regex rx("[.][0-9]{6}[0-9-]");
+          auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
+          auto key_end = std::sregex_iterator();
+          for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
+            key += i->str() + " ";
           }
-          */
+
           list = Core::split(key, ' ');
 
           numColumns = list.size() - 2;
@@ -495,11 +498,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             }
 
             getline(in, key);
-            /*
-            while (rx.indexIn(key) != -1) { // avoid wrong splitting
-              key.insert(rx.indexIn(key) + 1, " ");
+            key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
+            key_end = std::sregex_iterator();
+            for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
+              key += i->str() + " ";
             }
-            */
 
             list = Core::split(key, ' ');
             if (list.size() != numColumns + 2)
@@ -553,12 +556,13 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             getline(in, key); // skip -----------
             getline(in, key); // now we've got coefficients
 
-            /*/
-            QRegExp rx("[.][0-9]{6}[0-9-]");
-            while (rx.indexIn(key) != -1) { // avoid wrong splitting
-              key.insert(rx.indexIn(key) + 1, " ");
+            regex rx("[.][0-9]{6}[0-9-]");
+            auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
+            auto key_end = std::sregex_iterator();
+            for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
+              key += i->str() + " ";
             }
-            */
+
             list = Core::split(key, ' ');
             numColumns = list.size() - 2;
             columns.resize(numColumns);
@@ -570,11 +574,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
               }
 
               getline(in, key);
-              /*/
-              while (rx.indexIn(key) != -1) { // avoid wrong splitting
-                key.insert(rx.indexIn(key) + 1, " ");
+              key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
+              key_end = std::sregex_iterator();
+              for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
+                key += i->str() + " ";
               }
-              */
               list = Core::split(key, ' ');
               if (list.size() != numColumns + 2)
                 break;
