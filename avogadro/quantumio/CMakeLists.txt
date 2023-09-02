@@ -8,6 +8,7 @@ avogadro_headers(QuantumIO
   mopacaux.h
   nwchemjson.h
   nwchemlog.h
+  orca.h
 )
 
 # Source files for our data.
@@ -19,6 +20,7 @@ target_sources(QuantumIO PRIVATE
   mopacaux.cpp
   nwchemjson.cpp
   nwchemlog.cpp
+  orca.cpp
 )
 
 avogadro_add_library(QuantumIO)
