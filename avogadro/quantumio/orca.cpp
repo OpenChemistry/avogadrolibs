@@ -328,7 +328,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          int index = Core::lexicalCast<double>(list[0]);
+          int index = Core::lexicalCast<int>(list[0]);
           double intensity = Core::lexicalCast<double>(list[3]);
           m_IRintensities[index] = intensity;
 
@@ -351,7 +351,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          int index = Core::lexicalCast<double>(list[0]);
+          int index = Core::lexicalCast<int>(list[0]);
           if (m_RamanIntensities.size() == 0 && index > 0) {
             while (m_RamanIntensities.size() < index) {
               m_RamanIntensities.push_back(0.0);
@@ -542,8 +542,9 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         }
         m_numBasisFunctions = numRows;
         if (m_openShell && m_useBeta) {
+          // TODO: parse both alpha and beta orbitals
+
           m_MOcoeffs.clear(); // if the orbitals were punched multiple times
-          vector<string> orcaOrbitals;
           getline(in, key);
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
