@@ -44,14 +44,14 @@ namespace {
 #include <avogadro/quantumio/nwchemlog.h>
 #include <avogadro/quantumio/orca.h>
 
+#include <QAction>
+#include <QOpenGLFramebufferObject>
 #include <QtConcurrent/QtConcurrentMap>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QProcess>
-#include <QOpenGLFramebufferObject>
-#include <QAction>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -82,7 +82,7 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(displayMesh()));
   connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
-  
+
   m_actions.push_back(action);
 
   // Register quantum file formats
@@ -159,10 +159,12 @@ void Surfaces::surfacesActivated()
   }
   m_dialog->setupSteps(m_molecule->coordinate3dCount());
 
-  const auto identifiers = Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+  const auto identifiers =
+    Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
   std::set<std::pair<std::string, std::string>> chargeModels;
-  for (const auto &identifier: identifiers)
-    chargeModels.emplace(Calc::ChargeManager::instance().nameForModel(identifier), identifier);
+  for (const auto& identifier : identifiers)
+    chargeModels.emplace(
+      Calc::ChargeManager::instance().nameForModel(identifier), identifier);
   m_dialog->setupModels(chargeModels);
 
   m_dialog->show();
@@ -181,8 +183,7 @@ float Surfaces::resolution()
     case SolventExcluded:
       minimum = 0.1;
       break;
-    default:
-      ;
+    default:;
   }
 
   r = std::max(minimum, std::min(maximum, r));
@@ -220,7 +221,10 @@ void Surfaces::calculateSurface()
   }
 }
 
-float inline square(float x) { return x * x; }
+float inline square(float x)
+{
+  return x * x;
+}
 
 void Surfaces::calculateEDT()
 {
@@ -239,13 +243,14 @@ void Surfaces::calculateEDT()
 
     // first, make a list of all atom positions and radii
     Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    auto *atoms = new std::vector<std::pair<Vector3, double>>();
+    auto* atoms = new std::vector<std::pair<Vector3, double>>();
     double max_radius = probeRadius;
     QtGui::RWLayerManager layerManager;
     for (size_t i = 0; i < m_molecule->atomCount(); i++) {
       if (!layerManager.visible(m_molecule->layer(i)))
         continue;
-      auto radius = Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+      auto radius =
+        Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
       atoms->emplace_back(atomPositions[i], radius);
       if (radius > max_radius)
         max_radius = radius;
@@ -259,39 +264,41 @@ void Surfaces::calculateEDT()
     const Vector3 min = m_cube->min();
 
     // then, for each atom, set cubes around it up to a certain radius
-    QFuture innerFuture = QtConcurrent::map(*atoms, [=](std::pair<Vector3, double> &in) {
-      double startPosX = in.first(0) - in.second;
-      double endPosX = in.first(0) + in.second;
-      int startIndexX = (startPosX - min(0)) / res;
-      int endIndexX = (endPosX - min(0)) / res + 1;
-      for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-        double posX = indexX * res + min(0);
-        double radiusXsq = square(in.second) - square(posX - in.first(0));
-        if (radiusXsq < 0.0)
-          continue;
-        double radiusX = sqrt(radiusXsq);
-        double startPosY = in.first(1) - radiusX;
-        double endPosY = in.first(1) + radiusX;
-        int startIndexY = (startPosY - min(1)) / res;
-        int endIndexY = (endPosY - min(1)) / res + 1;
-        for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-          double posY = indexY * res + min(1);
-          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-          if (lengthXYsq < 0.0)
+    QFuture innerFuture =
+      QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
+        double startPosX = in.first(0) - in.second;
+        double endPosX = in.first(0) + in.second;
+        int startIndexX = (startPosX - min(0)) / res;
+        int endIndexX = (endPosX - min(0)) / res + 1;
+        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+          double posX = indexX * res + min(0);
+          double radiusXsq = square(in.second) - square(posX - in.first(0));
+          if (radiusXsq < 0.0)
             continue;
-          double lengthXY = sqrt(lengthXYsq);
-          double startPosZ = in.first(2) - lengthXY;
-          double endPosZ = in.first(2) + lengthXY;
-          int startIndexZ = (startPosZ - min(2)) / res;
-          int endIndexZ = (endPosZ - min(2)) / res + 1;
-          m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1, 1.0f);
+          double radiusX = sqrt(radiusXsq);
+          double startPosY = in.first(1) - radiusX;
+          double endPosY = in.first(1) + radiusX;
+          int startIndexY = (startPosY - min(1)) / res;
+          int endIndexY = (endPosY - min(1)) / res + 1;
+          for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
+            double posY = indexY * res + min(1);
+            double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+            if (lengthXYsq < 0.0)
+              continue;
+            double lengthXY = sqrt(lengthXYsq);
+            double startPosZ = in.first(2) - lengthXY;
+            double endPosZ = in.first(2) + lengthXY;
+            int startIndexZ = (startPosZ - min(2)) / res;
+            int endIndexZ = (endPosZ - min(2)) / res + 1;
+            m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
+                               1.0f);
+          }
         }
-      }
-    });
-    
+      });
+
     innerFuture.waitForFinished();
   });
-  
+
   // SolventExcluded requires an extra pass
   if (m_dialog->surfaceType() == SolventExcluded) {
     m_performEDTStepWatcher.setFuture(future);
@@ -305,14 +312,14 @@ void Surfaces::performEDTStep()
   QFuture future = QtConcurrent::run([=]() {
     const double probeRadius = 1.4;
     const double scaledProbeRadius = probeRadius / resolution();
-    
+
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
     // also make a list of all "inside" cubes
-    auto *insideIndices = new std::vector<Vector3i>;
+    auto* insideIndices = new std::vector<Vector3i>;
     Vector3i size = m_cube->dimensions();
-    relativePositions.reserve(size(0) * size(1) * 4); // O(n^2)
+    relativePositions.reserve(size(0) * size(1) * 4);    // O(n^2)
     insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
     for (int z = 0; z < size(2); z++) {
       int zp = std::max(z - 1, 0);
@@ -327,31 +334,27 @@ void Surfaces::performEDTStep()
           }
           int xp = std::max(x - 1, 0);
           int xn = std::min(x + 1, size(0) - 1);
-          if (m_cube->value(xp, y, z) > 0.0
-            || m_cube->value(xn, y, z) > 0.0
-            || m_cube->value(x, yp, z) > 0.0
-            || m_cube->value(x, yn, z) > 0.0
-            || m_cube->value(x, y, zp) > 0.0
-            || m_cube->value(x, y, zn) > 0.0
-          ) {
+          if (m_cube->value(xp, y, z) > 0.0 || m_cube->value(xn, y, z) > 0.0 ||
+              m_cube->value(x, yp, z) > 0.0 || m_cube->value(x, yn, z) > 0.0 ||
+              m_cube->value(x, y, zp) > 0.0 || m_cube->value(x, y, zn) > 0.0) {
             relativePositions.push_back(Vector3(x, y, z));
           }
         }
       }
     }
-    
+
     // pass the list to a NeighborPerceiver so it's faster to look up
     NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
-    
+
     // now, exclude all "inside" cubes too close to any "outside" cube
-    thread_local Array<Index> *neighbors = nullptr;
-    QFuture innerFuture = QtConcurrent::map(*insideIndices, [=](Vector3i &in) {
+    thread_local Array<Index>* neighbors = nullptr;
+    QFuture innerFuture = QtConcurrent::map(*insideIndices, [=](Vector3i& in) {
       Vector3 pos = in.cast<double>();
       if (neighbors == nullptr)
         neighbors = new Array<Index>;
       perceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
-      for (Index neighbor: *neighbors) {
-        const Vector3 &npos = relativePositions[neighbor];
+      for (Index neighbor : *neighbors) {
+        const Vector3& npos = relativePositions[neighbor];
         float distance = (npos - pos).norm();
         if (distance <= scaledProbeRadius) {
           m_cube->setValue(in(0), in(1), in(2), -1.0f);
@@ -359,10 +362,10 @@ void Surfaces::performEDTStep()
         }
       }
     });
-    
+
     innerFuture.waitForFinished();
   });
-  
+
   m_displayMeshWatcher.setFuture(future);
 }
 
@@ -523,7 +526,8 @@ void Surfaces::displayMesh()
     m_meshGenerator2 = new QtGui::MeshGenerator;
     connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses, true);
+  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses,
+                               true);
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have
@@ -535,7 +539,8 @@ void Surfaces::displayMesh()
   m_meshesLeft = 2;
 }
 
-Core::Color3f Surfaces::chargeGradient(double value, double clamp, ColormapType colormap) const
+Core::Color3f Surfaces::chargeGradient(double value, double clamp,
+                                       ColormapType colormap) const
 {
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
@@ -589,22 +594,22 @@ void Surfaces::colorMeshByPotential()
 {
   const auto model = m_dialog->colorModel().toStdString();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
-  
+
   const auto positionsf = m_mesh1->vertices();
   Core::Array<Vector3> positions(positionsf.size());
   std::transform(positionsf.begin(), positionsf.end(), positions.begin(),
-    [](const Vector3f &pos) { return pos.cast<double>(); }
-  );
-  const auto potentials = Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
-  
+                 [](const Vector3f& pos) { return pos.cast<double>(); });
+  const auto potentials =
+    Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
+
   double minPotential = *std::min_element(potentials.begin(), potentials.end());
   double maxPotential = *std::max_element(potentials.begin(), potentials.end());
   double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
-  
+
   Core::Array<Core::Color3f> colors(positions.size());
   for (size_t i = 0; i < potentials.size(); i++)
     colors[i] = chargeGradient(potentials[i], clamp, colormap);
-  
+
   m_mesh1->setColors(colors);
 }
 
@@ -806,4 +811,4 @@ void Surfaces::movieFrame()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

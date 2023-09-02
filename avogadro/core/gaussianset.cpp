@@ -22,9 +22,7 @@ GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
   m_scfType = Rhf;
 }
 
-GaussianSet::~GaussianSet()
-{
-}
+GaussianSet::~GaussianSet() {}
 
 unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 {
@@ -490,8 +488,9 @@ bool GaussianSet::generateDensityMatrix()
             m_density(jBasis, iBasis) += 2.0 * icoeff * jcoeff;
             m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
           }
-          cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
-               << endl;
+          //          cout << iBasis << ", " << jBasis << ": " <<
+          //          m_density(iBasis, jBasis)
+          //               << endl;
           break;
         case Rohf: // ROHF is handled similarly to UHF
         case Uhf:
@@ -507,8 +506,9 @@ bool GaussianSet::generateDensityMatrix()
             m_density(jBasis, iBasis) += icoeff * jcoeff;
             m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
           }
-          cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
-               << endl;
+          //          cout << iBasis << ", " << jBasis << ": " <<
+          //          m_density(iBasis, jBasis)
+          //               << endl;
           break;
         default:
           cout << "Unhandled scf type:" << m_scfType << endl;
@@ -546,4 +546,4 @@ bool GaussianSet::generateSpinDensityMatrix()
   return true;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Core

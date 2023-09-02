@@ -366,7 +366,7 @@ private:
   std::string m_functionalName;
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif

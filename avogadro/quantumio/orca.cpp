@@ -270,9 +270,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
         // okay, now set up the normal mode arrays
         m_vibDisplacements.resize(m_frequencies.size());
-        m_IRintensities.reserve(m_frequencies.size());
+        m_IRintensities.resize(m_frequencies.size());
         // we don't bother with Raman, because that's less common
         for (unsigned int i = 0; i < m_frequencies.size(); i++) {
+          m_IRintensities[i] = 0.0;
           m_vibDisplacements[i].resize(m_atomNums.size());
           for (unsigned int j = 0; j < m_atomNums.size(); j++)
             m_vibDisplacements[i].push_back(Eigen::Vector3d());
@@ -298,19 +299,18 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           getline(in, key);
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
-          for (unsigned int i = 0; i < 3*m_atomNums.size(); i++) {
+          for (unsigned int i = 0; i < 3 * m_atomNums.size(); i++) {
             unsigned int atomIndex = i / 3;
             unsigned int coordIndex = i % 3;
             for (unsigned int j = 0; j < modeIndex.size(); j++) {
               m_vibDisplacements[modeIndex[j]][atomIndex][coordIndex] =
-                Core::lexicalCast<double>(list[j+1]);
+                Core::lexicalCast<double>(list[j + 1]);
             }
 
             getline(in, key);
             key = Core::trimmed(key);
             list = Core::split(key, ' ');
           }
-
         }
 
         m_currentMode = NotParsing;
@@ -323,19 +323,14 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         while (!key.empty()) {
           // e.g. 6:   1711.76   0.014736   74.47  0.002686  (-0.021704 0.027180
           // 0.038427)
-          if (list.size() != 8) {
+          if (list.size() < 7) {
             break;
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
           int index = Core::lexicalCast<double>(list[0]);
-          if (m_IRintensities.size() == 0 && index > 0) {
-            while (m_IRintensities.size() < index + 1) {
-              m_IRintensities.push_back(0.0);
-            }
-          }
           double intensity = Core::lexicalCast<double>(list[3]);
-          m_IRintensities.push_back(intensity);
+          m_IRintensities[index] = intensity;
 
           getline(in, key);
           key = Core::trimmed(key);
