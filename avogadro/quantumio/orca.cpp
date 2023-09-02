@@ -149,8 +149,23 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   } else if (Core::contains(key, "Number of Electrons")) {
     list = Core::split(key, ' ');
     m_electrons = Core::lexicalCast<int>(list[5]);
-  } else if (Core::contains(key, "SPIN UP ORBITALS") && !m_openShell) {
-    m_openShell = true; // TODO
+  } else if (Core::contains(key, "ORBITAL ENERGIES")) {
+    m_currentMode = OrbitalEnergies;
+    getline(in, key); // skip ------------
+    getline(in, key); // check if SPIN UP ORBITALS are present
+    if (Core::contains(key, "SPIN UP ORBITALS")) {
+      m_openShell = true;
+      m_readBeta = false;
+    } else {
+      m_openShell = false;
+      m_readBeta = false;
+    }
+    getline(in, key); // skip column titles
+  } else if (Core::contains(key, "SPIN DOWN ORBITALS")) {
+    m_currentMode = OrbitalEnergies;
+    m_openShell = true;
+    m_readBeta = true;
+    getline(in, key); // skip column headers
   } else if (Core::contains(key, "MOLECULAR ORBITALS")) {
     m_currentMode = MO;
     getline(in, key); //------------
@@ -249,6 +264,35 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           list = Core::split(key, ' ');
         }
         m_partialCharges[m_chargeType] = charges;
+        m_currentMode = NotParsing;
+        break;
+      }
+      case OrbitalEnergies: {
+        // should start at the first orbital
+        if (!m_readBeta)
+          m_orbitalEnergy.clear();
+        else
+          m_betaOrbitalEnergy.clear();
+
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          if (list.size() != 4) {
+            break;
+          }
+
+          // energy in Hartree
+          double energy = Core::lexicalCast<double>(list[2]);
+          if (!m_readBeta)
+            m_orbitalEnergy.push_back(energy);
+          else
+            m_betaOrbitalEnergy.push_back(energy);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
         m_currentMode = NotParsing;
         break;
       }
@@ -544,10 +588,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           m_orcaSuccess = false;
         }
         m_numBasisFunctions = numRows;
-        if (m_openShell && m_useBeta) {
+        if (m_openShell) {
           // TODO: parse both alpha and beta orbitals
 
-          m_MOcoeffs.clear(); // if the orbitals were punched multiple times
+          m_BetaMOcoeffs.clear(); // if the orbitals were punched multiple times
           getline(in, key);
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
@@ -609,7 +653,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
               numRows = columns[i].size();
               for (unsigned int j = 0; j < numRows; ++j) {
 
-                m_MOcoeffs.push_back(columns[i][j]);
+                m_BetaMOcoeffs.push_back(columns[i][j]);
               }
             }
             columns.clear();
@@ -668,6 +712,15 @@ void ORCAOutput::load(GaussianSet* basis)
   // Now to load in the MO coefficients
   if (m_MOcoeffs.size())
     basis->setMolecularOrbitals(m_MOcoeffs);
+  if (m_BetaMOcoeffs.size())
+    basis->setMolecularOrbitals(m_BetaMOcoeffs, Core::BasisSet::Beta);
+
+  if (m_orbitalEnergy.size())
+    basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
+  if (m_betaOrbitalEnergy.size())
+    basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, Core::BasisSet::Beta);
+
+  // TODO: set orbital symmetries
 
   m_homo = ceil(m_electrons / 2.0);
   basis->generateDensityMatrix();

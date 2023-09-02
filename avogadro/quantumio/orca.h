@@ -75,6 +75,7 @@ private:
     Atoms,
     GTO,
     MO,
+    OrbitalEnergies,
     Charges,
     Frequencies,
     VibrationalModes,
@@ -91,7 +92,7 @@ private:
   int m_electrons;
 
   bool m_openShell;
-  bool m_useBeta;
+  bool m_readBeta;
 
   int m_homo;
 
@@ -105,6 +106,8 @@ private:
   std::vector<double> m_csp;
   std::vector<double> m_orbitalEnergy;
   std::vector<double> m_MOcoeffs;
+  std::vector<double> m_betaOrbitalEnergy;
+  std::vector<double> m_BetaMOcoeffs;
 
   std::string m_chargeType;
   std::map<std::string, MatrixX> m_partialCharges;
