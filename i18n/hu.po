@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-03 01:59+0000\n"
-"PO-Revision-Date: 2023-06-30 09:52+0000\n"
+"PO-Revision-Date: 2023-09-05 07:55+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2219,16 +2219,12 @@ msgid "Element symbol."
 msgstr "Kémiai elem szimbóluma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "Érvénytelen atomszám."
+msgstr "Érvénytelen atomindex."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
-#, fuzzy
-#| msgid "By Atomic Index"
 msgid "Atomic index."
-msgstr "Atomi index szerint"
+msgstr "Atomi index."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
 msgid "Invalid atomic number."
@@ -4490,30 +4486,24 @@ msgid "Vibrational Modes…"
 msgstr "Rezgési módok…"
 
 #: qtplugins/spectra/spectra.cpp:32
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Show the vibrational modes dialog."
-msgstr "Rezgési módok…"
+msgstr "Rezgési módok párbeszédpanel megjelenítése."
 
 #: qtplugins/spectra/spectra.cpp:33
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational mode."
-msgstr "Rezgési módok…"
+msgstr "Rezgési mód beállítása."
 
 #: qtplugins/spectra/spectra.cpp:35
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational amplitude."
-msgstr "Rezgési módok…"
+msgstr "Rezgési amplitúdó beállítása."
 
 #: qtplugins/spectra/spectra.cpp:37
 msgid "Start the vibrational animation."
-msgstr ""
+msgstr "Rezgés-animáció indítása."
 
 #: qtplugins/spectra/spectra.cpp:39
 msgid "Stop the vibrational animation."
-msgstr ""
+msgstr "Rezgés-animáció leállítása."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
