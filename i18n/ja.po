@@ -2,13 +2,13 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-03 01:59+0000\n"
-"PO-Revision-Date: 2022-11-13 17:48+0000\n"
+"PO-Revision-Date: 2023-09-05 07:55+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1007,8 +1007,6 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:278
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
 msgstr "全てのファイル"
 
@@ -1416,26 +1414,18 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "非対称単位にセルを縮約"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "原子の混成を変更"
+msgstr "原子の位置を変更"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "原子の色を変更"
+msgstr "原子の位置を変更"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "原子のレイヤーを変更"
+msgstr "原子のラベルを変更"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
 msgstr "選択を変更"
 
@@ -1782,8 +1772,6 @@ msgstr "残基による色付け"
 
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
 msgstr "カラーマップを選択"
 
@@ -1898,7 +1886,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:29
 #, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "結合情報を読み込む"
+msgstr "結合次数を読み込む"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -1978,10 +1966,8 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add Center of Mass"
 msgid "Add Centroid"
-msgstr "重心を追加"
+msgstr "中心を追加"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
@@ -1993,10 +1979,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Control"
 msgid "Centroid"
-msgstr "コントロール"
+msgstr "中心"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -2172,7 +2156,7 @@ msgstr "元素記号"
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
 #, fuzzy
 msgid "Invalid atomic index."
-msgstr "不正な原子番号"
+msgstr "不正な原子のインデックス"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
 #, fuzzy
@@ -2312,10 +2296,8 @@ msgid "Clear"
 msgstr "クリア"
 
 #: qtplugins/copypaste/copypaste.cpp:36
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "貼り付け"
+msgstr "貼り付け (&P)"
 
 #: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
 msgid "&Edit"
@@ -2617,12 +2599,6 @@ msgid "Draw"
 msgstr "描画"
 
 #: qtplugins/editor/editor.cpp:74
-#, fuzzy
-#| msgid ""
-#| "Draw Tool (F8)\n"
-#| "\n"
-#| "Left Mouse: \tClick and Drag to create Atoms and Bonds\n"
-#| "Right Mouse: \tDelete Atom"
 msgid ""
 "Draw Tool\n"
 "\n"
@@ -2699,7 +2675,7 @@ msgstr "PDBから取得"
 #, fuzzy, qt-format
 #| msgid "Cannot read molecular file %1."
 msgid "Could not read the PDB molecule: %1"
-msgstr "ファイル ‘%1’ を読めません。"
+msgstr "ファイルPDB分子 ‘%1’ を読めません。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
@@ -2719,7 +2695,6 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
-#, fuzzy
 msgid "Network Download Failed"
 msgstr "ネットワークダウンロードに失敗しました"
 
@@ -2735,7 +2710,6 @@ msgid "Specified molecule could not be found: %1"
 msgstr "指定された分子が見つかりませんでした: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
-#, fuzzy
 msgid "Fetch from PDB"
 msgstr "PDBから取得"
 
@@ -2938,8 +2912,6 @@ msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "Insert DNA"
 msgid "InsertDNA"
 msgstr "DNAを挿入"
 
@@ -2971,7 +2943,6 @@ msgid "Insert Fragment"
 msgstr "フラグメントを挿入"
 
 #: qtplugins/insertfragment/insertfragment.h:35
-#, fuzzy
 msgid "InsertFragment"
 msgstr "フラグメントを挿入"
 
@@ -3032,7 +3003,6 @@ msgid ", "
 msgstr ""
 
 #: qtplugins/label/label.cpp:185
-#, fuzzy
 msgid "Atom Label:"
 msgstr "原子のラベル:"
 
@@ -3051,7 +3021,6 @@ msgid " & "
 msgstr ""
 
 #: qtplugins/label/label.cpp:216
-#, fuzzy
 msgid "Residue Label:"
 msgstr "残基のラベル:"
 
@@ -3060,8 +3029,6 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:29
-#, fuzzy
-#| msgid "Bond Labels"
 msgid "Edit Labels"
 msgstr "ラベルの編集"
 
@@ -3073,7 +3040,6 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:67
-#, fuzzy
 msgid "Create Label"
 msgstr "ラベルを作成"
 
@@ -3995,9 +3961,8 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:451
 #: qtplugins/propertytables/propertymodel.cpp:468
-#, fuzzy
 msgid "Atom 1"
-msgstr "原子 %1"
+msgstr "原子 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:453
 msgid "Vertex"
