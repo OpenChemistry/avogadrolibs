@@ -21,7 +21,7 @@ namespace Avogadro {
 namespace Rendering {
 class GroupNode;
 class GLRenderer;
-}
+} // namespace Rendering
 
 namespace QtOpenGL {
 class GLWidget;
@@ -91,6 +91,18 @@ public:
    */
   virtual void draw(Rendering::GroupNode& node);
 
+  /**
+   * Called by the app to handle a command registered by the plugin.
+   * (e.g., "renderMovie" or "drawAtom", etc.)
+   *
+   * The app will turn the command into a string and pass it to the tool.
+   * and any options will go from a JSON dictionary to a QVariantMap.
+   *
+   * @return true if the command was handled, false otherwise.
+   */
+  virtual bool handleCommand(const QString& command,
+                             const QVariantMap& options);
+
 signals:
   /**
    * Emitted when draw() needs to be called again due to updates.
@@ -102,6 +114,17 @@ signals:
    * redrawn.
    */
   void updateRequested();
+
+  /**
+   * Register a new command with the application. The command will be available
+   * through scripting (e.g., "renderMovie" or "generateSurface", etc.)
+   *
+   * @param command The name of the command to register.
+   * @param description A description of the command.
+   *
+   * @sa handleCommand
+   */
+  void registerCommand(QString command, QString description);
 
 public slots:
   /**
@@ -137,12 +160,12 @@ class AVOGADROQTGUI_EXPORT ToolPluginFactory
 public:
   virtual ~ToolPluginFactory();
 
-  virtual ToolPlugin* createInstance(QObject *parent = nullptr) = 0;
+  virtual ToolPlugin* createInstance(QObject* parent = nullptr) = 0;
   virtual QString identifier() const = 0;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ToolPluginFactory,
                     "org.openchemistry.avogadro.ToolPluginFactory")

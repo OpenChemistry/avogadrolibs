@@ -147,7 +147,7 @@ void vtkChartHistogram::SetHistogramInputData(vtkTable* table,
     this->GetAxis(vtkAxis::LEFT)->SetRange(0, 1.0);
     this->GetAxis(vtkAxis::BOTTOM)->SetRange(0, 255);
 
-    // Set visiblity of items
+    // Set visibility of items
     setItemsVisible(false);
 
     return;

@@ -6,18 +6,15 @@
 #include "applycolors.h"
 #include "ui_chargedialog.h"
 
-#include "tinycolormap.hpp"
-
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QStringList>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QInputDialog>
+#include <QStringList>
+#include <QAction>
+#include <QColorDialog>
+#include <QInputDialog>
 
 using namespace tinycolormap;
 

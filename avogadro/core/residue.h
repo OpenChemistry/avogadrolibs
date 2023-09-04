@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_RESIDUE_H
 #define AVOGADRO_CORE_RESIDUE_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include <map>
@@ -44,6 +46,7 @@ public:
     betaBridge = 5, // DSSP "B"
     turn = 6,       // DSSP "T"
     coil = 7,       // DSSP "C"
+    maybeBeta = -3, // potential beta strand
     undefined = -1
   };
 

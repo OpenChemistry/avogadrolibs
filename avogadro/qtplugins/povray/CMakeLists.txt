@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 avogadro_plugin(POVRay
   "Render the scene using POV-Ray."
   ExtensionPlugin
@@ -9,4 +7,4 @@ avogadro_plugin(POVRay
   ""
 )
 
-target_link_libraries(POVRay PRIVATE AvogadroRendering)
+target_link_libraries(POVRay PRIVATE Avogadro::Rendering)

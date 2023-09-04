@@ -9,7 +9,7 @@
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QSortFilterProxyModel>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QScrollBar>

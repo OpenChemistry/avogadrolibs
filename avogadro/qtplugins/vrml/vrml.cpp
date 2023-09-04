@@ -14,7 +14,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>

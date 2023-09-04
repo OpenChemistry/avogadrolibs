@@ -62,7 +62,7 @@ namespace QtPlugins {
  * - `outputFormat` indicates the format that the script can convert to from the
  *   implemented format by the `--read` command. Allowed values are `"cml"`,
  *   `"cjson"`, `"sdf"`, `"pdb"` or `"xyz"`. See the `--read` documentation for more detail.
- * - `operations` specifies the scripts capabilies. The array should contain
+ * - `operations` specifies the scripts capabilities. The array should contain
  *   `"read"` if the script implements the `--read` option, and/or `"write"` if
  *   `--write` is available.
  * - `identifier` is a unique identifier. The value must only be unique amongst

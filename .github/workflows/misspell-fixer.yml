@@ -1,6 +1,6 @@
 name: misspell-fixer
 
-on: [push]
+on: [workflow_dispatch]
 jobs:
   spelling-check:
     name: Spelling Check

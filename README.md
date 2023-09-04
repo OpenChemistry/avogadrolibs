@@ -1,6 +1,6 @@
 # ![Avogadro 2][Avogadro2Logo] Avogadro 2
 
-[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) [![Build Status](https://img.shields.io/github/workflow/status/openchemistry/avogadrolibs/CMake%20Build%20Matrix)](https://github.com/OpenChemistry/avogadrolibs/actions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat)](https://github.com/OpenChemistry/avogadrolibs/graphs/contributors)  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
+[![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) [![Build Status](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_cmake.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat)](https://github.com/OpenChemistry/avogadrolibs/graphs/contributors)  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
 
 ## Introduction
 
@@ -31,8 +31,6 @@ an open source community project. The Avogadro 1.x series currently has more
 features, and can be found [here][Avogadro1]. We are actively porting more
 features to the Avogadro 2 code base, and making regular releases to get
 feedback from the community.
-
-We are actively working to finish Avogadro 2.0 in 2022.
 
 ## Installing
 

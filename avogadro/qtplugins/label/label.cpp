@@ -95,6 +95,7 @@ struct LayerLabel : Core::LayerData
 
   std::string serialize() final
   {
+    /// FIXME: What is this attempting to do? It causes compiler warnings.
     std::string aux = (const char*)atomOptions;
     std::string aux2 = (const char*)residueOptions;
     return aux + " " + aux2 + " " + std::to_string(radiusScalar) + " " +
@@ -166,8 +167,8 @@ struct LayerLabel : Core::LayerData
             val |= LabelOptions::Name;
           }
           if (option & LabelOptions::Ordinal) {
-            text << ((text.size() == 0) ? QObject::tr("Element & Ordinal")
-                                        : QObject::tr("El.&Or."));
+            text << ((text.size() == 0) ? QObject::tr("Element & Number")
+                                        : QObject::tr("El.&No."));
             val |= LabelOptions::Ordinal;
           }
           QString join = QObject::tr(", ");
@@ -179,7 +180,7 @@ struct LayerLabel : Core::LayerData
       }
       QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(atomLabelType(int)));
-      int index = atom->findData(int(atomOptions));
+
       atom->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Atom Label:"), atom);
 
@@ -210,7 +211,7 @@ struct LayerLabel : Core::LayerData
       }
       QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(residueLabelType(int)));
-      index = residue->findData(int(residueOptions));
+
       residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
 
@@ -313,7 +314,7 @@ void Label::processAtom(const Core::Molecule& molecule,
       text += (text == "" ? "" : " / ") + atom.label();
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Name) {
       text +=

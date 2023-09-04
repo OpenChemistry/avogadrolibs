@@ -176,12 +176,10 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
 
-    auto& interface1 =
-      m_layerManager.getSetting<LayerBallAndStick>(
-        m_layerManager.getLayerID(bond.atom1().index()));
-    auto& interface2 =
-      m_layerManager.getSetting<LayerBallAndStick>(
-        m_layerManager.getLayerID(bond.atom2().index()));
+    auto& interface1 = m_layerManager.getSetting<LayerBallAndStick>(
+      m_layerManager.getLayerID(bond.atom1().index()));
+    auto& interface2 = m_layerManager.getSetting<LayerBallAndStick>(
+      m_layerManager.getLayerID(bond.atom2().index()));
 
     if (!interface1.showHydrogens && !interface2.showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
@@ -198,24 +196,35 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     Vector3f bondVector = pos2 - pos1;
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
+
     switch (interface1.multiBonds || interface2.multiBonds ? bond.order() : 1) {
       case 3: {
-        Vector3f delta = bondVector.unitOrthogonal() * (2.0f * bondRadius);
-        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
-                               color2, i);
-        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius, color1,
-                               color2, i);
+        Vector3f delta = bondVector.unitOrthogonal();
+        // Rotate 45 degrees around the bond vector.
+        Eigen::Quaternionf q;
+        q = Eigen::AngleAxisf(45.0f * DEG_TO_RAD_F, bondVector);
+        delta = q * delta * 2.0f * bondRadius;
+        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.15,
+                               color1, color2, i);
+        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.15,
+                               color1, color2, i);
+        // This relies upon the single bond case below for the third cylinder.
+        [[fallthrough]];
       }
       default:
       case 1:
         cylinders->addCylinder(pos1, pos2, m_bondRadius, color1, color2, i);
         break;
       case 2: {
-        Vector3f delta = bondVector.unitOrthogonal() * bondRadius;
-        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius, color1,
-                               color2, i);
-        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius, color1,
-                               color2, i);
+        Vector3f delta = bondVector.unitOrthogonal();
+        // Rotate 45 degrees around the bond vector.
+        Eigen::Quaternionf q;
+        q = Eigen::AngleAxisf(45.0f * DEG_TO_RAD_F, bondVector);
+        delta = q * delta * bondRadius;
+        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.3,
+                               color1, color2, i);
+        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.3,
+                               color1, color2, i);
       }
     }
   }
@@ -278,4 +287,4 @@ void BallAndStick::showHydrogens(bool show)
   settings.setValue("ballandstick/showHydrogens", show);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

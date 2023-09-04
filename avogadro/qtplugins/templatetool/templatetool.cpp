@@ -29,12 +29,11 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
-
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
@@ -203,7 +202,7 @@ QUndoCommand *TemplateTool::keyPressEvent(QKeyEvent *e)
   return NULL;
 }
 
-void TemplateTool::draw(Rendering::GroupNode &node)
+void TemplateTool::draw(Rendering::GroupNode&)
 {
 }
 
@@ -351,13 +350,13 @@ Matrix3 applyKabsch(std::vector<Vector3> templatePoints, std::vector<Vector3> mo
   return r;
 }
 
-void TemplateTool::atomLeftClick(QMouseEvent *e)
+void TemplateTool::atomLeftClick(QMouseEvent*)
 {
   size_t selectedIndex = m_clickedObject.index;
   if (m_molecule->atom(selectedIndex).isValid()
   && m_molecule->atomicNumber(selectedIndex) == 1) {
     m_toolWidget->selectedUIDs().push_back(m_molecule->atomUniqueId(selectedIndex));
-    if (m_toolWidget->selectedUIDs().size() != m_toolWidget->denticity())
+    if (static_cast<int>(m_toolWidget->selectedUIDs().size()) != m_toolWidget->denticity())
       return;
   
     QFile templ(":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson");
@@ -507,7 +506,7 @@ void TemplateTool::atomRightClick(QMouseEvent *e)
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
 }
 
-void TemplateTool::atomLeftDrag(QMouseEvent *e)
+void TemplateTool::atomLeftDrag(QMouseEvent*)
 {
   // by default, don't allow drags for bonds
   return;

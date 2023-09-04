@@ -32,12 +32,13 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
+
+#include <QDebug>
 
 #include <limits>
 
@@ -261,8 +262,8 @@ void Editor::draw(Rendering::GroupNode& node)
   Vector3ub color(64, 255, 220);
   if (m_renderer) {
     auto backgroundColor = m_renderer->scene().backgroundColor();
-    color = contrastingColor(Vector3ub(backgroundColor[0], backgroundColor[1],
-                             backgroundColor[2]));
+    color = contrastingColor(
+      Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
   }
 
   TextProperties overlayTProp;
@@ -407,7 +408,36 @@ void Editor::bondLeftClick(QMouseEvent* e)
 void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
+  // check to see if we need to adjust hydrogens
+  Core::Array<Index> bondedAtoms;
+  if (m_toolWidget->adjustHydrogens()) {
+    // before we remove the atom, we need to delete any H atoms
+    // that are bonded to it
+    RWAtom atom = m_molecule->atom(m_clickedObject.index);
+    if (atom.isValid()) {
+      // get the list of bonded atoms
+      Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
+      for (const RWBond& bond : atomBonds) {
+        RWAtom bondedAtom = bond.getOtherAtom(atom);
+        if (bondedAtom.atomicNumber() == Core::Hydrogen) {
+          // remove the H atom
+          m_molecule->removeAtom(bondedAtom.index());
+        } else {
+          // save the atom to adjust after we remove the target
+          bondedAtoms.push_back(m_molecule->atomUniqueId(bondedAtom));
+        }
+      }
+    }
+  }
   m_molecule->removeAtom(m_clickedObject.index);
+
+  // okay, now adjust the valence on the bonded atoms
+  // (e.g., add back some hydrogens)
+  for (Index atomIndex : bondedAtoms) {
+    RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
+    QtGui::HydrogenTools::adjustHydrogens(atom);
+  }
+
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
 }
 

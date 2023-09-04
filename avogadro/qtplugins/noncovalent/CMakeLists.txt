@@ -6,4 +6,4 @@ avogadro_plugin(NonCovalent
   noncovalent.cpp
   "")
 
-target_link_libraries(NonCovalent PRIVATE AvogadroRendering)
+target_link_libraries(NonCovalent PRIVATE Avogadro::Rendering)

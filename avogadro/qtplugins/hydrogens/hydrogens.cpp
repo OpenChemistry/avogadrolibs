@@ -9,7 +9,7 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <QtCore/QStringList>
 

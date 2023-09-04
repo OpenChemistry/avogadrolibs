@@ -10,9 +10,8 @@
 #include <avogadro/rendering/primitive.h>
 #include <avogadro/rendering/textlabel3d.h>
 
-#include <QRegExp>
-#include <QtGui/QKeyEvent>
-#include <QtWidgets/QAction>
+#include <QKeyEvent>
+#include <QAction>
 
 namespace Avogadro::QtPlugins {
 
@@ -36,12 +35,12 @@ LabelEditor::LabelEditor(QObject* parent_)
 
 LabelEditor::~LabelEditor() {}
 
-QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent* e)
+QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent*)
 {
   return nullptr;
 }
 
-QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent* e)
+QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent*)
 {
   return nullptr;
 }

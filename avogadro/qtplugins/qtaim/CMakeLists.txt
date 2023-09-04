@@ -20,7 +20,7 @@ avogadro_plugin(QTAIMExtension
 
 target_link_libraries(QTAIMExtension
   PRIVATE
-    Qt5::Concurrent)
+    Qt::Concurrent)
 
 # The settings widget is not built -- its settings weren't actually used by the
 # engine in Avogadro 1. The sources are kept for later if we decide to use it.
@@ -34,4 +34,4 @@ avogadro_plugin(QTAIMScenePlugin
 
 target_link_libraries(QTAIMScenePlugin
   PRIVATE
-    AvogadroRendering)
+    Avogadro::Rendering)

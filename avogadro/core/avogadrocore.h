@@ -6,7 +6,6 @@
 #ifndef AVOGADRO_CORE_H
 #define AVOGADRO_CORE_H
 
-#include "avogadrocoreexport.h"
 #include <cstddef>
 #include <limits>
 

@@ -59,7 +59,7 @@ float arrowFunction(float t)
   const float maxPoint = 0.7f;
   if (t < maxPoint) {
     // normalize t using max point and scale it so that adding will be between
-    // [minimunRadius, 1]
+    // [minimumRadius, 1]
     result = t / maxPoint;
   } else {
     // starting with 1 and go decreassing

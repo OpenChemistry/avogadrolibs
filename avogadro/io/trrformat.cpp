@@ -400,7 +400,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   return true;
 }
 
-bool TrrFormat::write(std::ostream& outStream, const Core::Molecule& mol)
+bool TrrFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }

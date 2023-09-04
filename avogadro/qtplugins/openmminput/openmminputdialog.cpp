@@ -956,7 +956,7 @@ QString OpenMMInputDialog::generateInputDeck()
   scriptStream << "nonbondedMethod="
                << "app." << getNonBondedType(m_nonBondedType) << ",";
   if (m_nonBondedCutoff > 0) {
-    scriptStream << " nonbondedCutoff=" << fixed << qSetRealNumberPrecision(4)
+    scriptStream << " nonbondedCutoff=" << Qt::fixed << qSetRealNumberPrecision(4)
                  << m_nonBondedCutoff << "*unit.nanometers,";
   }
   if (m_constraintType == None) {
@@ -967,7 +967,7 @@ QString OpenMMInputDialog::generateInputDeck()
   }
   scriptStream << ", rigidWater=" << getRigidWater(m_rigidWater);
   if (m_nonBondedType == Ewald || m_nonBondedType == PME) {
-    scriptStream << ", ewaldErrorTolerance=" << fixed
+    scriptStream << ", ewaldErrorTolerance=" << Qt::fixed
                  << qSetRealNumberPrecision(5) << m_ewaldTolerance;
   }
   scriptStream << ")\n";

@@ -15,6 +15,8 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
+#include <QRegExp>
+
 class QJsonDocument;
 class QProcess;
 class QTextCharFormat;
@@ -191,7 +193,7 @@ namespace MoleQueue {
 }
 ~~~
  * This will result in a QCheckBox in the dynamically generated GUI, with
- * the inital check state shown in `default`.
+ * the initial check state shown in `default`.
  *
  * Special Parameters
  * ------------------

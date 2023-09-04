@@ -25,7 +25,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <queue>
 #include <set>
@@ -254,7 +254,7 @@ void SelectionTool::applyLayer(int layer)
 
   // qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " <<
   // m_layerManager.layerCount();
-  if (layer >= m_layerManager.layerCount()) {
+  if (layer >= static_cast<int>(m_layerManager.layerCount())) {
     // add a new layer
     auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
     QtGui::RWLayerManager rwLayerManager;
@@ -311,7 +311,7 @@ bool SelectionTool::toggleAtom(const Index& atom)
 
 bool SelectionTool::shouldClean(QMouseEvent* e)
 {
-  // acumulate the selection if shift or ctrl are presset
+  // accumulate the selection if shift or ctrl are presset
   if (!(e->modifiers() & Qt::ControlModifier) &&
       !(e->modifiers() & Qt::ShiftModifier)) {
     clearAtoms();

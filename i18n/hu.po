@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
-# ovari <ovari123@zoho.com>, 2021, 2022.
+# ovari <ovari123@zoho.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-08-28 03:35+0000\n"
-"PO-Revision-Date: 2022-08-22 16:48+0000\n"
+"POT-Creation-Date: 2023-06-18 02:38+0000\n"
+"PO-Revision-Date: 2023-06-30 09:52+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -506,17 +506,17 @@ msgstr "Belső hiba."
 msgid "Unable to resolve program selection. This is a bug."
 msgstr "A kijelölt program feloldása nem sikerült. Ez egy hiba."
 
-#: qtgui/backgroundfileformat.cpp:28 qtgui/backgroundfileformat.cpp:53
+#: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
 msgstr ""
 "Nincs molekula beállítva a „BackgroundFileFormat” (HáttérFájlformátum) "
 "fájlban!"
 
-#: qtgui/backgroundfileformat.cpp:31 qtgui/backgroundfileformat.cpp:56
+#: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
 msgstr "Nincs Io::FájlFormátum beállítva a HáttérFájlFormátum-ban!"
 
-#: qtgui/backgroundfileformat.cpp:34 qtgui/backgroundfileformat.cpp:59
+#: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
 msgstr ""
 "Nincs fájlnév beállítva a „BackgroundFileFormat” (HáttérFájlformátum) "
@@ -554,7 +554,7 @@ msgstr "Bór"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1759
+#: qtgui/elementtranslator.cpp:34:1708
 msgid "Carbon"
 msgstr "Szén"
 
@@ -636,13 +636,13 @@ msgstr "Mangán"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1762
+#: qtgui/elementtranslator.cpp:94:1711
 msgid "Iron"
 msgstr "Vas"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1765
+#: qtgui/elementtranslator.cpp:97:1714
 msgid "Cobalt"
 msgstr "Kobalt"
 
@@ -1076,16 +1076,12 @@ msgstr ""
 "használni?"
 
 #: qtgui/fileformatdialog.cpp:278
-#, fuzzy
-#| msgid "All files (*);;"
 msgid "All files"
-msgstr "Minden fájl (*);;"
+msgstr "Minden fájl"
 
 #: qtgui/fileformatdialog.cpp:281
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Minden támogatott formátum (%1);;"
+msgstr "Minden támogatott formátum"
 
 #: qtgui/interfacescript.cpp:222
 #, qt-format
@@ -1107,91 +1103,91 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr "Hiba történt a molekulaábrázolás karakterláncba írása során: %1"
 
-#: qtgui/jsonwidget.cpp:53
+#: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
 msgstr "Hiányzik a(z) „userOptions” (felhasználóiBeállítások)."
 
-#: qtgui/jsonwidget.cpp:84
+#: qtgui/jsonwidget.cpp:86
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "A(z) „%1” beállítás nem hivatkozik objektumra."
 
-#: qtgui/jsonwidget.cpp:91
+#: qtgui/jsonwidget.cpp:93
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "A „type” (típus) nem karakterlánc a(z) „%1” beállításhoz."
 
-#: qtgui/jsonwidget.cpp:98
+#: qtgui/jsonwidget.cpp:100
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "„%1” beállítás nem található."
 
-#: qtgui/jsonwidget.cpp:152
+#: qtgui/jsonwidget.cpp:154
 #, qt-format
 msgid "Tab %1"
 msgstr "Lap: %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:175:666
+#: qtgui/jsonwidget.cpp:177:627
 msgid "Title"
 msgstr "Cím"
 
-#: qtgui/jsonwidget.cpp:179
+#: qtgui/jsonwidget.cpp:181
 msgid "Filename Base"
 msgstr "A fájlnév alapja"
 
-#: qtgui/jsonwidget.cpp:184
+#: qtgui/jsonwidget.cpp:186
 msgid "Processor Cores"
 msgstr "Processzormagok"
 
-#: qtgui/jsonwidget.cpp:189
+#: qtgui/jsonwidget.cpp:191
 msgid "Calculation Type"
 msgstr "Számítás típusa"
 
-#: qtgui/jsonwidget.cpp:193
+#: qtgui/jsonwidget.cpp:195
 msgid "Theory"
 msgstr "Elmélet"
 
-#: qtgui/jsonwidget.cpp:193
+#: qtgui/jsonwidget.cpp:195
 msgid "Basis"
 msgstr "Bázis"
 
-#: qtgui/jsonwidget.cpp:198 qtgui/jsonwidget.cpp:202
+#: qtgui/jsonwidget.cpp:200 qtgui/jsonwidget.cpp:204
 msgid "Charge"
 msgstr "Töltés"
 
-#: qtgui/jsonwidget.cpp:199 qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:201 qtgui/jsonwidget.cpp:206
 msgid "Multiplicity"
 msgstr "Sokszínűség"
 
-#: qtgui/jsonwidget.cpp:523
+#: qtgui/jsonwidget.cpp:525
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Hiba történt: az értéknek objektumnak kell lennie a(z) „%1” kulcsnál."
 
-#: qtgui/jsonwidget.cpp:554
+#: qtgui/jsonwidget.cpp:556
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Ismeretlen beállítási típus „%1” a(z) „%2” beállításnál."
 
-#: qtgui/jsonwidget.cpp:563 qtgui/jsonwidget.cpp:598 qtgui/jsonwidget.cpp:620
-#: qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:663 qtgui/jsonwidget.cpp:684
+#: qtgui/jsonwidget.cpp:565 qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:622
+#: qtgui/jsonwidget.cpp:643 qtgui/jsonwidget.cpp:665 qtgui/jsonwidget.cpp:686
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Hibás "
 "vezérlői típus."
 
-#: qtgui/jsonwidget.cpp:570 qtgui/jsonwidget.cpp:605 qtgui/jsonwidget.cpp:627
-#: qtgui/jsonwidget.cpp:648 qtgui/jsonwidget.cpp:670 qtgui/jsonwidget.cpp:691
+#: qtgui/jsonwidget.cpp:572 qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:629
+#: qtgui/jsonwidget.cpp:650 qtgui/jsonwidget.cpp:672 qtgui/jsonwidget.cpp:693
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Hibás "
 "alapértelmezett érték:"
 
-#: qtgui/jsonwidget.cpp:584
+#: qtgui/jsonwidget.cpp:586
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1200,14 +1196,14 @@ msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Nem "
 "található érvényes kombinált bejegyzés tárgymutató az értékből:"
 
-#: qtgui/jsonwidget.cpp:752
+#: qtgui/jsonwidget.cpp:754
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 "Nem kezelt vezérlő a „collectOptions” (Beállítások gyűjtése) menüben a(z) "
 "„%1” beállításhoz."
 
-#: qtgui/jsonwidget.cpp:794 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:796 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[nincs molekula]"
@@ -1256,21 +1252,26 @@ msgstr "Hálók"
 msgid "Non-Covalent"
 msgstr "Nem kovalens kötések"
 
-#: qtgui/layermodel.cpp:153 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:153
+msgctxt "quantum theory of atoms in molecules"
+msgid "QTAIM"
+msgstr "Molekulák atomjainak kvantumelmélete"
+
+#: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr "Szimmetria elemek"
 
-#: qtgui/layermodel.cpp:155 qtplugins/surfaces/surfacedialog.cpp:26
+#: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:26
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "Van der Waals"
 
-#: qtgui/layermodel.cpp:157 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "Van der Waals (környezeti elzáródás)"
 
-#: qtgui/layermodel.cpp:159 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Drótváz"
 
@@ -1323,56 +1324,56 @@ msgstr ""
 "Kimenet:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:236
+#: qtgui/pythonscript.cpp:235
 msgid "Script failed to start."
 msgstr "A parancsfájl indítása nem sikerült."
 
-#: qtgui/pythonscript.cpp:239
+#: qtgui/pythonscript.cpp:238
 msgid "Script crashed."
 msgstr "A parancsfájl összeomlott."
 
-#: qtgui/pythonscript.cpp:242
+#: qtgui/pythonscript.cpp:241
 msgid "Script timed out."
 msgstr "A parancsfájl ideje lejárt."
 
-#: qtgui/pythonscript.cpp:245
+#: qtgui/pythonscript.cpp:244
 msgid "Read error."
 msgstr "Olvasási hiba."
 
-#: qtgui/pythonscript.cpp:248
+#: qtgui/pythonscript.cpp:247
 msgid "Write error."
 msgstr "Írási hiba."
 
-#: qtgui/pythonscript.cpp:252
+#: qtgui/pythonscript.cpp:251
 msgid "Unknown error."
 msgstr "Ismeretlen hiba."
 
-#: qtgui/rwlayermanager.cpp:33 qtgui/rwlayermanager.cpp:106
-#: qtgui/rwlayermanager.cpp:132
+#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:105
+#: qtgui/rwlayermanager.cpp:131
 msgid "Modify Layers"
 msgstr "Rétegek módosítása"
 
-#: qtgui/rwlayermanager.cpp:195
+#: qtgui/rwlayermanager.cpp:194
 msgid "Remove Layer"
 msgstr "Réteg eltávolítása"
 
-#: qtgui/rwlayermanager.cpp:202
+#: qtgui/rwlayermanager.cpp:201
 msgid "Remove Layer Info"
 msgstr "Rétegadatok eltávolítása"
 
-#: qtgui/rwlayermanager.cpp:211
+#: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
 msgstr "Réteg hozzáadása"
 
-#: qtgui/rwlayermanager.cpp:214
+#: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer Info"
 msgstr "Rétegadatok hozzáadása"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:221 qtgui/rwlayermanager.cpp:224
-#: qtplugins/select/select.cpp:528
-#: qtplugins/selectiontool/selectiontool.cpp:252:1579
+#: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
+#: qtplugins/select/select.cpp:527
+#: qtplugins/selectiontool/selectiontool.cpp:252:1528
 msgid "Change Layer"
 msgstr "Réteg módosítása"
 
@@ -1381,7 +1382,7 @@ msgid "Add Atom"
 msgstr "Atom hozzáadása"
 
 #: qtgui/rwmolecule.cpp:69 qtgui/rwmolecule.cpp:84
-#: qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:123
 msgid "Remove Atom"
 msgstr "Atom eltávolítása"
 
@@ -1391,7 +1392,7 @@ msgstr "Atomok törlése"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:486
+#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:447
 msgid "Adjust Hydrogens"
 msgstr "Hidrogénatomok beállítása"
 
@@ -1520,21 +1521,22 @@ msgstr "Kijelölés módosítása"
 msgid "Modify Molecule"
 msgstr "Molekula módosítása"
 
-#: qtplugins/3dmol/3dmol.cpp:42
+#: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
 msgstr "3Dmol HTML-blokk."
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/fetchpdb/fetchpdb.cpp:41
-#: qtplugins/importpqr/importpqr.cpp:47
+#: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
+#: qtplugins/importpqr/importpqr.cpp:43
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
 msgstr "&Fájl"
 
-#: qtplugins/3dmol/3dmol.cpp:52 qtplugins/povray/povray.cpp:46
-#: qtplugins/svg/svg.cpp:45 qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:51 qtplugins/ply/ply.cpp:46
+#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
+#: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
 msgstr "&Exportálás"
 
@@ -1626,15 +1628,15 @@ msgstr "PQR-fájlok (*.pqr)"
 #: qtplugins/gamessinput/gamessinput.cpp:88
 #: qtplugins/insertfragment/insertfragment.cpp:107
 #: qtplugins/lammpsinput/lammpsinput.cpp:64
-#: qtplugins/openbabel/openbabel.cpp:197 qtplugins/openbabel/openbabel.cpp:206
-#: qtplugins/openbabel/openbabel.cpp:216 qtplugins/openbabel/openbabel.cpp:353
-#: qtplugins/openbabel/openbabel.cpp:379 qtplugins/openbabel/openbabel.cpp:388
-#: qtplugins/openbabel/openbabel.cpp:442 qtplugins/openbabel/openbabel.cpp:492
-#: qtplugins/openbabel/openbabel.cpp:505 qtplugins/openbabel/openbabel.cpp:530
-#: qtplugins/openbabel/openbabel.cpp:544 qtplugins/openbabel/openbabel.cpp:573
-#: qtplugins/openbabel/openbabel.cpp:585 qtplugins/openbabel/openbabel.cpp:631
-#: qtplugins/openbabel/openbabel.cpp:681 qtplugins/openbabel/openbabel.cpp:723
-#: qtplugins/openbabel/openbabel.cpp:755
+#: qtplugins/openbabel/openbabel.cpp:204 qtplugins/openbabel/openbabel.cpp:213
+#: qtplugins/openbabel/openbabel.cpp:223 qtplugins/openbabel/openbabel.cpp:360
+#: qtplugins/openbabel/openbabel.cpp:386 qtplugins/openbabel/openbabel.cpp:395
+#: qtplugins/openbabel/openbabel.cpp:449 qtplugins/openbabel/openbabel.cpp:499
+#: qtplugins/openbabel/openbabel.cpp:512 qtplugins/openbabel/openbabel.cpp:537
+#: qtplugins/openbabel/openbabel.cpp:551 qtplugins/openbabel/openbabel.cpp:580
+#: qtplugins/openbabel/openbabel.cpp:592 qtplugins/openbabel/openbabel.cpp:638
+#: qtplugins/openbabel/openbabel.cpp:688 qtplugins/openbabel/openbabel.cpp:730
+#: qtplugins/openbabel/openbabel.cpp:762
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/quantuminput/quantuminput.cpp:111
 msgid "Error"
@@ -1659,8 +1661,7 @@ msgstr "ABPS bemeneti fájlok (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:64:144
+#: qtplugins/apbs/apbsdialog.cpp:178:144
 msgid "Success"
 msgstr "Sikerült"
 
@@ -1669,105 +1670,105 @@ msgstr "Sikerült"
 msgid "Input file written to '%1'"
 msgstr "Bemeneti fájl mentve ide: %1"
 
-#: qtplugins/applycolors/applycolors.cpp:46
-#: qtplugins/applycolors/applycolors.cpp:67
+#: qtplugins/applycolors/applycolors.cpp:43
+#: qtplugins/applycolors/applycolors.cpp:64
 msgid "By Custom Color…"
 msgstr "Egyedi szín szerint…"
 
-#: qtplugins/applycolors/applycolors.cpp:51
+#: qtplugins/applycolors/applycolors.cpp:48
 msgid "By Atomic Index"
 msgstr "Atomi index szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:56
+#: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance"
 msgstr "Távolság szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:61
+#: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
 msgstr "Elem szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:72
+#: qtplugins/applycolors/applycolors.cpp:69
 msgid "By Chain"
 msgstr "Lánc szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:77
+#: qtplugins/applycolors/applycolors.cpp:74
 msgid "By Partial Charge…"
 msgstr "Részleges feltöltéssel…"
 
-#: qtplugins/applycolors/applycolors.cpp:82
+#: qtplugins/applycolors/applycolors.cpp:79
 msgid "By Secondary Structure"
 msgstr "Másodlagos szerkezet szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:87
+#: qtplugins/applycolors/applycolors.cpp:84
 msgid "By Amino Acid"
 msgstr "Aminosav szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:92
+#: qtplugins/applycolors/applycolors.cpp:89
 msgid "By Shapely Scheme"
 msgstr "Formásséma szerint"
 
-#: qtplugins/applycolors/applycolors.cpp:107
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:552
+#: qtplugins/applycolors/applycolors.cpp:104
+#: qtplugins/applycolors/applycolors.cpp:207
+#: qtplugins/applycolors/applycolors.cpp:299
+#: qtplugins/surfaces/surfaces.cpp:554
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
-#: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:554
+#: qtplugins/applycolors/applycolors.cpp:106
+#: qtplugins/surfaces/surfaces.cpp:556
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Hőség"
 
-#: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:556
+#: qtplugins/applycolors/applycolors.cpp:108
+#: qtplugins/surfaces/surfaces.cpp:558
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Forró"
 
-#: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:558
+#: qtplugins/applycolors/applycolors.cpp:110
+#: qtplugins/surfaces/surfaces.cpp:560
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Szürke"
 
-#: qtplugins/applycolors/applycolors.cpp:115
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:560
+#: qtplugins/applycolors/applycolors.cpp:112
+#: qtplugins/applycolors/applycolors.cpp:207
+#: qtplugins/applycolors/applycolors.cpp:299
+#: qtplugins/surfaces/surfaces.cpp:562
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
 
-#: qtplugins/applycolors/applycolors.cpp:117
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:303
-#: qtplugins/surfaces/surfaces.cpp:562
+#: qtplugins/applycolors/applycolors.cpp:114
+#: qtplugins/applycolors/applycolors.cpp:208
+#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/surfaces/surfaces.cpp:564
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Pokol"
 
-#: qtplugins/applycolors/applycolors.cpp:119
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:303
-#: qtplugins/surfaces/surfaces.cpp:564
+#: qtplugins/applycolors/applycolors.cpp:116
+#: qtplugins/applycolors/applycolors.cpp:208
+#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/surfaces/surfaces.cpp:566
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plazma"
 
-#: qtplugins/applycolors/applycolors.cpp:121
-#: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:304
-#: qtplugins/surfaces/surfaces.cpp:566
+#: qtplugins/applycolors/applycolors.cpp:118
+#: qtplugins/applycolors/applycolors.cpp:209
+#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/surfaces/surfaces.cpp:568
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
 
-#: qtplugins/applycolors/applycolors.cpp:123
-#: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:304
-#: qtplugins/surfaces/surfaces.cpp:568
+#: qtplugins/applycolors/applycolors.cpp:120
+#: qtplugins/applycolors/applycolors.cpp:209
+#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/surfaces/surfaces.cpp:570
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -1776,10 +1777,10 @@ msgstr "Cividis"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:125
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305
-#: qtplugins/surfaces/surfaces.cpp:570:171 rc.cpp:1627
+#: qtplugins/applycolors/applycolors.cpp:122
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:302
+#: qtplugins/surfaces/surfaces.cpp:572:171 rc.cpp:1576
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Kísérteties"
@@ -1788,8 +1789,8 @@ msgstr "Kísérteties"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:572:168 rc.cpp:1624
+#: qtplugins/applycolors/applycolors.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:574:168 rc.cpp:1573
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Hideg meleg"
@@ -1798,8 +1799,8 @@ msgstr "Hideg meleg"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:574:162 rc.cpp:1618
+#: qtplugins/applycolors/applycolors.cpp:126
+#: qtplugins/surfaces/surfaces.cpp:576:162 rc.cpp:1567
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Egyensúly"
@@ -1808,8 +1809,8 @@ msgstr "Egyensúly"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:171
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:576:165 rc.cpp:1621
+#: qtplugins/applycolors/applycolors.cpp:128
+#: qtplugins/surfaces/surfaces.cpp:578:165 rc.cpp:1570
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Kék-sötétvörös"
@@ -1818,35 +1819,35 @@ msgstr "Kék-sötétvörös"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:133
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305
-#: qtplugins/surfaces/surfaces.cpp:578:174 rc.cpp:1630
+#: qtplugins/applycolors/applycolors.cpp:130
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:302
+#: qtplugins/surfaces/surfaces.cpp:580:174 rc.cpp:1579
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbó"
 
-#: qtplugins/applycolors/applycolors.cpp:141
+#: qtplugins/applycolors/applycolors.cpp:138
 msgid "Apply color schemes to atoms and residues."
 msgstr "Színsémák alkalmazása az atomokra és a maradékokra."
 
-#: qtplugins/applycolors/applycolors.cpp:152
-#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:40
+#: qtplugins/applycolors/applycolors.cpp:149
+#: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
-#: qtplugins/resetview/resetview.cpp:56
+#: qtplugins/resetview/resetview.cpp:57
 msgid "&View"
 msgstr "&Nézet"
 
-#: qtplugins/applycolors/applycolors.cpp:152
+#: qtplugins/applycolors/applycolors.cpp:149
 msgid "Color Atoms"
 msgstr "Atomok színezése"
 
-#: qtplugins/applycolors/applycolors.cpp:154
+#: qtplugins/applycolors/applycolors.cpp:151
 msgid "Color Residues"
 msgstr "Maradék színezése"
 
-#: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:308
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:305
 msgid "Select Colormap"
 msgstr "Színleképezés kijelölése"
 
@@ -1854,8 +1855,8 @@ msgstr "Színleképezés kijelölése"
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:150
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:308:159 rc.cpp:1615
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:305:159 rc.cpp:1564
 msgid "Colormap:"
 msgstr "Színleképezés:"
 
@@ -1919,17 +1920,17 @@ msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:776
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:864
-#: qtplugins/measuretool/measuretool.cpp:200
-#: qtplugins/measuretool/measuretool.cpp:208
-#: qtplugins/measuretool/measuretool.cpp:209
+#: qtplugins/measuretool/measuretool.cpp:203
+#: qtplugins/measuretool/measuretool.cpp:211
+#: qtplugins/measuretool/measuretool.cpp:212
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:798
-#: qtplugins/editor/editor.cpp:259 qtplugins/measuretool/measuretool.cpp:216
-#: qtplugins/measuretool/measuretool.cpp:217
-#: qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/editor/editor.cpp:260 qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/measuretool/measuretool.cpp:220
+#: qtplugins/measuretool/measuretool.cpp:222
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
@@ -1961,7 +1962,11 @@ msgstr "Kötések eltávolítása"
 msgid "Configure Bonding…"
 msgstr "Kötési beállítások…"
 
-#: qtplugins/bonding/bonding.cpp:58 qtplugins/centroid/centroid.cpp:45
+#: qtplugins/bonding/bonding.cpp:32
+msgid "Bond Selected Atoms"
+msgstr "Kijelölt atomok kötése"
+
+#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -1970,8 +1975,8 @@ msgstr "Kötési beállítások…"
 msgid "&Build"
 msgstr "Fe&lépítés"
 
-#: qtplugins/bonding/bonding.cpp:58
-#: qtplugins/propertytables/propertymodel.cpp:416
+#: qtplugins/bonding/bonding.cpp:63
+#: qtplugins/propertytables/propertymodel.cpp:422
 msgid "Bond"
 msgstr "Kötés"
 
@@ -2043,76 +2048,6 @@ msgstr "Súlypont"
 msgid "Add centroids and center-of-mass."
 msgstr "Súlypontok és tömegközéppont hozzáadása."
 
-#: qtplugins/clientserver/clientserver.cpp:62
-msgid "Client server operations."
-msgstr "Ügyfél/kiszolgáló műveletek."
-
-#: qtplugins/clientserver/clientserver.cpp:72
-#: qtplugins/coloropacitymap/coloropacitymap.cpp:85
-#: qtplugins/commandscripts/command.cpp:64
-#: qtplugins/commandscripts/command.cpp:72 qtplugins/mongochem/mongochem.cpp:33
-#: qtplugins/openbabel/openbabel.cpp:105
-#: qtplugins/plugindownloader/plugindownloader.cpp:40
-#: qtplugins/quantuminput/quantuminput.cpp:69 qtplugins/yaehmop/yaehmop.cpp:110
-msgid "&Extensions"
-msgstr "Ki&terjesztések"
-
-#: qtplugins/clientserver/clientserver.cpp:72
-msgid "S&erver"
-msgstr "&Kiszolgáló"
-
-#: qtplugins/clientserver/clientserver.cpp:148
-msgid "Connection failed"
-msgstr "A kapcsolódás sikertelen"
-
-#: qtplugins/clientserver/clientserver.cpp:149
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:57
-#, qt-format
-msgid "The connection to %2:%3 failed: connection refused."
-msgstr "A(z) %2 kapcsolat:%3 nem sikerült:kapcsolódás elutasítva."
-
-#: qtplugins/clientserver/clientserver.cpp:207
-#: qtplugins/clientserver/clientserver.cpp:218
-msgid "Remote service error"
-msgstr "Távoli szolgáltatás hiba"
-
-#: qtplugins/clientserver/clientserver.cpp:219
-#, qt-format
-msgid "Connection failed with: %1"
-msgstr "A kapcsolat nem sikerült a következővel: %1"
-
-#: qtplugins/clientserver/clientserver.cpp:241
-#, qt-format
-msgid "clientServer/%1:%2/lastOpenDir"
-msgstr "ügyfélKiszolgáló/%1:%2/utoljáraMegnyitottKönyvtár"
-
-#: qtplugins/clientserver/clientserver.cpp:253
-#, qt-format
-msgid "%1 ("
-msgstr "%1 ("
-
-#: qtplugins/clientserver/clientserver.cpp:255
-#, qt-format
-msgid "*.%1"
-msgstr "*.%1"
-
-#: qtplugins/clientserver/clientserver.h:45
-msgid "Client server"
-msgstr "Ügyfél/kiszolgáló"
-
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:56
-msgid "Connection refused"
-msgstr "Kapcsolódás elutasítva"
-
-#: qtplugins/clientserver/connectionsettingsdialog.cpp:65
-#, qt-format
-msgid "Connection to %2:%3 succeeded!"
-msgstr "%2 kapcsolat:%3 sikerült!"
-
-#: qtplugins/clientserver/filedialogmodel.cpp:655
-msgid "Filename"
-msgstr "Fájlnév"
-
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:60
@@ -2123,6 +2058,12 @@ msgstr "Fájlnév"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, b)
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:104
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, c)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:25
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, xTranslateSpinBox)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:44
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, yTranslateSpinBox)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:63
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, zTranslateSpinBox)
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:30
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxRadius)
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:59
@@ -2132,18 +2073,18 @@ msgstr "Fájlnév"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:272
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:215
-#: qtplugins/noncovalent/noncovalent.cpp:350:189 rc.cpp:192 rc.cpp:408
+#: qtplugins/noncovalent/noncovalent.cpp:351:189 rc.cpp:192 rc.cpp:369
 msgid " Å"
 msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:232
-#: qtplugins/noncovalent/noncovalent.cpp:368
+#: qtplugins/noncovalent/noncovalent.cpp:369
 msgid "Maximum distance:"
 msgstr "Legnagyobb távolság:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:233
 #: qtplugins/crystal/crystalscene.cpp:133
-#: qtplugins/noncovalent/noncovalent.cpp:369
+#: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:88
 msgid "Line width:"
 msgstr "Vonalvastagság:"
@@ -2164,15 +2105,24 @@ msgstr "Sóhíd"
 msgid "Repulsive"
 msgstr "Taszító"
 
-#: qtplugins/coloropacitymap/coloropacitymap.cpp:67
+#: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
 msgstr "Színes átlátszósági térkép szerkesztése…"
 
-#: qtplugins/coloropacitymap/coloropacitymap.h:26
+#: qtplugins/coloropacitymap/coloropacitymap.cpp:84
+#: qtplugins/commandscripts/command.cpp:64
+#: qtplugins/commandscripts/command.cpp:72
+#: qtplugins/openbabel/openbabel.cpp:107
+#: qtplugins/plugindownloader/plugindownloader.cpp:40
+#: qtplugins/quantuminput/quantuminput.cpp:69 qtplugins/yaehmop/yaehmop.cpp:112
+msgid "&Extensions"
+msgstr "Ki&terjesztések"
+
+#: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
 msgstr "Színes átlátszósági térkép"
 
-#: qtplugins/coloropacitymap/coloropacitymap.h:58
+#: qtplugins/coloropacitymap/coloropacitymap.h:56
 msgid "Edit color opacity maps, primarily for volume rendering."
 msgstr ""
 "Színes átlátszósági térképek szerkesztése, elsősorban térfogat-megjelenítés "
@@ -2299,14 +2249,14 @@ msgstr "Z koordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "'a' lattice coordinate."
-msgstr "a-rácskoordináta."
+msgstr "a-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "'b' lattice coordinate."
-msgstr "b-rácskoordináta."
+msgstr "b-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
-msgid "'c' coordinate."
+msgid "'c' lattice coordinate."
 msgstr "c-hálókoordináta."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
@@ -2334,7 +2284,7 @@ msgstr "Atomkoordináták szerkesztése"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:394
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:599
-#: qtplugins/label/label.cpp:155:1657 rc.cpp:1684
+#: qtplugins/label/label.cpp:156:1606 rc.cpp:1633
 msgid "Custom"
 msgstr "Egyéni"
 
@@ -2352,15 +2302,15 @@ msgstr "XYZ-formátum (atomszámok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:603
 msgid "Lattice coordinates (symbols)"
-msgstr "Rács koordinátái (szimbólumok)"
+msgstr "Hálókoordináták (szimbólumok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:604
 msgid "Lattice coordinates (names)"
-msgstr "Rács koordinátái (nevek)"
+msgstr "Hálókoordináták (nevek)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
 msgid "Lattice coordinates (atomic numbers)"
-msgstr "Rács koordinátái (atomszámok)"
+msgstr "Hálókoordináták (atomszámok)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
 msgid "GAMESS format (symbols)"
@@ -2374,60 +2324,55 @@ msgstr "GAMESS-formátum (nevek)"
 msgid "Turbomole format"
 msgstr "TURBOMOLE-formátum"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:104
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:32:279
+#: qtplugins/copypaste/copypaste.cpp:31:240
 msgid "Copy"
 msgstr "Másolás"
 
-#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:80
+#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:79
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
-#: qtplugins/mongochem/listmoleculesmodel.cpp:71
 msgid "SMILES"
 msgstr "Egyszerűsített molekuláris bemeneti vonalbeviteli rendszer"
 
-#: qtplugins/copypaste/copypaste.cpp:34 qtplugins/copypaste/copypaste.cpp:80
+#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:79
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
 msgid "InChI"
 msgstr "InChI"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:97
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:35:276
+#: qtplugins/copypaste/copypaste.cpp:34:237
 msgid "Cut"
 msgstr "Kivágás"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:138
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:36:288
+#: qtplugins/copypaste/copypaste.cpp:35:249
 msgid "Clear"
 msgstr "Törlés"
 
-#: qtplugins/copypaste/copypaste.cpp:37
-#, fuzzy
-#| msgid "Paste"
+#: qtplugins/copypaste/copypaste.cpp:36
 msgid "&Paste"
-msgstr "Beillesztés"
+msgstr "&Beillesztés"
 
-#: qtplugins/copypaste/copypaste.cpp:81 qtplugins/copypaste/copypaste.cpp:83
+#: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
 msgid "&Edit"
 msgstr "S&zerkesztés"
 
-#: qtplugins/copypaste/copypaste.cpp:83
-#, fuzzy
-#| msgid "Copy"
+#: qtplugins/copypaste/copypaste.cpp:82
 msgid "Copy As"
-msgstr "Másolás"
+msgstr "Másolás másként"
 
-#: qtplugins/copypaste/copypaste.cpp:151
+#: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
 msgstr "Hiba történt a molekula kivágásakor"
 
-#: qtplugins/copypaste/copypaste.cpp:152
+#: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error generating clipboard data."
 msgstr "Hiba történt a vágólapra vonatkozó adatok létrehozásakor."
 
-#: qtplugins/copypaste/copypaste.cpp:153
+#: qtplugins/copypaste/copypaste.cpp:152
 #, qt-format
 msgctxt "file format"
 msgid ""
@@ -2437,7 +2382,7 @@ msgstr ""
 "Kimeneti formátum: %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:157 qtplugins/copypaste/copypaste.cpp:275
+#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:274
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2446,19 +2391,19 @@ msgstr ""
 "Olvasó hiba:\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:236 qtplugins/copypaste/copypaste.cpp:269
+#: qtplugins/copypaste/copypaste.cpp:235 qtplugins/copypaste/copypaste.cpp:268
 msgid "Error Pasting Molecule"
 msgstr "Hiba történt a molekula beillesztésekor"
 
-#: qtplugins/copypaste/copypaste.cpp:237
+#: qtplugins/copypaste/copypaste.cpp:236
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "Nem lehet beilleszteni a molekulát: Üres a vágólap!"
 
-#: qtplugins/copypaste/copypaste.cpp:270
+#: qtplugins/copypaste/copypaste.cpp:269
 msgid "Error reading clipboard data."
 msgstr "Hiba történt a vágólap adatainak olvasásakor."
 
-#: qtplugins/copypaste/copypaste.cpp:271
+#: qtplugins/copypaste/copypaste.cpp:270
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2523,13 +2468,13 @@ msgstr "EWALD"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:719
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:680
 msgid "NONE"
 msgstr "EGYIK SEM"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1303
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1252
 msgid "PME"
 msgstr "PME"
 
@@ -2609,61 +2554,61 @@ msgstr "CP2K bemeneti fájl mentése"
 msgid "Submit CP2K Calculation"
 msgstr "CP2K számítás elküldése"
 
-#: qtplugins/crystal/crystal.cpp:41
+#: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
 msgstr "Kristály importálása a vágólapról…"
 
-#: qtplugins/crystal/crystal.cpp:48
+#: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
 msgstr "Egységsejt váltása"
 
-#: qtplugins/crystal/crystal.cpp:53
+#: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
 msgstr "Egységsejt szerkesztése…"
 
-#: qtplugins/crystal/crystal.cpp:58
+#: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
 msgstr "Atomoktól egységcelláig &körbefolyatása"
 
-#: qtplugins/crystal/crystal.cpp:64
+#: qtplugins/crystal/crystal.cpp:63
 msgid "Rotate to Standard &Orientation"
 msgstr "Szabványos tájolás el&forgatása"
 
-#: qtplugins/crystal/crystal.cpp:70
+#: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
 msgstr "Sejt&térfogat méretaránya…"
 
-#: qtplugins/crystal/crystal.cpp:75
+#: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
 msgstr "&Felsősejt összeállítása…"
 
-#: qtplugins/crystal/crystal.cpp:80
+#: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
 msgstr "Sejtcsökkentés (&Niggli)"
 
-#: qtplugins/crystal/crystal.cpp:104 qtplugins/plotpdf/plotpdf.cpp:54
-#: qtplugins/plotrmsd/plotrmsd.cpp:49 qtplugins/plotxrd/plotxrd.cpp:51
+#: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:55
+#: qtplugins/plotrmsd/plotrmsd.cpp:48 qtplugins/plotxrd/plotxrd.cpp:53
 #: qtplugins/spacegroup/spacegroup.cpp:104
 msgid "&Crystal"
 msgstr "&Kristály"
 
-#: qtplugins/crystal/crystal.cpp:150
+#: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
 msgstr "&Egységsejt eltávolítása"
 
-#: qtplugins/crystal/crystal.cpp:157
+#: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
 msgstr "&Egységsejt hozzáadása"
 
-#: qtplugins/crystal/crystal.cpp:169
+#: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
 msgstr "Kristály importálása a vágólapról"
 
-#: qtplugins/crystal/crystal.cpp:194
+#: qtplugins/crystal/crystal.cpp:193
 msgid "Niggli Reduce Crystal"
 msgstr "Niggli csökkentett kristály"
 
-#: qtplugins/crystal/crystal.cpp:195
+#: qtplugins/crystal/crystal.cpp:194
 msgid "The unit cell is already reduced."
 msgstr "Az egységsejt már csökkent."
 
@@ -2708,11 +2653,11 @@ msgstr "Egyéni elemtípusok manipulálása a jelenlegi molekulában."
 msgid "Custom Elements"
 msgstr "Egyéni elemek"
 
-#: qtplugins/editor/editor.cpp:70 qtplugins/editor/editor.cpp:109
+#: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:110
 msgid "Draw"
 msgstr "Rajzolás"
 
-#: qtplugins/editor/editor.cpp:73
+#: qtplugins/editor/editor.cpp:74
 msgid ""
 "Draw Tool\n"
 "\n"
@@ -2724,24 +2669,24 @@ msgstr ""
 "Bal egérgomb:\tKattintson és húzza az atomok és a kötés létrehozásához\n"
 "Jobb egérgomb:\tAtom törlése"
 
-#: qtplugins/editor/editor.cpp:103
+#: qtplugins/editor/editor.cpp:104
 msgid "Draw Atom"
 msgstr "Atom rajzolása"
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:114
 msgid "Change Bond Type"
 msgstr "Kötés típusának módosítása"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:127
 msgid "Remove Bond"
 msgstr "Kötés eltávolítása"
 
-#: qtplugins/editor/editor.cpp:254 qtplugins/measuretool/measuretool.cpp:190
-#: qtplugins/measuretool/measuretool.cpp:215
+#: qtplugins/editor/editor.cpp:255 qtplugins/measuretool/measuretool.cpp:193
+#: qtplugins/measuretool/measuretool.cpp:218
 msgid "Distance:"
 msgstr "Távolság:"
 
-#: qtplugins/editor/editor.cpp:257
+#: qtplugins/editor/editor.cpp:258
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -2750,7 +2695,7 @@ msgstr "%1 %L2"
 msgid "Editor tool"
 msgstr "Szerkesztő eszköz"
 
-#: qtplugins/editor/editortoolwidget.cpp:127
+#: qtplugins/editor/editortoolwidget.cpp:129
 msgid "Other…"
 msgstr "Egyéb…"
 
@@ -2758,38 +2703,36 @@ msgstr "Egyéb…"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:206:1636 rc.cpp:1654
+#: qtplugins/editor/editortoolwidget.cpp:208:1585 rc.cpp:1603
 msgid "Automatic"
 msgstr "Önműködő"
 
-#: qtplugins/editor/editortoolwidget.cpp:207
+#: qtplugins/editor/editortoolwidget.cpp:209
 msgid "Single"
 msgstr "Egyszeres"
 
-#: qtplugins/editor/editortoolwidget.cpp:208
+#: qtplugins/editor/editortoolwidget.cpp:210
 msgid "Double"
 msgstr "Kétszeres"
 
-#: qtplugins/editor/editortoolwidget.cpp:209
+#: qtplugins/editor/editortoolwidget.cpp:211
 msgid "Triple"
 msgstr "Háromszoros"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:47
+#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:43
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 msgid "&Import"
 msgstr "&Importálás"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
-#, fuzzy
-#| msgid "Fetch from PDB"
 msgid "Fetch PDB"
 msgstr "PDB (Protein Data Bank - Fehérje adatbank) lekérése"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr ""
+msgstr "A PDB-molekula nem olvasható: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
@@ -2801,24 +2744,24 @@ msgid "Chemical structure to download."
 msgstr "Letöltendő kémiai szerkezet."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:93
-#: qtplugins/networkdatabases/networkdatabases.cpp:90
+#: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr "%1 lekérdezése"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
-#: qtplugins/networkdatabases/networkdatabases.cpp:101
-#: qtplugins/networkdatabases/networkdatabases.cpp:112
+#: qtplugins/networkdatabases/networkdatabases.cpp:99
+#: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr "Hálózati letöltés nem sikerült"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
-#: qtplugins/networkdatabases/networkdatabases.cpp:102
+#: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr "Hálózati időtúllépés vagy más hiba."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
-#: qtplugins/networkdatabases/networkdatabases.cpp:113
+#: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr "A megadott molekula nem található: %1"
@@ -2831,11 +2774,11 @@ msgstr "PDB (Protein Data Bank - Fehérje adatbank) lekérése"
 msgid "Download PDB models from the Protein Data Bank"
 msgstr "PDB-modellek letöltése a fehérjeadatbankból"
 
-#: qtplugins/focus/focus.cpp:20
+#: qtplugins/focus/focus.cpp:22
 msgid "Focus Selection"
 msgstr "Összpontosítás kijelölése"
 
-#: qtplugins/focus/focus.cpp:21
+#: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
 msgstr "Összpontosítás eltávolítása"
 
@@ -2935,7 +2878,7 @@ msgstr "GAMESS számítás elküldése"
 msgid "&Adjust Hydrogens"
 msgstr "Hidrogénatomok &beállítása"
 
-#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:62
+#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:64
 msgid "Add Hydrogens"
 msgstr "Hidrogénatomok hozzáadása"
 
@@ -2959,7 +2902,7 @@ msgstr "&Hidrogénatomok"
 msgid "Hydrogens"
 msgstr "Hidrogénatomok"
 
-#: qtplugins/importpqr/importpqr.cpp:26
+#: qtplugins/importpqr/importpqr.cpp:24
 msgid "&Search PQR…"
 msgstr "PQR-&keresés…"
 
@@ -3001,7 +2944,7 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:168:600
+#: qtplugins/insertdna/insertdna.cpp:168:561
 msgid "Thymine"
 msgstr "Timin"
 
@@ -3009,7 +2952,7 @@ msgstr "Timin"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
-#: qtplugins/lineformatinput/lineformatinput.cpp:123:1021
+#: qtplugins/lineformatinput/lineformatinput.cpp:123:982
 msgid "Insert Molecule…"
 msgstr "Molekula beszúrása…"
 
@@ -3041,7 +2984,7 @@ msgstr "Hiba történt a fájl olvasásakor (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:117:381
+#: qtplugins/insertfragment/insertfragment.cpp:117:342
 msgid "Import Crystal"
 msgstr "Kristály importálása"
 
@@ -3057,12 +3000,12 @@ msgstr "Töredék beillesztése"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Molekulatöredék beillesztése nagyobb molekulák létrehozásához."
 
-#: qtplugins/label/label.cpp:133 qtplugins/meshes/meshes.cpp:176
+#: qtplugins/label/label.cpp:134 qtplugins/meshes/meshes.cpp:176
 #: qtplugins/meshes/meshes.cpp:182
 msgid "Color:"
 msgstr "Szín:"
 
-#: qtplugins/label/label.cpp:143
+#: qtplugins/label/label.cpp:144
 msgid "Distance from center:"
 msgstr "Távolság a központtól:"
 
@@ -3074,58 +3017,58 @@ msgstr "Távolság a központtól:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:374
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:150 qtplugins/label/label.cpp:190:1312
+#: qtplugins/label/label.cpp:151 qtplugins/label/label.cpp:191:1261
 msgid "None"
 msgstr "Nincs"
 
-#: qtplugins/label/label.cpp:159
+#: qtplugins/label/label.cpp:160
 msgid "Index"
 msgstr "Tárgymutató"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:161
 msgid "In."
 msgstr "Ebben."
 
-#: qtplugins/label/label.cpp:164 qtplugins/propertytables/propertymodel.cpp:380
+#: qtplugins/label/label.cpp:165 qtplugins/propertytables/propertymodel.cpp:386
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Elem"
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:166
 msgid "El."
 msgstr "El."
 
-#: qtplugins/label/label.cpp:169
-msgid "Element & Ordinal"
-msgstr "Elemnév és elemszáma"
-
 #: qtplugins/label/label.cpp:170
-msgid "El.&Or."
-msgstr "El.&Or."
+msgid "Element & Number"
+msgstr "Elemnév és elemszám"
 
-#: qtplugins/label/label.cpp:173
+#: qtplugins/label/label.cpp:171
+msgid "El.&No."
+msgstr "El.&Sz."
+
+#: qtplugins/label/label.cpp:174
 msgid ", "
 msgstr ", "
 
-#: qtplugins/label/label.cpp:184
+#: qtplugins/label/label.cpp:185
 msgid "Atom Label:"
 msgstr "Atomi címke:"
 
-#: qtplugins/label/label.cpp:195 qtplugins/propertytables/propertymodel.cpp:425
+#: qtplugins/label/label.cpp:196 qtplugins/propertytables/propertymodel.cpp:431
 msgid "ID"
 msgstr "Azonosító"
 
-#: qtplugins/label/label.cpp:199
+#: qtplugins/label/label.cpp:200
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
-#: qtplugins/propertytables/propertymodel.cpp:423
+#: qtplugins/propertytables/propertymodel.cpp:429
 msgid "Name"
 msgstr "Név"
 
-#: qtplugins/label/label.cpp:203
+#: qtplugins/label/label.cpp:204
 msgid " & "
 msgstr " és "
 
-#: qtplugins/label/label.cpp:215
+#: qtplugins/label/label.cpp:216
 msgid "Residue Label:"
 msgstr "Maradékcímke:"
 
@@ -3133,11 +3076,11 @@ msgstr "Maradékcímke:"
 msgid "Display labels on ball and stick style."
 msgstr "Címkék megjelenítése labda és bot modellben."
 
-#: qtplugins/label/labeleditor.cpp:30
+#: qtplugins/label/labeleditor.cpp:29
 msgid "Edit Labels"
 msgstr "Címkék szerkesztése"
 
-#: qtplugins/label/labeleditor.cpp:33
+#: qtplugins/label/labeleditor.cpp:32
 msgid ""
 "Atom Label Tool\n"
 "\n"
@@ -3147,7 +3090,7 @@ msgstr ""
 "\n"
 "Bal egérgomb:\tEgyedi címkék hozzáadásához kattintson az atomokra"
 
-#: qtplugins/label/labeleditor.cpp:68
+#: qtplugins/label/labeleditor.cpp:67
 msgid "Create Label"
 msgstr "Címke létrehozása"
 
@@ -3211,11 +3154,11 @@ msgid "Load single-line molecule descriptors through an input dialog."
 msgstr ""
 "Egysoros molekulaleírók betöltése egy beviteli párbeszédpanelen keresztül."
 
-#: qtplugins/manipulator/manipulator.cpp:39
+#: qtplugins/manipulator/manipulator.cpp:49
 msgid "Manipulate"
 msgstr "Manipulálás"
 
-#: qtplugins/manipulator/manipulator.cpp:42
+#: qtplugins/manipulator/manipulator.cpp:52
 msgid ""
 "Manipulation Tool\n"
 "\n"
@@ -3227,8 +3170,8 @@ msgstr ""
 "Bal egérgomb:\tKattintson és húzza az atomok mozgatásához.\n"
 "Jobb egérgomb:\tKattintson és húzza a kijelölt atomok elforgatásához.\n"
 
-#: qtplugins/manipulator/manipulator.h:33
-#: qtplugins/manipulator/manipulator.h:34
+#: qtplugins/manipulator/manipulator.h:36
+#: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
 msgstr "Manipuláló eszköz"
 
@@ -3254,16 +3197,16 @@ msgstr ""
 "\tA diéderest 1-2-3-4 között mérik\n"
 "Jobb egérgomb:\tÁllítsa vissza a méréseket."
 
-#: qtplugins/measuretool/measuretool.cpp:188
-#: qtplugins/measuretool/measuretool.cpp:199
+#: qtplugins/measuretool/measuretool.cpp:191
+#: qtplugins/measuretool/measuretool.cpp:202
 msgid "Dihedral:"
 msgstr "Diéderes:"
 
-#: qtplugins/measuretool/measuretool.cpp:189
+#: qtplugins/measuretool/measuretool.cpp:192
 msgid "Angle:"
 msgstr "Szög:"
 
-#: qtplugins/measuretool/measuretool.cpp:207
+#: qtplugins/measuretool/measuretool.cpp:210
 msgid "Angles:"
 msgstr "Szögek:"
 
@@ -3274,7 +3217,7 @@ msgstr "Méretezőeszköz"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:170:1570
+#: qtplugins/meshes/meshes.cpp:170:1519
 msgid "Opacity:"
 msgstr "Átlátszóság:"
 
@@ -3293,7 +3236,7 @@ msgstr "Molekula általános tulajdonságok megtekintése."
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
 #: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/surfaces.cpp:124 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/symmetry/symmetry.cpp:82
 msgid "&Analysis"
 msgstr "&Elemzés"
 
@@ -3305,7 +3248,7 @@ msgstr "&Tulajdonságok"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
-#: qtplugins/molecularproperties/molecularproperties.h:31:1030
+#: qtplugins/molecularproperties/molecularproperties.h:31:1042
 msgid "Molecular Properties"
 msgstr "Molekula tulajdonságai"
 
@@ -3328,57 +3271,37 @@ msgstr "ismeretlen molekula"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1060
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1072
 msgid "Molecule Name:"
 msgstr "Molekulanév:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:219
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:1036
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:1048
 msgid "Molecular Mass (g/mol):"
 msgstr "Molekulatömeg (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1042
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1054
 msgid "Chemical Formula:"
 msgstr "Kémiai képlet:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:223
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:236:1048
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:236:1060
 msgid "Number of Atoms:"
 msgstr "Atomok száma:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:225
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:238:1054
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:238:1066
 msgid "Number of Bonds:"
 msgstr "Kötések száma:"
-
-#: qtplugins/mongochem/listmoleculesmodel.cpp:68
-msgid "Formula"
-msgstr "Képlet"
-
-#: qtplugins/mongochem/listmoleculesmodel.cpp:74
-msgid "InChIKey"
-msgstr "InChI kulcs"
-
-#: qtplugins/mongochem/mongochem.cpp:23
-msgid "&MongoChem"
-msgstr "&MongoChem"
-
-#: qtplugins/mongochem/mongochem.h:29
-msgid "Mongo Chem Server"
-msgstr "MongoChem kiszolgáló"
-
-#: qtplugins/mongochem/mongochem.h:33
-msgid "Interface with Mongo Chem Server."
-msgstr "Felület a MongoChem kiszolgálóval."
 
 #: qtplugins/navigator/navigator.cpp:38
 msgid "Navigate"
@@ -3427,11 +3350,11 @@ msgstr "Hálózati adatbázisok"
 msgid "Interact with online databases, query structures etc."
 msgstr "Online adatbázisokkal, lekérdezési struktúrákkal kölcsönhatása."
 
-#: qtplugins/noncovalent/noncovalent.cpp:339
+#: qtplugins/noncovalent/noncovalent.cpp:340
 msgid " °"
 msgstr " °"
 
-#: qtplugins/noncovalent/noncovalent.cpp:367
+#: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
 msgstr "Szögtűrés:"
 
@@ -3452,41 +3375,41 @@ msgstr "Kalkogén"
 msgid "Autodetect (%1)"
 msgstr "Automatikus felismerés (%1)"
 
-#: qtplugins/openbabel/openbabel.cpp:43 qtplugins/openbabel/openbabel.cpp:516
+#: qtplugins/openbabel/openbabel.cpp:45 qtplugins/openbabel/openbabel.cpp:523
 msgid "Optimize Geometry"
 msgstr "Geometria optimalizálása"
 
-#: qtplugins/openbabel/openbabel.cpp:50
+#: qtplugins/openbabel/openbabel.cpp:52
 msgid "Configure Force Field…"
 msgstr "Erőtér beállítása…"
 
-#: qtplugins/openbabel/openbabel.cpp:56
+#: qtplugins/openbabel/openbabel.cpp:58
 msgid "Perceive Bonds"
 msgstr "Kötések érzékelése"
 
-#: qtplugins/openbabel/openbabel.cpp:68
+#: qtplugins/openbabel/openbabel.cpp:70
 msgid "Add Hydrogens for pH…"
 msgstr "Hidrogénatomok hozzáadása a pH szint értékhez…"
 
-#: qtplugins/openbabel/openbabel.cpp:74
+#: qtplugins/openbabel/openbabel.cpp:76
 msgid "Remove Hydrogens"
 msgstr "Hidrogénatomok eltávolítása"
 
-#: qtplugins/openbabel/openbabel.cpp:105
+#: qtplugins/openbabel/openbabel.cpp:107
 msgid "&Open Babel"
 msgstr "&Open Babel kémiai eszköztár"
 
-#: qtplugins/openbabel/openbabel.cpp:112
+#: qtplugins/openbabel/openbabel.cpp:114
 msgid "The Open Babel file formats are not ready to be added."
 msgstr ""
 "Az „Open Babel” kémiai eszköztár fájlformátumok nem állnak készen a "
 "hozzáadásra."
 
-#: qtplugins/openbabel/openbabel.cpp:192
+#: qtplugins/openbabel/openbabel.cpp:199
 msgid "Loading molecule from Open Babel…"
 msgstr "Molekula betöltése az Open Babelből…"
 
-#: qtplugins/openbabel/openbabel.cpp:198
+#: qtplugins/openbabel/openbabel.cpp:205
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
@@ -3494,16 +3417,16 @@ msgstr ""
 "Belső hiba történt: OpenBabel::readMolecule meghívva, de az elemzéshez nem "
 "elérhető obabel kimenet!"
 
-#: qtplugins/openbabel/openbabel.cpp:207
+#: qtplugins/openbabel/openbabel.cpp:214
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr "Hiba történt az „Open Babel” kémiai eszköztár (%1) futtatása közben."
 
-#: qtplugins/openbabel/openbabel.cpp:217
+#: qtplugins/openbabel/openbabel.cpp:224
 msgid "Error parsing openbabel output."
 msgstr "Hiba történt az „Open Babel” kémiai eszköztár kimenet elemzésekor."
 
-#: qtplugins/openbabel/openbabel.cpp:354 qtplugins/openbabel/openbabel.cpp:389
+#: qtplugins/openbabel/openbabel.cpp:361 qtplugins/openbabel/openbabel.cpp:396
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -3512,23 +3435,23 @@ msgstr ""
 "Hiba történt a támogatott erőterek listájának lekérésekor. („%1” "
 "használatával)."
 
-#: qtplugins/openbabel/openbabel.cpp:380
+#: qtplugins/openbabel/openbabel.cpp:387
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "A molekula érvénytelen. Nem lehet optimalizálni a geometriát."
 
-#: qtplugins/openbabel/openbabel.cpp:398
+#: qtplugins/openbabel/openbabel.cpp:405
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "A geometria nem optimalizálható az „Open Babel” kémiai eszköztárával."
 
-#: qtplugins/openbabel/openbabel.cpp:423
+#: qtplugins/openbabel/openbabel.cpp:430
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "Geometria optimalizálása („Open Babel” kémiai eszköztár)"
 
-#: qtplugins/openbabel/openbabel.cpp:424
+#: qtplugins/openbabel/openbabel.cpp:431
 msgid "Generating MDL…"
 msgstr "MDL létrehozása…"
 
-#: qtplugins/openbabel/openbabel.cpp:443
+#: qtplugins/openbabel/openbabel.cpp:450
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
@@ -3536,13 +3459,13 @@ msgstr ""
 "Belső hiba történt a jelenlegi molekula Open Babel-képviseletének "
 "létrehozásakor."
 
-#: qtplugins/openbabel/openbabel.cpp:449
+#: qtplugins/openbabel/openbabel.cpp:456
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "%1 indítása…"
 
-#: qtplugins/openbabel/openbabel.cpp:463 qtplugins/openbabel/openbabel.cpp:471
+#: qtplugins/openbabel/openbabel.cpp:470 qtplugins/openbabel/openbabel.cpp:478
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -3553,16 +3476,16 @@ msgstr ""
 "Jelenlegi energia: %3\n"
 "ΔE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:485
+#: qtplugins/openbabel/openbabel.cpp:492
 msgid "Updating molecule…"
 msgstr "Molekula frissítése…"
 
-#: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:574
-#: qtplugins/openbabel/openbabel.cpp:756
+#: qtplugins/openbabel/openbabel.cpp:500 qtplugins/openbabel/openbabel.cpp:581
+#: qtplugins/openbabel/openbabel.cpp:763
 msgid "Error interpreting Open Babel output."
 msgstr "Hiba történt az „Open Babel” kémiai eszköztár kimenet értelmezésekor."
 
-#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:586
+#: qtplugins/openbabel/openbabel.cpp:513 qtplugins/openbabel/openbabel.cpp:593
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -3571,91 +3494,91 @@ msgstr ""
 "Az obabel kimenetben lévő atomok száma (%1) nem egyezik meg az eredeti "
 "molekula atomjainak számával (%2)."
 
-#: qtplugins/openbabel/openbabel.cpp:525
+#: qtplugins/openbabel/openbabel.cpp:532
 msgid "Cannot open file with Open Babel."
 msgstr ""
 "A fájl megnyitása nem sikerült az „Open Babel” kémiai eszköztár "
 "használatával."
 
-#: qtplugins/openbabel/openbabel.cpp:531
+#: qtplugins/openbabel/openbabel.cpp:538
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "Érvénytelen molekula: A kötések nem érzékelhetők."
 
-#: qtplugins/openbabel/openbabel.cpp:537
+#: qtplugins/openbabel/openbabel.cpp:544
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "Kötések érzékelése („Open Babel” kémiai eszköztár)"
 
-#: qtplugins/openbabel/openbabel.cpp:538
+#: qtplugins/openbabel/openbabel.cpp:545
 msgid "Generating XYZ representation…"
 msgstr "XYZ-képviselet létrehozása…"
 
-#: qtplugins/openbabel/openbabel.cpp:545
+#: qtplugins/openbabel/openbabel.cpp:552
 msgid "Error generating XYZ string."
 msgstr "Hiba történt az XYZ karakterlánc létrehozásakor."
 
-#: qtplugins/openbabel/openbabel.cpp:556
+#: qtplugins/openbabel/openbabel.cpp:563
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "Az XYZ átalakítása Open Babel-re a következővel: %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:566
+#: qtplugins/openbabel/openbabel.cpp:573
 msgid "Updating molecule from Open Babel…"
 msgstr "A molekula frissítése az Open Babelből…"
 
-#: qtplugins/openbabel/openbabel.cpp:618 qtplugins/openbabel/openbabel.cpp:660
+#: qtplugins/openbabel/openbabel.cpp:625 qtplugins/openbabel/openbabel.cpp:667
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 "Hidrogénatomok hozzáadása nem lehetséges az „Open Babel” kémiai eszköztárral."
 
-#: qtplugins/openbabel/openbabel.cpp:623 qtplugins/openbabel/openbabel.cpp:673
+#: qtplugins/openbabel/openbabel.cpp:630 qtplugins/openbabel/openbabel.cpp:680
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Hidrogénatomok hozzáadása („Open Babel” kémiai eszköztár)"
 
-#: qtplugins/openbabel/openbabel.cpp:624
+#: qtplugins/openbabel/openbabel.cpp:631
 msgid "Generating Open Babel input…"
 msgstr "„Open Babel” kémiai eszköztár bemenet létrehozása…"
 
-#: qtplugins/openbabel/openbabel.cpp:632 qtplugins/openbabel/openbabel.cpp:682
+#: qtplugins/openbabel/openbabel.cpp:639 qtplugins/openbabel/openbabel.cpp:689
 msgid "Error generating Open Babel input."
 msgstr "Hiba történt az „Open Babel” kémiai eszköztári bemenet létrehozásakor."
 
-#: qtplugins/openbabel/openbabel.cpp:645 qtplugins/openbabel/openbabel.cpp:695
-#: qtplugins/openbabel/openbabel.cpp:737
+#: qtplugins/openbabel/openbabel.cpp:652 qtplugins/openbabel/openbabel.cpp:702
+#: qtplugins/openbabel/openbabel.cpp:744
 #, qt-format
 msgid "Running %1…"
 msgstr "%1 futtatása…"
 
-#: qtplugins/openbabel/openbabel.cpp:667
+#: qtplugins/openbabel/openbabel.cpp:674
 msgid "Add hydrogens for pH"
 msgstr "Hidrogénatomok hozzáadása a pH szint értékhez"
 
-#: qtplugins/openbabel/openbabel.cpp:667
+#: qtplugins/openbabel/openbabel.cpp:674
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:674 qtplugins/openbabel/openbabel.cpp:716
+#: qtplugins/openbabel/openbabel.cpp:681 qtplugins/openbabel/openbabel.cpp:723
 msgid "Generating obabel input…"
 msgstr "Az obabel bemenet létrehozása…"
 
-#: qtplugins/openbabel/openbabel.cpp:710
+#: qtplugins/openbabel/openbabel.cpp:717
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 "Hidrogénatomok eltávolítása nem lehetséges az „Open Babel” kémiai "
 "eszköztárával."
 
-#: qtplugins/openbabel/openbabel.cpp:715
+#: qtplugins/openbabel/openbabel.cpp:722
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Hidrogénatomok eltávolítása („Open Babel” kémiai eszköztár)"
 
-#: qtplugins/openbabel/openbabel.cpp:724
+#: qtplugins/openbabel/openbabel.cpp:731
 msgid "Error generating Open Babel data."
 msgstr "Hiba történt az „Open Babel” kémiai eszköztári adatok létrehozásakor."
 
-#: qtplugins/openbabel/openbabel.cpp:747
+#: qtplugins/openbabel/openbabel.cpp:754
 msgid "Reading obabel output…"
 msgstr "Az obabel bemenet olvasása…"
 
-#: qtplugins/openbabel/openbabel.cpp:810
+#: qtplugins/openbabel/openbabel.cpp:817
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -3709,7 +3632,7 @@ msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1213
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1162
 msgid "input.prmtop"
 msgstr "input.prmtop"
 
@@ -3739,11 +3662,11 @@ msgstr "top"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
-#: qtplugins/openmminput/openmminputdialog.cpp:1069:1330 rc.cpp:1345
+#: qtplugins/openmminput/openmminputdialog.cpp:1069:1279 rc.cpp:1294
 msgid "True"
 msgstr "Igaz"
 
-#: qtplugins/overlayaxes/overlayaxes.cpp:236
+#: qtplugins/overlayaxes/overlayaxes.cpp:237
 msgid "Reference Axes"
 msgstr "Referenciatengelyek"
 
@@ -3782,12 +3705,12 @@ msgstr " képkocka/másodperc"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: qtplugins/playertool/playertool.cpp:113:1687
+#: qtplugins/playertool/playertool.cpp:113:1636
 msgid "Frame:"
 msgstr "Képkocka:"
 
 #: qtplugins/playertool/playertool.cpp:120
-#: qtplugins/playertool/playertool.cpp:408
+#: qtplugins/playertool/playertool.cpp:411
 #: qtplugins/surfaces/surfacedialog.cpp:219
 #, qt-format
 msgid " of %0"
@@ -3802,7 +3725,7 @@ msgid "Record Movie…"
 msgstr "Rajzfilmfájl felvétele…"
 
 #: qtplugins/playertool/playertool.cpp:243
-#: qtplugins/playertool/playertool.cpp:346
+#: qtplugins/playertool/playertool.cpp:348
 msgid "Movie (*.mp4)"
 msgstr "Rajzfilmfájl (*.mp4)"
 
@@ -3814,7 +3737,7 @@ msgstr "Bittérképes grafika exportálása"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Rajzfilmfájl (*.mp4);;Rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:668
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:670
 msgid "GIF (*.gif)"
 msgstr "GIF-fájl (*.gif)"
 
@@ -3828,22 +3751,22 @@ msgstr ""
 "A GIF-fájlformátum nem támogatja a 100 képkocka/másodperc feletti "
 "képsebességet."
 
-#: qtplugins/playertool/playertool.cpp:311
+#: qtplugins/playertool/playertool.cpp:312
 msgid "Movie (*.avi)"
 msgstr "Rajzfilmfájl (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:341
-#: qtplugins/playertool/playertool.cpp:372 qtplugins/surfaces/surfaces.cpp:696
-#: qtplugins/surfaces/surfaces.cpp:739 qtplugins/surfaces/surfaces.cpp:751
-#: qtplugins/yaehmop/yaehmop.cpp:541
+#: qtplugins/playertool/playertool.cpp:343
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:698
+#: qtplugins/surfaces/surfaces.cpp:742 qtplugins/surfaces/surfaces.cpp:754
+#: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:342 qtplugins/surfaces/surfaces.cpp:740
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:743
 msgid "Error: cannot add frame to video."
 msgstr "Hiba történt: nem sikerült képkockát hozzáadni a videóhoz."
 
-#: qtplugins/playertool/playertool.cpp:373 qtplugins/surfaces/surfaces.cpp:752
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:755
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 fájl mentése nem sikerult."
@@ -3856,71 +3779,71 @@ msgstr "Lejátszó eszköz"
 msgid "Play back trajectories"
 msgstr "Pályák lejátszása"
 
-#: qtplugins/plotpdf/plotpdf.cpp:36
+#: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
 msgstr "Pár eloszlásfüggvény ábrázolása…"
 
-#: qtplugins/plotpdf/plotpdf.cpp:120
+#: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
 msgstr "Nem sikerült létrehozni a pár eloszlásfüggvény (PDF) mintát"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:119
+#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
-#: qtplugins/plotpdf/plotpdf.h:37
+#: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
 msgstr "Pár eloszlásfüggvény ábrázolása"
 
-#: qtplugins/plotpdf/plotpdf.h:72
+#: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
 msgstr "Pár elosztásfüggvény létrehozása és ábrázolása."
 
-#: qtplugins/plotrmsd/plotrmsd.cpp:31
+#: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
 msgstr "Gyök-közép-négyzet eltérés függvény ábrázolása…"
 
-#: qtplugins/plotrmsd/plotrmsd.h:37
+#: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
 msgstr "Gyök-közép-négyzet eltérés függvény ábrázolása"
 
-#: qtplugins/plotrmsd/plotrmsd.h:67
+#: qtplugins/plotrmsd/plotrmsd.h:64
 msgid "Generate and plot an RMSD curve."
 msgstr "Gyök-közép-négyzet eltérés függvény létrehozása és ábrázolása."
 
-#: qtplugins/plotxrd/plotxrd.cpp:33
+#: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
 msgstr "Elméleti röntgendiffrakciós minta ábrázolása…"
 
-#: qtplugins/plotxrd/plotxrd.cpp:118
+#: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
 msgstr "Röntgendiffrakciós minta létrehozása nem sikerült"
 
-#: qtplugins/plotxrd/plotxrd.cpp:161
+#: qtplugins/plotxrd/plotxrd.cpp:157
 msgid "Failed to convert molecule to CIF format."
 msgstr ""
 "Nem sikerült átalakítani a molekulát kristálytani információs fájlformátumba "
 "(CIF-fájl)."
 
-#: qtplugins/plotxrd/plotxrd.cpp:196
+#: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
 msgstr "A genXrdPattern-ből olvasott adatok sérültnek tűnnek!"
 
-#: qtplugins/plotxrd/plotxrd.cpp:234
+#: qtplugins/plotxrd/plotxrd.cpp:230
 msgid "Error: could not find genXrdPattern executable!"
 msgstr "Hiba történt: nem található genXrdPattern végrehajtható fájl!"
 
-#: qtplugins/plotxrd/plotxrd.cpp:244 qtplugins/plotxrd/plotxrd.cpp:256
-#: qtplugins/plotxrd/plotxrd.cpp:267 qtplugins/plotxrd/plotxrd.cpp:274
-#: qtplugins/yaehmop/yaehmop.cpp:563
+#: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
+#: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
+#: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
 msgstr "Hiba történt: "
 
-#: qtplugins/plotxrd/plotxrd.h:39
+#: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
 msgstr "Röntgendiffrakciós minta ábrázolása"
 
-#: qtplugins/plotxrd/plotxrd.h:87
+#: qtplugins/plotxrd/plotxrd.h:86
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr ""
 "Elméleti röntgendiffrakciós minta létrehozása és ábrázolása ObjCryst ++ "
@@ -3974,14 +3897,30 @@ msgstr "Beépülő modulok letöltése"
 msgid "Download plugins from GitHub repositories."
 msgstr "Beépülő modulok letöltése a GitHub adattáraiból."
 
+#: qtplugins/ply/ply.cpp:29
+msgid "PLY Render…"
+msgstr "PLY megjelenítése…"
+
+#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
+#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+msgid "Save File"
+msgstr "Fájl mentése"
+
+#: qtplugins/ply/ply.cpp:71
+msgid "PLY (*.ply);;Text file (*.txt)"
+msgstr "PLY-fájl (*.ply);;Szövegfájl (*.txt)"
+
+#: qtplugins/ply/ply.h:25
+msgid "PLY"
+msgstr "PLY"
+
+#: qtplugins/ply/ply.h:29
+msgid "Render the scene using PLY."
+msgstr "A jelenet megjelenítése a PLY használatával."
+
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
 msgstr "POV-Ray megjelenítése…"
-
-#: qtplugins/povray/povray.cpp:70 qtplugins/svg/svg.cpp:257
-#: qtplugins/vrml/vrml.cpp:70
-msgid "Save File"
-msgstr "Fájl mentése"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -3996,142 +3935,142 @@ msgid "Render the scene using POV-Ray."
 msgstr ""
 "A jelenet megjelenítése a látás kitartása sugárjelző (POV-Ray) segítségével."
 
-#: qtplugins/propertytables/propertymodel.cpp:382
+#: qtplugins/propertytables/propertymodel.cpp:388
 msgid "Valence"
 msgstr "Vegyérték"
 
-#: qtplugins/propertytables/propertymodel.cpp:384
+#: qtplugins/propertytables/propertymodel.cpp:390
 msgid "Formal Charge"
 msgstr "Hivatalos töltés"
 
-#: qtplugins/propertytables/propertymodel.cpp:386
+#: qtplugins/propertytables/propertymodel.cpp:392
 msgid "Partial Charge"
 msgstr "Részleges töltés"
 
-#: qtplugins/propertytables/propertymodel.cpp:388
+#: qtplugins/propertytables/propertymodel.cpp:394
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:390
+#: qtplugins/propertytables/propertymodel.cpp:396
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:392
+#: qtplugins/propertytables/propertymodel.cpp:398
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:394
-#: qtplugins/propertytables/propertymodel.cpp:433
+#: qtplugins/propertytables/propertymodel.cpp:400
+#: qtplugins/propertytables/propertymodel.cpp:439
 msgid "Color"
 msgstr "Szín"
 
-#: qtplugins/propertytables/propertymodel.cpp:397
+#: qtplugins/propertytables/propertymodel.cpp:403
 msgid "Atom"
 msgstr "Atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:404
-#: qtplugins/propertytables/propertymodel.cpp:443
-#: qtplugins/propertytables/propertymodel.cpp:460
+#: qtplugins/propertytables/propertymodel.cpp:410
+#: qtplugins/propertytables/propertymodel.cpp:449
+#: qtplugins/propertytables/propertymodel.cpp:466
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "Típus"
 
-#: qtplugins/propertytables/propertymodel.cpp:406
+#: qtplugins/propertytables/propertymodel.cpp:412
 msgid "Start Atom"
 msgstr "&Atomanimáció indítása"
 
-#: qtplugins/propertytables/propertymodel.cpp:408
+#: qtplugins/propertytables/propertymodel.cpp:414
 msgid "End Atom"
 msgstr "Utolsó atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:410
+#: qtplugins/propertytables/propertymodel.cpp:416
 msgid "Bond Order"
 msgstr "Kötésrend"
 
-#: qtplugins/propertytables/propertymodel.cpp:412
+#: qtplugins/propertytables/propertymodel.cpp:418
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Hosszúság (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:427
+#: qtplugins/propertytables/propertymodel.cpp:433
 msgid "Chain"
 msgstr "Lánc"
 
-#: qtplugins/propertytables/propertymodel.cpp:429
+#: qtplugins/propertytables/propertymodel.cpp:435
 msgid "Secondary Structure"
 msgstr "Másodlagos szerkezet"
 
-#: qtplugins/propertytables/propertymodel.cpp:431
+#: qtplugins/propertytables/propertymodel.cpp:437
 msgid "Heterogen"
 msgstr "Heterogén"
 
-#: qtplugins/propertytables/propertymodel.cpp:445
-#: qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/propertytables/propertymodel.cpp:451
+#: qtplugins/propertytables/propertymodel.cpp:468
 msgid "Atom 1"
 msgstr "1. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:447
+#: qtplugins/propertytables/propertymodel.cpp:453
 msgid "Vertex"
 msgstr "Csúcs"
 
-#: qtplugins/propertytables/propertymodel.cpp:449
-#: qtplugins/propertytables/propertymodel.cpp:466
+#: qtplugins/propertytables/propertymodel.cpp:455
+#: qtplugins/propertytables/propertymodel.cpp:472
 msgid "Atom 3"
 msgstr "3. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:451
-#: qtplugins/propertytables/propertymodel.cpp:470
+#: qtplugins/propertytables/propertymodel.cpp:457
+#: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Angle (°)"
 msgstr "Szög (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:464
+#: qtplugins/propertytables/propertymodel.cpp:470
 msgid "Atom 2"
 msgstr "2. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:468
+#: qtplugins/propertytables/propertymodel.cpp:474
 msgid "Atom 4"
 msgstr "4. atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:659
+#: qtplugins/propertytables/propertymodel.cpp:664
 msgid "Adjust Fragment"
 msgstr "Töredék beállítása"
 
-#: qtplugins/propertytables/propertymodel.cpp:785
+#: qtplugins/propertytables/propertymodel.cpp:790
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π-spirál"
 
-#: qtplugins/propertytables/propertymodel.cpp:787
+#: qtplugins/propertytables/propertymodel.cpp:792
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Hajlítás"
 
-#: qtplugins/propertytables/propertymodel.cpp:789
+#: qtplugins/propertytables/propertymodel.cpp:794
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α-spirál"
 
-#: qtplugins/propertytables/propertymodel.cpp:791
+#: qtplugins/propertytables/propertymodel.cpp:796
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β-lap"
 
-#: qtplugins/propertytables/propertymodel.cpp:793
+#: qtplugins/propertytables/propertymodel.cpp:798
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3_10-spirál"
 
-#: qtplugins/propertytables/propertymodel.cpp:795
+#: qtplugins/propertytables/propertymodel.cpp:800
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β-híd"
 
-#: qtplugins/propertytables/propertymodel.cpp:797
+#: qtplugins/propertytables/propertymodel.cpp:802
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Fordulás"
 
-#: qtplugins/propertytables/propertymodel.cpp:799
+#: qtplugins/propertytables/propertymodel.cpp:804
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Tekercs"
@@ -4251,11 +4190,11 @@ msgstr "Kvantum bemenet"
 msgid "Generate input for quantum codes."
 msgstr "Bemenet létrehozása a kvantumkódok számára."
 
-#: qtplugins/resetview/resetview.cpp:36
+#: qtplugins/resetview/resetview.cpp:37
 msgid "Center"
 msgstr "Középre"
 
-#: qtplugins/resetview/resetview.cpp:37
+#: qtplugins/resetview/resetview.cpp:38
 msgid "Align View to Axes"
 msgstr "Nézet igazítása a tengelyekhez"
 
@@ -4291,7 +4230,7 @@ msgstr "Összes kijelölése"
 msgid "Select None"
 msgstr "Kijelölés megszüntetése"
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:517
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:516
 msgid "Invert Selection"
 msgstr "Kijelölés megfordítása"
 
@@ -4381,7 +4320,7 @@ msgstr "Maradékatomok kijelölése"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1726
+#: qtplugins/select/select.h:30:1675
 msgid "Select"
 msgstr "Kijelölés"
 
@@ -4428,7 +4367,7 @@ msgstr "Tércsoport észlelése…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:67:1711
+#: qtplugins/spacegroup/spacegroup.cpp:67:1660
 msgid "Symmetrize"
 msgstr "Szimmetria átváltozása"
 
@@ -4500,9 +4439,9 @@ msgstr ""
 "A szimmetria nem sikerült.\n"
 "Kérjük, ellenőrizze a kristályt, és próbálkozzon újra más tűréssel."
 
-#: qtplugins/spacegroup/spacegroup.cpp:315 qtplugins/yaehmop/yaehmop.cpp:207
-#: qtplugins/yaehmop/yaehmop.cpp:297 qtplugins/yaehmop/yaehmop.cpp:309
-#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:440
+#: qtplugins/spacegroup/spacegroup.cpp:315 qtplugins/yaehmop/yaehmop.cpp:209
+#: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
+#: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
@@ -4582,28 +4521,28 @@ msgstr "(Legalacsonyabb szabad molekulapálya)"
 msgid "From File"
 msgstr "Fájlból"
 
-#: qtplugins/surfaces/surfaces.cpp:79
+#: qtplugins/surfaces/surfaces.cpp:80
 msgid "Create Surfaces…"
 msgstr "Felületek létrehozása…"
 
-#: qtplugins/surfaces/surfaces.cpp:412
+#: qtplugins/surfaces/surfaces.cpp:414
 msgid "Calculating electron density"
 msgstr "Elektronsűrűség számítása folyamatban van…"
 
-#: qtplugins/surfaces/surfaces.cpp:422
+#: qtplugins/surfaces/surfaces.cpp:424
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Molekuláris pálya kiszámítása: %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:645 qtplugins/surfaces/surfaces.cpp:673
+#: qtplugins/surfaces/surfaces.cpp:647 qtplugins/surfaces/surfaces.cpp:675
 msgid "Movie AVI (*.avi)"
 msgstr "AVI-rajzfilmfájl (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:647
+#: qtplugins/surfaces/surfaces.cpp:649
 msgid "Export Movie"
 msgstr "Rajzfilmfájl exportálása"
 
-#: qtplugins/surfaces/surfaces.cpp:648
+#: qtplugins/surfaces/surfaces.cpp:650
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4-rajzfilmfájl (*.mp4);;AVI-rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
@@ -4641,7 +4580,7 @@ msgstr "Szimmetria…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1696
+#: qtplugins/symmetry/symmetry.h:34:1645
 msgid "Symmetry"
 msgstr "Szimmetria"
 
@@ -4667,15 +4606,15 @@ msgstr "Csoport név %1"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: qtplugins/templatetool/templatetool.cpp:82
+#: qtplugins/templatetool/templatetool.cpp:81
 msgid "Template"
 msgstr "Sablon"
 
-#: qtplugins/templatetool/templatetool.cpp:299
+#: qtplugins/templatetool/templatetool.cpp:298
 msgid "Insert Template"
 msgstr "Sablon beszúrása"
 
-#: qtplugins/templatetool/templatetool.cpp:492
+#: qtplugins/templatetool/templatetool.cpp:491
 msgid "Insert Ligand"
 msgstr "Ligand beszúrása"
 
@@ -4716,19 +4655,19 @@ msgstr "A jelenet megjelenítése a virtuális valóságot modellező nyelvvel."
 msgid "Render the molecule as a wireframe."
 msgstr "Drótkeret molekulai diagram megjelenítése."
 
-#: qtplugins/yaehmop/yaehmop.cpp:89
+#: qtplugins/yaehmop/yaehmop.cpp:91
 msgid "Calculate Band Structure…"
 msgstr "Sávszerkezet kiszámítása…"
 
-#: qtplugins/yaehmop/yaehmop.cpp:110
+#: qtplugins/yaehmop/yaehmop.cpp:112
 msgid "&Yaehmop"
 msgstr "&YAeHMOP"
 
-#: qtplugins/yaehmop/yaehmop.cpp:208 qtplugins/yaehmop/yaehmop.cpp:441
+#: qtplugins/yaehmop/yaehmop.cpp:210 qtplugins/yaehmop/yaehmop.cpp:434
 msgid "Cannot calculate band structure: no unit cell!"
 msgstr "Sávstruktúra kiszámítása nem sikerült: nincs egységsejt!"
 
-#: qtplugins/yaehmop/yaehmop.cpp:298
+#: qtplugins/yaehmop/yaehmop.cpp:300
 #, qt-format
 msgid ""
 "Yaehmop execution failed with the following error:\n"
@@ -4739,11 +4678,11 @@ msgstr ""
 "hibával sikertelen:\n"
 "%1"
 
-#: qtplugins/yaehmop/yaehmop.cpp:308
+#: qtplugins/yaehmop/yaehmop.cpp:310
 msgid "Failed to read band structure output from Yaehmop!"
 msgstr "Nem sikerült a YAeHMOP sávszerkezet kimenet olvasása!"
 
-#: qtplugins/yaehmop/yaehmop.cpp:321
+#: qtplugins/yaehmop/yaehmop.cpp:322
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
@@ -4751,41 +4690,33 @@ msgstr ""
 "Csak egy különleges k-pont található a YAeHMOP kimenetben! Kettő vagy több "
 "szükséges!"
 
-#: qtplugins/yaehmop/yaehmop.cpp:372
+#: qtplugins/yaehmop/yaehmop.cpp:368
 #, qt-format
 msgid "Band %1"
 msgstr "Sáv: %1"
 
-#: qtplugins/yaehmop/yaehmop.cpp:393
+#: qtplugins/yaehmop/yaehmop.cpp:388
 msgid "Fermi Level"
 msgstr "Fermi-szint"
 
-#: qtplugins/yaehmop/yaehmop.cpp:402
-msgid "Energy (eV)"
-msgstr "Energia (eV)"
-
-#: qtplugins/yaehmop/yaehmop.cpp:403
-msgid "YAeHMOP Band Structure"
-msgstr "YAeHMOP-sávszerkezet"
-
-#: qtplugins/yaehmop/yaehmop.cpp:541
+#: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Cannot find Yaehmop"
 msgstr "Yaehmop nem található"
 
-#: qtplugins/yaehmop/yaehmop.cpp:552
+#: qtplugins/yaehmop/yaehmop.cpp:545
 #, qt-format
 msgid "Error: %1 failed to start"
 msgstr "Hiba: %1 indítása nem sikerült"
 
-#: qtplugins/yaehmop/yaehmop.cpp:603
+#: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
 msgstr "YAeHMOP bemenet"
 
-#: qtplugins/yaehmop/yaehmop.h:40
+#: qtplugins/yaehmop/yaehmop.h:39
 msgid "Yaehmop"
 msgstr "YAeHMOP"
 
-#: qtplugins/yaehmop/yaehmop.h:89
+#: qtplugins/yaehmop/yaehmop.h:88
 msgid "Perform extended Hückel calculations with yaehmop."
 msgstr "Végezzen kiterjesztett Hückel számításokat a YAeHMOP segítségével."
 
@@ -4793,10 +4724,6 @@ msgstr "Végezzen kiterjesztett Hückel számításokat a YAeHMOP segítségéve
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
 #. i18n: file: molequeue/molequeuedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::MoleQueueDialog)
-#. i18n: file: qtplugins/clientserver/filedialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, FileDialog)
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, SubmitCalculationDialog)
 msgid "Dialog"
 msgstr "Párbeszéd"
 
@@ -4808,8 +4735,8 @@ msgstr "Párbeszéd"
 #. i18n: ectx: property (windowTitle), widget (QDialog, BondingDialog)
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::EditorToolWidget)
-#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:20
-#. i18n: ectx: property (windowTitle), widget (QWidget, MongoChemWidget)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, ManipulateWidget)
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:20
@@ -5067,66 +4994,6 @@ msgstr "Távolsági tűréshatár:"
 msgid "Minimum Distance:"
 msgstr "Legkisebb távolság:"
 
-#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConnectionSettingsDialog)
-msgid "Server settings"
-msgstr "Kiszolgáló beállításai"
-
-#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:51
-#. i18n: ectx: property (text), widget (QLabel, label7)
-msgid "&Hostname:"
-msgstr "Állomás&név:"
-
-#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:64
-#. i18n: ectx: property (text), widget (QLabel, label8)
-msgid "Port"
-msgstr "Kikötő"
-
-#. i18n: file: qtplugins/clientserver/connectionsettingsdialog.ui:86
-#. i18n: ectx: property (text), widget (QPushButton, pushTestConnection)
-msgid "Test C&onnection..."
-msgstr "&Kapcsolat ellenőrzése…"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:46
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-msgid "Look in:"
-msgstr "Keresés helye:"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:66
-#. i18n: ectx: property (toolTip), widget (QToolButton, NavigateBack)
-msgid "Navigate Back"
-msgstr "Lépés vissza"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:79
-#. i18n: ectx: property (toolTip), widget (QToolButton, NavigateForward)
-msgid "Navigate Forward"
-msgstr "Navigálás előre"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:92
-#. i18n: ectx: property (toolTip), widget (QToolButton, NavigateUp)
-msgid "Navigate Up"
-msgstr "Navigálás felfelé"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:143
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-msgid "File name:"
-msgstr "Fájlnév:"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:153
-#. i18n: ectx: property (text), widget (QPushButton, OK)
-msgid "OK"
-msgstr "Rendben"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:160
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Files of type:"
-msgstr "Fájlok típusa:"
-
-#. i18n: file: qtplugins/clientserver/filedialog.ui:174
-#. i18n: ectx: property (text), widget (QPushButton, Cancel)
-msgid "Cancel"
-msgstr "Mégsem"
-
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
 msgid "Volume Rendering"
@@ -5223,9 +5090,9 @@ msgstr ""
 "pozíció koordináta<br/><span style=\" font-weight:600;\">y</span> - Y "
 "pozíció koordináta<br/><span style=\" font-weight:600;\">z</span> - Z "
 "pozíció koordináta<br/><span style=\" font-weight:600;\">a</span> - a-"
-"rácskoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">b</"
-"span> - b-rácskoordináta (csak kristályok)<br/><span style=\" font-"
-"weight:600;\">c</span> - c-rácskoordináta (csak kristályok)<br/><span style="
+"hálókoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">b</"
+"span> - b-hálókoordináta (csak kristályok)<br/><span style=\" font-"
+"weight:600;\">c</span> - c-hálókoordináta (csak kristályok)<br/><span style="
 "\" font-weight:600;\">_</span> - Szó szerinti szóköz („”), hasznos az "
 "igazításhoz<br/><span style=\" font-weight:600;\">0</span> - Szó szerinti 0 "
 "(„0”), hasznos az optimalizálási zászlókhoz<br/><span style=\" font-"
@@ -5237,17 +5104,17 @@ msgstr ""
 msgid "Help..."
 msgstr "Súgó…"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:111
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 msgid "Paste"
 msgstr "Beillesztés"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:131
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:135
 #. i18n: ectx: property (text), widget (QPushButton, revert)
 msgid "Revert"
 msgstr "Visszaállítás"
 
-#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:145
+#. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
 msgstr "Alkalmaz"
@@ -5275,8 +5142,6 @@ msgstr "Alapértelmezések"
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:73
-#. i18n: ectx: property (text), widget (QPushButton, pushSubmitCalculation)
 msgid "Submit Calculation..."
 msgstr "Számítás elküldése…"
 
@@ -5491,6 +5356,12 @@ msgstr "γ:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, gamma)
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:201
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, beta)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, xRotateSpinBox)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:130
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, yRotateSpinBox)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:146
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, zRotateSpinBox)
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:26
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_max2Theta)
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:48
@@ -5599,8 +5470,6 @@ msgstr "PQR importálása…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
-#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:66
-#. i18n: ectx: property (text), widget (QPushButton, pushSearch)
 msgid "Search"
 msgstr "Keresés"
 
@@ -5641,8 +5510,6 @@ msgstr "Képlet:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
-#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:52
-#. i18n: ectx: property (text), widget (QPushButton, pushDownload)
 msgid "Download"
 msgstr "Letöltés"
 
@@ -5739,6 +5606,8 @@ msgstr "B"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:93
+#. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Z"
 msgstr "Z"
 
@@ -6331,6 +6200,51 @@ msgstr "Létrehozás…"
 msgid "Descriptor:"
 msgstr "Leíró:"
 
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "X"
+msgstr "X"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:86
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Y"
+msgstr "Y"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Translate by:"
+msgstr "Fordító:"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "X-axis"
+msgstr "X-tengely"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:166
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+msgid "Y-axis"
+msgstr "Y-tengely"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+msgid "Z-axis"
+msgstr "Z-tengely"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Rotate around:"
+msgstr "Forgatás a következő körül:"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
+#. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
+msgid "Origin"
+msgstr "Eredet"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
+#. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
+msgid "Geometry"
+msgstr "Geometria"
+
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, moleculeNameLabel)
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:42
@@ -6343,121 +6257,6 @@ msgstr "Leíró:"
 #. i18n: ectx: property (text), widget (QLabel, bondCountLabel)
 msgid "TODO"
 msgstr "Tennivalók"
-
-#. i18n: file: qtplugins/mongochem/configdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, ConfigDialog)
-msgid "MongoChem Config"
-msgstr "MongoChem beállítása"
-
-#. i18n: file: qtplugins/mongochem/configdialog.ui:20
-#. i18n: ectx: property (text), widget (QLineEdit, girderUrl)
-msgid "http://localhost:8080/api/v1"
-msgstr "http://localhost:8080/api/v1"
-
-#. i18n: file: qtplugins/mongochem/configdialog.ui:34
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-msgid "API Key:"
-msgstr "API-kulcs:"
-
-#. i18n: file: qtplugins/mongochem/configdialog.ui:51
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Base URL:"
-msgstr "Alap URL-cím:"
-
-#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:45
-#. i18n: ectx: property (text), widget (QPushButton, pushConfig)
-msgid "Config"
-msgstr "Beállítás"
-
-#. i18n: file: qtplugins/mongochem/mongochemwidget.ui:59
-#. i18n: ectx: property (text), widget (QPushButton, pushUpload)
-msgid "Upload"
-msgstr "Feltöltés"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:21
-#. i18n: ectx: property (text), item, widget (QComboBox, container)
-msgid "Docker"
-msgstr "Docker"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:26
-#. i18n: ectx: property (text), item, widget (QComboBox, container)
-msgid "Singularity"
-msgstr "Egyedülállóság"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:34
-#. i18n: ectx: property (text), widget (QLabel, labelContainer)
-msgid "Container:"
-msgstr "Tároló:"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:44
-#. i18n: ectx: property (text), widget (QLabel, labelImage)
-msgid "Image:"
-msgstr "Kép:"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:54
-#. i18n: ectx: property (text), widget (QLineEdit, image)
-msgid "openchemistry/psi4:latest"
-msgstr "openchemistry/psi4:latest"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:99
-#. i18n: ectx: property (html), widget (QTextEdit, inputParameters)
-msgid ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
-"REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">{</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"theory\": \"dft\",</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"functional\": \"b3lyp\",</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"basis\": \"6-31g\",</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"task\": \"energy\" </span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">}</span></p></body></html>"
-msgstr ""
-"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"https://www.w3.org/TR/"
-"REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
-"weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">{</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"elmélet\": \"dft\",</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"függvényes\": \"b3lyp\",</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"bázis\": \"6-31g\",</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">    \"feladat\": \"energia\" </span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"family:'Ubuntu';\">}</span></p></body></html>"
-
-#. i18n: file: qtplugins/mongochem/submitcalculationdialog.ui:109
-#. i18n: ectx: property (text), widget (QLabel, labelInputParameters)
-msgid "Input Parameters:"
-msgstr "Bemenet paraméterei:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
@@ -7655,6 +7454,203 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
 
+#~ msgid "Client server operations."
+#~ msgstr "Ügyfél/kiszolgáló műveletek."
+
+#~ msgid "S&erver"
+#~ msgstr "&Kiszolgáló"
+
+#~ msgid "Connection failed"
+#~ msgstr "A kapcsolódás sikertelen"
+
+#, qt-format
+#~ msgid "The connection to %2:%3 failed: connection refused."
+#~ msgstr "A(z) %2 kapcsolat:%3 nem sikerült:kapcsolódás elutasítva."
+
+#~ msgid "Remote service error"
+#~ msgstr "Távoli szolgáltatás hiba"
+
+#, qt-format
+#~ msgid "Connection failed with: %1"
+#~ msgstr "A kapcsolat nem sikerült a következővel: %1"
+
+#, qt-format
+#~ msgid "clientServer/%1:%2/lastOpenDir"
+#~ msgstr "ügyfélKiszolgáló/%1:%2/utoljáraMegnyitottKönyvtár"
+
+#, qt-format
+#~ msgid "%1 ("
+#~ msgstr "%1 ("
+
+#, qt-format
+#~ msgid "*.%1"
+#~ msgstr "*.%1"
+
+#~ msgid "Client server"
+#~ msgstr "Ügyfél/kiszolgáló"
+
+#~ msgid "Connection refused"
+#~ msgstr "Kapcsolódás elutasítva"
+
+#, qt-format
+#~ msgid "Connection to %2:%3 succeeded!"
+#~ msgstr "%2 kapcsolat:%3 sikerült!"
+
+#~ msgid "Filename"
+#~ msgstr "Fájlnév"
+
+#~ msgid "Formula"
+#~ msgstr "Képlet"
+
+#~ msgid "InChIKey"
+#~ msgstr "InChI kulcs"
+
+#~ msgid "&MongoChem"
+#~ msgstr "&MongoChem"
+
+#~ msgid "Mongo Chem Server"
+#~ msgstr "MongoChem kiszolgáló"
+
+#~ msgid "Interface with Mongo Chem Server."
+#~ msgstr "Felület a MongoChem kiszolgálóval."
+
+#~ msgid "Energy (eV)"
+#~ msgstr "Energia (eV)"
+
+#~ msgid "YAeHMOP Band Structure"
+#~ msgstr "YAeHMOP-sávszerkezet"
+
+#~ msgid "Server settings"
+#~ msgstr "Kiszolgáló beállításai"
+
+#~ msgid "&Hostname:"
+#~ msgstr "Állomás&név:"
+
+#~ msgid "Port"
+#~ msgstr "Kikötő"
+
+#~ msgid "Test C&onnection..."
+#~ msgstr "&Kapcsolat ellenőrzése…"
+
+#~ msgid "Look in:"
+#~ msgstr "Keresés helye:"
+
+#~ msgid "Navigate Back"
+#~ msgstr "Lépés vissza"
+
+#~ msgid "Navigate Forward"
+#~ msgstr "Navigálás előre"
+
+#~ msgid "Navigate Up"
+#~ msgstr "Navigálás felfelé"
+
+#~ msgid "File name:"
+#~ msgstr "Fájlnév:"
+
+#~ msgid "OK"
+#~ msgstr "Rendben"
+
+#~ msgid "Files of type:"
+#~ msgstr "Fájlok típusa:"
+
+#~ msgid "Cancel"
+#~ msgstr "Mégsem"
+
+#~ msgid "MongoChem Config"
+#~ msgstr "MongoChem beállítása"
+
+#~ msgid "http://localhost:8080/api/v1"
+#~ msgstr "http://localhost:8080/api/v1"
+
+#~ msgid "API Key:"
+#~ msgstr "API-kulcs:"
+
+#~ msgid "Base URL:"
+#~ msgstr "Alap URL-cím:"
+
+#~ msgid "Config"
+#~ msgstr "Beállítás"
+
+#~ msgid "Upload"
+#~ msgstr "Feltöltés"
+
+#~ msgid "Docker"
+#~ msgstr "Docker"
+
+#~ msgid "Singularity"
+#~ msgstr "Egyedülállóság"
+
+#~ msgid "Container:"
+#~ msgstr "Tároló:"
+
+#~ msgid "Image:"
+#~ msgstr "Kép:"
+
+#~ msgid "openchemistry/psi4:latest"
+#~ msgstr "openchemistry/psi4:latest"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">{</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"theory\": \"dft\",</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"functional\": \"b3lyp\",</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"basis\": \"6-31g\",</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"task\": \"energy\" </span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">}</span></p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"https://www.w3.org/"
+#~ "TR/REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">{</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"elmélet\": \"dft\",</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"függvényes\": \"b3lyp\",</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"bázis\": \"6-31g\",</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">    \"feladat\": \"energia\" </span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "family:'Ubuntu';\">}</span></p></body></html>"
+
+#~ msgid "Input Parameters:"
+#~ msgstr "Bemenet paraméterei:"
+
+#~ msgid "Element & Ordinal"
+#~ msgstr "Elemnév és elemszáma"
+
+#~ msgid "'c' coordinate."
+#~ msgstr "c-hálókoordináta."
+
 #~ msgid "Error: could not find yaehmop executable!"
 #~ msgstr ""
 #~ "Hiba történt: nem található a YAeHMOP (Yet Another extended Huckel "
@@ -8072,9 +8068,6 @@ msgstr "E-mail-címek"
 
 #~ msgid "Constraints..."
 #~ msgstr "Megszorítások..."
-
-#~ msgid "Fix Selected Atoms"
-#~ msgstr "Fix kiválasztott atomok"
 
 #~ msgid "Energy = %L1 %2"
 #~ msgstr "Energia = %L1 %2"
@@ -9960,9 +9953,6 @@ msgstr "E-mail-címek"
 
 #~ msgid "Background:"
 #~ msgstr "Háttér:"
-
-#~ msgid "Foreground:"
-#~ msgstr "Előtér:"
 
 #~ msgid "New..."
 #~ msgstr "Új..."

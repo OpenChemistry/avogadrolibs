@@ -1,6 +1,3 @@
-# Needed to find avogadroioexport.h:
-include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
-
 # Extension
 set(quantuminput_srcs
   quantuminput.cpp
@@ -14,7 +11,7 @@ avogadro_plugin(QuantumInput
   "${quantuminput_srcs}"
 )
 
-target_link_libraries(QuantumInput PRIVATE AvogadroIO AvogadroMoleQueue)
+target_link_libraries(QuantumInput PRIVATE Avogadro::IO Avogadro::MoleQueue)
 
 set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogadrogenerators")
 # Look in parallel directory for the avogadrogenerators repository.

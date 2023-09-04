@@ -31,7 +31,7 @@ public:
   std::string name() const override { return "Gaussian FCHK"; }
   std::string description() const override
   {
-    return "Guassian formatted checkpoint reader.";
+    return "Gaussian formatted checkpoint reader.";
   }
 
   std::string specificationUrl() const override

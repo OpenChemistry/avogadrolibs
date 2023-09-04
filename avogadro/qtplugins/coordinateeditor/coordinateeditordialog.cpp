@@ -385,6 +385,17 @@ void CoordinateEditorDialog::validateInputWorker()
           break;
         }
 
+        case '#': {
+          // Validate integer:
+          bool isInt;
+          int index = tokenCursor.selectedText().toInt(&isInt);
+          if (!isInt)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic index."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Atomic index."));
+          break;
+        }
+
         case 'Z': {
           // Validate integer:
           bool isInt;
@@ -459,7 +470,7 @@ void CoordinateEditorDialog::validateInputWorker()
           if (!isReal)
             m_ui->text->markInvalid(tokenCursor, tr("Invalid coordinate."));
           else
-            m_ui->text->markValid(tokenCursor, tr("'c' coordinate."));
+            m_ui->text->markValid(tokenCursor, tr("'c' lattice coordinate."));
           break;
         }
 
@@ -564,6 +575,7 @@ void CoordinateEditorDialog::applyFinish(bool valid)
                                                  newMolecule.atomPositions3d());
   } else {
     newMolecule.perceiveBondsSimple();
+    newMolecule.perceiveBondOrders();
   }
 
   m_ui->text->document()->setModified(false);
@@ -624,6 +636,9 @@ QString CoordinateEditorDialog::detectInputFormat() const
 {
   if (m_ui->text->document()->isEmpty())
     return QString();
+
+  if (!m_ui->spec->text().isEmpty())
+    return m_ui->spec->text();
 
   // Extract the first non-empty line of text from the document.
   QTextCursor cur(m_ui->text->document());

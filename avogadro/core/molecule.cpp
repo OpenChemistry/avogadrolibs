@@ -46,9 +46,9 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -87,9 +87,9 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -241,7 +241,7 @@ const Layer& Molecule::layer() const
 
 void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
 {
-  if (value.size() != atomCount())
+  if (static_cast<Index>(value.size()) != atomCount())
     return;
 
   m_partialCharges[type] = value;
@@ -647,8 +647,8 @@ Array<const Molecule::BondType*> Molecule::bonds(Index a) const
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](const BondType*& a, const BondType*& b) {
-              return a->index() < b->index();
+            [](const BondType*& ba, const BondType*& bb) {
+              return ba->index() < bb->index();
             });
   return atomBonds;
 }
@@ -666,7 +666,7 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](BondType& a, BondType& b) { return a.index() < b.index(); });
+            [](BondType& ba, BondType& bb) { return ba.index() < bb.index(); });
   return atomBonds;
 }
 
@@ -910,21 +910,17 @@ void Molecule::perceiveBondOrders()
       anyUnsaturated = true;
   }
 
-  // current sum of formal charges
-  signed char targetCharge = totalCharge();
-  // we'll assign at the end of the do/while loop
-  signed char currentCharge = 0;
-
-  bool isRadical = (totalSpinMultiplicity() != 1);
-
   Index startIndex = 0;
   Index initialAtom = 0;
   while (anyUnsaturated) {
+
+    // okay, we're first going to try placing *one* bond from our start atom
+    // .. then we can try placing bonds anywhere
+
     // find the first atom with unsaturated valence of ONE
-    //  .. also skip oxygen atoms (e.g., -CO2 or -NO2 which are hard)
     bool foundStart = false;
     for (Index i = startIndex; i < atomCount(); ++i) {
-      if (unsaturatedValence[i] == 1 && atomicNumber(i) != 8) {
+      if (unsaturatedValence[i] == 1) {
         startIndex = i;
         foundStart = true;
         break;
@@ -944,6 +940,8 @@ void Molecule::perceiveBondOrders()
     }
 
     if (foundStart) {
+      // std::cerr << "Found start index " << startIndex << std::endl;
+
       // look at the neighbors of our start atom
       Index bestIndex = MaxIndex;
       unsigned bestValence = 256; // something impossible
@@ -974,12 +972,17 @@ void Molecule::perceiveBondOrders()
       // if we found a neighbor, then we can assign a bond order and update
       // charges
       if (bestIndex != MaxIndex) {
+        /*std::cerr << "Assigning bond " << startIndex << " " << bestIndex
+                  << std::endl; */
+
         // assign the bond order
         m_bondOrders[bond(startIndex, bestIndex).index()] += 1;
         // update the unsaturated valence of the start atom
         unsaturatedValence[startIndex] -= 1;
         // update the unsaturated valence of the neighbor atom
         unsaturatedValence[bestIndex] -= 1;
+
+        startIndex = 0; // we can now try placing bonds anywhere
       } else {
         startIndex += 1;
       }
@@ -998,6 +1001,8 @@ void Molecule::perceiveBondOrders()
     if (!foundStart && anyUnsaturated) {
       // we've gone through and it's not working
       // try a new starting atom and reset the bond orders
+      // std::cerr << " didn't work " << initialAtom << std::endl;
+
       initialAtom += 1;
       startIndex = initialAtom;
       for (Index i = 0; i < m_bondOrders.size(); ++i) {
@@ -1317,6 +1322,31 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
     }
   }
   return result;
+}
+
+void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax,
+                           const double radius) const
+{
+  boxMin.setConstant(std::numeric_limits<double>::max());
+  boxMax.setConstant(-std::numeric_limits<double>::max());
+
+  const bool noSelection = isSelectionEmpty();
+
+  for (uint32_t i = 0; i < atomCount(); i++) {
+    if (noSelection || m_selectedAtoms[i]) {
+
+      const Vector3 boxMinBuffer = atom(i).position3d().array() - radius;
+      const Vector3 boxMaxBuffer = atom(i).position3d().array() + radius;
+
+      boxMin.x() = std::min(boxMinBuffer.x(), boxMin.x());
+      boxMin.y() = std::min(boxMinBuffer.y(), boxMin.y());
+      boxMin.z() = std::min(boxMinBuffer.z(), boxMin.z());
+
+      boxMax.x() = std::max(boxMaxBuffer.x(), boxMax.x());
+      boxMax.y() = std::max(boxMaxBuffer.y(), boxMax.y());
+      boxMax.z() = std::max(boxMaxBuffer.z(), boxMax.z());
+    }
+  }
 }
 
 } // namespace Avogadro::Core

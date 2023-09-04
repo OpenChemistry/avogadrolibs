@@ -47,7 +47,7 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
-  bool write(std::ostream& out, const Core::Molecule& molecule) override
+  bool write(std::ostream&, const Core::Molecule&) override
   {
     // Writing a PDB file is not currently supported
     return false;

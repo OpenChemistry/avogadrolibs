@@ -14,7 +14,7 @@
 #include <avogadro/qtgui/scriptloader.h>
 #include <avogadro/qtgui/utilities.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>

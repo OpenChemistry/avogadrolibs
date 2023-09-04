@@ -15,7 +15,7 @@
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QInputDialog>
 
 #include <QtCore/QStringList>
@@ -25,8 +25,8 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro::QtPlugins {
 
 Select::Select(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_layerManager("Select"),
-    m_molecule(nullptr), m_elements(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_elements(nullptr), m_layerManager("Select")
 {
   auto* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
@@ -234,7 +234,7 @@ void Select::selectWater()
     m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
   }
   // also select water residues (which may be isolated "O" atoms)
-  for (const auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     if (residue.residueName() == "HOH") {
       for (auto atom : residue.residueAtoms()) {
         Index i = atom.index();
@@ -253,7 +253,7 @@ void Select::selectBackboneAtoms()
 
   QString undoText = tr("Select Backbone");
 
-  for (const auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     for (auto atom : residue.residueAtoms()) {
       auto name = residue.getAtomName(atom);
       if (name == "CA" || name == "C" || name == "N" || name == "O") {
@@ -287,7 +287,7 @@ void Select::selectSidechainAtoms()
 
   QString undoText = tr("Select Sidechain");
 
-  for (const auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     for (auto atom : residue.residueAtoms()) {
       auto name = residue.getAtomName(atom);
       if (name != "CA" && name != "C" && name != "N" && name != "O") {
@@ -424,7 +424,7 @@ void Select::selectAtomIndex()
         int start = range.first().toInt(&ok1);
         int last = range.back().toInt(&ok2);
         if (ok1 && ok2) {
-          for (Index i = start; i <= last; ++i)
+          for (int i = start; i <= last; ++i)
             m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
         }
       }
@@ -457,11 +457,10 @@ void Select::selectResidue()
   foreach (const QString item, list) {
     const QString label = item.simplified(); // get rid of whitespace
     // check if it's a number - select that residue index
-    bool ok;
     int index = label.toInt(&ok);
     if (ok) {
       auto residueList = m_molecule->residues();
-      if (index >= 1 && index < residueList.size()) {
+      if (index >= 1 && index < static_cast<int>(residueList.size())) {
         auto residue = residueList[index];
         for (auto& atom : residue.residueAtoms()) {
           Index i = atom.index();
@@ -477,10 +476,10 @@ void Select::selectResidue()
     QRegularExpressionMatch match = re.match(label);
     if (match.hasMatch()) {
       QString name = match.captured(1);
-      int index = match.captured(2).toInt();
+      index = match.captured(2).toInt();
 
       auto residueList = m_molecule->residues();
-      if (index >= 1 && index < residueList.size()) {
+      if (index >= 1 && index < static_cast<int>(residueList.size())) {
         auto residue = residueList[index];
         if (name == residue.residueName().c_str()) {
           for (auto atom : residue.residueAtoms()) {

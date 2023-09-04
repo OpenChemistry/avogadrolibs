@@ -11,7 +11,9 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
   build:
@@ -22,19 +24,19 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu 20.04 GCC", artifact: "Ubuntu-2004.tar.gz",
-            os: ubuntu-20.04,
+            name: "Ubuntu GCC", artifact: "Ubuntu-Latest.tar.gz",
+            os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
-            name: "Ubuntu 18.04 AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-18.04,
+            name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
+            os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -DCMAKE_BUILD_TYPE=Release",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -50,7 +52,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: " ",
+            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\\a\\Tools\\OpenSSL\\Win_x64",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -59,7 +61,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -67,7 +69,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "lsan",
-            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -75,7 +77,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "tsan",
-            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -83,7 +85,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DUSE_VTK=ON -DENABLE_TESTING=ON -DTEST_QTGL=OFF",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
 
@@ -93,7 +95,8 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -123,18 +126,22 @@ jobs:
       with:
         path: avogadrolibs
 
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v3
-      with:
-        path: ../Qt
-        key: ${{ runner.os }}-QtCache
-
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        cache: True
         version: ${{ env.QT_VERSION }}
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        cache: True
+        tools: 'tools_openssl_x64'
+        version: ${{ env.QT_VERSION }}
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -147,9 +154,11 @@ jobs:
       if: runner.os != 'Windows'
       with:
         path: |
-          ${{ runner.workspace }}/build/thirdparty
           ${{ runner.workspace }}/build/Downloads
-        key: ${{ matrix.config.name }}-thirdparty
+        key: ${{ matrix.config.name }}-downloads
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@main
 
     - name: Configure
       run: |
@@ -157,12 +166,12 @@ jobs:
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 

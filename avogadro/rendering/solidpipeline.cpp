@@ -5,6 +5,10 @@
 
 #include "solidpipeline.h"
 
+#include "avogadrogl.h"
+#include "shader.h"
+#include "shaderprogram.h"
+
 #include "solid_vs.h"
 
 #include "solid_first_fs.h"
@@ -13,11 +17,50 @@
 
 namespace Avogadro::Rendering {
 
-SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
-    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0)
+class SolidPipeline::Private
 {
-}
+public:
+  Private() {}
+
+  void attachStage(ShaderProgram& prog, const GLchar* nameRGB, GLuint texRGB,
+                   const GLchar* nameDepth, GLuint texDepth, int w, int h)
+  {
+    prog.bind();
+    GLuint programID;
+    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
+
+    GLuint attrRGB = glGetUniformLocation(programID, nameRGB);
+    glActiveTexture(GL_TEXTURE0 + 1);
+    glBindTexture(GL_TEXTURE_2D, texRGB);
+    glUniform1i(attrRGB, 1);
+
+    GLuint attrDepth = glGetUniformLocation(programID, nameDepth);
+    glActiveTexture(GL_TEXTURE0 + 2);
+    glBindTexture(GL_TEXTURE_2D, texDepth);
+    glUniform1i(attrDepth, 2);
+
+    prog.setUniformValue("width", float(w));
+    prog.setUniformValue("height", float(h));
+  }
+
+  GLuint defaultFBO;
+  GLuint renderFBO;
+  GLuint renderTexture;
+  GLuint depthTexture;
+  GLuint screenVBO;
+  ShaderProgram firstStageShaders;
+  Shader screenVertexShader;
+  Shader firstFragmentShader;
+};
+
+static const GLfloat s_fullscreenQuad[] = {
+  -1.0f, -1.0f, 0.0f,
+  1.0f, -1.0f, 0.0f,
+  -1.0f,  1.0f, 0.0f,
+  -1.0f,  1.0f, 0.0f,
+  1.0f, -1.0f, 0.0f,
+  1.0f,  1.0f, 0.0f,
+};
 
 void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 {
@@ -41,35 +84,47 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
                          *texDepth, 0);
 }
 
+SolidPipeline::SolidPipeline()
+  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
+    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0),
+    d(new Private)
+{
+}
+
+SolidPipeline::~SolidPipeline()
+{
+  delete d;
+}
+
 void SolidPipeline::initialize()
 {
-  initializeFramebuffer(&m_renderFBO, &m_renderTexture, &m_depthTexture);
+  initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
 
-  glGenBuffers(1, &m_screenVBO);
-  glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(m_fullscreenQuad), m_fullscreenQuad,
+  glGenBuffers(1, &d->screenVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
                GL_STATIC_DRAW);
 
-  m_screenVertexShader.setType(Shader::Vertex);
-  m_screenVertexShader.setSource(solid_vs);
-  if (!m_screenVertexShader.compile())
-    std::cout << m_screenVertexShader.error() << std::endl;
+  d->screenVertexShader.setType(Shader::Vertex);
+  d->screenVertexShader.setSource(solid_vs);
+  if (!d->screenVertexShader.compile())
+    std::cout << d->screenVertexShader.error() << std::endl;
 
-  m_firstFragmentShader.setType(Shader::Fragment);
-  m_firstFragmentShader.setSource(solid_first_fs);
-  if (!m_firstFragmentShader.compile())
-    std::cout << m_firstFragmentShader.error() << std::endl;
+  d->firstFragmentShader.setType(Shader::Fragment);
+  d->firstFragmentShader.setSource(solid_first_fs);
+  if (!d->firstFragmentShader.compile())
+    std::cout << d->firstFragmentShader.error() << std::endl;
 
-  m_firstStageShaders.attachShader(m_screenVertexShader);
-  m_firstStageShaders.attachShader(m_firstFragmentShader);
-  if (!m_firstStageShaders.link())
-    std::cout << m_firstStageShaders.error() << std::endl;
+  d->firstStageShaders.attachShader(d->screenVertexShader);
+  d->firstStageShaders.attachShader(d->firstFragmentShader);
+  if (!d->firstStageShaders.link())
+    std::cout << d->firstStageShaders.error() << std::endl;
 }
 
 void SolidPipeline::begin()
 {
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&m_defaultFBO);
-  glBindFramebuffer(GL_FRAMEBUFFER, m_renderFBO);
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
   GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
   glDrawBuffers(1, drawBuffersList);
 
@@ -82,49 +137,27 @@ void SolidPipeline::begin()
   glClearDepth(tmp[4]);
 }
 
-void SolidPipeline::attachStage(ShaderProgram& prog, const GLchar* nameRGB,
-                                GLuint texRGB, const GLchar* nameDepth,
-                                GLuint texDepth)
-{
-  prog.bind();
-  GLuint programID;
-  glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
-
-  GLuint attrRGB = glGetUniformLocation(programID, nameRGB);
-  glActiveTexture(GL_TEXTURE0 + 1);
-  glBindTexture(GL_TEXTURE_2D, texRGB);
-  glUniform1i(attrRGB, 1);
-
-  GLuint attrDepth = glGetUniformLocation(programID, nameDepth);
-  glActiveTexture(GL_TEXTURE0 + 2);
-  glBindTexture(GL_TEXTURE_2D, texDepth);
-  glUniform1i(attrDepth, 2);
-
-  prog.setUniformValue("width", float(m_width));
-  prog.setUniformValue("height", float(m_height));
-}
-
 void SolidPipeline::end()
 {
   // Draw fullscreen quad
   glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, m_screenVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
   // Draw to screen
-  if (glIsFramebuffer(m_defaultFBO)) {
-    glBindFramebuffer(GL_FRAMEBUFFER, m_defaultFBO);
+  if (glIsFramebuffer(d->defaultFBO)) {
+    glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
     GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, drawBuffersList);
   } else {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
   }
-  attachStage(m_firstStageShaders, "inRGBTex", m_renderTexture, "inDepthTex",
-              m_depthTexture);
-  m_firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
-  m_firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
-  m_firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
+  d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
+                 d->depthTexture, m_width, m_height);
+  d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
+  d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glDisableVertexAttribArray(0);
@@ -135,11 +168,11 @@ void SolidPipeline::resize(int width, int height)
   m_width = width * m_pixelRatio;
   m_height = height * m_pixelRatio;
 
-  glBindTexture(GL_TEXTURE_2D, m_renderTexture);
+  glBindTexture(GL_TEXTURE_2D, d->renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, 0);
 
-  glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+  glBindTexture(GL_TEXTURE_2D, d->depthTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 }

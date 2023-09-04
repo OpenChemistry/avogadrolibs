@@ -11,7 +11,7 @@
 #include <QtCore/QList>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -40,11 +40,11 @@ QStringList PluginDownloader::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
-void PluginDownloader::setMolecule(QtGui::Molecule* mol)
+void PluginDownloader::setMolecule(QtGui::Molecule*)
 {
 }
 
-bool PluginDownloader::readMolecule(QtGui::Molecule& mol)
+bool PluginDownloader::readMolecule(QtGui::Molecule&)
 {
   return true;
 }
@@ -57,7 +57,7 @@ void PluginDownloader::showDialog()
   m_widget->show();
 }
 
-void PluginDownloader::replyFinished(QNetworkReply* reply)
+void PluginDownloader::replyFinished(QNetworkReply*)
 {
 }
 }

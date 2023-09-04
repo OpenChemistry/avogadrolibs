@@ -4,9 +4,9 @@
 ******************************************************************************/
 
 #include "playertool.h"
-#include "gif.h"
 
-#include "gwavi.h"
+#include <gif.h>
+#include <gwavi.h>
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
@@ -14,10 +14,10 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QtGui/QOpenGLFramebufferObject>
+#include <QOpenGLFramebufferObject>
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -25,13 +25,13 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QOpenGLWidget>
+#include <QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 
-#include <QDebug>
+#include <QScreen>
 
 #include <cmath>
 
@@ -283,7 +283,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 
@@ -327,7 +328,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
       QByteArray ba;
@@ -364,7 +366,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 

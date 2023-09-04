@@ -15,7 +15,7 @@
 varying vec3 v_pos;
 // the sphere radius
 varying float v_radius;
-// streched corner: [-1.x, 1.x] (see below)
+// stretched corner: [-1.x, 1.x] (see below)
 varying vec2 v_corner;
 
 //

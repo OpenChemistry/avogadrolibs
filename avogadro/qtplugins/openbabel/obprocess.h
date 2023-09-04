@@ -130,7 +130,7 @@ signals:
    *
    * If an error occurs, readFormats will be empty.
    */
-  void queryReadFormatsFinished(QMap<QString, QString> readFormats);
+  void queryReadFormatsFinished(QMultiMap<QString, QString> readFormats);
 
   /**
    * Triggered when the process started by queryWriteFormats() completes.
@@ -144,7 +144,7 @@ signals:
    *
    * If an error occurs, writeFormats will be empty.
    */
-  void queryWriteFormatsFinished(QMap<QString, QString> writeFormats);
+  void queryWriteFormatsFinished(QMultiMap<QString, QString> writeFormats);
 
 private slots:
   void queryReadFormatsPrepare();
@@ -253,7 +253,7 @@ signals:
    *
    * If an error occurs, forceFields will be empty.
    */
-  void queryForceFieldsFinished(const QMap<QString, QString>& forceFields);
+  void queryForceFieldsFinished(const QMultiMap<QString, QString>& forceFields);
 
 private slots:
   void queryForceFieldsPrepare();
@@ -340,7 +340,7 @@ public slots:
    *
    * If an error occurs, charges will be empty.
    */
-  void queryChargesFinished(const QMap<QString, QString>& charges);
+  void queryChargesFinished(const QMultiMap<QString, QString>& charges);
 
 private slots:
   void queryChargesPrepare();

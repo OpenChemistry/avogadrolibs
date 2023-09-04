@@ -25,7 +25,7 @@ jobs:
         sh scripts/extract-messages.sh
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v5
       with:
         commit-message: "Automated translation updates"
         signoff: true

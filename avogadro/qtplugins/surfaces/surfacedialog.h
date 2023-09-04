@@ -31,7 +31,8 @@ class SurfaceDialog : public QDialog
   Q_OBJECT
 
 public:
-  SurfaceDialog(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
+  explicit SurfaceDialog(QWidget* parent = nullptr,
+                         Qt::WindowFlags f = Qt::WindowFlags());
   ~SurfaceDialog() override;
 
   void setupBasis(int numElectrons, int numMOs, bool beta);

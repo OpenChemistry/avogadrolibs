@@ -16,7 +16,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 

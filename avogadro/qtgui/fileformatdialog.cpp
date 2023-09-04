@@ -218,7 +218,7 @@ QString FileFormatDialog::generateFilterString(
 {
   QString filterString;
   // Create a map that groups the file extensions by name:
-  QMap<QString, QString> formatMap;
+  QMultiMap<QString, QString> formatMap;
   for (auto ff : ffs) {
     QString name(QString::fromStdString(ff->name()));
     std::vector<std::string> exts = ff->fileExtensions();

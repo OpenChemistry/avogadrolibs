@@ -13,7 +13,7 @@
 #include <QtCore/QList>
 #include <QtCore/QSettings>
 
-#include <QDebug>
+#include <algorithm>
 
 namespace {
 // The ItemData of the "Other" entry in the combo box
@@ -244,7 +244,7 @@ void TemplateToolWidget::updateElementCombo()
   QList<unsigned char> allElements;
   allElements << m_defaultElements;
   allElements << m_userElements;
-  qSort(allElements);
+  std::sort(allElements.begin(), allElements.end());
 
   // Cache selected atomic number for later
   QVariant selectedData;

@@ -67,7 +67,6 @@ QList<GenericHighlighter::Rule> GenericHighlighter::rules() const
 
 void GenericHighlighter::highlightBlock(const QString& text)
 {
-  typedef QList<Rule>::iterator RuleIter;
   for (auto & m_rule : m_rules)
     m_rule.apply(text, *this);
 }
@@ -75,7 +74,6 @@ void GenericHighlighter::highlightBlock(const QString& text)
 void GenericHighlighter::Rule::apply(const QString& text,
                                      GenericHighlighter& highlighter)
 {
-  typedef QList<QRegExp>::iterator PatternIter;
   for (auto & m_pattern : m_patterns) {
     int index = m_pattern.indexIn(text);
     while (index >= 0) {

@@ -26,6 +26,8 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
+#include <QRegularExpression>
+
 namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
@@ -165,7 +167,7 @@ void JsonWidget::buildOptionGui()
       m_currentLayout = layout;
     } else if (m_options["userOptions"].isObject()) {
       userOptions = m_options["userOptions"].toObject();
-      // don't need to set layout, we aready did that
+      // don't need to set layout, we already did that
     } else {
       break;
     }
@@ -314,9 +316,9 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
   if (hide) {
     widget->hide();
     // find the label and hide that too
-    auto label = form->labelForField(widget);
-    if (label)
-      label->hide();
+    auto fLabel = form->labelForField(widget);
+    if (fLabel)
+      fLabel->hide();
   }
 }
 
@@ -740,8 +742,8 @@ QJsonObject JsonWidget::collectOptions() const
       ret.insert(label, value);
     } else if (auto* spinBox = qobject_cast<QSpinBox*>(widget)) {
       ret.insert(label, spinBox->value());
-    } else if (auto* spinBox = qobject_cast<QDoubleSpinBox*>(widget)) {
-      ret.insert(label, spinBox->value());
+    } else if (auto* doubleSpinBox = qobject_cast<QDoubleSpinBox*>(widget)) {
+      ret.insert(label, doubleSpinBox->value());
     } else if (auto* checkBox = qobject_cast<QCheckBox*>(widget)) {
       ret.insert(label, checkBox->isChecked());
     } else if (auto* fileBrowse =
@@ -778,7 +780,7 @@ QString JsonWidget::generateJobTitle() const
     if (haveTheory)
       theory += "/";
     theory += basis;
-    theory.replace(QRegExp("\\s+"), "");
+    theory.replace(QRegularExpression("\\s+"), "");
     haveTheory = true;
   }
 

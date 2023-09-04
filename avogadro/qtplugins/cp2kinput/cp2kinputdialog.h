@@ -32,7 +32,8 @@ class Cp2kInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit Cp2kInputDialog(QWidget* parent_ = nullptr, Qt::WindowFlags f = 0);
+  explicit Cp2kInputDialog(QWidget* parent_ = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
   ~Cp2kInputDialog();
 
   void setMolecule(QtGui::Molecule* mol);

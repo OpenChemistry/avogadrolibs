@@ -13,7 +13,7 @@
 #include <QtGui/QSyntaxHighlighter>
 #include <QtGui/QTextCharFormat>
 
-class QRegExp;
+#include <QRegExp>
 
 namespace Avogadro {
 namespace QtGui {

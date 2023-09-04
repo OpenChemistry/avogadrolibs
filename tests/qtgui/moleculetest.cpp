@@ -157,7 +157,7 @@ TEST_F(MoleculeTest, addBond)
   EXPECT_EQ(bondBC.index(), static_cast<Index>(1));
   EXPECT_EQ(bondBC.order(), static_cast<unsigned char>(2));
 
-  // try to lookup nonexistant bond
+  // try to lookup nonexistent bond
   Bond bond = molecule.bond(a, c);
   EXPECT_FALSE(bond.isValid());
 

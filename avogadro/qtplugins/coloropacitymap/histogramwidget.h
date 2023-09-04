@@ -22,7 +22,9 @@ class vtkColorTransferFunction;
 
 namespace Avogadro {
 
-class QVTKGLWidget;
+namespace VTK {
+class QVTKWidget;
+}
 
 class HistogramWidget : public QWidget
 {
@@ -64,7 +66,7 @@ private:
   vtkWeakPointer<vtkPiecewiseFunction> m_opacityFunction;
   vtkWeakPointer<vtkTable> m_inputData;
 
-  QVTKGLWidget* m_qvtk;
+  VTK::QVTKWidget* m_qvtk;
 };
 } // namespace Avogadro
 

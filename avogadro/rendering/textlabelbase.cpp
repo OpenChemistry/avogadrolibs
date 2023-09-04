@@ -47,7 +47,7 @@ public:
   Array<PackedVertex> vertices;
   BufferObject vbo;
 
-  // Sentinals:
+  // Sentinels:
   bool shadersInvalid;
   bool textureInvalid;
   bool vboInvalid;

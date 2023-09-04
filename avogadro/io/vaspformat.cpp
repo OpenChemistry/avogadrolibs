@@ -444,7 +444,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   return true;
 }
 
-bool OutcarFormat::write(std::ostream& outStream, const Core::Molecule& mol)
+bool OutcarFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }

@@ -529,7 +529,7 @@ void Graph::updateSubgraphs() const
     m_subgraphToVertices[newSubgraph].insert(v);
   }
   m_loneVertices.clear();
-  for (int i = 0; i < m_subgraphToVertices.size(); i++) {
+  for (size_t i = 0; i < m_subgraphToVertices.size(); i++) {
     checkSplitSubgraph(i);
   }
 }

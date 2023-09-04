@@ -6,8 +6,8 @@
 #define AVOGADRO_QTGUI_RWMOLECULE_UNDO_H
 
 #include "rwmolecule.h"
-#include <QtCore/QDebug>
-#include <QtWidgets/QUndoCommand>
+
+#include <QUndoCommand>
 #include <cassert>
 
 namespace Avogadro {

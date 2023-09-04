@@ -11,7 +11,8 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/vtkplot.h>
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
 
 #include "pdfoptionsdialog.h"
 #include "plotpdf.h"
@@ -123,33 +124,27 @@ void PlotPdf::displayDialog()
   }
 
   // Now generate a plot with the data
-  std::vector<double> xData;
-  std::vector<double> yData;
+  std::vector<float> xData;
+  std::vector<float> yData;
   for (const auto& item : results) {
     xData.push_back(item.first);
     yData.push_back(item.second);
   }
-  std::vector<std::vector<double>> data{ xData, yData };
-
-  std::vector<std::string> lineLabels{ "PdfData" };
-
-  std::array<double, 4> color = { 255, 0, 0, 255 };
-  std::vector<std::array<double, 4>> lineColors{ color };
 
   const char* xTitle = "r (Å)";
   const char* yTitle = "g(r)";
   const char* windowName = "Pair Distribution Function";
 
-  if (!m_plot)
-    m_plot.reset(new VTK::VtkPlot);
+  if (!m_chartDialog)
+    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
-  m_plot->setData(data);
-  m_plot->setWindowName(windowName);
-  m_plot->setXTitle(xTitle);
-  m_plot->setYTitle(yTitle);
-  m_plot->setLineLabels(lineLabels);
-  m_plot->setLineColors(lineColors);
-  m_plot->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
+  m_chartDialog->show();
 }
 
 bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,

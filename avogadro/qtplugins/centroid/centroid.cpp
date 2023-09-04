@@ -8,7 +8,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 
 namespace Avogadro::QtPlugins {
 

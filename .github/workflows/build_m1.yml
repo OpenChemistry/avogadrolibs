@@ -6,7 +6,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=OFF -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
 
 jobs:
   build:
@@ -123,7 +123,7 @@ jobs:
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
           # create temporary keychain if the cert is non-zero
           if [ -s $CERTIFICATE_PATH ]; then
@@ -169,6 +169,7 @@ jobs:
         NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+      continue-on-error: true
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: Upload

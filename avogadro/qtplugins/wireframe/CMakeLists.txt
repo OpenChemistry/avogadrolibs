@@ -6,4 +6,4 @@ avogadro_plugin(Wireframe
   wireframe.cpp
   "")
 
-target_link_libraries(Wireframe PRIVATE AvogadroRendering)
+target_link_libraries(Wireframe PRIVATE Avogadro::Rendering)
