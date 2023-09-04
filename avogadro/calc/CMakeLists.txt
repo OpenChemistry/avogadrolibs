@@ -19,4 +19,4 @@ target_sources(Calc PRIVATE
 avogadro_add_library(Calc)
 
 target_link_libraries(Calc
-  PUBLIC Avogadro::Core)
+  PUBLIC Avogadro::Core cppoptlib)
