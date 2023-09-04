@@ -6,8 +6,8 @@
 #ifndef AVOGADRO_CALC_ENERGYCALCULATOR_H
 #define AVOGADRO_CALC_ENERGYCALCULATOR_H
 
-#include <avogadro/core/vector.h>
 #include <avogadro/core/variantmap.h>
+#include <avogadro/core/vector.h>
 
 #include <cppoptlib/problem.h>
 
@@ -18,12 +18,11 @@ class Molecule;
 
 namespace Calc {
 
-class EnergyCalculator
-  : public cppoptlib::Problem<Real>
+class EnergyCalculator : public cppoptlib::Problem<Real>
 {
 public:
   EnergyCalculator() {}
-  ~EnergyCalculator() { }
+  ~EnergyCalculator() {}
 
   /**
    * @return a unique identifier for this calculator.
@@ -66,13 +65,16 @@ public:
    */
   TVector mask() const { return m_mask; }
 
+  void freezeAtom(Index atomId);
+  void unfreezeAtom(Index atomId);
+
   /**
    * Called when the current molecule changes.
    */
   virtual void setMolecule(Core::Molecule* mol) = 0;
 
 protected:
-  TVector   m_mask; // optimize or frozen atom mask
+  TVector m_mask; // optimize or frozen atom mask
 };
 
 } // end namespace Calc
