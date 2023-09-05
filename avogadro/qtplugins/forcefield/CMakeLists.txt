@@ -7,9 +7,7 @@ include_directories(SYSTEM "${EIGEN3_INCLUDE_DIR}"
 
 # Extension
 set(forcefield_srcs
-  energycalculator.cpp
   forcefield.cpp
-  lennardjones.cpp
 )
 
 avogadro_plugin(Forcefield
@@ -20,7 +18,7 @@ avogadro_plugin(Forcefield
   "${forcefield_srcs}"
 )
 
-target_link_libraries(Forcefield LINK_PRIVATE AvogadroIO)
+target_link_libraries(Forcefield LINK_PRIVATE AvogadroIO AvogadroCalc)
 
 # Bundled forcefield scripts (open babel)
 set(forcefields

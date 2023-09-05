@@ -23,7 +23,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/utilities.h>
 
-#include "lennardjones.h"
+#include <avogadro/calc/lennardjones.h>
 
 #include <cppoptlib/meta.h>
 #include <cppoptlib/problem.h>
