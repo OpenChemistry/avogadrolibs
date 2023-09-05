@@ -42,7 +42,7 @@ jobs:
         os: [ubuntu-20.04, macos-latest, windows-2019]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.
