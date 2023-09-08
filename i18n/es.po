@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-03 01:59+0000\n"
-"PO-Revision-Date: 2023-09-05 07:55+0000\n"
-"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
+"PO-Revision-Date: 2023-09-09 12:53+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2219,10 +2219,8 @@ msgid "Element symbol."
 msgstr "Símbolo de elemento."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "Número atómico inválido."
+msgstr "Número atómico no válido."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
 msgid "Atomic index."
@@ -4479,25 +4477,23 @@ msgstr "Modos Vibracionales…"
 
 #: qtplugins/spectra/spectra.cpp:32
 msgid "Show the vibrational modes dialog."
-msgstr ""
+msgstr "Mostrar el diálogo de los modos de la vibración."
 
 #: qtplugins/spectra/spectra.cpp:33
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Set the vibrational mode."
-msgstr "Mostrar espectros y modos vibracionales."
+msgstr "Establecer el modo de vibración."
 
 #: qtplugins/spectra/spectra.cpp:35
 msgid "Set the vibrational amplitude."
-msgstr ""
+msgstr "Establecer la fuerza de la vibración."
 
 #: qtplugins/spectra/spectra.cpp:37
 msgid "Start the vibrational animation."
-msgstr ""
+msgstr "Inicia la vibración en la animación."
 
 #: qtplugins/spectra/spectra.cpp:39
 msgid "Stop the vibrational animation."
-msgstr ""
+msgstr "Para la vibración de la animación."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
