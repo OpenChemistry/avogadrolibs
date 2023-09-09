@@ -41,6 +41,7 @@ public:
     VdW,
     ESP,
     ElectronDensity,
+    SpinDensity,
     MO,
     FromFile,
     None

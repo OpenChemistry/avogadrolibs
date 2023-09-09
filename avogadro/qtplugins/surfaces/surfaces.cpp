@@ -102,6 +102,115 @@ Surfaces::~Surfaces()
   delete m_cube;
 }
 
+void Surfaces::registerCommands()
+{
+  // register some scripting commands
+  emit registerCommand("renderVDW", tr("Render the van der Waals surface."));
+  emit registerCommand("renderVanDerWaals",
+                       tr("Render the van der Waals molecular surface."));
+  emit registerCommand("renderSolventAccessible",
+                       tr("Render the solvent-accessible molecular surface."));
+  emit registerCommand("renderSolventExcluded",
+                       tr("Render the solvent-excluded molecular surface."));
+  emit registerCommand("renderOrbital", tr("Render a molecular orbital."));
+  emit registerCommand("renderElectronDensity",
+                       tr("Render the electron density."));
+  emit registerCommand("renderSpinDensity", tr("Render the spin density."));
+  emit registerCommand("renderCube",
+                       tr("Render a cube supplied with the file."));
+}
+
+bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command.
+
+  // Set up some defaults for the options.
+  int index = -1;
+  int homo = -1;
+  float isoValue = 0.03;
+  float cubeResolution = resolution(); // use default resolution
+
+  if (options.contains("resolution") &&
+      options["resolution"].canConvert<float>()) {
+    bool ok;
+    float res = options["resolution"].toFloat(&ok);
+    if (ok)
+      cubeResolution = res;
+  }
+  if (options.contains("isovalue") &&
+      options["isolvalue"].canConvert<float>()) {
+    bool ok;
+    float iso = options["isovalue"].toFloat(&ok);
+    if (ok)
+      isoValue = iso;
+  }
+
+  if (m_basis != nullptr)
+    homo = m_basis->homo();
+  if (options.contains("index")) {
+    // check if options contains "homo" or "lumo"
+    bool string = options["index"].canConvert<QString>();
+    if (string) {
+      // should be something like "homo-1" or "lumo+2"
+      QString name = options["index"].toString();
+      QString expression, modifier;
+      if (name.contains("homo", Qt::CaseInsensitive)) {
+        index = homo; // modified by the expression after the string
+        expression = name.remove("homo", Qt::CaseInsensitive);
+      } else if (name.contains("lumo", Qt::CaseInsensitive)) {
+        index = homo + 1; // again modified by the expression
+        expression = name.remove("homo", Qt::CaseInsensitive);
+      }
+      // modify HOMO / LUMO based on "+ number" or "- number"
+      if (expression.contains('-')) {
+        modifier = expression.remove('-');
+        bool ok;
+        int n = modifier.toInt(&ok);
+        if (ok)
+          index = index - n;
+      } else if (expression.contains('+')) {
+        modifier = expression.remove('+');
+        bool ok;
+        int n = modifier.toInt(&ok);
+        if (ok)
+          index = index + n;
+      }
+
+    } else
+      index = options.value("index").toInt();
+  }
+  bool beta = false;
+  if (options.contains("spin")) {
+    beta = options["spin"].toString().contains("beta");
+  }
+
+  if (command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) {
+    calculateEDT(VanDerWaals, cubeResolution);
+    return true;
+  } else if (command.compare("renderSolventAccessible", Qt::CaseInsensitive) ==
+             0) {
+    calculateEDT(SolventAccessible, cubeResolution);
+    return true;
+  } else if (command.compare("renderSolventExcluded", Qt::CaseInsensitive) ==
+             0) {
+    calculateEDT(SolventExcluded, cubeResolution);
+    return true;
+  } else if (command.compare("renderOrbital", Qt::CaseInsensitive) == 0) {
+    calculateQM(MolecularOrbital, index, beta, isoValue, cubeResolution);
+    return true;
+  } else if (command.compare("renderElectronDensity", Qt::CaseInsensitive) ==
+             0) {
+    calculateQM(ElectronDensity, index, beta, isoValue, cubeResolution);
+    return true;
+  } else if (command.compare("renderSpinDensity", Qt::CaseInsensitive) == 0) {
+    calculateQM(SpinDensity, index, beta, isoValue, cubeResolution);
+    return true;
+  }
+
+  return false;
+}
+
 void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
   if (mol->basisSet()) {
@@ -130,14 +239,6 @@ QStringList Surfaces::menuPath(QAction*) const
 
 void Surfaces::surfacesActivated()
 {
-  if (!m_dialog) {
-    m_dialog = new SurfaceDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(calculateClickedSignal()),
-            SLOT(calculateSurface()));
-    connect(m_dialog, SIGNAL(recordClicked()), SLOT(recordMovie()));
-    connect(m_dialog, SIGNAL(stepChanged(int)), SLOT(stepChanged(int)));
-  }
-
   if (m_basis) {
     // we have quantum data, set up the dialog accordingly
     auto gaussian = dynamic_cast<Core::GaussianSet*>(m_basis);
@@ -150,10 +251,12 @@ void Surfaces::surfacesActivated()
     m_dialog->setupBasis(m_basis->electronCount(),
                          m_basis->molecularOrbitalCount(), beta);
   }
+  // only show cubes from files so we don't duplicate orbitals
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
     for (auto* cube : m_cubes) {
-      cubeNames << cube->name().c_str();
+      if (cube->cubeType() == Core::Cube::Type::FromFile)
+        cubeNames << cube->name().c_str();
     }
     m_dialog->setupCubes(cubeNames);
   }
@@ -170,20 +273,25 @@ void Surfaces::surfacesActivated()
   m_dialog->show();
 }
 
-float Surfaces::resolution()
+float Surfaces::resolution(float specified)
 {
-  if (!m_dialog->automaticResolution())
+  if (specified != 0.0)
+    return specified;
+
+  if (m_dialog != nullptr && !m_dialog->automaticResolution())
     return m_dialog->resolution();
 
   float r = 0.02 * powf(m_molecule->atomCount(), 1.0f / 3.0f);
   float minimum = 0.05;
   float maximum = 0.5;
 
-  switch (m_dialog->surfaceType()) {
-    case SolventExcluded:
-      minimum = 0.1;
-      break;
-    default:;
+  if (m_dialog != nullptr) {
+    switch (m_dialog->surfaceType()) {
+      case SolventExcluded:
+        minimum = 0.1;
+        break;
+      default:;
+    }
   }
 
   r = std::max(minimum, std::min(maximum, r));
@@ -226,11 +334,14 @@ float inline square(float x)
   return x * x;
 }
 
-void Surfaces::calculateEDT()
+void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
+  if (type == Unknown && m_dialog != nullptr)
+    type = m_dialog->surfaceType();
+
   QFuture future = QtConcurrent::run([=]() {
     double probeRadius = 0.0;
-    switch (m_dialog->surfaceType()) {
+    switch (type) {
       case VanDerWaals:
         break;
       case SolventAccessible:
@@ -248,7 +359,7 @@ void Surfaces::calculateEDT()
     QtGui::RWLayerManager layerManager;
     for (size_t i = 0; i < m_molecule->atomCount(); i++) {
       if (!layerManager.visible(m_molecule->layer(i)))
-        continue;
+        continue; // ignore invisible atoms
       auto radius =
         Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
       atoms->emplace_back(atomPositions[i], radius);
@@ -257,10 +368,10 @@ void Surfaces::calculateEDT()
     }
 
     double padding = max_radius + probeRadius;
-    m_cube->setLimits(*m_molecule, resolution(), padding);
+    m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
     m_cube->fill(-1.0);
 
-    const float res = resolution();
+    const float res = resolution(defaultResolution);
     const Vector3 min = m_cube->min();
 
     // then, for each atom, set cubes around it up to a certain radius
@@ -300,7 +411,7 @@ void Surfaces::calculateEDT()
   });
 
   // SolventExcluded requires an extra pass
-  if (m_dialog->surfaceType() == SolventExcluded) {
+  if (type == SolventExcluded) {
     m_performEDTStepWatcher.setFuture(future);
   } else {
     m_displayMeshWatcher.setFuture(future);
@@ -369,10 +480,17 @@ void Surfaces::performEDTStep()
   m_displayMeshWatcher.setFuture(future);
 }
 
-void Surfaces::calculateQM()
+void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
+                           float defaultResolution)
 {
-  if (!m_basis || !m_dialog)
+  if (!m_basis)
     return; // nothing to do
+
+  if (m_dialog != nullptr) {
+    beta = m_dialog->beta(); // we're using the GUI
+  }
+
+  // TODO: check if we already calculated the requested cube
 
   // Reset state a little more frequently, minimal cost, avoid bugs.
   m_molecule->clearCubes();
@@ -409,28 +527,45 @@ void Surfaces::calculateQM()
   if (!m_cube)
     m_cube = m_molecule->addCube();
 
-  Type type = m_dialog->surfaceType();
-  int index = m_dialog->surfaceIndex();
-  m_isoValue = m_dialog->isosurfaceValue();
-  m_cube->setLimits(*m_molecule, resolution(), 5.0);
+  if (type == Unknown)
+    type = m_dialog->surfaceType();
+
+  if (index == -1 && m_dialog != nullptr)
+    index = m_dialog->surfaceIndex();
+  if (isoValue == 0.0 && m_dialog != nullptr)
+    m_isoValue = m_dialog->isosurfaceValue();
+  else
+    m_isoValue = isoValue;
+  float cubeResolution = resolution(defaultResolution);
+  float padding = 5.0;
+  // TODO: allow extra padding for some molecules / properties
+  m_cube->setLimits(*m_molecule, cubeResolution, padding);
 
   QString progressText;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
     m_cube->setName("Electron Density");
+    m_cube->setCubeType(Core::Cube::Type::ElectronDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
       m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateElectronDensity(m_cube);
     }
-  }
-
-  else if (type == MolecularOrbital) {
+  } else if (type == ElectronDensity) {
+    progressText = tr("Calculating spin density");
+    m_cube->setName("Spin Density");
+    m_cube->setCubeType(Core::Cube::Type::SpinDensity);
+    if (dynamic_cast<GaussianSet*>(m_basis)) {
+      m_gaussianConcurrent->calculateSpinDensity(m_cube);
+    } else {
+      m_slaterConcurrent->calculateSpinDensity(m_cube);
+    }
+  } else if (type == MolecularOrbital) {
     progressText = tr("Calculating molecular orbital %L1").arg(index);
     m_cube->setName("Molecular Orbital " + std::to_string(index + 1));
+    m_cube->setCubeType(Core::Cube::Type::MO);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index,
-                                                      m_dialog->beta());
+      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
     } else {
       m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
     }
@@ -471,14 +606,22 @@ void Surfaces::calculateQM()
   }
 }
 
-void Surfaces::calculateCube()
+void Surfaces::calculateCube(int index, float isoValue)
 {
-  if (!m_dialog || m_cubes.size() == 0)
+  if (m_cubes.size() == 0)
+    return;
+
+  if (index == -1 && m_dialog != nullptr)
+    index = m_dialog->surfaceIndex();
+  if (index < 0 || index >= static_cast<int>(m_cubes.size()))
     return;
 
   // check bounds
-  m_cube = m_cubes[m_dialog->surfaceIndex()];
-  m_isoValue = m_dialog->isosurfaceValue();
+  m_cube = m_cubes[index];
+  if (isoValue == 0.0 && m_dialog != nullptr)
+    m_isoValue = m_dialog->isosurfaceValue();
+  else
+    m_isoValue = isoValue;
   displayMesh();
 }
 
@@ -507,7 +650,10 @@ void Surfaces::displayMesh()
 
   // qDebug() << " running displayMesh";
 
-  m_smoothingPasses = m_dialog->smoothingPassesValue();
+  if (m_dialog != nullptr)
+    m_smoothingPasses = m_dialog->smoothingPassesValue();
+  else
+    m_smoothingPasses = 0;
 
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
@@ -520,6 +666,9 @@ void Surfaces::displayMesh()
   // TODO - only do this if we're generating an orbital
   //    and we need two meshes
   //   How do we know? - likely ask the cube if it's an MO?
+  qDebug() << "Cube " << m_cube->name().c_str() << " type "
+           << m_cube->cubeType();
+
   if (!m_mesh2)
     m_mesh2 = m_molecule->addMesh();
   if (!m_meshGenerator2) {
