@@ -173,9 +173,10 @@ TEST(HydrogenToolsTest, valencyAdjustment_N)
   RWAtom N = mol.addAtom(7);
   int expectedAdjustment = 3;
   for (int i = 0; i < 8; ++i, --expectedAdjustment) {
-    if (i == 4) // neutral N can have 3 or 5 bonds in our valence model.
-      expectedAdjustment += 2;
-    EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(N));
+    if (i == 5) // neutral N can have 3 or 5 bonds in our valence model.
+      EXPECT_EQ(0, HydrogenTools::valencyAdjustment(N));
+    else
+      EXPECT_EQ(expectedAdjustment, HydrogenTools::valencyAdjustment(N));
     mol.addBond(mol.addAtom(1), N, 1);
   }
 }
