@@ -97,7 +97,7 @@ static unsigned int atomValence(const unsigned char atomicNumber,
         case -1:
           return 2;
         case 0:
-          if (numBonds <= 3)
+          if (numBonds != 5)
             return 3;
           return 5;
         case 1:
