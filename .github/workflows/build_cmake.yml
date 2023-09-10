@@ -110,19 +110,19 @@ jobs:
       run: choco install ninja
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: avogadrolibs
 
