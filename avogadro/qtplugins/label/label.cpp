@@ -5,6 +5,9 @@
 
 #include "label.h"
 
+#include <iostream>
+#include <sstream>
+
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
@@ -57,7 +60,7 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
 
 struct LayerLabel : Core::LayerData
 {
-  enum LabelOptions : char
+  enum LabelOptions
   {
     None = 0x00,
     Index = 0x01,
@@ -65,8 +68,8 @@ struct LayerLabel : Core::LayerData
     Custom = 0x04,
     Ordinal = 0x08
   };
-  char atomOptions;
-  char residueOptions;
+  unsigned short atomOptions;
+  unsigned short residueOptions;
 
   QWidget* widget;
   float radiusScalar;
@@ -76,8 +79,8 @@ struct LayerLabel : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    atomOptions = char(settings.value("label/atomoptions", 0x02).toInt());
-    residueOptions = char(settings.value("label/residueoptions", 0x00).toInt());
+    atomOptions = settings.value("label/atomoptions", 0x02).toInt();
+    residueOptions = settings.value("label/residueoptions", 0x00).toInt();
     radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
 
     auto q_color =
@@ -95,21 +98,20 @@ struct LayerLabel : Core::LayerData
 
   std::string serialize() final
   {
-    /// FIXME: What is this attempting to do? It causes compiler warnings.
-    std::string aux = (const char*)atomOptions;
-    std::string aux2 = (const char*)residueOptions;
-    return aux + " " + aux2 + " " + std::to_string(radiusScalar) + " " +
-           std::to_string(color[0]) + " " + std::to_string(color[1]) + " " +
-           std::to_string(color[2]);
+    std::stringstream output;
+    output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
+           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2];
+    return output.str();
   }
+
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
     ss >> aux;
-    atomOptions = aux[0];
+    atomOptions = std::stoi(aux);
     ss >> aux;
-    residueOptions = aux[0];
+    residueOptions = std::stoi(aux);
     ss >> aux;
     radiusScalar = std::stof(aux);
     ss >> aux;
@@ -388,4 +390,4 @@ QWidget* Label::setupWidget()
   return interface.widget;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
