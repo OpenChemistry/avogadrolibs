@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-06-30 09:52+0000\n"
+"POT-Creation-Date: 2023-09-03 01:59+0000\n"
+"PO-Revision-Date: 2023-09-05 07:55+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1710,25 +1710,25 @@ msgstr "Formásséma szerint"
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:554
+#: qtplugins/surfaces/surfaces.cpp:561
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:106
-#: qtplugins/surfaces/surfaces.cpp:556
+#: qtplugins/surfaces/surfaces.cpp:563
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Hőség"
 
 #: qtplugins/applycolors/applycolors.cpp:108
-#: qtplugins/surfaces/surfaces.cpp:558
+#: qtplugins/surfaces/surfaces.cpp:565
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Forró"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:560
+#: qtplugins/surfaces/surfaces.cpp:567
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Szürke"
@@ -1736,7 +1736,7 @@ msgstr "Szürke"
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:562
+#: qtplugins/surfaces/surfaces.cpp:569
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
@@ -1744,7 +1744,7 @@ msgstr "Magma"
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:564
+#: qtplugins/surfaces/surfaces.cpp:571
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Pokol"
@@ -1752,7 +1752,7 @@ msgstr "Pokol"
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:566
+#: qtplugins/surfaces/surfaces.cpp:573
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plazma"
@@ -1760,7 +1760,7 @@ msgstr "Plazma"
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:568
+#: qtplugins/surfaces/surfaces.cpp:575
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
@@ -1768,7 +1768,7 @@ msgstr "Viridis"
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:570
+#: qtplugins/surfaces/surfaces.cpp:577
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -1780,7 +1780,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:572:171 rc.cpp:1576
+#: qtplugins/surfaces/surfaces.cpp:579:171 rc.cpp:1576
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Kísérteties"
@@ -1790,7 +1790,7 @@ msgstr "Kísérteties"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:574:168 rc.cpp:1573
+#: qtplugins/surfaces/surfaces.cpp:581:168 rc.cpp:1573
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Hideg meleg"
@@ -1800,7 +1800,7 @@ msgstr "Hideg meleg"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:576:162 rc.cpp:1567
+#: qtplugins/surfaces/surfaces.cpp:583:162 rc.cpp:1567
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Egyensúly"
@@ -1810,7 +1810,7 @@ msgstr "Egyensúly"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:171
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:578:165 rc.cpp:1570
+#: qtplugins/surfaces/surfaces.cpp:585:165 rc.cpp:1570
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Kék-sötétvörös"
@@ -1822,7 +1822,7 @@ msgstr "Kék-sötétvörös"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:580:174 rc.cpp:1579
+#: qtplugins/surfaces/surfaces.cpp:587:174 rc.cpp:1579
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbó"
@@ -2218,52 +2218,60 @@ msgstr "Érvénytelen kémiai elem szimbóluma."
 msgid "Element symbol."
 msgstr "Kémiai elem szimbóluma."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:394
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
+msgid "Invalid atomic index."
+msgstr "Érvénytelen atomindex."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
+msgid "Atomic index."
+msgstr "Atomi index."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
 msgid "Invalid atomic number."
 msgstr "Érvénytelen atomszám."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:396
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
 msgid "Atomic number."
 msgstr "Atomszám."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:416
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:438
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:449
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:460
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:471
 msgid "Invalid coordinate."
 msgstr "Érvénytelen koordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
 msgid "X coordinate."
 msgstr "X koordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
 msgid "Y coordinate."
 msgstr "Y koordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "Z coordinate."
 msgstr "Z koordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "'a' lattice coordinate."
 msgstr "a-hálókoordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 msgid "'b' lattice coordinate."
 msgstr "b-hálókoordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'c' lattice coordinate."
 msgstr "c-hálókoordináta."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:557
 msgid "Error applying geometry"
 msgstr "Hiba történt a geometria alkalmazásakor"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:547
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:558
 msgid ""
 "Could not parse geometry specification. Fix the highlighted errors and try "
 "again.\n"
@@ -2275,7 +2283,7 @@ msgstr ""
 "\n"
 "(Tipp: A hiba leírásához tartsa az egeret a piros szöveg fölé.)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:581
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:593
 msgid "Edit Atomic Coordinates"
 msgstr "Atomkoordináták szerkesztése"
 
@@ -2283,44 +2291,44 @@ msgstr "Atomkoordináták szerkesztése"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:394
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:599
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
 #: qtplugins/label/label.cpp:156:1606 rc.cpp:1633
 msgid "Custom"
 msgstr "Egyéni"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:600
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
 msgid "XYZ format (symbols)"
 msgstr "XYZ-formátum (szimbólumok)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:601
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
 msgid "XYZ format (names)"
 msgstr "XYZ-formátum (nevek)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:602
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
 msgid "XYZ format (atomic numbers)"
 msgstr "XYZ-formátum (atomszámok)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:603
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "Lattice coordinates (symbols)"
 msgstr "Hálókoordináták (szimbólumok)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:604
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
 msgid "Lattice coordinates (names)"
 msgstr "Hálókoordináták (nevek)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
 msgid "Lattice coordinates (atomic numbers)"
 msgstr "Hálókoordináták (atomszámok)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:619
 msgid "GAMESS format (symbols)"
 msgstr "GAMESS-formátum (szimbólumok)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:608
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "GAMESS format (names)"
 msgstr "GAMESS-formátum (nevek)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:621
 msgid "Turbomole format"
 msgstr "TURBOMOLE-formátum"
 
@@ -3235,8 +3243,8 @@ msgstr "Molekula általános tulajdonságok megtekintése."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:52
+#: qtplugins/surfaces/surfaces.cpp:127 qtplugins/symmetry/symmetry.cpp:82
 msgid "&Analysis"
 msgstr "&Elemzés"
 
@@ -3737,7 +3745,7 @@ msgstr "Bittérképes grafika exportálása"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Rajzfilmfájl (*.mp4);;Rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:670
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:677
 msgid "GIF (*.gif)"
 msgstr "GIF-fájl (*.gif)"
 
@@ -3756,17 +3764,17 @@ msgid "Movie (*.avi)"
 msgstr "Rajzfilmfájl (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:698
-#: qtplugins/surfaces/surfaces.cpp:742 qtplugins/surfaces/surfaces.cpp:754
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:705
+#: qtplugins/surfaces/surfaces.cpp:749 qtplugins/surfaces/surfaces.cpp:761
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:743
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:750
 msgid "Error: cannot add frame to video."
 msgstr "Hiba történt: nem sikerült képkockát hozzáadni a videóhoz."
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:755
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:762
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 fájl mentése nem sikerult."
@@ -4473,9 +4481,29 @@ msgstr "Tércsoport"
 msgid "Space group features for crystals."
 msgstr "A tércsoport jellemzői a kristályokhoz."
 
-#: qtplugins/spectra/spectra.cpp:26
+#: qtplugins/spectra/spectra.cpp:27
 msgid "Vibrational Modes…"
 msgstr "Rezgési módok…"
+
+#: qtplugins/spectra/spectra.cpp:32
+msgid "Show the vibrational modes dialog."
+msgstr "Rezgési módok párbeszédpanel megjelenítése."
+
+#: qtplugins/spectra/spectra.cpp:33
+msgid "Set the vibrational mode."
+msgstr "Rezgési mód beállítása."
+
+#: qtplugins/spectra/spectra.cpp:35
+msgid "Set the vibrational amplitude."
+msgstr "Rezgési amplitúdó beállítása."
+
+#: qtplugins/spectra/spectra.cpp:37
+msgid "Start the vibrational animation."
+msgstr "Rezgés-animáció indítása."
+
+#: qtplugins/spectra/spectra.cpp:39
+msgid "Stop the vibrational animation."
+msgstr "Rezgés-animáció leállítása."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
@@ -4521,28 +4549,28 @@ msgstr "(Legalacsonyabb szabad molekulapálya)"
 msgid "From File"
 msgstr "Fájlból"
 
-#: qtplugins/surfaces/surfaces.cpp:80
+#: qtplugins/surfaces/surfaces.cpp:81
 msgid "Create Surfaces…"
 msgstr "Felületek létrehozása…"
 
-#: qtplugins/surfaces/surfaces.cpp:414
+#: qtplugins/surfaces/surfaces.cpp:419
 msgid "Calculating electron density"
 msgstr "Elektronsűrűség számítása folyamatban van…"
 
-#: qtplugins/surfaces/surfaces.cpp:424
+#: qtplugins/surfaces/surfaces.cpp:429
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Molekuláris pálya kiszámítása: %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:647 qtplugins/surfaces/surfaces.cpp:675
+#: qtplugins/surfaces/surfaces.cpp:654 qtplugins/surfaces/surfaces.cpp:682
 msgid "Movie AVI (*.avi)"
 msgstr "AVI-rajzfilmfájl (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:649
+#: qtplugins/surfaces/surfaces.cpp:656
 msgid "Export Movie"
 msgstr "Rajzfilmfájl exportálása"
 
-#: qtplugins/surfaces/surfaces.cpp:650
+#: qtplugins/surfaces/surfaces.cpp:657
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4-rajzfilmfájl (*.mp4);;AVI-rajzfilmfájl (*.avi);;GIF-fájl (*.gif)"
 
@@ -7740,9 +7768,6 @@ msgstr "E-mail-címek"
 
 #~ msgid "Residue Properties..."
 #~ msgstr "Maradék tulajdonságai…"
-
-#~ msgid "Vibrational modes..."
-#~ msgstr "Rezgési módok…"
 
 #~ msgid "Create Surfaces..."
 #~ msgstr "Felületek létrehozása..."
