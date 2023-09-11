@@ -103,6 +103,12 @@ public:
   virtual bool handleCommand(const QString& command,
                              const QVariantMap& options);
 
+  /**
+   * Called by the app to tell the tool to register commands.
+   * If the tool has commands, it should emit the registerCommand signals.
+  */
+  virtual void registerCommands() {}
+
 signals:
   /**
    * Emitted when draw() needs to be called again due to updates.
