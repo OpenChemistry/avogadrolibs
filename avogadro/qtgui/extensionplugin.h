@@ -77,7 +77,7 @@ public:
   /**
    * If the extension plugin has script commands, this method
    * should be implemented to emit the registerCommand signals.
-  */
+   */
   virtual void registerCommands() {}
 
 public slots:

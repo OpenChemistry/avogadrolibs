@@ -106,7 +106,7 @@ public:
   /**
    * Called by the app to tell the tool to register commands.
    * If the tool has commands, it should emit the registerCommand signals.
-  */
+   */
   virtual void registerCommands() {}
 
 signals:
