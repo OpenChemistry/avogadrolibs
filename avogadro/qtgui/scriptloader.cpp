@@ -40,9 +40,8 @@ bool ScriptLoader::queryProgramName(const QString& scriptFilePath,
   displayName = gen.displayName();
   if (gen.hasErrors()) {
     displayName.clear();
-    qWarning() << "ScriptLoader::queryProgramName: Unable to retrieve program "
-                  "name for"
-               << scriptFilePath << ";" << gen.errorList().join("\n\n");
+    qWarning() << tr("Cannot load script %1")
+                    .arg(scriptFilePath);
     return false;
   }
   return true;
@@ -69,7 +68,7 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   // build up a list of possible files, then we check if they're real scripts
   QStringList fileList;
   foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for " << type << " scripts in" << dirStr;
+    qDebug() << tr("Checking for %1 scripts in path %2").arg(type).arg(dirStr);
     QDir dir(dirStr);
     if (dir.exists() && dir.isReadable()) {
       foreach (

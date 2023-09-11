@@ -97,7 +97,7 @@ if __name__ == "__main__":
         if name:
             print(name)
         else:
-            raise RuntimeError("xtb is unavailable")
+            sys.exit("xtb is unavailable")
     elif args["charges"]:
         print(charges())
     elif args["potential"]:
