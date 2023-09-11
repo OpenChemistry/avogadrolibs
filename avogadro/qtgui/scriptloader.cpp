@@ -27,9 +27,7 @@
 
 namespace Avogadro::QtGui {
 
-ScriptLoader::ScriptLoader(QObject* parent_)
-  : QObject(parent_)
-{}
+ScriptLoader::ScriptLoader(QObject* parent_) : QObject(parent_) {}
 
 ScriptLoader::~ScriptLoader() {}
 
@@ -40,8 +38,7 @@ bool ScriptLoader::queryProgramName(const QString& scriptFilePath,
   displayName = gen.displayName();
   if (gen.hasErrors()) {
     displayName.clear();
-    qWarning() << tr("Cannot load script %1")
-                    .arg(scriptFilePath);
+    qWarning() << tr("Cannot load script %1").arg(scriptFilePath);
     return false;
   }
   return true;
@@ -96,7 +93,7 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
               if (commands.type() == QJsonValue::Array) {
                 // check if "command.*" exists as a file
                 QJsonArray list = commands.toArray();
-                for (auto && i : list) {
+                for (auto&& i : list) {
                   QJsonValue command = i.toObject()["command"];
                   QString name = command.toString();
                   if (name.isEmpty() || name.isNull())
@@ -152,4 +149,4 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   return scriptList;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
