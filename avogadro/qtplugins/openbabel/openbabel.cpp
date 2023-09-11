@@ -837,13 +837,10 @@ QString OpenBabel::autoDetectForceField() const
         *eleIter != "N" && *eleIter != "O" && *eleIter != "P" &&
         *eleIter != "S") {
       gaffValid = false;
+      mmff94Valid = false;
 
-      // These are supported by MMFF94 (but not GAFF)
-      if (*eleIter != "Fe" && *eleIter != "Li" && *eleIter != "Na" &&
-          *eleIter != "K" && *eleIter != "Zn" && *eleIter != "Ca" &&
-          *eleIter != "Cu" && *eleIter != "Mg" && *eleIter != "Na") {
-        mmff94Valid = false;
-      }
+      // MMFF94 supports isolated metal ions but it's safer to use UFF
+      // Fixes #1324
     }
     ++eleIter;
   }
