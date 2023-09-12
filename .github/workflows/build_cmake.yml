@@ -248,7 +248,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: AppImage
-      if: matrix.config.os == 'ubuntu-18.04'
+      if: matrix.config.os == 'ubuntu-20.04'
       shell: bash
       run: |
         mkdir appdir
