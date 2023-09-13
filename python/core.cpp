@@ -22,7 +22,7 @@ PYBIND11_MODULE(core, m)
     .def_property_readonly("index", &Atom::index, "Index in the molecule")
     .def_property("atomic_number", &Atom::atomicNumber, &Atom::setAtomicNumber,
                   "The atomic number")
-    .def_property("position", &Atom::position3D, &Atom::setPosition3D,
+    .def_property("position", &Atom::position3d, &Atom::setPosition3d,
                   "The 3D position of the atom")
     .def_property("formal_charge", &Atom::formalCharge, &Atom::setFormalCharge,
                   "The formal charge of the atom")
@@ -49,6 +49,10 @@ PYBIND11_MODULE(core, m)
   Bond (Molecule::*addBond1)(Index, Index, unsigned char) = &Molecule::addBond;
   Bond (Molecule::*addBond2)(const Atom&, const Atom&, unsigned char) =
     &Molecule::addBond;
+  Bond (Molecule::*bond0)(Index) const = &Molecule::bond;
+  Bond (Molecule::*bond1)(const Atom&, const Atom&) const = &Molecule::bond;
+  Bond (Molecule::*bond2)(Index, Index) const = &Molecule::bond;
+  Cube* (Molecule::*cube0)(Index) = &Molecule::cube;
 
   py::class_<UnitCell>(m, "UnitCell")
     .def(py::init<>())
@@ -67,16 +71,10 @@ PYBIND11_MODULE(core, m)
          "Set the unit cell parameters a b c alpha beta gamma")
     .def_property("cell_matrix", &UnitCell::cellMatrix,
                   &UnitCell::setCellMatrix, "The unit cell vector matrix")
-    .def("to_fractional", &UnitCell::toFractional,
-         "Convert a cartesian vector to fractional coordinates")
-    .def("to_cartesian", &UnitCell::toCartesian,
-         "Convert a fractional vector to cartesian coordinates")
-    .def("wrap_fractional", &UnitCell::wrapFractional,
-         "Wrap a fractional vector to the unit cell")
-    .def("wrap_cartesian", &UnitCell::wrapCartesian,
-         "Wrap a cartesian vector to the unit cell")
     .def("distance", &UnitCell::distance,
          "Calculate the distance between two points in the unit cell");
+
+  UnitCell* (Molecule::*unitCell0)() = &Molecule::unitCell;
 
   py::class_<Molecule>(m, "Molecule")
     .def(py::init<>())
@@ -86,27 +84,26 @@ PYBIND11_MODULE(core, m)
     .def("atom_count", atomCount0, "The number of atoms")
     .def("atom_count", atomCount1,
          "The number of atoms with the supplied atomic number")
-    .def_property_readonly("atoms", &Molecule::atoms,
-                           "The atoms in the molecule")
+    .def("atom", &Molecule::atom, "The atom at the specified index")
     .def("add_bond", addBond1, "Add a new bond", py::arg("a1"), py::arg("a2"),
          py::arg("order") = 1)
     .def("add_bond", addBond2, "Add a new bond", py::arg("a1"), py::arg("a2"),
          py::arg("order") = 1)
     .def("bond_count", &Molecule::bondCount, "The number of bonds")
-    .def_property_readonly("bonds", &Molecule::bonds,
-                           "The bonds in the molecule")
+    .def("bond", bond0, "The bond at the specified index")
+    .def("bond", bond1, "The bond between the specified atoms")
+    .def("bond", bond2, "The bond between the specified atoms")
     .def("add_cube", &Molecule::addCube, py::return_value_policy::reference,
          "Add a new cube")
     .def("cube_count", &Molecule::cubeCount, "The number of cubes")
-    .def_property_readonly("cubes", &Molecule::cubes,
-                           "The cubes in the molecule")
+    .def("cube", cube0, "The cube at the specified index")
     .def_property_readonly("radius", &Molecule::radius,
                            "The radius of the molecule")
     .def_property_readonly("center", &Molecule::centerOfGeometry,
                            "The center of geometry of the molecule")
     .def_property_readonly("mass_center", &Molecule::centerOfMass,
                            "The center of mass of the molecule")
-    .def_property_readonly("unit_cell", &Molecule::unitCell,
+    .def_property_readonly("unit_cell", unitCell0,
                            "The unit cell of the molecule, if defined")
     .def("has_custom_elements", &Molecule::hasCustomElements,
          "Returns true if the molecule contains any custom elements")
