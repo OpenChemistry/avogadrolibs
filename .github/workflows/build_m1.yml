@@ -162,7 +162,8 @@ jobs:
           echo "codesign DMG"
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
           echo "notarizing"
-          npx notarize-cli --file Avogadro2*.dmg
+          xcrun notarytool submit Avogadro2*.dmg --apple-id "$NOTARIZE_USERNAME" --password "NOTARIZE_PASSWORD" --verbose --wait
+          xcrun stapler staple -v Avogadro2*.dmg
         fi
       env:
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
