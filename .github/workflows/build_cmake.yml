@@ -276,7 +276,8 @@ jobs:
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
-          npx notarize-cli --file Avogadro2*.dmg
+          xcrun notarytool submit Avogadro2*.dmg --apple-id "$NOTARIZE_USERNAME" --password "NOTARIZE_PASSWORD" --verbose --wait
+          xcrun stapler staple -v Avogadro2*.dmg
         fi
       working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
