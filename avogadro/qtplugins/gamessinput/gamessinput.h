@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_QUANTUMINPUT_H
-#define AVOGADRO_QTPLUGINS_QUANTUMINPUT_H
+#ifndef AVOGADRO_QTPLUGINS_GAMESSINPUT_H
+#define AVOGADRO_QTPLUGINS_GAMESSINPUT_H
 
 #include <avogadro/qtgui/extensionplugin.h>
 
@@ -65,4 +65,4 @@ private:
 }
 }
 
-#endif // AVOGADRO_QTPLUGINS_QUANTUMINPUT_H
+#endif // AVOGADRO_QTPLUGINS_GAMESSINPUT_H
