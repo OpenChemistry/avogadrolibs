@@ -38,6 +38,7 @@ namespace {
 #include <avogadro/quantumio/gamessus.h>
 #include <avogadro/quantumio/gaussiancube.h>
 #include <avogadro/quantumio/gaussianfchk.h>
+#include <avogadro/quantumio/genericoutput.h>
 #include <avogadro/quantumio/molden.h>
 #include <avogadro/quantumio/mopacaux.h>
 #include <avogadro/quantumio/nwchemjson.h>
@@ -89,6 +90,7 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
   Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
+  Io::FileFormatManager::registerFormat(new QuantumIO::GenericOutput);
   Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
   Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
   Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
