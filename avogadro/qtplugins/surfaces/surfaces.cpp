@@ -99,7 +99,7 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
 Surfaces::~Surfaces()
 {
   delete d;
-  delete m_cube;
+  // delete m_cube; // should be freed by the molecule
 }
 
 void Surfaces::registerCommands()
@@ -113,6 +113,7 @@ void Surfaces::registerCommands()
   emit registerCommand("renderSolventExcluded",
                        tr("Render the solvent-excluded molecular surface."));
   emit registerCommand("renderOrbital", tr("Render a molecular orbital."));
+  emit registerCommand("renderMO", tr("Render a molecular orbital."));
   emit registerCommand("renderElectronDensity",
                        tr("Render the electron density."));
   emit registerCommand("renderSpinDensity", tr("Render the spin density."));
@@ -124,6 +125,8 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 {
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.
+
+  qDebug() << "handle surface cmd:" << command << options;
 
   // Set up some defaults for the options.
   int index = -1;
@@ -148,12 +151,12 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 
   if (m_basis != nullptr)
     homo = m_basis->homo();
-  if (options.contains("index")) {
+  if (options.contains("orbital")) {
     // check if options contains "homo" or "lumo"
-    bool string = options["index"].canConvert<QString>();
+    bool string = options["orbital"].canConvert<QString>();
     if (string) {
       // should be something like "homo-1" or "lumo+2"
-      QString name = options["index"].toString();
+      QString name = options["orbital"].toString();
       QString expression, modifier;
       if (name.contains("homo", Qt::CaseInsensitive)) {
         index = homo; // modified by the expression after the string
@@ -185,7 +188,8 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     beta = options["spin"].toString().contains("beta");
   }
 
-  if (command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) {
+  if ((command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) ||
+      (command.compare("renderVDW", Qt::CaseInsensitive) == 0)) {
     calculateEDT(VanDerWaals, cubeResolution);
     return true;
   } else if (command.compare("renderSolventAccessible", Qt::CaseInsensitive) ==
@@ -196,7 +200,8 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
              0) {
     calculateEDT(SolventExcluded, cubeResolution);
     return true;
-  } else if (command.compare("renderOrbital", Qt::CaseInsensitive) == 0) {
+  } else if ((command.compare("renderOrbital", Qt::CaseInsensitive) == 0) ||
+             (command.compare("renderMO", Qt::CaseInsensitive) == 0)) {
     calculateQM(MolecularOrbital, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderElectronDensity", Qt::CaseInsensitive) ==
@@ -239,6 +244,14 @@ QStringList Surfaces::menuPath(QAction*) const
 
 void Surfaces::surfacesActivated()
 {
+  if (!m_dialog) {
+    m_dialog = new SurfaceDialog(qobject_cast<QWidget*>(parent()));
+    connect(m_dialog, SIGNAL(calculateClickedSignal()),
+            SLOT(calculateSurface()));
+    connect(m_dialog, SIGNAL(recordClicked()), SLOT(recordMovie()));
+    connect(m_dialog, SIGNAL(stepChanged(int)), SLOT(stepChanged(int)));
+  }
+
   if (m_basis) {
     // we have quantum data, set up the dialog accordingly
     auto gaussian = dynamic_cast<Core::GaussianSet*>(m_basis);
@@ -339,14 +352,20 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   if (type == Unknown && m_dialog != nullptr)
     type = m_dialog->surfaceType();
 
+  if (!m_cube)
+    m_cube = m_molecule->addCube();
+
   QFuture future = QtConcurrent::run([=]() {
     double probeRadius = 0.0;
     switch (type) {
       case VanDerWaals:
+        m_cube->setCubeType(Core::Cube::Type::VdW);
         break;
       case SolventAccessible:
+        m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
       case SolventExcluded:
         probeRadius = 1.4;
+        m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
         break;
       default:
         break;
@@ -618,6 +637,9 @@ void Surfaces::calculateCube(int index, float isoValue)
 
   // check bounds
   m_cube = m_cubes[index];
+  if (m_cube == nullptr)
+    return;
+
   if (isoValue == 0.0 && m_dialog != nullptr)
     m_isoValue = m_dialog->isosurfaceValue();
   else
@@ -764,6 +786,9 @@ void Surfaces::colorMeshByPotential()
 
 void Surfaces::colorMesh()
 {
+  if (m_dialog == nullptr)
+    return;
+
   switch (m_dialog->colorProperty()) {
     case None:
       break;
@@ -784,7 +809,8 @@ void Surfaces::meshFinished()
       m_molecule->emitChanged(QtGui::Molecule::Added);
       movieFrame();
     } else {
-      m_dialog->reenableCalculateButton();
+      if (m_dialog != nullptr)
+        m_dialog->reenableCalculateButton();
 
       qDebug() << " mesh finished";
 
