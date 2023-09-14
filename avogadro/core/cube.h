@@ -39,8 +39,11 @@ public:
   enum Type
   {
     VdW,
+    SolventAccessible,
+    SolventExcluded,
     ESP,
     ElectronDensity,
+    SpinDensity,
     MO,
     FromFile,
     None

@@ -28,7 +28,7 @@ namespace Core {
 class BasisSet;
 class Cube;
 class Mesh;
-}
+} // namespace Core
 
 namespace QtPlugins {
 
@@ -61,7 +61,7 @@ public:
     FromFile,
     Unknown
   };
-  
+
   enum ColorProperty
   {
     None,
@@ -69,7 +69,10 @@ public:
   };
 
   QString name() const override { return tr("Surfaces"); }
-  QString description() const override { return tr("Read and render surfaces."); }
+  QString description() const override
+  {
+    return tr("Read and render surfaces.");
+  }
 
   QList<QAction*> actions() const override;
 
@@ -77,19 +80,26 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  void registerCommands() override;
+
+public slots:
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
 private slots:
   void surfacesActivated();
   void calculateSurface();
-  void calculateEDT();
+  void calculateEDT(Type type = Unknown, float defaultResolution = 0.0);
   void performEDTStep(); // EDT step for SolventExcluded
-  void calculateQM();
-  void calculateCube();
+  void calculateQM(Type type = Unknown, int index = -1, bool betaSpin = false,
+                   float isoValue = 0.0, float defaultResolution = 0.0);
+  void calculateCube(int index = -1, float isoValue = 0.0);
 
   void stepChanged(int);
 
   void displayMesh();
   void meshFinished();
-  
+
   void colorMesh();
   void colorMeshByPotential();
 
@@ -97,10 +107,9 @@ private slots:
   void movieFrame();
 
 private:
-  float resolution();
-  Core::Color3f chargeGradient(
-    double value, double clamp, tinycolormap::ColormapType colormap
-  ) const;
+  float resolution(float specified = 0.0);
+  Core::Color3f chargeGradient(double value, double clamp,
+                               tinycolormap::ColormapType colormap) const;
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
@@ -139,7 +148,7 @@ private:
   class PIMPL;
   PIMPL* d = nullptr;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
