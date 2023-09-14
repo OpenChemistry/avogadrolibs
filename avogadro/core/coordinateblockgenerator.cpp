@@ -64,8 +64,8 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   const Index numAtoms = m_molecule->atomCount();
   Atom atom;
   unsigned char atomicNumber;
-  const char* symbol;
-  const char* name;
+  const char* symbol = "\0";
+  const char* name = "\0";
   Vector3 pos3d;
   Vector3 fpos3d;
   const UnitCell* cell =

@@ -35,7 +35,7 @@ Dihedral DihedralIterator::begin()
       Index c = bc.second;
 
       // find an a
-      Index a;
+      Index a = 0;
       for (const auto maybeA : graph.neighbors(b)) {
         if (maybeA != c) {
           a = maybeA;
