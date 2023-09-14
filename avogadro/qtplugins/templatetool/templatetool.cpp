@@ -370,7 +370,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       return;
 
     // Find dummy atom in template and get all necessary info
-    size_t templateDummyIndex;
+    size_t templateDummyIndex = 0;
     std::vector<size_t> templateLigandIndices;
     std::vector<size_t> templateLigandUIDs;
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
