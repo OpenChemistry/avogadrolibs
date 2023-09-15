@@ -70,27 +70,27 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
       if (r->name() == "cclib") {
         reader = r->newInstance();
         break;
-        if (r->identifier().compare(0, 9, "OpenBabel") == 0) {
-          reader = r->newInstance();
-          break;
-        }
+      } else if (r->identifier().compare(0, 9, "OpenBabel") == 0) {
+        reader = r->newInstance();
+        break;
       }
     }
-
-    // rewind the stream
-    in.seekg(0, std::ios::beg);
-    in.clear();
-
-    if (reader) {
-      bool success = reader->readFile(fileName(), molecule);
-      delete reader;
-      return success;
-    } else {
-      appendError(
-        "Could not determine the program used to generate this output file.");
-      delete reader;
-      return false;
-    }
   }
+
+  // rewind the stream
+  in.seekg(0, std::ios::beg);
+  in.clear();
+
+  if (reader) {
+    bool success = reader->readFile(fileName(), molecule);
+    delete reader;
+    return success;
+  } else {
+    appendError(
+      "Could not determine the program used to generate this output file.");
+    delete reader;
+    return false;
+  }
+}
 
 } // namespace Avogadro::QuantumIO
