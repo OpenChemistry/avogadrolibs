@@ -33,8 +33,6 @@ std::vector<std::string> GAMESSUSOutput::fileExtensions() const
   std::vector<std::string> extensions;
   extensions.emplace_back("gamout");
   extensions.emplace_back("gamess");
-  extensions.emplace_back("log");
-  extensions.emplace_back("out");
   return extensions;
 }
 

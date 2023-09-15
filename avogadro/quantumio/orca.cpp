@@ -30,8 +30,7 @@ ORCAOutput::~ORCAOutput() {}
 std::vector<std::string> ORCAOutput::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.emplace_back("log");
-  extensions.emplace_back("out");
+  extensions.emplace_back("orca");
   return extensions;
 }
 
