@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-03 01:59+0000\n"
-"PO-Revision-Date: 2023-06-11 08:49+0000\n"
+"PO-Revision-Date: 2023-09-17 17:54+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -1335,7 +1335,7 @@ msgstr "ბმის დამატება"
 
 #: qtgui/rwmolecule.cpp:298
 msgid "Removed Bond"
-msgstr "ბმის წაშლა"
+msgstr "წაშლილი მიბმა"
 
 #: qtgui/rwmolecule.cpp:305
 msgid "Clear Bonds"
@@ -1412,7 +1412,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
-msgstr "ატომის მდებარეობის შეცვლა"
+msgstr "ატომის მდებარეობების შეცვლა"
 
 #: qtgui/rwmolecule.h:224
 msgid "Change Atom Position"
@@ -1856,10 +1856,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Select Atom"
 msgid "Bond Selected Atoms"
-msgstr "აირჩიეთ ატომი"
+msgstr "მონიშნული ატომების მიბმა"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2105,16 +2103,12 @@ msgid "Element symbol."
 msgstr "ელემენტის სიმბოლო."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "არასწორი ატომური ნომერი."
+msgstr "არასწორი ატომური ინდექსი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
-#, fuzzy
-#| msgid "Atomic number."
 msgid "Atomic index."
-msgstr "ატომური ნომერი."
+msgstr "ატომური ინდექსი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
 msgid "Invalid atomic number."
@@ -4850,7 +4844,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Angstrom"
-msgstr ""
+msgstr "ანგსტრემი"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -5715,7 +5709,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:396
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Time Step"
-msgstr ""
+msgstr "დროის ბიჯი"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:416
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -5828,7 +5822,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Replicate"
-msgstr ""
+msgstr "რეპლიკაცია"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
@@ -5991,12 +5985,12 @@ msgstr ""
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "X-axis"
-msgstr ""
+msgstr "X-ღერძი"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:166
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Y-axis"
-msgstr ""
+msgstr "Y-ღერძი"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -6011,14 +6005,12 @@ msgstr ""
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Origin"
-msgstr ""
+msgstr "საწყისი"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-#, fuzzy
-#| msgid "Optimize Geometry"
 msgid "Geometry"
-msgstr "გეომეტრიის ოპტიმიზაცია"
+msgstr "გეომეტრია"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, moleculeNameLabel)
@@ -6240,7 +6232,7 @@ msgstr "პლატფორმა:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "Reference"
-msgstr "ბმა"
+msgstr "მიბმა"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -6830,7 +6822,7 @@ msgstr "ქვეჯგუფები:"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:214
 #. i18n: ectx: property (text), widget (QLabel, toleranceLabel)
 msgid "Tolerance:"
-msgstr ""
+msgstr "დაშვება:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
