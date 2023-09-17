@@ -12,12 +12,11 @@
 
 #include <algorithm>
 
+#include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QSettings>
-#include <QtCore/QDebug>
 
 #include <QtGui/QClipboard>
-
 
 namespace {
 // The ItemData of the "Other" entry in the combo box
@@ -27,7 +26,8 @@ const int ELEMENT_SELECTOR_TAG = 255;
 namespace Avogadro {
 namespace QtPlugins {
 
-enum LigandType {
+enum LigandType
+{
   Monodentate = 0,
   Bidentate = 1,
   Tridentate = 2,
