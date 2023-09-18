@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-17 02:00+0000\n"
-"PO-Revision-Date: 2023-09-09 12:53+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-09-19 16:01+0000\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1328,11 +1328,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1…"
+#, qt-format
 msgid "Warning '%1'"
-msgstr "Comenzando %1…"
+msgstr "Advertencia '%1'"
 
 #: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
@@ -1532,10 +1530,9 @@ msgid "Modify Molecule"
 msgstr "Modificar Molécula"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "No se puede guardar el archivo %1."
+msgstr "No se puede cargar la secuencia de comandos %1"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -4503,15 +4500,15 @@ msgstr "Establecer el modo de vibración."
 
 #: qtplugins/spectra/spectra.cpp:67
 msgid "Set the vibrational amplitude."
-msgstr "Establecer la fuerza de la vibración."
+msgstr "Establecer la amplitud de la vibración."
 
 #: qtplugins/spectra/spectra.cpp:69
 msgid "Start the vibrational animation."
-msgstr "Inicia la vibración en la animación."
+msgstr "Iniciar la animación vibracional."
 
 #: qtplugins/spectra/spectra.cpp:71
 msgid "Stop the vibrational animation."
-msgstr "Para la vibración de la animación."
+msgstr "Detener la animación vibracional."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
@@ -4562,10 +4559,8 @@ msgid "Create Surfaces…"
 msgstr "Crear Superficies…"
 
 #: qtplugins/surfaces/surfaces.cpp:110
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Traza átomos como esferas de Van der Waals"
+msgstr "Representar la superficie de Van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:112
 #, fuzzy
@@ -4586,16 +4581,12 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr "Representar la molécula en modo armazón de alambre."
 
 #: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "Orbital Molecular"
+msgstr "Representar un orbital molecular."
 
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "Calculando densidad electrónica"
+msgstr "Representar la densidad electrónica."
 
 #: qtplugins/surfaces/surfaces.cpp:121
 #, fuzzy
