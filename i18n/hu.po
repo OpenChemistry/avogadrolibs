@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-17 02:00+0000\n"
-"PO-Revision-Date: 2023-09-05 07:55+0000\n"
+"PO-Revision-Date: 2023-09-20 12:35+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1325,11 +1325,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1…"
+#, qt-format
 msgid "Warning '%1'"
-msgstr "%1 indítása…"
+msgstr "Figyelmeztetés „%1”"
 
 #: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
@@ -1529,15 +1527,14 @@ msgid "Modify Molecule"
 msgstr "Molekula módosítása"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "%1 fájl mentése nem sikerult."
+msgstr "Nem sikerült betölteni a(z) %1 parancsfájlt"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr ""
+msgstr "%1 parancsfájl keresése a(z) %2 elérési útban"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
@@ -4572,60 +4569,44 @@ msgid "Create Surfaces…"
 msgstr "Felületek létrehozása…"
 
 #: qtplugins/surfaces/surfaces.cpp:110
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Atomok Van der Waals szférájának rajzolása"
+msgstr "Van der Waals felületének rajzolása"
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "Drótkeret molekulai diagram megjelenítése."
+msgstr "Van der Waals molekulafelületének rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Drótkeret molekulai diagram megjelenítése."
+msgstr "Oldószerrel hozzáférhető molekulafelületének rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:116
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "Drótkeret molekulai diagram megjelenítése."
+msgstr "Oldószertől kizárt molekulafelületének rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "Molekulapálya"
+msgstr "Molekulapálya rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "Elektronsűrűség számítása folyamatban van…"
+msgstr "Elektronsűrűség rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:121
-#, fuzzy
-#| msgid "Render the scene using PLY."
 msgid "Render the spin density."
-msgstr "A jelenet megjelenítése a PLY használatával."
+msgstr "Centrifugálási sűrűségének rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render a cube supplied with the file."
-msgstr ""
+msgstr "Fájlhoz mellékelt kocka rajzolása."
 
 #: qtplugins/surfaces/surfaces.cpp:567
 msgid "Calculating electron density"
 msgstr "Elektronsűrűség számítása folyamatban van…"
 
 #: qtplugins/surfaces/surfaces.cpp:576
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Calculating spin density"
-msgstr "Elektronsűrűség számítása folyamatban van…"
+msgstr "Centrifugálási sűrűség kiszámítása folyamatban van…"
 
 #: qtplugins/surfaces/surfaces.cpp:585
 #, qt-format
