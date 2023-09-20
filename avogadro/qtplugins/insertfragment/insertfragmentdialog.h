@@ -33,18 +33,20 @@ public:
 public Q_SLOTS:
   void refresh();
 
-  void filterTextChanged(const QString &);
+  void filterTextChanged(const QString&);
 
   void activated();
 
+  void clicked(const QModelIndex& selected);
+
 Q_SIGNALS:
-  void performInsert(const QString &fileName, bool crystal);
+  void performInsert(const QString& fileName, bool crystal);
 
 private:
   Ui::InsertFragmentDialog* m_ui;
 
   class Private;
-  Private *m_implementation;
+  Private* m_implementation;
 };
 
 } // namespace QtPlugins

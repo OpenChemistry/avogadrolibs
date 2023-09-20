@@ -48,8 +48,8 @@ public:
 
   ~Private()
   {
-    
-      delete model; // proxy is handled through the model
+
+    delete model; // proxy is handled through the model
   }
 };
 
@@ -60,6 +60,8 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
 {
   setWindowFlags(Qt::Dialog | Qt::Tool);
   m_ui->setupUi(this);
+  // to start, hide the preview
+  m_ui->preview->hide();
 
   m_implementation->currentFileName.clear();
   if (directory.contains(QLatin1String("crystals")))
@@ -112,6 +114,13 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   m_implementation->model->setReadOnly(true);
   QModelIndex rootIndex = m_implementation->model->setRootPath(m_directory);
 
+  QStringList filters;
+  if (m_implementation->crystalFiles)
+    filters << "*.cif";
+  else
+    filters << "*.cjson";
+  m_implementation->model->setNameFilters(filters);
+
   m_implementation->proxy = new SortFilterTreeProxyModel(this);
   m_implementation->proxy->setSourceModel(m_implementation->model);
   m_implementation->proxy->setSortLocaleAware(true); // important for files
@@ -144,6 +153,9 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
 
   connect(m_ui->filterLineEdit, SIGNAL(textChanged(const QString&)), this,
           SLOT(filterTextChanged(const QString&)));
+
+  connect(m_ui->directoryTreeView, SIGNAL(clicked(const QModelIndex&)), this,
+          SLOT(clicked(const QModelIndex&)));
 }
 
 InsertFragmentDialog::~InsertFragmentDialog()
@@ -167,6 +179,24 @@ QString InsertFragmentDialog::fileName()
 
   // Remember to map to the source model
   return selected.first().data(QFileSystemModel::FilePathRole).toString();
+}
+
+void InsertFragmentDialog::clicked(const QModelIndex& selected)
+{
+  if (m_implementation == nullptr || m_implementation->model == nullptr)
+    return;
+
+  // Remember to map to the source model
+  QString fileName = selected.data(QFileSystemModel::FilePathRole).toString();
+  QFileInfo info(fileName);
+  if (!info.isDir()) {
+    // get the PNG name
+    QString pngName = info.absolutePath() + '/' + info.baseName() + ".png";
+
+    m_ui->preview->setIcon(QIcon(pngName));
+    m_ui->preview->show();
+  } else
+    m_ui->preview->hide();
 }
 
 void InsertFragmentDialog::refresh()
@@ -201,4 +231,4 @@ void InsertFragmentDialog::activated()
   emit performInsert(currentFileName, m_implementation->crystalFiles);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
