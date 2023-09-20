@@ -154,8 +154,9 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   connect(m_ui->filterLineEdit, SIGNAL(textChanged(const QString&)), this,
           SLOT(filterTextChanged(const QString&)));
 
-  connect(m_ui->directoryTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex &)), this,
-          SLOT(currentChanged(const QModelIndex&, const QModelIndex &)));
+  connect(m_ui->directoryTreeView->selectionModel(),
+          SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this,
+          SLOT(currentChanged(const QModelIndex&, const QModelIndex&)));
 }
 
 InsertFragmentDialog::~InsertFragmentDialog()
@@ -181,7 +182,8 @@ QString InsertFragmentDialog::fileName()
   return selected.first().data(QFileSystemModel::FilePathRole).toString();
 }
 
-void InsertFragmentDialog::currentChanged(const QModelIndex& selected, const QModelIndex& deselected)
+void InsertFragmentDialog::currentChanged(const QModelIndex& selected,
+                                          const QModelIndex& deselected)
 {
   Q_UNUSED(deselected)
   if (m_implementation == nullptr || m_implementation->model == nullptr)
