@@ -37,7 +37,8 @@ public Q_SLOTS:
 
   void activated();
 
-  void clicked(const QModelIndex& selected);
+  void currentChanged(const QModelIndex& selected,
+                      const QModelIndex& deselected);
 
 Q_SIGNALS:
   void performInsert(const QString& fileName, bool crystal);
