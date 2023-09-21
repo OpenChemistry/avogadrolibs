@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-09-03 01:59+0000\n"
+"POT-Creation-Date: 2023-09-17 02:00+0000\n"
 "PO-Revision-Date: 2023-01-11 10:11+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
@@ -1018,13 +1018,13 @@ msgstr "Selecionar ficheiro:"
 msgid "Select executable:"
 msgstr "Selecionar executável:"
 
-#: qtgui/fileformatdialog.cpp:51
+#: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 "Incapaz de encontrar um leitor de ficheiros adequado para o ficheiro "
 "seleccionado."
 
-#: qtgui/fileformatdialog.cpp:99
+#: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
@@ -1032,54 +1032,54 @@ msgstr ""
 "A extensão do ficheiro está faltando, então o formato do ficheiro não pôde "
 "ser determinado. Quer adicioná-la?"
 
-#: qtgui/fileformatdialog.cpp:113
+#: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 "Não foi possível encontrar um gravador de ficheiro adequado para o formato "
 "selecionado."
 
-#: qtgui/fileformatdialog.cpp:162
+#: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "manipuladores"
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "lidar"
 
-#: qtgui/fileformatdialog.cpp:167
+#: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
 msgstr "leitores"
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "ler"
 
-#: qtgui/fileformatdialog.cpp:172
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
 msgstr "escritores"
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "escrever"
 
-#: qtgui/fileformatdialog.cpp:178
+#: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Vários %1 encontrados que podem %2 este formato. Qual deve ser usado?"
 
-#: qtgui/fileformatdialog.cpp:278
+#: qtgui/fileformatdialog.cpp:279
 #, fuzzy
 #| msgid "All Files"
 msgid "All files"
 msgstr "Todos os Ficheiros"
 
-#: qtgui/fileformatdialog.cpp:281
+#: qtgui/fileformatdialog.cpp:282
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
@@ -1292,14 +1292,14 @@ msgstr "Criar uma nova visão"
 msgid "Periodic Table"
 msgstr "Tabela Periódica"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:189
+#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar o "
 "início (%3)."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:199
+#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1315,7 +1315,7 @@ msgstr ""
 "Erro ao executar o script '%1 %2': Tempo limite esgotado ao aguardar "
 "conclusão (%3)."
 
-#: qtgui/pythonscript.cpp:135
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1328,27 +1328,34 @@ msgstr ""
 "Resultado:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:235
+#: qtgui/pythonscript.cpp:145
+#, fuzzy, qt-format
+#| msgctxt "arg is an executable file."
+#| msgid "Starting %1..."
+msgid "Warning '%1'"
+msgstr "Iniciando %1..."
+
+#: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
 msgstr "Script falhou ao iniciar."
 
-#: qtgui/pythonscript.cpp:238
+#: qtgui/pythonscript.cpp:241
 msgid "Script crashed."
 msgstr "O código falhou."
 
-#: qtgui/pythonscript.cpp:241
+#: qtgui/pythonscript.cpp:244
 msgid "Script timed out."
 msgstr "O script expirou."
 
-#: qtgui/pythonscript.cpp:244
+#: qtgui/pythonscript.cpp:247
 msgid "Read error."
 msgstr "Erro de leitura."
 
-#: qtgui/pythonscript.cpp:247
+#: qtgui/pythonscript.cpp:250
 msgid "Write error."
 msgstr "Erro de escrita."
 
-#: qtgui/pythonscript.cpp:251
+#: qtgui/pythonscript.cpp:254
 msgid "Unknown error."
 msgstr "Erro desconhecido."
 
@@ -1537,6 +1544,17 @@ msgstr "Mudar seleções"
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "Modificar Molécula"
+
+#: qtgui/scriptloader.cpp:41
+#, fuzzy, qt-format
+#| msgid "Cannot save file %1."
+msgid "Cannot load script %1"
+msgstr "Não foi possível gravar o ficheiro %1."
+
+#: qtgui/scriptloader.cpp:68
+#, qt-format
+msgid "Checking for %1 scripts in path %2"
+msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:41
 #, fuzzy
@@ -1742,25 +1760,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:561
+#: qtplugins/surfaces/surfaces.cpp:734
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:106
-#: qtplugins/surfaces/surfaces.cpp:563
+#: qtplugins/surfaces/surfaces.cpp:736
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:108
-#: qtplugins/surfaces/surfaces.cpp:565
+#: qtplugins/surfaces/surfaces.cpp:738
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:567
+#: qtplugins/surfaces/surfaces.cpp:740
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Cinzento"
@@ -1768,7 +1786,7 @@ msgstr "Cinzento"
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:569
+#: qtplugins/surfaces/surfaces.cpp:742
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
@@ -1776,7 +1794,7 @@ msgstr "Magma"
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:571
+#: qtplugins/surfaces/surfaces.cpp:744
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Inferno"
@@ -1784,7 +1802,7 @@ msgstr "Inferno"
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:573
+#: qtplugins/surfaces/surfaces.cpp:746
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plasma"
@@ -1792,7 +1810,7 @@ msgstr "Plasma"
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:575
+#: qtplugins/surfaces/surfaces.cpp:748
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
@@ -1800,7 +1818,7 @@ msgstr "Viridis"
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:577
+#: qtplugins/surfaces/surfaces.cpp:750
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -1812,7 +1830,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:579:171 rc.cpp:1576
+#: qtplugins/surfaces/surfaces.cpp:752:171 rc.cpp:1576
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1824,7 +1842,7 @@ msgstr "Espectro"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:581:168 rc.cpp:1573
+#: qtplugins/surfaces/surfaces.cpp:754:168 rc.cpp:1573
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -1834,7 +1852,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:583:162 rc.cpp:1567
+#: qtplugins/surfaces/surfaces.cpp:756:162 rc.cpp:1567
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1846,7 +1864,7 @@ msgstr "Cancelar"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:171
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:585:165 rc.cpp:1570
+#: qtplugins/surfaces/surfaces.cpp:758:165 rc.cpp:1570
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Azul-VermelhoEscuro"
@@ -1858,7 +1876,7 @@ msgstr "Azul-VermelhoEscuro"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:587:174 rc.cpp:1579
+#: qtplugins/surfaces/surfaces.cpp:760:174 rc.cpp:1579
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -2352,7 +2370,7 @@ msgstr "Editar Coordenadas Atômicas"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:394
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
-#: qtplugins/label/label.cpp:156:1606 rc.cpp:1633
+#: qtplugins/label/label.cpp:158:1606 rc.cpp:1633
 msgid "Custom"
 msgstr "Personalizar"
 
@@ -3107,13 +3125,13 @@ msgstr "Inserir fragmento"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Insere fragmentos moleculares para construir moléculas maiores."
 
-#: qtplugins/label/label.cpp:134 qtplugins/meshes/meshes.cpp:176
+#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:176
 #: qtplugins/meshes/meshes.cpp:182
 #, fuzzy
 msgid "Color:"
 msgstr "Cores:"
 
-#: qtplugins/label/label.cpp:144
+#: qtplugins/label/label.cpp:146
 #, fuzzy
 msgid "Distance from center:"
 msgstr "Distância:"
@@ -3126,63 +3144,63 @@ msgstr "Distância:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:374
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:151 qtplugins/label/label.cpp:191:1261
+#: qtplugins/label/label.cpp:153 qtplugins/label/label.cpp:193:1261
 msgid "None"
 msgstr "Nenhum"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:162
 msgid "Index"
 msgstr ""
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:163
 #, fuzzy
 msgid "In."
 msgstr "Em:"
 
-#: qtplugins/label/label.cpp:165 qtplugins/propertytables/propertymodel.cpp:386
+#: qtplugins/label/label.cpp:167 qtplugins/propertytables/propertymodel.cpp:386
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Elemento"
 
-#: qtplugins/label/label.cpp:166
+#: qtplugins/label/label.cpp:168
 msgid "El."
 msgstr ""
 
-#: qtplugins/label/label.cpp:170
+#: qtplugins/label/label.cpp:172
 #, fuzzy
 #| msgid "Element name."
 msgid "Element & Number"
 msgstr "Nome do Elemento."
 
-#: qtplugins/label/label.cpp:171
+#: qtplugins/label/label.cpp:173
 msgid "El.&No."
 msgstr ""
 
-#: qtplugins/label/label.cpp:174
+#: qtplugins/label/label.cpp:176
 msgid ", "
 msgstr ""
 
-#: qtplugins/label/label.cpp:185
+#: qtplugins/label/label.cpp:187
 #, fuzzy
 msgid "Atom Label:"
 msgstr "Etiqueta do Grupo:"
 
-#: qtplugins/label/label.cpp:196 qtplugins/propertytables/propertymodel.cpp:431
+#: qtplugins/label/label.cpp:198 qtplugins/propertytables/propertymodel.cpp:431
 #, fuzzy
 msgid "ID"
 msgstr "MIDI"
 
-#: qtplugins/label/label.cpp:200
+#: qtplugins/label/label.cpp:202
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
 #: qtplugins/propertytables/propertymodel.cpp:429
 msgid "Name"
 msgstr ""
 
-#: qtplugins/label/label.cpp:204
+#: qtplugins/label/label.cpp:206
 msgid " & "
 msgstr ""
 
-#: qtplugins/label/label.cpp:216
+#: qtplugins/label/label.cpp:218
 #, fuzzy
 msgid "Residue Label:"
 msgstr "Nome do resíduo"
@@ -3350,8 +3368,8 @@ msgstr "Visualizar propriedades gerais de uma molécula."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:52
-#: qtplugins/surfaces/surfaces.cpp:127 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/surfaces/surfaces.cpp:243 qtplugins/symmetry/symmetry.cpp:82
 msgid "&Analysis"
 msgstr ""
 
@@ -3888,7 +3906,7 @@ msgstr "Exportar gráficos em bitmap"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Filme (*.mp4);;Filme (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:677
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:854
 msgid "GIF (*.gif)"
 msgstr ""
 
@@ -3907,17 +3925,17 @@ msgid "Movie (*.avi)"
 msgstr "Vídeo (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:705
-#: qtplugins/surfaces/surfaces.cpp:749 qtplugins/surfaces/surfaces.cpp:761
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:882
+#: qtplugins/surfaces/surfaces.cpp:926 qtplugins/surfaces/surfaces.cpp:938
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:750
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:927
 msgid "Error: cannot add frame to video."
 msgstr "Erro: não é possível adicionar quadro ao vídeo."
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:762
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:939
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Não foi possível gravar o ficheiro %1."
@@ -4701,29 +4719,29 @@ msgstr "Recursos do grupo espacial para cristais."
 msgid "Vibrational Modes…"
 msgstr "Modos Vibracionais"
 
-#: qtplugins/spectra/spectra.cpp:32
+#: qtplugins/spectra/spectra.cpp:64
 #, fuzzy
 #| msgid "Vibrational modes..."
 msgid "Show the vibrational modes dialog."
 msgstr "Modos vibracionais..."
 
-#: qtplugins/spectra/spectra.cpp:33
+#: qtplugins/spectra/spectra.cpp:65
 #, fuzzy
 #| msgid "Vibrational modes..."
 msgid "Set the vibrational mode."
 msgstr "Modos vibracionais..."
 
-#: qtplugins/spectra/spectra.cpp:35
+#: qtplugins/spectra/spectra.cpp:67
 #, fuzzy
 #| msgid "Vibrational modes..."
 msgid "Set the vibrational amplitude."
 msgstr "Modos vibracionais..."
 
-#: qtplugins/spectra/spectra.cpp:37
+#: qtplugins/spectra/spectra.cpp:69
 msgid "Start the vibrational animation."
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:39
+#: qtplugins/spectra/spectra.cpp:71
 msgid "Stop the vibrational animation."
 msgstr ""
 
@@ -4771,30 +4789,82 @@ msgstr "(LUMO)"
 msgid "From File"
 msgstr "Do Ficheiro"
 
-#: qtplugins/surfaces/surfaces.cpp:81
+#: qtplugins/surfaces/surfaces.cpp:82
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
 msgstr "Criar Superfícies"
 
-#: qtplugins/surfaces/surfaces.cpp:419
+#: qtplugins/surfaces/surfaces.cpp:110
+#, fuzzy
+#| msgid "Renders atoms as Van der Waals spheres"
+msgid "Render the van der Waals surface."
+msgstr "Mostra os átomos como esferas de Van der Waals"
+
+#: qtplugins/surfaces/surfaces.cpp:112
+#, fuzzy
+#| msgid "Render the molecule as a wireframe."
+msgid "Render the van der Waals molecular surface."
+msgstr "Desenha a molécula como estrutura de arame."
+
+#: qtplugins/surfaces/surfaces.cpp:114
+#, fuzzy
+#| msgid "Render the molecule as a wireframe."
+msgid "Render the solvent-accessible molecular surface."
+msgstr "Desenha a molécula como estrutura de arame."
+
+#: qtplugins/surfaces/surfaces.cpp:116
+#, fuzzy
+#| msgid "Render the molecule as a wireframe."
+msgid "Render the solvent-excluded molecular surface."
+msgstr "Desenha a molécula como estrutura de arame."
+
+#: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
+#, fuzzy
+#| msgid "Molecular Orbital"
+msgid "Render a molecular orbital."
+msgstr "Orbital Molecular"
+
+#: qtplugins/surfaces/surfaces.cpp:120
+#, fuzzy
+#| msgid "Calculating electron density"
+msgid "Render the electron density."
+msgstr "Calculando densidade eletrônica"
+
+#: qtplugins/surfaces/surfaces.cpp:121
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the spin density."
+msgstr "Renderizar a cena usando VRML."
+
+#: qtplugins/surfaces/surfaces.cpp:123
+msgid "Render a cube supplied with the file."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:567
 msgid "Calculating electron density"
 msgstr "Calculando densidade eletrônica"
 
-#: qtplugins/surfaces/surfaces.cpp:429
+#: qtplugins/surfaces/surfaces.cpp:576
+#, fuzzy
+#| msgid "Calculating electron density"
+msgid "Calculating spin density"
+msgstr "Calculando densidade eletrônica"
+
+#: qtplugins/surfaces/surfaces.cpp:585
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Calculando o orbital molecular %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:654 qtplugins/surfaces/surfaces.cpp:682
+#: qtplugins/surfaces/surfaces.cpp:831 qtplugins/surfaces/surfaces.cpp:859
 msgid "Movie AVI (*.avi)"
 msgstr "Vídeo (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:656
+#: qtplugins/surfaces/surfaces.cpp:833
 msgid "Export Movie"
 msgstr "Exportar Vídeo"
 
-#: qtplugins/surfaces/surfaces.cpp:657
+#: qtplugins/surfaces/surfaces.cpp:834
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Vídeo MP4 (*.mp4);;Vídeo AVI (*.avi);;GIF (*.gif)"
 
@@ -4802,7 +4872,7 @@ msgstr "Vídeo MP4 (*.mp4);;Vídeo AVI (*.avi);;GIF (*.gif)"
 msgid "Surfaces"
 msgstr "Superfícies"
 
-#: qtplugins/surfaces/surfaces.h:72
+#: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Ler e renderizar superfícies."
 
@@ -5982,8 +6052,8 @@ msgstr "Selecione o estilo de unidade a ser usado durante a simulação."
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -6062,8 +6132,8 @@ msgstr "Selecione atom_style usado pelo ficheiro de dados."
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -7652,8 +7722,8 @@ msgstr ""
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -8176,9 +8246,6 @@ msgstr ""
 
 #~ msgid "Van der Waals Spheres"
 #~ msgstr "Esferas de Van der Waals"
-
-#~ msgid "Renders atoms as Van der Waals spheres"
-#~ msgstr "Mostra os átomos como esferas de Van der Waals"
 
 #~ msgid "Stick"
 #~ msgstr "Vareta"
