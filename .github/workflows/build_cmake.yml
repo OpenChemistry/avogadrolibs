@@ -106,6 +106,18 @@ jobs:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: molecules
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
+
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
