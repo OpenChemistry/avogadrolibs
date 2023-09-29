@@ -145,6 +145,8 @@ jobs:
             # signing occurs via avogadroapp cpack instructions
           fi # certificate exists
         fi # password exists
+        # remove any previous DMG in case they're still around
+        rm -f avogadroapp/*.dmg
 
     - name: Create Mac and Windows Packages
       shell: bash
