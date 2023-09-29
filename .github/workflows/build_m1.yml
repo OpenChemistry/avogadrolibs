@@ -155,7 +155,7 @@ jobs:
         VERSION=""
         echo ${GITHUB_REF}
         echo ${GITHUB_REF#refs/*/}
-        [[ "${GITHUB_REF}" ~= "tags" ]] && VERSION="${GITHUB_REF#refs/*/}" || VERSION=`date -j "+%d-%m-%y"`
+        [[ "${GITHUB_REF}" =~ "tags" ]] && VERSION="${GITHUB_REF#refs/*/}" || VERSION=`date -j "+%d-%m-%y"`
         # build DMG
         VOL="Avogadro2-$VERSION"
         DMG="Avogadro2-$VERSION.dmg"
