@@ -155,14 +155,12 @@ jobs:
         VERSION=""
         echo ${GITHUB_REF}
         echo ${GITHUB_REF#refs/*/}
-        # [[ "${GITHUB_REF#refs/*/}" != "merge" ]] && VERSION="${GITHUB_REF#refs/*/}" || VERSION=`date -j "+%d-%m-%y"`
-        VERSION=`date -j "+%d-%m-%y"`
+        [[ "${GITHUB_REF}" ~= "tags" ]] && VERSION="${GITHUB_REF#refs/*/}" || VERSION=`date -j "+%d-%m-%y"`
         # build DMG
-        brew install create-dmg
         VOL="Avogadro2-$VERSION"
         DMG="Avogadro2-$VERSION.dmg"
         echo "VOL: $VOL"
-        create-dmg --volname ${VOL} --icon-size 64 --icon "Avogadro2.app" 10 50 --app-drop-link 180 50 --hide-extension Avogadro2.app --window-size 300 50 --window-pos 200 200 --format UDBZ ${DMG} prefix/Avogadro2.app
+        create-dmg --sandbox-safe --volname ${VOL} --icon-size 64 --icon "Avogadro2.app" 10 50 --app-drop-link 180 50 --hide-extension Avogadro2.app --window-size 300 50 --window-pos 200 200 --format UDBZ ${DMG} prefix/Avogadro2.app
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
