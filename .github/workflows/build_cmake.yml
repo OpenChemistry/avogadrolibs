@@ -269,8 +269,6 @@ jobs:
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
         mv Avogadro2*.AppImage avogadroapp # for upload
-        # remove the cpack files
-        rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
 
     - name: Build and Notarize Mac DMG
@@ -296,7 +294,6 @@ jobs:
         VOL="Avogadro2-$VERSION"
         DMG="Avogadro2-$VERSION.dmg"
         echo "VOL: $VOL"
-        rm -f Avogadro2*.dmg
         create-dmg --volname ${VOL} --icon-size 64 --icon "Avogadro2.app" 10 50 --app-drop-link 180 50 --hide-extension Avogadro2.app --window-size 300 50 --window-pos 200 200 --format UDBZ ${DMG} prefix/Avogadro2.app
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
@@ -304,7 +301,10 @@ jobs:
           xcrun notarytool submit Avogadro2*.dmg --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
           xcrun stapler staple -v Avogadro2*.dmg
         fi
-      working-directory: ${{ runner.workspace }}/build/avogadroapp
+        mkdir avogadroapp
+        # move it for upload
+        mv Avogadro2*.dmg avogadroapp
+      working-directory: ${{ runner.workspace }}/build
       env:
         NOTARIZE_TEAM: ${{ secrets.AC_TEAM }}
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
