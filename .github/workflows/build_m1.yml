@@ -145,6 +145,8 @@ jobs:
             # signing occurs via avogadroapp cpack instructions
           fi # certificate exists
         fi # password exists
+        # remove any previous DMG in case they're still around
+        rm -f avogadroapp/*.dmg
 
     - name: Create Mac and Windows Packages
       shell: bash
@@ -152,6 +154,7 @@ jobs:
         if [ -z "${P12_PASSWORD}" ]; then
           unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
         fi
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
