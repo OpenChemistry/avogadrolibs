@@ -295,8 +295,9 @@ jobs:
         brew install create-dmg
         VOL="Avogadro2-$VERSION"
         DMG="Avogadro2-$VERSION.dmg"
+        echo "VOL: $VOL"
         rm -f Avogadro2*.dmg
-        create-dmg --volname ${VOL} --icon-size 64 --icon "Avogadro2.app" 10 50 --app-drop-link 180 50 --hide-extension Avogadro2.app --window-size 300 50 --window-pos 200 200 --format UDBZ ${DMG} Avogadro2.app
+        create-dmg --volname ${VOL} --icon-size 64 --icon "Avogadro2.app" 10 50 --app-drop-link 180 50 --hide-extension Avogadro2.app --window-size 300 50 --window-pos 200 200 --format UDBZ ${DMG} prefix/Avogadro2.app
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
