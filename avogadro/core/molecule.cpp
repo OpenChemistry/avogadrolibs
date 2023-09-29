@@ -1055,6 +1055,28 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       Vector3 jpos = m_positions3d[j];
       Vector3 diff = jpos - ipos;
 
+      // Don't automatically bond nobel gases to anything
+      switch (atomicNumber(i)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
+      // now for the other atom
+      switch (atomicNumber(j)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
       if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
           std::fabs(diff[2]) > cutoff ||
           (atomicNumber(i) == 1 && atomicNumber(j) == 1))
