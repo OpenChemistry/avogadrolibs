@@ -118,7 +118,7 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   if (m_implementation->crystalFiles)
     filters << "*.cif";
   else
-    filters << "*.cjson";
+    filters << "*.cjson" << "*.cml";
   m_implementation->model->setNameFilters(filters);
 
   m_implementation->proxy = new SortFilterTreeProxyModel(this);
