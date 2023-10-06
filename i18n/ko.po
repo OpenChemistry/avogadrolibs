@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-09-17 02:00+0000\n"
-"PO-Revision-Date: 2023-08-05 21:51+0000\n"
+"PO-Revision-Date: 2023-10-07 12:12+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1284,11 +1284,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1…"
+#, qt-format
 msgid "Warning '%1'"
-msgstr "%1 시작 중…"
+msgstr "경고 '%1'"
 
 #: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
@@ -1488,15 +1486,14 @@ msgid "Modify Molecule"
 msgstr "분자 수정"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "%1 파일을 저장할 수 없습니다."
+msgstr "스크립트%1을(를)불러올수없음"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr ""
+msgstr "경로 %2에서 %1 스크립트를 확인하는 중"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
@@ -2188,16 +2185,12 @@ msgid "Element symbol."
 msgstr "원소 기호입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "잘못된 원자 번호입니다."
+msgstr "원자 지수가 잘못되었습니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
-#, fuzzy
-#| msgid "By Atomic Index"
 msgid "Atomic index."
-msgstr "원자 색인별"
+msgstr "원자 지수입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
 msgid "Invalid atomic number."
@@ -4429,25 +4422,23 @@ msgstr "진동 모드…"
 
 #: qtplugins/spectra/spectra.cpp:64
 msgid "Show the vibrational modes dialog."
-msgstr ""
+msgstr "진동 모드 대화상자를 표시합니다."
 
 #: qtplugins/spectra/spectra.cpp:65
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Set the vibrational mode."
-msgstr "스펙트럼 및 진동 모드를 표시합니다."
+msgstr "진동 모드를 설정합니다."
 
 #: qtplugins/spectra/spectra.cpp:67
 msgid "Set the vibrational amplitude."
-msgstr ""
+msgstr "진동 진폭을 설정합니다."
 
 #: qtplugins/spectra/spectra.cpp:69
 msgid "Start the vibrational animation."
-msgstr ""
+msgstr "진동 애니메이션을 시작합니다."
 
 #: qtplugins/spectra/spectra.cpp:71
 msgid "Stop the vibrational animation."
-msgstr ""
+msgstr "진동 애니메이션을 중지합니다."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
@@ -4498,60 +4489,44 @@ msgid "Create Surfaces…"
 msgstr "표면 생성…"
 
 #: qtplugins/surfaces/surfaces.cpp:110
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "원자를 발 데르 발스 구형으로 표시하기"
+msgstr "반 데르 발스 표면을 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "분자를 와이어프레임으로 렌더링합니다."
+msgstr "반 데르 발스 분자 표면을 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "분자를 와이어프레임으로 렌더링합니다."
+msgstr "용매에 접근 가능한 분자 표면을 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:116
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "분자를 와이어프레임으로 렌더링합니다."
+msgstr "용매가 배제된 분자 표면을 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "분자 궤도"
+msgstr "분자 궤도를 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "전자 밀도 계산"
+msgstr "전자 밀도를 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:121
-#, fuzzy
-#| msgid "Render the scene using PLY."
 msgid "Render the spin density."
-msgstr "PLY를 사용하여 장면을 렌더링합니다."
+msgstr "회전 밀도를 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render a cube supplied with the file."
-msgstr ""
+msgstr "파일과 함께 제공된 큐브를 렌더링합니다."
 
 #: qtplugins/surfaces/surfaces.cpp:567
 msgid "Calculating electron density"
 msgstr "전자 밀도 계산"
 
 #: qtplugins/surfaces/surfaces.cpp:576
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Calculating spin density"
-msgstr "전자 밀도 계산"
+msgstr "회전 밀도 계산"
 
 #: qtplugins/surfaces/surfaces.cpp:585
 #, qt-format
