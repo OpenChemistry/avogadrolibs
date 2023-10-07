@@ -140,7 +140,7 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSNabcxyz01_]*");
+  QRegExp specRegExp("[#ZGSLNabcxyz01_]*");
   auto* specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
@@ -383,6 +383,30 @@ void CoordinateEditorDialog::validateInputWorker()
           else
             m_ui->text->markValid(tokenCursor, tr("Element symbol."));
           break;
+        }
+
+        case 'L': {
+          // Validate label (symbol + number)
+
+          QString cleanToken(tokenCursor.selectedText().toLower());
+          if (!cleanToken.isEmpty())
+            cleanToken.replace(0, 1, cleanToken[0].toUpper());
+
+          // Split the label into symbol and number
+          QRegExp labelSplitter("([A-Z][a-z]?)(\\d+)");
+          if (labelSplitter.indexIn(cleanToken) == -1) {
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atom label."));
+            break;
+          }
+          // check the symbol
+          std::string tokenStd(labelSplitter.cap(1).toStdString());
+          atom.atomicNumber = Elements::atomicNumberFromSymbol(tokenStd);
+          if (atom.atomicNumber == Avogadro::InvalidElement)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid element symbol."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Element symbol."));
+          break;
+
         }
 
         case '#': {

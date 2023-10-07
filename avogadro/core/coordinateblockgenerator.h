@@ -47,6 +47,7 @@ public:
    * about each atom in the coordinate block.
    * - @c #: Atom index (one-based index)
    * - @c Z: Atomic number (e.g. "6" for carbon)
+   * - @c L: Atomic label (e.g., "C1" for first carbon, "H2" for second hydrogen")
    * - @c G: GAMESS-styled Atomic number (e.g. "6.0" for carbon)
    * - @c S: Element symbol (e.g. "C" for carbon)
    * - @c N: Element name (e.g. "Carbon")
