@@ -42,9 +42,9 @@
 #define FORMAT_DEBUG(x)
 #endif // ENABLE_FORMAT_DEBUG
 
-using Avogadro::QtGui::Molecule;
-using Avogadro::Core::Elements;
 using Avogadro::Vector3;
+using Avogadro::Core::Elements;
+using Avogadro::QtGui::Molecule;
 
 namespace {
 
@@ -96,7 +96,7 @@ struct AtomStruct
   Vector3 pos;
 };
 
-} // end anon namespace
+} // namespace
 
 namespace Avogadro::QtPlugins {
 
@@ -387,7 +387,6 @@ void CoordinateEditorDialog::validateInputWorker()
 
         case 'L': {
           // Validate label (symbol + number)
-
           QString cleanToken(tokenCursor.selectedText().toLower());
           if (!cleanToken.isEmpty())
             cleanToken.replace(0, 1, cleanToken[0].toUpper());
@@ -406,7 +405,6 @@ void CoordinateEditorDialog::validateInputWorker()
           else
             m_ui->text->markValid(tokenCursor, tr("Element symbol."));
           break;
-
         }
 
         case '#': {
@@ -845,4 +843,4 @@ void CoordinateEditorDialog::clearClicked()
   m_ui->text->document()->clear();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

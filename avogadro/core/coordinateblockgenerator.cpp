@@ -144,8 +144,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
           m_stream << std::left << std::setw(elementSymbolWidth) << symbol;
           break;
         case 'L':
-          m_stream << std::left << symbol
-                   << elementCounts[atomicNumber] << " ";
+          m_stream << std::left << symbol << elementCounts[atomicNumber] << " ";
           break;
         case 'N':
           m_stream << std::left << std::setw(elementNameWidth) << name;
@@ -203,4 +202,4 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   return m_stream.str();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core
