@@ -101,14 +101,14 @@ jobs:
         otool -L libinchi.?.?.?.dylib
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
         # finally, fixup the binaries
-        cd ../bin
-        for exe in obabel obmm eht_bind genXrdPattern; do
-          for libpath in `otool -L ${exe} | grep '/Users/runner' | awk '{print $1}'`; do 
-            export lib=`echo $libpath | cut -d '/' -f 10`;
-            echo "Fixing $exe $lib $libpath"
-            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
-          done
-        done
+        #cd ../bin
+        #for exe in obabel obmm eht_bind genXrdPattern; do
+        #  for libpath in `otool -L ${exe} | grep '/Users/runner' | awk '{print $1}'`; do 
+        #    export lib=`echo $libpath | cut -d '/' -f 10`;
+        #    echo "Fixing $exe $lib $libpath"
+        #    install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+        #  done
+        #done
 
 
     - name: Install the Apple certificate
