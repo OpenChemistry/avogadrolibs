@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-09-17 02:00+0000\n"
+"POT-Creation-Date: 2023-10-08 02:02+0000\n"
 "PO-Revision-Date: 2021-08-20 01:04+0000\n"
 "Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -2307,73 +2307,81 @@ msgid "Element name."
 msgstr "Naziv elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:382
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:404
 msgid "Invalid element symbol."
 msgstr "Nevažeći simbol elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:384
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:406
 msgid "Element symbol."
 msgstr "Simbol elementa."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:393
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
+#| msgid "Invalid atomic number."
+msgid "Invalid atom label."
+msgstr "Nevažeći atomski broj."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 #, fuzzy
 #| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
 msgstr "Nevažeći atomski broj."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:395
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
 #, fuzzy
 #| msgid "By Atomic Index"
 msgid "Atomic index."
 msgstr "Pokazatelj atoma"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
 msgstr "Nevažeći atomski broj."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
 msgid "Atomic number."
 msgstr "Atomski broj."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:416
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:438
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:449
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:460
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:471
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:482
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:493
 msgid "Invalid coordinate."
 msgstr "Nevažeća koordinata."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "X coordinate."
 msgstr "X Koordinata."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "Y coordinate."
 msgstr "Y Koordinata."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 msgid "Z coordinate."
 msgstr "Z Koordinata."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'a' lattice coordinate."
 msgstr "'a' koordinata rešetke."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
 msgid "'b' lattice coordinate."
 msgstr "'b' koordinata rešetke."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
 #, fuzzy
 #| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
 msgstr "'a' koordinata rešetke."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:557
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:579
 msgid "Error applying geometry"
 msgstr "Greška pri primeni geometrije"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:558
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:580
 msgid ""
 "Could not parse geometry specification. Fix the highlighted errors and try "
 "again.\n"
@@ -2385,7 +2393,7 @@ msgstr ""
 "\n"
 "(Savet: Držite miša iznad crvenog teksta za opis greške.)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:593
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "Edit Atomic Coordinates"
 msgstr "Uređivanje atomskih koordinata"
 
@@ -2393,44 +2401,44 @@ msgstr "Uređivanje atomskih koordinata"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:394
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:611
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
 #: qtplugins/label/label.cpp:158:1606 rc.cpp:1633
 msgid "Custom"
 msgstr "Proizvoljno"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:612
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:634
 msgid "XYZ format (symbols)"
 msgstr "XYZ format (simboli)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:613
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:635
 msgid "XYZ format (names)"
 msgstr "XYZ format (imena)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:614
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:636
 msgid "XYZ format (atomic numbers)"
 msgstr "XYZ format (atomski brojevi)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:637
 msgid "Lattice coordinates (symbols)"
 msgstr "Koordinate rešetki (simboli)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:616
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 msgid "Lattice coordinates (names)"
 msgstr "Koordinate rešetki (imena)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:617
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "Lattice coordinates (atomic numbers)"
 msgstr "Koordinate rešetki (atomski brojevi)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:619
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "GAMESS format (symbols)"
 msgstr "GAMESS format (simboli)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "GAMESS format (names)"
 msgstr "GAMESS format (imena)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:621
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Turbomole format"
 msgstr "Ulaz turbomola"
 
@@ -5010,13 +5018,13 @@ msgstr "%1 %2"
 msgid "Template"
 msgstr "Temperatura"
 
-#: qtplugins/templatetool/templatetool.cpp:298
+#: qtplugins/templatetool/templatetool.cpp:294
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Template"
 msgstr "Уметни пептид"
 
-#: qtplugins/templatetool/templatetool.cpp:491
+#: qtplugins/templatetool/templatetool.cpp:544
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
@@ -5029,7 +5037,7 @@ msgstr "Уметни пептид"
 msgid "Template tool"
 msgstr "Alat za manipulisanje"
 
-#: qtplugins/templatetool/templatetoolwidget.cpp:263
+#: qtplugins/templatetool/templatetoolwidget.cpp:288
 msgid "Other..."
 msgstr "Drugo..."
 
@@ -5476,6 +5484,27 @@ msgstr "Format:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
+#, fuzzy
+#| msgid ""
+#| "<html><head/><body><p>Specification of format. Each character indicates a "
+#| "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> "
+#| "- Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
+#| "\">Z</span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" "
+#| "font-weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" "
+#| "for carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name "
+#| "(e.g. \"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - "
+#| "Element symbol (e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;"
+#| "\">x</span> - X position coordinate<br/><span style=\" font-weight:600;"
+#| "\">y</span> - Y position coordinate<br/><span style=\" font-weight:600;"
+#| "\">z</span> - Z position coordinate<br/><span style=\" font-weight:600;"
+#| "\">a</span> - 'a' lattice coordinate (crystals only)<br/><span style=\" "
+#| "font-weight:600;\">b</span> - 'b' lattice coordinate (crystals only)<br/"
+#| "><span style=\" font-weight:600;\">c</span> - 'c' lattice coordinate "
+#| "(crystals only)<br/><span style=\" font-weight:600;\">_</span> - A "
+#| "literal space (\" \"), useful for alignment<br/><span style=\" font-"
+#| "weight:600;\">0</span> - A literal 0 (\"0\"), useful for optimization "
+#| "flags<br/><span style=\" font-weight:600;\">1</span> - A literal 1 "
+#| "(\"1\"), useful for optimization flags<br/></p></body></html>"
 msgid ""
 "<html><head/><body><p>Specification of format. Each character indicates a "
 "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
@@ -5484,18 +5513,19 @@ msgid ""
 "weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
 "carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
 "\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
-"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;\">x</span> - X "
-"position coordinate<br/><span style=\" font-weight:600;\">y</span> - Y "
-"position coordinate<br/><span style=\" font-weight:600;\">z</span> - Z "
-"position coordinate<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"lattice coordinate (crystals only)<br/><span style=\" font-weight:600;\">b</"
-"span> - 'b' lattice coordinate (crystals only)<br/><span style=\" font-"
-"weight:600;\">c</span> - 'c' lattice coordinate (crystals only)<br/><span "
-"style=\" font-weight:600;\">_</span> - A literal space (\" \"), useful for "
-"alignment<br/><span style=\" font-weight:600;\">0</span> - A literal 0 "
-"(\"0\"), useful for optimization flags<br/><span style=\" font-weight:600;"
-"\">1</span> - A literal 1 (\"1\"), useful for optimization flags<br/></p></"
-"body></html>"
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - "
+"Atom label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) "
+"<br/><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
+"><span style=\" font-weight:600;\">y</span> - Y position coordinate<br/"
+"><span style=\" font-weight:600;\">z</span> - Z position coordinate<br/"
+"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate "
+"(crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
+"coordinate (crystals only)<br/><span style=\" font-weight:600;\">c</span> - "
+"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;"
+"\">_</span> - A literal space (\" \"), useful for alignment<br/><span "
+"style=\" font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for "
+"optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
+"literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
 "<html><head/><body><p>Specifikacija formata. Svaki znak označava vrednost "
 "koju treba zapisati po atomu:</p><p><span style=\" font-weight:600;\">#</"
@@ -6076,7 +6106,7 @@ msgstr "Dvostruko"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
 msgid "Insert"
 msgstr "Umetni"
