@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-06-18 02:38+0000\n"
-"PO-Revision-Date: 2023-08-05 21:51+0000\n"
+"POT-Creation-Date: 2023-10-08 02:02+0000\n"
+"PO-Revision-Date: 2023-10-07 12:12+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -997,61 +997,61 @@ msgstr "파일 선택:"
 msgid "Select executable:"
 msgstr "실행 파일 선택:"
 
-#: qtgui/fileformatdialog.cpp:51
+#: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr "선택한 파일에 적합한 파일 리더를 찾을 수 없습니다."
 
-#: qtgui/fileformatdialog.cpp:99
+#: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr "파일 확장자가 누락되어 형식을 결정할 수 없습니다. 추가하겠습니까?"
 
-#: qtgui/fileformatdialog.cpp:113
+#: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr "선택한 형식에 적합한 파일 작성기를 찾을 수 없습니다."
 
-#: qtgui/fileformatdialog.cpp:162
+#: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "핸들러"
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "핸들"
 
-#: qtgui/fileformatdialog.cpp:167
+#: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
 msgstr "리더"
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "읽기"
 
-#: qtgui/fileformatdialog.cpp:172
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
 msgstr "라이터"
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "쓰기"
 
-#: qtgui/fileformatdialog.cpp:178
+#: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 "이 형식을 %2 할 수 있는 여러 %1을(를) 찾았습니다. 어떤 것을 사용해야 합니까?"
 
-#: qtgui/fileformatdialog.cpp:278
+#: qtgui/fileformatdialog.cpp:279
 msgid "All files"
 msgstr "모든 파일"
 
-#: qtgui/fileformatdialog.cpp:281
+#: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
 msgstr "지원되는 모든 형식"
 
@@ -1251,12 +1251,12 @@ msgstr "새로운 보기 만들기"
 msgid "Periodic Table"
 msgstr "주기율표"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:189
+#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr "스크립트 '%1 %2' 실행 중 오류: 시작(%3) 대기 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:199
+#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1270,7 +1270,7 @@ msgstr ""
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr "스크립트 '%1 %2' 실행 오류: 완료 (%3) 대기 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:135
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1283,27 +1283,32 @@ msgstr ""
 "출력: \n"
 "%6"
 
-#: qtgui/pythonscript.cpp:235
+#: qtgui/pythonscript.cpp:145
+#, qt-format
+msgid "Warning '%1'"
+msgstr "경고 '%1'"
+
+#: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
 msgstr "스크립트를 시작하지 못했습니다."
 
-#: qtgui/pythonscript.cpp:238
+#: qtgui/pythonscript.cpp:241
 msgid "Script crashed."
 msgstr "스크립트가 충돌했습니다."
 
-#: qtgui/pythonscript.cpp:241
+#: qtgui/pythonscript.cpp:244
 msgid "Script timed out."
 msgstr "스크립트 시간이 초과되었습니다."
 
-#: qtgui/pythonscript.cpp:244
+#: qtgui/pythonscript.cpp:247
 msgid "Read error."
 msgstr "읽기 오류입니다."
 
-#: qtgui/pythonscript.cpp:247
+#: qtgui/pythonscript.cpp:250
 msgid "Write error."
 msgstr "쓰기 오류입니다."
 
-#: qtgui/pythonscript.cpp:251
+#: qtgui/pythonscript.cpp:254
 msgid "Unknown error."
 msgstr "알 수 없는 오류입니다."
 
@@ -1479,6 +1484,16 @@ msgstr "선택 변경"
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "분자 수정"
+
+#: qtgui/scriptloader.cpp:41
+#, qt-format
+msgid "Cannot load script %1"
+msgstr "스크립트%1을(를)불러올수없음"
+
+#: qtgui/scriptloader.cpp:68
+#, qt-format
+msgid "Checking for %1 scripts in path %2"
+msgstr "경로 %2에서 %1 스크립트를 확인하는 중"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
@@ -1669,25 +1684,25 @@ msgstr "균형잡힌 스키마별"
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:554
+#: qtplugins/surfaces/surfaces.cpp:734
 msgctxt "colormap"
 msgid "Parula"
 msgstr "파룰라"
 
 #: qtplugins/applycolors/applycolors.cpp:106
-#: qtplugins/surfaces/surfaces.cpp:556
+#: qtplugins/surfaces/surfaces.cpp:736
 msgctxt "colormap"
 msgid "Heat"
 msgstr "열"
 
 #: qtplugins/applycolors/applycolors.cpp:108
-#: qtplugins/surfaces/surfaces.cpp:558
+#: qtplugins/surfaces/surfaces.cpp:738
 msgctxt "colormap"
 msgid "Hot"
 msgstr "뜨거운"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:560
+#: qtplugins/surfaces/surfaces.cpp:740
 msgctxt "colormap"
 msgid "Gray"
 msgstr "회색"
@@ -1695,7 +1710,7 @@ msgstr "회색"
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:562
+#: qtplugins/surfaces/surfaces.cpp:742
 msgctxt "colormap"
 msgid "Magma"
 msgstr "마그마"
@@ -1703,7 +1718,7 @@ msgstr "마그마"
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:564
+#: qtplugins/surfaces/surfaces.cpp:744
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "불"
@@ -1711,7 +1726,7 @@ msgstr "불"
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:566
+#: qtplugins/surfaces/surfaces.cpp:746
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "플라즈마"
@@ -1719,7 +1734,7 @@ msgstr "플라즈마"
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:568
+#: qtplugins/surfaces/surfaces.cpp:748
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "비리디스"
@@ -1727,7 +1742,7 @@ msgstr "비리디스"
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:570
+#: qtplugins/surfaces/surfaces.cpp:750
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "시비디스"
@@ -1739,7 +1754,7 @@ msgstr "시비디스"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:572:171 rc.cpp:1576
+#: qtplugins/surfaces/surfaces.cpp:752:171 rc.cpp:1576
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "스펙트럼"
@@ -1749,7 +1764,7 @@ msgstr "스펙트럼"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:574:168 rc.cpp:1573
+#: qtplugins/surfaces/surfaces.cpp:754:168 rc.cpp:1573
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "냉온"
@@ -1759,7 +1774,7 @@ msgstr "냉온"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:576:162 rc.cpp:1567
+#: qtplugins/surfaces/surfaces.cpp:756:162 rc.cpp:1567
 msgctxt "colormap"
 msgid "Balance"
 msgstr "균형"
@@ -1769,7 +1784,7 @@ msgstr "균형"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:171
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:578:165 rc.cpp:1570
+#: qtplugins/surfaces/surfaces.cpp:758:165 rc.cpp:1570
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "파란-어두운 빨강"
@@ -1781,7 +1796,7 @@ msgstr "파란-어두운 빨강"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:580:174 rc.cpp:1579
+#: qtplugins/surfaces/surfaces.cpp:760:174 rc.cpp:1579
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "터보"
@@ -2162,59 +2177,75 @@ msgid "Element name."
 msgstr "원소 이름입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:382
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:404
 msgid "Invalid element symbol."
 msgstr "잘못된 원소 기호입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:384
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:406
 msgid "Element symbol."
 msgstr "원소 기호입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:394
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
+#| msgid "Invalid atomic number."
+msgid "Invalid atom label."
+msgstr "잘못된 원자 번호입니다."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
+msgid "Invalid atomic index."
+msgstr "원자 지수가 잘못되었습니다."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
+msgid "Atomic index."
+msgstr "원자 지수입니다."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
 msgstr "잘못된 원자 번호입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:396
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
 msgid "Atomic number."
 msgstr "원자 번호입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:416
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:438
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:449
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:460
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:471
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:482
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:493
 msgid "Invalid coordinate."
 msgstr "잘못된 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "X coordinate."
 msgstr "X 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "Y coordinate."
 msgstr "Y 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 msgid "Z coordinate."
 msgstr "Z 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'a' lattice coordinate."
 msgstr "'a' 격자 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
 msgid "'b' lattice coordinate."
 msgstr "'b' 격자 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
 msgid "'c' lattice coordinate."
 msgstr "'c' 격자 좌표입니다."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:579
 msgid "Error applying geometry"
 msgstr "기하학 적용 오류"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:547
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:580
 msgid ""
 "Could not parse geometry specification. Fix the highlighted errors and try "
 "again.\n"
@@ -2226,7 +2257,7 @@ msgstr ""
 " \n"
 "(힌트: 오류에 대한 설명을 보려면 빨간색 텍스트 위에 마우스를 가져가세요.)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:581
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "Edit Atomic Coordinates"
 msgstr "원자 좌표 편집"
 
@@ -2234,44 +2265,44 @@ msgstr "원자 좌표 편집"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:394
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:599
-#: qtplugins/label/label.cpp:156:1606 rc.cpp:1633
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
+#: qtplugins/label/label.cpp:158:1606 rc.cpp:1633
 msgid "Custom"
 msgstr "커스텀"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:600
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:634
 msgid "XYZ format (symbols)"
 msgstr "XYZ 형식 (기호)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:601
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:635
 msgid "XYZ format (names)"
 msgstr "XYZ 형식 (이름)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:602
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:636
 msgid "XYZ format (atomic numbers)"
 msgstr "XYZ 형식(원자 번호)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:603
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:637
 msgid "Lattice coordinates (symbols)"
 msgstr "격자 좌표 (기호)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:604
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 msgid "Lattice coordinates (names)"
 msgstr "격자 좌표 (이름)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "Lattice coordinates (atomic numbers)"
 msgstr "격자좌표 (원자 번호)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "GAMESS format (symbols)"
 msgstr "GAMESS 형식 (기호)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:608
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "GAMESS format (names)"
 msgstr "GAMESS 형식 (이름)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Turbomole format"
 msgstr "터보몰 형식"
 
@@ -2949,12 +2980,12 @@ msgstr "조각삽입"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "더 큰 분자를 만들기 위해 분자 조각을 삽입합니다."
 
-#: qtplugins/label/label.cpp:134 qtplugins/meshes/meshes.cpp:176
+#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:176
 #: qtplugins/meshes/meshes.cpp:182
 msgid "Color:"
 msgstr "색상:"
 
-#: qtplugins/label/label.cpp:144
+#: qtplugins/label/label.cpp:146
 msgid "Distance from center:"
 msgstr "중심으로부터의 거리:"
 
@@ -2966,58 +2997,58 @@ msgstr "중심으로부터의 거리:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:374
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:151 qtplugins/label/label.cpp:191:1261
+#: qtplugins/label/label.cpp:153 qtplugins/label/label.cpp:193:1261
 msgid "None"
 msgstr "없음"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:162
 msgid "Index"
 msgstr "색인"
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:163
 msgid "In."
 msgstr "In."
 
-#: qtplugins/label/label.cpp:165 qtplugins/propertytables/propertymodel.cpp:386
+#: qtplugins/label/label.cpp:167 qtplugins/propertytables/propertymodel.cpp:386
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "원소"
 
-#: qtplugins/label/label.cpp:166
+#: qtplugins/label/label.cpp:168
 msgid "El."
 msgstr "El."
 
-#: qtplugins/label/label.cpp:170
+#: qtplugins/label/label.cpp:172
 msgid "Element & Number"
 msgstr "원소 번호"
 
-#: qtplugins/label/label.cpp:171
+#: qtplugins/label/label.cpp:173
 msgid "El.&No."
 msgstr "El.&No."
 
-#: qtplugins/label/label.cpp:174
+#: qtplugins/label/label.cpp:176
 msgid ", "
 msgstr ", "
 
-#: qtplugins/label/label.cpp:185
+#: qtplugins/label/label.cpp:187
 msgid "Atom Label:"
 msgstr "원자 레이블:"
 
-#: qtplugins/label/label.cpp:196 qtplugins/propertytables/propertymodel.cpp:431
+#: qtplugins/label/label.cpp:198 qtplugins/propertytables/propertymodel.cpp:431
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:200
+#: qtplugins/label/label.cpp:202
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
 #: qtplugins/propertytables/propertymodel.cpp:429
 msgid "Name"
 msgstr "이름"
 
-#: qtplugins/label/label.cpp:204
+#: qtplugins/label/label.cpp:206
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:216
+#: qtplugins/label/label.cpp:218
 msgid "Residue Label:"
 msgstr "잔류물 레이블:"
 
@@ -3181,8 +3212,8 @@ msgstr "분자의 일반적인 특성을 봅니다."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/surfaces/surfaces.cpp:243 qtplugins/symmetry/symmetry.cpp:82
 msgid "&Analysis"
 msgstr "분석(&A)"
 
@@ -3671,7 +3702,7 @@ msgstr "비트맵 그래픽 내보내기"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "동영상 (*.mp4);;동영상 (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:670
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:854
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -3688,17 +3719,17 @@ msgid "Movie (*.avi)"
 msgstr "동영상 (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:698
-#: qtplugins/surfaces/surfaces.cpp:742 qtplugins/surfaces/surfaces.cpp:754
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:882
+#: qtplugins/surfaces/surfaces.cpp:926 qtplugins/surfaces/surfaces.cpp:938
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "아보가드로"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:743
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:927
 msgid "Error: cannot add frame to video."
 msgstr "오류: 비디오에 프레임을 추가할 수 없습니다."
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:755
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:939
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 파일을 저장할 수 없습니다."
@@ -4393,9 +4424,29 @@ msgstr "공간그룹"
 msgid "Space group features for crystals."
 msgstr "결정체에 대한 공간 그룹 기능입니다."
 
-#: qtplugins/spectra/spectra.cpp:26
+#: qtplugins/spectra/spectra.cpp:27
 msgid "Vibrational Modes…"
 msgstr "진동 모드…"
+
+#: qtplugins/spectra/spectra.cpp:64
+msgid "Show the vibrational modes dialog."
+msgstr "진동 모드 대화상자를 표시합니다."
+
+#: qtplugins/spectra/spectra.cpp:65
+msgid "Set the vibrational mode."
+msgstr "진동 모드를 설정합니다."
+
+#: qtplugins/spectra/spectra.cpp:67
+msgid "Set the vibrational amplitude."
+msgstr "진동 진폭을 설정합니다."
+
+#: qtplugins/spectra/spectra.cpp:69
+msgid "Start the vibrational animation."
+msgstr "진동 애니메이션을 시작합니다."
+
+#: qtplugins/spectra/spectra.cpp:71
+msgid "Stop the vibrational animation."
+msgstr "진동 애니메이션을 중지합니다."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
@@ -4441,28 +4492,64 @@ msgstr "(LUMO)"
 msgid "From File"
 msgstr "파일에서"
 
-#: qtplugins/surfaces/surfaces.cpp:80
+#: qtplugins/surfaces/surfaces.cpp:82
 msgid "Create Surfaces…"
 msgstr "표면 생성…"
 
-#: qtplugins/surfaces/surfaces.cpp:414
+#: qtplugins/surfaces/surfaces.cpp:110
+msgid "Render the van der Waals surface."
+msgstr "반 데르 발스 표면을 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:112
+msgid "Render the van der Waals molecular surface."
+msgstr "반 데르 발스 분자 표면을 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:114
+msgid "Render the solvent-accessible molecular surface."
+msgstr "용매에 접근 가능한 분자 표면을 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:116
+msgid "Render the solvent-excluded molecular surface."
+msgstr "용매가 배제된 분자 표면을 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
+msgid "Render a molecular orbital."
+msgstr "분자 궤도를 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:120
+msgid "Render the electron density."
+msgstr "전자 밀도를 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:121
+msgid "Render the spin density."
+msgstr "회전 밀도를 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:123
+msgid "Render a cube supplied with the file."
+msgstr "파일과 함께 제공된 큐브를 렌더링합니다."
+
+#: qtplugins/surfaces/surfaces.cpp:567
 msgid "Calculating electron density"
 msgstr "전자 밀도 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:424
+#: qtplugins/surfaces/surfaces.cpp:576
+msgid "Calculating spin density"
+msgstr "회전 밀도 계산"
+
+#: qtplugins/surfaces/surfaces.cpp:585
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "분자 궤도 %L1 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:647 qtplugins/surfaces/surfaces.cpp:675
+#: qtplugins/surfaces/surfaces.cpp:831 qtplugins/surfaces/surfaces.cpp:859
 msgid "Movie AVI (*.avi)"
 msgstr "동영상 AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:649
+#: qtplugins/surfaces/surfaces.cpp:833
 msgid "Export Movie"
 msgstr "동영상 내보내기"
 
-#: qtplugins/surfaces/surfaces.cpp:650
+#: qtplugins/surfaces/surfaces.cpp:834
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "동영상 MP4 (*.mp4);;동영상 AVI (*.avi);;GIF (*.gif)"
 
@@ -4470,7 +4557,7 @@ msgstr "동영상 MP4 (*.mp4);;동영상 AVI (*.avi);;GIF (*.gif)"
 msgid "Surfaces"
 msgstr "표면"
 
-#: qtplugins/surfaces/surfaces.h:72
+#: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "표면을 읽고 렌더링합니다."
 
@@ -4530,11 +4617,11 @@ msgstr "%1 %2"
 msgid "Template"
 msgstr "템플레이트"
 
-#: qtplugins/templatetool/templatetool.cpp:298
+#: qtplugins/templatetool/templatetool.cpp:294
 msgid "Insert Template"
 msgstr "템플레이트 삽입"
 
-#: qtplugins/templatetool/templatetool.cpp:491
+#: qtplugins/templatetool/templatetool.cpp:544
 msgid "Insert Ligand"
 msgstr "리간드 삽입"
 
@@ -4543,7 +4630,7 @@ msgstr "리간드 삽입"
 msgid "Template tool"
 msgstr "템플레이트 도구"
 
-#: qtplugins/templatetool/templatetoolwidget.cpp:263
+#: qtplugins/templatetool/templatetoolwidget.cpp:288
 msgid "Other..."
 msgstr "기타..."
 
@@ -4974,6 +5061,27 @@ msgstr "형식:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
+#, fuzzy
+#| msgid ""
+#| "<html><head/><body><p>Specification of format. Each character indicates a "
+#| "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> "
+#| "- Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
+#| "\">Z</span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" "
+#| "font-weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" "
+#| "for carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name "
+#| "(e.g. \"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - "
+#| "Element symbol (e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;"
+#| "\">x</span> - X position coordinate<br/><span style=\" font-weight:600;"
+#| "\">y</span> - Y position coordinate<br/><span style=\" font-weight:600;"
+#| "\">z</span> - Z position coordinate<br/><span style=\" font-weight:600;"
+#| "\">a</span> - 'a' lattice coordinate (crystals only)<br/><span style=\" "
+#| "font-weight:600;\">b</span> - 'b' lattice coordinate (crystals only)<br/"
+#| "><span style=\" font-weight:600;\">c</span> - 'c' lattice coordinate "
+#| "(crystals only)<br/><span style=\" font-weight:600;\">_</span> - A "
+#| "literal space (\" \"), useful for alignment<br/><span style=\" font-"
+#| "weight:600;\">0</span> - A literal 0 (\"0\"), useful for optimization "
+#| "flags<br/><span style=\" font-weight:600;\">1</span> - A literal 1 "
+#| "(\"1\"), useful for optimization flags<br/></p></body></html>"
 msgid ""
 "<html><head/><body><p>Specification of format. Each character indicates a "
 "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
@@ -4982,18 +5090,19 @@ msgid ""
 "weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
 "carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
 "\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
-"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;\">x</span> - X "
-"position coordinate<br/><span style=\" font-weight:600;\">y</span> - Y "
-"position coordinate<br/><span style=\" font-weight:600;\">z</span> - Z "
-"position coordinate<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"lattice coordinate (crystals only)<br/><span style=\" font-weight:600;\">b</"
-"span> - 'b' lattice coordinate (crystals only)<br/><span style=\" font-"
-"weight:600;\">c</span> - 'c' lattice coordinate (crystals only)<br/><span "
-"style=\" font-weight:600;\">_</span> - A literal space (\" \"), useful for "
-"alignment<br/><span style=\" font-weight:600;\">0</span> - A literal 0 "
-"(\"0\"), useful for optimization flags<br/><span style=\" font-weight:600;"
-"\">1</span> - A literal 1 (\"1\"), useful for optimization flags<br/></p></"
-"body></html>"
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - "
+"Atom label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) "
+"<br/><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
+"><span style=\" font-weight:600;\">y</span> - Y position coordinate<br/"
+"><span style=\" font-weight:600;\">z</span> - Z position coordinate<br/"
+"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate "
+"(crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
+"coordinate (crystals only)<br/><span style=\" font-weight:600;\">c</span> - "
+"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;"
+"\">_</span> - A literal space (\" \"), useful for alignment<br/><span "
+"style=\" font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for "
+"optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
+"literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
 "<html><head/><body><p>형식 사양입니다. 각 문자는 원자당 쓸 값을 나타냅니다.:"
 "</p><p><span style=\" font-weight:600;\">#</span> - 원자 색인 (1, 2, ..., "
@@ -5551,7 +5660,7 @@ msgstr "이중"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
 msgid "Insert"
 msgstr "삽입"
@@ -5597,8 +5706,8 @@ msgstr "시뮬레이션 중에 사용할 단위 스타일을 선택합니다."
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -5610,8 +5719,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\"> \n"
@@ -5689,8 +5798,8 @@ msgstr "데이터 파일에서 사용하는 atom_style을 선택합니다."
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -5702,8 +5811,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\"> \n"
@@ -7276,8 +7385,8 @@ msgstr ""
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7287,8 +7396,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7813,9 +7922,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 
 #~ msgid "Van der Waals Spheres"
 #~ msgstr "반 데르 발스 구형"
-
-#~ msgid "Renders atoms as Van der Waals spheres"
-#~ msgstr "원자를 발 데르 발스 구형으로 표시하기"
 
 #~ msgid "Stick"
 #~ msgstr "막대기"

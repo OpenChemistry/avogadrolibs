@@ -27,16 +27,6 @@ Spectra::Spectra(QObject* p)
   action->setText(tr("Vibrational Modes…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
-
-  emit registerCommand("showVibrations",
-                       tr("Show the vibrational modes dialog."));
-  emit registerCommand("setVibrationalMode", tr("Set the vibrational mode."));
-  emit registerCommand("setVibrationalAmplitude",
-                       tr("Set the vibrational amplitude."));
-  emit registerCommand("startVibrationAnimation",
-                       tr("Start the vibrational animation."));
-  emit registerCommand("stopVibrationAnimation",
-                       tr("Stop the vibrational animation."));
 }
 
 Spectra::~Spectra() {}
@@ -66,6 +56,19 @@ void Spectra::setMolecule(QtGui::Molecule* mol)
 
   if (isVibrational)
     openDialog();
+}
+
+void Spectra::registerCommands()
+{
+  emit registerCommand("showVibrations",
+                       tr("Show the vibrational modes dialog."));
+  emit registerCommand("setVibrationalMode", tr("Set the vibrational mode."));
+  emit registerCommand("setVibrationalAmplitude",
+                       tr("Set the vibrational amplitude."));
+  emit registerCommand("startVibrationAnimation",
+                       tr("Start the vibrational animation."));
+  emit registerCommand("stopVibrationAnimation",
+                       tr("Stop the vibrational animation."));
 }
 
 bool Spectra::handleCommand(const QString& command, const QVariantMap& options)

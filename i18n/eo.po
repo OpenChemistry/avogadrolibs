@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-06-18 02:38+0000\n"
+"POT-Creation-Date: 2023-10-08 02:02+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -1019,62 +1019,62 @@ msgstr "Elekti dosieron:"
 msgid "Select executable:"
 msgstr "Elekti ruleblaĵon:"
 
-#: qtgui/fileformatdialog.cpp:51
+#: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr "Ne troviĝis taŭga dosierlegilo por la elektita dosiero."
 
-#: qtgui/fileformatdialog.cpp:99
+#: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:113
+#: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr "Ne troviĝis taŭga dosierskribilo por la elektita dosiero."
 
-#: qtgui/fileformatdialog.cpp:162
+#: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "traktiloj"
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "trakti"
 
-#: qtgui/fileformatdialog.cpp:167
+#: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
 msgstr "legiloj"
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "legi"
 
-#: qtgui/fileformatdialog.cpp:172
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
 msgstr "skribiloj"
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "skribi"
 
-#: qtgui/fileformatdialog.cpp:178
+#: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Troviĝis pluro da %1 kiu povas %2 ĉi tiun dosierformon. Kiun uzi?"
 
-#: qtgui/fileformatdialog.cpp:278
+#: qtgui/fileformatdialog.cpp:279
 #, fuzzy
 #| msgid "All files (*);;"
 msgid "All files"
 msgstr "Ĉiuj dosieroj (*);;"
 
-#: qtgui/fileformatdialog.cpp:281
+#: qtgui/fileformatdialog.cpp:282
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
@@ -1289,14 +1289,14 @@ msgstr "Krei novan vidon"
 msgid "Periodic Table"
 msgstr "Perioda Tabelo"
 
-#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:189
+#: qtgui/pythonscript.cpp:104 qtgui/pythonscript.cpp:192
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
 "Eraro pri rulado de programeto '%1 %2': Templimo elĉerpiĝis dum atendado de "
 "komenco (%3)."
 
-#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:199
+#: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
@@ -1312,7 +1312,7 @@ msgstr ""
 "Eraro pri rulado de programeto '%1 %2': Templimo elĉerpiĝis dum atendado de "
 "fino (%3)."
 
-#: qtgui/pythonscript.cpp:135
+#: qtgui/pythonscript.cpp:136
 #, qt-format
 msgid ""
 "Error running script '%1 %2': Abnormal exit status %3 (%4: %5)\n"
@@ -1325,27 +1325,34 @@ msgstr ""
 "Eligo:\n"
 "%6"
 
-#: qtgui/pythonscript.cpp:235
+#: qtgui/pythonscript.cpp:145
+#, fuzzy, qt-format
+#| msgctxt "arg is an executable file."
+#| msgid "Starting %1..."
+msgid "Warning '%1'"
+msgstr "Lanĉante %1…"
+
+#: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
 msgstr "Malsukcesis lanĉo de programeto."
 
-#: qtgui/pythonscript.cpp:238
+#: qtgui/pythonscript.cpp:241
 msgid "Script crashed."
 msgstr "Programeto kolapsis."
 
-#: qtgui/pythonscript.cpp:241
+#: qtgui/pythonscript.cpp:244
 msgid "Script timed out."
 msgstr "Programeto elĉerpis templimon."
 
-#: qtgui/pythonscript.cpp:244
+#: qtgui/pythonscript.cpp:247
 msgid "Read error."
 msgstr "Eraro pri legado."
 
-#: qtgui/pythonscript.cpp:247
+#: qtgui/pythonscript.cpp:250
 msgid "Write error."
 msgstr "Eraro pri skribado."
 
-#: qtgui/pythonscript.cpp:251
+#: qtgui/pythonscript.cpp:254
 msgid "Unknown error."
 msgstr "Nekonata eraro."
 
@@ -1529,6 +1536,17 @@ msgstr "Ŝanĝi elektojn"
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "Modifi Molekulon"
+
+#: qtgui/scriptloader.cpp:41
+#, fuzzy, qt-format
+#| msgid "Cannot save file %1."
+msgid "Cannot load script %1"
+msgstr "Ne povas konservi dosieron %1."
+
+#: qtgui/scriptloader.cpp:68
+#, qt-format
+msgid "Checking for %1 scripts in path %2"
+msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
@@ -1725,25 +1743,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:554
+#: qtplugins/surfaces/surfaces.cpp:734
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:106
-#: qtplugins/surfaces/surfaces.cpp:556
+#: qtplugins/surfaces/surfaces.cpp:736
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:108
-#: qtplugins/surfaces/surfaces.cpp:558
+#: qtplugins/surfaces/surfaces.cpp:738
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:560
+#: qtplugins/surfaces/surfaces.cpp:740
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
@@ -1751,7 +1769,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:562
+#: qtplugins/surfaces/surfaces.cpp:742
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
@@ -1759,7 +1777,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:564
+#: qtplugins/surfaces/surfaces.cpp:744
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
@@ -1767,7 +1785,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:566
+#: qtplugins/surfaces/surfaces.cpp:746
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
@@ -1775,7 +1793,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:568
+#: qtplugins/surfaces/surfaces.cpp:748
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
@@ -1783,7 +1801,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:570
+#: qtplugins/surfaces/surfaces.cpp:750
 msgctxt "colormap"
 msgid "Cividis"
 msgstr ""
@@ -1795,7 +1813,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:572:171 rc.cpp:1576
+#: qtplugins/surfaces/surfaces.cpp:752:171 rc.cpp:1576
 #, fuzzy
 #| msgid "Neutral"
 msgctxt "colormap"
@@ -1807,7 +1825,7 @@ msgstr "Neŭtra"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:574:168 rc.cpp:1573
+#: qtplugins/surfaces/surfaces.cpp:754:168 rc.cpp:1573
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1817,7 +1835,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:166
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:576:162 rc.cpp:1567
+#: qtplugins/surfaces/surfaces.cpp:756:162 rc.cpp:1567
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1829,7 +1847,7 @@ msgstr "Nuligi"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:171
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:578:165 rc.cpp:1570
+#: qtplugins/surfaces/surfaces.cpp:758:165 rc.cpp:1570
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1841,7 +1859,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:580:174 rc.cpp:1579
+#: qtplugins/surfaces/surfaces.cpp:760:174 rc.cpp:1579
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -2238,61 +2256,80 @@ msgid "Element name."
 msgstr "Nomo de elemento."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:382
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:404
 msgid "Invalid element symbol."
 msgstr "Nevalida simbolo de elemento."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:384
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:406
 msgid "Element symbol."
 msgstr "Simbolo de elemento."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:394
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
+#, fuzzy
+#| msgid "Invalid atomic number."
+msgid "Invalid atom label."
+msgstr "Nevalida atomnumero."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
+#, fuzzy
+#| msgid "Invalid atomic number."
+msgid "Invalid atomic index."
+msgstr "Nevalida atomnumero."
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
+#, fuzzy
+msgid "Atomic index."
+msgstr "Elekti laŭ Atoma Indico…"
+
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
 msgstr "Nevalida atomnumero."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:396
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
 msgid "Atomic number."
 msgstr "Atomnumero."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:405
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:416
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:438
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:449
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:460
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:471
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:482
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:493
 msgid "Invalid coordinate."
 msgstr "Nevalida koordinato."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:407
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
 msgid "X coordinate."
 msgstr "X-koordinato."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:418
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
 msgid "Y coordinate."
 msgstr "Y-koordinato."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
 msgid "Z coordinate."
 msgstr "Z-koordinato."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:440
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'a' lattice coordinate."
 msgstr "Krada koordinato 'a'."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:451
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
 msgid "'b' lattice coordinate."
 msgstr "Krada koordinato 'b'."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:462
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
 #, fuzzy
 #| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
 msgstr "Krada koordinato 'a'."
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:546
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:579
 msgid "Error applying geometry"
 msgstr "Eraro pri geometrio"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:547
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:580
 msgid ""
 "Could not parse geometry specification. Fix the highlighted errors and try "
 "again.\n"
@@ -2304,7 +2341,7 @@ msgstr ""
 "\n"
 "(Konsilo: Ŝvebigu musmontrilon super ruĝa teksto por priskribo de la eraro.)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:581
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "Edit Atomic Coordinates"
 msgstr "Redakti Atomajn Koordinatojn"
 
@@ -2312,44 +2349,44 @@ msgstr "Redakti Atomajn Koordinatojn"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:394
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:599
-#: qtplugins/label/label.cpp:156:1606 rc.cpp:1633
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
+#: qtplugins/label/label.cpp:158:1606 rc.cpp:1633
 msgid "Custom"
 msgstr "Laŭmenda"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:600
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:634
 msgid "XYZ format (symbols)"
 msgstr "XYZ-dosierformo (simboloj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:601
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:635
 msgid "XYZ format (names)"
 msgstr "XYZ-dosierformo (nomoj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:602
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:636
 msgid "XYZ format (atomic numbers)"
 msgstr "XYZ-dosierformo (atomnumeroj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:603
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:637
 msgid "Lattice coordinates (symbols)"
 msgstr "Kradaj koordinatoj (simboloj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:604
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 msgid "Lattice coordinates (names)"
 msgstr "Kradaj koordinatoj (nomoj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:605
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "Lattice coordinates (atomic numbers)"
 msgstr "Kradaj koordinatoj (atomnumeroj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:607
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "GAMESS format (symbols)"
 msgstr "GAMESS-dosierformo (simboloj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:608
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "GAMESS format (names)"
 msgstr "GAMESS-dosierformo (nomoj)"
 
-#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:609
+#: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Turbomole format"
 msgstr "Turbomole-dosierformo"
 
@@ -3059,13 +3096,13 @@ msgstr "Enmeti Fragmenton"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Enmeti molekulajn fragmentojn por konstrui pli grandajn molekulojn."
 
-#: qtplugins/label/label.cpp:134 qtplugins/meshes/meshes.cpp:176
+#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:176
 #: qtplugins/meshes/meshes.cpp:182
 #, fuzzy
 msgid "Color:"
 msgstr "Kolorigi laŭ:"
 
-#: qtplugins/label/label.cpp:144
+#: qtplugins/label/label.cpp:146
 #, fuzzy
 msgid "Distance from center:"
 msgstr "Distanca Tolero:"
@@ -3078,63 +3115,63 @@ msgstr "Distanca Tolero:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:374
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:151 qtplugins/label/label.cpp:191:1261
+#: qtplugins/label/label.cpp:153 qtplugins/label/label.cpp:193:1261
 msgid "None"
 msgstr "Nenio"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:162
 #, fuzzy
 msgid "Index"
 msgstr "Paŝa Indico"
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:163
 #, fuzzy
 msgid "In."
 msgstr "En:"
 
-#: qtplugins/label/label.cpp:165 qtplugins/propertytables/propertymodel.cpp:386
+#: qtplugins/label/label.cpp:167 qtplugins/propertytables/propertymodel.cpp:386
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Elemento"
 
-#: qtplugins/label/label.cpp:166
+#: qtplugins/label/label.cpp:168
 msgid "El."
 msgstr ""
 
-#: qtplugins/label/label.cpp:170
+#: qtplugins/label/label.cpp:172
 #, fuzzy
 #| msgid "Element name."
 msgid "Element & Number"
 msgstr "Nomo de elemento."
 
-#: qtplugins/label/label.cpp:171
+#: qtplugins/label/label.cpp:173
 msgid "El.&No."
 msgstr ""
 
-#: qtplugins/label/label.cpp:174
+#: qtplugins/label/label.cpp:176
 msgid ", "
 msgstr ""
 
-#: qtplugins/label/label.cpp:185
+#: qtplugins/label/label.cpp:187
 #, fuzzy
 msgid "Atom Label:"
 msgstr "Teksta Etikedo"
 
-#: qtplugins/label/label.cpp:196 qtplugins/propertytables/propertymodel.cpp:431
+#: qtplugins/label/label.cpp:198 qtplugins/propertytables/propertymodel.cpp:431
 msgid "ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:200
+#: qtplugins/label/label.cpp:202
 #: qtplugins/plugindownloader/downloaderwidget.cpp:60
 #: qtplugins/propertytables/propertymodel.cpp:429
 msgid "Name"
 msgstr "Nomo"
 
-#: qtplugins/label/label.cpp:204
+#: qtplugins/label/label.cpp:206
 msgid " & "
 msgstr ""
 
-#: qtplugins/label/label.cpp:216
+#: qtplugins/label/label.cpp:218
 #, fuzzy
 msgid "Residue Label:"
 msgstr "Elektotaj restaĵoj:"
@@ -3298,8 +3335,8 @@ msgstr "Vidi ĝeneralajn atributojn de molekulo."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/surfaces.cpp:125 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/surfaces/surfaces.cpp:243 qtplugins/symmetry/symmetry.cpp:82
 msgid "&Analysis"
 msgstr "&Analizo"
 
@@ -3831,7 +3868,7 @@ msgstr "Eksporti Rastruman Grafikaĵon"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Filmeto (*.mp4);;Filmeto (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:670
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:854
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -3848,17 +3885,17 @@ msgid "Movie (*.avi)"
 msgstr "Filmeto (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:698
-#: qtplugins/surfaces/surfaces.cpp:742 qtplugins/surfaces/surfaces.cpp:754
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:882
+#: qtplugins/surfaces/surfaces.cpp:926 qtplugins/surfaces/surfaces.cpp:938
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:743
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:927
 msgid "Error: cannot add frame to video."
 msgstr "Eraro: ne povas aldoni filmeron al filmeto."
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:755
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:939
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Ne povas konservi dosieron %1."
@@ -4635,11 +4672,37 @@ msgstr "Spacgrupo"
 msgid "Space group features for crystals."
 msgstr "Funkcioj pri spacgrupoj de kristaloj."
 
-#: qtplugins/spectra/spectra.cpp:26
+#: qtplugins/spectra/spectra.cpp:27
 #, fuzzy
 #| msgid "Vibrational Modes"
 msgid "Vibrational Modes…"
 msgstr "Vibraj Modoj"
+
+#: qtplugins/spectra/spectra.cpp:64
+#, fuzzy
+#| msgid "Vibrational modes..."
+msgid "Show the vibrational modes dialog."
+msgstr "Vibraj modoj…"
+
+#: qtplugins/spectra/spectra.cpp:65
+#, fuzzy
+#| msgid "Vibrational modes..."
+msgid "Set the vibrational mode."
+msgstr "Vibraj modoj…"
+
+#: qtplugins/spectra/spectra.cpp:67
+#, fuzzy
+#| msgid "Vibrational modes..."
+msgid "Set the vibrational amplitude."
+msgstr "Vibraj modoj…"
+
+#: qtplugins/spectra/spectra.cpp:69
+msgid "Start the vibrational animation."
+msgstr ""
+
+#: qtplugins/spectra/spectra.cpp:71
+msgid "Stop the vibrational animation."
+msgstr ""
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
@@ -4685,30 +4748,82 @@ msgstr "(Malplejalta neokupata MO)"
 msgid "From File"
 msgstr "El Dosiero"
 
-#: qtplugins/surfaces/surfaces.cpp:80
+#: qtplugins/surfaces/surfaces.cpp:82
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
 msgstr "Krei Surfacojn"
 
-#: qtplugins/surfaces/surfaces.cpp:414
+#: qtplugins/surfaces/surfaces.cpp:110
+#, fuzzy
+#| msgid "Read and render surfaces."
+msgid "Render the van der Waals surface."
+msgstr "Legi kaj montri surfacojn."
+
+#: qtplugins/surfaces/surfaces.cpp:112
+#, fuzzy
+#| msgid "Render the molecule as a wireframe."
+msgid "Render the van der Waals molecular surface."
+msgstr "Montri molekulon kiel dratan kadron."
+
+#: qtplugins/surfaces/surfaces.cpp:114
+#, fuzzy
+#| msgid "Render the molecule as a wireframe."
+msgid "Render the solvent-accessible molecular surface."
+msgstr "Montri molekulon kiel dratan kadron."
+
+#: qtplugins/surfaces/surfaces.cpp:116
+#, fuzzy
+#| msgid "Render the molecule as a wireframe."
+msgid "Render the solvent-excluded molecular surface."
+msgstr "Montri molekulon kiel dratan kadron."
+
+#: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
+#, fuzzy
+#| msgid "Molecular Orbital"
+msgid "Render a molecular orbital."
+msgstr "Molekula Orbito"
+
+#: qtplugins/surfaces/surfaces.cpp:120
+#, fuzzy
+#| msgid "Calculating electron density"
+msgid "Render the electron density."
+msgstr "Kalkulante elektronan denson"
+
+#: qtplugins/surfaces/surfaces.cpp:121
+#, fuzzy
+#| msgid "Render the scene using VRML."
+msgid "Render the spin density."
+msgstr "Bildigi ĉi tiun scenon per VRML."
+
+#: qtplugins/surfaces/surfaces.cpp:123
+msgid "Render a cube supplied with the file."
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:567
 msgid "Calculating electron density"
 msgstr "Kalkulante elektronan denson"
 
-#: qtplugins/surfaces/surfaces.cpp:424
+#: qtplugins/surfaces/surfaces.cpp:576
+#, fuzzy
+#| msgid "Calculating electron density"
+msgid "Calculating spin density"
+msgstr "Kalkulante elektronan denson"
+
+#: qtplugins/surfaces/surfaces.cpp:585
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Kalkulante molekulan orbiton %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:647 qtplugins/surfaces/surfaces.cpp:675
+#: qtplugins/surfaces/surfaces.cpp:831 qtplugins/surfaces/surfaces.cpp:859
 msgid "Movie AVI (*.avi)"
 msgstr "AVI-Filmeto (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:649
+#: qtplugins/surfaces/surfaces.cpp:833
 msgid "Export Movie"
 msgstr "Eksporti Filmeton"
 
-#: qtplugins/surfaces/surfaces.cpp:650
+#: qtplugins/surfaces/surfaces.cpp:834
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "MP4-Filmeto (*.mp4);;AVI-Filmeto (*.avi);;GIF (*.gif)"
 
@@ -4716,7 +4831,7 @@ msgstr "MP4-Filmeto (*.mp4);;AVI-Filmeto (*.avi);;GIF (*.gif)"
 msgid "Surfaces"
 msgstr "Surfacoj"
 
-#: qtplugins/surfaces/surfaces.h:72
+#: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Legi kaj montri surfacojn."
 
@@ -4780,13 +4895,13 @@ msgstr "%1 %2"
 msgid "Template"
 msgstr "Temperaturo"
 
-#: qtplugins/templatetool/templatetool.cpp:298
+#: qtplugins/templatetool/templatetool.cpp:294
 #, fuzzy
 #| msgid "Insert Molecule..."
 msgid "Insert Template"
 msgstr "Enmeti Molekulon…"
 
-#: qtplugins/templatetool/templatetool.cpp:491
+#: qtplugins/templatetool/templatetool.cpp:544
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Insert Ligand"
@@ -4799,7 +4914,7 @@ msgstr "Enmeti Fragmenton"
 msgid "Template tool"
 msgstr "Manipula ilo"
 
-#: qtplugins/templatetool/templatetoolwidget.cpp:263
+#: qtplugins/templatetool/templatetoolwidget.cpp:288
 #, fuzzy
 #| msgid "Other..."
 msgid "Other..."
@@ -5248,6 +5363,27 @@ msgstr "Aranĝo:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
+#, fuzzy
+#| msgid ""
+#| "<html><head/><body><p>Specification of format. Each character indicates a "
+#| "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> "
+#| "- Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
+#| "\">Z</span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" "
+#| "font-weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" "
+#| "for carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name "
+#| "(e.g. \"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - "
+#| "Element symbol (e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;"
+#| "\">x</span> - X position coordinate<br/><span style=\" font-weight:600;"
+#| "\">y</span> - Y position coordinate<br/><span style=\" font-weight:600;"
+#| "\">z</span> - Z position coordinate<br/><span style=\" font-weight:600;"
+#| "\">a</span> - 'a' lattice coordinate (crystals only)<br/><span style=\" "
+#| "font-weight:600;\">b</span> - 'b' lattice coordinate (crystals only)<br/"
+#| "><span style=\" font-weight:600;\">c</span> - 'c' lattice coordinate "
+#| "(crystals only)<br/><span style=\" font-weight:600;\">_</span> - A "
+#| "literal space (\" \"), useful for alignment<br/><span style=\" font-"
+#| "weight:600;\">0</span> - A literal 0 (\"0\"), useful for optimization "
+#| "flags<br/><span style=\" font-weight:600;\">1</span> - A literal 1 "
+#| "(\"1\"), useful for optimization flags<br/></p></body></html>"
 msgid ""
 "<html><head/><body><p>Specification of format. Each character indicates a "
 "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
@@ -5256,18 +5392,19 @@ msgid ""
 "weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
 "carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
 "\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
-"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;\">x</span> - X "
-"position coordinate<br/><span style=\" font-weight:600;\">y</span> - Y "
-"position coordinate<br/><span style=\" font-weight:600;\">z</span> - Z "
-"position coordinate<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"lattice coordinate (crystals only)<br/><span style=\" font-weight:600;\">b</"
-"span> - 'b' lattice coordinate (crystals only)<br/><span style=\" font-"
-"weight:600;\">c</span> - 'c' lattice coordinate (crystals only)<br/><span "
-"style=\" font-weight:600;\">_</span> - A literal space (\" \"), useful for "
-"alignment<br/><span style=\" font-weight:600;\">0</span> - A literal 0 "
-"(\"0\"), useful for optimization flags<br/><span style=\" font-weight:600;"
-"\">1</span> - A literal 1 (\"1\"), useful for optimization flags<br/></p></"
-"body></html>"
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - "
+"Atom label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) "
+"<br/><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
+"><span style=\" font-weight:600;\">y</span> - Y position coordinate<br/"
+"><span style=\" font-weight:600;\">z</span> - Z position coordinate<br/"
+"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate "
+"(crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
+"coordinate (crystals only)<br/><span style=\" font-weight:600;\">c</span> - "
+"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;"
+"\">_</span> - A literal space (\" \"), useful for alignment<br/><span "
+"style=\" font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for "
+"optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
+"literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
 "<html><head/><body><p>Specifo de dosierformo. Ĉiu signo indikas valoron "
 "skribendan por ĉiu atomo:</p><p><span style=\" font-weight:600;\">#</span> - "
@@ -5848,7 +5985,7 @@ msgstr "Duobla"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:69
+#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
 msgid "Insert"
 msgstr "Enmeti"
@@ -5896,8 +6033,8 @@ msgstr "Elektu la stilon de mezurunuoj uzotaj dum la simulado."
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -5909,8 +6046,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -5988,8 +6125,8 @@ msgstr "Elekti atoman stilon uzita de la datendosiero."
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -6001,8 +6138,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -7624,8 +7761,8 @@ msgstr ""
 msgid ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7635,8 +7772,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css"
-"\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Cantarell'; font-size:11pt; font-"
 "weight:400; font-style:normal;\">\n"
@@ -7993,9 +8130,6 @@ msgstr "phlostically@example.com"
 #, fuzzy
 #~ msgid "Residue Properties..."
 #~ msgstr "Detaloj pri Simetrio…"
-
-#~ msgid "Vibrational modes..."
-#~ msgstr "Vibraj modoj…"
 
 #~ msgid "Create Surfaces..."
 #~ msgstr "Krei Surfacojn…"

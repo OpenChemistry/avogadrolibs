@@ -45,6 +45,8 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
+  void registerCommands() override;
+
 public slots:
   void setMode(int mode);
   void setAmplitude(int amplitude);

@@ -43,7 +43,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
   std::vector<int> terList;
-  Residue* r;
+  Residue* r = nullptr;
   size_t currentResidueId = 0;
   bool ok(false);
   int coordSet = 0;
@@ -173,7 +173,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       } else if (coordSet == 0) {
         Atom newAtom = mol.addAtom(atomicNum);
         newAtom.setPosition3d(pos);
-        if (r) {
+        if (r != nullptr) {
           r->addResidueAtom(atomName, newAtom);
         }
         rawToAtomId.push_back(mol.atomCount() - 1);

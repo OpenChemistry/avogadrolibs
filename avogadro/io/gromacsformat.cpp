@@ -54,7 +54,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 {
   string buffer;
   string value;
-  Residue* r;
+  Residue* r = nullptr;
   size_t currentResidueId = 0;
 
   // Title
@@ -138,7 +138,9 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     // Atom name:
     value = trimmed(buffer.substr(10, 5));
     Atom atom;
-    int atomicNum = r->getAtomicNumber(value);
+    int atomicNum = 0;
+    if (r != nullptr)
+      r->getAtomicNumber(value);
     if (atomicNum) {
       atom = molecule.addAtom(atomicNum);
     } else {

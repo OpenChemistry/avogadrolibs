@@ -42,6 +42,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   for (it = begin; it != end; ++it) {
     switch (*it) {
       case 'S':
+      case 'L':
         needElementSymbol = true;
         break;
       case 'N':
@@ -64,8 +65,8 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   const Index numAtoms = m_molecule->atomCount();
   Atom atom;
   unsigned char atomicNumber;
-  const char* symbol;
-  const char* name;
+  const char* symbol = "\0";
+  const char* name = "\0";
   Vector3 pos3d;
   Vector3 fpos3d;
   const UnitCell* cell =
@@ -76,6 +77,7 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   {
     atomicNumberPrecision = 0,
     atomicNumberWidth = 3,
+    atomicLabelWidth = 8, // 3 element symbol + 5 index
     coordinatePrecision = 6,
     coordinateWidth = 11,
     elementNameWidth = 13, // Currently the longest element name
@@ -89,10 +91,14 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   // Use fixed number format.
   m_stream << std::fixed;
 
+  // Count the number for each element
+  std::vector<unsigned int> elementCounts(Elements::elementCount(), 0);
+
   // Iterate through the atoms
   for (Index atomI = 0; atomI < numAtoms; ++atomI) {
     atom = m_molecule->atom(atomI);
     atomicNumber = atom.atomicNumber();
+    elementCounts[atomicNumber]++;
     if (needElementSymbol)
       symbol = Core::Elements::symbol(atomicNumber);
     if (needElementName)
@@ -136,6 +142,9 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
           break;
         case 'S':
           m_stream << std::left << std::setw(elementSymbolWidth) << symbol;
+          break;
+        case 'L':
+          m_stream << std::left << symbol << elementCounts[atomicNumber] << " ";
           break;
         case 'N':
           m_stream << std::left << std::setw(elementNameWidth) << name;
@@ -193,4 +202,4 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   return m_stream.str();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core
