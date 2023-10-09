@@ -6,8 +6,6 @@
 #ifndef AVOGADRO_CORE_TYPES_H
 #define AVOGADRO_CORE_TYPES_H
 
-#include "avogadrocoreexport.h"
-
 namespace Avogadro {
 
 /** Symbolic constants representing various built-in C++ types. */

@@ -6,7 +6,10 @@
 #ifndef AVOGADRO_QTGUI_ATOMUTILITIES_H
 #define AVOGADRO_QTGUI_ATOMUTILITIES_H
 
-#include <avogadro/core/vector.h>
+#include "avogadrocoreexport.h"
+
+#include "avogadrocoreexport.h"
+
 #include <avogadro/core/molecule.h>
 
 #include <vector>

@@ -32,12 +32,13 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
+
+#include <QDebug>
 
 #include <limits>
 
@@ -220,6 +221,28 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
+inline Vector3ub contrastingColor(const Vector3ub& rgb)
+{
+  // If we're far 'enough' (+/-32) away from 128, just invert the component.
+  // If we're close to 128, inverting the color will end up too close to the
+  // input -- adjust the component before inverting.
+  const unsigned char minVal = 32;
+  const unsigned char maxVal = 223;
+  Vector3ub result;
+  for (size_t i = 0; i < 3; ++i) {
+    unsigned char input = rgb[i];
+    if (input > 160 || input < 96)
+      result[i] = static_cast<unsigned char>(255 - input);
+    else
+      result[i] = static_cast<unsigned char>(255 - (input / 4));
+
+    // Clamp to 32-->223 to prevent pure black/white
+    result[i] = std::min(maxVal, std::max(minVal, result[i]));
+  }
+
+  return result;
+}
+
 void Editor::draw(Rendering::GroupNode& node)
 {
   if (fabs(m_bondDistance) < 0.3)
@@ -236,9 +259,16 @@ void Editor::draw(Rendering::GroupNode& node)
                           .arg(distanceLabel, labelWidth)
                           .arg(tr("%L1 Å").arg(m_bondDistance, 9, 'f', 3), 9);
 
+  Vector3ub color(64, 255, 220);
+  if (m_renderer) {
+    auto backgroundColor = m_renderer->scene().backgroundColor();
+    color = contrastingColor(
+      Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+  }
+
   TextProperties overlayTProp;
   overlayTProp.setFontFamily(TextProperties::Mono);
-  overlayTProp.setColorRgb(64, 255, 220);
+  overlayTProp.setColorRgb(color[0], color[1], color[2]);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
   auto* label = new TextLabel2D;
@@ -266,15 +296,20 @@ void Editor::reset()
     Index a2 = m_bondedAtom.index;
     Index a3 = m_clickedObject.index;
 
-    // order them
+    // don't order them
+    // this caused bug:
+    // https://github.com/OpenChemistry/avogadrolibs/issues/678
+    /*
     if (a1 > a2)
       std::swap(a1, a2);
     if (a1 > a3)
       std::swap(a1, a3);
     if (a2 > a3)
       std::swap(a2, a3);
+    */
 
     // This preserves the order so they are adjusted in order.
+    // This is important for the undo stack to work correctly.
     Core::Array<Index> atomIds;
     atomIds.push_back(a3);
     atomIds.push_back(a2);
@@ -373,7 +408,36 @@ void Editor::bondLeftClick(QMouseEvent* e)
 void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
+  // check to see if we need to adjust hydrogens
+  Core::Array<Index> bondedAtoms;
+  if (m_toolWidget->adjustHydrogens()) {
+    // before we remove the atom, we need to delete any H atoms
+    // that are bonded to it
+    RWAtom atom = m_molecule->atom(m_clickedObject.index);
+    if (atom.isValid()) {
+      // get the list of bonded atoms
+      Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
+      for (const RWBond& bond : atomBonds) {
+        RWAtom bondedAtom = bond.getOtherAtom(atom);
+        if (bondedAtom.atomicNumber() == Core::Hydrogen) {
+          // remove the H atom
+          m_molecule->removeAtom(bondedAtom.index());
+        } else {
+          // save the atom to adjust after we remove the target
+          bondedAtoms.push_back(m_molecule->atomUniqueId(bondedAtom));
+        }
+      }
+    }
+  }
   m_molecule->removeAtom(m_clickedObject.index);
+
+  // okay, now adjust the valence on the bonded atoms
+  // (e.g., add back some hydrogens)
+  for (Index atomIndex : bondedAtoms) {
+    RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
+    QtGui::HydrogenTools::adjustHydrogens(atom);
+  }
+
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
 }
 
@@ -418,7 +482,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
   // Check if the previously clicked atom is still under the mouse.
   float depth = -1.0f;
-  for (const auto & hit : hits) {
+  for (const auto& hit : hits) {
     if (hit.second == m_clickedObject) {
       depth = hit.first;
       break;
@@ -462,7 +526,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (m_bondedAtom.isValid()) {
     // Is it still under the mouse?
     depth = -1.0f;
-    for (const auto & hit : hits) {
+    for (const auto& hit : hits) {
       if (hit.second == m_bondedAtom) {
         depth = hit.first;
         break;
@@ -484,7 +548,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   // Is there another atom under the cursor, besides newAtom? If so, we'll draw
   // a bond to it.
   Identifier atomToBond;
-  for (const auto & hit : hits) {
+  for (const auto& hit : hits) {
     const Identifier& ident = hit.second;
     // Are we on an atom
     if (ident.type == Rendering::AtomType)
@@ -496,10 +560,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
       }
   }
 
-  if (atomToBond.isValid()) {
+  if (atomToBond.isValid() && (atomToBond.index != m_newObject.index)) {
     // If we have a newAtom, destroy it
-    if (m_newObject.isValid() && atomToBond.index != m_newObject.index &&
-        m_newObject.type == Rendering::AtomType) {
+    if (m_newObject.isValid() && m_newObject.type == Rendering::AtomType) {
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
@@ -628,4 +691,4 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   return;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

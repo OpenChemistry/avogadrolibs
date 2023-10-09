@@ -30,7 +30,8 @@ class AVOGADROQTGUI_EXPORT MultiViewWidget : public QWidget
   Q_OBJECT
 
 public:
-  explicit MultiViewWidget(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
+  explicit MultiViewWidget(QWidget* parent = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
   ~MultiViewWidget() override;
 
   void addWidget(QWidget* widget);

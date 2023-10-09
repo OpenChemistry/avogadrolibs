@@ -20,4 +20,4 @@ avogadro_plugin(apbs
 )
 
 target_link_libraries(apbs
-  PRIVATE AvogadroIO AvogadroMoleQueue)
+  PRIVATE Avogadro::IO Avogadro::MoleQueue)

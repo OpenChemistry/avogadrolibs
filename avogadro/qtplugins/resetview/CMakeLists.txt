@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 avogadro_plugin(ResetView
   "Manipulate the view camera."
   ExtensionPlugin
@@ -9,4 +7,4 @@ avogadro_plugin(ResetView
   ""
 )
 
-target_link_libraries(ResetView PRIVATE AvogadroRendering)
+target_link_libraries(ResetView PRIVATE Avogadro::QtOpenGL)

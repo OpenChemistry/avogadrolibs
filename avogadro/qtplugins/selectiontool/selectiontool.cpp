@@ -25,7 +25,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <queue>
 #include <set>
@@ -245,7 +245,7 @@ void SelectionTool::applyColor(Vector3ub color)
 
 void SelectionTool::applyLayer(int layer)
 {
-  if (layer < 0 || m_molecule == nullptr) {
+  if (layer <= 0 || m_molecule == nullptr) {
     return;
   }
   RWMolecule* rwmol = m_molecule->undoMolecule();
@@ -254,7 +254,7 @@ void SelectionTool::applyLayer(int layer)
 
   // qDebug() << "SelectionTool::applyLayer" << layer << " layerCount " <<
   // m_layerManager.layerCount();
-  if (layer >= m_layerManager.layerCount()) {
+  if (layer >= static_cast<int>(m_layerManager.layerCount())) {
     // add a new layer
     auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
     QtGui::RWLayerManager rwLayerManager;
@@ -287,31 +287,31 @@ void SelectionTool::selectLinkedMolecule(QMouseEvent* e, Index atom)
 void SelectionTool::clearAtoms()
 {
   for (Index i = 0; i < m_molecule->atomCount(); ++i)
-    m_molecule->atom(i).setSelected(false);
+    m_molecule->undoMolecule()->setAtomSelected(i, false);
 }
 
 bool SelectionTool::addAtom(const Index& atom)
 {
-  m_molecule->atom(atom).setSelected(true);
+  m_molecule->undoMolecule()->setAtomSelected(atom, true);
   return true;
 }
 
 bool SelectionTool::removeAtom(const Index& atom)
 {
-  m_molecule->atom(atom).setSelected(false);
+  m_molecule->undoMolecule()->setAtomSelected(atom, false);
   return true;
 }
 
 bool SelectionTool::toggleAtom(const Index& atom)
 {
   Atom a = m_molecule->atom(atom);
-  a.setSelected(!a.selected());
+  m_molecule->undoMolecule()->setAtomSelected(atom, !a.selected());
   return a.selected();
 }
 
 bool SelectionTool::shouldClean(QMouseEvent* e)
 {
-  // acumulate the selection if shift or ctrl are presset
+  // accumulate the selection if shift or ctrl are presset
   if (!(e->modifiers() & Qt::ControlModifier) &&
       !(e->modifiers() & Qt::ShiftModifier)) {
     clearAtoms();

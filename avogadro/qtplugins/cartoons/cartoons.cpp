@@ -108,7 +108,7 @@ struct LayerCartoon : Core::LayerData
       jumpTable[4] = &Cartoons::showSimpleCartoon;
       jumpTable[5] = &Cartoons::showCartoon;
       jumpTable[6] = &Cartoons::showRope;
-      for (size_t i = 0; i < boxesText.size(); ++i) {
+      for (int i = 0; i < boxesText.size(); ++i) {
         auto* check = new QCheckBox(boxesText[i]);
         check->setChecked(boxesBools[i]);
         QObject::connect(check, &QCheckBox::clicked, slot, jumpTable[i]);
@@ -124,13 +124,13 @@ struct LayerCartoon : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    showBackbone = settings.value("cartoon/backbone", true).toBool();
+    showBackbone = settings.value("cartoon/backbone", false).toBool();
     showCartoon = settings.value("cartoon/cartoon", true).toBool();
     showTrace = settings.value("cartoon/trace", false).toBool();
     showTube = settings.value("cartoon/tube", false).toBool();
     showRibbon = settings.value("cartoon/ribbon", false).toBool();
     showRope = settings.value("cartoon/rope", false).toBool();
-    showSimpleCartoon = settings.value("cartoon/simplecartoon", true).toBool();
+    showSimpleCartoon = settings.value("cartoon/simplecartoon", false).toBool();
   }
 
   ~LayerCartoon() override

@@ -6,4 +6,4 @@ avogadro_plugin(BallStick
   ballandstick.cpp
   "")
 
-target_link_libraries(BallStick PRIVATE AvogadroRendering)
+target_link_libraries(BallStick PRIVATE Avogadro::Rendering)

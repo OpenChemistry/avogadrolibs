@@ -563,7 +563,7 @@ p, li { white-space: pre-wrap; }
      <item row="3" column="4">
       <widget class="QLabel" name="label_boundary">
        <property name="toolTip">
-        <string>Select bondary Styles in X, Y and Z directions.</string>
+        <string>Select boundary Styles in X, Y and Z directions.</string>
        </property>
        <property name="text">
         <string>Boundary</string>

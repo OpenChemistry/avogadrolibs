@@ -191,7 +191,7 @@ public:
   virtual FileFormat* newInstance() const = 0;
 
   /**
-   * @brief A unique identifier, used to retrieve formats programatically.
+   * @brief A unique identifier, used to retrieve formats programmatically.
    * CML, XYZ, PDB etc. A runtime warning will be generated if the identifier
    * is not unique.
    */

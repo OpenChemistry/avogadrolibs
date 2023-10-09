@@ -163,7 +163,6 @@ namespace {
 template<typename Map, typename VectorOfKeys, typename ValueType>
 void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
 {
-  typedef typename VectorOfKeys::const_iterator KeysIter;
   for (auto key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
     auto mapMatch = map.find(*key);
     if (mapMatch == map.end())

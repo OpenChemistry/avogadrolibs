@@ -44,6 +44,9 @@ private slots:
   void selectElement(int element);
   void selectResidue();
 
+  void selectBackboneAtoms();
+  void selectSidechainAtoms();
+
   void selectWater();
   bool isWaterOxygen(Index i);
 

@@ -230,8 +230,8 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     if (m_moleculeExtension == "cjson") {
       // convert the "cjson" field to a string
       QJsonObject cjsonObj = obj["cjson"].toObject();
-      QJsonDocument doc(cjsonObj);
-      QString strCJSON(doc.toJson(QJsonDocument::Compact));
+      QJsonDocument doc2(cjsonObj);
+      QString strCJSON(doc2.toJson(QJsonDocument::Compact));
       if (!strCJSON.isEmpty()) {
         result = format->readString(strCJSON.toStdString(), newMol);
       }
@@ -477,6 +477,12 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
       selectedList.append(static_cast<qint64>(i));
   }
   json.insert("selectedatoms", selectedList);
+
+  // insert the total charge
+  json.insert("charge", mol.totalCharge());
+
+  // insert the spin multiplicity
+  json.insert("spin", mol.totalSpinMultiplicity());
 
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(

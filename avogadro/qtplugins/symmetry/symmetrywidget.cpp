@@ -11,7 +11,7 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QDebug>
-#include <QtCore/QRegExp>
+
 #include <QtWidgets/QPlainTextEdit>
 
 using Avogadro::QtGui::Molecule;
@@ -285,10 +285,10 @@ void SymmetryWidget::equivalenceSelectionChanged(
   if (a == nullptr)
     return;
 
-  unsigned int length = m_molecule->atomCount();
+  Index length = m_molecule->atomCount();
   // unselect all the atoms
-  for (Index i = 0; i < length; ++i) {
-    m_molecule->setAtomSelected(i, false);
+  for (Index iat = 0; iat < length; ++iat) {
+    m_molecule->setAtomSelected(iat, false);
   }
   // this is yucky, but libmsym uses <void*> for id
   auto selectedAtom = reinterpret_cast<Index>(a->id);

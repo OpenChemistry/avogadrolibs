@@ -7,7 +7,7 @@
 #include "propertymodel.h"
 #include "propertyview.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QScrollBar>
@@ -26,30 +26,35 @@ PropertyTables::PropertyTables(QObject* parent_)
   auto* action = new QAction(this);
   action->setText(tr("Atom Properties…"));
   action->setData(PropertyType::AtomType);
+  action->setProperty("menu priority", 880);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Bond Properties…"));
   action->setData(PropertyType::BondType);
+  action->setProperty("menu priority", 870);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Angle Properties…"));
   action->setData(PropertyType::AngleType);
+  action->setProperty("menu priority", 860);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Torsion Properties…"));
   action->setData(PropertyType::TorsionType);
+  action->setProperty("menu priority", 850);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Residue Properties…"));
   action->setData(PropertyType::ResidueType);
+  action->setProperty("menu priority", 840);
   action->setEnabled(false); // changed by molecule
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);

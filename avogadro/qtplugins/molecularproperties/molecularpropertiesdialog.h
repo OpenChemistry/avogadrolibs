@@ -8,6 +8,12 @@
 
 #include <QtWidgets/QDialog>
 
+// Forward declarations
+class QAbstractButton;
+class QKeyEvent;
+class QNetworkAccessManager;
+class QNetworkReply;
+
 namespace Avogadro {
 
 namespace QtGui {
@@ -27,7 +33,6 @@ class MolecularPropertiesDialog;
  * basic molecular properties.
  * @author Allison Vacanti
  *
- * @todo IUPAC name fetch (need inchi key).
  */
 class MolecularPropertiesDialog : public QDialog
 {
@@ -40,18 +45,29 @@ public:
 
   QtGui::Molecule* molecule() { return m_molecule; }
 
+protected:
+  void keyPressEvent(QKeyEvent *event) override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol);
+  void buttonClicked(QAbstractButton *button);
 
 private slots:
+  void updateName();
   void updateLabels();
   void updateMassLabel();
   void updateFormulaLabel();
   void moleculeDestroyed();
+  void replyFinished(QNetworkReply*);
+  void copy();
 
 private:
   QtGui::Molecule* m_molecule;
   Ui::MolecularPropertiesDialog* m_ui;
+
+  QString m_name;
+  QNetworkAccessManager *m_network;
+  bool m_nameRequestPending;
 };
 
 } // namespace QtPlugins

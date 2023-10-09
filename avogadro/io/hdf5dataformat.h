@@ -28,7 +28,7 @@ namespace Io {
  *
  * This class is intended to supplement an existing format reader/writer by
  * providing the option to write large data to an HDF5 file store. The purpose
- * is to keep text format files at a managable size.
+ * is to keep text format files at a manageable size.
  *
  * To use this class, open or create an HDF5 file with the openFile method,
  * using the appropriate OpenMode for the intended operation. Data can be

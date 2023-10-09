@@ -1,9 +1,14 @@
-find_package(Eigen3 REQUIRED)
-include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Concurrent REQUIRED)
+if(QT_VERSION EQUAL 6)
+  find_package(Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+endif()
 
-find_package(Qt5 COMPONENTS Widgets Network Concurrent REQUIRED)
-include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
-add_definitions(${Qt5Widgets_DEFINITIONS})
+if(WIN32)
+  # used for HTTPS (e.g., PQR, downloads, etc.)
+  find_package(OpenSSL REQUIRED)
+endif()
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Modify the output directory for the build tree.
 set(original_library_output_dir "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
@@ -37,9 +42,8 @@ function(avogadro_plugin name description type header pluginClass sources)
   if(${ARGC} GREATER 7)
     set(rcs ${ARGV7})
   endif()
-  qt5_wrap_ui(ui_srcs ${uis})
-  qt5_add_resources(rc_srcs ${rcs})
-  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  qt_wrap_ui(ui_srcs ${uis})
+  qt_add_resources(rc_srcs ${rcs})
   unset(PluginIncludes)
   foreach(_header ${header})
     set(PluginIncludes
@@ -72,13 +76,13 @@ function(avogadro_plugin name description type header pluginClass sources)
     ${rc_srcs}
     ${name}Plugin.cpp
   )
-  target_link_libraries(${name} PRIVATE AvogadroCore AvogadroQtGui)
+  target_link_libraries(${name} PRIVATE Avogadro::QtGui)
 
   if("${_plugin_object}" STREQUAL "STATIC")
     set_target_properties(${name} PROPERTIES COMPILE_DEFINITIONS
       "QT_STATICPLUGIN")
-    if(UNIX) # Need -fPIC for static plugins linked to shared libs on Unix.
-      set_target_properties(${name} PROPERTIES COMPILE_FLAGS "-fPIC")
+    if(UNIX)
+      set_target_properties(${name} PROPERTIES POSITION_INDEPENDENT_CODE ON)
     endif()
   endif()
 
@@ -96,7 +100,7 @@ add_subdirectory(applycolors)
 add_subdirectory(bondcentrictool)
 add_subdirectory(bonding)
 add_subdirectory(cartoons)
-add_subdirectory(coordinateeditor)
+add_subdirectory(centroid)
 add_subdirectory(copypaste)
 add_subdirectory(crystal)
 add_subdirectory(customelements)
@@ -106,21 +110,17 @@ add_subdirectory(focus)
 add_subdirectory(hydrogens)
 add_subdirectory(importpqr)
 add_subdirectory(insertdna)
-add_subdirectory(insertfragment)
 add_subdirectory(label)
-add_subdirectory(lammpsinput)
 add_subdirectory(lineformatinput)
 add_subdirectory(manipulator)
 add_subdirectory(measuretool)
-add_subdirectory(molecularproperties)
-add_subdirectory(mongochem)
 add_subdirectory(navigator)
 add_subdirectory(networkdatabases)
 add_subdirectory(openbabel)
-add_subdirectory(openmminput)
 add_subdirectory(playertool)
-add_subdirectory(propertytables)
+add_subdirectory(ply)
 add_subdirectory(povray)
+add_subdirectory(propertytables)
 add_subdirectory(resetview)
 add_subdirectory(select)
 add_subdirectory(selectiontool)
@@ -128,36 +128,51 @@ if(USE_SPGLIB)
   add_subdirectory(spacegroup)
 endif()
 add_subdirectory(surfaces)
-add_subdirectory(svg)
+add_subdirectory(lammpsinput)
+add_subdirectory(openmminput)
+if(QT_VERSION EQUAL 5)
+  # This will need some work on the QRegExp migration
+  add_subdirectory(coordinateeditor)
+  add_subdirectory(insertfragment)
+  add_subdirectory(molecularproperties)
+  # The SVG library is not available in Qt 6
+  add_subdirectory(svg)
+endif()
 add_subdirectory(spectra)
+add_subdirectory(templatetool)
 add_subdirectory(vrml)
 
 # Plugins that require VTK
 if(USE_VTK)
+  add_subdirectory(coloropacitymap)
   add_subdirectory(plotpdf)
   add_subdirectory(plotrmsd)
   add_subdirectory(plotxrd)
-  if(BUILD_YAEHMOP_PLUGIN)
-    add_subdirectory(yaehmop)
-  endif()
-  add_subdirectory(coloropacitymap)
+  add_subdirectory(yaehmop)
 endif()
 
-add_subdirectory(apbs)
-add_subdirectory(cp2kinput)
-add_subdirectory(gamessinput)
+if(QT_VERSION EQUAL 5)
+  # QRegExp fixes needed in classes these depend on
+  add_subdirectory(apbs)
+  add_subdirectory(cp2kinput)
+  add_subdirectory(gamessinput)
+endif()
 
 # script plugins (input generators, etc.)
-add_subdirectory(commandscripts)
-add_subdirectory(quantuminput)
+if(QT_VERSION EQUAL 5)
+  # QRegExp fixes needed in classes these depend on
+  add_subdirectory(commandscripts)
+  add_subdirectory(quantuminput)
+  add_subdirectory(scriptcharges)
+endif()
 add_subdirectory(scriptfileformats)
-add_subdirectory(scriptcharges)
 
 if(USE_LIBARCHIVE)
   add_subdirectory(plugindownloader)
 endif()
 
-if(USE_LIBMSYM)
+if(USE_LIBMSYM AND QT_VERSION EQUAL 5)
+  # QStyleOptionViewItemV4 is not in Qt6, needs investigation
   add_subdirectory(symmetry)
 endif()
 
@@ -169,7 +184,8 @@ add_subdirectory(licorice)
 add_subdirectory(meshes)
 add_subdirectory(noncovalent)
 add_subdirectory(vanderwaals)
-add_subdirectory(vanderwaalsao)
+# redundant since there's universal AO
+# add_subdirectory(vanderwaalsao)
 add_subdirectory(wireframe)
 if (USE_OPENGL)
   # needs some raw OpenGL code
@@ -177,10 +193,6 @@ if (USE_OPENGL)
 endif()
 
 # other optional plugins
-if (USE_PROTOCALL)
-  add_subdirectory(clientserver)
-endif()
-
 if(BUILD_GPL_PLUGINS)
   # qtaimcurvature.h/cpp contains GPL licensed code:
   add_subdirectory(qtaim)
@@ -224,16 +236,21 @@ configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
 # Now to build the plugin library, which can also statically link plugins
 # and initialize them for the application. If Avogadro is built statically
 # then the static plugin header must be included by the application.
-set(HEADERS
+add_library(QtPlugins)
+avogadro_headers(QtPlugins
   pluginmanager.h
   pluginfactory.h
   "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h"
 )
 
-set(SOURCES
+target_sources(QtPlugins PRIVATE
   pluginmanager.cpp
 )
 
-avogadro_add_library(AvogadroQtPlugins ${HEADERS} ${SOURCES})
-target_link_libraries(AvogadroQtPlugins PUBLIC ${Qt5Core_LIBRARIES}
-  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} AvogadroQtGui)
+avogadro_add_library(QtPlugins ${HEADERS} ${SOURCES})
+target_link_libraries(QtPlugins PUBLIC Qt::Core
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} Avogadro::QtGui)
+
+if(QT_VERSION EQUAL 6)
+  target_link_libraries(QtPlugins PRIVATE Qt6::OpenGLWidgets Qt6::Network)
+endif()

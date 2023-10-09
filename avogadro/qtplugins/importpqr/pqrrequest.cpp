@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 namespace Avogadro::QtPlugins {
 /**
-* @brief Constructor to initialize the NetworkAcessManager and set pointers to
+* @brief Constructor to initialize the NetworkAccessManager and set pointers to
 * the widget's ui elements.
 */
 PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
@@ -49,7 +49,7 @@ void PQRRequest::sendRequest(QString url)
 * @param url The url to send the request to
 * @param mol2 The mol2 representation of the molecule to download
 */
-void PQRRequest::sendRequest(QString url, QString mol2)
+void PQRRequest::sendRequest(QString url, QString)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
   currentMolName = nameDisplay->text(); // needed to load mol into Avogadro
@@ -74,7 +74,7 @@ void PQRRequest::sendPNGRequest(QString url)
 */
 QString PQRRequest::molSelected(int num)
 {
-  if (results.empty() || num > results.size())
+  if (results.empty() || num > static_cast<int>(results.size()))
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
@@ -202,7 +202,7 @@ float PQRRequest::getMolMass(QString formula)
   int subscript = 1;
   std::string element;
   unsigned char atomicNum;
-  for (int i = 0; i < str.length(); i++) {
+  for (size_t i = 0; i < str.length(); i++) {
     // each element will start with a capital letter
     if (isupper(str[i])) {
       // if next letter is a lower case then we know the whole element

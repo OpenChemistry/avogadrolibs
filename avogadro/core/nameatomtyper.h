@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_NAMEATOMTYPER_H
 #define AVOGADRO_CORE_NAMEATOMTYPER_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include <avogadro/core/atomtyper.h>
 

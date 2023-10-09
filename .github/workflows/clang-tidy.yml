@@ -1,13 +1,12 @@
-name: Static Analysis
+name: Clang-Tidy Static Analysis
 
 on: 
-  pull_request:
   workflow_dispatch:
 
 env:
-  FEATURES: -DUSE_VTK=OFF -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
   BUILD_TYPE: RelWithDebInfo
-  CLAZY_VERSION: 1.8
+  QT_VERSION: 5.15.2
 
 jobs:
   build:
@@ -19,7 +18,7 @@ jobs:
         config:
         - {
             name: "Ubuntu Analysis",
-            os: ubuntu-20.04,
+            os: ubuntu-latest,
             cc: "clang", cxx: "clang++",
             cmake_flags: "-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_SYSTEM_LIBXML2=ON -USE_SYSTEM_ZLIB=ON",
             cpack: "",
@@ -31,25 +30,42 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev qt5-default libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install clang-tidy
 
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
     - name: Checkout openchemistry
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: avogadrolibs
+        fetch-depth: 2
+
+    - name: Grab cache files
+      uses: actions/cache@v3
+      if: runner.os != 'Windows'
+      with:
+        path: |
+          ${{ runner.workspace }}/build/thirdparty
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
@@ -63,29 +79,34 @@ jobs:
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} ninja
         # only re-compile avogadrolibs
         (cd avogadrolibs; ninja clean)
-        bear ninja
+        bear -- ninja
       shell: bash
       working-directory: ${{ runner.workspace }}/build
         
     - name: Create results directory
       run: |
-        mkdir clang-tidy-result
+        mkdir ${{ runner.workspace }}/clang-tidy-result
     
     - name: Analyze
       run: |
-        git diff -U0 HEAD^ | clang-tidy-diff -p1 -path ../build -export-fixes ../clang-tidy-result/fixes.yml
+        # generate the fixes and we'll make a diff
+        run-clang-tidy -p ../build -fix
+        cd avogadrolibs
+        pwd
+        echo "Generating diff"
+        git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
       working-directory: ${{ runner.workspace }}/avogadrolibs
     
     - name: Save PR metadata
       run: |
-        echo ${{ github.event.number }} > clang-tidy-result/pr-id.txt
-        echo ${{ github.event.pull_request.head.repo.full_name }} > clang-tidy-result/pr-head-repo.txt
-        echo ${{ github.event.pull_request.head.ref }} > clang-tidy-result/pr-head-ref.txt
-    
-    - uses: actions/upload-artifact@v2
+        echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
+        echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
+        echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
+
+    - uses: actions/upload-artifact@v3
       with:
         name: clang-tidy-result
-        path: clang-tidy-result/
+        path: ${{ runner.workspace }}/clang-tidy-result/
         
     - name: Setup tmate session
       if: ${{ failure() }}

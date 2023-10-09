@@ -14,7 +14,7 @@
 
 ******************************************************************************/
 
-#include <pugixml.cpp>
+#include <pugixml.hpp>
 
 #include <avogadro/core/utilities.h>
 

@@ -8,7 +8,7 @@
 namespace Avogadro::Core {
 
 NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDistance)
- : m_maxDistance(maxDistance)
+ : m_maxDistance(maxDistance), m_cachedArray(nullptr)
 {
   if (!points.size()) return;
 
@@ -44,8 +44,12 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points, float maxDista
 void NeighborPerceiver::getNeighborsInclusiveInPlace(
     Array<Index> &out, const Vector3 &point
 ) const {
-  out.clear();
   const std::array<int, 3> bin_index = getBinIndex(point);
+  if (&out == m_cachedArray && bin_index == m_cachedIndex)
+    return;
+
+  m_cachedIndex = bin_index;
+  out.clear();
   for (int xi = std::max(int(1), bin_index[0]) - 1;
       xi < std::min(m_binCount[0], bin_index[0] + 2); xi++) {
     for (int yi = std::max(int(1), bin_index[1]) - 1;

@@ -3,13 +3,14 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "yaehmopout.h"
+
 #include <QDebug>
+#include <QRegularExpression>
 #include <QString>
 #include <QVector>
 
 #include <avogadro/core/vector.h>
-
-#include "yaehmopout.h"
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -29,7 +30,7 @@ bool YaehmopOut::readBandData(const QString& data,
   kpoints.clear();
   specialKPoints.clear();
 
-  QStringList lines = data.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+  QStringList lines = data.split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
 
   while (!lines.isEmpty() && !lines[0].contains("#BAND_DATA"))
     lines.removeFirst();
@@ -40,6 +41,8 @@ bool YaehmopOut::readBandData(const QString& data,
   // These get printed from the status file and are not needed...
   foreach (const QString& line, lines) {
     if (line.contains("Error value from Diagonalization"))
+      lines.removeOne(line);
+    if (line.contains("On entry to ZHEGV , parameter number  6 had an illegal value"))
       lines.removeOne(line);
   }
 

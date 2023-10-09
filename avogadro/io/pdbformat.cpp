@@ -20,13 +20,13 @@
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
+using Avogadro::Core::lexicalCast;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::SecondaryStructureAssigner;
-using Avogadro::Core::UnitCell;
-using Avogadro::Core::lexicalCast;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
+using Avogadro::Core::UnitCell;
 
 using std::getline;
 using std::istringstream;
@@ -43,11 +43,17 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
   std::vector<int> terList;
-  Residue* r;
+  Residue* r = nullptr;
   size_t currentResidueId = 0;
   bool ok(false);
   int coordSet = 0;
   Array<Vector3> positions;
+  Array<size_t> rawToAtomId;
+  Array<size_t> altAtomIds;
+  Array<int> altAtomCoordSets;
+  Array<char> altAtomLocs;
+  std::set<char> altLocs;
+  Array<Vector3> altAtomPositions;
 
   while (getline(in, buffer)) { // Read Each line one by one
 
@@ -130,24 +136,47 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         return false;
       }
 
+      auto altLoc = lexicalCast<string>(buffer.substr(16, 1), ok);
+
       string element; // Element symbol, right justified
-      element = buffer.substr(76, 2);
-      element = trimmed(element);
-      if (element == "SE") // For Sulphur
-        element = 'S';
-      if (element.length() == 2)
-        element[1] = std::tolower(element[1]);
+      unsigned char atomicNum;
+      if (buffer.size() >= 78) {
+        element = buffer.substr(76, 2);
+        element = trimmed(element);
+        if (element == "SE") // For Sulphur
+          element = 'S';
+        if (element.length() == 2)
+          element[1] = std::tolower(element[1]);
 
-      unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
-      if (atomicNum == 255)
-        appendError("Invalid element");
+        atomicNum = Elements::atomicNumberFromSymbol(element);
+        if (atomicNum == 255)
+          appendError("Invalid element");
+      } else {
+        // non-standard or old-school PDB file - try to parse the atom name
+        element = trimmed(atomName);
+        atomicNum = Elements::atomicNumberFromSymbol(element);
+        if (atomicNum == 255)
+          appendError("Invalid element");
+      }
 
-      if (coordSet == 0) {
+      if (altLoc.compare("") && altLoc.compare("A")) {
+        if (coordSet == 0) {
+          rawToAtomId.push_back(-1);
+          altAtomIds.push_back(mol.atomCount() - 1);
+        } else {
+          altAtomIds.push_back(positions.size() - 1);
+        }
+        altAtomCoordSets.push_back(coordSet);
+        altAtomLocs.push_back(altLoc[0]);
+        altLocs.insert(altLoc[0]);
+        altAtomPositions.push_back(pos);
+      } else if (coordSet == 0) {
         Atom newAtom = mol.addAtom(atomicNum);
         newAtom.setPosition3d(pos);
-        if (r) {
+        if (r != nullptr) {
           r->addResidueAtom(atomName, newAtom);
         }
+        rawToAtomId.push_back(mol.atomCount() - 1);
       } else {
         positions.push_back(pos);
       }
@@ -167,7 +196,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     else if (startsWith(buffer, "CONECT")) {
       int a = lexicalCast<int>(buffer.substr(6, 5), ok);
       if (!ok) {
-        appendError("Failed to parse coordinate a " + buffer.substr(6, 5));
+        appendError("Failed to parse bond connection a " + buffer.substr(6, 5));
         return false;
       }
       --a;
@@ -176,6 +205,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
            ++terCount)
         ; // semicolon is intentional
       a = a - terCount;
+      a = rawToAtomId[a];
 
       int bCoords[] = { 11, 16, 21, 26 };
       for (int i = 0; i < 4; i++) {
@@ -185,23 +215,44 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         else {
           int b = lexicalCast<int>(buffer.substr(bCoords[i], 5), ok) - 1;
           if (!ok) {
-            appendError("Failed to parse coordinate b" + std::to_string(i) +
+            appendError("Failed to parse bond connection b" + std::to_string(i) +
                         " " + buffer.substr(bCoords[i], 5));
-            return false;
+            //return false;
+            continue; // skip this invalid record
           }
 
           for (terCount = 0; terCount < terList.size() && b > terList[terCount];
                ++terCount)
             ; // semicolon is intentional
           b = b - terCount;
+          b = rawToAtomId[b];
 
-          if (a < b) {
+          if (a < b && a >= 0 && b >= 0) {
             mol.Avogadro::Core::Molecule::addBond(a, b, 1);
           }
         }
       }
     }
   } // End while loop
+
+  int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
+  for (int c = 0; c < count; ++c) {
+    for (char l : altLocs) {
+      Array<Vector3> coordinateSet =
+        c == 0 ? mol.atomPositions3d() : mol.coordinate3d(c);
+      bool found = false;
+      for (size_t i = 0; i < altAtomCoordSets.size(); ++i) {
+        if (altAtomCoordSets[i] == c && altAtomLocs[i] == l) {
+          found = true;
+          coordinateSet[altAtomIds[i]] = altAtomPositions[i];
+        }
+      }
+      if (found)
+        mol.setCoordinate3d(
+          coordinateSet, mol.coordinate3dCount() ? mol.coordinate3dCount() : 1);
+    }
+  }
+
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
   perceiveSubstitutedCations(mol);
@@ -215,6 +266,7 @@ std::vector<std::string> PdbFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("pdb");
+  ext.emplace_back("ent");
   return ext;
 }
 
@@ -229,7 +281,7 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
 {
   for (Index i = 0; i < molecule.atomCount(); i++) {
     unsigned char requiredBondCount(0);
-    switch(molecule.atomicNumber(i)) {
+    switch (molecule.atomicNumber(i)) {
       case 7:
       case 15:
       case 33:
@@ -247,7 +299,7 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
 
     unsigned char bondCount(0);
     Index j = 0;
-    for (const auto &bond : molecule.bonds(i)) {
+    for (const auto& bond : molecule.bonds(i)) {
       unsigned char otherAtomicNumber(0);
       otherAtomicNumber = molecule.atomicNumber(bond.getOtherAtom(i).index());
       bondCount += bond.order();
@@ -264,4 +316,4 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io

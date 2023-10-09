@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_DIHEDRALITERATOR_H
 #define AVOGADRO_CORE_DIHEDRALITERATOR_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include <vector>

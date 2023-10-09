@@ -29,8 +29,6 @@ NWChemLog::~NWChemLog()
 std::vector<std::string> NWChemLog::fileExtensions() const
 {
   std::vector<std::string> extensions;
-  extensions.emplace_back("log");
-  extensions.emplace_back("out");
   extensions.emplace_back("nwchem");
   return extensions;
 }
@@ -62,6 +60,7 @@ bool NWChemLog::read(std::istream& in, Core::Molecule& molecule)
 
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   return true;
 }
@@ -175,7 +174,7 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
   }
 }
 
-void NWChemLog::readIntensities(std::istream& in, Core::Molecule& mol)
+void NWChemLog::readIntensities(std::istream& in, Core::Molecule&)
 {
   string line;
   bool ok = false;

@@ -26,7 +26,7 @@ class LammpsInputDialog : public QDialog
 
 public:
   explicit LammpsInputDialog(QWidget* parent = nullptr,
-                             Qt::WindowFlags flag = 0);
+                             Qt::WindowFlags flag = Qt::WindowFlags());
   ~LammpsInputDialog();
 
   void readSettings(QSettings&);

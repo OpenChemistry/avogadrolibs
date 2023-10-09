@@ -1,0 +1,8 @@
+query-filters:
+  - exclude:
+      id: cpp/integer-multiplication-cast-to-long
+paths-ignore:
+  - '**/moc_*.*'
+  - '**/ui_*.h'
+  - 'thirdparty/**/*.*'
+  - 'utilities/**/*.*'

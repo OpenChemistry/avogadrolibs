@@ -35,7 +35,7 @@ Dihedral DihedralIterator::begin()
       Index c = bc.second;
 
       // find an a
-      Index a, d;
+      Index a = 0;
       for (const auto maybeA : graph.neighbors(b)) {
         if (maybeA != c) {
           a = maybeA;
@@ -71,7 +71,6 @@ Dihedral DihedralIterator::operator++()
   std::tie(a, b, c, d) = m_current;
 
   Graph graph = m_mol->graph();
-  Index count = m_mol->atomCount();
 
   // we start at a good state (i.e., we have a valid dihedral)
   bool valid = (b != c && b != MaxIndex);
@@ -115,7 +114,6 @@ Dihedral DihedralIterator::operator++()
         c = maybeC;
 
         // find an a
-        Index a, d;
         for (const auto maybeA : graph.neighbors(b)) {
           if (maybeA != c) {
             a = maybeA;

@@ -7,9 +7,9 @@
 
 #include "molecularpropertiesdialog.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 namespace Avogadro::QtPlugins {
 
@@ -19,6 +19,8 @@ MolecularProperties::MolecularProperties(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&Molecular…"));
+  m_action->setProperty("menu priority", 990);
+
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 

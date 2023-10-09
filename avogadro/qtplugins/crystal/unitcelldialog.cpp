@@ -14,7 +14,7 @@
 
 #include <QtWidgets/QPlainTextEdit>
 
-#include <QtCore/QRegExp>
+#include <QRegularExpression>
 
 using Avogadro::QtGui::Molecule;
 
@@ -25,7 +25,7 @@ const int MATRIX_PREC = 5;
 const char MATRIX_FMT = 'f';
 
 // Valid value separators in matrix editors:
-const static QRegExp MATRIX_SEP(
+const static QRegularExpression MATRIX_SEP(
   R"(\s|,|;|\||\[|\]|\{|\}|\(|\)|\&|/|<|>)");
 }
 
@@ -305,7 +305,7 @@ void UnitCellDialog::initializeMatrixEditor(QPlainTextEdit* edit)
   edit->setFont(font);
 
   QFontMetrics metrics(font);
-  int minWidth = 3 * metrics.width('0') * (MATRIX_WIDTH + 1);
+  int minWidth = 3 * metrics.horizontalAdvance('0') * (MATRIX_WIDTH + 1);
   int minHeight = metrics.lineSpacing() * 3;
 
   edit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -347,7 +347,7 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
   int row = 0;
   int col = 0;
   foreach (const QString& line, lines) {
-    QStringList values = line.split(MATRIX_SEP, QString::SkipEmptyParts);
+    QStringList values = line.split(MATRIX_SEP, Qt::SkipEmptyParts);
     if (values.size() != 3)
       return Matrix3::Zero();
 

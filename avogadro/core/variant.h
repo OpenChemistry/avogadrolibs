@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_VARIANT_H
 #define AVOGADRO_CORE_VARIANT_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 #include "matrix.h"
 

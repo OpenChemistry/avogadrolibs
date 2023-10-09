@@ -93,7 +93,11 @@ if __name__ == "__main__":
     if args["metadata"]:
         print(json.dumps(getMetaData()))
     elif args["display_name"]:
-        print(getMetaData()["name"])
+        name = getMetaData().get("name")
+        if name:
+            print(name)
+        else:
+            sys.exit("xtb is unavailable")
     elif args["charges"]:
         print(charges())
     elif args["potential"]:

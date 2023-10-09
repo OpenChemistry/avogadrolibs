@@ -7,13 +7,9 @@
 
 namespace Avogadro::QtGui {
 
-ToolPlugin::ToolPlugin(QObject* parent_) : QObject(parent_)
-{
-}
+ToolPlugin::ToolPlugin(QObject* parent_) : QObject(parent_) {}
 
-ToolPlugin::~ToolPlugin()
-{
-}
+ToolPlugin::~ToolPlugin() {}
 
 QUndoCommand* ToolPlugin::mousePressEvent(QMouseEvent*)
 {
@@ -50,12 +46,16 @@ QUndoCommand* ToolPlugin::keyReleaseEvent(QKeyEvent*)
   return nullptr;
 }
 
-void ToolPlugin::draw(Rendering::GroupNode&)
+void ToolPlugin::draw(Rendering::GroupNode&) {}
+
+bool ToolPlugin::handleCommand(const QString& command,
+                               const QVariantMap& options)
 {
+  Q_UNUSED(command);
+  Q_UNUSED(options);
+  return false;
 }
 
-ToolPluginFactory::~ToolPluginFactory()
-{
-}
+ToolPluginFactory::~ToolPluginFactory() {}
 
-} // End Avogadro namespace
+} // namespace Avogadro::QtGui

@@ -47,7 +47,7 @@ public:
   Array<PackedVertex> vertices;
   BufferObject vbo;
 
-  // Sentinals:
+  // Sentinels:
   bool shadersInvalid;
   bool textureInvalid;
   bool vboInvalid;
@@ -58,9 +58,9 @@ public:
   Texture2D texture;
 
   // Shaders
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram shaderProgram;
+  inline static Shader* vertexShader = nullptr;
+  inline static Shader* fragmentShader = nullptr;
+  inline static ShaderProgram* shaderProgram = nullptr;
 
   RenderImpl();
   ~RenderImpl() {}
@@ -178,26 +178,26 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   }
 
   // Setup shaders
-  if (!shaderProgram.bind() || !shaderProgram.setUniformValue("mv", mv) ||
-      !shaderProgram.setUniformValue("proj", proj) ||
-      !shaderProgram.setUniformValue("vpDims", vpDims) ||
-      !shaderProgram.setUniformValue("anchor", anchor) ||
-      !shaderProgram.setUniformValue("radius", radius) ||
-      !shaderProgram.setTextureSampler("texture", texture) ||
+  if (!shaderProgram->bind() || !shaderProgram->setUniformValue("mv", mv) ||
+      !shaderProgram->setUniformValue("proj", proj) ||
+      !shaderProgram->setUniformValue("vpDims", vpDims) ||
+      !shaderProgram->setUniformValue("anchor", anchor) ||
+      !shaderProgram->setUniformValue("radius", radius) ||
+      !shaderProgram->setTextureSampler("texture", texture) ||
 
-      !shaderProgram.enableAttributeArray("offset") ||
-      !shaderProgram.useAttributeArray("offset", PackedVertex::offsetOffset(),
+      !shaderProgram->enableAttributeArray("offset") ||
+      !shaderProgram->useAttributeArray("offset", PackedVertex::offsetOffset(),
                                        sizeof(PackedVertex), IntType, 2,
                                        ShaderProgram::NoNormalize) ||
 
-      !shaderProgram.enableAttributeArray("texCoord") ||
-      !shaderProgram.useAttributeArray("texCoord", PackedVertex::tcoordOffset(),
+      !shaderProgram->enableAttributeArray("texCoord") ||
+      !shaderProgram->useAttributeArray("texCoord", PackedVertex::tcoordOffset(),
                                        sizeof(PackedVertex), FloatType, 2,
                                        ShaderProgram::NoNormalize)) {
     std::cerr << "Error setting up TextLabelBase shader program: "
-              << shaderProgram.error() << std::endl;
+              << shaderProgram->error() << std::endl;
     vbo.release();
-    shaderProgram.release();
+    shaderProgram->release();
     return;
   }
 
@@ -205,38 +205,48 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
   // Release resources:
-  shaderProgram.disableAttributeArray("texCoords");
-  shaderProgram.disableAttributeArray("offset");
-  shaderProgram.release();
+  shaderProgram->disableAttributeArray("texCoords");
+  shaderProgram->disableAttributeArray("offset");
+  shaderProgram->release();
   vbo.release();
 }
 
 void TextLabelBase::RenderImpl::compileShaders()
 {
-  vertexShader.setType(Shader::Vertex);
-  vertexShader.setSource(textlabelbase_vs);
-  if (!vertexShader.compile()) {
-    std::cerr << vertexShader.error() << std::endl;
+  if (vertexShader != nullptr && fragmentShader != nullptr && shaderProgram != nullptr)
+    return;
+
+  if (vertexShader == nullptr)
+    vertexShader = new Shader;
+  vertexShader->setType(Shader::Vertex);
+  vertexShader->setSource(textlabelbase_vs);
+  if (!vertexShader->compile()) {
+    std::cerr << vertexShader->error() << std::endl;
     return;
   }
 
-  fragmentShader.setType(Shader::Fragment);
-  fragmentShader.setSource(textlabelbase_fs);
-  if (!fragmentShader.compile()) {
-    std::cerr << fragmentShader.error() << std::endl;
+  if (fragmentShader == nullptr)
+    fragmentShader = new Shader;
+  fragmentShader->setType(Shader::Fragment);
+  fragmentShader->setSource(textlabelbase_fs);
+  if (!fragmentShader->compile()) {
+    std::cerr << fragmentShader->error() << std::endl;
     return;
   }
 
-  shaderProgram.attachShader(vertexShader);
-  shaderProgram.attachShader(fragmentShader);
-  if (!shaderProgram.link()) {
-    std::cerr << shaderProgram.error() << std::endl;
+  if (shaderProgram == nullptr)
+    shaderProgram = new ShaderProgram;
+  shaderProgram->attachShader(*vertexShader);
+  shaderProgram->attachShader(*fragmentShader);
+  if (!shaderProgram->link()) {
+    std::cerr << shaderProgram->error() << std::endl;
     return;
   }
-  shaderProgram.detachShader(vertexShader);
-  shaderProgram.detachShader(fragmentShader);
-  vertexShader.cleanup();
-  fragmentShader.cleanup();
+/*  shaderProgram->detachShader(vertexShader);
+  shaderProgram->detachShader(fragmentShader);
+  vertexShader->cleanup();
+  fragmentShader->cleanup();
+  */
 
   shadersInvalid = false;
 }

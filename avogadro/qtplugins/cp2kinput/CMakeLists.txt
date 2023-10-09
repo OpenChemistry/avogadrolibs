@@ -13,4 +13,4 @@ avogadro_plugin(Cp2kInput
   cp2kinputdialog.ui
 )
 
-target_link_libraries(Cp2kInput PRIVATE AvogadroMoleQueue)
+target_link_libraries(Cp2kInput PRIVATE Avogadro::MoleQueue)

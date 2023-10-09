@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_CUBE_H
 #define AVOGADRO_CORE_CUBE_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include "vector.h"
@@ -37,8 +39,11 @@ public:
   enum Type
   {
     VdW,
+    SolventAccessible,
+    SolventExcluded,
     ESP,
     ElectronDensity,
+    SpinDensity,
     MO,
     FromFile,
     None

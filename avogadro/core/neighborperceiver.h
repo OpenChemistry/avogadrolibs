@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_NEIGHBORPERCEIVER_H
 #define AVOGADRO_CORE_NEIGHBORPERCEIVER_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include "array.h"
@@ -60,6 +62,8 @@ protected:
   std::vector<std::vector<std::vector<std::vector<Index>>>> m_bins;
   Vector3 m_minPos;
   Vector3 m_maxPos;
+  mutable Array<Index> *m_cachedArray;
+  mutable std::array<int, 3> m_cachedIndex;
 };
 
 } // namespace Core

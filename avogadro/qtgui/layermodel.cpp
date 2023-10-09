@@ -20,7 +20,15 @@ namespace {
 const int QTTY_COLUMNS = 6;
 }
 
-LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {}
+LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {
+  m_plusIcon = QIcon(":/icons/fallback/32x32/plus.png");
+  m_dotsIcon = QIcon(":/icons/fallback/32x32/dots.png");
+  m_previewIcon = QIcon(":/icons/fallback/32x32/preview.png");
+  m_previewDashedIcon = QIcon(":/icons/fallback/32x32/dashed-preview.png");
+  m_lockIcon = QIcon(":/icons/fallback/32x32/lock.png");
+  m_openLockIcon = QIcon(":/icons/fallback/32x32/lock-open.png");
+  m_removeIcon = QIcon(":/icons/fallback/32x32/cross.png");
+}
 
 QModelIndex LayerModel::parent(const QModelIndex&) const
 {
@@ -35,18 +43,18 @@ int LayerModel::rowCount(const QModelIndex& p) const
     return m_item;
 }
 
-int LayerModel::columnCount(const QModelIndex& p) const
+int LayerModel::columnCount(const QModelIndex&) const
 {
   return QTTY_COLUMNS;
 }
 
-Qt::ItemFlags LayerModel::flags(const QModelIndex& idx) const
+Qt::ItemFlags LayerModel::flags(const QModelIndex&) const
 {
   return Qt::ItemIsEnabled;
 }
 
-bool LayerModel::setData(const QModelIndex& idx, const QVariant& value,
-                         int role)
+bool LayerModel::setData(const QModelIndex&, const QVariant&,
+                         int)
 {
   return false;
 }
@@ -56,20 +64,20 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
   if (!idx.isValid() || idx.column() > QTTY_COLUMNS)
     return QVariant();
   auto names = activeMoleculeNames();
-  if (idx.row() == names.size()) {
+  if (idx.row() == static_cast<int>(names.size())) {
     if (idx.column() == 0) {
       switch (role) {
         case Qt::DecorationRole:
-          return QIcon(":/icons/fallback/32x32/plus.png");
+          return m_plusIcon;
         default:
           return QVariant();
       }
     }
     return QVariant();
   }
-  auto name = tr(names[idx.row()].second.c_str()).toStdString();
+  auto name = names[idx.row()].second;
   auto layer = names[idx.row()].first;
-  bool isLayer = name == tr("Layer").toStdString();
+  bool isLayer = (name == "Layer");
   if (isLayer) {
     if (idx.column() == ColumnType::Name) {
       switch (role) {
@@ -77,7 +85,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
           return QString(tr("Layer %1")).arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
-          if (layer == static_cast<int>(getMoleculeLayer().activeLayer()))
+          if (layer == getMoleculeLayer().activeLayer())
             return QVariant(QColor(Qt::red));
           else
             return QVariant(QColor(Qt::black));
@@ -86,24 +94,24 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
       }
     } else if (idx.column() == ColumnType::Menu) {
       if (role == Qt::DecorationRole)
-        return QIcon(":/icons/fallback/32x32/dots.png");
+        return m_dotsIcon;
     } else if (idx.column() == ColumnType::Visible) {
       if (role == Qt::DecorationRole) {
         if (visible(layer))
-          return QIcon(":/icons/fallback/32x32/preview.png");
+          return m_previewIcon;
         else
-          return QIcon(":/icons/fallback/32x32/dashed-preview.png");
+          return m_previewDashedIcon;
       }
     } else if (idx.column() == ColumnType::Lock) {
       if (role == Qt::DecorationRole) {
         if (locked(layer))
-          return QIcon(":/icons/fallback/32x32/lock.png");
+          return m_lockIcon;
         else
-          return QIcon(":/icons/fallback/32x32/lock-open.png");
+          return m_openLockIcon;
       }
     } else if (idx.column() == ColumnType::Remove) {
       if (role == Qt::DecorationRole)
-        return QIcon(":/icons/fallback/32x32/cross.png");
+        return m_removeIcon;
     }
   } else {
     if (idx.column() == ColumnType::Name) {
@@ -141,6 +149,8 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Meshes");
   else if (name == "Non-Covalent")
     return tr("Non-Covalent");
+  else if (name == "QTAIM")
+    return tr("QTAIM", "quantum theory of atoms in molecules");
   else if (name == "Symmetry Elements")
     return tr("Symmetry Elements");
   else if (name == "Van der Waals")
@@ -158,7 +168,7 @@ QString LayerModel::getTranslatedName(const std::string& name) const
 QModelIndex LayerModel::index(int row, int column, const QModelIndex& p) const
 {
   if (!p.isValid())
-    if (row >= 0 && row <= m_item)
+    if (row >= 0 && row <= static_cast<int>(m_item))
       return createIndex(row, column);
   return QModelIndex();
 }
@@ -201,13 +211,13 @@ void LayerModel::addMolecule(const Molecule* mol)
 void LayerModel::setActiveLayer(int index, RWMolecule* rwmolecule)
 {
   auto names = activeMoleculeNames();
-  assert(index < names.size());
+  assert(index < static_cast<int>(names.size()));
   RWLayerManager::setActiveLayer(names[index].first, rwmolecule);
   updateRows();
 }
 void LayerModel::removeItem(int row, RWMolecule* rwmolecule)
 {
-  if (row <= m_item) {
+  if (row <= static_cast<int>(m_item)) {
     auto names = activeMoleculeNames();
     removeLayer(static_cast<size_t>(names[row].first), rwmolecule);
     updateRows();

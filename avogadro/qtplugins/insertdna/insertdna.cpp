@@ -13,10 +13,10 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
+#include <QAction>
+#include <QButtonGroup>
+#include <QMessageBox>
+#include <QProgressDialog>
 
 #include <nlohmann/json.hpp>
 
@@ -36,11 +36,12 @@ namespace Avogadro::QtPlugins {
     };
 
 
-InsertDna::InsertDna(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
-    m_molecule(nullptr), m_dialog(nullptr)
+InsertDna::InsertDna(QObject* p)
+  : Avogadro::QtGui::ExtensionPlugin(p), m_molecule(nullptr),
+    m_reader(nullptr), m_dialog(nullptr)
 {
-  auto* action = new QAction(tr("DNA/RNA..."), this);
+  auto* action = new QAction(tr("DNA/RNA…"), this);
+  action->setProperty("menu priority", 870);
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
 
   m_actions.append(action);
@@ -75,7 +76,7 @@ void InsertDna::showDialog()
   QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
   const FileFormat::Operations ops = FileFormat::Read | FileFormat::String;
   const FileFormat* fmt = FileFormatDialog::findFileFormat(
-    parentAsWidget, tr("Insert DNA/RNA..."), QString("file.fasta"), ops);
+    parentAsWidget, tr("Insert DNA/RNA…"), QString("file.fasta"), ops);
 
   if (fmt == nullptr) {
     return;
@@ -197,15 +198,15 @@ void InsertDna::showDialog()
 
     QProgressDialog progDlg;
     progDlg.setModal(true);
-    progDlg.setWindowTitle(tr("Insert Molecule..."));
-    progDlg.setLabelText(tr("Generating 3D molecule..."));
+    progDlg.setWindowTitle(tr("Insert Molecule…"));
+    progDlg.setLabelText(tr("Generating 3D molecule…"));
     progDlg.setRange(0, 0);
     progDlg.setValue(0);
     progDlg.show();
 
     QtGui::Molecule newMol;
     m_reader->setOptions(options.dump());
-    bool success = m_reader->readString(sequence.toStdString(), newMol);
+    m_reader->readString(sequence.toStdString(), newMol);
     m_molecule->undoMolecule()->appendMolecule(newMol, "Insert Molecule");
     emit requestActiveTool("Manipulator");
   }

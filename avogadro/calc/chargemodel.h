@@ -51,14 +51,14 @@ public:
   virtual ChargeModel* newInstance() const = 0;
 
   /**
-   * @brief A unique identifier, used to retrieve models programatically.
+   * @brief A unique identifier, used to retrieve models programmatically.
    * EEM2, NPA, etc. A runtime warning will be generated if the identifier
    * is not unique.
    */
   virtual std::string identifier() const = 0;
 
   /**
-   * @brief A user-visibile name of the model (e.g., "Natural Population
+   * @brief A user-visible name of the model (e.g., "Natural Population
    * Analysis")
    */
   virtual std::string name() const = 0;

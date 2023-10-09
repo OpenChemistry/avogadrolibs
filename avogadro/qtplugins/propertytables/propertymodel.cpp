@@ -74,7 +74,8 @@ inline QString torsionTypeString(unsigned char a, unsigned char b,
 
 PropertyModel::PropertyModel(PropertyType type, QObject* parent)
   : QAbstractTableModel(parent), m_type(type), m_molecule(nullptr)
-{}
+{
+}
 
 int PropertyModel::rowCount(const QModelIndex& parent) const
 {
@@ -148,57 +149,57 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   int row = index.row();
   int col = index.column();
 
-  // qDebug() << " data: " << row << " " << col << " " << role;
+  // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
+  auto toVariant = [&](auto flags) {
+    return static_cast<Qt::Alignment::Int>(flags);
+  };
 
   // handle text alignments
   if (role == Qt::TextAlignmentRole) {
     if (m_type == ConformerType) {
-      return Qt::AlignRight + Qt::AlignVCenter; // energies
+      return toVariant(Qt::AlignRight | Qt::AlignVCenter); // energies
     } else if (m_type == AtomType) {
       if ((index.column() == AtomDataCharge) ||
           (index.column() == AtomDataColor))
-        return Qt::AlignRight + Qt::AlignVCenter;
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter);
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == BondType) {
       if (index.column() == BondDataLength)
-        return Qt::AlignRight + Qt::AlignVCenter; // bond length
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter); // bond length
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == AngleType) {
       if (index.column() == AngleDataValue)
-        return Qt::AlignRight + Qt::AlignVCenter; // angle
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter); // angle
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == TorsionType) {
       if (index.column() == TorsionDataValue)
-        return Qt::AlignRight + Qt::AlignVCenter; // dihedral angle
+        return toVariant(Qt::AlignRight | Qt::AlignVCenter); // dihedral angle
       else
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == ResidueType) {
-      return Qt::AlignHCenter + Qt::AlignVCenter;
+      return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     }
   }
 
   if (role == Qt::DecorationRole) {
     // color for atom and residue
     if (m_type == AtomType && col == AtomDataColor &&
-        row < m_molecule->atomCount()) {
+        row < static_cast<int>(m_molecule->atomCount())) {
 
       auto c = m_molecule->color(row);
       QColor color(c[0], c[1], c[2]);
       return color;
     } else if (m_type == ResidueType && col == ResidueDataColor &&
-               row < m_molecule->residueCount()) {
+               row < static_cast<int>(m_molecule->residueCount())) {
 
       auto c = m_molecule->residue(row).color();
       QColor color(c[0], c[1], c[2]);
       return color;
     }
   }
-
-  bool sortRole =
-    (role == Qt::UserRole); // from the proxy model to handle floating-point
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
@@ -209,8 +210,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
 
-    if (row >= m_molecule->atomCount() || column > AtomColumns)
+    if (row >= static_cast<int>(m_molecule->atomCount()) ||
+        column > AtomColumns) {
       return QVariant(); // invalid index
+    }
 
     QString format("%L1");
 
@@ -242,8 +245,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     auto column = static_cast<BondColumn>(index.column());
 
-    if (row >= m_molecule->bondCount() || column > BondColumns)
+    if (row >= static_cast<int>(m_molecule->bondCount()) ||
+        column > BondColumns) {
       return QVariant(); // invalid index
+    }
 
     auto bond = m_molecule->bond(row);
     auto atom1 = bond.atom1();
@@ -267,8 +272,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
     auto column = static_cast<ResidueColumn>(index.column());
 
-    if (row >= m_molecule->residueCount() || column > ResidueColumns)
+    if (row >= static_cast<int>(m_molecule->residueCount()) ||
+        column > ResidueColumns) {
       return QVariant(); // invalid index
+    }
 
     auto residue = m_molecule->residue(row);
     // name, number, chain, secondary structure
@@ -290,7 +297,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   } else if (m_type == AngleType) {
 
     auto column = static_cast<AngleColumn>(index.column());
-    if (row > m_angles.size() || column > AngleColumns)
+    if (row > static_cast<int>(m_angles.size()) || column > AngleColumns)
       return QVariant(); // invalid index
 
     auto angle = m_angles[row];
@@ -320,7 +327,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   } else if (m_type == TorsionType) {
 
     auto column = static_cast<TorsionColumn>(index.column());
-    if (row > m_torsions.size() || column > TorsionColumns)
+    if (row > static_cast<int>(m_torsions.size()) || column > TorsionColumns)
       return QVariant(); // invalid index
 
     auto torsion = m_torsions[row];
@@ -388,7 +395,7 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
         case AtomDataY:
           return tr("Y (Å)");
         case AtomDataZ:
-          return tr("Z Å)");
+          return tr("Z (Å)");
         case AtomDataColor:
           return tr("Color");
       }
@@ -484,7 +491,8 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   // for the types and columns that can be edited
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
   if (m_type == AtomType) {
-    if (index.column() == AtomDataElement || index.column() == AtomDataX ||
+    if (index.column() == AtomDataElement ||
+        index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
         index.column() == AtomDataY || index.column() == AtomDataZ)
       return editable;
     // TODO: Color
@@ -622,7 +630,6 @@ bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
   auto* undoMolecule = m_molecule->undoMolecule();
 
   Core::Array<RWBond> bonds = undoMolecule->bonds(currentAtom);
-  typedef std::vector<RWBond>::const_iterator BondIter;
 
   for (auto& it : bonds) {
     if (it != bond) { // Skip the current bond
@@ -693,7 +700,8 @@ void PropertyModel::setBondLength(unsigned int index, double length)
   m_molecule->emitChanged(QtGui::Molecule::Modified | QtGui::Molecule::Atoms);
 }
 
-void PropertyModel::setAngle(unsigned int index, double newValue) {
+void PropertyModel::setAngle(unsigned int index, double newValue)
+{
   // the index refers to the angle
 
   auto angle = m_angles[index];
@@ -728,7 +736,8 @@ void PropertyModel::setAngle(unsigned int index, double newValue) {
   transformFragment();
 }
 
-void PropertyModel::setTorsion(unsigned int index, double newValue) {
+void PropertyModel::setTorsion(unsigned int index, double newValue)
+{
 
   auto torsion = m_torsions[index];
   auto atom1 = m_molecule->undoMolecule()->atom(std::get<0>(torsion));
@@ -760,7 +769,6 @@ void PropertyModel::setTorsion(unsigned int index, double newValue) {
 
   // Perform transformation
   transformFragment();
-
 }
 
 void PropertyModel::setMolecule(QtGui::Molecule* molecule)

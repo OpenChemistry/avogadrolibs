@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>316</width>
-    <height>107</height>
+    <width>405</width>
+    <height>183</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Molecular Properties</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -19,59 +19,76 @@
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Molecular Mass (g/mol):</string>
-       </property>
-      </widget>
-     </item>
+     <property name="formAlignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
      <item row="0" column="1">
-      <widget class="QLabel" name="molMassLabel">
+      <widget class="QLabel" name="moleculeNameLabel">
        <property name="text">
         <string>TODO</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Chemical Formula:</string>
+        <string>Molecular Mass (g/mol):</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLabel" name="formulaLabel">
+      <widget class="QLabel" name="molMassLabel">
        <property name="text">
         <string>TODO</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_7">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Number of Atoms:</string>
+        <string>Chemical Formula:</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLabel" name="atomCountLabel">
+      <widget class="QLabel" name="formulaLabel">
        <property name="text">
         <string>TODO</string>
        </property>
       </widget>
      </item>
      <item row="3" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Number of Atoms:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="atomCountLabel">
+       <property name="text">
+        <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
       <widget class="QLabel" name="label_8">
        <property name="text">
         <string>Number of Bonds:</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QLabel" name="bondCountLabel">
        <property name="text">
         <string>TODO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Molecule Name:</string>
        </property>
       </widget>
      </item>
@@ -83,7 +100,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

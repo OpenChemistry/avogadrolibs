@@ -16,10 +16,9 @@
 
 // Forward declarations
 class QByteArray;
-class QStringList;
 
 namespace VTK {
-class VtkPlot;
+class ChartDialog;
 }
 
 namespace Avogadro {
@@ -70,9 +69,10 @@ private:
   // If the YAEHMOP_EXECUTABLE environment variable is set, that will be
   // used for the executable. Otherwise, it will search for the executable in
   // some common places and use it if it can be found.
-  static bool executeYaehmop(const QByteArray& input, QByteArray& output,
-                             QString& err);
+  bool executeYaehmop(const QByteArray& input, QByteArray& output,
+                      QString& err);
 
+  QString m_programPath;
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
 
@@ -80,7 +80,7 @@ private:
 
   std::unique_ptr<BandDialog> m_bandDialog;
   std::unique_ptr<QAction> m_displayBandDialogAction;
-  std::unique_ptr<VTK::VtkPlot> m_bandPlot;
+  QScopedPointer<VTK::ChartDialog> m_chartDialog;
 };
 
 inline QString Yaehmop::description() const

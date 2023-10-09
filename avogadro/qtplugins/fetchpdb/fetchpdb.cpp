@@ -12,7 +12,7 @@
 #include <QtCore/QFile>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -25,6 +25,7 @@ FetchPDB::FetchPDB(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText("Fetch from &PDB…");
+  m_action->setProperty("menu priority", 180);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -54,6 +55,11 @@ bool FetchPDB::readMolecule(QtGui::Molecule& mol)
     mol, m_tempFileName.toStdString(), "mmtf");
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
+  else
+    // if it didn't read, show a dialog
+    QMessageBox::warning(
+      qobject_cast<QWidget*>(parent()), tr("Fetch PDB"),
+      tr("Could not read the PDB molecule: %1").arg(m_moleculeName));
 
   return readOK;
 }

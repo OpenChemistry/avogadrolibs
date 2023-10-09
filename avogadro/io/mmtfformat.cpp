@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "mmtfformat.h"
+#include <avogadro/core/array.h>
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
@@ -24,6 +25,7 @@ namespace Avogadro::Io {
 using std::string;
 using std::vector;
 
+using Core::Array;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
@@ -33,8 +35,10 @@ MMTFFormat::MMTFFormat() = default;
 
 MMTFFormat::~MMTFFormat() = default;
 
+namespace {
 // from latest MMTF code, under the MIT license
 // https://github.com/rcsb/mmtf-cpp/blob/master/include/mmtf/structure_data.hpp
+#if MMTF_SPEC_VERSION_MAJOR <= 1 && MMTF_SPEC_VERSION_MINOR < 1
 bool is_polymer(const unsigned int chain_index,
                 const std::vector<mmtf::Entity>& entity_list)
 {
@@ -48,11 +52,17 @@ bool is_polymer(const unsigned int chain_index,
   }
   return false;
 }
+#endif
+} // namespace
 
 bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 {
   mmtf::StructureData structure;
-  mmtf::decodeFromStream(structure, file);
+  try {
+    mmtf::decodeFromStream(structure, file);
+  } catch (...) { // if decoding failed, the file is broken
+    return false;
+  }
 
   // This controls which model we load, currently just the first?
   size_t modelIndex = 0;
@@ -91,6 +101,13 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
 
   auto entityList = structure.entityList;
   auto secStructList = structure.secStructList;
+
+  Array<size_t> rawToAtomId;
+  Array<size_t> altAtomIds;
+  Array<int> altAtomCoordSets;
+  Array<char> altAtomLocs;
+  std::set<char> altLocs;
+  Array<Vector3> altAtomPositions;
 
   for (Index j = 0; j < modelChainCount; j++) {
 
@@ -137,35 +154,41 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       Index groupSize = group.atomNameList.size();
 
       for (Index l = 0; l < groupSize; l++) {
+        Vector3 pos(static_cast<Real>(structure.xCoordList[atomIndex]),
+                  static_cast<Real>(structure.yCoordList[atomIndex]),
+                  static_cast<Real>(structure.zCoordList[atomIndex]));
+        if (structure.altLocList[atomIndex] != '\0' && structure.altLocList[atomIndex] != 'A') {
+          rawToAtomId.push_back(-1);
+          altAtomIds.push_back(molecule.atomCount() - 1);
+          altAtomLocs.push_back(structure.altLocList[atomIndex]);
+          altLocs.insert(structure.altLocList[atomIndex]);
+          altAtomPositions.push_back(pos);
+          atomIndex++;
+          continue;
+        }
 
         auto atom = molecule.addAtom(
           Elements::atomicNumberFromSymbol(group.elementList[l]));
-        // Not supported by Avogadro?
-        // const auto& altLocList = structure.altLocList;
 
         atom.setFormalCharge(group.formalChargeList[l]);
-        atom.setPosition3d(
-          Vector3(static_cast<Real>(structure.xCoordList[atomIndex]),
-                  static_cast<Real>(structure.yCoordList[atomIndex]),
-                  static_cast<Real>(structure.zCoordList[atomIndex])));
+        atom.setPosition3d(pos);
 
         std::string atomName = group.atomNameList[l];
         residue.addResidueAtom(atomName, atom);
+        rawToAtomId.push_back(molecule.atomCount() - 1);
         atomIndex++;
       }
 
-      // Intra-resiude bonds
+      // Intra-residue bonds
       for (size_t l = 0; l < group.bondOrderList.size(); l++) {
 
-        auto atom1 = static_cast<Index>(group.bondAtomList[l * 2]);
-        auto atom2 = static_cast<Index>(group.bondAtomList[l * 2 + 1]);
+        auto atom1 = static_cast<Index>(rawToAtomId[atomOffset + group.bondAtomList[l * 2]]);
+        auto atom2 = static_cast<Index>(rawToAtomId[atomOffset + group.bondAtomList[l * 2 + 1]]);
 
         char bo = static_cast<char>(group.bondOrderList[l]);
 
-        if (atomOffset + atom1 < molecule.atomCount() &&
-            atomOffset + atom2 < molecule.atomCount()) {
-          molecule.addBond(atomOffset + atom1, atomOffset + atom2, bo);
-        }
+        if (atom1 < molecule.atomCount() && atom2 < molecule.atomCount())
+          molecule.addBond(atom1, atom2, bo);
       }
 
       // This is the original PDB Chain name
@@ -185,8 +208,8 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
   // These are for inter-residue bonds
   for (size_t i = 0; i < structure.bondAtomList.size() / 2; i++) {
 
-    auto atom1 = static_cast<size_t>(structure.bondAtomList[i * 2]);
-    auto atom2 = static_cast<size_t>(structure.bondAtomList[i * 2 + 1]);
+    auto atom1 = static_cast<size_t>(rawToAtomId[structure.bondAtomList[i * 2]]);
+    auto atom2 = static_cast<size_t>(rawToAtomId[structure.bondAtomList[i * 2 + 1]]);
 
     /* Code for multiple models
     // We are below the atoms we care about
@@ -199,16 +222,31 @@ bool MMTFFormat::read(std::istream& file, Molecule& molecule)
       continue;
     } */
 
-    size_t atom_idx1 = atom1 - atomSkip; // atomSkip = 0 for us (1 model)
-    size_t atom_idx2 = atom2 - atomSkip;
-    if (atom_idx1 < molecule.atomCount() && atom_idx2 < molecule.atomCount())
-      molecule.addBond(atom_idx1, atom_idx2, 1); // Always a single bond
+    if (atom1 < molecule.atomCount() && atom2 < molecule.atomCount())
+      molecule.addBond(atom1, atom2, 1); // Always a single bond
+  }
+
+  for (char l: altLocs) {
+    Array<Vector3> coordinateSet = molecule.atomPositions3d();
+    bool found = false;
+    for (size_t i = 0; i < altAtomLocs.size(); i++) {
+      if (altAtomLocs[i] == l) {
+        found = true;
+        coordinateSet[altAtomIds[i]] = altAtomPositions[i];
+      }
+    }
+    if (found) {
+      molecule.setCoordinate3d(
+        coordinateSet,
+        molecule.coordinate3dCount() ? molecule.coordinate3dCount() : 1
+      );
+    }
   }
 
   return true;
 }
 
-bool MMTFFormat::write(std::ostream& out, const Core::Molecule& molecule)
+bool MMTFFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }

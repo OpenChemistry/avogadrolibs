@@ -45,6 +45,8 @@ public slots:
 
 private slots:
   void bond();
+  void createBond();
+  void bondOrders();
   void clearBonds();
   void configure();
   void setValues();
@@ -56,8 +58,10 @@ private:
   double m_minDistance;
 
   QAction* m_action;
+  QAction* m_orderAction;
   QAction* m_clearAction;
   QAction* m_configAction;
+  QAction* m_createBondsAction;
 
   QDialog* m_dialog;
   Ui::BondingDialog* m_ui;

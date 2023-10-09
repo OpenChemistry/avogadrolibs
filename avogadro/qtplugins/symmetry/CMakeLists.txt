@@ -4,8 +4,6 @@ if(NOT DEFINED LIBMSYM_INCLUDE_DIRS)
 endif()
 include_directories(${LIBMSYM_INCLUDE_DIRS})
 
-message("msym include dir " ${LIBMSYM_INCLUDE_DIRS})
-
 set(symmetry_srcs
   symmetry.cpp
   symmetrywidget.cpp
@@ -36,5 +34,5 @@ avogadro_plugin(SymmetryScene
   symmetryscene.cpp)
 
 target_link_libraries(Symmetry PRIVATE ${LIBMSYM_LIBRARIES})
-target_link_libraries(SymmetryScene PRIVATE AvogadroRendering)
+target_link_libraries(SymmetryScene PRIVATE Avogadro::Rendering)
 

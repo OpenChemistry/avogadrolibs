@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_MUTEX_H
 #define AVOGADRO_CORE_MUTEX_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 namespace Avogadro {
 namespace Core {

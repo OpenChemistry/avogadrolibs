@@ -10,6 +10,7 @@
 #include "cube.h"
 #include "elements.h"
 #include "layermanager.h"
+#include "mdlvalence_p.h"
 #include "mesh.h"
 #include "neighborperceiver.h"
 #include "residue.h"
@@ -45,9 +46,9 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -73,27 +74,22 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
-  : m_data(other.m_data),
-    m_partialCharges(std::move(other.m_partialCharges)),
+  : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d),
-    m_label(other.m_label),
-    m_coordinates3d(other.m_coordinates3d),
-    m_timesteps(other.m_timesteps),
+    m_positions3d(other.m_positions3d), m_label(other.m_label),
+    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
     m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges),
-    m_colors(other.m_colors),
+    m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
     m_vibrationRamanIntensities(other.m_vibrationRamanIntensities),
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
     m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -245,7 +241,7 @@ const Layer& Molecule::layer() const
 
 void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
 {
-  if (value.size() != atomCount())
+  if (static_cast<Index>(value.size()) != atomCount())
     return;
 
   m_partialCharges[type] = value;
@@ -258,6 +254,7 @@ MatrixX Molecule::partialCharges(const std::string& type) const
     return search->second; // value from the map
   } else {
     MatrixX charges(atomCount(), 1);
+    charges.fill(0.0);
     return charges;
   }
 }
@@ -318,6 +315,50 @@ Array<signed char>& Molecule::formalCharges()
 const Array<signed char>& Molecule::formalCharges() const
 {
   return m_formalCharges;
+}
+
+signed char Molecule::totalCharge() const
+{
+  signed char charge = 0;
+
+  // check the data map first
+  if (m_data.hasValue("totalCharge")) {
+    charge = m_data.value("totalCharge").toInt();
+  } else if (m_formalCharges.size() > 0) {
+    for (Index i = 0; i < m_formalCharges.size(); ++i)
+      charge += m_formalCharges[i];
+    return charge;
+  }
+  return charge; // should be zero
+}
+
+char Molecule::totalSpinMultiplicity() const
+{
+  char spin = 1;
+
+  // check the data map first
+  if (m_data.hasValue("totalSpinMultiplicity")) {
+    spin = m_data.value("totalSpinMultiplicity").toInt();
+  } else {
+    // add up the electrons
+    unsigned long electrons = 0;
+    for (Index i = 0; i < m_atomicNumbers.size(); ++i)
+      electrons += m_atomicNumbers[i];
+
+    // adjust by the total charge
+    electrons -= totalCharge();
+
+    // if there are an even number of electrons, the spin is 1
+    // if there are an odd number of electrons, the spin is 2
+    // (might not be true, but a good default for many molecules)
+    // %todo - adjust for inorganic / organometallics
+    if (electrons % 2 == 0)
+      spin = 1;
+    else
+      spin = 2;
+  }
+
+  return spin; // should be zero
 }
 
 Array<Vector3ub>& Molecule::colors()
@@ -606,8 +647,8 @@ Array<const Molecule::BondType*> Molecule::bonds(Index a) const
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](const BondType*& a, const BondType*& b) {
-              return a->index() < b->index();
+            [](const BondType*& ba, const BondType*& bb) {
+              return ba->index() < bb->index();
             });
   return atomBonds;
 }
@@ -625,7 +666,7 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](BondType& a, BondType& b) { return a.index() < b.index(); });
+            [](BondType& ba, BondType& bb) { return ba.index() < bb.index(); });
   return atomBonds;
 }
 
@@ -845,6 +886,143 @@ void Molecule::setVibrationLx(const Array<Array<Vector3>>& lx)
   m_vibrationLx = lx;
 }
 
+void Molecule::perceiveBondOrders()
+{
+  // check for coordinates and that there are some bonds
+  if (m_positions3d.size() != atomCount() || m_positions3d.size() < 2 ||
+      m_graph.edgeCount() == 0)
+    return;
+
+  // save the existing bonds and bond orders
+  // first calculate the unsaturated valence for every atom
+  Array<unsigned char> originalBonds = m_bondOrders;
+  Array<unsigned char> unsaturatedValence(atomCount(), 0);
+  bool anyUnsaturated = false;
+  for (Index i = 0; i < atomCount(); ++i) {
+    unsigned char boSum = 0;
+    for (auto bond : bonds(i)) {
+      boSum += bond.order();
+    }
+    unsaturatedValence[i] =
+      atomValence(atomicNumber(i), formalCharge(i), bonds(i).size()) - boSum;
+
+    if (unsaturatedValence[i] > 0)
+      anyUnsaturated = true;
+  }
+
+  Index startIndex = 0;
+  Index initialAtom = 0;
+  while (anyUnsaturated) {
+
+    // okay, we're first going to try placing *one* bond from our start atom
+    // .. then we can try placing bonds anywhere
+
+    // find the first atom with unsaturated valence of ONE
+    bool foundStart = false;
+    for (Index i = startIndex; i < atomCount(); ++i) {
+      if (unsaturatedValence[i] == 1) {
+        startIndex = i;
+        foundStart = true;
+        break;
+      }
+    }
+
+    // if we didn't find an atom with unsaturated valence of ONE,
+    // .. then find *something*
+    if (!foundStart) {
+      for (Index i = startIndex; i < atomCount(); ++i) {
+        if (unsaturatedValence[i] > 0) {
+          startIndex = i;
+          foundStart = true;
+          break;
+        }
+      }
+    }
+
+    if (foundStart) {
+      // std::cerr << "Found start index " << startIndex << std::endl;
+
+      // look at the neighbors of our start atom
+      Index bestIndex = MaxIndex;
+      unsigned bestValence = 256; // something impossible
+      Real bestDistance = 100.0;  // 10 Angstroms squared
+      Vector3 startPosition = m_positions3d[startIndex];
+      // iterate through the Indexes of the neighbors
+      for (auto neighbor : graph().neighbors(startIndex)) {
+        // if this neighbor doesn't have an unsaturated valence, skip it
+        if (unsaturatedValence[neighbor] == 0) {
+          continue;
+        }
+
+        if (unsaturatedValence[neighbor] < bestValence) {
+          bestIndex = neighbor;
+          bestValence = unsaturatedValence[neighbor];
+          bestDistance =
+            (m_positions3d[neighbor] - startPosition).squaredNorm();
+        } else if (unsaturatedValence[neighbor] == bestValence) {
+          // check if this neighbor is closer
+          Real distance =
+            (m_positions3d[neighbor] - startPosition).squaredNorm();
+          if (distance < bestDistance) {
+            bestIndex = neighbor;
+            bestDistance = distance;
+          }
+        }
+      }
+      // if we found a neighbor, then we can assign a bond order and update
+      // charges
+      if (bestIndex != MaxIndex) {
+        /*std::cerr << "Assigning bond " << startIndex << " " << bestIndex
+                  << std::endl; */
+
+        // assign the bond order
+        m_bondOrders[bond(startIndex, bestIndex).index()] += 1;
+        // update the unsaturated valence of the start atom
+        unsaturatedValence[startIndex] -= 1;
+        // update the unsaturated valence of the neighbor atom
+        unsaturatedValence[bestIndex] -= 1;
+
+        startIndex = 0; // we can now try placing bonds anywhere
+      } else {
+        startIndex += 1;
+      }
+    }
+
+    // TODO: update the current formal charges
+
+    anyUnsaturated = false; // check if we're done
+    for (Index i = 0; i < atomCount(); ++i) {
+      if (unsaturatedValence[i] > 0) {
+        anyUnsaturated = true;
+        break;
+      }
+    }
+
+    if (!foundStart && anyUnsaturated) {
+      // we've gone through and it's not working
+      // try a new starting atom and reset the bond orders
+      // std::cerr << " didn't work " << initialAtom << std::endl;
+
+      initialAtom += 1;
+      startIndex = initialAtom;
+      for (Index i = 0; i < m_bondOrders.size(); ++i) {
+        unsigned change = m_bondOrders[i] - originalBonds[i];
+        if (change > 0) {
+          // update the valences
+          unsaturatedValence[bond(i).atom1().index()] += change;
+          unsaturatedValence[bond(i).atom2().index()] += change;
+        }
+        m_bondOrders[i] = originalBonds[i];
+      }
+    }
+
+    if (initialAtom >= atomCount()) {
+      break;
+    }
+
+  } // keep going until we've assigned all the bond orders
+}
+
 void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 {
   // check for coordinates
@@ -877,6 +1055,28 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       Vector3 jpos = m_positions3d[j];
       Vector3 diff = jpos - ipos;
 
+      // Don't automatically bond nobel gases to anything
+      switch (atomicNumber(i)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
+      // now for the other atom
+      switch (atomicNumber(j)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
       if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
           std::fabs(diff[2]) > cutoff ||
           (atomicNumber(i) == 1 && atomicNumber(j) == 1))
@@ -893,7 +1093,7 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
 
 void Molecule::perceiveBondsFromResidueData()
 {
-  for (auto & m_residue : m_residues) {
+  for (auto& m_residue : m_residues) {
     m_residue.resolveResidueBonds(*this);
   }
 }
@@ -1146,4 +1346,29 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
   return result;
 }
 
-} // namespace Avogadro
+void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax,
+                           const double radius) const
+{
+  boxMin.setConstant(std::numeric_limits<double>::max());
+  boxMax.setConstant(-std::numeric_limits<double>::max());
+
+  const bool noSelection = isSelectionEmpty();
+
+  for (uint32_t i = 0; i < atomCount(); i++) {
+    if (noSelection || m_selectedAtoms[i]) {
+
+      const Vector3 boxMinBuffer = atom(i).position3d().array() - radius;
+      const Vector3 boxMaxBuffer = atom(i).position3d().array() + radius;
+
+      boxMin.x() = std::min(boxMinBuffer.x(), boxMin.x());
+      boxMin.y() = std::min(boxMinBuffer.y(), boxMin.y());
+      boxMin.z() = std::min(boxMinBuffer.z(), boxMin.z());
+
+      boxMax.x() = std::max(boxMaxBuffer.x(), boxMax.x());
+      boxMax.y() = std::max(boxMaxBuffer.y(), boxMax.y());
+      boxMax.z() = std::max(boxMaxBuffer.z(), boxMax.z());
+    }
+  }
+}
+
+} // namespace Avogadro::Core

@@ -15,11 +15,15 @@
 
 #include <avogadro/qtopengl/glwidget.h>
 
+#include <avogadro/rendering/arcsector.h>
+#include <avogadro/rendering/arcstrip.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
 #include <avogadro/rendering/meshgeometry.h>
+#include <avogadro/rendering/quad.h>
+#include <avogadro/rendering/quadoutline.h>
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
@@ -30,9 +34,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtGui/QIcon>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
+#include <QIcon>
+#include <QMouseEvent>
 
 #include <Eigen/Geometry>
 
@@ -49,11 +53,15 @@ using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 using QtGui::RWMolecule;
+using Rendering::ArcSector;
+using Rendering::ArcStrip;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::Identifier;
 using Rendering::LineStripGeometry;
 using Rendering::MeshGeometry;
+using Rendering::Quad;
+using Rendering::QuadOutline;
 
 namespace {
 const std::string degreeString("°");
@@ -101,193 +109,6 @@ inline float vectorAngleDegrees(const Vector3f& v1, const Vector3f& v2,
   const float signDet(crossProduct.dot(axis));
   const float angle(std::atan2(crossProductNorm, dotProduct) * RAD_TO_DEG_F);
   return signDet > 0.f ? angle : -angle;
-}
-
-// Convenience quad drawable:
-class Quad : public MeshGeometry
-{
-public:
-  Quad() {}
-  ~Quad() override {}
-
-  /**
-   * @brief setQuad Set the four corners of the quad.
-   */
-  void setQuad(const Vector3f& topLeft, const Vector3f& topRight,
-               const Vector3f& bottomLeft, const Vector3f& bottomRight);
-};
-
-void Quad::setQuad(const Vector3f& topLeft, const Vector3f& topRight,
-                   const Vector3f& bottomLeft, const Vector3f& bottomRight)
-{
-  const Vector3f bottom = bottomRight - bottomLeft;
-  const Vector3f left = topLeft - bottomLeft;
-  const Vector3f normal = bottom.cross(left).normalized();
-  Array<Vector3f> norms(4, normal);
-
-  Array<Vector3f> verts(4);
-  verts[0] = topLeft;
-  verts[1] = topRight;
-  verts[2] = bottomLeft;
-  verts[3] = bottomRight;
-
-  Array<unsigned int> indices(6);
-  indices[0] = 0;
-  indices[1] = 1;
-  indices[2] = 2;
-  indices[3] = 2;
-  indices[4] = 1;
-  indices[5] = 3;
-
-  clear();
-  addVertices(verts, norms);
-  addTriangles(indices);
-}
-
-// Convenience arc sector drawable:
-class ArcSector : public MeshGeometry
-{
-public:
-  ArcSector() {}
-  ~ArcSector() override {}
-
-  /**
-   * Define the sector.
-   * @param origin Center of the circle from which the arc is cut.
-   * @param startEdge A vector defining an leading edge of the sector. The
-   * direction is used to fix the sector's rotation about the origin, and the
-   * length defines the radius of the sector.
-   * @param normal The normal direction to the plane of the sector.
-   * @param degreesCCW The extent of the sector, measured counter-clockwise from
-   * startEdge in degrees.
-   * @param resolutionDeg The radial width of each triangle used in the sector
-   * approximation in degrees. This will be adjusted to fit an integral number
-   * of triangles in the sector. Smaller triangles (better approximations) are
-   * chosen if adjustment is needed.
-   */
-  void setArcSector(const Vector3f& origin, const Vector3f& startEdge,
-                    const Vector3f& normal, float degreesCCW,
-                    float resolutionDeg);
-};
-
-void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
-                             const Vector3f& normal, float degreesCCW,
-                             float resolutionDeg)
-{
-  // Prepare rotation, calculate sizes
-  const auto numTriangles =
-    static_cast<unsigned int>(std::fabs(std::ceil(degreesCCW / resolutionDeg)));
-  const auto numVerts = static_cast<size_t>(numTriangles + 2);
-  const float stepAngleRads =
-    (degreesCCW / static_cast<float>(numTriangles)) * DEG_TO_RAD_F;
-  const Eigen::AngleAxisf rot(stepAngleRads, normal);
-
-  // Generate normal array
-  Array<Vector3f> norms(numVerts, normal);
-
-  // Generate vertices
-  Array<Vector3f> verts(numVerts);
-  auto vertsInserter(verts.begin());
-  auto vertsEnd(verts.end());
-  Vector3f radial = startEdge;
-  *(vertsInserter++) = origin;
-  *(vertsInserter++) = origin + radial;
-  while (vertsInserter != vertsEnd)
-    *(vertsInserter++) = origin + (radial = rot * radial);
-
-  // Generate indices
-  Array<unsigned int> indices(numTriangles * 3);
-  auto indexInserter(indices.begin());
-  auto indexEnd(indices.end());
-  for (unsigned int i = 1; indexInserter != indexEnd; ++i) {
-    *(indexInserter++) = 0;
-    *(indexInserter++) = i;
-    *(indexInserter++) = i + 1;
-  }
-
-  clear();
-  addVertices(verts, norms);
-  addTriangles(indices);
-}
-
-// Convenience quad outline drawable:
-class QuadOutline : public LineStripGeometry
-{
-public:
-  QuadOutline() {}
-  ~QuadOutline() override {}
-
-  /**
-   * @brief setQuad Set the four corners of the quad.
-   */
-  void setQuad(const Vector3f& topLeft, const Vector3f& topRight,
-               const Vector3f& bottomLeft, const Vector3f& bottomRight,
-               float lineWidth);
-};
-
-void QuadOutline::setQuad(const Vector3f& topLeft, const Vector3f& topRight,
-                          const Vector3f& bottomLeft,
-                          const Vector3f& bottomRight, float lineWidth)
-{
-  Array<Vector3f> verts(5);
-  verts[0] = topLeft;
-  verts[1] = topRight;
-  verts[2] = bottomRight;
-  verts[3] = bottomLeft;
-  verts[4] = topLeft;
-
-  clear();
-  addLineStrip(verts, lineWidth);
-}
-
-// Convenience arc drawable:
-class ArcStrip : public LineStripGeometry
-{
-public:
-  ArcStrip() {}
-  ~ArcStrip() override {}
-
-  /**
-   * Define the arc.
-   * @param origin Center of the circle from which the arc is cut.
-   * @param start A vector pointing from the origin to the start of the arc.
-   * @param normal The normal direction to the plane of the circle.
-   * @param degreesCCW The extent of the arc, measured counter-clockwise from
-   * start in degrees.
-   * @param resolutionDeg The radial width of each segment used in the arc
-   * approximation, in degrees. This will be adjusted to fit an integral number
-   * of segments into the arc. Smaller segments (better approximations) are
-   * chosen if adjustment is needed.
-   * @param lineWidth The width of the line.
-   */
-  void setArc(const Vector3f& origin, const Vector3f& start,
-              const Vector3f& normal, float degreesCCW, float resolutionDeg,
-              float lineWidth);
-};
-
-void ArcStrip::setArc(const Vector3f& origin, const Vector3f& start,
-                      const Vector3f& normal, float degreesCCW,
-                      float resolutionDeg, float lineWidth)
-{
-  // Prepare rotation, calculate sizes
-  const auto resolution =
-    static_cast<unsigned int>(std::fabs(std::ceil(degreesCCW / resolutionDeg)));
-  const auto numVerts = static_cast<size_t>(resolution + 1);
-  const float stepAngleRads =
-    (degreesCCW / static_cast<float>(resolution)) * DEG_TO_RAD_F;
-  const Eigen::AngleAxisf rot(stepAngleRads, normal);
-
-  // Generate vertices
-  Array<Vector3f> verts(numVerts);
-  auto vertsInserter(verts.begin());
-  auto vertsEnd(verts.end());
-  Vector3f radial = start;
-  *(vertsInserter++) = origin + radial;
-  while (vertsInserter != vertsEnd)
-    *(vertsInserter++) = origin + (radial = rot * radial);
-
-  clear();
-  addLineStrip(verts, lineWidth);
 }
 
 } // namespace
@@ -1187,7 +1008,6 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
   const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
 
   Array<RWBond> bonds = m_molecule->bonds(currentAtom);
-  typedef std::vector<RWBond>::const_iterator BondIter;
 
   for (auto& it : bonds) {
     if (it != bond) { // Skip the current bond

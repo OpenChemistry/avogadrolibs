@@ -21,11 +21,13 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+
+#include <QRegularExpression>
 
 #include <string>
 
@@ -123,9 +125,14 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   std::vector<std::string> fexts;
   std::vector<std::string> fmime;
 
+  // Simple lambda to replace toSet in QList
+  auto toSet = [&] (const QList<QString>& list) {
+    return QSet<QString>(list.begin(), list.end());
+  };
+
   QSet<QString> formatDescriptions;
-  formatDescriptions.unite(m_readFormats.uniqueKeys().toSet());
-  formatDescriptions.unite(m_writeFormats.uniqueKeys().toSet());
+  formatDescriptions.unite(toSet(m_readFormats.uniqueKeys()));
+  formatDescriptions.unite(toSet(m_writeFormats.uniqueKeys()));
 
   QSet<QString> formatExtensions;
 
@@ -148,11 +155,11 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
     Io::FileFormat::Operations rw = Io::FileFormat::None;
 
     if (m_readFormats.contains(qdesc)) {
-      formatExtensions.unite(m_readFormats.values(qdesc).toSet());
+      formatExtensions.unite(toSet(m_readFormats.values(qdesc)));
       rw |= Io::FileFormat::Read;
     }
     if (m_writeFormats.contains(qdesc)) {
-      formatExtensions.unite(m_writeFormats.values(qdesc).toSet());
+      formatExtensions.unite(toSet(m_writeFormats.values(qdesc)));
       rw |= Io::FileFormat::Write;
     }
 
@@ -230,13 +237,13 @@ void OpenBabel::refreshReadFormats()
   // process for the refresh methods.
   auto* proc = new OBProcess(this);
 
-  connect(proc, SIGNAL(queryReadFormatsFinished(QMap<QString, QString>)),
-          SLOT(handleReadFormatUpdate(QMap<QString, QString>)));
+  connect(proc, SIGNAL(queryReadFormatsFinished(QMultiMap<QString, QString>)),
+          SLOT(handleReadFormatUpdate(QMultiMap<QString, QString>)));
 
   proc->queryReadFormats();
 }
 
-void OpenBabel::handleReadFormatUpdate(const QMap<QString, QString>& fmts)
+void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
 {
   m_readFormatsPending = false;
 
@@ -265,13 +272,13 @@ void OpenBabel::refreshWriteFormats()
   // process for the refresh methods.
   auto* proc = new OBProcess(this);
 
-  connect(proc, SIGNAL(queryWriteFormatsFinished(QMap<QString, QString>)),
-          SLOT(handleWriteFormatUpdate(QMap<QString, QString>)));
+  connect(proc, SIGNAL(queryWriteFormatsFinished(QMultiMap<QString, QString>)),
+          SLOT(handleWriteFormatUpdate(QMultiMap<QString, QString>)));
 
   proc->queryWriteFormats();
 }
 
-void OpenBabel::handleWriteFormatUpdate(const QMap<QString, QString>& fmts)
+void OpenBabel::handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts)
 {
   m_writeFormatsPending = false;
 
@@ -300,13 +307,13 @@ void OpenBabel::refreshForceFields()
   // process for the refresh methods.
   auto* proc = new OBProcess(this);
 
-  connect(proc, SIGNAL(queryForceFieldsFinished(QMap<QString, QString>)),
-          SLOT(handleForceFieldsUpdate(QMap<QString, QString>)));
+  connect(proc, SIGNAL(queryForceFieldsFinished(QMultiMap<QString, QString>)),
+          SLOT(handleForceFieldsUpdate(QMultiMap<QString, QString>)));
 
   proc->queryForceFields();
 }
 
-void OpenBabel::handleForceFieldsUpdate(const QMap<QString, QString>& ffMap)
+void OpenBabel::handleForceFieldsUpdate(const QMultiMap<QString, QString>& ffMap)
 {
   auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
@@ -321,13 +328,13 @@ void OpenBabel::refreshCharges()
   // process for the refresh methods.
   auto* proc = new OBProcess(this);
 
-  connect(proc, SIGNAL(queryChargesFinished(QMap<QString, QString>)),
-          SLOT(handleChargesUpdate(QMap<QString, QString>)));
+  connect(proc, SIGNAL(queryChargesFinished(QMultiMap<QString, QString>)),
+          SLOT(handleChargesUpdate(QMultiMap<QString, QString>)));
 
   proc->queryCharges();
 }
 
-void OpenBabel::handleChargesUpdate(const QMap<QString, QString>& chargeMap)
+void OpenBabel::handleChargesUpdate(const QMultiMap<QString, QString>& chargeMap)
 {
   auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
@@ -819,7 +826,7 @@ QString OpenBabel::autoDetectForceField() const
   // http://forums.openbabel.org/Heuristic-for-selecting-best-forcefield-td4655917.html
   QString formula = QString::fromStdString(m_molecule->formula());
   QStringList elementTypes =
-    formula.split(QRegExp("\\d+"), QString::SkipEmptyParts);
+    formula.split(QRegularExpression("\\d+"), Qt::SkipEmptyParts);
   bool mmff94Valid = true;
   bool gaffValid = true;
   QStringList::const_iterator eleIter = elementTypes.constBegin();
@@ -830,13 +837,10 @@ QString OpenBabel::autoDetectForceField() const
         *eleIter != "N" && *eleIter != "O" && *eleIter != "P" &&
         *eleIter != "S") {
       gaffValid = false;
+      mmff94Valid = false;
 
-      // These are supported by MMFF94 (but not GAFF)
-      if (*eleIter != "Fe" && *eleIter != "Li" && *eleIter != "Na" &&
-          *eleIter != "K" && *eleIter != "Zn" && *eleIter != "Ca" &&
-          *eleIter != "Cu" && *eleIter != "Mg" && *eleIter != "Na") {
-        mmff94Valid = false;
-      }
+      // MMFF94 supports isolated metal ions but it's safer to use UFF
+      // Fixes #1324
     }
     ++eleIter;
   }

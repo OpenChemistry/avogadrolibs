@@ -141,6 +141,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   }
   // Perceive bonds for the molecule.
   molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
 
   // Add in the electronic structure information if available.
   if (molecularOrbitals.is_object() &&

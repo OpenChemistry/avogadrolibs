@@ -21,4 +21,4 @@ avogadro_plugin(Editor
   "${editor_rcs}"
 )
 
-target_link_libraries(Editor PRIVATE AvogadroRendering)
+target_link_libraries(Editor PRIVATE Avogadro::QtOpenGL)

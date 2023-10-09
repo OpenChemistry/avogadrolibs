@@ -9,7 +9,7 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <QtCore/QStringList>
 
@@ -20,18 +20,22 @@ Hydrogens::Hydrogens(QObject* parent_)
 {
   auto* action = new QAction(tr("&Adjust Hydrogens"), this);
   action->setShortcut(QKeySequence("Ctrl+Alt+H"));
+  action->setProperty("menu priority", 760);
   connect(action, SIGNAL(triggered()), SLOT(adjustHydrogens()));
   m_actions.append(action);
 
   action = new QAction(tr("Add Hydrogens"), this);
+  action->setProperty("menu priority", 750);
   connect(action, SIGNAL(triggered()), SLOT(addHydrogens()));
   m_actions.append(action);
 
   action = new QAction(tr("Remove E&xtra Hydrogens"), this);
+  action->setProperty("menu priority", 740);
   connect(action, SIGNAL(triggered()), SLOT(removeHydrogens()));
   m_actions.append(action);
 
   action = new QAction(tr("&Remove All Hydrogens"), this);
+  action->setProperty("menu priority", 730);
   connect(action, SIGNAL(triggered()), SLOT(removeAllHydrogens()));
   m_actions.append(action);
 }

@@ -77,11 +77,13 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     Core::Array<unsigned int> indices(mesh->numVertices());
     std::generate(indices.begin(), indices.end(), indexGenerator);
 
+    bool hasColors = (mesh->colors().size() != 0);
+
     auto* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
-    //mesh1->setColor(m_color1);
     mesh1->setOpacity(m_opacity);
 
+    if (hasColors) {
     auto colors = mesh->colors();
     Core::Array<Vector3ub> colorsRGB(colors.size());
     for (size_t i = 0; i < colors.size(); i++)
@@ -89,11 +91,15 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
         colors[i].red() * 255, colors[i].green() * 255, colors[i].blue() * 255
       );
     mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
+    } else { // probably a molecular orbital
+      mesh1->setColor(m_color1);
+      mesh1->addVertices(mesh->vertices(), mesh->normals());
+    }
     mesh1->addTriangles(indices);
-    mesh1->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
+    mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
                                         : Rendering::TranslucentPass);
 
-    if (mol.meshCount() >= 2) {
+    if (mol.meshCount() >= 2) { // it's a molecular orbital, two parts
       auto* mesh2 = new MeshGeometry;
       geometry->addDrawable(mesh2);
       mesh = mol.mesh(1);
@@ -108,7 +114,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
       mesh2->setOpacity(m_opacity);
       mesh2->addVertices(mesh->vertices(), mesh->normals());
       mesh2->addTriangles(indices);
-      mesh2->setRenderPass(m_opacity == 255 ? Rendering::OpaquePass
+      mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
                                           : Rendering::TranslucentPass);
     }
   }

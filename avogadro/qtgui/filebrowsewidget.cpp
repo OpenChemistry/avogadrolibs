@@ -7,14 +7,14 @@
 
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFileSystemModel>
+#include <QFileSystemModel>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcessEnvironment>
-#include <QtCore/QRegExp>
+#include <QFileInfo>
+#include <QProcessEnvironment>
+#include <QRegExp>
 
 namespace Avogadro::QtGui {
 
@@ -159,15 +159,15 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
   if (!env.contains(QStringLiteral("PATH")))
     return result;
 
-  static QRegExp pathSplitter = QRegExp(
+  static QString pathSplitter =
 #ifdef Q_OS_WIN32
     ";"
 #else  // WIN32
     ":"
 #endif // WIN32
-  );
+  ;
   QStringList paths = env.value(QStringLiteral("PATH"))
-                        .split(pathSplitter, QString::SkipEmptyParts);
+                         .split(pathSplitter, Qt::SkipEmptyParts);
 
   foreach (const QString& path, paths) {
     QFileInfo info(path + "/" + exec);

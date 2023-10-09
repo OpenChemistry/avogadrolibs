@@ -14,9 +14,9 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
+#include <QAction>
+#include <QMessageBox>
+#include <QProgressDialog>
 
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
@@ -25,15 +25,17 @@ using Avogadro::QtGui::FileFormatDialog;
 namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_reader(nullptr),
-    m_molecule(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_),
+    m_molecule(nullptr), m_reader(nullptr)
 {
   auto* action = new QAction(tr("SMILES…"), this);
+  action->setProperty("menu priority", 800);
   action->setData("SMILES");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
 
   action = new QAction(tr("InChI…"), this);
+  action->setProperty("menu priority", 810);
   action->setData("InChI");
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
@@ -125,7 +127,7 @@ void LineFormatInput::showDialog()
   progDlg.show();
 
   QtGui::Molecule newMol;
-  bool success = m_reader->readString(m_descriptor, newMol);
+  m_reader->readString(m_descriptor, newMol);
   m_molecule->undoMolecule()->appendMolecule(newMol, "Insert Molecule");
   emit requestActiveTool("Manipulator");
   dlg.hide();

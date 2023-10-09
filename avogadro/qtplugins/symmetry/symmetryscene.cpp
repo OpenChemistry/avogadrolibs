@@ -11,6 +11,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/rendering/arcsector.h>
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
@@ -26,80 +27,12 @@ using namespace Avogadro;
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
+using Rendering::ArcSector;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::MeshGeometry;
 using Rendering::SphereGeometry;
-
-namespace {
-// Convenience arc sector drawable:
-class ArcSector : public MeshGeometry
-{
-public:
-  ArcSector() {}
-  ~ArcSector() override {}
-
-  /**
-   * Define the sector.
-   * @param origin Center of the circle from which the arc is cut.
-   * @param startEdge A vector defining an leading edge of the sector. The
-   * direction is used to fix the sector's rotation about the origin, and the
-   * length defines the radius of the sector.
-   * @param normal The normal direction to the plane of the sector.
-   * @param degreesCCW The extent of the sector, measured counter-clockwise from
-   * startEdge in degrees.
-   * @param resolutionDeg The radial width of each triangle used in the sector
-   * approximation in degrees. This will be adjusted to fit an integral number
-   * of triangles in the sector. Smaller triangles (better approximations) are
-   * chosen if adjustment is needed.
-   */
-  void setArcSector(const Vector3f& origin, const Vector3f& startEdge,
-                    const Vector3f& normal, float degreesCCW,
-                    float resolutionDeg);
-};
-
-void ArcSector::setArcSector(const Vector3f& origin, const Vector3f& startEdge,
-                             const Vector3f& normal, float degreesCCW,
-                             float resolutionDeg)
-{
-  // Prepare rotation, calculate sizes
-  const auto numTriangles =
-    static_cast<unsigned int>(std::fabs(std::ceil(degreesCCW / resolutionDeg)));
-  const auto numVerts = static_cast<size_t>(numTriangles + 2);
-  const float stepAngleRads =
-    (degreesCCW / static_cast<float>(numTriangles)) * DEG_TO_RAD_F;
-  const Eigen::AngleAxisf rot(stepAngleRads, normal);
-
-  // Generate normal array
-  Array<Vector3f> norms(numVerts, normal);
-
-  // Generate vertices
-  Array<Vector3f> verts(numVerts);
-  auto vertsInserter(verts.begin());
-  auto vertsEnd(verts.end());
-  Vector3f radial = startEdge;
-  *(vertsInserter++) = origin;
-  *(vertsInserter++) = origin + radial;
-  while (vertsInserter != vertsEnd)
-    *(vertsInserter++) = origin + (radial = rot * radial);
-
-  // Generate indices
-  Array<unsigned int> indices(numTriangles * 3);
-  auto indexInserter(indices.begin());
-  auto indexEnd(indices.end());
-  for (unsigned int i = 1; indexInserter != indexEnd; ++i) {
-    *(indexInserter++) = 0;
-    *(indexInserter++) = i;
-    *(indexInserter++) = i + 1;
-  }
-
-  clear();
-  addVertices(verts, norms);
-  addTriangles(indices);
-}
-
-} // namespace
 
 SymmetryScene::SymmetryScene(QObject* p)
   : QtGui::ScenePlugin(p), m_enabled(true)

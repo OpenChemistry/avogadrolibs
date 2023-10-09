@@ -395,7 +395,7 @@ void InputGeneratorWidget::showError(const QString& err)
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
   QFontMetrics metrics(textBrowser->currentFont());
-  int charWidth = metrics.width("i7OPlmWn9/") / 10;
+  int charWidth = metrics.horizontalAdvance("i7OPlmWn9/") / 10;
   int charHeight = metrics.lineSpacing();
   theSize.setWidth(80 * charWidth);
   theSize.setHeight(20 * charHeight);
@@ -448,15 +448,6 @@ void InputGeneratorWidget::saveSingleFile(const QString& fileName)
 
   settings.setValue(settingsKey("outputDirectory"),
                     QFileInfo(filePath).absoluteDir().absolutePath());
-
-  QFileInfo info(filePath);
-
-  // Don't check for overwrite: the file save dialog takes care of this.
-  // Attempt to open the file for writing
-  if (!QFile(fileName).open(QFile::WriteOnly)) {
-    showError(tr("%1: File exists and is not writable.").arg(fileName));
-    return;
-  }
 
   QTextEdit* edit = m_textEdits.value(fileName, nullptr);
   if (!edit) {
@@ -629,10 +620,17 @@ void InputGeneratorWidget::connectButtons()
           SLOT(updatePreviewText()));
   connect(m_ui->defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
   connect(m_ui->generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
   connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
   connect(m_ui->warningTextButton, SIGNAL(clicked()),
           SLOT(toggleWarningText()));
+
+  // disable the compute button if Molequeue is not running
+  MoleQueueManager& mqManager = MoleQueueManager::instance();
+  if (!mqManager.connectIfNeeded()) {
+    m_ui->computeButton->setEnabled(false);
+  } else {
+    connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
+  }
 }
 
 void InputGeneratorWidget::updateOptions()

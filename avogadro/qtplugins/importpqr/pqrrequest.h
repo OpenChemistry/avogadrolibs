@@ -33,7 +33,7 @@ class PQRRequest : public QObject
 
 public:
   /**
-   * @brief Constructor to initialize the NetworkAcessManager and set pointers to
+   * @brief Constructor to initialize the NetworkAccessManager and set pointers to
    * the widget's ui elements.
    * @param tw Pointer to ui's table widget
    * @param gv Pointer to ui's graphics view for SVG preview

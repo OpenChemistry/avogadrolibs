@@ -14,4 +14,4 @@ avogadro_plugin(GamessInput
   gamessinputdialog.ui
 )
 
-target_link_libraries(GamessInput PRIVATE AvogadroMoleQueue)
+target_link_libraries(GamessInput PRIVATE Avogadro::MoleQueue)

@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_RINGPERCEIVER_H
 #define AVOGADRO_CORE_RINGPERCEIVER_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 #include <cstddef>
 #include <vector>

@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_SPACE_GROUPS_H
 #define AVOGADRO_CORE_SPACE_GROUPS_H
 
-#include "avogadrocore.h"
+#include "avogadrocoreexport.h"
 
 namespace Avogadro {
 namespace Core {

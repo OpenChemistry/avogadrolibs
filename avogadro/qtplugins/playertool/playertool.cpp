@@ -4,9 +4,9 @@
 ******************************************************************************/
 
 #include "playertool.h"
-#include "gif.h"
 
-#include "gwavi.h"
+#include <gif.h>
+#include <gwavi.h>
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
@@ -14,10 +14,10 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QtGui/QOpenGLFramebufferObject>
+#include <QOpenGLFramebufferObject>
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -25,13 +25,13 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QOpenGLWidget>
+#include <QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 
-#include <QDebug>
+#include <QScreen>
 
 #include <cmath>
 
@@ -50,7 +50,7 @@ PlayerTool::PlayerTool(QObject* parent_)
   , m_slider(nullptr)
 {
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setIcon(QIcon(":/icons/player.png"));
+  m_activateAction->setIcon(QIcon(":/icons/animate.png"));
   m_activateAction->setToolTip(tr("Animation Tool"));
 }
 
@@ -269,6 +269,7 @@ void PlayerTool::recordMovie()
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
              EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -282,7 +283,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 
@@ -312,6 +314,7 @@ void PlayerTool::recordMovie()
     gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
                        EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), nullptr);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -325,7 +328,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
       QByteArray ba;
@@ -343,6 +347,7 @@ void PlayerTool::recordMovie()
     gwavi_close(gwavi);
   } else if (selfFilter == tr("Movie (*.mp4)")) {
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -361,7 +366,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 

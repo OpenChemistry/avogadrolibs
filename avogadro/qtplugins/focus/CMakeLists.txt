@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 avogadro_plugin(Focus
   "Focus the view on specific features."
   ExtensionPlugin
@@ -9,4 +7,4 @@ avogadro_plugin(Focus
   ""
 )
 
-target_link_libraries(Focus PRIVATE AvogadroRendering)
+target_link_libraries(Focus PRIVATE Avogadro::QtOpenGL)

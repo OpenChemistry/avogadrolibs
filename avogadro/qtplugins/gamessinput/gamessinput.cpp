@@ -15,7 +15,7 @@
 
 #include <QtCore/QDebug>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {

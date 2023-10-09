@@ -11,6 +11,7 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QString>
+#include <QDebug>
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
@@ -19,7 +20,6 @@
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
-#include <avogadro/vtk/vtkplot.h>
 
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
@@ -29,9 +29,7 @@
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtOpenGL::ActiveObjects;
 
-
 namespace Avogadro::QtPlugins {
-
 
 vtkImageData* cubeImageData(Core::Cube* cube)
 {
@@ -105,26 +103,18 @@ void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 void ColorOpacityMap::moleculeChanged(unsigned int c)
 {
   Q_ASSERT(m_molecule == qobject_cast<Molecule*>(sender()));
-  // Don't attempt to update anything if there is no dialog to update!
-  if (!m_comDialog)
-    return;
-
   // I think we need to look at adding cubes to changes, flaky right now.
   auto changes = static_cast<Molecule::MoleculeChanges>(c);
   if (changes & Molecule::Added || changes & Molecule::Removed) {
     updateActions();
-    updateHistogram();
+    if (m_comDialog)
+      updateHistogram();
   }
 }
 
 void ColorOpacityMap::updateActions()
 {
-  // Disable everything for nullptr molecules.
-  if (!m_molecule) {
-    foreach (QAction* action, m_actions)
-      action->setEnabled(false);
-    return;
-  }
+  // Just leave it enabled, if you click on it it will be empty...
   foreach (QAction* action, m_actions)
     action->setEnabled(true);
 }
@@ -182,4 +172,4 @@ void ColorOpacityMap::render()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

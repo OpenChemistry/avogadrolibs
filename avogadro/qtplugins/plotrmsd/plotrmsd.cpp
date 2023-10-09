@@ -3,6 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "plotrmsd.h"
+
 #include <QAction>
 #include <QDialog>
 #include <QMessageBox>
@@ -12,9 +14,8 @@
 #include <avogadro/core/array.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/vtkplot.h>
-
-#include "plotrmsd.h"
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
 
 using Avogadro::QtGui::Molecule;
 
@@ -23,10 +24,8 @@ namespace Avogadro::QtPlugins {
 using Core::Array;
 
 PlotRmsd::PlotRmsd(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_actions(QList<QAction*>())
-  , m_molecule(nullptr)
-  , m_displayDialogAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+    m_molecule(nullptr), m_displayDialogAction(new QAction(this))
 {
   m_displayDialogAction->setText(tr("Plot RMSD curve…"));
   connect(m_displayDialogAction.get(), &QAction::triggered, this,
@@ -102,33 +101,29 @@ void PlotRmsd::displayDialog()
   generateRmsdPattern(results);
 
   // Now generate a plot with the data
-  std::vector<double> xData;
-  std::vector<double> yData;
+  std::vector<float> xData;
+  std::vector<float> yData;
   for (const auto& item : results) {
     xData.push_back(item.first);
     yData.push_back(item.second);
   }
-  std::vector<std::vector<double>> data{ xData, yData };
-
-  std::vector<std::string> lineLabels{ "RmsdData" };
-
-  std::array<double, 4> color = { 255, 0, 0, 255 };
-  std::vector<std::array<double, 4>> lineColors{ color };
 
   const char* xTitle = "Frame";
   const char* yTitle = "RMSD (Angstrom)";
   const char* windowName = "RMSD Curve";
 
-  if (!m_plot)
-    m_plot.reset(new VTK::VtkPlot);
+  if (!m_chartDialog) {
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+  }
 
-  m_plot->setData(data);
-  m_plot->setWindowName(windowName);
-  m_plot->setXTitle(xTitle);
-  m_plot->setYTitle(yTitle);
-  m_plot->setLineLabels(lineLabels);
-  m_plot->setLineColors(lineColors);
-  m_plot->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
+  m_chartDialog->show();
 }
 
 void PlotRmsd::generateRmsdPattern(RmsdData& results)
@@ -136,7 +131,7 @@ void PlotRmsd::generateRmsdPattern(RmsdData& results)
   m_molecule->setCoordinate3d(0);
   Array<Vector3> ref = m_molecule->atomPositions3d();
 
-  for (size_t i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+  for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
     m_molecule->setCoordinate3d(i);
     Array<Vector3> positions = m_molecule->atomPositions3d();
     double sum = 0;
@@ -150,4 +145,4 @@ void PlotRmsd::generateRmsdPattern(RmsdData& results)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

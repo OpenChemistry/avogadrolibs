@@ -20,6 +20,11 @@ enum RenderPass
    */
   NotRendering = 0,
   /**
+   * Solid geometry is being drawn. Alpha blending disabled, depth testing is
+   * enabled. Additionally, any screen-space shaders act here.
+   */
+  SolidPass,
+  /**
    * Opaque geometry is being drawn. Alpha blending disabled, depth testing is
    * enabled.
    */

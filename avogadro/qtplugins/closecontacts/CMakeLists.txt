@@ -6,4 +6,4 @@ avogadro_plugin(CloseContacts
   closecontacts.cpp
   "")
 
-target_link_libraries(CloseContacts PRIVATE AvogadroRendering)
+target_link_libraries(CloseContacts PRIVATE Avogadro::Rendering)

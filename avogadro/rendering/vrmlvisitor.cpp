@@ -59,17 +59,6 @@ void VRMLVisitor::begin()
   // Initialise the VRML scene
   Vector3f cameraT = -(m_camera.modelView().linear().adjoint() *
                        m_camera.modelView().translation());
-  Vector3f cameraX =
-    m_camera.modelView().linear().row(0).transpose().normalized();
-  Vector3f cameraY =
-    m_camera.modelView().linear().row(1).transpose().normalized();
-  Vector3f cameraZ =
-    -m_camera.modelView().linear().row(2).transpose().normalized();
-
-  double huge = 100;
-
-  Vector3f light0pos =
-    huge * (m_camera.modelView().linear().adjoint() * Vector3f(0, 1, 0));
 
   // Output the POV-Ray initialisation code
   // orientation should be set
@@ -88,9 +77,8 @@ string VRMLVisitor::end()
   return m_sceneData;
 }
 
-void VRMLVisitor::visit(Drawable& geometry)
+void VRMLVisitor::visit(Drawable&)
 {
-  // geometry.render(m_camera);
 }
 
 void VRMLVisitor::visit(SphereGeometry& geometry)
@@ -108,9 +96,8 @@ void VRMLVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void VRMLVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
+void VRMLVisitor::visit(AmbientOcclusionSphereGeometry&)
 {
-  // geometry.render(m_camera);
 }
 
 void VRMLVisitor::visit(CylinderGeometry& geometry)
@@ -208,9 +195,8 @@ void VRMLVisitor::visit(MeshGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void VRMLVisitor::visit(LineStripGeometry& geometry)
+void VRMLVisitor::visit(LineStripGeometry&)
 {
-  // geometry.render(m_camera);
 }
 
 } // End namespace Avogadro

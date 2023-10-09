@@ -198,6 +198,10 @@ MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
     charges(i, 0) = output[i];
   }
 
+  // workaround failed runs causing the code to freeze
+  if (abs(charges(0, 0)) < 0.00001)
+    charges(0, 0) = 0.0001;
+
   // cache the charges and allow them to show up in output
   molecule.setPartialCharges(m_identifier, charges);
   return charges;
