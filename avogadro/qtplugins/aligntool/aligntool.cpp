@@ -354,10 +354,9 @@ bool AlignTool::handleCommand(const QString& command,
         return true;
       }
     }
-    
+
     return true;
   }
-
 }
 
 } // namespace Avogadro::QtPlugins
