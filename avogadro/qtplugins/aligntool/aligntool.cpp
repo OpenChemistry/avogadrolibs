@@ -47,7 +47,8 @@ using QtGui::RWAtom;
 
 AlignTool::AlignTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_toolWidget(nullptr)
+    m_molecule(nullptr), m_toolWidget(nullptr), m_renderer(nullptr),
+    m_alignType(0), m_axis(0)
 {
   m_activateAction->setText(tr("Align"));
   m_activateAction->setIcon(QIcon(":/icons/align.png"));
@@ -77,7 +78,6 @@ QWidget* AlignTool::toolWidget() const
 
     // Combo box to select desired aixs to align to
     QComboBox* comboAxis = new QComboBox(m_toolWidget);
-    m_axis = 0;
     comboAxis->addItem("x");
     comboAxis->addItem("y");
     comboAxis->addItem("z");
