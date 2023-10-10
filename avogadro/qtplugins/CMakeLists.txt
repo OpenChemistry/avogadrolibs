@@ -97,6 +97,7 @@ endfunction()
 # Now to make the plugins.
 add_subdirectory(3dmol)
 add_subdirectory(applycolors)
+add_subdirectory(aligntool)
 add_subdirectory(bondcentrictool)
 add_subdirectory(bonding)
 add_subdirectory(cartoons)
