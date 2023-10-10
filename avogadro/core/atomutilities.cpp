@@ -9,7 +9,7 @@
 #include <cmath>
 #include <vector>
 
-#define M_TETRAHED 109.47122063449069389
+constexpr double M_TETRAHED = 109.47122063449069389;
 
 namespace Avogadro::Core {
 
