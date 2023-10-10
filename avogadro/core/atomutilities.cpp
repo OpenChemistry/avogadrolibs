@@ -67,7 +67,7 @@ Vector3 AtomUtilities::generateNewBondVector(
 {
   Vector3 newPos;
   bool success = false;
-  int currentValence = allVectors.size();
+  int currentValence = static_cast<int>(allVectors.size());
 
   // No bonded atoms, just pick a random vector
   if (currentValence == 0) {
