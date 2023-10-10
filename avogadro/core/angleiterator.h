@@ -26,7 +26,7 @@ public:
   /**
    * Constructor.
    */
-  AngleIterator(const Molecule *mol);
+  explicit AngleIterator(const Molecule *mol);
 
   ~AngleIterator() {}
 
