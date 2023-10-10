@@ -13,7 +13,7 @@ constexpr double M_TETRAHED = 109.47122063449069389;
 
 namespace Avogadro::Core {
 
-typedef Array<Bond> NeighborListType;
+using NeighborListType = Array<Bond>;
 
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {
