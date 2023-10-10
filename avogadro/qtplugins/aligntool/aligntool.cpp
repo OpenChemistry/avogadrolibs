@@ -316,12 +316,12 @@ bool AlignTool::handleCommand(const QString& command,
   if (command == "centerAtom") {
     if (options.contains("id")) {
       Index atomIndex = options["id"].toInt();
-      if (atomIndex >= 0 && atomIndex < m_molecule->atomCount())
+      if (atomIndex < m_molecule->atomCount())
         shiftAtomToOrigin(atomIndex);
       return true;
     } else if (options.contains("index")) {
       Index atomIndex = options["index"].toInt();
-      if (atomIndex >= 0 && atomIndex < m_molecule->atomCount())
+      if (atomIndex < m_molecule->atomCount())
         shiftAtomToOrigin(atomIndex);
       return true;
     }
@@ -344,19 +344,21 @@ bool AlignTool::handleCommand(const QString& command,
     if (axis >= 0 && axis < 3) {
       if (options.contains("id")) {
         Index atomIndex = options["id"].toInt();
-        if (atomIndex >= 0 && atomIndex < m_molecule->atomCount())
+        if (atomIndex < m_molecule->atomCount())
           alignAtomToAxis(atomIndex, axis);
         return true;
       } else if (options.contains("index")) {
         Index atomIndex = options["index"].toInt();
-        if (atomIndex >= 0 && atomIndex < m_molecule->atomCount())
+        if (atomIndex < m_molecule->atomCount())
           alignAtomToAxis(atomIndex, axis);
         return true;
       }
     }
 
-    return true;
+    return false; // invalid options
   }
+
+  return true; // nothing to handle
 }
 
 } // namespace Avogadro::QtPlugins
