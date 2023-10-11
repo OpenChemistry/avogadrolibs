@@ -1,21 +1,22 @@
 # Translations for the Avogadro molecular builder.
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Balavamsi Krishna <balavamsikrishna38@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-08 02:02+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-10-11 16:27+0000\n"
+"Last-Translator: Balavamsi Krishna <balavamsikrishna38@gmail.com>\n"
+"Language-Team: Telugu <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/te/>\n"
 "Language: te\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -443,8 +444,9 @@ msgid "Unable to resolve program selection. This is a bug."
 msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
+#, fuzzy
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "బ్యాక్‌గ్రౌండ్‌ఫైల్ ఫార్మాట్‌లో అణువు ఏదీ సెట్ చేయబడలేదు!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -1451,14 +1453,16 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
+#, fuzzy
 msgid "&File"
-msgstr ""
+msgstr "&ఫైల్"
 
 #: qtplugins/3dmol/3dmol.cpp:51 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
+#, fuzzy
 msgid "&Export"
-msgstr ""
+msgstr "ఎగుమతి చెయ్యి"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1756,7 +1760,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:57
 msgid "&View"
-msgstr ""
+msgstr "(&V) చూడు"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 msgid "Color Atoms"
@@ -1877,7 +1881,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
 msgid "&Build"
-msgstr ""
+msgstr "& నిర్మించు"
 
 #: qtplugins/bonding/bonding.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:422
@@ -2019,8 +2023,9 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:107
 #: qtplugins/plugindownloader/plugindownloader.cpp:40
 #: qtplugins/quantuminput/quantuminput.cpp:69 qtplugins/yaehmop/yaehmop.cpp:112
+#, fuzzy
 msgid "&Extensions"
-msgstr ""
+msgstr "పొడిగింతలు"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
@@ -2263,7 +2268,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
 msgid "&Edit"
-msgstr ""
+msgstr "(&E) సరిదిద్దు"
 
 #: qtplugins/copypaste/copypaste.cpp:82
 msgid "Copy As"
@@ -2643,13 +2648,16 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
+#, fuzzy
 msgid "Network Download Failed"
-msgstr ""
+msgstr "జాలాకార వ్యవస్థ సవరణకు అవరోధం ఏర్పడింది"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr ""
+"జాలాకార వ్యవస్థ  నిర్ణీతవ్యవధిలో ప్రతిస్పందించలేదు లేక ఇతర ప్రతిబంధకము ఏర్పడి"
+" ఉండవచ్చు ."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -4104,7 +4112,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
-msgstr ""
+msgstr "(&S) ఎంచుకోండి"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
