@@ -9,13 +9,14 @@
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
 # Alex B <alessandrobrugnera16@protonmail.com>, 2022.
 # Marco Marchiò <marcomarchi89@hotmail.com>, 2023.
+# nicola zanna <zanna.nicola1@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-08 02:02+0000\n"
-"PO-Revision-Date: 2023-01-06 08:47+0000\n"
-"Last-Translator: Marco Marchiò <marcomarchi89@hotmail.com>\n"
+"PO-Revision-Date: 2023-10-13 13:02+0000\n"
+"Last-Translator: nicola zanna <zanna.nicola1@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -42,11 +43,14 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"Lo script --print-options output deve essere un oggetto JSON al livello più "
+"alto. Received:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:205
 #: qtgui/interfacescript.cpp:301
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Nessuna stringa di errore"
 
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:208
 #: qtgui/interfacescript.cpp:304
