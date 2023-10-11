@@ -42,6 +42,14 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToRead(
     if (fileName.isEmpty()) // user cancel
       return result;
 
+    if (FileFormat::validateFileName(fileName.toStdString()) == false) {
+      QMessageBox::warning(
+        parent, caption,
+        tr("The file name contains invalid characters. Please choose another "
+           "file name."));
+      continue;
+    }
+
     const Io::FileFormat* format = findFileFormat(
       parent, caption, fileName, FileFormat::File | FileFormat::Read);
 
