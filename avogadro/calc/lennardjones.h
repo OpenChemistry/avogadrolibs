@@ -6,7 +6,9 @@
 #ifndef AVOGADRO_CALC_LENNARDJONES_H
 #define AVOGADRO_CALC_LENNARDJONES_H
 
-#include "energycalculator.h"
+#include "avogadrocalcexport.h"
+
+#include <avogadro/calc/energycalculator.h>
 
 namespace Avogadro {
 namespace Core {
@@ -15,7 +17,7 @@ class Molecule;
 
 namespace Calc {
 
-class LennardJones : public EnergyCalculator
+class AVOGADROCALC_EXPORT LennardJones : public EnergyCalculator
 {
 public:
   LennardJones();

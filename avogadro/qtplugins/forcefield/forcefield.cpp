@@ -21,6 +21,7 @@
 #include <avogadro/qtgui/interfacescript.h>
 #include <avogadro/qtgui/interfacewidget.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/calc/lennardjones.h>
@@ -37,6 +38,8 @@ namespace Avogadro {
 namespace QtPlugins {
 
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RWMolecule;
+using Avogadro::Calc::EnergyCalculator;
 
 const int energyAction = 0;
 const int optimizeAction = 1;
@@ -138,7 +141,7 @@ void Forcefield::optimize()
 
   // set the method
   //@todo check m_method for a particular calculator
-  LennardJones lj(this->parent());
+  Calc::LennardJones lj;
   lj.setMolecule(m_molecule);
 
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
@@ -173,7 +176,7 @@ void Forcefield::energy()
     return;
 
   //@todo check m_method for a particular calculator
-  LennardJones lj(this->parent());
+  Calc::LennardJones lj;
   lj.setMolecule(m_molecule);
 
   int n = m_molecule->atomCount();
@@ -195,7 +198,7 @@ void Forcefield::freezeSelected()
   // now freeze the specified atoms
   for (Index i = 0; i < numAtoms; ++i) {
     if (m_molecule->atomSelected(i)) {
-      m_molecule->setAtomFrozen(i, true);
+      // m_molecule->setAtomFrozen(i, true);
     }
   }
 }

@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CALC_ENERGYCALCULATOR_H
 #define AVOGADRO_CALC_ENERGYCALCULATOR_H
 
+#include "avogadrocalcexport.h"
+
 #include <avogadro/core/variantmap.h>
 #include <avogadro/core/vector.h>
 
@@ -18,7 +20,7 @@ class Molecule;
 
 namespace Calc {
 
-class EnergyCalculator : public cppoptlib::Problem<Real>
+class AVOGADROCALC_EXPORT EnergyCalculator : public cppoptlib::Problem<Real>
 {
 public:
   EnergyCalculator() {}

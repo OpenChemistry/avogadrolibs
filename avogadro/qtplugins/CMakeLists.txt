@@ -250,7 +250,7 @@ target_sources(QtPlugins PRIVATE
 
 avogadro_add_library(QtPlugins ${HEADERS} ${SOURCES})
 target_link_libraries(QtPlugins PUBLIC Qt::Core
-  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} Avogadro::QtGui)
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} Avogadro::QtGui Avogadro::Calc)
 
 if(QT_VERSION EQUAL 6)
   target_link_libraries(QtPlugins PRIVATE Qt6::OpenGLWidgets Qt6::Network)

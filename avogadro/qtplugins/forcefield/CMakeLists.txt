@@ -18,7 +18,7 @@ avogadro_plugin(Forcefield
   "${forcefield_srcs}"
 )
 
-target_link_libraries(Forcefield LINK_PRIVATE AvogadroIO AvogadroCalc)
+target_link_libraries(Forcefield PRIVATE Avogadro::Calc)
 
 # Bundled forcefield scripts (open babel)
 set(forcefields
