@@ -46,7 +46,7 @@ public:
 
   /** Creates a variant to store @p value. */
   template <typename T>
-  Variant(T value);
+  explicit Variant(T value);
 
   /** Creates a new copy of @p variant. */
   inline Variant(const Variant& variant);
