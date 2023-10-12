@@ -128,10 +128,9 @@ public:
 
 private:
   template <typename T>
-  static T lexical_cast(const std::string& string);
+  // static T lexical_cast(const std::string& string);
 
-private:
-  Type m_type;
+  private : Type m_type;
   union
   {
     bool _bool;
@@ -146,8 +145,8 @@ private:
   } m_value;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #include "variant-inline.h"
 
