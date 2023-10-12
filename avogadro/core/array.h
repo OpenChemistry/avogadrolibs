@@ -130,8 +130,11 @@ public:
   }
 
   /** Copy constructor, note the copy made of the internal data of other. */
-  Array(const Array& other) : d(new Container(*other.d)) {}
-  //'d' is allocated new memory and a deep copy is one
+  Array(const Array& other)
+  {
+    other.d->reref();
+    d = other.d;
+  }
 
   ~Array();
 
