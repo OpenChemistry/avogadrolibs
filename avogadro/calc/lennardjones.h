@@ -13,6 +13,7 @@
 namespace Avogadro {
 namespace Core {
 class Molecule;
+class UnitCell;
 }
 
 namespace Calc {
@@ -43,6 +44,7 @@ public:
 
 protected:
   Core::Molecule* m_molecule;
+  Core::UnitCell* m_cell;
   Eigen::MatrixXd m_radii;
   bool m_vdw;
   Real m_depth;

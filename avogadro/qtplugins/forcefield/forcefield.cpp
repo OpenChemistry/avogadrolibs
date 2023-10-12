@@ -60,6 +60,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Optimize"));
   action->setData(optimizeAction);
+  action->setProperty("menu priority", 920);
   connect(action, SIGNAL(triggered()), SLOT(optimize()));
   m_actions.push_back(action);
 
@@ -67,6 +68,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Energy")); // calculate energy
   action->setData(energyAction);
+  action->setProperty("menu priority", 910);
   connect(action, SIGNAL(triggered()), SLOT(energy()));
   m_actions.push_back(action);
 
@@ -93,7 +95,7 @@ QStringList Forcefield::menuPath(QAction* action) const
     path << tr("&Extensions");
     return path;
   }
-  path << tr("&Extensions") << tr("Calculate");
+  path << tr("&Extensions") << tr("&Calculate");
   return path;
 }
 
@@ -122,20 +124,23 @@ void Forcefield::optimize()
   m_molecule->undoMolecule()->setInteractive(true);
 
   //@todo check m_minimizer for method to use
-  cppoptlib::LbfgsSolver<EnergyCalculator> solver;
+  //cppoptlib::LbfgsSolver<EnergyCalculator> solver;
+  cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
+  // just to get the right size / shape
+  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
   double* p = pos[0].data();
   Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
   Eigen::VectorXd positions = map;
+  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
 
   // Create a Criteria class to adjust stopping criteria
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
   // @todo allow criteria to be set
   crit.iterations = 5;
-  crit.xDelta = 1.0e-4; // positions converged to 1.0e-4
-  crit.fDelta = 1.0e-4; // energy converged to 1.0e-4
+  crit.fDelta = 1.0e-6;
   solver.setStopCriteria(crit); // every 5 steps, update coordinates
   cppoptlib::Status status = cppoptlib::Status::NotStarted;
 
@@ -148,8 +153,11 @@ void Forcefield::optimize()
     solver.minimize(lj, positions);
 
     cppoptlib::Status currentStatus = solver.status();
-    if (currentStatus != status || currentStatus == cppoptlib::Status::Continue) {
-      // status has changed or minimizer hasn't converged
+    // qDebug() << " status: " << (int)currentStatus;
+    // qDebug() << " energy: " << lj.value(positions);
+    // check the gradient norm
+    lj.gradient(positions, gradient);
+    // qDebug() << " gradient: " << gradient.norm();
 
       // update coordinates
       const double* d = positions.data();
@@ -157,15 +165,16 @@ void Forcefield::optimize()
       for (size_t i = 0; i < n; ++i) {
         pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
         d += 3;
+
+        forces[i] = Vector3(gradient[3 * i], gradient[3 * i + 1],
+                            gradient[3 * i + 2]);
       }
       // todo - merge these into one undo step
       m_molecule->undoMolecule()->setAtomPositions3d(pos, tr("Optimize Geometry"));
+      m_molecule->setForceVectors(forces);
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
       m_molecule->emitChanged(changes);
-    }
   }
-
-  qDebug() << " energy: " << lj.value(positions);
 
   m_molecule->undoMolecule()->setInteractive(isInteractive);
 }
