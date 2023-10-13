@@ -128,7 +128,7 @@ public:
 
 private:
   template <typename T>
-  // static T lexical_cast(const std::string& string);
+  static T lexical_cast(const std::string& string);
 
   private : Type m_type;
   union
