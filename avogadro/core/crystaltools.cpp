@@ -18,7 +18,7 @@ struct WrapAtomsToCellFunctor
 {
   const UnitCell& unitCell;
 
-  WrapAtomsToCellFunctor(Molecule& molecule) : unitCell(*molecule.unitCell()) {}
+  explicit WrapAtomsToCellFunctor(Molecule& molecule) : unitCell(*molecule.unitCell()) {}
 
   void operator()(Vector3& pos) { unitCell.wrapCartesian(pos, pos); }
 };
@@ -587,7 +587,7 @@ bool CrystalTools::buildSupercell(Molecule& molecule, unsigned int a,
 namespace {
 struct TransformAtomsFunctor
 {
-  TransformAtomsFunctor(const Matrix3& t) : transform(t) {}
+  explicit TransformAtomsFunctor(const Matrix3& t) : transform(t) {}
   const Matrix3& transform;
 
   void operator()(Vector3& pos) { pos = transform * pos; }
@@ -618,7 +618,7 @@ struct FractionalCoordinatesFunctor
 {
   const UnitCell& unitCell;
 
-  FractionalCoordinatesFunctor(const UnitCell& uc) : unitCell(uc) {}
+  explicit FractionalCoordinatesFunctor(const UnitCell& uc) : unitCell(uc) {}
 
   void operator()(Vector3& pos) { unitCell.toFractional(pos, pos); }
 };
@@ -654,7 +654,7 @@ struct SetFractionalCoordinatesFunctor
 {
   const UnitCell& unitCell;
 
-  SetFractionalCoordinatesFunctor(const Molecule& molecule)
+  explicit SetFractionalCoordinatesFunctor(const Molecule& molecule)
     : unitCell(*molecule.unitCell())
   {
   }
