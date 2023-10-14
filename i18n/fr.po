@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-08 02:02+0000\n"
-"PO-Revision-Date: 2023-09-02 22:53+0000\n"
+"PO-Revision-Date: 2023-10-13 13:02+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1324,11 +1324,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1…"
+#, qt-format
 msgid "Warning '%1'"
-msgstr "Lancement de %1…"
+msgstr "Rappel '%1'"
 
 #: qtgui/pythonscript.cpp:238
 msgid "Script failed to start."
@@ -1529,10 +1527,9 @@ msgid "Modify Molecule"
 msgstr "Modifier la molécule"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Impossible d’enregistrer le fichier %1."
+msgstr "Impossible d’accéder le script %1"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -2242,16 +2239,12 @@ msgid "Invalid atom label."
 msgstr "Numéro atomique invalide."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "Numéro atomique invalide."
+msgstr "Indice atomique invalide."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
-#, fuzzy
-#| msgid "By Atomic Index"
 msgid "Atomic index."
-msgstr "Par indice d'atome"
+msgstr "Par indice d'atome."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
@@ -2283,18 +2276,14 @@ msgid "Z coordinate."
 msgstr "Coordonnée Z."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
-#, fuzzy
 msgid "'a' lattice coordinate."
 msgstr "coordonnée « a » du réseau."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
-#, fuzzy
 msgid "'b' lattice coordinate."
 msgstr "coordonnée « b » du réseau."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
-#, fuzzy
-#| msgid "'c' coordinate."
 msgid "'c' lattice coordinate."
 msgstr "coordonnée « c » du réseau."
 
@@ -2341,7 +2330,6 @@ msgid "XYZ format (atomic numbers)"
 msgstr "Format XYZ (numéros atomiques)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:637
-#, fuzzy
 msgid "Lattice coordinates (symbols)"
 msgstr "Coordonnées du réseau (symboles)"
 
@@ -3297,10 +3285,8 @@ msgstr "Propriétés de la molécule"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
-#, fuzzy
-#| msgid "Copy"
 msgid "&Copy"
-msgstr "Copier"
+msgstr "&Copier"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:88
 msgctxt "asking server for molecule name"
@@ -3310,10 +3296,8 @@ msgstr "(en attente)"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:116
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:124
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:140
-#, fuzzy
-#| msgid "[no molecule]"
 msgid "unknown molecule"
-msgstr "[pas de molécule]"
+msgstr "[molécule inconnue]"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -3396,6 +3380,8 @@ msgstr "Base de données réseau"
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
 msgstr ""
+"Interagir avec les bases des données sur ligne, interroger des structures, "
+"etc."
 
 #: qtplugins/noncovalent/noncovalent.cpp:340
 msgid " °"
@@ -3843,7 +3829,7 @@ msgstr ""
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
-msgstr ""
+msgstr "Tracer la courbe RMSD…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
@@ -3855,7 +3841,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
-msgstr ""
+msgstr "Tracer le diagramme XRD théorique…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
@@ -3867,11 +3853,11 @@ msgstr "Échec de conversion de la molécule au format CIF."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "Les données genXrdPattern apparaissent d'être corrompues !"
 
 #: qtplugins/plotxrd/plotxrd.cpp:230
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Erreur : impossible de localiser l’exécutable genXrdPattern !"
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
@@ -3947,22 +3933,16 @@ msgid "Save File"
 msgstr "Enregistrer le fichier"
 
 #: qtplugins/ply/ply.cpp:71
-#, fuzzy
-#| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Fichier Texte (*.txt)"
+msgstr "PLY (*.ply);;Fichier Texte (*.txt)"
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
-#, fuzzy
-#| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Faire un rendu de la scène avec VRML."
+msgstr "Faire un rendu de la scène avec PLY."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
@@ -3985,7 +3965,6 @@ msgid "Valence"
 msgstr "Valence"
 
 #: qtplugins/propertytables/propertymodel.cpp:390
-#, fuzzy
 msgid "Formal Charge"
 msgstr "Charge formelle"
 
@@ -4026,9 +4005,8 @@ msgid "Start Atom"
 msgstr "Atome de départ"
 
 #: qtplugins/propertytables/propertymodel.cpp:414
-#, fuzzy
 msgid "End Atom"
-msgstr "Atome d'arrivée"
+msgstr "Atome terminal"
 
 #: qtplugins/propertytables/propertymodel.cpp:416
 msgid "Bond Order"
@@ -4088,7 +4066,6 @@ msgid "π Helix"
 msgstr "Hélice π"
 
 #: qtplugins/propertytables/propertymodel.cpp:792
-#, fuzzy
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Plié"
@@ -4104,7 +4081,6 @@ msgid "β Sheet"
 msgstr "Feuillet β"
 
 #: qtplugins/propertytables/propertymodel.cpp:798
-#, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "Hélice 3-10"
@@ -4264,7 +4240,7 @@ msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
-msgstr ""
+msgstr "Formats des fichiers script"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
@@ -4331,33 +4307,28 @@ msgid "Select Element"
 msgstr "Sélectionner l'élément"
 
 #: qtplugins/select/select.cpp:216
-#, fuzzy
 msgid "Select Water"
-msgstr "Indices des atomes"
+msgstr "Sélectionner les molécules d'eau"
 
 #: qtplugins/select/select.cpp:254
-#, fuzzy
 msgid "Select Backbone"
-msgstr "Indices des atomes"
+msgstr "Sélectionner le squelette"
 
 #: qtplugins/select/select.cpp:288
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "Indices des atomes"
+msgstr "Sélectionner branche"
 
 #: qtplugins/select/select.cpp:409
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Sélectionner les atomes par indice"
 
 #: qtplugins/select/select.cpp:410
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Atomes à sélectionner :"
 
 #: qtplugins/select/select.cpp:415
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Supprimer un atome"
+msgstr "Sélectionner un atome"
 
 #: qtplugins/select/select.cpp:448
 msgid "Select Atoms by Residue"
@@ -4402,9 +4373,8 @@ msgstr ""
 "Double-clic :\tsélectionner tout un fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:236
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Atome de départ"
+msgstr "Colorer les atomes"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -4513,7 +4483,6 @@ msgid "Hermann-Mauguin"
 msgstr "Hermann-Maugin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:345
-#, fuzzy
 msgid "Select Space Group"
 msgstr "Choisissez un groupe d'espace"
 
@@ -4531,7 +4500,7 @@ msgstr "Modes de vibrations…"
 
 #: qtplugins/spectra/spectra.cpp:64
 msgid "Show the vibrational modes dialog."
-msgstr ""
+msgstr "Montre l'interface à propos des modes vibrationnels."
 
 #: qtplugins/spectra/spectra.cpp:65
 #, fuzzy
@@ -4545,30 +4514,29 @@ msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:69
 msgid "Start the vibrational animation."
-msgstr ""
+msgstr "Démarrer l'animation des vibrations."
 
 #: qtplugins/spectra/spectra.cpp:71
 msgid "Stop the vibrational animation."
-msgstr ""
+msgstr "Arrêter l'animation des vibrations."
 
 #: qtplugins/spectra/spectra.h:32
 msgid "Spectra and Vibrations"
-msgstr ""
+msgstr "spectres et vibrations"
 
 #: qtplugins/spectra/spectra.h:36
 msgid "Display spectra and vibrational modes."
-msgstr ""
+msgstr "Montre spectres et mode vibrationnels."
 
 #: qtplugins/surfaces/surfacedialog.cpp:27
 msgid "Solvent Accessible"
-msgstr ""
+msgstr "accessible au solvant"
 
 #: qtplugins/surfaces/surfacedialog.cpp:29
 msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:156
-#, fuzzy
 msgid "Molecular Orbital"
 msgstr "Orbitale moléculaire"
 
@@ -4601,22 +4569,16 @@ msgid "Create Surfaces…"
 msgstr "Créer les surfaces…"
 
 #: qtplugins/surfaces/surfaces.cpp:110
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Affiche les atomes avec leurs rayons de van der Waals"
+msgstr "Affiche la surface van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "Faire une rendu de la molécule en fil de fer."
+msgstr "Faire une rendu de la surface molécule van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Faire une rendu de la molécule en fil de fer."
+msgstr "Faire une rendu de la surface moléculaire accessible au solvant."
 
 #: qtplugins/surfaces/surfaces.cpp:116
 #, fuzzy
@@ -4625,14 +4587,12 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr "Faire une rendu de la molécule en fil de fer."
 
 #: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Orbitale moléculaire"
+msgstr "Faire un rendu de l'orbitale moléculaire."
 
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Calcul de la densité électronique en cours"
+msgstr "Rendre la densité électronique."
 
 #: qtplugins/surfaces/surfaces.cpp:121
 #, fuzzy
@@ -4645,7 +4605,6 @@ msgid "Render a cube supplied with the file."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:567
-#, fuzzy
 msgid "Calculating electron density"
 msgstr "Calcul de la densité électronique en cours"
 
@@ -4657,7 +4616,7 @@ msgstr "Calcul de la densité électronique en cours"
 #: qtplugins/surfaces/surfaces.cpp:585
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Calcul de l'orbital moléculaire %L1 en cours"
 
 #: qtplugins/surfaces/surfaces.cpp:831 qtplugins/surfaces/surfaces.cpp:859
 msgid "Movie AVI (*.avi)"
@@ -4677,7 +4636,7 @@ msgstr "Surfaces"
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "Lire et faire un rendu des surfaces."
 
 #: qtplugins/svg/svg.cpp:30
 msgid "&SVG…"
@@ -4715,7 +4674,7 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Faire un rendu des éléments de symétrie."
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
 msgid "∞"
@@ -4732,22 +4691,16 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Température"
+msgstr "modèle"
 
 #: qtplugins/templatetool/templatetool.cpp:294
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Insérer un peptide"
+msgstr "Insérer modèle"
 
 #: qtplugins/templatetool/templatetool.cpp:544
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Insérer un peptide"
+msgstr "Insérer un ligand"
 
 #: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
@@ -4762,11 +4715,11 @@ msgstr "Autre..."
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr ""
+msgstr "Affichage simple des sphères van der Waals."
 
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:33
 msgid "Simple display of VdW spheres with ambient occlusion."
-msgstr ""
+msgstr "Affichage simple des sphères van der Waals avec une occlusion ambiante."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -4828,7 +4781,7 @@ msgstr "Niveau de Fermi"
 
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Cannot find Yaehmop"
-msgstr ""
+msgstr "Impossible de localiser Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:545
 #, qt-format
@@ -4893,7 +4846,7 @@ msgstr "Rétablir"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug Script…"
-msgstr ""
+msgstr "Déboguer script…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -4979,7 +4932,7 @@ msgstr "Renommer les éléments"
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
-msgstr ""
+msgstr "Snippet 3DMol HTML"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
@@ -5056,7 +5009,7 @@ msgstr "Lancer PDB2PQR"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:123
 #. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
 msgid "Load Existing PQR File"
-msgstr ""
+msgstr "Lire fichier PQR"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
@@ -5095,10 +5048,8 @@ msgstr "Ouvrir un fichier Cube"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "Partial Charges"
-msgstr "Charge partielle"
+msgstr "Charges partielles"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
