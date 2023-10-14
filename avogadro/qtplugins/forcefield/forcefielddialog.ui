@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtPlugins::OBForceFieldDialog</class>
- <widget class="QDialog" name="Avogadro::QtPlugins::OBForceFieldDialog">
+ <class>Avogadro::QtPlugins::ForceFieldDialog</class>
+ <widget class="QDialog" name="Avogadro::QtPlugins::ForceFieldDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>357</width>
+    <width>365</width>
     <height>295</height>
    </rect>
   </property>
@@ -42,11 +42,11 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>&quot;Energy&quot; convergence:</string>
+         <string>Energy convergence:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Step limit:</string>
@@ -72,7 +72,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QSpinBox" name="stepLimit">
         <property name="suffix">
          <string> steps</string>
@@ -84,10 +84,36 @@
          <number>100000</number>
         </property>
         <property name="singleStep">
-         <number>250</number>
+         <number>50</number>
         </property>
         <property name="value">
-         <number>2500</number>
+         <number>250</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Gradient convergence:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="gradConv">
+        <property name="suffix">
+         <string> units</string>
+        </property>
+        <property name="prefix">
+         <string>10^</string>
+        </property>
+        <property name="minimum">
+         <number>-10</number>
+        </property>
+        <property name="maximum">
+         <number>-1</number>
+        </property>
+        <property name="value">
+         <number>-4</number>
         </property>
        </widget>
       </item>
@@ -133,14 +159,17 @@
       </item>
       <item row="3" column="1">
        <widget class="QComboBox" name="algorithm">
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
         <item>
          <property name="text">
-          <string>Steepest Descent</string>
+          <string>Conjugate Gradient</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Conjugate Gradient</string>
+          <string>BFGS</string>
          </property>
         </item>
        </widget>
@@ -163,7 +192,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Avogadro::QtPlugins::OBForceFieldDialog</receiver>
+   <receiver>Avogadro::QtPlugins::ForceFieldDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -179,7 +208,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Avogadro::QtPlugins::OBForceFieldDialog</receiver>
+   <receiver>Avogadro::QtPlugins::ForceFieldDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -53,7 +53,7 @@ public:
 
   /**
    * @brief Register a new charge model with the manager.
-   * @param format An instance of the format to manage, the manager assumes
+   * @param model An instance of the model to manage, the manager assumes
    * ownership of the object passed in.
    * @return True on success, false on failure.
    */

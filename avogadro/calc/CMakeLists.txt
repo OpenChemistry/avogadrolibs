@@ -5,6 +5,7 @@ avogadro_headers(Calc
   chargemanager.h
   defaultmodel.h
   energycalculator.h
+  energymanager.h
   lennardjones.h
 )
 
@@ -13,6 +14,7 @@ target_sources(Calc PRIVATE
   chargemanager.cpp
   defaultmodel.cpp
   energycalculator.cpp
+  energymanager.cpp
   lennardjones.cpp
 )
 

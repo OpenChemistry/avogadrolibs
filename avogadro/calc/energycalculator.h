@@ -8,6 +8,7 @@
 
 #include "avogadrocalcexport.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/variantmap.h>
 #include <avogadro/core/vector.h>
 
@@ -45,6 +46,34 @@ public:
    * Called to set the configuration (e.g., for a GUI options dialog)
    */
   virtual bool setConfiguration(Core::VariantMap& config) { return true; }
+
+  /**
+   * @brief Indicate if your method only treats a subset of elements
+   * @return an element mask corresponding to the defined subset
+   */
+  virtual Core::Molecule::ElementMask elements() const = 0;
+
+  /**
+   * @brief Indicate if your method can handle unit cells
+   * @return true if unit cells are supported
+   */
+  virtual bool acceptsUnitCell() const { return false; }
+
+  /**
+   * @brief Indicate if your method can handle ions
+   * Many methods only treat neutral systems, either
+   * a neutral molecule or a neutral unit cell.
+   *
+   * @return true if ions are supported
+   */
+  virtual bool acceptsIons() const { return false; }
+
+  /**
+   * @brief Indicate if your method can handle radicals
+   * Most methods only treat closed-shell molecules.
+   * @return true if radicals are supported
+   */
+  virtual bool acceptsRadicals() const { return false; }
 
   /**
    * Calculate the gradients for this method, defaulting to numerical

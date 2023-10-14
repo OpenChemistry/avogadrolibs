@@ -24,23 +24,30 @@ public:
   LennardJones();
   ~LennardJones();
 
-  virtual std::string identifier() const override
+  std::string identifier() const override
   { return "LJ"; }
 
-  virtual std::string name() const override
+  std::string name() const override
   { return "Lennard-Jones"; }
 
-  virtual std::string description() const override
+  std::string description() const override
   { return "Universal Lennard-Jones potential"; }
 
-  virtual Real value(const Eigen::VectorXd& x) override;
-  virtual void gradient(const Eigen::VectorXd& x,
+  bool acceptsUnitCell() const override { return true; }
+
+  Core::Molecule::ElementMask elements() const override
+  {
+    return (m_elements);
+  }
+
+  Real value(const Eigen::VectorXd& x) override;
+  void gradient(const Eigen::VectorXd& x,
                         Eigen::VectorXd& grad) override;
 
   /**
    * Called when the current molecule changes.
    */
-  virtual void setMolecule(Core::Molecule* mol) override;
+  void setMolecule(Core::Molecule* mol) override;
 
 protected:
   Core::Molecule* m_molecule;
@@ -49,6 +56,8 @@ protected:
   bool m_vdw;
   Real m_depth;
   int m_exponent;
+
+  Core::Molecule::ElementMask m_elements;
 };
 
 } // namespace Calc
