@@ -1,0 +1,367 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#include "scriptenergy.h"
+
+#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/pythonscript.h>
+
+// formats supported in scripts
+#include <avogadro/io/cjsonformat.h>
+#include <avogadro/io/cmlformat.h>
+#include <avogadro/io/mdlformat.h>
+#include <avogadro/io/pdbformat.h>
+#include <avogadro/io/xyzformat.h>
+
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QScopedPointer>
+
+#include <qjsonarray.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
+#include <qjsonvalue.h>
+
+namespace Avogadro::QtPlugins {
+
+ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
+  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
+    m_inputFormat(NotUsed), m_gradients(false), m_ions(false),
+    m_radicals(false), m_unitCells(false)
+{
+  m_elements.reset();
+  readMetaData();
+}
+
+ScriptEnergy::~ScriptEnergy()
+{
+  delete m_interpreter;
+}
+
+QString ScriptEnergy::scriptFilePath() const
+{
+  return m_interpreter->scriptFilePath();
+}
+
+Calc::EnergyCalculator* ScriptEnergy::newInstance() const
+{
+  return new ScriptEnergy(m_interpreter->scriptFilePath());
+}
+
+void ScriptEnergy::setMolecule(Core::Molecule* mol)
+{
+  m_molecule = mol;
+
+  // should check if the molecule is valid for this script
+  // .. this should never happen, but let's be defensive
+  if (mol == nullptr || m_interpreter == nullptr) {
+    return; // nothing to do
+  }
+
+  if (!m_unitCells && mol->unitCell()) {
+    // appendError("Unit cell not supported for this script.");
+    return;
+  }
+  if (!m_ions && mol->totalCharge() != 0) {
+    // appendError("Ionized molecules not supported for this script.");
+    return;
+  }
+  if (!m_radicals && mol->totalSpinMultiplicity() != 1) {
+    // appendError("Radical molecules not supported for this script.");
+    return;
+  }
+
+  // start the process
+  // we need a tempory file to write the molecule
+  QScopedPointer<Io::FileFormat> format(createFileFormat(m_inputFormat));
+  if (format.isNull()) {
+    // appendError("Invalid input format.");
+    return;
+  }
+  // get a temporary filename
+  QString tempPath = QDir::tempPath();
+  if (!tempPath.endsWith(QDir::separator()))
+    tempPath += QDir::separator();
+  QString tempPattern =
+    tempPath + "avogadroenergyXXXXXX." + format->fileExtensions()[0].c_str();
+  m_tempFile.setFileTemplate(tempPattern);
+  if (!m_tempFile.open()) {
+    // appendError("Error creating temporary file.");
+    return;
+  }
+
+  // write the molecule
+  format->writeFile(m_tempFile.fileName().toStdString(), *mol);
+  m_tempFile.close();
+
+  // construct the command line options
+  QStringList options;
+  options << "-f" << m_tempFile.fileName();
+
+  // start the interpreter
+  m_interpreter->asyncExecute(options);
+}
+
+Real ScriptEnergy::value(const Eigen::VectorXd& x)
+{
+  if (m_molecule == nullptr || m_interpreter == nullptr)
+    return 0.0; // nothing to do
+
+  // write the new coordinates and read the energy
+  QByteArray input;
+  for (Index i = 0; i < x.size(); i += 3) {
+    // write as x y z (space separated)
+    input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
+             QString::number(x[i + 2]) + "\n";
+  }
+  QByteArray result = m_interpreter->asyncWriteAndResponse(input, 1);
+
+  return result.toDouble(); // if conversion fails, returns 0.0
+}
+
+void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  EnergyCalculator::gradient(x, grad);
+}
+
+ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
+{
+  if (str == "cjson")
+    return Cjson;
+  else if (str == "cml")
+    return Cml;
+  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+    return Mdl;
+  else if (str == "pdb")
+    return Pdb;
+  else if (str == "xyz")
+    return Xyz;
+  return NotUsed;
+}
+
+Io::FileFormat* ScriptEnergy::createFileFormat(ScriptEnergy::Format fmt)
+{
+  switch (fmt) {
+    case Cjson:
+      return new Io::CjsonFormat;
+    case Cml:
+      return new Io::CmlFormat;
+    case Mdl:
+      return new Io::MdlFormat;
+    case Pdb:
+      return new Io::PdbFormat;
+    case Xyz:
+      return new Io::XyzFormat;
+    default:
+    case NotUsed:
+      return nullptr;
+  }
+}
+
+void ScriptEnergy::resetMetaData()
+{
+  m_valid = false;
+  m_gradients = false;
+  m_ions = false;
+  m_radicals = false;
+  m_unitCells = false;
+  m_inputFormat = NotUsed;
+  m_identifier.clear();
+  m_name.clear();
+  m_description.clear();
+  m_formatString.clear();
+  m_elements.reset();
+}
+
+void ScriptEnergy::readMetaData()
+{
+  resetMetaData();
+
+  QByteArray output(m_interpreter->execute(QStringList() << "--metadata"));
+
+  if (m_interpreter->hasErrors()) {
+    qWarning() << tr("Error retrieving metadata for energy script: %1")
+                    .arg(scriptFilePath())
+               << "\n"
+               << m_interpreter->errorList();
+    return;
+  }
+
+  QJsonParseError parseError;
+  QJsonDocument doc(QJsonDocument::fromJson(output, &parseError));
+  if (parseError.error != QJsonParseError::NoError) {
+    qWarning() << tr("Error parsing metadata for energy script: %1")
+                    .arg(scriptFilePath())
+               << "\n"
+               << parseError.errorString();
+    return;
+  }
+
+  if (!doc.isObject()) {
+    qWarning() << tr("Error parsing metadata for energy script: %1\n"
+                     "Result is not a JSON object.\n")
+                    .arg(scriptFilePath());
+    return;
+  }
+
+  const QJsonObject metaData(doc.object());
+
+  // Read required inputs first.
+  std::string identifierTmp;
+  if (!parseString(metaData, "identifier", identifierTmp)) {
+    qWarning() << "Error parsing metadata for energy script:"
+               << scriptFilePath() << "\n"
+               << "Error parsing required member 'identifier'"
+               << "\n"
+               << output;
+    return;
+  }
+  m_identifier = identifierTmp;
+
+  std::string nameTmp;
+  if (!parseString(metaData, "name", nameTmp)) {
+    qWarning() << "Error parsing metadata for energy script:"
+               << scriptFilePath() << "\n"
+               << "Error parsing required member 'name'"
+               << "\n"
+               << output;
+    return;
+  }
+  m_name = nameTmp;
+
+  std::string descriptionTmp;
+  parseString(metaData, "description", descriptionTmp);
+  m_description = descriptionTmp; // optional
+
+  Format inputFormatTmp = NotUsed;
+  std::string inputFormatStrTmp;
+  if (!parseString(metaData, "inputFormat", inputFormatStrTmp)) {
+    qWarning() << "Error parsing metadata for energy script:"
+               << scriptFilePath() << "\n"
+               << "Member 'inputFormat' required for writable formats."
+               << "\n"
+               << output;
+    return;
+  }
+  m_formatString = inputFormatStrTmp.c_str(); // for the json key
+
+  // Validate the input format
+  inputFormatTmp = stringToFormat(inputFormatStrTmp);
+  if (inputFormatTmp == NotUsed) {
+    qWarning() << "Error parsing metadata for energy script:"
+               << scriptFilePath() << "\n"
+               << "Member 'inputFormat' not recognized:"
+               << inputFormatStrTmp.c_str()
+               << "\nValid values are cjson, cml, mdl/sdf, pdb, or xyz.\n"
+               << output;
+    return;
+  }
+  m_inputFormat = inputFormatTmp;
+
+  // check ions, radicals, unit cells
+  /*
+        "unitCell": False,
+        "gradients": True,
+        "ion": False,
+        "radical": False,
+  */
+  if (!metaData["gradients"].isBool()) {
+    return; // not valid
+  }
+  m_gradients = metaData["gradients"].toBool();
+
+  if (!metaData["unitCell"].isBool()) {
+    return; // not valid
+  }
+  m_unitCells = metaData["unitCell"].toBool();
+
+  if (!metaData["ion"].isBool()) {
+    return; // not valid
+  }
+  m_ions = metaData["ion"].toBool();
+
+  if (!metaData["radical"].isBool()) {
+    return; // not valid
+  }
+  m_radicals = metaData["radical"].toBool();
+
+  // get the element mask
+  // (if it doesn't exist, the default is no elements anyway)
+  m_valid = parseElements(metaData);
+}
+
+bool ScriptEnergy::parseString(const QJsonObject& ob, const QString& key,
+                               std::string& str)
+{
+  if (!ob[key].isString())
+    return false;
+
+  str = ob[key].toString().toStdString();
+
+  return !str.empty();
+}
+
+void ScriptEnergy::processElementString(const QString& str)
+{
+  // parse the QString
+  // first turn any commas into whitespace
+  QString str2(str);
+  str2.replace(',', ' ');
+  // then split on whitespace
+  QStringList strList = str2.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+  foreach (QString sstr, strList) {
+    // these should be numbers or ranges (e.g., 1-84)
+    if (sstr.contains('-')) {
+      // range, so split on the dash
+      QStringList strList2 = sstr.split('-');
+      if (strList2.size() != 2)
+        return;
+
+      // get the two numbers
+      bool ok;
+      int start = strList2[0].toInt(&ok);
+      if (!ok || start < 1 || start > 119)
+        return;
+      int end = strList2[1].toInt(&ok);
+      if (!ok || end < 1 || end > 119)
+        return;
+      for (int i = start; i <= end; ++i)
+        m_elements.set(i);
+    }
+
+    bool ok;
+    int i = sstr.toInt(&ok);
+    if (!ok || i < 1 || i > 119)
+      return;
+
+    m_elements.set(i);
+  }
+}
+
+bool ScriptEnergy::parseElements(const QJsonObject& object)
+{
+  m_elements.reset();
+
+  // we could either get a string or an array (of numbers)
+  if (object["elements"].isString()) {
+    auto str = object["elements"].toString();
+    processElementString(str);
+
+  } else if (object["elements"].isArray()) {
+    QJsonArray arr = object["elements"].toArray();
+    for (auto&& i : arr) {
+      if (i.isString()) {
+        processElementString(i.toString());
+      } else if (i.isDouble()) {
+        int element = i.toInt();
+        if (element >= 1 && element <= 119) // check the range
+          m_elements.set(element);
+      }
+    }
+  }
+  return true;
+}
+
+} // namespace Avogadro::QtPlugins

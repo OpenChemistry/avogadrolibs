@@ -81,7 +81,11 @@ std::string EnergyManager::nameForModel(const std::string& identifier) const
 
 EnergyManager::EnergyManager()
 {
-  // add any default models here (EEM maybe?)
+  // add any default models here
+
+  // LJ is the fallback, since it can handle anything
+  // (maybe not well, but it can handle it)
+  addModel(new LennardJones);
 }
 
 EnergyManager::~EnergyManager()

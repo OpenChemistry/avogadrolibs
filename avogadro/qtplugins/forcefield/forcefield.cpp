@@ -5,25 +5,25 @@
 ******************************************************************************/
 
 #include "forcefield.h"
+#include "scriptenergy.h"
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
 
-#include <QProgressDialog>
-#include <QWriteLocker>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QProgressDialog>
+#include <QWriteLocker>
 
 #include <avogadro/qtgui/avogadropython.h>
-#include <avogadro/qtgui/filebrowsewidget.h>
-#include <avogadro/qtgui/fileformatdialog.h>
-#include <avogadro/qtgui/interfacescript.h>
-#include <avogadro/qtgui/interfacewidget.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/utilities.h>
 
+#include <avogadro/qtgui/scriptloader.h>
+
+#include <avogadro/calc/energymanager.h>
 #include <avogadro/calc/lennardjones.h>
 
 #include <cppoptlib/meta.h>
@@ -37,22 +37,16 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+using Avogadro::Calc::EnergyCalculator;
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::RWMolecule;
-using Avogadro::Calc::EnergyCalculator;
 
 const int energyAction = 0;
 const int optimizeAction = 1;
 const int configureAction = 2;
 const int freezeAction = 3;
 
-Forcefield::Forcefield(QObject* parent_)
-  : ExtensionPlugin(parent_)
-  , m_molecule(nullptr)
-  , m_minimizer(LBFGS)
-  , m_method(0) // just Lennard-Jones for now
-  , m_maxSteps(100)
-  , m_outputFormat(nullptr)
+Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
 {
   refreshScripts();
 
@@ -74,7 +68,7 @@ Forcefield::Forcefield(QObject* parent_)
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Freeze Atoms")); // calculate energy
+  action->setText(tr("Freeze Atoms"));
   action->setData(freezeAction);
   connect(action, SIGNAL(triggered()), SLOT(freezeSelected()));
   m_actions.push_back(action);
@@ -106,12 +100,7 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  // @todo set molecule for a calculator
-}
-
-void Forcefield::refreshScripts()
-{
-  // call the script loader
+  // @todo set the available method list
 }
 
 void Forcefield::optimize()
@@ -123,9 +112,7 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
-  //@todo check m_minimizer for method to use
-  //cppoptlib::LbfgsSolver<EnergyCalculator> solver;
-  cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
+  cppoptlib::LbfgsSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
@@ -138,42 +125,49 @@ void Forcefield::optimize()
 
   // Create a Criteria class to adjust stopping criteria
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
-  // @todo allow criteria to be set
-  crit.iterations = 5;
-  crit.fDelta = 1.0e-6;
-  solver.setStopCriteria(crit); // every 5 steps, update coordinates
-  cppoptlib::Status status = cppoptlib::Status::NotStarted;
+
+  // e.g., every 5 steps, update coordinates
+  crit.iterations = m_nSteps;
+  // we don't set function or gradient criteria
+  // .. these seem to be broken in the solver code
+  // .. so we handle ourselves
+  solver.setStopCriteria(crit);
 
   // set the method
   //@todo check m_method for a particular calculator
   Calc::LennardJones lj;
   lj.setMolecule(m_molecule);
 
+  double energy = lj.value(positions);
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
     solver.minimize(lj, positions);
 
-    cppoptlib::Status currentStatus = solver.status();
-    // qDebug() << " status: " << (int)currentStatus;
-    // qDebug() << " energy: " << lj.value(positions);
-    // check the gradient norm
+    double currentEnergy = lj.value(positions);
     lj.gradient(positions, gradient);
-    // qDebug() << " gradient: " << gradient.norm();
 
-      // update coordinates
-      const double* d = positions.data();
-      // casting would be lovely...
-      for (size_t i = 0; i < n; ++i) {
-        pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
-        d += 3;
+    // update coordinates
+    const double* d = positions.data();
+    // casting would be lovely...
+    for (size_t i = 0; i < n; ++i) {
+      pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
+      d += 3;
 
-        forces[i] = Vector3(gradient[3 * i], gradient[3 * i + 1],
-                            gradient[3 * i + 2]);
-      }
-      // todo - merge these into one undo step
-      m_molecule->undoMolecule()->setAtomPositions3d(pos, tr("Optimize Geometry"));
-      m_molecule->setForceVectors(forces);
-      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
-      m_molecule->emitChanged(changes);
+      forces[i] = -1.0 * Vector3(gradient[3 * i], gradient[3 * i + 1],
+                                 gradient[3 * i + 2]);
+    }
+    // todo - merge these into one undo step
+    m_molecule->undoMolecule()->setAtomPositions3d(pos,
+                                                   tr("Optimize Geometry"));
+    m_molecule->setForceVectors(forces);
+    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+    m_molecule->emitChanged(changes);
+
+    // check for convergence
+    if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
+      break;
+    if (fabs(currentEnergy - energy) < m_tolerance)
+      break;
+    energy = currentEnergy;
   }
 
   m_molecule->undoMolecule()->setInteractive(isInteractive);
@@ -212,5 +206,47 @@ void Forcefield::freezeSelected()
   }
 }
 
-} // end QtPlugins
+void Forcefield::refreshScripts()
+{
+  unregisterScripts();
+  qDeleteAll(m_scripts);
+  m_scripts.clear();
+
+  QMap<QString, QString> scriptPaths =
+    QtGui::ScriptLoader::scriptList("energy");
+  foreach (const QString& filePath, scriptPaths) {
+    auto* model = new ScriptEnergy(filePath);
+    if (model->isValid())
+      m_scripts.push_back(model);
+    else
+      delete model;
+  }
+
+  registerScripts();
 }
+
+void Forcefield::unregisterScripts()
+{
+  for (QList<Calc::EnergyCalculator*>::const_iterator
+         it = m_scripts.constBegin(),
+         itEnd = m_scripts.constEnd();
+       it != itEnd; ++it) {
+    Calc::EnergyManager::unregisterModel((*it)->identifier());
+  }
+}
+
+void Forcefield::registerScripts()
+{
+  for (QList<Calc::EnergyCalculator*>::const_iterator
+         it = m_scripts.constBegin(),
+         itEnd = m_scripts.constEnd();
+       it != itEnd; ++it) {
+    if (!Calc::EnergyManager::registerModel((*it)->newInstance())) {
+      qDebug() << "Could not register model" << (*it)->identifier().c_str()
+               << "due to name conflict.";
+    }
+  }
+}
+
+} // namespace QtPlugins
+} // namespace Avogadro

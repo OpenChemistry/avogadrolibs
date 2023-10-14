@@ -1,5 +1,6 @@
 set(forcefield_srcs
   forcefield.cpp
+  scriptenergy.cpp
 )
 
 avogadro_plugin(Forcefield
@@ -22,4 +23,4 @@ set(forcefields
 )
 
 install(PROGRAMS ${forcefields}
-DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/forcefields/")
+DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/energy/")

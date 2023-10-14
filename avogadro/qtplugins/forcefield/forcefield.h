@@ -16,6 +16,11 @@ class QAction;
 class QDialog;
 
 namespace Avogadro {
+
+namespace Calc {
+class EnergyCalculator;
+}
+
 namespace QtPlugins {
 
 /**
@@ -57,6 +62,8 @@ public slots:
    * Scan for new scripts in the Forcefield directories.
    */
   void refreshScripts();
+  void registerScripts();
+  void unregisterScripts();
 
 private slots:
   void energy();
@@ -65,18 +72,19 @@ private slots:
 
 private:
   QList<QAction*> m_actions;
-  QtGui::Molecule* m_molecule;
+  QtGui::Molecule* m_molecule = nullptr;
 
-  Minimizer m_minimizer;
-  unsigned int m_method;
-  unsigned int m_maxSteps;
+  // defaults
+  Minimizer m_minimizer = LBFGS;
+  unsigned int m_maxSteps = 250;
+  unsigned int m_nSteps = 5;
+  double m_tolerance = 1.0e-6;
+  double m_gradientTolerance = 1.0e-4;
+  Calc::EnergyCalculator *m_method = nullptr;
 
-  // maps program name --> script file path
-  QMap<QString, QString> m_forcefieldScripts;
-
-  const Io::FileFormat* m_outputFormat;
-  QString m_tempFileName;
+  QList<Calc::EnergyCalculator*> m_scripts;
 };
+
 }
 }
 

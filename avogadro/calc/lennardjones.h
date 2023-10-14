@@ -14,7 +14,7 @@ namespace Avogadro {
 namespace Core {
 class Molecule;
 class UnitCell;
-}
+} // namespace Core
 
 namespace Calc {
 
@@ -24,25 +24,23 @@ public:
   LennardJones();
   ~LennardJones();
 
-  std::string identifier() const override
-  { return "LJ"; }
+  LennardJones* newInstance() const override { return new LennardJones; }
 
-  std::string name() const override
-  { return "Lennard-Jones"; }
+  std::string identifier() const override { return "LJ"; }
+
+  std::string name() const override { return "Lennard-Jones"; }
 
   std::string description() const override
-  { return "Universal Lennard-Jones potential"; }
+  {
+    return "Universal Lennard-Jones potential";
+  }
 
   bool acceptsUnitCell() const override { return true; }
 
-  Core::Molecule::ElementMask elements() const override
-  {
-    return (m_elements);
-  }
+  Core::Molecule::ElementMask elements() const override { return (m_elements); }
 
   Real value(const Eigen::VectorXd& x) override;
-  void gradient(const Eigen::VectorXd& x,
-                        Eigen::VectorXd& grad) override;
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
 
   /**
    * Called when the current molecule changes.

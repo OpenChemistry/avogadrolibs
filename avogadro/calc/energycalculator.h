@@ -28,6 +28,12 @@ public:
   ~EnergyCalculator() {}
 
   /**
+   * Create a new instance of the model. Ownership passes to the
+   * caller.
+   */
+  virtual EnergyCalculator* newInstance() const = 0;
+
+  /**
    * @return a unique identifier for this calculator.
    */
   virtual std::string identifier() const = 0;
@@ -96,16 +102,23 @@ public:
    */
   TVector mask() const { return m_mask; }
 
-  void freezeAtom(Index atomId);
-  void unfreezeAtom(Index atomId);
-
   /**
    * Called when the current molecule changes.
    */
   virtual void setMolecule(Core::Molecule* mol) = 0;
 
 protected:
+  /**
+   * @brief Append an error to the error string for the model.
+   * @param errorString The error to be added.
+   * @param newLine Add a new line after the error string?
+   */
+  void appendError(const std::string& errorString, bool newLine = true) const;
+
   TVector m_mask; // optimize or frozen atom mask
+
+private:
+  mutable std::string m_error;
 };
 
 } // end namespace Calc

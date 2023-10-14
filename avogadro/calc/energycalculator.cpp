@@ -27,22 +27,4 @@ void EnergyCalculator::cleanGradients(TVector& grad)
   grad = grad.cwiseProduct(m_mask);
 }
 
-void EnergyCalculator::freezeAtom(Index atomId)
-{
-  if (atomId * 3 <= m_mask.rows() - 3) {
-    m_mask[atomId*3] = 0.0;
-    m_mask[atomId*3+1] = 0.0;
-    m_mask[atomId*3+2] = 0.0;
-  }
-}
-
-void EnergyCalculator::unfreezeAtom(Index atomId)
-{
-  if (atomId * 3 <= m_mask.rows() - 3) {
-    m_mask[atomId*3] = 1.0;
-    m_mask[atomId*3+1] = 1.0;
-    m_mask[atomId*3+2] = 1.0;
-  }
-}
-
 } // namespace Avogadro

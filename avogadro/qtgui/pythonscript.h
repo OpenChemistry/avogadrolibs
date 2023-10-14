@@ -99,6 +99,18 @@ public:
                           const QByteArray& scriptStdin = QByteArray());
 
   /**
+   * Write input to the asynchronous process' standard input and return the
+   * standard output when ready. Does not wait for the process to terminate
+   * before returning (e.g. "server mode").
+   * 
+   * @param input The input to write to the process' standard input
+   * @param expectedLines The number of lines to expect in the output. If -1,
+   *                     the output is read until the process terminates.
+   * @return The standard output of the process
+  */
+  QByteArray asyncWriteAndResponse(QByteArray input, const int expectedLines = -1);
+
+  /**
    * Returns the standard output of the asynchronous process when finished.
    */
   QByteArray asyncResponse();
