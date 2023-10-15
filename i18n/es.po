@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-15 02:02+0000\n"
-"PO-Revision-Date: 2023-10-10 16:03+0000\n"
-"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
+"PO-Revision-Date: 2023-10-16 12:00+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1026,6 +1026,8 @@ msgstr "Seleccionar ejecutable:"
 msgid ""
 "The file name contains invalid characters. Please choose another file name."
 msgstr ""
+"El nombre del archivo contiene caracteres no válidos. Por favor, elije otro "
+"nombre para el archivo."
 
 #: qtgui/fileformatdialog.cpp:60
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1594,32 +1596,24 @@ msgid "Axis:"
 msgstr "Eje:"
 
 #: qtplugins/aligntool/aligntool.cpp:152
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Configuraciones de Alineacion"
+msgstr "Alinear desde el comienzo"
 
 #: qtplugins/aligntool/aligntool.cpp:188
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "Alinear la Vista con los Ejes"
+msgstr "Alinear con el eje"
 
 #: qtplugins/aligntool/aligntool.cpp:304
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "Renderiza los ejes x, y y z en el origen"
+msgstr "Centra el átomo en el origen."
 
 #: qtplugins/aligntool/aligntool.cpp:307
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "Rota la molécula para alinear el átomo con el eje especificado."
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
-msgstr "Herramienta de selección"
+msgstr "Herramienta de alineación"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
