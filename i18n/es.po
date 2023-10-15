@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-08 02:02+0000\n"
+"POT-Creation-Date: 2023-10-15 02:02+0000\n"
 "PO-Revision-Date: 2023-10-10 16:03+0000\n"
 "Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
@@ -1022,13 +1022,18 @@ msgstr "Seleccionar archivo:"
 msgid "Select executable:"
 msgstr "Seleccionar ejecutable:"
 
-#: qtgui/fileformatdialog.cpp:52
+#: qtgui/fileformatdialog.cpp:48
+msgid ""
+"The file name contains invalid characters. Please choose another file name."
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:60
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 "No se pudo hallar un lector de archivos adecuado para el archivo "
 "seleccionado."
 
-#: qtgui/fileformatdialog.cpp:100
+#: qtgui/fileformatdialog.cpp:108
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
@@ -1036,54 +1041,54 @@ msgstr ""
 "Falta la extensión de archivo, por lo que no se puede determinar el formato. "
 "¿Desea añadirlo?"
 
-#: qtgui/fileformatdialog.cpp:114
+#: qtgui/fileformatdialog.cpp:122
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 "No se pudo hallar un escritor de archivos adecuado para el formato de "
 "archivo seleccionado."
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:171
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "manipuladores"
 
-#: qtgui/fileformatdialog.cpp:164
+#: qtgui/fileformatdialog.cpp:172
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "manipular"
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:176
 msgctxt "File readers"
 msgid "readers"
 msgstr "lectores"
 
-#: qtgui/fileformatdialog.cpp:169
+#: qtgui/fileformatdialog.cpp:177
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "leer"
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:181
 msgctxt "File writers"
 msgid "writers"
 msgstr "escritores"
 
-#: qtgui/fileformatdialog.cpp:174
+#: qtgui/fileformatdialog.cpp:182
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "escribir"
 
-#: qtgui/fileformatdialog.cpp:179
+#: qtgui/fileformatdialog.cpp:187
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 "Múltiples %1 hallados capaces de %2 este formato de archivo. ¿Cuál se "
 "debería usar?"
 
-#: qtgui/fileformatdialog.cpp:279
+#: qtgui/fileformatdialog.cpp:287
 msgid "All files"
 msgstr "Todos los archivos"
 
-#: qtgui/fileformatdialog.cpp:282
+#: qtgui/fileformatdialog.cpp:290
 msgid "All supported formats"
 msgstr "Todos los formatos soportados"
 
@@ -1561,6 +1566,64 @@ msgstr "&Exportar"
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
 msgstr "ThreeDMol"
+
+#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:88
+msgid "Align"
+msgstr "Alinear"
+
+#: qtplugins/aligntool/aligntool.cpp:56
+msgid ""
+"Align Molecules\n"
+"\n"
+"Left Mouse: \tSelect up to two atoms.\n"
+"\tThe first atom is centered at the origin.\n"
+"\tThe second atom is aligned to the selected axis.\n"
+"Right Mouse: \tReset alignment.\n"
+"Double-Click: \tCenter the atom at the origin."
+msgstr ""
+"Alinear Moléculas \n"
+"\n"
+"Izquierdo del ratón: \t Seleccione hasta dos átomos. \n"
+"\t El primer átomo se centra en el origen. \n"
+"\t El segundo átomo está alineado con el eje seleccionado. \n"
+"Derecho del ratón: \t Cambiar la alineación. \n"
+"Doble clic: \t Centrar el átomo en el origen."
+
+#: qtplugins/aligntool/aligntool.cpp:75
+msgid "Axis:"
+msgstr "Eje:"
+
+#: qtplugins/aligntool/aligntool.cpp:152
+#, fuzzy
+#| msgid "Align Settings"
+msgid "Align at Origin"
+msgstr "Configuraciones de Alineacion"
+
+#: qtplugins/aligntool/aligntool.cpp:188
+#, fuzzy
+#| msgid "Align View to Axes"
+msgid "Align to Axis"
+msgstr "Alinear la Vista con los Ejes"
+
+#: qtplugins/aligntool/aligntool.cpp:304
+#, fuzzy
+#| msgid "Renders the x, y, and z axes at the origin"
+msgid "Center the atom at the origin."
+msgstr "Renderiza los ejes x, y y z en el origen"
+
+#: qtplugins/aligntool/aligntool.cpp:307
+msgid "Rotate the molecule to align the atom to the specified axis."
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.h:30
+#, fuzzy
+#| msgid "Selection tool"
+msgid "Align tool"
+msgstr "Herramienta de selección"
+
+#: qtplugins/aligntool/aligntool.h:33
+msgid "Align molecules to a Cartesian axis"
+msgstr "Alinear moléculas a un eje Cartesiano"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
@@ -5155,8 +5218,8 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Especificación de Formato. Cada carácter indica un "
 "valor a escribir por átomo:</p><p><span style=\" font-weight:600;\">#</span> "
-"- Índice atómico (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;\""
-">Z</span> - Número atómico (e.g. «6» para el carbono)<br/><span style=\" "
+"- Índice atómico (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
+"\">Z</span> - Número atómico (e.g. «6» para el carbono)<br/><span style=\" "
 "font-weight:600;\">G</span> - Número atómico estilo GAMESS (e.g. «6.0» para "
 "el carbono)<br/><span style=\" font-weight:600;\">N</span> - Nombre del "
 "elemento (e.g. «Carbono»)<br/><span style=\" font-weight:600;\">S</span> - "
@@ -8094,9 +8157,6 @@ msgstr ""
 #~ msgid "Axes"
 #~ msgstr "Ejes"
 
-#~ msgid "Renders the x, y, and z axes at the origin"
-#~ msgstr "Renderiza los ejes x, y y z en el origen"
-
 #~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
 #~ msgstr "Representa las primitivas usando esferas (átomos) y palos (enlaces)"
 
@@ -9577,40 +9637,11 @@ msgstr ""
 #~ msgid "Tools"
 #~ msgstr "Herramientas"
 
-#~ msgid ""
-#~ "Align Molecules\n"
-#~ "\n"
-#~ "Left Mouse: \tSelect up to two atoms.\n"
-#~ "\tThe first atom is centered at the origin.\n"
-#~ "\tThe second atom is aligned to the selected axis.\n"
-#~ "Right Mouse: \tReset alignment.\n"
-#~ "Double-Click: \tCenter the atom at the origin."
-#~ msgstr ""
-#~ "Alinear Moléculas \n"
-#~ "\n"
-#~ "Izquierdo del ratón: \t Seleccione hasta dos átomos. \n"
-#~ "\t El primer átomo se centra en el origen. \n"
-#~ "\t El segundo átomo está alineado con el eje seleccionado. \n"
-#~ "Derecho del ratón: \t Cambiar la alineación. \n"
-#~ "Doble clic: \t Centrar el átomo en el origen."
-
-#~ msgid "Axis:"
-#~ msgstr "Eje:"
-
 #~ msgid "Align:"
 #~ msgstr "Alinear:"
 
 #~ msgid "Everything"
 #~ msgstr "Todo"
-
-#~ msgid "Align"
-#~ msgstr "Alinear"
-
-#~ msgid "Align molecules to a Cartesian axis"
-#~ msgstr "Alinear moléculas a un eje Cartesiano"
-
-#~ msgid "Align Settings"
-#~ msgstr "Configuraciones de Alineacion"
 
 #~ msgid ""
 #~ "Auto Optimization Tool\n"

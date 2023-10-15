@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-08 02:02+0000\n"
+"POT-Creation-Date: 2023-10-15 02:02+0000\n"
 "PO-Revision-Date: 2023-05-20 18:51+0000\n"
 "Last-Translator: Hıncal Gökhan BAKIR <hgokhanb@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -1014,62 +1014,67 @@ msgstr "Dosya seç:"
 msgid "Select executable:"
 msgstr "Çalıştırma dosyasını seçiniz:"
 
-#: qtgui/fileformatdialog.cpp:52
+#: qtgui/fileformatdialog.cpp:48
+msgid ""
+"The file name contains invalid characters. Please choose another file name."
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:60
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr "Seçili dosya için uygun bir dosya okuyucu bulunamıyor."
 
-#: qtgui/fileformatdialog.cpp:100
+#: qtgui/fileformatdialog.cpp:108
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:114
+#: qtgui/fileformatdialog.cpp:122
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr "Seçilen format için uygun bir dosya yazıcısı bulunamadı."
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:171
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "işleyiciler"
 
-#: qtgui/fileformatdialog.cpp:164
+#: qtgui/fileformatdialog.cpp:172
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "işleyici"
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:176
 msgctxt "File readers"
 msgid "readers"
 msgstr "okuyucular"
 
-#: qtgui/fileformatdialog.cpp:169
+#: qtgui/fileformatdialog.cpp:177
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "oku"
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:181
 msgctxt "File writers"
 msgid "writers"
 msgstr "yazarlar"
 
-#: qtgui/fileformatdialog.cpp:174
+#: qtgui/fileformatdialog.cpp:182
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "yaz"
 
-#: qtgui/fileformatdialog.cpp:179
+#: qtgui/fileformatdialog.cpp:187
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Bu biçimi %2 yapabilen birden çok %1 bulundu. Hangisi kullanılmalı?"
 
-#: qtgui/fileformatdialog.cpp:279
+#: qtgui/fileformatdialog.cpp:287
 #, fuzzy
 #| msgid "All Files"
 msgid "All files"
 msgstr "Bütün Dosyalar"
 
-#: qtgui/fileformatdialog.cpp:282
+#: qtgui/fileformatdialog.cpp:290
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
@@ -1561,6 +1566,57 @@ msgstr "&Dışa Aktar"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:88
+msgid "Align"
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.cpp:56
+msgid ""
+"Align Molecules\n"
+"\n"
+"Left Mouse: \tSelect up to two atoms.\n"
+"\tThe first atom is centered at the origin.\n"
+"\tThe second atom is aligned to the selected axis.\n"
+"Right Mouse: \tReset alignment.\n"
+"Double-Click: \tCenter the atom at the origin."
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.cpp:75
+#, fuzzy
+#| msgid "X Axis"
+msgid "Axis:"
+msgstr "X Ekseni"
+
+#: qtplugins/aligntool/aligntool.cpp:152
+msgid "Align at Origin"
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.cpp:188
+#, fuzzy
+#| msgid "Align View to Axes"
+msgid "Align to Axis"
+msgstr "Görünümü Eksene Hizala"
+
+#: qtplugins/aligntool/aligntool.cpp:304
+#, fuzzy
+#| msgid "Renders the x, y, and z axes at the origin"
+msgid "Center the atom at the origin."
+msgstr "Merkezdeki x, y, ve x eksenlerini kaplar"
+
+#: qtplugins/aligntool/aligntool.cpp:307
+msgid "Rotate the molecule to align the atom to the specified axis."
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.h:30
+#, fuzzy
+#| msgid "Navigate tool"
+msgid "Align tool"
+msgstr "Gezinme aracı"
+
+#: qtplugins/aligntool/aligntool.h:33
+msgid "Align molecules to a Cartesian axis"
 msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:31
@@ -7896,9 +7952,6 @@ msgstr ""
 #~ msgid "Axes"
 #~ msgstr "Eksenler"
 
-#~ msgid "Renders the x, y, and z axes at the origin"
-#~ msgstr "Merkezdeki x, y, ve x eksenlerini kaplar"
-
 #~ msgid "Renders primitives using Balls (atoms) and Sticks (bonds)"
 #~ msgstr ""
 #~ "Primitifleri Toplar (Atomlar) ve Çubuklar (Bağlar) kullanarak kaplar"
@@ -8546,9 +8599,6 @@ msgstr ""
 #~ "Yüklediğiniz molekülün içindeki titreşim verisi herhangi bir yoğunluk "
 #~ "(intensity) bilgisi içermiyor. Görselleştirme için yoğunluk değerleri "
 #~ "rastgele atandı."
-
-#~ msgid "X Axis"
-#~ msgstr "X Ekseni"
 
 #~ msgid "Y Axis"
 #~ msgstr "Y Ekseni"
