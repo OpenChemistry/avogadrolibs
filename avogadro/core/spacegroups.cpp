@@ -259,7 +259,7 @@ Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
 }
 
 void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
-                               double cartTol)
+                               double cartTol, bool wrapToCell, bool allCopies)
 {
   if (!mol.unitCell())
     return;
@@ -303,13 +303,17 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
       newAtom.setPosition3d(newCandidate);
     }
   }
-  // @todo make this optional
-  CrystalTools::wrapAtomsToUnitCell(mol);
+
+  if (wrapToCell)
+    CrystalTools::wrapAtomsToUnitCell(mol);
 
   // Now we need to generate any copies on the unit boundary
   // We need to loop through all the atoms again
   // if a fractional coordinate contains 0.0, we need to generate a copy
   // of the atom at 1.0
+  if (!allCopies)
+    return;
+
   atomicNumbers = mol.atomicNumbers();
   positions = mol.atomPositions3d();
   numAtoms = mol.atomCount();
