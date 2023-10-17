@@ -59,8 +59,7 @@ bool ResetView::handleCommand(const QString& command,
     return false; // Nothing to do
 
   if (command == "alignView") {
-    qDebug() << " align ";
-    alignToAxes();
+    animationCameraDefault(false);
     return true;
   }
   return false;
