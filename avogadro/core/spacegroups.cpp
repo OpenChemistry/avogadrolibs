@@ -28,31 +28,34 @@ unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
   unsigned short hall = 0; // can't find anything
   const unsigned short hall_count = 530;
+  // some files use " instead of = for the space group symbol
+  std::string sg = spaceGroup;
+  std::replace(sg.begin(), sg.end(), '"', '=');
 
   // space_group_hall_symbol
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_hall_symbol[i]) {
+    if (sg == space_group_hall_symbol[i]) {
       return i; // found a match
     }
   }
 
   // space_group_international
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_international[i]) {
+    if (sg == space_group_international[i]) {
       return i; // found a match
     }
   }
 
   // space_group_international_short
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_international_short[i]) {
+    if (sg == space_group_international_short[i]) {
       return i; // found a match
     }
   }
 
   // space_group_international_full
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_international_full[i]) {
+    if (sg == space_group_international_full[i]) {
       return i; // found a match
     }
   }
