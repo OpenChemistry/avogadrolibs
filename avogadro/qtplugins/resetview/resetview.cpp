@@ -12,6 +12,7 @@
 #include <QTimer>
 #include <QAction>
 #include <QOpenGLWidget>
+#include <QDebug>
 
 #include <limits>
 
@@ -45,6 +46,24 @@ ResetView::ResetView(QObject* parent_)
 }
 
 ResetView::~ResetView() {}
+
+void ResetView::registerCommands()
+{
+  emit registerCommand("alignView", tr("Align view to axes."));
+}
+
+bool ResetView::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (m_molecule == nullptr || m_camera == nullptr)
+    return false; // Nothing to do 
+
+  if (command == "alignView") {
+    qDebug() << " align ";
+    alignToAxes();
+    return true;
+  }
+  return false;
+}
 
 QList<QAction*> ResetView::actions() const
 {
