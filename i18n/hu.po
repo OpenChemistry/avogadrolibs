@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-15 02:02+0000\n"
-"PO-Revision-Date: 2023-09-20 12:35+0000\n"
+"PO-Revision-Date: 2023-10-17 23:41+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.1\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1026,6 +1026,8 @@ msgstr "Végrehajtható fájl kijelölése:"
 msgid ""
 "The file name contains invalid characters. Please choose another file name."
 msgstr ""
+"A fájlnév érvénytelen karaktereket tartalmaz. Kérjük, válasszon másik "
+"fájlnevet."
 
 #: qtgui/fileformatdialog.cpp:60
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1578,38 +1580,37 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
+"Molekulák igazítása\n"
+"\n"
+"Bal egér: \tVálasszon ki legfeljebb két atomot.\n"
+"\tAz első atom középpontjában az origó található.\n"
+"\tA második atom a kiválasztott tengelyhez igazodik.\n"
+"Jobb egér: \tÁllítsa vissza az igazítást.\n"
+"Dupla kattintás: \tAz atom középpontba állítása az origóban."
 
 #: qtplugins/aligntool/aligntool.cpp:75
 msgid "Axis:"
 msgstr "Tengely:"
 
 #: qtplugins/aligntool/aligntool.cpp:152
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Rendezés beállításai"
+msgstr "Igazítsa az eredethez"
 
 #: qtplugins/aligntool/aligntool.cpp:188
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "Nézet igazítása a tengelyekhez"
+msgstr "Igazítsa a tengelyhez"
 
 #: qtplugins/aligntool/aligntool.cpp:304
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "x,y, és z tengelyek renderelése a kiinduláshoz"
+msgstr "Központosítsa az atomot az eredetre."
 
 #: qtplugins/aligntool/aligntool.cpp:307
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "Forgassa el a molekulát, hogy az atomot a megadott tengelyhez igazítsa."
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
-msgstr "Kijelölőeszköz"
+msgstr "Igazítóeszköz"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
@@ -2292,10 +2293,8 @@ msgid "Element symbol."
 msgstr "Kémiai elem szimbóluma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "Érvénytelen atomszám."
+msgstr "Érvénytelen atomcímke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 msgid "Invalid atomic index."
@@ -5201,27 +5200,6 @@ msgstr "Formátum:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:71
 #. i18n: ectx: property (toolTip), widget (QLineEdit, spec)
-#, fuzzy
-#| msgid ""
-#| "<html><head/><body><p>Specification of format. Each character indicates a "
-#| "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> "
-#| "- Atom index (1, 2, ..., numAtoms)<br/><span style=\" font-weight:600;"
-#| "\">Z</span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" "
-#| "font-weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" "
-#| "for carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name "
-#| "(e.g. \"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - "
-#| "Element symbol (e.g. \"C\" for carbon)<br/><span style=\" font-weight:600;"
-#| "\">x</span> - X position coordinate<br/><span style=\" font-weight:600;"
-#| "\">y</span> - Y position coordinate<br/><span style=\" font-weight:600;"
-#| "\">z</span> - Z position coordinate<br/><span style=\" font-weight:600;"
-#| "\">a</span> - 'a' lattice coordinate (crystals only)<br/><span style=\" "
-#| "font-weight:600;\">b</span> - 'b' lattice coordinate (crystals only)<br/"
-#| "><span style=\" font-weight:600;\">c</span> - 'c' lattice coordinate "
-#| "(crystals only)<br/><span style=\" font-weight:600;\">_</span> - A "
-#| "literal space (\" \"), useful for alignment<br/><span style=\" font-"
-#| "weight:600;\">0</span> - A literal 0 (\"0\"), useful for optimization "
-#| "flags<br/><span style=\" font-weight:600;\">1</span> - A literal 1 "
-#| "(\"1\"), useful for optimization flags<br/></p></body></html>"
 msgid ""
 "<html><head/><body><p>Specification of format. Each character indicates a "
 "value to write per atom:</p><p><span style=\" font-weight:600;\">#</span> - "
@@ -5248,21 +5226,22 @@ msgstr ""
 "írandó értéket jelzi:</p><p><span style=\" font-weight:600;\">#</span> - "
 "Atomi tárgymutató (1, 2, …, atomok száma)<br/><span style=\" font-weight:600;"
 "\">Z</span> - Atomszám (pl. „6” a szén esetében)<br/><span style=\" font-"
-"weight:600;\">G</span> - GAMESS-stílusú atomszám (pl. „6.0” a szén "
-"esetében)<br/><span style=\" font-weight:600;\">N</span> - Elem neve (pl. "
-"„Szén”)<br/><span style=\" font-weight:600;\">S</span> - Elem szimbólum (pl. "
-"\"C\" a szén esetében)<br/><span style=\" font-weight:600;\">x</span> - X "
-"pozíció koordináta<br/><span style=\" font-weight:600;\">y</span> - Y "
-"pozíció koordináta<br/><span style=\" font-weight:600;\">z</span> - Z "
-"pozíció koordináta<br/><span style=\" font-weight:600;\">a</span> - a-"
-"hálókoordináta (csak kristályok)<br/><span style=\" font-weight:600;\">b</"
-"span> - b-hálókoordináta (csak kristályok)<br/><span style=\" font-"
-"weight:600;\">c</span> - c-hálókoordináta (csak kristályok)<br/><span "
-"style=\" font-weight:600;\">_</span> - Szó szerinti szóköz („”), hasznos az "
-"igazításhoz<br/><span style=\" font-weight:600;\">0</span> - Szó szerinti 0 "
-"(„0”), hasznos az optimalizálási zászlókhoz<br/><span style=\" font-"
-"weight:600;\">1</span> - Szó szerinti 1 („1”), hasznos az optimalizálási "
-"zászlókhoz<br/></p></body></html>"
+"weight:600;\">G</span> - GAMESS-stílusú atomszám (pl. „6.0” a szén esetében)<"
+"br/><span style=\" font-weight:600;\">N</span> - Elem neve (pl. „Szén”)<br/"
+"><span style=\" font-weight:600;\">S</span> - Elem szimbólum (pl. \"C\" a "
+"szén esetében)<br/><span style=\" font-weight:700;\">L</span> - Atomcímke ("
+"pl. „C2” a második szénatom, „H1” az első hidrogén)<br/><span style=\" font-"
+"weight:600;\">x</span> - X pozíció koordináta<br/><span style=\" font-"
+"weight:600;\">y</span> - Y pozíció koordináta<br/><span style=\" font-"
+"weight:600;\">z</span> - Z pozíció koordináta<br/><span style=\" font-"
+"weight:600;\">a</span> - a-hálókoordináta (csak kristályok)<br/><span style="
+"\" font-weight:600;\">b</span> - b-hálókoordináta (csak kristályok)<br/"
+"><span style=\" font-weight:600;\">c</span> - c-hálókoordináta (csak "
+"kristályok)<br/><span style=\" font-weight:600;\">_</span> - Szó szerinti "
+"szóköz („ ”), hasznos az igazításhoz<br/><span style=\" font-weight:600;\""
+">0</span> - Szó szerinti 0 („0”), hasznos az optimalizálási zászlókhoz<br/"
+"><span style=\" font-weight:600;\">1</span> - Szó szerinti 1 („1”), hasznos "
+"az optimalizálási zászlókhoz<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
