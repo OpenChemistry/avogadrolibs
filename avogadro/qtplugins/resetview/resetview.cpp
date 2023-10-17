@@ -9,10 +9,10 @@
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 
-#include <QTimer>
 #include <QAction>
-#include <QOpenGLWidget>
 #include <QDebug>
+#include <QOpenGLWidget>
+#include <QTimer>
 
 #include <limits>
 
@@ -52,10 +52,11 @@ void ResetView::registerCommands()
   emit registerCommand("alignView", tr("Align view to axes."));
 }
 
-bool ResetView::handleCommand(const QString& command, const QVariantMap& options)
+bool ResetView::handleCommand(const QString& command,
+                              const QVariantMap& options)
 {
   if (m_molecule == nullptr || m_camera == nullptr)
-    return false; // Nothing to do 
+    return false; // Nothing to do
 
   if (command == "alignView") {
     qDebug() << " align ";
@@ -204,13 +205,13 @@ inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
 {
   centroid = Vector3::Zero();
 
-  for (const auto & mol : mols)
+  for (const auto& mol : mols)
     centroid += mol;
 
   centroid /= (double)mols.size();
   Matrix3d covariance = Matrix3::Zero();
 
-  for (const auto & mol : mols) {
+  for (const auto& mol : mols) {
     Vector3d adjusted = mol - centroid;
     covariance += adjusted * adjusted.transpose();
   }
@@ -273,4 +274,4 @@ void ResetView::alignToAxes()
   animationCameraDefault();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
