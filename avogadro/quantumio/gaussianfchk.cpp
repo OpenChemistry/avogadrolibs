@@ -57,6 +57,17 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
                             m_aPos[i + 1] * BOHR_TO_ANGSTROM,
                             m_aPos[i + 2] * BOHR_TO_ANGSTROM));
   }
+
+  if (m_frequencies.size() > 0 &&
+      m_frequencies.size() == m_vibDisplacements.size() &&
+      m_frequencies.size() == m_IRintensities.size()) {
+    molecule.setVibrationFrequencies(m_frequencies);
+    molecule.setVibrationIRIntensities(m_IRintensities);
+    molecule.setVibrationLx(m_vibDisplacements);
+    if (m_RamanIntensities.size())
+      molecule.setVibrationRamanIntensities(m_RamanIntensities);
+  }
+
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -91,7 +102,7 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (Core::contains(key, "UHF")) {
     m_scftype = Uhf;
   } else if (key == "Number of atoms" && list.size() > 1) {
-    cout << "Number of atoms = " << Core::lexicalCast<int>(list[1]) << endl;
+    m_numAtoms = Core::lexicalCast<int>(list[1]);
   } else if (key == "Charge" && list.size() > 1) {
     m_charge = Core::lexicalCast<signed char>(list[1]);
   } else if (key == "Multiplicity" && list.size() > 1) {
@@ -183,6 +194,48 @@ void GaussianFchk::processLine(std::istream& in)
            << endl;
     else
       cout << "Error reading in the SCF spin density matrix.\n";
+  } else if (key == "Number of Normal Modes" && list.size() > 1) {
+    m_normalModes = Core::lexicalCast<int>(list[1]);
+  } else if (key == "Vib-E2" && list.size() > 2) {
+    m_frequencies.clear();
+    m_IRintensities.clear();
+    m_RamanIntensities.clear();
+
+    unsigned threeN = m_numAtoms * 3; // degrees of freedom
+    std::vector<double> tmp =
+      readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+
+    // read in the first 3N-6 elements as frequencies
+    for (unsigned int i = 0; i < m_normalModes; ++i) {
+      m_frequencies.push_back(tmp[i]);
+    }
+    // skip to after threeN elements then read IR intensities
+    for (unsigned int i = threeN; i < threeN + m_normalModes; ++i) {
+      m_IRintensities.push_back(tmp[i]);
+    }
+    // now check if we have Raman intensities
+    if (tmp[threeN + m_normalModes] != 0.0) {
+      for (unsigned int i = threeN + m_normalModes;
+           i < threeN + 2 * m_normalModes; ++i) {
+        m_RamanIntensities.push_back(tmp[i]);
+      }
+    }
+  } else if (key == "Vib-Modes" && list.size() > 2) {
+    std::vector<double> tmp = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+    m_vibDisplacements.clear();
+    if (tmp.size() == m_numAtoms * 3 * m_normalModes) {
+      for (unsigned int i = 0; i < m_normalModes; ++i) {
+        Core::Array<Vector3> mode;
+        for (unsigned int j = 0; j < m_numAtoms; ++j) {
+          Vector3 v(tmp[i * m_numAtoms * 3 + j * 3],
+                    tmp[i * m_numAtoms * 3 + j * 3 + 1],
+                    tmp[i * m_numAtoms * 3 + j * 3 + 2]);
+          mode.push_back(v);
+        }
+        m_vibDisplacements.push_back(mode);
+      }
+    }
+    cout << "Read " << m_vibDisplacements.size() << " vibrational modes\n";
   }
 }
 
