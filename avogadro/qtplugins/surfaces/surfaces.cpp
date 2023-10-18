@@ -143,8 +143,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     if (ok)
       cubeResolution = res;
   }
-  if (options.contains("isovalue") &&
-      options["isolvalue"].canConvert<float>()) {
+  if (options.contains("isovalue") && options["isovalue"].canConvert<float>()) {
     bool ok;
     float iso = options["isovalue"].toFloat(&ok);
     if (ok)
@@ -165,7 +164,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
         expression = name.remove("homo", Qt::CaseInsensitive);
       } else if (name.contains("lumo", Qt::CaseInsensitive)) {
         index = homo + 1; // again modified by the expression
-        expression = name.remove("homo", Qt::CaseInsensitive);
+        expression = name.remove("lumo", Qt::CaseInsensitive);
       }
       // modify HOMO / LUMO based on "+ number" or "- number"
       if (expression.contains('-')) {
@@ -181,9 +180,11 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
         if (ok)
           index = index + n;
       }
-
-    } else
-      index = options.value("index").toInt();
+      index = index - 1; // start from zero
+    } else {
+      // internally, we count orbitals from zero
+      index = options.value("index").toInt() - 1;
+    }
   }
   bool beta = false;
   if (options.contains("spin")) {
