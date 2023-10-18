@@ -221,7 +221,8 @@ void GaussianFchk::processLine(std::istream& in)
       }
     }
   } else if (key == "Vib-Modes" && list.size() > 2) {
-    std::vector<double> tmp = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+    std::vector<double> tmp =
+      readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     m_vibDisplacements.clear();
     if (tmp.size() == m_numAtoms * 3 * m_normalModes) {
       for (unsigned int i = 0; i < m_normalModes; ++i) {
