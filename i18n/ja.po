@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-08 02:02+0000\n"
+"POT-Creation-Date: 2023-10-15 02:02+0000\n"
 "PO-Revision-Date: 2023-09-05 07:55+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -957,60 +957,65 @@ msgstr "ファイルを選択:"
 msgid "Select executable:"
 msgstr "実行ファイルを選択:"
 
-#: qtgui/fileformatdialog.cpp:52
+#: qtgui/fileformatdialog.cpp:48
+msgid ""
+"The file name contains invalid characters. Please choose another file name."
+msgstr ""
+
+#: qtgui/fileformatdialog.cpp:60
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:100
+#: qtgui/fileformatdialog.cpp:108
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:114
+#: qtgui/fileformatdialog.cpp:122
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:163
+#: qtgui/fileformatdialog.cpp:171
 msgctxt "File handlers"
 msgid "handlers"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:164
+#: qtgui/fileformatdialog.cpp:172
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:168
+#: qtgui/fileformatdialog.cpp:176
 msgctxt "File readers"
 msgid "readers"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:169
+#: qtgui/fileformatdialog.cpp:177
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:173
+#: qtgui/fileformatdialog.cpp:181
 msgctxt "File writers"
 msgid "writers"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:174
+#: qtgui/fileformatdialog.cpp:182
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:179
+#: qtgui/fileformatdialog.cpp:187
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 
-#: qtgui/fileformatdialog.cpp:279
+#: qtgui/fileformatdialog.cpp:287
 msgid "All files"
 msgstr "全てのファイル"
 
-#: qtgui/fileformatdialog.cpp:282
+#: qtgui/fileformatdialog.cpp:290
 msgid "All supported formats"
 msgstr ""
 
@@ -1471,6 +1476,64 @@ msgstr "エクスポート (&E)"
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
 msgstr ""
+
+#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:88
+msgid "Align"
+msgstr "アラインメント"
+
+#: qtplugins/aligntool/aligntool.cpp:56
+msgid ""
+"Align Molecules\n"
+"\n"
+"Left Mouse: \tSelect up to two atoms.\n"
+"\tThe first atom is centered at the origin.\n"
+"\tThe second atom is aligned to the selected axis.\n"
+"Right Mouse: \tReset alignment.\n"
+"Double-Click: \tCenter the atom at the origin."
+msgstr ""
+"分子のアラインメント\n"
+"\n"
+"左クリック: \t二つまでの分子を選んでください。\n"
+"\t最初の原子が座標の原点になります。\n"
+"\t次の原子が選択した座標軸上にアラインメントされます。\n"
+"右クリック: \tアラインメントをリセットします。\n"
+"ダブルクリック: \t原子を原点に設定します。"
+
+#: qtplugins/aligntool/aligntool.cpp:75
+msgid "Axis:"
+msgstr "座標軸:"
+
+#: qtplugins/aligntool/aligntool.cpp:152
+#, fuzzy
+#| msgid "Align Settings"
+msgid "Align at Origin"
+msgstr "アラインメントの設定"
+
+#: qtplugins/aligntool/aligntool.cpp:188
+#, fuzzy
+#| msgid "Align Settings"
+msgid "Align to Axis"
+msgstr "アラインメントの設定"
+
+#: qtplugins/aligntool/aligntool.cpp:304
+#, fuzzy
+#| msgid "selected atom to origin"
+msgid "Center the atom at the origin."
+msgstr "選択原子を原点に"
+
+#: qtplugins/aligntool/aligntool.cpp:307
+msgid "Rotate the molecule to align the atom to the specified axis."
+msgstr ""
+
+#: qtplugins/aligntool/aligntool.h:30
+#, fuzzy
+#| msgid "Align"
+msgid "Align tool"
+msgstr "アラインメント"
+
+#: qtplugins/aligntool/aligntool.h:33
+msgid "Align molecules to a Cartesian axis"
+msgstr "分子を座標軸に沿ってアラインメント"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
@@ -9453,40 +9516,11 @@ msgstr ""
 #~ msgid "Tools"
 #~ msgstr "ツール"
 
-#~ msgid ""
-#~ "Align Molecules\n"
-#~ "\n"
-#~ "Left Mouse: \tSelect up to two atoms.\n"
-#~ "\tThe first atom is centered at the origin.\n"
-#~ "\tThe second atom is aligned to the selected axis.\n"
-#~ "Right Mouse: \tReset alignment.\n"
-#~ "Double-Click: \tCenter the atom at the origin."
-#~ msgstr ""
-#~ "分子のアラインメント\n"
-#~ "\n"
-#~ "左クリック: \t二つまでの分子を選んでください。\n"
-#~ "\t最初の原子が座標の原点になります。\n"
-#~ "\t次の原子が選択した座標軸上にアラインメントされます。\n"
-#~ "右クリック: \tアラインメントをリセットします。\n"
-#~ "ダブルクリック: \t原子を原点に設定します。"
-
-#~ msgid "Axis:"
-#~ msgstr "座標軸:"
-
 #~ msgid "Align:"
 #~ msgstr "アラインメントの対象:"
 
 #~ msgid "Everything"
 #~ msgstr "全て"
-
-#~ msgid "Align"
-#~ msgstr "アラインメント"
-
-#~ msgid "Align molecules to a Cartesian axis"
-#~ msgstr "分子を座標軸に沿ってアラインメント"
-
-#~ msgid "Align Settings"
-#~ msgstr "アラインメントの設定"
 
 #~ msgid ""
 #~ "Auto Optimization Tool\n"
@@ -10054,9 +10088,6 @@ msgstr ""
 
 #~ msgid "by arbitrary vector"
 #~ msgstr "任意のベクトルで"
-
-#~ msgid "selected atom to origin"
-#~ msgstr "選択原子を原点に"
 
 #~ msgid "selected atom to unit cell center"
 #~ msgstr "選択原子をユニットセルの原点に"
