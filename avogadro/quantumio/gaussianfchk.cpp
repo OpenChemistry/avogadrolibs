@@ -95,6 +95,7 @@ void GaussianFchk::processLine(std::istream& in)
 
   string tmp = line.substr(43);
   vector<string> list = Core::split(tmp, ' ');
+  std::vector<double> tmpVec;
 
   // Big switch statement checking for various things we are interested in
   if (Core::contains(key, "RHF")) {
@@ -115,13 +116,11 @@ void GaussianFchk::processLine(std::istream& in)
     m_electronsBeta = Core::lexicalCast<int>(list[1]);
   } else if (key == "Number of basis functions" && list.size() > 1) {
     m_numBasisFunctions = Core::lexicalCast<int>(list[1]);
-    cout << "Number of basis functions = " << m_numBasisFunctions << endl;
+    // cout << "Number of basis functions = " << m_numBasisFunctions << endl;
   } else if (key == "Atomic numbers" && list.size() > 2) {
     m_aNums = readArrayI(in, Core::lexicalCast<int>(list[2]));
     if (static_cast<int>(m_aNums.size()) != Core::lexicalCast<int>(list[2]))
       cout << "Reading atomic numbers failed.\n";
-    else
-      cout << "Reading atomic numbers succeeded.\n";
   }
   // Now we get to the meat of it - coordinates of the atoms
   else if (key == "Current cartesian coordinates" && list.size() > 2) {
@@ -145,15 +144,16 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (key == "Alpha Orbital Energies") {
     if (m_scftype == Rhf) {
       m_orbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
+      // cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
     } else if (m_scftype == Uhf) {
       m_alphaOrbitalEnergy =
         readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() << endl;
+      // cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() <<
+      // endl;
     }
   } else if (key == "Beta Orbital Energies") {
     if (m_scftype != Uhf) {
-      cout << "UHF detected. Reassigning Alpha properties." << endl;
+      // cout << "UHF detected. Reassigning Alpha properties." << endl;
       m_scftype = Uhf;
       m_alphaOrbitalEnergy = m_orbitalEnergy;
       m_orbitalEnergy = vector<double>();
@@ -163,36 +163,22 @@ void GaussianFchk::processLine(std::istream& in)
     }
 
     m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-    cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
+    // cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
   } else if (key == "Alpha MO coefficients" && list.size() > 2) {
     if (m_scftype == Rhf) {
       m_MOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_MOcoeffs.size()) ==
-          Core::lexicalCast<int>(list[2]))
-        cout << "MO coefficients, n = " << m_MOcoeffs.size() << endl;
     } else if (m_scftype == Uhf) {
       m_alphaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      if (static_cast<int>(m_alphaMOcoeffs.size()) ==
-          Core::lexicalCast<int>(list[2]))
-        cout << "Alpha MO coefficients, n = " << m_alphaMOcoeffs.size() << endl;
     } else {
       cout << "Error, alpha MO coefficients, n = " << m_MOcoeffs.size() << endl;
     }
   } else if (key == "Beta MO coefficients" && list.size() > 2) {
     m_betaMOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-    if (static_cast<int>(m_betaMOcoeffs.size()) ==
-        Core::lexicalCast<int>(list[2]))
-      cout << "Beta MO coefficients, n = " << m_betaMOcoeffs.size() << endl;
   } else if (key == "Total SCF Density" && list.size() > 2) {
-    if (readDensityMatrix(in, Core::lexicalCast<int>(list[2]), 16))
-      cout << "SCF density matrix read in " << m_density.rows() << endl;
-    else
+    if (!readDensityMatrix(in, Core::lexicalCast<int>(list[2]), 16))
       cout << "Error reading in the SCF density matrix.\n";
   } else if (key == "Spin SCF Density" && list.size() > 2) {
-    if (readSpinDensityMatrix(in, Core::lexicalCast<int>(list[2]), 16))
-      cout << "SCF spin density matrix read in " << m_spinDensity.rows()
-           << endl;
-    else
+    if (!readSpinDensityMatrix(in, Core::lexicalCast<int>(list[2]), 16))
       cout << "Error reading in the SCF spin density matrix.\n";
   } else if (key == "Number of Normal Modes" && list.size() > 1) {
     m_normalModes = Core::lexicalCast<int>(list[1]);
@@ -202,41 +188,38 @@ void GaussianFchk::processLine(std::istream& in)
     m_RamanIntensities.clear();
 
     unsigned threeN = m_numAtoms * 3; // degrees of freedom
-    std::vector<double> tmp =
-      readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+    tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
 
     // read in the first 3N-6 elements as frequencies
     for (unsigned int i = 0; i < m_normalModes; ++i) {
-      m_frequencies.push_back(tmp[i]);
+      m_frequencies.push_back(tmpVec[i]);
     }
     // skip to after threeN elements then read IR intensities
     for (unsigned int i = threeN; i < threeN + m_normalModes; ++i) {
-      m_IRintensities.push_back(tmp[i]);
+      m_IRintensities.push_back(tmpVec[i]);
     }
     // now check if we have Raman intensities
-    if (tmp[threeN + m_normalModes] != 0.0) {
+    if (tmpVec[threeN + m_normalModes] != 0.0) {
       for (unsigned int i = threeN + m_normalModes;
            i < threeN + 2 * m_normalModes; ++i) {
-        m_RamanIntensities.push_back(tmp[i]);
+        m_RamanIntensities.push_back(tmpVec[i]);
       }
     }
   } else if (key == "Vib-Modes" && list.size() > 2) {
-    std::vector<double> tmp =
-      readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
+    tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     m_vibDisplacements.clear();
-    if (tmp.size() == m_numAtoms * 3 * m_normalModes) {
+    if (tmpVec.size() == m_numAtoms * 3 * m_normalModes) {
       for (unsigned int i = 0; i < m_normalModes; ++i) {
         Core::Array<Vector3> mode;
         for (unsigned int j = 0; j < m_numAtoms; ++j) {
-          Vector3 v(tmp[i * m_numAtoms * 3 + j * 3],
-                    tmp[i * m_numAtoms * 3 + j * 3 + 1],
-                    tmp[i * m_numAtoms * 3 + j * 3 + 2]);
+          Vector3 v(tmpVec[i * m_numAtoms * 3 + j * 3],
+                    tmpVec[i * m_numAtoms * 3 + j * 3 + 1],
+                    tmpVec[i * m_numAtoms * 3 + j * 3 + 2]);
           mode.push_back(v);
         }
         m_vibDisplacements.push_back(mode);
       }
     }
-    cout << "Read " << m_vibDisplacements.size() << " vibrational modes\n";
   }
 }
 
