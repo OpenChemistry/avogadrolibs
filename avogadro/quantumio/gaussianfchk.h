@@ -7,6 +7,8 @@
 #define AVOGADRO_QUANTUMIO_GAUSSIANFCHK_H
 
 #include "avogadroquantumioexport.h"
+
+#include <avogadro/core/array.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/io/fileformat.h>
 
@@ -67,6 +69,8 @@ private:
   int m_electrons;
   int m_electronsAlpha;
   int m_electronsBeta;
+  int m_normalModes;
+  int m_numAtoms;
   unsigned char m_spin;
   signed char m_charge;
   unsigned int m_numBasisFunctions;
@@ -87,8 +91,14 @@ private:
   MatrixX m_density;     /// Total density matrix
   MatrixX m_spinDensity; /// Spin density matrix
   Core::ScfType m_scftype;
+
+  Core::Array<double> m_frequencies;
+  Core::Array<double> m_IRintensities;
+  Core::Array<double> m_RamanIntensities;
+  Core::Array<Core::Array<Vector3>> m_vibDisplacements;
 };
-}
-}
+
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif
