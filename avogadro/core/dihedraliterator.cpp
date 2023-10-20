@@ -82,7 +82,7 @@ Dihedral DihedralIterator::operator++()
     if (valid) {
       // we have a valid current dihedral, try to find a new "d"
       for (const auto maybeD : graph.neighbors(c)) {
-        if (maybeD != a && maybeD != b && (!valid || maybeD > d)) {
+        if (maybeD != a && maybeD != b && maybeD > d) {
           m_current = make_tuple(a, b, c, maybeD);
           return m_current;
         }
