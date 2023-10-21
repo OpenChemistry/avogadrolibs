@@ -16,7 +16,7 @@ using Core::Molecule;
 namespace Calc {
 
 #ifndef M_PI
-constexpr double  M_PI = 3.14159265358979323846;
+constexpr double M_PI = 3.14159265358979323846;
 #endif
 
 ChargeModel::ChargeModel() : m_dielectric(1.0) {}
