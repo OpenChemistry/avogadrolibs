@@ -59,7 +59,7 @@ class Cjson:
         '''
         data = self.__from_cjson(filePath)
         data["atoms"]["coords"]["3d"] = coords_array
-        return data
+        return self.__to_cjson(data)
     def set_elements(self, filePath, elements_array):
         '''
         It sets all the elements present in the cjson file
@@ -67,7 +67,7 @@ class Cjson:
         '''
         data = self.__from_cjson(filePath)
         data["atoms"]["elements"]["number"] = elements_array
-        return data
+        return self.__to_cjson(data)
     def set_coordinates(self, filePath, coords_array):
         '''
         It helps to set all coordinates of the
@@ -76,4 +76,4 @@ class Cjson:
         '''
         data = self.__from_cjson(filePath)
         data["atoms"]["coords"]["3d"] = coords_array
-        return data
+        return self.__to_cjson(data)
