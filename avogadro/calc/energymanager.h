@@ -86,7 +86,7 @@ public:
    * @return Instance of the model, nullptr if not found. Ownership passes to
    * the caller.
    */
-  EnergyCalculator* newModelFromIdentifier(const std::string& identifier) const;
+  EnergyCalculator* model(const std::string& identifier) const;
 
   /**
    * Get a list of all loaded identifiers

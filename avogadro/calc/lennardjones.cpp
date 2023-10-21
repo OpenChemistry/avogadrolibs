@@ -30,6 +30,8 @@ void LennardJones::setMolecule(Core::Molecule* mol)
     return; // nothing to do
   }
 
+  m_mask = mol->frozenAtomMask();
+
   m_cell = mol->unitCell(); // could be nullptr
   int numAtoms = mol->atomCount();
 

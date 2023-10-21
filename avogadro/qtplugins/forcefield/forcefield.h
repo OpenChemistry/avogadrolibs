@@ -57,6 +57,8 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  std::string recommendedForceField() const;
+
 public slots:
   /**
    * Scan for new scripts in the Forcefield directories.
@@ -69,8 +71,10 @@ private slots:
   void energy();
   void optimize();
   void freezeSelected();
+  void unfreezeSelected();
 
 private:
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
 

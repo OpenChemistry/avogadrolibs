@@ -54,6 +54,15 @@ bool EnergyManager::addModel(EnergyCalculator* model)
   return true;
 }
 
+EnergyCalculator* EnergyManager::model(const std::string& identifier) const
+{
+  auto it = m_identifiers.find(identifier);
+  if (it == m_identifiers.end()) {
+    return nullptr;
+  }
+  return m_models[it->second]->newInstance();
+}
+
 bool EnergyManager::removeModel(const std::string& identifier)
 {
   auto ids = m_identifiers[identifier];

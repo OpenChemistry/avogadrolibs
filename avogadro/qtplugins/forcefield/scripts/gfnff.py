@@ -40,6 +40,9 @@ def run(filename):
     with open(filename, "r") as f:
         mol_cjson = json.load(f)
 
+    with open("/Users/ghutchis/gfnff.log", "a") as f:
+        f.write(filename + "\n")
+
     # first setup the calculator
     atoms = np.array(mol_cjson["atoms"]["elements"]["number"])
     coord_list = mol_cjson["atoms"]["coords"]["3d"]
@@ -66,6 +69,9 @@ def run(filename):
     while True:
         # first print the energy of these coordinates
         print(res.get_energy())  # in Hartree
+
+        with open("/Users/ghutchis/gfnff.log", "a") as f:
+            f.write(str(res.get_energy()) + "\n")
 
         # now print the gradient
         # .. we don't want the "[]" in the output

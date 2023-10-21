@@ -5,6 +5,8 @@
 
 #include "energycalculator.h"
 
+#include <iostream>
+
 namespace Avogadro::Calc {
 
 void EnergyCalculator::gradient(const TVector& x, TVector& grad)

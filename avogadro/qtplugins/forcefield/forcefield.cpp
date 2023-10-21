@@ -45,6 +45,8 @@ const int energyAction = 0;
 const int optimizeAction = 1;
 const int configureAction = 2;
 const int freezeAction = 3;
+const int unfreezeAction = 4;
+const int constraintAction = 5;
 
 Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
 {
@@ -68,9 +70,16 @@ Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
 
   action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Freeze Atoms"));
+  action->setText(tr("Freeze Selected Atoms"));
   action->setData(freezeAction);
   connect(action, SIGNAL(triggered()), SLOT(freezeSelected()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Unfreeze Selected Atoms"));
+  action->setData(unfreezeAction);
+  connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
   m_actions.push_back(action);
 }
 
@@ -99,8 +108,6 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
     return;
 
   m_molecule = mol;
-
-  // @todo set the available method list
 }
 
 void Forcefield::optimize()
@@ -115,15 +122,18 @@ void Forcefield::optimize()
   cppoptlib::LbfgsSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
+  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
-  // just to get the right size / shape
-  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
   double* p = pos[0].data();
   Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
   Eigen::VectorXd positions = map;
-  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
 
-  // Create a Criteria class to adjust stopping criteria
+  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
+  // just to get the right size / shape
+  // we'll use this to draw the force arrows later
+  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
+
+  // Create a Criteria class so we can update coords every N steps
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every 5 steps, update coordinates
@@ -134,20 +144,27 @@ void Forcefield::optimize()
   solver.setStopCriteria(crit);
 
   // set the method
-  //@todo check m_method for a particular calculator
-  Calc::LennardJones lj;
-  lj.setMolecule(m_molecule);
+  std::string recommended = recommendedForceField();
+  qDebug() << "Energy method: " << recommended.c_str();
 
-  double energy = lj.value(positions);
+  if (m_method == nullptr) {
+    // we have to create the calculator
+    m_method = Calc::EnergyManager::instance().model(recommended);
+  }
+  m_method->setMolecule(m_molecule);
+  m_method->setMask(m_molecule->frozenAtomMask());
+
+  Real energy = m_method->value(positions);
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
-    solver.minimize(lj, positions);
+    solver.minimize(*m_method, positions);
 
-    double currentEnergy = lj.value(positions);
-    lj.gradient(positions, gradient);
+    Real currentEnergy = m_method->value(positions);
+    // get the current gradient for force visualization
+    m_method->gradient(positions, gradient);
 
     // update coordinates
     const double* d = positions.data();
-    // casting would be lovely...
+    // casting back would be lovely...
     for (size_t i = 0; i < n; ++i) {
       pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
       d += 3;
@@ -179,17 +196,59 @@ void Forcefield::energy()
     return;
 
   //@todo check m_method for a particular calculator
-  Calc::LennardJones lj;
-  lj.setMolecule(m_molecule);
+  std::string recommended = recommendedForceField();
+  qDebug() << "Energy method: " << recommended.c_str();
+
+  if (m_method == nullptr) {
+    // we have to create the calculator
+    m_method = Calc::EnergyManager::instance().model(recommended);
+  }
+  m_method->setMolecule(m_molecule);
 
   int n = m_molecule->atomCount();
+  // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   double* p = pos[0].data();
   Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
   Eigen::VectorXd positions = map;
 
-  QString msg(tr("Energy = %L1 kJ/mol").arg(lj.value(positions)));
+  // now get the energy
+  Real energy = m_method->value(positions);
+
+  QString msg(tr("Energy = %L1").arg(energy));
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
+}
+
+std::string Forcefield::recommendedForceField() const
+{
+  // if we have a unit cell, we need to use the LJ calculator
+  // (implementing something better would be nice)
+  if (m_molecule == nullptr || m_molecule->unitCell() != nullptr)
+    return "LJ";
+
+  // otherwise, let's see what identifers are returned
+  auto list =
+    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
+  if (list.empty())
+    return "LJ"; // this will always work
+
+  // iterate to see what we have
+  std::string bestOption;
+  for (auto options : list) {
+    // ideally, we'd use GFN-FF but it needs tweaking
+    // everything else is a ranking
+    // GAFF is better than MMFF94 which is better than UFF
+    if (options == "UFF" && bestOption != "GAFF" || bestOption != "MMFF94")
+      bestOption = options;
+    if (options == "MMFF94" && bestOption != "GAFF")
+      bestOption = options;
+    if (options == "GAFF")
+      bestOption = options;
+  }
+  if (!bestOption.empty())
+    return bestOption;
+  else
+    return "LJ"; // this will always work
 }
 
 void Forcefield::freezeSelected()
@@ -201,7 +260,21 @@ void Forcefield::freezeSelected()
   // now freeze the specified atoms
   for (Index i = 0; i < numAtoms; ++i) {
     if (m_molecule->atomSelected(i)) {
-      // m_molecule->setAtomFrozen(i, true);
+      m_molecule->setFrozenAtom(i, true);
+    }
+  }
+}
+
+void Forcefield::unfreezeSelected()
+{
+  if (!m_molecule)
+    return;
+
+  int numAtoms = m_molecule->atomCount();
+  // now freeze the specified atoms
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i)) {
+      m_molecule->setFrozenAtom(i, false);
     }
   }
 }
@@ -241,6 +314,9 @@ void Forcefield::registerScripts()
          it = m_scripts.constBegin(),
          itEnd = m_scripts.constEnd();
        it != itEnd; ++it) {
+
+    qDebug() << " register " << (*it)->identifier().c_str();
+
     if (!Calc::EnergyManager::registerModel((*it)->newInstance())) {
       qDebug() << "Could not register model" << (*it)->identifier().c_str()
                << "due to name conflict.";

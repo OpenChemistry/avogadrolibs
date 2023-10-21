@@ -227,6 +227,8 @@ QByteArray PythonScript::asyncWriteAndResponse(QByteArray input, const int expec
     return QByteArray(); // wait
   }
 
+  qDebug() << " writing to process: " << input << " " << expectedLines;
+
   m_process->write(input);
   QByteArray buffer;
 
@@ -243,8 +245,12 @@ QByteArray PythonScript::asyncWriteAndResponse(QByteArray input, const int expec
         buffer += m_process->readLine();
         remainingLines--;
       }
+      // clear the rest of the buffer
+      qDebug() << " remaining " << m_process->readAll();
     }
   }
+
+  qDebug() << " read from process: " << buffer;
 
   return buffer;
 }

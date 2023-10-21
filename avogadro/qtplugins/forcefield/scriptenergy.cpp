@@ -27,7 +27,7 @@
 namespace Avogadro::QtPlugins {
 
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
-  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
+  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(true),
     m_inputFormat(NotUsed), m_gradients(false), m_ions(false),
     m_radicals(false), m_unitCells(false)
 {
@@ -101,6 +101,8 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   options << "-f" << m_tempFile.fileName();
 
   // start the interpreter
+  //@ todo - check if there was a previous process running
+  // .. if so, kill it
   m_interpreter->asyncExecute(options);
 }
 
@@ -123,6 +125,7 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
 
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
+  //@ todo read the gradient if available from the process
   EnergyCalculator::gradient(x, grad);
 }
 
@@ -290,6 +293,8 @@ void ScriptEnergy::readMetaData()
   // get the element mask
   // (if it doesn't exist, the default is no elements anyway)
   m_valid = parseElements(metaData);
+
+  qDebug() << " finished parsing metadata ";
 }
 
 bool ScriptEnergy::parseString(const QJsonObject& ob, const QString& key,

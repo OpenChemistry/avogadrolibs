@@ -81,16 +81,6 @@ public:
   bool removeModel(const std::string& identifier);
 
   /**
-   * New instance of the model for the specified @p identifier. Ownership
-   * is passed to the caller.
-   * @param identifier The unique identifier of the format.
-   * @return Instance of the format, nullptr if not found. Ownership passes to
-   * the
-   * caller.
-   */
-  ChargeModel* newModelFromIdentifier(const std::string& identifier) const;
-
-  /**
    * Get a list of all loaded identifiers
    */
   std::set<std::string> identifiers() const;
