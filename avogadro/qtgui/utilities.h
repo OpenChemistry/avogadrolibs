@@ -6,9 +6,10 @@
 #ifndef AVOGADRO_QTGUI_UTILITIES_H
 #define AVOGADRO_QTGUI_UTILITIES_H
 
-#include "avogadroqtguiexport.h"
-
+#include <qstring.h>
 #include <QtCore/QString>
+
+#include "avogadroqtguiexport.h"
 
 namespace Avogadro {
 namespace QtGui {

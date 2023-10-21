@@ -33,6 +33,7 @@
 #ifndef H_GWAVI
 #define H_GWAVI
 
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C"
 {

@@ -6,7 +6,14 @@
 #ifndef AVOGADRO_QTPLUGINS_OBFORCEFIELDDIALOG_H
 #define AVOGADRO_QTPLUGINS_OBFORCEFIELDDIALOG_H
 
+#include <qdialog.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
 #include <QDialog>
+
+class QObject;
+class QWidget;
 
 namespace Avogadro {
 namespace QtPlugins {

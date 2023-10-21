@@ -7,8 +7,18 @@
 #define AVOGADRO_QTPLUGINS_MOLECULARPROPERTIES_H
 
 #include <avogadro/qtgui/extensionplugin.h>
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
+
+class QAction;
+class QObject;
 
 namespace Avogadro {
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
 
 namespace Core {
 class Molecule;

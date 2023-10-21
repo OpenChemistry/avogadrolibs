@@ -5,6 +5,15 @@
 
 #include "molequeuemanager.h"
 
+#include <qglobal.h>
+#include <qjsonarray.h>
+#include <qjsonvalue.h>
+#include <qlist.h>
+#include <qstringlist.h>
+
+#include "avogadro/molequeue/client/client.h"
+#include "avogadro/molequeue/molequeuequeuelistmodel.h"
+
 namespace Avogadro::MoleQueue {
 
 MoleQueueManager* MoleQueueManager::m_instance = nullptr;

@@ -5,11 +5,15 @@
 
 #include "graph.h"
 
+#include <ext/alloc_traits.h>
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <set>
 #include <stack>
+#include <memory>
+
+#include "avogadro/core/array.h"
 
 namespace Avogadro::Core {
 

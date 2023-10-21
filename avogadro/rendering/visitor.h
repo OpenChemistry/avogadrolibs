@@ -6,8 +6,9 @@
 #ifndef AVOGADRO_RENDERING_VISITOR_H
 #define AVOGADRO_RENDERING_VISITOR_H
 
-#include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
+
+#include "avogadrorenderingexport.h"
 
 namespace Avogadro {
 namespace Rendering {

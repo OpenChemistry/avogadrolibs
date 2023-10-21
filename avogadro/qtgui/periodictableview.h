@@ -6,9 +6,18 @@
 #ifndef AVOGADRO_QTGUI_PERIODICTABLEVIEW_H
 #define AVOGADRO_QTGUI_PERIODICTABLEVIEW_H
 
+#include <qgraphicsview.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <QtWidgets/QGraphicsView>
+
 #include "avogadroqtguiexport.h"
 
-#include <QtWidgets/QGraphicsView>
+class QKeyEvent;
+class QMouseEvent;
+class QObject;
+class QResizeEvent;
+class QWidget;
 
 namespace Avogadro {
 namespace QtGui {

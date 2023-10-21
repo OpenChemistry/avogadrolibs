@@ -5,6 +5,10 @@
 
 #include "sceneplugin.h"
 
+#include "avogadro/qtgui/pluginlayermanager.h"
+
+class QWidget;
+
 namespace Avogadro::QtGui {
 
 ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_) {}

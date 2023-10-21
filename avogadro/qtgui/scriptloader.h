@@ -15,11 +15,15 @@
 #ifndef AVOGADRO_QTGUI_SCRIPTLOADER_H
 #define AVOGADRO_QTGUI_SCRIPTLOADER_H
 
-#include "avogadroqtguiexport.h"
-
+#include <qmap.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+
+#include "avogadroqtguiexport.h"
 
 namespace Avogadro {
 namespace QtGui {

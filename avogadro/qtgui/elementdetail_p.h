@@ -6,7 +6,14 @@
 #ifndef AVOGADRO_QTGUI_ELEMENTDETAIL_P_H
 #define AVOGADRO_QTGUI_ELEMENTDETAIL_P_H
 
+#include <qgraphicsitem.h>
+#include <qpainterpath.h>
+#include <qrect.h>
 #include <QtWidgets/QGraphicsItem>
+
+class QPainter;
+class QStyleOptionGraphicsItem;
+class QWidget;
 
 namespace Avogadro {
 namespace QtGui {

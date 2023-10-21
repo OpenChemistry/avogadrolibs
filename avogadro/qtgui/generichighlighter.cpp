@@ -5,7 +5,12 @@
 
 #include "generichighlighter.h"
 
+#include <qglobal.h>
+#include <qstringlist.h>
 #include <cassert>
+
+class QObject;
+class QTextDocument;
 
 namespace Avogadro::QtGui {
 

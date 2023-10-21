@@ -6,12 +6,21 @@
 #ifndef AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 #define AVOGADRO_QTPLUGINS_SURFACEDIALOG_H
 
+#include <qdialog.h>
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
 #include <QtCore/QStringList>
 #include <QtWidgets/QDialog>
-
 #include <set>
+#include <string>
+#include <utility>
 
 #include "surfaces.h"
+
+class QObject;
+class QWidget;
 // for the enum
 
 namespace Ui {

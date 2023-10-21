@@ -4,17 +4,18 @@
 ******************************************************************************/
 
 #include "editortoolwidget.h"
-#include "ui_editortoolwidget.h"
-
-#include <avogadro/core/elements.h>
 
 #include <avogadro/qtgui/elementtranslator.h>
 #include <avogadro/qtgui/periodictableview.h>
-
-#include <QtCore/QList>
-#include <QtCore/QSettings>
-
+#include <qcheckbox.h>
+#include <qcombobox.h>
+#include <qglobal.h>
+#include <qmetatype.h>
+#include <qsettings.h>
+#include <qvariant.h>
 #include <algorithm>
+
+#include "ui_editortoolwidget.h"
 
 namespace {
 // The ItemData of the "Other" entry in the combo box

@@ -6,7 +6,14 @@
 #ifndef AVOGADRO_QTPLUGINS_INSERTFRAGMENTDIALOG_H
 #define AVOGADRO_QTPLUGINS_INSERTFRAGMENTDIALOG_H
 
+#include <qdialog.h>
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtWidgets/QDialog>
+
+class QObject;
+class QWidget;
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -44,6 +51,7 @@ private:
   Ui::InsertFragmentDialog* m_ui;
 
   class Private;
+
   Private *m_implementation;
 };
 

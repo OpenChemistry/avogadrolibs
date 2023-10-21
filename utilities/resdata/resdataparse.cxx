@@ -15,12 +15,14 @@
 ******************************************************************************/
 
 #include <avogadro/core/utilities.h>
-
+#include <ext/alloc_traits.h>
 #include <algorithm>
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
+#include <memory>
+#include <utility>
 
 using std::cout;
 using std::endl;

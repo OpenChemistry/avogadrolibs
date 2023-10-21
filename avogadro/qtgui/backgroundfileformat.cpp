@@ -6,6 +6,8 @@
 #include "backgroundfileformat.h"
 
 #include <avogadro/io/fileformat.h>
+#include <qbytearray.h>
+#include <memory>
 
 namespace Avogadro::QtGui {
 

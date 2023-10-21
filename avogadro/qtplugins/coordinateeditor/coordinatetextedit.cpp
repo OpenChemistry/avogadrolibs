@@ -5,12 +5,17 @@
 
 #include "coordinatetextedit.h"
 
-#include <QtGui/QHelpEvent>
-#include <QtGui/QTextCursor>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QToolTip>
+#include <qapplication.h>
+#include <qbrush.h>
+#include <qcoreevent.h>
+#include <qevent.h>
+#include <qnamespace.h>
+#include <qpalette.h>
+#include <qtextcursor.h>
+#include <qtextdocument.h>
+#include <qtooltip.h>
 
-#include <QtCore/QListIterator>
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

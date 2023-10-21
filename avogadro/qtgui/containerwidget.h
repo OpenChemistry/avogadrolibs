@@ -6,11 +6,16 @@
 #ifndef AVOGADRO_QTGUI_CONTAINERWIDGET_H
 #define AVOGADRO_QTGUI_CONTAINERWIDGET_H
 
-#include "avogadroqtguiexport.h"
-
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qwidget.h>
 #include <QtWidgets/QWidget>
 
+#include "avogadroqtguiexport.h"
+
 class QLabel;
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

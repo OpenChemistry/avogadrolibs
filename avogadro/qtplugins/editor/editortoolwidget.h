@@ -6,7 +6,13 @@
 #ifndef AVOGADRO_QTPLUGINS_EDITORTOOLWIDGET_H
 #define AVOGADRO_QTPLUGINS_EDITORTOOLWIDGET_H
 
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qwidget.h>
 #include <QtWidgets/QWidget>
+
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

@@ -4,8 +4,8 @@
  * if supplied the final one would be the variable name.
  */
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {

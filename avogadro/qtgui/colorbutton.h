@@ -9,10 +9,19 @@
 #ifndef AVOGADRO_QTGUI_COLORBUTTON_H
 #define AVOGADRO_QTGUI_COLORBUTTON_H
 
-#include "avogadroqtguiexport.h"
-
+#include <qabstractbutton.h>
+#include <qcolor.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QAbstractButton>
 #include <QColor>
+
+#include "avogadroqtguiexport.h"
+
+class QEvent;
+class QObject;
+class QPaintEvent;
+class QWidget;
 
 namespace Avogadro {
 namespace QtGui {

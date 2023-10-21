@@ -15,24 +15,31 @@
 ******************************************************************************/
 
 #include "insertfragmentdialog.h"
-#include "ui_insertfragmentdialog.h"
-
-#include "sortfiltertreeproxymodel.h"
 
 #include <avogadro/qtgui/utilities.h>
+#include <QtCore/qglobal.h>
+#include <qabstractitemmodel.h>
+#include <qabstractitemview.h>
+#include <qcoreapplication.h>
+#include <qdebug.h>
+#include <qdir.h>
+#include <qfileinfo.h>
+#include <qfilesystemmodel.h>
+#include <qglobal.h>
+#include <qitemselectionmodel.h>
+#include <qlineedit.h>
+#include <qlist.h>
+#include <qpushbutton.h>
+#include <qregexp.h>
+#include <qstandardpaths.h>
+#include <qstringlist.h>
+#include <qtreeview.h>
+#include <qvariant.h>
 
-#include <QtCore/QSettings>
+#include "ui_insertfragmentdialog.h"
+#include "sortfiltertreeproxymodel.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QSortFilterProxyModel>
-#include <QtCore/QStandardPaths>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFileSystemModel>
-#include <QtWidgets/QMessageBox>
-
-#include <QCloseEvent>
-
-#include <QtCore/QDebug>
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

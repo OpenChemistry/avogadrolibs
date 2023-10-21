@@ -1,9 +1,28 @@
 #include "pqrrequest.h"
-#include "pqrwidget.h"
 
 #include <avogadro/core/elements.h>
-
 #include <nlohmann/json.hpp>
+#include <qbytearray.h>
+#include <qlabel.h>
+#include <qlineedit.h>
+#include <qnamespace.h>
+#include <qnetworkaccessmanager.h>
+#include <qnetworkreply.h>
+#include <qnetworkrequest.h>
+#include <qtablewidget.h>
+#include <qurl.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <nlohmann/detail/iterators/iter_impl.hpp>
+#include <nlohmann/json_fwd.hpp>
+#include <algorithm>
+#include <cctype>
+#include <initializer_list>
+#include <map>
+#include <memory>
+#include <string>
+
+#include "pqrwidget.h"
 
 using json = nlohmann::json;
 

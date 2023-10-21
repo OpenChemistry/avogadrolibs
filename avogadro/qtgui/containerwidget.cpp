@@ -5,10 +5,11 @@
 
 #include "containerwidget.h"
 
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QVBoxLayout>
+#include <qboxlayout.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
+#include <qstringliteral.h>
 
 namespace Avogadro::QtGui {
 

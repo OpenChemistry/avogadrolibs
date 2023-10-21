@@ -5,18 +5,26 @@
 
 #include "scriptfileformats.h"
 
-#include "fileformatscript.h"
-
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/scriptloader.h>
-#include <avogadro/qtgui/utilities.h>
+#include <QtCore/qglobal.h>
+#include <qalgorithms.h>
+#include <qdebug.h>
+#include <qglobal.h>
+#include <qmap.h>
+#include <string>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QStandardPaths>
-#include <QtCore/QTimer>
+#include "fileformatscript.h"
+#include "avogadro/io/fileformat.h"
+#include "avogadro/qtgui/extensionplugin.h"
+
+class QAction;
+class QObject;
+namespace Avogadro {
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
+}  // namespace Avogadro
 
 namespace Avogadro::QtPlugins {
 

@@ -7,10 +7,20 @@
 #define AVOGADRO_QTPLUGINS_COORDINATEEDITOR_H
 
 #include <avogadro/qtgui/extensionplugin.h>
-
 #include <avogadro/core/avogadrocore.h>
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
+
+class QAction;
+class QObject;
 
 namespace Avogadro {
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
+
 namespace QtPlugins {
 class CoordinateEditorDialog;
 

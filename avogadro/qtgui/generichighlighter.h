@@ -6,14 +6,21 @@
 #ifndef AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H
 #define AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H
 
-#include "avogadroqtguiexport.h"
-
 #include <avogadro/core/avogadrocore.h>
-
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qregexp.h>
+#include <qstring.h>
+#include <qsyntaxhighlighter.h>
+#include <qtextformat.h>
 #include <QtGui/QSyntaxHighlighter>
 #include <QtGui/QTextCharFormat>
-
 #include <QRegExp>
+#include <utility>
+
+#include "avogadroqtguiexport.h"
+
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

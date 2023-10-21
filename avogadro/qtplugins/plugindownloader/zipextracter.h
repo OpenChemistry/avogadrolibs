@@ -3,10 +3,14 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "archive.h"
-#include "archive_entry.h"
+#include <qlist.h>
 #include <QtCore/QList>
 #include <string>
+
+#include "archive.h"
+#include "archive_entry.h"
+
+class QString;
 
 namespace Avogadro {
 

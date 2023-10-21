@@ -6,7 +6,13 @@
 #ifndef AVOGADRO_QTGUI_PERIODICTABLESCENE_P_H
 #define AVOGADRO_QTGUI_PERIODICTABLESCENE_P_H
 
+#include <qgraphicsscene.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtWidgets/QGraphicsScene>
+
+class QGraphicsSceneMouseEvent;
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

@@ -4,14 +4,21 @@
 ******************************************************************************/
 
 #include "obforcefielddialog.h"
+
+#include <QtCore/qglobal.h>
+#include <qcheckbox.h>
+#include <qcombobox.h>
+#include <qdebug.h>
+#include <qgroupbox.h>
+#include <qlist.h>
+#include <qsettings.h>
+#include <qspinbox.h>
+#include <qvariant.h>
+#include <cmath> // for log10
+
 #include "ui_obforcefielddialog.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QSettings>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-
-#include <cmath> // for log10
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

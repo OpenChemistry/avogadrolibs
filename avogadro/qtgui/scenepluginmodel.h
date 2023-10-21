@@ -6,9 +6,17 @@
 #ifndef AVOGADRO_QTGUI_SCENEPLUGINMODEL_H
 #define AVOGADRO_QTGUI_SCENEPLUGINMODEL_H
 
+#include <qabstractitemmodel.h>
+#include <qlist.h>
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qvariant.h>
+#include <QtCore/QAbstractItemModel>
+
 #include "avogadroqtguiexport.h"
 
-#include <QtCore/QAbstractItemModel>
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

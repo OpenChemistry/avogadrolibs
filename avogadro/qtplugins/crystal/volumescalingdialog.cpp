@@ -4,7 +4,14 @@
 ******************************************************************************/
 
 #include "volumescalingdialog.h"
+
+#include <qcheckbox.h>
+#include <qlabel.h>
+#include <qspinbox.h>
+
 #include "ui_volumescalingdialog.h"
+
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

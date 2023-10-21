@@ -4,11 +4,18 @@
 ******************************************************************************/
 
 #include "batchjob.h"
-#include "molequeuemanager.h"
 
-#include <QtCore/QDebug>
-
+#include <QtCore/qglobal.h>
+#include <qdebug.h>
+#include <qglobal.h>
+#include <qmetatype.h>
+#include <qstringlist.h>
 #include <limits>
+
+#include "molequeuemanager.h"
+#include "avogadro/molequeue/client/client.h"
+#include "avogadro/molequeue/client/jobobject.h"
+#include "avogadro/molequeue/inputgenerator.h"
 
 namespace Avogadro::MoleQueue {
 

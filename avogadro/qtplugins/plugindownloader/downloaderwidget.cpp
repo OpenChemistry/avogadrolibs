@@ -4,23 +4,39 @@
 ******************************************************************************/
 
 #include "downloaderwidget.h"
+
+#include <qabstractitemview.h>
+#include <qdatetime.h>
+#include <qdir.h>
+#include <qfile.h>
+#include <qglobal.h>
+#include <qheaderview.h>
+#include <qiodevice.h>
+#include <qlocale.h>
+#include <qnamespace.h>
+#include <qnetworkaccessmanager.h>
+#include <qnetworkreply.h>
+#include <qnetworkrequest.h>
+#include <qpushbutton.h>
+#include <qstandardpaths.h>
+#include <qstringlist.h>
+#include <qtablewidget.h>
+#include <qtextbrowser.h>
+#include <qurl.h>
+#include <qvariant.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <nlohmann/detail/iterators/iter_impl.hpp>
+#include <algorithm>
+#include <initializer_list>
+#include <map>
+#include <memory>
+#include <string>
+
 #include "ui_downloaderwidget.h"
 #include "zipextracter.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QRegularExpression>
-#include <QtCore/QStandardPaths>
-
-#include <QtWidgets/QGraphicsRectItem>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QTableWidgetItem>
-
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
+class QWidget;
 
 using json = nlohmann::json;
 

@@ -4,9 +4,15 @@
 ******************************************************************************/
 
 #include "lineformatinputdialog.h"
+
+#include <qcombobox.h>
+#include <qlineedit.h>
+#include <qsettings.h>
+#include <qvariant.h>
+
 #include "ui_lineformatinputdialog.h"
 
-#include <QtCore/QSettings>
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

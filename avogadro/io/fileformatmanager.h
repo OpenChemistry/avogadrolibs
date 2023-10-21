@@ -6,13 +6,15 @@
 #ifndef AVOGADRO_IO_FILEFORMATMANAGER_H
 #define AVOGADRO_IO_FILEFORMATMANAGER_H
 
-#include "avogadroioexport.h"
-
-#include "fileformat.h" // For FileFormat::Operation enum.
-
+#include <ctype.h>
+#include <stddef.h>
 #include <map>
 #include <string>
 #include <vector>
+#include <algorithm>
+
+#include "avogadroioexport.h"
+#include "fileformat.h" // For FileFormat::Operation enum.
 
 namespace Avogadro {
 namespace Core {

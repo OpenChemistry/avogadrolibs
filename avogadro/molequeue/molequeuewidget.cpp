@@ -4,15 +4,26 @@
 ******************************************************************************/
 
 #include "molequeuewidget.h"
-#include "ui_molequeuewidget.h"
 
-#include "molequeuemanager.h"
-
-#include <QtWidgets/QMessageBox>
-
-#include <QtCore/QTimer>
-
+#include <qabstractitemmodel.h>
+#include <qcheckbox.h>
+#include <qglobal.h>
+#include <qitemselectionmodel.h>
+#include <qlabel.h>
+#include <qlist.h>
+#include <qmessagebox.h>
+#include <qspinbox.h>
+#include <qtimer.h>
+#include <qtoolbutton.h>
+#include <qtreeview.h>
+#include <qvariant.h>
 #include <limits>
+
+#include "ui_molequeuewidget.h"
+#include "molequeuemanager.h"
+#include "avogadro/molequeue/client/client.h"
+#include "avogadro/molequeue/client/jobobject.h"
+#include "avogadro/molequeue/molequeuequeuelistmodel.h"
 
 namespace Avogadro::MoleQueue {
 

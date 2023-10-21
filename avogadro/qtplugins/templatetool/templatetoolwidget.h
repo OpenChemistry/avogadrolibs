@@ -6,7 +6,16 @@
 #ifndef AVOGADRO_QTPLUGINS_TEMPLATETOOLWIDGET_H
 #define AVOGADRO_QTPLUGINS_TEMPLATETOOLWIDGET_H
 
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
+#include <qwidget.h>
+#include <stddef.h>
 #include <QtWidgets/QWidget>
+#include <vector>
+
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

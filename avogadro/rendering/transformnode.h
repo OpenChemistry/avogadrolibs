@@ -7,6 +7,7 @@
 #define AVOGADRO_RENDERING_TRANSFORMNODE_H
 
 #include "groupnode.h"
+#include "avogadrorenderingexport.h"
 
 namespace Avogadro {
 namespace Rendering {

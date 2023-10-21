@@ -14,16 +14,25 @@
 
 #include "scriptloader.h"
 
+#include <QtCore/qglobal.h>
+#include <qbytearray.h>
+#include <qcoreapplication.h>
+#include <qdatetime.h>
+#include <qdebug.h>
+#include <qdir.h>
+#include <qfile.h>
+#include <qfileinfo.h>
+#include <qglobal.h>
+#include <qiodevice.h>
+#include <qjsonarray.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
+#include <qjsonvalue.h>
+#include <qstandardpaths.h>
+#include <qstringlist.h>
+
 #include "interfacescript.h"
 #include "utilities.h"
-
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QStandardPaths>
 
 namespace Avogadro::QtGui {
 

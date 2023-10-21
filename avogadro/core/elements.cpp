@@ -5,13 +5,15 @@
 
 #include "elements.h"
 
-#include "avogadrocore.h"
-#include "elementdata.h"
-#include "utilities.h"
-
+#include <ext/alloc_traits.h>
 #include <algorithm>
 #include <cctype>
 #include <vector>
+#include <memory>
+
+#include "avogadrocore.h"
+#include "elementdata.h"
+#include "utilities.h"
 
 using Avogadro::Core::isCustomElement;
 

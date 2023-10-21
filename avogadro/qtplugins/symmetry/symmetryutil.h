@@ -17,6 +17,7 @@
 #ifndef AVOGADRO_QTPLUGINS_SYMMETRYUTIL_H
 #define AVOGADRO_QTPLUGINS_SYMMETRYUTIL_H
 
+#include <qstring.h>
 #include <QtCore/QObject>
 
 namespace msym {

@@ -6,10 +6,19 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H
 
-#include "avogadromolequeueexport.h"
+#include <avogadro/core/avogadrocore.h>
+#include <QtCore/qglobal.h>
+#include <qdialog.h>
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qpair.h>
+#include <qstring.h>
 #include <QtWidgets/QDialog>
 
-#include <avogadro/core/avogadrocore.h>
+#include "avogadromolequeueexport.h"
+
+class QObject;
+class QWidget;
 
 namespace Avogadro {
 namespace MoleQueue {

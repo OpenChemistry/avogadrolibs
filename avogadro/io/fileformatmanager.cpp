@@ -6,7 +6,6 @@
 #include "fileformatmanager.h"
 
 #include "fileformat.h"
-
 #include "cjsonformat.h"
 #include "cmlformat.h"
 #include "dcdformat.h"
@@ -25,6 +24,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <utility>
 
 using std::unique_ptr;
 

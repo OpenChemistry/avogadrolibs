@@ -6,10 +6,15 @@
 #ifndef AVOGADRO_MOLEQUEUE_JSONRPCCLIENT_H
 #define AVOGADRO_MOLEQUEUE_JSONRPCCLIENT_H
 
-#include "avogadromolequeueexport.h"
-
+#include <qbytearray.h>
+#include <qjsonobject.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
+
+#include "avogadromolequeueexport.h"
 
 class QLocalSocket;
 

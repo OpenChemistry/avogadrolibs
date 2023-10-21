@@ -4,15 +4,19 @@
 ******************************************************************************/
 
 #include "multiviewwidget.h"
+
+#include <qboxlayout.h>
+#include <qcoreevent.h>
+#include <qglobal.h>
+#include <qlayout.h>
+#include <qobject.h>
+#include <qpushbutton.h>
+#include <qsize.h>
+#include <qsplitter.h>
+#include <qvariant.h>
+
 #include "containerwidget.h"
 #include "viewfactory.h"
-
-#include <QtCore/QEvent>
-#include <QtCore/QVariant>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSplitter>
-#include <QtWidgets/QVBoxLayout>
 
 namespace Avogadro::QtGui {
 

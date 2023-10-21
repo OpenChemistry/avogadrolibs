@@ -4,9 +4,12 @@
 ******************************************************************************/
 
 #include "inputgeneratordialog.h"
-#include "ui_inputgeneratordialog.h"
 
+#include "ui_inputgeneratordialog.h"
 #include "inputgeneratorwidget.h"
+#include "avogadro/molequeue/inputgenerator.h"
+
+class QWidget;
 
 namespace Avogadro::MoleQueue {
 

@@ -17,13 +17,20 @@
 #ifndef GAMESSHIGHLIGHTER_H
 #define GAMESSHIGHLIGHTER_H
 
+#include <qobjectdefs.h>
+#include <qregexp.h>
+#include <qstring.h>
+#include <qstringlist.h>
+#include <qsyntaxhighlighter.h>
+#include <qtextformat.h>
+#include <qvector.h>
 #include <QSyntaxHighlighter>
-
 #include <QRegExp>
 #include <QStringList>
 #include <QTextCharFormat>
 
 class QTextDocument;
+class QObject;
 
 namespace Avogadro {
 namespace QtPlugins {

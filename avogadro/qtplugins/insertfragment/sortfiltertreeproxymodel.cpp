@@ -5,7 +5,7 @@
 
 #include "sortfiltertreeproxymodel.h"
 
-#include <QDebug>
+#include <qvariant.h>
 
 namespace Avogadro {
 

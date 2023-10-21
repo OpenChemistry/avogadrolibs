@@ -4,7 +4,11 @@
 ******************************************************************************/
 
 #include "groupnode.h"
+
+#include <iterator>
+
 #include "visitor.h"
+#include "avogadro/rendering/node.h"
 
 namespace Avogadro::Rendering {
 

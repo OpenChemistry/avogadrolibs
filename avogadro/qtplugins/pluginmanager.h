@@ -6,11 +6,17 @@
 #ifndef AVOGADRO_QTGUI_PLUGINMANAGER_H
 #define AVOGADRO_QTGUI_PLUGINMANAGER_H
 
-#include "avogadroqtpluginsexport.h"
-
+#include <qglobal.h>
+#include <qlist.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+
+#include "avogadroqtpluginsexport.h"
 
 namespace Avogadro {
 namespace QtPlugins {

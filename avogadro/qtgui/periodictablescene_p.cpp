@@ -4,15 +4,19 @@
 ******************************************************************************/
 
 #include "periodictablescene_p.h"
+
+#include <qglobal.h>
+#include <qgraphicsitem.h>
+#include <qgraphicssceneevent.h>
+#include <qlist.h>
+#include <qnamespace.h>
+#include <qtransform.h>
+#include <qvariant.h>
+
 #include "elementdetail_p.h"
 #include "elementitem_p.h"
-#include "elementtranslator.h"
 
-#include <QtGui/QFont>
-#include <QtGui/QFontMetrics>
-#include <QtGui/QPainter>
-#include <QtWidgets/QGraphicsSceneMouseEvent>
-#include <QtWidgets/QStyleOption>
+class QObject;
 
 namespace Avogadro::QtGui {
 

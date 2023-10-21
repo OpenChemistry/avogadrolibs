@@ -5,16 +5,22 @@
 
 #include "filebrowsewidget.h"
 
-#include <QtWidgets/QCompleter>
-#include <QtWidgets/QFileDialog>
-#include <QFileSystemModel>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-
-#include <QFileInfo>
-#include <QProcessEnvironment>
-#include <QRegExp>
+#include <QtCore/qglobal.h>
+#include <qboxlayout.h>
+#include <qcompleter.h>
+#include <qdialog.h>
+#include <qdir.h>
+#include <qfiledialog.h>
+#include <qfileinfo.h>
+#include <qfilesystemmodel.h>
+#include <qglobal.h>
+#include <qlineedit.h>
+#include <qnamespace.h>
+#include <qpalette.h>
+#include <qprocess.h>
+#include <qpushbutton.h>
+#include <qstringlist.h>
+#include <qstringliteral.h>
 
 namespace Avogadro::QtGui {
 

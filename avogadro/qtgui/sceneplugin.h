@@ -6,13 +6,18 @@
 #ifndef AVOGADRO_QTGUI_SCENEPLUGIN_H
 #define AVOGADRO_QTGUI_SCENEPLUGIN_H
 
-#include "avogadroqtguiexport.h"
-
-#include "pluginlayermanager.h"
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtplugins/pluginfactory.h>
-
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QObject>
+
+#include "avogadroqtguiexport.h"
+#include "pluginlayermanager.h"
+#include "avogadro/qtgui/sceneplugin.h"
+
+class QWidget;
 
 namespace Avogadro {
 

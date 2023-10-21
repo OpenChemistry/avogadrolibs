@@ -5,9 +5,11 @@
 
 #include "molequeuequeuelistmodel.h"
 
-#include <QtCore/QDebug>
-
+#include <QtCore/qglobal.h>
+#include <qdebug.h>
 #include <limits>
+
+class QObject;
 
 namespace Avogadro::MoleQueue {
 

@@ -16,10 +16,18 @@
 
 #include "3dmol.h"
 
-#include "3dmoldialog.h"
+#include <qaction.h>
+#include <qwidget.h>
 
-#include <QAction>
-#include <QStringList>
+#include "3dmoldialog.h"
+#include "avogadro/qtgui/extensionplugin.h"
+
+class QObject;
+namespace Avogadro {
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
+}  // namespace Avogadro
 
 namespace Avogadro::QtPlugins {
 

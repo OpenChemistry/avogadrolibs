@@ -8,8 +8,13 @@
 
 #include "colorbutton.h"
 
-#include <QColorDialog>
-#include <QPainter>
+#include <qcolordialog.h>
+#include <qnamespace.h>
+#include <qpainter.h>
+
+class QEvent;
+class QPaintEvent;
+class QWidget;
 
 namespace Avogadro::QtGui {
 

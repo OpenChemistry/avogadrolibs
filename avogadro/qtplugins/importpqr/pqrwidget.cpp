@@ -1,7 +1,21 @@
 #include "pqrwidget.h"
+
+#include <qabstractitemview.h>
+#include <qcombobox.h>
+#include <qheaderview.h>
+#include <qlabel.h>
+#include <qlineedit.h>
+#include <qpixmap.h>
+#include <qpushbutton.h>
+#include <qstringlist.h>
+#include <qtablewidget.h>
+
 #include "importpqr.h"
 #include "pqrrequest.h"
 #include "ui_pqrwidget.h"
+
+class QByteArray;
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

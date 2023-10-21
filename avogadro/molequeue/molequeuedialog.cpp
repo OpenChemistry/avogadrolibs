@@ -4,14 +4,18 @@
 ******************************************************************************/
 
 #include "molequeuedialog.h"
+
+#include <qeventloop.h>
+#include <qglobal.h>
+#include <qmessagebox.h>
+#include <qprogressdialog.h>
+#include <qtimer.h>
+
 #include "molequeuewidget.h"
 #include "ui_molequeuedialog.h"
+#include "avogadro/molequeue/client/jobobject.h"
 
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
-
-#include <QtCore/QEventLoop>
-#include <QtCore/QTimer>
+class QWidget;
 
 namespace Avogadro::MoleQueue {
 

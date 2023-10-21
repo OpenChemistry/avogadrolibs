@@ -6,13 +6,13 @@
 #ifndef AVOGADRO_IO_FILEFORMAT_H
 #define AVOGADRO_IO_FILEFORMAT_H
 
-#include "avogadroioexport.h"
 #include <avogadro/core/avogadrocore.h>
-
 #include <istream>
 #include <ostream>
 #include <string>
 #include <vector>
+
+#include "avogadroioexport.h"
 
 namespace Avogadro {
 

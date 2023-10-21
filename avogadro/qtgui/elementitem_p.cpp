@@ -4,15 +4,14 @@
 ******************************************************************************/
 
 #include "elementitem_p.h"
-#include "elementtranslator.h"
 
 #include <avogadro/core/elements.h>
+#include <qnamespace.h>
+#include <qpainter.h>
+#include <qpen.h>
 
-#include <QtGui/QFont>
-#include <QtGui/QFontMetrics>
-#include <QtGui/QPainter>
-#include <QtWidgets/QGraphicsSceneMouseEvent>
-#include <QtWidgets/QStyleOption>
+class QStyleOptionGraphicsItem;
+class QWidget;
 
 namespace Avogadro::QtGui {
 

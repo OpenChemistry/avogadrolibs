@@ -5,6 +5,8 @@
 
 #include "extensionplugin.h"
 
+class QWidget;
+
 namespace Avogadro::QtGui {
 
 ExtensionPlugin::ExtensionPlugin(QObject* parent_) : QObject(parent_)

@@ -5,10 +5,12 @@
 
 #include "client.h"
 
+#include <qglobal.h>
+#include <qnamespace.h>
+#include <qregexp.h>
+
 #include "jsonrpcclient.h"
 #include "jobobject.h"
-
-#include <QtCore/QJsonDocument>
 
 namespace Avogadro::MoleQueue {
 

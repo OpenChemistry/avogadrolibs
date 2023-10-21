@@ -7,10 +7,23 @@
 #define AVOGADRO_QTPLUGINS_SCRIPTFILEFORMATS_H
 
 #include <avogadro/qtgui/extensionplugin.h>
-
 #include <avogadro/core/avogadrocore.h>
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
+
+class QAction;
+class QObject;
 
 namespace Avogadro {
+namespace Io {
+class FileFormat;
+}  // namespace Io
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
+
 namespace QtPlugins {
 
 /**
