@@ -554,7 +554,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
 size_t calcNlogN(size_t n)
 {
   size_t aproxLog = 1;
-  float aux = n;
+  float aux = static_cast<float>(n);
   while (aux > 2.0f) {
     aux /= 2.0f;
     ++aproxLog;
