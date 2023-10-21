@@ -42,7 +42,8 @@ public:
   ~SpaceGroups();
 
   /**
-   * @return The hall number of the matching space group string or 0 if not found
+   * @return The hall number of the matching space group string or 0 if not
+   * found
    */
   static unsigned short hallNumber(const std::string& spaceGroup);
 
@@ -65,8 +66,8 @@ public:
   static const char* schoenflies(unsigned short hallNumber);
 
   /**
-   * @return the Hall symbol for a given hall number. '=' is used instead of '"'.
-   * If an invalid hall number is given, an empty string will be returned.
+   * @return the Hall symbol for a given hall number. '=' is used instead of
+   * '"'. If an invalid hall number is given, an empty string will be returned.
    */
   static const char* hallSymbol(unsigned short hallNumber);
 
@@ -118,7 +119,8 @@ public:
    * distance, the new atom will not be placed there.
    */
   static void fillUnitCell(Molecule& mol, unsigned short hallNumber,
-                           double cartTol = 1e-5);
+                           double cartTol = 1e-5, bool wrapToCell = true,
+                           bool allCopies = true);
 
   /**
    * Reduce a cell to its asymmetric unit.
@@ -137,7 +139,7 @@ private:
   static const char* transformsString(unsigned short hallNumber);
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_SPACE_GROUPS_H

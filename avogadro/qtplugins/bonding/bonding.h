@@ -40,11 +40,17 @@ public:
 
   QStringList menuPath(QAction* action) const override;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
   void bond();
+  void createBond();
   void bondOrders();
   void clearBonds();
   void configure();
@@ -60,6 +66,7 @@ private:
   QAction* m_orderAction;
   QAction* m_clearAction;
   QAction* m_configAction;
+  QAction* m_createBondsAction;
 
   QDialog* m_dialog;
   Ui::BondingDialog* m_ui;

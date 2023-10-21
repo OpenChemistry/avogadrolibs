@@ -29,7 +29,7 @@ class Molecule;
 namespace Rendering {
 class Camera;
 class Scene;
-}
+} // namespace Rendering
 
 namespace Io {
 class FileFormat;
@@ -80,6 +80,12 @@ public:
    */
   virtual QList<Io::FileFormat*> fileFormats() const;
 
+  /**
+   * If the extension plugin has script commands, this method
+   * should be implemented to emit the registerCommand signals.
+   */
+  virtual void registerCommands() {}
+
 public slots:
   /**
    * Called when the current molecule changes.
@@ -109,6 +115,18 @@ public slots:
    */
   virtual void setActiveWidget(QWidget* widget);
 
+  /**
+   * Called by the app to handle a command registered by the extension.
+   * (e.g., "renderMovie" or "generateSurface", etc.)
+   *
+   * The app will turn the command into a string and pass it to the extension.
+   * and any options will go from a JSON dictionary to a QVariantMap.
+   *
+   * @return true if the command was handled, false otherwise.
+   */
+  virtual bool handleCommand(const QString& command,
+                             const QVariantMap& options);
+
 signals:
   /**
    * Signal that the extension has a new molecule that is ready to be loaded.
@@ -137,6 +155,17 @@ signals:
    * would be most readily viewed with a specialized view.
    */
   void requestActiveDisplayTypes(QStringList displayTypes);
+
+  /**
+   * Register a new command with the application. The command will be available
+   * through scripting (e.g., "renderMovie" or "generateSurface", etc.)
+   *
+   * @param command The name of the command to register.
+   * @param description A description of the command.
+   *
+   * @sa handleCommand
+   */
+  void registerCommand(QString command, QString description);
 };
 
 /**
@@ -152,8 +181,8 @@ public:
   ~ExtensionPluginFactory() override;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 Q_DECLARE_INTERFACE(Avogadro::QtGui::ExtensionPluginFactory,
                     "org.openchemistry.avogadro.ExtensionPluginFactory")

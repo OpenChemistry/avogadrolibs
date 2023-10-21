@@ -38,7 +38,7 @@ namespace Avogadro::QtPlugins {
 OpenBabel::OpenBabel(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_process(new OBProcess(this)),
     m_readFormatsPending(true), m_writeFormatsPending(true),
-    m_defaultFormat("cml"), m_progress(nullptr)
+    m_defaultFormat("cjson"), m_progress(nullptr)
 {
   auto* action = new QAction(this);
   action->setEnabled(true);
@@ -126,7 +126,7 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   std::vector<std::string> fmime;
 
   // Simple lambda to replace toSet in QList
-  auto toSet = [&] (const QList<QString>& list) {
+  auto toSet = [&](const QList<QString>& list) {
     return QSet<QString>(list.begin(), list.end());
   };
 
@@ -259,9 +259,9 @@ void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
     emit fileFormatsReady();
 
     // Update the default format if cjson is available
-    if (m_readFormats.contains("Chemical JSON") &&
-        m_writeFormats.contains("Chemical JSON")) {
-      m_defaultFormat = "cjson";
+    if (!m_readFormats.contains("Chemical JSON") &&
+        !m_writeFormats.contains("Chemical JSON")) {
+      m_defaultFormat = "cml";
     }
   }
 }
@@ -294,9 +294,9 @@ void OpenBabel::handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts)
     emit fileFormatsReady();
 
     // Update the default format if cjson is available
-    if (m_readFormats.contains("Chemical JSON") &&
-        m_writeFormats.contains("Chemical JSON")) {
-      m_defaultFormat = "cjson";
+    if (!m_readFormats.contains("Chemical JSON") &&
+        !m_writeFormats.contains("Chemical JSON")) {
+      m_defaultFormat = "cml";
     }
   }
 }
@@ -313,7 +313,8 @@ void OpenBabel::refreshForceFields()
   proc->queryForceFields();
 }
 
-void OpenBabel::handleForceFieldsUpdate(const QMultiMap<QString, QString>& ffMap)
+void OpenBabel::handleForceFieldsUpdate(
+  const QMultiMap<QString, QString>& ffMap)
 {
   auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
@@ -334,7 +335,8 @@ void OpenBabel::refreshCharges()
   proc->queryCharges();
 }
 
-void OpenBabel::handleChargesUpdate(const QMultiMap<QString, QString>& chargeMap)
+void OpenBabel::handleChargesUpdate(
+  const QMultiMap<QString, QString>& chargeMap)
 {
   auto* proc = qobject_cast<OBProcess*>(sender());
   if (proc)
@@ -837,13 +839,10 @@ QString OpenBabel::autoDetectForceField() const
         *eleIter != "N" && *eleIter != "O" && *eleIter != "P" &&
         *eleIter != "S") {
       gaffValid = false;
+      mmff94Valid = false;
 
-      // These are supported by MMFF94 (but not GAFF)
-      if (*eleIter != "Fe" && *eleIter != "Li" && *eleIter != "Na" &&
-          *eleIter != "K" && *eleIter != "Zn" && *eleIter != "Ca" &&
-          *eleIter != "Cu" && *eleIter != "Mg" && *eleIter != "Na") {
-        mmff94Valid = false;
-      }
+      // MMFF94 supports isolated metal ions but it's safer to use UFF
+      // Fixes #1324
     }
     ++eleIter;
   }
@@ -863,4 +862,4 @@ QString OpenBabel::autoDetectForceField() const
 
   return result;
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -7,6 +7,7 @@
 
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/periodictableview.h>
+
 #include <qcombobox.h>
 #include <qglobal.h>
 #include <qicon.h>
@@ -15,6 +16,11 @@
 #include <qtoolbutton.h>
 #include <qvariant.h>
 #include <algorithm>
+
+#include <QtCore/QDebug>
+#include <QtCore/QList>
+
+#include <QtGui/QClipboard>
 
 #include "ui_templatetoolwidget.h"
 
@@ -25,6 +31,18 @@ const int ELEMENT_SELECTOR_TAG = 255;
 
 namespace Avogadro {
 namespace QtPlugins {
+
+enum LigandType
+{
+  Monodentate = 0,
+  Bidentate = 1,
+  Tridentate = 2,
+  Tetradentate = 3,
+  Hexadentate = 4,
+  Haptic = 5,
+  FunctionalGroup = 6,
+  Clipboard = 7
+};
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::TemplateToolWidget), m_elementSelector(NULL),
@@ -65,7 +83,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
             << "7-pbp"
             << "8-sqa";
 
-  typeChanged(0);
+  typeChanged(LigandType::Monodentate);
 }
 
 TemplateToolWidget::~TemplateToolWidget()
@@ -125,6 +143,9 @@ unsigned char TemplateToolWidget::ligand() const
 
 QString TemplateToolWidget::ligandString() const
 {
+  // tell us if we are using the clipboard
+  if (m_ui->typeComboBox->currentIndex() == LigandType::Clipboard)
+    return "Clipboard";
   return m_ligands.at(m_ui->ligandComboBox->currentIndex());
 }
 
@@ -155,7 +176,7 @@ void TemplateToolWidget::typeChanged(int index)
   m_ligands = QStringList();
   QStringList ligandNames;
   switch (index) {
-    case 0: // Monodentate
+    case LigandType::Monodentate: // Monodentate
       ligandNames << "ammine"
                   << "aqua"
                   << "carbonyl"
@@ -170,7 +191,7 @@ void TemplateToolWidget::typeChanged(int index)
                 << "1-thiol";
       m_denticity = 1;
       break;
-    case 1: // Bidentate
+    case LigandType::Bidentate: // Bidentate
       ligandNames << "acetylacetonate"
                   << "bipyridine"
                   << "ethylenediamine";
@@ -179,12 +200,12 @@ void TemplateToolWidget::typeChanged(int index)
                 << "2-ethylenediamine";
       m_denticity = 2;
       break;
-    case 2: // Tridentate
+    case LigandType::Tridentate: // Tridentate
       ligandNames << "terpyridine";
       m_ligands << "3-terpyridine";
       m_denticity = 3;
       break;
-    case 3: // Tetradentate
+    case LigandType::Tetradentate: // Tetradentate
       ligandNames << "phthalocyanine"
                   << "porphin"
                   << "salen";
@@ -193,12 +214,12 @@ void TemplateToolWidget::typeChanged(int index)
                 << "4-salen";
       m_denticity = 4;
       break;
-    case 4: // Hexadentate
+    case LigandType::Hexadentate: // Hexadentate
       ligandNames << "edta";
       m_ligands << "6-edta";
       m_denticity = 6;
       break;
-    case 5: // Haptic
+    case LigandType::Haptic: // Haptic
       ligandNames << "η2-ethylene"
                   << "η5-cyclopentyl"
                   << "η6-benzene";
@@ -207,7 +228,7 @@ void TemplateToolWidget::typeChanged(int index)
                 << "eta6-benzene";
       m_denticity = 1;
       break;
-    case 6: // Functional Groups
+    case LigandType::FunctionalGroup: // Functional Groups
       ligandNames << "amide"
                   << "carboxylate"
                   << "ester"
@@ -217,8 +238,15 @@ void TemplateToolWidget::typeChanged(int index)
       m_ligands = ligandNames;
       m_denticity = 1;
       break;
+    case LigandType::Clipboard: // Clipboard
+      ligandNames << "clipboard";
+      m_ligands = ligandNames;
+      // technically, we should check the clipboard
+      m_denticity = 1;
+      break;
   }
   m_ui->ligandComboBox->addItems(ligandNames);
+  ligandChanged(0);
 }
 
 void TemplateToolWidget::elementChanged(int index)

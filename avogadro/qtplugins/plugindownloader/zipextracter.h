@@ -3,7 +3,9 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include <qlist.h>
+#ifndef AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
+#define AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
+
 #include <QtCore/QList>
 #include <string>
 
@@ -26,5 +28,8 @@ public:
   QList<QString> extract(std::string extractdir, std::string absolutepath);
   QList<QString> listFiles(const std::string absolutepath);
 };
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
+
+#endif

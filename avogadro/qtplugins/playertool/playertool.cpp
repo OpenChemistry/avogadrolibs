@@ -4,9 +4,9 @@
 ******************************************************************************/
 
 #include "playertool.h"
-#include "gif.h"
 
-#include "gwavi.h"
+#include <gif.h>
+#include <gwavi.h>
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
@@ -50,7 +50,7 @@ PlayerTool::PlayerTool(QObject* parent_)
   , m_slider(nullptr)
 {
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setIcon(QIcon(":/icons/player.png"));
+  m_activateAction->setIcon(QIcon(":/icons/animate.png"));
   m_activateAction->setToolTip(tr("Animation Tool"));
 }
 

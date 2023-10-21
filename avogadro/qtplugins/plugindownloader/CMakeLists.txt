@@ -1,7 +1,5 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty")
+find_package(LibArchive REQUIRED)
 
-find_package(LIBARCHIVE REQUIRED)
-include_directories(SYSTEM ${LIBARCHIVE_INCLUDE_DIRS})
 # Extension
 set(plugindownloader_srcs
   plugindownloader.cpp
@@ -19,5 +17,12 @@ avogadro_plugin(PluginDownloader
   ""
 )
 
-target_link_libraries(PluginDownloader PRIVATE ${Qt5Network_LIBRARIES}
-  ${LIBARCHIVE_LIBRARIES})
+target_link_libraries(PluginDownloader PRIVATE Qt::Network
+  LibArchive::LibArchive
+  nlohmann_json::nlohmann_json
+)
+
+if(WIN32)
+  # for https support
+  target_link_libraries(PluginDownloader PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
+endif()

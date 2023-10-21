@@ -27,23 +27,14 @@ function(avogadro_add_library name)
   target_include_directories(${name}
     PUBLIC
       "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>"
+      "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
       "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
       "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
-
-  # Now install everything.
-  # SKBUILD is set for binary wheel
-  if (SKBUILD)
-    # For MACOSX
-    set_target_properties(${name} PROPERTIES INSTALL_NAME_DIR "@rpath")
-    set(INSTALL_RUNTIME_DIR avogadro)
-    set(INSTALL_LIBRARY_DIR avogadro)
-    set(INSTALL_ARCHIVE_DIR avogadro)
-  endif()
 
   # Install the target and its headers.
   install(TARGETS ${name}
     EXPORT "AvogadroLibsTargets"
-    FILE_SET HEADERS DESTINATION "${INSTALL_INCLUDE_DIR}"
+    FILE_SET HEADERS DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro"
     RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
     ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}"
@@ -54,7 +45,9 @@ endfunction()
 function(avogadro_headers _name)
   target_sources(${_name} PUBLIC
     FILE_SET HEADERS
-    BASE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+    BASE_DIRS
+      ${AvogadroLibs_SOURCE_DIR}/avogadro
+      ${AvogadroLibs_BINARY_DIR}/avogadro
     FILES ${ARGN})
 endfunction()
 

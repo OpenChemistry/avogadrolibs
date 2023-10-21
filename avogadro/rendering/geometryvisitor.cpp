@@ -17,13 +17,9 @@ GeometryVisitor::GeometryVisitor()
 {
 }
 
-GeometryVisitor::~GeometryVisitor()
-{
-}
+GeometryVisitor::~GeometryVisitor() {}
 
-void GeometryVisitor::visit(Drawable&)
-{
-}
+void GeometryVisitor::visit(Drawable&) {}
 
 void GeometryVisitor::visit(SphereGeometry& geometry)
 {
@@ -122,13 +118,13 @@ void GeometryVisitor::visit(LineStripGeometry& lsg)
   m_dirty = true;
 
   Vector3f tmpCenter(Vector3f::Zero());
-  for (const auto & vert : verts) {
+  for (const auto& vert : verts) {
     tmpCenter += vert.vertex;
   }
   tmpCenter /= static_cast<float>(verts.size());
 
   float tmpRadius(0.f);
-  for (const auto & vert : verts) {
+  for (const auto& vert : verts) {
     float distance = (vert.vertex - tmpCenter).squaredNorm();
     if (distance > tmpRadius)
       tmpRadius = distance;
@@ -187,4 +183,4 @@ void GeometryVisitor::average()
   }
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

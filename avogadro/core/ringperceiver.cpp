@@ -47,11 +47,6 @@ DistanceMatrix::~DistanceMatrix()
   delete[] m_values;
 }
 
-size_t DistanceMatrix::operator()(size_t i, size_t j) const
-{
-  return m_values[i * m_size + j];
-}
-
 size_t& DistanceMatrix::operator()(size_t i, size_t j)
 {
   return m_values[i * m_size + j];

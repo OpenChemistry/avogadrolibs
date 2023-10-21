@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
 project(AvogadroLibs)
 
@@ -54,6 +54,9 @@ option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
 option(USE_MMTF "Enable optional features using mmtf" ON)
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
+option(USE_EXTERNAL_NLOHMANN "Use an externally-provided version of the nlohmann JSON library" OFF)
+option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
+option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)
 set(QT_VERSION "5" CACHE STRING "What major version of Qt")
 set(QT_VERSIONS_SUPPORTED 5 6)
 set_property(CACHE QT_VERSION PROPERTY STRINGS 5 6)
@@ -61,8 +64,8 @@ if(NOT QT_VERSION IN_LIST QT_VERSIONS_SUPPORTED)
   message(FATAL_ERROR "Qt version must be one of ${QT_VERSIONS_SUPPORTED}")
 endif()
 
-add_subdirectory(utilities)
 add_subdirectory(thirdparty)
+add_subdirectory(utilities)
 add_subdirectory(avogadro)
 
 if(ENABLE_TESTING)
@@ -114,8 +117,6 @@ if (NOT SKBUILD)
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGLEW.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLIBARCHIVE.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
   install(EXPORT "AvogadroLibsTargets"

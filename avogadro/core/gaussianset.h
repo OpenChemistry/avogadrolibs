@@ -174,6 +174,13 @@ public:
   bool generateDensityMatrix();
 
   /**
+   * @brief Generate the spin density matrix if we have the required
+   * information.
+   * @return True on success, false on failure.
+   */
+  bool generateSpinDensityMatrix();
+
+  /**
    * @return The number of molecular orbitals in the GaussianSet.
    */
   unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
@@ -357,22 +364,9 @@ private:
   ScfType m_scfType;
 
   std::string m_functionalName;
-
-  /**
-   * @brief Generate the density matrix if we have the required information.
-   * @return True on success, false on failure.
-   */
-  bool generateDensity();
-
-  /**
-   * @brief Generate the spin density matrix if we have the required
-   * information.
-   * @return True on success, false on failure.
-   */
-  bool generateSpinDensity();
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif

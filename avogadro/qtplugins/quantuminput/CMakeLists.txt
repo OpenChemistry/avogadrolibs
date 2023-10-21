@@ -1,6 +1,3 @@
-# Needed to find avogadroioexport.h:
-include_directories("${AvogadroLibs_BINARY_DIR}/avogadro/io/")
-
 # Extension
 set(quantuminput_srcs
   quantuminput.cpp
