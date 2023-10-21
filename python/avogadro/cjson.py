@@ -39,3 +39,8 @@ class Cjson:
         element_coords = [(*coords[i*3:(i+1)*3], elements[i]) for i in range(0, int(len(coords) / 3))]
         cjson_dict = {"element-coordinates" :element_coords}
         return self.__to_cjson(cjson_dict)
+
+    def get_elements(self, filePath):
+        data = self.__open_file(filePath)
+        elements = data["atoms"]["elements"]["number"]
+        return elements
