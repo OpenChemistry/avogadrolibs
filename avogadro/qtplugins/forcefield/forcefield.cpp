@@ -5,6 +5,7 @@
 ******************************************************************************/
 
 #include "forcefield.h"
+#include "obmmenergy.h"
 #include "scriptenergy.h"
 
 #include <QtCore/QDebug>
@@ -50,7 +51,10 @@ const int constraintAction = 5;
 
 Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
 {
-  refreshScripts();
+  //refreshScripts();
+  Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
+  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
+  Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
@@ -119,7 +123,8 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
-  cppoptlib::LbfgsSolver<EnergyCalculator> solver;
+  //cppoptlib::LbfgsSolver<EnergyCalculator> solver;
+  cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
@@ -127,6 +132,7 @@ void Forcefield::optimize()
   double* p = pos[0].data();
   Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
   Eigen::VectorXd positions = map;
+  Eigen::VectorXd lastPositions = positions;
 
   Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
   // just to get the right size / shape
@@ -137,14 +143,14 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every 5 steps, update coordinates
-  crit.iterations = m_nSteps;
+  crit.iterations = 5;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
   solver.setStopCriteria(crit);
 
   // set the method
-  std::string recommended = recommendedForceField();
+  std::string recommended = "UFF";
   qDebug() << "Energy method: " << recommended.c_str();
 
   if (m_method == nullptr) {
@@ -152,39 +158,78 @@ void Forcefield::optimize()
     m_method = Calc::EnergyManager::instance().model(recommended);
   }
   m_method->setMolecule(m_molecule);
-  m_method->setMask(m_molecule->frozenAtomMask());
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != m_molecule->atomCount()) {
+    mask = Eigen::VectorXd::Zero(3 * m_molecule->atomCount());
+    // set to 1.0
+    for (Index i = 0; i < 3 * m_molecule->atomCount(); ++i) {
+      mask[i] = 1.0;
+    }
+  }
+  m_method->setMask(mask);
 
   Real energy = m_method->value(positions);
+  m_method->gradient(positions, gradient);
+  qDebug() << " initial " << energy 
+  << " gradNorm: " << gradient.norm()
+  << " posNorm: " << positions.norm();
+
+  Real currentEnergy = 0.0;
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
     solver.minimize(*m_method, positions);
 
-    Real currentEnergy = m_method->value(positions);
+    currentEnergy = m_method->value(positions);
     // get the current gradient for force visualization
     m_method->gradient(positions, gradient);
+    qDebug() << " optimize " << i << currentEnergy
+             << " gradNorm: " << gradient.norm()
+             << " posNorm: " << positions.norm();
 
     // update coordinates
-    const double* d = positions.data();
-    // casting back would be lovely...
-    for (size_t i = 0; i < n; ++i) {
-      pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
-      d += 3;
+    bool isFinite = std::isfinite(currentEnergy);
+    if (isFinite) {
+      const double* d = positions.data();
+      bool isFinite = true;
+      // casting back would be lovely...
+      for (size_t i = 0; i < n; ++i) {
+        if (!std::isfinite(*d) || !std::isfinite(*(d + 1)) ||
+            !std::isfinite(*(d + 2))) {
+          isFinite = false;
+          break;
+        }
 
-      forces[i] = -1.0 * Vector3(gradient[3 * i], gradient[3 * i + 1],
-                                 gradient[3 * i + 2]);
+        pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
+        d += 3;
+
+        forces[i] = -1.0 * Vector3(gradient[3 * i], gradient[3 * i + 1],
+                                   gradient[3 * i + 2]);
+      }
     }
-    // todo - merge these into one undo step
-    m_molecule->undoMolecule()->setAtomPositions3d(pos,
-                                                   tr("Optimize Geometry"));
-    m_molecule->setForceVectors(forces);
-    Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
-    m_molecule->emitChanged(changes);
 
-    // check for convergence
-    if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
-      break;
-    if (fabs(currentEnergy - energy) < m_tolerance)
-      break;
-    energy = currentEnergy;
+    // todo - merge these into one undo step
+    if (isFinite) {
+      qDebug() << " finite! ";
+      m_molecule->undoMolecule()->setAtomPositions3d(pos,
+                                                     tr("Optimize Geometry"));
+      m_molecule->setForceVectors(forces);
+      Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+      m_molecule->emitChanged(changes);
+      lastPositions = positions;
+
+      // check for convergence
+      /*
+      if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
+        break;
+      if (fabs(currentEnergy - energy) < m_tolerance)
+        break;
+      */
+
+      energy = currentEnergy;
+    } else {
+      // reset to last positions
+      positions = lastPositions;
+      gradient = Eigen::VectorXd::Zero(3 * n);
+    }
   }
 
   m_molecule->undoMolecule()->setInteractive(isInteractive);

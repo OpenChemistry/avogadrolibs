@@ -20,13 +20,18 @@ void EnergyCalculator::cleanGradients(TVector& grad)
   unsigned int size = grad.rows();
   // check for overflows -- in case of divide by zero, etc.
   for (unsigned int i = 0; i < size; ++i) {
-    if (!std::isfinite(grad[i])) {
+    if (!std::isfinite(grad[i]) || std::isnan(grad[i])) {
       grad[i] = 0.0;
     }
   }
 
   // freeze any masked atoms or coordinates
-  grad = grad.cwiseProduct(m_mask);
+  /*
+  if (m_mask.rows() == size)
+    grad = grad.cwiseProduct(m_mask);
+  else
+    std::cerr << "Error: mask size " << m_mask.rows() << " " << grad.rows() << std::endl;
+  */
 }
 
 } // namespace Avogadro

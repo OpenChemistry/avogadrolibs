@@ -221,36 +221,31 @@ void PythonScript::processFinished(int, QProcess::ExitStatus)
   emit finished();
 }
 
-QByteArray PythonScript::asyncWriteAndResponse(QByteArray input, const int expectedLines)
+void PythonScript::asyncTerminate()
+{
+  if (m_process != nullptr) {
+    m_process->terminate();
+    disconnect(m_process, SIGNAL(finished()), this, SLOT(processFinished()));
+    m_process->deleteLater();
+    m_process = nullptr;
+  }
+}
+
+QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
 {
   if (m_process == nullptr) {
     return QByteArray(); // wait
   }
 
-  qDebug() << " writing to process: " << input << " " << expectedLines;
-
   m_process->write(input);
   QByteArray buffer;
 
-  if (expectedLines == -1) {
-    m_process->waitForFinished();
-    buffer = m_process->readAll();
-  } else {
-    // only read a certain number of lines
-    // (e.g., energy and gradients)
-    int remainingLines = expectedLines;
-    bool ready = m_process->waitForReadyRead();
-    if (ready) {
-      while (m_process->canReadLine() && remainingLines > 0) {
-        buffer += m_process->readLine();
-        remainingLines--;
-      }
-      // clear the rest of the buffer
-      qDebug() << " remaining " << m_process->readAll();
+  bool ready = m_process->waitForReadyRead();
+  if (ready) {
+    while (m_process->canReadLine()) {
+      buffer += m_process->readLine();
     }
   }
-
-  qDebug() << " read from process: " << buffer;
 
   return buffer;
 }

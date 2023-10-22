@@ -12,9 +12,9 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QByteArray>
+#include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QProcess>
 
 namespace Avogadro {
 namespace QtGui {
@@ -92,23 +92,26 @@ public:
    * Start a new process to execute asynchronously
    * "<m_pythonInterpreter> <scriptFilePath()> [args ...]",
    * optionally passing scriptStdin to the processes standard input.
-   * 
+   *
    * Will send asyncFinished() signal when finished
    */
   void asyncExecute(const QStringList& args,
-                          const QByteArray& scriptStdin = QByteArray());
+                    const QByteArray& scriptStdin = QByteArray());
 
   /**
    * Write input to the asynchronous process' standard input and return the
    * standard output when ready. Does not wait for the process to terminate
    * before returning (e.g. "server mode").
-   * 
+   *
    * @param input The input to write to the process' standard input
-   * @param expectedLines The number of lines to expect in the output. If -1,
-   *                     the output is read until the process terminates.
    * @return The standard output of the process
+   */
+  QByteArray asyncWriteAndResponse(QByteArray input);
+
+  /**
+   * Terminate the asynchronous process.
   */
-  QByteArray asyncWriteAndResponse(QByteArray input, const int expectedLines = -1);
+  void asyncTerminate();
 
   /**
    * Returns the standard output of the asynchronous process when finished.
@@ -116,9 +119,9 @@ public:
   QByteArray asyncResponse();
 
 signals:
-/**
- * The asynchronous execution is finished or timed out
- */
+  /**
+   * The asynchronous execution is finished or timed out
+   */
   void finished();
 
 public slots:

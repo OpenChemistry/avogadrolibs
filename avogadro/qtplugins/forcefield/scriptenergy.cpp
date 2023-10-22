@@ -100,9 +100,9 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   QStringList options;
   options << "-f" << m_tempFile.fileName();
 
+  // if there was a previous process, kill it
+  m_interpreter->asyncTerminate();
   // start the interpreter
-  //@ todo - check if there was a previous process running
-  // .. if so, kill it
   m_interpreter->asyncExecute(options);
 }
 
@@ -118,15 +118,66 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
     input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
              QString::number(x[i + 2]) + "\n";
   }
-  QByteArray result = m_interpreter->asyncWriteAndResponse(input, 1);
+  QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
-  return result.toDouble(); // if conversion fails, returns 0.0
+  // go through lines in result until we see "AvogadroEnergy: "
+  QStringList lines = QString(result).remove('\r').split('\n');
+  double energy = 0.0;
+  for (auto line : lines) {
+    if (line.startsWith("AvogadroEnergy:")) {
+      QStringList items = line.split(" ");
+      if (items.size() > 1)
+        energy = items[1].toDouble();
+    }
+  }
+
+  return energy; // if conversion fails, returns 0.0
 }
 
 void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  //@ todo read the gradient if available from the process
-  EnergyCalculator::gradient(x, grad);
+  if (!m_gradients) {
+    EnergyCalculator::gradient(x, grad);
+    return;
+  }
+
+  // Get the gradient from the script
+  // write the new coordinates and read the energy
+  QByteArray input;
+  for (Index i = 0; i < x.size(); i += 3) {
+    // write as x y z (space separated)
+    input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
+             QString::number(x[i + 2]) + "\n";
+  }
+  QByteArray result = m_interpreter->asyncWriteAndResponse(input);
+
+  // parse the result
+  // first split on newlines
+  QStringList lines = QString(result).remove('\r').split('\n');
+  double energy = 0.0;
+  unsigned int i = 0;
+  bool readingGrad = false;
+  for (auto line : lines) {
+    if (line.startsWith("AvogadroGradient:")) {
+      readingGrad = true;
+      continue; // next line
+    }
+
+    if (readingGrad) {
+      QStringList items = line.split(" ");
+      if (items.size() == 3) {
+        grad[i] = items[0].toDouble();
+        grad[i + 1] = items[1].toDouble();
+        grad[i + 2] = items[2].toDouble();
+        i += 3;
+      }
+
+      if (i > x.size())
+        break;
+    }
+  }
+
+  cleanGradients(grad);
 }
 
 ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
@@ -293,8 +344,6 @@ void ScriptEnergy::readMetaData()
   // get the element mask
   // (if it doesn't exist, the default is no elements anyway)
   m_valid = parseElements(metaData);
-
-  qDebug() << " finished parsing metadata ";
 }
 
 bool ScriptEnergy::parseString(const QJsonObject& ob, const QString& key,

@@ -67,18 +67,6 @@ def run(filename):
 
     # we loop forever - Avogadro will kill our process when done
     while True:
-        # first print the energy of these coordinates
-        print(res.get_energy())  # in Hartree
-
-        with open("/Users/ghutchis/gfnff.log", "a") as f:
-            f.write(str(res.get_energy()) + "\n")
-
-        # now print the gradient
-        # .. we don't want the "[]" in the output
-        output = np.array2string(res.get_gradient())
-        output = output.replace("[", "").replace("]", "")
-        print(output)
-
         # read new coordinates from stdin
         for i in range(len(atoms)):
             coordinates[i] = np.fromstring(input(), sep=" ")
@@ -88,6 +76,20 @@ def run(filename):
         # update the calculator and run a new calculation
         calc.update(coordinates)
         calc.singlepoint(res)
+
+        # first print the energy of these coordinates
+        print("AvogadroEnergy:", res.get_energy())  # in Hartree
+
+        with open("/Users/ghutchis/gfnff.log", "a") as f:
+            f.write(str(res.get_energy()) + "\n")
+
+        # now print the gradient
+        # .. we don't want the "[]" in the output
+        print("AvogadroGradient:")
+        grad = res.get_gradient() * 4961.475
+        output = np.array2string(grad)
+        output = output.replace("[", "").replace("]", "")
+        print(output)
 
 
 if __name__ == "__main__":

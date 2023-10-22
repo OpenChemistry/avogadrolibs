@@ -80,7 +80,7 @@ private:
 
   // defaults
   Minimizer m_minimizer = LBFGS;
-  unsigned int m_maxSteps = 250;
+  unsigned int m_maxSteps = 100;
   unsigned int m_nSteps = 5;
   double m_tolerance = 1.0e-6;
   double m_gradientTolerance = 1.0e-4;

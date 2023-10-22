@@ -47,22 +47,31 @@ def run(filename):
     # we loop forever - Avogadro will kill the process when done
     num_atoms = len(mol.atoms)
     while True:
-        # first print the energy of these coordinates
-        print(ff.Energy(True))  # in Hartree
-
-        # now print the gradient on each atom
-        for atom in mol.atoms:
-            grad = ff.GetGradient(atom.OBAtom)
-            print(grad.GetX(), grad.GetY(), grad.GetZ())
-
         # read new coordinates from stdin
         for i in range(num_atoms):
             coordinates = np.fromstring(input(), sep=" ")
             atom = mol.atoms[i]
             atom.OBAtom.SetVector(coordinates[0], coordinates[1], coordinates[2])
 
+        with open("/Users/ghutchis/uff.log", "a") as f:
+            f.write("Coordinates:\n")
+            for atom in mol.atoms:
+                f.write(str(atom.OBAtom.GetX()) + " " + str(atom.OBAtom.GetY()) + " " + str(atom.OBAtom.GetZ()) + "\n")
+
         # update the molecule geometry for the next energy
         ff.SetCoordinates(mol.OBMol)
+
+        # first print the energy of these coordinates
+        energy = ff.Energy(True)  # in Hartree
+        print("AvogadroEnergy:", energy)  # in Hartree
+        with open("/Users/ghutchis/uff.log", "a") as f:
+            f.write(str(energy) + "\n")
+
+        # now print the gradient on each atom
+        print("AvogadroGradient:")
+        for atom in mol.atoms:
+            grad = ff.GetGradient(atom.OBAtom)
+            print(grad.GetX(), grad.GetY(), grad.GetZ())
 
 
 if __name__ == "__main__":
