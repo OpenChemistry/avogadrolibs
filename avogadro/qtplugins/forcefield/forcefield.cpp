@@ -29,9 +29,8 @@
 
 #include <cppoptlib/meta.h>
 #include <cppoptlib/problem.h>
-
+#include <cppoptlib/solver/bfgssolver.h>
 #include <cppoptlib/solver/lbfgssolver.h>
-// not currently used
 #include <cppoptlib/solver/conjugatedgradientdescentsolver.h>
 #include <cppoptlib/solver/gradientdescentsolver.h>
 
@@ -125,9 +124,8 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
-  //cppoptlib::LbfgsSolver<EnergyCalculator> solver;
-  //cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
-  cppoptlib::GradientDescentSolver<EnergyCalculator> solver;
+  cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
+  //cppoptlib::GradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
@@ -146,17 +144,17 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = 10;
+  crit.iterations = m_nSteps;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
   solver.setStopCriteria(crit);
 
   // set the method
-  std::string recommended = "MMFF94";
+  std::string recommended = recommendedForceField();
   qDebug() << "Energy method: " << recommended.c_str();
 
-  if (m_method == nullptr) {
+  if (m_method == nullptr || m_method->identifier() != recommended) {
     // we have to create the calculator
     m_method = Calc::EnergyManager::instance().model(recommended);
   }
@@ -181,6 +179,8 @@ void Forcefield::optimize()
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
     solver.minimize(*m_method, positions);
 
+    qApp->processEvents(QEventLoop::AllEvents, 500);
+
     currentEnergy = m_method->value(positions);
     // get the current gradient for force visualization
     m_method->gradient(positions, gradient);
@@ -204,7 +204,7 @@ void Forcefield::optimize()
         pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
         d += 3;
 
-        forces[i] = -1.0 * Vector3(gradient[3 * i], gradient[3 * i + 1],
+        forces[i] = -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1],
                                    gradient[3 * i + 2]);
       }
     }
@@ -246,7 +246,7 @@ void Forcefield::energy()
   std::string recommended = recommendedForceField();
   qDebug() << "Energy method: " << recommended.c_str();
 
-  if (m_method == nullptr) {
+  if (m_method == nullptr || m_method->identifier() != recommended) {
     // we have to create the calculator
     m_method = Calc::EnergyManager::instance().model(recommended);
   }

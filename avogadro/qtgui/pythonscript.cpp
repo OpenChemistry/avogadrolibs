@@ -224,8 +224,8 @@ void PythonScript::processFinished(int, QProcess::ExitStatus)
 void PythonScript::asyncTerminate()
 {
   if (m_process != nullptr) {
-    m_process->terminate();
     disconnect(m_process, SIGNAL(finished()), this, SLOT(processFinished()));
+    m_process->kill();
     m_process->deleteLater();
     m_process = nullptr;
   }

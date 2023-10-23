@@ -16,9 +16,12 @@ target_link_libraries(Forcefield PRIVATE Avogadro::Calc)
 
 # Bundled forcefield scripts
 set(forcefields
+  scripts/gaff.py
   scripts/gfn1.py
   scripts/gfn2.py
   scripts/gfnff.py
+  scripts/mmff94.py
+  scripts/uff.py
 )
 
 install(PROGRAMS ${forcefields}

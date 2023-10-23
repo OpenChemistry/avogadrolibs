@@ -26,12 +26,10 @@ void EnergyCalculator::cleanGradients(TVector& grad)
   }
 
   // freeze any masked atoms or coordinates
-  /*
   if (m_mask.rows() == size)
     grad = grad.cwiseProduct(m_mask);
   else
     std::cerr << "Error: mask size " << m_mask.rows() << " " << grad.rows() << std::endl;
-  */
 }
 
 } // namespace Avogadro
