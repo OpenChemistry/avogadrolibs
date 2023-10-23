@@ -124,14 +124,14 @@ jobs:
         path: avogadrolibs
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         cache: True
         version: ${{ env.QT_VERSION }}
 
     - name: Install OpenSSL (Win64)
       if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         cache: True
         tools: 'tools_opensslv3_x64'
