@@ -12,7 +12,8 @@
 namespace Avogadro::Calc {
 
 LennardJones::LennardJones()
-  : m_vdw(true), m_depth(100.0), m_exponent(6), m_cell(nullptr)
+  : m_vdw(true), m_depth(100.0), m_exponent(6), m_cell(nullptr),
+    m_molecule(nullptr)
 {
   // defined for 1-118
   for (unsigned int i = 1; i <= 118; ++i) {
