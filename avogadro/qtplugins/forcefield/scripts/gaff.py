@@ -20,9 +20,9 @@ def getMetaData():
         return {}  # Avogadro will ignore us now
 
     metaData = {
-        "name": "MMFF94",
-        "identifier": "MMFF94",
-        "description": "Calculate MMFF94 energies and gradients",
+        "name": "GAFF",
+        "identifier": "GAFF",
+        "description": "Calculate GAFF energies and gradients",
         "inputFormat": "cml",
         "elements": "1,6-9,14-17,35,53",
         "unitCell": False,
@@ -38,11 +38,11 @@ def run(filename):
     #  in cjson format (it's a temporary file created by Avogadro)
     mol = next(pybel.readfile("cml", filename))
 
-    ff = pybel._forcefields["mmff94"]
+    ff = pybel._forcefields["gaff"]
     success = ff.Setup(mol.OBMol)
     if not success:
         # should never happen, but just in case
-        sys.exit("MMFF94 force field setup failed")
+        sys.exit("GAFF setup failed")
 
     # we loop forever - Avogadro will kill the process when done
     num_atoms = len(mol.atoms)
@@ -69,7 +69,7 @@ def run(filename):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("MMFF94 calculator")
+    parser = argparse.ArgumentParser("GAFF calculator")
     parser.add_argument("--display-name", action="store_true")
     parser.add_argument("--metadata", action="store_true")
     parser.add_argument("-f", "--file", nargs=1)

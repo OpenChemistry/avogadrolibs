@@ -22,16 +22,18 @@ class OBMMEnergy::ProcessListener : public QObject
 public:
   ProcessListener(QProcess *proc) : QObject(), m_finished(false), m_process(proc)
   {
-    connect(m_process, SIGNAL(readyRead()), SLOT(readyRead()));
   }
 
   bool waitForOutput(QByteArray output, int msTimeout = 2000)
   {
+    connect(m_process, SIGNAL(readyRead()), SLOT(readyRead()));
     if (!wait(msTimeout))
       return false;
 
     // success!
     output = m_output;
+    disconnect(m_process, nullptr, nullptr, nullptr);
+    m_finished = false;
     return true;
   }
 
@@ -209,6 +211,7 @@ void OBMMEnergy::setMolecule(Core::Molecule* mol)
     // appendError("Error running process.");
     return;
   }
+  qDebug() << "OBMM start: " << result;
 
   // okay, we need to write "load <filename>" to the interpreter
   // and then read the response
@@ -233,9 +236,9 @@ void OBMMEnergy::setMolecule(Core::Molecule* mol)
   input = QByteArray("energy\n");
   result.clear();
   m_process->write(input);
-  if (!listener.waitForOutput(result)) {
-    // appendError("Error running process.");
-    return;
+  result.clear();
+  while (!result.contains("command >")) {
+    result += m_process->readLine();
   }
   qDebug() << "OBMM energy: " << result;
 }
@@ -262,7 +265,6 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
   input += "\n";
 
   m_process->write(input);
-  m_process->waitForBytesWritten();
   m_process->waitForReadyRead();
   result.clear();
   while (!result.contains("command >")) {
@@ -275,7 +277,6 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
   input = "energy\n\n";
   result.clear();
   m_process->write(input);
-  m_process->waitForBytesWritten();
   m_process->waitForReadyRead();
   while (!result.contains("command >")) {
     result += m_process->readLine();

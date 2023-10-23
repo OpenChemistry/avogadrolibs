@@ -53,19 +53,12 @@ def run(filename):
             atom = mol.atoms[i]
             atom.OBAtom.SetVector(coordinates[0], coordinates[1], coordinates[2])
 
-        with open("/Users/ghutchis/uff.log", "a") as f:
-            f.write("Coordinates:\n")
-            for atom in mol.atoms:
-                f.write(str(atom.OBAtom.GetX()) + " " + str(atom.OBAtom.GetY()) + " " + str(atom.OBAtom.GetZ()) + "\n")
-
         # update the molecule geometry for the next energy
         ff.SetCoordinates(mol.OBMol)
 
         # first print the energy of these coordinates
-        energy = ff.Energy(True)  # in Hartree
-        print("AvogadroEnergy:", energy)  # in Hartree
-        with open("/Users/ghutchis/uff.log", "a") as f:
-            f.write(str(energy) + "\n")
+        energy = ff.Energy(True)  # in kJ/mol
+        print("AvogadroEnergy:", energy)  # in kJ/mol
 
         # now print the gradient on each atom
         print("AvogadroGradient:")

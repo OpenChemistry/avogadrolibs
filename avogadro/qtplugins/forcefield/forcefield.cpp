@@ -51,10 +51,12 @@ const int constraintAction = 5;
 
 Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
 {
-  //refreshScripts();
+  refreshScripts();
+  /*/
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
+  */
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
@@ -124,7 +126,8 @@ void Forcefield::optimize()
   m_molecule->undoMolecule()->setInteractive(true);
 
   //cppoptlib::LbfgsSolver<EnergyCalculator> solver;
-  cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
+  //cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
+  cppoptlib::GradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
@@ -142,15 +145,15 @@ void Forcefield::optimize()
   // Create a Criteria class so we can update coords every N steps
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
-  // e.g., every 5 steps, update coordinates
-  crit.iterations = 5;
+  // e.g., every N steps, update coordinates
+  crit.iterations = 10;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
   solver.setStopCriteria(crit);
 
   // set the method
-  std::string recommended = "UFF";
+  std::string recommended = "MMFF94";
   qDebug() << "Energy method: " << recommended.c_str();
 
   if (m_method == nullptr) {
@@ -208,7 +211,6 @@ void Forcefield::optimize()
 
     // todo - merge these into one undo step
     if (isFinite) {
-      qDebug() << " finite! ";
       m_molecule->undoMolecule()->setAtomPositions3d(pos,
                                                      tr("Optimize Geometry"));
       m_molecule->setForceVectors(forces);

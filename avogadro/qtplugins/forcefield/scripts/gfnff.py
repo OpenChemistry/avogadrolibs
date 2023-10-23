@@ -80,13 +80,10 @@ def run(filename):
         # first print the energy of these coordinates
         print("AvogadroEnergy:", res.get_energy())  # in Hartree
 
-        with open("/Users/ghutchis/gfnff.log", "a") as f:
-            f.write(str(res.get_energy()) + "\n")
-
         # now print the gradient
         # .. we don't want the "[]" in the output
         print("AvogadroGradient:")
-        grad = res.get_gradient() * 4961.475
+        grad = res.get_gradient() * 4961.475  # convert units
         output = np.array2string(grad)
         output = output.replace("[", "").replace("]", "")
         print(output)
