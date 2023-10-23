@@ -101,7 +101,7 @@ public:
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
   MatrixX partialCharges(const std::string& identifier,
-                               Core::Molecule& mol) const;
+                         Core::Molecule& mol) const;
 
   /**
    * @return the potential at the point for the molecule, or 0.0 if the model is

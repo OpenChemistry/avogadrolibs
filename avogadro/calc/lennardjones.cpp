@@ -38,7 +38,7 @@ void LennardJones::setMolecule(Core::Molecule* mol)
   // track atomic radii for this molecule
   m_radii.setZero();
   Eigen::MatrixXd radii(numAtoms, numAtoms);
-  Eigen::MatrixXd mask(numAtoms*3, 1);
+  Eigen::MatrixXd mask(numAtoms * 3, 1);
   mask.setOnes();
   m_mask = mask;
 

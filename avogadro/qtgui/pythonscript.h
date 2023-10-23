@@ -110,7 +110,7 @@ public:
 
   /**
    * Terminate the asynchronous process.
-  */
+   */
   void asyncTerminate();
 
   /**

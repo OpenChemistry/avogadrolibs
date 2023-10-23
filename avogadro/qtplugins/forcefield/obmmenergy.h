@@ -55,7 +55,10 @@ public:
 
   std::string identifier() const override { return m_identifier; }
   std::string name() const override { return m_name; }
-  std::string description() const override { return m_description.toStdString(); }
+  std::string description() const override
+  {
+    return m_description.toStdString();
+  }
 
   Core::Molecule::ElementMask elements() const override { return (m_elements); }
 

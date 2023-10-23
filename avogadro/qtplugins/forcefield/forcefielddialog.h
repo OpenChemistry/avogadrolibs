@@ -1,21 +1,10 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_OBFORCEFIELDDIALOG_H
-#define AVOGADRO_QTPLUGINS_OBFORCEFIELDDIALOG_H
+#ifndef AVOGADRO_QTPLUGINS_FORCEFIELDDIALOG_H
+#define AVOGADRO_QTPLUGINS_FORCEFIELDDIALOG_H
 
 #include <QDialog>
 
@@ -23,14 +12,14 @@ namespace Avogadro {
 namespace QtPlugins {
 
 namespace Ui {
-class OBForceFieldDialog;
+class ForceFieldDialog;
 }
 
 /**
- * @brief The OBForceFieldDialog class is used to prompt the user for parameters
- * to be used in an OpenBabel force field optimization.
+ * @brief The ForceFieldDialog class is used to prompt the user for parameters
+ * to be used in a force field optimization.
  */
-class OBForceFieldDialog : public QDialog
+class ForceFieldDialog : public QDialog
 {
   Q_OBJECT
 
@@ -38,9 +27,9 @@ public:
   /**
    * Construct a new dialog using the forcefields in @a forceFields.
    */
-  explicit OBForceFieldDialog(const QStringList& forceFields,
-                              QWidget* parent_ = 0);
-  ~OBForceFieldDialog() override;
+  explicit ForceFieldDialog(const QStringList& forceFields,
+                            QWidget* parent_ = 0);
+  ~ForceFieldDialog() override;
 
   /**
    * Construct a new dialog using the forcefields in @a forceFields and
@@ -51,39 +40,15 @@ public:
    * When the user closes the dialog, the options they selected are returned. If
    * the user cancels the dialog, an empty list is returned.
    */
-  static QStringList prompt(QWidget* parent_, const QStringList& forceFields,
-                            const QStringList& startingOptions,
+  static QVariantMap prompt(QWidget* parent_, const QStringList& forceFields,
+                            const QVariantMap& startingOptions,
                             const QString& recommendedForceField_ = QString());
 
   /**
-   * Get/set the options displayed in the dialog. The option format is a list of
-   * strings that may be used directly as arguments in a call to
-   * QProcess::start, with the exception of the `-i<input format>`,
-   * `-o<output format>` and `--minimize` options, which are not used by this
-   * class. See `obabel -L minimize` for a complete listing of available
-   * options.
-   *
-   * Each option (and argument, if applicable) must be a separate string in the
-   * list. For instance, to refer to the options in the call:
-@code
-obabel -icml -ocml --minimize --log --crit 1e-05 --ff Ghemical --sd"
-@endcode
-   *
-   * The option list should contain, in order:
-   * - `--crit`
-   * - `1e-05`
-   * - `--ff`
-   * - `Ghemical`
-   * - `--sd`
-   *
-   * @note The `--log` option is always added in the list returned by
-   * options, and is ignored by the setOptions method.
-   *
-   * @{
+   * Get/set the options displayed in the dialog. 
    */
-  QStringList options() const;
-  void setOptions(const QStringList& opts);
-  /**@}*/
+  QVariantMap options() const;
+  void setOptions(const QVariantMap& opts);
 
   /**
    * Get/set the recommended forcefield for the current molecule. If an empty
@@ -105,10 +70,10 @@ private slots:
 private:
   void updateRecommendedForceField();
 
-  Ui::OBForceFieldDialog* ui;
+  Ui::ForceFieldDialog* ui;
   QString m_recommendedForceField;
 };
 
 } // namespace QtPlugins
 } // namespace Avogadro
-#endif // AVOGADRO_QTPLUGINS_OBFORCEFIELDDIALOG_H
+#endif // AVOGADRO_QTPLUGINS_FORCEFIELDDIALOG_H

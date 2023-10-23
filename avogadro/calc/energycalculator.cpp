@@ -29,7 +29,8 @@ void EnergyCalculator::cleanGradients(TVector& grad)
   if (m_mask.rows() == size)
     grad = grad.cwiseProduct(m_mask);
   else
-    std::cerr << "Error: mask size " << m_mask.rows() << " " << grad.rows() << std::endl;
+    std::cerr << "Error: mask size " << m_mask.rows() << " " << grad.rows()
+              << std::endl;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Calc

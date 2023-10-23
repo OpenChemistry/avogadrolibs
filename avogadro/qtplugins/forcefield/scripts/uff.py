@@ -64,7 +64,7 @@ def run(filename):
         print("AvogadroGradient:")
         for atom in mol.atoms:
             grad = ff.GetGradient(atom.OBAtom)
-            print(grad.GetX(), grad.GetY(), grad.GetZ())
+            print(-1.0*grad.GetX(), -1.0*grad.GetY(), -1.0*grad.GetZ())
 
 
 if __name__ == "__main__":

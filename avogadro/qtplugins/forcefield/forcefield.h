@@ -1,7 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_FORCEFIELD_H
@@ -56,6 +55,7 @@ public:
   QStringList menuPath(QAction*) const override;
 
   void setMolecule(QtGui::Molecule* mol) override;
+  void setupMethod();
 
   std::string recommendedForceField() const;
 
@@ -67,6 +67,8 @@ public slots:
   void registerScripts();
   void unregisterScripts();
 
+  void showDialog();
+
 private slots:
   void energy();
   void optimize();
@@ -74,9 +76,11 @@ private slots:
   void unfreezeSelected();
 
 private:
-
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
+  Calc::EnergyCalculator* m_method = nullptr;
+  std::string m_methodName;
+  bool m_autodetect;
 
   // defaults
   Minimizer m_minimizer = LBFGS;
@@ -84,12 +88,11 @@ private:
   unsigned int m_nSteps = 5;
   double m_tolerance = 1.0e-6;
   double m_gradientTolerance = 1.0e-4;
-  Calc::EnergyCalculator *m_method = nullptr;
 
   QList<Calc::EnergyCalculator*> m_scripts;
 };
 
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_FORCEFIELD_H

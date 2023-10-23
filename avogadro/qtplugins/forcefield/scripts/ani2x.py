@@ -6,8 +6,12 @@ import json
 import sys
 
 try:
-    from openbabel import pybel
+    import torch
+    import torchani
     import numpy as np
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = torchani.models.ANI2x(periodic_table_index=True).to(device)
 
     imported = True
 except ImportError:
@@ -20,11 +24,11 @@ def getMetaData():
         return {}  # Avogadro will ignore us now
 
     metaData = {
-        "name": "MMFF94",
-        "identifier": "MMFF94",
-        "description": "Calculate MMFF94 energies and gradients",
-        "inputFormat": "cml",
-        "elements": "1,6-9,14-17,35,53",
+        "name": "ANI2x",
+        "identifier": "ANI2x",
+        "description": "Calculate ANI-2x energies and gradients",
+        "inputFormat": "cjson",
+        "elements": "1,6-9,16-17",
         "unitCell": False,
         "gradients": True,
         "ion": False,
@@ -36,40 +40,37 @@ def getMetaData():
 def run(filename):
     # we get the molecule from the supplied filename
     #  in cjson format (it's a temporary file created by Avogadro)
-    mol = next(pybel.readfile("cml", filename))
+    with open(filename, "r") as f:
+        mol_cjson = json.load(f)
 
-    ff = pybel._forcefields["mmff94"]
-    success = ff.Setup(mol.OBMol)
-    if not success:
-        # should never happen, but just in case
-        sys.exit("MMFF94 force field setup failed")
+    # first setup the calculator
+    atoms = np.array(mol_cjson["atoms"]["elements"]["number"])
+    species = torch.tensor([atoms], device=device)
+    coord_list = mol_cjson["atoms"]["coords"]["3d"]
+    np_coords = np.array(coord_list, dtype=float).reshape(-1, 3)
+    coordinates = torch.tensor([np_coords], requires_grad=True, device=device)
 
     # we loop forever - Avogadro will kill the process when done
-    num_atoms = len(mol.atoms)
+    num_atoms = len(atoms)
     while True:
         # read new coordinates from stdin
         for i in range(num_atoms):
-            coordinates = np.fromstring(input(), sep=" ")
-            atom = mol.atoms[i]
-            atom.OBAtom.SetVector(coordinates[0], coordinates[1], coordinates[2])
-
-        # update the molecule geometry for the next energy
-        ff.SetCoordinates(mol.OBMol)
+            np_coords[i] = np.fromstring(input(), sep=" ")
+        coordinates = torch.tensor([np_coords], requires_grad=True, device=device)
 
         # first print the energy of these coordinates
-        energy = ff.Energy(True)  # in kJ/mol
-        print("AvogadroEnergy:", energy)  # in kJ/mol
+        energy = model((species, coordinates)).energies
+        print("AvogadroEnergy:", energy)  # in Hartree
 
         # now print the gradient on each atom
         print("AvogadroGradient:")
-        for atom in mol.atoms:
-            grad = ff.GetGradient(atom.OBAtom)
-            print(-1.0*grad.GetX(), -1.0*grad.GetY(), -1.0*grad.GetZ())
-
+        derivative = torch.autograd.grad(energy.sum(), coordinates)[0]
+        for i in range(num_atoms):
+            print(derivative[0][i][0].item(), derivative[0][i][1].item(), derivative[0][i][2].item())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("MMFF94 calculator")
+    parser = argparse.ArgumentParser("ANI-2x calculator")
     parser.add_argument("--display-name", action="store_true")
     parser.add_argument("--metadata", action="store_true")
     parser.add_argument("-f", "--file", nargs=1)
@@ -83,6 +84,6 @@ if __name__ == "__main__":
         if name:
             print(name)
         else:
-            sys.exit("pybel is unavailable")
+            sys.exit("ANI-2x is unavailable")
     elif args["file"]:
         run(args["file"][0])

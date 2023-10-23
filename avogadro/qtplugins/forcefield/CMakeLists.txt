@@ -1,5 +1,6 @@
 set(forcefield_srcs
   forcefield.cpp
+  forcefielddialog.cpp
   obmmenergy.cpp
   scriptenergy.cpp
 )
@@ -10,12 +11,14 @@ avogadro_plugin(Forcefield
   forcefield.h
   Forcefield
   "${forcefield_srcs}"
+  forcefielddialog.ui
 )
 
 target_link_libraries(Forcefield PRIVATE Avogadro::Calc)
 
 # Bundled forcefield scripts
 set(forcefields
+  scripts/ani2x.py
   scripts/gaff.py
   scripts/gfn1.py
   scripts/gfn2.py

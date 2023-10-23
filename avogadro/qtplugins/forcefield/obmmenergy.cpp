@@ -20,7 +20,8 @@ class OBMMEnergy::ProcessListener : public QObject
 {
   Q_OBJECT
 public:
-  ProcessListener(QProcess *proc) : QObject(), m_finished(false), m_process(proc)
+  ProcessListener(QProcess* proc)
+    : QObject(), m_finished(false), m_process(proc)
   {
   }
 
@@ -71,7 +72,7 @@ OBMMEnergy::OBMMEnergy(const std::string& method)
 {
   // eventually CJSON might be nice
   m_inputFormat = new Io::CmlFormat;
- 
+
   if (method == "UFF") {
     m_description = tr("Universal Force Field");
     m_elements.reset();
@@ -351,7 +352,7 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     if (readingGradient) {
       QStringList items = line.split(" ", Qt::SkipEmptyParts);
       if (items.size() == 3) {
-        grad[3 * i] = items[0].toDouble();
+        grad[3 * i] = -1.0 * items[0].toDouble();
         grad[3 * i + 1] = items[1].toDouble();
         grad[3 * i + 2] = items[2].toDouble();
         ++i;

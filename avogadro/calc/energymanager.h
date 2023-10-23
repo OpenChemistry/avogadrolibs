@@ -103,11 +103,11 @@ public:
 
   /**
    * @brief Get the name of the model for the specified identifier.
-   * 
+   *
    * The name is a user-visible string, and may be translated.
    * @param identifier The unique identifier of the model.
    * @return The name of the model, or an empty string if not found.
-  */
+   */
   std::string nameForModel(const std::string& identifier) const;
 
   /**

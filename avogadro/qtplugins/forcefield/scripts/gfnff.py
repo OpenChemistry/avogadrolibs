@@ -40,9 +40,6 @@ def run(filename):
     with open(filename, "r") as f:
         mol_cjson = json.load(f)
 
-    with open("/Users/ghutchis/gfnff.log", "a") as f:
-        f.write(filename + "\n")
-
     # first setup the calculator
     atoms = np.array(mol_cjson["atoms"]["elements"]["number"])
     coord_list = mol_cjson["atoms"]["coords"]["3d"]
@@ -83,7 +80,7 @@ def run(filename):
         # now print the gradient
         # .. we don't want the "[]" in the output
         print("AvogadroGradient:")
-        grad = res.get_gradient() * 4961.475  # convert units
+        grad = res.get_gradient() * 496100.475  # convert units
         output = np.array2string(grad)
         output = output.replace("[", "").replace("]", "")
         print(output)

@@ -165,9 +165,9 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     if (readingGrad) {
       QStringList items = line.split(" ");
       if (items.size() == 3) {
-        grad[i] = -1.0*items[0].toDouble();
-        grad[i + 1] = -1.0*items[1].toDouble();
-        grad[i + 2] = -1.0*items[2].toDouble();
+        grad[i] = items[0].toDouble();
+        grad[i + 1] = items[1].toDouble();
+        grad[i + 2] = items[2].toDouble();
         i += 3;
       }
 

@@ -1,14 +1,16 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "forcefield.h"
+#include "forcefielddialog.h"
 #include "obmmenergy.h"
 #include "scriptenergy.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QSettings>
+
 #include <QtWidgets/QAction>
 #include <QtWidgets/QMessageBox>
 
@@ -30,9 +32,9 @@
 #include <cppoptlib/meta.h>
 #include <cppoptlib/problem.h>
 #include <cppoptlib/solver/bfgssolver.h>
-#include <cppoptlib/solver/lbfgssolver.h>
 #include <cppoptlib/solver/conjugatedgradientdescentsolver.h>
 #include <cppoptlib/solver/gradientdescentsolver.h>
+#include <cppoptlib/solver/lbfgssolver.h>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -48,10 +50,21 @@ const int freezeAction = 3;
 const int unfreezeAction = 4;
 const int constraintAction = 5;
 
-Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
+Forcefield::Forcefield(QObject* parent_)
+  : ExtensionPlugin(parent_), m_method(nullptr)
 {
+  QSettings settings;
+  settings.beginGroup("forcefield");
+  m_autodetect = settings.value("autodetect", true).toBool();
+  m_methodName = settings.value("forcefield", "LJ").toString().toStdString();
+  m_nSteps = settings.value("steps", 10).toInt();
+  m_maxSteps = settings.value("maxSteps", 250).toInt();
+  m_tolerance = settings.value("tolerance", 1.0e-4).toDouble();
+  m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
+  settings.endGroup();
+
   refreshScripts();
-  /*/
+  /* @todo - finish OBMM interface
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
@@ -71,6 +84,18 @@ Forcefield::Forcefield(QObject* parent_) : ExtensionPlugin(parent_)
   action->setData(energyAction);
   action->setProperty("menu priority", 910);
   connect(action, SIGNAL(triggered()), SLOT(energy()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Configure…"));
+  action->setData(configureAction);
+  action->setProperty("menu priority", 900);
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setSeparator(true);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -98,13 +123,48 @@ QList<QAction*> Forcefield::actions() const
 QStringList Forcefield::menuPath(QAction* action) const
 {
   QStringList path;
-  if (action->data() == optimizeAction) {
-    // optimize geometry
-    path << tr("&Extensions");
-    return path;
-  }
   path << tr("&Extensions") << tr("&Calculate");
   return path;
+}
+
+void Forcefield::showDialog()
+{
+  QStringList forceFields;
+  auto list =
+    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
+  for (auto option : list) {
+    forceFields << option.c_str();
+  }
+
+  QSettings settings;
+  QVariantMap options;
+  options["forcefield"] = m_methodName.c_str();
+  options["nSteps"] = m_nSteps;
+  options["maxSteps"] = m_maxSteps;
+  options["tolerance"] = m_tolerance;
+  options["gradientTolerance"] = m_gradientTolerance;
+  options["autodetect"] = m_autodetect;
+
+  QVariantMap results = ForceFieldDialog::prompt(
+    nullptr, forceFields, options, recommendedForceField().c_str());
+
+  if (!results.isEmpty()) {
+    // update settings
+    settings.beginGroup("forcefield");
+    m_methodName = results["forcefield"].toString().toStdString();
+    settings.setValue("forcefield", m_methodName.c_str());
+    
+    m_maxSteps = results["maxSteps"].toInt();
+    settings.setValue("maxSteps", m_maxSteps);
+    m_tolerance = results["tolerance"].toDouble();
+    settings.setValue("tolerance", m_tolerance);
+    m_gradientTolerance = results["gradientTolerance"].toDouble();
+    settings.setValue("gradientTolerance", m_gradientTolerance);
+    m_autodetect = results["autodetect"].toBool();
+    settings.setValue("autodetect", m_autodetect);
+    settings.endGroup();
+  }
+  setupMethod();
 }
 
 void Forcefield::setMolecule(QtGui::Molecule* mol)
@@ -113,11 +173,32 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
     return;
 
   m_molecule = mol;
+
+  setupMethod();
+}
+
+void Forcefield::setupMethod()
+{
+  if (m_autodetect)
+    m_methodName = recommendedForceField();
+
+  qDebug() << " setup method " << m_methodName.c_str() << " autodetect: "
+           << m_autodetect << " recommended " << recommendedForceField().c_str();
+
+  if (m_method == nullptr) {
+    // we have to create the calculator
+    m_method = Calc::EnergyManager::instance().model(m_methodName);
+  } else if (m_method->identifier() != m_methodName) {
+    delete m_method; // delete the previous one
+    m_method = Calc::EnergyManager::instance().model(m_methodName);
+  }
+
+  m_method->setMolecule(m_molecule);
 }
 
 void Forcefield::optimize()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_method == nullptr)
     return;
 
   // merge all coordinate updates into one step for undo
@@ -125,9 +206,21 @@ void Forcefield::optimize()
   m_molecule->undoMolecule()->setInteractive(true);
 
   cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
-  //cppoptlib::GradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
+
+  // double-check the mask
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != 3*n) {
+    mask = Eigen::VectorXd::Zero(3 * n);
+    // set to 1.0
+    for (Index i = 0; i < 3 * n; ++i) {
+      mask[i] = 1.0;
+    }
+  }
+  m_method->setMolecule(m_molecule);
+  m_method->setMask(mask);
+
   // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   double* p = pos[0].data();
@@ -144,36 +237,16 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = m_nSteps;
+  crit.iterations = 5;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
   solver.setStopCriteria(crit);
 
-  // set the method
-  std::string recommended = recommendedForceField();
-  qDebug() << "Energy method: " << recommended.c_str();
-
-  if (m_method == nullptr || m_method->identifier() != recommended) {
-    // we have to create the calculator
-    m_method = Calc::EnergyManager::instance().model(recommended);
-  }
-  m_method->setMolecule(m_molecule);
-  auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != m_molecule->atomCount()) {
-    mask = Eigen::VectorXd::Zero(3 * m_molecule->atomCount());
-    // set to 1.0
-    for (Index i = 0; i < 3 * m_molecule->atomCount(); ++i) {
-      mask[i] = 1.0;
-    }
-  }
-  m_method->setMask(mask);
-
   Real energy = m_method->value(positions);
   m_method->gradient(positions, gradient);
-  qDebug() << " initial " << energy 
-  << " gradNorm: " << gradient.norm()
-  << " posNorm: " << positions.norm();
+  qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
+  qDebug() << " maxSteps" << m_maxSteps << " steps " << m_maxSteps / crit.iterations;
 
   Real currentEnergy = 0.0;
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
@@ -185,8 +258,7 @@ void Forcefield::optimize()
     // get the current gradient for force visualization
     m_method->gradient(positions, gradient);
     qDebug() << " optimize " << i << currentEnergy
-             << " gradNorm: " << gradient.norm()
-             << " posNorm: " << positions.norm();
+             << " gradNorm: " << gradient.norm();
 
     // update coordinates
     bool isFinite = std::isfinite(currentEnergy);
@@ -239,18 +311,8 @@ void Forcefield::optimize()
 
 void Forcefield::energy()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_method == nullptr)
     return;
-
-  //@todo check m_method for a particular calculator
-  std::string recommended = recommendedForceField();
-  qDebug() << "Energy method: " << recommended.c_str();
-
-  if (m_method == nullptr || m_method->identifier() != recommended) {
-    // we have to create the calculator
-    m_method = Calc::EnergyManager::instance().model(recommended);
-  }
-  m_method->setMolecule(m_molecule);
 
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
@@ -260,9 +322,10 @@ void Forcefield::energy()
   Eigen::VectorXd positions = map;
 
   // now get the energy
+  m_method->setMolecule(m_molecule);
   Real energy = m_method->value(positions);
 
-  QString msg(tr("Energy = %L1").arg(energy));
+  QString msg(tr("%1 Energy = %L2").arg(m_methodName.c_str()).arg(energy));
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
@@ -281,16 +344,14 @@ std::string Forcefield::recommendedForceField() const
 
   // iterate to see what we have
   std::string bestOption;
-  for (auto options : list) {
+  for (auto option : list) {
     // ideally, we'd use GFN-FF but it needs tweaking
     // everything else is a ranking
     // GAFF is better than MMFF94 which is better than UFF
-    if (options == "UFF" && bestOption != "GAFF" || bestOption != "MMFF94")
-      bestOption = options;
-    if (options == "MMFF94" && bestOption != "GAFF")
-      bestOption = options;
-    if (options == "GAFF")
-      bestOption = options;
+    if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
+      bestOption = option;
+    if (option == "MMFF94" && bestOption != "GAFF")
+      bestOption = option;
   }
   if (!bestOption.empty())
     return bestOption;
