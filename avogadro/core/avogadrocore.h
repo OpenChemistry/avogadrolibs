@@ -71,7 +71,7 @@ constexpr Real RAD_TO_DEG = static_cast<Real>(RAD_TO_DEG_D);
 constexpr double BOHR_TO_ANGSTROM_D = 0.52917721092;
 constexpr float BOHR_TO_ANGSTROM_F = static_cast<float>(BOHR_TO_ANGSTROM_D);
 constexpr Real BOHR_TO_ANGSTROM = static_cast<Real>(BOHR_TO_ANGSTROM_D);
-
+//const expr
 constexpr double ANGSTROM_TO_BOHR_D = 1.0 / BOHR_TO_ANGSTROM_D;
 constexpr float ANGSTROM_TO_BOHR_F = static_cast<float>(ANGSTROM_TO_BOHR_D);
 constexpr Real ANGSTROM_TO_BOHR = static_cast<Real>(ANGSTROM_TO_BOHR_D);
