@@ -35,7 +35,7 @@ using Core::UnitCell;
 #endif
 
 #define DCD_EOF -1
-#define DCD_MAGIC 84
+constexpr int DCD_MAGIC = 84;
 #define DCD_IS_CHARMM 0x01
 #define DCD_HAS_4DIMS 0x02
 #define DCD_HAS_EXTRA_BLOCK 0x04
