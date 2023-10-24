@@ -205,7 +205,8 @@ void Forcefield::optimize()
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
-  cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
+  cppoptlib::LbfgsSolver<EnergyCalculator> solver;
+  // cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
 

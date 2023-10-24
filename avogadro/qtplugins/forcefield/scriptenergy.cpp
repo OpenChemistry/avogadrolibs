@@ -125,9 +125,11 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
   double energy = 0.0;
   for (auto line : lines) {
     if (line.startsWith("AvogadroEnergy:")) {
-      QStringList items = line.split(" ");
-      if (items.size() > 1)
+      QStringList items = line.split(" ", QString::SkipEmptyParts);
+      if (items.size() > 1) {
         energy = items[1].toDouble();
+        break;
+      }
     }
   }
 
@@ -163,7 +165,7 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     }
 
     if (readingGrad) {
-      QStringList items = line.split(" ");
+      QStringList items = line.split(" ", QString::SkipEmptyParts);
       if (items.size() == 3) {
         grad[i] = items[0].toDouble();
         grad[i + 1] = items[1].toDouble();

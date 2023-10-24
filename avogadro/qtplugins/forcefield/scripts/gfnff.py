@@ -66,7 +66,7 @@ def run(filename):
     while True:
         # read new coordinates from stdin
         for i in range(len(atoms)):
-            coordinates[i] = np.fromstring(input(), sep=" ")
+            coordinates[i] = np.fromstring(input())
         # .. convert from Angstrom to Bohr
         coordinates /= 0.52917721067
 
@@ -80,7 +80,7 @@ def run(filename):
         # now print the gradient
         # .. we don't want the "[]" in the output
         print("AvogadroGradient:")
-        grad = res.get_gradient() * 496100.475  # convert units
+        grad = res.get_gradient() * 4961.475  # convert units
         output = np.array2string(grad)
         output = output.replace("[", "").replace("]", "")
         print(output)
