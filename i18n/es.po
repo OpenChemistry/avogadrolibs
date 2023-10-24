@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
 "PO-Revision-Date: 2023-10-24 08:18+0000\n"
-"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2957,10 +2957,8 @@ msgid "Autodetect (%1)"
 msgstr "Autodetectar (%1)"
 
 #: qtplugins/forcefield/obmmenergy.cpp:77
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Campo de fuerza"
+msgstr "Campo de fuerza universal"
 
 #: qtplugins/forcefield/obmmenergy.cpp:82
 msgid "Generalized Amber Force Field"
