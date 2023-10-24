@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
 "PO-Revision-Date: 2023-10-24 08:22+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2971,7 +2971,8 @@ msgstr "Campo de Fuerza Molecular 94 de Merck"
 #: qtplugins/forcefield/scriptenergy.cpp:238
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr "Error al recuperar los metadatos para el script de energía: %1"
+msgstr ""
+"Error al recuperar metadatos para la secuencia de comandos de energía: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:248
 #, qt-format
