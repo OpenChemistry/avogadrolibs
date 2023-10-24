@@ -39,7 +39,7 @@ double ChargeModel::potential(Molecule& mol, const Vector3& point) const
     double distance = (positions[i] - point).norm();
     if (distance > 0.01) {
       // drop small distances to avoid overflow
-      potential += charges(i,0) / distance;
+      potential += charges(i, 0) / distance;
     }
   }
 
@@ -52,12 +52,13 @@ Array<double> ChargeModel::potentials(Core::Molecule& mol,
   // This is naive and slow, but can be re-implemented by methods
   // for batching
   Array<double> potentials(points.size(), 0.0);
-  for(unsigned int i = 0; i < points.size(); ++i)
+  for (unsigned int i = 0; i < points.size(); ++i)
     potentials[i] = potential(mol, points[i]);
   return potentials;
 }
 
-void ChargeModel::appendError(const std::string& errorString, bool newLine) const
+void ChargeModel::appendError(const std::string& errorString,
+                              bool newLine) const
 {
   m_error += errorString;
   if (newLine)
