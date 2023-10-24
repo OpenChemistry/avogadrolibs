@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
 "PO-Revision-Date: 2023-10-24 08:17+0000\n"
-"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2055,11 +2055,11 @@ msgstr "Enlace"
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Eliminar enlaces de todos los átomos o de los seleccionados."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Crear enlaces entre todos los átomos o los seleccionados."
 
 #: qtplugins/bonding/bonding.cpp:77
 msgid "Perceive bond orders."
@@ -2905,16 +2905,12 @@ msgstr ""
 "molécula."
 
 #: qtplugins/forcefield/forcefield.cpp:75
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "Optimización"
+msgstr "Optimizar"
 
 #: qtplugins/forcefield/forcefield.cpp:91
-#, fuzzy
-#| msgid "Configure Bonding…"
 msgid "Configure…"
-msgstr "Configurar Enlaces…"
+msgstr "Configurar…"
 
 #: qtplugins/forcefield/forcefield.cpp:103
 msgid "Freeze Selected Atoms"
@@ -2925,10 +2921,8 @@ msgid "Unfreeze Selected Atoms"
 msgstr "Liberar los Átomos Seleccionadaos"
 
 #: qtplugins/forcefield/forcefield.cpp:126
-#, fuzzy
-#| msgid "Calculate"
 msgid "&Calculate"
-msgstr "Calcular"
+msgstr "&Calcular"
 
 #: qtplugins/forcefield/forcefield.cpp:287 qtplugins/openbabel/openbabel.cpp:45
 #: qtplugins/openbabel/openbabel.cpp:525
@@ -2936,10 +2930,9 @@ msgid "Optimize Geometry"
 msgstr "Optimizar Geometría"
 
 #: qtplugins/forcefield/forcefield.cpp:328
-#, fuzzy, qt-format
-#| msgid "Energy = %L1 %2"
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energía = %L1 %2"
+msgstr "%1 Energía = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:329
 #: qtplugins/playertool/playertool.cpp:343
@@ -2950,16 +2943,12 @@ msgid "Avogadro"
 msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.h:46
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield optimization"
-msgstr "Optimización de campos de fuerza"
+msgstr "Optimización del campo de fuerza"
 
 #: qtplugins/forcefield/forcefield.h:50
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield minimization, including scripts"
-msgstr "Optimización de campos de fuerza"
+msgstr "Minimización del campo de fuerza, incluidos los scripts"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
