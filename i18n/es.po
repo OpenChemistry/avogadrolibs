@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
-"PO-Revision-Date: 2023-10-16 12:00+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-10-24 08:17+0000\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.1.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1026,7 +1026,7 @@ msgstr "Seleccionar ejecutable:"
 msgid ""
 "The file name contains invalid characters. Please choose another file name."
 msgstr ""
-"El nombre del archivo contiene caracteres no válidos. Por favor, elije otro "
+"El nombre del archivo contiene caracteres no válidos. Por favor, elegir otro "
 "nombre para el archivo."
 
 #: qtgui/fileformatdialog.cpp:60
@@ -1585,10 +1585,10 @@ msgid ""
 msgstr ""
 "Alinear Moléculas \n"
 "\n"
-"Izquierdo del ratón: \t Seleccione hasta dos átomos. \n"
+"Botón Izquierdo del Ratón: \t Seleccionar hasta dos átomos. \n"
 "\t El primer átomo se centra en el origen. \n"
 "\t El segundo átomo está alineado con el eje seleccionado. \n"
-"Derecho del ratón: \t Cambiar la alineación. \n"
+"Botón Derecho del Ratón: \t Cambiar la alineación. \n"
 "Doble clic: \t Centrar el átomo en el origen."
 
 #: qtplugins/aligntool/aligntool.cpp:75
@@ -1597,19 +1597,19 @@ msgstr "Eje:"
 
 #: qtplugins/aligntool/aligntool.cpp:152
 msgid "Align at Origin"
-msgstr "Alinear desde el comienzo"
+msgstr "Alinear en el Origen"
 
 #: qtplugins/aligntool/aligntool.cpp:188
 msgid "Align to Axis"
-msgstr "Alinear con el eje"
+msgstr "Alinear con el Eje"
 
 #: qtplugins/aligntool/aligntool.cpp:304
 msgid "Center the atom at the origin."
-msgstr "Centra el átomo en el origen."
+msgstr "Centrar el átomo en el origen."
 
 #: qtplugins/aligntool/aligntool.cpp:307
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr "Rota la molécula para alinear el átomo con el eje especificado."
+msgstr "Rotar la molécula para alinear el átomo con el eje especificado."
 
 #: qtplugins/aligntool/aligntool.h:30
 msgid "Align tool"
@@ -2062,10 +2062,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:77
-#, fuzzy
-#| msgid "Perceive Bond Orders"
 msgid "Perceive bond orders."
-msgstr "Determinar Órdenes de Enlace"
+msgstr "Determinar órdenes de enlace."
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -2706,16 +2704,12 @@ msgid "Import Crystal from Clipboard"
 msgstr "Importar Cristal desde el Portapapeles"
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
-#| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Asociar Átomos a Celda Unidad"
+msgstr "Asociar átomos a la celda unidad."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Rotar a la Orientación Estándar"
+msgstr "Rotar la celda unidad a la orientación estándar."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
@@ -2923,16 +2917,12 @@ msgid "Configure…"
 msgstr "Configurar Enlaces…"
 
 #: qtplugins/forcefield/forcefield.cpp:103
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Importar átomos seleccionados"
+msgstr "Fijar los Átomos Seleccionados"
 
 #: qtplugins/forcefield/forcefield.cpp:110
-#, fuzzy
-#| msgid "Bond Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Enlazar Átomos Seleccionadaos"
+msgstr "Liberar los Átomos Seleccionadaos"
 
 #: qtplugins/forcefield/forcefield.cpp:126
 #, fuzzy
