@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
 "PO-Revision-Date: 2023-10-24 08:28+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -4362,7 +4362,7 @@ msgstr "Alinear la Vista con los Ejes"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr "Alinear la visualización con los ejes."
+msgstr "Alinear la vista con los ejes."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
