@@ -301,7 +301,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           break;
         list = Core::split(key, ' ');
         while (!key.empty()) {
-          if (list.size() != 3) {
+          // imaginary frequencies can have an additional comment:
+          // ***imaginary mode***
+          if (list.size() != 3 &&
+              (list.size() != 5 || list[3] != "***imaginary" ||
+               list[4] != "mode***")) {
             break;
           }
           // e.g. 0:         0.00 cm**-1
@@ -331,14 +335,24 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         if (key.empty())
           break;
         list = Core::split(key, ' ');
-        vector<int> modeIndex;
+        vector<std::size_t> modeIndex;
+        bool invalid_index = false;
         while (!key.empty()) {
           // first we get a set of column numbers
           // e.g. 1  2  3  4  5  6  7  8  9 10
           modeIndex.clear();
-          for (unsigned int i = 0; i < list.size(); i++) {
-            modeIndex.push_back(Core::lexicalCast<int>(list[i]));
+          for (const auto& index_str : list) {
+            auto index = Core::lexicalCast<std::size_t>(index_str);
+            if (index >= m_frequencies.size()) {
+              invalid_index = true;
+              break;
+            }
+            modeIndex.push_back(index);
           }
+          // invalid column index
+          if (invalid_index)
+            break;
+
           // now we read the displacements .. there should be 3N lines
           // x,y,z for each atom
           getline(in, key);
@@ -373,7 +387,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          int index = Core::lexicalCast<int>(list[0]);
+          auto index = Core::lexicalCast<std::size_t>(list[0]);
+          // invalid index
+          if (index >= m_frequencies.size())
+            break;
+
           double intensity = Core::lexicalCast<double>(list[3]);
           m_IRintensities[index] = intensity;
 
@@ -396,8 +414,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          int index = Core::lexicalCast<int>(list[0]);
-          if (m_RamanIntensities.size() == 0 && index > 0) {
+          auto index = Core::lexicalCast<std::size_t>(list[0]);
+          // invalid index
+          if (index >= m_frequencies.size())
+            break;
+          if (m_RamanIntensities.empty()) {
             while (m_RamanIntensities.size() < index) {
               m_RamanIntensities.push_back(0.0);
             }
