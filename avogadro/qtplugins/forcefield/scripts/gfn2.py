@@ -64,7 +64,7 @@ def run(filename):
     while(True):
         # read new coordinates from stdin
         for i in range(len(atoms)):
-            coordinates[i] = np.fromstring(input(), sep=" ")
+            coordinates[i] = np.fromstring(input())
         # .. convert from Angstrom to Bohr
         coordinates /= 0.52917721067
 
