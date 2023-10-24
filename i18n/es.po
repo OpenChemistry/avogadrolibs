@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
-"PO-Revision-Date: 2023-10-24 08:17+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-10-24 08:18+0000\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -2948,7 +2948,7 @@ msgstr "Optimización del campo de fuerza"
 
 #: qtplugins/forcefield/forcefield.h:50
 msgid "Forcefield minimization, including scripts"
-msgstr "Minimización del campo de fuerza, incluidos los scripts"
+msgstr "Minimización del campo de fuerza, incluyendo las secuencias de comandos"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
