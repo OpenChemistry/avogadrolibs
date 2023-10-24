@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
-"PO-Revision-Date: 2023-10-24 08:19+0000\n"
+"PO-Revision-Date: 2023-10-24 08:20+0000\n"
 "Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -2966,7 +2966,7 @@ msgstr "Campo de Fuerza Generalizado de Amber"
 
 #: qtplugins/forcefield/obmmenergy.cpp:96
 msgid "Merck Molecular Force Field 94"
-msgstr "Campo de fuerza molecular Merck 94"
+msgstr "Campo de Fuerza Molecular 94 de Merck"
 
 #: qtplugins/forcefield/scriptenergy.cpp:238
 #, qt-format
