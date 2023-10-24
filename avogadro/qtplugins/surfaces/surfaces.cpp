@@ -154,8 +154,14 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     homo = m_basis->homo();
   if (options.contains("orbital")) {
     // check if options contains "homo" or "lumo"
-    bool string = options["orbital"].canConvert<QString>();
-    if (string) {
+    bool ok = false;
+    if (options["orbital"].canConvert<int>()) {
+      // internally, we count orbitals from zero
+      // if the conversion worked, ok = true
+      // and we'll skip the next conditional
+      index = options.value("orbital").toInt(&ok) - 1;
+    }
+    if (!ok && options["orbital"].canConvert<QString>()) {
       // should be something like "homo-1" or "lumo+2"
       QString name = options["orbital"].toString();
       QString expression, modifier;
@@ -181,9 +187,6 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
           index = index + n;
       }
       index = index - 1; // start from zero
-    } else {
-      // internally, we count orbitals from zero
-      index = options.value("index").toInt() - 1;
     }
   }
   bool beta = false;
