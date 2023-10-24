@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-23 23:03+0000\n"
 "PO-Revision-Date: 2023-10-24 08:29+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -4557,8 +4557,7 @@ msgstr "Grupo Espacial"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
-"Rellena los átomos simétricos en función del grupo espacial del cristalino."
+msgstr "Rellenar átomos simétricos en función del grupo espacial del cristal."
 
 #: qtplugins/spacegroup/spacegroup.cpp:199
 msgid "Failure"
