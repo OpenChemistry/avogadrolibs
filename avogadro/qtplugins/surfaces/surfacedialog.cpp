@@ -11,7 +11,7 @@ namespace Avogadro::QtPlugins {
 
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog),
-  m_automaticResolution(true)
+    m_automaticResolution(true)
 {
   m_ui->setupUi(this);
 
@@ -68,7 +68,7 @@ void SurfaceDialog::propertyComboChanged(int n)
     case 1: // Electrostatic Potential
       m_ui->colormapCombo->setEnabled(true);
       m_ui->modelCombo->setEnabled(true);
-      for (const auto &model: m_chargeModels)
+      for (const auto& model : m_chargeModels)
         m_ui->modelCombo->addItem(model.first.c_str(), model.second.c_str());
   }
 }
@@ -169,7 +169,8 @@ void SurfaceDialog::setupBasis(int numElectrons, int numMOs, bool beta)
     m_ui->spinCombo->setVisible(true);
     m_ui->spinCombo->setEnabled(true);
     if (m_ui->surfaceCombo->findData(Surfaces::Type::SpinDensity) == -1)
-      m_ui->surfaceCombo->addItem(tr("Spin Density"), Surfaces::Type::SpinDensity);
+      m_ui->surfaceCombo->addItem(tr("Spin Density"),
+                                  Surfaces::Type::SpinDensity);
   } else {
     auto pos = m_ui->surfaceCombo->findData(Surfaces::Type::SpinDensity);
     if (pos != -1)
@@ -241,8 +242,8 @@ void SurfaceDialog::setupSteps(int stepCount)
 }
 
 void SurfaceDialog::setupModels(
-    const std::set<std::pair<std::string, std::string>> &chargeModels
-) {
+  const std::set<std::pair<std::string, std::string>>& chargeModels)
+{
   m_chargeModels = chargeModels;
 }
 
@@ -253,7 +254,8 @@ Surfaces::Type SurfaceDialog::surfaceType()
 
 Surfaces::ColorProperty SurfaceDialog::colorProperty()
 {
-  return static_cast<Surfaces::ColorProperty>(m_ui->propertyCombo->currentIndex());
+  return static_cast<Surfaces::ColorProperty>(
+    m_ui->propertyCombo->currentIndex());
 }
 
 QString SurfaceDialog::colorModel()
@@ -330,4 +332,4 @@ void SurfaceDialog::enableRecord()
   m_ui->recordButton->setEnabled(true);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins
