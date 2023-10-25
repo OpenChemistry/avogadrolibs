@@ -38,19 +38,5 @@ jobs:
         path: ${{ runner.workspace }}/clang-format.diff
         name: clang-format.diff
 
-    - name: Comment on diff
-      if: failure()
-      run: |
-        export NAME=`curl "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | jq '.artifacts[].name'`
-        export DL=`curl "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | jq '.artifacts[].archive_download_url'`
-        export URL="https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
-        echo URL=${URL}
-        echo NAME=${NAME}
-        echo DL=${DL}
-        curl "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
-
-        jq -nc "{\"body\": \"ERROR: clang-format-diff detected formatting issues. See the artifact for a patch or run clang-format on your branch.\"}" | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments"
+    - name: autofix
+      uses: autofix-ci/action@d3e591514b99d0fca6779455ff8338516663f7cc
