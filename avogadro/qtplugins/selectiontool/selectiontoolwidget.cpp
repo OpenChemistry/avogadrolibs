@@ -33,7 +33,8 @@ void SelectionToolWidget::setDropDown(size_t current, size_t max)
     m_ui->changeLayerDropDown->addItem(QString::number(i + 1));
   }
   m_ui->changeLayerDropDown->addItem(tr("New Layer"));
-  m_ui->changeLayerDropDown->setCurrentIndex(current);
+  if (current != m_ui->changeLayerDropDown->currentIndex())
+    m_ui->changeLayerDropDown->setCurrentIndex(current);
 }
 
 void SelectionToolWidget::userClickedColor()
