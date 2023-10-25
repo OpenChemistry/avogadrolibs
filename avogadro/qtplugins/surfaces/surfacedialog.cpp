@@ -19,7 +19,6 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
 
   m_ui->orbitalCombo->setVisible(false);
   m_ui->spinCombo->setVisible(false);
-  m_ui->chargeCombo->setVisible(false);
   m_ui->recordButton->setVisible(false);
 
   // set the data for the default items
@@ -151,28 +150,35 @@ void SurfaceDialog::setupBasis(int numElectrons, int numMOs, bool beta)
     return;
 
   m_ui->orbitalCombo->setVisible(true);
-  m_ui->orbitalCombo->setEnabled(false);
+  auto n = m_ui->surfaceCombo->currentIndex();
+  int type = m_ui->surfaceCombo->itemData(n).toInt();
+  if (type == Surfaces::Type::MolecularOrbital ||
+      type == Surfaces::Type::FromFile)
+    m_ui->orbitalCombo->setEnabled(true);
+  else
+    m_ui->orbitalCombo->setEnabled(false);
 
-  m_ui->surfaceCombo->addItem(tr("Molecular Orbital"),
-                              Surfaces::Type::MolecularOrbital);
-  m_ui->surfaceCombo->addItem(tr("Electron Density"),
-                              Surfaces::Type::ElectronDensity);
+  if (m_ui->surfaceCombo->findData(Surfaces::Type::MolecularOrbital) == -1)
+    m_ui->surfaceCombo->addItem(tr("Molecular Orbital"),
+                                Surfaces::Type::MolecularOrbital);
+  if (m_ui->surfaceCombo->findData(Surfaces::Type::ElectronDensity) == -1)
+    m_ui->surfaceCombo->addItem(tr("Electron Density"),
+                                Surfaces::Type::ElectronDensity);
 
   if (beta) {
     m_ui->spinCombo->setVisible(true);
     m_ui->spinCombo->setEnabled(true);
+    if (m_ui->surfaceCombo->findData(Surfaces::Type::SpinDensity) == -1)
+      m_ui->surfaceCombo->addItem(tr("Spin Density"), Surfaces::Type::SpinDensity);
+  } else {
+    auto pos = m_ui->surfaceCombo->findData(Surfaces::Type::SpinDensity);
+    if (pos != -1)
+      m_ui->surfaceCombo->removeItem(pos);
   }
-  // TODO: this class doesn't know about alpha / beta spin right now
-  /*
-  if (numElectrons % 2 != 0) {
-    m_ui->surfaceCombo->addItem(tr("Spin Density"),
-  Surfaces::Type::SpinDensity); m_ui->spinCombo->setVisible(true);
-    m_ui->spinCombo->setEnabled(true);
-  }
-  */
 
   // TODO: get this from the basis information
   QString text;
+  m_ui->orbitalCombo->clear();
   for (int i = 1; i <= numMOs; ++i) {
     text = tr("MO %L1", "Molecular orbital").arg(i);
     if (i == numElectrons / 2)
@@ -204,21 +210,25 @@ void SurfaceDialog::setupCubes(QStringList cubeNames)
 void SurfaceDialog::setupSteps(int stepCount)
 {
   if (stepCount < 2) {
+    m_ui->frameLabel->hide();
     m_ui->stepValue->setEnabled(false);
+    m_ui->stepValue->hide();
     m_ui->recordButton->setEnabled(false);
-    m_ui->recordButton->setVisible(false);
+    m_ui->recordButton->hide();
     m_ui->vcrBack->setEnabled(false);
-    m_ui->vcrBack->setVisible(false);
+    m_ui->vcrBack->hide();
     m_ui->vcrPlay->setEnabled(false);
-    m_ui->vcrPlay->setVisible(false);
+    m_ui->vcrPlay->hide();
     m_ui->vcrForward->setEnabled(false);
-    m_ui->vcrForward->setVisible(false);
+    m_ui->vcrForward->hide();
   } else {
+    m_ui->frameLabel->show();
     m_ui->stepValue->setEnabled(true);
     m_ui->stepValue->setRange(1, stepCount);
     m_ui->stepValue->setSuffix(tr(" of %0").arg(stepCount));
+    m_ui->stepValue->show();
     m_ui->recordButton->setEnabled(true);
-    m_ui->recordButton->setVisible(true);
+    m_ui->recordButton->show();
     /* Disable for now, this would be nice in future.
     m_ui->vcrBack->setEnabled(true);
     m_ui->vcrBack->setVisible(true);
