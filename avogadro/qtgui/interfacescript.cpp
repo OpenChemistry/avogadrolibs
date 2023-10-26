@@ -30,12 +30,14 @@ InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
     m_moleculeExtension(QStringLiteral("Unknown"))
-{}
+{
+}
 
 InterfaceScript::InterfaceScript(QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(this)),
     m_moleculeExtension(QStringLiteral("Unknown"))
-{}
+{
+}
 
 InterfaceScript::~InterfaceScript() {}
 
@@ -162,7 +164,8 @@ bool InterfaceScript::runCommand(const QJsonObject& options_,
   if (!insertMolecule(allOptions, *mol))
     return false;
 
-  connect(m_interpreter, &PythonScript::finished, this, &::Avogadro::QtGui::InterfaceScript::commandFinished);
+  connect(m_interpreter, &PythonScript::finished, this,
+          &::Avogadro::QtGui::InterfaceScript::commandFinished);
   m_interpreter->asyncExecute(QStringList() << QStringLiteral("--run-command"),
                               QJsonDocument(allOptions).toJson());
   return true;
@@ -257,8 +260,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     }
 
     // select some atoms
-    if (obj.contains("selectedAtoms") &&
-        obj["selectedAtoms"].isArray()) {
+    if (obj.contains("selectedAtoms") && obj["selectedAtoms"].isArray()) {
       QJsonArray selectedList = obj["selectedAtoms"].toArray();
       for (int i = 0; i < selectedList.size(); ++i) {
         if (selectedList[i].isDouble()) {
@@ -843,4 +845,4 @@ bool InterfaceScript::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
