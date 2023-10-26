@@ -50,9 +50,9 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_ui->readmeBrowser->setOpenExternalLinks(true);
 
   connect(m_ui->downloadButton, SIGNAL(clicked(bool)), this,
-          SLOT(getCheckedRepos()));
+          SLOT(getCheckedPlugins()));
   connect(m_ui->repoTable, SIGNAL(cellClicked(int, int)), this,
-          SLOT(downloadREADME(int, int)));
+          SLOT(downloadPluginDescriptionFor(int, int)));
 
   m_ui->repoTable->setColumnCount(4);
   m_ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -66,7 +66,7 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_ui->repoTable->setRowCount(0);
   m_ui->repoTable->verticalHeader()->hide();
 
-  getRepoData();
+  fetchPluginsList();
 }
 
 PluginManagerWidget::~PluginManagerWidget()
@@ -74,24 +74,21 @@ PluginManagerWidget::~PluginManagerWidget()
   delete m_ui;
 }
 
-// download master plugin.json from Avogadro.cc
-void PluginManagerWidget::getRepoData(QString url)
+void PluginManagerWidget::fetchPluginsList(QString url)
 {
   QNetworkRequest request;
   setRawHeaders(&request);
-  request.setUrl(url); // Set the url
+  request.setUrl(url);
   m_reply = m_NetworkAccessManager->get(request);
-  connect(m_reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
+  connect(m_reply, SIGNAL(finished()), this, SLOT(updatePluginsList()));
 }
 
-// Process the master plugin.json hosted on Avogadro.cc
-void PluginManagerWidget::updateRepoData()
+// refresh list of plugins in the gui
+void PluginManagerWidget::updatePluginsList()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
-    // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
 
-    // parse the json
     m_root = json::parse(bytes.data());
     int numRepos = m_root.size();
     m_ui->repoTable->setRowCount(numRepos);
@@ -101,7 +98,6 @@ void PluginManagerWidget::updateRepoData()
 
       const auto& currentRoot = m_root[i];
 
-      // Loop through the keys
       for (auto it = currentRoot.cbegin(); it != currentRoot.cend(); ++it) {
         if (it.key() == "name" && it.value().is_string())
           m_repoList[i].name = it.value().get<std::string>().c_str();
@@ -112,7 +108,6 @@ void PluginManagerWidget::updateRepoData()
         else if (it.key() == "type" && it.value().is_string())
           m_repoList[i].type = it.value().get<std::string>().c_str();
         else if (it.key() == "updated_at" && it.value().is_string()) {
-          // format the date, e.g. 2021-05-21T15:25:32Z
           QString format("yyyy-MM-ddTHH:mm:ssZ");
           QDateTime dateTime = QDateTime::fromString(
             it.value().get<std::string>().c_str(), format);
@@ -130,15 +125,13 @@ void PluginManagerWidget::updateRepoData()
 
       QStringList urlParts;
       QString readmeUrl;
-      // If the readme wasn't supplied with the JSON, figure it out
       if (m_repoList[i].readmeUrl == "Error") {
         if (m_repoList[i].baseUrl != "Error")
           urlParts = m_repoList[i].baseUrl.split("/");
         else {
           urlParts = m_repoList[i].zipballUrl.split("/");
           urlParts.removeLast();
-          urlParts.removeLast(); // remove /zipball/(version/branch)
-          // save this as the base URL
+          urlParts.removeLast();
           m_repoList[i].baseUrl = urlParts.join("/");
         }
         urlParts.append("readme");
@@ -163,27 +156,23 @@ void PluginManagerWidget::updateRepoData()
   m_reply->deleteLater();
 }
 
-// Grab README data from Github
-void PluginManagerWidget::downloadREADME(int row, int col)
+void PluginManagerWidget::downloadPluginDescriptionFor(int row, int col)
 {
   m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
   setRawHeaders(&request);
-  request.setUrl(url); // Set the url
+  request.setUrl(url);
 
   m_reply = m_NetworkAccessManager->get(request);
-  connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
+  connect(m_reply, SIGNAL(finished()), this, SLOT(showDownloadedPluginDescription()));
 }
 
-// display README when the user clicks a row
-void PluginManagerWidget::showREADME()
+void PluginManagerWidget::showDownloadedPluginDescription()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
-    // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
 
-    // parse the json
     m_root = json::parse(bytes.data());
 
     QByteArray content("ERROR");
@@ -238,8 +227,10 @@ void PluginManagerWidget::showREADME()
   }
 }
 
-// see which repositories the user checked
-void PluginManagerWidget::getCheckedRepos()
+/**
+ * Get which plugins have been checked by user
+ */
+void PluginManagerWidget::getCheckedPlugins()
 {
   m_ui->readmeBrowser->clear();
   m_downloadList.clear();

@@ -34,10 +34,10 @@ public:
   ~PluginManagerWidget() override;
 
 public slots:
-  void showREADME();
-  void downloadREADME(int, int);
-  void updateRepoData();
-  void getCheckedRepos();
+  void showDownloadedPluginDescription();
+  void downloadPluginDescriptionFor(int, int);
+  void updatePluginsList();
+  void getCheckedPlugins();
   void handleRedirect();
   void unzipPlugin();
 
@@ -70,8 +70,11 @@ private:
   };
 
   void downloadNextPlugin();
-  // for now, the default path
-  void getRepoData(QString url = "https://avogadro.cc/plugins.json");
+  /**
+   * Fetch plugins information listed in the given file at the given url  
+   * for now, the default path
+   */
+  void fetchPluginsList(QString url = "https://avogadro.cc/plugins.json");
   void downloadNext();
   bool checkSHA1(QByteArray);
 
