@@ -41,6 +41,9 @@ public slots:
   void installNextPluginFinished();
   void unzipPlugin();
   void installDownloadedPlugin();
+  void onInstallMethodChanged(const QString &text);
+  void onSetPythonPathClicked();
+  void onEnvironmentChanged(const QString &text);
 
 private:
   struct repo

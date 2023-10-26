@@ -6,6 +6,7 @@
 #include "pluginmanagerwidget.h"
 #include "ui_pluginmanagerwidget.h"
 #include "zipextracter.h"
+#include "pythoncmdlineinterface.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -66,7 +67,34 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_ui->repoTable->setRowCount(0);
   m_ui->repoTable->verticalHeader()->hide();
 
+  // Populate the environment selection ComboBox
+  QStringList environments = detectPythonInterpreters();
+  m_ui->environmentSelection->addItems(environments);
+  int baseIndex = m_ui->environmentSelection->findText("base");
+  if (baseIndex != -1) {
+      m_ui->environmentSelection->setCurrentIndex(baseIndex);
+  }
+
+  // Connect signals to slots
+  connect(m_ui->installMethod, SIGNAL(currentTextChanged(const QString &)), this, SLOT(onInstallMethodChanged(const QString &)));
+  connect(m_ui->setPythonPath, &QPushButton::clicked, this, &PluginManagerWidget::onSetPythonPathClicked);
+  connect(m_ui->environmentSelection, SIGNAL(currentTextChanged(const QString &)), this, SLOT(onEnvironmentChanged(const QString &)));
+
   fetchPluginsList();
+}
+
+void PluginManagerWidget::onInstallMethodChanged(const QString &text) {
+    QString method = (text == "no install") ? "None" : text;
+    qDebug() << "Install Method Changed to: " << method;
+}
+
+void PluginManagerWidget::onSetPythonPathClicked() {
+    QString pythonPath = m_ui->pythonPathInput->text();
+    qDebug() << "Python Path: " << pythonPath;
+}
+
+void PluginManagerWidget::onEnvironmentChanged(const QString &text) {
+    qDebug() << "Environment Changed to: " << text;
 }
 
 PluginManagerWidget::~PluginManagerWidget()

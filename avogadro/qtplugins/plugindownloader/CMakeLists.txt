@@ -5,6 +5,7 @@ set(plugindownloader_srcs
   plugindownloader.cpp
   pluginmanagerwidget.cpp
   zipextracter.cpp
+  pythoncmdlineinterface.cpp
 )
 
 avogadro_plugin(PluginDownloader
