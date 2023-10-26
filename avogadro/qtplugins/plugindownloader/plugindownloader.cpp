@@ -24,7 +24,7 @@ PluginDownloader::PluginDownloader(QObject* parent_)
     m_network(nullptr), m_widget(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("Download Plugins…"));
+  m_action->setText(tr("Manage"));
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
