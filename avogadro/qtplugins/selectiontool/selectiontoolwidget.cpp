@@ -17,8 +17,6 @@ SelectionToolWidget::SelectionToolWidget(QWidget* parent)
   setDropDown(0, 1);
   connect(m_ui->applyColorButton, SIGNAL(clicked()), this,
           SLOT(userClickedColor()));
-  connect(m_ui->changeLayerDropDown, SIGNAL(currentIndexChanged(int)), this,
-          SIGNAL(changeLayer(int)));
 }
 
 SelectionToolWidget::~SelectionToolWidget()
@@ -28,6 +26,8 @@ SelectionToolWidget::~SelectionToolWidget()
 
 void SelectionToolWidget::setDropDown(size_t current, size_t max)
 {
+  // disconnect the signal so we don't send it accidentally
+  disconnect(m_ui->changeLayerDropDown, nullptr, nullptr, nullptr);
   m_ui->changeLayerDropDown->clear();
   for (size_t i = 0; i < max; ++i) {
     m_ui->changeLayerDropDown->addItem(QString::number(i + 1));
@@ -35,6 +35,10 @@ void SelectionToolWidget::setDropDown(size_t current, size_t max)
   m_ui->changeLayerDropDown->addItem(tr("New Layer"));
   if (current != m_ui->changeLayerDropDown->currentIndex())
     m_ui->changeLayerDropDown->setCurrentIndex(current);
+
+  // reconnect the signal
+  connect(m_ui->changeLayerDropDown, SIGNAL(currentIndexChanged(int)), this,
+          SIGNAL(changeLayer(int)));
 }
 
 void SelectionToolWidget::userClickedColor()
@@ -59,4 +63,4 @@ void SelectionToolWidget::userClickedColor()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
