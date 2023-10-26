@@ -40,7 +40,7 @@ public slots:
   void installCheckedPlugins();
   void installNextPluginFinished();
   void unzipPlugin();
-  void installDownloadedPlugin():
+  void installDownloadedPlugin();
 
 private:
   struct repo

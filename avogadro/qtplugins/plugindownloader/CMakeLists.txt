@@ -13,7 +13,7 @@ avogadro_plugin(PluginDownloader
   plugindownloader.h
   PluginDownloader
   "${plugindownloader_srcs}"
-  downloaderwidget.ui
+  pluginmanagerwidget.ui
   ""
 )
 

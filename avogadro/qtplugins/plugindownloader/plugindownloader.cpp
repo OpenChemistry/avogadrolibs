@@ -4,7 +4,7 @@
 ******************************************************************************/
 
 #include "plugindownloader.h"
-#include "downloaderwidget.h"
+#include "pluginmanagerwidget.h"
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -52,7 +52,7 @@ bool PluginDownloader::readMolecule(QtGui::Molecule&)
 void PluginDownloader::showDialog()
 {
   if (m_widget == nullptr) {
-    m_widget = new DownloaderWidget(qobject_cast<QWidget*>(parent()));
+    m_widget = new PluginManagerWidget(qobject_cast<QWidget*>(parent()));
   }
   m_widget->show();
 }

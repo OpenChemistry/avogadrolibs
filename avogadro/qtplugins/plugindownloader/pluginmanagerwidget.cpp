@@ -289,7 +289,7 @@ void PluginManagerWidget::installNextPluginFinished()
   }
 }
 void PluginManagerWidget::installDownloadedPlugin() {
-  unzipPlugin()
+  unzipPlugin();
 }
 
 // Save and unzip the plugin zipball
