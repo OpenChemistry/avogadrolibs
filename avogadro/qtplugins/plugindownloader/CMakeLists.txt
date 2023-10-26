@@ -3,7 +3,7 @@ find_package(LibArchive REQUIRED)
 # Extension
 set(plugindownloader_srcs
   plugindownloader.cpp
-  downloaderwidget.cpp
+  pluginmanagerwidget.cpp
   zipextracter.cpp
 )
 

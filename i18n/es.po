@@ -3252,9 +3252,9 @@ msgstr "Etiqueta Atómica:"
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:202
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
-#: qtplugins/propertytables/propertymodel.cpp:429
+#: qtplugins/label/label.cpp:199
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:60
+#: qtplugins/propertytables/propertymodel.cpp:423
 msgid "Name"
 msgstr "Nombre"
 
@@ -4014,38 +4014,38 @@ msgstr "PlotXrd"
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "Generar y mostrar un patrón teórico de XRD usando ObjCryst++."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:60
 msgid "Update"
 msgstr "Actualizar"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:60
 msgid "Version"
 msgstr "Versión"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:61
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:61
 msgid "Description"
 msgstr "Descripción"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:321
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Descargando %1 to %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:334
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:334
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extrayendo %1 to %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:337
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:337
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "Finalizando %1 archivos\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:341
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:341
 msgid "Extraction successful\n"
 msgstr "Extracción exitosa\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:371
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:371
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Error extrayendo: %1"

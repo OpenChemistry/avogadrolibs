@@ -3220,9 +3220,9 @@ msgstr "원자 레이블:"
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:202
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
-#: qtplugins/propertytables/propertymodel.cpp:429
+#: qtplugins/label/label.cpp:199
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:60
+#: qtplugins/propertytables/propertymodel.cpp:423
 msgid "Name"
 msgstr "이름"
 
@@ -3974,38 +3974,38 @@ msgstr "플롯Xrd"
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "ObjCryst++를 사용하여 이론적 XRD 패턴을 생성하고 플로팅합니다."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:60
 msgid "Update"
 msgstr "업데이트"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:60
 msgid "Version"
 msgstr "버전"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:61
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:61
 msgid "Description"
 msgstr "설명"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:321
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "%1을(를) %2(으)로 다운로드 중\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:334
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:334
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1을(를) %2(으)로 압축해제 중\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:337
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:337
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1개 파일 완료\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:341
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:341
 msgid "Extraction successful\n"
 msgstr "압축해제 성공\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:371
+#: qtplugins/plugindownloader/pluginmanagerwidget.cpp:371
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "압축해제 중 오류: %1"
