@@ -244,14 +244,30 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     // check if the script wants us to perceive bonds first
     if (obj["bond"].toBool()) {
       newMol.perceiveBondsSimple();
+      newMol.perceiveBondOrders();
     }
 
-    if (obj["append"].toBool()) { // just append some new bits
+    // just append some new bits
+    if (obj["append"].toBool()) {
       guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
     } else { // replace the whole molecule
       Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
                                            Molecule::Added | Molecule::Removed);
       guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+    }
+
+    // select some atoms
+    if (obj.contains("selectedAtoms") &&
+        obj["selectedAtoms"].isArray()) {
+      QJsonArray selectedList = obj["selectedAtoms"].toArray();
+      for (int i = 0; i < selectedList.size(); ++i) {
+        if (selectedList[i].isDouble()) {
+          Index index = static_cast<Index>(selectedList[i].toDouble());
+          if (index >= 0 && index < guiMol->atomCount())
+            guiMol->undoMolecule()->setAtomSelected(index, true);
+        }
+      }
+      guiMol->emitChanged(Molecule::Atoms);
     }
   }
   return result;
