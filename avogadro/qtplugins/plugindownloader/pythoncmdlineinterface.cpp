@@ -1,5 +1,51 @@
 #include "pythoncmdlineinterface.h"
 
+bool isBinaryPresent(const QString& binaryName) {
+    QProcess process;
+    process.start(binaryName, QStringList() << "--version");
+    process.waitForFinished();
+    return process.exitCode() == 0;
+}
+
+void installRequirements(const QString& folderPath, const QString& installMethod) {
+    if (installMethod.isEmpty()) {
+        return;
+    }
+
+    if (!isBinaryPresent(installMethod)) {
+        QMessageBox::critical(nullptr, "Installation Error", installMethod + " is not installed on this system.");
+        return;
+    }
+
+    QString requirementsTxt = folderPath + "/requirements.txt";
+    QString pyprojectToml = folderPath + "/pyproject.toml";
+    QString installCommand;
+
+    if (QFile::exists(requirementsTxt)) {
+        if (installMethod == "pip") {
+            installCommand = "pip install -r " + requirementsTxt;
+        } else if (installMethod == "conda") {
+            installCommand = "conda install --file " + requirementsTxt;
+        }
+    } else if (QFile::exists(pyprojectToml)) {
+        if (installMethod == "pip") {
+            installCommand = "pip install " + folderPath;
+        }
+    }
+
+    if (!installCommand.isEmpty()) {
+        QProcess process;
+        process.start(installCommand);
+        process.waitForFinished();
+
+        if (process.exitCode() != 0) {
+            QMessageBox::critical(nullptr, "Installation Error", process.readAllStandardError());
+        }
+    } else {
+        QMessageBox::information(nullptr, "No Requirements Found", "Neither requirements.txt nor pyproject.toml found.");
+    }
+}
+
 QStringList detectPythonInterpreters() {
     QStringList interpreters;
     QProcess process;

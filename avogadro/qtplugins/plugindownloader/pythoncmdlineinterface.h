@@ -5,6 +5,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QProcess>
 #include <QtWidgets/QMessageBox>
+#include <QtCore/QFile>
 
 void activateEnvironment(const QString& envType, const QString& envName);
 QStringList detectPythonInterpreters();
