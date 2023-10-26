@@ -9,5 +9,6 @@
 
 void activateEnvironment(const QString& envType, const QString& envName);
 QStringList detectPythonInterpreters();
+void installRequirements(const QString& folderPath, const QString& installMethod);
 
 #endif
