@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DownloaderWidget</class>
- <widget class="QDialog" name="DownloaderWidget">
+ <class>PluginManagerWidget</class>
+ <widget class="QDialog" name="PluginManagerWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

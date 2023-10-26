@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "downloaderwidget.h"
-#include "ui_downloaderwidget.h"
+#include "pluginmanagerwidget.h"
+#include "ui_pluginmanagerwidget.h"
 #include "zipextracter.h"
 
 #include <QtCore/QDir>
@@ -39,8 +39,8 @@ void setRawHeaders(QNetworkRequest* request)
   return;
 }
 
-DownloaderWidget::DownloaderWidget(QWidget* parent)
-  : QDialog(parent), m_ui(new Ui::DownloaderWidget)
+PluginManagerWidget::PluginManagerWidget(QWidget* parent)
+  : QDialog(parent), m_ui(new Ui::PluginManagerWidget)
 {
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -69,13 +69,13 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
   getRepoData();
 }
 
-DownloaderWidget::~DownloaderWidget()
+PluginManagerWidget::~PluginManagerWidget()
 {
   delete m_ui;
 }
 
 // download master plugin.json from Avogadro.cc
-void DownloaderWidget::getRepoData(QString url)
+void PluginManagerWidget::getRepoData(QString url)
 {
   QNetworkRequest request;
   setRawHeaders(&request);
@@ -85,7 +85,7 @@ void DownloaderWidget::getRepoData(QString url)
 }
 
 // Process the master plugin.json hosted on Avogadro.cc
-void DownloaderWidget::updateRepoData()
+void PluginManagerWidget::updateRepoData()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     // Reading the data from the response
@@ -164,7 +164,7 @@ void DownloaderWidget::updateRepoData()
 }
 
 // Grab README data from Github
-void DownloaderWidget::downloadREADME(int row, int col)
+void PluginManagerWidget::downloadREADME(int row, int col)
 {
   m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
@@ -177,7 +177,7 @@ void DownloaderWidget::downloadREADME(int row, int col)
 }
 
 // display README when the user clicks a row
-void DownloaderWidget::showREADME()
+void PluginManagerWidget::showREADME()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     // Reading the data from the response
@@ -239,7 +239,7 @@ void DownloaderWidget::showREADME()
 }
 
 // see which repositories the user checked
-void DownloaderWidget::getCheckedRepos()
+void PluginManagerWidget::getCheckedRepos()
 {
   m_ui->readmeBrowser->clear();
   m_downloadList.clear();
@@ -260,7 +260,7 @@ void DownloaderWidget::getCheckedRepos()
 }
 
 // Used to download one zip at a time so we know which plugin data we're getting
-void DownloaderWidget::downloadNext()
+void PluginManagerWidget::downloadNext()
 {
   if (!m_downloadList.isEmpty()) {
     QString url = m_downloadList.last().url;
@@ -274,7 +274,7 @@ void DownloaderWidget::downloadNext()
 }
 
 // The download url for Github is always a redirect to the actual zip
-void DownloaderWidget::handleRedirect()
+void PluginManagerWidget::handleRedirect()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     QVariant statusCode =
@@ -299,7 +299,7 @@ void DownloaderWidget::handleRedirect()
 }
 
 // Save and unzip the plugin zipball
-void DownloaderWidget::unzipPlugin()
+void PluginManagerWidget::unzipPlugin()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     // done with redirect

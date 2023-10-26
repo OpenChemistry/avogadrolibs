@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_DOWNLOADERWIDGET_H
-#define AVOGADRO_DOWNLOADERWIDGET_H
+#ifndef AVOGADRO_PluginManagerWidget_H
+#define AVOGADRO_PluginManagerWidget_H
 
 #include <QtCore/QList>
 #include <QtCore/QStringList>
@@ -18,20 +18,20 @@ class QNetworkAccessManager;
 class QNetworkReply;
 
 namespace Ui {
-class DownloaderWidget;
+class PluginManagerWidget;
 }
 
 namespace Avogadro {
 
 namespace QtPlugins {
 
-class DownloaderWidget : public QDialog
+class PluginManagerWidget : public QDialog
 {
   Q_OBJECT
 
 public:
-  DownloaderWidget(QWidget* parent = nullptr);
-  ~DownloaderWidget() override;
+  PluginManagerWidget(QWidget* parent = nullptr);
+  ~PluginManagerWidget() override;
 
 public slots:
   void showREADME();
@@ -76,7 +76,7 @@ private:
   bool checkSHA1(QByteArray);
 
   std::vector<repo> m_repoList;
-  Ui::DownloaderWidget* m_ui;
+  Ui::PluginManagerWidget* m_ui;
   QNetworkAccessManager* m_NetworkAccessManager;
   QNetworkReply* m_reply;
   /** Holds a node of JSON results */
@@ -90,4 +90,4 @@ private:
 };
 } // namespace QtPlugins
 } // namespace Avogadro
-#endif // AVOGADRO_DOWNLOADERWIDGET_H
+#endif // AVOGADRO_PluginManagerWidget_H
