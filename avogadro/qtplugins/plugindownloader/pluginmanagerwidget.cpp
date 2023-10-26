@@ -47,10 +47,10 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser
-  m_ui->readmeBrowser->setOpenExternalLinks(true);
+  m_ui->pluginDescriptionBrowser->setOpenExternalLinks(true);
 
-  connect(m_ui->downloadButton, SIGNAL(clicked(bool)), this,
-          SLOT(getCheckedPlugins()));
+  connect(m_ui->installButton, SIGNAL(clicked(bool)), this,
+          SLOT(installCheckedPlugins()));
   connect(m_ui->repoTable, SIGNAL(cellClicked(int, int)), this,
           SLOT(downloadPluginDescriptionFor(int, int)));
 
@@ -158,7 +158,7 @@ void PluginManagerWidget::updatePluginsList()
 
 void PluginManagerWidget::downloadPluginDescriptionFor(int row, int col)
 {
-  m_ui->readmeBrowser->clear();
+  m_ui->pluginDescriptionBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
   QNetworkRequest request;
   setRawHeaders(&request);
@@ -182,7 +182,7 @@ void PluginManagerWidget::showDownloadedPluginDescription()
     }
 
 #if QT_VERSION >= 0x050E00
-    m_ui->readmeBrowser->setMarkdown(QByteArray::fromBase64(content).data());
+    m_ui->pluginDescriptionBrowser->setMarkdown(QByteArray::fromBase64(content).data());
 #else
     // adapt some of the text to HTML using regex
     QString readme(QByteArray::fromBase64(content).data());
@@ -222,7 +222,7 @@ void PluginManagerWidget::showDownloadedPluginDescription()
     readme.replace(QRegularExpression("<\\/ul>\\s?<ul>"), "");
     // paragraphs .. doesn't seem needed
     // readme.replace(QRegularExpression("\\n([^\\n]+)\\n"), "<p>\\1</p>");
-    m_ui->readmeBrowser->setHtml(readme);
+    m_ui->pluginDescriptionBrowser->setHtml(readme);
 #endif
   }
 }
@@ -230,9 +230,9 @@ void PluginManagerWidget::showDownloadedPluginDescription()
 /**
  * Get which plugins have been checked by user
  */
-void PluginManagerWidget::getCheckedPlugins()
+void PluginManagerWidget::installCheckedPlugins()
 {
-  m_ui->readmeBrowser->clear();
+  m_ui->pluginDescriptionBrowser->clear();
   m_downloadList.clear();
   for (size_t i = 0; i < m_repoList.size(); i++) {
     QTableWidgetItem* row = m_ui->repoTable->item(i, 0);
@@ -247,25 +247,25 @@ void PluginManagerWidget::getCheckedPlugins()
       m_downloadList.append(newEntry);
     }
   }
-  downloadNext();
+  installNextPlugin();
 }
 
 // Used to download one zip at a time so we know which plugin data we're getting
-void PluginManagerWidget::downloadNext()
+void PluginManagerWidget::installNextPlugin()
 {
   if (!m_downloadList.isEmpty()) {
     QString url = m_downloadList.last().url;
     QNetworkRequest request;
     setRawHeaders(&request);
-    request.setUrl(url); // Set the url
+    request.setUrl(url);
 
     m_reply = m_NetworkAccessManager->get(request);
-    connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
+    connect(m_reply, SIGNAL(finished()), this, SLOT(installNextPluginFinished()));
   }
 }
 
 // The download url for Github is always a redirect to the actual zip
-void PluginManagerWidget::handleRedirect()
+void PluginManagerWidget::installNextPluginFinished()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     QVariant statusCode =
@@ -278,15 +278,18 @@ void PluginManagerWidget::handleRedirect()
 
       QNetworkRequest request;
       setRawHeaders(&request);
-      request.setUrl(_urlRedirectedTo); // Set the url
+      request.setUrl(_urlRedirectedTo);
       m_reply = m_NetworkAccessManager->get(request);
-      connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
+      connect(m_reply, SIGNAL(finished()), this, SLOT(installDownloadedPlugin()));
     }
   } else {
     m_reply->deleteLater();
     m_downloadList.removeLast();
-    downloadNext();
+    installNextPlugin();
   }
+}
+void PluginManagerWidget::installDownloadedPlugin() {
+  unzipPlugin()
 }
 
 // Save and unzip the plugin zipball
@@ -308,7 +311,7 @@ void PluginManagerWidget::unzipPlugin()
     // create the destination directory if it doesn't exist
     QDir().mkpath(extractDirectory);
 
-    m_ui->readmeBrowser->append(
+    m_ui->pluginDescriptionBrowser->append(
       tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
 
     QFile out(absolutePath);
@@ -321,15 +324,15 @@ void PluginManagerWidget::unzipPlugin()
 
     ZipExtracter unzip;
 
-    m_ui->readmeBrowser->append(
+    m_ui->pluginDescriptionBrowser->append(
       tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
     QList<QString> newFiles = unzip.listFiles(absolutep);
-    m_ui->readmeBrowser->append(
+    m_ui->pluginDescriptionBrowser->append(
       tr("Finished %1 files\n").arg(newFiles.length()));
 
     QList<QString> ret = unzip.extract(extractdir, absolutep);
     if (ret.empty()) {
-      m_ui->readmeBrowser->append(tr("Extraction successful\n"));
+      m_ui->pluginDescriptionBrowser->append(tr("Extraction successful\n"));
 
       // get the list of files / directories we unzipped
       // the first one is the main directory name
@@ -358,14 +361,14 @@ void PluginManagerWidget::unzipPlugin()
         }
       }
     } else {
-      m_ui->readmeBrowser->append(
+      m_ui->pluginDescriptionBrowser->append(
         tr("Error while extracting: %1").arg(ret.first()));
     }
 
     out.remove(); // remove the ZIP file
     m_reply->deleteLater();
     m_downloadList.removeLast();
-    downloadNext();
+    installNextPlugin();
   }
 }
 

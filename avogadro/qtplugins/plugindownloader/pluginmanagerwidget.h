@@ -37,9 +37,10 @@ public slots:
   void showDownloadedPluginDescription();
   void downloadPluginDescriptionFor(int, int);
   void updatePluginsList();
-  void getCheckedPlugins();
-  void handleRedirect();
+  void installCheckedPlugins();
+  void installNextPluginFinished();
   void unzipPlugin();
+  void installDownloadedPlugin():
 
 private:
   struct repo
@@ -69,13 +70,12 @@ private:
     QString type;
   };
 
-  void downloadNextPlugin();
   /**
    * Fetch plugins information listed in the given file at the given url  
    * for now, the default path
    */
   void fetchPluginsList(QString url = "https://avogadro.cc/plugins.json");
-  void downloadNext();
+  void installNextPlugin();
   bool checkSHA1(QByteArray);
 
   std::vector<repo> m_repoList;
