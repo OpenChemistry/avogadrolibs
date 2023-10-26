@@ -70,6 +70,7 @@ private slots:
 
 private:
   QAction* m_action;
+  QWidget* m_window;
   QNetworkAccessManager* m_network;
   QStringList detectPythonInterpreters();
   void activateEnvironment(const QString& envType, const QString& envName);

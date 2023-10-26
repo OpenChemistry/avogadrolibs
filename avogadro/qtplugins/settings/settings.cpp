@@ -4,7 +4,7 @@
 namespace Avogadro::QtPlugins {
 
 Settings::Settings(QObject* parent_)
-  : ExtensionPlugin(parent_), m_action(new QAction(this))
+  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_window(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("Settings"));
@@ -29,15 +29,15 @@ bool Settings::readMolecule(QtGui::Molecule&)
 
 QStringList Settings::menuPath(QAction*) const
 {
-  return QStringList() << tr("&File");
+  return QStringList() << tr("&Program");
 }
 
 void Settings::showDialog()
-{
-    QWidget window;
-    QVBoxLayout layout(&window);
+{    
+    m_window = new QWidget();
+    QVBoxLayout* layout = new QVBoxLayout(m_window);
     for (const QString& interpreter : detectPythonInterpreters()) {
-        QCheckBox* checkbox = new QCheckBox(interpreter, &window);
+        QCheckBox* checkbox = new QCheckBox(interpreter, m_window);
         QStringList parts = interpreter.split("(").last().split(")").first().split(":");
         QString envType = parts.first();
         QString envName = parts.last();
@@ -46,9 +46,9 @@ void Settings::showDialog()
                 activateEnvironment(envType, envName);
             }
         });
-        layout.addWidget(checkbox);
+        layout->addWidget(checkbox);
     }
-    window.show();
+    m_window->show();
 }
 
 QStringList Settings::detectPythonInterpreters() {
