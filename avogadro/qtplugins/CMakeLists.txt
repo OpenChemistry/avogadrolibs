@@ -166,7 +166,6 @@ if(QT_VERSION EQUAL 5)
   add_subdirectory(commandscripts)
   add_subdirectory(quantuminput)
   add_subdirectory(scriptcharges)
-  add_subdirectory(settings)
 endif()
 add_subdirectory(scriptfileformats)
 
