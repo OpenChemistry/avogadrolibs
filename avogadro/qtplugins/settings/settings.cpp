@@ -4,10 +4,10 @@
 namespace Avogadro::QtPlugins {
 
 Settings::Settings(QObject* parent_)
-  : ExtensionPlugin(parent_), m_action(new QAction(this)), m_widget(nullptr)
+  : ExtensionPlugin(parent_), m_action(new QAction(this))
 {
   m_action->setEnabled(true);
-  m_action->setText(tr("Manage"));
+  m_action->setText(tr("Settings"));
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -18,34 +18,40 @@ QList<QAction*> Settings::actions() const
   return QList<QAction*>() << m_action;
 }
 
+void Settings::setMolecule(QtGui::Molecule*)
+{
+}
+
+bool Settings::readMolecule(QtGui::Molecule&)
+{
+  return true;
+}
+
 QStringList Settings::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Extensions");
+  return QStringList() << tr("&File");
 }
 
-void PluginDownloader::showDialog()
+void Settings::showDialog()
 {
-  if (m_widget == nullptr) {
-        QWidget window;
-        QVBoxLayout layout(&window);
-        for (const QString& interpreter : detectPythonInterpreters()) {
-            QCheckBox* checkbox = new QCheckBox(interpreter, &window);
-            QStringList parts = interpreter.split("(").last().split(")").first().split(":");
-            QString envType = parts.first();
-            QString envName = parts.last();
-            QObject::connect(checkbox, &QCheckBox::stateChanged, [=](int state) {
-                if (state == Qt::Checked) {
-                    activateEnvironment(envType, envName);
-                }
-            });
-            layout.addWidget(checkbox);
-        }
-        m_widget = window;
-  }
-  m_widget->show();
+    QWidget window;
+    QVBoxLayout layout(&window);
+    for (const QString& interpreter : detectPythonInterpreters()) {
+        QCheckBox* checkbox = new QCheckBox(interpreter, &window);
+        QStringList parts = interpreter.split("(").last().split(")").first().split(":");
+        QString envType = parts.first();
+        QString envName = parts.last();
+        QObject::connect(checkbox, &QCheckBox::stateChanged, [=](int state) {
+            if (state == Qt::Checked) {
+                activateEnvironment(envType, envName);
+            }
+        });
+        layout.addWidget(checkbox);
+    }
+    window.show();
 }
 
-QStringList detectPythonInterpreters() {
+QStringList Settings::detectPythonInterpreters() {
     QStringList interpreters;
     QProcess process;
     QString pythonCmd = (QSysInfo::productType() == "windows") ? "where python" : "which python";
@@ -79,7 +85,7 @@ QStringList detectPythonInterpreters() {
     return interpreters;
 }
 
-void activateEnvironment(const QString& envType, const QString& envName) {
+void Settings::activateEnvironment(const QString& envType, const QString& envName) {
     QProcess process;
     if (envType == "Conda") {
         process.start("conda --version");
@@ -104,8 +110,5 @@ void activateEnvironment(const QString& envType, const QString& envName) {
     if (process.exitCode() != 0) {
         QMessageBox::warning(nullptr, "Activation Failed", "Failed to activate or deactivate environment");
     }
-}
-void PluginDownloader::replyFinished(QNetworkReply*)
-{
 }
 }

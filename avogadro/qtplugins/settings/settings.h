@@ -35,7 +35,7 @@ class QProgressDialog;
 namespace Avogadro {
 namespace QtPlugins {
 
-class PluginManagerWidget;
+class Settings;
 
 /**
  * @brief Downloads Github repos and extracts their contents into a Avogadro
@@ -62,7 +62,8 @@ public:
   QStringList menuPath(QAction*) const override;
 
 public slots:
-
+  void setMolecule(QtGui::Molecule*) override;
+  bool readMolecule(QtGui::Molecule&) override;
 
 private slots:
   void showDialog();
@@ -70,7 +71,6 @@ private slots:
 private:
   QAction* m_action;
   QNetworkAccessManager* m_network;
-  QWidget* m_widget;
   QStringList detectPythonInterpreters();
   void activateEnvironment(const QString& envType, const QString& envName);
 };

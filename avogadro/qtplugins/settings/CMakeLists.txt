@@ -7,15 +7,15 @@ set(settings_srcs
   settings.cpp
 )
 
-avogadro_plugin(SettingsPlugin
+avogadro_plugin(Settings
   "General settings for avogadro"
   ExtensionPlugin
   settings.h
-  SettingsPlugin
+  Settings
   "${settings_srcs}"
   ""
   ""
 )
 
-target_link_libraries(SettingsPlugin PRIVATE ${Qt5Network_LIBRARIES}
+target_link_libraries(Settings PRIVATE ${Qt5Network_LIBRARIES}
   ${LIBARCHIVE_LIBRARIES})
