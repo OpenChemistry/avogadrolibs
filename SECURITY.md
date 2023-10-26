@@ -9,6 +9,7 @@ patches for widely used long-term-support OS.
 
 | Version | Supported          | 
 | ------- | ------------------ | 
+| 1.98.x  | :white_check_mark: |
 | 1.97.x  | :white_check_mark: |
 | < 1.97  | :x:                |
 
