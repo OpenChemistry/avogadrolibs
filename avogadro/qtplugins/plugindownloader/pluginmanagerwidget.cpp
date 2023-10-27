@@ -363,11 +363,18 @@ void PluginManagerWidget::installNextPluginFinished()
   }
 }
 void PluginManagerWidget::installDownloadedPlugin() {
-  unzipPlugin();
+  QString pluginDir = unzipPlugin();
+  if ( pluginDir == NULL ) {
+
+  } else {
+    QString installer = m_settings.value("extensions/python/installer", QString()).toString();
+    QString pythonEnvironmentFull = m_settings.value("extensions/python/environmentFull", QString()).toString();
+    installRequirements(pluginDir, installer, pythonEnvironmentFull);
+  }
 }
 
 // Save and unzip the plugin zipball
-void PluginManagerWidget::unzipPlugin()
+QString PluginManagerWidget::unzipPlugin()
 {
   if (m_reply->error() == QNetworkReply::NoError) {
     // done with redirect
@@ -380,7 +387,7 @@ void PluginManagerWidget::unzipPlugin()
     QString extractDirectory;
     QString subdir = m_downloadList.last().type;
 
-    extractDirectory = m_filePath + "/" + subdir + "/";
+    extractDirectory = m_filePath + QDir::separator() + subdir + QDir::separator();
 
     // create the destination directory if it doesn't exist
     QDir().mkpath(extractDirectory);
@@ -443,7 +450,9 @@ void PluginManagerWidget::unzipPlugin()
     m_reply->deleteLater();
     m_downloadList.removeLast();
     installNextPlugin();
+    return extractdir;
   }
+  return NULL;
 }
 
 } // namespace Avogadro

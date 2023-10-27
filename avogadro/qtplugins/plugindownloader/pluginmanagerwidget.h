@@ -40,7 +40,7 @@ public slots:
   void updatePluginsList();
   void installCheckedPlugins();
   void installNextPluginFinished();
-  void unzipPlugin();
+  QString unzipPlugin();
   void installDownloadedPlugin();
   void onInstallMethodChanged(const QString &text);
   void onSetPythonPathClicked();

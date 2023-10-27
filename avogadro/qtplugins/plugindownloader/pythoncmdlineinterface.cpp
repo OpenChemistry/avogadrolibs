@@ -7,7 +7,7 @@ bool isBinaryPresent(const QString& binaryName) {
     return process.exitCode() == 0;
 }
 
-void installRequirements(const QString& folderPath, const QString& installMethod) {
+void installRequirements(const QString& folderPath, const QString& installMethod, const QString& pythonInstallation) {
     if (installMethod.isEmpty()) {
         return;
     }
@@ -17,19 +17,44 @@ void installRequirements(const QString& folderPath, const QString& installMethod
         return;
     }
 
+    // Extract the environment name from pythonInstallation, if present
+    QString envName;
+    int colonIndex = pythonInstallation.indexOf(":");
+    int parenIndex = pythonInstallation.indexOf("(");
+    if (parenIndex != -1 && colonIndex != -1) {
+        envName = pythonInstallation.mid(parenIndex + 1, colonIndex - parenIndex - 1).trimmed();
+    }
+
+    // Prepare environment activation command only if envName is not empty
+    QString activateCommand;
+    if (!envName.isEmpty()) {
+        if (pythonInstallation.contains("Conda")) {
+            activateCommand = (QSysInfo::productType() == "windows") ? 
+                               QString("activate %1 && ").arg(envName) : 
+                               QString("conda activate %1 && ").arg(envName);
+        } else if (pythonInstallation.contains("VirtualEnv")) {
+            activateCommand = (QSysInfo::productType() == "windows") ? 
+                               QString("%1\\Scripts\\activate && ").arg(envName) : 
+                               QString("source %1/bin/activate && ").arg(envName);
+        }
+    }
+
     QString requirementsTxt = folderPath + "/requirements.txt";
     QString pyprojectToml = folderPath + "/pyproject.toml";
     QString installCommand;
 
     if (QFile::exists(requirementsTxt)) {
         if (installMethod == "pip") {
-            installCommand = "pip install -r " + requirementsTxt;
+            installCommand = activateCommand + "pip install -r " + requirementsTxt;
         } else if (installMethod == "conda") {
-            installCommand = "conda install --file " + requirementsTxt;
+            installCommand = activateCommand + "conda install --file " + requirementsTxt;
         }
     } else if (QFile::exists(pyprojectToml)) {
         if (installMethod == "pip") {
-            installCommand = "pip install " + folderPath;
+            installCommand = activateCommand + "pip install " + folderPath;
+        } else if (installMethod == "conda") {
+            QMessageBox::information(nullptr, "Installation Info", "Conda cannot install from a pyproject.toml file.");
+            return;
         }
     }
 
@@ -75,7 +100,7 @@ QStringList detectPythonInterpreters() {
     QString systemPythonPath = process.readAllStandardOutput();
     if (!systemPythonPath.isEmpty()) {
         QString pythonPath = systemPythonPath.trimmed();
-        interpreters << QString("%1 (base): %2").arg(pythonInterpreterVersion(pythonPath),pythonPath);
+        interpreters << QString("%1: %2").arg(pythonInterpreterVersion(pythonPath),pythonPath);
     }
     process.start("conda env list");
     process.waitForFinished();
@@ -103,13 +128,13 @@ void activateEnvironment(const QString& envType, const QString& envName) {
             QMessageBox::warning(nullptr, "Activation Failed", "Conda is not installed on this computer.");
             return;
         }
-        if (envName == "base") {
+        if (envName == "") {
             process.start("conda deactivate");
         } else {
             process.start(QString("conda activate %1").arg(envName));
         }
     } else if (envType == "VirtualEnv") {
-        if (envName == "base") {
+        if (envName == "") {
             process.start("deactivate");
         } else {
             process.start(QString("source %1/bin/activate").arg(envName));
