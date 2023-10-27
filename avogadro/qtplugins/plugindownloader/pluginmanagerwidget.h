@@ -14,6 +14,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
+#include <QtCore/QFile>
 
 #include <nlohmann/json.hpp>
 
@@ -57,6 +58,8 @@ public slots:
   void writePluginsJsonFile();
   void appendToPluginsJsonFile(const QJsonObject &newPlugin);
   QString getPluginsListFilePath();
+  void addPluginLocationClicked();
+  void refreshPluginsListClicked();
 
 
 private:

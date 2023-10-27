@@ -90,9 +90,20 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   connect(m_ui->installMethod, SIGNAL(currentTextChanged(const QString &)), this, SLOT(onInstallMethodChanged(const QString &)));
   connect(m_ui->setPythonPath, &QPushButton::clicked, this, &PluginManagerWidget::onSetPythonPathClicked);
   connect(m_ui->environmentSelection, SIGNAL(currentTextChanged(const QString &)), this, SLOT(onEnvironmentChanged(const QString &)));
+  connect(m_ui->refreshPluginsList, &QPushButton::clicked, this, &PluginManagerWidget::refreshPluginsListClicked);
+  connect(m_ui->addPluginLocation, &QPushButton::clicked, this, &PluginManagerWidget::addPluginLocationClicked);
 
+  if ( ! QFile::exists(getPluginsListFilePath()) ) {
+    fetchPluginsList();
+  }
+}
+void PluginManagerWidget::addPluginLocationClicked() {
+  qDebug() << "Should show a popup that create then a json object";
+}
+void PluginManagerWidget::refreshPluginsListClicked() {
   fetchPluginsList();
 }
+
 void PluginManagerWidget::selectInstallerFromCode(const QString &code) {
   int installerIndex = m_ui->installMethod->findText(installMethodDisplayedFromCode(code));
   if (installerIndex != -1) {

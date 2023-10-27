@@ -28,12 +28,33 @@
     <widget class="QTextBrowser" name="pluginDescriptionBrowser"/>
    </item>
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0">
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item>
-      <widget class="QComboBox" name="environmentSelection"/>
+      <widget class="QPushButton" name="refreshPluginsList">
+       <property name="text">
+        <string>Refresh Plugin List</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="environmentSelection">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addPluginLocation">
+       <property name="text">
+        <string>Add plugin location</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QComboBox" name="installMethod">
