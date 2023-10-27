@@ -54,6 +54,17 @@ QString extractPythonPaths(const QString& pythonInterpreterString) {
     }
     return "";
 }
+ 
+QString pythonInterpreterVersion(const QString& interpreterPath) {
+    QProcess process;
+    process.start(interpreterPath + " --version");
+    process.waitForFinished();
+    if ( process.exitCode() == 0 ) {
+        process.readAllStandardOutput();
+    } else {
+        return "Python";
+    }
+}
 
 QStringList detectPythonInterpreters() {
     QStringList interpreters;
@@ -63,7 +74,8 @@ QStringList detectPythonInterpreters() {
     process.waitForFinished();
     QString systemPythonPath = process.readAllStandardOutput();
     if (!systemPythonPath.isEmpty()) {
-        interpreters << QString("Python (base): %1").arg(systemPythonPath.trimmed());
+        QString pythonPath = systemPythonPath.trimmed();
+        interpreters << QString("%1 (base): %2").arg(pythonInterpreterVersion(pythonPath),pythonPath);
     }
     process.start("conda env list");
     process.waitForFinished();
@@ -74,18 +86,11 @@ QStringList detectPythonInterpreters() {
             auto parts = line.split(' ');
             QString envName = parts[0];
             QString envPath = parts.last();
-            interpreters << QString("Python (Conda: %1): %2").arg(envName, envPath);
+            QString pythonPath = envPath + QDir::separator() + "bin" + QDir::separator() + "python";
+            interpreters << QString("%1 (Conda: %2): %3").arg(pythonInterpreterVersion(pythonPath),envName, pythonPath);
         }
     }
-    process.start("virtualenv --list");
-    process.waitForFinished();
-    QString venvsOutput = process.readAllStandardOutput();
-    lines = venvsOutput.split('\n');
-    for (const QString& line : lines) {
-        if (!line.isEmpty()) {
-            interpreters << QString("Python (VirtualEnv: %1)").arg(line.trimmed());
-        }
-    }
+    // virtualenv cannot be detected automatically
     return interpreters;
 }
 
