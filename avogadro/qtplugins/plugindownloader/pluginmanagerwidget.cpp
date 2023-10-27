@@ -43,6 +43,7 @@ void setRawHeaders(QNetworkRequest* request)
 PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::PluginManagerWidget)
 {
+
   m_filePath =
     QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
@@ -100,7 +101,9 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   }
 }
 void PluginManagerWidget::addPluginLocationClicked() {
-  qDebug() << "Should show a popup that create then a json object";
+  QString pluginLocationUrl = m_ui->pluginLocationUrl->text();
+  qDebug() << "Should show a popup that create then a json object: " << pluginLocationUrl;
+
 }
 void PluginManagerWidget::refreshPluginsListClicked() {
   fetchPluginsList();
@@ -538,6 +541,61 @@ void PluginManagerWidget::appendToPluginsJsonFile(const QJsonObject &newPlugin)
     jsonFile.write(jsonDoc.toJson());
     jsonFile.close();
   }
+}
+
+void PluginManagerWidget::addPluginFromGithubUrl(QString url) {
+  std::regex pattern(R"(https://github\.com/([^/]+)/([^/]+)/?)");
+  std::smatch match;
+
+  std::string user;
+  std::string project;
+  const std::string url_str = url.toUtf8().constData();
+  if ( std::regex_match(url_str,match,pattern) ) {
+    user = match[1];
+    project = match[2];
+  } else {
+    QMessageBox::information(nullptr,"Wrong url","Url given seem to have the wrong format must be https://github.com/user/project/");
+    return;
+  }
+
+  QString realUrl = QString::fromStdString("https://raw.githubusercontent.com/" + user + "/" + project + "/master/plugin.json");
+  QNetworkRequest request;
+  setRawHeaders(&request);
+  request.setUrl(realUrl);
+
+  m_reply = m_NetworkAccessManager->get(request);
+  connect(m_reply, SIGNAL(finished()), this, SLOT(addPluginFromGithubUrlResult()));
+}
+void PluginManagerWidget::addPluginFromGithubUrlResult() {
+  if ( m_reply->error() != QNetworkReply::NoError) {
+    QMessageBox::warning(nullptr,"Error","Unable to fetch plugin.json");
+    return;
+  }
+  QByteArray data = m_reply->readAll();
+  QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+  QJsonObject jsonObj = jsonDoc.object();
+
+  QJsonObject plugin;
+  plugin["name"] = jsonObj["name"];
+  plugin["type"] = jsonObj["type"];
+  plugin["repo"] = jsonObj["url"];
+  plugin["description"] = jsonObj["description"];
+  plugin["updated_at"] = "2021-05-22T13:50:05Z";
+  plugin["branch"] = "master";
+  plugin["has_release"] = false;
+  plugin["release_version"] = "N/A";
+  std::regex pattern(R"(https://github\.com/([^/]+)/([^/]+)/?)");
+  std::smatch match;
+
+  const std::string json_url_str = jsonObj["url"].toString().toStdString();
+  if ( std::regex_match(json_url_str,match,pattern) ) {
+    std::string user = match[1];
+    std::string project = match[2];
+    plugin["zipball_url"] = QString::fromStdString("https://api.github.com/repos/" + user + "/" + project + "/zipball/master");
+  }
+  plugin["type"] = jsonObj["type"];
+
+  appendToPluginsJsonFile(plugin);
 }
 
 } // namespace Avogadro

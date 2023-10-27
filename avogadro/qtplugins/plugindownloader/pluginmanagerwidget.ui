@@ -50,11 +50,22 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="addPluginLocation">
-       <property name="text">
-        <string>Add plugin location</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLineEdit" name="pluginLocationUrl">
+         <property name="text">
+          <string>https://github.com/user/project/</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addPluginLocation">
+         <property name="text">
+          <string>Add plugin in given github repo</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QComboBox" name="installMethod">

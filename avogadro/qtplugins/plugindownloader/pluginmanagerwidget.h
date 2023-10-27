@@ -15,8 +15,13 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 #include <QtCore/QFile>
+#include <QtWidgets/QMessageBox>
+
 
 #include <nlohmann/json.hpp>
+#include <regex>
+#include <string>
+#include <iostream>
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -60,7 +65,8 @@ public slots:
   QString getPluginsListFilePath();
   void addPluginLocationClicked();
   void refreshPluginsListClicked();
-
+  void addPluginFromGithubUrl(QString url);
+  void addPluginFromGithubUrlResult();
 
 private:
   struct repo
