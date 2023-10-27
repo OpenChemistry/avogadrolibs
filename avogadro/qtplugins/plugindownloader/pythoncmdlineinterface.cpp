@@ -116,7 +116,7 @@ void activateEnvironment(const QString& envType, const QString& envName) {
     }
 }
 
-QString extractEnvironment(const QString& interpreter) {
+QString extractInstallerCodeFrom(const QString& interpreter) {
     bool hasConda = false;
     bool hasPip = false;
 

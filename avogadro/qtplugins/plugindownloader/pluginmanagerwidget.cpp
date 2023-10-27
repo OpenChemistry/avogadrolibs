@@ -83,7 +83,7 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_ui->pythonPathInput->setText(pythonInterp);
 
   // prefill install method
-  int installerIndex = m_ui->environmentSelection->findText(installer);
+  int installerIndex = m_ui->environmentSelection->findText(installMethodDisplayedFromCode(installer));
   if (installerIndex != -1) {
       m_ui->environmentSelection->setCurrentIndex(installerIndex);
   }
@@ -97,10 +97,23 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   fetchPluginsList();
 }
 
+QString PluginManagerWidget::installMethodCodeFromDisplayed(const QString &text) {
+  QString method = (text == "no install") ? "" : text;
+  return method;
+}
+
+QString PluginManagerWidget::installMethodDisplayedFromCode(const QString &code) {
+  QString method = (code == "") ? "no install" : code;
+  return method;
+}
+
 void PluginManagerWidget::onInstallMethodChanged(const QString &text) {
-    QString method = (text == "no install") ? "" : text;
-    qDebug() << "Install Method Changed to: " << method;
-    m_settings.setValue("extensions/python/installer",method);
+  QString method = installMethodCodeFromDisplayed(text);
+  onInstallMethodChangedFromCode(method);
+}
+void PluginManagerWidget::onInstallMethodChangedFromCode(const QString &code) {
+    qDebug() << "Install Method Changed to: " << code;
+    m_settings.setValue("extensions/python/installer",code);
 }
 
 void PluginManagerWidget::onSetPythonPathClicked() {
@@ -113,7 +126,9 @@ void PluginManagerWidget::onEnvironmentChanged(const QString &text) {
     qDebug() << "Environment Changed to: " << text;
     m_ui->pythonPathInput->setText(extractPythonPaths(text));
     qDebug() << "Should also change the installation method (both): ";
-    onInstallMethodChanged(extractEnvironment(text));
+    QString code = extractInstallerCodeFrom(text);
+    onInstallMethodChangedFromCode(code);
+
     m_settings.setValue("extensions/python/environmentFull", text);
 }
 

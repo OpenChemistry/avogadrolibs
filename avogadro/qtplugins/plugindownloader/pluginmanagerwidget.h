@@ -45,6 +45,9 @@ public slots:
   void onInstallMethodChanged(const QString &text);
   void onSetPythonPathClicked();
   void onEnvironmentChanged(const QString &text);
+  QString installMethodCodeFromDisplayed(const QString &text);
+  QString installMethodDisplayedFromCode(const QString &code);
+  void onInstallMethodChangedFromCode(const QString &code);
 
 private:
   struct repo
