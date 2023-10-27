@@ -48,7 +48,7 @@ public slots:
   QString installMethodCodeFromDisplayed(const QString &text);
   QString installMethodDisplayedFromCode(const QString &code);
   void onInstallMethodChangedFromCode(const QString &code);
-  QString selectInstallerFromCode(const QString &code);
+  void selectInstallerFromCode(const QString &code);
 private:
   struct repo
   {

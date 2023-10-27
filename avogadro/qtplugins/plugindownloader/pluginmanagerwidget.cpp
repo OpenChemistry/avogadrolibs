@@ -93,7 +93,7 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
 
   fetchPluginsList();
 }
-QString PluginManagerWidget::selectInstallerFromCode(const QString &code) {
+void PluginManagerWidget::selectInstallerFromCode(const QString &code) {
   int installerIndex = m_ui->installMethod->findText(installMethodDisplayedFromCode(code));
   if (installerIndex != -1) {
       m_ui->installMethod->setCurrentIndex(installerIndex);
