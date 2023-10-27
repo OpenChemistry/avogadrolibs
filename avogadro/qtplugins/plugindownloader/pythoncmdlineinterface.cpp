@@ -60,7 +60,7 @@ QString pythonInterpreterVersion(const QString& interpreterPath) {
     process.start(interpreterPath + " --version");
     process.waitForFinished();
     if ( process.exitCode() == 0 ) {
-        process.readAllStandardOutput();
+        return process.readAllStandardOutput();
     } else {
         return "Python";
     }
