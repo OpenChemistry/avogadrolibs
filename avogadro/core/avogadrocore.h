@@ -28,26 +28,45 @@
   Class(const Class&);                                                         \
   Class& operator=(const Class&);
 
- 
 namespace Avogadro {
 
-using Real = double;
-using Index = std::size_t;
+/** Typedef for a real number. */
+typedef double Real;
+
+/** Typedef for indices and sizes. */
+typedef size_t Index;
 constexpr Index MaxIndex = std::numeric_limits<Index>::max();
 
+/** Used to represent an invalid atomic number. */
 constexpr unsigned char InvalidElement = 255;
-constexpr unsigned char CustomElementMin = 128;
-constexpr unsigned char CustomElementMax = 254;
-constexpr unsigned char CustomElementCount = CustomElementMax - CustomElementMin + 1;
 
+/**
+ * Minimum value for atomic numbers that represent custom, non-elemental
+ *  particles. */
+constexpr unsigned char CustomElementMin = 128;
+
+/**
+ * Maximum value for atomic numbers that represent custom, non-elemental
+ *  particles. */
+constexpr unsigned char CustomElementMax = 254;
+
+/**
+ * Count of atomic number values that are used to represent custom,
+ * non-elemental particles. */
+constexpr unsigned char CustomElementCount =
+  CustomElementMax - CustomElementMin + 1;
+
+/**
+ * @return True if @a atomicNumber denotes a custom element type.
+ */
 namespace Core {
-inline bool isCustomElement(unsigned char atomicNumber)
+inline constexpr bool isCustomElement(unsigned char atomicNumber)
 {
   return atomicNumber >= CustomElementMin && atomicNumber <= CustomElementMax;
 }
 }
 
-/** Unit conversion factors. */
+/** Unit conversion factors. @{ */
 constexpr double PI_D = 3.141592653589793238462643;
 constexpr float PI_F = static_cast<float>(PI_D);
 constexpr Real PI = static_cast<Real>(PI_D);
@@ -67,6 +86,7 @@ constexpr Real BOHR_TO_ANGSTROM = static_cast<Real>(BOHR_TO_ANGSTROM_D);
 constexpr double ANGSTROM_TO_BOHR_D = 1.0 / BOHR_TO_ANGSTROM_D;
 constexpr float ANGSTROM_TO_BOHR_F = static_cast<float>(ANGSTROM_TO_BOHR_D);
 constexpr Real ANGSTROM_TO_BOHR = static_cast<Real>(ANGSTROM_TO_BOHR_D);
+/** @} */
 
 } // end Avogadro namespace
 
