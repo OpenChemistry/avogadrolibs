@@ -83,10 +83,7 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_ui->pythonPathInput->setText(pythonInterp);
 
   // prefill install method
-  int installerIndex = m_ui->environmentSelection->findText(installMethodDisplayedFromCode(installer));
-  if (installerIndex != -1) {
-      m_ui->environmentSelection->setCurrentIndex(installerIndex);
-  }
+  selectInstallerFromCode(installer);
   
 
   // Connect signals to slots
@@ -95,6 +92,12 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   connect(m_ui->environmentSelection, SIGNAL(currentTextChanged(const QString &)), this, SLOT(onEnvironmentChanged(const QString &)));
 
   fetchPluginsList();
+}
+QString PluginManagerWidget::selectInstallerFromCode(const QString &code) {
+  int installerIndex = m_ui->installMethod->findText(installMethodDisplayedFromCode(code));
+  if (installerIndex != -1) {
+      m_ui->installMethod->setCurrentIndex(installerIndex);
+  }
 }
 
 QString PluginManagerWidget::installMethodCodeFromDisplayed(const QString &text) {
@@ -127,7 +130,7 @@ void PluginManagerWidget::onEnvironmentChanged(const QString &text) {
     m_ui->pythonPathInput->setText(extractPythonPaths(text));
     qDebug() << "Should also change the installation method (both): ";
     QString code = extractInstallerCodeFrom(text);
-    onInstallMethodChangedFromCode(code);
+    selectInstallerFromCode(code);
 
     m_settings.setValue("extensions/python/environmentFull", text);
 }
