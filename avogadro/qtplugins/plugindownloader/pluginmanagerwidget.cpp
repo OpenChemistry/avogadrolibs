@@ -381,7 +381,7 @@ void PluginManagerWidget::installDownloadedPlugin() {
   } else {
     QString installer = m_settings.value("extensions/python/installer", QString()).toString();
     QString pythonEnvironmentFull = m_settings.value("extensions/python/environmentFull", QString()).toString();
-    appendInstallationInformation("Installing python requirements ...");
+    appendInstallationInformation("Installing python requirements from '" + pluginDir + "' method " + installer + " env " + pythonEnvironmentFull + " ...");
     installRequirements(pluginDir, installer, pythonEnvironmentFull);
     appendInstallationInformation("Requirements installed ...");
   }
@@ -466,7 +466,7 @@ QString PluginManagerWidget::unzipPlugin()
     m_reply->deleteLater();
     m_downloadList.removeLast();
     installNextPlugin();
-    return extractDirectory;
+    return extractDirectory + QDir::separator() + repoName;
   }
   return NULL;
 }
