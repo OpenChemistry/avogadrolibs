@@ -148,22 +148,17 @@ PluginManagerWidget::~PluginManagerWidget()
   delete m_ui;
 }
 
-void PluginManagerWidget::fetchPluginsList(QString url)
-{
-  QNetworkRequest request;
-  setRawHeaders(&request);
-  request.setUrl(url);
-  m_reply = m_NetworkAccessManager->get(request);
-  connect(m_reply, SIGNAL(finished()), this, SLOT(updatePluginsList()));
-}
-
 // refresh list of plugins in the gui
 void PluginManagerWidget::updatePluginsList()
 {
-  if (m_reply->error() == QNetworkReply::NoError) {
-    QByteArray bytes = m_reply->readAll();
+  QString jsonFilePath = getPluginsListFilePath();
+  QFile jsonFile(jsonFilePath);
+  if (jsonFile.open(QFile::ReadOnly)) {
+    QByteArray jsonData = jsonFile.readAll();
+    jsonFile.close();
 
-    m_root = json::parse(bytes.data());
+    m_root = json::parse(jsonData.data());
+    
     int numRepos = m_root.size();
     m_ui->repoTable->setRowCount(numRepos);
     m_repoList.clear();
@@ -222,12 +217,13 @@ void PluginManagerWidget::updatePluginsList()
           i, 2, new QTableWidgetItem(m_repoList[i].releaseVersion));
       else
         m_ui->repoTable->setItem(i, 2,
-                                 new QTableWidgetItem(m_repoList[i].updatedAt));
+                                new QTableWidgetItem(m_repoList[i].updatedAt));
       m_ui->repoTable->setItem(i, 3,
-                               new QTableWidgetItem(m_repoList[i].description));
+                              new QTableWidgetItem(m_repoList[i].description));
     }
+
+    m_reply->deleteLater();
   }
-  m_reply->deleteLater();
 }
 
 void PluginManagerWidget::downloadPluginDescriptionFor(int row, int col)
@@ -457,6 +453,78 @@ QString PluginManagerWidget::unzipPlugin()
     return extractDirectory;
   }
   return NULL;
+}
+
+void PluginManagerWidget::fetchPluginsList(QString url)
+{
+  QString jsonFilePath = getPluginsListFilePath();
+  QNetworkRequest request;
+  setRawHeaders(&request);
+  request.setUrl(url);
+  m_reply = m_NetworkAccessManager->get(request);
+  connect(m_reply, SIGNAL(finished()), this, SLOT(writePluginsJsonFile()));
+}
+
+void PluginManagerWidget::writePluginsJsonFile()
+{
+  if (m_reply->error() == QNetworkReply::NoError) {
+    QByteArray bytes = m_reply->readAll();
+    m_root = json::parse(bytes.data());
+
+    int numRepos = m_root.size();
+    m_ui->repoTable->setRowCount(numRepos);
+    m_repoList.clear();
+    for (int i = 0; i < numRepos; i++) {
+      QJsonObject jsonObject;
+
+      const auto& currentRoot = m_root[i];
+
+      for (auto it = currentRoot.cbegin(); it != currentRoot.cend(); ++it) {
+        const QString key = QString::fromStdString(it.key());
+        if (it.value().is_string()) {
+          jsonObject[key] = QString::fromStdString(it.value().get<std::string>());
+        } else if (it.value().is_boolean()) {
+          jsonObject[key] = it.value().get<bool>();
+        } else if (it.value().is_number()) {
+          jsonObject[key] = it.value().get<double>();
+        }
+      }
+      appendToPluginsJsonFile(jsonObject);
+    }
+
+    updatePluginsList();
+  }
+  m_reply->deleteLater();
+}
+
+QString PluginManagerWidget::getPluginsListFilePath() {
+  QDir().mkpath(m_filePath);
+  return m_filePath + "/plugins.json";
+}
+void PluginManagerWidget::appendToPluginsJsonFile(const QJsonObject &newPlugin)
+{
+  QString jsonFilePath = getPluginsListFilePath();
+  QFile jsonFile(jsonFilePath);
+  if (jsonFile.open(QFile::ReadWrite)) {
+    QByteArray jsonData = jsonFile.readAll();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
+    QJsonArray jsonArray = jsonDoc.array();
+
+    QString newName = newPlugin["name"].toString();
+    for (auto it = jsonArray.begin(); it != jsonArray.end(); ) {
+      if ((*it).toObject()["name"].toString() == newName) {
+        it = jsonArray.erase(it);
+      } else {
+        ++it;
+      }
+    }
+
+    jsonArray.append(newPlugin);
+    jsonDoc.setArray(jsonArray);
+    jsonFile.seek(0);
+    jsonFile.write(jsonDoc.toJson());
+    jsonFile.close();
+  }
 }
 
 } // namespace Avogadro

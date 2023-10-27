@@ -11,6 +11,9 @@
 #include <QtCore/QVariantMap>
 #include <QtCore/QSettings>
 #include <QtWidgets/QDialog>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
 
 #include <nlohmann/json.hpp>
 
@@ -51,6 +54,10 @@ public slots:
   void selectInstallerFromCode(const QString &code);
   void setPythonPath(const QString &path);
   void appendInstallationInformation(QString text);
+  void writePluginsJsonFile();
+  void appendToPluginsJsonFile(const QJsonObject &newPlugin);
+  QString getPluginsListFilePath();
+
 
 private:
   struct repo
