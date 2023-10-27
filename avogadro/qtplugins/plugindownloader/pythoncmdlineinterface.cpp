@@ -116,17 +116,15 @@ void activateEnvironment(const QString& envType, const QString& envName) {
     }
 }
 
-QString extractEnvironment(const QStringList& interpreters) {
+QString extractEnvironment(const QString& interpreter) {
     bool hasConda = false;
     bool hasPip = false;
 
-    for (const QString& interpreter : interpreters) {
-        if (interpreter.contains("Conda")) {
-            hasConda = true;
-        }
-        if (interpreter.contains("VirtualEnv")) {
-            hasPip = true;
-        }
+    if (interpreter.contains("Conda")) {
+        hasConda = true;
+    }
+    if (interpreter.contains("VirtualEnv")) {
+        hasPip = true;
     }
 
     if (hasConda) {

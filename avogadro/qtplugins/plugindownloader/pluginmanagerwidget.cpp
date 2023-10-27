@@ -80,12 +80,12 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
       onEnvironmentChanged(environments.at(baseIndex));
   }
   // prefill from settings
-  m_ui->setPythonPath->setText(pythonInterp);
+  m_ui->pythonPathInput->setText(pythonInterp);
 
   // prefill install method
-  int baseIndex = m_ui->environmentSelection->findText(installer);
-  if (baseIndex != -1) {
-      m_ui->environmentSelection->setCurrentIndex(baseIndex);
+  int installerIndex = m_ui->environmentSelection->findText(installer);
+  if (installerIndex != -1) {
+      m_ui->environmentSelection->setCurrentIndex(installerIndex);
   }
   
 
@@ -111,7 +111,7 @@ void PluginManagerWidget::onSetPythonPathClicked() {
 
 void PluginManagerWidget::onEnvironmentChanged(const QString &text) {
     qDebug() << "Environment Changed to: " << text;
-    m_ui->setPythonPath->setText(extractPythonPaths(text));
+    m_ui->pythonPathInput->setText(extractPythonPaths(text));
     qDebug() << "Should also change the installation method (both): ";
     onInstallMethodChanged(extractEnvironment(text));
     m_settings.setValue("extensions/python/environmentFull", text);
