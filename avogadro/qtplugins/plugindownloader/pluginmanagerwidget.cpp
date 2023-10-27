@@ -103,7 +103,7 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
 void PluginManagerWidget::addPluginLocationClicked() {
   QString pluginLocationUrl = m_ui->pluginLocationUrl->text();
   qDebug() << "Should show a popup that create then a json object: " << pluginLocationUrl;
-
+  addPluginFromGithubUrl(pluginLocationUrl);
 }
 void PluginManagerWidget::refreshPluginsListClicked() {
   fetchPluginsList();
@@ -571,8 +571,9 @@ void PluginManagerWidget::addPluginFromGithubUrlResult() {
     QMessageBox::warning(nullptr,"Error","Unable to fetch plugin.json");
     return;
   }
-  QByteArray data = m_reply->readAll();
-  QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+  qDebug() << "plugin.json found";
+
+  QJsonDocument jsonDoc = QJsonDocument::fromJson(m_reply->readAll());
   QJsonObject jsonObj = jsonDoc.object();
 
   QJsonObject plugin;
@@ -596,6 +597,7 @@ void PluginManagerWidget::addPluginFromGithubUrlResult() {
   plugin["type"] = jsonObj["type"];
 
   appendToPluginsJsonFile(plugin);
+  updatePluginsList();
 }
 
 } // namespace Avogadro
