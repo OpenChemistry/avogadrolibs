@@ -103,6 +103,7 @@ private:
   void fetchPluginsList(QString url = "https://avogadro.cc/plugins.json");
   void installNextPlugin();
   bool checkSHA1(QByteArray);
+  repo* getRepoByName(QString name);
 
   std::vector<repo> m_repoList;
   Ui::PluginManagerWidget* m_ui;

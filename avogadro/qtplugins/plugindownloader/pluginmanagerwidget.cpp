@@ -202,7 +202,7 @@ void PluginManagerWidget::updatePluginsList()
           m_repoList[i].zipballUrl = it.value().get<std::string>().c_str();
         else if (it.key() == "has_release" && it.value().is_boolean())
           m_repoList[i].hasRelease = it.value().get<bool>();
-        else if (it.key() == "repo_url" && it.value().is_string())
+        else if (it.key() == "repo" && it.value().is_string())
           m_repoList[i].baseUrl = it.value().get<std::string>().c_str();
         else if (it.key() == "readme_url" && it.value().is_string())
           m_repoList[i].readmeUrl = it.value().get<std::string>().c_str();
@@ -392,6 +392,16 @@ void PluginManagerWidget::appendInstallationInformation(QString text) {
     text
   );
 }
+
+PluginManagerWidget::repo* PluginManagerWidget::getRepoByName(QString name) {
+  for(int i = 0; i < m_repoList.size(); i++) {
+    if ( name == m_repoList[i].name ) {
+      return &m_repoList[i];
+    }
+  }
+  return nullptr;
+}
+
 // Save and unzip the plugin zipball
 QString PluginManagerWidget::unzipPlugin()
 {
@@ -400,7 +410,12 @@ QString PluginManagerWidget::unzipPlugin()
     QByteArray fileData = m_reply->readAll();
     QDir().mkpath(m_filePath); // create any needed directories for the download
     QString repoName = m_downloadList.last().name;
-    QString filename = repoName + ".zip";
+    PluginManagerWidget::repo* repoData = getRepoByName(repoName);
+    std::string repoBaseUrl = repoData->baseUrl.toUtf8().toStdString();
+    std::string::size_type lastSlash = repoBaseUrl.rfind('/');
+    QString pluginOutputDirName = QString::fromStdString(repoBaseUrl.substr(lastSlash + 1));
+    
+    QString filename = pluginOutputDirName + ".zip";
 
     QString absolutePath = m_filePath + "/" + filename;
     QString extractDirectory;
@@ -466,7 +481,7 @@ QString PluginManagerWidget::unzipPlugin()
     m_reply->deleteLater();
     m_downloadList.removeLast();
     installNextPlugin();
-    return extractDirectory + QDir::separator() + repoName;
+    return extractDirectory + QDir::separator() + pluginOutputDirName;
   }
   return NULL;
 }

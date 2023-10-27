@@ -20,18 +20,21 @@ void installRequirements(const QString& folderPath, const QString& installMethod
     // Extract the environment name from pythonInstallation, if present
     QString envName;
     int colonIndex = pythonInstallation.indexOf(":");
-    int parenIndex = pythonInstallation.indexOf("(");
+    int parenIndex = pythonInstallation.indexOf(")");
     if (parenIndex != -1 && colonIndex != -1) {
-        envName = pythonInstallation.mid(parenIndex + 1, colonIndex - parenIndex - 1).trimmed();
+        assert(colonIndex < parenIndex);
+        envName = pythonInstallation.mid(colonIndex + 1, parenIndex - colonIndex - 1).trimmed();
     }
 
     // Prepare environment activation command only if envName is not empty
     QString activateCommand;
     if (!envName.isEmpty()) {
         if (pythonInstallation.contains("Conda")) {
-            activateCommand = (QSysInfo::productType() == "windows") ? 
-                               QString("activate %1 && ").arg(envName) : 
-                               QString("conda activate %1 && ").arg(envName);
+            if ( envName.isEmpty() ) {
+                activateCommand = QString("conda run ");
+            } else {
+                activateCommand = QString("conda run -n %1 ").arg(envName);
+            }
         } else if (pythonInstallation.contains("VirtualEnv")) {
             activateCommand = (QSysInfo::productType() == "windows") ? 
                                QString("%1\\Scripts\\activate && ").arg(envName) : 
@@ -56,18 +59,17 @@ void installRequirements(const QString& folderPath, const QString& installMethod
             QMessageBox::information(nullptr, "Installation Info", "Conda cannot install from a pyproject.toml file.");
             return;
         }
-    }
-
-    if (!installCommand.isEmpty()) {
-        QProcess process;
-        process.start(installCommand);
-        process.waitForFinished();
-
-        if (process.exitCode() != 0) {
-            QMessageBox::critical(nullptr, "Installation Error", process.readAllStandardError());
-        }
     } else {
         QMessageBox::information(nullptr, "No Requirements Found", "Neither requirements.txt nor pyproject.toml found.");
+        return;
+    }
+
+    QProcess process;
+    process.start(installCommand);
+    process.waitForFinished();
+
+    if (process.exitCode() != 0) {
+        QMessageBox::critical(nullptr, "Installation Error", process.readAllStandardError());
     }
 }
 
