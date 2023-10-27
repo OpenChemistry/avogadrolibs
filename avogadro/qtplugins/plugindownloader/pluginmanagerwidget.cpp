@@ -93,7 +93,9 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   connect(m_ui->refreshPluginsList, &QPushButton::clicked, this, &PluginManagerWidget::refreshPluginsListClicked);
   connect(m_ui->addPluginLocation, &QPushButton::clicked, this, &PluginManagerWidget::addPluginLocationClicked);
 
-  if ( ! QFile::exists(getPluginsListFilePath()) ) {
+  if ( QFile::exists(getPluginsListFilePath()) ) {
+    updatePluginsList();
+  } else {
     fetchPluginsList();
   }
 }
