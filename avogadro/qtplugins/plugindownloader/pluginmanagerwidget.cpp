@@ -369,10 +369,17 @@ void PluginManagerWidget::installDownloadedPlugin() {
   } else {
     QString installer = m_settings.value("extensions/python/installer", QString()).toString();
     QString pythonEnvironmentFull = m_settings.value("extensions/python/environmentFull", QString()).toString();
+    appendInstallationInformation("Installing python requirements ...");
     installRequirements(pluginDir, installer, pythonEnvironmentFull);
+    appendInstallationInformation("Requirements installed ...");
   }
 }
 
+void PluginManagerWidget::appendInstallationInformation(QString text) {
+  m_ui->pluginDescriptionBrowser->append(
+    text
+  );
+}
 // Save and unzip the plugin zipball
 QString PluginManagerWidget::unzipPlugin()
 {
@@ -392,8 +399,7 @@ QString PluginManagerWidget::unzipPlugin()
     // create the destination directory if it doesn't exist
     QDir().mkpath(extractDirectory);
 
-    m_ui->pluginDescriptionBrowser->append(
-      tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
+    appendInstallationInformation(tr("Downloading %1 to %2\n").arg(filename).arg(m_filePath));
 
     QFile out(absolutePath);
     out.open(QIODevice::WriteOnly);
@@ -405,15 +411,14 @@ QString PluginManagerWidget::unzipPlugin()
 
     ZipExtracter unzip;
 
-    m_ui->pluginDescriptionBrowser->append(
-      tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
+    appendInstallationInformation(tr("Extracting %1 to %2\n").arg(absolutePath).arg(extractDirectory));
     QList<QString> newFiles = unzip.listFiles(absolutep);
-    m_ui->pluginDescriptionBrowser->append(
-      tr("Finished %1 files\n").arg(newFiles.length()));
+
+    appendInstallationInformation(tr("Finished %1 files\n").arg(newFiles.length()));
 
     QList<QString> ret = unzip.extract(extractdir, absolutep);
     if (ret.empty()) {
-      m_ui->pluginDescriptionBrowser->append(tr("Extraction successful\n"));
+      appendInstallationInformation(tr("Extraction successful\n"));
 
       // get the list of files / directories we unzipped
       // the first one is the main directory name
@@ -442,15 +447,14 @@ QString PluginManagerWidget::unzipPlugin()
         }
       }
     } else {
-      m_ui->pluginDescriptionBrowser->append(
-        tr("Error while extracting: %1").arg(ret.first()));
+      appendInstallationInformation(tr("Error while extracting: %1").arg(ret.first()));
     }
 
     out.remove(); // remove the ZIP file
     m_reply->deleteLater();
     m_downloadList.removeLast();
     installNextPlugin();
-    return extractdir;
+    return extractDirectory;
   }
   return NULL;
 }

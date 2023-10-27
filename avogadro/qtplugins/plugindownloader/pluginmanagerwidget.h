@@ -50,6 +50,7 @@ public slots:
   void onInstallMethodChangedFromCode(const QString &code);
   void selectInstallerFromCode(const QString &code);
   void setPythonPath(const QString &path);
+  void appendInstallationInformation(QString text);
 
 private:
   struct repo
