@@ -9,7 +9,7 @@
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
-
+#include <QtCore/QSettings>
 #include <QtWidgets/QDialog>
 
 #include <nlohmann/json.hpp>
@@ -32,6 +32,7 @@ class PluginManagerWidget : public QDialog
 public:
   PluginManagerWidget(QWidget* parent = nullptr);
   ~PluginManagerWidget() override;
+  QSettings m_settings;
 
 public slots:
   void showDownloadedPluginDescription();

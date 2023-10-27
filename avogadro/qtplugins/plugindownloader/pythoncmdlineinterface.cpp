@@ -46,6 +46,15 @@ void installRequirements(const QString& folderPath, const QString& installMethod
     }
 }
 
+QString extractPythonPaths(const QString& pythonInterpreterString) {
+    int colonIndex = pythonInterpreterString.lastIndexOf(":");
+    if (colonIndex != -1) {
+        QString path = pythonInterpreterString.mid(colonIndex + 1).trimmed();
+        return path;
+    }
+    return "";
+}
+
 QStringList detectPythonInterpreters() {
     QStringList interpreters;
     QProcess process;
@@ -104,5 +113,27 @@ void activateEnvironment(const QString& envType, const QString& envName) {
     process.waitForFinished();
     if (process.exitCode() != 0) {
         QMessageBox::warning(nullptr, "Activation Failed", "Failed to activate or deactivate environment");
+    }
+}
+
+QString extractEnvironment(const QStringList& interpreters) {
+    bool hasConda = false;
+    bool hasPip = false;
+
+    for (const QString& interpreter : interpreters) {
+        if (interpreter.contains("Conda")) {
+            hasConda = true;
+        }
+        if (interpreter.contains("VirtualEnv")) {
+            hasPip = true;
+        }
+    }
+
+    if (hasConda) {
+        return "conda";
+    } else if (hasPip) {
+        return "pip";
+    } else {
+        return "";
     }
 }

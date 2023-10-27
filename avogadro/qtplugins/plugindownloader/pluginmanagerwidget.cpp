@@ -67,13 +67,27 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
   m_ui->repoTable->setRowCount(0);
   m_ui->repoTable->verticalHeader()->hide();
 
+  QString pythonInterp = m_settings.value("interpreters/python", QString()).toString();
+  QString installer = m_settings.value("extensions/python/installer", QString()).toString();
+  QString pythonEnvironmentFull = m_settings.value("extensions/python/environmentFull", QString()).toString();
+
   // Populate the environment selection ComboBox
   QStringList environments = detectPythonInterpreters();
   m_ui->environmentSelection->addItems(environments);
-  int baseIndex = m_ui->environmentSelection->findText("base");
+  int baseIndex = m_ui->environmentSelection->findText(pythonEnvironmentFull);
+  if (baseIndex != -1) {
+      m_ui->environmentSelection->setCurrentIndex(baseIndex);
+      onEnvironmentChanged(environments.at(baseIndex));
+  }
+  // prefill from settings
+  m_ui->setPythonPath->setText(pythonInterp);
+
+  // prefill install method
+  int baseIndex = m_ui->environmentSelection->findText(installer);
   if (baseIndex != -1) {
       m_ui->environmentSelection->setCurrentIndex(baseIndex);
   }
+  
 
   // Connect signals to slots
   connect(m_ui->installMethod, SIGNAL(currentTextChanged(const QString &)), this, SLOT(onInstallMethodChanged(const QString &)));
@@ -84,17 +98,23 @@ PluginManagerWidget::PluginManagerWidget(QWidget* parent)
 }
 
 void PluginManagerWidget::onInstallMethodChanged(const QString &text) {
-    QString method = (text == "no install") ? "None" : text;
+    QString method = (text == "no install") ? "" : text;
     qDebug() << "Install Method Changed to: " << method;
+    m_settings.setValue("extensions/python/installer",method);
 }
 
 void PluginManagerWidget::onSetPythonPathClicked() {
     QString pythonPath = m_ui->pythonPathInput->text();
     qDebug() << "Python Path: " << pythonPath;
+    m_settings.setValue("interpreters/python",pythonPath);
 }
 
 void PluginManagerWidget::onEnvironmentChanged(const QString &text) {
     qDebug() << "Environment Changed to: " << text;
+    m_ui->setPythonPath->setText(extractPythonPaths(text));
+    qDebug() << "Should also change the installation method (both): ";
+    onInstallMethodChanged(extractEnvironment(text));
+    m_settings.setValue("extensions/python/environmentFull", text);
 }
 
 PluginManagerWidget::~PluginManagerWidget()
