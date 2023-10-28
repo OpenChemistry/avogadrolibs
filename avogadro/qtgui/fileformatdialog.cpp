@@ -88,7 +88,7 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
 
     if (FileFormat::validateFileName(fileName.toStdString()) == false) {
       QMessageBox::warning(
-        parent, caption,
+        parentWidget, caption,
         tr("The file name contains invalid characters. Please choose another "
            "file name."));
       continue;
