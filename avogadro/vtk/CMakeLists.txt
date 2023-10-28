@@ -37,7 +37,7 @@ target_link_libraries(Vtk PUBLIC Avogadro::Rendering Avogadro::QtGui
   VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
   VTK::RenderingFreeType VTK::InteractionStyle VTK::ChartsCore VTK::ViewsContext2D
   VTK::RenderingContextOpenGL2 VTK::DomainsChemistryOpenGL2 Qt::Widgets
-  PRIVATE GLEW::GLEW)
+  PRIVATE GLEW::GLEW OpenGL::GL)
 
 vtk_module_autoinit(TARGETS Vtk MODULES
   VTK::RenderingOpenGL2 VTK::GUISupportQt VTK::RenderingVolumeOpenGL2
