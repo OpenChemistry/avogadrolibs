@@ -28,11 +28,14 @@ permissions:
 
 jobs:
   codacy-security-scan:
+    name: Codacy Security Scan
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-    name: Codacy Security Scan
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
