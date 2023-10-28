@@ -90,7 +90,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       // m_bondOrders[i][2] is the bond order
       if (m_bondOrders[i].size() > 2)
         molecule.addBond(m_bondOrders[i][0], m_bondOrders[i][1],
-                       static_cast<unsigned char>(m_bondOrders[i][2]));
+                         static_cast<unsigned char>(m_bondOrders[i][2]));
     }
   }
 
@@ -286,7 +286,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           break;
 
         m_bondOrders.clear();
-        while (key[0] == "B") {
+        while (key[0] == 'B') {
           // @todo .. parse the bonds based on character position
           // e.g. B(  0-Ru,  1-C ) :   0.4881 B(  0-Ru,  4-C ) :   0.6050
           getline(in, key);
