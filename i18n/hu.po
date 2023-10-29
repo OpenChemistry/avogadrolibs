@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
-"PO-Revision-Date: 2023-10-17 23:41+0000\n"
+"PO-Revision-Date: 2023-10-31 11:02+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1\n"
+"X-Generator: Weblate 5.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2055,17 +2055,15 @@ msgstr "Kötés"
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Kötések eltávolítása az összes vagy a kijelölt atomról."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Kötések létrehozása az összes vagy a kijelölt atom között."
 
 #: qtplugins/bonding/bonding.cpp:77
-#, fuzzy
-#| msgid "Perceive Bond Orders"
 msgid "Perceive bond orders."
-msgstr "Kötésrendek érzékelése"
+msgstr "Kötésrendek érzékelése."
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -2708,16 +2706,12 @@ msgid "Import Crystal from Clipboard"
 msgstr "Kristály importálása a vágólapról"
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
-#| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Atomoktól egységcelláig &körbefolyatása"
+msgstr "Atomoktól egységcelláig körbefolyatása."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Szabványos tájolás elforgatása"
+msgstr "Egységcella elforgatása a szabványos tájolásba."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
@@ -2910,34 +2904,24 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Atomi erőtérek képi megjelenítése a molekula számára."
 
 #: qtplugins/forcefield/forcefield.cpp:75
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
 msgstr "Optimalizálás"
 
 #: qtplugins/forcefield/forcefield.cpp:91
-#, fuzzy
-#| msgid "Configure Bonding…"
 msgid "Configure…"
-msgstr "Kötési beállítások…"
+msgstr "Beállítások…"
 
 #: qtplugins/forcefield/forcefield.cpp:103
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Kijelölt atomok importálása"
+msgstr "Kijelölt atomok lefagyása"
 
 #: qtplugins/forcefield/forcefield.cpp:110
-#, fuzzy
-#| msgid "Bond Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Kijelölt atomok kötése"
+msgstr "Kijelölt atomok lefagyásának feloldása"
 
 #: qtplugins/forcefield/forcefield.cpp:126
-#, fuzzy
-#| msgid "Calculate"
 msgid "&Calculate"
-msgstr "Számítás"
+msgstr "S&zámítás"
 
 #: qtplugins/forcefield/forcefield.cpp:288 qtplugins/openbabel/openbabel.cpp:45
 #: qtplugins/openbabel/openbabel.cpp:525
@@ -2945,10 +2929,9 @@ msgid "Optimize Geometry"
 msgstr "Geometria optimalizálása"
 
 #: qtplugins/forcefield/forcefield.cpp:329
-#, fuzzy, qt-format
-#| msgid "Energy = %L1 %2"
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energia = %L1 %2"
+msgstr "%1 energia = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:330
 #: qtplugins/playertool/playertool.cpp:343
@@ -2959,16 +2942,12 @@ msgid "Avogadro"
 msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.h:46
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield optimization"
-msgstr "Erőtér optimalizálás"
+msgstr "Erőtér optimalizálása"
 
 #: qtplugins/forcefield/forcefield.h:50
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield minimization, including scripts"
-msgstr "Erőtér optimalizálás"
+msgstr "Erőtér minimalizálás, parancsfájlok beleértve"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -2977,28 +2956,26 @@ msgid "Autodetect (%1)"
 msgstr "Automatikus felismerés (%1)"
 
 #: qtplugins/forcefield/obmmenergy.cpp:77
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Erőtér"
+msgstr "Egyetemes erőtér"
 
 #: qtplugins/forcefield/obmmenergy.cpp:82
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "Általánosított borostyánsárga erőtér"
 
 #: qtplugins/forcefield/obmmenergy.cpp:96
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "Merck molekuláris erőtér 94"
 
 #: qtplugins/forcefield/scriptenergy.cpp:240
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "Hiba történt az energiaparancsfájl metaadatainak lekérésekor: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:250
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "Hiba történt az energiaparancsfájl metaadatainak elemzésekor: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:258
 #, qt-format
@@ -3006,6 +2983,8 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"Hiba történt az energiaparancsfájl metaadatainak elemzésekor: %1\n"
+"Az eredmény nem JSON-objektum.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -4396,10 +4375,8 @@ msgid "Align View to Axes"
 msgstr "Nézet igazítása a tengelyekhez"
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align view to axes."
-msgstr "Nézet igazítása a tengelyekhez"
+msgstr "Nézet igazítása a tengelyekhez."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4593,7 +4570,7 @@ msgstr "Tércsoport"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
+msgstr "Szimmetrikus atomok kitöltése a kristálytércsoport alapján."
 
 #: qtplugins/spacegroup/spacegroup.cpp:199
 msgid "Failure"
@@ -4729,10 +4706,8 @@ msgid "Electron Density"
 msgstr "Elektronsűrűség"
 
 #: qtplugins/surfaces/surfacedialog.cpp:172
-#, fuzzy
-#| msgid "Density"
 msgid "Spin Density"
-msgstr "Sűrűség"
+msgstr "Centrifugálási sűrűség"
 
 #: qtplugins/surfaces/surfacedialog.cpp:184
 #, qt-format
@@ -5726,10 +5701,8 @@ msgstr "Összefolyatás ismérv"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "\"Energy\" convergence:"
 msgid "Energy convergence:"
-msgstr "„Energia” összefolyattatása:"
+msgstr "Energia összefolyattatása:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -5767,10 +5740,8 @@ msgstr " lépés"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "\"Energy\" convergence:"
 msgid "Gradient convergence:"
-msgstr "„Energia” összefolyattatása:"
+msgstr "Gradiens összefolyattatása:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:126
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -7307,10 +7278,8 @@ msgstr "Izofelületi érték:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
-#, fuzzy
-#| msgid ", "
 msgid " "
-msgstr ", "
+msgstr " , "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
