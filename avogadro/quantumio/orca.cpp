@@ -303,8 +303,6 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             bond.push_back(secondAtom);
             bond.push_back(static_cast<int>(std::round(bondOrder)));
             m_bondOrders.push_back(bond);
-            std::cout << " bond " << firstAtom << " " << secondAtom << " "
-                      << bondOrder << std::endl;
           }
 
           if (key.size() > 54 && key[28] == 'B') {
@@ -317,8 +315,6 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
               bond.push_back(firstAtom);
               bond.push_back(secondAtom);
               bond.push_back(static_cast<int>(std::round(bondOrder)));
-              std::cout << " bond " << firstAtom << " " << secondAtom << " "
-                        << bondOrder << std::endl;
               m_bondOrders.push_back(bond);
             }
           }
@@ -332,8 +328,6 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
               bond.push_back(firstAtom);
               bond.push_back(secondAtom);
               bond.push_back(static_cast<int>(std::round(bondOrder)));
-              std::cout << " bond " << firstAtom << " " << secondAtom << " "
-                        << bondOrder << std::endl;
               m_bondOrders.push_back(bond);
             }
           }

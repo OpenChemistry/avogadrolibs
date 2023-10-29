@@ -182,9 +182,6 @@ void Forcefield::setupMethod()
   if (m_autodetect)
     m_methodName = recommendedForceField();
 
-  qDebug() << " setup method " << m_methodName.c_str() << " autodetect: "
-           << m_autodetect << " recommended " << recommendedForceField().c_str();
-
   if (m_method == nullptr) {
     // we have to create the calculator
     m_method = Calc::EnergyManager::instance().model(m_methodName);
