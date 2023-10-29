@@ -78,19 +78,23 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
-  // for now, do simple bond perception
+  // guess bonds and bond orders
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
 
-  // add bonds from calculated bond orders
+  // check bonds from calculated bond orders
   if (m_bondOrders.size() > 0) {
     for (unsigned int i = 0; i < m_bondOrders.size(); i++) {
       // m_bondOrders[i][0] is the first atom
       // m_bondOrders[i][1] is the second atom
       // m_bondOrders[i][2] is the bond order
-      if (m_bondOrders[i].size() > 2)
-        molecule.addBond(m_bondOrders[i][0], m_bondOrders[i][1],
-                         static_cast<unsigned char>(m_bondOrders[i][2]));
+      if (m_bondOrders[i].size() > 2) {
+        auto bond = molecule.bond(m_bondOrders[i][0], m_bondOrders[i][1]);
+        if (bond.isValid() && bond.order() != m_bondOrders[i][2]) {
+          // if the bond order is different, change it
+          bond.setOrder(static_cast<unsigned char>(m_bondOrders[i][2]));
+        }
+      }
     }
   }
 
@@ -289,6 +293,51 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         while (key[0] == 'B') {
           // @todo .. parse the bonds based on character position
           // e.g. B(  0-Ru,  1-C ) :   0.4881 B(  0-Ru,  4-C ) :   0.6050
+          Index firstAtom = Core::lexicalCast<Index>(key.substr(2, 3));
+          Index secondAtom = Core::lexicalCast<Index>(key.substr(9, 3));
+          double bondOrder = Core::lexicalCast<double>(key.substr(18, 9));
+
+          if (bondOrder > 1.6) {
+            std::vector<int> bond;
+            bond.push_back(firstAtom);
+            bond.push_back(secondAtom);
+            bond.push_back(static_cast<int>(std::round(bondOrder)));
+            m_bondOrders.push_back(bond);
+            std::cout << " bond " << firstAtom << " " << secondAtom << " "
+                      << bondOrder << std::endl;
+          }
+
+          if (key.size() > 54 && key[28] == 'B') {
+            firstAtom = Core::lexicalCast<Index>(key.substr(30, 3));
+            secondAtom = Core::lexicalCast<Index>(key.substr(37, 3));
+            bondOrder = Core::lexicalCast<double>(key.substr(46, 9));
+
+            if (bondOrder > 1.6) {
+              std::vector<int> bond;
+              bond.push_back(firstAtom);
+              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(std::round(bondOrder)));
+              std::cout << " bond " << firstAtom << " " << secondAtom << " "
+                        << bondOrder << std::endl;
+              m_bondOrders.push_back(bond);
+            }
+          }
+          if (key.size() > 82 && key[56] == 'B') {
+            firstAtom = Core::lexicalCast<Index>(key.substr(58, 3));
+            secondAtom = Core::lexicalCast<Index>(key.substr(65, 3));
+            bondOrder = Core::lexicalCast<double>(key.substr(74, 9));
+
+            if (bondOrder > 1.6) {
+              std::vector<int> bond;
+              bond.push_back(firstAtom);
+              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(std::round(bondOrder)));
+              std::cout << " bond " << firstAtom << " " << secondAtom << " "
+                        << bondOrder << std::endl;
+              m_bondOrders.push_back(bond);
+            }
+          }
+
           getline(in, key);
           key = Core::trimmed(key);
         }
