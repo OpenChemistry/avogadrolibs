@@ -78,9 +78,25 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
-  // Do simple bond perception.
+  // guess bonds and bond orders
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
+
+  // check bonds from calculated bond orders
+  if (m_bondOrders.size() > 0) {
+    for (unsigned int i = 0; i < m_bondOrders.size(); i++) {
+      // m_bondOrders[i][0] is the first atom
+      // m_bondOrders[i][1] is the second atom
+      // m_bondOrders[i][2] is the bond order
+      if (m_bondOrders[i].size() > 2) {
+        auto bond = molecule.bond(m_bondOrders[i][0], m_bondOrders[i][1]);
+        if (bond.isValid() && bond.order() != m_bondOrders[i][2]) {
+          // if the bond order is different, change it
+          bond.setOrder(static_cast<unsigned char>(m_bondOrders[i][2]));
+        }
+      }
+    }
+  }
 
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
@@ -148,6 +164,9 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   } else if (Core::contains(key, "Number of Electrons")) {
     list = Core::split(key, ' ');
     m_electrons = Core::lexicalCast<int>(list[5]);
+  } else if (Core::contains(key, "Mayer bond orders")) {
+    m_currentMode = BondOrders;
+    // starts at the next line
   } else if (Core::contains(key, "ORBITAL ENERGIES")) {
     m_currentMode = OrbitalEnergies;
     getline(in, key); // skip ------------
@@ -265,6 +284,65 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         m_partialCharges[m_chargeType] = charges;
         m_currentMode = NotParsing;
         break;
+      }
+      case BondOrders: {
+        if (key.empty())
+          break;
+
+        m_bondOrders.clear();
+        while (key[0] == 'B') {
+          // @todo .. parse the bonds based on character position
+          // e.g. B(  0-Ru,  1-C ) :   0.4881 B(  0-Ru,  4-C ) :   0.6050
+          Index firstAtom = Core::lexicalCast<Index>(key.substr(2, 3));
+          Index secondAtom = Core::lexicalCast<Index>(key.substr(9, 3));
+          double bondOrder = Core::lexicalCast<double>(key.substr(18, 9));
+
+          if (bondOrder > 1.6) {
+            std::vector<int> bond;
+            bond.push_back(firstAtom);
+            bond.push_back(secondAtom);
+            bond.push_back(static_cast<int>(std::round(bondOrder)));
+            m_bondOrders.push_back(bond);
+            std::cout << " bond " << firstAtom << " " << secondAtom << " "
+                      << bondOrder << std::endl;
+          }
+
+          if (key.size() > 54 && key[28] == 'B') {
+            firstAtom = Core::lexicalCast<Index>(key.substr(30, 3));
+            secondAtom = Core::lexicalCast<Index>(key.substr(37, 3));
+            bondOrder = Core::lexicalCast<double>(key.substr(46, 9));
+
+            if (bondOrder > 1.6) {
+              std::vector<int> bond;
+              bond.push_back(firstAtom);
+              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(std::round(bondOrder)));
+              std::cout << " bond " << firstAtom << " " << secondAtom << " "
+                        << bondOrder << std::endl;
+              m_bondOrders.push_back(bond);
+            }
+          }
+          if (key.size() > 82 && key[56] == 'B') {
+            firstAtom = Core::lexicalCast<Index>(key.substr(58, 3));
+            secondAtom = Core::lexicalCast<Index>(key.substr(65, 3));
+            bondOrder = Core::lexicalCast<double>(key.substr(74, 9));
+
+            if (bondOrder > 1.6) {
+              std::vector<int> bond;
+              bond.push_back(firstAtom);
+              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(std::round(bondOrder)));
+              std::cout << " bond " << firstAtom << " " << secondAtom << " "
+                        << bondOrder << std::endl;
+              m_bondOrders.push_back(bond);
+            }
+          }
+
+          getline(in, key);
+          key = Core::trimmed(key);
+        }
+
+        m_currentMode = NotParsing;
       }
       case OrbitalEnergies: {
         // should start at the first orbital
@@ -579,10 +657,14 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           while (idx < orcaOrbitals.size()) {
             if (Core::contains(orcaOrbitals.at(idx), "pz")) {
               for (unsigned int i = 0; i < numColumns; i++) {
+                if (idx + 1 >= columns[i].size())
+                  break;
                 std::swap(columns[i].at(idx), columns[i].at(idx + 1));
               }
               idx++;
               for (unsigned int i = 0; i < numColumns; i++) {
+                if (idx + 1 >= columns[i].size())
+                  break;
                 std::swap(columns[i].at(idx), columns[i].at(idx + 1));
               }
               idx++;
@@ -654,10 +736,14 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             while (idx < orcaOrbitals.size()) {
               if (Core::contains(orcaOrbitals.at(idx), "pz")) {
                 for (unsigned int i = 0; i < numColumns; i++) {
+                  if (idx + 1 >= columns[i].size())
+                    break;
                   std::swap(columns[i].at(idx), columns[i].at(idx + 1));
                 }
                 idx++;
                 for (unsigned int i = 0; i < numColumns; i++) {
+                  if (idx + 1 >= columns[i].size())
+                    break;
                   std::swap(columns[i].at(idx), columns[i].at(idx + 1));
                 }
                 idx++;
