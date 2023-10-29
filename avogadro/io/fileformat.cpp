@@ -63,7 +63,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
   close();
   m_fileName = fileName_;
   m_mode = mode_;
-  if (!m_fileName.empty() && validateFileName(m_fileName)) {
+  if (!m_fileName.empty()) {
     // Imbue the standard C locale.
     locale cLocale("C");
     if (m_mode & Read) {
@@ -76,7 +76,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
         appendError("Error opening file: " + fileName_);
         return false;
       }
-    } else if (m_mode & Write) {
+    } else if (m_mode & Write && validateFileName(m_fileName)) {
       auto* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
       m_out = file;
       if (file->is_open()) {

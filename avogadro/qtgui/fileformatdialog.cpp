@@ -42,14 +42,6 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToRead(
     if (fileName.isEmpty()) // user cancel
       return result;
 
-    if (FileFormat::validateFileName(fileName.toStdString()) == false) {
-      QMessageBox::warning(
-        parent, caption,
-        tr("The file name contains invalid characters. Please choose another "
-           "file name."));
-      continue;
-    }
-
     const Io::FileFormat* format = findFileFormat(
       parent, caption, fileName, FileFormat::File | FileFormat::Read);
 
@@ -93,6 +85,14 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
 
     if (fileName.isEmpty()) // user cancel
       return result;
+
+    if (FileFormat::validateFileName(fileName.toStdString()) == false) {
+      QMessageBox::warning(
+        parentWidget, caption,
+        tr("The file name contains invalid characters. Please choose another "
+           "file name."));
+      continue;
+    }
 
     const Io::FileFormat* format = findFileFormat(
       parentWidget, caption, fileName, FileFormat::File | FileFormat::Write);
