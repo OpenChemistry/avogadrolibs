@@ -11,6 +11,9 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
+
 #include <QAction>
 #include <QDebug>
 #include <QtCore/QTimer>
@@ -26,6 +29,12 @@ Spectra::Spectra(QObject* p)
   action->setEnabled(false);
   action->setText(tr("Vibrational Modes…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(false);
+  action->setText(tr("Spectra…"));
+  connect(action, SIGNAL(triggered()), SLOT(showSpectraChart()));
   m_actions.push_back(action);
 }
 
@@ -50,6 +59,7 @@ void Spectra::setMolecule(QtGui::Molecule* mol)
     isVibrational = true;
 
   m_actions[0]->setEnabled(isVibrational);
+  m_actions[1]->setEnabled(isVibrational);
   m_molecule = mol;
   if (m_dialog)
     m_dialog->setMolecule(mol);
@@ -210,6 +220,55 @@ void Spectra::openDialog()
   if (m_molecule)
     m_dialog->setMolecule(m_molecule);
   m_dialog->show();
+}
+
+void Spectra::showSpectraChart()
+{
+  if (m_molecule == nullptr || m_molecule->vibrationFrequencies().empty())
+    return;
+
+  std::vector<float> xData;
+  std::vector<float> yData;
+  // generate the raw stick spectrum
+  float maxIntensity = 0.0f;
+  for (unsigned int x = 0; x < 4000; ++x) {
+    xData.push_back(static_cast<float>(x));
+    // check if x is near a frequency and add a peak
+    bool found = false;
+    for (auto index = 0; index < m_molecule->vibrationFrequencies().size();
+         ++index) {
+      auto freq = m_molecule->vibrationFrequencies()[index];
+      if (std::abs(static_cast<int>(x) - static_cast<int>(freq)) < 2) {
+        yData.push_back(m_molecule->vibrationIRIntensities()[index]);
+        if (m_molecule->vibrationIRIntensities()[index] > maxIntensity)
+          maxIntensity = m_molecule->vibrationIRIntensities()[index];
+
+        found = true;
+        break;
+      }
+    }
+    if (!found)
+      yData.push_back(0.0f);
+  }
+
+  auto xTitle = tr("Wavenumbers (cm⁻¹)");
+  auto yTitle = tr("Transmission");
+  auto windowName = tr("Vibrational Spectra");
+
+  if (!m_chartDialog) {
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+  }
+
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->setXAxisTitle(xTitle.toStdString());
+  chart->setYAxisTitle(yTitle.toStdString());
+  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisLimits(4000.0, 0.0);
+  chart->setYAxisLimits(maxIntensity, 0.0);
+  m_chartDialog->show();
 }
 
 void Spectra::advanceFrame()

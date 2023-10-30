@@ -6,7 +6,9 @@
 #include "avogadrovtkexport.h"
 
 #include <QWidget>
+
 #include <array>
+#include <string>
 
 #include <vtkNew.h>
 
@@ -43,14 +45,18 @@ public:
 
   void clearPlots();
 
-  void setXAxisTitle(const char* title);
+  void setXAxisTitle(const std::string title);
 
-  void setYAxisTitle(const char* title);
+  void setYAxisTitle(const std::string title);
 
   void setTickLabels(Axis a, const std::vector<float>& tickPositions,
                      const std::vector<std::string>& tickLabels);
 
   void setAxisLimits(Axis a, float min, float max);
+  void setXAxisLimits(float min, float max);
+  void setYAxisLimits(float min, float max);
+
+  void setAxisLogScale(Axis a, bool logScale);
 
 private:
   void renderViews();

@@ -12,3 +12,5 @@ avogadro_plugin(Spectra
   "${plugin_srcs}"
   "vibrationdialog.ui"
 )
+
+target_link_libraries(Spectra PRIVATE Avogadro::Vtk)

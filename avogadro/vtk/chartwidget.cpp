@@ -15,6 +15,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkStringArray.h>
 #include <vtkTable.h>
+#include <vtkTextProperty.h>
 
 #include <QHBoxLayout>
 
@@ -113,16 +114,26 @@ void ChartWidget::clearPlots()
   m_table->RemoveAllColumns();
 }
 
-void ChartWidget::setXAxisTitle(const char* title)
+void ChartWidget::setXAxisTitle(const std::string title)
 {
   auto* axis = m_chart->GetAxis(vtkAxis::BOTTOM);
   axis->SetTitle(title);
+  axis->SetTitleVisible(true);
+  axis->GetTitleProperties()->SetFontSize(18);
+  axis->GetTitleProperties()->SetBold(true);
+
+  axis->GetLabelProperties()->SetFontSize(14);
 }
 
-void ChartWidget::setYAxisTitle(const char* title)
+void ChartWidget::setYAxisTitle(const std::string title)
 {
   auto* axis = m_chart->GetAxis(vtkAxis::LEFT);
   axis->SetTitle(title);
+  axis->SetTitleVisible(true);
+  axis->GetTitleProperties()->SetFontSize(18);
+  axis->GetTitleProperties()->SetBold(true);
+
+  axis->GetLabelProperties()->SetFontSize(14);
 }
 
 void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,
@@ -159,6 +170,27 @@ void ChartWidget::setAxisLimits(Axis a, float min, float max)
 
   customAxis->SetRange(min, max);
   customAxis->SetBehavior(vtkAxis::FIXED);
+}
+
+void ChartWidget::setXAxisLimits(float min, float max)
+{
+  setAxisLimits(Axis::x, min, max);
+}
+
+void ChartWidget::setYAxisLimits(float min, float max)
+{
+  setAxisLimits(Axis::y, min, max);
+}
+
+void ChartWidget::setAxisLogScale(Axis a, bool logScale)
+{
+  auto customAxis = axis(a);
+
+  // We need a valid axis and equal sizes vectors of points/labels.
+  if (!customAxis)
+    return;
+
+  customAxis->SetLogScale(logScale);
 }
 
 vtkAxis* ChartWidget::axis(Axis a)

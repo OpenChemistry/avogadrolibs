@@ -13,6 +13,11 @@ class QDialog;
 class QTimer;
 
 namespace Avogadro {
+
+namespace VTK {
+  class ChartDialog;
+}
+
 namespace QtPlugins {
 
 class VibrationDialog;
@@ -53,6 +58,7 @@ public slots:
   void startVibrationAnimation();
   void stopVibrationAnimation();
   void openDialog();
+  void showSpectraChart();
 
 private slots:
   void advanceFrame();
@@ -63,6 +69,7 @@ private:
   QtGui::Molecule* m_molecule;
 
   VibrationDialog* m_dialog;
+  QScopedPointer<VTK::ChartDialog> m_chartDialog;
 
   QTimer* m_timer;
 
