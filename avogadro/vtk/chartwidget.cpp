@@ -123,8 +123,6 @@ void ChartWidget::setXAxisTitle(const std::string title)
   axis->GetTitleProperties()->SetFontSize(18);
   axis->GetTitleProperties()->SetBold(true);
 
-  qDebug() << " chart font " << axis->GetTitleProperties()->GetFontFamilyAsString();
-
   axis->GetLabelProperties()->SetFontSize(14);
 }
 

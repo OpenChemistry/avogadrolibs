@@ -69,7 +69,9 @@ private:
   QtGui::Molecule* m_molecule;
 
   VibrationDialog* m_dialog;
+#ifdef USE_VTK
   QScopedPointer<VTK::ChartDialog> m_chartDialog;
+#endif
 
   QTimer* m_timer;
 

@@ -238,6 +238,7 @@ void Spectra::openDialog()
   m_dialog->show();
 }
 
+#ifdef USE_VTK
 void Spectra::showSpectraChart()
 {
   if (m_molecule == nullptr || m_molecule->vibrationFrequencies().empty())
@@ -294,6 +295,7 @@ chart->setXAxisLimits(4000.0, 0.0);
 chart->setYAxisLimits(maxIntensity, 0.0);
 m_chartDialog->show();
 }
+#endif
 
 void Spectra::advanceFrame()
 {
