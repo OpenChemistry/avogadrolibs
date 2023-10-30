@@ -18,6 +18,7 @@
 #include <vtkTextProperty.h>
 
 #include <QHBoxLayout>
+#include <QDebug>
 
 namespace Avogadro::VTK {
 
@@ -121,6 +122,8 @@ void ChartWidget::setXAxisTitle(const std::string title)
   axis->SetTitleVisible(true);
   axis->GetTitleProperties()->SetFontSize(18);
   axis->GetTitleProperties()->SetBold(true);
+
+  qDebug() << " chart font " << axis->GetTitleProperties()->GetFontFamilyAsString();
 
   axis->GetLabelProperties()->SetFontSize(14);
 }

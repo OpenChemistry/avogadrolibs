@@ -21,6 +21,22 @@
 
 namespace Avogadro::QtPlugins {
 
+float scaleAndBlur(float x, float peak, float intensity, float scale = 1.0,
+                   float shift = 0.0, float fwhm = 0.0)
+{
+  // return the intensity at point x, from a Gaussian centered at peak
+  // with a width of fwhm, scaled by scale and shifted by shift
+  float fwhm_to_sigma = 2.0 * sqrt(2.0 * log(2.0));
+  float sigma = fwhm / fwhm_to_sigma;
+
+  // x is the absolute position, but we need to scale the peak position
+  float scaled_peak = (peak - shift) / scale;
+  float delta = x - scaled_peak;
+  float exponent = -(delta * delta) / (2 * sigma * sigma);
+  float gaussian = exp(exponent);
+  return intensity * gaussian;
+}
+
 Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
     m_timer(nullptr), m_mode(0), m_amplitude(20)
@@ -229,46 +245,54 @@ void Spectra::showSpectraChart()
 
   std::vector<float> xData;
   std::vector<float> yData;
-  // generate the raw stick spectrum
+  std::vector<float> yStick;
+
   float maxIntensity = 0.0f;
+  for (auto intensity : m_molecule->vibrationIRIntensities()) {
+    if (intensity > maxIntensity)
+      maxIntensity = intensity;
+  }
+
+  float scale = 1.0;
+  float shift = 0.0;
+  float fwhm = 30.0;
   for (unsigned int x = 0; x < 4000; ++x) {
-    xData.push_back(static_cast<float>(x));
-    // check if x is near a frequency and add a peak
-    bool found = false;
+    float xValue = static_cast<float>(x);
+    xData.push_back(xValue);
+    yData.push_back(0.0f);
+    yStick.push_back(0.0f);
+
+    // now we add up the intensity from any frequency
     for (auto index = 0; index < m_molecule->vibrationFrequencies().size();
          ++index) {
-      auto freq = m_molecule->vibrationFrequencies()[index];
-      if (std::abs(static_cast<int>(x) - static_cast<int>(freq)) < 2) {
-        yData.push_back(m_molecule->vibrationIRIntensities()[index]);
-        if (m_molecule->vibrationIRIntensities()[index] > maxIntensity)
-          maxIntensity = m_molecule->vibrationIRIntensities()[index];
+      float freq = m_molecule->vibrationFrequencies()[index];
+      float peak = m_molecule->vibrationIRIntensities()[index];
+      float intensity = scaleAndBlur(xValue, freq, peak, scale, shift, fwhm);
+      float stick = scaleAndBlur(xValue, freq, peak, scale, shift, 0.0);
 
-        found = true;
-        break;
-      }
+      yData.back() += intensity;
+      yStick.back() += stick;
     }
-    if (!found)
-      yData.push_back(0.0f);
   }
 
-  auto xTitle = tr("Wavenumbers (cm⁻¹)");
-  auto yTitle = tr("Transmission");
-  auto windowName = tr("Vibrational Spectra");
+auto xTitle = tr("Wavenumbers (cm⁻¹)");
+auto yTitle = tr("Transmission");
+auto windowName = tr("Vibrational Spectra");
 
-  if (!m_chartDialog) {
-    m_chartDialog.reset(
-      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
-  }
+if (!m_chartDialog) {
+  m_chartDialog.reset(
+    new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+}
 
-  m_chartDialog->setWindowTitle(windowName);
-  auto* chart = m_chartDialog->chartWidget();
-  chart->clearPlots();
-  chart->setXAxisTitle(xTitle.toStdString());
-  chart->setYAxisTitle(yTitle.toStdString());
-  chart->addPlot(xData, yData, VTK::color4ub{ 255, 0, 0, 255 });
-  chart->setXAxisLimits(4000.0, 0.0);
-  chart->setYAxisLimits(maxIntensity, 0.0);
-  m_chartDialog->show();
+m_chartDialog->setWindowTitle(windowName);
+auto* chart = m_chartDialog->chartWidget();
+chart->clearPlots();
+chart->setXAxisTitle(xTitle.toStdString());
+chart->setYAxisTitle(yTitle.toStdString());
+chart->addPlot(xData, yData, VTK::color4ub{ 0, 0, 0, 255 });
+chart->setXAxisLimits(4000.0, 0.0);
+chart->setYAxisLimits(maxIntensity, 0.0);
+m_chartDialog->show();
 }
 
 void Spectra::advanceFrame()

@@ -15,7 +15,7 @@ class QTimer;
 namespace Avogadro {
 
 namespace VTK {
-  class ChartDialog;
+class ChartDialog;
 }
 
 namespace QtPlugins {
@@ -78,6 +78,7 @@ private:
   int m_mode;
   int m_amplitude;
 };
+
 } // namespace QtPlugins
 } // namespace Avogadro
 
