@@ -5,7 +5,6 @@
 
 #include "pythonscript.h"
 
-#include <QtCore/qglobal.h>
 #include <qdebug.h>
 #include <qfileinfo.h>
 #include <qglobal.h>

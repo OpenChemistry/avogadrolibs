@@ -19,7 +19,7 @@
 #include <pugixml.hpp>
 #include <string>
 #include <iostream>
-#include <fstream>
+#include <fstream> // IWYU pragma: keep
 #include <vector>
 #include <memory>
 

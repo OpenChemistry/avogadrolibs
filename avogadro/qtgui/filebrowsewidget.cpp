@@ -5,7 +5,6 @@
 
 #include "filebrowsewidget.h"
 
-#include <QtCore/qglobal.h>
 #include <qboxlayout.h>
 #include <qcompleter.h>
 #include <qdialog.h>

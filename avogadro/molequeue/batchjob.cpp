@@ -5,7 +5,6 @@
 
 #include "batchjob.h"
 
-#include <QtCore/qglobal.h>
 #include <qdebug.h>
 #include <qglobal.h>
 #include <qmetatype.h>

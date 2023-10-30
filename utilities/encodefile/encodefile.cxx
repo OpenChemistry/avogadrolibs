@@ -4,7 +4,7 @@
  * if supplied the final one would be the variable name.
  */
 
-#include <fstream>
+#include <fstream> // IWYU pragma: keep
 #include <iostream>
 
 int main(int argc, char *argv[])

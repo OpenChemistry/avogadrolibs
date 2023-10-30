@@ -14,7 +14,6 @@
 
 #include "scriptloader.h"
 
-#include <QtCore/qglobal.h>
 #include <qbytearray.h>
 #include <qcoreapplication.h>
 #include <qdatetime.h>

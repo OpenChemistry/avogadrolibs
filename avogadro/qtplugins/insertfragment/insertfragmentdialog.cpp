@@ -17,7 +17,6 @@
 #include "insertfragmentdialog.h"
 
 #include <avogadro/qtgui/utilities.h>
-#include <QtCore/qglobal.h>
 #include <qabstractitemmodel.h>
 #include <qabstractitemview.h>
 #include <qcoreapplication.h>

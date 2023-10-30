@@ -6,9 +6,9 @@
 #include "fileformat.h"
 
 #include <algorithm>
-#include <fstream>
+#include <fstream> // IWYU pragma: keep
 #include <locale>
-#include <sstream>
+#include <sstream> // IWYU pragma: keep
 
 namespace Avogadro::Io {
 

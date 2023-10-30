@@ -3,9 +3,10 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+// IWYU pragma: no_include <ext/alloc_traits.h>
+
 #include "elements.h"
 
-#include <ext/alloc_traits.h>
 #include <algorithm>
 #include <cctype>
 #include <vector>

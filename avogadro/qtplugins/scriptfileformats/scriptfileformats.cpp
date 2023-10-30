@@ -7,7 +7,6 @@
 
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/scriptloader.h>
-#include <QtCore/qglobal.h>
 #include <qalgorithms.h>
 #include <qdebug.h>
 #include <qglobal.h>
@@ -20,6 +19,7 @@
 
 class QAction;
 class QObject;
+
 namespace Avogadro {
 namespace QtGui {
 class Molecule;

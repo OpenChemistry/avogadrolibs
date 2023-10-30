@@ -5,7 +5,6 @@
 
 #include "obprocess.h"
 
-#include <QtCore/qglobal.h>
 #include <qcoreapplication.h>
 #include <qdebug.h>
 #include <qdir.h>

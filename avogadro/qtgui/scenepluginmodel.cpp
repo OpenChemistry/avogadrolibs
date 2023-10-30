@@ -5,7 +5,6 @@
 
 #include "scenepluginmodel.h"
 
-#include <QtCore/qglobal.h>
 #include <qglobal.h>
 #include <qobject.h>
 
