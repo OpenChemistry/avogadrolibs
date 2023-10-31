@@ -76,7 +76,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
         appendError("Error opening file: " + fileName_);
         return false;
       }
-    } else if (m_mode & Write && validateFileName(m_fileName)) {
+    } else if (m_mode & Write) {
       auto* file = new ofstream(m_fileName.c_str(), std::ofstream::binary);
       m_out = file;
       if (file->is_open()) {
