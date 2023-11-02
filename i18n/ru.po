@@ -311,16 +311,17 @@ msgstr "Показывать и Предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Произошла ошибка:"
 
 #: molequeue/inputgeneratorwidget.cpp:442
 msgid "Select output filename"
-msgstr ""
+msgstr "Выберите выходное имя файла"
 
 #: molequeue/inputgeneratorwidget.cpp:454
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Внутренняя ошибка: не удалось найти текстовый виджет для имени файла \"%1\""
 
 #: molequeue/inputgeneratorwidget.cpp:470
 #: molequeue/inputgeneratorwidget.cpp:581
