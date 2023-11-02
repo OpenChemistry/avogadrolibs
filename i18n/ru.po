@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
 "PO-Revision-Date: 2023-11-02 20:36+0000\n"
-"Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
+"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -118,6 +118,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Вывод сценария:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:326 qtgui/interfacescript.cpp:472
 #, qt-format
@@ -127,6 +129,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Ошибка синтаксического анализа при смещении %L1: \"%2\"\n"
+"Необработанный JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:350
 #, qt-format
@@ -150,6 +156,11 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Ошибка создания объекта cjson: Ошибка синтаксического анализа при смещении "
+"%1: %2\n"
+"Необработанный JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:539
 #, qt-format
@@ -157,6 +168,9 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Генератор ошибок Объект cjson: Проанализированный JSON не является объектом:"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
@@ -211,7 +225,20 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Следующие файлы были изменены:\n"
+"\n"
+"%1\n"
+"\n"
+"Хотели бы вы перезаписать свои изменения, чтобы отразить новую геометрию или "
+"параметры задания?"
 msgstr[1] ""
+"Следующие файлы были изменены:\n"
+"\n"
+"%1\n"
+"\n"
+"Хотели бы вы перезаписать свои изменения, чтобы отразить новую геометрию или "
+"параметры задания?"
+msgstr[2] ""
 
 #: molequeue/inputgeneratorwidget.cpp:162
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
