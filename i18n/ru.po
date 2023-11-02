@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
 "PO-Revision-Date: 2023-11-02 20:38+0000\n"
-"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
+"Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -104,7 +104,7 @@ msgstr "отсутствует элемент \"файлы\"."
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:408
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr "Элемент \"mainFile\" не ссылается на запись в разделе \"файлы\"."
+msgstr "Элемент 'mainFile' не ссылается на запись в разделе 'файлы'."
 
 #: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:413
 msgid "'mainFile' member must be a string."
