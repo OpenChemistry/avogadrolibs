@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
-"PO-Revision-Date: 2023-11-02 20:34+0000\n"
+"PO-Revision-Date: 2023-11-02 20:36+0000\n"
 "Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -94,7 +94,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:393
 msgid "'files' member not an array."
-msgstr "элемент \"файлы\" не является массивом."
+msgstr "элемент 'файлы' не является массивом."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:397
 msgid "'files' member missing."
