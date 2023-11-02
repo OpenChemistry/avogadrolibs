@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
 "PO-Revision-Date: 2023-11-02 20:38+0000\n"
-"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
+"Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -307,7 +307,7 @@ msgstr "Скрыть &предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:374
 msgid "Show &Warnings"
-msgstr "Показывать и Предупреждения"
+msgstr "Показывать &предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
