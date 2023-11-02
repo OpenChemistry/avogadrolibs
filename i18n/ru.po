@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
-"PO-Revision-Date: 2023-11-02 20:36+0000\n"
+"PO-Revision-Date: 2023-11-02 20:37+0000\n"
 "Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -84,6 +84,8 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Неверная запись в файле: имя файла/содержимое отсутствует или нет строк:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:387
 #, qt-format
@@ -102,7 +104,7 @@ msgstr "отсутствует элемент \"файлы\"."
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:408
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "Элемент \"mainFile\" не ссылается на запись в разделе \"файлы\"."
 
 #: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:413
 msgid "'mainFile' member must be a string."
@@ -244,22 +246,22 @@ msgstr[2] ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Перезаписать измененные входные файлы?"
 
 #: molequeue/inputgeneratorwidget.cpp:188
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Проблемы, возникшие во время генерации входных данных:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
-msgstr ""
+msgstr "Нет входных файлов для сохранения!"
 
 #: molequeue/inputgeneratorwidget.cpp:285
 #: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:976
 #: qtplugins/gamessinput/gamessinputdialog.cpp:685
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Не удается подключиться к MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:594 molequeue/molequeuewidget.cpp:70
@@ -269,6 +271,8 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Не удается подключиться к серверу MoleQueue. Пожалуйста, убедитесь, что он "
+"работает, и повторите попытку."
 
 #: molequeue/inputgeneratorwidget.cpp:317
 #, qt-format
