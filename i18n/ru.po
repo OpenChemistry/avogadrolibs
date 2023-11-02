@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
-"PO-Revision-Date: 2023-11-02 20:40+0000\n"
+"PO-Revision-Date: 2023-11-03 21:33+0000\n"
 "Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -463,7 +463,7 @@ msgstr "Время Ожидания Отправки Задания"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr "Avogadro отключился, ожидая ответа от MoleQueue."
+msgstr "Время ожидания Avogadro истекло, ожидая ответа от MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
