@@ -63,7 +63,7 @@ bool FileFormat::open(const std::string& fileName_, Operation mode_)
   close();
   m_fileName = fileName_;
   m_mode = mode_;
-  if (!m_fileName.empty() && validateFileName(m_fileName)) {
+  if (!m_fileName.empty()) {
     // Imbue the standard C locale.
     locale cLocale("C");
     if (m_mode & Read) {

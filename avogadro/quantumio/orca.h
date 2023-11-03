@@ -62,6 +62,8 @@ private:
   std::vector<int> m_atomNums;
   std::vector<Eigen::Vector3d> m_atomPos;
 
+  std::vector<std::vector<int>> m_bondOrders;
+
   std::vector<int> shellFunctions;
   std::vector<Core::GaussianSet::orbital> shellTypes;
   std::vector<std::vector<int>> m_orcaNumShells;
@@ -83,6 +85,7 @@ private:
     Raman,
     Electronic,
     NMR,
+    BondOrders,
     NotParsing,
     Unrecognized
   };
