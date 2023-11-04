@@ -6,18 +6,19 @@
 # Yuri Kozlov <yuray@komyakino.ru>, 2011.
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # koffevar <egor.kafisov@gmail.com>, 2020.
-# Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022.
+# Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022, 2023.
 # Alex Brohovsky <san4ito94@gmail.com>, 2021.
 # МАН69К <weblate@mah69k.net>, 2022.
 # Kateryna Golovanvoa <kasya8888@gmail.com>, 2022.
 # Oleg Shparber <trollixx@gmail.com>, 2023.
+# Ivanushka <oplata.kes1@mail.ru>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
-"PO-Revision-Date: 2023-04-17 02:51+0000\n"
-"Last-Translator: Oleg Shparber <trollixx@gmail.com>\n"
+"PO-Revision-Date: 2023-11-03 21:33+0000\n"
+"Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -26,13 +27,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 5.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Фоновое задание #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
@@ -52,12 +53,12 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:208
 #: qtgui/interfacescript.cpp:319
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Возвращено нестроковое предупреждение."
 
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:211
 #: qtgui/interfacescript.cpp:322
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "элемент 'предупрежден' не является массивом."
 
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:342
 #, qt-format
@@ -74,6 +75,8 @@ msgstr "Ошибка заполнения файла %1: %2"
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Файл '%1' имеет неверное содержание. Отсутствует элементы строки 'contents' "
+"или 'filePath'."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:381
 #, qt-format
@@ -81,6 +84,8 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Неверная запись в файле: имя файла/содержимое отсутствует или нет строк:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:387
 #, qt-format
@@ -91,7 +96,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:393
 msgid "'files' member not an array."
-msgstr ""
+msgstr "элемент 'файлы' не является массивом."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:397
 msgid "'files' member missing."
@@ -99,7 +104,7 @@ msgstr "отсутствует элемент \"файлы\"."
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:408
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "Элемент 'mainFile' не ссылается на запись в разделе 'файлы'."
 
 #: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:413
 msgid "'mainFile' member must be a string."
@@ -115,6 +120,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Вывод сценария:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:326 qtgui/interfacescript.cpp:472
 #, qt-format
@@ -124,6 +131,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Ошибка синтаксического анализа при смещении %L1: \"%2\"\n"
+"Необработанный JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:350
 #, qt-format
@@ -147,6 +158,11 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Ошибка создания объекта cjson: Ошибка синтаксического анализа при смещении "
+"%1: %2\n"
+"Необработанный JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:539
 #, qt-format
@@ -154,6 +170,9 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Генератор ошибок Объект cjson: Проанализированный JSON не является объектом:"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
@@ -208,28 +227,47 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Следующие файл(ы) были изменены:\n"
+"\n"
+"%1\n"
+"\n"
+"Хотели бы вы перезаписать свои изменения, чтобы отразить новую геометрию или "
+"параметры задания?"
 msgstr[1] ""
+"Следующие файл(ы) были изменены:\n"
+"\n"
+"%1\n"
+"\n"
+"Хотели бы вы перезаписать свои изменения, чтобы отразить новую геометрию или "
+"параметры задания?"
+msgstr[2] ""
+"Следующие файл(ы) были изменены:\n"
+"\n"
+"%1\n"
+"\n"
+"Хотели бы вы перезаписать свои изменения, чтобы отразить новую геометрию или "
+"параметры задания?"
 
 #: molequeue/inputgeneratorwidget.cpp:162
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Перезаписать измененные входные файлы?"
 
 #: molequeue/inputgeneratorwidget.cpp:188
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Проблемы, возникшие во время генерации входных данных:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
-msgstr ""
+msgstr "Нет входных файлов для сохранения!"
 
 #: molequeue/inputgeneratorwidget.cpp:285
 #: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:976
 #: qtplugins/gamessinput/gamessinputdialog.cpp:685
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Не удается подключиться к MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:594 molequeue/molequeuewidget.cpp:70
@@ -239,48 +277,51 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Не удается подключиться к серверу MoleQueue. Пожалуйста, убедитесь, что он "
+"работает, и повторите попытку."
 
 #: molequeue/inputgeneratorwidget.cpp:317
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Отправить Расчет %1"
 
 #: molequeue/inputgeneratorwidget.cpp:333
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1013
 #: qtplugins/gamessinput/gamessinputdialog.cpp:722
 msgid "Job Failed"
-msgstr ""
+msgstr "Задание не выполнено"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1014
 #: qtplugins/gamessinput/gamessinputdialog.cpp:723
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Работа не была завершена успешно."
 
 #: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Скрипт возвращает предупреждения:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:368
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Скрыть &предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:374
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Показывать &предупреждения"
 
 #: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Произошла ошибка:"
 
 #: molequeue/inputgeneratorwidget.cpp:442
 msgid "Select output filename"
-msgstr ""
+msgstr "Выберите выходное имя файла"
 
 #: molequeue/inputgeneratorwidget.cpp:454
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Внутренняя ошибка: не удалось найти текстовый виджет для имени файла '%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:470
 #: molequeue/inputgeneratorwidget.cpp:581
@@ -293,7 +334,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Ошибка Вывода"
 
 #: molequeue/inputgeneratorwidget.cpp:471
 #: molequeue/inputgeneratorwidget.cpp:582
@@ -305,27 +346,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Не удалось выполнить запись в файл %1."
 
 #: molequeue/inputgeneratorwidget.cpp:482
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Выберите директорию вывода"
 
 #: molequeue/inputgeneratorwidget.cpp:499
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Каталог не существует!"
 
 #: molequeue/inputgeneratorwidget.cpp:505
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Каталог не может быть прочитан!"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -334,7 +375,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Файл будет перезаписан."
 
 #: molequeue/inputgeneratorwidget.cpp:520
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -343,13 +384,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Файл недоступен для записи."
 
 #: molequeue/inputgeneratorwidget.cpp:533
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Входные файлы не могут быть записаны из-за неизвестной ошибки."
 
 #: molequeue/inputgeneratorwidget.cpp:537
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -360,6 +401,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Входные файлы не могут быть записаны:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -374,6 +418,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Входные файлы не могут быть записаны:\n"
+"\n"
+"%1\n"
+"\n"
+"Предупреждения:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:557
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -386,28 +437,33 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Предупреждение:\n"
+"\n"
+"%1\n"
+"\n"
+"Вы хотели бы продолжить?"
 
 #: molequeue/inputgeneratorwidget.cpp:561
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Запись входных файлов"
 
 #: molequeue/inputgeneratorwidget.cpp:608
 msgid "Configure Job"
-msgstr ""
+msgstr "Настройка Задания"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Отправка задания в MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Время Ожидания Отправки Задания"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Время ожидания Avogadro истекло, ожидая ответа от MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
@@ -2859,7 +2915,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Не удалось загрузить из сети"
+msgstr "Сетевой сбой при загрузке"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
