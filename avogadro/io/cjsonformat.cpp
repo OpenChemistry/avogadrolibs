@@ -302,6 +302,16 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
     if (unitCellObject != nullptr)
       molecule.setUnitCell(unitCellObject);
+
+    // check for Hall number if present
+    if (unitCell["hallNumber"].is_number()) {
+      if (hallNumber > 0 && hallNumber < 531)
+        molecule.setHallNumber(static_cast<int>(unitCell["hallNumber"]));
+    } else if (unitCell["spaceGroup"].is_string()) {
+      auto hallNumber = SpaceGroups::hallNumber(unitCell["spaceGroup"]);
+      if (hallNumber != -1 && hallNumber != 0)
+        molecule.setHallNumber(hallNumber);
+    }
   }
 
   json fractional = atoms["coords"]["3dFractional"];
@@ -698,6 +708,10 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     vectors.push_back(molecule.unitCell()->cVector().y());
     vectors.push_back(molecule.unitCell()->cVector().z());
     unitCell["cellVectors"] = vectors;
+
+    // write the Hall number and space group
+    unitCell["hallNumber"] = molecule.hallNumber();
+    unitCell["spaceGroup"] = SpaceGroups::international(molecule.hallNumber());
 
     root["unitCell"] = unitCell;
   }
