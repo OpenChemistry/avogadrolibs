@@ -14,9 +14,8 @@
 
 ******************************************************************************/
 
-#include "insertfragmentdialog.h"
 #include "ui_insertfragmentdialog.h"
-
+#include "insertfragmentdialog.h"
 #include "sortfiltertreeproxymodel.h"
 
 #include <avogadro/qtgui/utilities.h>

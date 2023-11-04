@@ -42,6 +42,7 @@ avogadro_headers(QtGui
   fileformatdialog.h
   generichighlighter.h
   hydrogentools.h
+  insertfragmentdialog.h
   interfacescript.h
   interfacewidget.h
   jsonwidget.h
@@ -60,6 +61,7 @@ avogadro_headers(QtGui
   sceneplugin.h
   scenepluginmodel.h
   scriptloader.h
+  sortfiltertreeproxymodel.h
   toolplugin.h
   utilities.h
   viewfactory.h
@@ -78,6 +80,7 @@ target_sources(QtGui PRIVATE
   fileformatdialog.cpp
   generichighlighter.cpp
   hydrogentools.cpp
+  insertfragmentdialog.cpp
   interfacescript.cpp
   interfacewidget.cpp
   jsonwidget.cpp
@@ -95,6 +98,7 @@ target_sources(QtGui PRIVATE
   sceneplugin.cpp
   scenepluginmodel.cpp
   scriptloader.cpp
+  sortfiltertreeproxymodel.cpp
   toolplugin.cpp
   utilities.cpp
   viewfactory.cpp
@@ -102,6 +106,7 @@ target_sources(QtGui PRIVATE
 
 set(UIS
   customelementdialog.ui
+  insertfragmentdialog.ui
 )
 qt_wrap_ui(UI_SOURCES ${UIS})
 target_sources(QtGui PRIVATE ${UI_SOURCES})

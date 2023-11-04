@@ -5,8 +5,6 @@
 
 #include "sortfiltertreeproxymodel.h"
 
-#include <QDebug>
-
 namespace Avogadro {
 
   // Custom class for Avogadro to handle filtering files

@@ -4,7 +4,7 @@
 ******************************************************************************/
 
 #include "insertfragment.h"
-#include "insertfragmentdialog.h"
+#include <avogadro/qtgui/insertfragmentdialog.h>
 
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
@@ -13,7 +13,6 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 
 #include <QAction>
