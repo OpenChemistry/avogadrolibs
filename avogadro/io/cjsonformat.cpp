@@ -305,8 +305,9 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
     // check for Hall number if present
     if (unitCell["hallNumber"].is_number()) {
+      auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
       if (hallNumber > 0 && hallNumber < 531)
-        molecule.setHallNumber(static_cast<int>(unitCell["hallNumber"]));
+        molecule.setHallNumber(hallNumber);
     } else if (unitCell["spaceGroup"].is_string()) {
       auto hallNumber = SpaceGroups::hallNumber(unitCell["spaceGroup"]);
       if (hallNumber != -1 && hallNumber != 0)
