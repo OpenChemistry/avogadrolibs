@@ -310,8 +310,8 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
       if (hallNumber > 0 && hallNumber < 531)
         molecule.setHallNumber(hallNumber);
     } else if (unitCell["spaceGroup"].is_string()) {
-      auto hallNumber = SpaceGroups::hallNumber(unitCell["spaceGroup"]);
-      if (hallNumber != -1 && hallNumber != 0)
+      auto hallNumber = Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
+      if (hallNumber != 0)
         molecule.setHallNumber(hallNumber);
     }
   }
@@ -713,7 +713,8 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 
     // write the Hall number and space group
     unitCell["hallNumber"] = molecule.hallNumber();
-    unitCell["spaceGroup"] = SpaceGroups::international(molecule.hallNumber());
+    unitCell["spaceGroup"] =
+      Core::SpaceGroups::international(molecule.hallNumber());
 
     root["unitCell"] = unitCell;
   }
