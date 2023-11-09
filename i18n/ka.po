@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-29 02:01+0000\n"
-"PO-Revision-Date: 2023-09-17 17:54+0000\n"
+"PO-Revision-Date: 2023-11-10 06:36+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0.2\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -1239,11 +1239,9 @@ msgid ""
 msgstr ""
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1…"
+#, qt-format
 msgid "Warning '%1'"
-msgstr "%1-ის გაშვება…"
+msgstr "ფრთხილად '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
@@ -1443,10 +1441,9 @@ msgid "Modify Molecule"
 msgstr ""
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Command scripts"
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "ბრძანების სკრიპტები"
+msgstr "ვერ ჩავტვირთე სკრიპტი %1"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -1512,10 +1509,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
-msgstr "მონიშვნის ხელსაწყო"
+msgstr "გასწორების ხელსაწყო"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
@@ -1950,10 +1945,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:77
-#, fuzzy
-#| msgid "Perceive Bond Orders"
 msgid "Perceive bond orders."
-msgstr "ბმის მიმდევრობის აღქმა"
+msgstr "ბმის მიმდევრობის აღქმა."
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -2188,10 +2181,8 @@ msgid "Element symbol."
 msgstr "ელემენტის სიმბოლო."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "არასწორი ატომური ნომერი."
+msgstr "არასწორი ატომის ჭდე."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 msgid "Invalid atomic index."
@@ -2775,34 +2766,24 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:75
-#, fuzzy
-#| msgid "Optimize Geometry"
 msgid "Optimize"
-msgstr "გეომეტრიის ოპტიმიზაცია"
+msgstr "ოპტიმიზაცია"
 
 #: qtplugins/forcefield/forcefield.cpp:91
-#, fuzzy
-#| msgid "Configure Job"
 msgid "Configure…"
-msgstr "დავალების მორგება"
+msgstr "მორგება…"
 
 #: qtplugins/forcefield/forcefield.cpp:103
-#, fuzzy
-#| msgid "Bond Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "მონიშნული ატომების მიბმა"
+msgstr "მონიშნული ატომების გაყინვა"
 
 #: qtplugins/forcefield/forcefield.cpp:110
-#, fuzzy
-#| msgid "Bond Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "მონიშნული ატომების მიბმა"
+msgstr "მონიშნული ატომების გადნობა"
 
 #: qtplugins/forcefield/forcefield.cpp:126
-#, fuzzy
-#| msgid "Calculate"
 msgid "&Calculate"
-msgstr "გამოთვლა"
+msgstr "&გამოთვლა"
 
 #: qtplugins/forcefield/forcefield.cpp:288 qtplugins/openbabel/openbabel.cpp:45
 #: qtplugins/openbabel/openbabel.cpp:525
@@ -2823,10 +2804,8 @@ msgid "Avogadro"
 msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.h:46
-#, fuzzy
-#| msgid "Geometry Optimization"
 msgid "Forcefield optimization"
-msgstr "გეომეტრიის ოპტიმიზაცია"
+msgstr "ძალის ველის ოპტიმიზაცია"
 
 #: qtplugins/forcefield/forcefield.h:50
 msgid "Forcefield minimization, including scripts"
@@ -4505,10 +4484,8 @@ msgid "Electron Density"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:172
-#, fuzzy
-#| msgid "Density"
 msgid "Spin Density"
-msgstr "სიმკვრივე"
+msgstr "სპინის სიმკვრივე"
 
 #: qtplugins/surfaces/surfacedialog.cpp:184
 #, qt-format
@@ -4551,16 +4528,12 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:117 qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Calculating molecular orbital %L1"
 msgid "Render a molecular orbital."
-msgstr "მოლეკულური ორბიტალის %L1 გამოთვლა"
+msgstr "მოლეკულური ორბიტალის რენდერი."
 
 #: qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "ელექტრონების სიმკვრივის გამოთვლა"
+msgstr "ელექტრონების სიმკვრივის რენდერი."
 
 #: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the spin density."
@@ -4575,10 +4548,8 @@ msgid "Calculating electron density"
 msgstr "ელექტრონების სიმკვრივის გამოთვლა"
 
 #: qtplugins/surfaces/surfaces.cpp:580
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Calculating spin density"
-msgstr "ელექტრონების სიმკვრივის გამოთვლა"
+msgstr "სპინის სიმკვრივის გამოთვლა"
 
 #: qtplugins/surfaces/surfaces.cpp:589
 #, qt-format
@@ -5469,10 +5440,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Energy and Forces"
 msgid "Energy convergence:"
-msgstr "ენერგია და ძალები"
+msgstr "ენერგიის კონვერგენცია:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7024,10 +6993,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
-#, fuzzy
-#| msgid ", "
 msgid " "
-msgstr ", "
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
