@@ -15,6 +15,7 @@
 
 #include <cctype>
 #include <istream>
+#include <iostream>
 #include <string>
 
 using Avogadro::Core::Array;
@@ -139,7 +140,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       auto altLoc = lexicalCast<string>(buffer.substr(16, 1), ok);
 
       string element; // Element symbol, right justified
-      unsigned char atomicNum;
+      unsigned char atomicNum = 255;
       if (buffer.size() >= 78) {
         element = buffer.substr(76, 2);
         element = trimmed(element);
@@ -151,12 +152,20 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         atomicNum = Elements::atomicNumberFromSymbol(element);
         if (atomicNum == 255)
           appendError("Invalid element");
-      } else {
+      } 
+
+      if (atomicNum == 255) {
         // non-standard or old-school PDB file - try to parse the atom name
         element = trimmed(atomName);
+        // remove any trailing digits
+        while (element.size() && std::isdigit(element.back()))
+          element.pop_back();
+
         atomicNum = Elements::atomicNumberFromSymbol(element);
-        if (atomicNum == 255)
+        if (atomicNum == 255) {
           appendError("Invalid element");
+          continue; // skip this invalid record
+        }
       }
 
       if (altLoc.compare("") && altLoc.compare("A")) {
