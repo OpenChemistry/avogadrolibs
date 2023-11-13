@@ -14,8 +14,8 @@
 #include <avogadro/core/vector.h>
 
 #include <cctype>
-#include <istream>
 #include <iostream>
+#include <istream>
 #include <string>
 
 using Avogadro::Core::Array;
@@ -152,7 +152,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         atomicNum = Elements::atomicNumberFromSymbol(element);
         if (atomicNum == 255)
           appendError("Invalid element");
-      } 
+      }
 
       if (atomicNum == 255) {
         // non-standard or old-school PDB file - try to parse the atom name
@@ -224,9 +224,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         else {
           int b = lexicalCast<int>(buffer.substr(bCoords[i], 5), ok) - 1;
           if (!ok) {
-            appendError("Failed to parse bond connection b" + std::to_string(i) +
-                        " " + buffer.substr(bCoords[i], 5));
-            //return false;
+            appendError("Failed to parse bond connection b" +
+                        std::to_string(i) + " " + buffer.substr(bCoords[i], 5));
+            // return false;
             continue; // skip this invalid record
           }
 
