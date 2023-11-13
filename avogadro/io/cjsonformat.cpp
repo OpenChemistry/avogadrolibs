@@ -85,14 +85,15 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
   return deserialize(file, molecule, true);
 }
 
-bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule, bool isJson)
+bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
+                              bool isJson)
 {
   json jsonRoot;
   if (isJson)
     jsonRoot = json::parse(file, nullptr, false);
   else // msgpack
     jsonRoot = json::from_msgpack(file);
-  
+
   if (jsonRoot.is_discarded()) {
     appendError("Error reading CJSON file.");
     return false;
@@ -648,7 +649,8 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
   return serialize(file, molecule, true);
 }
 
-bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule, bool isJson)
+bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
+                            bool isJson)
 {
   json opts;
   if (!options().empty())

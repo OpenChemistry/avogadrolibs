@@ -55,7 +55,7 @@ public:
   bool serialize(std::ostream& out, const Core::Molecule& molecule, bool json);
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_CJSONFORMAT_H

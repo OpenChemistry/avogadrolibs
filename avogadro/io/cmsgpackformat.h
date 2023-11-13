@@ -6,8 +6,8 @@
 #ifndef AVOGADRO_IO_CMSGPACKFORMAT_H
 #define AVOGADRO_IO_CMSGPACKFORMAT_H
 
-#include "fileformat.h"
 #include "cjsonformat.h"
+#include "fileformat.h"
 
 namespace Avogadro {
 namespace Core {
@@ -36,7 +36,8 @@ public:
   std::string name() const override { return "Chemical MessagePack"; }
   std::string description() const override
   {
-    return "CMsgPack format is a lightweight intermediate format used to exchange "
+    return "CMsgPack format is a lightweight intermediate format used to "
+           "exchange "
            "information between Avogadro and other data parsing applications";
   }
 
@@ -55,7 +56,7 @@ public:
   bool m_json = false;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_CMSGPACKFORMAT_H
