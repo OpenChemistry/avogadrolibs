@@ -87,7 +87,12 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
 bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule, bool isJson)
 {
-  json jsonRoot = json::parse(file, nullptr, false);
+  json jsonRoot;
+  if (isJson)
+    jsonRoot = json::parse(file, nullptr, false);
+  else // msgpack
+    jsonRoot = json::from_msgpack(file);
+  
   if (jsonRoot.is_discarded()) {
     appendError("Error reading CJSON file.");
     return false;
@@ -1025,7 +1030,8 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule, bool i
       modes.push_back(static_cast<unsigned int>(i) + 1);
       freqs.push_back(molecule.vibrationFrequencies()[i]);
       inten.push_back(molecule.vibrationIRIntensities()[i]);
-      raman.push_back(molecule.vibrationRamanIntensities()[i]);
+      if (molecule.vibrationRamanIntensities().size() > i)
+        raman.push_back(molecule.vibrationRamanIntensities()[i]);
       Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
       json eigenVector;
       for (auto pos : atomDisplacements) {
@@ -1038,7 +1044,8 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule, bool i
     root["vibrations"]["modes"] = modes;
     root["vibrations"]["frequencies"] = freqs;
     root["vibrations"]["intensities"] = inten;
-    root["vibrations"]["ramanIntensities"] = raman;
+    if (molecule.vibrationRamanIntensities().size() > 0)
+      root["vibrations"]["ramanIntensities"] = raman;
     root["vibrations"]["eigenVectors"] = eigenVectors;
   }
 
@@ -1071,8 +1078,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule, bool i
 
   if (isJson)
     file << std::setw(2) << root;
-  else // write msgpack
+  else { // write msgpack
     json::to_msgpack(root, file);
+  }
 
   return true;
 }

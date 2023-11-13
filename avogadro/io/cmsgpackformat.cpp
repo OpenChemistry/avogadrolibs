@@ -39,7 +39,6 @@ vector<std::string> CMsgPackFormat::mimeTypes() const
 
   bool CMsgPackFormat::write(std::ostream& out, const Core::Molecule& molecule)
   {
-    std::cerr << "CMsgPackFormat::write" << std::endl;
     return CjsonFormat::serialize(out, molecule, false);
   }
 
