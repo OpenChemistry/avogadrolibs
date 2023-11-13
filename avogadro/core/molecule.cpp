@@ -49,6 +49,7 @@ Molecule::Molecule(const Molecule& other)
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
     m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
     m_atomicNumbers(other.m_atomicNumbers),
+    m_frozenAtomMask(other.m_frozenAtomMask),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -90,6 +91,7 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
     m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
     m_atomicNumbers(other.m_atomicNumbers),
+    m_frozenAtomMask(other.m_frozenAtomMask),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -133,6 +135,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
 
@@ -193,6 +196,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
@@ -266,6 +270,59 @@ std::set<std::string> Molecule::partialChargeTypes() const
     types.insert(it.first);
   return types;
 }
+
+void Molecule::setFrozenAtom(Index atomId, bool frozen)
+{
+  if (atomId >= m_atomicNumbers.size())
+    return;
+
+  // check if we need to resize
+  unsigned int size = m_frozenAtomMask.rows();  
+  if (m_frozenAtomMask.rows() != 3*m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3*m_atomicNumbers.size());
+
+  // do we need to initialize new values?
+  if (m_frozenAtomMask.rows() > size)
+    for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
+      m_frozenAtomMask[i] = 1.0;
+  
+  float value = frozen ? 0.0 : 1.0;
+  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
+    m_frozenAtomMask[atomId*3] = value;
+    m_frozenAtomMask[atomId*3+1] = value;
+    m_frozenAtomMask[atomId*3+2] = value;
+  }
+}
+
+bool Molecule::frozenAtom(Index atomId) const
+{
+  bool frozen = false;
+  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
+    frozen = (m_frozenAtomMask[atomId*3] == 0.0 &&
+              m_frozenAtomMask[atomId*3+1] == 0.0 &&
+              m_frozenAtomMask[atomId*3+2] == 0.0);
+  }
+  return frozen;
+}
+
+void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
+{
+  // check if we need to resize
+  unsigned int size = m_frozenAtomMask.rows();  
+  if (m_frozenAtomMask.rows() != 3*m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3*m_atomicNumbers.size());
+
+  // do we need to initialize new values?
+  if (m_frozenAtomMask.rows() > size)
+    for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
+      m_frozenAtomMask[i] = 1.0;
+  
+  float value = frozen ? 0.0 : 1.0;
+  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
+    m_frozenAtomMask[atomId*3 + axis] = value;
+  }
+}
+
 
 void Molecule::setData(const std::string& name, const Variant& value)
 {
@@ -554,7 +611,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
 size_t calcNlogN(size_t n)
 {
   size_t aproxLog = 1;
-  float aux = n;
+  float aux = static_cast<float>(n);
   while (aux > 2.0f) {
     aux /= 2.0f;
     ++aproxLog;
@@ -1054,6 +1111,28 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       double cutoff = radii[i] + radii[j] + tolerance;
       Vector3 jpos = m_positions3d[j];
       Vector3 diff = jpos - ipos;
+
+      // Don't automatically bond nobel gases to anything
+      switch (atomicNumber(i)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
+      // now for the other atom
+      switch (atomicNumber(j)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
 
       if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
           std::fabs(diff[2]) > cutoff ||

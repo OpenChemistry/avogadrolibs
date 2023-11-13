@@ -2,6 +2,10 @@ name: Build Wheels
 
 on: [push, pull_request]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   # Don't build python 2.7, pypy, or 32-bit wheels or Mac arm64 on Py3.8
   CIBW_SKIP: "cp36-* cp37-* cp311-* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
@@ -42,7 +46,7 @@ jobs:
         os: [ubuntu-20.04, macos-latest, windows-2019]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Grab the whole history so that setuptools-scm can see the tags and
           # give it a correct version even on non-tag push.

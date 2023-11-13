@@ -12,6 +12,7 @@
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -307,6 +308,17 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule, bool isJso
     }
     if (unitCellObject != nullptr)
       molecule.setUnitCell(unitCellObject);
+
+    // check for Hall number if present
+    if (unitCell["hallNumber"].is_number()) {
+      auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
+      if (hallNumber > 0 && hallNumber < 531)
+        molecule.setHallNumber(hallNumber);
+    } else if (unitCell["spaceGroup"].is_string()) {
+      auto hallNumber = Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
+      if (hallNumber != 0)
+        molecule.setHallNumber(hallNumber);
+    }
   }
 
   json fractional = atoms["coords"]["3dFractional"];
@@ -708,6 +720,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule, bool i
     vectors.push_back(molecule.unitCell()->cVector().y());
     vectors.push_back(molecule.unitCell()->cVector().z());
     unitCell["cellVectors"] = vectors;
+
+    // write the Hall number and space group
+    unitCell["hallNumber"] = molecule.hallNumber();
+    unitCell["spaceGroup"] =
+      Core::SpaceGroups::international(molecule.hallNumber());
 
     root["unitCell"] = unitCell;
   }

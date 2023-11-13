@@ -27,9 +27,7 @@
 
 namespace Avogadro::QtGui {
 
-ScriptLoader::ScriptLoader(QObject* parent_)
-  : QObject(parent_)
-{}
+ScriptLoader::ScriptLoader(QObject* parent_) : QObject(parent_) {}
 
 ScriptLoader::~ScriptLoader() {}
 
@@ -40,9 +38,7 @@ bool ScriptLoader::queryProgramName(const QString& scriptFilePath,
   displayName = gen.displayName();
   if (gen.hasErrors()) {
     displayName.clear();
-    qWarning() << "ScriptLoader::queryProgramName: Unable to retrieve program "
-                  "name for"
-               << scriptFilePath << ";" << gen.errorList().join("\n\n");
+    qWarning() << tr("Cannot load script %1").arg(scriptFilePath);
     return false;
   }
   return true;
@@ -69,7 +65,7 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   // build up a list of possible files, then we check if they're real scripts
   QStringList fileList;
   foreach (const QString& dirStr, dirs) {
-    qDebug() << "Checking for " << type << " scripts in" << dirStr;
+    qDebug() << tr("Checking for %1 scripts in path %2").arg(type).arg(dirStr);
     QDir dir(dirStr);
     if (dir.exists() && dir.isReadable()) {
       foreach (
@@ -97,7 +93,7 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
               if (commands.type() == QJsonValue::Array) {
                 // check if "command.*" exists as a file
                 QJsonArray list = commands.toArray();
-                for (auto && i : list) {
+                for (auto&& i : list) {
                   QJsonValue command = i.toObject()["command"];
                   QString name = command.toString();
                   if (name.isEmpty() || name.isNull())
@@ -153,4 +149,4 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
   return scriptList;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

@@ -12,8 +12,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>337</height>
+    <width>443</width>
+    <height>354</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -30,7 +30,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -117,13 +117,6 @@
        </item>
        <item>
         <widget class="QComboBox" name="modelCombo">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="chargeCombo">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -314,6 +307,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QDoubleSpinBox" name="isosurfaceDoubleSpinBox">
+         <property name="prefix">
+          <string> </string>
+         </property>
          <property name="decimals">
           <number>4</number>
          </property>
@@ -402,16 +398,16 @@
           <bool>false</bool>
          </property>
          <property name="minimum">
-          <double>0</double>
+          <number>0</number>
          </property>
          <property name="maximum">
-          <double>19</double>
+          <number>19</number>
          </property>
          <property name="singleStep">
-          <double>1</double>
+          <number>1</number>
          </property>
          <property name="value">
-          <double>5</double>
+          <number>5</number>
          </property>
         </widget>
        </item>
@@ -431,7 +427,7 @@
       </layout>
      </item>
      <item row="6" column="0">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="frameLabel">
        <property name="text">
         <string>Frame:</string>
        </property>
@@ -458,7 +454,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="media-seek-backward"/>
+          <iconset theme="media-seek-backward">
+           <normaloff>.</normaloff>.</iconset>
          </property>
         </widget>
        </item>
@@ -471,7 +468,8 @@
           <string/>
          </property>
          <property name="icon">
-           <iconset theme="media-playback-start"/>
+          <iconset theme="media-playback-start">
+           <normaloff>.</normaloff>.</iconset>
          </property>
         </widget>
        </item>
@@ -484,7 +482,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="media-seek-forward"/>
+          <iconset theme="media-seek-forward">
+           <normaloff>.</normaloff>.</iconset>
          </property>
         </widget>
        </item>
@@ -504,19 +503,6 @@
       </layout>
      </item>
     </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -554,6 +540,19 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

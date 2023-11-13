@@ -11,9 +11,13 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -65,22 +69,6 @@ jobs:
             cpack: "",
           }
         - {
-            name: "Ubuntu Leak Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "lsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Thread Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "tsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-            cpack: "",
-          }
-        - {
             name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
@@ -97,6 +85,7 @@ jobs:
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -110,19 +99,31 @@ jobs:
       run: choco install ninja
 
     - name: Checkout openchemistry
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
 
     - name: Checkout avogadroapp
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
 
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: molecules
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
+
     - name: Checkout avogadrolibs
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: avogadrolibs
 
@@ -137,7 +138,7 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         cache: True
-        tools: 'tools_openssl_x64'
+        tools: 'tools_opensslv3_x64'
         version: ${{ env.QT_VERSION }}
         host: 'windows'
         target: 'desktop'
@@ -196,6 +197,15 @@ jobs:
         done
         otool -L libinchi.?.?.?.dylib
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        # finally, fixup the binaries
+        #cd ../bin
+        #for exe in obabel obmm eht_bind genXrdPattern; do
+        #  for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+        #    export lib=`echo $libpath | cut -d '/' -f 9`;
+        #    echo "Fixing $exe $lib $libpath"
+        #    install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+        #  done
+        #done
 
     - name: Run tests
       if: matrix.config.os == 'ubuntu-20.04'
@@ -249,21 +259,22 @@ jobs:
           fi # certificate exists
         fi # password exists
 
-    - name: Pack
-      if: matrix.config.artifact != 0
+    - name: Create Mac and Windows Packages
+      if: matrix.config.os == 'windows-latest' || matrix.config.os == 'macos-latest'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
           unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
         fi
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
-      working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: AppImage
-      if: matrix.config.os == 'ubuntu-18.04'
+      if: matrix.config.os == 'ubuntu-20.04' && matrix.config.build_type == 'Release'
       shell: bash
       run: |
         mkdir appdir
@@ -278,27 +289,24 @@ jobs:
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
         mv Avogadro2*.AppImage avogadroapp # for upload
-        # remove the cpack files
-        rm avogadroapp/Avogadro2*Linux.*
       working-directory: ${{ runner.workspace }}/build
 
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
       run: |
-        # check current directory (failing signing)
-        echo `pwd`
-        ls -ld
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
-          npx notarize-cli --file Avogadro2*.dmg
+          xcrun notarytool submit Avogadro2*.dmg --apple-id "$NOTARIZE_USERNAME" --team-id "$NOTARIZE_TEAM" --password "$NOTARIZE_PASSWORD" --verbose --wait
+          xcrun stapler staple -v Avogadro2*.dmg
         fi
       working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
+        NOTARIZE_TEAM: ${{ secrets.AC_TEAM }}
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
         NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
-        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
+      continue-on-error: true
 
     - name: Setup tmate session
       if: ${{ failure() }}

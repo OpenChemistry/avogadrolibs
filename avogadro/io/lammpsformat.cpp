@@ -426,6 +426,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 
   std::ostringstream massStream, atomStream, bondStream;
   double xmin, xmax, ymin, ymax, zmin, zmax;
+  xmin = xmax = ymin = ymax = zmin = zmax = 0.0;
 
   size_t numAtoms = mol2.atomCount();
   outStream << to_string(numAtoms) << " atoms\n";
