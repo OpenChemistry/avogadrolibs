@@ -249,7 +249,9 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             Core::lexicalCast<double>(list[6]) * m_coordFactor,
             Core::lexicalCast<double>(list[7]) * m_coordFactor);
 
-          m_atomNums.push_back(Core::lexicalCast<int>(list[2]));
+          unsigned char atomicNum =
+            Core::Elements::atomicNumberFromSymbol(Core::trimmed(list[1]));
+          m_atomNums.push_back(atomicNum);
           m_atomPos.push_back(pos);
           m_atomLabel.push_back(Core::trimmed(list[1]));
           getline(in, key);
