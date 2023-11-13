@@ -3,9 +3,10 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_CJSONFORMAT_H
-#define AVOGADRO_IO_CJSONFORMAT_H
+#ifndef AVOGADRO_IO_CMSGPACKFORMAT_H
+#define AVOGADRO_IO_CMSGPACKFORMAT_H
 
+#include "cjsonformat.h"
 #include "fileformat.h"
 
 namespace Avogadro {
@@ -15,27 +16,28 @@ class GaussianSet;
 namespace Io {
 
 /**
- * @class CjsonFormat cjsonformat.h <avogadro/io/cjsonformat.h>
- * @brief Implementation of the Chemical JSON format.
+ * @class CMsgPackFormat cmsgpackformat.h <avogadro/io/cmsgpackformat.h>
+ * @brief Implementation of the Chemical MessagePack format.
  */
 
-class AVOGADROIO_EXPORT CjsonFormat : public FileFormat
+class AVOGADROIO_EXPORT CMsgPackFormat : public CjsonFormat
 {
 public:
-  CjsonFormat();
-  ~CjsonFormat() override;
+  CMsgPackFormat();
+  ~CMsgPackFormat() override;
 
   Operations supportedOperations() const override
   {
     return ReadWrite | File | Stream | String;
   }
 
-  FileFormat* newInstance() const override { return new CjsonFormat; }
-  std::string identifier() const override { return "Avogadro: CJSON"; }
-  std::string name() const override { return "Chemical JSON"; }
+  FileFormat* newInstance() const override { return new CMsgPackFormat; }
+  std::string identifier() const override { return "Avogadro: CMsgPack"; }
+  std::string name() const override { return "Chemical MessagePack"; }
   std::string description() const override
   {
-    return "CJSON format is a lightweight intermediate format used to exchange "
+    return "CMsgPack format is a lightweight intermediate format used to "
+           "exchange "
            "information between Avogadro and other data parsing applications";
   }
 
@@ -50,12 +52,11 @@ public:
   bool read(std::istream& in, Core::Molecule& molecule) override;
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
-  // internal - to allow JSON or MsgPack to be written
-  bool deserialize(std::istream& in, Core::Molecule& molecule, bool json);
-  bool serialize(std::ostream& out, const Core::Molecule& molecule, bool json);
+  // write MessagePack
+  bool m_json = false;
 };
 
 } // namespace Io
 } // namespace Avogadro
 
-#endif // AVOGADRO_IO_CJSONFORMAT_H
+#endif // AVOGADRO_IO_CMSGPACKFORMAT_H
