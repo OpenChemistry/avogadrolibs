@@ -154,7 +154,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   json labels = atoms["labels"];
   if (labels.is_array() && labels.size() == atomCount) {
     for (size_t i = 0; i < atomCount; ++i) {
-      molecule.atom(i).setLabel(labels[i]);
+      molecule.setAtomLabel(i, labels[i]);
     }
   }
 
@@ -242,6 +242,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
            ++i) {
         molecule.bond(i).setOrder(static_cast<int>(order[i]));
+      }
+    }
+
+    // are there bond labels?
+    json bondLabels = bonds["labels"];
+    if (bondLabels.is_array() && bondLabels.size() == molecule.bondCount()) {
+      for (unsigned int i = 0; i < molecule.bondCount(); ++i) {
+        molecule.setBondLabel(i, bondLabels[i]);
       }
     }
   }
@@ -952,12 +960,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
   }
 
-  // labels
-  json labels;
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
-    labels.push_back(molecule.label(i));
+  // check for atom labels
+  Array atomLabels = molecule.atomLabels();
+  if (atomLabels.size() == molecule.atomCount()) {
+    json labels;
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
+      labels.push_back(atomLabels[i]);
+    }
+    root["atoms"]["labels"] = labels;
   }
-  root["atoms"]["labels"] = labels;
 
   // formal charges
   json formalCharges;
@@ -987,6 +998,16 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     root["bonds"]["connections"]["index"] = connections;
     root["bonds"]["order"] = order;
+
+    // check if there are bond labels
+    Array bondLabels = molecule.bondLabels();
+    if (bondLabels.size() == molecule.bondCount()) {
+      json labels;
+      for (Index i = 0; i < molecule.bondCount(); ++i) {
+        labels.push_back(bondLabels[i]);
+      }
+      root["bonds"]["labels"] = labels;
+    }
   }
 
   // Create and populate any residue arrays

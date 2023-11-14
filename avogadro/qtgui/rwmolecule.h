@@ -223,9 +223,9 @@ public:
   bool setAtomPosition3d(Index atomId, const Vector3& pos,
                          const QString& undoText = tr("Change Atom Position"));
 
-  std::string label(Index atomId) const;
-  bool setLabel(Index atomId, const std::string& label,
-                const QString& undoText = tr("Change Atom Label"));
+  std::string atomLabel(Index atomId) const;
+  bool setAtomLabel(Index atomId, const std::string& label,
+                    const QString& undoText = tr("Change Atom Label"));
 
   /**
    * Set whether the specified atom is selected or not.
@@ -735,9 +735,9 @@ inline Vector3 RWMolecule::atomPosition3d(Index atomId) const
   return m_molecule.atomPosition3d(atomId);
 }
 
-inline std::string RWMolecule::label(Index atomId) const
+inline std::string RWMolecule::atomLabel(Index atomId) const
 {
-  return m_molecule.label(atomId);
+  return m_molecule.atomLabel(atomId);
 }
 
 inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const

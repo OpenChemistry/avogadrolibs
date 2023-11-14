@@ -36,8 +36,9 @@ Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
     m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_label(other.m_label), m_coordinates3d(other.m_coordinates3d),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
+    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
@@ -78,9 +79,9 @@ Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d), m_label(other.m_label),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
+    m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
@@ -119,7 +120,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
-    m_label = other.m_label;
+    m_atomLabels = other.m_atomLabels;
+    m_bondLabels = other.m_bondLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -180,7 +182,8 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
-    m_label = other.m_label;
+    m_atomLabels = other.m_atomLabels;
+    m_bondLabels = other.m_bondLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -277,20 +280,20 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
     return;
 
   // check if we need to resize
-  unsigned int size = m_frozenAtomMask.rows();  
-  if (m_frozenAtomMask.rows() != 3*m_atomicNumbers.size())
-    m_frozenAtomMask.conservativeResize(3*m_atomicNumbers.size());
+  unsigned int size = m_frozenAtomMask.rows();
+  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
 
   // do we need to initialize new values?
   if (m_frozenAtomMask.rows() > size)
     for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
       m_frozenAtomMask[i] = 1.0;
-  
+
   float value = frozen ? 0.0 : 1.0;
   if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[atomId*3] = value;
-    m_frozenAtomMask[atomId*3+1] = value;
-    m_frozenAtomMask[atomId*3+2] = value;
+    m_frozenAtomMask[atomId * 3] = value;
+    m_frozenAtomMask[atomId * 3 + 1] = value;
+    m_frozenAtomMask[atomId * 3 + 2] = value;
   }
 }
 
@@ -298,9 +301,9 @@ bool Molecule::frozenAtom(Index atomId) const
 {
   bool frozen = false;
   if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    frozen = (m_frozenAtomMask[atomId*3] == 0.0 &&
-              m_frozenAtomMask[atomId*3+1] == 0.0 &&
-              m_frozenAtomMask[atomId*3+2] == 0.0);
+    frozen = (m_frozenAtomMask[atomId * 3] == 0.0 &&
+              m_frozenAtomMask[atomId * 3 + 1] == 0.0 &&
+              m_frozenAtomMask[atomId * 3 + 2] == 0.0);
   }
   return frozen;
 }
@@ -308,21 +311,20 @@ bool Molecule::frozenAtom(Index atomId) const
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
   // check if we need to resize
-  unsigned int size = m_frozenAtomMask.rows();  
-  if (m_frozenAtomMask.rows() != 3*m_atomicNumbers.size())
-    m_frozenAtomMask.conservativeResize(3*m_atomicNumbers.size());
+  unsigned int size = m_frozenAtomMask.rows();
+  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
 
   // do we need to initialize new values?
   if (m_frozenAtomMask.rows() > size)
     for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
       m_frozenAtomMask[i] = 1.0;
-  
+
   float value = frozen ? 0.0 : 1.0;
   if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[atomId*3 + axis] = value;
+    m_frozenAtomMask[atomId * 3 + axis] = value;
   }
 }
-
 
 void Molecule::setData(const std::string& name, const Variant& value)
 {
@@ -564,12 +566,13 @@ void Molecule::clearAtoms()
 {
   m_positions2d.clear();
   m_positions3d.clear();
-  m_label.clear();
+  m_atomLabels.clear();
   m_hybridizations.clear();
   m_formalCharges.clear();
   m_colors.clear();
   m_atomicNumbers.clear();
   m_bondOrders.clear();
+  m_bondLabels.clear();
   m_graph.clear();
   m_partialCharges.clear();
   m_elements.reset();
