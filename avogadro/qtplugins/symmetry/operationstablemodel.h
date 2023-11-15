@@ -17,6 +17,14 @@
 #ifndef AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H
 #define AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H
 
+#include <qabstractitemmodel.h>
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qvariant.h>
+
+class QObject;
+
 namespace msym {
 extern "C"
 {

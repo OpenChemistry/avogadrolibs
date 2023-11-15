@@ -5,14 +5,18 @@
 
 #include "obprocess.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcess>
+#include <qcoreapplication.h>
+#include <qdebug.h>
+#include <qdir.h>
+#include <qfileinfo.h>
+#include <qglobal.h>
+#include <qlist.h>
+#include <qprocess.h>
+#include <qregexp.h>
+#include <qregularexpression.h>
+#include <qtextstream.h>
 
-#include <QRegExp>
-#include <QRegularExpression>
+#include "avogadro/core/array.h"
 
 namespace Avogadro::QtPlugins {
 

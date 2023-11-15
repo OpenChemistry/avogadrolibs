@@ -8,14 +8,24 @@
 #define AVOGADRO_QTPLUGINS_OBPROCESS_H
 
 #include <avogadro/core/array.h>
-
+#include <qbytearray.h>
+#include <qmap.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
 #include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+#include <string>
 
 class QProcess;
 
 namespace Avogadro {
+namespace Core {
+template <typename T> class Array;
+}  // namespace Core
+
 namespace QtPlugins {
 
 /**

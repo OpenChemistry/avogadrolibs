@@ -14,13 +14,16 @@
 
 ******************************************************************************/
 
-#include <avogadro/core/utilities.h>
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
+#include <avogadro/core/utilities.h>
 #include <algorithm>
-#include <fstream>
 #include <iostream>
+#include <fstream> // IWYU pragma: keep
 #include <string>
 #include <vector>
+#include <memory>
+#include <utility>
 
 using std::cout;
 using std::endl;

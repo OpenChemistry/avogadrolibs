@@ -6,10 +6,13 @@
 #ifndef AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
 #define AVOGADRO_QTPLUGINS_ZIPEXTRACTER_H
 
-#include "archive.h"
-#include "archive_entry.h"
 #include <QtCore/QList>
 #include <string>
+
+#include "archive.h"
+#include "archive_entry.h"
+
+class QString;
 
 namespace Avogadro {
 

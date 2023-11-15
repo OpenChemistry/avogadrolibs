@@ -5,7 +5,12 @@
 
 #include "zipextracter.h"
 
-#include <QtCore/QString>
+#include <archive.h>
+#include <archive_entry.h>
+#include <qstring.h>
+#include <stdio.h>
+#include <string.h>
+
 namespace Avogadro::QtPlugins {
 
 ZipExtracter::ZipExtracter() {}

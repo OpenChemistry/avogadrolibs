@@ -6,12 +6,17 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H
 
-#include "avogadromolequeueexport.h"
+#include <avogadro/core/avogadrocore.h>
+#include <qjsonobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qwidget.h>
 #include <QtWidgets/QWidget>
 
-#include <avogadro/core/avogadrocore.h>
-
+#include "avogadromolequeueexport.h"
 #include "client/jobobject.h"
+
+class QObject;
 
 namespace Avogadro {
 namespace MoleQueue {

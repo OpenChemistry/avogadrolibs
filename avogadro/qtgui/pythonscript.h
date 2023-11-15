@@ -6,15 +6,20 @@
 #ifndef AVOGADRO_QTGUI_PYTHONSCRIPT_H
 #define AVOGADRO_QTGUI_PYTHONSCRIPT_H
 
-#include "avogadroqtguiexport.h"
-#include <QtCore/QObject>
-
 #include <avogadro/core/avogadrocore.h>
-
+#include <qbytearray.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qprocess.h>
+#include <qstring.h>
+#include <qstringlist.h>
+#include <QtCore/QObject>
 #include <QtCore/QByteArray>
 #include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+
+#include "avogadroqtguiexport.h"
 
 namespace Avogadro {
 namespace QtGui {

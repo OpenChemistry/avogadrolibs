@@ -5,14 +5,16 @@
 
 #include "pythonscript.h"
 
+#include <qdebug.h>
+#include <qfileinfo.h>
+#include <qglobal.h>
+#include <qlocale.h>
+#include <qsettings.h>
+#include <qstringliteral.h>
+#include <qvariant.h>
+
 #include "avogadropython.h"
 #include "utilities.h"
-
-#include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QLocale>
-#include <QtCore/QProcess>
-#include <QtCore/QSettings>
 
 namespace Avogadro::QtGui {
 

@@ -3,6 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+// IWYU pragma: no_include <ext/alloc_traits.h>
+
 #include "graph.h"
 
 #include <algorithm>
@@ -10,6 +12,9 @@
 #include <cassert>
 #include <set>
 #include <stack>
+#include <memory>
+
+#include "avogadro/core/array.h"
 
 namespace Avogadro::Core {
 

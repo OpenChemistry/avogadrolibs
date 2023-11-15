@@ -15,7 +15,11 @@
 ******************************************************************************/
 
 #include "operationstablemodel.h"
+
 #include "symmetryutil.h"
+#include "libmsym/msym.h"
+
+class QObject;
 
 using namespace Avogadro::QtPlugins::SymmetryUtil;
 

@@ -5,9 +5,18 @@
 
 #include "coordinateeditor.h"
 
-#include "coordinateeditordialog.h"
+#include <qaction.h>
+#include <qwidget.h>
 
-#include <QAction>
+#include "coordinateeditordialog.h"
+#include "avogadro/qtgui/extensionplugin.h"
+
+class QObject;
+namespace Avogadro {
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
+}  // namespace Avogadro
 
 namespace Avogadro::QtPlugins {
 

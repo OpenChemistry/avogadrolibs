@@ -6,17 +6,24 @@
 #ifndef AVOGADRO_QTGUI_BATCHJOB_H
 #define AVOGADRO_QTGUI_BATCHJOB_H
 
-#include <QtCore/QObject>
-
-#include "inputgenerator.h"
-
 #include <avogadro/core/avogadrocore.h>
-
-#include "client/jobobject.h"
-
+#include <qjsonobject.h>
+#include <qjsonvalue.h>
+#include <qlist.h>
+#include <qmap.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qvariant.h>
+#include <qvector.h>
+#include <QtCore/QObject>
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>
 #include <QtCore/QVector>
+
+#include "inputgenerator.h"
+#include "client/jobobject.h"
+#include "avogadromolequeueexport.h"
 
 namespace Avogadro {
 namespace Core {

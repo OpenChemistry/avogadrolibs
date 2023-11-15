@@ -6,11 +6,10 @@
 #ifndef AVOGADRO_CORE_ELEMENTS_H
 #define AVOGADRO_CORE_ELEMENTS_H
 
-#include "avogadrocoreexport.h"
-
-#include "avogadrocore.h"
-
 #include <string>
+
+#include "avogadrocoreexport.h"
+#include "avogadrocore.h"
 
 namespace Avogadro {
 namespace Core {

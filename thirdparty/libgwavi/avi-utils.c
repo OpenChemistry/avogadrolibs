@@ -40,6 +40,7 @@
 
 #include "avi-utils.h"
 #include "fileio.h"
+#include "gwavi_private.h"
 
 int write_avi_header(FILE* out, struct gwavi_header_t* avi_header)
 {

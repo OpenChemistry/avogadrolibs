@@ -6,11 +6,11 @@
 #ifndef AVOGADRO_CORE_LAYER_H
 #define AVOGADRO_CORE_LAYER_H
 
-#include "avogadrocoreexport.h"
-
-#include "avogadrocore.h"
-
 #include <avogadro/core/array.h>
+#include <cstddef>
+
+#include "avogadrocoreexport.h"
+#include "avogadrocore.h"
 
 namespace Avogadro {
 namespace Core {

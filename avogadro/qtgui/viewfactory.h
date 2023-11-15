@@ -6,9 +6,13 @@
 #ifndef AVOGADRO_QTGUI_VIEWFACTORY_H
 #define AVOGADRO_QTGUI_VIEWFACTORY_H
 
+#include <qstring.h>
+#include <qstringlist.h>
+#include <QtWidgets/QWidget>
+
 #include "avogadroqtguiexport.h"
 
-#include <QtWidgets/QWidget>
+class QWidget;
 
 namespace Avogadro {
 namespace QtGui {

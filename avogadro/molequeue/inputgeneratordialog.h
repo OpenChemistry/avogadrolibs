@@ -6,10 +6,17 @@
 #ifndef AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
 #define AVOGADRO_MOLEQUEUE_INPUTGENERATORDIALOG_H
 
+#include <avogadro/core/avogadrocore.h>
+#include <qdialog.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <QtWidgets/QDialog>
+
 #include "avogadromolequeueexport.h"
 #include "inputgeneratorwidget.h"
-#include <QtWidgets/QDialog>
-#include <avogadro/core/avogadrocore.h>
+
+class QObject;
+class QWidget;
 
 namespace Avogadro {
 namespace QtGui {
@@ -18,10 +25,12 @@ class Molecule;
 
 namespace MoleQueue {
 class BatchJob;
+
 namespace Ui {
 class InputGeneratorDialog;
 }
 class InputGeneratorWidget;
+
 /**
  * @class InputGeneratorDialog inputgeneratordialog.h
  * <avogadro/molequeue/inputgeneratordialog.h>

@@ -6,15 +6,20 @@
 #ifndef AVOGADRO_QTGUI_TOOLPLUGIN_H
 #define AVOGADRO_QTGUI_TOOLPLUGIN_H
 
-#include "avogadroqtguiexport.h"
-
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QObject>
+
+#include "avogadroqtguiexport.h"
+#include "avogadro/qtgui/toolplugin.h"
 
 class QAction;
 class QKeyEvent;
 class QMouseEvent;
 class QUndoCommand;
 class QWheelEvent;
+class QWidget;
 
 namespace Avogadro {
 

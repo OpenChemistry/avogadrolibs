@@ -6,13 +6,16 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEMANAGER_H
 
+#include <avogadro/core/avogadrocore.h>
+#include <qjsonobject.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QObject>
 
 #include "molequeuequeuelistmodel.h"
-
-#include <avogadro/core/avogadrocore.h>
-
 #include "client/client.h"
+#include "avogadromolequeueexport.h"
 
 namespace Avogadro {
 namespace MoleQueue {

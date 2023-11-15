@@ -6,11 +6,19 @@
 #ifndef AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
 #define AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H
 
+#include <qlist.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qtextedit.h>
+#include <qtextformat.h>
 #include <QtWidgets/QTextEdit>
-
 #include <QtGui/QTextCharFormat>
 
 class QHelpEvent;
+class QEvent;
+class QObject;
+class QTextCursor;
+class QWidget;
 
 namespace Avogadro {
 namespace QtPlugins {

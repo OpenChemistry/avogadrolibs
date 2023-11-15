@@ -1,12 +1,10 @@
 #include "struct.h"
-#include "struct_endian.h"
 
 #include <ctype.h>
-#include <errno.h>
 #include <stdarg.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+
+#include "struct_endian.h"
 
 // refer to
 // http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html#serialization

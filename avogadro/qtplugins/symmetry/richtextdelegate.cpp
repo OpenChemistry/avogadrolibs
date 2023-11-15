@@ -16,6 +16,14 @@
 
 #include "richtextdelegate.h"
 
+#include <qpainter.h>
+#include <qrect.h>
+#include <qstyle.h>
+#include <qtextdocument.h>
+#include <qwidget.h>
+
+class QModelIndex;
+
 namespace Avogadro::QtPlugins {
 
 QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem& o,

@@ -5,7 +5,9 @@
 
 #include "shader.h"
 
-#include "avogadrogl.h"
+#include <GL/glew.h>
+
+#include "avogadro/core/avogadrocore.h"
 
 namespace Avogadro::Rendering {
 

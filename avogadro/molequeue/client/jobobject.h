@@ -6,12 +6,15 @@
 #ifndef AVOGADRO_MOLEQUEUE_JOBOBJECT_H
 #define AVOGADRO_MOLEQUEUE_JOBOBJECT_H
 
-#include "avogadromolequeueexport.h"
-
+#include <qjsonarray.h>
+#include <qjsonobject.h>
+#include <qstring.h>
+#include <qvariant.h>
 #include <QtCore/QJsonObject>
-
 #include <QtCore/QString>
 #include <QtCore/QVariant>
+
+#include "avogadromolequeueexport.h"
 
 namespace Avogadro {
 namespace MoleQueue {

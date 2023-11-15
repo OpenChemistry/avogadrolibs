@@ -6,7 +6,13 @@
 #ifndef SORTFILTERTREEPROXYMODEL_H
 #define SORTFILTERTREEPROXYMODEL_H
 
+#include <qabstractitemmodel.h>
+#include <qobjectdefs.h>
+#include <qsortfilterproxymodel.h>
+#include <qstring.h>
 #include <QSortFilterProxyModel>
+
+class QObject;
 
 namespace Avogadro {
 

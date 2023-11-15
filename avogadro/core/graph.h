@@ -6,14 +6,14 @@
 #ifndef AVOGADRO_CORE_GRAPH_H
 #define AVOGADRO_CORE_GRAPH_H
 
-#include "avogadrocoreexport.h"
-
-#include "avogadrocore.h"
-#include "array.h"
-
 #include <cstddef>
 #include <set>
 #include <vector>
+#include <utility>
+
+#include "avogadrocoreexport.h"
+#include "avogadrocore.h"
+#include "array.h"
 
 namespace Avogadro {
 namespace Core {

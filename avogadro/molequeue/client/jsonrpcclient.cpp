@@ -5,10 +5,12 @@
 
 #include "jsonrpcclient.h"
 
-#include <QtCore/QJsonDocument>
-#include <QtCore/QDataStream>
-#include <QtCore/QTimer>
-#include <QtNetwork/QLocalSocket>
+#include <qdatastream.h>
+#include <qjsondocument.h>
+#include <qjsonvalue.h>
+#include <qlocalsocket.h>
+#include <qnamespace.h>
+#include <qtimer.h>
 
 namespace Avogadro::MoleQueue {
 

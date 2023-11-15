@@ -6,10 +6,18 @@
 #ifndef AVOGADRO_QTGUI_LAYERMANAGER_H
 #define AVOGADRO_QTGUI_LAYERMANAGER_H
 
-#include "avogadroqtguiexport.h"
-
 #include <avogadro/core/layermanager.h>
+#include <stddef.h>
 #include <cassert>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+
+#include "avogadroqtguiexport.h"
+#include "avogadro/core/array.h"
+#include "avogadro/core/avogadrocore.h"
+#include "avogadro/core/layer.h"
 
 namespace Avogadro {
 namespace QtGui {

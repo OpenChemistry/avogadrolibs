@@ -5,14 +5,37 @@
 
 #include "obfileformat.h"
 
-#include "obprocess.h"
-
 #include <nlohmann/json.hpp>
+#include <QtCore/qglobal.h>
+#include <qbytearray.h>
+#include <qcoreapplication.h>
+#include <qdebug.h>
+#include <qeventloop.h>
+#include <qfileinfo.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
+#include <qtimer.h>
+#include <stdint.h>
+#include <initializer_list>
+#include <istream>
+#include <map>
+#include <memory>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
-#include <QtCore/QFileInfo>
-#include <QtCore/QTimer>
+#include "obprocess.h"
+#include "avogadro/io/cjsonformat.h"
+#include "avogadro/io/cmlformat.h"
+#include "avogadro/io/fileformat.h"
+#include "avogadro/io/pdbformat.h"
+#include "nlohmann/detail/iterators/iter_impl.hpp"
+#include "nlohmann/json_fwd.hpp"
+
+namespace Avogadro {
+namespace Core {
+class Molecule;
+}  // namespace Core
+}  // namespace Avogadro
 
 using json = nlohmann::json;
 

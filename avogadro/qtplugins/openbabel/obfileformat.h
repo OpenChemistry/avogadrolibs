@@ -7,12 +7,18 @@
 #define AVOGADRO_QTPLUGINS_OBFILEFORMAT_H
 
 #include <avogadro/io/fileformat.h>
-
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/pdbformat.h>
+#include <iosfwd>
+#include <string>
+#include <vector>
 
 namespace Avogadro {
+namespace Core {
+class Molecule;
+}  // namespace Core
+
 namespace QtPlugins {
 
 /**

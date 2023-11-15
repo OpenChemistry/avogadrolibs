@@ -17,9 +17,18 @@
 #ifndef AVOGADRO_QTPLUGINS_RICHTEXTDELEGATE_H
 #define AVOGADRO_QTPLUGINS_RICHTEXTDELEGATE_H
 
+#include <qobjectdefs.h>
+#include <qsize.h>
+#include <qstring.h>
+#include <qstyleditemdelegate.h>
+#include <qstyleoption.h>
 #include <QPainter>
 #include <QStyledItemDelegate>
 #include <QTextDocument>
+
+class QModelIndex;
+class QObject;
+class QPainter;
 
 namespace Avogadro {
 namespace QtPlugins {

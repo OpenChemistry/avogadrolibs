@@ -4,17 +4,17 @@
 ******************************************************************************/
 
 #include "pluginmanager.h"
-#include "avogadrostaticqtplugins.h"
 
 #include <avogadro/qtgui/utilities.h>
+#include <QtCore/qglobal.h>
+#include <qbytearray.h>
+#include <qcoreapplication.h>
+#include <qdebug.h>
+#include <qdir.h>
+#include <qmutex.h>
+#include <qpluginloader.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QMutex>
-#include <QtCore/QPluginLoader>
-
-#include <QtCore/QDebug>
+#include "avogadrostaticqtplugins.h"
 
 namespace Avogadro::QtPlugins {
 

@@ -1,20 +1,24 @@
 #ifndef AVOGADRO_PQRWIDGET_H
 #define AVOGADRO_PQRWIDGET_H
 
+#include <qdialog.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGraphicsRectItem>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
-
 #include <QtGui/QPixmap>
-
 #include <QtNetwork/QNetworkReply>
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSortFilterProxyModel>
+
+class QByteArray;
+class QObject;
+class QWidget;
 
 /**
  * PQRWidget is a class extending QDialog to provide the ui for

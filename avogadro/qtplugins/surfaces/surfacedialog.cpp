@@ -5,7 +5,16 @@
 
 #include "surfacedialog.h"
 
+#include <qcombobox.h>
+#include <qlist.h>
+#include <qpushbutton.h>
+#include <qspinbox.h>
+#include <qvariant.h>
+
 #include "ui_surfacedialog.h"
+#include "avogadro/qtplugins/surfaces/surfaces.h"
+
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 

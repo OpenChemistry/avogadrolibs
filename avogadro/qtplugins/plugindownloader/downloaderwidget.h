@@ -6,16 +6,24 @@
 #ifndef AVOGADRO_DOWNLOADERWIDGET_H
 #define AVOGADRO_DOWNLOADERWIDGET_H
 
+#include <nlohmann/json.hpp>
+#include <qbytearray.h>
+#include <qdialog.h>
+#include <qlist.h>
+#include <qmetatype.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <nlohmann/json_fwd.hpp>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
-
 #include <QtWidgets/QDialog>
-
-#include <nlohmann/json.hpp>
+#include <vector>
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QObject;
+class QWidget;
 
 namespace Ui {
 class DownloaderWidget;

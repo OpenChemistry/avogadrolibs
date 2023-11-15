@@ -6,12 +6,15 @@
 #ifndef AVOGADRO_RENDERING_GROUPNODE_H
 #define AVOGADRO_RENDERING_GROUPNODE_H
 
-#include "node.h"
-
+#include <stddef.h>
 #include <list>
+
+#include "node.h"
+#include "avogadrorenderingexport.h"
 
 namespace Avogadro {
 namespace Rendering {
+class Visitor;
 
 /**
  * @class GroupNode groupnode.h <avogadro/rendering/groupnode.h>

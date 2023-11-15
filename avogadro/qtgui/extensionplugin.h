@@ -6,13 +6,19 @@
 #ifndef AVOGADRO_QTGUI_EXTENSIONPLUGIN_H
 #define AVOGADRO_QTGUI_EXTENSIONPLUGIN_H
 
-#include "avogadroqtguiexport.h"
-
 #include <avogadro/qtplugins/pluginfactory.h>
-
+#include <qlist.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
 #include <QtCore/QObject>
 
+#include "avogadroqtguiexport.h"
+#include "avogadro/qtgui/extensionplugin.h"
+
 class QAction;
+class QWidget;
 
 namespace Avogadro {
 

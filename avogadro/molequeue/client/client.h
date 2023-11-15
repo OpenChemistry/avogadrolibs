@@ -6,13 +6,23 @@
 #ifndef AVOGADRO_MOLEQUEUE_CLIENT_H
 #define AVOGADRO_MOLEQUEUE_CLIENT_H
 
-#include "avogadromolequeueexport.h"
-
+#include <qhash.h>
+#include <qjsonarray.h>
+#include <qjsonobject.h>
+#include <qjsonvalue.h>
+#include <qlist.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QRegExp>
 #include <QtCore/QHash>
+
+#include "avogadromolequeueexport.h"
+
+class QRegExp;
 
 namespace Avogadro {
 namespace MoleQueue {

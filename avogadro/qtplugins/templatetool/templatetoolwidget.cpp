@@ -4,19 +4,25 @@
 ******************************************************************************/
 
 #include "templatetoolwidget.h"
-#include "ui_templatetoolwidget.h"
 
 #include <avogadro/core/elements.h>
-
 #include <avogadro/qtgui/periodictableview.h>
 
+#include <qcombobox.h>
+#include <qglobal.h>
+#include <qicon.h>
+#include <qmetatype.h>
+#include <qsettings.h>
+#include <qtoolbutton.h>
+#include <qvariant.h>
 #include <algorithm>
 
 #include <QtCore/QDebug>
 #include <QtCore/QList>
-#include <QtCore/QSettings>
 
 #include <QtGui/QClipboard>
+
+#include "ui_templatetoolwidget.h"
 
 namespace {
 // The ItemData of the "Other" entry in the combo box

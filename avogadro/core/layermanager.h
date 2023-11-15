@@ -6,19 +6,19 @@
 #ifndef AVOGADRO_CORE_LAYERMANAGER_H
 #define AVOGADRO_CORE_LAYERMANAGER_H
 
-#include "avogadrocoreexport.h"
-
-#include "avogadrocore.h"
-
-#include "array.h"
-#include "layer.h"
-
 #include <cassert>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <cstddef>
+
+#include "avogadrocoreexport.h"
+#include "avogadrocore.h"
+#include "array.h"
+#include "layer.h"
 
 namespace Avogadro {
 namespace Core {

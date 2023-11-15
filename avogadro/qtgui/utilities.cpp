@@ -5,9 +5,10 @@
 
 #include "utilities.h"
 
-#include <QtCore/QProcessEnvironment>
-#include <QtCore/QStringList>
-#include <QtCore/QFileInfo>
+#include <qfileinfo.h>
+#include <qlist.h>
+#include <qprocess.h>
+#include <qstringlist.h>
 
 namespace Avogadro::QtGui::Utilities {
 

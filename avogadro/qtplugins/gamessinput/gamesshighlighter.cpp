@@ -16,6 +16,10 @@
 
 #include "gamesshighlighter.h"
 
+#include <qfont.h>
+#include <qglobal.h>
+#include <qnamespace.h>
+
 namespace Avogadro::QtPlugins {
 
 GamessHighlighter::GamessHighlighter(QTextDocument* parent_)

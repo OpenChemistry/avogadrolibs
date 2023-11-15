@@ -14,14 +14,14 @@
 
 ******************************************************************************/
 
-#include <pugixml.hpp>
-
 #include <avogadro/core/utilities.h>
-
-#include <fstream>
+#include <stdlib.h>
+#include <pugixml.hpp>
 #include <string>
 #include <iostream>
+#include <fstream> // IWYU pragma: keep
 #include <vector>
+#include <memory>
 
 using std::ifstream;
 using std::ofstream;

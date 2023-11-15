@@ -33,8 +33,16 @@
 #ifndef H_GWAVI_UTILS
 #define H_GWAVI_UTILS
 
+#include <stdio.h>
+
 #include "gwavi.h"
 #include "gwavi_private.h"
+
+struct gwavi_header_t;
+struct gwavi_stream_format_a_t;
+struct gwavi_stream_format_v_t;
+struct gwavi_stream_header_t;
+struct gwavi_t;
 
 /*
  * Utility functions for gwavi library.

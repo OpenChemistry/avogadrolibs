@@ -1,23 +1,31 @@
 #ifndef PQRREQUEST_H
 #define PQRREQUEST_H
 
+#include <qmetatype.h>
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
-
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSize>
 #include <QtCore/QUrl>
 #include <QtCore/QVariantMap>
-
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
-
 #include <cctype>
+#include <vector>
+
+class QLabel;
+class QLineEdit;
+class QNetworkAccessManager;
+class QNetworkReply;
+class QTableWidget;
 
 /**
  * @brief The PQRRequest class sends and receives network requests to PQR and

@@ -6,13 +6,23 @@
 #ifndef AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H
 #define AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H
 
-#include "avogadromolequeueexport.h"
+#include <qabstractitemmodel.h>
+#include <qglobal.h>
+#include <qlist.h>
+#include <qmap.h>
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qstringlist.h>
+#include <qvariant.h>
 #include <QtCore/QAbstractItemModel>
-
 #include <QtCore/QStringList>
+
+#include "avogadromolequeueexport.h"
 
 // for gtest unit testing access
 class MoleQueueQueueListModelTestBridge;
+class QObject;
 
 namespace Avogadro {
 namespace MoleQueue {

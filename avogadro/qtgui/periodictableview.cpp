@@ -4,11 +4,22 @@
 ******************************************************************************/
 
 #include "periodictableview.h"
-#include "periodictablescene_p.h"
-#include <avogadro/core/elements.h>
 
-#include <QtCore/QTimer>
-#include <QtGui/QKeyEvent>
+#include <avogadro/core/elements.h>
+#include <qbytearray.h>
+#include <qevent.h>
+#include <qgraphicsscene.h>
+#include <qnamespace.h>
+#include <qobject.h>
+#include <qpainter.h>
+#include <qsize.h>
+#include <qtimer.h>
+#include <qtransform.h>
+#include <memory>
+
+#include "periodictablescene_p.h"
+
+class QWidget;
 
 namespace Avogadro::QtGui {
 

@@ -3,15 +3,18 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "elements.h"
+// IWYU pragma: no_include <ext/alloc_traits.h>
 
-#include "avogadrocore.h"
-#include "elementdata.h"
-#include "utilities.h"
+#include "elements.h"
 
 #include <algorithm>
 #include <cctype>
 #include <vector>
+#include <memory>
+
+#include "avogadrocore.h"
+#include "elementdata.h"
+#include "utilities.h"
 
 using Avogadro::Core::isCustomElement;
 

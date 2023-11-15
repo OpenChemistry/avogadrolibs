@@ -6,10 +6,13 @@
 #ifndef AVOGADRO_QTGUI_BACKGROUNDFILEFORMAT_H
 #define AVOGADRO_QTGUI_BACKGROUNDFILEFORMAT_H
 
-#include "avogadroqtguiexport.h"
-
+#include <qobject.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+
+#include "avogadroqtguiexport.h"
 
 namespace Avogadro {
 

@@ -5,11 +5,18 @@
 
 #include "molecularproperties.h"
 
+#include <qaction.h>
+#include <qwidget.h>
+
 #include "molecularpropertiesdialog.h"
+#include "avogadro/qtgui/extensionplugin.h"
 
-#include <QAction>
-
-#include <QStringList>
+class QObject;
+namespace Avogadro {
+namespace QtGui {
+class Molecule;
+}  // namespace QtGui
+}  // namespace Avogadro
 
 namespace Avogadro::QtPlugins {
 

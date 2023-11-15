@@ -6,9 +6,16 @@
 #ifndef AVOGADRO_QTGUI_MULTIVIEWWIDGET_H
 #define AVOGADRO_QTGUI_MULTIVIEWWIDGET_H
 
+#include <qlist.h>
+#include <qnamespace.h>
+#include <qobjectdefs.h>
+#include <qstring.h>
+#include <qwidget.h>
+#include <QtWidgets/QWidget>
+
 #include "avogadroqtguiexport.h"
 
-#include <QtWidgets/QWidget>
+class QObject;
 
 namespace Avogadro {
 namespace QtGui {

@@ -5,12 +5,11 @@
 
 #include "pluginlayermanager.h"
 
-#include <avogadro/qtplugins/ballandstick/ballandstick.h>
-#include <avogadro/qtplugins/cartoons/cartoons.h>
-
-#include <QtCore/QSettings>
 #include <cassert>
 #include <vector>
+#include <utility>
+
+#include "avogadro/core/layermanager.h"
 
 namespace Avogadro::QtGui {
 
