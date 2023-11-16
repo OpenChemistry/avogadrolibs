@@ -52,9 +52,12 @@ public slots:
 private slots:
   void showDialog();
   void replyFinished(QNetworkReply*);
+  void configurePython();
 
 private:
-  QAction* m_action;
+  QAction* m_downloadAction;
+  QAction* m_configureAction;
+
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
   QString m_moleculeName;

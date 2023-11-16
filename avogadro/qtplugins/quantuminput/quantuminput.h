@@ -67,7 +67,6 @@ public slots:
 
 private slots:
   void menuActivated();
-  void configurePython();
 
 private:
   void updateInputGeneratorScripts();

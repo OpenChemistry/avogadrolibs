@@ -38,8 +38,6 @@ using MoleQueue::InputGenerator;
 using MoleQueue::InputGeneratorDialog;
 using MoleQueue::JobObject;
 
-const int ConfigureAction = -1; // to find the configuration action
-
 QuantumInput::QuantumInput(QObject* parent_)
   : ExtensionPlugin(parent_)
   , m_molecule(nullptr)
@@ -65,10 +63,7 @@ QStringList QuantumInput::menuPath(QAction*action) const
   if (action == nullptr)
     return path;
     
-  if (action->data() == ConfigureAction)
-    path << tr("&Extensions");
-  else
-    path << tr("&Input");
+  path << tr("&Input");
   return path;
 }
 
