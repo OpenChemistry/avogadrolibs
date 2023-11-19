@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-29 02:01+0000\n"
+"POT-Creation-Date: 2023-11-19 16:50+0000\n"
 "PO-Revision-Date: 2023-01-11 10:11+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
@@ -1018,18 +1018,13 @@ msgstr "Selecionar ficheiro:"
 msgid "Select executable:"
 msgstr "Selecionar executável:"
 
-#: qtgui/fileformatdialog.cpp:48
-msgid ""
-"The file name contains invalid characters. Please choose another file name."
-msgstr ""
-
-#: qtgui/fileformatdialog.cpp:60
+#: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 "Incapaz de encontrar um leitor de ficheiros adequado para o ficheiro "
 "seleccionado."
 
-#: qtgui/fileformatdialog.cpp:108
+#: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
@@ -1037,54 +1032,54 @@ msgstr ""
 "A extensão do ficheiro está faltando, então o formato do ficheiro não pôde "
 "ser determinado. Quer adicioná-la?"
 
-#: qtgui/fileformatdialog.cpp:122
+#: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr ""
 "Não foi possível encontrar um gravador de ficheiro adequado para o formato "
 "selecionado."
 
-#: qtgui/fileformatdialog.cpp:171
+#: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "manipuladores"
 
-#: qtgui/fileformatdialog.cpp:172
+#: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "lidar"
 
-#: qtgui/fileformatdialog.cpp:176
+#: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
 msgstr "leitores"
 
-#: qtgui/fileformatdialog.cpp:177
+#: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "ler"
 
-#: qtgui/fileformatdialog.cpp:181
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
 msgstr "escritores"
 
-#: qtgui/fileformatdialog.cpp:182
+#: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "escrever"
 
-#: qtgui/fileformatdialog.cpp:187
+#: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Vários %1 encontrados que podem %2 este formato. Qual deve ser usado?"
 
-#: qtgui/fileformatdialog.cpp:287
+#: qtgui/fileformatdialog.cpp:279
 #, fuzzy
 #| msgid "All Files"
 msgid "All files"
 msgstr "Todos os Ficheiros"
 
-#: qtgui/fileformatdialog.cpp:290
+#: qtgui/fileformatdialog.cpp:282
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
@@ -1390,7 +1385,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
-#: qtplugins/select/select.cpp:527
+#: qtplugins/select/select.cpp:548
 #: qtplugins/selectiontool/selectiontool.cpp:254:1567
 #, fuzzy
 msgid "Change Layer"
@@ -1411,7 +1406,7 @@ msgstr "Limpar Átomos"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:447
+#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:459
 msgid "Adjust Hydrogens"
 msgstr "Ajustar os Hidrogénios"
 
@@ -1695,7 +1690,7 @@ msgstr "Erro ao ler ficheiro OpenDX: Nenhum cubo encontrado"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:31:84
+#: qtplugins/apbs/apbs.h:31:96
 msgid "APBS"
 msgstr "APBS"
 
@@ -1758,7 +1753,7 @@ msgstr "Entrada ABPS (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178:144
+#: qtplugins/apbs/apbsdialog.cpp:178:156
 msgid "Success"
 msgstr "Sucesso"
 
@@ -1886,7 +1881,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:756:171 rc.cpp:1615
+#: qtplugins/surfaces/surfaces.cpp:756:183 rc.cpp:1615
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1898,7 +1893,7 @@ msgstr "Espectro"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:758:168 rc.cpp:1612
+#: qtplugins/surfaces/surfaces.cpp:758:180 rc.cpp:1612
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -1908,7 +1903,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:760:162 rc.cpp:1606
+#: qtplugins/surfaces/surfaces.cpp:760:174 rc.cpp:1606
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1920,7 +1915,7 @@ msgstr "Cancelar"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:762:165 rc.cpp:1609
+#: qtplugins/surfaces/surfaces.cpp:762:177 rc.cpp:1609
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Azul-VermelhoEscuro"
@@ -1932,7 +1927,7 @@ msgstr "Azul-VermelhoEscuro"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:764:174 rc.cpp:1618
+#: qtplugins/surfaces/surfaces.cpp:764:186 rc.cpp:1618
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -1970,7 +1965,7 @@ msgstr "Cores Seleccionadas"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:159 rc.cpp:1603
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1603
 #, fuzzy
 msgid "Colormap:"
 msgstr "Cores:"
@@ -2208,7 +2203,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:215
-#: qtplugins/noncovalent/noncovalent.cpp:351:189 rc.cpp:192 rc.cpp:369
+#: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:381
 msgid " Å"
 msgstr " Å"
 
@@ -2491,7 +2486,7 @@ msgstr "Formato Turbomole"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:31:240
+#: qtplugins/copypaste/copypaste.cpp:31:252
 msgid "Copy"
 msgstr "Copiar"
 
@@ -2507,13 +2502,13 @@ msgstr "InChI"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34:237
+#: qtplugins/copypaste/copypaste.cpp:34:249
 msgid "Cut"
 msgstr "Recortar"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35:249
+#: qtplugins/copypaste/copypaste.cpp:35:261
 msgid "Clear"
 msgstr "Limpar"
 
@@ -2887,6 +2882,14 @@ msgid "Editor tool"
 msgstr "Ferramenta de Edição"
 
 #: qtplugins/editor/editortoolwidget.cpp:129
+#: qtplugins/templatetool/templatetoolwidget.cpp:270
+#: qtplugins/templatetool/templatetoolwidget.cpp:283
+#: qtplugins/templatetool/templatetoolwidget.cpp:291
+#: qtplugins/templatetool/templatetoolwidget.cpp:299
+#: qtplugins/templatetool/templatetoolwidget.cpp:307
+#: qtplugins/templatetool/templatetoolwidget.cpp:315
+#: qtplugins/templatetool/templatetoolwidget.cpp:328
+#: qtplugins/templatetool/templatetoolwidget.cpp:390
 #, fuzzy
 #| msgid "Other..."
 msgid "Other…"
@@ -3022,18 +3025,18 @@ msgstr "Corrigir átomos seleccionados"
 msgid "&Calculate"
 msgstr "Calcular"
 
-#: qtplugins/forcefield/forcefield.cpp:288 qtplugins/openbabel/openbabel.cpp:45
+#: qtplugins/forcefield/forcefield.cpp:285 qtplugins/openbabel/openbabel.cpp:45
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Optimize Geometry"
 msgstr "Otimizar Geometria"
 
-#: qtplugins/forcefield/forcefield.cpp:329
+#: qtplugins/forcefield/forcefield.cpp:326
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
 msgstr "Energia = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:330
+#: qtplugins/forcefield/forcefield.cpp:327
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:886
 #: qtplugins/surfaces/surfaces.cpp:930 qtplugins/surfaces/surfaces.cpp:942
@@ -3248,7 +3251,7 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:168:600
+#: qtplugins/insertdna/insertdna.cpp:168:612
 msgid "Thymine"
 msgstr "Timina"
 
@@ -3298,7 +3301,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:117:342
+#: qtplugins/insertfragment/insertfragment.cpp:117:354
 msgid "Import Crystal"
 msgstr "Importar Cristal"
 
@@ -4068,7 +4071,9 @@ msgstr " de %0"
 msgid "Dynamic bonding?"
 msgstr "Ligações dinâmicas?"
 
-#: qtplugins/playertool/playertool.cpp:139
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+#: qtplugins/playertool/playertool.cpp:139:1684
 #, fuzzy
 #| msgid "Record Movie..."
 msgid "Record Movie…"
@@ -4230,7 +4235,9 @@ msgstr ""
 msgid "Error while extracting: %1"
 msgstr ""
 
-#: qtplugins/plugindownloader/plugindownloader.cpp:27
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1540
 msgid "Download Plugins…"
 msgstr ""
 
@@ -4627,7 +4634,7 @@ msgstr "Selecionar Tudo"
 msgid "Select None"
 msgstr "Limpar Seleção"
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:516
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:537
 msgid "Invert Selection"
 msgstr "Inverter Seleção"
 
@@ -4663,13 +4670,13 @@ msgstr "Número Atômico."
 msgid "Select Water…"
 msgstr "Número Atômico."
 
-#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
+#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:368
 #, fuzzy
 #| msgid "Ignore Selection"
 msgid "Enlarge Selection"
 msgstr "Ignorar selecção"
 
-#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
+#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:404
 #, fuzzy
 #| msgid "Selection"
 msgid "Shrink Selection"
@@ -4693,44 +4700,44 @@ msgstr "&Seleccionar"
 msgid "Select Element"
 msgstr "Seleccionar por elemento..."
 
-#: qtplugins/select/select.cpp:216
+#: qtplugins/select/select.cpp:217
 #, fuzzy
 msgid "Select Water"
 msgstr "Número Atômico."
 
-#: qtplugins/select/select.cpp:254
+#: qtplugins/select/select.cpp:266
 #, fuzzy
 msgid "Select Backbone"
 msgstr "Número Atômico."
 
-#: qtplugins/select/select.cpp:288
+#: qtplugins/select/select.cpp:302
 #, fuzzy
 msgid "Select Sidechain"
 msgstr "Número Atômico."
 
-#: qtplugins/select/select.cpp:409
+#: qtplugins/select/select.cpp:428
 msgid "Select Atoms by Index"
 msgstr ""
 
-#: qtplugins/select/select.cpp:410
+#: qtplugins/select/select.cpp:429
 msgid "Atoms to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:415
+#: qtplugins/select/select.cpp:434
 #, fuzzy
 #| msgid "Delete Atom"
 msgid "Select Atom"
 msgstr "Apagar o Átomo"
 
-#: qtplugins/select/select.cpp:448
+#: qtplugins/select/select.cpp:469
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:449
+#: qtplugins/select/select.cpp:470
 msgid "Residues to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:454
+#: qtplugins/select/select.cpp:475
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select Residue"
@@ -5126,28 +5133,35 @@ msgstr "%1 %2"
 msgid "Template"
 msgstr "Temperatura"
 
-#: qtplugins/templatetool/templatetool.cpp:294
+#: qtplugins/templatetool/templatetool.cpp:84
+msgid ""
+"Template Tool\n"
+"\n"
+"Insert fragments, including metal centers.\n"
+"Select an element and coordination geometry,then click to insert a "
+"fragment.\n"
+"\n"
+"Select a ligand or functional group and clickon a hydrogen atom to attach it."
+msgstr ""
+
+#: qtplugins/templatetool/templatetool.cpp:302
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Template"
 msgstr "Inserir Peptídeo"
 
-#: qtplugins/templatetool/templatetool.cpp:544
+#: qtplugins/templatetool/templatetool.cpp:559
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
 msgstr "Inserir Peptídeo"
 
-#: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
+#: qtplugins/templatetool/templatetool.h:36
 #, fuzzy
 #| msgid "Manipulate tool"
 msgid "Template tool"
 msgstr "Ferramenta de manipulação"
-
-#: qtplugins/templatetool/templatetoolwidget.cpp:288
-msgid "Other..."
-msgstr "Outro..."
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5294,6 +5308,10 @@ msgstr "Depurar script..."
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #, fuzzy
 #| msgid "Submit Calculation..."
 msgid "Submit Calculation…"
@@ -5383,6 +5401,32 @@ msgstr "Abrir resultado ao terminar:"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
 msgstr "Renomear Elementos"
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
+#, fuzzy
+#| msgid "Insert Fragment"
+msgid "Insert Fragment…"
+msgstr "Inserir fragmento"
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:22
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Filter:"
+msgstr "Filtro:"
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:29
+#. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
+msgid "Type a name or part of a name to show only matching files."
+msgstr ""
+"Digite um nome ou parte de um nome para mostrar apenas os ficheiros "
+"correspondentes."
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:86
+#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
+#. i18n: ectx: property (text), widget (QPushButton, insertButton)
+msgid "Insert"
+msgstr "Inserir"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -5654,8 +5698,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
-msgid "Help..."
-msgstr "Ajuda..."
+msgid "Help…"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5691,19 +5735,14 @@ msgstr "Apagar todos"
 msgid "Defaults"
 msgstr "Padrões"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-msgid "Submit Calculation..."
-msgstr "Submeter Cálculo..."
-
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Save File..."
-msgstr "Gravar Ficheiro..."
+#, fuzzy
+#| msgid "Save File"
+msgid "Save File…"
+msgstr "Gravar Ficheiro"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6295,32 +6334,6 @@ msgctxt "double-strand DNA"
 msgid "Double"
 msgstr "Dupla"
 
-#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
-#. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:86
-#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
-msgid "Insert"
-msgstr "Inserir"
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::InsertFragmentDialog)
-#, fuzzy
-#| msgid "Insert Fragment"
-msgid "Insert Fragment…"
-msgstr "Inserir fragmento"
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:22
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Filter:"
-msgstr "Filtro:"
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:29
-#. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
-msgid "Type a name or part of a name to show only matching files."
-msgstr ""
-"Digite um nome ou parte de um nome para mostrar apenas os ficheiros "
-"correspondentes."
-
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
@@ -6832,8 +6845,10 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Generate..."
-msgstr ""
+#, fuzzy
+#| msgid "Generating MDL..."
+msgid "Generate…"
+msgstr "Criando MDL..."
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7470,11 +7485,6 @@ msgstr ""
 msgid "Max 2*theta:"
 msgstr "Máx 2*theta:"
 
-#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-msgid "Download Plugins..."
-msgstr ""
-
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download Selected"
@@ -7628,11 +7638,6 @@ msgstr "Estrôncio"
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
 msgstr "Calcular"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-msgid "Record Movie..."
-msgstr "Gravar Vídeo..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -8075,6 +8080,21 @@ msgstr ""
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo."
 "pt,,,,,avogadro-devel@lists.sourceforge.net,david.rodrigues@gmail.com,,,"
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo.pt"
+
+#~ msgid "Help..."
+#~ msgstr "Ajuda..."
+
+#~ msgid "Submit Calculation..."
+#~ msgstr "Submeter Cálculo..."
+
+#~ msgid "Save File..."
+#~ msgstr "Gravar Ficheiro..."
+
+#~ msgid "Record Movie..."
+#~ msgstr "Gravar Vídeo..."
+
+#~ msgid "Other..."
+#~ msgstr "Outro..."
 
 #~ msgid "Client server operations."
 #~ msgstr "Operações cliente-servidor."

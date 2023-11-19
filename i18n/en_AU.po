@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-29 02:01+0000\n"
+"POT-Creation-Date: 2023-11-19 16:50+0000\n"
 "PO-Revision-Date: 2023-11-08 19:34+0000\n"
 "Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -39,8 +39,8 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
-"script --print-options output must be an JSON object at top level. Received:"
-"\n"
+"script --print-options output must be an JSON object at top level. "
+"Received:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:208
@@ -464,7 +464,8 @@ msgstr "Job Retrieval Timeout"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
-msgstr "Avogadro timed out waiting for the finished job details from MoleQueue."
+msgstr ""
+"Avogadro timed out waiting for the finished job details from MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
@@ -1008,17 +1009,11 @@ msgstr "Select file:"
 msgid "Select executable:"
 msgstr "Select executable:"
 
-#: qtgui/fileformatdialog.cpp:48
-msgid ""
-"The file name contains invalid characters. Please choose another file name."
-msgstr ""
-"The file name contains invalid characters. Please choose another file name."
-
-#: qtgui/fileformatdialog.cpp:60
+#: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr "Unable to find a suitable file reader for the selected file."
 
-#: qtgui/fileformatdialog.cpp:108
+#: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
@@ -1026,50 +1021,50 @@ msgstr ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 
-#: qtgui/fileformatdialog.cpp:122
+#: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
 msgstr "Unable to find a suitable file writer for the selected format."
 
-#: qtgui/fileformatdialog.cpp:171
+#: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
 msgstr "handlers"
 
-#: qtgui/fileformatdialog.cpp:172
+#: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
 msgstr "handle"
 
-#: qtgui/fileformatdialog.cpp:176
+#: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
 msgstr "readers"
 
-#: qtgui/fileformatdialog.cpp:177
+#: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
 msgstr "read"
 
-#: qtgui/fileformatdialog.cpp:181
+#: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
 msgstr "writers"
 
-#: qtgui/fileformatdialog.cpp:182
+#: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
 msgstr "write"
 
-#: qtgui/fileformatdialog.cpp:187
+#: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Multiple %1 found that can %2 this format. Which should be used?"
 
-#: qtgui/fileformatdialog.cpp:287
+#: qtgui/fileformatdialog.cpp:279
 msgid "All files"
 msgstr "All files"
 
-#: qtgui/fileformatdialog.cpp:290
+#: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
 msgstr "All supported formats"
 
@@ -1353,7 +1348,7 @@ msgstr "Add Layer Info"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
-#: qtplugins/select/select.cpp:527
+#: qtplugins/select/select.cpp:548
 #: qtplugins/selectiontool/selectiontool.cpp:254:1567
 msgid "Change Layer"
 msgstr "Change Layer"
@@ -1373,7 +1368,7 @@ msgstr "Clear Atoms"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:447
+#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:459
 msgid "Adjust Hydrogens"
 msgstr "Adjust Hydrogens"
 
@@ -1639,7 +1634,7 @@ msgstr "Error reading OpenDX file: No cube found"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:31:84
+#: qtplugins/apbs/apbs.h:31:96
 msgid "APBS"
 msgstr "APBS"
 
@@ -1702,7 +1697,7 @@ msgstr "ABPS Input (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
-#: qtplugins/apbs/apbsdialog.cpp:178:144
+#: qtplugins/apbs/apbsdialog.cpp:178:156
 msgid "Success"
 msgstr "Success"
 
@@ -1821,7 +1816,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:756:171 rc.cpp:1615
+#: qtplugins/surfaces/surfaces.cpp:756:183 rc.cpp:1615
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spectral"
@@ -1831,7 +1826,7 @@ msgstr "Spectral"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:758:168 rc.cpp:1612
+#: qtplugins/surfaces/surfaces.cpp:758:180 rc.cpp:1612
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -1841,7 +1836,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:760:162 rc.cpp:1606
+#: qtplugins/surfaces/surfaces.cpp:760:174 rc.cpp:1606
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Balance"
@@ -1851,7 +1846,7 @@ msgstr "Balance"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:762:165 rc.cpp:1609
+#: qtplugins/surfaces/surfaces.cpp:762:177 rc.cpp:1609
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blue-DarkRed"
@@ -1863,7 +1858,7 @@ msgstr "Blue-DarkRed"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:764:174 rc.cpp:1618
+#: qtplugins/surfaces/surfaces.cpp:764:186 rc.cpp:1618
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -1897,7 +1892,7 @@ msgstr "Select Colourmap"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:159 rc.cpp:1603
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1603
 msgid "Colormap:"
 msgstr "Colourmap:"
 
@@ -2121,7 +2116,7 @@ msgstr "Add centroids and centre-of-mass."
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:215
-#: qtplugins/noncovalent/noncovalent.cpp:351:189 rc.cpp:192 rc.cpp:369
+#: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:381
 msgid " Å"
 msgstr " Å"
 
@@ -2386,7 +2381,7 @@ msgstr "Turbomole format"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:31:240
+#: qtplugins/copypaste/copypaste.cpp:31:252
 msgid "Copy"
 msgstr "Copy"
 
@@ -2402,13 +2397,13 @@ msgstr "InChI"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34:237
+#: qtplugins/copypaste/copypaste.cpp:34:249
 msgid "Cut"
 msgstr "Cut"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35:249
+#: qtplugins/copypaste/copypaste.cpp:35:261
 msgid "Clear"
 msgstr "Clear"
 
@@ -2763,6 +2758,14 @@ msgid "Editor tool"
 msgstr "Editor tool"
 
 #: qtplugins/editor/editortoolwidget.cpp:129
+#: qtplugins/templatetool/templatetoolwidget.cpp:270
+#: qtplugins/templatetool/templatetoolwidget.cpp:283
+#: qtplugins/templatetool/templatetoolwidget.cpp:291
+#: qtplugins/templatetool/templatetoolwidget.cpp:299
+#: qtplugins/templatetool/templatetoolwidget.cpp:307
+#: qtplugins/templatetool/templatetoolwidget.cpp:315
+#: qtplugins/templatetool/templatetoolwidget.cpp:328
+#: qtplugins/templatetool/templatetoolwidget.cpp:390
 msgid "Other…"
 msgstr "Other…"
 
@@ -2881,17 +2884,17 @@ msgstr "Unfreeze Selected Atoms"
 msgid "&Calculate"
 msgstr "&Calculate"
 
-#: qtplugins/forcefield/forcefield.cpp:288 qtplugins/openbabel/openbabel.cpp:45
+#: qtplugins/forcefield/forcefield.cpp:285 qtplugins/openbabel/openbabel.cpp:45
 #: qtplugins/openbabel/openbabel.cpp:525
 msgid "Optimize Geometry"
 msgstr "&Optimize Geometry"
 
-#: qtplugins/forcefield/forcefield.cpp:329
+#: qtplugins/forcefield/forcefield.cpp:326
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energy = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:330
+#: qtplugins/forcefield/forcefield.cpp:327
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:886
 #: qtplugins/surfaces/surfaces.cpp:930 qtplugins/surfaces/surfaces.cpp:942
@@ -3094,7 +3097,7 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:168:600
+#: qtplugins/insertdna/insertdna.cpp:168:612
 msgid "Thymine"
 msgstr "Thymine"
 
@@ -3134,7 +3137,7 @@ msgstr "Error reading file (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:117:342
+#: qtplugins/insertfragment/insertfragment.cpp:117:354
 msgid "Import Crystal"
 msgstr "Import Crystal"
 
@@ -3567,8 +3570,8 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
-"An error occurred while retrieving the list of supported force fields. ("
-"using '%1')."
+"An error occurred while retrieving the list of supported force fields. "
+"(using '%1')."
 
 #: qtplugins/openbabel/openbabel.cpp:389
 msgid "Molecule invalid. Cannot optimize geometry."
@@ -3850,7 +3853,9 @@ msgstr " of %0"
 msgid "Dynamic bonding?"
 msgstr "Dynamic bonding?"
 
-#: qtplugins/playertool/playertool.cpp:139
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+#: qtplugins/playertool/playertool.cpp:139:1684
 msgid "Record Movie…"
 msgstr "Record Movie…"
 
@@ -4002,7 +4007,9 @@ msgstr "Extraction successful\n"
 msgid "Error while extracting: %1"
 msgstr "Error while extracting: %1"
 
-#: qtplugins/plugindownloader/plugindownloader.cpp:27
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1540
 msgid "Download Plugins…"
 msgstr "Download Plugins…"
 
@@ -4346,7 +4353,7 @@ msgstr "Select All"
 msgid "Select None"
 msgstr "Select None"
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:516
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:537
 msgid "Invert Selection"
 msgstr "Invert Selection"
 
@@ -4374,11 +4381,11 @@ msgstr "Select Sidechain Atoms…"
 msgid "Select Water…"
 msgstr "Select Water…"
 
-#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:352
+#: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:368
 msgid "Enlarge Selection"
 msgstr "Enlarge Selection"
 
-#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:387
+#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:404
 msgid "Shrink Selection"
 msgstr "Shrink Selection"
 
@@ -4398,39 +4405,39 @@ msgstr "&Select"
 msgid "Select Element"
 msgstr "Select Element"
 
-#: qtplugins/select/select.cpp:216
+#: qtplugins/select/select.cpp:217
 msgid "Select Water"
 msgstr "Select Water"
 
-#: qtplugins/select/select.cpp:254
+#: qtplugins/select/select.cpp:266
 msgid "Select Backbone"
 msgstr "Select Backbone"
 
-#: qtplugins/select/select.cpp:288
+#: qtplugins/select/select.cpp:302
 msgid "Select Sidechain"
 msgstr "Select Sidechain"
 
-#: qtplugins/select/select.cpp:409
+#: qtplugins/select/select.cpp:428
 msgid "Select Atoms by Index"
 msgstr "Select Atoms by Index"
 
-#: qtplugins/select/select.cpp:410
+#: qtplugins/select/select.cpp:429
 msgid "Atoms to Select:"
 msgstr "Atoms to Select:"
 
-#: qtplugins/select/select.cpp:415
+#: qtplugins/select/select.cpp:434
 msgid "Select Atom"
 msgstr "Select Atom"
 
-#: qtplugins/select/select.cpp:448
+#: qtplugins/select/select.cpp:469
 msgid "Select Atoms by Residue"
 msgstr "Select Atoms by Residue"
 
-#: qtplugins/select/select.cpp:449
+#: qtplugins/select/select.cpp:470
 msgid "Residues to Select:"
 msgstr "Residues to Select:"
 
-#: qtplugins/select/select.cpp:454
+#: qtplugins/select/select.cpp:475
 msgid "Select Residue"
 msgstr "Select Residue"
 
@@ -4788,22 +4795,29 @@ msgstr "%1 %2"
 msgid "Template"
 msgstr "Template"
 
-#: qtplugins/templatetool/templatetool.cpp:294
+#: qtplugins/templatetool/templatetool.cpp:84
+msgid ""
+"Template Tool\n"
+"\n"
+"Insert fragments, including metal centers.\n"
+"Select an element and coordination geometry,then click to insert a "
+"fragment.\n"
+"\n"
+"Select a ligand or functional group and clickon a hydrogen atom to attach it."
+msgstr ""
+
+#: qtplugins/templatetool/templatetool.cpp:302
 msgid "Insert Template"
 msgstr "Insert Template"
 
-#: qtplugins/templatetool/templatetool.cpp:544
+#: qtplugins/templatetool/templatetool.cpp:559
 msgid "Insert Ligand"
 msgstr "Insert Ligand"
 
-#: qtplugins/templatetool/templatetool.h:34
 #: qtplugins/templatetool/templatetool.h:35
+#: qtplugins/templatetool/templatetool.h:36
 msgid "Template tool"
 msgstr "Template tool"
-
-#: qtplugins/templatetool/templatetoolwidget.cpp:288
-msgid "Other..."
-msgstr "Other..."
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -4946,6 +4960,10 @@ msgstr "Debug Script…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr "Submit Calculation…"
 
@@ -4970,8 +4988,8 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>Number of processor cores to reserve for this "
-"job.</p></body></html>"
+"<html><head/><body><p>Number of processor cores to reserve for this job.</"
+"p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -4986,8 +5004,8 @@ msgid ""
 "body></html>"
 msgstr ""
 "<html><head/><body><p>Delete remote working files upon job completion. "
-"Results will still be copied to the local MoleQueue job cache "
-"first.</p></body></html>"
+"Results will still be copied to the local MoleQueue job cache first.</p></"
+"body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5031,6 +5049,28 @@ msgstr "Open output when finished:"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
 msgstr "Rename Elements"
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
+msgid "Insert Fragment…"
+msgstr "Insert Fragment…"
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:22
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Filter:"
+msgstr "Filter:"
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:29
+#. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
+msgid "Type a name or part of a name to show only matching files."
+msgstr "Type a name or part of a name to show only matching files."
+
+#. i18n: file: qtgui/insertfragmentdialog.ui:86
+#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
+#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
+#. i18n: ectx: property (text), widget (QPushButton, insertButton)
+msgid "Insert"
+msgstr "Insert"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -5261,25 +5301,25 @@ msgstr ""
 "span> - Atomic number (e.g. \"6\" for carbon)<br/><span style=\" font-"
 "weight:600;\">G</span> - GAMESS-style atomic number (e.g. \"6.0\" for "
 "carbon)<br/><span style=\" font-weight:600;\">N</span> - Element name (e.g. "
-"\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol ("
-"e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - Atom "
-"label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) <br/"
-"><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
+"\"Carbon\")<br/><span style=\" font-weight:600;\">S</span> - Element symbol "
+"(e.g. \"C\" for carbon)<br/><span style=\" font-weight:700;\">L</span> - "
+"Atom label (e.g., \"C2\" for second carbon atom, \"H1\" for first hydrogen) "
+"<br/><span style=\" font-weight:600;\">x</span> - X position coordinate<br/"
 "><span style=\" font-weight:600;\">y</span> - Y position coordinate<br/"
 "><span style=\" font-weight:600;\">z</span> - Z position coordinate<br/"
-"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate ("
-"crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
+"><span style=\" font-weight:600;\">a</span> - 'a' lattice coordinate "
+"(crystals only)<br/><span style=\" font-weight:600;\">b</span> - 'b' lattice "
 "coordinate (crystals only)<br/><span style=\" font-weight:600;\">c</span> - "
-"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;\""
-">_</span> - A literal space (\" \"), useful for alignment<br/><span style=\" "
-"font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for optimization "
-"flags<br/><span style=\" font-weight:600;\">1</span> - A literal 1 (\"1\"), "
-"useful for optimization flags<br/></p></body></html>"
+"'c' lattice coordinate (crystals only)<br/><span style=\" font-weight:600;"
+"\">_</span> - A literal space (\" \"), useful for alignment<br/><span "
+"style=\" font-weight:600;\">0</span> - A literal 0 (\"0\"), useful for "
+"optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
+"literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
-msgid "Help..."
-msgstr "Help..."
+msgid "Help…"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5315,19 +5355,14 @@ msgstr "Reset All"
 msgid "Defaults"
 msgstr "Defaults"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-msgid "Submit Calculation..."
-msgstr "Submit Calculation..."
-
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Save File..."
-msgstr "Save File..."
+#, fuzzy
+#| msgid "Save File"
+msgid "Save File…"
+msgstr "Save File"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -5892,28 +5927,6 @@ msgctxt "double-strand DNA"
 msgid "Double"
 msgstr "Double"
 
-#. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
-#. i18n: ectx: property (text), widget (QPushButton, insertButton)
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:86
-#. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
-msgid "Insert"
-msgstr "Insert"
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::InsertFragmentDialog)
-msgid "Insert Fragment…"
-msgstr "Insert Fragment…"
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:22
-#. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Filter:"
-msgstr "Filter:"
-
-#. i18n: file: qtplugins/insertfragment/insertfragmentdialog.ui:29
-#. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
-msgid "Type a name or part of a name to show only matching files."
-msgstr "Type a name or part of a name to show only matching files."
-
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
@@ -6445,7 +6458,9 @@ msgstr "Use Form"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Generate..."
+#, fuzzy
+#| msgid "Generate..."
+msgid "Generate…"
 msgstr "Generate..."
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
@@ -7020,8 +7035,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>The broadening of the peak at the base (in "
-"degrees).</p></body></html>"
+"<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7029,8 +7044,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: 162."
-"00°</p></body></html>"
+"<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
+"162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -7038,8 +7053,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The broadening of the peaks at the base in "
-"degrees.</p><p>Default: 0.52958°</p></body></html>"
+"<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
+"p><p>Default: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7062,8 +7077,8 @@ msgid ""
 "<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The wavelength of the x-ray in Ångstroms. "
-"</p><p>Default: 1.50560 Å</p></body></html>"
+"<html><head/><body><p>The wavelength of the x-ray in Ångstroms. </"
+"p><p>Default: 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -7071,18 +7086,13 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p>The number of 2theta points to generate.</p><p>Default:"
-" 1000</p></body></html>"
+"<html><head/><body><p>The number of 2theta points to generate.</"
+"p><p>Default: 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2*theta:"
 msgstr "Max 2*theta:"
-
-#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-msgid "Download Plugins..."
-msgstr "Download Plugins..."
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -7227,11 +7237,6 @@ msgstr "Strong"
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
 msgstr "Calculate"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-msgid "Record Movie..."
-msgstr "Record Movie..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -7507,8 +7512,8 @@ msgstr ""
 "addition, if a density-of-states calculation is performed, the Fermi level "
 "here will automatically be set to what was detected during the density-of-"
 "states calculation.</p><p>If this box is checked, be sure the correct Fermi "
-"level is set in the spinbox on the right.</p><p>Default: "
-"off</p></body></html>"
+"level is set in the spinbox on the right.</p><p>Default: off</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -7523,8 +7528,8 @@ msgid ""
 "p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Adjust the energies so that the zero is the Fermi? "
-"Only available if we are plotting the Fermi level.</p><p><br/></p><p>Default:"
-" off</p></body></html>"
+"Only available if we are plotting the Fermi level.</p><p><br/></"
+"p><p>Default: off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -7567,16 +7572,16 @@ msgid ""
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Enter special k-points as such:</p><p>L 0.5 0.5 0.5</"
-"p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; "
-"&lt;x&gt; &lt;y&gt; &lt;z&gt; where x, y, and z are fractional reciprocal "
-"space coordinates. Lines will be drawn connecting these k-points on the "
-"graph in the order you put them in. Please note that the orientation of your "
-"cell may have an effect on the locations of these reciprocal space points.</"
-"p><p>If the space group of the crystal has been perceived or set, the "
-"special k points will be automatically filled up with the primitive cell "
-"high symmetry points for that space group. There are a few space groups will "
-"different high symmetry points depending on the lattice (such as if a &gt; b "
-"or a &lt; b) - that is taken into account automatically.</p></body></html>"
+"p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>That is, &lt;symbol&gt; &lt;"
+"x&gt; &lt;y&gt; &lt;z&gt; where x, y, and z are fractional reciprocal space "
+"coordinates. Lines will be drawn connecting these k-points on the graph in "
+"the order you put them in. Please note that the orientation of your cell may "
+"have an effect on the locations of these reciprocal space points.</p><p>If "
+"the space group of the crystal has been perceived or set, the special k "
+"points will be automatically filled up with the primitive cell high symmetry "
+"points for that space group. There are a few space groups will different "
+"high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
+"b) - that is taken into account automatically.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -7594,8 +7599,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -7620,8 +7625,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: "
-"off</p></body></html>"
+"<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
+"body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
@@ -7706,6 +7711,31 @@ msgstr ""
 "sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph."
 "odell@googlemail.com,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
 "com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com"
+
+#~ msgid "Help..."
+#~ msgstr "Help..."
+
+#~ msgid "Submit Calculation..."
+#~ msgstr "Submit Calculation..."
+
+#~ msgid "Save File..."
+#~ msgstr "Save File..."
+
+#~ msgid "Download Plugins..."
+#~ msgstr "Download Plugins..."
+
+#~ msgid "Record Movie..."
+#~ msgstr "Record Movie..."
+
+#~ msgid ""
+#~ "The file name contains invalid characters. Please choose another file "
+#~ "name."
+#~ msgstr ""
+#~ "The file name contains invalid characters. Please choose another file "
+#~ "name."
+
+#~ msgid "Other..."
+#~ msgstr "Other..."
 
 #~ msgid "Connection failed"
 #~ msgstr "Connection failed"
