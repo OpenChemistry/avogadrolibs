@@ -229,7 +229,8 @@ void TemplateToolWidget::ligandChanged(int index)
   m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
 }
 
-void TemplateToolWidget::otherLigandInsert(const QString& fileName, bool crystal)
+void TemplateToolWidget::otherLigandInsert(const QString& fileName,
+                                           bool crystal)
 {
   if (m_fragmentDialog == nullptr)
     return;
@@ -248,7 +249,6 @@ void TemplateToolWidget::otherLigandInsert(const QString& fileName, bool crystal
   iconName += ".png";
   m_ui->ligandPreview->setIcon(QIcon(iconName));
 }
-
 
 void TemplateToolWidget::typeChanged(int index)
 {

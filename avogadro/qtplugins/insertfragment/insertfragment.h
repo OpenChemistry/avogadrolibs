@@ -17,13 +17,13 @@ namespace Io {
 class FileFormat;
 }
 namespace QtGui {
-class InsertFragmentDialog;  
+class InsertFragmentDialog;
 }
 
 namespace QtPlugins {
 
 /**
- * @brief Load single-line molecule descriptors through an input dialog.
+ * @brief Load molecules through a tree browser.
  */
 class InsertFragment : public QtGui::ExtensionPlugin
 {
@@ -42,7 +42,7 @@ public slots:
 
 private slots:
   void showDialog();
-  void performInsert(const QString &fileName, bool crystal);
+  void performInsert(const QString& fileName, bool crystal);
 
 private:
   QList<QAction*> m_actions;

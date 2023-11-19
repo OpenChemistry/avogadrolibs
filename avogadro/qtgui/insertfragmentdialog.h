@@ -52,6 +52,6 @@ private:
   Private* m_implementation;
 };
 
-} // namespace QtPlugins
+} // namespace QtGui
 } // namespace Avogadro
 #endif // AVOGADRO_QTGUI_InsertFragmentDIALOG_H

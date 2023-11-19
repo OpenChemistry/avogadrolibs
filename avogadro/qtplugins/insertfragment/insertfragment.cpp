@@ -5,8 +5,8 @@
 
 #include "insertfragment.h"
 
-#include <avogadro/qtgui/insertfragmentdialog.h>
 #include <avogadro/qtgui/fileformatdialog.h>
+#include <avogadro/qtgui/insertfragmentdialog.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -20,8 +20,8 @@
 #include <QtWidgets/QProgressDialog>
 
 using Avogadro::Io::FileFormatManager;
-using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::InsertFragmentDialog;
+using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
@@ -123,4 +123,4 @@ void InsertFragment::performInsert(const QString& fileName, bool crystal)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
