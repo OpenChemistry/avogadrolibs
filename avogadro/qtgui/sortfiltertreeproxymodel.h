@@ -3,14 +3,16 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef SORTFILTERTREEPROXYMODEL_H
-#define SORTFILTERTREEPROXYMODEL_H
+#ifndef AVOGADRO_QTGUI_SORTFILTERTREEPROXYMODEL_H
+#define AVOGADRO_QTGUI_SORTFILTERTREEPROXYMODEL_H
+
+#include "avogadroqtguiexport.h"
 
 #include <QSortFilterProxyModel>
 
-namespace Avogadro {
+namespace Avogadro::QtGui {
 
-  class SortFilterTreeProxyModel: public QSortFilterProxyModel
+  class AVOGADROQTGUI_EXPORT SortFilterTreeProxyModel: public QSortFilterProxyModel
   {
     Q_OBJECT
   public:
@@ -29,6 +31,6 @@ namespace Avogadro {
     QModelIndex m_sourceRoot;
   };
 
-}
+} // End Avogadro QtGui namespace
 
 #endif

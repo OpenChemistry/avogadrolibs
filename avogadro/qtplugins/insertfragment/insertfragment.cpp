@@ -4,8 +4,8 @@
 ******************************************************************************/
 
 #include "insertfragment.h"
-#include <avogadro/qtgui/insertfragmentdialog.h>
 
+#include <avogadro/qtgui/insertfragmentdialog.h>
 #include <avogadro/qtgui/fileformatdialog.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -21,6 +21,7 @@
 
 using Avogadro::Io::FileFormatManager;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::InsertFragmentDialog;
 
 namespace Avogadro::QtPlugins {
 

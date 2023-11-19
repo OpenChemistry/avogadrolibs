@@ -5,7 +5,7 @@
 
 #include "sortfiltertreeproxymodel.h"
 
-namespace Avogadro {
+namespace Avogadro::QtGui {
 
   // Custom class for Avogadro to handle filtering files
   // Directories are at most 2 levels deep until we get to files

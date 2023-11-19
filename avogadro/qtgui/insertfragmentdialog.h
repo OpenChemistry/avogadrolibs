@@ -3,13 +3,15 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_INSERTFRAGMENTDIALOG_H
-#define AVOGADRO_QTPLUGINS_INSERTFRAGMENTDIALOG_H
+#ifndef AVOGADRO_QTGUI_INSERTFRAGMENTDIALOG_H
+#define AVOGADRO_QTGUI_INSERTFRAGMENTDIALOG_H
+
+#include "avogadroqtguiexport.h"
 
 #include <QtWidgets/QDialog>
 
 namespace Avogadro {
-namespace QtPlugins {
+namespace QtGui {
 
 namespace Ui {
 class InsertFragmentDialog;
@@ -18,7 +20,7 @@ class InsertFragmentDialog;
 /**
  * @brief Dialog to prompt a format and descriptor string.
  */
-class InsertFragmentDialog : public QDialog
+class AVOGADROQTGUI_EXPORT InsertFragmentDialog : public QDialog
 {
   Q_OBJECT
 
@@ -52,4 +54,4 @@ private:
 
 } // namespace QtPlugins
 } // namespace Avogadro
-#endif // AVOGADRO_QTPLUGINS_InsertFragmentDIALOG_H
+#endif // AVOGADRO_QTGUI_InsertFragmentDIALOG_H

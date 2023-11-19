@@ -33,7 +33,7 @@
 
 #include <QtCore/QDebug>
 
-namespace Avogadro::QtPlugins {
+namespace Avogadro::QtGui {
 
 class InsertFragmentDialog::Private
 {
@@ -233,4 +233,4 @@ void InsertFragmentDialog::activated()
   emit performInsert(currentFileName, m_implementation->crystalFiles);
 }
 
-} // namespace Avogadro::QtPlugins
+} // namespace Avogadro::QtGui

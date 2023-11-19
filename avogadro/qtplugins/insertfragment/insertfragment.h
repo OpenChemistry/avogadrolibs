@@ -16,7 +16,7 @@ namespace Avogadro {
 namespace Io {
 class FileFormat;
 }
-namespace QtPlugins {
+namespace QtGui {
 class InsertFragmentDialog;  
 }
 
@@ -46,8 +46,8 @@ private slots:
 
 private:
   QList<QAction*> m_actions;
-  InsertFragmentDialog* m_moleculeDialog;
-  InsertFragmentDialog* m_crystalDialog;
+  QtGui::InsertFragmentDialog* m_moleculeDialog;
+  QtGui::InsertFragmentDialog* m_crystalDialog;
   /// Maps identifier to extension:
   QMap<QString, std::string> m_formats;
 
