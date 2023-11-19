@@ -945,7 +945,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QPushButton" name="generateButton">
        <property name="text">
-        <string>Generate...</string>
+        <string>Generate…</string>
        </property>
       </widget>
      </item>
