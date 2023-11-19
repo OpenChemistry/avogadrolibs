@@ -525,7 +525,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Record Movie...</string>
+        <string>Record Movie…</string>
        </property>
        <property name="default">
         <bool>true</bool>
