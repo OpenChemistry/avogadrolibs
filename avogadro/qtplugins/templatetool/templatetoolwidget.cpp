@@ -156,6 +156,10 @@ QString TemplateToolWidget::ligandString() const
   // tell us if we are using the clipboard
   if (m_ui->typeComboBox->currentIndex() == LigandType::Clipboard)
     return "Clipboard";
+  // check if it's "other"
+  if (m_ligands.at(m_ui->ligandComboBox->currentIndex()).endsWith("other"))
+    return m_ligandPath;
+
   return m_ligands.at(m_ui->ligandComboBox->currentIndex());
 }
 
@@ -181,17 +185,70 @@ void TemplateToolWidget::ligandChanged(int index)
   QString iconName = m_ligands[index];
 
   // check if it's "other"
-  if (iconName.endsWith("-other")) {
-    if (!m_fragmentDialog) {
-      m_fragmentDialog = new QtGui::InsertFragmentDialog(this);
-      connect(m_fragmentDialog, SIGNAL(accepted()), this, SLOT(accepted()));
+  if (iconName.endsWith("other")) {
+
+    // figure out the ligand type and the resulting path
+    // to the fragment files
+    int ligandType = m_ui->typeComboBox->currentIndex();
+    QString path = "fragments";
+
+    switch (ligandType) {
+      case LigandType::Monodentate:
+        path += "/ligands/monodentate";
+        break;
+      case LigandType::Bidentate:
+        path += "/ligands/bidentate";
+        break;
+      case LigandType::Tridentate:
+        path += "/ligands/tridentate";
+        break;
+      case LigandType::Tetradentate:
+        path += "/ligands/tetradentate";
+        break;
+      case LigandType::Hexadentate:
+        path += "/ligands/hexadentate";
+        break;
+      case LigandType::Haptic:
+        path += "/ligands/haptic";
+        break;
+      case LigandType::FunctionalGroup:
+        path += "/groups";
+        break;
     }
+
+    if (m_fragmentDialog != nullptr)
+      m_fragmentDialog->deleteLater();
+
+    m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
+    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
+            SLOT(otherLigandInsert(const QString&, bool)));
     m_fragmentDialog->show();
     return;
   }
 
   m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
 }
+
+void TemplateToolWidget::otherLigandInsert(const QString& fileName, bool crystal)
+{
+  if (m_fragmentDialog == nullptr)
+    return;
+
+  // get the ligand name
+  QString ligandName = m_fragmentDialog->fileName();
+  m_ligandPath = ligandName;
+
+  m_fragmentDialog->hide();
+  // it will be deleted later
+
+  // update the icon from the filename (so check for .png)
+  QString iconName = fileName;
+  if (iconName.endsWith(".cjson"))
+    iconName.chop(6);
+  iconName += ".png";
+  m_ui->ligandPreview->setIcon(QIcon(iconName));
+}
+
 
 void TemplateToolWidget::typeChanged(int index)
 {
@@ -270,6 +327,8 @@ void TemplateToolWidget::typeChanged(int index)
                   << "phenyl"
                   << "sulfonate" << tr("Other…");
       m_ligands = ligandNames;
+      // make sure last one is "other"
+      m_ligands.last() = "1-other";
       m_denticity = 1;
       break;
     case LigandType::Clipboard: // Clipboard

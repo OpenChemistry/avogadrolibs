@@ -408,8 +408,15 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
         return;
 
     } else {
-      QFile templ(":/templates/ligands/" + m_toolWidget->ligandString() +
-                  ".cjson");
+      QString path;
+      if (m_toolWidget->ligandString().endsWith(".cjson")) {
+        // we already have the full path .. from the insert browser
+        path = m_toolWidget->ligandString();
+      } else {
+        path = ":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson";
+      }
+
+      QFile templ(path);
       if (!templ.open(QFile::ReadOnly | QFile::Text))
         return;
       QTextStream templateStream(&templ);
