@@ -15,9 +15,8 @@
 ******************************************************************************/
 
 #include "insertfragmentdialog.h"
-#include "ui_insertfragmentdialog.h"
-
 #include "sortfiltertreeproxymodel.h"
+#include "ui_insertfragmentdialog.h"
 
 #include <avogadro/qtgui/utilities.h>
 
@@ -34,7 +33,7 @@
 
 #include <QtCore/QDebug>
 
-namespace Avogadro::QtPlugins {
+namespace Avogadro::QtGui {
 
 class InsertFragmentDialog::Private
 {
@@ -118,7 +117,8 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   if (m_implementation->crystalFiles)
     filters << "*.cif";
   else
-    filters << "*.cjson" << "*.cml";
+    filters << "*.cjson"
+            << "*.cml";
   m_implementation->model->setNameFilters(filters);
 
   m_implementation->proxy = new SortFilterTreeProxyModel(this);
@@ -234,4 +234,4 @@ void InsertFragmentDialog::activated()
   emit performInsert(currentFileName, m_implementation->crystalFiles);
 }
 
-} // namespace Avogadro::QtPlugins
+} // namespace Avogadro::QtGui
