@@ -11,6 +11,7 @@
 namespace Avogadro {
 namespace QtGui {
 class PeriodicTableView;
+class InsertFragmentDialog;
 }
 
 namespace QtPlugins {
@@ -60,12 +61,14 @@ private:
   void saveElements();
 
   Ui::TemplateToolWidget *m_ui;
+  QtGui::InsertFragmentDialog *m_fragmentDialog;
   QtGui::PeriodicTableView *m_elementSelector;
   QList<unsigned char> m_defaultElements;
   QList<unsigned char> m_userElements;
   unsigned char m_currentElement;
   QStringList m_centers;
   QStringList m_ligands;
+  QString m_ligandPath;
   
   int m_denticity;
   std::vector<size_t> m_selectedUIDs;
