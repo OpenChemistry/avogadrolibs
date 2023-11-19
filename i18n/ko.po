@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-11-19 14:57+0000\n"
+"POT-Creation-Date: 2023-11-19 16:50+0000\n"
 "PO-Revision-Date: 2023-10-07 12:12+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -3861,7 +3861,9 @@ msgstr " %0 의"
 msgid "Dynamic bonding?"
 msgstr "역동적인 결합입니까?"
 
-#: qtplugins/playertool/playertool.cpp:139
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+#: qtplugins/playertool/playertool.cpp:139:1684
 msgid "Record Movie…"
 msgstr "동영상 녹화…"
 
@@ -4013,7 +4015,9 @@ msgstr "압축해제 성공\n"
 msgid "Error while extracting: %1"
 msgstr "압축해제 중 오류: %1"
 
-#: qtplugins/plugindownloader/plugindownloader.cpp:27
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1540
 msgid "Download Plugins…"
 msgstr "플러그인 다운로드…"
 
@@ -4967,6 +4971,10 @@ msgstr "디버그 스크립트…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr "계산 제출…"
 
@@ -5337,8 +5345,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
-msgid "Help..."
-msgstr "도움말..."
+msgid "Help…"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5374,19 +5382,14 @@ msgstr "모두 초기화"
 msgid "Defaults"
 msgstr "기본값"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-msgid "Submit Calculation..."
-msgstr "계산 제출..."
-
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Save File..."
-msgstr "파일 저장..."
+#, fuzzy
+#| msgid "Save File"
+msgid "Save File…"
+msgstr "파일 저장"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6485,7 +6488,9 @@ msgstr "양식 사용"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Generate..."
+#, fuzzy
+#| msgid "Generate..."
+msgid "Generate…"
 msgstr "생성..."
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
@@ -7118,11 +7123,6 @@ msgstr ""
 msgid "Max 2*theta:"
 msgstr "최대 2*세타:"
 
-#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-msgid "Download Plugins..."
-msgstr "플러그인 다운로드..."
-
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download Selected"
@@ -7268,11 +7268,6 @@ msgstr "스트론튬"
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
 msgstr "계산"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-msgid "Record Movie..."
-msgstr "동영상 녹화..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -7702,6 +7697,21 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com"
+
+#~ msgid "Help..."
+#~ msgstr "도움말..."
+
+#~ msgid "Submit Calculation..."
+#~ msgstr "계산 제출..."
+
+#~ msgid "Save File..."
+#~ msgstr "파일 저장..."
+
+#~ msgid "Download Plugins..."
+#~ msgstr "플러그인 다운로드..."
+
+#~ msgid "Record Movie..."
+#~ msgstr "동영상 녹화..."
 
 #~ msgid "Other..."
 #~ msgstr "기타..."

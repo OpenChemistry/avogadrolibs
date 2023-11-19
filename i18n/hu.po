@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-11-19 14:57+0000\n"
+"POT-Creation-Date: 2023-11-19 16:50+0000\n"
 "PO-Revision-Date: 2023-10-31 11:02+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -3904,7 +3904,9 @@ msgstr " / %0"
 msgid "Dynamic bonding?"
 msgstr "Dinamikus kötések?"
 
-#: qtplugins/playertool/playertool.cpp:139
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+#: qtplugins/playertool/playertool.cpp:139:1684
 msgid "Record Movie…"
 msgstr "Rajzfilmfájl felvétele…"
 
@@ -4062,7 +4064,9 @@ msgstr "A fájlok kicsomagolása sikeresen megtörtént.\n"
 msgid "Error while extracting: %1"
 msgstr "Hiba történt a kivonás során: %1"
 
-#: qtplugins/plugindownloader/plugindownloader.cpp:27
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1540
 msgid "Download Plugins…"
 msgstr "Beépülő modulok letöltése…"
 
@@ -5022,6 +5026,10 @@ msgstr "Hibakeresési parancsfájl…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr "Számítás elküldése…"
 
@@ -5380,8 +5388,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
-msgid "Help..."
-msgstr "Súgó…"
+msgid "Help…"
+msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5417,19 +5425,14 @@ msgstr "Mindent visszaállít"
 msgid "Defaults"
 msgstr "Alapértelmezések"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-msgid "Submit Calculation..."
-msgstr "Számítás elküldése…"
-
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Save File..."
-msgstr "Fájl mentése…"
+#, fuzzy
+#| msgid "Save File"
+msgid "Save File…"
+msgstr "Fájl mentése"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6526,7 +6529,9 @@ msgstr "Űrlap használata"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Generate..."
+#, fuzzy
+#| msgid "Generate..."
+msgid "Generate…"
 msgstr "Létrehozás…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
@@ -7160,11 +7165,6 @@ msgstr ""
 msgid "Max 2*theta:"
 msgstr "Legnagyobb 2θ:"
 
-#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-msgid "Download Plugins..."
-msgstr "Beépülő modulok letöltése…"
-
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download Selected"
@@ -7308,11 +7308,6 @@ msgstr "Erős"
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
 msgstr "Számítás"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-msgid "Record Movie..."
-msgstr "Rajzfilmfájl felvétele…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
@@ -7745,6 +7740,21 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Help..."
+#~ msgstr "Súgó…"
+
+#~ msgid "Submit Calculation..."
+#~ msgstr "Számítás elküldése…"
+
+#~ msgid "Save File..."
+#~ msgstr "Fájl mentése…"
+
+#~ msgid "Download Plugins..."
+#~ msgstr "Beépülő modulok letöltése…"
+
+#~ msgid "Record Movie..."
+#~ msgstr "Rajzfilmfájl felvétele…"
 
 #~ msgid ""
 #~ "The file name contains invalid characters. Please choose another file "

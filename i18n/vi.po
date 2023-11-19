@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-11-19 14:57+0000\n"
+"POT-Creation-Date: 2023-11-19 16:50+0000\n"
 "PO-Revision-Date: 2022-11-27 00:47+0000\n"
 "Last-Translator: Minh P <phandinhminh@protonmail.ch>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/avogadro/"
@@ -3898,7 +3898,9 @@ msgstr ""
 msgid "Dynamic bonding?"
 msgstr "Liên kết động"
 
-#: qtplugins/playertool/playertool.cpp:139
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
+#. i18n: ectx: property (text), widget (QPushButton, recordButton)
+#: qtplugins/playertool/playertool.cpp:139:1684
 msgid "Record Movie…"
 msgstr ""
 
@@ -4051,7 +4053,9 @@ msgstr ""
 msgid "Error while extracting: %1"
 msgstr ""
 
-#: qtplugins/plugindownloader/plugindownloader.cpp:27
+#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1540
 msgid "Download Plugins…"
 msgstr ""
 
@@ -5071,6 +5075,10 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr ""
 
@@ -5404,7 +5412,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
-msgid "Help..."
+msgid "Help…"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
@@ -5441,19 +5449,13 @@ msgstr "Thiết lập lại tất cả"
 msgid "Defaults"
 msgstr "Mặc định"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
-#. i18n: ectx: property (text), widget (QPushButton, computeButton)
-msgid "Submit Calculation..."
-msgstr ""
-
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Save File..."
-msgstr ""
+#, fuzzy
+msgid "Save File…"
+msgstr "Lưu file video"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6548,7 +6550,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-msgid "Generate..."
+msgid "Generate…"
 msgstr ""
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
@@ -7183,11 +7185,6 @@ msgstr ""
 msgid "Max 2*theta:"
 msgstr ""
 
-#. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-msgid "Download Plugins..."
-msgstr ""
-
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download Selected"
@@ -7339,11 +7336,6 @@ msgstr "Strông-ti"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
 msgid "Calculate"
-msgstr ""
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
-#. i18n: ectx: property (text), widget (QPushButton, recordButton)
-msgid "Record Movie..."
 msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
