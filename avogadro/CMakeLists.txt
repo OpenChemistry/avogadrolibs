@@ -1,5 +1,13 @@
 include(GenerateExportHeader)
 
+# use LTO if available
+cmake_policy(SET CMP0069 NEW)
+include(CheckIPOSupported)
+check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
+if(lto_supported)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
+
 # May want to adjust the name, this more performs boilerplate library stuff now.
 function(avogadro_add_library name)
   # Add an alias target to expose to other targets.
