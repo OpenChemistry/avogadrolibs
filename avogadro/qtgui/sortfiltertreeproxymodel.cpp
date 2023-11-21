@@ -23,6 +23,11 @@ bool SortFilterTreeProxyModel::filterAcceptsRow(
     return true; // true root, always accept
   }
 
+  QString data = sourceModel()->data(sourceIndex).toString();
+  // ignore any image files
+  if (data.endsWith(".png"))
+    return false;
+
   // Now we see if we're a child of the root
   // If not, we accept -- only filter under *our* tree
   // Along the way, we'll see if a parent matches the filter
@@ -48,7 +53,6 @@ bool SortFilterTreeProxyModel::filterAcceptsRow(
   // else, sourceParent is a root, so we're good to filter
 
   // Check if the data for this row matches. If so, the default is to accept
-  QString data = sourceModel()->data(sourceIndex).toString();
   if (data.contains(filterRegExp()))
     return true;
 
