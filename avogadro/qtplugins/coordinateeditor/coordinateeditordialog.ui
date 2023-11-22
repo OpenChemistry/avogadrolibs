@@ -75,7 +75,7 @@
        <item>
         <widget class="QToolButton" name="help">
          <property name="text">
-          <string>Help...</string>
+          <string>Help…</string>
          </property>
         </widget>
        </item>

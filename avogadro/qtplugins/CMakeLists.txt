@@ -97,6 +97,7 @@ endfunction()
 # Now to make the plugins.
 add_subdirectory(3dmol)
 add_subdirectory(applycolors)
+add_subdirectory(aligntool)
 add_subdirectory(bondcentrictool)
 add_subdirectory(bonding)
 add_subdirectory(cartoons)
@@ -107,6 +108,7 @@ add_subdirectory(customelements)
 add_subdirectory(editor)
 add_subdirectory(fetchpdb)
 add_subdirectory(focus)
+add_subdirectory(forcefield)
 add_subdirectory(hydrogens)
 add_subdirectory(importpqr)
 add_subdirectory(insertdna)
@@ -249,7 +251,7 @@ target_sources(QtPlugins PRIVATE
 
 avogadro_add_library(QtPlugins ${HEADERS} ${SOURCES})
 target_link_libraries(QtPlugins PUBLIC Qt::Core
-  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} Avogadro::QtGui)
+  PRIVATE ${AvogadroLibs_STATIC_PLUGINS} Avogadro::QtGui Avogadro::Calc)
 
 if(QT_VERSION EQUAL 6)
   target_link_libraries(QtPlugins PRIVATE Qt6::OpenGLWidgets Qt6::Network)

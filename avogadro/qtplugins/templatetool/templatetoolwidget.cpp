@@ -8,6 +8,7 @@
 
 #include <avogadro/core/elements.h>
 
+#include <avogadro/qtgui/insertfragmentdialog.h>
 #include <avogadro/qtgui/periodictableview.h>
 
 #include <algorithm>
@@ -39,29 +40,18 @@ enum LigandType
 };
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
-  : QWidget(parent_), m_ui(new Ui::TemplateToolWidget), m_elementSelector(NULL),
-    m_currentElement(26)
+  : QWidget(parent_), m_ui(new Ui::TemplateToolWidget),
+    m_elementSelector(nullptr), m_fragmentDialog(nullptr), m_currentElement(26)
 {
   m_ui->setupUi(this);
 
   buildElements();
 
-  connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(elementChanged(int)));
-
-  connect(m_ui->coordinationComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(coordinationChanged(int)));
-
-  connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(typeChanged(int)));
-
-  connect(m_ui->ligandComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(ligandChanged(int)));
-
-  // Show iron at startup.
-  selectElement(26);
-  // default coordination = octahedral
-  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/6-oct.png"));
+  // Get default options
+  QSettings settings;
+  settings.beginGroup("templatetool");
+  unsigned int currentElement = settings.value("element", 26).toUInt();
+  selectElement(currentElement);
 
   // In the same order of the coordinationComboBox
   // append ".png" for the icon and ".cjson" for the template
@@ -77,7 +67,33 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
             << "7-pbp"
             << "8-sqa";
 
-  typeChanged(LigandType::Monodentate);
+  connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(elementChanged(int)));
+
+  connect(m_ui->coordinationComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(coordinationChanged(int)));
+
+  connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(typeChanged(int)));
+
+  connect(m_ui->ligandComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(ligandChanged(int)));
+
+  // default coordination = octahedral
+  QString currentCoord = settings.value("coordination", "6-oct").toString();
+  int index = m_centers.indexOf(currentCoord);
+  if (index < 0)
+    index = 7; // octahedral
+  m_ui->coordinationComboBox->setCurrentIndex(index);
+
+  // update the preview icon
+  QString iconPath = QString(":/icons/centers/%1.png").arg(currentCoord);
+  m_ui->centerPreview->setIcon(QIcon(iconPath));
+
+  unsigned int ligandType = settings.value("ligandType", 0).toUInt();
+  m_ui->typeComboBox->setCurrentIndex(ligandType);
+  // update the ligand combo box
+  typeChanged(ligandType);
 }
 
 TemplateToolWidget::~TemplateToolWidget()
@@ -140,6 +156,10 @@ QString TemplateToolWidget::ligandString() const
   // tell us if we are using the clipboard
   if (m_ui->typeComboBox->currentIndex() == LigandType::Clipboard)
     return "Clipboard";
+  // check if it's "other"
+  if (m_ligands.at(m_ui->ligandComboBox->currentIndex()).endsWith("other"))
+    return m_ligandPath;
+
   return m_ligands.at(m_ui->ligandComboBox->currentIndex());
 }
 
@@ -150,6 +170,9 @@ void TemplateToolWidget::coordinationChanged(int index)
 
   // get the icon name
   QString iconName = m_centers[index];
+  QSettings settings;
+  settings.setValue("templatetool/coordination", iconName);
+
   m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
 }
 
@@ -160,11 +183,79 @@ void TemplateToolWidget::ligandChanged(int index)
 
   // get the icon name
   QString iconName = m_ligands[index];
+
+  // check if it's "other"
+  if (iconName.endsWith("other")) {
+
+    // figure out the ligand type and the resulting path
+    // to the fragment files
+    int ligandType = m_ui->typeComboBox->currentIndex();
+    QString path = "fragments";
+
+    switch (ligandType) {
+      case LigandType::Monodentate:
+        path += "/ligands/monodentate";
+        break;
+      case LigandType::Bidentate:
+        path += "/ligands/bidentate";
+        break;
+      case LigandType::Tridentate:
+        path += "/ligands/tridentate";
+        break;
+      case LigandType::Tetradentate:
+        path += "/ligands/tetradentate";
+        break;
+      case LigandType::Hexadentate:
+        path += "/ligands/hexadentate";
+        break;
+      case LigandType::Haptic:
+        path += "/ligands/haptic";
+        break;
+      case LigandType::FunctionalGroup:
+        path += "/groups";
+        break;
+    }
+
+    if (m_fragmentDialog != nullptr)
+      m_fragmentDialog->deleteLater();
+
+    m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
+    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
+            SLOT(otherLigandInsert(const QString&, bool)));
+    m_fragmentDialog->show();
+    return;
+  }
+
   m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+}
+
+void TemplateToolWidget::otherLigandInsert(const QString& fileName,
+                                           bool crystal)
+{
+  if (m_fragmentDialog == nullptr)
+    return;
+
+  // get the ligand name
+  QString ligandName = m_fragmentDialog->fileName();
+  m_ligandPath = ligandName;
+
+  m_fragmentDialog->hide();
+  // it will be deleted later
+
+  // update the icon from the filename (so check for .png)
+  QString iconName = fileName;
+  if (iconName.endsWith(".cjson"))
+    iconName.chop(6);
+  iconName += ".png";
+  m_ui->ligandPreview->setIcon(QIcon(iconName));
 }
 
 void TemplateToolWidget::typeChanged(int index)
 {
+  QSettings settings;
+  settings.beginGroup("templatetool");
+  settings.setValue("ligandType", index);
+
   m_selectedUIDs.clear();
   m_ui->ligandComboBox->clear();
   m_ligands = QStringList();
@@ -176,50 +267,56 @@ void TemplateToolWidget::typeChanged(int index)
                   << "carbonyl"
                   << "cyano"
                   << "phosphine"
-                  << "thiol";
+                  << "thiol" << tr("Other…");
       m_ligands << "1-ammine"
                 << "1-aqua"
                 << "1-carbonyl"
                 << "1-cyano"
                 << "1-phosphine"
-                << "1-thiol";
+                << "1-thiol"
+                << "1-other";
       m_denticity = 1;
       break;
     case LigandType::Bidentate: // Bidentate
       ligandNames << "acetylacetonate"
                   << "bipyridine"
-                  << "ethylenediamine";
+                  << "ethylenediamine" << tr("Other…");
       m_ligands << "2-acetylacetonate"
                 << "2-bipyridine"
-                << "2-ethylenediamine";
+                << "2-ethylenediamine"
+                << "2-other";
       m_denticity = 2;
       break;
     case LigandType::Tridentate: // Tridentate
-      ligandNames << "terpyridine";
-      m_ligands << "3-terpyridine";
+      ligandNames << "terpyridine" << tr("Other…");
+      m_ligands << "3-terpyridine"
+                << "3-other";
       m_denticity = 3;
       break;
     case LigandType::Tetradentate: // Tetradentate
       ligandNames << "phthalocyanine"
                   << "porphin"
-                  << "salen";
+                  << "salen" << tr("Other…");
       m_ligands << "4-phthalocyanine"
                 << "4-porphin"
-                << "4-salen";
+                << "4-salen"
+                << "4-other";
       m_denticity = 4;
       break;
     case LigandType::Hexadentate: // Hexadentate
-      ligandNames << "edta";
-      m_ligands << "6-edta";
+      ligandNames << "edta" << tr("Other…");
+      m_ligands << "6-edta"
+                << "6-other";
       m_denticity = 6;
       break;
     case LigandType::Haptic: // Haptic
       ligandNames << "η2-ethylene"
                   << "η5-cyclopentyl"
-                  << "η6-benzene";
+                  << "η6-benzene" << tr("Other…");
       m_ligands << "eta2-ethylene"
                 << "eta5-cyclopentyl"
-                << "eta6-benzene";
+                << "eta6-benzene"
+                << "eta-other";
       m_denticity = 1;
       break;
     case LigandType::FunctionalGroup: // Functional Groups
@@ -228,8 +325,10 @@ void TemplateToolWidget::typeChanged(int index)
                   << "ester"
                   << "nitro"
                   << "phenyl"
-                  << "sulfonate";
+                  << "sulfonate" << tr("Other…");
       m_ligands = ligandNames;
+      // make sure last one is "other"
+      m_ligands.last() = "1-other";
       m_denticity = 1;
       break;
     case LigandType::Clipboard: // Clipboard
@@ -261,6 +360,9 @@ void TemplateToolWidget::elementChanged(int index)
       m_currentElement = static_cast<unsigned char>(itemData.toInt());
     }
   }
+
+  QSettings settings;
+  settings.setValue("templatetool/element", m_currentElement);
 }
 
 void TemplateToolWidget::updateElementCombo()
@@ -285,7 +387,7 @@ void TemplateToolWidget::updateElementCombo()
       atomicNum);
   }
   m_ui->elementComboBox->insertSeparator(m_ui->elementComboBox->count());
-  m_ui->elementComboBox->addItem(tr("Other..."), ELEMENT_SELECTOR_TAG);
+  m_ui->elementComboBox->addItem(tr("Other…"), ELEMENT_SELECTOR_TAG);
 
   // Reset the element if it still exists
   selectElement(static_cast<unsigned char>(

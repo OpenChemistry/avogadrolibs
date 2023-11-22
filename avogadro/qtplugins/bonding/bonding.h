@@ -40,6 +40,11 @@ public:
 
   QStringList menuPath(QAction* action) const override;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 

@@ -12,6 +12,7 @@
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
@@ -81,7 +82,18 @@ bool isBooleanArray(json& j)
 
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
-  json jsonRoot = json::parse(file, nullptr, false);
+  return deserialize(file, molecule, true);
+}
+
+bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
+                              bool isJson)
+{
+  json jsonRoot;
+  if (isJson)
+    jsonRoot = json::parse(file, nullptr, false);
+  else // msgpack
+    jsonRoot = json::from_msgpack(file);
+
   if (jsonRoot.is_discarded()) {
     appendError("Error reading CJSON file.");
     return false;
@@ -302,6 +314,17 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
     }
     if (unitCellObject != nullptr)
       molecule.setUnitCell(unitCellObject);
+
+    // check for Hall number if present
+    if (unitCell["hallNumber"].is_number()) {
+      auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
+      if (hallNumber > 0 && hallNumber < 531)
+        molecule.setHallNumber(hallNumber);
+    } else if (unitCell["spaceGroup"].is_string()) {
+      auto hallNumber = Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
+      if (hallNumber != 0)
+        molecule.setHallNumber(hallNumber);
+    }
   }
 
   json fractional = atoms["coords"]["3dFractional"];
@@ -623,6 +646,12 @@ bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 
 bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
 {
+  return serialize(file, molecule, true);
+}
+
+bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
+                            bool isJson)
+{
   json opts;
   if (!options().empty())
     opts = json::parse(options(), nullptr, false);
@@ -698,6 +727,11 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     vectors.push_back(molecule.unitCell()->cVector().y());
     vectors.push_back(molecule.unitCell()->cVector().z());
     unitCell["cellVectors"] = vectors;
+
+    // write the Hall number and space group
+    unitCell["hallNumber"] = molecule.hallNumber();
+    unitCell["spaceGroup"] =
+      Core::SpaceGroups::international(molecule.hallNumber());
 
     root["unitCell"] = unitCell;
   }
@@ -998,7 +1032,8 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
       modes.push_back(static_cast<unsigned int>(i) + 1);
       freqs.push_back(molecule.vibrationFrequencies()[i]);
       inten.push_back(molecule.vibrationIRIntensities()[i]);
-      raman.push_back(molecule.vibrationRamanIntensities()[i]);
+      if (molecule.vibrationRamanIntensities().size() > i)
+        raman.push_back(molecule.vibrationRamanIntensities()[i]);
       Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
       json eigenVector;
       for (auto pos : atomDisplacements) {
@@ -1011,7 +1046,8 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     root["vibrations"]["modes"] = modes;
     root["vibrations"]["frequencies"] = freqs;
     root["vibrations"]["intensities"] = inten;
-    root["vibrations"]["ramanIntensities"] = raman;
+    if (molecule.vibrationRamanIntensities().size() > 0)
+      root["vibrations"]["ramanIntensities"] = raman;
     root["vibrations"]["eigenVectors"] = eigenVectors;
   }
 
@@ -1042,8 +1078,11 @@ bool CjsonFormat::write(std::ostream& file, const Molecule& molecule)
     root["layer"]["settings"][settings.first] = setting;
   }
 
-  // Write out the file, use a two space indent to "pretty print".
-  file << std::setw(2) << root;
+  if (isJson)
+    file << std::setw(2) << root;
+  else { // write msgpack
+    json::to_msgpack(root, file);
+  }
 
   return true;
 }

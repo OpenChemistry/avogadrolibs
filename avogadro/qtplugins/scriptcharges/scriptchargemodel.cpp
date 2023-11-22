@@ -277,7 +277,7 @@ void ScriptChargeModel::readMetaData()
   if (!parseString(metaData, "identifier", identifierTmp)) {
     qWarning() << "Error parsing metadata for charge script:"
                << scriptFilePath() << "\n"
-               << "Error parsing required member 'operations'"
+               << "Error parsing required member 'identifier'"
                << "\n"
                << output;
     return;

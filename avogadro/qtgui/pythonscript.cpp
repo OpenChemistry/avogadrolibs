@@ -221,6 +221,35 @@ void PythonScript::processFinished(int, QProcess::ExitStatus)
   emit finished();
 }
 
+void PythonScript::asyncTerminate()
+{
+  if (m_process != nullptr) {
+    disconnect(m_process, nullptr, nullptr, nullptr);
+    m_process->kill();
+    m_process->deleteLater();
+    m_process = nullptr;
+  }
+}
+
+QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
+{
+  if (m_process == nullptr) {
+    return QByteArray(); // wait
+  }
+
+  m_process->write(input);
+  QByteArray buffer;
+
+  bool ready = m_process->waitForReadyRead();
+  if (ready) {
+    while (m_process->canReadLine()) {
+      buffer += m_process->readLine();
+    }
+  }
+
+  return buffer;
+}
+
 QByteArray PythonScript::asyncResponse()
 {
   if (m_process == nullptr || m_process->state() == QProcess::Running) {

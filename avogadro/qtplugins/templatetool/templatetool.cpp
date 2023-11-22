@@ -80,6 +80,14 @@ TemplateTool::TemplateTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Template"));
   m_activateAction->setIcon(QIcon(":/icons/template.png"));
+  m_activateAction->setToolTip(
+    tr("Template Tool\n\n"
+       "Insert fragments, including metal centers.\n"
+       "Select an element and coordination geometry,"
+       "then click to insert a fragment.\n\n"
+       "Select a ligand or functional group and click"
+       "on a hydrogen atom to attach it."));
+
   reset();
 }
 
@@ -408,8 +416,15 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
         return;
 
     } else {
-      QFile templ(":/templates/ligands/" + m_toolWidget->ligandString() +
-                  ".cjson");
+      QString path;
+      if (m_toolWidget->ligandString().endsWith(".cjson")) {
+        // we already have the full path .. from the insert browser
+        path = m_toolWidget->ligandString();
+      } else {
+        path = ":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson";
+      }
+
+      QFile templ(path);
       if (!templ.open(QFile::ReadOnly | QFile::Text))
         return;
       QTextStream templateStream(&templ);

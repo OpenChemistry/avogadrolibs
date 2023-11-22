@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <memory>
 
-
 namespace Avogadro::Calc {
 
 ChargeManager& ChargeManager::instance()
@@ -88,7 +87,7 @@ ChargeManager::ChargeManager()
 ChargeManager::~ChargeManager()
 {
   // Delete the models that were loaded.
-  for (auto & m_model : m_models) {
+  for (auto& m_model : m_models) {
     delete m_model;
   }
   m_models.clear();
@@ -102,7 +101,6 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
 
   // check our models for compatibility
   for (auto m_model : m_models) {
-
     // We check that every element in the molecule
     // is handled by the model
     auto mask = m_model->elements() & molecule.elements();
@@ -113,8 +111,8 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   return identifiers;
 }
 
-MatrixX ChargeManager::partialCharges(
-  const std::string& identifier, Core::Molecule& molecule) const
+MatrixX ChargeManager::partialCharges(const std::string& identifier,
+                                      Core::Molecule& molecule) const
 {
   // first check if the type is found in the molecule
   // (i.e., read from a file not computed dynamically)
@@ -181,4 +179,4 @@ Core::Array<double> ChargeManager::potentials(
   return model->potentials(molecule, points);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Calc

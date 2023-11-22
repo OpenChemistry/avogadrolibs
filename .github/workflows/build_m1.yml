@@ -8,6 +8,10 @@ env:
   MACOS_TARGET: 10.12
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: ${{ matrix.config.name }}
