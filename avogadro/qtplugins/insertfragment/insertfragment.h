@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2020 Geoffrey R. Hutchison
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_INSERTFRAGMENT_H
@@ -27,14 +16,14 @@ namespace Avogadro {
 namespace Io {
 class FileFormat;
 }
-namespace QtPlugins {
-class InsertFragmentDialog;  
+namespace QtGui {
+class InsertFragmentDialog;
 }
 
 namespace QtPlugins {
 
 /**
- * @brief Load single-line molecule descriptors through an input dialog.
+ * @brief Load molecules through a tree browser.
  */
 class InsertFragment : public QtGui::ExtensionPlugin
 {
@@ -53,12 +42,12 @@ public slots:
 
 private slots:
   void showDialog();
-  void performInsert(const QString &fileName, bool crystal);
+  void performInsert(const QString& fileName, bool crystal);
 
 private:
   QList<QAction*> m_actions;
-  InsertFragmentDialog* m_moleculeDialog;
-  InsertFragmentDialog* m_crystalDialog;
+  QtGui::InsertFragmentDialog* m_moleculeDialog;
+  QtGui::InsertFragmentDialog* m_crystalDialog;
   /// Maps identifier to extension:
   QMap<QString, std::string> m_formats;
 

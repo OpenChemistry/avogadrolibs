@@ -9,8 +9,7 @@
 
 #include <limits>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 namespace {
 // Internal id used for queue model indices
@@ -196,7 +195,7 @@ QModelIndex MoleQueueQueueListModel::index(int row, int column,
 QModelIndex MoleQueueQueueListModel::parent(const QModelIndex& child) const
 {
   if (child.isValid()) {
-    const quint32 childId = static_cast<quint32>(child.internalId());
+    const auto childId = static_cast<quint32>(child.internalId());
 
     // Child is queue -- return invalid parent.
     if (childId == QueueInternalId)
@@ -356,5 +355,4 @@ quint32 MoleQueueQueueListModel::nextUid()
   return m_uidCounter;
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

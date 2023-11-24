@@ -1,23 +1,12 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_GAUSSIANSET_H
 #define AVOGADRO_CORE_GAUSSIANSET_H
+
+#include "avogadrocoreexport.h"
 
 #include "basisset.h"
 
@@ -183,6 +172,13 @@ public:
    * @return True on success, false on failure.
    */
   bool generateDensityMatrix();
+
+  /**
+   * @brief Generate the spin density matrix if we have the required
+   * information.
+   * @return True on success, false on failure.
+   */
+  bool generateSpinDensityMatrix();
 
   /**
    * @return The number of molecular orbitals in the GaussianSet.
@@ -368,22 +364,9 @@ private:
   ScfType m_scfType;
 
   std::string m_functionalName;
-
-  /**
-   * @brief Generate the density matrix if we have the required information.
-   * @return True on success, false on failure.
-   */
-  bool generateDensity();
-
-  /**
-   * @brief Generate the spin density matrix if we have the required
-   * information.
-   * @return True on success, false on failure.
-   */
-  bool generateSpinDensity();
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif

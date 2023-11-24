@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "scenepluginmodel.h"
 
 #include "sceneplugin.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ScenePluginModel::ScenePluginModel(QObject* parent_)
   : QAbstractItemModel(parent_)
@@ -57,7 +45,7 @@ bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
   if (!index_.isValid() || index_.column() > 1)
     return false;
 
-  ScenePlugin* item =
+  auto* item =
     qobject_cast<ScenePlugin*>(static_cast<QObject*>(index_.internalPointer()));
   if (!item)
     return false;
@@ -82,8 +70,8 @@ QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
   if (!index_.isValid() || index_.column() > 1)
     return QVariant();
 
-  QObject* object = static_cast<QObject*>(index_.internalPointer());
-  ScenePlugin* item = qobject_cast<ScenePlugin*>(object);
+  auto* object = static_cast<QObject*>(index_.internalPointer());
+  auto* item = qobject_cast<ScenePlugin*>(object);
   if (!item)
     return QVariant();
 
@@ -152,7 +140,7 @@ void ScenePluginModel::removeItem(ScenePlugin* item)
 
 void ScenePluginModel::itemChanged()
 {
-  ScenePlugin* item = qobject_cast<ScenePlugin*>(sender());
+  auto* item = qobject_cast<ScenePlugin*>(sender());
   if (item) {
     int row = m_scenePlugins.indexOf(item);
     if (row >= 0)
@@ -160,5 +148,4 @@ void ScenePluginModel::itemChanged()
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

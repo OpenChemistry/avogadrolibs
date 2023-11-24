@@ -8,16 +8,14 @@
 
 #include <avogadro/core/molecule.h>
 
-#include <QtCore/QObject>
-#include <QtWidgets/QUndoCommand>
-#include <QtWidgets/QUndoStack>
+#include <QObject>
+#include <QUndoCommand>
+#include <QUndoStack>
 #include <cassert>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
-using Core::Layer;
 using Core::LayerData;
 using Core::MoleculeInfo;
 using std::map;
@@ -35,6 +33,19 @@ public:
   {
     m_visible = true;
     m_locked = false;
+
+    const auto activeLayer = m_moleculeInfo->layer.activeLayer();
+    // we loop through the layers to find enabled settings for the active layer
+    for (const auto& names : m_moleculeInfo->enable) {
+      bool value = names.second[activeLayer];
+      m_enable[names.first] = value;
+    }
+    // now we do the same thing for settings
+    for (const auto& names : m_moleculeInfo->settings) {
+      auto value = names.second[activeLayer];
+      m_settings[names.first] = value;
+    }
+
   }
 
   void redo() override
@@ -42,8 +53,13 @@ public:
     m_moleculeInfo->visible.push_back(m_visible);
     m_moleculeInfo->locked.push_back(m_locked);
 
-    for (auto& enable : m_enable) {
+    // it's confusing to create an empty layer
+    //  .. so we just create a layer that matches the active layer
+    for (const auto& enable : m_enable) {
       m_moleculeInfo->enable[enable.first].push_back(enable.second);
+    }
+    for (const auto& settings : m_settings) {
+      m_moleculeInfo->settings[settings.first].push_back(settings.second);
     }
 
     m_moleculeInfo->layer.addLayer();
@@ -181,7 +197,7 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
     rwmolecule->removeAtom(atom);
   }
   auto& molecule = m_molToInfo[m_activeMolecule];
-  RemoveLayerCommand* comm = new RemoveLayerCommand(molecule, layer);
+  auto* comm = new RemoveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Remove Layer Info"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
@@ -193,7 +209,7 @@ void RWLayerManager::addLayer(RWMolecule* rwmolecule)
   assert(rwmolecule != nullptr);
   rwmolecule->undoStack().beginMacro(QObject::tr("Add Layer"));
   auto& molecule = m_molToInfo[m_activeMolecule];
-  AddLayerCommand* comm = new AddLayerCommand(molecule);
+  auto* comm = new AddLayerCommand(molecule);
   comm->setText(QObject::tr("Add Layer Info"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
@@ -203,7 +219,7 @@ void RWLayerManager::setActiveLayer(size_t layer, RWMolecule* rwmolecule)
 {
   rwmolecule->undoStack().beginMacro(QObject::tr("Change Layer"));
   auto& molecule = m_molToInfo[m_activeMolecule];
-  ActiveLayerCommand* comm = new ActiveLayerCommand(molecule, layer);
+  auto* comm = new ActiveLayerCommand(molecule, layer);
   comm->setText(QObject::tr("Change Layer"));
   rwmolecule->undoStack().push(comm);
   rwmolecule->undoStack().endMacro();
@@ -242,9 +258,10 @@ void RWLayerManager::addMolecule(const Core::Molecule* mol)
 
 Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
 {
-  if (m_activeMolecule == nullptr) {
+  if (m_activeMolecule == nullptr || m_molToInfo[m_activeMolecule] == nullptr) {
     return Array<std::pair<size_t, string>>();
   }
+
   auto& molecule = m_molToInfo[m_activeMolecule];
   size_t qttyLayer = molecule->layer.layerCount();
   vector<set<string>> active(qttyLayer, set<string>());
@@ -268,5 +285,4 @@ Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
   return result;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

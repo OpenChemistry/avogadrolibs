@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_VTKAVOGADROACTOR_H
@@ -42,23 +31,23 @@ public:
   /** Required type macro. */
   vtkTypeMacro(vtkAvogadroActor, vtkActor)
 
-    /** Print the state of the object. */
-    void PrintSelf(ostream& os, vtkIndent indent);
+  /** Print the state of the object. */
+  void PrintSelf(ostream& os, vtkIndent indent) override;
 
   /** Render the opaque geometry. */
-  int RenderOpaqueGeometry(vtkViewport* viewport);
+  int RenderOpaqueGeometry(vtkViewport* viewport) override;
 
   /** Render the translucent geometry. */
-  int RenderTranslucentPolygonalGeometry(vtkViewport* viewport);
+  int RenderTranslucentPolygonalGeometry(vtkViewport* viewport) override;
 
   /** Does the actor have translucent geometry? */
-  int HasTranslucentPolygonalGeometry();
+  int HasTranslucentPolygonalGeometry() override;
 
   /**
    * Get the bounds for this Actor as (Xmin,Xmax,Ymin,Ymax,Zmin,Zmax). (The
    * method GetBounds(double bounds[6]) is available from the superclass.)
    */
-  double* GetBounds();
+  double* GetBounds() override;
 
   /** Set the scene on the actor, the actor assumes ownership of the scene. */
   void setScene(Avogadro::Rendering::Scene* scene);

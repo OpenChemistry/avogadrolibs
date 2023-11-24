@@ -11,8 +11,7 @@
 #include <QColorDialog>
 #include <QPainter>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 ColorButton::ColorButton(QWidget* parent)
   : QAbstractButton(parent), m_color(Qt::white), m_title("")
@@ -86,5 +85,4 @@ bool ColorButton::event(QEvent* e)
   return QAbstractButton::event(e);
 }
 
-} // namespace QtGui
 } // namespace Avogadro

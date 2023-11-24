@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_SCENEPLUGIN_H
@@ -56,9 +45,6 @@ public:
   /**
    * Process the supplied atom, and add the necessary primitives to the scene.
    */
-  virtual void process(const Core::Molecule& molecule,
-                       Rendering::GroupNode& node);
-
   virtual void process(const QtGui::Molecule& molecule,
                        Rendering::GroupNode& node);
 
@@ -92,6 +78,13 @@ public:
   virtual void setEnabled(bool enable);
 
   virtual QWidget* setupWidget();
+
+  /**
+  * Returns if this plugin should be considered in the default behavior,
+  * or it should reset to true or false.
+  */
+  enum DefaultBehavior { Ignore, False, True };
+  virtual DefaultBehavior defaultBehavior() const { return Ignore; }
 
 signals:
   void drawablesChanged();

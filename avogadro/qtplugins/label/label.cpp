@@ -5,10 +5,13 @@
 
 #include "label.h"
 
+#include <iostream>
+#include <sstream>
+
 #include <avogadro/core/elements.h>
-#include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
+#include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/scene.h>
 #include <avogadro/rendering/textlabel3d.h>
@@ -21,8 +24,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::Rendering::TextLabel3D;
 using Core::Array;
@@ -46,7 +48,7 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
   tprop.setColorRgb(color.data());
 
-  TextLabel3D* label = new TextLabel3D;
+  auto* label = new TextLabel3D;
   label->setText(text);
   label->setRenderPass(Rendering::TranslucentPass);
   label->setTextProperties(tprop);
@@ -58,7 +60,7 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
 
 struct LayerLabel : Core::LayerData
 {
-  enum LabelOptions : char
+  enum LabelOptions
   {
     None = 0x00,
     Index = 0x01,
@@ -66,8 +68,8 @@ struct LayerLabel : Core::LayerData
     Custom = 0x04,
     Ordinal = 0x08
   };
-  char atomOptions;
-  char residueOptions;
+  unsigned short atomOptions;
+  unsigned short residueOptions;
 
   QWidget* widget;
   float radiusScalar;
@@ -77,39 +79,39 @@ struct LayerLabel : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    atomOptions = char(settings.value("label/atomoptions", 0x02).toInt());
-    residueOptions = char(settings.value("label/residueoptions", 0x00).toInt());
+    atomOptions = settings.value("label/atomoptions", 0x02).toInt();
+    residueOptions = settings.value("label/residueoptions", 0x00).toInt();
     radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
 
-    QColor q_color =
+    auto q_color =
       settings.value("label/color", QColor(Qt::white)).value<QColor>();
     color[0] = static_cast<unsigned char>(q_color.red());
     color[1] = static_cast<unsigned char>(q_color.green());
     color[2] = static_cast<unsigned char>(q_color.blue());
   }
 
-  ~LayerLabel()
+  ~LayerLabel() override
   {
     if (widget)
       widget->deleteLater();
   }
 
-  std::string serialize() override final
+  std::string serialize() final
   {
-    std::string aux = (const char*)atomOptions;
-    std::string aux2 = (const char*)residueOptions;
-    return aux + " " + aux2 + " " + std::to_string(radiusScalar) + " " +
-           std::to_string(color[0]) + " " + std::to_string(color[1]) + " " +
-           std::to_string(color[2]);
+    std::stringstream output;
+    output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
+           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2];
+    return output.str();
   }
-  void deserialize(std::string text) override final
+
+  void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
     ss >> aux;
-    atomOptions = aux[0];
+    atomOptions = std::stoi(aux);
     ss >> aux;
-    residueOptions = aux[0];
+    residueOptions = std::stoi(aux);
     ss >> aux;
     radiusScalar = std::stof(aux);
     ss >> aux;
@@ -124,17 +126,17 @@ struct LayerLabel : Core::LayerData
   {
     if (!widget) {
       widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
-      QVBoxLayout* v = new QVBoxLayout;
+      auto* v = new QVBoxLayout;
 
-      QFormLayout* form = new QFormLayout;
+      auto* form = new QFormLayout;
       // color button
-      QtGui::ColorButton* colorButton = new QtGui::ColorButton;
+      auto* colorButton = new QtGui::ColorButton;
       QObject::connect(colorButton, SIGNAL(colorChanged(const QColor&)), slot,
                        SLOT(setColor(const QColor&)));
       form->addRow(QObject::tr("Color:"), colorButton);
 
       // radius scalar
-      QDoubleSpinBox* spin = new QDoubleSpinBox;
+      auto* spin = new QDoubleSpinBox;
       spin->setRange(0.0, 1.5);
       spin->setSingleStep(0.1);
       spin->setDecimals(1);
@@ -143,11 +145,10 @@ struct LayerLabel : Core::LayerData
                        SLOT(setRadiusScalar(double)));
       form->addRow(QObject::tr("Distance from center:"), spin);
 
-      QComboBox* atom = new QComboBox;
+      auto* atom = new QComboBox;
       atom->setObjectName("atom");
       char elements[] = { None, Index, Name, Custom, Ordinal };
-      for (unsigned char i = 0; i < 5; ++i) {
-        char option = elements[i];
+      for (char option : elements) {
         if (option == 0) {
           atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
@@ -168,8 +169,8 @@ struct LayerLabel : Core::LayerData
             val |= LabelOptions::Name;
           }
           if (option & LabelOptions::Ordinal) {
-            text << ((text.size() == 0) ? QObject::tr("Element & Ordinal")
-                                        : QObject::tr("El.&Or."));
+            text << ((text.size() == 0) ? QObject::tr("Element & Number")
+                                        : QObject::tr("El.&No."));
             val |= LabelOptions::Ordinal;
           }
           QString join = QObject::tr(", ");
@@ -181,11 +182,11 @@ struct LayerLabel : Core::LayerData
       }
       QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(atomLabelType(int)));
-      int index = atom->findData(int(atomOptions));
+
       atom->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Atom Label:"), atom);
 
-      QComboBox* residue = new QComboBox;
+      auto* residue = new QComboBox;
       residue->setObjectName("residue");
       for (char i = 0x00; i < std::pow(2, 2); ++i) {
         if (i == 0) {
@@ -212,7 +213,7 @@ struct LayerLabel : Core::LayerData
       }
       QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(residueLabelType(int)));
-      index = residue->findData(int(residueOptions));
+
       residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
 
@@ -230,11 +231,11 @@ Label::Label(QObject* parent_) : QtGui::ScenePlugin(parent_)
 
 Label::~Label() {}
 
-void Label::process(const Core::Molecule& molecule, Rendering::GroupNode& node)
+void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
   m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
-    LayerLabel& interface = m_layerManager.getSetting<LayerLabel>(layer);
+    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
     if (interface.residueOptions) {
       processResidue(molecule, node, layer);
     }
@@ -247,7 +248,7 @@ void Label::process(const Core::Molecule& molecule, Rendering::GroupNode& node)
 void Label::processResidue(const Core::Molecule& molecule,
                            Rendering::GroupNode& node, size_t layer)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   for (const auto& residue : molecule.residues()) {
@@ -267,7 +268,7 @@ void Label::processResidue(const Core::Molecule& molecule,
     float radius = 0.0f;
     for (const auto& atom : atoms) {
       unsigned char atomicNumber = atom.atomicNumber();
-      float auxR = static_cast<float>(Elements::radiusVDW(atomicNumber));
+      auto auxR = static_cast<float>(Elements::radiusVDW(atomicNumber));
       auxR += (atom.position3d().cast<float>() - pos).norm();
       if (auxR > radius) {
         auxR = radius;
@@ -291,7 +292,7 @@ void Label::processResidue(const Core::Molecule& molecule,
 void Label::processAtom(const Core::Molecule& molecule,
                         Rendering::GroupNode& node, size_t layer)
 {
-  GeometryNode* geometry = new GeometryNode;
+  auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   std::map<unsigned char, size_t> atomCount;
@@ -309,13 +310,13 @@ void Label::processAtom(const Core::Molecule& molecule,
       continue;
     }
 
-    LayerLabel& interface = m_layerManager.getSetting<LayerLabel>(layer);
+    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
     std::string text = "";
     if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + atom.label();
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
     }
     if (interface.atomOptions & LayerLabel::LabelOptions::Name) {
       text +=
@@ -340,7 +341,7 @@ void Label::processAtom(const Core::Molecule& molecule,
 
 void Label::setColor(const QColor& color)
 {
-  LayerLabel& interface = m_layerManager.getSetting<LayerLabel>();
+  auto& interface = m_layerManager.getSetting<LayerLabel>();
 
   interface.color[0] = static_cast<unsigned char>(color.red());
   interface.color[1] = static_cast<unsigned char>(color.green());
@@ -354,7 +355,7 @@ void Label::setColor(const QColor& color)
 
 void Label::atomLabelType(int index)
 {
-  LayerLabel& interface = m_layerManager.getSetting<LayerLabel>();
+  auto& interface = m_layerManager.getSetting<LayerLabel>();
   interface.atomOptions = char(setupWidget()
                                  ->findChildren<QComboBox*>("atom")[0]
                                  ->itemData(index)
@@ -364,7 +365,7 @@ void Label::atomLabelType(int index)
 
 void Label::residueLabelType(int index)
 {
-  LayerLabel& interface = m_layerManager.getSetting<LayerLabel>();
+  auto& interface = m_layerManager.getSetting<LayerLabel>();
   interface.residueOptions = char(setupWidget()
                                     ->findChildren<QComboBox*>("residue")[0]
                                     ->itemData(index)
@@ -374,7 +375,7 @@ void Label::residueLabelType(int index)
 
 void Label::setRadiusScalar(double radius)
 {
-  LayerLabel& interface = m_layerManager.getSetting<LayerLabel>();
+  auto& interface = m_layerManager.getSetting<LayerLabel>();
   interface.radiusScalar = float(radius);
   emit drawablesChanged();
 
@@ -384,10 +385,9 @@ void Label::setRadiusScalar(double radius)
 
 QWidget* Label::setupWidget()
 {
-  LayerLabel& interface = m_layerManager.getSetting<LayerLabel>();
+  auto& interface = m_layerManager.getSetting<LayerLabel>();
   interface.setupWidget(this);
   return interface.widget;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

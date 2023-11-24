@@ -22,8 +22,7 @@
 
 #include "qtaimwavefunction.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMWavefunction::QTAIMWavefunction()
 {
@@ -511,5 +510,4 @@ bool QTAIMWavefunction::initializeWithMoleculeProperties(QtGui::Molecule*& mol)
   return true;
 }
 
-} // end namespace QtPlugins
 } // end namespace Avogadro

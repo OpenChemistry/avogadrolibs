@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "meshgenerator.h"
@@ -24,26 +12,25 @@
 #include <QDebug>
 #include <QReadWriteLock>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Cube;
 using Core::Mesh;
 
 MeshGenerator::MeshGenerator(QObject* p)
-  : QThread(p), m_iso(0.0), m_reverseWinding(false), m_cube(nullptr),
+  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(false), m_cube(nullptr),
     m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
     m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
 }
 
 MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
-                             bool reverse, QObject* p)
-  : QThread(p), m_iso(0.0), m_reverseWinding(reverse), m_cube(nullptr),
+                             int passes, bool reverse, QObject* p)
+  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(reverse), m_cube(nullptr),
     m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
     m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
-  initialize(cube_, mesh_, iso);
+  initialize(cube_, mesh_, iso, passes);
 }
 
 MeshGenerator::~MeshGenerator()
@@ -51,13 +38,14 @@ MeshGenerator::~MeshGenerator()
 }
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
-                               bool reverse)
+                               int passes, bool reverse)
 {
   if (!cube_ || !mesh_)
     return false;
   m_cube = cube_;
   m_mesh = mesh_;
   m_iso = iso;
+  m_passes = passes;
   m_reverseWinding = reverse;
   if (!m_cube->lock()->tryLock()) {
     qDebug() << "Cannot get a read lock…";
@@ -114,11 +102,15 @@ void MeshGenerator::run()
   // Now we are done give all that memory back
   m_vertices.resize(0);
   m_normals.resize(0);
+
+  // Smooth out the mesh
+  m_mesh->smooth(m_passes);
 }
 
 void MeshGenerator::clear()
 {
   m_iso = 0.0;
+  m_passes = 6;
   m_cube = nullptr;
   m_mesh = nullptr;
   m_stepSize.setZero();
@@ -618,5 +610,4 @@ const int MeshGenerator::a2iTriangleConnectionTable[256][16] = {
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
 };
 
-} // End namespace QtGui
 } // End namespace Avogadro

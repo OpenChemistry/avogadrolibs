@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "geometrynode.h"
@@ -21,8 +10,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 using Core::Array;
 
@@ -38,17 +26,15 @@ GeometryNode::~GeometryNode()
 void GeometryNode::accept(Visitor& visitor)
 {
   visitor.visit(*this);
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    (*it)->accept(visitor);
+  for (auto & m_drawable : m_drawables) {
+    m_drawable->accept(visitor);
   }
 }
 
 void GeometryNode::addDrawable(Drawable* object)
 {
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    if (*it == object)
+  for (auto & m_drawable : m_drawables) {
+    if (m_drawable == object)
       return;
   }
   object->setParent(this);
@@ -59,7 +45,7 @@ bool GeometryNode::removeDrawable(Drawable* object)
 {
   if (!object)
     return false;
-  for (std::vector<Drawable*>::iterator it = m_drawables.begin();
+  for (auto it = m_drawables.begin();
        it != m_drawables.end(); ++it) {
     if (*it == object) {
       (*it)->setParent(nullptr);
@@ -81,19 +67,17 @@ Drawable* GeometryNode::drawable(size_t index)
 void GeometryNode::clearDrawables()
 {
   // Like all good parents, we destroy our children before we go...
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    delete (*it);
+  for (auto & m_drawable : m_drawables) {
+    delete m_drawable;
   }
   m_drawables.clear();
 }
 
 void GeometryNode::render(const Camera& camera)
 {
-  for (std::vector<Drawable*>::iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
-    if ((*it)->isVisible())
-      (*it)->render(camera);
+  for (auto & m_drawable : m_drawables) {
+    if (m_drawable->isVisible())
+      m_drawable->render(camera);
   }
 }
 
@@ -102,11 +86,10 @@ std::multimap<float, Identifier> GeometryNode::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  for (std::vector<Drawable*>::const_iterator it = m_drawables.begin();
-       it != m_drawables.end(); ++it) {
+  for (auto m_drawable : m_drawables) {
     std::multimap<float, Identifier> drawableHits;
-    if ((*it)->isVisible())
-      drawableHits = (*it)->hits(rayOrigin, rayEnd, rayDirection);
+    if (m_drawable->isVisible())
+      drawableHits = m_drawable->hits(rayOrigin, rayEnd, rayDirection);
     result.insert(drawableHits.begin(), drawableHits.end());
   }
 
@@ -116,15 +99,14 @@ std::multimap<float, Identifier> GeometryNode::hits(
 Array<Identifier> GeometryNode::areaHits(const Frustrum& f) const
 {
   Array<Identifier> result;
-  for (auto it = m_drawables.begin(); it != m_drawables.end(); ++it) {
+  for (auto m_drawable : m_drawables) {
     Array<Identifier> drawableHits;
-    if ((*it)->isVisible())
-      drawableHits = (*it)->areaHits(f);
+    if (m_drawable->isVisible())
+      drawableHits = m_drawable->areaHits(f);
     result.insert(result.end(), drawableHits.begin(), drawableHits.end());
   }
 
   return result;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

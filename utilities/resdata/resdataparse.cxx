@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
           output << "ResidueData " << currResidue << "Data(\"" << currResidue
                  << "\",\n"
                  << "// Atoms\n{";
-          int i = 0;
+          size_t i = 0;
           for (i = 0; i < atoms.size(); ++i) {
             output << "\"" << atoms[i] << "\"";
             if (i != atoms.size() - 1)
@@ -169,16 +169,16 @@ int main(int argc, char* argv[])
                       params[2].end());
 
         if (params[3] == "1") {
-          singleBonds.push_back(make_pair(params[1], params[2]));
+          singleBonds.emplace_back(params[1], params[2]);
         } else if (params[3] == "2") {
-          doubleBonds.push_back(make_pair(params[1], params[2]));
+          doubleBonds.emplace_back(params[1], params[2]);
         }
       }
     }
   }
 
   output << "std::map<std::string, ResidueData> residueDict = {\n";
-  for (int j = 0; j < residueClassNames.size(); ++j) {
+  for (size_t j = 0; j < residueClassNames.size(); ++j) {
     output << "{\"" << residueClassNames[j] << "\", " << residueClassNames[j]
            << "Data}";
     if (j != residueClassNames.size() - 1)

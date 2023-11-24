@@ -7,8 +7,7 @@
 
 #include <shared_mutex>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::shared_mutex;
 
@@ -57,5 +56,4 @@ void SharedMutex::unlockForWrite()
   d->lock.unlock();
 }
 
-} // namespace Core
 } // namespace Avogadro

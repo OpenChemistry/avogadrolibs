@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "shader.h"
 
 #include "avogadrogl.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 Shader::Shader(Type type_, const std::string& source_)
   : m_type(type_), m_handle(0), m_dirty(true), m_source(source_)
@@ -55,7 +43,7 @@ bool Shader::compile()
 
   GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
   GLuint handle_ = glCreateShader(type_);
-  const GLchar* source_ = static_cast<const GLchar*>(m_source.c_str());
+  const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
   glShaderSource(handle_, 1, &source_, nullptr);
   glCompileShader(handle_);
   GLint isCompiled;
@@ -92,5 +80,4 @@ void Shader::cleanup()
   m_dirty = false;
 }
 
-} // End Rendering namespace
 } // End Avogadro namespace

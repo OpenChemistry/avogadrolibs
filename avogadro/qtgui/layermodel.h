@@ -11,6 +11,7 @@
 
 #include <Eigen/Geometry>
 #include <QtCore/QAbstractItemModel>
+#include <QtGui/QIcon>
 
 namespace Avogadro {
 namespace QtGui {
@@ -67,7 +68,16 @@ public slots:
   void updateRows();
 
 private:
+  QString getTranslatedName(const std::string& name) const;
   size_t m_item;
+
+  QIcon m_plusIcon;
+  QIcon m_dotsIcon;
+  QIcon m_previewIcon;
+  QIcon m_previewDashedIcon;
+  QIcon m_lockIcon;
+  QIcon m_openLockIcon;
+  QIcon m_removeIcon;
 };
 
 } // namespace QtGui

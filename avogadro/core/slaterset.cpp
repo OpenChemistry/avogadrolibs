@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "slaterset.h"
@@ -27,8 +15,7 @@ using std::cout;
 using std::endl;
 using Eigen::SelfAdjointEigenSolver;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SlaterSet::SlaterSet() : m_initialized(false)
 {
@@ -104,7 +91,7 @@ void SlaterSet::initCalculation()
   m_normalized.resize(m_overlap.cols(), m_overlap.rows());
 
   SelfAdjointEigenSolver<MatrixX> s(m_overlap);
-  MatrixX p = s.eigenvectors();
+  const MatrixX& p = s.eigenvectors();
   MatrixX m =
     p * s.eigenvalues().array().inverse().array().sqrt().matrix().asDiagonal() *
     p.inverse();
@@ -158,8 +145,8 @@ void SlaterSet::initCalculation()
     }
   }
   // Convert the exponents into Angstroms
-  for (size_t i = 0; i < m_zetas.size(); ++i)
-    m_zetas[i] = m_zetas[i] / BOHR_TO_ANGSTROM_D;
+  for (double & m_zeta : m_zetas)
+    m_zeta = m_zeta / BOHR_TO_ANGSTROM_D;
 
   m_initialized = true;
 }
@@ -171,5 +158,4 @@ inline unsigned int SlaterSet::factorial(unsigned int n)
   return (n * factorial(n - 1));
 }
 
-} // End namespace Core
 } // End namespace Avogadro

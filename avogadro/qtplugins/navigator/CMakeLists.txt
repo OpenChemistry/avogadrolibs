@@ -19,4 +19,4 @@ avogadro_plugin(Navigator
   "${navigator_rcs}"
 )
 
-target_link_libraries(Navigator PRIVATE AvogadroQtOpenGL)
+target_link_libraries(Navigator PRIVATE Avogadro::QtOpenGL)

@@ -43,8 +43,7 @@ using namespace Eigen;
 #define HUGE_REAL_NUMBER 1.e20
 #define SMALL_GRADIENT_NORM 1.e-4
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
 {
@@ -119,9 +118,9 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   nuclearCriticalPointsFile.close();
 
   QList<QPair<QVector3D, qreal>> betaSpheres;
-  for (qint64 i = 0; i < nuclearCriticalPoints.length(); ++i) {
+  for (auto nuclearCriticalPoint : nuclearCriticalPoints) {
     QPair<QVector3D, qreal> thisBetaSphere;
-    thisBetaSphere.first = nuclearCriticalPoints.at(i);
+    thisBetaSphere.first = nuclearCriticalPoint;
     thisBetaSphere.second = 0.1;
     betaSpheres.append(thisBetaSphere);
   }
@@ -247,8 +246,8 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
       value.append(forwardPath.at(i).x());
     }
     value.append(result.x());
-    for (qint64 i = 0; i < backwardPath.length(); ++i) {
-      value.append(backwardPath.at(i).x());
+    for (auto i : backwardPath) {
+      value.append(i.x());
     }
     value.append(backwardEndpoint.x());
     value.append(forwardEndpoint.y());
@@ -256,8 +255,8 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
       value.append(forwardPath.at(i).y());
     }
     value.append(result.y());
-    for (qint64 i = 0; i < backwardPath.length(); ++i) {
-      value.append(backwardPath.at(i).y());
+    for (auto i : backwardPath) {
+      value.append(i.y());
     }
     value.append(backwardEndpoint.y());
     value.append(forwardEndpoint.z());
@@ -265,8 +264,8 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
       value.append(forwardPath.at(i).z());
     }
     value.append(result.z());
-    for (qint64 i = 0; i < backwardPath.length(); ++i) {
-      value.append(backwardPath.at(i).z());
+    for (auto i : backwardPath) {
+      value.append(i.z());
     }
     value.append(backwardEndpoint.z());
 
@@ -478,15 +477,15 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   QFile file;
   file.remove(tempFileName);
 
-  for (qint64 n = 0; n < results.length(); ++n) {
+  for (const auto & n : results) {
 
-    bool correctSignature = results.at(n).at(0).toBool();
+    bool correctSignature = n.at(0).toBool();
 
     if (correctSignature) {
 
-      QVector3D result(results.at(n).at(1).toReal(),
-                       results.at(n).at(2).toReal(),
-                       results.at(n).at(3).toReal());
+      QVector3D result(n.at(1).toReal(),
+                       n.at(2).toReal(),
+                       n.at(3).toReal());
 
       m_nuclearCriticalPoints.append(result);
     }
@@ -583,9 +582,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   file.remove(tempFileName);
   file.remove(nuclearCriticalPointsFileName);
 
-  for (qint64 i = 0; i < results.length(); ++i) {
-    QList<QVariant> thisCriticalPoint = results.at(i);
-
+  for (const auto& thisCriticalPoint : results) {
     bool success = thisCriticalPoint.at(0).toBool();
 
     if (success) {
@@ -730,18 +727,18 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   QFile file;
   file.remove(tempFileName);
 
-  for (qint64 n = 0; n < results.length(); ++n) {
+  for (const auto & n : results) {
 
     qint64 counter = 0;
-    bool correctSignature = results.at(n).at(counter).toBool();
+    bool correctSignature = n.at(counter).toBool();
     counter++;
 
     if (correctSignature) {
-      qreal x = results.at(n).at(counter).toReal();
+      qreal x = n.at(counter).toReal();
       counter++;
-      qreal y = results.at(n).at(counter).toReal();
+      qreal y = n.at(counter).toReal();
       counter++;
-      qreal z = results.at(n).at(counter).toReal();
+      qreal z = n.at(counter).toReal();
       counter++;
 
       if ((xmin < x && x < xmax) && (ymin < y && y < ymax) &&
@@ -750,12 +747,12 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
 
         qreal smallestDistance = HUGE_REAL_NUMBER;
 
-        for (qint64 i = 0; i < m_electronDensitySources.length(); ++i) {
+        for (auto m_electronDensitySource : m_electronDensitySources) {
 
           Matrix<qreal, 3, 1> a(x, y, z);
-          Matrix<qreal, 3, 1> b(m_electronDensitySources.at(i).x(),
-                                m_electronDensitySources.at(i).y(),
-                                m_electronDensitySources.at(i).z());
+          Matrix<qreal, 3, 1> b(m_electronDensitySource.x(),
+                                m_electronDensitySource.y(),
+                                m_electronDensitySource.z());
 
           qreal distance = QTAIMMathUtilities::distance(a, b);
 
@@ -883,18 +880,18 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   QFile file;
   file.remove(tempFileName);
 
-  for (qint64 n = 0; n < results.length(); ++n) {
+  for (const auto & n : results) {
 
     qint64 counter = 0;
-    bool correctSignature = results.at(n).at(counter).toBool();
+    bool correctSignature = n.at(counter).toBool();
     counter++;
 
     if (correctSignature) {
-      qreal x = results.at(n).at(counter).toReal();
+      qreal x = n.at(counter).toReal();
       counter++;
-      qreal y = results.at(n).at(counter).toReal();
+      qreal y = n.at(counter).toReal();
       counter++;
-      qreal z = results.at(n).at(counter).toReal();
+      qreal z = n.at(counter).toReal();
       counter++;
 
       if ((xmin < x && x < xmax) && (ymin < y && y < ymax) &&
@@ -903,12 +900,12 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
 
         qreal smallestDistance = HUGE_REAL_NUMBER;
 
-        for (qint64 i = 0; i < m_electronDensitySinks.length(); ++i) {
+        for (auto m_electronDensitySink : m_electronDensitySinks) {
 
           Matrix<qreal, 3, 1> a(x, y, z);
-          Matrix<qreal, 3, 1> b(m_electronDensitySinks.at(i).x(),
-                                m_electronDensitySinks.at(i).y(),
-                                m_electronDensitySinks.at(i).z());
+          Matrix<qreal, 3, 1> b(m_electronDensitySink.x(),
+                                m_electronDensitySink.y(),
+                                m_electronDensitySink.z());
 
           qreal distance = QTAIMMathUtilities::distance(a, b);
 
@@ -943,5 +940,4 @@ QString QTAIMCriticalPointLocator::temporaryFileName()
   return tempFileName;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

@@ -1,31 +1,19 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "backgroundfileformat.h"
 
 #include <avogadro/io/fileformat.h>
 
-namespace Avogadro {
-
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 BackgroundFileFormat::BackgroundFileFormat(Io::FileFormat* format,
-                                           QObject* aparent)
-  : QObject(aparent), m_format(format), m_molecule(nullptr), m_success(false)
-{}
+                                           QObject* parent)
+  : QObject(parent), m_format(format), m_molecule(nullptr), m_success(false)
+{
+}
 
 BackgroundFileFormat::~BackgroundFileFormat()
 {
@@ -82,5 +70,4 @@ void BackgroundFileFormat::write()
   emit finished();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

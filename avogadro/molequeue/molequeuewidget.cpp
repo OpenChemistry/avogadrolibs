@@ -14,8 +14,7 @@
 
 #include <limits>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 const unsigned int MoleQueueWidget::InvalidMoleQueueId(
   std::numeric_limits<unsigned int>::max());
@@ -300,5 +299,4 @@ bool MoleQueueWidget::programSelected()
   return sel.size() > 0;
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

@@ -1,22 +1,12 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2016 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_SELECT_H
 #define AVOGADRO_QTPLUGINS_SELECT_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/qtgui/pluginlayermanager.h>
 
@@ -53,6 +43,18 @@ private slots:
   void selectAtomIndex();
   void selectElement(int element);
   void selectResidue();
+
+  void selectBackboneAtoms();
+  void selectSidechainAtoms();
+
+  void selectWater();
+  bool isWaterOxygen(Index i);
+
+  void enlargeSelection();
+  void shrinkSelection();
+  Vector3 getSelectionCenter();
+
+  void createLayerFromSelection();
 
 private:
   QList<QAction*> m_actions;

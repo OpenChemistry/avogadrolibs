@@ -27,14 +27,19 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr(m_name.c_str()); }
+  QString name() const override { return tr("Cartoons", "protein ribbon / cartoon rendering"); }
 
   QString description() const override
   {
-    return tr("Simple display of Cartoons family.");
+    return tr("Display of biomolecule ribbons / cartoons.");
   }
 
   QWidget* setupWidget() override;
+
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::True;
+  }
 
 public slots:
   // straights line between alpha carbons
@@ -53,11 +58,9 @@ public slots:
   // of 3) we crea a big N-bezier line
   void showRope(bool show);
 
-  static std::string getName() { return "Cartoons"; }
-
 private:
   Rendering::GroupNode* m_group;
-  std::string m_name = getName();
+  std::string m_name = "Cartoons";
 
   std::map<size_t, AtomsPairList> getBackboneByResidues(
     const QtGui::Molecule& molecule, size_t layer);

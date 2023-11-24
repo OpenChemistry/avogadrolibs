@@ -1,30 +1,15 @@
-/******************************************************************************
+/* This source file is part of the Avogadro project.
+   It is released under the 3-Clause BSD License, see "LICENSE". */
 
-  This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
-******************************************************************************/
-
-#ifndef AVOGADRO_VTKGLWIDGET_H
-#define AVOGADRO_VTKGLWIDGET_H
+#pragma once
 
 #include "avogadrovtkexport.h"
+#include "qvtkwidget.h"
 
-#include <QVTKOpenGLWidget.h>
 #include <vtkNew.h>
 #include <vtkSmartPointer.h>
 
 #include <avogadro/qtgui/scenepluginmodel.h>
-#include <avogadro/rendering/glrenderer.h>
 
 #include <QtCore/QPointer>
 
@@ -50,7 +35,7 @@ class ToolPlugin;
 
 namespace VTK {
 
-class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKOpenGLWidget
+class AVOGADROVTK_EXPORT vtkGLWidget : public QVTKWidget
 {
   Q_OBJECT
 
@@ -187,5 +172,3 @@ private:
 };
 } // namespace VTK
 } // namespace Avogadro
-
-#endif // AVOGADRO_VTKGLWIDGET_H

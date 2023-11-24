@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTOPENGL_GLWIDGET_H
@@ -20,10 +9,11 @@
 #include "avogadroqtopenglexport.h"
 
 #include <avogadro/qtgui/scenepluginmodel.h>
+#include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtCore/QPointer>
-#include <QtWidgets/QOpenGLWidget>
+#include <QPointer>
+#include <QOpenGLWidget>
 
 class QTimer;
 
@@ -31,7 +21,6 @@ namespace Avogadro {
 
 namespace QtGui {
 class Molecule;
-class ToolPlugin;
 }
 
 namespace QtOpenGL {

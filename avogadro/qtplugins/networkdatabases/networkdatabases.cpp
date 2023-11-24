@@ -1,18 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2009 Marcus D. Hanwell
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "networkdatabases.h"
@@ -22,13 +10,12 @@
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 NetworkDatabases::NetworkDatabases(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -36,6 +23,7 @@ NetworkDatabases::NetworkDatabases(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText("Download by &Name…");
+  m_action->setProperty("menu priority", 190);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
@@ -94,9 +82,7 @@ void NetworkDatabases::showDialog()
   // services
   m_network->get(QNetworkRequest(
     QUrl("https://cactus.nci.nih.gov/chemical/structure/" + structureName +
-         "/sdf?get3d=true" +
-         "&resolver=name_by_opsin,name_by_cir,name_by_chemspider" +
-         "&requester=Avogadro2")));
+         "/file?format=sdf&get3d=true")));
 
   m_moleculeName = structureName;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(structureName));
@@ -128,6 +114,5 @@ void NetworkDatabases::replyFinished(QNetworkReply* reply)
   }
   emit moleculeReady(1);
   reply->deleteLater();
-}
 }
 }

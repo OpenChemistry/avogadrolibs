@@ -12,14 +12,14 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using namespace std;
 
 SecondaryStructureAssigner::SecondaryStructureAssigner(Molecule* mol)
   : m_molecule(mol)
-{}
+{
+}
 
 SecondaryStructureAssigner::~SecondaryStructureAssigner()
 {
@@ -61,7 +61,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Plug gaps in the helix
-  for (auto i = 1; i < residueCount - 1; ++i) {
+  for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
     if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
@@ -79,13 +79,12 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Then assign the beta sheet - but only if a residue isn't assigned
-  const Residue::SecondaryStructure maybeBeta =
-    static_cast<const Residue::SecondaryStructure>(-3);
   for (auto hBond : m_hBonds) {
     if (hBond->distSquared < infinity) {
       if (m_molecule->residue(hBond->residue).secondaryStructure() ==
           Residue::SecondaryStructure::undefined)
-        m_molecule->residue(hBond->residue).setSecondaryStructure(maybeBeta);
+        m_molecule->residue(hBond->residue)
+          .setSecondaryStructure(Residue::SecondaryStructure::maybeBeta);
     }
   }
 
@@ -97,8 +96,10 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
       auto match = m_molecule->residue(hBond->residuePair);
 
       // if we're "maybe" beta see if the match is either beta or "maybe"
-      if (current.secondaryStructure() == maybeBeta &&
-          (match.secondaryStructure() == maybeBeta ||
+      if (current.secondaryStructure() ==
+            Residue::SecondaryStructure::maybeBeta &&
+          (match.secondaryStructure() ==
+             Residue::SecondaryStructure::maybeBeta ||
            match.secondaryStructure() ==
              Residue::SecondaryStructure::betaSheet)) {
         // we can be sure now
@@ -111,7 +112,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // Plug gaps in the beta sheet
-  for (auto i = 1; i < residueCount - 1; ++i) {
+  for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
     if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
@@ -129,7 +130,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
   }
 
   // remove singletons
-  for (auto i = 1; i < residueCount - 1; ++i) {
+  for (size_t i = 1; i < residueCount - 1; ++i) {
     // check that before and after this residue are in the same chain
     if (m_molecule->residue(i).chainId() !=
           m_molecule->residue(i - 1).chainId() ||
@@ -139,7 +140,7 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
 
     auto current = m_molecule->residue(i);
     // clear maybeBeta assignments (e.g. short bits)
-    if (current.secondaryStructure() == maybeBeta)
+    if (current.secondaryStructure() == Residue::SecondaryStructure::maybeBeta)
       m_molecule->residue(i).setSecondaryStructure(
         Residue::SecondaryStructure::undefined);
 
@@ -174,15 +175,15 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
   // Loop over the backbone atoms
   // we're just considering N and O (on a peptide)
-  unsigned int i = 0; // track the residue index
-  for (auto residue : m_molecule->residues()) {
-    unsigned int residueId = i++;
+  unsigned int idx = 0; // track the residue index
+  for (const auto& residue : m_molecule->residues()) {
+    unsigned int residueId = idx++;
     if (residue.isHeterogen())
       continue;
 
     auto oxygen = residue.getAtomByName("O");
     if (oxygen.isValid()) {
-      hBondRecord* oRecord = new hBondRecord();
+      auto* oRecord = new hBondRecord();
       oRecord->atom = oxygen.index();
       oRecord->atomZ = oxygen.position3d()[2];
       oRecord->distSquared = std::numeric_limits<float>::max();
@@ -193,7 +194,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
     auto nitrogen = residue.getAtomByName("N");
     if (nitrogen.isValid()) {
-      hBondRecord* nRecord = new hBondRecord();
+      auto* nRecord = new hBondRecord();
       nRecord->atom = nitrogen.index();
       nRecord->atomZ = nitrogen.position3d()[2];
       nRecord->distSquared = std::numeric_limits<float>::max();
@@ -215,13 +216,13 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
 
   // now loop through the sorted list (so we can exit quickly)
   int n = m_hBonds.size();
-  for (unsigned int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     auto recordI = m_hBonds[i];
-    auto residueI = m_molecule->residue(recordI->residue);
+    const Residue& residueI = m_molecule->residue(recordI->residue);
 
-    for (unsigned int j = i + 1; j < n; ++j) {
+    for (int j = i + 1; j < n; ++j) {
       auto recordJ = m_hBonds[j];
-      auto residueJ = m_molecule->residue(recordJ->residue);
+      const Residue& residueJ = m_molecule->residue(recordJ->residue);
 
       // skip if we're not on the same chain
       if (residueI.chainId() != residueJ.chainId())
@@ -266,5 +267,4 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
   }   // end for(i)
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core

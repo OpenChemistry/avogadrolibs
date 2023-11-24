@@ -18,7 +18,7 @@ namespace QtGui {
  * @class PluginLayerManager pluginlayermanager.h
  * <avogadro/qtgui/pluginlayermanager.h>
  * @brief The PluginLayerManager class is a set of common layer dependent
- * operators usefull for Layer dependent QtPlugins.
+ * operators useful for Layer dependent QtPlugins.
  */
 class AVOGADROQTGUI_EXPORT PluginLayerManager : protected Core::LayerManager
 {
@@ -62,10 +62,10 @@ public:
   /** set active layer @p enable */
   void setEnabled(bool enable);
 
-  /** @return @p atom layer enabled globaly and in plugin */
+  /** @return @p atom layer enabled globally and in plugin */
   bool atomEnabled(Index atom) const;
 
-  /** @return @p atom layer enabled globaly, in plugin and in @p layer */
+  /** @return @p atom layer enabled globally, in plugin and in @p layer */
   bool atomEnabled(size_t layer, Index atom) const;
 
   /** @return if @p atom1 or @p atom2 is enabled */

@@ -10,8 +10,7 @@
 
 #include <limits>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 // initialize statics
 const BatchJob::BatchId BatchJob::InvalidBatchId = -1;
@@ -221,5 +220,4 @@ void BatchJob::setup()
           SLOT(handleErrorResponse(int, int, QString, QJsonValue)));
 }
 
-} // namespace MoleQueue
 } // namespace Avogadro

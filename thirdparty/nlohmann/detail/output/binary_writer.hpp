@@ -683,7 +683,7 @@ class binary_writer
     @param[in] n number of type @a NumberType
     @tparam NumberType the type of the number
 
-    @note This function needs to respect the system's endianess, because bytes
+    @note This function needs to respect the system's endianness, because bytes
           in CBOR, MessagePack, and UBJSON are stored in network order (big
           endian) and therefore need reordering on little endian systems.
     */

@@ -14,6 +14,7 @@ set(tests
   Mesh
   Molecule
   Mutex
+  NeighborPerceiver
   RingPerceiver
   Spacegroup
   Utilities
@@ -33,7 +34,7 @@ message(STATUS "Test source files: ${testSrcs}")
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroTests ${testSrcs})
-target_link_libraries(AvogadroTests AvogadroCore
+target_link_libraries(AvogadroTests Avogadro::Core
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those

@@ -10,8 +10,7 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using namespace std;
 
@@ -36,7 +35,7 @@ Dihedral DihedralIterator::begin()
       Index c = bc.second;
 
       // find an a
-      Index a, d;
+      Index a = 0;
       for (const auto maybeA : graph.neighbors(b)) {
         if (maybeA != c) {
           a = maybeA;
@@ -72,7 +71,6 @@ Dihedral DihedralIterator::operator++()
   std::tie(a, b, c, d) = m_current;
 
   Graph graph = m_mol->graph();
-  Index count = m_mol->atomCount();
 
   // we start at a good state (i.e., we have a valid dihedral)
   bool valid = (b != c && b != MaxIndex);
@@ -84,7 +82,7 @@ Dihedral DihedralIterator::operator++()
     if (valid) {
       // we have a valid current dihedral, try to find a new "d"
       for (const auto maybeD : graph.neighbors(c)) {
-        if (maybeD != a && maybeD != b && (!valid || maybeD > d)) {
+        if (maybeD != a && maybeD != b && maybeD > d) {
           m_current = make_tuple(a, b, c, maybeD);
           return m_current;
         }
@@ -116,7 +114,6 @@ Dihedral DihedralIterator::operator++()
         c = maybeC;
 
         // find an a
-        Index a, d;
         for (const auto maybeA : graph.neighbors(b)) {
           if (maybeA != c) {
             a = maybeA;
@@ -153,5 +150,4 @@ Dihedral DihedralIterator::operator++()
   return make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 } // end ++ operator
 
-} // namespace Core
 } // namespace Avogadro

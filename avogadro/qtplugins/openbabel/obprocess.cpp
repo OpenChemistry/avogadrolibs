@@ -10,10 +10,11 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
-#include <QtCore/QRegExp>
 
-namespace Avogadro {
-namespace QtPlugins {
+#include <QRegExp>
+#include <QRegularExpression>
+
+namespace Avogadro::QtPlugins {
 
 OBProcess::OBProcess(QObject* parent_)
   : QObject(parent_), m_processLocked(false), m_aborted(false),
@@ -143,11 +144,11 @@ void OBProcess::queryReadFormatsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("\\s*([^\\s]+)\\s+--\\s+([^\\n]+)\\n");
+  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString extension = parser.cap(1);
@@ -168,11 +169,11 @@ void OBProcess::queryWriteFormatsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("\\s*([^\\s]+)\\s+--\\s+([^\\n]+)\\n");
+  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString extension = parser.cap(1);
@@ -230,7 +231,7 @@ void OBProcess::convertPrepareOutput()
 
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
-  QRegExp errorChecker("\\b0 molecules converted\\b"
+  QRegularExpression errorChecker("\\b0 molecules converted\\b"
                        "|"
                        "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
@@ -268,11 +269,11 @@ void OBProcess::queryForceFieldsPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString key = parser.cap(1);
@@ -307,11 +308,11 @@ void OBProcess::queryChargesPrepare()
     return;
   }
 
-  QMap<QString, QString> result;
+  QMultiMap<QString, QString> result;
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser("([^\\s]+)\\s+(\\S[^\\n]*[^\\n\\.]+)\\.?\\n");
+  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
   int pos = 0;
   while ((pos = parser.indexIn(output, pos)) != -1) {
     QString key = parser.cap(1);
@@ -324,8 +325,76 @@ void OBProcess::queryChargesPrepare()
   emit queryChargesFinished(result);
 }
 
+bool OBProcess::calculateCharges(const QByteArray& mol,
+                                 const std::string& format,
+                                 const std::string& type)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::calculateCharges(): process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+
+  if (format == "cjson") {
+    realOptions << "-icjson";
+  } else {
+    realOptions << "-icml";
+  }
+  realOptions << "-onul" // ignore the output
+              << "--partialcharge"
+              << type.c_str()
+              << "--print";
+
+  // Start the optimization
+  executeObabel(realOptions, this, SLOT(chargesPrepareOutput()), mol);
+  return true;
+}
+
+void OBProcess::chargesPrepareOutput()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  // Keep this empty if an error occurs:
+  QByteArray output;
+
+  // Check for errors.
+  QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
+  QRegularExpression errorChecker("\\b0 molecules converted\\b"
+                       "|"
+                       "obabel: cannot read input format!");
+  if (!errorOutput.contains(errorChecker)) {
+    if (m_process->exitStatus() == QProcess::NormalExit)
+      output = m_process->readAllStandardOutput();
+  }
+
+  /// Print any meaningful warnings @todo This should go to a log at some point.
+  if (!errorOutput.isEmpty() && errorOutput != "1 molecule converted\n")
+    qWarning() << m_obabelExecutable << " stderr:\n" << errorOutput;
+
+  // Convert the output line-by-line to charges
+  Core::Array<double> charges;
+  QTextStream stream(output);
+  QString line;
+  while (stream.readLineInto(&line)) {
+    bool ok;
+    double charge = line.toDouble(&ok);
+    if (!ok)
+      break;
+    
+    charges.push_back(charge);
+  }
+
+  emit chargesFinished(charges);
+  releaseProcess();
+}
+
 bool OBProcess::optimizeGeometry(const QByteArray& mol,
-                                 const QStringList& options)
+                                 const QStringList& options,
+                                 const std::string format)
 {
   if (!tryLockProcess()) {
     qWarning() << "OBProcess::optimizeGeometry(): process already in use.";
@@ -333,9 +402,14 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   }
 
   QStringList realOptions;
-  realOptions << "-icml"
-              << "-ocml"
-              << "--minimize"
+  if (format == "cjson") {
+    realOptions << "-icjson"
+                << "-ocjson";
+  } else {
+    realOptions << "-icml"
+                << "-ocml";
+  }
+  realOptions << "--minimize"
               << "--noh" // new in OB 3.0.1
               << "--log" << options;
 
@@ -383,7 +457,7 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegExp lastStepParser("\\n\\s*([0-9]+)\\s+([-0-9.]+)\\s+([-0-9.]+)\\n");
+    QRegExp lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
     if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
       int step = lastStepParser.cap(1).toInt();
       double energy = lastStepParser.cap(2).toDouble();
@@ -400,8 +474,8 @@ void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
   // Setup exit handler
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)), receiver, slot);
-    connect(m_process, SIGNAL(error(QProcess::ProcessError)), this,
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver, slot);
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
             SLOT(obError()));
   }
 
@@ -424,5 +498,4 @@ void OBProcess::resetState()
   connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

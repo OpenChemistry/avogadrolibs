@@ -3,10 +3,9 @@
 
 #include "histogramwidget.h"
 
-#include "qvtkwidget.h"
-
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/vtk/qvtkwidget.h>
 #include <avogadro/vtk/vtkglwidget.h>
 
 #include "vtkChartHistogramColorOpacityEditor.h"
@@ -36,14 +35,13 @@
 
 namespace Avogadro {
 
-using QtOpenGL::ActiveObjects;
 
 HistogramWidget::HistogramWidget(QWidget* parent)
-  : QWidget(parent), m_qvtk(new QVTKGLWidget(this))
+  : QWidget(parent), m_qvtk(new VTK::QVTKWidget(this))
 {
   // Set up our little chart.
-  m_histogramView->SetRenderWindow(m_qvtk->GetRenderWindow());
-  m_histogramView->SetInteractor(m_qvtk->GetInteractor());
+  m_histogramView->SetRenderWindow(m_qvtk->renderWindow());
+  m_histogramView->SetInteractor(m_qvtk->interactor());
   m_histogramView->GetScene()->AddItem(m_histogramColorOpacityEditor);
 
   // Connect events from the histogram color/opacity editor.

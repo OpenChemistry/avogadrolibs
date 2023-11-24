@@ -1,21 +1,12 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_CORE_UNITCELL_H
 #define AVOGADRO_CORE_UNITCELL_H
+
+#include "avogadrocoreexport.h"
 
 #include "avogadrocore.h"
 
@@ -351,7 +342,7 @@ inline Vector3 UnitCell::minimumImage(const Vector3& v) const
 
 inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
 {
-  return std::fabs(minimumImage(v1 - v2).norm());
+  return minimumImage(v1 - v2).norm();
 }
 
 } // namespace Core

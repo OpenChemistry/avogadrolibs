@@ -49,14 +49,14 @@
      <item>
       <widget class="QPushButton" name="computeButton">
        <property name="text">
-        <string>Submit Calculation...</string>
+        <string>Submit Calculation…</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="generateButton">
        <property name="text">
-        <string>Save File...</string>
+        <string>Save File…</string>
        </property>
       </widget>
      </item>
@@ -396,7 +396,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
-          <string>Poiosson EWALD GMAX</string>
+          <string>Poisson EWALD GMAX</string>
          </property>
         </widget>
        </item>

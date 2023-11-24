@@ -2,7 +2,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
   include(CheckCXXCompilerFlag)
 
-  # Addtional warnings for GCC
+  # Additional warnings for GCC
   set(CMAKE_CXX_FLAGS_WARN "-Wnon-virtual-dtor -Wno-long-long -Wcast-align -Wchar-subscripts -Wall -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-check-new -fno-common")
 
   # This flag is useful as not returning from a non-void function is an error
@@ -29,4 +29,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS_DEBUG
     "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_WARN} ${CMAKE_CXX_FLAGS_ERROR}")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+
+  # Sanitizers
+  set(CMAKE_CXX_FLAGS_TSAN "-fsanitize=thread -g -O1")
+  set(CMAKE_CXX_FLAGS_ASAN "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1")
+  set(CMAKE_CXX_FLAGS_LSAN "-fsanitize=leak -fno-omit-frame-pointer -g -O1")
+  set(CMAKE_CXX_FLAGS_MSAN "-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2")
+  set(CMAKE_CXX_FLAGS_UBSAN "-fsanitize=undefined")
 endif()

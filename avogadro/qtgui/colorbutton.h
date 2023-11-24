@@ -26,7 +26,7 @@ namespace QtGui {
  * When clicked by the user, it brings up a color picker to select a new
  * color.
  *
- * The widget has a default minimium size of 35x20 pixels.
+ * The widget has a default minimum size of 35x20 pixels.
  */
 
 class AVOGADROQTGUI_EXPORT ColorButton : public QAbstractButton
@@ -38,7 +38,7 @@ public:
   explicit ColorButton(const QColor& initial, QWidget* parent = 0);
 
   /**
-   *  Redraw the widget (i.e., refresh the colored rectange)
+   *  Redraw the widget (i.e., refresh the colored rectangle)
    */
   void paintEvent(QPaintEvent*);
 

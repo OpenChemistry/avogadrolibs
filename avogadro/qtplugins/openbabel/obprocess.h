@@ -7,6 +7,8 @@
 #ifndef AVOGADRO_QTPLUGINS_OBPROCESS_H
 #define AVOGADRO_QTPLUGINS_OBPROCESS_H
 
+#include <avogadro/core/array.h>
+
 #include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -128,7 +130,7 @@ signals:
    *
    * If an error occurs, readFormats will be empty.
    */
-  void queryReadFormatsFinished(QMap<QString, QString> readFormats);
+  void queryReadFormatsFinished(QMultiMap<QString, QString> readFormats);
 
   /**
    * Triggered when the process started by queryWriteFormats() completes.
@@ -142,7 +144,7 @@ signals:
    *
    * If an error occurs, writeFormats will be empty.
    */
-  void queryWriteFormatsFinished(QMap<QString, QString> writeFormats);
+  void queryWriteFormatsFinished(QMultiMap<QString, QString> writeFormats);
 
 private slots:
   void queryReadFormatsPrepare();
@@ -251,7 +253,7 @@ signals:
    *
    * If an error occurs, forceFields will be empty.
    */
-  void queryForceFieldsFinished(const QMap<QString, QString>& forceFields);
+  void queryForceFieldsFinished(const QMultiMap<QString, QString>& forceFields);
 
 private slots:
   void queryForceFieldsPrepare();
@@ -269,7 +271,7 @@ public slots:
    * optimization finishes, optimizeGeometryFinished will be emitted with the
    * result of the optimization.
    *
-   * The optimization is started with
+   * The optimization is started with, e.g. 
    * `obabel -icml -ocml --minimize <options>`
    *
    * The standard output is recorded and returned by optimizeGeometryFinished.
@@ -279,7 +281,7 @@ public slots:
    *
    * @return True if the process started successfully, false otherwise.
    */
-  bool optimizeGeometry(const QByteArray& cml, const QStringList& options);
+  bool optimizeGeometry(const QByteArray& cml, const QStringList& options, std::string format = "cml");
 signals:
   /**
    * Emitted with the standard output of the process when it finishes.
@@ -338,10 +340,40 @@ public slots:
    *
    * If an error occurs, charges will be empty.
    */
-  void queryChargesFinished(const QMap<QString, QString>& charges);
+  void queryChargesFinished(const QMultiMap<QString, QString>& charges);
 
 private slots:
   void queryChargesPrepare();
+
+public slots:
+  /**
+   * Calculate the partial charges on the molecule @a input using @a type
+   *
+   * @param input String containing molecule representation in @a inFormat
+   * format.
+   * @param inFormat File extension corresponding to input format
+   * (see `obabel -L formats`).
+   * @param type The charge model to use (e.g., MMFF94, gasteiger, etc.)
+   *
+   * After calling this method, the chargesFinished signal will be emitted to
+   * indicate return status along with the charges as text.
+   *
+   * The process is performed as:
+   * `obabel -i<inFormat> -onul --partialcharge <type> --print < input  > output`
+   *
+   * @return True if the process started successfully, false otherwise.
+   */
+  bool calculateCharges(const QByteArray& input, const std::string& inFormat = "cml", const std::string& type = "mmff94");
+
+private slots:
+  void chargesPrepareOutput();
+
+signals:
+  /**
+   * Emitted after a call to calculateCharges() finishes.
+   * @param output the set of partial charges
+   */
+  void chargesFinished(const Core::Array<double>& charges);
   // end Charge Models doxygen group
   /**@}*/
 

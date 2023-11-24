@@ -34,5 +34,31 @@
         <file>icons/fallback/32x32/plus.png</file>
         <file>icons/fallback/32x32/preview.png</file>
         <file>icons/fallback/index.theme</file>
+        <file>icons/colormap/balance.png</file>
+        <file>icons/colormap/balance@2x.png</file>
+        <file>icons/colormap/bluedarkred.png</file>
+        <file>icons/colormap/bluedarkred@2x.png</file>
+        <file>icons/colormap/cividis.png</file>
+        <file>icons/colormap/cividis@2x.png</file>
+        <file>icons/colormap/coolwarm.png</file>
+        <file>icons/colormap/coolwarm@2x.png</file>
+        <file>icons/colormap/gray.png</file>
+        <file>icons/colormap/gray@2x.png</file>
+        <file>icons/colormap/hot.png</file>
+        <file>icons/colormap/hot@2x.png</file>
+        <file>icons/colormap/inferno.png</file>
+        <file>icons/colormap/inferno@2x.png</file>
+        <file>icons/colormap/magma.png</file>
+        <file>icons/colormap/magma@2x.png</file>
+        <file>icons/colormap/parula.png</file>
+        <file>icons/colormap/parula@2x.png</file>
+        <file>icons/colormap/plasma.png</file>
+        <file>icons/colormap/plasma@2x.png</file>
+        <file>icons/colormap/spectral.png</file>
+        <file>icons/colormap/spectral@2x.png</file>
+        <file>icons/colormap/turbo.png</file>
+        <file>icons/colormap/turbo@2x.png</file>
+        <file>icons/colormap/viridis.png</file>
+        <file>icons/colormap/viridis@2x.png</file>
     </qresource>
 </RCC>

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013-2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "molecule.h"
@@ -21,8 +10,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
@@ -60,8 +48,8 @@ bool MoleculeModel::setData(const QModelIndex& idx, const QVariant& value,
   if (!idx.isValid() || idx.column() > 2)
     return false;
 
-  QObject* object = static_cast<QObject*>(idx.internalPointer());
-  Molecule* mol = qobject_cast<Molecule*>(object);
+  auto* object = static_cast<QObject*>(idx.internalPointer());
+  auto* mol = qobject_cast<Molecule*>(object);
   if (!mol)
     return false;
 
@@ -93,8 +81,8 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
   if (!idx.isValid() || idx.column() > 2)
     return QVariant();
 
-  QObject* object = static_cast<QObject*>(idx.internalPointer());
-  Molecule* mol = qobject_cast<Molecule*>(object);
+  auto* object = static_cast<QObject*>(idx.internalPointer());
+  auto* mol = qobject_cast<Molecule*>(object);
   if (!mol)
     return QVariant();
 
@@ -201,7 +189,7 @@ void MoleculeModel::removeItem(Molecule* item)
 
 void MoleculeModel::itemChanged()
 {
-  Molecule* item = qobject_cast<Molecule*>(sender());
+  auto* item = qobject_cast<Molecule*>(sender());
   if (item) {
     int row = m_molecules.indexOf(item);
     if (row >= 0)
@@ -209,5 +197,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace QtGui
 } // namespace Avogadro

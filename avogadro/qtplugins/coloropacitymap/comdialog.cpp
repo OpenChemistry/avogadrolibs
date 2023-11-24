@@ -10,8 +10,7 @@
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/vtk/vtkglwidget.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtOpenGL::ActiveObjects;
 using VTK::vtkGLWidget;
@@ -92,5 +91,4 @@ void ComDialog::setOpacity(double value)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

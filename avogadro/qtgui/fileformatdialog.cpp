@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "fileformatdialog.h"
@@ -19,6 +8,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/io/fileformatmanager.h>
 
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 
@@ -30,12 +20,9 @@ using Avogadro::Io::FileFormat;
 using Avogadro::Io::FileFormatManager;
 using std::vector;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
-FileFormatDialog::FileFormatDialog(QWidget* parentW)
-  : QFileDialog(parentW)
-{}
+FileFormatDialog::FileFormatDialog(QWidget* parentW) : QFileDialog(parentW) {}
 
 FileFormatDialog::~FileFormatDialog() {}
 
@@ -90,8 +77,8 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
   FormatFilePair result(nullptr, QString());
   // Use the default read filter if none specified:
   const QString realFilter = filter.isEmpty() ? writeFileFilter() : filter;
-  
-QString fileName;
+
+  QString fileName;
   do { // jump point for continue statements on retry
     fileName =
       QFileDialog::getSaveFileName(parentWidget, caption, dir, realFilter);
@@ -104,6 +91,24 @@ QString fileName;
 
     // If none found, give user the option to retry.
     if (!format) {
+      QString extension = QFileInfo(fileName).suffix().toLower();
+
+      if (extension.isEmpty()) {
+        QMessageBox::StandardButton reply = QMessageBox::question(
+          parentWidget, caption,
+          tr(
+            "The file extension is missing, so the format cannot be determined."
+            "Do you want to add it?"),
+          QMessageBox::Abort | QMessageBox::Retry, QMessageBox::Retry);
+        switch (reply) {
+          default:
+          case QMessageBox::Retry:
+            continue;
+          case QMessageBox::Abort:
+            return result;
+        }
+      }
+
       QMessageBox::StandardButton reply = QMessageBox::question(
         parentWidget, caption,
         tr("Unable to find a suitable file writer for "
@@ -149,7 +154,7 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
   QString verb;
   QString key;
 
-  // TODO: This does not work for translation... 
+  // TODO: This does not work for translation...
   //  particularly since len(matches) is known
   if ((formatFlags & FileFormat::Read && formatFlags & FileFormat::Write) ||
       ((formatFlags & FileFormat::Read) == 0 &&
@@ -180,7 +185,7 @@ const Io::FileFormat* FileFormatDialog::findFileFormat(
                           formatPrefix);
 }
 
-const QString FileFormatDialog::readFileFilter()
+QString FileFormatDialog::readFileFilter()
 {
   static QString readFilter;
   if (readFilter.isEmpty()) {
@@ -194,7 +199,7 @@ const QString FileFormatDialog::readFileFilter()
   return readFilter;
 }
 
-const QString FileFormatDialog::writeFileFilter()
+QString FileFormatDialog::writeFileFilter()
 {
   static QString writeFilter;
   if (writeFilter.isEmpty()) {
@@ -202,7 +207,7 @@ const QString FileFormatDialog::writeFileFilter()
       FileFormatManager::instance().fileFormats(FileFormat::Write |
                                                 FileFormat::File);
 
-    writeFilter = generateFilterString(formats, AllFiles);
+    writeFilter = generateFilterString(formats, WriteFormats | AllFiles);
   }
 
   return writeFilter;
@@ -214,16 +219,12 @@ QString FileFormatDialog::generateFilterString(
 {
   QString filterString;
   // Create a map that groups the file extensions by name:
-  QMap<QString, QString> formatMap;
-  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
-                                                          itEnd = ffs.end();
-       it != itEnd; ++it) {
-    QString name(QString::fromStdString((*it)->name()));
-    std::vector<std::string> exts = (*it)->fileExtensions();
-    for (std::vector<std::string>::const_iterator eit = exts.begin(),
-                                                  eitEnd = exts.end();
-         eit != eitEnd; ++eit) {
-      QString ext(QString::fromStdString(*eit));
+  QMultiMap<QString, QString> formatMap;
+  for (auto ff : ffs) {
+    QString name(QString::fromStdString(ff->name()));
+    std::vector<std::string> exts = ff->fileExtensions();
+    for (auto& eit : exts) {
+      QString ext(QString::fromStdString(eit));
       if (!formatMap.values(name).contains(ext)) {
         formatMap.insertMulti(name, ext);
       }
@@ -246,7 +247,24 @@ QString FileFormatDialog::generateFilterString(
 
   foreach (const QString& desc, formatMap.uniqueKeys()) {
     QStringList extensions;
-    foreach (QString extension, formatMap.values(desc)) {
+    QStringList formatExtensions = formatMap.values(desc);
+
+    // When writing formats, only list one common extension
+    // .. to ensure the OS appends the extension to the filename
+    if (options & WriteFormats) {
+      if (formatExtensions.contains(QStringLiteral("cml")))
+        formatExtensions = QStringList("cml");
+      else if (formatExtensions.contains(QStringLiteral("mol2")))
+        formatExtensions = QStringList("mol2");
+      else if (formatExtensions.contains(QStringLiteral("pdb")))
+        formatExtensions = QStringList("pdb");
+      else if (formatExtensions.contains(QStringLiteral("sdf")))
+        formatExtensions = QStringList("sdf");
+      else if (formatExtensions.contains(QStringLiteral("xyz")))
+        formatExtensions = QStringList("xyz");
+    }
+
+    foreach (QString extension, formatExtensions) {
       if (!nonExtensions.contains(extension))
         extension.prepend("*.");
       extensions << extension;
@@ -258,10 +276,10 @@ QString FileFormatDialog::generateFilterString(
   }
 
   if (options & AllFiles)
-    filterString.prepend(tr("All files (*);;"));
+    filterString.prepend(tr("All files") + " (*);;");
 
   if (options & AllFormats) {
-    filterString.prepend(tr("All supported formats (%1);;")
+    filterString.prepend((tr("All supported formats") + " (%1);;")
                            .arg(allExtensions.join(QStringLiteral(" "))));
   }
 
@@ -280,10 +298,8 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
 
   // If more than one format found, prompt user to select one.
   QStringList idents;
-  for (std::vector<const Io::FileFormat*>::const_iterator it = ffs.begin(),
-                                                          itEnd = ffs.end();
-       it != itEnd; ++it) {
-    idents << QString::fromStdString((*it)->identifier());
+  for (auto ff : ffs) {
+    idents << QString::fromStdString(ff->identifier());
   }
 
   // If there is a format prefix, see if that can reduce the results down.
@@ -294,12 +310,34 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   if (preferred.size() == 1)
     return ffs[idents.indexOf(preferred.first())];
 
+  // We will only show the dialog if the user is pressing
+  //  the shift, control or meta keys.
+  if (!(QApplication::keyboardModifiers() &
+        (Qt::ShiftModifier | Qt::ControlModifier | Qt::MetaModifier))) {
+    // use a script format if set (i.e., these override internal)
+    // otherwise use internal over Open Babel
+    for (int i = 0; i < static_cast<int>(ffs.size()); ++i) {
+      if (idents[i].startsWith("User")) {
+        return ffs[i];
+      } else if (idents[i].startsWith("Avogadro")) {
+        return ffs[i];
+      } else if (idents[i].startsWith("OpenBabel")) {
+        return ffs[i];
+      }
+    }
+    // if we get here, we should show the user the dialog
+    //  .. but it should never happen
+  }
+
   // See if they used one before:
   QString lastIdent = settingsKey.isNull()
                         ? QString()
                         : QSettings().value(settingsKey).toString();
 
   int lastIdentIndex = idents.indexOf(lastIdent);
+
+  // we're going to show the dialog - if there wasn't a choice
+  // the default should be the first one
   if (lastIdentIndex < 0)
     lastIdentIndex = 0;
 
@@ -319,5 +357,4 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   return ffs[index];
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

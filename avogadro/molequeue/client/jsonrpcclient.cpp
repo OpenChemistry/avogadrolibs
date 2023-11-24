@@ -10,8 +10,7 @@
 #include <QtCore/QTimer>
 #include <QtNetwork/QLocalSocket>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 JsonRpcClient::JsonRpcClient(QObject *parent_) :
   QObject(parent_),
@@ -104,7 +103,7 @@ void JsonRpcClient::readPacket(const QByteArray message)
   QJsonDocument reader = QJsonDocument::fromJson(message, &error);
 
   if (error.error != QJsonParseError::NoError) {
-    emit badPacketReceived("Unparseable message received\n:"
+    emit badPacketReceived("Unparsable message received\n:"
                            + error.errorString() + "\nContent: " + message);
     return;
   }
@@ -143,5 +142,4 @@ void JsonRpcClient::readSocket()
   }
 }
 
-} // End namespace MoleQueue
 } // End namespace Avogadro

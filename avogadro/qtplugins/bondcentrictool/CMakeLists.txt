@@ -19,4 +19,4 @@ avogadro_plugin(BondCentric
   "${bondcentrictool_rcs}"
 )
 
-target_link_libraries(BondCentric PRIVATE AvogadroQtOpenGL)
+target_link_libraries(BondCentric PRIVATE Avogadro::QtOpenGL)

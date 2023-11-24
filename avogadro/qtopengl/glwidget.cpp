@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "glwidget.h"
@@ -30,11 +19,11 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
+#include <QtGui/QWindow>
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 GLWidget::GLWidget(QWidget* p)
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
@@ -80,25 +69,24 @@ void GLWidget::updateScene()
   if (mol) {
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
-    Rendering::GroupNode* moleculeNode = new Rendering::GroupNode(&node);
-    QtGui::RWMolecule* rwmol = new QtGui::RWMolecule(*mol, this);
+    auto* moleculeNode = new Rendering::GroupNode(&node);
+    QtGui::RWMolecule* rwmol = mol->undoMolecule();
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
-      Rendering::GroupNode* engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(static_cast<Core::Molecule>(*mol), *engineNode);
+      auto* engineNode = new Rendering::GroupNode(moleculeNode);
       scenePlugin->process(*mol, *engineNode);
       scenePlugin->processEditable(*rwmol, *engineNode);
     }
 
     // Let the tools perform any drawing they need to do.
     if (m_activeTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_activeTool->draw(*toolNode);
     }
 
     if (m_defaultTool) {
-      Rendering::GroupNode* toolNode = new Rendering::GroupNode(moleculeNode);
+      auto* toolNode = new Rendering::GroupNode(moleculeNode);
       m_defaultTool->draw(*toolNode);
     }
 
@@ -236,6 +224,8 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int width_, int height_)
 {
+  float pixelRatio = window()->windowHandle()->devicePixelRatio();
+  m_renderer.setPixelRatio(pixelRatio);
   m_renderer.resize(width_, height_);
 }
 
@@ -342,5 +332,4 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     QOpenGLWidget::keyReleaseEvent(e);
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

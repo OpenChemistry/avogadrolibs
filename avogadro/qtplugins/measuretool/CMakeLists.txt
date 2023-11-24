@@ -19,4 +19,4 @@ avogadro_plugin(MeasureTool
   "${measuretool_rcs}"
 )
 
-target_link_libraries(MeasureTool PRIVATE AvogadroQtOpenGL)
+target_link_libraries(MeasureTool PRIVATE Avogadro::QtOpenGL)

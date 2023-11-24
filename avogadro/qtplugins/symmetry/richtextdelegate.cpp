@@ -16,8 +16,7 @@
 
 #include "richtextdelegate.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem& o,
                                  const QModelIndex& index) const
@@ -48,6 +47,5 @@ void RichTextDelegate::paint(QPainter* p, const QStyleOptionViewItem& o,
   QRect clip(0, 0, ov4.rect.width(), ov4.rect.height());
   doc.drawContents(p, clip);
   p->restore();
-}
 }
 }

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "meshgeometry.h"
@@ -33,8 +22,9 @@
 
 namespace {
 #include "mesh_fs.h"
+#include "mesh_opaque_fs.h"
 #include "mesh_vs.h"
-}
+} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -43,8 +33,7 @@ using Avogadro::Vector4ub;
 using std::cout;
 using std::endl;
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 const unsigned int MeshGeometry::InvalidIndex =
   std::numeric_limits<unsigned int>::max();
@@ -57,9 +46,11 @@ public:
   BufferObject vbo;
   BufferObject ibo;
 
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram program;
+  inline static Shader* vertexShader = nullptr;
+  inline static Shader* fragmentShader = nullptr;
+  inline static Shader* fragmentShaderOpaque = nullptr;
+  inline static ShaderProgram* program = nullptr;
+  inline static ShaderProgram* programOpaque = nullptr;
 
   size_t numberOfVertices;
   size_t numberOfIndices;
@@ -67,16 +58,14 @@ public:
 
 MeshGeometry::MeshGeometry()
   : m_color(255, 0, 0), m_opacity(255), m_dirty(false), d(new Private)
-{
-}
+{}
 
 MeshGeometry::MeshGeometry(const MeshGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices), m_indices(other.m_indices),
     m_color(other.m_color), m_opacity(other.m_opacity),
     m_dirty(true), // Force rendering internals to be rebuilt
     d(new Private)
-{
-}
+{}
 
 MeshGeometry::~MeshGeometry()
 {
@@ -103,19 +92,39 @@ void MeshGeometry::update()
   }
 
   // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(mesh_vs);
-    d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(mesh_fs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
-    if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << endl;
-    d->program.attachShader(d->vertexShader);
-    d->program.attachShader(d->fragmentShader);
-    if (!d->program.link())
-      cout << d->program.error() << endl;
+  if (d->vertexShader == nullptr) {
+    d->vertexShader = new Shader;
+    d->vertexShader->setType(Shader::Vertex);
+    d->vertexShader->setSource(mesh_vs);
+
+    d->fragmentShader = new Shader;
+    d->fragmentShader->setType(Shader::Fragment);
+    d->fragmentShader->setSource(mesh_fs);
+
+    d->fragmentShaderOpaque = new Shader;
+    d->fragmentShaderOpaque->setType(Shader::Fragment);
+    d->fragmentShaderOpaque->setSource(mesh_opaque_fs);
+
+    if (!d->vertexShader->compile())
+      cout << d->vertexShader->error() << endl;
+    if (!d->fragmentShader->compile())
+      cout << d->fragmentShader->error() << endl;
+    if (!d->fragmentShaderOpaque->compile())
+      cout << d->fragmentShaderOpaque->error() << endl;
+
+    if (d->program == nullptr)
+      d->program = new ShaderProgram;
+    d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->fragmentShader);
+    if (!d->program->link())
+      cout << d->program->error() << endl;
+
+    if (d->programOpaque == nullptr)
+      d->programOpaque = new ShaderProgram;
+    d->programOpaque->attachShader(*d->vertexShader);
+    d->programOpaque->attachShader(*d->fragmentShaderOpaque);
+    if (!d->programOpaque->link())
+      cout << d->programOpaque->error() << endl;
   }
 }
 
@@ -127,45 +136,52 @@ void MeshGeometry::render(const Camera& camera)
   // Prepare the VBOs, IBOs and shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << endl;
+  ShaderProgram* program;
+  // If the mesh is opaque, use the opaque shader
+  if (m_opacity != 255)
+    program = d->program;
+  else
+    program = d->programOpaque;
+
+  if (!program->bind())
+    cout << program->error() << endl;
 
   d->vbo.bind();
   d->ibo.bind();
 
   // Set up our attribute arrays.
-  if (!d->program.enableAttributeArray("vertex"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                    sizeof(PackedVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
+  if (!program->enableAttributeArray("vertex"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                 sizeof(PackedVertex), FloatType, 3,
+                                 ShaderProgram::NoNormalize)) {
+    cout << program->error() << endl;
   }
-  if (!d->program.enableAttributeArray("color"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
-                                    sizeof(PackedVertex), UCharType, 4,
-                                    ShaderProgram::Normalize)) {
-    cout << d->program.error() << endl;
+  if (!program->enableAttributeArray("color"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
+                                 sizeof(PackedVertex), UCharType, 4,
+                                 ShaderProgram::Normalize)) {
+    cout << program->error() << endl;
   }
-  if (!d->program.enableAttributeArray("normal"))
-    cout << d->program.error() << endl;
-  if (!d->program.useAttributeArray("normal", PackedVertex::normalOffset(),
-                                    sizeof(PackedVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-    cout << d->program.error() << endl;
+  if (!program->enableAttributeArray("normal"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
+                                 sizeof(PackedVertex), FloatType, 3,
+                                 ShaderProgram::NoNormalize)) {
+    cout << program->error() << endl;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << endl;
+  if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
+    cout << program->error() << endl;
   }
-  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << endl;
+  if (!program->setUniformValue("projection", camera.projection().matrix())) {
+    cout << program->error() << endl;
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
-  if (!d->program.setUniformValue("normalMatrix", normalMatrix))
-    std::cout << d->program.error() << std::endl;
+  if (!program->setUniformValue("normalMatrix", normalMatrix))
+    std::cout << program->error() << std::endl;
 
   // Render the loaded spheres using the shader and bound VBO.
   glDrawRangeElements(GL_TRIANGLES, 0,
@@ -176,11 +192,11 @@ void MeshGeometry::render(const Camera& camera)
   d->vbo.release();
   d->ibo.release();
 
-  d->program.disableAttributeArray("vector");
-  d->program.disableAttributeArray("color");
-  d->program.disableAttributeArray("normal");
+  program->disableAttributeArray("vector");
+  program->disableAttributeArray("color");
+  program->disableAttributeArray("normal");
 
-  d->program.release();
+  program->release();
 }
 
 unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
@@ -192,10 +208,10 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
 
   size_t result = m_vertices.size();
 
-  Core::Array<Vector3f>::const_iterator vIter = v.begin();
-  Core::Array<Vector3f>::const_iterator vEnd = v.end();
-  Core::Array<Vector3f>::const_iterator nIter = n.begin();
-  Core::Array<Vector4ub>::const_iterator cIter = c.begin();
+  auto vIter = v.begin();
+  auto vEnd = v.end();
+  auto nIter = n.begin();
+  auto cIter = c.begin();
 
   while (vIter != vEnd)
     m_vertices.push_back(PackedVertex(*(cIter++), *(nIter++), *(vIter++)));
@@ -214,10 +230,10 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
 
   size_t result = m_vertices.size();
 
-  Core::Array<Vector3f>::const_iterator vIter = v.begin();
-  Core::Array<Vector3f>::const_iterator vEnd = v.end();
-  Core::Array<Vector3f>::const_iterator nIter = n.begin();
-  Core::Array<Vector3ub>::const_iterator cIter = c.begin();
+  auto vIter = v.begin();
+  auto vEnd = v.end();
+  auto nIter = n.begin();
+  auto cIter = c.begin();
 
   Vector4ub tmpColor(0, 0, 0, m_opacity);
   while (vIter != vEnd) {
@@ -238,9 +254,9 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
 
   size_t result = m_vertices.size();
 
-  Core::Array<Vector3f>::const_iterator vIter = v.begin();
-  Core::Array<Vector3f>::const_iterator vEnd = v.end();
-  Core::Array<Vector3f>::const_iterator nIter = n.begin();
+  auto vIter = v.begin();
+  auto vEnd = v.end();
+  auto nIter = n.begin();
 
   const Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
   while (vIter != vEnd)
@@ -275,5 +291,4 @@ void MeshGeometry::clear()
   m_dirty = true;
 }
 
-} // End namespace Rendering
 } // End namespace Avogadro

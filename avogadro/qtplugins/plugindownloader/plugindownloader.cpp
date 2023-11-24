@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "plugindownloader.h"
@@ -22,14 +11,13 @@
 #include <QtCore/QList>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
 //#include <libarchive/archive.h>
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 PluginDownloader::PluginDownloader(QObject* parent_)
   : ExtensionPlugin(parent_), m_action(new QAction(this)), m_molecule(nullptr),
@@ -52,11 +40,11 @@ QStringList PluginDownloader::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
-void PluginDownloader::setMolecule(QtGui::Molecule* mol)
+void PluginDownloader::setMolecule(QtGui::Molecule*)
 {
 }
 
-bool PluginDownloader::readMolecule(QtGui::Molecule& mol)
+bool PluginDownloader::readMolecule(QtGui::Molecule&)
 {
   return true;
 }
@@ -69,8 +57,7 @@ void PluginDownloader::showDialog()
   m_widget->show();
 }
 
-void PluginDownloader::replyFinished(QNetworkReply* reply)
+void PluginDownloader::replyFinished(QNetworkReply*)
 {
-}
 }
 }

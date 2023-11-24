@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "bonding.h"
@@ -19,16 +8,15 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtCore/QSettings>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QDialog>
+#include <QAction>
+#include <QDialog>
+#include <QSettings>
 
 #include <vector>
 
 #include "ui_bondingdialog.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Array;
 using Core::Elements;
@@ -38,8 +26,10 @@ typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
 Bonding::Bonding(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_action(new QAction(tr("Bond Atoms"), this)),
+    m_orderAction(new QAction(tr("Perceive Bond Orders"), this)),
     m_clearAction(new QAction(tr("Remove Bonds"), this)),
     m_configAction(new QAction(tr("Configure Bonding…"), this)),
+    m_createBondsAction(new QAction(tr("Bond Selected Atoms"), this)),
     m_dialog(nullptr), m_ui(nullptr)
 {
   QSettings settings;
@@ -47,7 +37,14 @@ Bonding::Bonding(QObject* parent_)
   m_minDistance = settings.value("bonding/minDistance", 0.32).toDouble();
 
   m_action->setShortcut(QKeySequence("Ctrl+B"));
+  m_action->setProperty("menu priority", 750);
+  m_createBondsAction->setProperty("menu priority", 740);
+  m_orderAction->setProperty("menu priority", 735);
+  m_clearAction->setProperty("menu priority", 720);
+
   connect(m_action, SIGNAL(triggered()), SLOT(bond()));
+  connect(m_createBondsAction, SIGNAL(triggered()), SLOT(createBond()));
+  connect(m_orderAction, SIGNAL(triggered()), SLOT(bondOrders()));
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
   connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
 }
@@ -57,7 +54,8 @@ Bonding::~Bonding() {}
 QList<QAction*> Bonding::actions() const
 {
   QList<QAction*> result;
-  return result << m_action << m_clearAction << m_configAction;
+  return result << m_action << m_createBondsAction << m_orderAction
+                << m_clearAction << m_configAction;
 }
 
 QStringList Bonding::menuPath(QAction*) const
@@ -68,6 +66,33 @@ QStringList Bonding::menuPath(QAction*) const
 void Bonding::setMolecule(QtGui::Molecule* mol)
 {
   m_molecule = mol;
+}
+
+void Bonding::registerCommands()
+{
+  emit registerCommand("removeBonds",
+                       tr("Remove bonds from all or selected atoms."));
+  emit registerCommand("createBonds",
+                       tr("Create bonds between all or selected atoms."));
+  emit registerCommand("addBondOrders", tr("Perceive bond orders."));
+}
+
+bool Bonding::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command.
+
+  if (command == "removeBonds") {
+    clearBonds();
+    return true;
+  } else if (command == "createBonds") {
+    bond();
+    return true;
+  } else if (command == "addBondOrders") {
+    bondOrders();
+    return true;
+  }
+  return false;
 }
 
 void Bonding::configure()
@@ -100,6 +125,30 @@ void Bonding::setValues()
   QSettings settings;
   settings.setValue("bonding/tolerance", m_tolerance);
   settings.setValue("bonding/minDistance", m_minDistance);
+}
+
+void Bonding::createBond()
+{
+  // Create bond between selected atoms no matter the distance
+  if (!m_molecule)
+    return;
+
+  if (m_molecule->isSelectionEmpty())
+    return;
+
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (!m_molecule->atomSelected(i))
+      continue;
+
+    for (Index j = i + 1; j < m_molecule->atomCount(); ++j) {
+      if (!m_molecule->atomSelected(j))
+        continue;
+
+      m_molecule->addBond(i, j, 1);
+    }
+  }
+
+  m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 
 void Bonding::bond()
@@ -155,6 +204,12 @@ void Bonding::bond()
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 
+void Bonding::bondOrders()
+{
+  m_molecule->perceiveBondOrders();
+  m_molecule->emitChanged(QtGui::Molecule::Bonds);
+}
+
 void Bonding::clearBonds()
 {
   // remove any bonds connected to the selected atoms
@@ -169,15 +224,13 @@ void Bonding::clearBonds()
 
       // OK, the atom is selected, get the bonds to delete
       const NeighborListType bonds = m_molecule->bonds(i);
-      for (NeighborListType::const_iterator it = bonds.begin();
-           it != bonds.end(); ++it) {
-        bondIndices.push_back(it->index());
+      for (auto bond : bonds) {
+        bondIndices.push_back(bond.index());
       }
     } // end looping through atoms
 
     // now delete the bonds
-    for (std::vector<size_t>::const_reverse_iterator it = bondIndices.rbegin(),
-                                                     itEnd = bondIndices.rend();
+    for (auto it = bondIndices.rbegin(), itEnd = bondIndices.rend();
          it != itEnd; ++it) {
       m_molecule->removeBond(*it);
     }
@@ -185,5 +238,4 @@ void Bonding::clearBonds()
   m_molecule->emitChanged(QtGui::Molecule::Bonds);
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

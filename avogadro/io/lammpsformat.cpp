@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "lammpsformat.h"
@@ -36,8 +25,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 using Core::Array;
 using Core::Atom;
@@ -51,7 +39,6 @@ using Core::trimmed;
 using Core::UnitCell;
 
 #ifndef _WIN32
-using std::isalpha;
 #endif
 
 LammpsTrajectoryFormat::LammpsTrajectoryFormat() {}
@@ -65,6 +52,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   double x_min = 0, x_max = 0, y_min = 0, y_max = 0, z_min = 0, z_max = 0,
          tilt_xy = 0, tilt_xz = 0, tilt_yz = 0, scale_x = 0., scale_y = 0.,
          scale_z = 0.;
+
+  // This can likely be removed as it is clearly not used anywhere, suppress for
+  // now.
+  AVO_UNUSED(id_idx);
 
   string buffer;
   getline(inStream, buffer); // Finish the first line
@@ -167,10 +158,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     } else if (labels[i] == "zs" || labels[i] == "zsu") {
       z_idx = i;
       scale_z = 1.;
-    } else if (labels[i] == "type")
+    } else if (labels[i] == "type") {
       type_idx = i;
-    else if (labels[i] == "id")
+    } else if (labels[i] == "id") {
       id_idx = i;
+    }
   }
 
   // Parse atoms
@@ -198,7 +190,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
                   scale_z * (z_min + (z_max - z_min) *
                                        lexicalCast<double>(tokens[z_idx - 2])));
 
-    AtomTypeMap::const_iterator it = atomTypes.find(to_string(atomicNum));
+    auto it = atomTypes.find(to_string(atomicNum));
     if (it == atomTypes.end()) {
       atomTypes.insert(
         std::make_pair(to_string(atomicNum), customElementCounter++));
@@ -215,10 +207,8 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (AtomTypeMap::const_iterator it = atomTypes.begin(),
-                                     itEnd = atomTypes.end();
-         it != itEnd; ++it) {
-      elementMap.insert(std::make_pair(it->second, it->first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(std::make_pair(atomType.second, atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }
@@ -354,10 +344,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       } else if (labels[i] == "zs" || labels[i] == "zsu") {
         z_idx = i;
         scale_z = 1.;
-      } else if (labels[i] == "type")
+      } else if (labels[i] == "type") {
         type_idx = i;
-      else if (labels[i] == "id")
+      } else if (labels[i] == "id") {
         id_idx = i;
+      }
     }
 
     Array<Vector3> positions;
@@ -394,8 +385,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   return true;
 }
 
-bool LammpsTrajectoryFormat::write(std::ostream& outStream,
-                                   const Core::Molecule& mol)
+bool LammpsTrajectoryFormat::write(std::ostream&, const Core::Molecule&)
 {
   return false;
 }
@@ -403,14 +393,14 @@ bool LammpsTrajectoryFormat::write(std::ostream& outStream,
 std::vector<std::string> LammpsTrajectoryFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("dump");
+  ext.emplace_back("dump");
   return ext;
 }
 
 std::vector<std::string> LammpsTrajectoryFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("text/lammps");
+  mime.emplace_back("text/lammps");
   return mime;
 }
 
@@ -418,7 +408,7 @@ LammpsDataFormat::LammpsDataFormat() {}
 
 LammpsDataFormat::~LammpsDataFormat() {}
 
-bool LammpsDataFormat::read(std::istream& inStream, Core::Molecule& mol)
+bool LammpsDataFormat::read(std::istream&, Core::Molecule&)
 {
   return false;
 }
@@ -436,6 +426,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 
   std::ostringstream massStream, atomStream, bondStream;
   double xmin, xmax, ymin, ymax, zmin, zmax;
+  xmin = xmax = ymin = ymax = zmin = zmax = 0.0;
 
   size_t numAtoms = mol2.atomCount();
   outStream << to_string(numAtoms) << " atoms\n";
@@ -447,11 +438,9 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
   size_t idx = 1;
   Array<unsigned char> atomicNumbers = mol2.atomicNumbers();
   std::map<unsigned char, size_t> composition;
-  for (Array<unsigned char>::const_iterator it = atomicNumbers.begin(),
-                                            itEnd = atomicNumbers.end();
-       it != itEnd; ++it) {
-    if (composition.find(*it) == composition.end()) {
-      composition[*it] = idx++;
+  for (unsigned char& atomicNumber : atomicNumbers) {
+    if (composition.find(atomicNumber) == composition.end()) {
+      composition[atomicNumber] = idx++;
     }
   }
 
@@ -459,7 +448,7 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 
   // Masses
   massStream << "Masses\n\n";
-  std::map<unsigned char, size_t>::iterator iter = composition.begin();
+  auto iter = composition.begin();
   while (iter != composition.end()) {
     massStream << iter->second << "   " << Elements::mass(iter->first) << "\n";
     ++iter;
@@ -492,11 +481,12 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
         zmax = std::max(coords[2], zmax);
       }
 
-      char atomline[200];
-      sprintf(atomline, "%-*d %d %10f %10f %10f\n",
-              static_cast<int>(log(numAtoms)) + 1, static_cast<int>(i + 1),
-              static_cast<int>(composition[atomicNumbers[i]]), coords.x(),
-              coords.y(), coords.z());
+      const unsigned int lineSize = 256;
+      char atomline[lineSize];
+      snprintf(atomline, lineSize - 1, "%-*d %d %10f %10f %10f\n",
+               static_cast<int>(log(numAtoms)) + 1, static_cast<int>(i + 1),
+               static_cast<int>(composition[atomicNumbers[i]]), coords.x(),
+               coords.y(), coords.z());
       atomStream << atomline;
     }
 
@@ -508,60 +498,62 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     std::map<std::pair<unsigned char, unsigned char>, int> bondIds;
     int bondItr = 1;
     bondStream << "Bonds\n\n";
+    const unsigned int lineSize = 256;
     for (Index i = 0; i < numBonds; ++i) {
-      char bondline[200];
+      char bondline[lineSize];
       Bond b = mol2.bond(i);
       if (bondIds.find(std::make_pair(b.atom1().atomicNumber(),
                                       b.atom2().atomicNumber())) !=
           bondIds.end()) {
-        sprintf(bondline, "%-*d %7d %7d %7d\n",
-                static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
-                bondIds[std::make_pair(b.atom1().atomicNumber(),
-                                       b.atom2().atomicNumber())],
-                static_cast<int>(b.atom1().index() + 1),
-                static_cast<int>(b.atom2().index() + 1));
+        snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
+                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
+                 bondIds[std::make_pair(b.atom1().atomicNumber(),
+                                        b.atom2().atomicNumber())],
+                 static_cast<int>(b.atom1().index() + 1),
+                 static_cast<int>(b.atom2().index() + 1));
         bondStream << bondline;
       } else if (bondIds.find(std::make_pair(b.atom2().atomicNumber(),
                                              b.atom1().atomicNumber())) !=
                  bondIds.end()) {
-        sprintf(bondline, "%-*d %7d %7d %7d\n",
-                static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
-                bondIds[std::make_pair(b.atom1().atomicNumber(),
-                                       b.atom2().atomicNumber())],
-                static_cast<int>(b.atom2().index() + 1),
-                static_cast<int>(b.atom1().index() + 1));
+        snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
+                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
+                 bondIds[std::make_pair(b.atom1().atomicNumber(),
+                                        b.atom2().atomicNumber())],
+                 static_cast<int>(b.atom2().index() + 1),
+                 static_cast<int>(b.atom1().index() + 1));
         bondStream << bondline;
       } else {
         bondIds.insert(std::make_pair(
           std::make_pair(b.atom1().atomicNumber(), b.atom2().atomicNumber()),
           bondItr++));
-        sprintf(bondline, "%-*d %7d %7d %7d\n",
-                static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
-                bondIds[std::make_pair(b.atom1().atomicNumber(),
-                                       b.atom2().atomicNumber())],
-                static_cast<int>(b.atom1().index() + 1),
-                static_cast<int>(b.atom2().index() + 1));
+        snprintf(bondline, lineSize - 1, "%-*d %7d %7d %7d\n",
+                 static_cast<int>(log(numAtoms) + 1), static_cast<int>(i + 1),
+                 bondIds[std::make_pair(b.atom1().atomicNumber(),
+                                        b.atom2().atomicNumber())],
+                 static_cast<int>(b.atom1().index() + 1),
+                 static_cast<int>(b.atom2().index() + 1));
         bondStream << bondline;
       }
     }
   }
 
   UnitCell* unitcell = mol2.unitCell();
-  char simBoxBlock[200];
+  const unsigned int lineSize = 256;
+  char simBoxBlock[lineSize];
   if (unitcell) {
     const Matrix3& mat = unitcell->cellMatrix().transpose();
-    sprintf(simBoxBlock,
-            "%10f %10f xlo xhi\n%10f %10f ylo yhi\n%10f %10f zlo zhi\n%10f "
-            "%10f %10f xy xz yz",
-            0.0, mat(0, 0), 0.0, mat(1, 1), 0.0, mat(2, 2), mat(1, 0),
-            mat(2, 0), mat(2, 1));
+    snprintf(simBoxBlock, lineSize - 1,
+             "%10f %10f xlo xhi\n%10f %10f ylo yhi\n%10f %10f zlo zhi\n%10f "
+             "%10f %10f xy xz yz",
+             0.0, mat(0, 0), 0.0, mat(1, 1), 0.0, mat(2, 2), mat(1, 0),
+             mat(2, 0), mat(2, 1));
     outStream << simBoxBlock;
   } else {
-    sprintf(simBoxBlock,
-            "%10f %10f xlo xhi\n%10f %10f ylo yhi\n%10f %10f zlo zhi\n%10f "
-            "%10f %10f xy xz yz",
-            xmin - 0.5, xmax - 0.5, ymin - 0.5, ymax - 0.5, zmin - 0.5,
-            zmax - 0.5, 0.0, 0.0, 0.0);
+    snprintf(simBoxBlock, lineSize - 1,
+             "%10f %10f xlo xhi\n%10f %10f ylo yhi\n%10f %10f zlo zhi\n%10f "
+             "%10f %10f xy xz yz",
+             xmin - 0.5, xmax - 0.5, ymin - 0.5, ymax - 0.5, zmin - 0.5,
+             zmax - 0.5, 0.0, 0.0, 0.0);
     outStream << simBoxBlock;
   }
   outStream << std::endl << std::endl << std::endl;
@@ -575,16 +567,15 @@ bool LammpsDataFormat::write(std::ostream& outStream, const Core::Molecule& mol)
 std::vector<std::string> LammpsDataFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
-  ext.push_back("lmpdat");
+  ext.emplace_back("lmpdat");
   return ext;
 }
 
 std::vector<std::string> LammpsDataFormat::mimeTypes() const
 {
   std::vector<std::string> mime;
-  mime.push_back("N/A");
+  mime.emplace_back("N/A");
   return mime;
 }
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io

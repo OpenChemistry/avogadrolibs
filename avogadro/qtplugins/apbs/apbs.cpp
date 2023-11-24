@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "apbs.h"
@@ -30,8 +19,7 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Mesh;
 
@@ -39,7 +27,7 @@ Apbs::Apbs(QObject* parent_)
   : QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
     m_progressDialog(nullptr), m_dialog(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setText(tr("Run APBS…"));
   connect(action, SIGNAL(triggered()), this, SLOT(onRunApbs()));
   m_actions.append(action);
@@ -83,7 +71,7 @@ void Apbs::onOpenOutputFile()
 
 void Apbs::meshGeneratorFinished()
 {
-  QtGui::MeshGenerator* generator =
+  auto* generator =
     qobject_cast<QtGui::MeshGenerator*>(sender());
   if (!generator) {
     return;
@@ -166,7 +154,7 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       qApp->processEvents();
 
       Mesh* mesh = molecule.addMesh();
-      QtGui::MeshGenerator* meshGenerator =
+      auto* meshGenerator =
         new QtGui::MeshGenerator(cube, mesh, 0.1f);
       connect(meshGenerator, SIGNAL(finished()), this,
               SLOT(meshGeneratorFinished()));
@@ -194,6 +182,5 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
   }
 
   return true;
-}
 }
 }

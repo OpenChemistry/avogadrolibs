@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2017 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "downloaderwidget.h"
@@ -35,8 +24,7 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 void setRawHeaders(QNetworkRequest* request)
 {
@@ -109,7 +97,7 @@ void DownloaderWidget::updateRepoData()
     m_ui->repoTable->setRowCount(numRepos);
     m_repoList.clear();
     for (int i = 0; i < numRepos; i++) {
-      m_repoList.push_back(repo());
+      m_repoList.emplace_back();
 
       const auto& currentRoot = m_root[i];
 
@@ -158,7 +146,7 @@ void DownloaderWidget::updateRepoData()
         m_repoList[i].readmeUrl = readmeUrl;
       }
 
-      QTableWidgetItem* checkbox = new QTableWidgetItem();
+      auto* checkbox = new QTableWidgetItem();
       checkbox->setCheckState(Qt::Unchecked);
       m_ui->repoTable->setItem(i, 0, checkbox);
       m_ui->repoTable->setItem(i, 1, new QTableWidgetItem(m_repoList[i].name));
@@ -390,5 +378,4 @@ void DownloaderWidget::unzipPlugin()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

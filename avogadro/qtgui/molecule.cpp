@@ -8,14 +8,13 @@
 
 #include <iostream>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using std::swap;
 
-Molecule::Molecule(QObject* parent_)
-  : QObject(parent_),
-    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
+Molecule::Molecule(QObject* p)
+  : QObject(p), Core::Molecule(),
+    m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(true);
 }
@@ -116,7 +115,7 @@ bool Molecule::removeAtom(Index index)
     return false;
   // Unique ID of an atom that was removed:
   m_atomUniqueIds[uniqueId] = MaxIndex;
-  Index newSize = static_cast<Index>(atomCount() - 1);
+  auto newSize = static_cast<Index>(atomCount() - 1);
 
   // Before removing the atom we must first remove any bonds to it.
   Core::Molecule::removeAtom(index);
@@ -238,7 +237,7 @@ bool Molecule::removeBond(Index index)
     return false;
   m_bondUniqueIds[uniqueId] = MaxIndex; // Unique ID of a bond that was removed.
 
-  Index newSize = static_cast<Index>(bondCount() - 1);
+  auto newSize = static_cast<Index>(bondCount() - 1);
   if (index != newSize) {
     Index movedBondUID = findBondUniqueId(newSize);
     assert(movedBondUID != MaxIndex);
@@ -312,5 +311,4 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // namespace QtGui
 } // namespace Avogadro

@@ -7,10 +7,9 @@
 
 using json = nlohmann::json;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 /**
-* @brief Constructor to initialize the NetworkAcessManager and set pointers to
+* @brief Constructor to initialize the NetworkAccessManager and set pointers to
 * the widget's ui elements.
 */
 PQRRequest::PQRRequest(QTableWidget* tw, QLabel* gv, QLineEdit* nd, QLabel* fd,
@@ -50,7 +49,7 @@ void PQRRequest::sendRequest(QString url)
 * @param url The url to send the request to
 * @param mol2 The mol2 representation of the molecule to download
 */
-void PQRRequest::sendRequest(QString url, QString mol2)
+void PQRRequest::sendRequest(QString url, QString)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
   currentMolName = nameDisplay->text(); // needed to load mol into Avogadro
@@ -75,7 +74,7 @@ void PQRRequest::sendPNGRequest(QString url)
 */
 QString PQRRequest::molSelected(int num)
 {
-  if (results.empty() || num > results.size())
+  if (results.empty() || num > static_cast<int>(results.size()))
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
@@ -111,7 +110,7 @@ void PQRRequest::parseJson()
     } else {
       table->setRowCount(resultSize);
       for (int i = 0; i < resultSize; i++) {
-        results.push_back(result());
+        results.emplace_back();
 
         // Loop through the keys
         for (auto it = root[i].cbegin(); it != root[i].cend(); ++it) {
@@ -138,7 +137,7 @@ void PQRRequest::parseJson()
         // table->setItem(i, 2, new
         // QTableWidgetItem(QString::number(results[i].mass, 'f', 3) + QString("
         // g/mol")));
-        QTableWidgetItem* massItem = new QTableWidgetItem();
+        auto* massItem = new QTableWidgetItem();
         massItem->setData(Qt::DisplayRole, results[i].mass);
         table->setItem(i, 2, massItem);
       }
@@ -180,13 +179,13 @@ QString PQRRequest::parseSubscripts(QString formula)
 {
   std::string str = formula.toStdString();
   QString toReturn;
-  for (int i = 0; i < str.length(); i++) {
-    if (isdigit(str[i])) {
+  for (char i : str) {
+    if (isdigit(i)) {
       toReturn.append("<sub>");
-      toReturn.append(str[i]);
+      toReturn.append(i);
       toReturn.append("</sub>");
     } else {
-      toReturn.append(str[i]);
+      toReturn.append(i);
     }
   }
   return toReturn;
@@ -203,7 +202,7 @@ float PQRRequest::getMolMass(QString formula)
   int subscript = 1;
   std::string element;
   unsigned char atomicNum;
-  for (int i = 0; i < str.length(); i++) {
+  for (size_t i = 0; i < str.length(); i++) {
     // each element will start with a capital letter
     if (isupper(str[i])) {
       // if next letter is a lower case then we know the whole element
@@ -245,5 +244,4 @@ float PQRRequest::getMolMass(QString formula)
   }
   return totalMass;
 }
-} // namespace QtPlugins
 } // namespace Avogadro

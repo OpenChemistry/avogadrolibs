@@ -31,13 +31,12 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <QDebug>
 
 #include <cmath>
 
-using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -46,8 +45,7 @@ using Avogadro::Rendering::TextLabel2D;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 MeasureTool::MeasureTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -137,7 +135,7 @@ void MeasureTool::createLabels(T* mol, GeometryNode* geo,
     const unsigned char* color = Elements::color(atomicNumber);
     atomLabelProp.setColorRgb(contrastingColor(Vector3ub(color)).data());
 
-    TextLabel3D* label = new TextLabel3D;
+    auto* label = new TextLabel3D;
     label->setText(QString("#%1").arg(i + 1).toStdString());
     label->setTextProperties(atomLabelProp);
     label->setAnchor(positions[i].cast<float>());
@@ -152,7 +150,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   if (m_atoms.size() == 0)
     return;
 
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   node.addChild(geo);
 
   // Add labels, extract positions
@@ -174,12 +172,15 @@ void MeasureTool::draw(Rendering::GroupNode& node)
     case 4:
       v3 = positions[3] - positions[2];
       v3Norm = v3.norm();
+      [[fallthrough]];
     case 3:
       v2 = positions[2] - positions[1];
       v2Norm = v2.norm();
+      [[fallthrough]];
     case 2:
       v1 = positions[1] - positions[0];
       v1Norm = v1.norm();
+      [[fallthrough]];
     default:
       break;
   }
@@ -232,7 +233,7 @@ void MeasureTool::draw(Rendering::GroupNode& node)
   overlayTProp.setColorRgb(64, 255, 220);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
-  TextLabel2D* label = new TextLabel2D;
+  auto* label = new TextLabel2D;
   label->setText(overlayText.toStdString());
   label->setTextProperties(overlayTProp);
   label->setRenderPass(Rendering::Overlay2DPass);
@@ -278,5 +279,4 @@ bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
   return true;
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

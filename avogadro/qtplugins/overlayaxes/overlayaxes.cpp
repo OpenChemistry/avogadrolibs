@@ -16,8 +16,8 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-#include <QtCore/QSettings>
-#include <QtWidgets/QAction>
+#include <QSettings>
+#include <QAction>
 
 #include <Eigen/Geometry>
 
@@ -75,8 +75,7 @@ void CustomMesh::render(const Camera& camera)
 }
 } // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class OverlayAxes::RenderImpl
 {
@@ -116,7 +115,7 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
 
   // Number of angular samples:
   const unsigned int res = 12;
-  const float resf = static_cast<float>(res);
+  const auto resf = static_cast<float>(res);
   // Cylinder length:
   const float cylLength = .75f;
   // Cylinder radius:
@@ -232,9 +231,10 @@ void OverlayAxes::RenderImpl::addAxis(const Vector3f& axis,
   mesh->addTriangles(triangles);
 }
 
-OverlayAxes::OverlayAxes(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_render(new RenderImpl),
-    m_axesAction(new QAction(tr("Reference Axes"), this)), m_initialized(false)
+OverlayAxes::OverlayAxes(QObject* p)
+  : Avogadro::QtGui::ExtensionPlugin(p), m_initialized(false),
+    m_render(new RenderImpl), m_glWidget(nullptr),
+    m_axesAction(new QAction(tr("Reference Axes"), this))
 {
   connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
 
@@ -300,9 +300,9 @@ void OverlayAxes::setActiveWidget(QWidget* widget)
   }
 }
 
-void OverlayAxes::process(const Core::Molecule& mol, Rendering::GroupNode& node)
+void OverlayAxes::process(const Core::Molecule&, Rendering::GroupNode& node)
 {
-  GeometryNode* geo = new GeometryNode;
+  auto* geo = new GeometryNode;
   // Since our geometry doesn't change, we just make a copy of the pre-built
   // set of axes.
   geo->addDrawable(new CustomMesh(*m_render->mesh));
@@ -325,5 +325,4 @@ void OverlayAxes::setScene(Rendering::Scene* scene)
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

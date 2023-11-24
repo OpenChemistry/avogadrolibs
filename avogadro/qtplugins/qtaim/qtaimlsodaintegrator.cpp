@@ -39,8 +39,7 @@ tam@wri.com
 
 #include "qtaimlsodaintegrator.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMLSODAIntegrator::QTAIMLSODAIntegrator(QTAIMWavefunctionEvaluator& eval,
                                            const qint64 mode)
@@ -1374,7 +1373,7 @@ void QTAIMLSODAIntegrator::lsoda(int neq, double* y, double* t, double tout,
    start of problem).  Check for too much accuracy being requested, and
    check for h below the roundoff level in *t.
 */
-  while (1) {
+  while (true) {
     if (*istate != 1 || nst != 0) {
       if ((nst - nslast) >= mxstep) {
         //              qDebug( "lsoda -- %d steps taken before reaching tout",
@@ -1696,8 +1695,8 @@ void QTAIMLSODAIntegrator::stoda(int neq, double* y)
    In any case, prja is called at least every msbp steps.
 */
 
-  while (1) {
-    while (1) {
+  while (true) {
+    while (true) {
       if (fabs(rc - 1.) > ccmax)
         ipup = miter;
       if (nst >= nslp + msbp)
@@ -2319,7 +2318,7 @@ void QTAIMLSODAIntegrator::correction(int neq, double* y, int* corflag,
    preprocessed before starting the corrector iteration.  ipup is set
    to 0 as an indicator that this has been done.
 */
-  while (1) {
+  while (true) {
     if (*m == 0) {
       if (ipup > 0) {
         prja(neq, y);
@@ -2762,5 +2761,4 @@ void QTAIMLSODAIntegrator::freevectors()
   free(ipvt);
 } /*   end freevectors   */
 
-} // namespace QtPlugins
 } // namespace Avogadro

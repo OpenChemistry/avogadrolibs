@@ -1,20 +1,10 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012-13 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "manipulator.h"
+#include "ui_manipulatewidget.h"
 
 #include <avogadro/core/vector.h>
 
@@ -26,31 +16,34 @@
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QtCore/QDebug>
+#include <QAction>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
 
-using Avogadro::Core::Atom;
-using Avogadro::Core::Bond;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
-using QtGui::RWBond;
-using QtGui::RWMolecule;
-using Rendering::Identifier;
 
 #define ROTATION_SPEED 0.5
+
+class ManipulateWidget : public QWidget, public Ui::ManipulateWidget
+{
+public:
+  ManipulateWidget(QWidget* parent = nullptr) : QWidget(parent)
+  {
+    setupUi(this);
+  }
+};
 
 Manipulator::Manipulator(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
+    m_toolWidget(new ManipulateWidget(dynamic_cast<QWidget*>(parent_))),
     m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Manipulate"));
@@ -59,12 +52,116 @@ Manipulator::Manipulator(QObject* parent_)
     tr("Manipulation Tool\n\n"
        "Left Mouse: \tClick and drag to move atoms\n"
        "Right Mouse: \tClick and drag to rotate selected atoms.\n"));
+
+  connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
+          SLOT(buttonClicked(QAbstractButton*)));
 }
 
 Manipulator::~Manipulator() {}
 
 QWidget* Manipulator::toolWidget() const
 {
+  return m_toolWidget;
+}
+
+void Manipulator::buttonClicked(QAbstractButton* button)
+{
+  if (m_toolWidget == nullptr)
+    return;
+
+  // clear focus from the boxes (they eat up keystrokes)
+  m_toolWidget->xTranslateSpinBox->clearFocus();
+  m_toolWidget->yTranslateSpinBox->clearFocus();
+  m_toolWidget->zTranslateSpinBox->clearFocus();
+
+  m_toolWidget->xRotateSpinBox->clearFocus();
+  m_toolWidget->yRotateSpinBox->clearFocus();
+  m_toolWidget->zRotateSpinBox->clearFocus();
+
+  if (m_toolWidget->buttonBox->buttonRole(button) !=
+      QDialogButtonBox::ApplyRole) {
+    // reset values
+    m_toolWidget->xTranslateSpinBox->setValue(0.0);
+    m_toolWidget->yTranslateSpinBox->setValue(0.0);
+    m_toolWidget->zTranslateSpinBox->setValue(0.0);
+
+    m_toolWidget->xRotateSpinBox->setValue(0.0);
+    m_toolWidget->yRotateSpinBox->setValue(0.0);
+    m_toolWidget->zRotateSpinBox->setValue(0.0);
+
+    return;
+  }
+
+  // apply values
+  Vector3 delta(m_toolWidget->xTranslateSpinBox->value(),
+                m_toolWidget->yTranslateSpinBox->value(),
+                m_toolWidget->zTranslateSpinBox->value());
+
+  translate(delta);
+
+  Vector3 rotation(m_toolWidget->xRotateSpinBox->value(),
+                   m_toolWidget->yRotateSpinBox->value(),
+                   m_toolWidget->zRotateSpinBox->value());
+  Vector3 center(0.0, 0.0, 0.0);
+
+  // Check if we're rotating around the origin or the centroid
+  if (m_toolWidget->rotateComboBox->currentIndex() == 1) {
+    // center of selected atoms
+    unsigned long selectedAtomCount = 0;
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      if (!m_molecule->atomSelected(i))
+        continue;
+
+      center += m_molecule->atomPosition3d(i);
+      selectedAtomCount++;
+    }
+    if (selectedAtomCount > 0)
+      center /= selectedAtomCount;
+
+  } else {
+    center = m_molecule->molecule().centerOfGeometry();
+  }
+
+  // Settings are in degrees
+#ifndef DEG_TO_RAD
+#define DEG_TO_RAD 0.0174532925
+#endif
+  rotate(rotation * DEG_TO_RAD, center);
+
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+}
+
+QUndoCommand* Manipulator::keyPressEvent(QKeyEvent* e)
+{
+  switch (e->key()) {
+    case Qt::Key_Left:
+    case Qt::Key_H:
+    case Qt::Key_A:
+      translate(Vector3(-0.1, 0.0, 0.0));
+      e->accept();
+      break;
+    case Qt::Key_Right:
+    case Qt::Key_L:
+    case Qt::Key_D:
+      translate(Vector3(+0.1, 0.0, 0.0));
+      e->accept();
+      break;
+    case Qt::Key_Up:
+    case Qt::Key_K:
+    case Qt::Key_W:
+      translate(Vector3(0.0, +0.1, 0.0));
+      e->accept();
+      break;
+    case Qt::Key_Down:
+    case Qt::Key_J:
+    case Qt::Key_S:
+      translate(Vector3(0.0, -0.1, 0.0));
+      e->accept();
+      break;
+    default:
+      e->ignore();
+  }
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
   return nullptr;
 }
 
@@ -133,7 +230,7 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
   if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
-      m_object.molecule == mol) {
+      m_object.molecule == &m_molecule->molecule()) {
     // translate single atom position
     RWAtom atom = m_molecule->atom(m_object.index);
     Vector3f oldPos(atom.position3d().cast<float>());
@@ -251,7 +348,7 @@ void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
   // check for modifier keys (e.g., Mac)
   if (e->buttons() & Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
     m_currentAction = Translation;
-  } else if (e->buttons() & Qt::MidButton ||
+  } else if (e->buttons() & Qt::MiddleButton ||
              (e->buttons() & Qt::LeftButton &&
               e->modifiers() == Qt::ShiftModifier)) {
     m_currentAction = ZoomTilt;
@@ -263,5 +360,4 @@ void Manipulator::updatePressedButtons(QMouseEvent* e, bool release)
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

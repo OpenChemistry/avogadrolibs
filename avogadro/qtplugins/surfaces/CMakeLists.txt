@@ -1,6 +1,3 @@
-include_directories(SYSTEM "${AvogadroLibs_SOURCE_DIR}/thirdparty/libgwavi"
-  "${AvogadroLibs_SOURCE_DIR}/thirdparty/gif-h")
-
 set(surfaces_srcs
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
@@ -19,7 +16,10 @@ avogadro_plugin(Surfaces
 
 target_link_libraries(Surfaces
   PRIVATE
-    AvogadroQuantumIO
-    AvogadroQtOpenGL
-    Qt5::Concurrent
-    gwavi)
+    Avogadro::Calc
+    Avogadro::QuantumIO
+    Avogadro::QtOpenGL
+    Qt::Concurrent
+    gif-h
+    gwavi
+    tinycolormap)

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2015 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_VIBRATIONDIALOG_H
@@ -39,7 +28,8 @@ class VibrationDialog : public QDialog
   Q_OBJECT
 
 public:
-  VibrationDialog(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
+  explicit VibrationDialog(QWidget* parent = nullptr,
+                           Qt::WindowFlags f = Qt::WindowFlags());
   ~VibrationDialog() override;
 
   void setMolecule(QtGui::Molecule* molecule);

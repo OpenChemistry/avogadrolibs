@@ -1,23 +1,18 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2012 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
 #define AVOGADRO_QTGUI_MOLECULARPROPERTIESDIALOG_H
 
 #include <QtWidgets/QDialog>
+
+// Forward declarations
+class QAbstractButton;
+class QKeyEvent;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 namespace Avogadro {
 
@@ -38,7 +33,6 @@ class MolecularPropertiesDialog;
  * basic molecular properties.
  * @author Allison Vacanti
  *
- * @todo IUPAC name fetch (need inchi key).
  */
 class MolecularPropertiesDialog : public QDialog
 {
@@ -51,18 +45,29 @@ public:
 
   QtGui::Molecule* molecule() { return m_molecule; }
 
+protected:
+  void keyPressEvent(QKeyEvent *event) override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol);
+  void buttonClicked(QAbstractButton *button);
 
 private slots:
+  void updateName();
   void updateLabels();
   void updateMassLabel();
   void updateFormulaLabel();
   void moleculeDestroyed();
+  void replyFinished(QNetworkReply*);
+  void copy();
 
 private:
   QtGui::Molecule* m_molecule;
   Ui::MolecularPropertiesDialog* m_ui;
+
+  QString m_name;
+  QNetworkAccessManager *m_network;
+  bool m_nameRequestPending;
 };
 
 } // namespace QtPlugins

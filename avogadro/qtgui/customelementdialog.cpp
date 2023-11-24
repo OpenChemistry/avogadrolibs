@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "customelementdialog.h"
@@ -28,8 +17,7 @@
 
 using Avogadro::Core::Elements;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 CustomElementDialog::CustomElementDialog(Molecule& mol, QWidget* p)
   : QDialog(p), m_ui(new Ui::CustomElementDialog), m_molecule(mol)
@@ -64,7 +52,7 @@ struct RemapAtomicNumbers
   unsigned char operator()(unsigned char old) const
   {
     if (Core::isCustomElement(old)) {
-      MapType::const_iterator it = map.find(old);
+      auto it = map.find(old);
       return it == map.end() ? old : it->second;
     }
     return old;
@@ -87,12 +75,12 @@ void CustomElementDialog::apply()
     if (currentIndex == 0) {
       // Reuse old name:
       unsigned char newId = newIdGenerator++;
-      Molecule::CustomElementMap::const_iterator it = oldMap.find(oldId);
+      auto it = oldMap.find(oldId);
       newMap.insert(std::make_pair(newId, it->second));
       oldToNew.insert(std::make_pair(oldId, newId));
     } else {
       // New element assigned:
-      unsigned char newId = static_cast<unsigned char>(currentIndex);
+      auto newId = static_cast<unsigned char>(currentIndex);
       oldToNew.insert(std::make_pair(oldId, newId));
     }
   }
@@ -138,19 +126,17 @@ void CustomElementDialog::prepareForm()
     atomicNumbers.begin(), atomicNumbers.end(), CustomElementFilter());
 
   Molecule::CustomElementMap::const_iterator match;
-  for (std::set<unsigned char>::const_iterator it = customElements.begin(),
-                                               itEnd = customElements.end();
-       it != itEnd; ++it) {
-    if ((match = map.find(*it)) != map.end())
-      addRow(*it, QString::fromStdString(match->second));
+  for (unsigned char customElement : customElements) {
+    if ((match = map.find(customElement)) != map.end())
+      addRow(customElement, QString::fromStdString(match->second));
     else
-      addRow(*it, QString::fromStdString(Elements::name(*it)));
+      addRow(customElement, QString::fromStdString(Elements::name(customElement)));
   }
 }
 
 void CustomElementDialog::addRow(unsigned char elementId, const QString& name)
 {
-  QComboBox* combo = new QComboBox(this);
+  auto* combo = new QComboBox(this);
   combo->setProperty("id", static_cast<unsigned int>(elementId));
   combo->addItem(name);
   combo->addItems(m_elements);
@@ -164,5 +150,4 @@ void CustomElementDialog::addRow(unsigned char elementId, const QString& name)
   m_ui->form->addRow(name + ":", combo);
 }
 
-} // namespace QtGui
 } // namespace Avogadro

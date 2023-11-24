@@ -1,25 +1,13 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "textproperties.h"
 
 #include <algorithm>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 TextProperties::TextProperties()
   : m_pixelHeight(24), m_hAlign(HLeft), m_vAlign(VTop),
@@ -75,5 +63,4 @@ bool TextProperties::operator==(const TextProperties& other) const
          m_rgba[3] == other.m_rgba[3];
 }
 
-} // namespace Rendering
 } // namespace Avogadro

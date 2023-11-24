@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2018 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <QAction>
@@ -22,6 +11,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QString>
 #include <QTextEdit>
@@ -32,7 +22,8 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
-#include <avogadro/vtk/vtkplot.h>
+#include <avogadro/vtk/chartdialog.h>
+#include <avogadro/vtk/chartwidget.h>
 
 #include "banddialog.h"
 #include "specialkpoints.h"
@@ -57,7 +48,48 @@ Yaehmop::Yaehmop(QObject* parent_)
       new BandDialog(qobject_cast<QWidget*>(parent()), m_yaehmopSettings)),
     m_displayBandDialogAction(new QAction(this))
 {
+  // first off, look for the program
+  // either as eht_bind or yaehmop
+  bool found = false;
+
+  // If the YAEHMOP_EXECUTABLE environment variable is set, then
+  // use that
+  QByteArray yaehmopExec = qgetenv("YAEHMOP_EXECUTABLE");
+  if (!yaehmopExec.isEmpty()) {
+    m_programPath = yaehmopExec;
+  } else {
+    // otherwise look in the current directory, ../bin and the PATH environment
+
+#ifdef _WIN32
+    QStringList programs = QStringList() << "eht_bind.exe"
+                                         << "yaehmop.exe";
+#else
+    QStringList programs = QStringList() << "eht_bind"
+                                         << "yaehmop";
+#endif
+    QStringList paths;
+    paths << QCoreApplication::applicationDirPath()
+          << QCoreApplication::applicationDirPath() + "/../bin";
+
+    // add the PATH environment variable
+    auto environment = QProcessEnvironment::systemEnvironment().value("PATH");
+    paths << environment.split(':');
+
+    foreach (QString binary, programs) {
+      foreach (QString path, paths) {
+        if (QFile::exists(path + "/" + binary)) {
+          m_programPath = path + "/" + binary;
+          found = true;
+          break;
+        }
+      }
+      if (found)
+        break;
+    }
+  }
+
   m_displayBandDialogAction->setText(tr("Calculate Band Structure…"));
+  m_displayBandDialogAction->setEnabled(found);
   connect(m_displayBandDialogAction.get(), &QAction::triggered, this,
           &Yaehmop::displayBandDialog);
   m_actions.push_back(m_displayBandDialogAction.get());
@@ -252,7 +284,7 @@ void Yaehmop::calculateBandStructure()
 
   // Num special k points
   int numSK = m_yaehmopSettings.specialKPoints
-                .split(QRegExp("[\r\n]"), QString::SkipEmptyParts)
+                .split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts)
                 .size();
   input += (QString::number(numSK) + "\n"); // num special k points
 
@@ -265,7 +297,7 @@ void Yaehmop::calculateBandStructure()
   if (!executeYaehmop(input.toLocal8Bit(), output, err)) {
     QMessageBox::warning(
       nullptr, tr("Avogadro2"),
-      tr("Yaehmop execution failed with the following error:\n%1").arg(err);
+      tr("Yaehmop execution failed with the following error:\n%1").arg(err));
     qDebug() << "Yaehmop execution failed with the following error:\n" << err;
     return;
   }
@@ -281,7 +313,6 @@ void Yaehmop::calculateBandStructure()
   }
 
   int numKPoints = kpoints.size();
-  int numOrbitals = bands.size();
   int numSpecialKPoints = specialKPoints.size();
 
   // If there is only one special k point, there is nothing to graph. Just
@@ -296,12 +327,12 @@ void Yaehmop::calculateBandStructure()
   }
 
   // Calculate the k-space distances
-  std::vector<double> xVals{ 0.0 };
+  std::vector<float> xVals{ 0.0 };
   for (int i = 1; i < numKPoints; ++i)
     xVals.push_back(kpointDistance(kpoints[i - 1], kpoints[i]) + xVals.back());
 
   // Calculate the special k point distances
-  std::vector<double> specialKPointVals{ 0.0 };
+  std::vector<float> specialKPointVals{ 0.0 };
   for (int i = 1; i < numSpecialKPoints; ++i) {
     specialKPointVals.push_back(
       kpointDistance(specialKPoints[i - 1].coords, specialKPoints[i].coords) +
@@ -320,10 +351,8 @@ void Yaehmop::calculateBandStructure()
   }
 
   // Now generate a plot with the data
-  std::vector<std::vector<double>> data;
+  std::vector<std::vector<float>> data;
   data.push_back(xVals);
-
-  using VtkPlot = VTK::VtkPlot;
 
   // Make some labels
   std::vector<std::string> lineLabels;
@@ -332,16 +361,12 @@ void Yaehmop::calculateBandStructure()
   std::array<double, 4> color = { 255, 0, 0, 255 };
   std::vector<std::array<double, 4>> lineColors;
 
-  // Set the line styles. Most should be solid
-  VtkPlot::LineStyle style = VtkPlot::LineStyle::solidLine;
-  std::vector<VtkPlot::LineStyle> lineStyles;
-
   size_t curBandNum = 1;
   for (const auto& band : bands) {
-    data.push_back(band.toStdVector());
-    lineLabels.push_back("Band " + std::to_string(curBandNum));
+    std::vector<float> tmp(band.begin(), band.end());
+    data.push_back(tmp);
+    lineLabels.push_back(tr("Band %1").arg(curBandNum).toStdString());
     lineColors.push_back(color);
-    lineStyles.push_back(style);
     ++curBandNum;
   }
 
@@ -360,38 +385,36 @@ void Yaehmop::calculateBandStructure()
     }
 
     // Create a horizontal, black, dashed line for the fermi level
-    lineLabels.push_back(tr("Fermi Level"));
+    lineLabels.push_back(tr("Fermi Level").toStdString());
     lineColors.push_back({ 0, 0, 0, 255 });
-    lineStyles.push_back(VtkPlot::LineStyle::dashLine);
 
-    std::vector<double> fermiVals(xVals.size(), fermi);
+    std::vector<float> fermiVals(xVals.size(), fermi);
     data.push_back(std::move(fermiVals));
   }
 
   const char* xTitle = "";
-  const char* yTitle = tr("Energy (eV)");
-  const char* windowName = tr("YAeHMOP Band Structure");
+  const char* yTitle = "Energy (eV)";
+  const char* windowName = "YAeHMOP Band Structure";
 
-  m_bandPlot.reset(new VtkPlot);
-  m_bandPlot->setData(data);
-  m_bandPlot->setWindowName(windowName);
-  m_bandPlot->setXTitle(xTitle);
-  m_bandPlot->setYTitle(yTitle);
-  m_bandPlot->setLineLabels(lineLabels);
-  m_bandPlot->setLineColors(lineColors);
-  m_bandPlot->setLineStyles(lineStyles);
-  m_bandPlot->setCustomTickLabels(VtkPlot::Axis::xAxis, specialKPointVals,
-                                  specialKPointLabels);
-
-  // It makes more sense to stop the x axis exactly at its limits
-  m_bandPlot->setAxisLimits(VtkPlot::Axis::xAxis, xVals.front(), xVals.back());
-
-  if (m_yaehmopSettings.limitY) {
-    m_bandPlot->setAxisLimits(VtkPlot::Axis::yAxis, m_yaehmopSettings.minY,
-                              m_yaehmopSettings.maxY);
+  if (!m_chartDialog) {
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
   }
 
-  m_bandPlot->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->addPlots(data, VTK::color4ub{ 255, 0, 0, 255 });
+  chart->setXAxisTitle(xTitle);
+  chart->setYAxisTitle(yTitle);
+  chart->setTickLabels(VTK::ChartWidget::Axis::x, specialKPointVals,
+                       specialKPointLabels);
+  chart->setAxisLimits(VTK::ChartWidget::Axis::x, xVals.front(), xVals.back());
+  if (m_yaehmopSettings.limitY) {
+    chart->setAxisLimits(VTK::ChartWidget::Axis::y, m_yaehmopSettings.minY,
+                         m_yaehmopSettings.maxY);
+  }
+  m_chartDialog->show();
 
   // Show the yaehmop input if we are to do so
   if (m_yaehmopSettings.displayYaehmopInput)
@@ -497,7 +520,7 @@ QString Yaehmop::createGeometryAndLatticeInput() const
 }
 
 // Uncomment this for executeYaehmop debugging
-//#define AVOGADRO_YAEHMOP_EXECUTE_DEBUG
+// #define AVOGADRO_YAEHMOP_EXECUTE_DEBUG
 
 bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
                              QString& err)
@@ -506,29 +529,10 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   qDebug() << "executeYaehmop() input is:\n" << qPrintable(input);
 #endif
 
-  QString program;
-  // If the YAEHMOP_EXECUTABLE environment variable is set, then
-  // use that
-  QByteArray yaehmopExec = qgetenv("YAEHMOP_EXECUTABLE");
-  if (!yaehmopExec.isEmpty()) {
-    program = yaehmopExec;
-  } else {
-// Otherwise, search in the current directory, and then ../bin
-#ifdef _WIN32
-    QString executable = "yaehmop.exe";
-#else
-    QString executable = "yaehmop";
-#endif
-    QString path = QCoreApplication::applicationDirPath();
-    if (QFile::exists(path + "/" + executable))
-      program = path + "/" + executable;
-    else if (QFile::exists(path + "/../bin/" + executable))
-      program = path + "/../bin/" + executable;
-    else {
-      err = tr("Error: could not find yaehmop executable!");
-      qDebug() << err;
-      return false;
-    }
+  QString program = m_programPath;
+  if (program.isEmpty()) {
+    QMessageBox::warning(nullptr, tr("Avogadro"), tr("Cannot find Yaehmop"));
+    return false;
   }
 
   QStringList args;
@@ -538,8 +542,7 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   p.start(program, args);
 
   if (!p.waitForStarted()) {
-    err = tr("Error: " + program.toLocal8Bit() + " failed to start");
-    qDebug() << err;
+    qDebug() << tr("Error: %1 failed to start").arg(program);
     return false;
   }
 
@@ -552,26 +555,23 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
   if (!p.waitForFinished()) {
     err = tr("Error: " + program.toLocal8Bit() + " failed to finish");
     qDebug() << err;
-    output = p.readAll();
+    output = p.readAllStandardOutput();
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
 
   int exitStatus = p.exitStatus();
-  output = p.readAll();
+  output = p.readAllStandardOutput();
 
   if (exitStatus == QProcess::CrashExit) {
-    err = tr("Error: %1 crashed!").arg(program.toLocal8Bit());
-    qDebug() << err;
+    qDebug() << "Error: Yahemop crashed!";
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
 
   if (exitStatus != QProcess::NormalExit) {
-    err = tr("Error: %1 finished abnormally with exit code %2")
-            .arg(program.toLocal8Bit())
-            .arg(exitStatus);
-    qDebug() << err;
+    qDebug() << "Error: Yahemop finished abnormally with exit code "
+             << exitStatus;
     qDebug() << "Output is as follows:\n" << qPrintable(output);
     return false;
   }
@@ -586,7 +586,7 @@ bool Yaehmop::executeYaehmop(const QByteArray& input, QByteArray& output,
 
 void Yaehmop::showYaehmopInput(const QString& input)
 {
-  QDialog* dialog = new QDialog;
+  QDialog* dialog = new QDialog(qobject_cast<QWidget*>(this->parent()));
 
   // Make sure this gets deleted upon closing
   dialog->setAttribute(Qt::WA_DeleteOnClose);

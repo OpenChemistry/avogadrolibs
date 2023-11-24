@@ -1,19 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2008-2009 Marcus D. Hanwell
-  Copyright 2008 Albert De Fusco
-  Copyright 2010-2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "slatersettools.h"
@@ -23,13 +10,10 @@
 
 #include <iostream>
 
-using std::cout;
-using std::endl;
 
 using std::vector;
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
 {
@@ -124,7 +108,7 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
 
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
-    deltas.push_back(position - m_molecule->atom(i).position3d());
+    deltas.emplace_back(position - m_molecule->atom(i).position3d());
     dr2.push_back(deltas[i].squaredNorm());
   }
 
@@ -176,5 +160,4 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   return values;
 }
 
-} // End Core namespace
 } // End Avogadro namespace

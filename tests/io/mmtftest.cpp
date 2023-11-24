@@ -136,3 +136,22 @@ TEST(MMTFTest, residues)
   EXPECT_EQ(res3.residueName(), "HOH");
   EXPECT_EQ(res3.residueAtoms().size(), static_cast<size_t>(1));
 }
+
+TEST(MMTFTest, AltLoc)
+{
+  MMTFFormat mmtf;
+  Molecule molecule;
+  mmtf.readFile(std::string(AVOGADRO_DATA) + "/data/1FDT.mmtf", molecule);
+
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+
+  EXPECT_FLOAT_EQ(molecule.atomPosition3d(270).x(), molecule.coordinate3d(1)[270].x());
+  EXPECT_FLOAT_EQ(molecule.atomPosition3d(270).y(), molecule.coordinate3d(1)[270].y());
+  EXPECT_FLOAT_EQ(molecule.atomPosition3d(270).z(), molecule.coordinate3d(1)[270].z());
+
+  EXPECT_TRUE(
+    molecule.atomPosition3d(271).x() != molecule.coordinate3d(1)[271].x() ||
+    molecule.atomPosition3d(271).y() != molecule.coordinate3d(1)[271].y() ||
+    molecule.atomPosition3d(271).z() != molecule.coordinate3d(1)[271].z()
+  );
+}

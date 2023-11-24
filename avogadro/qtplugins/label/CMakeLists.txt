@@ -1,4 +1,3 @@
-
 avogadro_plugin(Label
   "Labels rendering scheme"
   ScenePlugin
@@ -25,5 +24,5 @@ avogadro_plugin(LabelEditor
   "${label_rcs}"
 )
 
-target_link_libraries(Label LINK_PRIVATE AvogadroRendering)
-target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering)
+target_link_libraries(Label LINK_PRIVATE Avogadro::Rendering)
+target_link_libraries(LabelEditor LINK_PRIVATE Avogadro::QtOpenGL)

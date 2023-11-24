@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "qttextrenderstrategy.h"
@@ -21,7 +10,7 @@
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QImage>
-#include <QtGui/QMatrix>
+#include <QTransform>
 #include <QtGui/QPainter>
 #include <QtGui/QPolygonF>
 
@@ -40,7 +29,8 @@ namespace {
 
 inline Qt::Alignment textPropertiesToAlignment(const TextProperties& prop)
 {
-  Qt::Alignment result = nullptr;
+  // This is initialized with no flags set as we want, no need to initialize.
+  Qt::Alignment result;
 
   switch (prop.hAlign()) {
     default:
@@ -129,8 +119,7 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
 
 } // namespace
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 QtTextRenderStrategy::QtTextRenderStrategy() {}
 
@@ -153,7 +142,7 @@ void QtTextRenderStrategy::boundingBox(const std::string& string,
   // Rotate if needed
   if (tprop.rotationDegreesCW() != 0.f) {
     // Build transformation
-    QMatrix transform;
+    QTransform transform;
     transform.rotate(static_cast<qreal>(-tprop.rotationDegreesCW()));
 
     // Transform a floating point representation of the bbox
@@ -198,7 +187,7 @@ void QtTextRenderStrategy::render(const std::string& string,
   textRect.translate(-textRect.topLeft());
 
   // Apply rotation, if any
-  qreal rot(static_cast<qreal>(tprop.rotationDegreesCW()));
+  auto rot(static_cast<qreal>(tprop.rotationDegreesCW()));
   if (rot != 0.f) {
     // Rotate the painter:
     painter.rotate(static_cast<qreal>(rot));
@@ -260,7 +249,7 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   // output: 0xRRGGBBAA (big endian)
   // output: 0xAABBGGRR (little endian)
 
-  quint32* cur = reinterpret_cast<quint32*>(buffer);
+  auto* cur = reinterpret_cast<quint32*>(buffer);
   quint32* end = &cur[pixels];
 
   while (cur < end) {
@@ -271,5 +260,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace QtOpenGL
 } // namespace Avogadro

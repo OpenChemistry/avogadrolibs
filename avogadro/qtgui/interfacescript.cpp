@@ -21,8 +21,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using QtGui::GenericHighlighter;
 using QtGui::PythonScript;
@@ -31,12 +30,14 @@ InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
     m_moleculeExtension(QStringLiteral("Unknown"))
-{}
+{
+}
 
 InterfaceScript::InterfaceScript(QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(this)),
     m_moleculeExtension(QStringLiteral("Unknown"))
-{}
+{
+}
 
 InterfaceScript::~InterfaceScript() {}
 
@@ -227,13 +228,13 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       return false;
     }
 
-    QtGui::Molecule* guiMol = static_cast<QtGui::Molecule*>(mol);
+    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
     QtGui::Molecule newMol(guiMol->parent());
     if (m_moleculeExtension == "cjson") {
       // convert the "cjson" field to a string
       QJsonObject cjsonObj = obj["cjson"].toObject();
-      QJsonDocument doc(cjsonObj);
-      QString strCJSON(doc.toJson(QJsonDocument::Compact));
+      QJsonDocument doc2(cjsonObj);
+      QString strCJSON(doc2.toJson(QJsonDocument::Compact));
       if (!strCJSON.isEmpty()) {
         result = format->readString(strCJSON.toStdString(), newMol);
       }
@@ -246,14 +247,29 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     // check if the script wants us to perceive bonds first
     if (obj["bond"].toBool()) {
       newMol.perceiveBondsSimple();
+      newMol.perceiveBondOrders();
     }
 
-    if (obj["append"].toBool()) { // just append some new bits
+    // just append some new bits
+    if (obj["append"].toBool()) {
       guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
     } else { // replace the whole molecule
       Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
                                            Molecule::Added | Molecule::Removed);
       guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
+    }
+
+    // select some atoms
+    if (obj.contains("selectedAtoms") && obj["selectedAtoms"].isArray()) {
+      QJsonArray selectedList = obj["selectedAtoms"].toArray();
+      for (int i = 0; i < selectedList.size(); ++i) {
+        if (selectedList[i].isDouble()) {
+          Index index = static_cast<Index>(selectedList[i].toDouble());
+          if (index >= 0 && index < guiMol->atomCount())
+            guiMol->undoMolecule()->setAtomSelected(index, true);
+        }
+      }
+      guiMol->emitChanged(Molecule::Atoms);
     }
   }
   return result;
@@ -342,7 +358,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
 
               // Concatenate the requested styles for this input file.
               if (fileObj[QStringLiteral("highlightStyles")].isArray()) {
-                GenericHighlighter* highlighter(new GenericHighlighter(this));
+                auto* highlighter(new GenericHighlighter(this));
                 foreach (const QJsonValue& styleVal,
                          fileObj["highlightStyles"].toArray()) {
                   if (styleVal.isString()) {
@@ -480,6 +496,12 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   }
   json.insert("selectedAtoms", selectedList);
 
+  // insert the total charge
+  json.insert("charge", mol.totalCharge());
+
+  // insert the spin multiplicity
+  json.insert("spin", mol.totalSpinMultiplicity());
+
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
@@ -551,7 +573,7 @@ void InterfaceScript::replaceKeywords(QString& str,
 
   // Find each coordinate block keyword in the file, then generate and replace
   // it with the appropriate values.
-  QRegExp coordParser("\\$\\$coords:([^\\$]*)\\$\\$");
+  QRegExp coordParser(R"(\$\$coords:([^\$]*)\$\$)");
   int ind = 0;
   while ((ind = coordParser.indexIn(str, ind)) != -1) {
     // Extract spec and prepare the replacement
@@ -606,10 +628,10 @@ bool InterfaceScript::parseHighlightStyles(const QJsonArray& json) const
     }
     QJsonArray rulesArray(styleObj.value(QStringLiteral("rules")).toArray());
 
-    GenericHighlighter* highlighter(
+    auto* highlighter(
       new GenericHighlighter(const_cast<InterfaceScript*>(this)));
     if (!parseRules(rulesArray, *highlighter)) {
-      qDebug() << "Error parsing style" << styleName << Qt::endl
+      qDebug() << "Error parsing style" << styleName << '\n'
                << QString(QJsonDocument(styleObj).toJson());
       highlighter->deleteLater();
       result = false;
@@ -634,13 +656,13 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     QJsonObject ruleObj(ruleVal.toObject());
 
     if (!ruleObj.contains(QStringLiteral("patterns"))) {
-      qDebug() << "Rule missing 'patterns' array:" << Qt::endl
+      qDebug() << "Rule missing 'patterns' array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value(QStringLiteral("patterns")).isArray()) {
-      qDebug() << "Rule 'patterns' member is not an array:" << Qt::endl
+      qDebug() << "Rule 'patterns' member is not an array:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -649,13 +671,13 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
       ruleObj.value(QStringLiteral("patterns")).toArray());
 
     if (!ruleObj.contains(QStringLiteral("format"))) {
-      qDebug() << "Rule missing 'format' object:" << Qt::endl
+      qDebug() << "Rule missing 'format' object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
     }
     if (!ruleObj.value(QStringLiteral("format")).isObject()) {
-      qDebug() << "Rule 'format' member is not an object:" << Qt::endl
+      qDebug() << "Rule 'format' member is not an object:" << '\n'
                << QString(QJsonDocument(ruleObj).toJson());
       result = false;
       continue;
@@ -667,7 +689,7 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
     foreach (QJsonValue patternVal, patternsArray) {
       QRegExp pattern;
       if (!parsePattern(patternVal, pattern)) {
-        qDebug() << "Error while parsing pattern:" << Qt::endl
+        qDebug() << "Error while parsing pattern:" << '\n'
                  << QString(QJsonDocument(patternVal.toObject()).toJson());
         result = false;
         continue;
@@ -677,7 +699,7 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
 
     QTextCharFormat format;
     if (!parseFormat(formatObj, format)) {
-      qDebug() << "Error while parsing format:" << Qt::endl
+      qDebug() << "Error while parsing format:" << '\n'
                << QString(QJsonDocument(formatObj).toJson());
       result = false;
     }
@@ -827,5 +849,4 @@ bool InterfaceScript::parsePattern(const QJsonValue& json,
   return true;
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

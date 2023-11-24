@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "opendxreader.h"
@@ -22,8 +11,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QVector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Core::Cube;
 
@@ -48,7 +36,7 @@ bool OpenDxReader::readFile(const QString& fileName)
   Vector3i dim(0, 0, 0);
   Vector3 origin(0, 0, 0);
   QVector<Vector3> spacings;
-  std::vector<double> values;
+  std::vector<float> values;
 
   while (!file.atEnd()) {
     QByteArray line = file.readLine();
@@ -108,6 +96,5 @@ QString OpenDxReader::errorString() const
 Cube* OpenDxReader::cube() const
 {
   return m_cube;
-}
 }
 }

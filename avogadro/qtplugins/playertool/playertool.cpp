@@ -1,23 +1,12 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "playertool.h"
-#include "gif.h"
 
-#include "gwavi.h"
+#include <gif.h>
+#include <gwavi.h>
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
@@ -25,10 +14,10 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QtGui/QOpenGLFramebufferObject>
+#include <QOpenGLFramebufferObject>
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -36,18 +25,17 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QOpenGLWidget>
+#include <QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
 
-#include <QDebug>
+#include <QScreen>
 
 #include <cmath>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 
@@ -62,7 +50,7 @@ PlayerTool::PlayerTool(QObject* parent_)
   , m_slider(nullptr)
 {
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setIcon(QIcon(":/icons/player.png"));
+  m_activateAction->setIcon(QIcon(":/icons/animate.png"));
   m_activateAction->setToolTip(tr("Animation Tool"));
 }
 
@@ -72,10 +60,10 @@ QWidget* PlayerTool::toolWidget() const
 {
   if (!m_toolWidget) {
     m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    QVBoxLayout* layout = new QVBoxLayout;
-    QHBoxLayout* controls = new QHBoxLayout;
+    auto* layout = new QVBoxLayout;
+    auto* controls = new QHBoxLayout;
     controls->addStretch(1);
-    QPushButton* leftButton = new QPushButton("<");
+    auto* leftButton = new QPushButton("<");
     connect(leftButton, SIGNAL(clicked()), SLOT(back()));
     controls->addWidget(leftButton);
     playButton = new QPushButton(tr("Play"));
@@ -85,14 +73,14 @@ QWidget* PlayerTool::toolWidget() const
     connect(stopButton, SIGNAL(clicked()), SLOT(stop()));
     controls->addWidget(stopButton);
     stopButton->setEnabled(false);
-    QPushButton* rightButton = new QPushButton(">");
+    auto* rightButton = new QPushButton(">");
     connect(rightButton, SIGNAL(clicked()), SLOT(forward()));
     controls->addWidget(rightButton);
     controls->addStretch(1);
     layout->addLayout(controls);
 
-    QHBoxLayout* frames = new QHBoxLayout;
-    QLabel* label = new QLabel(tr("Frame rate:"));
+    auto* frames = new QHBoxLayout;
+    auto* label = new QLabel(tr("Frame rate:"));
     frames->addWidget(label);
     m_animationFPS = new QSpinBox;
     m_animationFPS->setValue(5);
@@ -102,7 +90,7 @@ QWidget* PlayerTool::toolWidget() const
     frames->addWidget(m_animationFPS);
     layout->addLayout(frames);
 
-    QHBoxLayout* sliderLayout = new QHBoxLayout;
+    auto* sliderLayout = new QHBoxLayout;
     m_slider = new QSlider(Qt::Horizontal);
     m_slider->setMinimum(0);
     m_slider->setTickInterval(1);
@@ -113,16 +101,16 @@ QWidget* PlayerTool::toolWidget() const
     if (m_molecule->coordinate3dCount() > 1)
       m_slider->setMaximum(m_molecule->coordinate3dCount() - 1);
 
-    QHBoxLayout* frameLayout = new QHBoxLayout;
+    auto* frameLayout = new QHBoxLayout;
 
     // QHBoxLayout* leftColumn = new QHBoxLayout;
     // QLabel* label2 = new QLabel(tr("Timestep:"));
     // leftColumn->addWidget(label2);
     // frameLayout->addLayout(leftColumn);
 
-    QHBoxLayout* rightColumn = new QHBoxLayout;
+    auto* rightColumn = new QHBoxLayout;
     rightColumn->addStretch(1);
-    QLabel* label3 = new QLabel(tr("Frame:"));
+    auto* label3 = new QLabel(tr("Frame:"));
     rightColumn->addWidget(label3);
     m_frameIdx = new QSpinBox;
     m_frameIdx->setValue(1);
@@ -138,7 +126,7 @@ QWidget* PlayerTool::toolWidget() const
 
     layout->addLayout(frameLayout);
 
-    QHBoxLayout* bonding = new QHBoxLayout;
+    auto* bonding = new QHBoxLayout;
     bonding->addStretch(1);
     m_dynamicBonding = new QCheckBox(tr("Dynamic bonding?"));
     m_dynamicBonding->setChecked(false);
@@ -146,9 +134,9 @@ QWidget* PlayerTool::toolWidget() const
     bonding->addStretch(1);
     layout->addLayout(bonding);
 
-    QHBoxLayout* recordLayout = new QHBoxLayout;
+    auto* recordLayout = new QHBoxLayout;
     recordLayout->addStretch(1);
-    QPushButton* recordButton = new QPushButton(tr("Record Movie…"));
+    auto* recordButton = new QPushButton(tr("Record Movie…"));
     connect(recordButton, SIGNAL(clicked()), SLOT(recordMovie()));
     recordLayout->addWidget(recordButton);
     recordLayout->addStretch(1);
@@ -195,7 +183,7 @@ void PlayerTool::play()
 {
   playButton->setEnabled(false);
   stopButton->setEnabled(true);
-  double fps = static_cast<double>(m_animationFPS->value());
+  auto fps = static_cast<double>(m_animationFPS->value());
   if (fps < 0.00001)
     fps = 5;
   int timeOut = static_cast<int>(1000 / fps);
@@ -281,6 +269,7 @@ void PlayerTool::recordMovie()
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
              EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -294,7 +283,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 
@@ -302,7 +292,7 @@ void PlayerTool::recordMovie()
       int frameHeight = exportImage.height();
       int numbPixels = frameWidth * frameHeight;
 
-      uint8_t* imageData = new uint8_t[numbPixels * 4];
+      auto* imageData = new uint8_t[numbPixels * 4];
       int imageIndex = 0;
       for (int j = 0; j < frameHeight; ++j) {
         for (int k = 0; k < frameWidth; ++k) {
@@ -324,6 +314,7 @@ void PlayerTool::recordMovie()
     gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
                        EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), nullptr);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -337,7 +328,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
       QByteArray ba;
@@ -355,6 +347,7 @@ void PlayerTool::recordMovie()
     gwavi_close(gwavi);
   } else if (selfFilter == tr("Movie (*.mp4)")) {
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
+      qApp->processEvents();
       m_molecule->setCoordinate3d(i);
       if (bonding) {
         m_molecule->clearBonds();
@@ -373,7 +366,8 @@ void PlayerTool::recordMovie()
       if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
         exportImage = m_glWidget->grabFramebuffer();
       } else {
-        QPixmap pixmap = QPixmap::grabWindow(m_glWidget->winId());
+        auto* screen = QGuiApplication::primaryScreen();
+        auto pixmap = screen->grabWindow(m_glWidget->winId());
         exportImage = pixmap.toImage();
       }
 
@@ -418,5 +412,4 @@ void PlayerTool::setSliderLimit()
   }
 }
 
-} // namespace QtPlugins
 } // namespace Avogadro

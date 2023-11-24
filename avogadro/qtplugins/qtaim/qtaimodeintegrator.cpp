@@ -20,8 +20,7 @@
 
 #include "qtaimodeintegrator.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 QTAIMODEIntegrator::QTAIMODEIntegrator(QTAIMWavefunctionEvaluator& eval,
                                        const qint64 mode)
@@ -1184,5 +1183,4 @@ qreal QTAIMODEIntegrator::r8_sign(qreal x)
 }
 //****************************************************************************80
 
-} // namespace QtPlugins
 } // namespace Avogadro

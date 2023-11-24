@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
   if (orbitalNumber > 0)
     cout << "1  " << orbitalNumber << endl;
 
-  GaussianSetTools* m_tools = new GaussianSetTools(&mol);
+  auto* m_tools = new GaussianSetTools(&mol);
 
   // print the qube values
   int linecount = 0;
