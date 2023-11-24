@@ -21,6 +21,8 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
+#include <QtWidgets/QMessageBox>
+
 namespace Avogadro::QtGui {
 
 using QtGui::GenericHighlighter;
@@ -271,6 +273,25 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       }
       guiMol->emitChanged(Molecule::Atoms);
     }
+
+    // check if there are messages for the user
+    if (obj.contains("message")) {
+      QString message;
+
+      if (obj["message"].isString())
+        message = obj["message"].toString();
+      else if (obj["message"].isArray()) {
+        QJsonArray messageList = obj["message"].toArray();
+        for (int i = 0; i < messageList.size(); ++i) {
+          if (messageList[i].isString())
+            message += messageList[i].toString() + "\n";
+        }
+      }
+      if (!message.isEmpty()) {
+        QMessageBox::information(qobject_cast<QWidget*>(parent()),
+                                 tr("%1 Message").arg(m_displayName), message);
+      }
+    }
   }
   return result;
 }
@@ -505,9 +526,11 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
-  QScopedPointer<Io::FileFormat> cjsonFormat(formats.newFormatFromFileExtension("cjson"));
+  QScopedPointer<Io::FileFormat> cjsonFormat(
+    formats.newFormatFromFileExtension("cjson"));
 
-  // If we want something *other* than CJSON, check that we can supply that format
+  // If we want something *other* than CJSON, check that we can supply that
+  // format
   if (format.isNull()) {
     m_errors << tr("Error writing molecule representation to string: "
                    "Unrecognized file format: %1")
@@ -522,12 +545,14 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
     return false;
   }
 
+  // if we need a different format, insert it
   if (m_moleculeExtension != QLatin1String("cjson")) {
     json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
   }
 
-  // And we *always* write the CJSON representation
-  // Embed CJSON as actual JSON, rather than a string, so we have to parse it again
+  // We will *always* write the CJSON representation
+  // Embed CJSON as actual JSON, rather than a string,
+  // .. so we'll have to re-parse it
   cjsonFormat->writeString(str, mol);
   QJsonParseError error;
   QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
