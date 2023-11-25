@@ -915,6 +915,20 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     if (hasCustomColors)
       root["atoms"]["colors"] = colors;
 
+    // check for partial charges
+    auto partialCharges = molecule.partialChargeTypes();
+    if (!partialCharges.empty()) {
+      // add them to the atoms object
+      for (const auto& type : partialCharges) {
+        MatrixX chargesMatrix = molecule.partialCharges(type);
+        json charges;
+        for (Index i = 0; i < molecule.atomCount(); ++i) {
+          charges.push_back(chargesMatrix(i, 0));
+        }
+        root["atoms"]["partialCharges"][type] = charges;
+      }
+    }
+
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       // everything gets real-space Cartesians
