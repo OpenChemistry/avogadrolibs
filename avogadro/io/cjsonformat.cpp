@@ -214,21 +214,6 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  // Partial charges are optional, but if present should be loaded.
-  json partialCharges = atoms["partialCharges"];
-  if (partialCharges.is_object()) {
-    // keys are types, values are arrays of charges
-    for (auto& kv : partialCharges.items()) {
-      MatrixX charges(atomCount, 1);
-      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
-        for (size_t i = 0; i < kv.value().size(); ++i) {
-          charges(i, 0) = kv.value()[i];
-        }
-        molecule.setPartialCharges(kv.key(), charges);
-      }
-    }
-  }
-
   // Bonds are optional, but if present should be loaded.
   json bonds = jsonRoot["bonds"];
   if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
@@ -609,6 +594,21 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // Partial charges are optional, but if present should be loaded.
+  json partialCharges = atoms["partialCharges"];
+  if (partialCharges.is_object()) {
+    // keys are types, values are arrays of charges
+    for (auto& kv : partialCharges.items()) {
+      MatrixX charges(atomCount, 1);
+      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
+        for (size_t i = 0; i < kv.value().size(); ++i) {
+          charges(i, 0) = kv.value()[i];
+        }
+        molecule.setPartialCharges(kv.key(), charges);
+      }
+    }
+  }
+
   if (jsonRoot.find("layer") != jsonRoot.end()) {
     auto names = LayerManager::getMoleculeInfo(&molecule);
     json visible = jsonRoot["layer"]["visible"];
@@ -914,6 +914,20 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       root["atoms"]["selected"] = selected;
     if (hasCustomColors)
       root["atoms"]["colors"] = colors;
+
+    // check for partial charges
+    auto partialCharges = molecule.partialChargeTypes();
+    if (!partialCharges.empty()) {
+      // add them to the atoms object
+      for (const auto& type : partialCharges) {
+        MatrixX chargesMatrix = molecule.partialCharges(type);
+        json charges;
+        for (Index i = 0; i < molecule.atomCount(); ++i) {
+          charges.push_back(chargesMatrix(i, 0));
+        }
+        root["atoms"]["partialCharges"][type] = charges;
+      }
+    }
 
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
