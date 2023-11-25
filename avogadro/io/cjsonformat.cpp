@@ -214,21 +214,6 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  // Partial charges are optional, but if present should be loaded.
-  json partialCharges = atoms["partialCharges"];
-  if (partialCharges.is_object()) {
-    // keys are types, values are arrays of charges
-    for (auto& kv : partialCharges.items()) {
-      MatrixX charges(atomCount, 1);
-      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
-        for (size_t i = 0; i < kv.value().size(); ++i) {
-          charges(i, 0) = kv.value()[i];
-        }
-        molecule.setPartialCharges(kv.key(), charges);
-      }
-    }
-  }
-
   // Bonds are optional, but if present should be loaded.
   json bonds = jsonRoot["bonds"];
   if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
@@ -605,6 +590,21 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           //          << element.value() << " type "
           //          << element.value().type_name() << std::endl;
         }
+      }
+    }
+  }
+
+  // Partial charges are optional, but if present should be loaded.
+  json partialCharges = atoms["partialCharges"];
+  if (partialCharges.is_object()) {
+    // keys are types, values are arrays of charges
+    for (auto& kv : partialCharges.items()) {
+      MatrixX charges(atomCount, 1);
+      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
+        for (size_t i = 0; i < kv.value().size(); ++i) {
+          charges(i, 0) = kv.value()[i];
+        }
+        molecule.setPartialCharges(kv.key(), charges);
       }
     }
   }
