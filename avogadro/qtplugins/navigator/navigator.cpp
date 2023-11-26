@@ -59,35 +59,31 @@ void Navigator::registerCommands()
 bool Navigator::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  qDebug() << "Navigator::handleCommand: " << command;
-  qDebug() << (m_renderer == nullptr);
-  qDebug() << (m_glWidget == nullptr);
-  qDebug() << (m_molecule == nullptr);
-
   if (m_renderer == nullptr)
     return false; // No camera
 
   if (command == "rotateScene") {
-    float x = options.value("x").toFloat() * DEG_TO_RAD;
-    float y = options.value("y").toFloat() * DEG_TO_RAD;
-    float z = options.value("z").toFloat() * DEG_TO_RAD;
+    float x = options.value("x").toFloat();
+    float y = options.value("y").toFloat();
+    float z = options.value("z").toFloat();
     rotate(m_renderer->camera().focus(), x, y, z);
+
     m_glWidget->requestUpdate();
-    qDebug() << "rotateScene: " << x << y << z;
-    return true;
   } else if (command == "zoomScene") {
     float d = options.value("delta").toFloat();
     zoom(m_renderer->camera().focus(), d);
     m_glWidget->requestUpdate();
-    return true;
   } else if (command == "translateScene") {
     float x = options.value("x").toFloat();
     float y = options.value("y").toFloat();
     translate(m_renderer->camera().focus(), x, y);
     m_glWidget->requestUpdate();
-    return true;
+  } else {
+    qDebug() << "Unknown command: " << command;
+    return false;
   }
-  return false;
+
+  return true;
 }
 
 Navigator::~Navigator() {}
