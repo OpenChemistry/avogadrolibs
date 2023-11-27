@@ -53,6 +53,7 @@ public slots:
   void startVibrationAnimation();
   void stopVibrationAnimation();
   void openDialog();
+  void moleculeChanged(unsigned int changes);
 
 private slots:
   void advanceFrame();
