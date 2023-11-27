@@ -83,7 +83,7 @@ void Molecule::readProperties(const Molecule& other)
   m_colors = other.m_colors;
 
   // copy orbital information
-  GaussianSet *gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
+  GaussianSet* gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
   if (gaussianSet) {
     m_basisSet = gaussianSet->clone();
     m_basisSet->setMolecule(this);
@@ -311,20 +311,20 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
     return;
 
   // check if we need to resize
-  unsigned int size = m_frozenAtomMask.rows();  
-  if (m_frozenAtomMask.rows() != 3*m_atomicNumbers.size())
-    m_frozenAtomMask.conservativeResize(3*m_atomicNumbers.size());
+  unsigned int size = m_frozenAtomMask.rows();
+  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
 
   // do we need to initialize new values?
   if (m_frozenAtomMask.rows() > size)
     for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
       m_frozenAtomMask[i] = 1.0;
-  
+
   float value = frozen ? 0.0 : 1.0;
   if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[atomId*3] = value;
-    m_frozenAtomMask[atomId*3+1] = value;
-    m_frozenAtomMask[atomId*3+2] = value;
+    m_frozenAtomMask[atomId * 3] = value;
+    m_frozenAtomMask[atomId * 3 + 1] = value;
+    m_frozenAtomMask[atomId * 3 + 2] = value;
   }
 }
 
@@ -332,9 +332,9 @@ bool Molecule::frozenAtom(Index atomId) const
 {
   bool frozen = false;
   if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    frozen = (m_frozenAtomMask[atomId*3] == 0.0 &&
-              m_frozenAtomMask[atomId*3+1] == 0.0 &&
-              m_frozenAtomMask[atomId*3+2] == 0.0);
+    frozen = (m_frozenAtomMask[atomId * 3] == 0.0 &&
+              m_frozenAtomMask[atomId * 3 + 1] == 0.0 &&
+              m_frozenAtomMask[atomId * 3 + 2] == 0.0);
   }
   return frozen;
 }
@@ -342,21 +342,20 @@ bool Molecule::frozenAtom(Index atomId) const
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
   // check if we need to resize
-  unsigned int size = m_frozenAtomMask.rows();  
-  if (m_frozenAtomMask.rows() != 3*m_atomicNumbers.size())
-    m_frozenAtomMask.conservativeResize(3*m_atomicNumbers.size());
+  unsigned int size = m_frozenAtomMask.rows();
+  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
 
   // do we need to initialize new values?
   if (m_frozenAtomMask.rows() > size)
     for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
       m_frozenAtomMask[i] = 1.0;
-  
+
   float value = frozen ? 0.0 : 1.0;
   if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[atomId*3 + axis] = value;
+    m_frozenAtomMask[atomId * 3 + axis] = value;
   }
 }
-
 
 void Molecule::setData(const std::string& name, const Variant& value)
 {
