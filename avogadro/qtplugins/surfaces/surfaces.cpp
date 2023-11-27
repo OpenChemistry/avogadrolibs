@@ -224,6 +224,10 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 
 void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr) {
+    m_molecule->disconnect(this);
+  }
+
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
   } else if (mol->cubes().size() != 0) {
@@ -234,6 +238,18 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (m_molecule != nullptr) {
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+  }
+}
+
+void Surfaces::moleculeChanged(unsigned int changes)
+{
+  if (changes & Molecule::Added || changes & Molecule::Removed) {
+    m_cubes = m_molecule->cubes();
+    m_basis = m_molecule->basisSet();
+  }
 }
 
 QList<QAction*> Surfaces::actions() const
