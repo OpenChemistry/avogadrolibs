@@ -73,6 +73,13 @@ public:
   /** Destroys the molecule object. */
   virtual ~Molecule();
 
+  /**
+   * Adds the properties from the supplied
+   * molecule to this molecule. Does not otherwise
+   * modify atoms / bonds / residues, etc.
+   */
+  void readProperties(const Molecule& other);
+
   /** Sets the data value with @p name to @p value. */
   void setData(const std::string& name, const Variant& value);
 
@@ -695,12 +702,12 @@ public:
 
   /**
    * Freeze or unfreeze an atom for optimization
-  */
+   */
   void setFrozenAtom(Index atomId, bool frozen);
 
   /**
    * Get the frozen status of an atom
-  */
+   */
   bool frozenAtom(Index atomId) const;
 
   /**
@@ -708,7 +715,7 @@ public:
    * @param atomId The index of the atom to modify.
    * @param axis The axis to freeze (0, 1, or 2 for X, Y, or Z)
    * @param frozen True to freeze, false to unfreeze
-  */
+   */
   void setFrozenAtomAxis(Index atomId, int axis, bool frozen);
 
   Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }

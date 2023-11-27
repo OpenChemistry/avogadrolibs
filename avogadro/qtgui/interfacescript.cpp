@@ -252,8 +252,11 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       newMol.perceiveBondOrders();
     }
 
-    // just append some new bits
-    if (obj["append"].toBool()) {
+    // how do we handle this result?
+    if (obj["readProperties"].toBool()) {
+      guiMol->readProperties(newMol);
+      guiMol->emitChanged(Molecule::Properties | Molecule::Added);
+    } else if (obj["append"].toBool()) {
       guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
     } else { // replace the whole molecule
       Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
