@@ -15,6 +15,7 @@
 #include "mesh.h"
 #include "neighborperceiver.h"
 #include "residue.h"
+#include "slaterset.h"
 #include "unitcell.h"
 
 #include <algorithm>
@@ -77,23 +78,38 @@ Molecule::Molecule(const Molecule& other)
 
 void Molecule::readProperties(const Molecule& other)
 {
-  m_data = other.m_data;
-  m_partialCharges = other.m_partialCharges;
   m_label = other.m_label;
   m_colors = other.m_colors;
+  // merge data maps by iterating through other's map
+  for (auto it = other.m_data.begin(); it != other.m_data.end(); ++it) {
+    // even if we have the same key, we want to overwrite
+    m_data.setValue(it.key(), it.value());
+  }
+  // merge partial charge maps
+  for (auto it = other.m_partialCharges.begin();
+       it != other.m_partialCharges.end(); ++it) {
+    m_partialCharges[it.key()] = it.value();
+  }
 
   // copy orbital information
+  SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
+  if (slaterSet != nullptr) {
+    m_basisSet = slaterSet->clone();
+    m_basisSet->setMolecule(this);
+  }
   GaussianSet* gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
-  if (gaussianSet) {
+  if (gaussianSet != nullptr) {
     m_basisSet = gaussianSet->clone();
     m_basisSet->setMolecule(this);
   }
 
-  // copy spectra information
-  m_vibrationFrequencies = other.m_vibrationFrequencies;
-  m_vibrationIRIntensities = other.m_vibrationIRIntensities;
-  m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
-  m_vibrationLx = other.m_vibrationLx;
+  // copy over spectra information
+  if (other.m_vibrationFrequencies.size() > 0) {
+    m_vibrationFrequencies = other.m_vibrationFrequencies;
+    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
+    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
+    m_vibrationLx = other.m_vibrationLx;
+  }
 
   // Copy over any meshes
   for (Index i = 0; i < other.meshCount(); ++i) {
