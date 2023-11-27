@@ -73,6 +73,13 @@ public:
   /** Destroys the molecule object. */
   virtual ~Molecule();
 
+  /** 
+   * Adds the properties from the supplied
+   * molecule to this molecule. Does not otherwise
+   * modify atoms / bonds / residues, etc.
+   */
+  void readProperties(const Molecule& other);
+
   /** Sets the data value with @p name to @p value. */
   void setData(const std::string& name, const Variant& value);
 

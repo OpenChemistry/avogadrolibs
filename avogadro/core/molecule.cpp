@@ -9,6 +9,7 @@
 #include "color3f.h"
 #include "cube.h"
 #include "elements.h"
+#include "gaussianset.h"
 #include "layermanager.h"
 #include "mdlvalence_p.h"
 #include "mesh.h"
@@ -71,6 +72,39 @@ Molecule::Molecule(const Molecule& other)
     // make sure all the atoms are in the active layer
     for (Index i = 0; i < atomCount(); ++i)
       m_layers.addAtomToActiveLayer(i);
+  }
+}
+
+void Molecule::readProperties(const Molecule& other)
+{
+  m_data = other.m_data;
+  m_partialCharges = other.m_partialCharges;
+  m_label = other.m_label;
+  m_colors = other.m_colors;
+
+  // copy orbital information
+  GaussianSet *gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
+  if (gaussianSet) {
+    m_basisSet = gaussianSet->clone();
+    m_basisSet->setMolecule(this);
+  }
+
+  // copy spectra information
+  m_vibrationFrequencies = other.m_vibrationFrequencies;
+  m_vibrationIRIntensities = other.m_vibrationIRIntensities;
+  m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
+  m_vibrationLx = other.m_vibrationLx;
+
+  // Copy over any meshes
+  for (Index i = 0; i < other.meshCount(); ++i) {
+    Mesh* m = addMesh();
+    *m = *other.mesh(i);
+  }
+
+  // Copy over any cubes
+  for (Index i = 0; i < other.cubeCount(); ++i) {
+    Cube* c = addCube();
+    *c = *other.cube(i);
   }
 }
 
