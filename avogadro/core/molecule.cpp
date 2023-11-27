@@ -81,14 +81,14 @@ void Molecule::readProperties(const Molecule& other)
   m_label = other.m_label;
   m_colors = other.m_colors;
   // merge data maps by iterating through other's map
-  for (auto it = other.m_data.begin(); it != other.m_data.end(); ++it) {
+  for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd(); ++it) {
     // even if we have the same key, we want to overwrite
-    m_data.setValue(it.key(), it.value());
+    m_data.setValue(it->first, it->second);
   }
   // merge partial charge maps
-  for (auto it = other.m_partialCharges.begin();
-       it != other.m_partialCharges.end(); ++it) {
-    m_partialCharges[it.key()] = it.value();
+  for (auto it = other.m_partialCharges.cbegin();
+       it != other.m_partialCharges.cend(); ++it) {
+    m_partialCharges[it->first] = it->second;
   }
 
   // copy orbital information
