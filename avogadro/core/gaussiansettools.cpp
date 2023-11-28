@@ -55,7 +55,13 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
 }
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
-{
+{  
+  const MatrixX& matrix = m_basis->densityMatrix();
+  if (matrix.rows() == 0 || matrix.cols() == 0) {
+    // we don't have a density matrix, so generate one
+    m_basis->generateDensityMatrix();
+  }
+
   for (size_t i = 0; i < cube.data()->size(); ++i) {
     Vector3 pos = cube.position(i);
     cube.setValue(i, calculateElectronDensity(pos));
@@ -67,6 +73,7 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 {
   const MatrixX& matrix = m_basis->densityMatrix();
   int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
+
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
     return 0.0;
   }
