@@ -55,13 +55,17 @@ void InsertPeptide::setMolecule(QtGui::Molecule* mol)
 
 void InsertPeptide::showDialog()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr)
     return;
 
-  QWidget* parentAsWidget = qobject_cast<QWidget*>(parent());
+  if (m_dialog == nullptr) {
+    m_dialog = new InsertPeptideDialog(qobject_cast<QWidget*>(parent()));
+  }
+
+  m_dialog->show();
 }
 
-void InsertFragment::performInsert(const QString& sequence)
+void InsertPeptide::performInsert(const QString& sequence)
 {
   if (m_molecule == nullptr)
     return;
@@ -69,7 +73,7 @@ void InsertFragment::performInsert(const QString& sequence)
   // read the file into the new fragment
   Avogadro::QtGui::Molecule newMol(m_molecule->parent());
 
-  m_molecule->undoMolecule()->appendMolecule(newMol, tr("Insert Peptide"));
+  //m_molecule->undoMolecule()->appendMolecule(newMol, tr("Insert Peptide"));
   emit requestActiveTool("Manipulator");
 }
 
