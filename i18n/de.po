@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-11-19 16:50+0000\n"
-"PO-Revision-Date: 2023-08-17 15:50+0000\n"
+"PO-Revision-Date: 2023-11-30 16:05+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -684,7 +684,7 @@ msgstr "Zirconium"
 
 #: qtgui/elementtranslator.cpp:139
 msgid "Niobium"
-msgstr "Niob (Columbium)"
+msgstr "Niob"
 
 #: qtgui/elementtranslator.cpp:142
 msgid "Molybdenum"
@@ -852,7 +852,7 @@ msgstr "Blei"
 
 #: qtgui/elementtranslator.cpp:265
 msgid "Bismuth"
-msgstr "Bismut (Wismut)"
+msgstr "Bismut"
 
 #: qtgui/elementtranslator.cpp:268
 msgid "Polonium"
