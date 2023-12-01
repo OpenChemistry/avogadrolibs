@@ -139,10 +139,11 @@ void Spectra::setMode(int mode)
       m_molecule->setForceVector(atom, v);
       ++atom;
     }
-    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+    // m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 
     int frames = 5; // TODO: needs an option
     int frameCounter = 0;
+    m_molecule->clearCoordinate3d();
     m_molecule->setCoordinate3d(atomPositions, frameCounter++);
 
     // Current coords + displacement.

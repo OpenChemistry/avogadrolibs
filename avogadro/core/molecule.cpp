@@ -81,7 +81,8 @@ void Molecule::readProperties(const Molecule& other)
   m_label = other.m_label;
   m_colors = other.m_colors;
   // merge data maps by iterating through other's map
-  for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd(); ++it) {
+  for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
+       ++it) {
     // even if we have the same key, we want to overwrite
     m_data.setValue(it->first, it->second);
   }
@@ -1216,6 +1217,11 @@ bool Molecule::setCoordinate3d(int coord)
     return true;
   }
   return false;
+}
+
+void Molecule::clearCoordinate3d()
+{
+  m_coordinates3d.clear();
 }
 
 Array<Vector3> Molecule::coordinate3d(int index) const
