@@ -554,6 +554,11 @@ public:
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
   /**
+   * Clear coordinate sets (except the default set)
+   */
+  void clearCoordinate3d();
+
+  /**
    * Timestep property is used when molecular dynamics trajectories are read
    */
   bool setTimeStep(double timestep, int index);
