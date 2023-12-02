@@ -347,6 +347,8 @@ QWidget* JsonWidget::createOptionWidget(const QJsonValue& option)
     return createFloatWidget(obj);
   else if (type == QLatin1String("boolean"))
     return createBooleanWidget(obj);
+  else if (type == QLatin1String("text"))
+    return createTextWidget(obj);
 
   qDebug() << "Unrecognized option type:" << type;
   return nullptr;
@@ -396,6 +398,19 @@ QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
   }
 
   return edit;
+}
+
+QWidget* JsonWidget::createTextWidget(const QJsonObject& obj)
+{
+  auto* text = new QLabel(this);
+  text->setWordWrap(true);
+
+  if (obj.contains(QStringLiteral("toolTip")) &&
+      obj.value(QStringLiteral("toolTip")).isString()) {
+    text->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  }
+
+  return text;
 }
 
 QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
@@ -551,6 +566,8 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
     return setFloatOption(name, defaultValue);
   else if (type == QLatin1String("boolean"))
     return setBooleanOption(name, defaultValue);
+  else if (type == QLatin1String("text"))
+    return setTextOption(name, defaultValue);
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
@@ -612,6 +629,27 @@ void JsonWidget::setStringOption(const QString& name, const QJsonValue& value)
   }
 
   lineEdit->setText(value.toString());
+}
+
+void JsonWidget::setTextOption(const QString& name, const QJsonValue& value)
+{
+  auto* text = qobject_cast<QLabel*>(m_widgets.value(name, nullptr));
+  if (text == nullptr) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                    .arg(name);
+    return;
+  }
+
+  if (!value.isString()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                    .arg(name)
+               << value;
+    return;
+  }
+
+  text->setText(value.toString());
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
