@@ -395,7 +395,7 @@ void InputGeneratorWidget::showError(const QString& err)
   // adjust the size of the text browser to ~80 char wide, ~20 lines high
   QSize theSize = textBrowser->sizeHint();
   QFontMetrics metrics(textBrowser->currentFont());
-  int charWidth = metrics.width("i7OPlmWn9/") / 10;
+  int charWidth = metrics.horizontalAdvance("i7OPlmWn9/") / 10;
   int charHeight = metrics.lineSpacing();
   theSize.setWidth(80 * charWidth);
   theSize.setHeight(20 * charHeight);

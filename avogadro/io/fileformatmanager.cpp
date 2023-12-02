@@ -9,6 +9,7 @@
 
 #include "cjsonformat.h"
 #include "cmlformat.h"
+#include "cmsgpackformat.h"
 #include "dcdformat.h"
 #include "gromacsformat.h"
 #include "lammpsformat.h"
@@ -134,7 +135,7 @@ bool FileFormatManager::addFormat(FileFormat* format)
     appendError("Format " + format->identifier() + " already loaded.");
     return false;
   }
-  for (auto & m_format : m_formats) {
+  for (auto& m_format : m_formats) {
     if (m_format == format) {
       appendError("The format object was already loaded.");
       return false;
@@ -146,11 +147,11 @@ bool FileFormatManager::addFormat(FileFormat* format)
   m_formats.push_back(format);
   m_identifiers[format->identifier()].push_back(index);
   std::vector<std::string> mimes = format->mimeTypes();
-  for (auto & mime : mimes) {
+  for (auto& mime : mimes) {
     m_mimeTypes[mime].push_back(index);
   }
   std::vector<std::string> extensions = format->fileExtensions();
-  for (auto & extension : extensions) {
+  for (auto& extension : extensions) {
     m_fileExtensions[extension].push_back(index);
   }
 
@@ -160,10 +161,9 @@ bool FileFormatManager::addFormat(FileFormat* format)
 namespace {
 // Lookup each key from "keys" in "map", and remove "val" from the Map's
 // data value (which is a vector of ValueType)
-template<typename Map, typename VectorOfKeys, typename ValueType>
+template <typename Map, typename VectorOfKeys, typename ValueType>
 void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
 {
-  typedef typename VectorOfKeys::const_iterator KeysIter;
   for (auto key = keys.begin(), keyEnd = keys.end(); key != keyEnd; ++key) {
     auto mapMatch = map.find(*key);
     if (mapMatch == map.end())
@@ -172,13 +172,12 @@ void removeFromMap(Map& map, const VectorOfKeys& keys, const ValueType& val)
     if (vec.size() <= 1) {
       map.erase(*key);
     } else {
-      auto newEnd =
-        std::remove(vec.begin(), vec.end(), val);
+      auto newEnd = std::remove(vec.begin(), vec.end(), val);
       vec.resize(newEnd - vec.begin());
     }
   }
 }
-}
+} // namespace
 
 bool FileFormatManager::removeFormat(const std::string& identifier)
 {
@@ -285,6 +284,7 @@ FileFormatManager::FileFormatManager()
 {
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
+  addFormat(new CMsgPackFormat);
   addFormat(new DcdFormat);
   addFormat(new GromacsFormat);
   addFormat(new LammpsTrajectoryFormat);
@@ -304,7 +304,7 @@ FileFormatManager::FileFormatManager()
 FileFormatManager::~FileFormatManager()
 {
   // Delete the file formats that were loaded.
-  for (auto & m_format : m_formats) {
+  for (auto& m_format : m_formats) {
     delete m_format;
   }
   m_formats.clear();
@@ -315,9 +315,9 @@ std::vector<std::string> FileFormatManager::filteredKeysFromFormatMap(
   const FileFormatManager::FormatIdMap& fmap) const
 {
   std::vector<std::string> result;
-  for (const auto & it : fmap) {
-    for (auto formatIt = it.second.begin();
-         formatIt != it.second.end(); ++formatIt) {
+  for (const auto& it : fmap) {
+    for (auto formatIt = it.second.begin(); formatIt != it.second.end();
+         ++formatIt) {
       if (filter == FileFormat::None ||
           (m_formats[*formatIt]->supportedOperations() & filter) == filter) {
         result.push_back(it.first);
@@ -384,4 +384,4 @@ void FileFormatManager::appendError(const std::string& errorMessage)
   m_error += errorMessage + "\n";
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Io

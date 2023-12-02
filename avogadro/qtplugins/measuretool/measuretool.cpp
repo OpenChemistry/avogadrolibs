@@ -31,7 +31,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
 
 #include <QDebug>
 
@@ -172,12 +172,15 @@ void MeasureTool::draw(Rendering::GroupNode& node)
     case 4:
       v3 = positions[3] - positions[2];
       v3Norm = v3.norm();
+      [[fallthrough]];
     case 3:
       v2 = positions[2] - positions[1];
       v2Norm = v2.norm();
+      [[fallthrough]];
     case 2:
       v1 = positions[1] - positions[0];
       v1Norm = v1.norm();
+      [[fallthrough]];
     default:
       break;
   }

@@ -5,17 +5,15 @@
 
 #include "atomutilities.h"
 
-#include "mdlvalence_p.h"
-
 #include <algorithm>
 #include <cmath>
 #include <vector>
 
-#define M_TETRAHED 109.47122063449069389
+constexpr double M_TETRAHED = 109.47122063449069389;
 
 namespace Avogadro::Core {
 
-typedef Array<Bond> NeighborListType;
+using NeighborListType = Array<Bond>;
 
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {
@@ -69,7 +67,7 @@ Vector3 AtomUtilities::generateNewBondVector(
 {
   Vector3 newPos;
   bool success = false;
-  int currentValence = allVectors.size();
+  int currentValence = static_cast<int>(allVectors.size());
 
   // No bonded atoms, just pick a random vector
   if (currentValence == 0) {
@@ -77,7 +75,7 @@ Vector3 AtomUtilities::generateNewBondVector(
     return newPos;
   } else if (currentValence == 1) {
     // One bonded atom
-    Vector3 bond1 = allVectors[0];
+    const Vector3& bond1 = allVectors[0];
 
     // Check what's attached to our neighbor -- we want to set trans to the
     // neighbor
@@ -106,12 +104,10 @@ Vector3 AtomUtilities::generateNewBondVector(
 
     Vector3 v1, v2;
     v1 = bond1.cross(bond2);
-    bool noA2 = false;
+
     if (bond2.norm() < 1.0e-5 || v1.norm() < 1.0e-5) {
       //        std::cout << " creating a random paired atom " << std::endl;
 
-      // there is no a-2 atom
-      noA2 = true;
       v2 = Vector3::Random().normalized();
 
       double angle = fabs(acos(bond1.dot(v2)));
@@ -151,8 +147,8 @@ Vector3 AtomUtilities::generateNewBondVector(
     return -1.0 * newPos.normalized();
   } // end one bond
   else if (currentValence == 2) {
-    Vector3 bond1 = allVectors[0];
-    Vector3 bond2 = allVectors[1];
+    const Vector3& bond1 = allVectors[0];
+    const Vector3& bond2 = allVectors[1];
 
     Vector3 v1 = bond1 + bond2;
     v1.normalize();
@@ -174,9 +170,9 @@ Vector3 AtomUtilities::generateNewBondVector(
     return -1.0 * newPos.normalized();
   } // end two bonds
   else if (currentValence == 3) {
-    Vector3 bond1 = allVectors[0];
-    Vector3 bond2 = allVectors[1];
-    Vector3 bond3 = allVectors[2];
+    const Vector3& bond1 = allVectors[0];
+    const Vector3& bond2 = allVectors[1];
+    const Vector3& bond3 = allVectors[2];
 
     // need to handle different hybridizations here
 

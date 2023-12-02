@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>align.png</file>
+        <file>align@2x.png</file>
+    </qresource>
+</RCC>

@@ -1,5 +1,0 @@
-package external.Avogadro.Core;
-
-message Molecule {
-
-}

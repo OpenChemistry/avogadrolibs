@@ -1,4 +1,3 @@
-
 avogadro_plugin(Label
   "Labels rendering scheme"
   ScenePlugin
@@ -25,12 +24,5 @@ avogadro_plugin(LabelEditor
   "${label_rcs}"
 )
 
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
-include_directories(SYSTEM ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
-if(WIN32 AND NOT BUILD_SHARED_LIBS)
-  add_definitions(-DGLEW_STATIC)
-endif()
-
-target_link_libraries(Label LINK_PRIVATE AvogadroRendering)
-target_link_libraries(LabelEditor LINK_PRIVATE AvogadroRendering)
+target_link_libraries(Label LINK_PRIVATE Avogadro::Rendering)
+target_link_libraries(LabelEditor LINK_PRIVATE Avogadro::QtOpenGL)

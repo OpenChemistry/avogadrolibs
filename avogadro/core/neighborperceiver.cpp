@@ -47,7 +47,7 @@ void NeighborPerceiver::getNeighborsInclusiveInPlace(
   const std::array<int, 3> bin_index = getBinIndex(point);
   if (&out == m_cachedArray && bin_index == m_cachedIndex)
     return;
-  m_cachedArray = &out;
+
   m_cachedIndex = bin_index;
   out.clear();
   for (int xi = std::max(int(1), bin_index[0]) - 1;

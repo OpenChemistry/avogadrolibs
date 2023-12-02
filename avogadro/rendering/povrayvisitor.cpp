@@ -16,10 +16,10 @@
 
 namespace Avogadro::Rendering {
 
-using std::string;
-using std::ostringstream;
-using std::ostream;
 using std::ofstream;
+using std::ostream;
+using std::ostringstream;
+using std::string;
 
 namespace {
 ostream& operator<<(ostream& os, const Vector3f& v)
@@ -34,7 +34,7 @@ ostream& operator<<(ostream& os, const Vector3ub& color)
      << color[2] / 255.0f;
   return os;
 }
-}
+} // namespace
 
 POVRayVisitor::POVRayVisitor(const Camera& c)
   : m_camera(c), m_backgroundColor(255, 255, 255),
@@ -42,9 +42,7 @@ POVRayVisitor::POVRayVisitor(const Camera& c)
 {
 }
 
-POVRayVisitor::~POVRayVisitor()
-{
-}
+POVRayVisitor::~POVRayVisitor() {}
 
 void POVRayVisitor::begin()
 {
@@ -106,9 +104,9 @@ string POVRayVisitor::end()
   return m_sceneData;
 }
 
-void POVRayVisitor::visit(Drawable& geometry)
+void POVRayVisitor::visit(Drawable&)
 {
-  // geometry.render(m_camera);
+  return;
 }
 
 void POVRayVisitor::visit(SphereGeometry& geometry)
@@ -121,10 +119,7 @@ void POVRayVisitor::visit(SphereGeometry& geometry)
   m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(AmbientOcclusionSphereGeometry& geometry)
-{
-  // geometry.render(m_camera);
-}
+void POVRayVisitor::visit(AmbientOcclusionSphereGeometry&) {}
 
 void POVRayVisitor::visit(CylinderGeometry& geometry)
 {
@@ -159,25 +154,37 @@ void POVRayVisitor::visit(MeshGeometry& geometry)
   }
   str << "\n}\n";
   str << "texture_list{" << v.size() << ",\n";
-  for (auto & i : v)
-    str << "texture{pigment{rgb<" << i.normal << ">}\n";
+  float r = 0.0;
+  float g = 0.0;
+  float b = 0.0;
+  float t = 1.0 - geometry.opacity() / 255.0;
+
+  for (auto& i : v) {
+    r = i.color[0] / 255.0;
+    g = i.color[1] / 255.0;
+    b = i.color[2] / 255.0;
+    str << "texture{pigment{rgbt<" << r << ", " << g << ", " << b << "," << t
+        << ">}}\n";
+  }
   str << "\n}\n";
   str << "face_indices{" << tris.size() / 3 << ",\n";
   for (size_t i = 0; i < tris.size(); i += 3) {
     str << "<" << tris[i] << "," << tris[i + 1] << "," << tris[i + 2] << ">";
+    // this represents the texture color from the vertex
+    str << ", " << (i / 3);
     if (i != tris.size() - 3)
       str << ", ";
     if (i != 0 && ((i + 1) / 3) % 3 == 0)
       str << '\n';
   }
   str << "\n}\n";
-  str << "\tpigment { rgbt <1.0, 0.0, 0.0, 1.0> }\n"
+  str << "\tpigment { rgbt <" << r << ", " << g << "," << b << "," << t
+      << "> }\n"
       << "}\n\n";
+
+  m_sceneData += str.str();
 }
 
-void POVRayVisitor::visit(LineStripGeometry& geometry)
-{
-  // geometry.render(m_camera);
-}
+void POVRayVisitor::visit(LineStripGeometry&) {}
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

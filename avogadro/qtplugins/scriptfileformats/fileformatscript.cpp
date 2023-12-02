@@ -85,6 +85,7 @@ bool FileFormatScript::read(std::istream& in, Core::Molecule& molecule)
 
   if (m_bondOnRead) {
     molecule.perceiveBondsSimple();
+    molecule.perceiveBondOrders();
   }
 
   return true;
@@ -216,7 +217,6 @@ void FileFormatScript::readMetaData()
 
   // validate operations:
   Operations operationsTmp = Io::FileFormat::None;
-  typedef std::vector<std::string>::const_iterator StringVectorIter;
   for (auto & it : opStringsTmp) {
     if (it == "read")
       operationsTmp |= Io::FileFormat::Read;

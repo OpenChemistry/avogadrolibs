@@ -44,8 +44,7 @@ Angle AngleIterator::operator++()
       if (valid) {
         // we have a valid current angle, try to find a new edge
         for (const auto maybeC : graph.neighbors(b)) {
-          if (maybeC != a 
-            && (!valid || maybeC > c)) {
+          if (maybeC != a && maybeC > c) {
             m_current = make_tuple(a, b, maybeC);
             return m_current;
           }

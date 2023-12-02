@@ -1,57 +1,66 @@
 include(GenerateExportHeader)
 
+# May want to adjust the name, this more performs boilerplate library stuff now.
 function(avogadro_add_library name)
-  add_library(${name} ${ARGN})
+  # Add an alias target to expose to other targets.
+  add_library(Avogadro::${name} ALIAS ${name})
   # Use the new AUTOMOC support for Qt libraries (CMake 2.8.6).
-  if(${name} MATCHES "^AvogadroQt")
+  if(${name} MATCHES "^Qt")
     set_target_properties(${name} PROPERTIES AUTOMOC TRUE)
   endif()
   if(BUILD_SHARED_LIBS)
-  set_target_properties(${name} PROPERTIES VERSION "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}"
-   					   SOVERSION ${AvogadroLibs_VERSION_MAJOR})
+  set_target_properties(${name}
+    PROPERTIES
+      OUTPUT_NAME Avogadro${name}
+      VERSION "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}"
+      SOVERSION ${AvogadroLibs_VERSION_MAJOR})
   endif()
-  string(TOLOWER ${name} lowerName)
+  string(TOLOWER ${name} _lower_name)
+  string(TOUPPER ${name} _upper_name)
   # Generate the necessary export headers.
-  generate_export_header(${name} EXPORT_FILE_NAME ${lowerName}export.h)
-  list(APPEND HEADERS "${CMAKE_CURRENT_BINARY_DIR}/${lowerName}export.h")
-  include_directories(${CMAKE_CURRENT_BINARY_DIR})
-  # Now install everything.
-  string(REGEX REPLACE "^avogadro" "" module ${lowerName})
+  generate_export_header(${name}
+    BASE_NAME AVOGADRO${_upper_name}
+    EXPORT_FILE_NAME avogadro${_lower_name}export.h)
+  target_sources(${name} PUBLIC FILE_SET HEADERS
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/avogadro${_lower_name}export.h")
+  # Set up the build and install include directories for the target.
+  target_include_directories(${name}
+    PUBLIC
+      "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>"
+      "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>"
+      "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+      "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
 
-  # SKBUILD is set for binary wheel
-  if (NOT SKBUILD)
-    install(FILES ${HEADERS}
-      DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro/${module}")
-  else()
-    # For MACOSX
-    set_target_properties(${name} PROPERTIES INSTALL_NAME_DIR "@rpath")
-    set(INSTALL_RUNTIME_DIR avogadro)
-    set(INSTALL_LIBRARY_DIR avogadro)
-    set(INSTALL_ARCHIVE_DIR avogadro)
-  endif()
-
+  # Install the target and its headers.
   install(TARGETS ${name}
     EXPORT "AvogadroLibsTargets"
+    FILE_SET HEADERS DESTINATION "${INSTALL_INCLUDE_DIR}/avogadro"
     RUNTIME DESTINATION "${INSTALL_RUNTIME_DIR}"
     LIBRARY DESTINATION "${INSTALL_LIBRARY_DIR}"
-    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+    ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}"
+    INCLUDES DESTINATION "${INSTALL_INCLUDE_DIR}")
+endfunction()
+
+# Simple wrapper to collect boilerplate for adding headers to targets.
+function(avogadro_headers _name)
+  target_sources(${_name} PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS
+      ${AvogadroLibs_SOURCE_DIR}/avogadro
+      ${AvogadroLibs_BINARY_DIR}/avogadro
+    FILES ${ARGN})
 endfunction()
 
 add_subdirectory(core)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/core)
 add_subdirectory(calc)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/calc)
 add_subdirectory(io)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/io)
 add_subdirectory(quantumio)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/quantumio)
 # SKBUILD is set for binary wheel
-if (NOT SKBUILD)
+if(NOT SKBUILD)
   add_subdirectory(command)
 endif()
 if(USE_OPENGL)
   add_subdirectory(rendering)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/rendering)
 endif()
 
 if(USE_QT)
@@ -60,21 +69,13 @@ if(USE_QT)
   endif()
 
   add_subdirectory(qtgui)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/qtgui)
   if(USE_OPENGL)
     add_subdirectory(qtopengl)
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/qtopengl)
   endif()
   # Add unconditionally as this talks to MoleQueue, but doesn't depend on it.
   add_subdirectory(molequeue)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/molequeue)
   if(USE_VTK)
     add_subdirectory(vtk)
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/vtk)
   endif()
   add_subdirectory(qtplugins)
-endif()
-
-if(USE_PROTOCALL)
-  add_subdirectory(protocall)
 endif()

@@ -12,9 +12,9 @@ namespace Avogadro::QtGui {
 
 using std::swap;
 
-Molecule::Molecule(QObject* parent_)
-  : QObject(parent_),
-    m_undoMolecule(new RWMolecule(*this, this)), Core::Molecule()
+Molecule::Molecule(QObject* p)
+  : QObject(p), Core::Molecule(),
+    m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(true);
 }

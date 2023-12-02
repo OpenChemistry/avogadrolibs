@@ -34,9 +34,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
-#include <QtGui/QIcon>
-#include <QtGui/QMouseEvent>
-#include <QtWidgets/QAction>
+#include <QAction>
+#include <QIcon>
+#include <QMouseEvent>
 
 #include <Eigen/Geometry>
 
@@ -1008,7 +1008,6 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
   const RWAtom bondedAtom(bond.getOtherAtom(startAtom));
 
   Array<RWBond> bonds = m_molecule->bonds(currentAtom);
-  typedef std::vector<RWBond>::const_iterator BondIter;
 
   for (auto& it : bonds) {
     if (it != bond) { // Skip the current bond

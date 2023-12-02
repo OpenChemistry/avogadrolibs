@@ -11,11 +11,11 @@
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QAction>
 #include <QtCore/QDebug>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
 #include <QtGui/QKeySequence>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QInputDialog>
 
 #include <QtCore/QStringList>
@@ -25,8 +25,8 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro::QtPlugins {
 
 Select::Select(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_layerManager("Select"),
-    m_molecule(nullptr), m_elements(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_elements(nullptr), m_layerManager("Select")
 {
   auto* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
@@ -181,7 +181,8 @@ void Select::selectElement(int element)
 
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
     if (m_molecule->atomicNumber(i) == element) {
-      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                  undoText);
     } else
       m_molecule->undoMolecule()->setAtomSelected(i, false, undoText);
   }
@@ -223,22 +224,33 @@ void Select::selectWater()
     } else if (atomicNumber == 1) {
       // check if it's attached to a water oxygen
       auto bonds = m_molecule->bonds(i);
-      if (bonds.size() != 1 || !isWaterOxygen(bonds[0].getOtherAtom(i).index()))
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
-      else
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+      bool isWater = false;
+      // check the bonds for a water oxygen
+      for (auto& bond : bonds) {
+        if (isWaterOxygen(bond.getOtherAtom(i).index())) {
+          m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                      undoText);
+          isWater = true;
+          break;
+        }
+      }
+      if (!isWater)
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                    undoText);
 
       continue;
     }
 
-    m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
+    m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                undoText);
   }
   // also select water residues (which may be isolated "O" atoms)
-  for (const auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     if (residue.residueName() == "HOH") {
       for (auto atom : residue.residueAtoms()) {
         Index i = atom.index();
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
     }
   }
@@ -253,12 +265,13 @@ void Select::selectBackboneAtoms()
 
   QString undoText = tr("Select Backbone");
 
-  for (const auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     for (auto atom : residue.residueAtoms()) {
       auto name = residue.getAtomName(atom);
       if (name == "CA" || name == "C" || name == "N" || name == "O") {
         Index i = atom.index();
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
 
       // also select hydrogens connected to the backbone atoms
@@ -270,7 +283,8 @@ void Select::selectBackboneAtoms()
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                        undoText);
           }
         }
       }
@@ -287,12 +301,13 @@ void Select::selectSidechainAtoms()
 
   QString undoText = tr("Select Sidechain");
 
-  for (const auto residue : m_molecule->residues()) {
+  for (const auto& residue : m_molecule->residues()) {
     for (auto atom : residue.residueAtoms()) {
       auto name = residue.getAtomName(atom);
       if (name != "CA" && name != "C" && name != "N" && name != "O") {
         Index i = atom.index();
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
 
       // or is it a hydrogen connected to a backbone atom?
@@ -305,7 +320,8 @@ void Select::selectSidechainAtoms()
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                        undoText);
           }
         }
       }
@@ -357,7 +373,8 @@ void Select::enlargeSelection()
       Vector3 displacement = m_molecule->atomPosition3d(i) - center;
       Real distance = displacement.squaredNorm();
       if (distance < maxDistance) {
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
     }
   }
@@ -391,9 +408,11 @@ void Select::shrinkSelection()
     Vector3 displacement = m_molecule->atomPosition3d(i) - center;
     Real distance = displacement.squaredNorm();
     if (distance < maxDistance)
-      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                  undoText);
     else
-      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                  undoText);
   }
 
   m_molecule->emitChanged(Molecule::Atoms);
@@ -424,14 +443,16 @@ void Select::selectAtomIndex()
         int start = range.first().toInt(&ok1);
         int last = range.back().toInt(&ok2);
         if (ok1 && ok2) {
-          for (Index i = start; i <= last; ++i)
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+          for (int i = start; i <= last; ++i)
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                        undoText);
         }
       }
     } else {
       int i = item.toInt(&ok);
       if (ok)
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
     }
   }
 
@@ -457,11 +478,10 @@ void Select::selectResidue()
   foreach (const QString item, list) {
     const QString label = item.simplified(); // get rid of whitespace
     // check if it's a number - select that residue index
-    bool ok;
     int index = label.toInt(&ok);
     if (ok) {
       auto residueList = m_molecule->residues();
-      if (index >= 1 && index < residueList.size()) {
+      if (index >= 1 && index < static_cast<int>(residueList.size())) {
         auto residue = residueList[index];
         for (auto& atom : residue.residueAtoms()) {
           Index i = atom.index();
@@ -477,10 +497,10 @@ void Select::selectResidue()
     QRegularExpressionMatch match = re.match(label);
     if (match.hasMatch()) {
       QString name = match.captured(1);
-      int index = match.captured(2).toInt();
+      index = match.captured(2).toInt();
 
       auto residueList = m_molecule->residues();
-      if (index >= 1 && index < residueList.size()) {
+      if (index >= 1 && index < static_cast<int>(residueList.size())) {
         auto residue = residueList[index];
         if (name == residue.residueName().c_str()) {
           for (auto atom : residue.residueAtoms()) {

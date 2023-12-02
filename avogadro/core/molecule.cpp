@@ -9,11 +9,13 @@
 #include "color3f.h"
 #include "cube.h"
 #include "elements.h"
+#include "gaussianset.h"
 #include "layermanager.h"
 #include "mdlvalence_p.h"
 #include "mesh.h"
 #include "neighborperceiver.h"
 #include "residue.h"
+#include "slaterset.h"
 #include "unitcell.h"
 
 #include <algorithm>
@@ -46,9 +48,10 @@ Molecule::Molecule(const Molecule& other)
     m_meshes(std::vector<Mesh*>()), m_cubes(std::vector<Cube*>()),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
-    m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
+    m_frozenAtomMask(other.m_frozenAtomMask),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -73,6 +76,55 @@ Molecule::Molecule(const Molecule& other)
   }
 }
 
+void Molecule::readProperties(const Molecule& other)
+{
+  m_label = other.m_label;
+  m_colors = other.m_colors;
+  // merge data maps by iterating through other's map
+  for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
+       ++it) {
+    // even if we have the same key, we want to overwrite
+    m_data.setValue(it->first, it->second);
+  }
+  // merge partial charge maps
+  for (auto it = other.m_partialCharges.cbegin();
+       it != other.m_partialCharges.cend(); ++it) {
+    m_partialCharges[it->first] = it->second;
+  }
+
+  // copy orbital information
+  SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
+  if (slaterSet != nullptr) {
+    m_basisSet = slaterSet->clone();
+    m_basisSet->setMolecule(this);
+  }
+  GaussianSet* gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
+  if (gaussianSet != nullptr) {
+    m_basisSet = gaussianSet->clone();
+    m_basisSet->setMolecule(this);
+  }
+
+  // copy over spectra information
+  if (other.m_vibrationFrequencies.size() > 0) {
+    m_vibrationFrequencies = other.m_vibrationFrequencies;
+    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
+    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
+    m_vibrationLx = other.m_vibrationLx;
+  }
+
+  // Copy over any meshes
+  for (Index i = 0; i < other.meshCount(); ++i) {
+    Mesh* m = addMesh();
+    *m = *other.mesh(i);
+  }
+
+  // Copy over any cubes
+  for (Index i = 0; i < other.cubeCount(); ++i) {
+    Cube* c = addCube();
+    *c = *other.cube(i);
+  }
+}
+
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
     m_customElementMap(std::move(other.m_customElementMap)),
@@ -87,9 +139,10 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_vibrationLx(other.m_vibrationLx),
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
-    m_residues(other.m_residues), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
-    m_hallNumber(other.m_hallNumber),
+    m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
+    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
+    m_atomicNumbers(other.m_atomicNumbers),
+    m_frozenAtomMask(other.m_frozenAtomMask),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;
@@ -133,6 +186,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
 
@@ -193,6 +247,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_bondOrders = other.m_bondOrders;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
+    m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
     m_meshes = std::move(other.m_meshes);
@@ -241,7 +296,7 @@ const Layer& Molecule::layer() const
 
 void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
 {
-  if (value.size() != atomCount())
+  if (static_cast<Index>(value.size()) != atomCount())
     return;
 
   m_partialCharges[type] = value;
@@ -265,6 +320,58 @@ std::set<std::string> Molecule::partialChargeTypes() const
   for (auto& it : m_partialCharges)
     types.insert(it.first);
   return types;
+}
+
+void Molecule::setFrozenAtom(Index atomId, bool frozen)
+{
+  if (atomId >= m_atomicNumbers.size())
+    return;
+
+  // check if we need to resize
+  unsigned int size = m_frozenAtomMask.rows();
+  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
+
+  // do we need to initialize new values?
+  if (m_frozenAtomMask.rows() > size)
+    for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
+      m_frozenAtomMask[i] = 1.0;
+
+  float value = frozen ? 0.0 : 1.0;
+  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
+    m_frozenAtomMask[atomId * 3] = value;
+    m_frozenAtomMask[atomId * 3 + 1] = value;
+    m_frozenAtomMask[atomId * 3 + 2] = value;
+  }
+}
+
+bool Molecule::frozenAtom(Index atomId) const
+{
+  bool frozen = false;
+  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
+    frozen = (m_frozenAtomMask[atomId * 3] == 0.0 &&
+              m_frozenAtomMask[atomId * 3 + 1] == 0.0 &&
+              m_frozenAtomMask[atomId * 3 + 2] == 0.0);
+  }
+  return frozen;
+}
+
+void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
+{
+  // check if we need to resize
+  unsigned int size = m_frozenAtomMask.rows();
+  if (m_frozenAtomMask.rows() != 3 * m_atomicNumbers.size())
+    m_frozenAtomMask.conservativeResize(3 * m_atomicNumbers.size());
+
+  // do we need to initialize new values?
+  if (m_frozenAtomMask.rows() > size)
+    for (unsigned int i = size; i < m_frozenAtomMask.rows(); ++i)
+      m_frozenAtomMask[i] = 1.0;
+
+  float value = frozen ? 0.0 : 1.0;
+  if (atomId * 3 <= m_frozenAtomMask.rows() - 3) {
+    m_frozenAtomMask[atomId * 3 + axis] = value;
+  }
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)
@@ -554,7 +661,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
 size_t calcNlogN(size_t n)
 {
   size_t aproxLog = 1;
-  float aux = n;
+  float aux = static_cast<float>(n);
   while (aux > 2.0f) {
     aux /= 2.0f;
     ++aproxLog;
@@ -647,8 +754,8 @@ Array<const Molecule::BondType*> Molecule::bonds(Index a) const
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](const BondType*& a, const BondType*& b) {
-              return a->index() < b->index();
+            [](const BondType*& ba, const BondType*& bb) {
+              return ba->index() < bb->index();
             });
   return atomBonds;
 }
@@ -666,7 +773,7 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](BondType& a, BondType& b) { return a.index() < b.index(); });
+            [](BondType& ba, BondType& bb) { return ba.index() < bb.index(); });
   return atomBonds;
 }
 
@@ -910,13 +1017,6 @@ void Molecule::perceiveBondOrders()
       anyUnsaturated = true;
   }
 
-  // current sum of formal charges
-  signed char targetCharge = totalCharge();
-  // we'll assign at the end of the do/while loop
-  signed char currentCharge = 0;
-
-  bool isRadical = (totalSpinMultiplicity() != 1);
-
   Index startIndex = 0;
   Index initialAtom = 0;
   while (anyUnsaturated) {
@@ -1062,6 +1162,28 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       Vector3 jpos = m_positions3d[j];
       Vector3 diff = jpos - ipos;
 
+      // Don't automatically bond nobel gases to anything
+      switch (atomicNumber(i)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
+      // now for the other atom
+      switch (atomicNumber(j)) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
       if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
           std::fabs(diff[2]) > cutoff ||
           (atomicNumber(i) == 1 && atomicNumber(j) == 1))
@@ -1095,6 +1217,11 @@ bool Molecule::setCoordinate3d(int coord)
     return true;
   }
   return false;
+}
+
+void Molecule::clearCoordinate3d()
+{
+  m_coordinates3d.clear();
 }
 
 Array<Vector3> Molecule::coordinate3d(int index) const
@@ -1329,6 +1456,31 @@ std::list<Index> Molecule::getAtomsAtLayer(size_t layer)
     }
   }
   return result;
+}
+
+void Molecule::boundingBox(Vector3& boxMin, Vector3& boxMax,
+                           const double radius) const
+{
+  boxMin.setConstant(std::numeric_limits<double>::max());
+  boxMax.setConstant(-std::numeric_limits<double>::max());
+
+  const bool noSelection = isSelectionEmpty();
+
+  for (uint32_t i = 0; i < atomCount(); i++) {
+    if (noSelection || m_selectedAtoms[i]) {
+
+      const Vector3 boxMinBuffer = atom(i).position3d().array() - radius;
+      const Vector3 boxMaxBuffer = atom(i).position3d().array() + radius;
+
+      boxMin.x() = std::min(boxMinBuffer.x(), boxMin.x());
+      boxMin.y() = std::min(boxMinBuffer.y(), boxMin.y());
+      boxMin.z() = std::min(boxMinBuffer.z(), boxMin.z());
+
+      boxMax.x() = std::max(boxMaxBuffer.x(), boxMax.x());
+      boxMax.y() = std::max(boxMaxBuffer.y(), boxMax.y());
+      boxMax.z() = std::max(boxMaxBuffer.z(), boxMax.z());
+    }
+  }
 }
 
 } // namespace Avogadro::Core

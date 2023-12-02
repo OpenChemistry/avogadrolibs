@@ -6,9 +6,11 @@
 #include "focus.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
+
 #include <iostream>
 
 namespace Avogadro::QtPlugins {

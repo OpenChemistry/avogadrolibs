@@ -22,9 +22,7 @@ GaussianSet::GaussianSet() : m_numMOs(0), m_init(false)
   m_scfType = Rhf;
 }
 
-GaussianSet::~GaussianSet()
-{
-}
+GaussianSet::~GaussianSet() {}
 
 unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 {
@@ -199,12 +197,6 @@ bool GaussianSet::setSpinDensityMatrix(const MatrixX& m)
 {
   m_spinDensity.resize(m.rows(), m.cols());
   m_spinDensity = m;
-  return true;
-}
-
-bool GaussianSet::generateDensityMatrix()
-{
-  // FIXME: Finish me!
   return true;
 }
 
@@ -497,7 +489,7 @@ void GaussianSet::initCalculation()
   m_init = true;
 }
 
-bool GaussianSet::generateDensity()
+bool GaussianSet::generateDensityMatrix()
 {
   if (m_scfType == Unknown)
     return false;
@@ -514,9 +506,11 @@ bool GaussianSet::generateDensity()
             m_density(jBasis, iBasis) += 2.0 * icoeff * jcoeff;
             m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
           }
-          cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
-               << endl;
+          //          cout << iBasis << ", " << jBasis << ": " <<
+          //          m_density(iBasis, jBasis)
+          //               << endl;
           break;
+        case Rohf: // ROHF is handled similarly to UHF
         case Uhf:
           for (unsigned int iaMO = 0; iaMO < m_electrons[0]; ++iaMO) {
             double icoeff = m_moMatrix[0](iBasis, iaMO);
@@ -530,8 +524,9 @@ bool GaussianSet::generateDensity()
             m_density(jBasis, iBasis) += icoeff * jcoeff;
             m_density(iBasis, jBasis) = m_density(jBasis, iBasis);
           }
-          cout << iBasis << ", " << jBasis << ": " << m_density(iBasis, jBasis)
-               << endl;
+          //          cout << iBasis << ", " << jBasis << ": " <<
+          //          m_density(iBasis, jBasis)
+          //               << endl;
           break;
         default:
           cout << "Unhandled scf type:" << m_scfType << endl;
@@ -541,7 +536,7 @@ bool GaussianSet::generateDensity()
   return true;
 }
 
-bool GaussianSet::generateSpinDensity()
+bool GaussianSet::generateSpinDensityMatrix()
 {
   if (m_scfType != Uhf)
     return false;
@@ -569,4 +564,4 @@ bool GaussianSet::generateSpinDensity()
   return true;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Core

@@ -7,7 +7,7 @@
 #include "propertymodel.h"
 #include "propertyview.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QScrollBar>

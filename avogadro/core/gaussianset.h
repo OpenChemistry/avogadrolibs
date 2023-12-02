@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_GAUSSIANSET_H
 #define AVOGADRO_CORE_GAUSSIANSET_H
 
+#include "avogadrocoreexport.h"
+
 #include "basisset.h"
 
 #include <avogadro/core/matrix.h>
@@ -170,6 +172,13 @@ public:
    * @return True on success, false on failure.
    */
   bool generateDensityMatrix();
+
+  /**
+   * @brief Generate the spin density matrix if we have the required
+   * information.
+   * @return True on success, false on failure.
+   */
+  bool generateSpinDensityMatrix();
 
   /**
    * @return The number of molecular orbitals in the GaussianSet.
@@ -355,22 +364,9 @@ private:
   ScfType m_scfType;
 
   std::string m_functionalName;
-
-  /**
-   * @brief Generate the density matrix if we have the required information.
-   * @return True on success, false on failure.
-   */
-  bool generateDensity();
-
-  /**
-   * @brief Generate the spin density matrix if we have the required
-   * information.
-   * @return True on success, false on failure.
-   */
-  bool generateSpinDensity();
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif

@@ -42,9 +42,9 @@
 #define FORMAT_DEBUG(x)
 #endif // ENABLE_FORMAT_DEBUG
 
-using Avogadro::QtGui::Molecule;
-using Avogadro::Core::Elements;
 using Avogadro::Vector3;
+using Avogadro::Core::Elements;
+using Avogadro::QtGui::Molecule;
 
 namespace {
 
@@ -96,7 +96,7 @@ struct AtomStruct
   Vector3 pos;
 };
 
-} // end anon namespace
+} // namespace
 
 namespace Avogadro::QtPlugins {
 
@@ -140,7 +140,7 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
           SLOT(textModified(bool)));
 
   // Setup spec edit
-  QRegExp specRegExp("[#ZGSNabcxyz01_]*");
+  QRegExp specRegExp("[#ZGSLNabcxyz01_]*");
   auto* specValidator = new QRegExpValidator(specRegExp, this);
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
@@ -385,6 +385,39 @@ void CoordinateEditorDialog::validateInputWorker()
           break;
         }
 
+        case 'L': {
+          // Validate label (symbol + number)
+          QString cleanToken(tokenCursor.selectedText().toLower());
+          if (!cleanToken.isEmpty())
+            cleanToken.replace(0, 1, cleanToken[0].toUpper());
+
+          // Split the label into symbol and number
+          QRegExp labelSplitter("([A-Z][a-z]?)(\\d+)");
+          if (labelSplitter.indexIn(cleanToken) == -1) {
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atom label."));
+            break;
+          }
+          // check the symbol
+          std::string tokenStd(labelSplitter.cap(1).toStdString());
+          atom.atomicNumber = Elements::atomicNumberFromSymbol(tokenStd);
+          if (atom.atomicNumber == Avogadro::InvalidElement)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid element symbol."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Element symbol."));
+          break;
+        }
+
+        case '#': {
+          // Validate integer:
+          bool isInt;
+          int index = tokenCursor.selectedText().toInt(&isInt);
+          if (!isInt)
+            m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic index."));
+          else
+            m_ui->text->markValid(tokenCursor, tr("Atomic index."));
+          break;
+        }
+
         case 'Z': {
           // Validate integer:
           bool isInt;
@@ -564,6 +597,7 @@ void CoordinateEditorDialog::applyFinish(bool valid)
                                                  newMolecule.atomPositions3d());
   } else {
     newMolecule.perceiveBondsSimple();
+    newMolecule.perceiveBondOrders();
   }
 
   m_ui->text->document()->setModified(false);
@@ -624,6 +658,9 @@ QString CoordinateEditorDialog::detectInputFormat() const
 {
   if (m_ui->text->document()->isEmpty())
     return QString();
+
+  if (!m_ui->spec->text().isEmpty())
+    return m_ui->spec->text();
 
   // Extract the first non-empty line of text from the document.
   QTextCursor cur(m_ui->text->document());
@@ -806,4 +843,4 @@ void CoordinateEditorDialog::clearClicked()
   m_ui->text->document()->clear();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

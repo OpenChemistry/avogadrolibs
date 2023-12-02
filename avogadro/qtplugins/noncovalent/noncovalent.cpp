@@ -257,6 +257,7 @@ static bool checkPairVector(
         default:
           return false;
       }
+      break;
     default:
       return true;
   }

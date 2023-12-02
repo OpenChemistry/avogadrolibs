@@ -14,11 +14,10 @@
 #include <QtCore/QMimeData>
 
 #include <QtGui/QClipboard>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
-#include <QDebug>
 
 #include <string>
 #include <vector>

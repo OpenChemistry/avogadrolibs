@@ -13,8 +13,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QAction>
+#include <QDebug>
 #include <QtWidgets/QAbstractItemView>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QInputDialog>
@@ -102,6 +103,26 @@ QList<QAction*> SpaceGroup::actions() const
 QStringList SpaceGroup::menuPath(QAction*) const
 {
   return QStringList() << tr("&Crystal") << tr("Space Group");
+}
+
+void SpaceGroup::registerCommands()
+{
+  emit registerCommand(
+    "fillUnitCell",
+    tr("Fill symmetric atoms based on the crystal space group."));
+}
+
+bool SpaceGroup::handleCommand(const QString& command,
+                               const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command.
+
+  if (command == "fillUnitCell") {
+    fillUnitCell();
+    return true;
+  }
+  return false;
 }
 
 void SpaceGroup::setMolecule(QtGui::Molecule* mol)
@@ -370,4 +391,4 @@ unsigned short SpaceGroup::selectSpaceGroup()
   return view->currentIndex().row() + 1;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

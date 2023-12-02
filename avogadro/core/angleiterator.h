@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_ANGLEITERATOR_H
 #define AVOGADRO_CORE_ANGLEITERATOR_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include <vector>

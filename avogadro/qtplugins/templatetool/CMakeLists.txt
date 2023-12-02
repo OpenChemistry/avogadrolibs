@@ -21,11 +21,26 @@ avogadro_plugin(TemplateTool
   "${template_rcs}"
 )
 
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
-include_directories(SYSTEM ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
-if(WIN32 AND NOT BUILD_SHARED_LIBS)
-  add_definitions(-DGLEW_STATIC)
+# Install the fragments
+set(_molecules "${AvogadroLibs_SOURCE_DIR}/../fragments")
+
+# Look in parallel directory for the molecule fragment repository
+if(NOT EXISTS "${_fragments}")
+# download molecules...
+ExternalProject_Add(fragments
+    GIT_REPOSITORY https://github.com/openchemistry/fragments 
+    GIT_TAG main
+    # or https://github.com/OpenChemistry/molecules/archive/refs/heads/master.zip
+    SOURCE_DIR "${AvogadroLibs_SOURCE_DIR}/../fragments"
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+)
 endif()
 
-target_link_libraries(TemplateTool LINK_PRIVATE AvogadroRendering)
+install(DIRECTORY "${AvogadroLibs_SOURCE_DIR}/../fragments"
+  DESTINATION "${INSTALL_DATA_DIR}/avogadro2"
+  PATTERN ".git" EXCLUDE
+)
+
+target_link_libraries(TemplateTool LINK_PRIVATE Avogadro::QtOpenGL)

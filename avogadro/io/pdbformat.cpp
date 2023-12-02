@@ -14,6 +14,7 @@
 #include <avogadro/core/vector.h>
 
 #include <cctype>
+#include <iostream>
 #include <istream>
 #include <string>
 
@@ -43,7 +44,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
   std::vector<int> terList;
-  Residue* r;
+  Residue* r = nullptr;
   size_t currentResidueId = 0;
   bool ok(false);
   int coordSet = 0;
@@ -139,7 +140,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       auto altLoc = lexicalCast<string>(buffer.substr(16, 1), ok);
 
       string element; // Element symbol, right justified
-      unsigned char atomicNum;
+      unsigned char atomicNum = 255;
       if (buffer.size() >= 78) {
         element = buffer.substr(76, 2);
         element = trimmed(element);
@@ -151,12 +152,20 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         atomicNum = Elements::atomicNumberFromSymbol(element);
         if (atomicNum == 255)
           appendError("Invalid element");
-      } else {
+      }
+
+      if (atomicNum == 255) {
         // non-standard or old-school PDB file - try to parse the atom name
         element = trimmed(atomName);
+        // remove any trailing digits
+        while (element.size() && std::isdigit(element.back()))
+          element.pop_back();
+
         atomicNum = Elements::atomicNumberFromSymbol(element);
-        if (atomicNum == 255)
+        if (atomicNum == 255) {
           appendError("Invalid element");
+          continue; // skip this invalid record
+        }
       }
 
       if (altLoc.compare("") && altLoc.compare("A")) {
@@ -173,7 +182,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       } else if (coordSet == 0) {
         Atom newAtom = mol.addAtom(atomicNum);
         newAtom.setPosition3d(pos);
-        if (r) {
+        if (r != nullptr) {
           r->addResidueAtom(atomName, newAtom);
         }
         rawToAtomId.push_back(mol.atomCount() - 1);
@@ -215,9 +224,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         else {
           int b = lexicalCast<int>(buffer.substr(bCoords[i], 5), ok) - 1;
           if (!ok) {
-            appendError("Failed to parse bond connection b" + std::to_string(i) +
-                        " " + buffer.substr(bCoords[i], 5));
-            //return false;
+            appendError("Failed to parse bond connection b" +
+                        std::to_string(i) + " " + buffer.substr(bCoords[i], 5));
+            // return false;
             continue; // skip this invalid record
           }
 
@@ -235,13 +244,13 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
   } // End while loop
 
-  size_t count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
-  for (size_t c = 0; c < count; c++) {
+  int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
+  for (int c = 0; c < count; ++c) {
     for (char l : altLocs) {
       Array<Vector3> coordinateSet =
-        c == size_t(0) ? mol.atomPositions3d() : mol.coordinate3d(c);
+        c == 0 ? mol.atomPositions3d() : mol.coordinate3d(c);
       bool found = false;
-      for (size_t i = 0; i < altAtomCoordSets.size(); i++) {
+      for (size_t i = 0; i < altAtomCoordSets.size(); ++i) {
         if (altAtomCoordSets[i] == c && altAtomLocs[i] == l) {
           found = true;
           coordinateSet[altAtomIds[i]] = altAtomPositions[i];

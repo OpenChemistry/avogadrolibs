@@ -20,50 +20,48 @@
 
 namespace Avogadro::Core {
 
-SpaceGroups::SpaceGroups()
-{
-}
+SpaceGroups::SpaceGroups() {}
 
-SpaceGroups::~SpaceGroups()
-{
-}
+SpaceGroups::~SpaceGroups() {}
 
 unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
   unsigned short hall = 0; // can't find anything
-  const unsigned short hall_count = 530;
+  const unsigned short hall_count = 531; // 530 but first one is empty
+  // some files use " instead of = for the space group symbol
+  std::string sg = spaceGroup;
+  std::replace(sg.begin(), sg.end(), '"', '=');
 
   // space_group_hall_symbol
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_hall_symbol[i]) {
+    if (sg == space_group_hall_symbol[i]) {
       return i; // found a match
     }
   }
 
   // space_group_international
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_international[i]) {
+    if (sg == space_group_international[i]) {
       return i; // found a match
     }
   }
 
   // space_group_international_short
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_international_short[i]) {
+    if (sg == space_group_international_short[i]) {
       return i; // found a match
     }
   }
 
   // space_group_international_full
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (spaceGroup == space_group_international_full[i]) {
+    if (sg == space_group_international_full[i]) {
       return i; // found a match
     }
   }
 
   return hall; // can't find anything
 }
-
 
 CrystalSystem SpaceGroups::crystalSystem(unsigned short hallNumber)
 {
@@ -254,14 +252,14 @@ Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
   // These transforms are separated by spaces
   std::vector<std::string> transforms = split(transformsStr, ' ');
 
-  for (auto & transform : transforms)
+  for (auto& transform : transforms)
     ret.push_back(getSingleTransform(transform, v));
 
   return ret;
 }
 
 void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
-                               double cartTol)
+                               double cartTol, bool wrapToCell, bool allCopies)
 {
   if (!mol.unitCell())
     return;
@@ -305,7 +303,86 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
       newAtom.setPosition3d(newCandidate);
     }
   }
-  CrystalTools::wrapAtomsToUnitCell(mol);
+
+  if (wrapToCell)
+    CrystalTools::wrapAtomsToUnitCell(mol);
+
+  // Now we need to generate any copies on the unit boundary
+  // We need to loop through all the atoms again
+  // if a fractional coordinate contains 0.0, we need to generate a copy
+  // of the atom at 1.0
+  if (!allCopies)
+    return;
+
+  atomicNumbers = mol.atomicNumbers();
+  positions = mol.atomPositions3d();
+  numAtoms = mol.atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    unsigned char atomicNum = atomicNumbers[i];
+    Vector3 pos = uc->toFractional(positions[i]);
+
+    Array<Vector3> newAtoms;
+    // We need to check each coordinate to see if it is 0.0 or 1.0
+    // .. if so, we need to generate the symmetric copy
+    for (Index j = 0; j < 3; ++j) {
+      Vector3 newPos = pos;
+      if (fabs(pos[j]) < 0.001) {
+        newPos[j] = 1.0;
+        newAtoms.push_back(newPos);
+      }
+      if (fabs(pos[j] - 1.0) < 0.001) {
+        newPos[j] = 0.0;
+        newAtoms.push_back(newPos);
+      }
+
+      for (Index k = j + 1; k < 3; ++k) {
+        if (fabs(pos[k]) < 0.001) {
+          newPos[k] = 1.0;
+          newAtoms.push_back(newPos);
+          newPos[k] = 0.0; // revert for the other coords
+        }
+        if (fabs(pos[k] - 1.0) < 0.001) {
+          newPos[k] = 0.0;
+          newAtoms.push_back(newPos);
+          newPos[k] = 1.0; // revert
+        }
+      }
+    }
+    // finally, check if all coordinates are 0.0
+    if (fabs(pos[0]) < 0.001 && fabs(pos[1]) < 0.001 && fabs(pos[2]) < 0.001)
+      newAtoms.push_back(Vector3(1.0, 1.0, 1.0));
+    // or 1.0 .. unlikely, but possible
+    if (fabs(pos[0] - 1.0) < 0.001 && fabs(pos[1] - 1.0) < 0.001 &&
+        fabs(pos[2] - 1.0) < 0.001)
+      newAtoms.push_back(Vector3(0.0, 0.0, 0.0));
+
+    for (Index j = 0; j < newAtoms.size(); ++j) {
+      // The new atoms are in fractional coordinates. Convert to cartesian.
+      Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
+
+      // If there is already an atom in this location within a
+      // certain tolerance, do not add the atom.
+      bool atomAlreadyPresent = false;
+      for (Index k = 0; k < mol.atomCount(); k++) {
+        // If it does not have the same atomic number, skip over it.
+        if (mol.atomicNumber(k) != atomicNum)
+          continue;
+
+        Real distance = (mol.atomPosition3d(k) - newCandidate).norm();
+
+        if (distance <= cartTol)
+          atomAlreadyPresent = true;
+      }
+
+      // If there is already an atom present here, just continue
+      if (atomAlreadyPresent)
+        continue;
+
+      // If we got this far, add the atom!
+      Atom newAtom = mol.addAtom(atomicNum);
+      newAtom.setPosition3d(newCandidate);
+    }
+  }
 }
 
 void SpaceGroups::reduceToAsymmetricUnit(Molecule& mol,
@@ -359,4 +436,4 @@ const char* SpaceGroups::transformsString(unsigned short hallNumber)
     return "";
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

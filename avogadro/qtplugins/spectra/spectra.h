@@ -42,12 +42,18 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 public slots:
   void setMode(int mode);
   void setAmplitude(int amplitude);
   void startVibrationAnimation();
   void stopVibrationAnimation();
   void openDialog();
+  void moleculeChanged(unsigned int changes);
 
 private slots:
   void advanceFrame();
@@ -66,7 +72,7 @@ private:
   int m_mode;
   int m_amplitude;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_Spectra_H

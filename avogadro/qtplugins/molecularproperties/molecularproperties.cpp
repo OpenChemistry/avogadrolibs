@@ -7,9 +7,9 @@
 
 #include "molecularpropertiesdialog.h"
 
-#include <QtWidgets/QAction>
+#include <QAction>
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 namespace Avogadro::QtPlugins {
 

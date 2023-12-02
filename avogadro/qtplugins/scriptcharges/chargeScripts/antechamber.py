@@ -148,7 +148,7 @@ if __name__ == "__main__":
         if name:
             print(name)
         else:
-            raise RuntimeError("antechamber is unavailable")
+            sys.exit("antechamber is unavailable")
     elif args["charges"]:
         print(charges())
     elif args["potential"]:

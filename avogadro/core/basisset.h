@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_BASISSET_H
 #define AVOGADRO_CORE_BASISSET_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include <string>

@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_UNITCELL_H
 #define AVOGADRO_CORE_UNITCELL_H
 
+#include "avogadrocoreexport.h"
+
 #include "avogadrocore.h"
 
 #include "matrix.h"
@@ -340,7 +342,7 @@ inline Vector3 UnitCell::minimumImage(const Vector3& v) const
 
 inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
 {
-  return std::fabs(minimumImage(v1 - v2).norm());
+  return minimumImage(v1 - v2).norm();
 }
 
 } // namespace Core

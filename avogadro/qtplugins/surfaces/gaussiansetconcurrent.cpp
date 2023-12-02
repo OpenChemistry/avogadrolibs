@@ -56,8 +56,8 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
   if (!mol)
     return;
   m_set = dynamic_cast<GaussianSet*>(mol->basisSet());
-  
-    delete m_tools;
+
+  delete m_tools;
   m_tools = new GaussianSetTools(mol);
 }
 
@@ -76,6 +76,12 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
 
 bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
+  const MatrixX& matrix = m_set->densityMatrix();
+  if (matrix.rows() == 0 || matrix.cols() == 0) {
+    // we don't have a density matrix, so calculate one
+    m_set->generateDensityMatrix();
+  }
+
   return setUpCalculation(cube, 0, GaussianSetConcurrent::processDensity);
 }
 
@@ -141,4 +147,4 @@ void GaussianSetConcurrent::processSpinDensity(GaussianShell& shell)
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
 }
-}
+} // namespace Avogadro::QtPlugins

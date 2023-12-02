@@ -17,7 +17,7 @@
 
 #include <avogadro/molequeue/client/jobobject.h>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QLabel>

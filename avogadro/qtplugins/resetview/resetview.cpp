@@ -9,9 +9,11 @@
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 
+#include <QAction>
+#include <QDebug>
+#include <QOpenGLWidget>
 #include <QTimer>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QOpenGLWidget>
+
 #include <limits>
 
 #define CAMERA_NEAR_DISTANCE 13.35f // Experimental number
@@ -44,6 +46,24 @@ ResetView::ResetView(QObject* parent_)
 }
 
 ResetView::~ResetView() {}
+
+void ResetView::registerCommands()
+{
+  emit registerCommand("alignView", tr("Align view to axes."));
+}
+
+bool ResetView::handleCommand(const QString& command,
+                              const QVariantMap& options)
+{
+  if (m_molecule == nullptr || m_camera == nullptr)
+    return false; // Nothing to do
+
+  if (command == "alignView") {
+    animationCameraDefault(false);
+    return true;
+  }
+  return false;
+}
 
 QList<QAction*> ResetView::actions() const
 {
@@ -184,13 +204,13 @@ inline void getOBB(const Array<Vector3>& mols, Vector3d& centroid,
 {
   centroid = Vector3::Zero();
 
-  for (const auto & mol : mols)
+  for (const auto& mol : mols)
     centroid += mol;
 
   centroid /= (double)mols.size();
   Matrix3d covariance = Matrix3::Zero();
 
-  for (const auto & mol : mols) {
+  for (const auto& mol : mols) {
     Vector3d adjusted = mol - centroid;
     covariance += adjusted * adjusted.transpose();
   }
@@ -253,4 +273,4 @@ void ResetView::alignToAxes()
   animationCameraDefault();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

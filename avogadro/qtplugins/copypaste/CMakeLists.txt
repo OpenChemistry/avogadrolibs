@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 avogadro_plugin(CopyPaste
   "Interact with the clipboard."
   ExtensionPlugin
@@ -9,4 +7,4 @@ avogadro_plugin(CopyPaste
   ""
 )
 
-target_link_libraries(CopyPaste PRIVATE AvogadroIO)
+target_link_libraries(CopyPaste PRIVATE Avogadro::IO)

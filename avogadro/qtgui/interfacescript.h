@@ -15,6 +15,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+#include <QRegExp>
 
 class QJsonDocument;
 class QProcess;

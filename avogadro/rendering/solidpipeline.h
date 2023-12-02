@@ -6,19 +6,6 @@
 #ifndef AVOGADRO_RENDERING_SOLIDPIPELINE_H
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
-#include "avogadrogl.h"
-#include "shader.h"
-#include "shaderprogram.h"
-
-static const GLfloat m_fullscreenQuad[] = {
-  -1.0f, -1.0f, 0.0f,
-  1.0f, -1.0f, 0.0f,
-  -1.0f,  1.0f, 0.0f,
-  -1.0f,  1.0f, 0.0f,
-  1.0f, -1.0f, 0.0f,
-  1.0f,  1.0f, 0.0f,
-};
-
 namespace Avogadro {
 namespace Rendering {
 
@@ -26,6 +13,13 @@ class SolidPipeline
 {
 public:
   SolidPipeline();
+  ~SolidPipeline();
+
+  /**
+   * @brief Probably don't want to support copy/assignment.
+   */
+  SolidPipeline(const SolidPipeline&) = delete;
+  SolidPipeline& operator= (const SolidPipeline&) = delete;
 
   /**
    * @brief Initialize OpenGL objects.
@@ -81,23 +75,16 @@ public:
   void setEdStrength(float strength) { m_edStrength = strength; }
 
 private:
-  void attachStage(ShaderProgram& prog, const GLchar* nameRGB, GLuint texRGB,
-                   const GLchar* nameDepth, GLuint texDepth);
-
-  GLuint m_defaultFBO;
-  GLuint m_renderFBO;
-  GLuint m_renderTexture;
-  GLuint m_depthTexture;
-  GLuint m_screenVBO;
-  ShaderProgram m_firstStageShaders;
-  Shader m_screenVertexShader;
-  Shader m_firstFragmentShader;
   float m_pixelRatio;
   bool m_aoEnabled;
   float m_aoStrength;
   bool m_edEnabled;
   float m_edStrength;
-  int m_width, m_height;
+  int m_width;
+  int m_height;
+
+  class Private;
+  Private* d;
 };
 
 } // End namespace Rendering

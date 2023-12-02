@@ -73,24 +73,24 @@ bool VibrationModel::setData(const QModelIndex&, const QVariant&, int)
 QVariant VibrationModel::data(const QModelIndex& idx, int role) const
 {
   if (!idx.isValid() || idx.column() > 2 || !m_molecule ||
-      m_molecule->vibrationFrequencies().size() <= idx.row()) {
+      static_cast<int>(m_molecule->vibrationFrequencies().size()) <= idx.row()) {
     return QVariant();
   }
 
   if (role == Qt::DisplayRole) {
     switch (idx.column()) {
       case 0:
-        if (m_molecule->vibrationFrequencies().size() > idx.row())
+        if (static_cast<int>(m_molecule->vibrationFrequencies().size()) > idx.row())
           return m_molecule->vibrationFrequencies()[idx.row()];
         else
           return "No value";
       case 1:
-        if (m_molecule->vibrationIRIntensities().size() > idx.row())
+        if (static_cast<int>(m_molecule->vibrationIRIntensities().size()) > idx.row())
           return m_molecule->vibrationIRIntensities()[idx.row()];
         else
           return "No value";
       case 2:
-        if (m_molecule->vibrationRamanIntensities().size() > idx.row())
+        if (static_cast<int>(m_molecule->vibrationRamanIntensities().size()) > idx.row())
           return m_molecule->vibrationRamanIntensities()[idx.row()];
         else
           return "No value";
@@ -107,7 +107,7 @@ QModelIndex VibrationModel::index(int row, int column,
 {
   if (!p.isValid())
     if (row >= 0 && m_molecule &&
-        row < m_molecule->vibrationFrequencies().size())
+        row < static_cast<int>(m_molecule->vibrationFrequencies().size()))
       return createIndex(row, column);
   return QModelIndex();
 }
