@@ -74,4 +74,4 @@ Contributors Hall of Fame:
   [Avogadro1]: http://avogadro.cc/ "Avogadro 1"
   [Build]: https://two.avogadro.cc/install/build.html "Building Avogadro"
   [Contribution]: https://two.avogadro.cc/contrib/ "Contribution guide"
-  [API]: https://two.avogadro.cc/api/ "API documentation"
+  [API]: https://two.avogadro.cc/develop/ "API documentation"
