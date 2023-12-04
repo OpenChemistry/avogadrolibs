@@ -48,8 +48,8 @@ enum MergeIds
   SetPosition3dMergeId,
   SetForceVectorMergeId,
   SetBondOrderMergeId,
-  ModifySelectionMergeId,
-  ModifyColorsMergeId
+  SetSelectionMergeId,
+  SetColorMergeId
 };
 
 // Base class for undo commands that can be merged together, overriding the
@@ -348,25 +348,6 @@ public:
 } // namespace
 
 namespace {
-class SetAtomColorCommand : public RWMolecule::UndoCommand
-{
-  Index m_atomId;
-  Vector3ub m_oldColor;
-  Vector3ub m_newColor;
-
-public:
-  SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
-                      Vector3ub newColor)
-    : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
-      m_newColor(newColor)
-  {
-  }
-
-  void redo() override { m_molecule.setColor(m_atomId, m_newColor); }
-
-  void undo() override { m_molecule.setColor(m_atomId, m_oldColor); }
-};
-
 class SetLayerCommand : public RWMolecule::UndoCommand
 {
   Index m_atomId;
@@ -687,14 +668,14 @@ public:
 } // namespace
 
 namespace {
-class ModifySelectionCommand : public MergeUndoCommand<ModifySelectionMergeId>
+class SetSelectionCommand : public MergeUndoCommand<SetSelectionMergeId>
 {
   std::vector<bool> m_newSelectedAtoms;
   std::vector<bool> m_oldSelectedAtoms;
 
 public:
-  ModifySelectionCommand(RWMolecule& m, Index atomId, bool selected)
-    : MergeUndoCommand<ModifySelectionMergeId>(m)
+  SetSelectionCommand(RWMolecule& m, Index atomId, bool selected)
+    : MergeUndoCommand<SetSelectionMergeId>(m)
   {
     Index atomCount = m_mol.molecule().atomCount();
     m_oldSelectedAtoms.resize(atomCount);
@@ -724,8 +705,8 @@ public:
 
   bool mergeWith(const QUndoCommand* other) override
   {
-    const ModifySelectionCommand* o =
-      dynamic_cast<const ModifySelectionCommand*>(other);
+    const SetSelectionCommand* o =
+      dynamic_cast<const SetSelectionCommand*>(other);
     if (!o)
       return false;
 
@@ -743,66 +724,48 @@ public:
 };
 } // namespace
 
-/*
 namespace {
-class ModifyColorCommand : public MergeUndoCommand<ModifyColorMergeId>
+class SetAtomColorCommand : public MergeUndoCommand<SetColorMergeId>
 {
-  Array<Vector3ub> m_newSelectedAtoms;
-  Array<Vector3ub> m_oldSelectedAtoms;
+  Array<Vector3ub> m_oldColors;
+  Array<Vector3ub> m_newColors;
 
 public:
-  ModifySelectionCommand(RWMolecule& m, Index atomId, bool selected)
-    : MergeUndoCommand<ModifySelectionMergeId>(m)
+  SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub newColor)
+    : MergeUndoCommand<SetColorMergeId>(m)
   {
-    Index atomCount = m_mol.molecule().atomCount();
-    m_oldSelectedAtoms.reserve(atomCount);
-    m_newSelectedAtoms.reserve(atomCount);
+    m_oldColors.resize(m_molecule.atomCount());
+    m_newColors.resize(m_molecule.atomCount());
 
-    for (Index i = 0; i < atomCount; ++i) {
-      m_oldSelectedAtoms[i] = m_molecule.atomSelected(i);
-      m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
-    }
+    m_oldColors = m_mol.molecule().colors();
 
-    m_newSelectedAtoms[atomId] = selected;
+    m_newColors = m_mol.molecule().colors();
+    m_newColors[atomId] = newColor;
   }
 
-  void redo() override
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    for (Index i = 0; i < atomCount; ++i)
-      m_mol.molecule().setAtomSelected(i, m_newSelectedAtoms[i]);
-  }
+  void redo() override { m_mol.molecule().setColors(m_newColors); }
 
-  void undo() override
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    for (Index i = 0; i < atomCount; ++i)
-      m_mol.molecule().setAtomSelected(i, m_oldSelectedAtoms[i]);
-  }
+  void undo() override { m_mol.molecule().setColors(m_oldColors); }
 
   bool mergeWith(const QUndoCommand* other) override
   {
-    const ModifySelectionCommand* o =
-      dynamic_cast<const ModifySelectionCommand*>(other);
+    const SetAtomColorCommand* o =
+      dynamic_cast<const SetAtomColorCommand*>(other);
     if (o) {
       // check if the atom count matches
-      Index numAtoms = m_oldSelectedAtoms.size();
-      if (numAtoms != o->m_oldSelectedAtoms.size() ||
-          numAtoms != o->m_newSelectedAtoms.size()) {
+      Index numAtoms = m_oldColors.size();
+      if (numAtoms != o->m_oldColors.size() ||
+          numAtoms != o->m_newColors.size()) {
         return false;
       }
 
-      // merge these, by grabbing the new selected atoms
-      for (Index i = 0; i < numAtoms; ++i)
-        m_newSelectedAtoms[i] = o->m_newSelectedAtoms[i];
-
+      m_newColors = o->m_newColors;
       return true;
     }
     return false;
   }
 };
 } // namespace
-*/
 
 } // namespace QtGui
 } // namespace Avogadro

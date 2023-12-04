@@ -293,7 +293,8 @@ public:
    * @param color The new color.
    * @return True on success, false otherwise.
    */
-  bool setColor(Index atomId, Vector3ub color);
+  bool setColor(Index atomId, Vector3ub color,
+                const QString& undoText = tr("Change Atom Color"));
 
   bool setLayer(Index atomId, size_t layer);
   size_t layer(Index atomId) const;
