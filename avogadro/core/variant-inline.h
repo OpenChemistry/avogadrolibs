@@ -13,14 +13,26 @@
 namespace Avogadro {
 namespace Core {
 
-inline Variant::Variant() : m_type(Null)
-{
-}
+inline Variant::Variant() : m_type(Null) {}
 
 template <typename T>
 inline Variant::Variant(T v) : m_type(Null)
 {
   setValue(v);
+}
+
+template <>
+inline Variant::Variant(const char* v) : m_type(String)
+{
+  m_value.string = new std::string(v);
+}
+
+template <>
+inline Variant::Variant(const MatrixXf& v) : m_type(Matrix)
+{
+  MatrixX* m = new MatrixX(v.rows(), v.cols());
+  *m = v.cast<double>();
+  m_value.matrix = m;
 }
 
 inline Variant::Variant(const Variant& variant) : m_type(variant.type())
@@ -444,7 +456,7 @@ inline T Variant::lexical_cast(const std::string& str)
   return value;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_VARIANT_INLINE_H
