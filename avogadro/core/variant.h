@@ -48,6 +48,12 @@ public:
   template <typename T>
   Variant(T value);
 
+  /** Creates a std::string variant to store @p value */
+  Variant(const char* value);
+
+  /** Creates a MatrixX variant to store @p value */
+  Variant(const MatrixXf& value);
+
   /** Creates a new copy of @p variant. */
   inline Variant(const Variant& variant);
 
@@ -146,8 +152,8 @@ private:
   } m_value;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #include "variant-inline.h"
 
