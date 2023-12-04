@@ -21,11 +21,13 @@ inline Variant::Variant(T v) : m_type(Null)
   setValue(v);
 }
 
+template <>
 inline Variant::Variant(const char* v) : m_type(String)
 {
   m_value.string = new std::string(v);
 }
 
+template <>
 inline Variant::Variant(const MatrixXf& v) : m_type(Matrix)
 {
   MatrixX* m = new MatrixX(v.rows(), v.cols());
