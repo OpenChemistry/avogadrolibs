@@ -438,11 +438,13 @@ void Select::selectAtomIndex()
     // check if it's a range
     if (item.contains('-')) {
       auto range = item.split('-');
-      if (range.size() >= 2) {
+      if (range.size() == 2) {
         bool ok1, ok2;
         int start = range.first().toInt(&ok1);
         int last = range.back().toInt(&ok2);
         if (ok1 && ok2) {
+          int k=m_molecule->atomCount();
+          if(start<k)
           for (int i = start; i <= last; ++i)
             m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                         undoText);
@@ -451,8 +453,12 @@ void Select::selectAtomIndex()
     } else {
       int i = item.toInt(&ok);
       if (ok)
+      {
+        int k = m_molecule->atomCount();
+        if(i<k)
         m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                     undoText);
+      }
     }
   }
 
@@ -542,6 +548,9 @@ void Select::invertSelection()
 void Select::createLayerFromSelection()
 {
   if (!m_molecule)
+    return;
+
+  if(!m_elements)
     return;
 
   QtGui::RWMolecule* rwmol = m_molecule->undoMolecule();
