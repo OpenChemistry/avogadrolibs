@@ -30,6 +30,10 @@ public:
   void setSourceModel(PropertyModel* model) { m_model = model; }
   void hideEvent(QHideEvent* event);
 
+protected:
+  // copy the selected properties to the clipboard
+  void keyPressEvent(QKeyEvent *event);
+
 private:
   PropertyType m_type;
   QtGui::Molecule* m_molecule;
