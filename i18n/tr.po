@@ -9,13 +9,14 @@
 # udo pton <udopton@gmail.com>, 2021.
 # Acun <acun1993@gmail.com>, 2021.
 # Hıncal Gökhan BAKIR <hgokhanb@gmail.com>, 2023.
+# Hakkı Konu <hakkikonu@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-11-19 16:50+0000\n"
-"PO-Revision-Date: 2023-05-20 18:51+0000\n"
-"Last-Translator: Hıncal Gökhan BAKIR <hgokhanb@gmail.com>\n"
+"PO-Revision-Date: 2023-12-02 21:28+0000\n"
+"Last-Translator: Hakkı Konu <hakkikonu@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -42,6 +43,8 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"script --print-options çıktısı en üst düzeyde bir JSON nesnesi olmalıdır.\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:208
 #: qtgui/interfacescript.cpp:319
@@ -1023,6 +1026,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
+"Dosya uzantısı eksik, bu nedenle format belirlenemiyor Eklemek istiyor "
+"musunuz?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1064,16 +1069,12 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Bu biçimi %2 yapabilen birden çok %1 bulundu. Hangisi kullanılmalı?"
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
-msgstr "Bütün Dosyalar"
+msgstr "Bütün dosyalar"
 
 #: qtgui/fileformatdialog.cpp:282
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Desteklenen tüm formatlar (%1) ;;"
+msgstr "Desteklenen tüm formatlar"
 
 #: qtgui/interfacescript.cpp:225
 #, qt-format
@@ -1144,7 +1145,7 @@ msgstr "Temel"
 
 #: qtgui/jsonwidget.cpp:200 qtgui/jsonwidget.cpp:204
 msgid "Charge"
-msgstr ""
+msgstr "Yük"
 
 #: qtgui/jsonwidget.cpp:201 qtgui/jsonwidget.cpp:206
 msgid "Multiplicity"
@@ -1158,13 +1159,13 @@ msgstr "Hata: '%1' anahtarı için değer nesne olmalıdır."
 #: qtgui/jsonwidget.cpp:556
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "'%2' seçeneği için tanınmayan seçenek türü '%1'."
 
 #: qtgui/jsonwidget.cpp:565 qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:622
 #: qtgui/jsonwidget.cpp:643 qtgui/jsonwidget.cpp:665 qtgui/jsonwidget.cpp:686
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
-msgstr ""
+msgstr "'%1' seçeneği için varsayılan ayar hatası. Hatalı widget türü."
 
 #: qtgui/jsonwidget.cpp:572 qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:629
 #: qtgui/jsonwidget.cpp:650 qtgui/jsonwidget.cpp:672 qtgui/jsonwidget.cpp:693
@@ -1184,7 +1185,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:754
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "'%1' seçeneği için collectOptions içinde işlenmemiş widget."
 
 #: qtgui/jsonwidget.cpp:796 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
@@ -1192,27 +1193,23 @@ msgid "[no molecule]"
 msgstr "[molekül yok]"
 
 #: qtgui/layermodel.cpp:85
-#, fuzzy, qt-format
-#| msgid "Layer"
+#, qt-format
 msgid "Layer %1"
-msgstr "Katman"
+msgstr "Katman %1"
 
 #: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
 msgstr "Top ve Çubuk"
 
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
-#, fuzzy
-#| msgctxt "protein rendering style"
-#| msgid "Cartoon"
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Karikatür"
+msgstr "Karikatürler"
 
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Yakın Temaslar"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1227,19 +1224,17 @@ msgid "Labels"
 msgstr "Etiketler"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
-#, fuzzy
-#| msgid "Licorice"
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "Meyan kökü"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 msgid "Meshes"
-msgstr ""
+msgstr "Ağlar"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Kovalent Olmayan"
 
 #: qtgui/layermodel.cpp:153
 #, fuzzy
@@ -1250,7 +1245,7 @@ msgstr "QTAIM (MAKT)"
 
 #: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Simetri Unsurları"
 
 #: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1318,11 +1313,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1…"
+#, qt-format
 msgid "Warning '%1'"
-msgstr "%1 başlatılıyor…"
+msgstr "Uyarı '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
@@ -1487,7 +1480,7 @@ msgstr "Temel Ögeye İndirge"
 #: qtgui/rwmolecule.cpp:628 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:240
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Hücreyi Konvansiyonelleştirin"
 
 #: qtgui/rwmolecule.cpp:653 qtplugins/spacegroup/spacegroup.cpp:265
 msgid "Symmetrize Cell"
@@ -1502,10 +1495,8 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Hücreyi Asimetrik Birime İndirge"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Atom Hibridizasyonunu Değiştir"
+msgstr "Atom Konumlarını Değiştirme"
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
@@ -1538,11 +1529,11 @@ msgstr "Dosya kaydedilemiyor %1."
 #: qtgui/scriptloader.cpp:68
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr ""
+msgstr "%2 dizininde %1 komut dosyası olup olmadığı kontrol ediliyor"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "3DMol HTML Bloğu."
 
 #: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
@@ -1565,9 +1556,10 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:88
 msgid "Align"
-msgstr ""
+msgstr "Hizala"
 
 #: qtplugins/aligntool/aligntool.cpp:56
+#, fuzzy
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1577,42 +1569,41 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
+"Molekülleri Hizala\n"
+"\n"
+"Sol Fare: En fazla iki atom seçin.\n"
+"\tİlk atom orijinde ortalanır.\n"
+"\tİkinci atom seçilen eksene hizalanır.\n"
+"Sağ Fare: Hizalamayı sıfırlayın.\n"
+"Çift Tıklama: \tAtomu orijinde ortalar."
 
 #: qtplugins/aligntool/aligntool.cpp:75
-#, fuzzy
-#| msgid "X Axis"
 msgid "Axis:"
-msgstr "X Ekseni"
+msgstr "X Ekseni:"
 
 #: qtplugins/aligntool/aligntool.cpp:152
 msgid "Align at Origin"
-msgstr ""
+msgstr "Başlangıçta Hizala"
 
 #: qtplugins/aligntool/aligntool.cpp:188
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "Görünümü Eksene Hizala"
+msgstr "Eksene Hizala"
 
 #: qtplugins/aligntool/aligntool.cpp:304
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "Merkezdeki x, y, ve x eksenlerini kaplar"
+msgstr "Atomu orijinde ortalayın."
 
 #: qtplugins/aligntool/aligntool.cpp:307
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "Atomu belirtilen eksene hizalamak için molekülü döndürün."
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Navigate tool"
 msgid "Align tool"
-msgstr "Gezinme aracı"
+msgstr "Hizalama aracı"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
-msgstr ""
+msgstr "Molekülleri bir Kartezyen eksene hizalama"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
@@ -1762,10 +1753,8 @@ msgid "By Chain"
 msgstr "Zincire Göre"
 
 #: qtplugins/applycolors/applycolors.cpp:74
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Kısmi Yük"
+msgstr "Kısmi Talep ile…"
 
 #: qtplugins/applycolors/applycolors.cpp:79
 msgid "By Secondary Structure"
@@ -1785,25 +1774,25 @@ msgstr "Şekil Düzenine Göre"
 #: qtplugins/surfaces/surfaces.cpp:738
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:106
 #: qtplugins/surfaces/surfaces.cpp:740
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Isı"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:742
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Sıcak"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:744
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Gri"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1811,7 +1800,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:746
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -1819,7 +1808,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:748
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Cehennem"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -1827,7 +1816,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:750
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plazma"
 
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
@@ -1835,7 +1824,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:752
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
@@ -1843,7 +1832,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:754
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1853,11 +1842,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:756:183 rc.cpp:1615
-#, fuzzy
-#| msgid "Neutral"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Nötr"
+msgstr "Spektral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1867,7 +1854,7 @@ msgstr "Nötr"
 #: qtplugins/surfaces/surfaces.cpp:758:180 rc.cpp:1612
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Soğuk sıcak"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1875,11 +1862,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:760:174 rc.cpp:1606
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "İptal"
+msgstr "Denge"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1889,7 +1874,7 @@ msgstr "İptal"
 #: qtplugins/surfaces/surfaces.cpp:762:177 rc.cpp:1609
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Mavi-Koyu Kırmızı"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1901,7 +1886,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:764:186 rc.cpp:1618
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:138
 msgid "Apply color schemes to atoms and residues."
@@ -1971,6 +1956,7 @@ msgid "Bond-Centric Manipulation"
 msgstr "Bağ Merkezli Yönlendirme"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:124
+#, fuzzy
 msgid ""
 "Bond Centric Manipulation Tool\n"
 "\n"
@@ -1983,6 +1969,17 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Tahvil Merkezli Manipülasyon Aracı\n"
+"\n"
+"Sol Fare: Görünümü döndürmek için tıklayın ve sürükleyin.\n"
+"Orta Fare: Yakınlaştırmak veya uzaklaştırmak için tıklayın ve sürükleyin.\n"
+"Sağ Fare: Görünümü taşımak için tıklayın ve sürükleyin.\n"
+"Çift Tıklama: \tGörünümü sıfırlayın.\n"
+"\n"
+"Manipülasyon Düzlemini ayarlamak için bir Bağın üzerine Sol Tıklayıp "
+"Sürükleyin:\n"
+"Açıyı değiştirmek için Bağdaki Atomlardan birini Sol Tıklayıp Sürükleyin\n"
+"Uzunluğu değiştirmek için Bağdaki Atomlardan birine Sağ Tıklayıp Sürükleyin"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:776
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:864
@@ -2052,11 +2049,11 @@ msgstr "Bağ"
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Tüm atomlardan veya seçilen atomlardan bağları kaldırın."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Tüm atomlar veya seçilen atomlar arasında bağlar oluşturun."
 
 #: qtplugins/bonding/bonding.cpp:77
 #, fuzzy
@@ -2109,7 +2106,7 @@ msgstr "İp"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Biyomolekül şeritlerinin / karikatürlerinin gösterimi."
 
 #: qtplugins/centroid/centroid.cpp:20
 #, fuzzy
@@ -2119,12 +2116,12 @@ msgstr "Kısıtlama ekle"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
-msgstr ""
+msgstr "Kütle Merkezi Ekleme"
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Dikme Ekle"
 
 #: qtplugins/centroid/centroid.h:26
 #, fuzzy
@@ -2134,7 +2131,7 @@ msgstr "Ortala"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Merkezleri ve kütle merkezini ekleyin."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -3505,10 +3502,8 @@ msgstr "[molekül yok]"
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1111
-#, fuzzy
-#| msgid "Molecular Dynamics"
 msgid "Molecule Name:"
-msgstr "Molekül Dinamikleri"
+msgstr "Molekül Adı:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -3582,10 +3577,8 @@ msgid " °"
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Set Tolerance…"
 msgid "Angle tolerance:"
-msgstr "Toleransı Ayarla…"
+msgstr "Açı toleransı:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -5789,10 +5782,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Energy and Forces"
 msgid "Energy convergence:"
-msgstr "Enerji ve Kuvvetler"
+msgstr "Enerji yakınsaması:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -5922,7 +5913,7 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Formula:"
-msgstr ""
+msgstr "Formül:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
