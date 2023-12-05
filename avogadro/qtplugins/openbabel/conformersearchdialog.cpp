@@ -6,6 +6,7 @@
 #include "conformersearchdialog.h"
 
 #include <QButtonGroup>
+#include <QDebug>
 #include <QPushButton>
 
 namespace Avogadro {
@@ -24,6 +25,9 @@ ConformerSearchDialog::ConformerSearchDialog(QWidget* parent, Qt::WindowFlags f)
   connect(ui.geneticRadio, SIGNAL(toggled(bool)), this,
           SLOT(geneticToggled(bool)));
 
+  connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
+          SLOT(buttonClicked(QAbstractButton*)));
+
   m_method = 1; // systematic
   m_numConformers = 100;
 
@@ -40,45 +44,38 @@ ConformerSearchDialog::ConformerSearchDialog(QWidget* parent, Qt::WindowFlags f)
 
 ConformerSearchDialog::~ConformerSearchDialog() {}
 
-QStringList ConformerSearchDialog::prompt(QWidget* parent_,
-                                          const QStringList& startingOptions)
+void ConformerSearchDialog::buttonClicked(QAbstractButton* button)
 {
-  ConformerSearchDialog dialog(parent_);
-
-  // dlg.setOptions(startingOptions);
-
-  QStringList options;
-  // TODO: add options for number of steps (currently ignored by OB)
-  if (static_cast<DialogCode>(dialog.exec()) == Accepted) {
-    options = dialog.options();
+  if (button == ui.buttonBox->button(QDialogButtonBox::Ok)) {
+    emit accepted();
   }
-
-  return options;
+  close();
 }
 
 QStringList ConformerSearchDialog::options() const
 {
   QStringList options;
-  options << "--conformer";
+
+  // in OB v3.2
+  options << "--steps" << QString::number(ui.optStepsSpinBox->value());
+
   if (ui.systematicRadio->isChecked())
     options << "--systematic";
   else if (ui.randomRadio->isChecked()) {
     options << "--random";
-    options << "--nconf" << QString(ui.numSpin->value());
+    options << "--nconf" << QString::number(ui.numSpin->value());
   } else if (ui.weightedRadio->isChecked()) {
     options << "--weighted";
-    options << "--nconf" << QString(ui.numSpin->value());
+    options << "--nconf" << QString::number(ui.numSpin->value());
   } else if (ui.geneticRadio->isChecked()) {
     // genetic is the default, no need to specify
-    options << "--nconf" << QString(ui.numSpin->value());
-    options << "--children" << QString(ui.childrenSpinBox->value());
-    options << "--mutability" << QString(ui.mutabilitySpinBox->value());
-    options << "--convergence" << QString(ui.convergenceSpinBox->value());
+    options << "--nconf" << QString::number(ui.numSpin->value());
+    options << "--children" << QString::number(ui.childrenSpinBox->value());
+    options << "--mutability" << QString::number(ui.mutabilitySpinBox->value());
+    options << "--convergence"
+            << QString::number(ui.convergenceSpinBox->value());
     options << "--scoring" << ui.scoringComboBox->currentText();
   }
-
-  options << "--writeconformers"
-          << "--log";
 
   return options;
 }

@@ -39,7 +39,8 @@ namespace Avogadro::QtPlugins {
 OpenBabel::OpenBabel(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_process(new OBProcess(this)),
     m_readFormatsPending(true), m_writeFormatsPending(true),
-    m_defaultFormat("cml"), m_progress(nullptr)
+    m_defaultFormat("cml"), m_progress(nullptr),
+    m_conformerSearchDialog(nullptr)
 {
   auto* action = new QAction(this);
   action->setEnabled(true);
@@ -406,14 +407,14 @@ void OpenBabel::onConfigureConformerSearch()
   QStringList options =
     settings.value("openbabel/conformerSearch/lastOptions").toStringList();
 
-  options =
-    ConformerSearchDialog::prompt(qobject_cast<QWidget*>(parent()), options);
-
-  // User cancel
-  if (options.isEmpty())
-    return;
-
-  settings.setValue("openbabel/conformerSearch/lastOptions", options);
+  if (m_conformerSearchDialog == nullptr) {
+    m_conformerSearchDialog =
+      new ConformerSearchDialog(qobject_cast<QWidget*>(parent()));
+    connect(m_conformerSearchDialog, SIGNAL(accepted()), this,
+            SLOT(onGenerateConformers()));
+  }
+  // todo set options from last run
+  m_conformerSearchDialog->show();
 }
 
 void OpenBabel::onOptimizeGeometry()
@@ -587,8 +588,13 @@ void OpenBabel::onGenerateConformers()
     return;
   }
 
+  if (m_conformerSearchDialog == nullptr) {
+    return; // should't happen
+  }
+
   QSettings settings;
-  QStringList options;
+  QStringList options = m_conformerSearchDialog->options();
+
   QStringList ffOptions =
     settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
   bool autoDetect =
@@ -608,7 +614,7 @@ void OpenBabel::onGenerateConformers()
     }
   }
 
-  qDebug() << "Force field options: " << ffOptions;
+  options << ffOptions;
 
   // Setup progress dialog
   initializeProgressDialog(tr("Generating Conformers (Open Babel)"),

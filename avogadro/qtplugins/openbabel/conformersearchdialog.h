@@ -24,9 +24,6 @@ public:
   int method();
   int numConformers();
 
-  static QStringList prompt(QWidget* parent_,
-                            const QStringList& startingOptions);
-
   QStringList options() const;
 
 public slots:
@@ -36,6 +33,11 @@ public slots:
   void randomToggled(bool checked);
   void weightedToggled(bool checked);
   void geneticToggled(bool checked);
+
+  void buttonClicked(QAbstractButton* button);
+
+signals:
+  void accepted();
 
 private:
   Ui::ConformerSearchDialog ui;

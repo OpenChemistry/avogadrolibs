@@ -442,7 +442,6 @@ bool OBProcess::generateConformers(const QByteArray& mol,
                 << "-ocml";
   }
   realOptions << "--conformer"
-              << "--writeconformers"
               << "--noh" // new in OB 3.0.1
               << "--log" << options;
 
