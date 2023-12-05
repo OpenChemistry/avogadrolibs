@@ -8,8 +8,6 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocoreexport.h"
-
 #include <avogadro/core/molecule.h>
 
 #include <vector>
