@@ -550,7 +550,7 @@ void Select::createLayerFromSelection()
   if (!m_molecule)
     return;
 
-  if(!m_elements)
+  if(!m_molecules->atomeCount())
     return;
 
   QtGui::RWMolecule* rwmol = m_molecule->undoMolecule();
