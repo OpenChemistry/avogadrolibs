@@ -208,11 +208,28 @@ void JsonWidget::buildOptionGui()
     }
 
     // Add remaining keys at bottom.
+    // look for "order" key to determine order
+    QMap<int, QString> keys;
+    int order = 0;
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
                                      itEnd = userOptions.constEnd();
          it != itEnd; ++it) {
-      addOptionRow(it.key(), it.key(), it.value());
+      if (it.value().isObject()) {
+        QJsonObject obj = it.value().toObject();
+        if (obj.contains("order") && obj.value("order").isDouble()) {
+          order = obj.value("order").toInt();
+          keys.insert(order, it.key());
+        } else { // object doesn't contain "order"
+          keys.insert(order++, it.key());
+        }
+      } else {
+        keys.insert(order++, it.key());
+      }
     }
+
+    // now loop over keys and add them
+    for (QString key : std::as_const(keys))
+      addOptionRow(key, key, userOptions.take(key));
 
     // Make connections for standard options:
     if (auto* combo = qobject_cast<QComboBox*>(
