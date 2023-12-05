@@ -208,10 +208,26 @@ void JsonWidget::buildOptionGui()
     }
 
     // Add remaining keys at bottom.
+    // look for "order" key to determine order
+    QStringList keys;
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
                                      itEnd = userOptions.constEnd();
          it != itEnd; ++it) {
-      addOptionRow(it.key(), it.key(), it.value());
+      if (it.value().isObject()) {
+        QJsonObject obj = it.value().toObject();
+        if (obj.contains("order") && obj.value("order").isDouble()) {
+          keys.insert(obj.value("order").toInt(), it.key());
+        } else {
+          keys.append(it.key());
+        }
+      } else {
+        keys.append(it.key());
+      }
+    }
+
+    // now loop over keys and add them
+    for (const QString& key : keys) {
+      addOptionRow(key, key, userOptions.take(key));
     }
 
     // Make connections for standard options:
