@@ -5,3 +5,5 @@ avogadro_plugin(PropertyTables
   PropertyTables
   "propertytables.cpp;propertymodel.cpp;propertyview.cpp"
 )
+
+target_link_libraries(PropertyTables PRIVATE Avogadro::Calc)

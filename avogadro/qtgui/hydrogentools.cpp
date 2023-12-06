@@ -134,6 +134,9 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
   // convenience
   RWMolecule* molecule = atom.molecule();
 
+  if (molecule == nullptr)
+    return;
+
   if (doRemove) {
     // get the list of hydrogens connected to this
     std::vector<size_t> badHIndices;

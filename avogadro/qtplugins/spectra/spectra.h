@@ -58,7 +58,11 @@ public slots:
   void startVibrationAnimation();
   void stopVibrationAnimation();
   void openDialog();
+<<<<<<< HEAD
   void showSpectraChart();
+=======
+  void moleculeChanged(unsigned int changes);
+>>>>>>> d1f15600098f6bcc076b474e518d8c15c8b8429f
 
 private slots:
   void advanceFrame();

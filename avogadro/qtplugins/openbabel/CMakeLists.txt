@@ -3,6 +3,7 @@ if(QT_VERSION EQUAL 6)
 endif()
 
 set(openbabel_srcs
+  conformersearchdialog.cpp
   obcharges.cpp
   obfileformat.cpp
   obforcefielddialog.cpp
@@ -11,6 +12,7 @@ set(openbabel_srcs
 )
 
 set(openbabel_uis
+  conformersearchdialog.ui
   obforcefielddialog.ui
 )
 

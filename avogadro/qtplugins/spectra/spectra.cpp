@@ -70,6 +70,9 @@ QStringList Spectra::menuPath(QAction*) const
 
 void Spectra::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr)
+    m_molecule->disconnect(this);
+
   bool isVibrational(false);
   if (mol->vibrationFrequencies().size())
     isVibrational = true;
@@ -82,6 +85,25 @@ void Spectra::setMolecule(QtGui::Molecule* mol)
 
   if (isVibrational)
     openDialog();
+
+  connect(m_molecule, SIGNAL(changed(unsigned int)),
+          SLOT(moleculeChanged(unsigned int)));
+}
+
+void Spectra::moleculeChanged(unsigned int changes)
+{
+  if (m_molecule == nullptr)
+    return;
+
+  bool currentVibrational = m_actions[0]->isEnabled();
+  bool isVibrational = (m_molecule->vibrationFrequencies().size() > 0);
+  if (currentVibrational != isVibrational) {
+    m_actions[0]->setEnabled(isVibrational);
+    if (m_dialog)
+      m_dialog->setMolecule(m_molecule); // update the dialog
+    if (isVibrational)
+      openDialog();
+  }
 }
 
 void Spectra::registerCommands()
@@ -143,10 +165,11 @@ void Spectra::setMode(int mode)
       m_molecule->setForceVector(atom, v);
       ++atom;
     }
-    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+    // m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 
     int frames = 5; // TODO: needs an option
     int frameCounter = 0;
+    m_molecule->clearCoordinate3d();
     m_molecule->setCoordinate3d(atomPositions, frameCounter++);
 
     // Current coords + displacement.
@@ -276,24 +299,24 @@ void Spectra::showSpectraChart()
     }
   }
 
-auto xTitle = tr("Wavenumbers (cm⁻¹)");
-auto yTitle = tr("Transmission");
-auto windowName = tr("Vibrational Spectra");
+  auto xTitle = tr("Wavenumbers (cm⁻¹)");
+  auto yTitle = tr("Transmission");
+  auto windowName = tr("Vibrational Spectra");
 
-if (!m_chartDialog) {
-  m_chartDialog.reset(
-    new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
-}
+  if (!m_chartDialog) {
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+  }
 
-m_chartDialog->setWindowTitle(windowName);
-auto* chart = m_chartDialog->chartWidget();
-chart->clearPlots();
-chart->setXAxisTitle(xTitle.toStdString());
-chart->setYAxisTitle(yTitle.toStdString());
-chart->addPlot(xData, yData, VTK::color4ub{ 0, 0, 0, 255 });
-chart->setXAxisLimits(4000.0, 0.0);
-chart->setYAxisLimits(maxIntensity, 0.0);
-m_chartDialog->show();
+  m_chartDialog->setWindowTitle(windowName);
+  auto* chart = m_chartDialog->chartWidget();
+  chart->clearPlots();
+  chart->setXAxisTitle(xTitle.toStdString());
+  chart->setYAxisTitle(yTitle.toStdString());
+  chart->addPlot(xData, yData, VTK::color4ub{ 0, 0, 0, 255 });
+  chart->setXAxisLimits(4000.0, 0.0);
+  chart->setYAxisLimits(maxIntensity, 0.0);
+  m_chartDialog->show();
 }
 #endif
 

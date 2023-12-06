@@ -65,6 +65,7 @@ using namespace tinycolormap;
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
+using Core::Cube;
 using Core::GaussianSet;
 using Core::NeighborPerceiver;
 using QtGui::Molecule;
@@ -224,6 +225,10 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 
 void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr) {
+    m_molecule->disconnect(this);
+  }
+
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
   } else if (mol->cubes().size() != 0) {
@@ -234,6 +239,18 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (m_molecule != nullptr) {
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+  }
+}
+
+void Surfaces::moleculeChanged(unsigned int changes)
+{
+  if (changes & Molecule::Added || changes & Molecule::Removed) {
+    m_cubes = m_molecule->cubes();
+    m_basis = m_molecule->basisSet();
+  }
 }
 
 QList<QAction*> Surfaces::actions() const
@@ -691,29 +708,36 @@ void Surfaces::displayMesh()
   }
   m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue, m_smoothingPasses);
 
-  // TODO - only do this if we're generating an orbital
-  //    and we need two meshes
-  //   How do we know? - likely ask the cube if it's an MO?
-  qDebug() << "Cube " << m_cube->name().c_str() << " type "
-           << m_cube->cubeType();
-
-  if (!m_mesh2)
-    m_mesh2 = m_molecule->addMesh();
-  if (!m_meshGenerator2) {
-    m_meshGenerator2 = new QtGui::MeshGenerator;
-    connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+  bool isMO = false;
+  // if it's from a file we should "play it safe"
+  if (m_cube->cubeType() == Cube::Type::MO ||
+      m_cube->cubeType() == Cube::Type::FromFile) {
+    isMO = true;
   }
-  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses,
-                               true);
+
+  if (isMO) {
+    if (!m_mesh2)
+      m_mesh2 = m_molecule->addMesh();
+    if (!m_meshGenerator2) {
+      m_meshGenerator2 = new QtGui::MeshGenerator;
+      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+    }
+    m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses,
+                                 true);
+  }
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have
   // many read locks but no write lock.
   m_meshGenerator1->start();
-  m_meshGenerator2->start();
+  if (isMO)
+    m_meshGenerator2->start();
 
   // Track how many meshes are left to show.
-  m_meshesLeft = 2;
+  if (isMO)
+    m_meshesLeft = 2;
+  else
+    m_meshesLeft = 1;
 }
 
 Core::Color3f Surfaces::chargeGradient(double value, double clamp,
@@ -809,6 +833,12 @@ void Surfaces::meshFinished()
   --m_meshesLeft;
   if (m_meshesLeft == 0) {
     colorMesh();
+
+    // finished, so request to enable the mesh display type
+    QStringList displayTypes;
+    displayTypes << tr("Meshes");
+    requestActiveDisplayTypes(displayTypes);
+
     if (m_recordingMovie) {
       // Move to the next frame.
       qDebug() << "Let's get to the next frame…";
@@ -818,12 +848,9 @@ void Surfaces::meshFinished()
       if (m_dialog != nullptr)
         m_dialog->reenableCalculateButton();
 
-      qDebug() << " mesh finished";
-
       m_molecule->emitChanged(QtGui::Molecule::Added);
     }
   }
-  // TODO: enable the mesh display type
 }
 
 void Surfaces::recordMovie()

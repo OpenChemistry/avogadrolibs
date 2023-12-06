@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Avogadro::QtPlugins::InsertFragmentDialog</class>
- <widget class="QDialog" name="Avogadro::QtPlugins::InsertFragmentDialog">
+ <class>Avogadro::QtGui::InsertFragmentDialog</class>
+ <widget class="QDialog" name="Avogadro::QtGui::InsertFragmentDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

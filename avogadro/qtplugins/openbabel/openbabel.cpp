@@ -5,6 +5,7 @@
 
 #include "openbabel.h"
 
+#include "conformersearchdialog.h"
 #include "obcharges.h"
 #include "obfileformat.h"
 #include "obforcefielddialog.h"
@@ -38,7 +39,8 @@ namespace Avogadro::QtPlugins {
 OpenBabel::OpenBabel(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_process(new OBProcess(this)),
     m_readFormatsPending(true), m_writeFormatsPending(true),
-    m_defaultFormat("cjson"), m_progress(nullptr)
+    m_defaultFormat("cml"), m_progress(nullptr),
+    m_conformerSearchDialog(nullptr)
 {
   auto* action = new QAction(this);
   action->setEnabled(true);
@@ -51,6 +53,12 @@ OpenBabel::OpenBabel(QObject* p)
   action->setEnabled(true);
   action->setText(tr("Configure Force Field…"));
   connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Conformer Search…"));
+  connect(action, SIGNAL(triggered()), SLOT(onConfigureConformerSearch()));
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -83,16 +91,14 @@ OpenBabel::OpenBabel(QObject* p)
   refreshCharges();
 
   QString info = openBabelInfo();
-  /*
   if (info.isEmpty()) {
     qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
                     .arg(OBProcess().obabelExecutable());
     foreach (QAction* a, m_actions)
       a->setEnabled(false);
   } else {
-  */
-  qDebug() << OBProcess().obabelExecutable() << " found: " << info;
-  // }
+    qDebug() << OBProcess().obabelExecutable() << " found: " << info;
+  }
 }
 
 OpenBabel::~OpenBabel() {}
@@ -129,7 +135,6 @@ QList<Io::FileFormat*> OpenBabel::fileFormats() const
   auto toSet = [&](const QList<QString>& list) {
     return QSet<QString>(list.begin(), list.end());
   };
-
   QSet<QString> formatDescriptions;
   formatDescriptions.unite(toSet(m_readFormats.uniqueKeys()));
   formatDescriptions.unite(toSet(m_writeFormats.uniqueKeys()));
@@ -259,9 +264,11 @@ void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
     emit fileFormatsReady();
 
     // Update the default format if cjson is available
-    if (!m_readFormats.contains("Chemical JSON") &&
-        !m_writeFormats.contains("Chemical JSON")) {
-      m_defaultFormat = "cml";
+    if (m_readFormats.contains("Chemical JSON") &&
+        m_writeFormats.contains("Chemical JSON")) {
+      m_defaultFormat = "cjson";
+
+      qDebug() << "Setting default format to cjson.";
     }
   }
 }
@@ -294,9 +301,10 @@ void OpenBabel::handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts)
     emit fileFormatsReady();
 
     // Update the default format if cjson is available
-    if (!m_readFormats.contains("Chemical JSON") &&
-        !m_writeFormats.contains("Chemical JSON")) {
-      m_defaultFormat = "cml";
+    if (m_readFormats.contains("Chemical JSON") &&
+        m_writeFormats.contains("Chemical JSON")) {
+      m_defaultFormat = "cjson";
+      qDebug() << "Setting default format to cjson.";
     }
   }
 }
@@ -382,6 +390,33 @@ void OpenBabel::onConfigureGeometryOptimization()
   settings.setValue("openbabel/optimizeGeometry/lastOptions", options);
 }
 
+void OpenBabel::onConfigureConformerSearch()
+{
+  // If the force field map is empty, there is probably a problem with the
+  // obabel executable. Warn the user and return.
+  if (m_forceFields.isEmpty()) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("An error occurred while retrieving the list of "
+                             "supported forcefields. (using '%1').")
+                            .arg(m_process->obabelExecutable()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  QSettings settings;
+  QStringList options =
+    settings.value("openbabel/conformerSearch/lastOptions").toStringList();
+
+  if (m_conformerSearchDialog == nullptr) {
+    m_conformerSearchDialog =
+      new ConformerSearchDialog(qobject_cast<QWidget*>(parent()));
+    connect(m_conformerSearchDialog, SIGNAL(accepted()), this,
+            SLOT(onGenerateConformers()));
+  }
+  // todo set options from last run
+  m_conformerSearchDialog->show();
+}
+
 void OpenBabel::onOptimizeGeometry()
 {
   if (!m_molecule || m_molecule->atomCount() == 0) {
@@ -430,7 +465,7 @@ void OpenBabel::onOptimizeGeometry()
 
   // Setup progress dialog
   initializeProgressDialog(tr("Optimizing Geometry (Open Babel)"),
-                           tr("Generating MDL…"), 0, 0, 0);
+                           tr("Generating…"), 0, 0, 0);
 
   // Connect process
   disconnect(m_process);
@@ -523,6 +558,158 @@ void OpenBabel::onOptimizeGeometryFinished(const QByteArray& output)
 
   m_molecule->undoMolecule()->setAtomPositions3d(mol.atomPositions3d(),
                                                  tr("Optimize Geometry"));
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
+  m_progress->reset();
+}
+
+void OpenBabel::onGenerateConformers()
+{
+  if (!m_molecule || m_molecule->atomCount() == 0) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Molecule invalid. Cannot generate conformers."),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // If the force field map is empty, there is probably a problem with the
+  // obabel executable. Warn the user and return.
+  if (m_forceFields.isEmpty()) {
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("An error occurred while retrieving the list of "
+                             "supported forcefields. (using '%1').")
+                            .arg(m_process->obabelExecutable()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Fail here if the process is already in use
+  if (m_process->inUse()) {
+    showProcessInUseError(tr("Cannot generate conformers with Open Babel."));
+    return;
+  }
+
+  if (m_conformerSearchDialog == nullptr) {
+    return; // should't happen
+  }
+
+  QSettings settings;
+  QStringList options = m_conformerSearchDialog->options();
+
+  QStringList ffOptions =
+    settings.value("openbabel/optimizeGeometry/lastOptions").toStringList();
+  bool autoDetect =
+    settings.value("openbabel/optimizeGeometry/autoDetect", true).toBool();
+
+  if (autoDetect) {
+    QString ff = autoDetectForceField();
+    int ffIndex = ffOptions.indexOf("--ff");
+    if (ffIndex >= 0) {
+      // Shouldn't happen, but just to be safe...
+      if (ffIndex + 1 == ffOptions.size())
+        ffOptions << ff;
+      else
+        ffOptions[ffIndex + 1] = ff;
+    } else {
+      ffOptions << "--ff" << ff;
+    }
+  }
+
+  options << ffOptions;
+
+  // Setup progress dialog
+  initializeProgressDialog(tr("Generating Conformers (Open Babel)"),
+                           tr("Generating…"), 0, 0, 0);
+
+  // Connect process
+  disconnect(m_process);
+  m_process->disconnect(this);
+  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
+  connect(m_process, SIGNAL(conformerStatusUpdate(int, int, double, double)),
+          SLOT(onConformerStatusUpdate(int, int, double, double)));
+  connect(m_process, SIGNAL(generateConformersFinished(QByteArray)),
+          SLOT(onGenerateConformersFinished(QByteArray)));
+
+  std::string mol;
+  if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol,
+                                                     m_defaultFormat)) {
+    m_progress->reset();
+    QMessageBox::critical(
+      qobject_cast<QWidget*>(parent()), tr("Error"),
+      tr("An internal error occurred while generating an "
+         "Open Babel representation of the current molecule."),
+      QMessageBox::Ok);
+    return;
+  }
+
+  m_progress->setLabelText(tr("Starting %1…", "arg is an executable file.")
+                             .arg(m_process->obabelExecutable()));
+
+  // Run obabel
+  m_process->generateConformers(QByteArray(mol.c_str()), options,
+                                m_defaultFormat);
+}
+
+void OpenBabel::onConformerStatusUpdate(int step, int numSteps, double energy,
+                                        double lastEnergy)
+{
+  QString status;
+
+  if (step == 0) {
+    status = tr("Step %1 of %2\nCurrent energy: %3\ndE: %4")
+               .arg(step)
+               .arg(numSteps)
+               .arg(fabs(energy) > 1e-10 ? QString::number(energy, 'g', 5)
+                                         : QString("(pending)"))
+               .arg("(pending)");
+  } else {
+    double dE = energy - lastEnergy;
+    status = tr("Step %1 of %2\nCurrent energy: %3\ndE: %4")
+               .arg(step)
+               .arg(numSteps)
+               .arg(energy, 0, 'g', 5)
+               .arg(dE, 0, 'g', 5);
+  }
+
+  m_progress->setRange(0, numSteps);
+  m_progress->setValue(step);
+  m_progress->setLabelText(status);
+}
+
+void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
+{
+  m_progress->setLabelText(tr("Updating molecule…"));
+
+  // output --> molecule
+  Core::Molecule mol;
+  if (!Io::FileFormatManager::instance().readString(mol, output.constData(),
+                                                    m_defaultFormat)) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Error interpreting Open Babel output."),
+                          QMessageBox::Ok);
+    qDebug() << "Open Babel:" << output;
+    return;
+  }
+
+  /// @todo cache a pointer to the current molecule in the above slot, and
+  /// verify that we're still operating on the same molecule.
+
+  // Check that the atom count hasn't changed:
+  if (mol.atomCount() != m_molecule->atomCount()) {
+    m_progress->reset();
+    QMessageBox::critical(qobject_cast<QWidget*>(parent()), tr("Error"),
+                          tr("Number of atoms in obabel output (%1) does not "
+                             "match the number of atoms in the original "
+                             "molecule (%2).")
+                            .arg(mol.atomCount())
+                            .arg(m_molecule->atomCount()),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  //@todo .. multiple coordinate sets
+  m_molecule->undoMolecule()->setAtomPositions3d(mol.atomPositions3d(),
+                                                 tr("Generate Conformers"));
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
   m_progress->reset();
 }
