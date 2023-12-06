@@ -143,8 +143,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     if (ok)
       cubeResolution = res;
   }
-  if (options.contains("isovalue") &&
-      options["isolvalue"].canConvert<float>()) {
+  if (options.contains("isovalue") && options["isovalue"].canConvert<float>()) {
     bool ok;
     float iso = options["isovalue"].toFloat(&ok);
     if (ok)
@@ -155,8 +154,14 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     homo = m_basis->homo();
   if (options.contains("orbital")) {
     // check if options contains "homo" or "lumo"
-    bool string = options["orbital"].canConvert<QString>();
-    if (string) {
+    bool ok = false;
+    if (options["orbital"].canConvert<int>()) {
+      // internally, we count orbitals from zero
+      // if the conversion worked, ok = true
+      // and we'll skip the next conditional
+      index = options.value("orbital").toInt(&ok) - 1;
+    }
+    if (!ok && options["orbital"].canConvert<QString>()) {
       // should be something like "homo-1" or "lumo+2"
       QString name = options["orbital"].toString();
       QString expression, modifier;
@@ -165,7 +170,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
         expression = name.remove("homo", Qt::CaseInsensitive);
       } else if (name.contains("lumo", Qt::CaseInsensitive)) {
         index = homo + 1; // again modified by the expression
-        expression = name.remove("homo", Qt::CaseInsensitive);
+        expression = name.remove("lumo", Qt::CaseInsensitive);
       }
       // modify HOMO / LUMO based on "+ number" or "- number"
       if (expression.contains('-')) {
@@ -181,9 +186,8 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
         if (ok)
           index = index + n;
       }
-
-    } else
-      index = options.value("index").toInt();
+      index = index - 1; // start from zero
+    }
   }
   bool beta = false;
   if (options.contains("spin")) {
@@ -220,6 +224,10 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 
 void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr) {
+    m_molecule->disconnect(this);
+  }
+
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
   } else if (mol->cubes().size() != 0) {
@@ -230,6 +238,18 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (m_molecule != nullptr) {
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+  }
+}
+
+void Surfaces::moleculeChanged(unsigned int changes)
+{
+  if (changes & Molecule::Added || changes & Molecule::Removed) {
+    m_cubes = m_molecule->cubes();
+    m_basis = m_molecule->basisSet();
+  }
 }
 
 QList<QAction*> Surfaces::actions() const

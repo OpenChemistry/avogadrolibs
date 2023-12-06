@@ -76,6 +76,27 @@ QStringList Command::menuPath(QAction* action) const
     return path;
   }
 
+  // look for {number} in the last part of the path
+  // (this is a priority integer)
+  QString lastPart = path.takeLast();
+  int priority = 0;
+  int braceIndex = lastPart.indexOf('{');
+  int endBraceIndex = lastPart.indexOf('}');
+  if (braceIndex >= 0 && endBraceIndex >= 0 && endBraceIndex > braceIndex) {
+    bool ok = false;
+    size_t len = endBraceIndex - braceIndex - 1;
+    priority = lastPart.mid(braceIndex + 1, len).toInt(&ok);
+    if (ok) {
+      lastPart = lastPart.left(braceIndex);
+    }
+  }
+  // add it back to the path
+  path << lastPart;
+
+  if (priority != 0) {
+    action->setProperty("menu priority", priority);
+  }
+
   // try to translate each part of the path
   // not ideal, but menus should already be in the translation file
   QStringList translatedPath;
@@ -306,4 +327,4 @@ void Command::addAction(const QString& label, const QString& scriptFilePath)
   m_actions << action;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

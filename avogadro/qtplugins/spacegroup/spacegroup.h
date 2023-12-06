@@ -26,6 +26,11 @@ public:
   QList<QAction*> actions() const;
   QStringList menuPath(QAction*) const;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 public slots:
   void setMolecule(QtGui::Molecule* mol);
 

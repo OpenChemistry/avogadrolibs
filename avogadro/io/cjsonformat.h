@@ -41,7 +41,7 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "http://wiki.openchemistry.org/Chemical_JSON";
+    return "https://github.com/openchemistry/chemicaljson";
   }
 
   std::vector<std::string> fileExtensions() const override;
@@ -49,9 +49,13 @@ public:
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
+
+  // internal - to allow JSON or MsgPack to be written
+  bool deserialize(std::istream& in, Core::Molecule& molecule, bool json);
+  bool serialize(std::ostream& out, const Core::Molecule& molecule, bool json);
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Io
+} // namespace Avogadro
 
 #endif // AVOGADRO_IO_CJSONFORMAT_H

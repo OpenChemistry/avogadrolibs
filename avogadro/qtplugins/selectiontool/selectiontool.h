@@ -63,7 +63,7 @@ private:
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
-  SelectionToolWidget* m_toolWidget;
+  mutable SelectionToolWidget* m_toolWidget;
   bool m_drawSelectionBox;
   bool m_doubleClick;
   bool m_initSelectionBox;

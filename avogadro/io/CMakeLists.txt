@@ -3,6 +3,7 @@ add_library(IO)
 avogadro_headers(IO
   cjsonformat.h
   cmlformat.h
+  cmsgpackformat.h
   dcdformat.h
   fileformat.h
   fileformatmanager.h
@@ -19,6 +20,7 @@ avogadro_headers(IO
 target_sources(IO PRIVATE
   cjsonformat.cpp
   cmlformat.cpp
+  cmsgpackformat.cpp
   dcdformat.cpp
   fileformat.cpp
   fileformatmanager.cpp

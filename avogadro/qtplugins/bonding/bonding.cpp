@@ -68,6 +68,33 @@ void Bonding::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 }
 
+void Bonding::registerCommands()
+{
+  emit registerCommand("removeBonds",
+                       tr("Remove bonds from all or selected atoms."));
+  emit registerCommand("createBonds",
+                       tr("Create bonds between all or selected atoms."));
+  emit registerCommand("addBondOrders", tr("Perceive bond orders."));
+}
+
+bool Bonding::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command.
+
+  if (command == "removeBonds") {
+    clearBonds();
+    return true;
+  } else if (command == "createBonds") {
+    bond();
+    return true;
+  } else if (command == "addBondOrders") {
+    bondOrders();
+    return true;
+  }
+  return false;
+}
+
 void Bonding::configure()
 {
   if (!m_ui) {

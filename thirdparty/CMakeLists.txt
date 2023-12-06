@@ -14,7 +14,7 @@ if(USE_EXTERNAL_NLOHMANN)
 else()
   add_library(nlohmann_json INTERFACE IMPORTED GLOBAL)
   target_include_directories(nlohmann_json
-    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/nlohmann>)
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
   add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
 endif(USE_EXTERNAL_NLOHMANN)
 
@@ -41,6 +41,12 @@ else()
   target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
   unset(_STRUCT_ROOT)
 endif(USE_EXTERNAL_STRUCT)
+
+if(NOT TARGET cppoptlib)
+  add_library(cppoptlib INTERFACE IMPORTED GLOBAL)
+  target_include_directories(cppoptlib INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+endif(NOT TARGET cppoptlib)
 
 if(NOT TARGET tinycolormap)
   add_library(tinycolormap INTERFACE IMPORTED GLOBAL)

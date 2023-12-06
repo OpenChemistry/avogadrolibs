@@ -34,9 +34,9 @@ using Core::UnitCell;
 #ifndef _WIN32
 #endif
 
-#define GROMACS_MAGIC 1993
-#define DIM 3
-#define NM_TO_ANGSTROM 10.0
+constexpr int GROMACS_MAGIC = 1993;
+constexpr int DIM = 3;
+constexpr float NM_TO_ANGSTROM = 10.0;
 string TRRVERSION = "GMX_trn_file";
 string HEADITEMS[] = { "ir_size",   "e_size",   "box_size", "vir_size",
                        "pres_size", "top_size", "sym_size", "x_size",
