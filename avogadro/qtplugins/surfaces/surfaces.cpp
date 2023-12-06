@@ -728,6 +728,10 @@ void Surfaces::displayMesh()
   m_meshGenerator1->start();
   m_meshGenerator2->start();
 
+  QStringList displayTypes;
+  displayTypes << tr("Meshes");
+  requestActiveDisplayTypes(displayTypes);
+
   // Track how many meshes are left to show.
   m_meshesLeft = 2;
 }
