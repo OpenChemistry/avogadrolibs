@@ -12,6 +12,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTemporaryFile>
 #include <QtCore/QTimer>
 
 using json = nlohmann::json;
@@ -73,7 +74,8 @@ OBFileFormat::OBFileFormat(const std::string& name_,
     m_identifier(identifier_), m_name(name_),
     m_specificationUrl(specificationUrl_), m_defaultFormat(defaultFormat_),
     m_fileOnly(fileOnly_)
-{}
+{
+}
 
 OBFileFormat::~OBFileFormat() {}
 
@@ -122,7 +124,6 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   // default is CML or CJSON
   QString format =
     QString::fromStdString(opts.value("format", m_defaultFormat));
-  qDebug() << "Reading to format: " << format << m_defaultFormat.c_str();
 
   if (!m_fileOnly) {
     // Determine length of data
@@ -149,6 +150,26 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   } else {
     // Can only read files. Need absolute path.
     QString filename = QString::fromStdString(fileName());
+    if (filename.isEmpty()) {
+      // no choice but to write to a temporary file
+      in.seekg(0, std::ios_base::end);
+      std::istream::pos_type length = in.tellg();
+      in.seekg(0, std::ios_base::beg);
+      in.clear();
+
+      // Extract data, hope it's not big
+      QByteArray input;
+      input.resize(static_cast<int>(length));
+      in.read(input.data(), length);
+
+      QTemporaryFile tmpFile;
+      tmpFile.setAutoRemove(false);
+      tmpFile.open();
+      tmpFile.write(input.data());
+      tmpFile.close();
+      filename = tmpFile.fileName();
+    }
+
     if (!QFileInfo(filename).isAbsolute()) {
       appendError("Internal error -- filename must be absolute! " +
                   filename.toStdString());
@@ -281,6 +302,6 @@ Io::FileFormat* OBFileFormat::newInstance() const
                           m_defaultFormat, m_fileOnly);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #include "obfileformat.moc"

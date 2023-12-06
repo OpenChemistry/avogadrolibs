@@ -5,8 +5,7 @@ avogadro_plugin(InsertFragment
   ExtensionPlugin
   insertfragment.h
   InsertFragment
-  "insertfragment.cpp;insertfragmentdialog.cpp;sortfiltertreeproxymodel.cpp"
-  "insertfragmentdialog.ui"
+  insertfragment.cpp
 )
 
 # Install the fragments & crystals

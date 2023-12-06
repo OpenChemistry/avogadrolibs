@@ -73,6 +73,13 @@ public:
   /** Destroys the molecule object. */
   virtual ~Molecule();
 
+  /**
+   * Adds the properties from the supplied
+   * molecule to this molecule. Does not otherwise
+   * modify atoms / bonds / residues, etc.
+   */
+  void readProperties(const Molecule& other);
+
   /** Sets the data value with @p name to @p value. */
   void setData(const std::string& name, const Variant& value);
 
@@ -547,6 +554,11 @@ public:
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
 
   /**
+   * Clear coordinate sets (except the default set)
+   */
+  void clearCoordinate3d();
+
+  /**
    * Timestep property is used when molecular dynamics trajectories are read
    */
   bool setTimeStep(double timestep, int index);
@@ -694,6 +706,26 @@ public:
   bool setAtomicNumber(Index atomId, unsigned char atomicNumber);
 
   /**
+   * Freeze or unfreeze an atom for optimization
+   */
+  void setFrozenAtom(Index atomId, bool frozen);
+
+  /**
+   * Get the frozen status of an atom
+   */
+  bool frozenAtom(Index atomId) const;
+
+  /**
+   * Freeze or unfreeze X, Y, or Z coordinate of an atom for optimization
+   * @param atomId The index of the atom to modify.
+   * @param axis The axis to freeze (0, 1, or 2 for X, Y, or Z)
+   * @param frozen True to freeze, false to unfreeze
+   */
+  void setFrozenAtomAxis(Index atomId, int axis, bool frozen);
+
+  Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
+
+  /**
    * @return a map of components and count.
    */
   std::map<unsigned char, size_t> composition() const;
@@ -762,6 +794,8 @@ protected:
 
   // This will be stored from the last space group operation
   unsigned short m_hallNumber = 0;
+
+  Eigen::VectorXd m_frozenAtomMask;
 
 private:
   mutable Graph m_graph; // A transformation of the molecule to a graph.

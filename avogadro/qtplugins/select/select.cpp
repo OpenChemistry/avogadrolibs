@@ -11,11 +11,11 @@
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QAction>
 #include <QtCore/QDebug>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QRegularExpressionMatch>
 #include <QtGui/QKeySequence>
-#include <QAction>
 #include <QtWidgets/QInputDialog>
 
 #include <QtCore/QStringList>
@@ -139,7 +139,7 @@ bool Select::evalSelect(bool input, Index index) const
 
 void Select::selectAll()
 {
-  if (m_molecule) {
+  if (m_molecule && m_molecule->atomCount() > 0) {
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
       m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i));
     }
@@ -150,7 +150,7 @@ void Select::selectAll()
 
 void Select::selectNone()
 {
-  if (m_molecule) {
+  if (m_molecule && m_molecule->atomCount() > 0) {
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       m_molecule->undoMolecule()->setAtomSelected(i, false);
 
@@ -160,7 +160,7 @@ void Select::selectNone()
 
 void Select::selectElement()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   if (m_elements == nullptr) {
@@ -174,14 +174,15 @@ void Select::selectElement()
 
 void Select::selectElement(int element)
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   QString undoText = tr("Select Element");
 
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
     if (m_molecule->atomicNumber(i) == element) {
-      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                  undoText);
     } else
       m_molecule->undoMolecule()->setAtomSelected(i, false, undoText);
   }
@@ -210,7 +211,7 @@ bool Select::isWaterOxygen(Index i)
 
 void Select::selectWater()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   QString undoText = tr("Select Water");
@@ -223,22 +224,33 @@ void Select::selectWater()
     } else if (atomicNumber == 1) {
       // check if it's attached to a water oxygen
       auto bonds = m_molecule->bonds(i);
-      if (bonds.size() != 1 || !isWaterOxygen(bonds[0].getOtherAtom(i).index()))
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
-      else
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+      bool isWater = false;
+      // check the bonds for a water oxygen
+      for (auto& bond : bonds) {
+        if (isWaterOxygen(bond.getOtherAtom(i).index())) {
+          m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                      undoText);
+          isWater = true;
+          break;
+        }
+      }
+      if (!isWater)
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                    undoText);
 
       continue;
     }
 
-    m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
+    m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                undoText);
   }
   // also select water residues (which may be isolated "O" atoms)
   for (const auto& residue : m_molecule->residues()) {
     if (residue.residueName() == "HOH") {
       for (auto atom : residue.residueAtoms()) {
         Index i = atom.index();
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
     }
   }
@@ -248,6 +260,9 @@ void Select::selectWater()
 
 void Select::selectBackboneAtoms()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   // unselect everything
   selectNone();
 
@@ -258,7 +273,8 @@ void Select::selectBackboneAtoms()
       auto name = residue.getAtomName(atom);
       if (name == "CA" || name == "C" || name == "N" || name == "O") {
         Index i = atom.index();
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
 
       // also select hydrogens connected to the backbone atoms
@@ -270,7 +286,8 @@ void Select::selectBackboneAtoms()
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                        undoText);
           }
         }
       }
@@ -282,6 +299,9 @@ void Select::selectBackboneAtoms()
 
 void Select::selectSidechainAtoms()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   // unselect everything
   selectNone();
 
@@ -292,7 +312,8 @@ void Select::selectSidechainAtoms()
       auto name = residue.getAtomName(atom);
       if (name != "CA" && name != "C" && name != "N" && name != "O") {
         Index i = atom.index();
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
 
       // or is it a hydrogen connected to a backbone atom?
@@ -305,7 +326,8 @@ void Select::selectSidechainAtoms()
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                        undoText);
           }
         }
       }
@@ -334,6 +356,9 @@ Vector3 Select::getSelectionCenter()
 
 void Select::enlargeSelection()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   Vector3 center = getSelectionCenter();
   // find the current max distance of the selection
   Real maxDistance = 0.0;
@@ -357,7 +382,8 @@ void Select::enlargeSelection()
       Vector3 displacement = m_molecule->atomPosition3d(i) - center;
       Real distance = displacement.squaredNorm();
       if (distance < maxDistance) {
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
       }
     }
   }
@@ -367,6 +393,9 @@ void Select::enlargeSelection()
 
 void Select::shrinkSelection()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   Vector3 center = getSelectionCenter();
   // find the current max distance of the selection
   Real maxDistance = 0.0;
@@ -391,9 +420,11 @@ void Select::shrinkSelection()
     Vector3 displacement = m_molecule->atomPosition3d(i) - center;
     Real distance = displacement.squaredNorm();
     if (distance < maxDistance)
-      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                  undoText);
     else
-      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i), undoText);
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(false, i),
+                                                  undoText);
   }
 
   m_molecule->emitChanged(Molecule::Atoms);
@@ -401,7 +432,7 @@ void Select::shrinkSelection()
 
 void Select::selectAtomIndex()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool ok;
@@ -425,13 +456,15 @@ void Select::selectAtomIndex()
         int last = range.back().toInt(&ok2);
         if (ok1 && ok2) {
           for (int i = start; i <= last; ++i)
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                        undoText);
         }
       }
     } else {
       int i = item.toInt(&ok);
       if (ok)
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i), undoText);
+        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                    undoText);
     }
   }
 
@@ -440,7 +473,7 @@ void Select::selectAtomIndex()
 
 void Select::selectResidue()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool ok;
@@ -510,7 +543,7 @@ void Select::selectResidue()
 
 void Select::invertSelection()
 {
-  if (m_molecule) {
+  if (m_molecule && m_molecule->atomCount() > 0) {
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       m_molecule->undoMolecule()->setAtomSelected(
         i, evalSelect(!m_molecule->atomSelected(i), i), tr("Invert Selection"));
@@ -520,7 +553,7 @@ void Select::invertSelection()
 
 void Select::createLayerFromSelection()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   QtGui::RWMolecule* rwmol = m_molecule->undoMolecule();

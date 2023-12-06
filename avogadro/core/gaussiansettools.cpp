@@ -11,7 +11,6 @@
 
 #include <iostream>
 
-
 using std::vector;
 
 namespace Avogadro::Core {
@@ -22,9 +21,7 @@ GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
     m_basis = dynamic_cast<GaussianSet*>(m_molecule->basisSet());
 }
 
-GaussianSetTools::~GaussianSetTools()
-{
-}
+GaussianSetTools::~GaussianSetTools() {}
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
@@ -56,6 +53,12 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
 {
+  const MatrixX& matrix = m_basis->densityMatrix();
+  if (matrix.rows() == 0 || matrix.cols() == 0) {
+    // we don't have a density matrix, so generate one
+    m_basis->generateDensityMatrix();
+  }
+
   for (size_t i = 0; i < cube.data()->size(); ++i) {
     Vector3 pos = cube.position(i);
     cube.setValue(i, calculateElectronDensity(pos));
@@ -67,6 +70,7 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 {
   const MatrixX& matrix = m_basis->densityMatrix();
   int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
+
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
     return 0.0;
   }
@@ -153,7 +157,7 @@ inline vector<double> GaussianSetTools::calculateValues(
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
     deltas.emplace_back(pos -
-                     (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
+                        (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
     dr2.push_back(deltas[i].squaredNorm());
   }
 
@@ -246,7 +250,7 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -279,7 +283,7 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -318,7 +322,7 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -336,16 +340,7 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
   double componentsF[10] = {
     // molden order
     // e.g https://gau2grid.readthedocs.io/en/latest/order.html
-    xxx,
-    yyy,
-    zzz,
-    xyy,
-    xxy,
-    xxz,
-    xzz,
-    yzz,
-    yyz,
-    xyz
+    xxx, yyy, zzz, xyy, xxy, xxz, xzz, yzz, yyz, xyz
   };
 
   for (int i = 0; i < 10; ++i)
@@ -371,7 +366,7 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -418,4 +413,4 @@ final normalization
     values[baseIndex + i] += components[i] * componentsF[i];
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Core

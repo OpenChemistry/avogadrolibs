@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_CORE_COORDINATEBLOCKGENERATOR_H
 #define AVOGADRO_CORE_COORDINATEBLOCKGENERATOR_H
 
-#include <avogadrocoreexport.h>
+#include "avogadrocoreexport.h"
 
 #include <sstream>
 #include <string>

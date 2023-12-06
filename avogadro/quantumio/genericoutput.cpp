@@ -9,6 +9,7 @@
 #include <avogadro/io/fileformatmanager.h>
 
 #include "gamessus.h"
+#include "molden.h"
 #include "nwchemlog.h"
 #include "orca.h"
 
@@ -49,6 +50,10 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
     } else if (line.find("GAMESS VERSION") != std::string::npos) {
       // GAMESS-US .. don't know if we can read Firefly or GAMESS-UK
       reader = new GAMESSUSOutput;
+      break;
+    } else if (line.find("[Molden Format]") != std::string::npos) {
+      // molden with .out extension
+      reader = new MoldenFile;
       break;
     } else if (line.find("O   R   C   A") != std::string::npos) {
       // ORCA reader

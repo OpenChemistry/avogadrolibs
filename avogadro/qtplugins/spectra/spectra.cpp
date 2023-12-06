@@ -45,6 +45,9 @@ QStringList Spectra::menuPath(QAction*) const
 
 void Spectra::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr)
+    m_molecule->disconnect(this);
+
   bool isVibrational(false);
   if (mol->vibrationFrequencies().size())
     isVibrational = true;
@@ -56,6 +59,25 @@ void Spectra::setMolecule(QtGui::Molecule* mol)
 
   if (isVibrational)
     openDialog();
+
+  connect(m_molecule, SIGNAL(changed(unsigned int)),
+          SLOT(moleculeChanged(unsigned int)));
+}
+
+void Spectra::moleculeChanged(unsigned int changes)
+{
+  if (m_molecule == nullptr)
+    return;
+
+  bool currentVibrational = m_actions[0]->isEnabled();
+  bool isVibrational = (m_molecule->vibrationFrequencies().size() > 0);
+  if (currentVibrational != isVibrational) {
+    m_actions[0]->setEnabled(isVibrational);
+    if (m_dialog)
+      m_dialog->setMolecule(m_molecule); // update the dialog
+    if (isVibrational)
+      openDialog();
+  }
 }
 
 void Spectra::registerCommands()
@@ -117,10 +139,11 @@ void Spectra::setMode(int mode)
       m_molecule->setForceVector(atom, v);
       ++atom;
     }
-    m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+    // m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 
     int frames = 5; // TODO: needs an option
     int frameCounter = 0;
+    m_molecule->clearCoordinate3d();
     m_molecule->setCoordinate3d(atomPositions, frameCounter++);
 
     // Current coords + displacement.
