@@ -1,19 +1,15 @@
 set(plugin_srcs
-  vibrationdialog.cpp
-  vibrationmodel.cpp
+  spectradialog.cpp
   spectra.cpp
 )
 
 avogadro_plugin(Spectra
-  "Spectra and Vibrations"
+  "Spectra Plots"
   ExtensionPlugin
   spectra.h
   Spectra
   "${plugin_srcs}"
-  "vibrationdialog.ui"
+  "spectradialog.ui"
 )
 
-if (USE_VTK)
-  add_definitions(-DUSE_VTK)
-  target_link_libraries(Spectra PRIVATE Avogadro::Vtk)
-endif()
+target_link_libraries(Spectra PRIVATE Avogadro::Vtk)

@@ -69,4 +69,4 @@ void VibrationDialog::selectRow(QModelIndex idx)
   emit modeChanged(idx.row());
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins

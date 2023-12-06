@@ -40,7 +40,7 @@ public:
   bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
                const color4ub& color = color4ub{ 0, 0, 0, 255 });
 
-  bool addPlots(const std::vector< std::vector<float> >& plotData,
+  bool addPlots(const std::vector<std::vector<float>>& plotData,
                 const color4ub& color = color4ub{ 0, 0, 0, 255 });
 
   void clearPlots();
@@ -55,6 +55,8 @@ public:
   void setAxisLimits(Axis a, float min, float max);
   void setXAxisLimits(float min, float max);
   void setYAxisLimits(float min, float max);
+
+  void setFontSize(int size = 14);
 
   void setAxisLogScale(Axis a, bool logScale);
 

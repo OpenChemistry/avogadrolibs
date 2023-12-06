@@ -17,8 +17,8 @@
 #include <vtkTable.h>
 #include <vtkTextProperty.h>
 
-#include <QHBoxLayout>
 #include <QDebug>
+#include <QHBoxLayout>
 
 namespace Avogadro::VTK {
 
@@ -65,8 +65,8 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
   return true;
 }
 
-bool ChartWidget::addPlots(const std::vector< std::vector<float> >& plotData,
-                          const std::array<unsigned char, 4>& color)
+bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
+                           const std::array<unsigned char, 4>& color)
 {
   // Need at least an x and a y.
   if (plotData.size() < 2)
@@ -120,7 +120,6 @@ void ChartWidget::setXAxisTitle(const std::string title)
   auto* axis = m_chart->GetAxis(vtkAxis::BOTTOM);
   axis->SetTitle(title);
   axis->SetTitleVisible(true);
-  axis->GetTitleProperties()->SetFontSize(18);
   axis->GetTitleProperties()->SetBold(true);
 
   axis->GetLabelProperties()->SetFontSize(14);
@@ -131,10 +130,20 @@ void ChartWidget::setYAxisTitle(const std::string title)
   auto* axis = m_chart->GetAxis(vtkAxis::LEFT);
   axis->SetTitle(title);
   axis->SetTitleVisible(true);
-  axis->GetTitleProperties()->SetFontSize(18);
   axis->GetTitleProperties()->SetBold(true);
+}
 
-  axis->GetLabelProperties()->SetFontSize(14);
+void ChartWidget::setFontSize(int size)
+{
+  int titleSize = round(size * 1.25);
+
+  auto* axis = m_chart->GetAxis(vtkAxis::BOTTOM);
+  axis->GetLabelProperties()->SetFontSize(size);
+  axis->GetTitleProperties()->SetFontSize(titleSize);
+
+  axis = m_chart->GetAxis(vtkAxis::LEFT);
+  axis->GetLabelProperties()->SetFontSize(size);
+  axis->GetTitleProperties()->SetFontSize(titleSize);
 }
 
 void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,

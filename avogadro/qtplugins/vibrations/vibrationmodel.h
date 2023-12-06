@@ -47,7 +47,7 @@ private:
   QtGui::Molecule* m_molecule;
   bool m_hasRaman;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_VIBRATIONMODEL_H

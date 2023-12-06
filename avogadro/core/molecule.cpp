@@ -36,10 +36,11 @@ Molecule::Molecule()
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
-    m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
-    m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_label(other.m_label), m_coordinates3d(other.m_coordinates3d),
-    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
+    m_spectra(other.m_spectra), m_customElementMap(other.m_customElementMap),
+    m_elements(other.m_elements), m_positions2d(other.m_positions2d),
+    m_positions3d(other.m_positions3d), m_label(other.m_label),
+    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
+    m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
@@ -92,6 +93,9 @@ void Molecule::readProperties(const Molecule& other)
     m_partialCharges[it->first] = it->second;
   }
 
+  // copy spectra
+  m_spectra = other.m_spectra;
+
   // copy orbital information
   SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
   if (slaterSet != nullptr) {
@@ -127,6 +131,7 @@ void Molecule::readProperties(const Molecule& other)
 
 Molecule::Molecule(Molecule&& other) noexcept
   : m_data(other.m_data), m_partialCharges(std::move(other.m_partialCharges)),
+    m_spectra(other.m_spectra),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
     m_positions3d(other.m_positions3d), m_label(other.m_label),
@@ -166,6 +171,7 @@ Molecule& Molecule::operator=(const Molecule& other)
   if (this != &other) {
     m_data = other.m_data;
     m_partialCharges = other.m_partialCharges;
+    m_spectra = other.m_spectra;
     m_customElementMap = other.m_customElementMap;
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -227,6 +233,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
   if (this != &other) {
     m_data = other.m_data;
     m_partialCharges = std::move(other.m_partialCharges);
+    m_spectra = other.m_spectra;
     m_customElementMap = std::move(other.m_customElementMap);
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
@@ -320,6 +327,31 @@ std::set<std::string> Molecule::partialChargeTypes() const
   for (auto& it : m_partialCharges)
     types.insert(it.first);
   return types;
+}
+
+std::set<std::string> Molecule::spectraTypes() const
+{
+  std::set<std::string> types;
+  for (auto& it : m_spectra)
+    types.insert(it.first);
+  return types;
+}
+
+void Molecule::setSpectra(const std::string& type, const MatrixX& value)
+{
+  m_spectra[type] = value;
+}
+
+MatrixX Molecule::spectra(const std::string& type) const
+{
+  MatrixX value;
+
+  auto search = m_spectra.find(type);
+  if (search != m_spectra.end()) {
+    value = search->second; // value from the map
+  }
+
+  return value;
 }
 
 void Molecule::setFrozenAtom(Index atomId, bool frozen)
