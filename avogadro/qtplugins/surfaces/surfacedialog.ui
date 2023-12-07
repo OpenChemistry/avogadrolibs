@@ -360,10 +360,10 @@
           <bool>true</bool>
          </property>
          <property name="currentText">
-          <string>Medium</string>
+          <string>Light</string>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <item>
           <property name="text">
@@ -407,7 +407,7 @@
           <number>1</number>
          </property>
          <property name="value">
-          <number>5</number>
+          <number>1</number>
          </property>
         </widget>
        </item>
@@ -525,7 +525,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Record Movie...</string>
+        <string>Record Movie…</string>
        </property>
        <property name="default">
         <bool>true</bool>

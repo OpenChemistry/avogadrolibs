@@ -120,10 +120,6 @@ void SurfaceDialog::smoothingComboChanged(int n)
       m_ui->smoothingPassesSpinBox->setValue(0);
       m_ui->smoothingPassesSpinBox->setEnabled(false);
       break;
-    case 1: // Light smoothing
-      m_ui->smoothingPassesSpinBox->setValue(1);
-      m_ui->smoothingPassesSpinBox->setEnabled(false);
-      break;
     case 2: // Medium smoothing
       m_ui->smoothingPassesSpinBox->setValue(5);
       m_ui->smoothingPassesSpinBox->setEnabled(false);
@@ -136,8 +132,9 @@ void SurfaceDialog::smoothingComboChanged(int n)
       m_ui->smoothingPassesSpinBox->setValue(5);
       m_ui->smoothingPassesSpinBox->setEnabled(true);
       break;
+    case 1: // Light smoothing
     default:
-      m_ui->smoothingPassesSpinBox->setValue(5);
+      m_ui->smoothingPassesSpinBox->setValue(1);
       m_ui->smoothingPassesSpinBox->setEnabled(false);
       break;
   }

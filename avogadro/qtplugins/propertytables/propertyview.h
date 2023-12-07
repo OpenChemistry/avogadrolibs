@@ -13,7 +13,7 @@
 class QProgressDialog;
 namespace Avogadro {
 
-namespace QtGui{
+namespace QtGui {
 class Molecule;
 }
 
@@ -21,7 +21,6 @@ class PropertyView : public QTableView
 {
   Q_OBJECT
 public:
-
   explicit PropertyView(PropertyType type, QWidget* parent = 0);
 
   void selectionChanged(const QItemSelection& selected,
@@ -29,6 +28,10 @@ public:
   void setMolecule(QtGui::Molecule* molecule);
   void setSourceModel(PropertyModel* model) { m_model = model; }
   void hideEvent(QHideEvent* event);
+
+protected:
+  // copy the selected properties to the clipboard
+  void keyPressEvent(QKeyEvent* event);
 
 private:
   PropertyType m_type;

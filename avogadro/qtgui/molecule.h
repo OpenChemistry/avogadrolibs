@@ -73,6 +73,7 @@ public:
     UnitCell = 0x04,
     Selection = 0x08,
     Layers = 0x16,
+    Properties = 0x32,
     /** Operations that can affect the above types. */
     Added = 0x1024,
     Removed = 0x2048,
@@ -93,7 +94,8 @@ public:
    */
   virtual AtomType addAtom(unsigned char atomicNumber, Index uniqueId);
 
-  AtomType addAtom(unsigned char number, Vector3 position3d, Index uniqueId = MaxIndex);
+  AtomType addAtom(unsigned char number, Vector3 position3d,
+                   Index uniqueId = MaxIndex);
 
   /**
    * @brief Remove the specified atom from the molecule.

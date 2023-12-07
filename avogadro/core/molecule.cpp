@@ -9,11 +9,13 @@
 #include "color3f.h"
 #include "cube.h"
 #include "elements.h"
+#include "gaussianset.h"
 #include "layermanager.h"
 #include "mdlvalence_p.h"
 #include "mesh.h"
 #include "neighborperceiver.h"
 #include "residue.h"
+#include "slaterset.h"
 #include "unitcell.h"
 
 #include <algorithm>
@@ -72,6 +74,55 @@ Molecule::Molecule(const Molecule& other)
     // make sure all the atoms are in the active layer
     for (Index i = 0; i < atomCount(); ++i)
       m_layers.addAtomToActiveLayer(i);
+  }
+}
+
+void Molecule::readProperties(const Molecule& other)
+{
+  m_label = other.m_label;
+  m_colors = other.m_colors;
+  // merge data maps by iterating through other's map
+  for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
+       ++it) {
+    // even if we have the same key, we want to overwrite
+    m_data.setValue(it->first, it->second);
+  }
+  // merge partial charge maps
+  for (auto it = other.m_partialCharges.cbegin();
+       it != other.m_partialCharges.cend(); ++it) {
+    m_partialCharges[it->first] = it->second;
+  }
+
+  // copy orbital information
+  SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
+  if (slaterSet != nullptr) {
+    m_basisSet = slaterSet->clone();
+    m_basisSet->setMolecule(this);
+  }
+  GaussianSet* gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
+  if (gaussianSet != nullptr) {
+    m_basisSet = gaussianSet->clone();
+    m_basisSet->setMolecule(this);
+  }
+
+  // copy over spectra information
+  if (other.m_vibrationFrequencies.size() > 0) {
+    m_vibrationFrequencies = other.m_vibrationFrequencies;
+    m_vibrationIRIntensities = other.m_vibrationIRIntensities;
+    m_vibrationRamanIntensities = other.m_vibrationRamanIntensities;
+    m_vibrationLx = other.m_vibrationLx;
+  }
+
+  // Copy over any meshes
+  for (Index i = 0; i < other.meshCount(); ++i) {
+    Mesh* m = addMesh();
+    *m = *other.mesh(i);
+  }
+
+  // Copy over any cubes
+  for (Index i = 0; i < other.cubeCount(); ++i) {
+    Cube* c = addCube();
+    *c = *other.cube(i);
   }
 }
 
@@ -1170,6 +1221,11 @@ bool Molecule::setCoordinate3d(int coord)
     return true;
   }
   return false;
+}
+
+void Molecule::clearCoordinate3d()
+{
+  m_coordinates3d.clear();
 }
 
 Array<Vector3> Molecule::coordinate3d(int index) const

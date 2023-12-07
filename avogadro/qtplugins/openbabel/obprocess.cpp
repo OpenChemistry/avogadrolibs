@@ -232,8 +232,8 @@ void OBProcess::convertPrepareOutput()
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
   QRegularExpression errorChecker("\\b0 molecules converted\\b"
-                       "|"
-                       "obabel: cannot read input format!");
+                                  "|"
+                                  "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
     if (m_process->exitStatus() == QProcess::NormalExit)
       output = m_process->readAllStandardOutput();
@@ -342,9 +342,7 @@ bool OBProcess::calculateCharges(const QByteArray& mol,
     realOptions << "-icml";
   }
   realOptions << "-onul" // ignore the output
-              << "--partialcharge"
-              << type.c_str()
-              << "--print";
+              << "--partialcharge" << type.c_str() << "--print";
 
   // Start the optimization
   executeObabel(realOptions, this, SLOT(chargesPrepareOutput()), mol);
@@ -364,8 +362,8 @@ void OBProcess::chargesPrepareOutput()
   // Check for errors.
   QString errorOutput = QString::fromLatin1(m_process->readAllStandardError());
   QRegularExpression errorChecker("\\b0 molecules converted\\b"
-                       "|"
-                       "obabel: cannot read input format!");
+                                  "|"
+                                  "obabel: cannot read input format!");
   if (!errorOutput.contains(errorChecker)) {
     if (m_process->exitStatus() == QProcess::NormalExit)
       output = m_process->readAllStandardOutput();
@@ -384,7 +382,7 @@ void OBProcess::chargesPrepareOutput()
     double charge = line.toDouble(&ok);
     if (!ok)
       break;
-    
+
     charges.push_back(charge);
   }
 
@@ -426,6 +424,40 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
   return true;
 }
 
+bool OBProcess::generateConformers(const QByteArray& mol,
+                                   const QStringList& options,
+                                   const std::string format)
+{
+  if (!tryLockProcess()) {
+    qWarning() << "OBProcess::generateConformers(): process already in use.";
+    return false;
+  }
+
+  QStringList realOptions;
+  if (format == "cjson") {
+    realOptions << "-icjson"
+                << "-ocjson";
+  } else {
+    realOptions << "-icml"
+                << "-ocml";
+  }
+  realOptions << "--conformer"
+              << "--noh" // new in OB 3.0.1
+              << "--log" << options;
+
+  // We'll need to read the log (printed to stderr) to update progress
+  connect(m_process, SIGNAL(readyReadStandardError()),
+          SLOT(conformerReadLog()));
+
+  // Initialize the log reader ivars
+  m_optimizeGeometryLog.clear();
+  m_maxConformers = -1;
+
+  // Start the optimization
+  executeObabel(realOptions, this, SLOT(conformerPrepare()), mol);
+  return true;
+}
+
 void OBProcess::optimizeGeometryPrepare()
 {
   if (m_aborted) {
@@ -439,9 +471,52 @@ void OBProcess::optimizeGeometryPrepare()
   emit optimizeGeometryFinished(result);
 }
 
+void OBProcess::conformerPrepare()
+{
+  if (m_aborted) {
+    releaseProcess();
+    return;
+  }
+
+  QByteArray result = m_process->readAllStandardOutput();
+
+  releaseProcess();
+  emit generateConformersFinished(result);
+}
+
 void OBProcess::optimizeGeometryReadLog()
 {
   // Append the current stderr to the log
+  m_optimizeGeometryLog +=
+    QString::fromLatin1(m_process->readAllStandardError());
+
+  // Search for the maximum number of steps if we haven't found it yet
+  if (m_optimizeGeometryMaxSteps < 0) {
+    QRegExp maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
+    if (maxStepsParser.indexIn(m_optimizeGeometryLog) != -1) {
+      m_optimizeGeometryMaxSteps = maxStepsParser.cap(1).toInt();
+      emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps, 0.0,
+                                        0.0);
+    }
+  }
+
+  // Emit the last printed step
+  if (m_optimizeGeometryMaxSteps >= 0) {
+    QRegExp lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
+      int step = lastStepParser.cap(1).toInt();
+      double energy = lastStepParser.cap(2).toDouble();
+      double lastEnergy = lastStepParser.cap(3).toDouble();
+      emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
+                                        energy, lastEnergy);
+    }
+  }
+}
+
+void OBProcess::conformerReadLog()
+{
+  // Append the current stderr to the log
+  // (we're grabbing the log from the geometry optimization)
   m_optimizeGeometryLog +=
     QString::fromLatin1(m_process->readAllStandardError());
 
@@ -474,7 +549,8 @@ void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
   // Setup exit handler
   if (receiver) {
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
-    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver, slot);
+    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver,
+            slot);
     connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
             SLOT(obError()));
   }
@@ -498,4 +574,4 @@ void OBProcess::resetState()
   connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

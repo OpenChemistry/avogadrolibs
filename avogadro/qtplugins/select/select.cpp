@@ -139,7 +139,7 @@ bool Select::evalSelect(bool input, Index index) const
 
 void Select::selectAll()
 {
-  if (m_molecule) {
+  if (m_molecule && m_molecule->atomCount() > 0) {
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
       m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i));
     }
@@ -150,7 +150,7 @@ void Select::selectAll()
 
 void Select::selectNone()
 {
-  if (m_molecule) {
+  if (m_molecule && m_molecule->atomCount() > 0) {
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       m_molecule->undoMolecule()->setAtomSelected(i, false);
 
@@ -160,7 +160,7 @@ void Select::selectNone()
 
 void Select::selectElement()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   if (m_elements == nullptr) {
@@ -174,7 +174,7 @@ void Select::selectElement()
 
 void Select::selectElement(int element)
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   QString undoText = tr("Select Element");
@@ -211,7 +211,7 @@ bool Select::isWaterOxygen(Index i)
 
 void Select::selectWater()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   QString undoText = tr("Select Water");
@@ -260,6 +260,9 @@ void Select::selectWater()
 
 void Select::selectBackboneAtoms()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   // unselect everything
   selectNone();
 
@@ -296,6 +299,9 @@ void Select::selectBackboneAtoms()
 
 void Select::selectSidechainAtoms()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   // unselect everything
   selectNone();
 
@@ -350,6 +356,9 @@ Vector3 Select::getSelectionCenter()
 
 void Select::enlargeSelection()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   Vector3 center = getSelectionCenter();
   // find the current max distance of the selection
   Real maxDistance = 0.0;
@@ -384,6 +393,9 @@ void Select::enlargeSelection()
 
 void Select::shrinkSelection()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   Vector3 center = getSelectionCenter();
   // find the current max distance of the selection
   Real maxDistance = 0.0;
@@ -420,7 +432,7 @@ void Select::shrinkSelection()
 
 void Select::selectAtomIndex()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool ok;
@@ -461,7 +473,7 @@ void Select::selectAtomIndex()
 
 void Select::selectResidue()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   bool ok;
@@ -531,7 +543,7 @@ void Select::selectResidue()
 
 void Select::invertSelection()
 {
-  if (m_molecule) {
+  if (m_molecule && m_molecule->atomCount() > 0) {
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       m_molecule->undoMolecule()->setAtomSelected(
         i, evalSelect(!m_molecule->atomSelected(i), i), tr("Invert Selection"));
@@ -541,7 +553,7 @@ void Select::invertSelection()
 
 void Select::createLayerFromSelection()
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
 
   QtGui::RWMolecule* rwmol = m_molecule->undoMolecule();

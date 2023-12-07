@@ -49,6 +49,11 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
   QUndoCommand* keyReleaseEvent(QKeyEvent* e) override;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 protected slots:
   void swapZoomDirection(bool checked);
 

@@ -285,14 +285,14 @@
      <item>
       <widget class="QPushButton" name="computeButton">
        <property name="text">
-        <string>Submit Calculation...</string>
+        <string>Submit Calculation…</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="generateButton">
        <property name="text">
-        <string>Save File...</string>
+        <string>Save File…</string>
        </property>
       </widget>
      </item>

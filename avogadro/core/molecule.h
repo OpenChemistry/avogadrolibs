@@ -73,6 +73,13 @@ public:
   /** Destroys the molecule object. */
   virtual ~Molecule();
 
+  /**
+   * Adds the properties from the supplied
+   * molecule to this molecule. Does not otherwise
+   * modify atoms / bonds / residues, etc.
+   */
+  void readProperties(const Molecule& other);
+
   /** Sets the data value with @p name to @p value. */
   void setData(const std::string& name, const Variant& value);
 
@@ -585,6 +592,11 @@ public:
   bool setCoordinate3d(int coord);
   Array<Vector3> coordinate3d(int index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, int index);
+
+  /**
+   * Clear coordinate sets (except the default set)
+   */
+  void clearCoordinate3d();
 
   /**
    * Timestep property is used when molecular dynamics trajectories are read

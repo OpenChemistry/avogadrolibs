@@ -19,10 +19,11 @@ namespace QtPlugins {
 class TemplateToolWidget;
 
 /**
- * @class TemplateTool templatetool.h <avogadro/qtplugins/templatetool/templatetool.h>
+ * @class TemplateTool templatetool.h
+ <avogadro/qtplugins/templatetool/templatetool.h>
  * @brief The Template tool inserts fragments, including metal centers.
  * @author Geoffrey R. Hutchison, Aritz, Erkiaga
- 
+
  */
 class TemplateTool : public QtGui::ToolPlugin
 {
@@ -43,15 +44,9 @@ public:
       m_molecule = mol->undoMolecule();
   }
 
-  void setEditMolecule(QtGui::RWMolecule* mol) override
-  {
-    m_molecule = mol;
-  }
+  void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
 
-  void setGLWidget(QtOpenGL::GLWidget* widget) override
-  {
-    m_glWidget = widget;
-  }
+  void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }
 
   void setGLRenderer(Rendering::GLRenderer* renderer) override
   {
