@@ -7,9 +7,13 @@
 
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
+#include <QApplication>
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QSortFilterProxyModel>
-#include <QAction>
+#include <QtGui/QClipboard>
+#include <QtGui/QKeyEvent>
+
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QScrollBar>
@@ -143,6 +147,43 @@ void PropertyView::hideEvent(QHideEvent*)
   }
 
   this->deleteLater();
+}
+
+void PropertyView::keyPressEvent(QKeyEvent* event)
+{
+  // handle copy event
+  // thanks to https://www.walletfox.com/course/qtableviewcopypaste.php
+  if (!event->matches(QKeySequence::Copy)) {
+    QTableView::keyPressEvent(event);
+    return;
+  }
+
+  // get the selected rows (if any)
+  QModelIndexList selectedRows = selectionModel()->selectedRows();
+
+  // if nothing is selected, copy everything to the clipboard
+  QString text;
+  if (selectedRows.isEmpty()) {
+    // iterate through every row and column and copy the data
+    for (int i = 0; i < model()->rowCount(); ++i) {
+      QStringList rowContents;
+      for (int j = 0; j < model()->columnCount(); ++j)
+        rowContents << model()->index(i, j).data().toString();
+      text += rowContents.join("\t");
+      text += "\n";
+    }
+  } else {
+    // copy the selected rows to the clipboard
+    QItemSelectionRange range = selectionModel()->selection().first();
+    for (auto i = range.top(); i <= range.bottom(); ++i) {
+      QStringList rowContents;
+      for (auto j = range.left(); j <= range.right(); ++j)
+        rowContents << model()->index(i, j).data().toString();
+      text += rowContents.join("\t");
+      text += "\n";
+    }
+  }
+  QApplication::clipboard()->setText(text);
 }
 
 } // end namespace Avogadro
