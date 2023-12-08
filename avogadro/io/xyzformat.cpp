@@ -24,7 +24,6 @@ using json = nlohmann::json;
 using std::endl;
 using std::getline;
 using std::string;
-using std::string;
 using std::vector;
 
 namespace Avogadro::Io {
@@ -32,8 +31,8 @@ namespace Avogadro::Io {
 using Core::Array;
 using Core::Atom;
 using Core::Elements;
-using Core::Molecule;
 using Core::lexicalCast;
+using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 
@@ -93,7 +92,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
-    vector<string> tokens(split(buffer, ' '));
+    vector<string> tokens;
+    // check for tabs PR#1512
+    if (buffer.find('\t') != std::string::npos)
+      tokens = split(buffer, '\t');
+    else
+      tokens = split(buffer, ' ');
 
     if (tokens.size() < 4) {
       appendError("Not enough tokens in this line: " + buffer);
@@ -234,4 +238,4 @@ std::vector<std::string> XyzFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io
