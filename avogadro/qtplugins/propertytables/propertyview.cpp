@@ -285,7 +285,7 @@ void PropertyView::contextMenuEvent(QContextMenuEvent* event)
   connect(copyAction, &QAction::triggered, this,
           &PropertyView::copySelectedRowsToClipboard);
 
-  QAction* exportAction = menu.addAction(tr("Export..."));
+  QAction* exportAction = menu.addAction(tr("Export…"));
   menu.addAction(exportAction);
   connect(exportAction, &QAction::triggered, this,
           &PropertyView::openExportDialogBox);
