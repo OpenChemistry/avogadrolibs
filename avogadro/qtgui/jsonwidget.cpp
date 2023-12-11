@@ -220,7 +220,8 @@ void JsonWidget::buildOptionGui()
           order = obj.value("order").toInt();
           keys.insert(order, it.key());
         } else { // object doesn't contain "order"
-          keys.insert(order++, it.key());
+          keys.insert(order, it.key());
+          order++;
         }
       } else {
         keys.insert(order++, it.key());
