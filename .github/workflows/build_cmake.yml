@@ -200,14 +200,14 @@ jobs:
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
         cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
         # finally, fixup the binaries
-        #cd ../bin
-        #for exe in obabel obmm eht_bind genXrdPattern; do
-        #  for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
-        #    export lib=`echo $libpath | cut -d '/' -f 9`;
-        #    echo "Fixing $exe $lib $libpath"
-        #    install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
-        #  done
-        #done
+        cd ../bin
+        for exe in obabel obmm eht_bind genXrdPattern; do
+          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $exe $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+          done
+        done
 
     - name: Run tests
       if: matrix.config.os == 'ubuntu-20.04'
