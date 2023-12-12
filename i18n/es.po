@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-10 18:10+0000\n"
-"PO-Revision-Date: 2023-12-11 07:53+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-12-13 18:59+0000\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.3-rc\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3537,15 +3537,15 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:54
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr "Gira la escena a lo largo de los ejes x, y o z."
+msgstr "Rotar la escena a lo largo de los ejes x, y o z."
 
 #: qtplugins/navigator/navigator.cpp:55
 msgid "Zoom the scene."
-msgstr "Amplía la escena."
+msgstr "Ampliar la escena."
 
 #: qtplugins/navigator/navigator.cpp:56
 msgid "Translate the scene."
-msgstr "Traduce la escena."
+msgstr "Mover la escena."
 
 #: qtplugins/navigator/navigator.cpp:97
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3601,7 +3601,7 @@ msgstr "Configurar Campo de Fuerza…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
 msgid "Conformer Search…"
-msgstr "Búsqueda de los confórmeros…"
+msgstr "Buscar Confórmeros…"
 
 #: qtplugins/openbabel/openbabel.cpp:66
 msgid "Perceive Bonds"
@@ -3618,7 +3618,8 @@ msgstr "Eliminar Hidrógenos"
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr "¡%1 no encontrado! Deshabilitando las acciones del plugin Open Babel."
+msgstr ""
+"¡%1 no encontrado! Deshabilitando las acciones del complemento de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
@@ -3731,11 +3732,11 @@ msgstr "No se pueden generar confórmeros con Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating Conformers (Open Babel)"
-msgstr "Generar confórmeros (Open Babel)"
+msgstr "Generanado Confórmeros (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:712
 msgid "Generate Conformers"
-msgstr "Generar confórmeros"
+msgstr "Generar Confórmeros"
 
 #: qtplugins/openbabel/openbabel.cpp:721
 msgid "Cannot open file with Open Babel."
@@ -4938,14 +4939,14 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
-"Herramienta de la plantilla\n"
+"Herramienta de la Plantilla\n"
 "\n"
-"Inserte los fragmentos, incluidos los centros metálicos.\n"
-"Seleccione un elemento y una geometría de coordinación y haga clic para "
+"Insertar fragmentos, incluyendo centros metálicos.\n"
+"Seleccionar un elemento y una geometría de coordinación y presionar para "
 "insertar un fragmento.\n"
 "\n"
-"Seleccione un ligante o grupo funcional y haga clic en un átomo de hidrógeno "
-"para unirlo."
+"Seleccionar un ligando o grupo funcional y presionar sobe un átomo de "
+"hidrógeno para unirlo."
 
 #: qtplugins/templatetool/templatetool.cpp:302
 msgid "Insert Template"
@@ -5464,7 +5465,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help…"
-msgstr "Auxilio…"
+msgstr "Ayuda…"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5505,7 +5506,7 @@ msgstr "Predeterminados"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save File…"
-msgstr "Guardar el archivo…"
+msgstr "Guardar Archivo…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6709,7 +6710,7 @@ msgstr "Búsqueda ponderada de rotores"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
 msgid "Genetic algorithm search"
-msgstr "Búscar algoritmos genéticos"
+msgstr "Búsqueda de algoritmo genético"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
@@ -6719,14 +6720,14 @@ msgstr "Optimización por confórmeros:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
 msgid "Genetic Algorithm Options"
-msgstr "Opciones del algoritmo genético"
+msgstr "Opciones del Algoritmo Genético"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:102
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr "número de hijos por cada geometría pricipal"
+msgstr "número de hijos por cada geometría principal"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6760,7 +6761,7 @@ msgstr "Convergencia:"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Scoring method:"
-msgstr "Método de calificación:"
+msgstr "Método de puntuación:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -7728,7 +7729,7 @@ msgstr "Grupos"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Group:"
-msgstr "Grupo"
+msgstr "Grupo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -7753,12 +7754,12 @@ msgstr "nitro"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr "Fenilo"
+msgstr "fenilo"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr "Sulfonato"
+msgstr "sulfonato"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
