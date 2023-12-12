@@ -83,7 +83,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
     - name: Install Dependencies (macOS)
@@ -178,34 +178,36 @@ jobs:
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
-      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel 
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
       run: |
         for plugin in *.so; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
             export lib=`echo $libpath | cut -d '/' -f 9`;
             echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
         cd .. # build/prefix/lib
-        for plugin in libinchi.?.?.?.dylib; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+        for plugin in libinchi.?.?.?.dylib libopenbabel.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
             export lib=`echo $libpath | cut -d '/' -f 9`;
             echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
         otool -L libinchi.?.?.?.dylib
+        otool -L libopenbabel.?.?.?.dylib
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
         # finally, fixup the binaries
-        #cd ../bin
-        #for exe in obabel obmm eht_bind genXrdPattern; do
-        #  for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do 
-        #    export lib=`echo $libpath | cut -d '/' -f 9`;
-        #    echo "Fixing $exe $lib $libpath"
-        #    install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
-        #  done
-        #done
+        cd ../bin
+        for exe in obabel obmm eht_bind genXrdPattern; do
+          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $exe $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+          done
+        done
 
     - name: Run tests
       if: matrix.config.os == 'ubuntu-20.04'
@@ -327,4 +329,3 @@ jobs:
         rm -rf ./* || true
         rm -rf ./.??* || true
         ls -la ./
- 
