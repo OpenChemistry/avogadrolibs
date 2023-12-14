@@ -144,7 +144,6 @@ void Vibrations::setMode(int mode)
       m_molecule->setForceVector(atom, v);
       ++atom;
     }
-    // m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
 
     int frames = 5; // TODO: needs an option
     int frameCounter = 0;
@@ -154,7 +153,7 @@ void Vibrations::setMode(int mode)
     // Current coords + displacement.
     for (int i = 1; i <= frames; ++i) {
       Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
+      for (atom = 0; atom < m_molecule->atomCount(); ++atom) {
         framePositions.push_back(atomPositions[atom] + atomDisplacements[atom] *
                                                          factor *
                                                          (double(i) / frames));
@@ -164,7 +163,7 @@ void Vibrations::setMode(int mode)
     // + displacement back to original.
     for (int i = frames - 1; i >= 0; --i) {
       Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
+      for (atom = 0; atom < m_molecule->atomCount(); ++atom) {
         framePositions.push_back(atomPositions[atom] + atomDisplacements[atom] *
                                                          factor *
                                                          (double(i) / frames));
@@ -174,7 +173,7 @@ void Vibrations::setMode(int mode)
     // Current coords - displacement.
     for (int i = 1; i <= frames; ++i) {
       Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
+      for (atom = 0; atom < m_molecule->atomCount(); ++atom) {
         framePositions.push_back(atomPositions[atom] - atomDisplacements[atom] *
                                                          factor *
                                                          (double(i) / frames));
@@ -184,7 +183,7 @@ void Vibrations::setMode(int mode)
     // - displacement back to original.
     for (int i = frames - 1; i >= 0; --i) {
       Core::Array<Vector3> framePositions;
-      for (Index atom = 0; atom < m_molecule->atomCount(); ++atom) {
+      for (atom = 0; atom < m_molecule->atomCount(); ++atom) {
         framePositions.push_back(atomPositions[atom] - atomDisplacements[atom] *
                                                          factor *
                                                          (double(i) / frames));
