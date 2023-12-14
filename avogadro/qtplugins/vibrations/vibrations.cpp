@@ -48,13 +48,12 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
   if (mol == nullptr)
     return;
 
-  m_molecule->disconnect(this);
+  if (m_molecule != nullptr)
+    m_molecule->disconnect(this);
 
   bool isVibrational(false);
   if (mol->vibrationFrequencies().size())
     isVibrational = true;
-
-  qDebug() << "Vibrations::setMolecule()" << isVibrational;
 
   m_actions[0]->setEnabled(isVibrational);
   m_molecule = mol;
@@ -75,8 +74,6 @@ void Vibrations::moleculeChanged(unsigned int changes)
 
   bool currentVibrational = m_actions[0]->isEnabled();
   bool isVibrational = (m_molecule->vibrationFrequencies().size() > 0);
-
-  qDebug() << "Vibrations::moleculeChanged()" << isVibrational;
 
   if (currentVibrational != isVibrational) {
     m_actions[0]->setEnabled(isVibrational);
