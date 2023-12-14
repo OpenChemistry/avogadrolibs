@@ -61,6 +61,38 @@ bool ChartWidget::addPlot(const std::vector<float>& x,
 
   auto* line = m_chart->AddPlot(vtkChart::LINE);
   line->SetInputData(m_table, 0, 1);
+  line->SetWidth(m_lineWidth);
+  line->SetColor(color[0], color[1], color[2], color[3]);
+  return true;
+}
+
+bool ChartWidget::addSeries(const std::vector<float>& newSeries,
+                            const std::array<unsigned char, 4>& color)
+{
+  if (newSeries.empty())
+    return false;
+
+  // check to see if the newSeries has the same number of rows
+  // as the existing table
+  if (m_table->GetNumberOfRows() != newSeries.size()) {
+    return false;
+  }
+
+  // okay, we add a new column
+  vtkNew<vtkFloatArray> yArr;
+  // new column name
+  auto numColumns = m_table->GetNumberOfColumns();
+  yArr->SetName(("y" + std::to_string(numColumns)).c_str());
+  yArr->SetNumberOfValues(newSeries.size());
+  m_table->AddColumn(yArr);
+
+  for (size_t i = 0; i < newSeries.size(); ++i) {
+    yArr->SetValue(i, newSeries[i]);
+  }
+
+  auto* line = m_chart->AddPlot(vtkChart::LINE);
+  line->SetInputData(m_table, 0, numColumns);
+  line->SetWidth(m_lineWidth);
   line->SetColor(color[0], color[1], color[2], color[3]);
   return true;
 }
@@ -103,6 +135,7 @@ bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
     // Add the plot.
     auto* line = m_chart->AddPlot(vtkChart::LINE);
     line->SetInputData(m_table, 0, i);
+    line->SetWidth(m_lineWidth);
     line->SetColor(color[0], color[1], color[2], color[3]);
   }
 
@@ -115,7 +148,7 @@ void ChartWidget::clearPlots()
   m_table->RemoveAllColumns();
 }
 
-void ChartWidget::setXAxisTitle(const std::string title)
+void ChartWidget::setXAxisTitle(const std::string& title)
 {
   auto* axis = m_chart->GetAxis(vtkAxis::BOTTOM);
   axis->SetTitle(title);
@@ -125,7 +158,7 @@ void ChartWidget::setXAxisTitle(const std::string title)
   axis->GetLabelProperties()->SetFontSize(14);
 }
 
-void ChartWidget::setYAxisTitle(const std::string title)
+void ChartWidget::setYAxisTitle(const std::string& title)
 {
   auto* axis = m_chart->GetAxis(vtkAxis::LEFT);
   axis->SetTitle(title);
@@ -144,6 +177,15 @@ void ChartWidget::setFontSize(int size)
   axis = m_chart->GetAxis(vtkAxis::LEFT);
   axis->GetLabelProperties()->SetFontSize(size);
   axis->GetTitleProperties()->SetFontSize(titleSize);
+}
+
+void ChartWidget::setLineWidth(float width)
+{
+  m_lineWidth = width;
+  for (int i = 0; i < m_chart->GetNumberOfPlots(); ++i) {
+    auto* plot = m_chart->GetPlot(i);
+    plot->SetWidth(width);
+  }
 }
 
 void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,

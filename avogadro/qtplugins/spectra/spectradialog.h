@@ -54,6 +54,8 @@ private slots:
   void changeCalculatedSpectraColor();
   void changeImportedSpectraColor();
   void changeFontSize();
+  void changeLineWidth();
+  void changeSpectra();
 
   void updatePlot();
 

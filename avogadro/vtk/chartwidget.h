@@ -40,14 +40,17 @@ public:
   bool addPlot(const std::vector<float>& x, const std::vector<float>& y,
                const color4ub& color = color4ub{ 0, 0, 0, 255 });
 
+  bool addSeries(const std::vector<float>& y,
+                 const color4ub& color = color4ub{ 0, 0, 0, 255 });
+
   bool addPlots(const std::vector<std::vector<float>>& plotData,
                 const color4ub& color = color4ub{ 0, 0, 0, 255 });
 
   void clearPlots();
 
-  void setXAxisTitle(const std::string title);
+  void setXAxisTitle(const std::string& title);
 
-  void setYAxisTitle(const std::string title);
+  void setYAxisTitle(const std::string& title);
 
   void setTickLabels(Axis a, const std::vector<float>& tickPositions,
                      const std::vector<std::string>& tickLabels);
@@ -57,11 +60,13 @@ public:
   void setYAxisLimits(float min, float max);
 
   void setFontSize(int size = 14);
+  void setLineWidth(float width = 1.0);
 
   void setAxisLogScale(Axis a, bool logScale);
 
 private:
   void renderViews();
+  float m_lineWidth = 1.0;
   vtkAxis* axis(Axis a);
 
   vtkNew<vtkContextView> m_view;

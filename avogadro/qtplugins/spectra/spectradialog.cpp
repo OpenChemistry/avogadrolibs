@@ -15,7 +15,6 @@
 #include <QtCore/QDebug>
 
 #include <avogadro/core/molecule.h>
-
 #include <avogadro/vtk/chartwidget.h>
 
 using namespace std;
@@ -71,6 +70,26 @@ SpectraDialog::SpectraDialog(QWidget* parent)
           SLOT(changeBackgroundColor()));
   connect(m_ui->push_colorForeground, SIGNAL(clicked()), this,
           SLOT(changeForegroundColor()));
+  connect(m_ui->push_colorCalculated, SIGNAL(clicked()), this,
+          SLOT(changeCalculatedSpectraColor()));
+  connect(m_ui->push_colorImported, SIGNAL(clicked()), this,
+          SLOT(changeImportedSpectraColor()));
+  connect(m_ui->fontSizeCombo, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(changeFontSize()));
+  connect(m_ui->lineWidthSpinBox, SIGNAL(valueChanged(double)), this,
+          SLOT(changeLineWidth()));
+  connect(m_ui->combo_spectra, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(changeSpectra()));
+  connect(m_ui->xAxisMinimum, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
+  connect(m_ui->xAxisMaximum, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
+  connect(m_ui->yAxisMinimum, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
+  connect(m_ui->yAxisMaximum, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
+  connect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
+          SLOT(updatePlot()));
 
   readSettings();
 }
@@ -78,6 +97,96 @@ SpectraDialog::SpectraDialog(QWidget* parent)
 SpectraDialog::~SpectraDialog()
 {
   writeSettings();
+}
+
+void SpectraDialog::changeSpectra()
+{
+  // TODO: change the scale and offset based on defaults and settings
+  QSettings settings;
+
+  // what type of spectra are we plotting?
+  SpectraType type =
+    static_cast<SpectraType>(m_ui->combo_spectra->currentData().toInt());
+
+  switch (type) {
+    case SpectraType::Infrared:
+      m_ui->scaleSpinBox->setValue(1.0);
+      m_ui->offsetSpinBox->setValue(0.0);
+      m_ui->xAxisMinimum->setValue(4000.0);
+      m_ui->xAxisMaximum->setValue(0.0);
+      m_ui->peakWidth->setValue(30.0);
+      break;
+    case SpectraType::Raman:
+      m_ui->scaleSpinBox->setValue(1.0);
+      m_ui->offsetSpinBox->setValue(0.0);
+      m_ui->xAxisMinimum->setValue(0.0);
+      m_ui->xAxisMaximum->setValue(4000.0);
+      m_ui->peakWidth->setValue(30.0);
+      break;
+    case SpectraType::NMR:
+      m_ui->scaleSpinBox->setValue(1.0);
+      m_ui->offsetSpinBox->setValue(0.0);
+      // todo: these should be per element
+      m_ui->xAxisMinimum->setValue(0.0);
+      m_ui->xAxisMaximum->setValue(200.0);
+      m_ui->peakWidth->setValue(0.1);
+      break;
+    case SpectraType::Electronic:
+      m_ui->scaleSpinBox->setValue(1.0);
+      m_ui->offsetSpinBox->setValue(0.0);
+      // in eV
+      m_ui->xAxisMinimum->setValue(5.0);
+      m_ui->xAxisMaximum->setValue(1.0);
+      m_ui->peakWidth->setValue(0.1);
+      break;
+    case SpectraType::CircularDichroism:
+      m_ui->scaleSpinBox->setValue(1.0);
+      m_ui->offsetSpinBox->setValue(0.0);
+      m_ui->xAxisMinimum->setValue(5.0);
+      m_ui->xAxisMaximum->setValue(1.0);
+      m_ui->peakWidth->setValue(0.1);
+      break;
+    case SpectraType::DensityOfStates:
+      m_ui->scaleSpinBox->setValue(1.0);
+      m_ui->offsetSpinBox->setValue(0.0);
+      m_ui->xAxisMinimum->setValue(-50.0);
+      m_ui->xAxisMaximum->setValue(50.0);
+      m_ui->peakWidth->setValue(0.1);
+      break;
+  }
+
+  MatrixX& spectra =
+    m_spectra[m_ui->combo_spectra->currentText().toStdString()];
+  float maxIntensity = 1.0;
+  // update the data table
+  m_ui->dataTable->setRowCount(spectra.rows());
+  m_ui->dataTable->setColumnCount(spectra.cols());
+  for (auto i = 0; i < spectra.rows(); ++i) {
+    for (auto j = 0; j < spectra.cols(); ++j) {
+      QTableWidgetItem* item =
+        new QTableWidgetItem(QString::number(spectra(i, j), 'f', 4));
+      m_ui->dataTable->setItem(i, j, item);
+    }
+  }
+  // if there's a second column, check for intensities
+  if (spectra.cols() > 1) {
+    for (auto i = 0; i < spectra.rows(); ++i) {
+      if (spectra(i, 1) > maxIntensity)
+        maxIntensity = spectra(i, 1);
+    }
+    maxIntensity = maxIntensity * 1.25;
+  }
+  // if transmission for IR, set the max intensity to 100
+  if (type == SpectraType::Infrared)
+    maxIntensity = 100.0;
+
+  if (maxIntensity < 1.0)
+    maxIntensity = 1.0;
+
+  // update the spin box
+  m_ui->yAxisMaximum->setValue(maxIntensity);
+
+  updatePlot();
 }
 
 void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
@@ -113,6 +222,7 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
     }
   }
 
+  changeSpectra();
   updatePlot();
 }
 
@@ -127,7 +237,14 @@ void SpectraDialog::writeSettings() const
 void SpectraDialog::readSettings()
 {
   QSettings settings;
-  // update the dialog with the settings
+  // update the dialog with saved settings
+
+  // font size
+  int fontSize = settings.value("spectra/fontSize", 12).toInt();
+  m_ui->fontSizeCombo->setCurrentText(QString::number(fontSize));
+  // line width
+  float lineWidth = settings.value("spectra/lineWidth", 1.0).toFloat();
+  m_ui->lineWidthSpinBox->setValue(lineWidth);
 }
 
 void SpectraDialog::changeBackgroundColor()
@@ -189,6 +306,14 @@ void SpectraDialog::changeFontSize()
   updatePlot();
 }
 
+void SpectraDialog::changeLineWidth()
+{
+  float width = m_ui->lineWidthSpinBox->value();
+  QSettings settings;
+  settings.setValue("spectra/lineWidth", width);
+  updatePlot();
+}
+
 ///////////////////////
 // Plot Manipulation //
 ///////////////////////
@@ -204,9 +329,11 @@ void SpectraDialog::updatePlot()
   SpectraType type =
     static_cast<SpectraType>(m_ui->combo_spectra->currentData().toInt());
 
+  QSettings settings;
   QString windowName;
   QString xTitle;
   QString yTitle;
+  bool transmission = false;
   // get the raw data from the spectra map
   switch (type) {
     case SpectraType::Infrared:
@@ -215,6 +342,13 @@ void SpectraDialog::updatePlot()
       windowName = tr("Vibrational Spectra");
       xTitle = tr("Wavenumbers (cm⁻¹)");
       yTitle = tr("Transmission");
+      transmission = true;
+
+      settings.setValue("spectra/irXMin", float(m_ui->xAxisMinimum->value()));
+      settings.setValue("spectra/irXMax", m_ui->xAxisMaximum->value());
+      settings.setValue("spectra/irPeakWidth", float(m_ui->peakWidth->value()));
+      settings.setValue("spectra/irScale", m_ui->scaleSpinBox->value());
+      settings.setValue("spectra/irOffset", m_ui->offsetSpinBox->value());
       break;
     case SpectraType::Raman:
       transitions = fromMatrix(m_spectra["Raman"].col(0));
@@ -222,6 +356,12 @@ void SpectraDialog::updatePlot()
       windowName = tr("Raman Spectra");
       xTitle = tr("Wavenumbers (cm⁻¹)");
       yTitle = tr("Intensity");
+      // save the plot settings
+      settings.setValue("spectra/ramanXMin", m_ui->xAxisMinimum->value());
+      settings.setValue("spectra/ramanXMax", m_ui->xAxisMaximum->value());
+      settings.setValue("spectra/ramanPeakWidth", m_ui->peakWidth->value());
+      settings.setValue("spectra/ramanScale", m_ui->scaleSpinBox->value());
+      settings.setValue("spectra/ramanOffset", m_ui->offsetSpinBox->value());
       break;
     case SpectraType::NMR:
       transitions = fromMatrix(m_spectra["NMR"].col(0));
@@ -229,6 +369,12 @@ void SpectraDialog::updatePlot()
       windowName = tr("NMR Spectra");
       xTitle = tr("Chemical Shift (ppm)");
       yTitle = tr("Intensity");
+      // save the plot settings
+      settings.setValue("spectra/nmrXMin", m_ui->xAxisMinimum->value());
+      settings.setValue("spectra/nmrXMax", m_ui->xAxisMaximum->value());
+      settings.setValue("spectra/nmrPeakWidth", m_ui->peakWidth->value());
+      settings.setValue("spectra/nmrScale", m_ui->scaleSpinBox->value());
+      settings.setValue("spectra/nmrOffset", m_ui->offsetSpinBox->value());
       break;
     case SpectraType::Electronic:
       transitions = fromMatrix(m_spectra["Electronic"].col(0));
@@ -236,6 +382,14 @@ void SpectraDialog::updatePlot()
       windowName = tr("Electronic Spectra");
       xTitle = tr("eV");
       yTitle = tr("Intensity");
+      // save settings
+      settings.setValue("spectra/electronicXMin", m_ui->xAxisMinimum->value());
+      settings.setValue("spectra/electronicXMax", m_ui->xAxisMaximum->value());
+      settings.setValue("spectra/electronicPeakWidth",
+                        m_ui->peakWidth->value());
+      settings.setValue("spectra/electronicScale", m_ui->scaleSpinBox->value());
+      settings.setValue("spectra/electronicOffset",
+                        m_ui->offsetSpinBox->value());
       break;
     case SpectraType::CircularDichroism:
       transitions = fromMatrix(m_spectra["Electronic"].col(0));
@@ -243,6 +397,12 @@ void SpectraDialog::updatePlot()
       windowName = tr("Circular Dichroism Spectra");
       xTitle = tr("eV)");
       yTitle = tr("Intensity");
+      // save settings
+      settings.setValue("spectra/CDXMin", m_ui->xAxisMinimum->value());
+      settings.setValue("spectra/CDXMax", m_ui->xAxisMaximum->value());
+      settings.setValue("spectra/CDPeakWidth", m_ui->peakWidth->value());
+      settings.setValue("spectra/CDScale", m_ui->scaleSpinBox->value());
+      settings.setValue("spectra/CDOffset", m_ui->offsetSpinBox->value());
       break;
     case SpectraType::DensityOfStates:
       transitions = fromMatrix(m_spectra["DensityOfStates"].col(0));
@@ -250,6 +410,12 @@ void SpectraDialog::updatePlot()
       windowName = tr("Density of States");
       xTitle = tr("eV");
       yTitle = tr("Intensity");
+      // save settings
+      settings.setValue("spectra/dosXMin", m_ui->xAxisMinimum->value());
+      settings.setValue("spectra/dosXMax", m_ui->xAxisMaximum->value());
+      settings.setValue("spectra/dosPeakWidth", m_ui->peakWidth->value());
+      settings.setValue("spectra/dosScale", m_ui->scaleSpinBox->value());
+      settings.setValue("spectra/dosOffset", m_ui->offsetSpinBox->value());
       break;
   }
   setWindowTitle(windowName);
@@ -265,11 +431,8 @@ void SpectraDialog::updatePlot()
   float offset = m_ui->offsetSpinBox->value();
   float fwhm = m_ui->peakWidth->value();
 
-  // float xMin = m_ui->xAxisMinimum->value();
-  // float xMax = m_ui->xAxisMaximum->value();
-
-  float xMin = 4000.0;
-  float xMax = 0.0;
+  float xMin = m_ui->xAxisMinimum->value();
+  float xMax = m_ui->xAxisMaximum->value();
 
   int start = std::min(static_cast<int>(xMin), static_cast<int>(xMax));
   int end = std::max(static_cast<int>(xMin), static_cast<int>(xMax));
@@ -286,10 +449,17 @@ void SpectraDialog::updatePlot()
       float peak = intensities[index];
 
       float intensity = scaleAndBlur(xValue, freq, peak, scale, offset, fwhm);
-      float stick = scaleAndBlur(xValue, freq, peak, scale, offset, 0.0);
+      float stick = scaleAndBlur(xValue, freq, peak, scale, offset, 1.0);
 
       yData.back() += intensity;
       yStick.back() += stick;
+    }
+    // if transmission, we need to invert the intensity
+    if (transmission) {
+      float trans = 1.0f - (yData.back() / (maxIntensity * 1.25));
+      yData.back() = trans * 100.0; // percent
+      trans = 1.0f - (yStick.back() / maxIntensity);
+      yStick.back() = trans * 100.0; // percent
     }
   }
 
@@ -299,9 +469,10 @@ void SpectraDialog::updatePlot()
   chart->setYAxisTitle(yTitle.toStdString());
   unsigned int fontSize = m_ui->fontSizeCombo->currentText().toInt();
   chart->setFontSize(fontSize);
+  float lineWidth = m_ui->lineWidthSpinBox->value();
+  chart->setLineWidth(lineWidth);
 
   // get the spectra color
-  QSettings settings;
   QColor spectraColor =
     settings.value("spectra/calculatedColor", black).value<QColor>();
   VTK::color4ub calculatedColor = {
@@ -311,18 +482,14 @@ void SpectraDialog::updatePlot()
     static_cast<unsigned char>(spectraColor.alpha())
   };
   chart->addPlot(xData, yData, calculatedColor);
+  VTK::color4ub importedColor = { 255, 0, 0, 255 };
+  chart->addSeries(yStick, importedColor);
 
   // axis limits
-  /*/
   float xAxisMin = m_ui->xAxisMinimum->value();
   float xAxisMax = m_ui->xAxisMaximum->value();
   float yAxisMin = m_ui->yAxisMinimum->value();
   float yAxisMax = m_ui->yAxisMaximum->value();
-  */
-  float xAxisMin = 4000.0;
-  float xAxisMax = 0.0;
-  float yAxisMin = 0.0;
-  float yAxisMax = maxIntensity * 1.1;
 
   chart->setXAxisLimits(xAxisMin, xAxisMax);
   chart->setYAxisLimits(yAxisMin, yAxisMax);
@@ -337,8 +504,9 @@ void SpectraDialog::toggleOptions()
 {
   if (m_ui->tab_widget->isHidden()) {
     m_ui->tab_widget->show();
-    m_ui->dataTable->show();
-    m_ui->push_exportData->show();
+    // todo: show the data table
+    // m_ui->dataTable->show();
+    // m_ui->push_exportData->show();
     QSize s = size();
     s.setWidth(s.width() + m_ui->dataTable->size().width());
     s.setHeight(s.height() + m_ui->tab_widget->size().height());

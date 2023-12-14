@@ -80,6 +80,9 @@
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
+         <property name="maximum">
+          <double>4000.000000000000000</double>
+         </property>
         </widget>
        </item>
        <item row="1" column="0">
@@ -117,6 +120,9 @@
         <widget class="QDoubleSpinBox" name="offsetSpinBox">
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="decimals">
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -156,6 +162,9 @@
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
+         <property name="maximum">
+          <double>4000.000000000000000</double>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -164,7 +173,10 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="decimals">
-          <number>3</number>
+          <number>4</number>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
          </property>
          <property name="value">
           <double>1.000000000000000</double>
@@ -190,6 +202,9 @@
        </item>
        <item row="2" column="3">
         <widget class="QDoubleSpinBox" name="peakThreshold">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
@@ -221,6 +236,9 @@
        </item>
        <item row="4" column="3">
         <widget class="QPushButton" name="push_import">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -273,6 +291,9 @@
        </item>
        <item row="3" column="2">
         <widget class="QCheckBox" name="cb_calculate">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -302,6 +323,9 @@
        </item>
        <item row="3" column="3">
         <widget class="QPushButton" name="push_export">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -365,13 +389,6 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Line Size:</string>
-         </property>
-        </widget>
-       </item>
        <item row="5" column="2">
         <widget class="QLabel" name="label">
          <property name="text">
@@ -411,13 +428,29 @@
          </item>
         </widget>
        </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Line Size:</string>
+         </property>
+        </widget>
+       </item>
        <item row="5" column="1">
-        <widget class="QSpinBox" name="lineSpinBox">
+        <widget class="QDoubleSpinBox" name="lineWidthSpinBox">
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
+         <property name="decimals">
+          <number>1</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
          <property name="maximum">
-          <number>6</number>
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.500000000000000</double>
          </property>
         </widget>
        </item>
@@ -566,7 +599,7 @@ Scroll wheel: Zoom to cursor</string>
   <tabstop>push_colorImported</tabstop>
   <tabstop>cb_import</tabstop>
   <tabstop>push_import</tabstop>
-  <tabstop>lineSpinBox</tabstop>
+  <tabstop>lineWidthSpinBox</tabstop>
   <tabstop>fontSizeCombo</tabstop>
   <tabstop>dataTable</tabstop>
   <tabstop>push_exportData</tabstop>
