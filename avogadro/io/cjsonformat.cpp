@@ -80,6 +80,16 @@ bool isBooleanArray(json& j)
   return false;
 }
 
+json eigenColToJson(const MatrixX& matrix, int column)
+{
+  json j;
+  j = json::array();
+  for (Index i = 0; i < matrix.rows(); ++i) {
+    j.push_back(matrix(i, column));
+  }
+  return j;
+}
+
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
   return deserialize(file, molecule, true);
@@ -795,13 +805,13 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     for (const auto& type : molecule.spectraTypes()) {
       if (type == "Electronic") {
         hasElectronic = true;
-        electronic["energies"] = molecule.spectra(type).col(0);
-        electronic["intensities"] = molecule.spectra(type).col(1);
+        electronic["energies"] = eigenColToJson(molecule.spectra(type), 0);
+        electronic["intensities"] = eigenColToJson(molecule.spectra(type), 1);
       } else if (type == "CircularDichroism") {
-        electronic["rotation"] = molecule.spectra(type).col(1);
+        electronic["rotation"] = eigenColToJson(molecule.spectra(type), 1);
       } else if (type == "NMR") {
         json data;
-        data["shifts"] = molecule.spectra(type).col(0);
+        data["shifts"] = eigenColToJson(molecule.spectra(type), 0);
         spectra["nmr"] = data;
       }
     }
