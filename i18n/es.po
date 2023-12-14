@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-10 18:10+0000\n"
-"PO-Revision-Date: 2023-11-20 18:03+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-12-13 18:59+0000\n"
+"Last-Translator: Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2\n"
+"X-Generator: Weblate 5.3-rc\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1097,7 +1097,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "Mensaje %1"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -3537,17 +3537,15 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:54
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Rotar la escena a lo largo de los ejes x, y o z."
 
 #: qtplugins/navigator/navigator.cpp:55
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Ampliar la escena."
 
 #: qtplugins/navigator/navigator.cpp:56
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Interpretar átomos..."
+msgstr "Mover la escena."
 
 #: qtplugins/navigator/navigator.cpp:97
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3602,10 +3600,8 @@ msgid "Configure Force Field…"
 msgstr "Configurar Campo de Fuerza…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Búsqueda de Confórmero"
+msgstr "Buscar Confórmeros…"
 
 #: qtplugins/openbabel/openbabel.cpp:66
 msgid "Perceive Bonds"
@@ -3623,6 +3619,7 @@ msgstr "Eliminar Hidrógenos"
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
 msgstr ""
+"¡%1 no encontrado! Deshabilitando las acciones del complemento de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
@@ -3677,10 +3674,8 @@ msgid "Optimizing Geometry (Open Babel)"
 msgstr "Optimizando la Geometría (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
-#, fuzzy
-#| msgid "Generating MDL…"
 msgid "Generating…"
-msgstr "Generando MDL…"
+msgstr "Generando…"
 
 #: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
 msgid ""
@@ -3728,27 +3723,20 @@ msgstr ""
 "número de átomos en la molécula original (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:569
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molécula inválida. No se pudo optimizar la geometría."
+msgstr "Molécula inválida. No se pueden generar confórmeros."
 
 #: qtplugins/openbabel/openbabel.cpp:587
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "No se pudo abrir el archivo con Open Babel."
+msgstr "No se pueden generar confórmeros con Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:620
-#, fuzzy
-#| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "Buscando Enlaces (Open Babel)"
+msgstr "Generanado Confórmeros (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:712
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Confórmero %1"
+msgstr "Generar Confórmeros"
 
 #: qtplugins/openbabel/openbabel.cpp:721
 msgid "Cannot open file with Open Babel."
@@ -4376,34 +4364,24 @@ msgid "Molecule Properties"
 msgstr "Propiedades Moleculares"
 
 #: qtplugins/propertytables/propertyview.cpp:231
-#, fuzzy
-#| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Exportar"
+msgstr "Exportar a CSV"
 
 #: qtplugins/propertytables/propertyview.cpp:232
-#, fuzzy
-#| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "Archivos WFN (*.wfn);;Todos los archivos (*.*)"
+msgstr "Archivos CSV (*.csv);;Todos los archivos (*)"
 
 #: qtplugins/propertytables/propertyview.cpp:244
-#, fuzzy
-#| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "No se pudo abrir al archivo '%1' para escritura."
+msgstr "No se ha podido abrir el archivo para escribir."
 
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Error de lectura del archivo de estrucutura (%1)."
+msgstr "Error al escribir en el archivo."
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "&Exportar"
+msgstr "Exportar…"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4961,14 +4939,14 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
-"Herramienta de la plantilla\n"
+"Herramienta de la Plantilla\n"
 "\n"
-"Inserte los fragmentos, incluidos los centros metálicos.\n"
-"Seleccione un elemento y una geometría de coordinación y haga clic para "
+"Insertar fragmentos, incluyendo centros metálicos.\n"
+"Seleccionar un elemento y una geometría de coordinación y presionar para "
 "insertar un fragmento.\n"
 "\n"
-"Seleccione un ligante o grupo funcional y haga clic en un átomo de hidrógeno "
-"para unirlo."
+"Seleccionar un ligando o grupo funcional y presionar sobe un átomo de "
+"hidrógeno para unirlo."
 
 #: qtplugins/templatetool/templatetool.cpp:302
 msgid "Insert Template"
@@ -5487,7 +5465,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help…"
-msgstr "Auxilio…"
+msgstr "Ayuda…"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5528,7 +5506,7 @@ msgstr "Predeterminados"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save File…"
-msgstr "Guardar el archivo…"
+msgstr "Guardar Archivo…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6711,10 +6689,8 @@ msgstr "Método"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Número de Confórmeros"
+msgstr "Número de confórmeros:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -6733,73 +6709,59 @@ msgstr "Búsqueda ponderada de rotores"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
-#, fuzzy
-#| msgid "Genetic Algorithm Search"
 msgid "Genetic algorithm search"
-msgstr "Buscar De Algoritmo Genético"
+msgstr "Búsqueda de algoritmo genético"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
-#| msgid "Optimization algorithm:"
 msgid "Optimization per conformer:"
-msgstr "Algoritmo de Optimización:"
+msgstr "Optimización por confórmeros:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
-#, fuzzy
-#| msgid "Genetic Algorithm Search"
 msgid "Genetic Algorithm Options"
-msgstr "Buscar De Algoritmo Genético"
+msgstr "Opciones del Algoritmo Genético"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:102
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr ""
+msgstr "número de hijos por cada geometría principal"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Children"
 msgid "Children:"
-msgstr "Hijos"
+msgstr "Hijos:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr ""
+msgstr "frecuencia de mutación (menor = mutaciones más frecuentes)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Multiplicity:"
 msgid "Mutability:"
-msgstr "Multiplicidad:"
+msgstr "Mutabilidad:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr ""
+msgstr "número de generaciones idénticas antes de alcanzar la convergencia"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Energy convergence:"
 msgid "Convergence:"
-msgstr "Convergencia de la energía:"
+msgstr "Convergencia:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Nonbonded method:"
 msgid "Scoring method:"
-msgstr "Método no enlazado:"
+msgstr "Método de puntuación:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -6807,11 +6769,13 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"método de puntuación para el algoritmo genético (RMSD = distancia "
+"geométrica, energía = energías más bajas)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7759,49 +7723,43 @@ msgstr "Ligando:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "Grupo %1"
+msgstr "Grupos"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Group:"
-msgstr "Grupo %1"
+msgstr "Grupo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
-msgstr ""
+msgstr "amida"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:476
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
-msgstr ""
+msgstr "carboxilato"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:481
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
-msgstr ""
+msgstr "éster"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrógeno"
+msgstr "nitro"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr ""
+msgstr "fenilo"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr ""
+msgstr "sulfonato"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
