@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-10 18:10+0000\n"
-"PO-Revision-Date: 2023-12-15 04:57+0000\n"
+"PO-Revision-Date: 2023-12-15 17:30+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -1023,7 +1023,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 შეტყობინება"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -1178,7 +1178,7 @@ msgstr "ბადეები"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "არაკოვალენტური"
 
 #: qtgui/layermodel.cpp:153
 msgctxt "quantum theory of atoms in molecules"
@@ -1197,7 +1197,7 @@ msgstr "ვან დერ ვაალსი"
 #: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr ""
+msgstr "ვან დერ ვაალსი (AO)"
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1478,7 +1478,7 @@ msgstr "3DMol"
 
 #: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:88
 msgid "Align"
-msgstr ""
+msgstr "სწორება"
 
 #: qtplugins/aligntool/aligntool.cpp:56
 msgid ""
@@ -1493,7 +1493,7 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:75
 msgid "Axis:"
-msgstr ""
+msgstr "ღერძი:"
 
 #: qtplugins/aligntool/aligntool.cpp:152
 msgid "Align at Origin"
@@ -1727,7 +1727,7 @@ msgstr "Magma"
 #: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "ჯოჯოხეთი"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -4705,7 +4705,7 @@ msgstr "∞"
 #: qtplugins/symmetry/symmetrywidget.cpp:340
 #, qt-format
 msgid "Group %1"
-msgstr ""
+msgstr "ჯგუფი %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:348
 #, qt-format
@@ -5207,7 +5207,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help…"
-msgstr ""
+msgstr "დახმარება…"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -5255,7 +5255,7 @@ msgstr "ფაილის შენახვა…"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr ""
+msgstr "ძ&ირითადი პარამეტრები"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -5998,7 +5998,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "molecular"
-msgstr ""
+msgstr "მოლეკულური"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:266
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6320,14 +6320,14 @@ msgstr "ერთი ხაზი"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:876
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
 msgid "Multi Line"
-msgstr ""
+msgstr "მრავალხაზიანი"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:928
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 msgid "Use Form"
-msgstr ""
+msgstr "ფორმის გამოყენება"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:948
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -6344,12 +6344,12 @@ msgstr "დესკრიპტორი:"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6454,7 +6454,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Children:"
-msgstr ""
+msgstr "შვილები:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7247,7 +7247,7 @@ msgstr "დაშვება:"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Tight"
-msgstr ""
+msgstr "ვიწრო"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:230
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
@@ -7287,7 +7287,7 @@ msgstr "0"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+1"
-msgstr ""
+msgstr "+1"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -7312,12 +7312,12 @@ msgstr "+5"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:139
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+6"
-msgstr ""
+msgstr "+6"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:144
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
 msgid "+7"
-msgstr ""
+msgstr "+7"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
@@ -7444,17 +7444,17 @@ msgstr "ჯგუფი:"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
-msgstr ""
+msgstr "ამიდი"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:476
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
-msgstr ""
+msgstr "კარბოქსილატი"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:481
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
-msgstr ""
+msgstr "ესტერი"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -7464,12 +7464,12 @@ msgstr "ნიტრო"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr ""
+msgstr "ფენილ"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr ""
+msgstr "სულფონატი"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
@@ -7539,7 +7539,7 @@ msgstr "მაქს y: "
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
 msgid "<html><head/><body><p>The Fermi Level</p></body></html>"
-msgstr ""
+msgstr "<html><head/><body><p>ფერმის დონე</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:142
 #. i18n: ectx: property (toolTip), widget (QTextEdit, edit_specialKPoints)
