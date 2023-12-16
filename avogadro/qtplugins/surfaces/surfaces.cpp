@@ -591,7 +591,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     } else {
       m_slaterConcurrent->calculateElectronDensity(m_cube);
     }
-  } else if (type == ElectronDensity) {
+  } else if (type == SpinDensity) {
     progressText = tr("Calculating spin density");
     m_cube->setName("Spin Density");
     m_cube->setCubeType(Core::Cube::Type::SpinDensity);
@@ -691,8 +691,6 @@ void Surfaces::displayMesh()
   if (!m_cube)
     return;
 
-  // qDebug() << " running displayMesh";
-
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
   else
@@ -704,7 +702,7 @@ void Surfaces::displayMesh()
     m_meshGenerator1 = new QtGui::MeshGenerator;
     connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue, m_smoothingPasses);
+  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
 
   bool isMO = false;
   // if it's from a file we should "play it safe"
@@ -720,8 +718,8 @@ void Surfaces::displayMesh()
       m_meshGenerator2 = new QtGui::MeshGenerator;
       connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
     }
-    m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses,
-                                 true);
+    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
+                                 m_smoothingPasses, true);
   }
 
   // Start the mesh generation - this needs an improved mutex with a read lock
