@@ -24,15 +24,15 @@ public:
   explicit PropertyView(PropertyType type, QWidget* parent = 0);
 
   void selectionChanged(const QItemSelection& selected,
-                        const QItemSelection& previous);
+                        const QItemSelection& previous) override;
   void setMolecule(QtGui::Molecule* molecule);
   void setSourceModel(PropertyModel* model) { m_model = model; }
-  void hideEvent(QHideEvent* event);
+  void hideEvent(QHideEvent* event) override;
   void contextMenuEvent(QContextMenuEvent* event) override;
 
 protected:
   // copy the selected properties to the clipboard
-  void keyPressEvent(QKeyEvent* event);
+  void keyPressEvent(QKeyEvent* event) override;
 
 private:
   PropertyType m_type;
