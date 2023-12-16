@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-10 18:10+0000\n"
+"POT-Creation-Date: 2023-12-16 16:26+0000\n"
 "PO-Revision-Date: 2023-11-03 21:33+0000\n"
 "Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
@@ -561,7 +561,7 @@ msgstr "Бор"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1819
+#: qtgui/elementtranslator.cpp:34:1925
 msgid "Carbon"
 msgstr "Углерод"
 
@@ -643,13 +643,13 @@ msgstr "Марганец"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1822
+#: qtgui/elementtranslator.cpp:94:1928
 msgid "Iron"
 msgstr "Железо"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1825
+#: qtgui/elementtranslator.cpp:97:1931
 msgid "Cobalt"
 msgstr "Кобальт"
 
@@ -1169,43 +1169,43 @@ msgstr ""
 msgid "Multiplicity"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:557
+#: qtgui/jsonwidget.cpp:558
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:590
+#: qtgui/jsonwidget.cpp:591
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:599 qtgui/jsonwidget.cpp:634 qtgui/jsonwidget.cpp:655
-#: qtgui/jsonwidget.cpp:677 qtgui/jsonwidget.cpp:698 qtgui/jsonwidget.cpp:720
-#: qtgui/jsonwidget.cpp:741
+#: qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:635 qtgui/jsonwidget.cpp:656
+#: qtgui/jsonwidget.cpp:678 qtgui/jsonwidget.cpp:699 qtgui/jsonwidget.cpp:721
+#: qtgui/jsonwidget.cpp:742
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:606 qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:662
-#: qtgui/jsonwidget.cpp:684 qtgui/jsonwidget.cpp:705 qtgui/jsonwidget.cpp:727
-#: qtgui/jsonwidget.cpp:748
+#: qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:642 qtgui/jsonwidget.cpp:663
+#: qtgui/jsonwidget.cpp:685 qtgui/jsonwidget.cpp:706 qtgui/jsonwidget.cpp:728
+#: qtgui/jsonwidget.cpp:749
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:620
+#: qtgui/jsonwidget.cpp:621
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:809
+#: qtgui/jsonwidget.cpp:810
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:851 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:852 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 #, fuzzy
 msgid "[no molecule]"
@@ -1594,7 +1594,9 @@ msgid ""
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:75
+#. i18n: file: qtplugins/spectra/spectradialog.ui:281
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: qtplugins/aligntool/aligntool.cpp:75:1693
 msgid "Axis:"
 msgstr "Ось:"
 
@@ -1881,7 +1883,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1684
+#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1790
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1893,7 +1895,7 @@ msgstr "Спектры"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1681
+#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1903,7 +1905,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1675
+#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1781
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1915,7 +1917,7 @@ msgstr "Отменить"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1678
+#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1927,7 +1929,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1687
+#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -1965,7 +1967,7 @@ msgstr "Выбранные цвета"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1672
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1778
 #, fuzzy
 #| msgid "Color:"
 msgid "Colormap:"
@@ -2431,7 +2433,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:158:1714 rc.cpp:1744
+#: qtplugins/label/label.cpp:158:1820 rc.cpp:1850
 msgid "Custom"
 msgstr "Настраиваемое"
 
@@ -2474,45 +2476,45 @@ msgstr "Входной файл Turbomole"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:31
+#: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/propertytables/propertyview.cpp:283:252
 #, fuzzy
 msgid "Copy"
 msgstr "Копировать всё"
 
-#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 #, fuzzy
 msgid "SMILES"
 msgstr "SMILES..."
 
-#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
 msgid "InChI"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34:249
+#: qtplugins/copypaste/copypaste.cpp:33:249
 msgid "Cut"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35:261
+#: qtplugins/copypaste/copypaste.cpp:34:261
 #, fuzzy
 msgid "Clear"
 msgstr "Очистить всё"
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:81
 #, fuzzy
 msgid "Copy As"
 msgstr "Копировать всё"
@@ -2533,26 +2535,26 @@ msgid ""
 "%2"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:274
+#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
 #, qt-format
 msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:235 qtplugins/copypaste/copypaste.cpp:268
+#: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
 msgid "Error Pasting Molecule"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:236
+#: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:269
+#: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
 msgstr ""
 
-#: qtplugins/copypaste/copypaste.cpp:270
+#: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2873,7 +2875,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:345
 #: qtplugins/templatetool/templatetoolwidget.cpp:353
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:1948
+#: qtplugins/templatetool/templatetoolwidget.cpp:424:2054
 #, fuzzy
 #| msgid "Other"
 msgid "Other…"
@@ -2883,7 +2885,7 @@ msgstr "Другая"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1693 rc.cpp:1711
+#: qtplugins/editor/editortoolwidget.cpp:208:1799 rc.cpp:1817
 msgid "Automatic"
 msgstr "Автоматический"
 
@@ -3008,19 +3010,19 @@ msgstr "Зафиксировать выделенные атомы"
 msgid "&Calculate"
 msgstr "Рассчитать"
 
-#: qtplugins/forcefield/forcefield.cpp:285 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:303 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:560
 #, fuzzy
 msgid "Optimize Geometry"
 msgstr "&Оптимизировать геометрию"
 
-#: qtplugins/forcefield/forcefield.cpp:326
+#: qtplugins/forcefield/forcefield.cpp:344
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
 msgstr "Энергия = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:327
+#: qtplugins/forcefield/forcefield.cpp:345
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:913
 #: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
@@ -3276,9 +3278,9 @@ msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
-#| msgid "Fragment..."
-msgid "Fragment…"
-msgstr "Фрагмент..."
+#| msgid "Molecule"
+msgid "Molecule…"
+msgstr "Молекула"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 #, fuzzy
@@ -3557,8 +3559,9 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
 #: qtplugins/surfaces/surfaces.cpp:264 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
 msgstr "Аналитический"
@@ -4067,7 +4070,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:113:1747
+#: qtplugins/playertool/playertool.cpp:113:1853
 #, fuzzy
 msgid "Frame:"
 msgstr "Параметры:"
@@ -4086,7 +4089,7 @@ msgstr "Динамические связи"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:139:1753
+#: qtplugins/playertool/playertool.cpp:139:1859
 msgid "Record Movie…"
 msgstr ""
 
@@ -4766,7 +4769,7 @@ msgstr "Выделить по аминокислотному остатку..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1786
+#: qtplugins/select/select.h:30:1892
 #, fuzzy
 msgid "Select"
 msgstr "&Выделить"
@@ -4817,7 +4820,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1771
+#: qtplugins/spacegroup/spacegroup.cpp:68:1877
 msgid "Symmetrize"
 msgstr ""
 
@@ -4920,40 +4923,143 @@ msgstr ""
 msgid "Space group features for crystals."
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:27
+#: qtplugins/spectra/spectra.cpp:29
 #, fuzzy
-msgid "Vibrational Modes…"
+#| msgid "Import Spectra"
+msgid "Plot Spectra…"
+msgstr "Импорт спектров"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:75
+#. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
+#: qtplugins/spectra/spectra.h:36:1651
+#, fuzzy
+#| msgid "Spectra"
+msgid "Spectra"
+msgstr "Спектры"
+
+#: qtplugins/spectra/spectra.h:38
+#, fuzzy
+#| msgid "Display standard molecular properties."
+msgid "Display spectra plots."
+msgstr "Отобразить стандартные свойства молекулы"
+
+#: qtplugins/spectra/spectradialog.cpp:201
+#, fuzzy
+#| msgctxt "Infrared spectra option"
+#| msgid "Infrared"
+msgid "Infrared"
+msgstr "ИК"
+
+#: qtplugins/spectra/spectradialog.cpp:205
+#, fuzzy
+#| msgctxt "Raman spectrum"
+#| msgid "Raman"
+msgid "Raman"
+msgstr "КР"
+
+#: qtplugins/spectra/spectradialog.cpp:208
+msgid "NMR"
+msgstr "ЯМР"
+
+#: qtplugins/spectra/spectradialog.cpp:211
+#, fuzzy
+#| msgid "electron"
+msgid "Electronic"
+msgstr "электрон"
+
+#: qtplugins/spectra/spectradialog.cpp:215
+msgid "Circular Dichroism"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:219
+#: qtplugins/spectra/spectradialog.cpp:410
+#, fuzzy
+#| msgid "&Density Of States Settings"
+msgid "Density of States"
+msgstr "Настройки &плотности состояний"
+
+#: qtplugins/spectra/spectradialog.cpp:256
+msgid "Select Background Color"
+msgstr "Выберите цвет фона"
+
+#: qtplugins/spectra/spectradialog.cpp:269
+msgid "Select Foreground Color"
+msgstr "Выберите цвет линий"
+
+#: qtplugins/spectra/spectradialog.cpp:282
+msgid "Select Calculated Spectra Color"
+msgstr "Выберите цвет рассчитанных спектров"
+
+#: qtplugins/spectra/spectradialog.cpp:294
+msgid "Select Imported Spectra Color"
+msgstr "Выберите цвет импортированных спектров"
+
+#: qtplugins/spectra/spectradialog.cpp:342
+#, fuzzy
+msgid "Vibrational Spectra"
 msgstr "Колебания"
 
-#: qtplugins/spectra/spectra.cpp:86
-msgid "Show the vibrational modes dialog."
-msgstr ""
-
-#: qtplugins/spectra/spectra.cpp:87
+#: qtplugins/spectra/spectradialog.cpp:343
+#: qtplugins/spectra/spectradialog.cpp:357
 #, fuzzy
-#| msgid "Set Fractional Coordinates"
-msgid "Set the vibrational mode."
-msgstr "Задать дробные координаты"
+#| msgid "Wavenumber (cm<sup>-1</sup>)"
+msgid "Wavenumbers (cm⁻¹)"
+msgstr "Волновое число (см<sup>-1</sup>)"
 
-#: qtplugins/spectra/spectra.cpp:89
-msgid "Set the vibrational amplitude."
+#: qtplugins/spectra/spectradialog.cpp:344
+#, fuzzy
+#| msgid "Transition State"
+msgid "Transmission"
+msgstr "Переходное состояние"
+
+#: qtplugins/spectra/spectradialog.cpp:356
+#, fuzzy
+#| msgid "Import Spectra"
+msgid "Raman Spectra"
+msgstr "Импорт спектров"
+
+#: qtplugins/spectra/spectradialog.cpp:358
+#: qtplugins/spectra/spectradialog.cpp:371
+#: qtplugins/spectra/spectradialog.cpp:384
+#: qtplugins/spectra/spectradialog.cpp:399
+#: qtplugins/spectra/spectradialog.cpp:412
+#, fuzzy
+#| msgid "Intensities"
+msgid "Intensity"
+msgstr "Интенсивности"
+
+#: qtplugins/spectra/spectradialog.cpp:369
+#, fuzzy
+#| msgid "Spectra"
+msgid "NMR Spectra"
+msgstr "Спектры"
+
+#: qtplugins/spectra/spectradialog.cpp:370
+#, fuzzy
+#| msgid "Shift (ppm)"
+msgid "Chemical Shift (ppm)"
+msgstr "Химический сдвиг (м.д.)"
+
+#: qtplugins/spectra/spectradialog.cpp:382
+#, fuzzy
+#| msgid "Electron Density"
+msgid "Electronic Spectra"
+msgstr "Электронная плотность"
+
+#: qtplugins/spectra/spectradialog.cpp:383
+#: qtplugins/spectra/spectradialog.cpp:411
+#, fuzzy
+msgid "eV"
+msgstr "eV"
+
+#: qtplugins/spectra/spectradialog.cpp:397
+msgid "Circular Dichroism Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:91
-msgid "Start the vibrational animation."
-msgstr ""
-
-#: qtplugins/spectra/spectra.cpp:93
-msgid "Stop the vibrational animation."
-msgstr ""
-
-#: qtplugins/spectra/spectra.h:32
-msgid "Spectra and Vibrations"
-msgstr ""
-
-#: qtplugins/spectra/spectra.h:36
-msgid "Display spectra and vibrational modes."
-msgstr ""
+#: qtplugins/spectra/spectradialog.cpp:398
+#, fuzzy
+msgid "eV)"
+msgstr "eV"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5108,7 +5214,7 @@ msgstr "Симметрия"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1756
+#: qtplugins/symmetry/symmetry.h:34:1862
 msgid "Symmetry"
 msgstr "Симметрия"
 
@@ -5176,6 +5282,45 @@ msgstr ""
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:33
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:27
+#, fuzzy
+msgid "Vibrational Modes…"
+msgstr "Колебания"
+
+#: qtplugins/vibrations/vibrations.cpp:90
+msgid "Show the vibrational modes dialog."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:91
+#, fuzzy
+#| msgid "Set Fractional Coordinates"
+msgid "Set the vibrational mode."
+msgstr "Задать дробные координаты"
+
+#: qtplugins/vibrations/vibrations.cpp:93
+msgid "Set the vibrational amplitude."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:95
+msgid "Start the vibrational animation."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:97
+msgid "Stop the vibrational animation."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.h:33
+#, fuzzy
+#| msgid "Vibration"
+msgid "Vibrations"
+msgstr "Колебание"
+
+#: qtplugins/vibrations/vibrations.h:37
+#, fuzzy
+#| msgid "Set Fractional Coordinates"
+msgid "Display vibrational modes."
+msgstr "Задать дробные координаты"
 
 #: qtplugins/vrml/vrml.cpp:29
 #, fuzzy
@@ -7549,27 +7694,203 @@ msgstr "Постоянный размер"
 msgid "Apply Color"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
-msgid "Vibrational Modes"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
+msgid "Spectra Visualization"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
+#. i18n: file: qtplugins/spectra/spectradialog.ui:38
+#. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
+msgid "&Load data..."
+msgstr "&Загрузить данные"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:45
+#. i18n: ectx: property (text), widget (QPushButton, push_exportData)
+msgid "Export Data"
+msgstr "Экспортировать данные"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:58
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+msgid "&Close"
+msgstr "&Закрыть"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:91
+#. i18n: ectx: property (text), widget (QLabel, label_11)
+#, fuzzy
+#| msgid "Frequency Scale Factor:"
+msgid "Scale Factor:"
+msgstr "Коэффициент масштабирования частот:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:108
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "X-Axis Minimum:"
+msgstr "Минимум:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:115
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "X-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:132
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+msgid "Offset:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+msgid "Y-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:156
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "Y-Axis Minimum:"
+msgstr "Минимум:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:189
+#. i18n: ectx: property (text), widget (QLabel, label_13)
+#, fuzzy
+#| msgid "Width:"
+msgid "Peak Width:"
+msgstr "Толщина:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:216
+#. i18n: ectx: property (text), widget (QLabel, label_27)
+#, fuzzy
+#| msgid "Threshold:"
+msgid "Peak Threshold:"
+msgstr "Порог:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:224
+#. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
+msgid "&Appearance"
+msgstr "Внешний вид"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:233
+#. i18n: ectx: property (text), widget (QCheckBox, cb_import)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:304
+#. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
+msgid "Show"
+msgstr "Показать"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:249
+#. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
+msgid "Imports a tsv of experimental spectra to overlay on the plot."
+msgstr ""
+"Импортирует экспериментальные спектры в формате tsv и отображает на том же "
+"графике"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:252
+#. i18n: ectx: property (text), widget (QPushButton, push_import)
+msgid "&Import..."
+msgstr "&Импорт..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:268
+#. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:320
+#. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:349
+#. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:388
+#. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
+msgid "Set Color..."
+msgstr "Выбрать..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:288
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Imported Spectra:"
+msgstr "Импортированные спектры.."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:336
+#. i18n: ectx: property (text), widget (QPushButton, push_export)
+msgid "&Export..."
+msgstr "&Экспорт..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:362
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Background:"
+msgstr "Фон:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:375
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+#| msgid "Export Calculated Spectrum"
+msgid "Calculated Spectra:"
+msgstr "Экспорт рассчитанного спектра"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Amplitude:"
-msgstr "Амплитуда:"
-
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
-#. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
-msgid "Start Animation"
-msgstr "Начать &анимацию"
+#| msgid "Constant Size"
+msgid "Font Size:"
+msgstr "Постоянный размер"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
-#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:406
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 #, fuzzy
-msgid "Stop Animation"
-msgstr "Остановить анимацию"
+#| msgid "10e-"
+msgid "10"
+msgstr "10e-"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:411
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "12"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:416
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "14"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:421
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "16"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:426
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "18"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+#| msgid "Jump Size:"
+msgid "Line Size:"
+msgstr "Размер перехода:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "x"
+msgstr "x"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "y"
+msgstr "y"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: ectx: property (text), widget (QPushButton, push_options)
+msgid "&Options…"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
+msgid ""
+"Controls:\n"
+"Double left click: Restore default axis limits\n"
+"Right click + drag: Move plot\n"
+"Middle click + drag: Zoom to region\n"
+"Scroll wheel: Zoom to cursor"
+msgstr ""
+"Управление:\n"
+"Двойной щелчок левой кнопкой: Restore default axis limits\n"
+"Щелчок левой кнопкой + перемещение: Переместить график\n"
+"Щелчок средней кнопкой: Увеличить область\n"
+"Прокрутка: Увеличить под курсором"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -7971,6 +8292,28 @@ msgstr ""
 msgid "sulfonate"
 msgstr ""
 
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+msgid "Vibrational Modes"
+msgstr ""
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:56
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Amplitude:"
+msgstr "Амплитуда:"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
+msgid "Start Animation"
+msgstr "Начать &анимацию"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
+#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
+msgid "Stop Animation"
+msgstr "Остановить анимацию"
+
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
@@ -8172,6 +8515,11 @@ msgstr ""
 "ru,,,5097@mail.ru,avogadro-devel@lists.sourceforge.net,annulen@yandex.ru,"
 "roman_romul@mail.ru,parukhin@gmail.com,,hippi90ub@gmail.com,madcad@yandex."
 "ru,,yuray@komyakino.ru,dn2010@km.ru"
+
+#, fuzzy
+#~| msgid "Fragment..."
+#~ msgid "Fragment…"
+#~ msgstr "Фрагмент..."
 
 #, fuzzy
 #~| msgid "DFT Functional:"
@@ -8782,9 +9130,6 @@ msgstr ""
 #~ msgid "Estimated Dipole Moment (D):"
 #~ msgstr "Оценочный дипольный момент (Д):"
 
-#~ msgid "Display standard molecular properties."
-#~ msgstr "Отобразить стандартные свойства молекулы"
-
 #~ msgid "Fetch by chemical name..."
 #~ msgstr "Загрузить по названию..."
 
@@ -8817,9 +9162,6 @@ msgstr ""
 
 #~ msgid "Hide Preview"
 #~ msgstr "Скрыть предпросмотр"
-
-#~ msgid "Intensities"
-#~ msgstr "Интенсивности"
 
 #~ msgid "Save POV-Ray rendered image"
 #~ msgstr "Сохранить визуализированное изображение, созданное POV-Ray"
@@ -9179,12 +9521,6 @@ msgstr ""
 #~ "Информация о колебаниях данной молекулы не содержит интенсивностей. Для "
 #~ "визуализации будут использованы произвольные значения интенсивностей"
 
-#~ msgid "Wavenumber (cm<sup>-1</sup>)"
-#~ msgstr "Волновое число (см<sup>-1</sup>)"
-
-#~ msgid "Shift (ppm)"
-#~ msgstr "Химический сдвиг (м.д.)"
-
 #~ msgid "Activity"
 #~ msgstr "Активности"
 
@@ -9193,13 +9529,6 @@ msgstr ""
 
 #~ msgid "Y Axis"
 #~ msgstr "Ось Y"
-
-#~ msgid "&Appearance"
-#~ msgstr "Внешний вид"
-
-#~ msgctxt "Infrared spectra option"
-#~ msgid "Infrared"
-#~ msgstr "ИК"
 
 #~ msgid "&Infrared Spectra Settings"
 #~ msgstr "Настройки &ИК спектра"
@@ -9215,18 +9544,11 @@ msgstr ""
 #~ msgid "DOS"
 #~ msgstr "Плотность состояний"
 
-#~ msgid "&Density Of States Settings"
-#~ msgstr "Настройки &плотности состояний"
-
 #~ msgid "&UV Settings"
 #~ msgstr "Настройки &УФ"
 
 #~ msgid "&CD Settings"
 #~ msgstr "Настройки &КД"
-
-#~ msgctxt "Raman spectrum"
-#~ msgid "Raman"
-#~ msgstr "КР"
 
 #~ msgid "&Raman Settings"
 #~ msgstr "Настройки &КР"
@@ -9258,21 +9580,6 @@ msgstr ""
 #~ msgid "Enter new name for current scheme:"
 #~ msgstr "Введите новое название для данной схемы:"
 
-#~ msgid "Select Background Color"
-#~ msgstr "Выберите цвет фона"
-
-#~ msgid "Select Foreground Color"
-#~ msgstr "Выберите цвет линий"
-
-#~ msgid "Select Calculated Spectra Color"
-#~ msgstr "Выберите цвет рассчитанных спектров"
-
-#~ msgid "Select Imported Spectra Color"
-#~ msgstr "Выберите цвет импортированных спектров"
-
-#~ msgid "Export Calculated Spectrum"
-#~ msgstr "Экспорт рассчитанного спектра"
-
 #~ msgid "Tab Separated Values (*.tsv)"
 #~ msgstr "Значения, разделенные табуляциями (*.tsv)"
 
@@ -9284,9 +9591,6 @@ msgstr ""
 
 #~ msgid "JCAMP-DX"
 #~ msgstr "JCAMP-DX"
-
-#~ msgid "Import Spectra"
-#~ msgstr "Импорт спектров"
 
 #~ msgid "Unknown extension: %1"
 #~ msgstr "Неизвестное расширение: %1"
@@ -9364,9 +9668,6 @@ msgstr ""
 
 #~ msgid "No vibrational displacements exist."
 #~ msgstr "Колебательные смещения отсутствуют"
-
-#~ msgid "Vibration"
-#~ msgstr "Колебание"
 
 #~ msgid "Visualize vibrational modes from quantum chemistry calculations"
 #~ msgstr "Показать колебательные моды из квантовохимического расчета"
@@ -9868,9 +10169,6 @@ msgstr ""
 #~ msgid "Custom:"
 #~ msgstr "Произвольный:"
 
-#~ msgid "Width:"
-#~ msgstr "Толщина:"
-
 #~ msgid "Cut-off radius:"
 #~ msgstr "Предельный радиус:"
 
@@ -10111,9 +10409,6 @@ msgstr ""
 
 #~ msgid "Algorithm"
 #~ msgstr "Алгоритм"
-
-#~ msgid "10e-"
-#~ msgstr "10e-"
 
 #~ msgid "Alanine"
 #~ msgstr "Аланин"
@@ -10984,9 +11279,6 @@ msgstr ""
 #~ msgid "Raman Intensities"
 #~ msgstr "Рамановские интенсивности"
 
-#~ msgid "NMR"
-#~ msgstr "ЯМР"
-
 #~ msgid "Make EFP"
 #~ msgstr "Сделать EFP"
 
@@ -11372,9 +11664,6 @@ msgstr ""
 #~ msgid "Purify Hessian"
 #~ msgstr "Спроецировать гессиан"
 
-#~ msgid "Frequency Scale Factor:"
-#~ msgstr "Коэффициент масштабирования частот:"
-
 #~ msgid "bohrs"
 #~ msgstr "бор"
 
@@ -11390,14 +11679,8 @@ msgstr ""
 #~ msgid "Print Orbs at Each Iteration"
 #~ msgstr "Выводить орбитали на каждой итерации"
 
-#~ msgid "Jump Size:"
-#~ msgstr "Размер перехода:"
-
 #~ msgid "Stationary Point"
 #~ msgstr "Стационарная точка"
-
-#~ msgid "Minimum:"
-#~ msgstr "Минимум:"
 
 #~ msgid "Initial:"
 #~ msgstr "Исходный:"
@@ -11546,50 +11829,11 @@ msgstr ""
 #~ msgid "Display Type:"
 #~ msgstr "Тип отображения:"
 
-#~ msgid ""
-#~ "Controls:\n"
-#~ "Double left click: Restore default axis limits\n"
-#~ "Right click + drag: Move plot\n"
-#~ "Middle click + drag: Zoom to region\n"
-#~ "Scroll wheel: Zoom to cursor"
-#~ msgstr ""
-#~ "Управление:\n"
-#~ "Двойной щелчок левой кнопкой: Restore default axis limits\n"
-#~ "Щелчок левой кнопкой + перемещение: Переместить график\n"
-#~ "Щелчок средней кнопкой: Увеличить область\n"
-#~ "Прокрутка: Увеличить под курсором"
-
-#~ msgid "&Load data..."
-#~ msgstr "&Загрузить данные"
-
-#~ msgid "&Close"
-#~ msgstr "&Закрыть"
-
-#~ msgid "Set Color..."
-#~ msgstr "Выбрать..."
-
-#~ msgid "Imported Spectra:"
-#~ msgstr "Импортированные спектры.."
-
 #~ msgid "Font:"
 #~ msgstr "Шрифт:"
 
 #~ msgid "Change Font..."
 #~ msgstr "Сменить шрифт..."
-
-#~ msgid "Show"
-#~ msgstr "Показать"
-
-#~ msgid "Imports a tsv of experimental spectra to overlay on the plot."
-#~ msgstr ""
-#~ "Импортирует экспериментальные спектры в формате tsv и отображает на том "
-#~ "же графике"
-
-#~ msgid "&Import..."
-#~ msgstr "&Импорт..."
-
-#~ msgid "Background:"
-#~ msgstr "Фон:"
 
 #~ msgid "Foreground:"
 #~ msgstr "Передний план:"
@@ -11602,9 +11846,6 @@ msgstr ""
 
 #~ msgid "&Schemes:"
 #~ msgstr "&Схемы..."
-
-#~ msgid "&Export..."
-#~ msgstr "&Экспорт..."
 
 #~ msgid "&DPI:"
 #~ msgstr "&DPI:"
@@ -11633,15 +11874,6 @@ msgstr ""
 
 #~ msgid "Auto-adjust F&ont Size"
 #~ msgstr "Автоподбор размера &шрифта"
-
-#~ msgid "x"
-#~ msgstr "x"
-
-#~ msgid "y"
-#~ msgstr "y"
-
-#~ msgid "Export Data"
-#~ msgstr "Экспортировать данные"
 
 #~ msgid "&Gaussian Width:"
 #~ msgstr "Ширина &гауссова пика:"
@@ -11675,9 +11907,6 @@ msgstr ""
 
 #~ msgid " cm⁻¹"
 #~ msgstr " cm⁻¹"
-
-#~ msgid "Threshold:"
-#~ msgstr "Порог:"
 
 #~ msgid "tab_NMR"
 #~ msgstr "tab_ЯМР"
