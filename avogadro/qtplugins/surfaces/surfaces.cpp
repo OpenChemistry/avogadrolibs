@@ -129,8 +129,6 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.
 
-  qDebug() << "handle surface cmd:" << command << options;
-
   // Set up some defaults for the options.
   int index = -1;
   int homo = -1;
@@ -797,6 +795,9 @@ void Surfaces::colorMeshByPotential()
   const auto colormap = getColormapFromString(m_dialog->colormapName());
 
   const auto positionsf = m_mesh1->vertices();
+  if (positionsf.empty())
+    return;
+
   Core::Array<Vector3> positions(positionsf.size());
   std::transform(positionsf.begin(), positionsf.end(), positions.begin(),
                  [](const Vector3f& pos) { return pos.cast<double>(); });
