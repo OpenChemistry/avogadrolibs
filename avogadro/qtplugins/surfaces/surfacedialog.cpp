@@ -52,8 +52,12 @@ void SurfaceDialog::surfaceComboChanged(int n)
   if (type == Surfaces::Type::MolecularOrbital ||
       type == Surfaces::Type::FromFile) {
     m_ui->orbitalCombo->setEnabled(true);
+    m_ui->propertyCombo->setEnabled(false);
+    m_ui->propertyCombo->setCurrentIndex(0); // None
+    m_ui->colormapCombo->setEnabled(false);
   } else {
     m_ui->orbitalCombo->setEnabled(false);
+    m_ui->propertyCombo->setEnabled(true);
   }
 }
 
