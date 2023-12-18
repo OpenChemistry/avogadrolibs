@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-10 18:10+0000\n"
+"POT-Creation-Date: 2023-12-16 16:26+0000\n"
 "PO-Revision-Date: 2023-02-16 16:36+0000\n"
 "Last-Translator: Shusong Zhang <sszhang@mail.nwpu.edu.cn>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -529,7 +529,7 @@ msgstr "硼"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1819
+#: qtgui/elementtranslator.cpp:34:1925
 msgid "Carbon"
 msgstr "碳"
 
@@ -611,13 +611,13 @@ msgstr "锰"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1822
+#: qtgui/elementtranslator.cpp:94:1928
 msgid "Iron"
 msgstr "铁"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1825
+#: qtgui/elementtranslator.cpp:97:1931
 msgid "Cobalt"
 msgstr "钴"
 
@@ -1136,43 +1136,43 @@ msgstr "电荷"
 msgid "Multiplicity"
 msgstr "多重性"
 
-#: qtgui/jsonwidget.cpp:557
+#: qtgui/jsonwidget.cpp:558
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:590
+#: qtgui/jsonwidget.cpp:591
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:599 qtgui/jsonwidget.cpp:634 qtgui/jsonwidget.cpp:655
-#: qtgui/jsonwidget.cpp:677 qtgui/jsonwidget.cpp:698 qtgui/jsonwidget.cpp:720
-#: qtgui/jsonwidget.cpp:741
+#: qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:635 qtgui/jsonwidget.cpp:656
+#: qtgui/jsonwidget.cpp:678 qtgui/jsonwidget.cpp:699 qtgui/jsonwidget.cpp:721
+#: qtgui/jsonwidget.cpp:742
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:606 qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:662
-#: qtgui/jsonwidget.cpp:684 qtgui/jsonwidget.cpp:705 qtgui/jsonwidget.cpp:727
-#: qtgui/jsonwidget.cpp:748
+#: qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:642 qtgui/jsonwidget.cpp:663
+#: qtgui/jsonwidget.cpp:685 qtgui/jsonwidget.cpp:706 qtgui/jsonwidget.cpp:728
+#: qtgui/jsonwidget.cpp:749
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:620
+#: qtgui/jsonwidget.cpp:621
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:809
+#: qtgui/jsonwidget.cpp:810
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:851 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:852 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 #, fuzzy
 msgid "[no molecule]"
@@ -1560,7 +1560,9 @@ msgid ""
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:75
+#. i18n: file: qtplugins/spectra/spectradialog.ui:281
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: qtplugins/aligntool/aligntool.cpp:75:1693
 msgid "Axis:"
 msgstr "轴"
 
@@ -1844,7 +1846,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1684
+#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1790
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1856,7 +1858,7 @@ msgstr "光谱"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1681
+#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1866,7 +1868,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1675
+#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1781
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1878,7 +1880,7 @@ msgstr "取消"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1678
+#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1890,7 +1892,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1687
+#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -1928,7 +1930,7 @@ msgstr "已选的颜色"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1672
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1778
 #, fuzzy
 #| msgid "Color:"
 msgid "Colormap:"
@@ -2392,7 +2394,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:158:1714 rc.cpp:1744
+#: qtplugins/label/label.cpp:158:1820 rc.cpp:1850
 msgid "Custom"
 msgstr "自定义"
 
@@ -2434,44 +2436,44 @@ msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:31
+#: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/propertytables/propertyview.cpp:283:252
 msgid "Copy"
 msgstr "复制"
 
-#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
 msgid "InChI"
 msgstr "国际化合物标识"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34:249
+#: qtplugins/copypaste/copypaste.cpp:33:249
 msgid "Cut"
 msgstr "剪切"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35:261
+#: qtplugins/copypaste/copypaste.cpp:34:261
 msgid "Clear"
 msgstr "清除"
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:35
 #, fuzzy
 #| msgid "Paste"
 msgid "&Paste"
 msgstr "粘贴"
 
-#: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
 msgstr "编辑(&E)"
 
-#: qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:81
 #, fuzzy
 #| msgid "Copy"
 msgid "Copy As"
@@ -2495,7 +2497,7 @@ msgstr ""
 "输出格式： %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:274
+#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2504,19 +2506,19 @@ msgstr ""
 "读取器错误：\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:235 qtplugins/copypaste/copypaste.cpp:268
+#: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
 msgid "Error Pasting Molecule"
 msgstr "错误粘贴分子"
 
-#: qtplugins/copypaste/copypaste.cpp:236
+#: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "无法粘贴分子。剪贴板为空！"
 
-#: qtplugins/copypaste/copypaste.cpp:269
+#: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
 msgstr "读取剪贴板数据错误。"
 
-#: qtplugins/copypaste/copypaste.cpp:270
+#: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2833,7 +2835,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:345
 #: qtplugins/templatetool/templatetoolwidget.cpp:353
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:1948
+#: qtplugins/templatetool/templatetoolwidget.cpp:424:2054
 #, fuzzy
 #| msgid "Other"
 msgid "Other…"
@@ -2843,7 +2845,7 @@ msgstr "其它"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1693 rc.cpp:1711
+#: qtplugins/editor/editortoolwidget.cpp:208:1799 rc.cpp:1817
 msgid "Automatic"
 msgstr ""
 
@@ -2968,19 +2970,19 @@ msgstr "修正所选择的原子"
 msgid "&Calculate"
 msgstr "计算"
 
-#: qtplugins/forcefield/forcefield.cpp:285 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:303 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:560
 #, fuzzy
 msgid "Optimize Geometry"
 msgstr "优化几何结构(&O)"
 
-#: qtplugins/forcefield/forcefield.cpp:326
+#: qtplugins/forcefield/forcefield.cpp:344
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
 msgstr "能量 = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:327
+#: qtplugins/forcefield/forcefield.cpp:345
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:913
 #: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
@@ -3231,9 +3233,9 @@ msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
-#| msgid "Fragment..."
-msgid "Fragment…"
-msgstr "片段..."
+#| msgid "Molecule"
+msgid "Molecule…"
+msgstr "分子"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 #, fuzzy
@@ -3500,8 +3502,9 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
 #: qtplugins/surfaces/surfaces.cpp:264 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
 msgstr "分析"
@@ -4017,7 +4020,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:113:1747
+#: qtplugins/playertool/playertool.cpp:113:1853
 #, fuzzy
 msgid "Frame:"
 msgstr "参数："
@@ -4036,7 +4039,7 @@ msgstr "动态绑定？"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:139:1753
+#: qtplugins/playertool/playertool.cpp:139:1859
 msgid "Record Movie…"
 msgstr ""
 
@@ -4716,7 +4719,7 @@ msgstr "按残基选择..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1786
+#: qtplugins/select/select.h:30:1892
 #, fuzzy
 msgid "Select"
 msgstr "选择(&S)"
@@ -4758,7 +4761,7 @@ msgstr "空间&群"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1771
+#: qtplugins/spacegroup/spacegroup.cpp:68:1877
 msgid "Symmetrize"
 msgstr "对称"
 
@@ -4864,40 +4867,146 @@ msgstr "空间&群"
 msgid "Space group features for crystals."
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:27
+#: qtplugins/spectra/spectra.cpp:29
 #, fuzzy
-msgid "Vibrational Modes…"
-msgstr "震动模式..."
+#| msgid "Import Spectra"
+msgid "Plot Spectra…"
+msgstr "导入光谱"
 
-#: qtplugins/spectra/spectra.cpp:86
-msgid "Show the vibrational modes dialog."
-msgstr ""
+#. i18n: file: qtplugins/spectra/spectradialog.ui:75
+#. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
+#: qtplugins/spectra/spectra.h:36:1651
+#, fuzzy
+#| msgid "Spectra"
+msgid "Spectra"
+msgstr "光谱"
 
-#: qtplugins/spectra/spectra.cpp:87
+#: qtplugins/spectra/spectra.h:38
 #, fuzzy
 #| msgid "Display spectra and vibrational modes."
-msgid "Set the vibrational mode."
+msgid "Display spectra plots."
 msgstr "显示光谱和振动模式。"
 
-#: qtplugins/spectra/spectra.cpp:89
-msgid "Set the vibrational amplitude."
+#: qtplugins/spectra/spectradialog.cpp:201
+#, fuzzy
+#| msgctxt "Infrared spectra option"
+#| msgid "Infrared"
+msgid "Infrared"
+msgstr "红外"
+
+#: qtplugins/spectra/spectradialog.cpp:205
+msgid "Raman"
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:91
-msgid "Start the vibrational animation."
+#: qtplugins/spectra/spectradialog.cpp:208
+msgid "NMR"
+msgstr "NMR"
+
+#: qtplugins/spectra/spectradialog.cpp:211
+#, fuzzy
+#| msgid "Electron Density"
+msgid "Electronic"
+msgstr "电子密度"
+
+#: qtplugins/spectra/spectradialog.cpp:215
+msgid "Circular Dichroism"
 msgstr ""
 
-#: qtplugins/spectra/spectra.cpp:93
-msgid "Stop the vibrational animation."
+#: qtplugins/spectra/spectradialog.cpp:219
+#: qtplugins/spectra/spectradialog.cpp:410
+#, fuzzy
+#| msgid "Transition State"
+msgid "Density of States"
+msgstr "过渡态"
+
+#: qtplugins/spectra/spectradialog.cpp:256
+#, fuzzy
+#| msgid "Select Bond Labels Color"
+msgid "Select Background Color"
+msgstr "选择键标签"
+
+#: qtplugins/spectra/spectradialog.cpp:269
+#, fuzzy
+#| msgid "Select Bond Labels Color"
+msgid "Select Foreground Color"
+msgstr "选择键标签"
+
+#: qtplugins/spectra/spectradialog.cpp:282
+#, fuzzy
+#| msgid "Export Calculated Spectrum"
+msgid "Select Calculated Spectra Color"
+msgstr "导出光谱计算结果"
+
+#: qtplugins/spectra/spectradialog.cpp:294
+#, fuzzy
+#| msgid "Imported Spectra:"
+msgid "Select Imported Spectra Color"
+msgstr "导入光谱:"
+
+#: qtplugins/spectra/spectradialog.cpp:342
+#, fuzzy
+msgid "Vibrational Spectra"
+msgstr "震动模式..."
+
+#: qtplugins/spectra/spectradialog.cpp:343
+#: qtplugins/spectra/spectradialog.cpp:357
+#, fuzzy
+#| msgid "Wavenumber (cm<sup>-1</sup>)"
+msgid "Wavenumbers (cm⁻¹)"
+msgstr "波数 (cm<sup>-1</sup>)"
+
+#: qtplugins/spectra/spectradialog.cpp:344
+#, fuzzy
+#| msgid "Transition State"
+msgid "Transmission"
+msgstr "过渡态"
+
+#: qtplugins/spectra/spectradialog.cpp:356
+#, fuzzy
+#| msgid "Import Spectra"
+msgid "Raman Spectra"
+msgstr "导入光谱"
+
+#: qtplugins/spectra/spectradialog.cpp:358
+#: qtplugins/spectra/spectradialog.cpp:371
+#: qtplugins/spectra/spectradialog.cpp:384
+#: qtplugins/spectra/spectradialog.cpp:399
+#: qtplugins/spectra/spectradialog.cpp:412
+#, fuzzy
+#| msgid "Electron Density"
+msgid "Intensity"
+msgstr "电子密度"
+
+#: qtplugins/spectra/spectradialog.cpp:369
+#, fuzzy
+#| msgid "Spectra"
+msgid "NMR Spectra"
+msgstr "光谱"
+
+#: qtplugins/spectra/spectradialog.cpp:370
+#, fuzzy
+#| msgid "Shift (ppm)"
+msgid "Chemical Shift (ppm)"
+msgstr "位移 (ppm)"
+
+#: qtplugins/spectra/spectradialog.cpp:382
+#, fuzzy
+#| msgid "Electron Density"
+msgid "Electronic Spectra"
+msgstr "电子密度"
+
+#: qtplugins/spectra/spectradialog.cpp:383
+#: qtplugins/spectra/spectradialog.cpp:411
+msgid "eV"
 msgstr ""
 
-#: qtplugins/spectra/spectra.h:32
-msgid "Spectra and Vibrations"
+#: qtplugins/spectra/spectradialog.cpp:397
+msgid "Circular Dichroism Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectra.h:36
-msgid "Display spectra and vibrational modes."
-msgstr "显示光谱和振动模式。"
+#: qtplugins/spectra/spectradialog.cpp:398
+msgid "eV)"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5058,7 +5167,7 @@ msgstr "对称"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1756
+#: qtplugins/symmetry/symmetry.h:34:1862
 msgid "Symmetry"
 msgstr "对称"
 
@@ -5124,6 +5233,45 @@ msgstr ""
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:33
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:27
+#, fuzzy
+msgid "Vibrational Modes…"
+msgstr "震动模式..."
+
+#: qtplugins/vibrations/vibrations.cpp:90
+msgid "Show the vibrational modes dialog."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:91
+#, fuzzy
+#| msgid "Display spectra and vibrational modes."
+msgid "Set the vibrational mode."
+msgstr "显示光谱和振动模式。"
+
+#: qtplugins/vibrations/vibrations.cpp:93
+msgid "Set the vibrational amplitude."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:95
+msgid "Start the vibrational animation."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.cpp:97
+msgid "Stop the vibrational animation."
+msgstr ""
+
+#: qtplugins/vibrations/vibrations.h:33
+#, fuzzy
+#| msgid "Vibration"
+msgid "Vibrations"
+msgstr "振动"
+
+#: qtplugins/vibrations/vibrations.h:37
+#, fuzzy
+#| msgid "Display spectra and vibrational modes."
+msgid "Display vibrational modes."
+msgstr "显示光谱和振动模式。"
 
 #: qtplugins/vrml/vrml.cpp:29
 #, fuzzy
@@ -7512,27 +7660,199 @@ msgstr "恒定大小"
 msgid "Apply Color"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
-msgid "Vibrational Modes"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
+msgid "Spectra Visualization"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
+#. i18n: file: qtplugins/spectra/spectradialog.ui:38
+#. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
+msgid "&Load data..."
+msgstr "载入数据(&L)..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:45
+#. i18n: ectx: property (text), widget (QPushButton, push_exportData)
+msgid "Export Data"
+msgstr "导出数据"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:58
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+msgid "&Close"
+msgstr "关闭(&C)"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:91
+#. i18n: ectx: property (text), widget (QLabel, label_11)
+msgid "Scale Factor:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:108
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "X-Axis Minimum:"
+msgstr "最小值："
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:115
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "X-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:132
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+msgid "Offset:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+msgid "Y-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:156
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "Y-Axis Minimum:"
+msgstr "最小值："
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:189
+#. i18n: ectx: property (text), widget (QLabel, label_13)
+#, fuzzy
+#| msgid "Width:"
+msgid "Peak Width:"
+msgstr "宽度："
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:216
+#. i18n: ectx: property (text), widget (QLabel, label_27)
+#, fuzzy
+#| msgid "Snap-to Threshold: "
+msgid "Peak Threshold:"
+msgstr "对齐至起点: "
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:224
+#. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
+msgid "&Appearance"
+msgstr "外观(&A)"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:233
+#. i18n: ectx: property (text), widget (QCheckBox, cb_import)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:304
+#. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
+msgid "Show"
+msgstr "显示"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:249
+#. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
+msgid "Imports a tsv of experimental spectra to overlay on the plot."
+msgstr "导入一个实验光谱的tsv文件以覆盖当前绘图。"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:252
+#. i18n: ectx: property (text), widget (QPushButton, push_import)
+msgid "&Import..."
+msgstr "导入(&I)..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:268
+#. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:320
+#. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:349
+#. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:388
+#. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
+msgid "Set Color..."
+msgstr "设置颜色..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:288
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Imported Spectra:"
+msgstr "导入光谱:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:336
+#. i18n: ectx: property (text), widget (QPushButton, push_export)
+msgid "&Export..."
+msgstr "导出(&E)..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:362
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Background:"
+msgstr "背景:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:375
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+#| msgid "Export Calculated Spectrum"
+msgid "Calculated Spectra:"
+msgstr "导出光谱计算结果"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Amplitude:"
+#, fuzzy
+#| msgid "Constant Size"
+msgid "Font Size:"
+msgstr "恒定大小"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:406
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+#, fuzzy
+#| msgid "10e-"
+msgid "10"
+msgstr "10e-"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:411
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "12"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
-#. i18n: ectx: property (text), widget (QPushButton, startButton)
-#, fuzzy
-msgid "Start Animation"
-msgstr "开始动画(&A)"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:416
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "14"
+msgstr ""
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
-#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:421
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "16"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:426
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "18"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: ectx: property (text), widget (QLabel, label_5)
 #, fuzzy
-msgid "Stop Animation"
-msgstr "停止动画(&A)"
+#| msgid "Jump Size:"
+msgid "Line Size:"
+msgstr "跳转尺度:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "x"
+msgstr "x"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "y"
+msgstr "y"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: ectx: property (text), widget (QPushButton, push_options)
+msgid "&Options…"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
+msgid ""
+"Controls:\n"
+"Double left click: Restore default axis limits\n"
+"Right click + drag: Move plot\n"
+"Middle click + drag: Zoom to region\n"
+"Scroll wheel: Zoom to cursor"
+msgstr ""
+"控制:\n"
+"双击左键: 恢复默认坐标轴范围\n"
+"右击+拖动: 移动绘图\n"
+"中击+拖动: 缩放到区域\n"
+"滚轮: 按光标缩放"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -7930,6 +8250,28 @@ msgstr ""
 msgid "sulfonate"
 msgstr ""
 
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+msgid "Vibrational Modes"
+msgstr ""
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:56
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Amplitude:"
+msgstr ""
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+#, fuzzy
+msgid "Start Animation"
+msgstr "开始动画(&A)"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
+#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+#, fuzzy
+msgid "Stop Animation"
+msgstr "停止动画(&A)"
+
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
@@ -8135,6 +8477,11 @@ msgstr ""
 "devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,,,"
 "chaofeng111@gmail.com,,,,allen19920930@gmail.com,skyxxzc@gmail.com,"
 "cuiweicui1985@gmail.com,,yjjart@gmail.com,sihanzheng@gmail.com"
+
+#, fuzzy
+#~| msgid "Fragment..."
+#~ msgid "Fragment…"
+#~ msgstr "片段..."
 
 #~ msgid "Submit Calculation..."
 #~ msgstr "提交计算..."
@@ -8407,9 +8754,6 @@ msgstr ""
 
 #~ msgid "Select Atom Labels Color"
 #~ msgstr "选择原子标签颜色"
-
-#~ msgid "Select Bond Labels Color"
-#~ msgstr "选择键标签"
 
 #~ msgid "Select Bond Labels Font"
 #~ msgstr "选择键标签字体"
@@ -8969,24 +9313,11 @@ msgstr ""
 #~ msgstr ""
 #~ "您加载的分子振动数据没有任何强度数值。强度应当被赋予一个数值以便显示。"
 
-#~ msgid "Wavenumber (cm<sup>-1</sup>)"
-#~ msgstr "波数 (cm<sup>-1</sup>)"
-
-#~ msgid "Shift (ppm)"
-#~ msgstr "位移 (ppm)"
-
 #~ msgid "X Axis"
 #~ msgstr "X 轴"
 
 #~ msgid "Y Axis"
 #~ msgstr "Y 轴"
-
-#~ msgid "&Appearance"
-#~ msgstr "外观(&A)"
-
-#~ msgctxt "Infrared spectra option"
-#~ msgid "Infrared"
-#~ msgstr "红外"
 
 #~ msgid "&Infrared Spectra Settings"
 #~ msgstr "红外光谱设置(&I)"
@@ -9025,9 +9356,6 @@ msgstr ""
 #~ msgid "Enter new name for current scheme:"
 #~ msgstr "为当前原理图输入新名字:"
 
-#~ msgid "Export Calculated Spectrum"
-#~ msgstr "导出光谱计算结果"
-
 #~ msgid "Tab Separated Values (*.tsv)"
 #~ msgstr "制表符分隔数值格式 (*.tsv)"
 
@@ -9039,9 +9367,6 @@ msgstr ""
 
 #~ msgid "JCAMP-DX"
 #~ msgstr "JCAMP-DX"
-
-#~ msgid "Import Spectra"
-#~ msgstr "导入光谱"
 
 #~ msgid "Unknown extension: %1"
 #~ msgstr "未知扩展名: %1"
@@ -9092,9 +9417,6 @@ msgstr ""
 
 #~ msgid "No vibrational displacements exist."
 #~ msgstr "没有振动位移存在。"
-
-#~ msgid "Vibration"
-#~ msgstr "振动"
 
 #~ msgid "Visualize vibrational modes from quantum chemistry calculations"
 #~ msgstr "从量子化学计算中显示振动模式。"
@@ -9374,9 +9696,6 @@ msgstr ""
 #~ msgid " Show Angles"
 #~ msgstr " 显示键角"
 
-#~ msgid "Snap-to Threshold: "
-#~ msgstr "对齐至起点: "
-
 #~ msgid "Bond Centric Manipulate"
 #~ msgstr "化学键操纵"
 
@@ -9506,9 +9825,6 @@ msgstr ""
 #~ msgid "Dipole Moment"
 #~ msgstr "偶极矩"
 
-#~ msgid "Width:"
-#~ msgstr "宽度："
-
 #~ msgid "Cut-off radius:"
 #~ msgstr "截断半径："
 
@@ -9637,9 +9953,6 @@ msgstr ""
 
 #~ msgid "Algorithm"
 #~ msgstr "算法"
-
-#~ msgid "10e-"
-#~ msgstr "10e-"
 
 #~ msgid "Ala"
 #~ msgstr "Ala"
@@ -10073,9 +10386,6 @@ msgstr ""
 #~ msgid "Raman Intensities"
 #~ msgstr "Raman强度"
 
-#~ msgid "NMR"
-#~ msgstr "NMR"
-
 #~ msgid "Make EFP"
 #~ msgstr "构建 EFP"
 
@@ -10475,14 +10785,8 @@ msgstr ""
 #~ msgid "Print Orbs at Each Iteration"
 #~ msgstr "每次迭代后打印轨道"
 
-#~ msgid "Jump Size:"
-#~ msgstr "跳转尺度:"
-
 #~ msgid "Stationary Point"
 #~ msgstr "不动点"
-
-#~ msgid "Minimum:"
-#~ msgstr "最小值："
 
 #~ msgid "Initial:"
 #~ msgstr "初始"
@@ -10595,48 +10899,11 @@ msgstr ""
 #~ msgid "Display Type:"
 #~ msgstr "显示模式："
 
-#~ msgid ""
-#~ "Controls:\n"
-#~ "Double left click: Restore default axis limits\n"
-#~ "Right click + drag: Move plot\n"
-#~ "Middle click + drag: Zoom to region\n"
-#~ "Scroll wheel: Zoom to cursor"
-#~ msgstr ""
-#~ "控制:\n"
-#~ "双击左键: 恢复默认坐标轴范围\n"
-#~ "右击+拖动: 移动绘图\n"
-#~ "中击+拖动: 缩放到区域\n"
-#~ "滚轮: 按光标缩放"
-
-#~ msgid "&Load data..."
-#~ msgstr "载入数据(&L)..."
-
-#~ msgid "&Close"
-#~ msgstr "关闭(&C)"
-
-#~ msgid "Set Color..."
-#~ msgstr "设置颜色..."
-
-#~ msgid "Imported Spectra:"
-#~ msgstr "导入光谱:"
-
 #~ msgid "Font:"
 #~ msgstr "字体:"
 
 #~ msgid "Change Font..."
 #~ msgstr "更换字体..."
-
-#~ msgid "Show"
-#~ msgstr "显示"
-
-#~ msgid "Imports a tsv of experimental spectra to overlay on the plot."
-#~ msgstr "导入一个实验光谱的tsv文件以覆盖当前绘图。"
-
-#~ msgid "&Import..."
-#~ msgstr "导入(&I)..."
-
-#~ msgid "Background:"
-#~ msgstr "背景:"
 
 #~ msgid "New..."
 #~ msgstr "新建..."
@@ -10646,9 +10913,6 @@ msgstr ""
 
 #~ msgid "&Schemes:"
 #~ msgstr "原理图(&S):"
-
-#~ msgid "&Export..."
-#~ msgstr "导出(&E)..."
 
 #~ msgid "&DPI:"
 #~ msgstr "&DPI:"
@@ -10676,15 +10940,6 @@ msgstr ""
 
 #~ msgid "Auto-adjust F&ont Size"
 #~ msgstr "自动调整字体大小(&O)"
-
-#~ msgid "x"
-#~ msgstr "x"
-
-#~ msgid "y"
-#~ msgstr "y"
-
-#~ msgid "Export Data"
-#~ msgstr "导出数据"
 
 #~ msgid "&Gaussian Width:"
 #~ msgstr "高斯宽度(&G):"

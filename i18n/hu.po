@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-10 18:10+0000\n"
+"POT-Creation-Date: 2023-12-16 16:26+0000\n"
 "PO-Revision-Date: 2023-12-08 03:04+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -554,7 +554,7 @@ msgstr "Bór"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1819
+#: qtgui/elementtranslator.cpp:34:1925
 msgid "Carbon"
 msgstr "Szén"
 
@@ -636,13 +636,13 @@ msgstr "Mangán"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1822
+#: qtgui/elementtranslator.cpp:94:1928
 msgid "Iron"
 msgstr "Vas"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1825
+#: qtgui/elementtranslator.cpp:97:1931
 msgid "Cobalt"
 msgstr "Kobalt"
 
@@ -1166,35 +1166,35 @@ msgstr "Töltés"
 msgid "Multiplicity"
 msgstr "Sokszínűség"
 
-#: qtgui/jsonwidget.cpp:557
+#: qtgui/jsonwidget.cpp:558
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Hiba történt: az értéknek objektumnak kell lennie a(z) „%1” kulcsnál."
 
-#: qtgui/jsonwidget.cpp:590
+#: qtgui/jsonwidget.cpp:591
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Ismeretlen beállítási típus „%1” a(z) „%2” beállításnál."
 
-#: qtgui/jsonwidget.cpp:599 qtgui/jsonwidget.cpp:634 qtgui/jsonwidget.cpp:655
-#: qtgui/jsonwidget.cpp:677 qtgui/jsonwidget.cpp:698 qtgui/jsonwidget.cpp:720
-#: qtgui/jsonwidget.cpp:741
+#: qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:635 qtgui/jsonwidget.cpp:656
+#: qtgui/jsonwidget.cpp:678 qtgui/jsonwidget.cpp:699 qtgui/jsonwidget.cpp:721
+#: qtgui/jsonwidget.cpp:742
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Hibás "
 "vezérlői típus."
 
-#: qtgui/jsonwidget.cpp:606 qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:662
-#: qtgui/jsonwidget.cpp:684 qtgui/jsonwidget.cpp:705 qtgui/jsonwidget.cpp:727
-#: qtgui/jsonwidget.cpp:748
+#: qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:642 qtgui/jsonwidget.cpp:663
+#: qtgui/jsonwidget.cpp:685 qtgui/jsonwidget.cpp:706 qtgui/jsonwidget.cpp:728
+#: qtgui/jsonwidget.cpp:749
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Hibás "
 "alapértelmezett érték:"
 
-#: qtgui/jsonwidget.cpp:620
+#: qtgui/jsonwidget.cpp:621
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1203,14 +1203,14 @@ msgstr ""
 "Hibás történt a(z) „%1” beállítás alapértelmezett beállításakor. Nem "
 "található érvényes kombinált bejegyzés tárgymutató az értékből:"
 
-#: qtgui/jsonwidget.cpp:809
+#: qtgui/jsonwidget.cpp:810
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 "Nem kezelt vezérlő a „collectOptions” (Beállítások gyűjtése) menüben a(z) "
 "„%1” beállításhoz."
 
-#: qtgui/jsonwidget.cpp:851 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:852 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[nincs molekula]"
@@ -1589,7 +1589,9 @@ msgstr ""
 "Jobb egér: \tÁllítsa vissza az igazítást.\n"
 "Dupla kattintás: \tAz atom középpontba állítása az origóban."
 
-#: qtplugins/aligntool/aligntool.cpp:75
+#. i18n: file: qtplugins/spectra/spectradialog.ui:281
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: qtplugins/aligntool/aligntool.cpp:75:1693
 msgid "Axis:"
 msgstr "Tengely:"
 
@@ -1859,7 +1861,7 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1684
+#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1790
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Kísérteties"
@@ -1869,7 +1871,7 @@ msgstr "Kísérteties"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1681
+#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Hideg meleg"
@@ -1879,7 +1881,7 @@ msgstr "Hideg meleg"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1675
+#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1781
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Egyensúly"
@@ -1889,7 +1891,7 @@ msgstr "Egyensúly"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1678
+#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Kék-sötétvörös"
@@ -1901,7 +1903,7 @@ msgstr "Kék-sötétvörös"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1687
+#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbó"
@@ -1935,7 +1937,7 @@ msgstr "Színleképezés kijelölése"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1672
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1778
 msgid "Colormap:"
 msgstr "Színleképezés:"
 
@@ -2390,7 +2392,7 @@ msgstr "Atomkoordináták szerkesztése"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:158:1714 rc.cpp:1744
+#: qtplugins/label/label.cpp:158:1820 rc.cpp:1850
 msgid "Custom"
 msgstr "Egyéni"
 
@@ -2432,42 +2434,42 @@ msgstr "TURBOMOLE-formátum"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:31
+#: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/propertytables/propertyview.cpp:283:252
 msgid "Copy"
 msgstr "Másolás"
 
-#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "SMILES"
 msgstr "Egyszerűsített molekuláris bemeneti vonalbeviteli rendszer"
 
-#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
 msgid "InChI"
 msgstr "InChI"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34:249
+#: qtplugins/copypaste/copypaste.cpp:33:249
 msgid "Cut"
 msgstr "Kivágás"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35:261
+#: qtplugins/copypaste/copypaste.cpp:34:261
 msgid "Clear"
 msgstr "Törlés"
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
 msgstr "&Beillesztés"
 
-#: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
 msgstr "S&zerkesztés"
 
-#: qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
 msgstr "Másolás másként"
 
@@ -2489,7 +2491,7 @@ msgstr ""
 "Kimeneti formátum: %1\n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:274
+#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2498,19 +2500,19 @@ msgstr ""
 "Olvasó hiba:\n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:235 qtplugins/copypaste/copypaste.cpp:268
+#: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
 msgid "Error Pasting Molecule"
 msgstr "Hiba történt a molekula beillesztésekor"
 
-#: qtplugins/copypaste/copypaste.cpp:236
+#: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "Nem lehet beilleszteni a molekulát: Üres a vágólap!"
 
-#: qtplugins/copypaste/copypaste.cpp:269
+#: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
 msgstr "Hiba történt a vágólap adatainak olvasásakor."
 
-#: qtplugins/copypaste/copypaste.cpp:270
+#: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2822,7 +2824,7 @@ msgstr "Szerkesztő eszköz"
 #: qtplugins/templatetool/templatetoolwidget.cpp:345
 #: qtplugins/templatetool/templatetoolwidget.cpp:353
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:1948
+#: qtplugins/templatetool/templatetoolwidget.cpp:424:2054
 msgid "Other…"
 msgstr "Egyéb…"
 
@@ -2830,7 +2832,7 @@ msgstr "Egyéb…"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1693 rc.cpp:1711
+#: qtplugins/editor/editortoolwidget.cpp:208:1799 rc.cpp:1817
 msgid "Automatic"
 msgstr "Önműködő"
 
@@ -2941,17 +2943,17 @@ msgstr "Kijelölt atomok lefagyásának feloldása"
 msgid "&Calculate"
 msgstr "S&zámítás"
 
-#: qtplugins/forcefield/forcefield.cpp:285 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:303 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "Geometria optimalizálása"
 
-#: qtplugins/forcefield/forcefield.cpp:326
+#: qtplugins/forcefield/forcefield.cpp:344
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 energia = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:327
+#: qtplugins/forcefield/forcefield.cpp:345
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:913
 #: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
@@ -3180,8 +3182,10 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "DNS/RNS-töredékek beszúrása párbeszédpanelen keresztül."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-msgid "Fragment…"
-msgstr "Töredék…"
+#, fuzzy
+#| msgid "Molecule"
+msgid "Molecule…"
+msgstr "Molekula"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3445,8 +3449,9 @@ msgstr "Molekula általános tulajdonságok megtekintése."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
 #: qtplugins/surfaces/surfaces.cpp:264 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
 msgstr "&Elemzés"
 
@@ -3961,7 +3966,7 @@ msgstr " képkocka/másodperc"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:113:1747
+#: qtplugins/playertool/playertool.cpp:113:1853
 msgid "Frame:"
 msgstr "Képkocka:"
 
@@ -3978,7 +3983,7 @@ msgstr "Dinamikus kötések?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:139:1753
+#: qtplugins/playertool/playertool.cpp:139:1859
 msgid "Record Movie…"
 msgstr "Rajzfilmfájl felvétele…"
 
@@ -4607,7 +4612,7 @@ msgstr "Maradékatomok kijelölése"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1786
+#: qtplugins/select/select.h:30:1892
 msgid "Select"
 msgstr "Kijelölés"
 
@@ -4654,7 +4659,7 @@ msgstr "Tércsoport észlelése…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1771
+#: qtplugins/spacegroup/spacegroup.cpp:68:1877
 msgid "Symmetrize"
 msgstr "Szimmetria átváltozása"
 
@@ -4764,37 +4769,153 @@ msgstr "Tércsoport"
 msgid "Space group features for crystals."
 msgstr "A tércsoport jellemzői a kristályokhoz."
 
-#: qtplugins/spectra/spectra.cpp:27
-msgid "Vibrational Modes…"
-msgstr "Rezgési módok…"
+#: qtplugins/spectra/spectra.cpp:29
+#, fuzzy
+#| msgid "Import Spectra"
+msgid "Plot Spectra…"
+msgstr "Spektrum importálása"
 
-#: qtplugins/spectra/spectra.cpp:86
-msgid "Show the vibrational modes dialog."
-msgstr "Rezgési módok párbeszédpanel megjelenítése."
+#. i18n: file: qtplugins/spectra/spectradialog.ui:75
+#. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
+#: qtplugins/spectra/spectra.h:36:1651
+#, fuzzy
+#| msgctxt "colormap"
+#| msgid "Spectral"
+msgid "Spectra"
+msgstr "Kísérteties"
 
-#: qtplugins/spectra/spectra.cpp:87
-msgid "Set the vibrational mode."
-msgstr "Rezgési mód beállítása."
-
-#: qtplugins/spectra/spectra.cpp:89
-msgid "Set the vibrational amplitude."
-msgstr "Rezgési amplitúdó beállítása."
-
-#: qtplugins/spectra/spectra.cpp:91
-msgid "Start the vibrational animation."
-msgstr "Rezgés-animáció indítása."
-
-#: qtplugins/spectra/spectra.cpp:93
-msgid "Stop the vibrational animation."
-msgstr "Rezgés-animáció leállítása."
-
-#: qtplugins/spectra/spectra.h:32
-msgid "Spectra and Vibrations"
-msgstr "Kísérteties és rezgések"
-
-#: qtplugins/spectra/spectra.h:36
-msgid "Display spectra and vibrational modes."
+#: qtplugins/spectra/spectra.h:38
+#, fuzzy
+#| msgid "Display spectra and vibrational modes."
+msgid "Display spectra plots."
 msgstr "Kísérteties és rezgési módok megjelenítése."
+
+#: qtplugins/spectra/spectradialog.cpp:201
+#, fuzzy
+#| msgctxt "Infrared spectra option"
+#| msgid "Infrared"
+msgid "Infrared"
+msgstr "Infravörös"
+
+#: qtplugins/spectra/spectradialog.cpp:205
+msgid "Raman"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:208
+msgid "NMR"
+msgstr "NMR"
+
+#: qtplugins/spectra/spectradialog.cpp:211
+#, fuzzy
+#| msgid "electron"
+msgid "Electronic"
+msgstr "elektron"
+
+#: qtplugins/spectra/spectradialog.cpp:215
+msgid "Circular Dichroism"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:219
+#: qtplugins/spectra/spectradialog.cpp:410
+#, fuzzy
+#| msgid "Transition State"
+msgid "Density of States"
+msgstr "Átmeneti állapot"
+
+#: qtplugins/spectra/spectradialog.cpp:256
+#, fuzzy
+#| msgid "Select Backbone"
+msgid "Select Background Color"
+msgstr "Gerincatomok kijelölése"
+
+#: qtplugins/spectra/spectradialog.cpp:269
+#, fuzzy
+#| msgid "Select Colormap"
+msgid "Select Foreground Color"
+msgstr "Színleképezés kijelölése"
+
+#: qtplugins/spectra/spectradialog.cpp:282
+#, fuzzy
+#| msgid "Calculated Spectra:"
+msgid "Select Calculated Spectra Color"
+msgstr "Számított spektrum:"
+
+#: qtplugins/spectra/spectradialog.cpp:294
+#, fuzzy
+#| msgid "Imported Spectra:"
+msgid "Select Imported Spectra Color"
+msgstr "Importált spektrum:"
+
+#: qtplugins/spectra/spectradialog.cpp:342
+#, fuzzy
+#| msgid "Vibrational Modes"
+msgid "Vibrational Spectra"
+msgstr "Rezgési módok"
+
+#: qtplugins/spectra/spectradialog.cpp:343
+#: qtplugins/spectra/spectradialog.cpp:357
+#, fuzzy
+#| msgid "Wavenumber (cm<sup>-1</sup>)"
+msgid "Wavenumbers (cm⁻¹)"
+msgstr "Hullámszám (cm<sup>-1</sup>)"
+
+#: qtplugins/spectra/spectradialog.cpp:344
+#, fuzzy
+#| msgid "Transition State"
+msgid "Transmission"
+msgstr "Átmeneti állapot"
+
+#: qtplugins/spectra/spectradialog.cpp:356
+#, fuzzy
+#| msgid "Import Spectra"
+msgid "Raman Spectra"
+msgstr "Spektrum importálása"
+
+#: qtplugins/spectra/spectradialog.cpp:358
+#: qtplugins/spectra/spectradialog.cpp:371
+#: qtplugins/spectra/spectradialog.cpp:384
+#: qtplugins/spectra/spectradialog.cpp:399
+#: qtplugins/spectra/spectradialog.cpp:412
+#, fuzzy
+#| msgid "Density"
+msgid "Intensity"
+msgstr "Sűrűség"
+
+#: qtplugins/spectra/spectradialog.cpp:369
+#, fuzzy
+#| msgctxt "colormap"
+#| msgid "Spectral"
+msgid "NMR Spectra"
+msgstr "Kísérteties"
+
+#: qtplugins/spectra/spectradialog.cpp:370
+#, fuzzy
+#| msgid "Shift (ppm)"
+msgid "Chemical Shift (ppm)"
+msgstr "Eltolódás (ppm)"
+
+#: qtplugins/spectra/spectradialog.cpp:382
+#, fuzzy
+#| msgid "Electron Density"
+msgid "Electronic Spectra"
+msgstr "Elektronsűrűség"
+
+#: qtplugins/spectra/spectradialog.cpp:383
+#: qtplugins/spectra/spectradialog.cpp:411
+#, fuzzy
+#| msgid " eV"
+msgid "eV"
+msgstr " eV"
+
+#: qtplugins/spectra/spectradialog.cpp:397
+msgid "Circular Dichroism Spectra"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:398
+#, fuzzy
+#| msgid " eV"
+msgid "eV)"
+msgstr " eV"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -4931,7 +5052,7 @@ msgstr "Szimmetria…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1756
+#: qtplugins/symmetry/symmetry.h:34:1862
 msgid "Symmetry"
 msgstr "Szimmetria"
 
@@ -5000,6 +5121,42 @@ msgstr "Van der Waals gömbök egyszerű megjelenítése."
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:33
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr "Van der Waals gömbök egyszerű megjelenítése környezeti elzáródással."
+
+#: qtplugins/vibrations/vibrations.cpp:27
+msgid "Vibrational Modes…"
+msgstr "Rezgési módok…"
+
+#: qtplugins/vibrations/vibrations.cpp:90
+msgid "Show the vibrational modes dialog."
+msgstr "Rezgési módok párbeszédpanel megjelenítése."
+
+#: qtplugins/vibrations/vibrations.cpp:91
+msgid "Set the vibrational mode."
+msgstr "Rezgési mód beállítása."
+
+#: qtplugins/vibrations/vibrations.cpp:93
+msgid "Set the vibrational amplitude."
+msgstr "Rezgési amplitúdó beállítása."
+
+#: qtplugins/vibrations/vibrations.cpp:95
+msgid "Start the vibrational animation."
+msgstr "Rezgés-animáció indítása."
+
+#: qtplugins/vibrations/vibrations.cpp:97
+msgid "Stop the vibrational animation."
+msgstr "Rezgés-animáció leállítása."
+
+#: qtplugins/vibrations/vibrations.h:33
+#, fuzzy
+#| msgid "Vibration"
+msgid "Vibrations"
+msgstr "Vibráció"
+
+#: qtplugins/vibrations/vibrations.h:37
+#, fuzzy
+#| msgid "Display spectra and vibrational modes."
+msgid "Display vibrational modes."
+msgstr "Kísérteties és rezgési módok megjelenítése."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -7411,25 +7568,198 @@ msgstr "Állandó méret"
 msgid "Apply Color"
 msgstr "Szín alkalmazása"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
-msgid "Vibrational Modes"
-msgstr "Rezgési módok"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
+#, fuzzy
+#| msgid "Spectra and Vibrations"
+msgid "Spectra Visualization"
+msgstr "Kísérteties és rezgések"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
+#. i18n: file: qtplugins/spectra/spectradialog.ui:38
+#. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
+msgid "&Load data..."
+msgstr "&Adatok betöltése..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:45
+#. i18n: ectx: property (text), widget (QPushButton, push_exportData)
+#, fuzzy
+#| msgid "&Export"
+msgid "Export Data"
+msgstr "&Exportálás"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:58
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+msgid "&Close"
+msgstr "&Bezárás"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:91
+#. i18n: ectx: property (text), widget (QLabel, label_11)
+#, fuzzy
+#| msgid "&Scaling Factor:"
+msgid "Scale Factor:"
+msgstr "&Méretezési tényező:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:108
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "X-Axis Minimum:"
+msgstr "Minimum:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:115
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "X-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:132
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+msgid "Offset:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+msgid "Y-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:156
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "Y-Axis Minimum:"
+msgstr "Minimum:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:189
+#. i18n: ectx: property (text), widget (QLabel, label_13)
+#, fuzzy
+#| msgid "Peak width:"
+msgid "Peak Width:"
+msgstr "Csúcs szélessége:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:216
+#. i18n: ectx: property (text), widget (QLabel, label_27)
+msgid "Peak Threshold:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:224
+#. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
+msgid "&Appearance"
+msgstr "Meg&jelenés"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:233
+#. i18n: ectx: property (text), widget (QCheckBox, cb_import)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:304
+#. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
+msgid "Show"
+msgstr "Megjelenítés"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:249
+#. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
+msgid "Imports a tsv of experimental spectra to overlay on the plot."
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:252
+#. i18n: ectx: property (text), widget (QPushButton, push_import)
+msgid "&Import..."
+msgstr "&Importálás..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:268
+#. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:320
+#. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:349
+#. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:388
+#. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
+msgid "Set Color..."
+msgstr "Színbeállítás..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:288
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Imported Spectra:"
+msgstr "Importált spektrum:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:336
+#. i18n: ectx: property (text), widget (QPushButton, push_export)
+msgid "&Export..."
+msgstr "&Exportálás…"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:362
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+msgid "Background:"
+msgstr "Háttér:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:375
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+msgid "Calculated Spectra:"
+msgstr "Számított spektrum:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Amplitude:"
-msgstr "Amplitúdó:"
+#, fuzzy
+#| msgid "Constant Size"
+msgid "Font Size:"
+msgstr "Állandó méret"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
-#. i18n: ectx: property (text), widget (QPushButton, startButton)
-msgid "Start Animation"
-msgstr "Animáció indítása"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:406
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+#, fuzzy
+#| msgid "10^"
+msgid "10"
+msgstr "10^"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
-#. i18n: ectx: property (text), widget (QPushButton, stopButton)
-msgid "Stop Animation"
-msgstr "Animáció leállítása"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:411
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "12"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:416
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "14"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:421
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "16"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:426
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "18"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+#| msgid "Line width:"
+msgid "Line Size:"
+msgstr "Vonalvastagság:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "x"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "y"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: ectx: property (text), widget (QPushButton, push_options)
+#, fuzzy
+#| msgid "Operations"
+msgid "&Options…"
+msgstr "Műveletek"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
+msgid ""
+"Controls:\n"
+"Double left click: Restore default axis limits\n"
+"Right click + drag: Move plot\n"
+"Middle click + drag: Zoom to region\n"
+"Scroll wheel: Zoom to cursor"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -7803,6 +8133,26 @@ msgstr ""
 msgid "sulfonate"
 msgstr ""
 
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+msgid "Vibrational Modes"
+msgstr "Rezgési módok"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:56
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Amplitude:"
+msgstr "Amplitúdó:"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+msgid "Start Animation"
+msgstr "Animáció indítása"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
+#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+msgid "Stop Animation"
+msgstr "Animáció leállítása"
+
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
@@ -7997,6 +8347,9 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Fragment…"
+#~ msgstr "Töredék…"
 
 #~ msgid "Functional Groups"
 #~ msgstr "Függvényes csoportok"
@@ -8968,24 +9321,11 @@ msgstr "E-mail-címek"
 #~ "értékeket. Az intenzitásokat tetszőleges értékekre állítottam a "
 #~ "vizualizáció miatt."
 
-#~ msgid "Wavenumber (cm<sup>-1</sup>)"
-#~ msgstr "Hullámszám (cm<sup>-1</sup>)"
-
-#~ msgid "Shift (ppm)"
-#~ msgstr "Eltolódás (ppm)"
-
 #~ msgid "X Axis"
 #~ msgstr "X tengely"
 
 #~ msgid "Y Axis"
 #~ msgstr "Y tengely"
-
-#~ msgid "&Appearance"
-#~ msgstr "Meg&jelenés"
-
-#~ msgctxt "Infrared spectra option"
-#~ msgid "Infrared"
-#~ msgstr "Infravörös"
 
 #~ msgid "&Infrared Spectra Settings"
 #~ msgstr "&Infravörös spektumok beállítása"
@@ -9038,9 +9378,6 @@ msgstr "E-mail-címek"
 
 #~ msgid "JCAMP-DX"
 #~ msgstr "JCAMP-DX"
-
-#~ msgid "Import Spectra"
-#~ msgstr "Spektrum importálása"
 
 #~ msgid "Unknown extension: %1"
 #~ msgstr "Ismeretlen kiterjesztés: %1"
@@ -9098,9 +9435,6 @@ msgstr "E-mail-címek"
 
 #~ msgid "No vibrational displacements exist."
 #~ msgstr "Nincs vibrációs eltolódás"
-
-#~ msgid "Vibration"
-#~ msgstr "Vibráció"
 
 #~ msgid "Visualize vibrational modes from quantum chemistry calculations"
 #~ msgstr "Vibrációs módok vizualizációja kvantumkémiai számításokból"
@@ -9980,9 +10314,6 @@ msgstr "E-mail-címek"
 #~ msgid "Raman Intensities"
 #~ msgstr "Raman intenzitás"
 
-#~ msgid "NMR"
-#~ msgstr "NMR"
-
 #~ msgid "Make EFP"
 #~ msgstr "EFP készítés"
 
@@ -10342,9 +10673,6 @@ msgstr "E-mail-címek"
 #~ msgid "Stationary Point"
 #~ msgstr "Álló pont"
 
-#~ msgid "Minimum:"
-#~ msgstr "Minimum:"
-
 #~ msgid "Initial:"
 #~ msgstr "Kezdeti:"
 
@@ -10438,35 +10766,11 @@ msgstr "E-mail-címek"
 #~ msgid "Display Type:"
 #~ msgstr "Meglenítés típusa:"
 
-#~ msgid "&Load data..."
-#~ msgstr "&Adatok betöltése..."
-
-#~ msgid "&Close"
-#~ msgstr "&Bezárás"
-
-#~ msgid "Calculated Spectra:"
-#~ msgstr "Számított spektrum:"
-
-#~ msgid "Set Color..."
-#~ msgstr "Színbeállítás..."
-
-#~ msgid "Imported Spectra:"
-#~ msgstr "Importált spektrum:"
-
 #~ msgid "Font:"
 #~ msgstr "Betűtípus:"
 
 #~ msgid "Change Font..."
 #~ msgstr "A betűtípus megváltoztatása..."
-
-#~ msgid "Show"
-#~ msgstr "Megjelenítés"
-
-#~ msgid "&Import..."
-#~ msgstr "&Importálás..."
-
-#~ msgid "Background:"
-#~ msgstr "Háttér:"
 
 #~ msgid "New..."
 #~ msgstr "Új..."
@@ -10476,9 +10780,6 @@ msgstr "E-mail-címek"
 
 #~ msgid "&Schemes:"
 #~ msgstr "&Sémák:"
-
-#~ msgid "&Export..."
-#~ msgstr "&Exportálás…"
 
 #~ msgid "&DPI:"
 #~ msgstr "&DPI:"
