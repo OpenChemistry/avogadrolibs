@@ -14,6 +14,7 @@
 #include <avogadro/rendering/linestripgeometry.h>
 
 #include <QtCore/QSettings>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QVBoxLayout>
