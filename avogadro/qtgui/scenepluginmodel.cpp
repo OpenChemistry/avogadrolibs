@@ -11,7 +11,8 @@ namespace Avogadro::QtGui {
 
 ScenePluginModel::ScenePluginModel(QObject* parent_)
   : QAbstractItemModel(parent_)
-{}
+{
+}
 
 QModelIndex ScenePluginModel::parent(const QModelIndex&) const
 {
@@ -28,7 +29,7 @@ int ScenePluginModel::rowCount(const QModelIndex& parent_) const
 
 int ScenePluginModel::columnCount(const QModelIndex&) const
 {
-  return 1;
+  return 2;
 }
 
 Qt::ItemFlags ScenePluginModel::flags(const QModelIndex& index_) const
@@ -67,13 +68,34 @@ bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
 
 QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
 {
-  if (!index_.isValid() || index_.column() > 1)
+  if (!index_.isValid() || index_.column() > 2)
     return QVariant();
 
   auto* object = static_cast<QObject*>(index_.internalPointer());
   auto* item = qobject_cast<ScenePlugin*>(object);
   if (!item)
     return QVariant();
+
+  // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
+  auto toVariant = [&](auto flags) {
+    return static_cast<Qt::Alignment::Int>(flags);
+  };
+
+  // check if setupWidget() returns something
+  if (index_.column() == 1) {
+    switch (role) {
+      case Qt::DisplayRole:
+      case Qt::EditRole:
+        return (item->setupWidget() != nullptr) ? "…" : " ";
+      case Qt::ToolTipRole:
+      case Qt::WhatsThisRole:
+        return tr("Settings");
+      case Qt::TextAlignmentRole:
+        return toVariant(Qt::AlignLeft | Qt::AlignVCenter);
+      default:
+        return QVariant();
+    }
+  }
 
   if (index_.column() == 0) {
     switch (role) {
@@ -88,6 +110,8 @@ QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
       case Qt::ToolTipRole:
       case Qt::WhatsThisRole:
         return item->description();
+      case Qt::TextAlignmentRole:
+        return toVariant(Qt::AlignLeft);
       default:
         return QVariant();
     }
@@ -148,4 +172,4 @@ void ScenePluginModel::itemChanged()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
