@@ -175,7 +175,7 @@ QWidget* CrystalScene::setupWidget()
 
     auto* multiColor = new QCheckBox;
     multiColor->setChecked(m_multiColor);
-    fomr->addRow(tr("Color axes:"), multiColor);
+    form->addRow(tr("Color axes:"), multiColor);
     connect(multiColor, SIGNAL(toggled(bool)), SLOT(setMultiColor(bool)));
 
     auto* color = new QtGui::ColorButton;
