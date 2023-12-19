@@ -9,7 +9,7 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
-#include <QtGui/QColor> 
+#include <QtGui/QColor>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -38,8 +38,9 @@ public:
   QWidget* setupWidget() override;
 
 private slots:
-  void setColor(const QColor &color);
+  void setColor(const QColor& color);
   void setLineWidth(double width);
+  void setMultiColor(bool multiColor);
 
 private:
   std::string m_name = "Crystal Lattice";
@@ -47,6 +48,7 @@ private:
   QWidget* m_setupWidget;
   float m_lineWidth;
   Vector3ub m_color;
+  bool m_multiColor;
 };
 
 } // end namespace QtPlugins
