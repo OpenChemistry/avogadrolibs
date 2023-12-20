@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-16 16:26+0000\n"
-"PO-Revision-Date: 2023-12-20 17:07+0000\n"
+"PO-Revision-Date: 2023-12-20 22:12+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -7386,10 +7386,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "ოპერაციები"
+msgstr "&მორგება…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:568
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
