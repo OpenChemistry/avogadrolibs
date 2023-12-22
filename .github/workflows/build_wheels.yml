@@ -55,10 +55,11 @@ jobs:
       - uses: actions/setup-python@v5
         name: Install Python
         with:
-          python-version: '3.7'
+          python-version: '3.8'
+          cache: 'pip' # caching pip dependencies
 
       - name: Install cibuildwheel
-        run: pip install cibuildwheel==2.12.3
+        run: pip install cibuildwheel==2.16.2
 
       - name: Install dependencies
         run: . ./scripts/github-actions/install.sh
@@ -66,8 +67,9 @@ jobs:
       - name: Build wheels
         run:  cibuildwheel --output-dir wheelhouse
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
 
   upload_pypi:
