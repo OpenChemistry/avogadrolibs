@@ -52,8 +52,7 @@ public:
   }
 };
 
-InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
-                                           Qt::WindowFlags)
+InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory)
   : QDialog(aParent), m_ui(new Ui::InsertFragmentDialog),
     m_implementation(new Private)
 {
