@@ -16,7 +16,7 @@ env:
   CIBW_BEFORE_ALL_LINUX: yum install -y git eigen3-devel
 
   # Specify eigen location for windows
-  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEigen3_INCLUDE_DIR:PATH=/c/eigen"
+  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
 
   # On Mac build both x64 and arm64
   CIBW_ARCHS_MACOS: "x86_64 arm64"

@@ -15,8 +15,8 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
-#include <QtWidgets/QSlider>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QVBoxLayout>
 
 #include <algorithm>
@@ -36,17 +36,15 @@ Meshes::Meshes(QObject* p) : ScenePlugin(p), m_setupWidget(nullptr)
   // out of 255
   m_opacity = settings.value("meshes/opacity", 150).toUInt();
 
-  auto color =
-    settings.value("meshes/color1", QColor(Qt::red)).value<QColor>();
+  auto color = settings.value("meshes/color1", QColor(Qt::red)).value<QColor>();
   m_color1[0] = static_cast<unsigned char>(color.red());
   m_color1[1] = static_cast<unsigned char>(color.green());
   m_color1[2] = static_cast<unsigned char>(color.blue());
 
-  color =
-    settings.value("meshes/color2", QColor(Qt::blue)).value<QColor>();
+  color = settings.value("meshes/color2", QColor(Qt::blue)).value<QColor>();
   m_color2[0] = static_cast<unsigned char>(color.red());
   m_color2[1] = static_cast<unsigned char>(color.green());
-  m_color2[2] = static_cast<unsigned char>(color.blue());  
+  m_color2[2] = static_cast<unsigned char>(color.blue());
 }
 
 Meshes::~Meshes() {}
@@ -67,7 +65,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
   if (mol.meshCount()) {
     auto* geometry = new GeometryNode;
     node.addChild(geometry);
- 
+
     const Mesh* mesh = mol.mesh(0);
 
     /// @todo Allow use of MeshGeometry without an index array when all vertices
@@ -84,20 +82,19 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     mesh1->setOpacity(m_opacity);
 
     if (hasColors) {
-    auto colors = mesh->colors();
-    Core::Array<Vector3ub> colorsRGB(colors.size());
-    for (size_t i = 0; i < colors.size(); i++)
-      colorsRGB[i] = Vector3ub(
-        colors[i].red() * 255, colors[i].green() * 255, colors[i].blue() * 255
-      );
-    mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
+      auto colors = mesh->colors();
+      Core::Array<Vector3ub> colorsRGB(colors.size());
+      for (size_t i = 0; i < colors.size(); i++)
+        colorsRGB[i] = Vector3ub(colors[i].red() * 255, colors[i].green() * 255,
+                                 colors[i].blue() * 255);
+      mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
     } else { // probably a molecular orbital
       mesh1->setColor(m_color1);
       mesh1->addVertices(mesh->vertices(), mesh->normals());
     }
     mesh1->addTriangles(indices);
     mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
-                                        : Rendering::TranslucentPass);
+                                          : Rendering::TranslucentPass);
 
     if (mol.meshCount() >= 2) { // it's a molecular orbital, two parts
       auto* mesh2 = new MeshGeometry;
@@ -115,7 +112,7 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
       mesh2->addVertices(mesh->vertices(), mesh->normals());
       mesh2->addTriangles(indices);
       mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
-                                          : Rendering::TranslucentPass);
+                                            : Rendering::TranslucentPass);
     }
   }
 }
@@ -189,4 +186,4 @@ QWidget* Meshes::setupWidget()
   return m_setupWidget;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

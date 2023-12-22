@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-10 18:10+0000\n"
+"POT-Creation-Date: 2023-12-16 16:26+0000\n"
 "PO-Revision-Date: 2023-10-07 12:12+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -529,7 +529,7 @@ msgstr "붕소"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1819
+#: qtgui/elementtranslator.cpp:34:1925
 msgid "Carbon"
 msgstr "탄소"
 
@@ -611,13 +611,13 @@ msgstr "망간"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1822
+#: qtgui/elementtranslator.cpp:94:1928
 msgid "Iron"
 msgstr "철"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1825
+#: qtgui/elementtranslator.cpp:97:1931
 msgid "Cobalt"
 msgstr "코발트"
 
@@ -1134,33 +1134,33 @@ msgstr "전하"
 msgid "Multiplicity"
 msgstr "다중도"
 
-#: qtgui/jsonwidget.cpp:557
+#: qtgui/jsonwidget.cpp:558
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "오류: 값은 키 '%1'에 대한 객체여야 합니다."
 
-#: qtgui/jsonwidget.cpp:590
+#: qtgui/jsonwidget.cpp:591
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "옵션 '%2'에 대해 인식할 수 없는 옵션 유형 '%1'입니다."
 
-#: qtgui/jsonwidget.cpp:599 qtgui/jsonwidget.cpp:634 qtgui/jsonwidget.cpp:655
-#: qtgui/jsonwidget.cpp:677 qtgui/jsonwidget.cpp:698 qtgui/jsonwidget.cpp:720
-#: qtgui/jsonwidget.cpp:741
+#: qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:635 qtgui/jsonwidget.cpp:656
+#: qtgui/jsonwidget.cpp:678 qtgui/jsonwidget.cpp:699 qtgui/jsonwidget.cpp:721
+#: qtgui/jsonwidget.cpp:742
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 위젯 유형입니"
 "다."
 
-#: qtgui/jsonwidget.cpp:606 qtgui/jsonwidget.cpp:641 qtgui/jsonwidget.cpp:662
-#: qtgui/jsonwidget.cpp:684 qtgui/jsonwidget.cpp:705 qtgui/jsonwidget.cpp:727
-#: qtgui/jsonwidget.cpp:748
+#: qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:642 qtgui/jsonwidget.cpp:663
+#: qtgui/jsonwidget.cpp:685 qtgui/jsonwidget.cpp:706 qtgui/jsonwidget.cpp:728
+#: qtgui/jsonwidget.cpp:749
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 기본값:"
 
-#: qtgui/jsonwidget.cpp:620
+#: qtgui/jsonwidget.cpp:621
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1169,12 +1169,12 @@ msgstr ""
 "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 값에서 유효한 콤보 항"
 "목 인덱스를 찾을 수 없습니다:"
 
-#: qtgui/jsonwidget.cpp:809
+#: qtgui/jsonwidget.cpp:810
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "옵션 '%1'에 대한 collectOptions 처리되지 않은 위젯입니다."
 
-#: qtgui/jsonwidget.cpp:851 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:852 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:395
 msgid "[no molecule]"
 msgstr "[분자 없음]"
@@ -1541,7 +1541,9 @@ msgid ""
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:75
+#. i18n: file: qtplugins/spectra/spectradialog.ui:281
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: qtplugins/aligntool/aligntool.cpp:75:1693
 msgid "Axis:"
 msgstr "축:"
 
@@ -1818,7 +1820,7 @@ msgstr "시비디스"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1684
+#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1790
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "스펙트럼"
@@ -1828,7 +1830,7 @@ msgstr "스펙트럼"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1681
+#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "냉온"
@@ -1838,7 +1840,7 @@ msgstr "냉온"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1675
+#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1781
 msgctxt "colormap"
 msgid "Balance"
 msgstr "균형"
@@ -1848,7 +1850,7 @@ msgstr "균형"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1678
+#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "파란-어두운 빨강"
@@ -1860,7 +1862,7 @@ msgstr "파란-어두운 빨강"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1687
+#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "터보"
@@ -1894,7 +1896,7 @@ msgstr "색상지도 선택"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1672
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1778
 msgid "Colormap:"
 msgstr "색상지도:"
 
@@ -2345,7 +2347,7 @@ msgstr "원자 좌표 편집"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:158:1714 rc.cpp:1744
+#: qtplugins/label/label.cpp:158:1820 rc.cpp:1850
 msgid "Custom"
 msgstr "커스텀"
 
@@ -2387,42 +2389,42 @@ msgstr "터보몰 형식"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
-#: qtplugins/copypaste/copypaste.cpp:31
+#: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/propertytables/propertyview.cpp:283:252
 msgid "Copy"
 msgstr "복사"
 
-#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "SMILES"
 msgstr "SMILES"
 
-#: qtplugins/copypaste/copypaste.cpp:33 qtplugins/copypaste/copypaste.cpp:79
+#: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
 msgid "InChI"
 msgstr "국제 화학 식별자"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:34:249
+#: qtplugins/copypaste/copypaste.cpp:33:249
 msgid "Cut"
 msgstr "잘라내기"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:35:261
+#: qtplugins/copypaste/copypaste.cpp:34:261
 msgid "Clear"
 msgstr "지우기"
 
-#: qtplugins/copypaste/copypaste.cpp:36
+#: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
 msgstr "붙여넣기(&P)"
 
-#: qtplugins/copypaste/copypaste.cpp:80 qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
 msgstr "편집(&E)"
 
-#: qtplugins/copypaste/copypaste.cpp:82
+#: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
 msgstr "다른 이름으로 복사"
 
@@ -2444,7 +2446,7 @@ msgstr ""
 "출력 형식: %1 \n"
 "%2"
 
-#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:274
+#: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
 #, qt-format
 msgid ""
 "Reader error:\n"
@@ -2453,19 +2455,19 @@ msgstr ""
 "리더 오류: \n"
 "%1"
 
-#: qtplugins/copypaste/copypaste.cpp:235 qtplugins/copypaste/copypaste.cpp:268
+#: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
 msgid "Error Pasting Molecule"
 msgstr "분자 붙여넣기 오류"
 
-#: qtplugins/copypaste/copypaste.cpp:236
+#: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
 msgstr "분자를 붙여넣을 수 없음: 클립보드가 비어 있습니다!"
 
-#: qtplugins/copypaste/copypaste.cpp:269
+#: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
 msgstr "클립보드 데이터를 읽는 동안 오류가 발생했습니다."
 
-#: qtplugins/copypaste/copypaste.cpp:270
+#: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
 msgctxt "file format description"
 msgid ""
@@ -2779,7 +2781,7 @@ msgstr "편집기 도구"
 #: qtplugins/templatetool/templatetoolwidget.cpp:345
 #: qtplugins/templatetool/templatetoolwidget.cpp:353
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:1948
+#: qtplugins/templatetool/templatetoolwidget.cpp:424:2054
 msgid "Other…"
 msgstr "기타…"
 
@@ -2787,7 +2789,7 @@ msgstr "기타…"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1693 rc.cpp:1711
+#: qtplugins/editor/editortoolwidget.cpp:208:1799 rc.cpp:1817
 msgid "Automatic"
 msgstr "자동"
 
@@ -2908,18 +2910,18 @@ msgstr "선택된 원자 결합"
 msgid "&Calculate"
 msgstr "계산"
 
-#: qtplugins/forcefield/forcefield.cpp:285 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:303 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:560
 msgid "Optimize Geometry"
 msgstr "기하학 최적화"
 
-#: qtplugins/forcefield/forcefield.cpp:326
+#: qtplugins/forcefield/forcefield.cpp:344
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
 msgstr "에너지 = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:327
+#: qtplugins/forcefield/forcefield.cpp:345
 #: qtplugins/playertool/playertool.cpp:343
 #: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:913
 #: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
@@ -3152,8 +3154,10 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "대화상자를 통해 DNA/RNA 단편을 삽입합니다."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-msgid "Fragment…"
-msgstr "조각…"
+#, fuzzy
+#| msgid "Molecule"
+msgid "Molecule…"
+msgstr "분자"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3414,8 +3418,9 @@ msgstr "분자의 일반적인 특성을 봅니다."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:42
+#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
 #: qtplugins/surfaces/surfaces.cpp:264 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
 msgstr "분석(&A)"
 
@@ -3917,7 +3922,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:113:1747
+#: qtplugins/playertool/playertool.cpp:113:1853
 msgid "Frame:"
 msgstr "프레임:"
 
@@ -3934,7 +3939,7 @@ msgstr "역동적인 결합입니까?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:139:1753
+#: qtplugins/playertool/playertool.cpp:139:1859
 msgid "Record Movie…"
 msgstr "동영상 녹화…"
 
@@ -4553,7 +4558,7 @@ msgstr "잔여물 선택"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1786
+#: qtplugins/select/select.h:30:1892
 msgid "Select"
 msgstr "선택"
 
@@ -4598,7 +4603,7 @@ msgstr "지각 공간 그룹…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1771
+#: qtplugins/spacegroup/spacegroup.cpp:68:1877
 msgid "Symmetrize"
 msgstr "대칭화"
 
@@ -4708,37 +4713,152 @@ msgstr "공간그룹"
 msgid "Space group features for crystals."
 msgstr "결정체에 대한 공간 그룹 기능입니다."
 
-#: qtplugins/spectra/spectra.cpp:27
-msgid "Vibrational Modes…"
-msgstr "진동 모드…"
+#: qtplugins/spectra/spectra.cpp:29
+#, fuzzy
+#| msgid "Import Spectra"
+msgid "Plot Spectra…"
+msgstr "스펙트럼 가져오기"
 
-#: qtplugins/spectra/spectra.cpp:86
-msgid "Show the vibrational modes dialog."
-msgstr "진동 모드 대화상자를 표시합니다."
+#. i18n: file: qtplugins/spectra/spectradialog.ui:75
+#. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
+#: qtplugins/spectra/spectra.h:36:1651
+#, fuzzy
+#| msgctxt "colormap"
+#| msgid "Spectral"
+msgid "Spectra"
+msgstr "스펙트럼"
 
-#: qtplugins/spectra/spectra.cpp:87
-msgid "Set the vibrational mode."
-msgstr "진동 모드를 설정합니다."
-
-#: qtplugins/spectra/spectra.cpp:89
-msgid "Set the vibrational amplitude."
-msgstr "진동 진폭을 설정합니다."
-
-#: qtplugins/spectra/spectra.cpp:91
-msgid "Start the vibrational animation."
-msgstr "진동 애니메이션을 시작합니다."
-
-#: qtplugins/spectra/spectra.cpp:93
-msgid "Stop the vibrational animation."
-msgstr "진동 애니메이션을 중지합니다."
-
-#: qtplugins/spectra/spectra.h:32
-msgid "Spectra and Vibrations"
-msgstr "스펙트럼 및 진동"
-
-#: qtplugins/spectra/spectra.h:36
-msgid "Display spectra and vibrational modes."
+#: qtplugins/spectra/spectra.h:38
+#, fuzzy
+#| msgid "Display spectra and vibrational modes."
+msgid "Display spectra plots."
 msgstr "스펙트럼 및 진동 모드를 표시합니다."
+
+#: qtplugins/spectra/spectradialog.cpp:201
+#, fuzzy
+#| msgctxt "Infrared spectra option"
+#| msgid "Infrared"
+msgid "Infrared"
+msgstr "적외선"
+
+#: qtplugins/spectra/spectradialog.cpp:205
+msgid "Raman"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:208
+#, fuzzy
+#| msgctxt "NMR spectra option"
+#| msgid "NMR"
+msgid "NMR"
+msgstr "NMR"
+
+#: qtplugins/spectra/spectradialog.cpp:211
+#, fuzzy
+#| msgid "electron"
+msgid "Electronic"
+msgstr "전자"
+
+#: qtplugins/spectra/spectradialog.cpp:215
+msgid "Circular Dichroism"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:219
+#: qtplugins/spectra/spectradialog.cpp:410
+#, fuzzy
+#| msgid "Transition State"
+msgid "Density of States"
+msgstr "전이 상태"
+
+#: qtplugins/spectra/spectradialog.cpp:256
+msgid "Select Background Color"
+msgstr "배경색상 선택"
+
+#: qtplugins/spectra/spectradialog.cpp:269
+#, fuzzy
+#| msgid "Select Background Color"
+msgid "Select Foreground Color"
+msgstr "배경색상 선택"
+
+#: qtplugins/spectra/spectradialog.cpp:282
+#, fuzzy
+#| msgid "Export Calculated Spectrum"
+msgid "Select Calculated Spectra Color"
+msgstr "계산된 스펙트럼 내보내기"
+
+#: qtplugins/spectra/spectradialog.cpp:294
+#, fuzzy
+#| msgid "Imported Spectra:"
+msgid "Select Imported Spectra Color"
+msgstr "가져온 스펙트럼:"
+
+#: qtplugins/spectra/spectradialog.cpp:342
+#, fuzzy
+#| msgid "Vibrational Modes"
+msgid "Vibrational Spectra"
+msgstr "진동 모드"
+
+#: qtplugins/spectra/spectradialog.cpp:343
+#: qtplugins/spectra/spectradialog.cpp:357
+msgid "Wavenumbers (cm⁻¹)"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:344
+#, fuzzy
+#| msgid "Transition State"
+msgid "Transmission"
+msgstr "전이 상태"
+
+#: qtplugins/spectra/spectradialog.cpp:356
+#, fuzzy
+#| msgid "Import Spectra"
+msgid "Raman Spectra"
+msgstr "스펙트럼 가져오기"
+
+#: qtplugins/spectra/spectradialog.cpp:358
+#: qtplugins/spectra/spectradialog.cpp:371
+#: qtplugins/spectra/spectradialog.cpp:384
+#: qtplugins/spectra/spectradialog.cpp:399
+#: qtplugins/spectra/spectradialog.cpp:412
+#, fuzzy
+#| msgid "Density"
+msgid "Intensity"
+msgstr "밀도"
+
+#: qtplugins/spectra/spectradialog.cpp:369
+#, fuzzy
+#| msgctxt "colormap"
+#| msgid "Spectral"
+msgid "NMR Spectra"
+msgstr "스펙트럼"
+
+#: qtplugins/spectra/spectradialog.cpp:370
+#, fuzzy
+#| msgid "Chemical files (*.parm7)"
+msgid "Chemical Shift (ppm)"
+msgstr "화학 파일 (*.parm7)"
+
+#: qtplugins/spectra/spectradialog.cpp:382
+#, fuzzy
+#| msgid "Electron Density"
+msgid "Electronic Spectra"
+msgstr "전자 밀도"
+
+#: qtplugins/spectra/spectradialog.cpp:383
+#: qtplugins/spectra/spectradialog.cpp:411
+#, fuzzy
+#| msgid " eV"
+msgid "eV"
+msgstr " eV"
+
+#: qtplugins/spectra/spectradialog.cpp:397
+msgid "Circular Dichroism Spectra"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:398
+#, fuzzy
+#| msgid " eV"
+msgid "eV)"
+msgstr " eV"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -4877,7 +4997,7 @@ msgstr "대칭…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1756
+#: qtplugins/symmetry/symmetry.h:34:1862
 msgid "Symmetry"
 msgstr "대칭"
 
@@ -4938,6 +5058,42 @@ msgstr "VdW 구체의 간단한 표시입니다."
 #: qtplugins/vanderwaalsao/vanderwaalsao.h:33
 msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr "주변 폐색이 있는 VdW 구체의 간단한 표시입니다."
+
+#: qtplugins/vibrations/vibrations.cpp:27
+msgid "Vibrational Modes…"
+msgstr "진동 모드…"
+
+#: qtplugins/vibrations/vibrations.cpp:90
+msgid "Show the vibrational modes dialog."
+msgstr "진동 모드 대화상자를 표시합니다."
+
+#: qtplugins/vibrations/vibrations.cpp:91
+msgid "Set the vibrational mode."
+msgstr "진동 모드를 설정합니다."
+
+#: qtplugins/vibrations/vibrations.cpp:93
+msgid "Set the vibrational amplitude."
+msgstr "진동 진폭을 설정합니다."
+
+#: qtplugins/vibrations/vibrations.cpp:95
+msgid "Start the vibrational animation."
+msgstr "진동 애니메이션을 시작합니다."
+
+#: qtplugins/vibrations/vibrations.cpp:97
+msgid "Stop the vibrational animation."
+msgstr "진동 애니메이션을 중지합니다."
+
+#: qtplugins/vibrations/vibrations.h:33
+#, fuzzy
+#| msgid "Vibration"
+msgid "Vibrations"
+msgstr "진동"
+
+#: qtplugins/vibrations/vibrations.h:37
+#, fuzzy
+#| msgid "Display spectra and vibrational modes."
+msgid "Display vibrational modes."
+msgstr "스펙트럼 및 진동 모드를 표시합니다."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -7368,25 +7524,205 @@ msgstr "일정한 크기"
 msgid "Apply Color"
 msgstr "색상 적용"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
-msgid "Vibrational Modes"
-msgstr "진동 모드"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
+#, fuzzy
+#| msgid "Spectra and Vibrations"
+msgid "Spectra Visualization"
+msgstr "스펙트럼 및 진동"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:56
+#. i18n: file: qtplugins/spectra/spectradialog.ui:38
+#. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
+msgid "&Load data..."
+msgstr "데이터 읽기(&L)..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:45
+#. i18n: ectx: property (text), widget (QPushButton, push_exportData)
+#, fuzzy
+#| msgid "&Export"
+msgid "Export Data"
+msgstr "내보내기(&E)"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:58
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+msgid "&Close"
+msgstr "닫기(&C)"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:91
+#. i18n: ectx: property (text), widget (QLabel, label_11)
+#, fuzzy
+#| msgid "&Scaling Factor:"
+msgid "Scale Factor:"
+msgstr "계수 인자(&S):"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:108
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "X-Axis Minimum:"
+msgstr "최소:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:115
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "X-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:132
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+msgid "Offset:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:139
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+msgid "Y-Axis Maximum:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:156
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#, fuzzy
+#| msgid "Minimum:"
+msgid "Y-Axis Minimum:"
+msgstr "최소:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:189
+#. i18n: ectx: property (text), widget (QLabel, label_13)
+#, fuzzy
+#| msgid "Peak width:"
+msgid "Peak Width:"
+msgstr "피크 폭:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:216
+#. i18n: ectx: property (text), widget (QLabel, label_27)
+msgid "Peak Threshold:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:224
+#. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
+msgid "&Appearance"
+msgstr "모양(&A)"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:233
+#. i18n: ectx: property (text), widget (QCheckBox, cb_import)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:304
+#. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
+msgid "Show"
+msgstr "보기"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:249
+#. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
+msgid "Imports a tsv of experimental spectra to overlay on the plot."
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:252
+#. i18n: ectx: property (text), widget (QPushButton, push_import)
+msgid "&Import..."
+msgstr "가져오기(&I)..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:268
+#. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:320
+#. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:349
+#. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
+#. i18n: file: qtplugins/spectra/spectradialog.ui:388
+#. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
+#, fuzzy
+#| msgid "Select Colormap"
+msgid "Set Color..."
+msgstr "색상지도 선택"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:288
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+msgid "Imported Spectra:"
+msgstr "가져온 스펙트럼:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:336
+#. i18n: ectx: property (text), widget (QPushButton, push_export)
+msgid "&Export..."
+msgstr "내보내기(&E)..."
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:362
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#, fuzzy
+#| msgctxt "protein rendering style"
+#| msgid "Backbone"
+msgid "Background:"
+msgstr "중추"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:375
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#, fuzzy
+#| msgid "Export Calculated Spectrum"
+msgid "Calculated Spectra:"
+msgstr "계산된 스펙트럼 내보내기"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-msgid "Amplitude:"
-msgstr "진폭:"
+#, fuzzy
+#| msgid "Constant Size"
+msgid "Font Size:"
+msgstr "일정한 크기"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:96
-#. i18n: ectx: property (text), widget (QPushButton, startButton)
-msgid "Start Animation"
-msgstr "애니메이션 시작"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:406
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+#, fuzzy
+#| msgid "10^"
+msgid "10"
+msgstr "10^"
 
-#. i18n: file: qtplugins/spectra/vibrationdialog.ui:103
-#. i18n: ectx: property (text), widget (QPushButton, stopButton)
-msgid "Stop Animation"
-msgstr "애니메이션 중지"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:411
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "12"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:416
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "14"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:421
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "16"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:426
+#. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
+msgid "18"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#, fuzzy
+#| msgid "Line width:"
+msgid "Line Size:"
+msgstr "선의 폭:"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "x"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "y"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: ectx: property (text), widget (QPushButton, push_options)
+#, fuzzy
+#| msgid "Operations"
+msgid "&Options…"
+msgstr "운영"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
+msgid ""
+"Controls:\n"
+"Double left click: Restore default axis limits\n"
+"Right click + drag: Move plot\n"
+"Middle click + drag: Zoom to region\n"
+"Scroll wheel: Zoom to cursor"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -7762,6 +8098,26 @@ msgstr ""
 msgid "sulfonate"
 msgstr ""
 
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
+msgid "Vibrational Modes"
+msgstr "진동 모드"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:56
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Amplitude:"
+msgstr "진폭:"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
+#. i18n: ectx: property (text), widget (QPushButton, startButton)
+msgid "Start Animation"
+msgstr "애니메이션 시작"
+
+#. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
+#. i18n: ectx: property (text), widget (QPushButton, stopButton)
+msgid "Stop Animation"
+msgstr "애니메이션 중지"
+
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
@@ -7953,6 +8309,9 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com"
+
+#~ msgid "Fragment…"
+#~ msgstr "조각…"
 
 #~ msgid "Functional Groups"
 #~ msgstr "기능 그룹"
@@ -8532,9 +8891,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 #~ msgid "Open parameter file"
 #~ msgstr "매개 변수 파일 열기"
 
-#~ msgid "Chemical files (*.parm7)"
-#~ msgstr "화학 파일 (*.parm7)"
-
 #~ msgid "Import Trajectory"
 #~ msgstr "궤도 가져오기"
 
@@ -8884,19 +9240,8 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 #~ msgid "Y Axis"
 #~ msgstr "Y 축"
 
-#~ msgid "&Appearance"
-#~ msgstr "모양(&A)"
-
-#~ msgctxt "Infrared spectra option"
-#~ msgid "Infrared"
-#~ msgstr "적외선"
-
 #~ msgid "&Infrared Spectra Settings"
 #~ msgstr "적외선 스펙트럼 설정"
-
-#~ msgctxt "NMR spectra option"
-#~ msgid "NMR"
-#~ msgstr "NMR"
 
 #~ msgid "&NMR Spectra Settings"
 #~ msgstr "NMR 스펙트럼 설정"
@@ -8928,12 +9273,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 #~ msgid "Enter new name for current scheme:"
 #~ msgstr "최근의 도표에 대한 새로운 이름 입력:"
 
-#~ msgid "Select Background Color"
-#~ msgstr "배경색상 선택"
-
-#~ msgid "Export Calculated Spectrum"
-#~ msgstr "계산된 스펙트럼 내보내기"
-
 #~ msgid "Tab Separated Values (*.tsv)"
 #~ msgstr "탭으로 분리된 값 (*.tsv)"
 
@@ -8945,9 +9284,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 
 #~ msgid "JCAMP-DX"
 #~ msgstr "JCAMP-DX"
-
-#~ msgid "Import Spectra"
-#~ msgstr "스펙트럼 가져오기"
 
 #~ msgid "Unknown extension: %1"
 #~ msgstr "알려지지 않은 확장자: %1"
@@ -8999,9 +9335,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 
 #~ msgid "Vibrational Analysis"
 #~ msgstr "진동 계산"
-
-#~ msgid "Vibration"
-#~ msgstr "진동"
 
 #~ msgid "Pause"
 #~ msgstr "일시정지"
@@ -9653,9 +9986,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 #~ msgid "Grid-Free"
 #~ msgstr "격자 없애기"
 
-#~ msgid "Minimum:"
-#~ msgstr "최소:"
-
 #~ msgid "Quadratic Approximation"
 #~ msgstr "2차 근사치"
 
@@ -9668,26 +9998,11 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 #~ msgid "Display Type:"
 #~ msgstr "표시 형식:"
 
-#~ msgid "&Load data..."
-#~ msgstr "데이터 읽기(&L)..."
-
-#~ msgid "&Close"
-#~ msgstr "닫기(&C)"
-
-#~ msgid "Imported Spectra:"
-#~ msgstr "가져온 스펙트럼:"
-
 #~ msgid "Font:"
 #~ msgstr "글꼴:"
 
 #~ msgid "Change Font..."
 #~ msgstr "글꼴 변경..."
-
-#~ msgid "Show"
-#~ msgstr "보기"
-
-#~ msgid "&Import..."
-#~ msgstr "가져오기(&I)..."
 
 #~ msgid "New..."
 #~ msgstr "새로 만들기..."
@@ -9697,9 +10012,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 
 #~ msgid "&Schemes:"
 #~ msgstr "도표(&S):"
-
-#~ msgid "&Export..."
-#~ msgstr "내보내기(&E)..."
 
 #~ msgid "&DPI:"
 #~ msgstr "DPI(&D):"
