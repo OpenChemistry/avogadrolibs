@@ -287,9 +287,27 @@ public:
    */
   bool setAtomPosition3d(Index atomId, const Vector3& pos);
 
-  std::string label(Index atomId) const;
-  bool setLabel(const Core::Array<std::string>& label);
-  bool setLabel(Index atomId, const std::string& label);
+  /**
+   * @return Any custom label for the requested atom.
+   * @param atomId The index of the atom.
+   */
+  std::string atomLabel(Index atomId) const;
+  /**
+   * Set the custom label of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param label The new label of the atom.
+   * @return True on success, false otherwise.
+   */
+  bool setAtomLabel(Index atomId, const std::string& label);
+
+  const Core::Array<std::string> atomLabels() const { return m_atomLabels; }
+
+  /**
+   * Set all the atom labels in the molecule.
+   * @param label The new label array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setAtomLabels(const Core::Array<std::string>& label);
 
   /**
    * Set whether the specified atom is selected or not.
@@ -403,6 +421,28 @@ public:
 
   /** @return the bond between atomId1 and atomId2. */
   BondType bond(Index atomId1, Index atomId2) const;
+
+  /**
+   * @return Any custom label for the requested bond.
+   * @param bondIndex The index of the bond.
+   */
+  std::string bondLabel(Index bondIndex) const;
+  /**
+   * Set the custom label of a single bond.
+   * @param bondIndex The index of the bond to modify.
+   * @param label The new label of the bond.
+   * @return True on success, false otherwise.
+   */
+  bool setBondLabel(Index bondIndex, const std::string& label);
+
+  const Core::Array<std::string> bondLabels() const { return m_bondLabels; }
+
+  /**
+   * Set all the atom labels in the molecule.
+   * @param label The new label array. Must be of length atomCount().
+   * @return True on success, false otherwise.
+   */
+  bool setBondLabels(const Core::Array<std::string>& label);
 
   /**
    * @brief Get all bonds to @p a.
@@ -780,7 +820,8 @@ protected:
                           //!< force fields)
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
-  Array<std::string> m_label;
+  Array<std::string> m_atomLabels;
+  Array<std::string> m_bondLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
   Array<double> m_timesteps;
   Array<AtomHybridization> m_hybridizations;
@@ -989,26 +1030,26 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
   return false;
 }
 
-inline std::string Molecule::label(Index atomId) const
+inline std::string Molecule::atomLabel(Index atomId) const
 {
-  return atomId < m_label.size() ? m_label[atomId] : "";
+  return atomId < m_atomLabels.size() ? m_atomLabels[atomId] : "";
 }
 
-inline bool Molecule::setLabel(const Core::Array<std::string>& label)
+inline bool Molecule::setAtomLabels(const Core::Array<std::string>& labels)
 {
-  if (label.size() == atomCount() || label.size() == 0) {
-    m_label = label;
+  if (labels.size() == atomCount() || labels.size() == 0) {
+    m_atomLabels = labels;
     return true;
   }
   return false;
 }
 
-inline bool Molecule::setLabel(Index atomId, const std::string& label)
+inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_label.size())
-      m_label.resize(atomCount(), "");
-    m_label[atomId] = label;
+    if (atomId >= m_atomLabels.size())
+      m_atomLabels.resize(atomCount(), "");
+    m_atomLabels[atomId] = label;
     return true;
   }
   return false;
@@ -1086,6 +1127,30 @@ inline const Array<unsigned char>& Molecule::bondOrders() const
   return m_bondOrders;
 }
 
+inline std::string Molecule::bondLabel(Index bondId) const
+{
+  return bondId < m_bondLabels.size() ? m_bondLabels[bondId] : "";
+}
+
+inline bool Molecule::setBondLabels(const Core::Array<std::string>& labels)
+{
+  if (labels.size() == atomCount() || labels.size() == 0) {
+    m_bondLabels = labels;
+    return true;
+  }
+  return false;
+}
+
+inline bool Molecule::setBondLabel(Index bondId, const std::string& label)
+{
+  if (bondId < bondCount()) {
+    if (bondId >= m_bondLabels.size())
+      m_bondLabels.resize(bondCount(), "");
+    m_bondLabels[bondId] = label;
+    return true;
+  }
+  return false;
+}
 inline const Graph& Molecule::graph() const
 {
   return m_graph;

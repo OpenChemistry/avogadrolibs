@@ -38,9 +38,9 @@ Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
     m_spectra(other.m_spectra), m_customElementMap(other.m_customElementMap),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d), m_label(other.m_label),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
+    m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
@@ -79,7 +79,8 @@ Molecule::Molecule(const Molecule& other)
 
 void Molecule::readProperties(const Molecule& other)
 {
-  m_label = other.m_label;
+  m_atomLabels = other.m_atomLabels;
+  m_bondLabels = other.m_bondLabels;
   m_colors = other.m_colors;
   // merge data maps by iterating through other's map
   for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
@@ -134,9 +135,9 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_spectra(other.m_spectra),
     m_customElementMap(std::move(other.m_customElementMap)),
     m_elements(other.m_elements), m_positions2d(other.m_positions2d),
-    m_positions3d(other.m_positions3d), m_label(other.m_label),
-    m_coordinates3d(other.m_coordinates3d), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
+    m_positions3d(other.m_positions3d), m_atomLabels(other.m_atomLabels),
+    m_bondLabels(other.m_bondLabels), m_coordinates3d(other.m_coordinates3d),
+    m_timesteps(other.m_timesteps), m_hybridizations(other.m_hybridizations),
     m_formalCharges(other.m_formalCharges), m_colors(other.m_colors),
     m_vibrationFrequencies(other.m_vibrationFrequencies),
     m_vibrationIRIntensities(other.m_vibrationIRIntensities),
@@ -176,7 +177,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
-    m_label = other.m_label;
+    m_atomLabels = other.m_atomLabels;
+    m_bondLabels = other.m_bondLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -238,7 +240,8 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     m_elements = other.m_elements;
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
-    m_label = other.m_label;
+    m_atomLabels = other.m_atomLabels;
+    m_bondLabels = other.m_bondLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_timesteps = other.m_timesteps;
     m_hybridizations = other.m_hybridizations;
@@ -646,12 +649,13 @@ void Molecule::clearAtoms()
 {
   m_positions2d.clear();
   m_positions3d.clear();
-  m_label.clear();
+  m_atomLabels.clear();
   m_hybridizations.clear();
   m_formalCharges.clear();
   m_colors.clear();
   m_atomicNumbers.clear();
   m_bondOrders.clear();
+  m_bondLabels.clear();
   m_graph.clear();
   m_partialCharges.clear();
   m_elements.reset();

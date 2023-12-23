@@ -380,13 +380,13 @@ Vector3 AtomTemplate<Molecule_T>::forceVector() const
 template <class Molecule_T>
 void AtomTemplate<Molecule_T>::setLabel(const std::string& label)
 {
-  m_molecule->setLabel(m_index, label);
+  m_molecule->setAtomLabel(m_index, label);
 }
 
 template <class Molecule_T>
 std::string AtomTemplate<Molecule_T>::label() const
 {
-  return m_molecule->label(m_index);
+  return m_molecule->atomLabel(m_index);
 }
 
 } // namespace Core
