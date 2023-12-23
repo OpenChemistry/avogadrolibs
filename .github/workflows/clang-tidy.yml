@@ -103,7 +103,7 @@ jobs:
         echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
         echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: clang-tidy-result
         path: ${{ runner.workspace }}/clang-tidy-result/

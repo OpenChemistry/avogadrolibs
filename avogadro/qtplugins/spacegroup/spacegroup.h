@@ -21,10 +21,10 @@ public:
   explicit SpaceGroup(QObject* parent_ = nullptr);
   ~SpaceGroup();
 
-  QString name() const { return tr("SpaceGroup"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("SpaceGroup"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
@@ -32,7 +32,7 @@ public:
   void registerCommands() override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 

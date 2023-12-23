@@ -8,10 +8,10 @@
 #include "histogramwidget.h"
 
 #include <QAction>
+#include <QDebug>
 #include <QDialog>
 #include <QMessageBox>
 #include <QString>
-#include <QDebug>
 
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/cube.h>
@@ -84,6 +84,18 @@ QStringList ColorOpacityMap::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
+void ColorOpacityMap::setActiveWidget(QWidget* widget)
+{
+  auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+  if (vtkWidget) {
+    m_vtkWidget = true;
+    updateActions();
+  } else {
+    m_vtkWidget = false;
+    updateActions();
+  }
+}
+
 void ColorOpacityMap::setMolecule(QtGui::Molecule* mol)
 {
   if (m_molecule == mol)
@@ -114,15 +126,17 @@ void ColorOpacityMap::moleculeChanged(unsigned int c)
 
 void ColorOpacityMap::updateActions()
 {
-  // Just leave it enabled, if you click on it it will be empty...
   foreach (QAction* action, m_actions)
-    action->setEnabled(true);
+    action->setEnabled(m_vtkWidget);
 }
 
 void ColorOpacityMap::updateHistogram()
 {
   auto widget = ActiveObjects::instance().activeWidget();
   auto vtkWidget = qobject_cast<VTK::vtkGLWidget*>(widget);
+
+  if (vtkWidget == nullptr)
+    m_vtkWidget = false;
 
   if (widget && vtkWidget && widget != m_activeWidget) {
     if (m_activeWidget)
@@ -132,6 +146,7 @@ void ColorOpacityMap::updateHistogram()
   }
 
   if (vtkWidget && m_molecule && m_molecule->cubeCount()) {
+    m_vtkWidget = true;
     vtkNew<vtkTable> table;
     auto imageData = vtkWidget->imageData();
     auto lut = vtkWidget->lut();

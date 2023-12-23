@@ -22,12 +22,12 @@
 namespace {
 #include "linestrip_fs.h"
 #include "linestrip_vs.h"
-}
+} // namespace
 
-using Avogadro::Core::Array;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
+using Avogadro::Core::Array;
 
 using std::cout;
 using std::endl;
@@ -232,6 +232,29 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
 }
 
 size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
+                                       const Vector3ub& rgb, float lineWidth)
+{
+  if (vertices.empty())
+    return InvalidIndex;
+
+  size_t result = m_lineStarts.size();
+  m_lineStarts.push_back(static_cast<unsigned int>(m_vertices.size()));
+  m_lineWidths.push_back(lineWidth);
+
+  auto vertIter(vertices.begin());
+  auto vertEnd(vertices.end());
+
+  m_vertices.reserve(m_vertices.size() + vertices.size());
+  Vector4ub tmpColor(rgb[0], rgb[1], rgb[2], m_opacity);
+  while (vertIter != vertEnd) {
+    m_vertices.push_back(PackedVertex(*(vertIter++), tmpColor));
+  }
+
+  m_dirty = true;
+  return result;
+}
+
+size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
                                        float lineWidth)
 {
   if (vertices.empty())
@@ -253,4 +276,4 @@ size_t LineStripGeometry::addLineStrip(const Core::Array<Vector3f>& vertices,
   return result;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

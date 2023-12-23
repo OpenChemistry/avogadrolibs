@@ -100,6 +100,15 @@ public:
   /** \overload */
   VariantMap& dataMap();
 
+  /** @return a specific spectra entry */
+  MatrixX spectra(const std::string& name) const;
+
+  /** Sets the spectra value with @p name to @p value. */
+  void setSpectra(const std::string& name, const MatrixX& value);
+
+  /** @return the list of available spectra */
+  std::set<std::string> spectraTypes() const;
+
   /** Sets atomic partial charges with @p type to @p value. */
   void setPartialCharges(const std::string& type, const MatrixX& value);
 
@@ -804,6 +813,8 @@ protected:
   VariantMap m_data;
   std::map<std::string, MatrixX>
     m_partialCharges; //!< Sets of atomic partial charges
+
+  std::map<std::string, MatrixX> m_spectra; //!< Sets of spectra
   CustomElementMap m_customElementMap;
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)

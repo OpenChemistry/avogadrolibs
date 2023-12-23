@@ -1,3 +1,5 @@
+include(ExternalProject)
+
 set(template_srcs
   templatetool.cpp
   templatetoolwidget.cpp
@@ -28,7 +30,7 @@ set(_molecules "${AvogadroLibs_SOURCE_DIR}/../fragments")
 if(NOT EXISTS "${_fragments}")
 # download molecules...
 ExternalProject_Add(fragments
-    GIT_REPOSITORY https://github.com/openchemistry/fragments 
+    GIT_REPOSITORY https://github.com/openchemistry/fragments
     GIT_TAG main
     # or https://github.com/OpenChemistry/molecules/archive/refs/heads/master.zip
     SOURCE_DIR "${AvogadroLibs_SOURCE_DIR}/../fragments"

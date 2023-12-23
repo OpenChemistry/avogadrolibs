@@ -14,6 +14,7 @@
 #include <avogadro/rendering/linestripgeometry.h>
 
 #include <QtCore/QSettings>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QVBoxLayout>
@@ -28,8 +29,11 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::LineStripGeometry;
 
-CrystalScene::CrystalScene(QObject* p)
-  : ScenePlugin(p), m_setupWidget(nullptr)
+const Vector3ub red = { 255, 0, 0 };
+const Vector3ub green = { 0, 255, 0 };
+const Vector3ub blue = { 0, 0, 255 };
+
+CrystalScene::CrystalScene(QObject* p) : ScenePlugin(p), m_setupWidget(nullptr)
 {
   m_layerManager = QtGui::PluginLayerManager(m_name);
 
@@ -41,6 +45,8 @@ CrystalScene::CrystalScene(QObject* p)
   m_color[0] = static_cast<unsigned char>(color.red());
   m_color[1] = static_cast<unsigned char>(color.green());
   m_color[2] = static_cast<unsigned char>(color.blue());
+
+  m_multiColor = settings.value("crystal/multiColor", true).toBool();
 }
 
 CrystalScene::~CrystalScene() {}
@@ -52,8 +58,8 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
     node.addChild(geometry);
     auto* lines = new LineStripGeometry;
     geometry->addDrawable(lines);
-
     lines->setColor(m_color);
+    auto color = m_color;
     float width = m_lineWidth;
 
     Vector3f a = cell->aVector().cast<float>();
@@ -63,24 +69,50 @@ void CrystalScene::process(const QtGui::Molecule& molecule, GroupNode& node)
     Vector3f vertex(Vector3f::Zero());
 
     Array<Vector3f> strip;
+    // draw the a axis
     strip.reserve(5);
     strip.push_back(vertex);
-    strip.push_back(vertex += a);
-    strip.push_back(vertex += b);
-    strip.push_back(vertex -= a);
-    strip.push_back(vertex -= b);
+    strip.push_back(vertex + a);
+    if (!m_multiColor)
+      lines->addLineStrip(strip, color, width);
+    else // a axis is R-G-B
+      lines->addLineStrip(strip, red, width);
+
+    // now the b-axis
+    strip.clear();
+    strip.push_back(vertex);
+    strip.push_back(vertex + b);
+    if (!m_multiColor)
+      lines->addLineStrip(strip, color, width);
+    else // b axis is R-G-B
+      lines->addLineStrip(strip, green, width);
+
+    // now the rest of the ab plane
+    strip.clear();
+    strip.push_back(vertex + a);
+    strip.push_back(vertex + a + b);
+    strip.push_back(vertex + b);
     lines->addLineStrip(strip, width);
 
-    for (auto & it : strip) {
-      it += c;
-    }
+    // now the ab plane "up" by axis c
+    strip.clear();
+    strip.push_back(vertex + c);
+    strip.push_back(vertex + a + c);
+    strip.push_back(vertex + a + b + c);
+    strip.push_back(vertex + b + c);
+    strip.push_back(vertex + c);
     lines->addLineStrip(strip, width);
 
+    // now the c axis
     strip.resize(2);
     strip[0] = Vector3f::Zero();
     strip[1] = c;
-    lines->addLineStrip(strip, width);
+    if (!m_multiColor)
+      lines->addLineStrip(strip, color, width);
+    else // c axis is R-G-B
+      lines->addLineStrip(strip, blue, width);
 
+    // now the remaining "struts" from ab plane along c axis
     strip[0] += a;
     strip[1] += a;
     lines->addLineStrip(strip, width);
@@ -116,6 +148,15 @@ void CrystalScene::setColor(const QColor& color)
   settings.setValue("crystal/color", color);
 }
 
+void CrystalScene::setMultiColor(bool multiColor)
+{
+  m_multiColor = multiColor;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("crystal/multiColor", multiColor);
+}
+
 QWidget* CrystalScene::setupWidget()
 {
   if (!m_setupWidget) {
@@ -132,6 +173,11 @@ QWidget* CrystalScene::setupWidget()
     auto* form = new QFormLayout;
     form->addRow(tr("Line width:"), spin);
 
+    auto* multiColor = new QCheckBox;
+    multiColor->setChecked(m_multiColor);
+    form->addRow(tr("Color axes:"), multiColor);
+    connect(multiColor, SIGNAL(toggled(bool)), SLOT(setMultiColor(bool)));
+
     auto* color = new QtGui::ColorButton;
     connect(color, SIGNAL(colorChanged(const QColor&)),
             SLOT(setColor(const QColor&)));
@@ -145,4 +191,4 @@ QWidget* CrystalScene::setupWidget()
   return m_setupWidget;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
