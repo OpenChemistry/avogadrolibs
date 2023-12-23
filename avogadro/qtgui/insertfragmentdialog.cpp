@@ -22,11 +22,11 @@
 
 #include <QtCore/QSettings>
 
+#include <QFileSystemModel>
 #include <QtCore/QDir>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFileSystemModel>
 #include <QtWidgets/QMessageBox>
 
 #include <QCloseEvent>
