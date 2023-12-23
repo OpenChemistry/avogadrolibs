@@ -66,7 +66,8 @@ struct LayerLabel : Core::LayerData
     Index = 0x01,
     Name = 0x02,
     Custom = 0x04,
-    Ordinal = 0x08
+    Ordinal = 0x08,
+    UniqueID = 0x16
   };
   unsigned short atomOptions;
   unsigned short residueOptions;
@@ -326,6 +327,9 @@ void Label::processAtom(const Core::Molecule& molecule,
       text += (text == "" ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
+    }
+    if (interface.atomOptions & LayerLabel::LabelOptions::UniqueID) {
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
