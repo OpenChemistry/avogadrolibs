@@ -35,7 +35,8 @@ bool SortFilterTreeProxyModel::filterAcceptsRow(
     bool childOfRoot = false;
     QModelIndex parent = sourceParent;
     for (int depth = 3; depth > 0; depth--) {
-      if (sourceModel()->data(parent).toString().contains(filterRegExp()))
+      if (sourceModel()->data(parent).toString().contains(
+            filterRegularExpression()))
         return true; // a parent matches the pattern
 
       parent = parent.parent();
