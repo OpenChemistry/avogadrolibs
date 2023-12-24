@@ -148,7 +148,7 @@ struct LayerLabel : Core::LayerData
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
-      char elements[] = { None, Index, Name, Custom, Ordinal };
+      char elements[] = { None, Index, Name, Custom, Ordinal, UniqueID };
       for (char option : elements) {
         if (option == 0) {
           atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
@@ -173,6 +173,11 @@ struct LayerLabel : Core::LayerData
             text << ((text.size() == 0) ? QObject::tr("Element & Number")
                                         : QObject::tr("El.&No."));
             val |= LabelOptions::Ordinal;
+          }
+          if (option & LabelOptions::UniqueID) {
+            text << ((text.size() == 0) ? QObject::tr("Unique ID")
+                                        : QObject::tr("Un.ID"));
+            val |= LabelOptions::UniqueID;
           }
           QString join = QObject::tr(", ");
           atom->addItem(text.join(join), QVariant(val));
