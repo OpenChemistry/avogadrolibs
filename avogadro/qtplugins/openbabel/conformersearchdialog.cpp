@@ -11,8 +11,7 @@
 
 namespace Avogadro {
 
-ConformerSearchDialog::ConformerSearchDialog(QWidget* parent, Qt::WindowFlags f)
-  : QDialog(parent, f)
+ConformerSearchDialog::ConformerSearchDialog(QWidget* parent) : QDialog(parent)
 {
   ui.setupUi(this);
 

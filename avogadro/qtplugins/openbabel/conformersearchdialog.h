@@ -17,8 +17,8 @@ class ConformerSearchDialog : public QDialog
 
 public:
   //! Constructor
-  explicit ConformerSearchDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-  //! Desconstructor
+  explicit ConformerSearchDialog(QWidget* parent = 0);
+  //! Deconstructor
   ~ConformerSearchDialog();
 
   int method();
