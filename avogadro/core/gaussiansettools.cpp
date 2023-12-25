@@ -132,7 +132,7 @@ bool GaussianSetTools::isValid() const
 
 inline bool GaussianSetTools::isSmall(double val) const
 {
-  if (val > -1e-20 && val < 1e-20)
+  if (val > -1e-12 && val < 1e-12)
     return true;
   else
     return false;
@@ -168,6 +168,12 @@ inline vector<double> GaussianSetTools::calculateValues(
 
   // Now calculate the values at this point in space
   for (unsigned int i = 0; i < basisSize; ++i) {
+    // bail early if the distance is too big
+    // TODO: this should be smarter and use the exponents
+    //   .. and angular momentum
+    if (dr2[atomIndices[i]] > 100.0)
+      continue;
+
     switch (basis[i]) {
       case GaussianSet::S:
         pointS(i, dr2[atomIndices[i]], values);
