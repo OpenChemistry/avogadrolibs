@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023.
+# Chiyu Liang <532117255@qq.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-24 02:05+0000\n"
-"PO-Revision-Date: 2023-09-05 07:55+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2023-12-26 21:41+0000\n"
+"Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2676,7 +2677,7 @@ msgstr "標準配向に回転"
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "クリスタルを Niggli 縮約"
 
 #: qtplugins/crystal/crystal.cpp:216
 #, fuzzy
