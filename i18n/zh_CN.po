@@ -7,13 +7,14 @@
 # Hugel <qihu@nfschina.com>, 2022.
 # FAN JI <sifan95.ji@gmail.com>, 2022.
 # Shusong Zhang <sszhang@mail.nwpu.edu.cn>, 2023.
+# alchemistcai <alchemistcai@163.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-24 02:05+0000\n"
-"PO-Revision-Date: 2023-02-16 16:36+0000\n"
-"Last-Translator: Shusong Zhang <sszhang@mail.nwpu.edu.cn>\n"
+"PO-Revision-Date: 2023-12-26 18:38+0000\n"
+"Last-Translator: alchemistcai <alchemistcai@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -87,7 +88,7 @@ msgstr "'files' 成员不是数组。"
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "缺少'files'成员。"
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
