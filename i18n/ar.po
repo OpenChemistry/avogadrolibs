@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-16 16:26+0000\n"
+"POT-Creation-Date: 2023-12-24 02:05+0000\n"
 "PO-Revision-Date: 2021-06-16 17:34+0000\n"
 "Last-Translator: Lihan Zhu <zhulihan@seas.upenn.edu>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
@@ -1176,7 +1176,7 @@ msgid "Licorice"
 msgstr ""
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
-#: qtplugins/surfaces/surfaces.cpp:839
+#: qtplugins/surfaces/surfaces.cpp:838
 msgid "Meshes"
 msgstr ""
 
@@ -1306,59 +1306,59 @@ msgstr ""
 msgid "Change Layer"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:38 qtgui/rwmolecule.cpp:47
+#: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:69 qtgui/rwmolecule.cpp:84
+#: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
 #: qtplugins/editor/editor.cpp:123
 msgid "Remove Atom"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:94
+#: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
 msgstr ""
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:459
+#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:459
 msgid "Adjust Hydrogens"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:142
+#: qtgui/rwmolecule.cpp:143
 #, fuzzy
 msgid "Change Elements"
 msgstr "عنصر"
 
-#: qtgui/rwmolecule.cpp:154
+#: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:220
+#: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:232
+#: qtgui/rwmolecule.cpp:233
 msgid "Change Atom Formal Charge"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:244
+#: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:256
+#: qtgui/rwmolecule.cpp:257
 msgid "Change Atom Layer"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:272
+#: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:298
+#: qtgui/rwmolecule.cpp:299
 msgid "Removed Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:305
+#: qtgui/rwmolecule.cpp:306
 msgid "Clear Bonds"
 msgstr ""
 
@@ -1371,64 +1371,64 @@ msgstr "ترتيب الرابطة"
 msgid "Change Bond Order"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:355
+#: qtgui/rwmolecule.cpp:354
 msgid "Update Bonds"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:374
+#: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:394
+#: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:407
+#: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:472
+#: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:489
+#: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:512
+#: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:532
+#: qtgui/rwmolecule.cpp:527
 msgid "Build Super Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:556
+#: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:578
+#: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:603 qtplugins/spacegroup/spacegroup.cpp:56
+#: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:628 qtplugins/spacegroup/spacegroup.cpp:62
+#: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:240
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:653 qtplugins/spacegroup/spacegroup.cpp:265
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
 msgid "Symmetrize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:672
+#: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:692
+#: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
@@ -1453,6 +1453,12 @@ msgstr "عنصر"
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr ""
+
+#: qtgui/scenepluginmodel.cpp:92
+#, fuzzy
+#| msgid "&UV Settings"
+msgid "Settings"
+msgstr "&إعدادات الأشعة فوق البنفسجية"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1716,25 +1722,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:762
+#: qtplugins/surfaces/surfaces.cpp:758
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:106
-#: qtplugins/surfaces/surfaces.cpp:764
+#: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:108
-#: qtplugins/surfaces/surfaces.cpp:766
+#: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:768
+#: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
@@ -1742,7 +1748,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:770
+#: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
@@ -1750,7 +1756,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:772
+#: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
@@ -1758,7 +1764,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:774
+#: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
@@ -1766,7 +1772,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:776
+#: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
@@ -1774,7 +1780,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:778
+#: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
 msgstr ""
@@ -1786,7 +1792,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1790
+#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1790
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1798,7 +1804,7 @@ msgstr "طيف"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1787
+#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1808,7 +1814,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1781
+#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1781
 #, fuzzy
 #| msgid "Cancel"
 msgctxt "colormap"
@@ -1820,7 +1826,7 @@ msgstr "إلغي"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1784
+#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1832,7 +1838,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1793
+#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -2106,7 +2112,7 @@ msgid "Maximum distance:"
 msgstr "المسافة"
 
 #: qtplugins/closecontacts/closecontacts.cpp:233
-#: qtplugins/crystal/crystalscene.cpp:133
+#: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:88
 msgid "Line width:"
@@ -2654,7 +2660,12 @@ msgstr ""
 msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
-#: qtplugins/crystal/crystalscene.cpp:138
+#: qtplugins/crystal/crystalscene.cpp:178
+#, fuzzy
+msgid "Color axes:"
+msgstr "طبّق"
+
+#: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
 msgstr ""
 
@@ -2870,8 +2881,8 @@ msgstr "الطاقة = %L1 %2"
 
 #: qtplugins/forcefield/forcefield.cpp:345
 #: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:913
-#: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "أفوقادرو"
@@ -3134,8 +3145,8 @@ msgstr ""
 msgid "Insert molecular fragments for building larger molecules."
 msgstr ""
 
-#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:176
-#: qtplugins/meshes/meshes.cpp:182
+#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr ""
 
@@ -3340,7 +3351,7 @@ msgstr "قياس"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:170:1627
+#: qtplugins/meshes/meshes.cpp:167:1627
 msgid "Opacity:"
 msgstr ""
 
@@ -3360,7 +3371,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
 #: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
-#: qtplugins/surfaces/surfaces.cpp:264 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
@@ -3857,7 +3868,7 @@ msgstr "اسم العنصر"
 
 #: qtplugins/playertool/playertool.cpp:120
 #: qtplugins/playertool/playertool.cpp:411
-#: qtplugins/surfaces/surfacedialog.cpp:226
+#: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
 msgstr ""
@@ -3885,7 +3896,7 @@ msgstr ""
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:885
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:884
 msgid "GIF (*.gif)"
 msgstr ""
 
@@ -3902,11 +3913,11 @@ msgstr ""
 msgid "Movie (*.avi)"
 msgstr "ملفات الافلام )*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:958
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:957
 msgid "Error: cannot add frame to video."
 msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:970
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
 msgstr ""
@@ -4789,36 +4800,36 @@ msgstr ""
 msgid "Solvent Excluded"
 msgstr ""
 
-#: qtplugins/surfaces/surfacedialog.cpp:159
+#: qtplugins/surfaces/surfacedialog.cpp:163
 #, fuzzy
 msgid "Molecular Orbital"
 msgstr "المدارات الجزيئية..."
 
-#: qtplugins/surfaces/surfacedialog.cpp:162
+#: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
 msgstr ""
 
-#: qtplugins/surfaces/surfacedialog.cpp:169
+#: qtplugins/surfaces/surfacedialog.cpp:173
 msgid "Spin Density"
 msgstr ""
 
-#: qtplugins/surfaces/surfacedialog.cpp:181
+#: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
 msgstr ""
 
-#: qtplugins/surfaces/surfacedialog.cpp:183
+#: qtplugins/surfaces/surfacedialog.cpp:187
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr ""
 
-#: qtplugins/surfaces/surfacedialog.cpp:185
+#: qtplugins/surfaces/surfacedialog.cpp:189
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
 msgstr ""
 
-#: qtplugins/surfaces/surfacedialog.cpp:200
+#: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
 msgstr ""
 
@@ -4862,31 +4873,31 @@ msgstr ""
 msgid "Render a cube supplied with the file."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:588
+#: qtplugins/surfaces/surfaces.cpp:586
 #, fuzzy
 msgid "Calculating electron density"
 msgstr "كثافة الإلكترون"
 
-#: qtplugins/surfaces/surfaces.cpp:597
+#: qtplugins/surfaces/surfaces.cpp:595
 #, fuzzy
 msgid "Calculating spin density"
 msgstr "كثافة الإلكترون"
 
-#: qtplugins/surfaces/surfaces.cpp:606
+#: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:862 qtplugins/surfaces/surfaces.cpp:890
+#: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
 msgid "Movie AVI (*.avi)"
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:864
+#: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
 msgstr "ت&صدير صورة"
 
-#: qtplugins/surfaces/surfaces.cpp:865
+#: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr ""
 
@@ -8360,9 +8371,6 @@ msgstr ""
 
 #~ msgid "&Infrared Spectra Settings"
 #~ msgstr "&إعدادات أطياف الأشعة تحت الحمراء"
-
-#~ msgid "&UV Settings"
-#~ msgstr "&إعدادات الأشعة فوق البنفسجية"
 
 #~ msgid "Dark"
 #~ msgstr "غامق"

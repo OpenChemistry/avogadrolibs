@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-16 16:26+0000\n"
+"POT-Creation-Date: 2023-12-24 02:05+0000\n"
 "PO-Revision-Date: 2023-10-07 12:12+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -1216,7 +1216,7 @@ msgid "Licorice"
 msgstr "감초"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
-#: qtplugins/surfaces/surfaces.cpp:839
+#: qtplugins/surfaces/surfaces.cpp:838
 msgid "Meshes"
 msgstr "메쉬"
 
@@ -1349,58 +1349,58 @@ msgstr "레이어 정보 추가"
 msgid "Change Layer"
 msgstr "레이어 변경"
 
-#: qtgui/rwmolecule.cpp:38 qtgui/rwmolecule.cpp:47
+#: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
 msgstr "원자 추가"
 
-#: qtgui/rwmolecule.cpp:69 qtgui/rwmolecule.cpp:84
+#: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
 #: qtplugins/editor/editor.cpp:123
 msgid "Remove Atom"
 msgstr "원자 제거하기"
 
-#: qtgui/rwmolecule.cpp:94
+#: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
 msgstr "원자 지우기"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:106 qtgui/rwmolecule.cpp:114:459
+#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:459
 msgid "Adjust Hydrogens"
 msgstr "수소 추가"
 
-#: qtgui/rwmolecule.cpp:142
+#: qtgui/rwmolecule.cpp:143
 msgid "Change Elements"
 msgstr "원소 변경"
 
-#: qtgui/rwmolecule.cpp:154
+#: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
 msgstr "원소 바꾸기"
 
-#: qtgui/rwmolecule.cpp:220
+#: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
 msgstr "원자 혼성화 변경"
 
-#: qtgui/rwmolecule.cpp:232
+#: qtgui/rwmolecule.cpp:233
 msgid "Change Atom Formal Charge"
 msgstr "원자 형식 전하 변경"
 
-#: qtgui/rwmolecule.cpp:244
+#: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
 msgstr "원자 색상 변경"
 
-#: qtgui/rwmolecule.cpp:256
+#: qtgui/rwmolecule.cpp:257
 msgid "Change Atom Layer"
 msgstr "원자 레이어 변경"
 
-#: qtgui/rwmolecule.cpp:272
+#: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
 msgstr "결합 추가"
 
-#: qtgui/rwmolecule.cpp:298
+#: qtgui/rwmolecule.cpp:299
 msgid "Removed Bond"
 msgstr "결합 제거됨"
 
-#: qtgui/rwmolecule.cpp:305
+#: qtgui/rwmolecule.cpp:306
 msgid "Clear Bonds"
 msgstr "결합 지우기"
 
@@ -1412,64 +1412,64 @@ msgstr "결합 차수 설정"
 msgid "Change Bond Order"
 msgstr "결합 차수 변경"
 
-#: qtgui/rwmolecule.cpp:355
+#: qtgui/rwmolecule.cpp:354
 msgid "Update Bonds"
 msgstr "결합 업데이트"
 
-#: qtgui/rwmolecule.cpp:374
+#: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
 msgstr "결합 업데이트"
 
-#: qtgui/rwmolecule.cpp:394
+#: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell"
 msgstr "단위 격자 추가"
 
-#: qtgui/rwmolecule.cpp:407
+#: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
 msgstr "단위 격자 제거"
 
-#: qtgui/rwmolecule.cpp:472
+#: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
 msgstr "단위 격자 편집"
 
-#: qtgui/rwmolecule.cpp:489
+#: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
 msgstr "원자를 격자로 감싸기"
 
-#: qtgui/rwmolecule.cpp:512
+#: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
 msgstr "격자 부피 스케일"
 
-#: qtgui/rwmolecule.cpp:532
+#: qtgui/rwmolecule.cpp:527
 msgid "Build Super Cell"
 msgstr "슈퍼 격자 빌드"
 
-#: qtgui/rwmolecule.cpp:556
+#: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
 msgstr "니글리 감소"
 
-#: qtgui/rwmolecule.cpp:578
+#: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
 msgstr "표준 방향으로 회전"
 
-#: qtgui/rwmolecule.cpp:603 qtplugins/spacegroup/spacegroup.cpp:56
+#: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
 msgstr "기본으로 축소"
 
-#: qtgui/rwmolecule.cpp:628 qtplugins/spacegroup/spacegroup.cpp:62
+#: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:240
 msgid "Conventionalize Cell"
 msgstr "격자 관습화"
 
-#: qtgui/rwmolecule.cpp:653 qtplugins/spacegroup/spacegroup.cpp:265
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
 msgid "Symmetrize Cell"
 msgstr "격자 대칭화"
 
-#: qtgui/rwmolecule.cpp:672
+#: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
 msgstr "단위 격자 채우기"
 
-#: qtgui/rwmolecule.cpp:692
+#: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "격자를 비대칭 단위로 축소"
 
@@ -1492,6 +1492,12 @@ msgstr "선택 변경"
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "분자 수정"
+
+#: qtgui/scenepluginmodel.cpp:92
+#, fuzzy
+#| msgid "&Settings"
+msgid "Settings"
+msgstr "설정(&S)"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1750,25 +1756,25 @@ msgstr "균형잡힌 스키마별"
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:762
+#: qtplugins/surfaces/surfaces.cpp:758
 msgctxt "colormap"
 msgid "Parula"
 msgstr "파룰라"
 
 #: qtplugins/applycolors/applycolors.cpp:106
-#: qtplugins/surfaces/surfaces.cpp:764
+#: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
 msgstr "열"
 
 #: qtplugins/applycolors/applycolors.cpp:108
-#: qtplugins/surfaces/surfaces.cpp:766
+#: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
 msgstr "뜨거운"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:768
+#: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
 msgstr "회색"
@@ -1776,7 +1782,7 @@ msgstr "회색"
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
-#: qtplugins/surfaces/surfaces.cpp:770
+#: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
 msgstr "마그마"
@@ -1784,7 +1790,7 @@ msgstr "마그마"
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:772
+#: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "불"
@@ -1792,7 +1798,7 @@ msgstr "불"
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
-#: qtplugins/surfaces/surfaces.cpp:774
+#: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "플라즈마"
@@ -1800,7 +1806,7 @@ msgstr "플라즈마"
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:776
+#: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "비리디스"
@@ -1808,7 +1814,7 @@ msgstr "비리디스"
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
-#: qtplugins/surfaces/surfaces.cpp:778
+#: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "시비디스"
@@ -1820,7 +1826,7 @@ msgstr "시비디스"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1790
+#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1790
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "스펙트럼"
@@ -1830,7 +1836,7 @@ msgstr "스펙트럼"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1787
+#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "냉온"
@@ -1840,7 +1846,7 @@ msgstr "냉온"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1781
+#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1781
 msgctxt "colormap"
 msgid "Balance"
 msgstr "균형"
@@ -1850,7 +1856,7 @@ msgstr "균형"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1784
+#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "파란-어두운 빨강"
@@ -1862,7 +1868,7 @@ msgstr "파란-어두운 빨강"
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1793
+#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "터보"
@@ -2132,7 +2138,7 @@ msgid "Maximum distance:"
 msgstr "최대 거리:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:233
-#: qtplugins/crystal/crystalscene.cpp:133
+#: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:88
 msgid "Line width:"
@@ -2697,7 +2703,13 @@ msgstr "결정체"
 msgid "Tools for crystal-specific editing/analysis."
 msgstr "결정체 전용 편집/분석을 위한 도구입니다."
 
-#: qtplugins/crystal/crystalscene.cpp:138
+#: qtplugins/crystal/crystalscene.cpp:178
+#, fuzzy
+#| msgid "Color:"
+msgid "Color axes:"
+msgstr "색상:"
+
+#: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
 msgstr "선 색상:"
 
@@ -2923,8 +2935,8 @@ msgstr "에너지 = %L1 %2"
 
 #: qtplugins/forcefield/forcefield.cpp:345
 #: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:913
-#: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "아보가드로"
@@ -3186,8 +3198,8 @@ msgstr "조각삽입"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "더 큰 분자를 만들기 위해 분자 조각을 삽입합니다."
 
-#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:176
-#: qtplugins/meshes/meshes.cpp:182
+#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr "색상:"
 
@@ -3400,7 +3412,7 @@ msgstr "측정 도구"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:170:1627
+#: qtplugins/meshes/meshes.cpp:167:1627
 msgid "Opacity:"
 msgstr "투명도:"
 
@@ -3419,7 +3431,7 @@ msgstr "분자의 일반적인 특성을 봅니다."
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
 #: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
-#: qtplugins/surfaces/surfaces.cpp:264 qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
 msgstr "분석(&A)"
@@ -3928,7 +3940,7 @@ msgstr "프레임:"
 
 #: qtplugins/playertool/playertool.cpp:120
 #: qtplugins/playertool/playertool.cpp:411
-#: qtplugins/surfaces/surfacedialog.cpp:226
+#: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
 msgstr " %0 의"
@@ -3956,7 +3968,7 @@ msgstr "비트맵 그래픽 내보내기"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "동영상 (*.mp4);;동영상 (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:885
+#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:884
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -3972,11 +3984,11 @@ msgstr "GIF 파일 형식은 100 FPS 이상의 프레임 속도를 지원하지 
 msgid "Movie (*.avi)"
 msgstr "동영상 (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:958
+#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:957
 msgid "Error: cannot add frame to video."
 msgstr "오류: 비디오에 프레임을 추가할 수 없습니다."
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:970
+#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 파일을 저장할 수 없습니다."
@@ -4868,37 +4880,37 @@ msgstr "용제 접근 가능"
 msgid "Solvent Excluded"
 msgstr "용매 제외"
 
-#: qtplugins/surfaces/surfacedialog.cpp:159
+#: qtplugins/surfaces/surfacedialog.cpp:163
 msgid "Molecular Orbital"
 msgstr "분자 궤도"
 
-#: qtplugins/surfaces/surfacedialog.cpp:162
+#: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
 msgstr "전자 밀도"
 
-#: qtplugins/surfaces/surfacedialog.cpp:169
+#: qtplugins/surfaces/surfacedialog.cpp:173
 #, fuzzy
 #| msgid "Density"
 msgid "Spin Density"
 msgstr "밀도"
 
-#: qtplugins/surfaces/surfacedialog.cpp:181
+#: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
 msgstr "MO %L1"
 
-#: qtplugins/surfaces/surfacedialog.cpp:183
+#: qtplugins/surfaces/surfacedialog.cpp:187
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
 msgstr "(HOMO)"
 
-#: qtplugins/surfaces/surfacedialog.cpp:185
+#: qtplugins/surfaces/surfacedialog.cpp:189
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
 msgstr "(LUMO)"
 
-#: qtplugins/surfaces/surfacedialog.cpp:200
+#: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
 msgstr "파일에서"
 
@@ -4938,28 +4950,28 @@ msgstr "회전 밀도를 렌더링합니다."
 msgid "Render a cube supplied with the file."
 msgstr "파일과 함께 제공된 큐브를 렌더링합니다."
 
-#: qtplugins/surfaces/surfaces.cpp:588
+#: qtplugins/surfaces/surfaces.cpp:586
 msgid "Calculating electron density"
 msgstr "전자 밀도 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:597
+#: qtplugins/surfaces/surfaces.cpp:595
 msgid "Calculating spin density"
 msgstr "회전 밀도 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:606
+#: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "분자 궤도 %L1 계산"
 
-#: qtplugins/surfaces/surfaces.cpp:862 qtplugins/surfaces/surfaces.cpp:890
+#: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
 msgid "Movie AVI (*.avi)"
 msgstr "동영상 AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:864
+#: qtplugins/surfaces/surfaces.cpp:863
 msgid "Export Movie"
 msgstr "동영상 내보내기"
 
-#: qtplugins/surfaces/surfaces.cpp:865
+#: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "동영상 MP4 (*.mp4);;동영상 AVI (*.avi);;GIF (*.gif)"
 
@@ -8860,9 +8872,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com"
 #~ msgstr ""
 #~ "분자에 비틀림 구속를 추가하기 위해서는 최소한 네 개의 원자를 포함하고 있어"
 #~ "야 합니다"
-
-#~ msgid "&Settings"
-#~ msgstr "설정(&S)"
 
 #~ msgid "&Length Unit"
 #~ msgstr "길이 단위(&L)"
