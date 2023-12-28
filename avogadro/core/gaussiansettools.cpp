@@ -161,7 +161,6 @@ inline void GaussianSetTools::calculateCutoffs()
     // .. but it's a good approximation since they'll be similar
     unsigned int cIndex = m_basis->cIndices()[i];
     const double coeff = std::abs(coefficients[cIndex]);
-    const double prefactor = coeff * std::pow(r, L);
 
     // now loop through all exponents for this L value
     // (e.g., multiple terms - we don't know which is the most diffuse)
@@ -169,11 +168,11 @@ inline void GaussianSetTools::calculateCutoffs()
          j < m_basis->gtoIndices()[i + 1]; ++j) {
       double alpha = exponents[j];
       double r = std::sqrt(L / (2 * alpha));
-      double value = prefactor * std::exp(-alpha * r * r);
+      double value = coeff * std::pow(r, L) * std::exp(-alpha * r * r);
 
       while (value > threshold && r < maxDistance) {
         r += 0.25;
-        value = prefactor * std::exp(-alpha * r * r);
+        value = coeff * std::pow(r, L) * std::exp(-alpha * r * r);
       }
 
       m_cutoffDistances[L] = std::max(m_cutoffDistances[L], r * r);
