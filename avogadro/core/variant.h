@@ -146,8 +146,8 @@ private:
   } m_value;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #include "variant-inline.h"
 

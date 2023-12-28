@@ -80,6 +80,16 @@ bool isBooleanArray(json& j)
   return false;
 }
 
+json eigenColToJson(const MatrixX& matrix, int column)
+{
+  json j;
+  j = json::array();
+  for (Index i = 0; i < matrix.rows(); ++i) {
+    j.push_back(matrix(i, column));
+  }
+  return j;
+}
+
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
 {
   return deserialize(file, molecule, true);
@@ -154,7 +164,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   json labels = atoms["labels"];
   if (labels.is_array() && labels.size() == atomCount) {
     for (size_t i = 0; i < atomCount; ++i) {
-      molecule.atom(i).setLabel(labels[i]);
+      molecule.setAtomLabel(i, labels[i]);
     }
   }
 
@@ -227,6 +237,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
            ++i) {
         molecule.bond(i).setOrder(static_cast<int>(order[i]));
+      }
+    }
+
+    // are there bond labels?
+    json bondLabels = bonds["labels"];
+    if (bondLabels.is_array() && bondLabels.size() == molecule.bondCount()) {
+      for (unsigned int i = 0; i < molecule.bondCount(); ++i) {
+        molecule.setBondLabel(i, bondLabels[i]);
       }
     }
   }
@@ -526,6 +544,58 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // check for spectra data
+  json spectra = jsonRoot["spectra"];
+  if (spectra.is_object()) {
+    // electronic
+    json electronic = spectra["electronic"];
+    if (electronic.is_object()) {
+      // check to see "energies" and "intensities"
+      json energies = electronic["energies"];
+      json intensities = electronic["intensities"];
+      // make sure they are both numeric arrays
+      if (isNumericArray(energies) && isNumericArray(intensities)) {
+        // make sure they are the same size
+        if (energies.size() == intensities.size()) {
+          // create the matrix
+          MatrixX electronicData(energies.size(), 2);
+          // copy the data
+          for (std::size_t i = 0; i < energies.size(); ++i) {
+            electronicData(i, 0) = energies[i];
+            electronicData(i, 1) = intensities[i];
+          }
+          // set the data
+          molecule.setSpectra("Electronic", electronicData);
+        }
+      }
+      // check if there's CD data for "rotation"
+      json rotation = electronic["rotation"];
+      if (isNumericArray(rotation) && rotation.size() == energies.size()) {
+        MatrixX rotationData(rotation.size(), 2);
+        for (std::size_t i = 0; i < rotation.size(); ++i) {
+          rotationData(i, 0) = energies[i];
+          rotationData(i, 1) = rotation[i];
+        }
+        molecule.setSpectra("CircularDichroism", rotationData);
+      }
+    }
+
+    // nmr
+    json nmr = spectra["nmr"];
+    if (nmr.is_object()) {
+      // chemical shifts
+      json chemicalShifts = nmr["shifts"];
+      if (isNumericArray(chemicalShifts)) {
+        MatrixX chemicalShiftData(chemicalShifts.size(), 2);
+        for (std::size_t i = 0; i < chemicalShifts.size(); ++i) {
+          chemicalShiftData(i, 0) = static_cast<double>(chemicalShifts[i]);
+          chemicalShiftData(i, 1) = 1.0;
+        }
+        molecule.setSpectra("NMR", chemicalShiftData);
+      }
+    }
+  }
+
   // properties
   if (jsonRoot.find("properties") != jsonRoot.end()) {
     json properties = jsonRoot["properties"];
@@ -734,6 +804,29 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       Core::SpaceGroups::international(molecule.hallNumber());
 
     root["unitCell"] = unitCell;
+  }
+
+  // check for spectra data
+  if (molecule.spectraTypes().size() != 0) {
+    json spectra, electronic, nmr;
+    bool hasElectronic = false;
+    for (const auto& type : molecule.spectraTypes()) {
+      if (type == "Electronic") {
+        hasElectronic = true;
+        electronic["energies"] = eigenColToJson(molecule.spectra(type), 0);
+        electronic["intensities"] = eigenColToJson(molecule.spectra(type), 1);
+      } else if (type == "CircularDichroism") {
+        electronic["rotation"] = eigenColToJson(molecule.spectra(type), 1);
+      } else if (type == "NMR") {
+        json data;
+        data["shifts"] = eigenColToJson(molecule.spectra(type), 0);
+        spectra["nmr"] = data;
+      }
+    }
+    if (hasElectronic) {
+      spectra["electronic"] = electronic;
+    }
+    root["spectra"] = spectra;
   }
 
   // Create a basis set/MO matrix we can round trip.
@@ -966,12 +1059,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
   }
 
-  // labels
-  json labels;
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
-    labels.push_back(molecule.label(i));
+  // check for atom labels
+  Array atomLabels = molecule.atomLabels();
+  if (atomLabels.size() == molecule.atomCount()) {
+    json labels;
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
+      labels.push_back(atomLabels[i]);
+    }
+    root["atoms"]["labels"] = labels;
   }
-  root["atoms"]["labels"] = labels;
 
   // formal charges
   json formalCharges;
@@ -1001,6 +1097,16 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     root["bonds"]["connections"]["index"] = connections;
     root["bonds"]["order"] = order;
+
+    // check if there are bond labels
+    Array bondLabels = molecule.bondLabels();
+    if (bondLabels.size() == molecule.bondCount()) {
+      json labels;
+      for (Index i = 0; i < molecule.bondCount(); ++i) {
+        labels.push_back(bondLabels[i]);
+      }
+      root["bonds"]["labels"] = labels;
+    }
   }
 
   // Create and populate any residue arrays

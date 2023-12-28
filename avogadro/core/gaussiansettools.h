@@ -99,8 +99,13 @@ private:
   Molecule* m_molecule;
   GaussianSet* m_basis;
   BasisSet::ElectronType m_type = BasisSet::Paired;
+  std::vector<double> m_cutoffDistances;
 
   bool isSmall(double value) const;
+
+  // get the cutoff distance for the given angular momentum
+  // .. and the current basis set (exponents)
+  void calculateCutoffs();
 
   /**
    * @brief Calculate the values at this position in space. The public calculate
@@ -126,9 +131,13 @@ private:
               std::vector<double>& values) const;
   void pointG9(unsigned int index, const Vector3& delta, double dr2,
                std::vector<double>& values) const;
+
+  // map from symmetry to angular momentum
+  // S, SP, P, D, D5, F, F7, G, G9, H, H11, I, I13, etc.
+  const int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_GAUSSIANSETTOOLS_H

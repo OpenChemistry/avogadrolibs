@@ -31,6 +31,8 @@ public slots:
 
   void moleculeChanged(unsigned int changes);
 
+  void setActiveWidget(QWidget* widget) override;
+
 private slots:
   void updateActions();
 
@@ -48,6 +50,7 @@ private:
   HistogramWidget* m_histogramWidget = nullptr;
   QScopedPointer<QAction> m_displayDialogAction;
 
+  bool m_vtkWidget = false;
   QWidget* m_activeWidget = nullptr;
 };
 

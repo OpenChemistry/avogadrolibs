@@ -11,7 +11,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 #include <QMutex>
@@ -153,7 +153,7 @@ void Forcefield::showDialog()
     settings.beginGroup("forcefield");
     m_methodName = results["forcefield"].toString().toStdString();
     settings.setValue("forcefield", m_methodName.c_str());
-    
+
     m_maxSteps = results["maxSteps"].toInt();
     settings.setValue("maxSteps", m_maxSteps);
     m_tolerance = results["tolerance"].toDouble();
@@ -182,6 +182,23 @@ void Forcefield::setupMethod()
   if (m_autodetect)
     m_methodName = recommendedForceField();
 
+  // check if m_methodName even exists (e.g., saved preference)
+  // or if that method doesn't work for this (e.g., unit cell, etc.)
+  auto list =
+    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
+  bool found = false;
+  for (auto option : list) {
+    if (option == m_methodName) {
+      found = true;
+      break;
+    }
+  }
+
+  // fall back to recommended if not found (LJ will always work)
+  if (!found) {
+    m_methodName = recommendedForceField();
+  }
+
   if (m_method == nullptr) {
     // we have to create the calculator
     m_method = Calc::EnergyManager::instance().model(m_methodName);
@@ -209,7 +226,7 @@ void Forcefield::optimize()
 
   // double-check the mask
   auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != 3*n) {
+  if (mask.rows() != 3 * n) {
     mask = Eigen::VectorXd::Zero(3 * n);
     // set to 1.0
     for (Index i = 0; i < 3 * n; ++i) {
@@ -244,7 +261,8 @@ void Forcefield::optimize()
   Real energy = m_method->value(positions);
   m_method->gradient(positions, gradient);
   qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
-  qDebug() << " maxSteps" << m_maxSteps << " steps " << m_maxSteps / crit.iterations;
+  qDebug() << " maxSteps" << m_maxSteps << " steps "
+           << m_maxSteps / crit.iterations;
 
   Real currentEnergy = 0.0;
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {

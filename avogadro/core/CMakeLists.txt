@@ -26,7 +26,7 @@ target_sources(Headers PUBLIC
     utilities.h
     vector.h
 )
-target_link_libraries(Headers INTERFACE Eigen3::Eigen3)
+target_link_libraries(Headers INTERFACE Eigen3::Eigen)
 install(TARGETS Headers
   EXPORT "AvogadroLibsTargets"
   FILE_SET HEADERS DESTINATION "${INSTALL_INCLUDE_DIR}")

@@ -22,11 +22,11 @@
 
 #include <QtCore/QSettings>
 
+#include <QFileSystemModel>
 #include <QtCore/QDir>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFileSystemModel>
 #include <QtWidgets/QMessageBox>
 
 #include <QCloseEvent>
@@ -52,8 +52,7 @@ public:
   }
 };
 
-InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
-                                           Qt::WindowFlags)
+InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory)
   : QDialog(aParent), m_ui(new Ui::InsertFragmentDialog),
     m_implementation(new Private)
 {
@@ -213,8 +212,8 @@ void InsertFragmentDialog::filterTextChanged(const QString& newFilter)
     return; // no dialog or proxy model to set
 
   // Allow things like "ti" to match "Ti" etc.
-  QRegExp reg(newFilter, Qt::CaseInsensitive, QRegExp::WildcardUnix);
-  m_implementation->proxy->setFilterRegExp(reg);
+  QRegularExpression reg(newFilter, QRegularExpression::CaseInsensitiveOption);
+  m_implementation->proxy->setFilterRegularExpression(reg);
 
   if (!newFilter.isEmpty()) {
     // user interface niceness -- show any file match

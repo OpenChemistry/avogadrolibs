@@ -54,6 +54,7 @@ private slots:
 
   void typeChanged(int index);
   void ligandChanged(int index);
+  void groupChanged(int index);
 
   void otherLigandInsert(const QString& fileName, bool crystal);
 
