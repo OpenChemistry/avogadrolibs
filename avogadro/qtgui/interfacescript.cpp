@@ -21,6 +21,8 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
+#include <QtWidgets/QMessageBox>
+
 namespace Avogadro::QtGui {
 
 using QtGui::GenericHighlighter;
@@ -250,8 +252,11 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       newMol.perceiveBondOrders();
     }
 
-    // just append some new bits
-    if (obj["append"].toBool()) {
+    // how do we handle this result?
+    if (obj["readProperties"].toBool()) {
+      guiMol->readProperties(newMol);
+      guiMol->emitChanged(Molecule::Properties | Molecule::Added);
+    } else if (obj["append"].toBool()) {
       guiMol->undoMolecule()->appendMolecule(newMol, m_displayName);
     } else { // replace the whole molecule
       Molecule::MoleculeChanges changes = (Molecule::Atoms | Molecule::Bonds |
@@ -270,6 +275,25 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
         }
       }
       guiMol->emitChanged(Molecule::Atoms);
+    }
+
+    // check if there are messages for the user
+    if (obj.contains("message")) {
+      QString message;
+
+      if (obj["message"].isString())
+        message = obj["message"].toString();
+      else if (obj["message"].isArray()) {
+        QJsonArray messageList = obj["message"].toArray();
+        for (int i = 0; i < messageList.size(); ++i) {
+          if (messageList[i].isString())
+            message += messageList[i].toString() + "\n";
+        }
+      }
+      if (!message.isEmpty()) {
+        QMessageBox::information(qobject_cast<QWidget*>(parent()),
+                                 tr("%1 Message").arg(m_displayName), message);
+      }
     }
   }
   return result;
@@ -488,13 +512,13 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   if (m_moleculeExtension == QLatin1String("None"))
     return true;
 
-  // insert the selected atoms
+  // Always insert the selected atoms
   QJsonArray selectedList;
   for (Index i = 0; i < mol.atomCount(); ++i) {
     if (mol.atomSelected(i))
       selectedList.append(static_cast<qint64>(i));
   }
-  json.insert("selectedatoms", selectedList);
+  json.insert("selectedAtoms", selectedList);
 
   // insert the total charge
   json.insert("charge", mol.totalCharge());
@@ -505,7 +529,11 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
   Io::FileFormatManager& formats = Io::FileFormatManager::instance();
   QScopedPointer<Io::FileFormat> format(
     formats.newFormatFromFileExtension(m_moleculeExtension.toStdString()));
+  QScopedPointer<Io::FileFormat> cjsonFormat(
+    formats.newFormatFromFileExtension("cjson"));
 
+  // If we want something *other* than CJSON, check that we can supply that
+  // format
   if (format.isNull()) {
     m_errors << tr("Error writing molecule representation to string: "
                    "Unrecognized file format: %1")
@@ -520,30 +548,34 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
     return false;
   }
 
+  // if we need a different format, insert it
   if (m_moleculeExtension != QLatin1String("cjson")) {
     json.insert(m_moleculeExtension, QJsonValue(QString::fromStdString(str)));
-  } else {
-    // If cjson was requested, embed the actual JSON, rather than the string.
-    QJsonParseError error;
-    QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
-    if (error.error != QJsonParseError::NoError) {
-      m_errors << tr("Error generating cjson object: Parse error at offset %1: "
-                     "%2\nRaw JSON:\n\n%3")
-                    .arg(error.offset)
-                    .arg(error.errorString())
-                    .arg(QString::fromStdString(str));
-      return false;
-    }
-
-    if (!doc.isObject()) {
-      m_errors << tr("Error generator cjson object: Parsed JSON is not an "
-                     "object:\n%1")
-                    .arg(QString::fromStdString(str));
-      return false;
-    }
-
-    json.insert(m_moleculeExtension, doc.object());
   }
+
+  // We will *always* write the CJSON representation
+  // Embed CJSON as actual JSON, rather than a string,
+  // .. so we'll have to re-parse it
+  cjsonFormat->writeString(str, mol);
+  QJsonParseError error;
+  QJsonDocument doc = QJsonDocument::fromJson(str.c_str(), &error);
+  if (error.error != QJsonParseError::NoError) {
+    m_errors << tr("Error generating cjson object: Parse error at offset %1: "
+                   "%2\nRaw JSON:\n\n%3")
+                  .arg(error.offset)
+                  .arg(error.errorString())
+                  .arg(QString::fromStdString(str));
+    return false;
+  }
+
+  if (!doc.isObject()) {
+    m_errors << tr("Error generator cjson object: Parsed JSON is not an "
+                   "object:\n%1")
+                  .arg(QString::fromStdString(str));
+    return false;
+  }
+
+  json.insert("cjson", doc.object());
 
   return true;
 }

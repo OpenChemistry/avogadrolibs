@@ -5,6 +5,7 @@
 
 #include "propertymodel.h"
 
+#include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
@@ -135,6 +136,28 @@ QString partialCharge(Molecule* molecule, int atom)
     auto first = types.cbegin();
     MatrixX charges = molecule->partialCharges((*first));
     charge = charges(atom, 0);
+  } else {
+    // find something
+    const auto options =
+      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
+    if (options.size() > 0) {
+      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
+      std::string type;
+      if (options.find("GFN2") != options.end())
+        type = "GFN2";
+      else if (options.find("am1bcc") != options.end())
+        type = "am1bcc";
+      else if (options.find("mmff94") != options.end())
+        type = "mmff94";
+      else if (options.find("gasteiger") != options.end())
+        type = "gasteiger";
+      else
+        type = *options.begin();
+
+      MatrixX charges =
+        Calc::ChargeManager::instance().partialCharges(type, *molecule);
+      charge = charges(atom, 0);
+    }
   }
   return QString("%L1").arg(charge, 0, 'f', 3);
 }

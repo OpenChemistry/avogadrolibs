@@ -33,7 +33,7 @@ jobs:
 
     - name: Upload patch
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ${{ runner.workspace }}/clang-format.diff
         name: clang-format.diff

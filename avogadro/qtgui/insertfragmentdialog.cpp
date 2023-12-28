@@ -15,26 +15,25 @@
 ******************************************************************************/
 
 #include "insertfragmentdialog.h"
-#include "ui_insertfragmentdialog.h"
-
 #include "sortfiltertreeproxymodel.h"
+#include "ui_insertfragmentdialog.h"
 
 #include <avogadro/qtgui/utilities.h>
 
 #include <QtCore/QSettings>
 
+#include <QFileSystemModel>
 #include <QtCore/QDir>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QFileSystemModel>
 #include <QtWidgets/QMessageBox>
 
 #include <QCloseEvent>
 
 #include <QtCore/QDebug>
 
-namespace Avogadro::QtPlugins {
+namespace Avogadro::QtGui {
 
 class InsertFragmentDialog::Private
 {
@@ -53,8 +52,7 @@ public:
   }
 };
 
-InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
-                                           Qt::WindowFlags)
+InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory)
   : QDialog(aParent), m_ui(new Ui::InsertFragmentDialog),
     m_implementation(new Private)
 {
@@ -118,7 +116,8 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory,
   if (m_implementation->crystalFiles)
     filters << "*.cif";
   else
-    filters << "*.cjson" << "*.cml";
+    filters << "*.cjson"
+            << "*.cml";
   m_implementation->model->setNameFilters(filters);
 
   m_implementation->proxy = new SortFilterTreeProxyModel(this);
@@ -213,8 +212,8 @@ void InsertFragmentDialog::filterTextChanged(const QString& newFilter)
     return; // no dialog or proxy model to set
 
   // Allow things like "ti" to match "Ti" etc.
-  QRegExp reg(newFilter, Qt::CaseInsensitive, QRegExp::WildcardUnix);
-  m_implementation->proxy->setFilterRegExp(reg);
+  QRegularExpression reg(newFilter, QRegularExpression::CaseInsensitiveOption);
+  m_implementation->proxy->setFilterRegularExpression(reg);
 
   if (!newFilter.isEmpty()) {
     // user interface niceness -- show any file match
@@ -234,4 +233,4 @@ void InsertFragmentDialog::activated()
   emit performInsert(currentFileName, m_implementation->crystalFiles);
 }
 
-} // namespace Avogadro::QtPlugins
+} // namespace Avogadro::QtGui

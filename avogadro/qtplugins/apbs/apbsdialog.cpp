@@ -171,7 +171,7 @@ void ApbsDialog::runPdb2Pqr()
 void ApbsDialog::saveInputFile()
 {
   QString fileName = QFileDialog::getSaveFileName(
-    this, tr("Save APBS Input File"), "apbs.in", tr("ABPS Input (*.in)"));
+    this, tr("Save APBS Input File"), "apbs.in", tr("APBS Input (*.in)"));
   if (!fileName.isEmpty()) {
     saveInputFile(fileName);
 

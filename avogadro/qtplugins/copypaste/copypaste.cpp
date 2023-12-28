@@ -13,11 +13,10 @@
 
 #include <QtCore/QMimeData>
 
-#include <QtGui/QClipboard>
 #include <QAction>
+#include <QtGui/QClipboard>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
-
 
 #include <string>
 #include <vector>
@@ -113,7 +112,8 @@ void CopyPaste::copyInChI()
 
 bool CopyPaste::copy(Io::FileFormat* format)
 {
-  if (!m_molecule)
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
+      format == nullptr)
     return false;
 
   std::string output;
@@ -197,6 +197,9 @@ void CopyPaste::cut()
 
 void CopyPaste::clear()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   if (m_molecule->isSelectionEmpty())
     m_molecule->undoMolecule()->clearAtoms();
   else {

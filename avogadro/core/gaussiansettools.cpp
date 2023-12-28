@@ -11,20 +11,20 @@
 
 #include <iostream>
 
-
 using std::vector;
 
 namespace Avogadro::Core {
 
 GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
 {
-  if (m_molecule)
+  if (m_molecule) {
     m_basis = dynamic_cast<GaussianSet*>(m_molecule->basisSet());
+    m_cutoffDistances.resize(7, 0.0); // s, p, d, f, g, h, i (for now)
+    calculateCutoffs();
+  }
 }
 
-GaussianSetTools::~GaussianSetTools()
-{
-}
+GaussianSetTools::~GaussianSetTools() {}
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
@@ -56,6 +56,12 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
 {
+  const MatrixX& matrix = m_basis->densityMatrix();
+  if (matrix.rows() == 0 || matrix.cols() == 0) {
+    // we don't have a density matrix, so generate one
+    m_basis->generateDensityMatrix();
+  }
+
   for (size_t i = 0; i < cube.data()->size(); ++i) {
     Vector3 pos = cube.position(i);
     cube.setValue(i, calculateElectronDensity(pos));
@@ -67,6 +73,7 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 {
   const MatrixX& matrix = m_basis->densityMatrix();
   int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
+
   if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
     return 0.0;
   }
@@ -128,10 +135,49 @@ bool GaussianSetTools::isValid() const
 
 inline bool GaussianSetTools::isSmall(double val) const
 {
-  if (val > -1e-20 && val < 1e-20)
-    return true;
-  else
-    return false;
+  return std::abs(val) < 1e-12;
+}
+
+inline void GaussianSetTools::calculateCutoffs()
+{
+  // Guesstimate a distance we can ignore the exp(-alpha * r^2) term
+  // .. because it's negligible
+  // This will depend on the angular momentum of the basis function
+  // .. so we calculate it for whatever L values in this basis set
+
+  const double threshold = 0.03 * 0.001; // 0.1% of a typical isovalue
+  const double maxDistance = 15.0;       // 15 Angstroms
+
+  // get the exponents and normalized coefficients
+  const std::vector<double>& exponents = m_basis->gtoA();
+  const std::vector<double>& coefficients = m_basis->gtoCN();
+  const std::vector<int>& sym = m_basis->symmetry();
+
+  // we loop through the "symmetry" (i.e., L values in this basis set)
+  for (size_t i = 0; i < sym.size(); ++i) {
+    int L = symToL[sym[i]];
+
+    // this is a hack, since not all coefficients will be the same
+    // .. but it's a good approximation since they'll be similar
+    unsigned int cIndex = m_basis->cIndices()[i];
+    const double coeff = std::abs(coefficients[cIndex]);
+
+    // now loop through all exponents for this L value
+    // (e.g., multiple terms - we don't know which is the most diffuse)
+    for (unsigned int j = m_basis->gtoIndices()[i];
+         j < m_basis->gtoIndices()[i + 1]; ++j) {
+      double alpha = exponents[j];
+      double r = std::sqrt(L / (2 * alpha));
+      double value = coeff * std::pow(r, L) * std::exp(-alpha * r * r);
+
+      while (value > threshold && r < maxDistance) {
+        r += 0.25;
+        value = coeff * std::pow(r, L) * std::exp(-alpha * r * r);
+      }
+
+      m_cutoffDistances[L] = std::max(m_cutoffDistances[L], r * r);
+    }
+  }
 }
 
 inline vector<double> GaussianSetTools::calculateValues(
@@ -153,7 +199,7 @@ inline vector<double> GaussianSetTools::calculateValues(
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
     deltas.emplace_back(pos -
-                     (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
+                        (m_molecule->atom(i).position3d() * ANGSTROM_TO_BOHR));
     dr2.push_back(deltas[i].squaredNorm());
   }
 
@@ -164,6 +210,11 @@ inline vector<double> GaussianSetTools::calculateValues(
 
   // Now calculate the values at this point in space
   for (unsigned int i = 0; i < basisSize; ++i) {
+    // bail early if the distance is too big
+    double cutoff = m_cutoffDistances[symToL[basis[i]]];
+    if (dr2[atomIndices[i]] > cutoff)
+      continue;
+
     switch (basis[i]) {
       case GaussianSet::S:
         pointS(i, dr2[atomIndices[i]], values);
@@ -246,7 +297,7 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -279,7 +330,7 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -318,7 +369,7 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -336,16 +387,7 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
   double componentsF[10] = {
     // molden order
     // e.g https://gau2grid.readthedocs.io/en/latest/order.html
-    xxx,
-    yyy,
-    zzz,
-    xyy,
-    xxy,
-    xxz,
-    xzz,
-    yzz,
-    yyz,
-    xyz
+    xxx, yyy, zzz, xyy, xxy, xxz, xzz, yzz, yyz, xyz
   };
 
   for (int i = 0; i < 10; ++i)
@@ -371,7 +413,7 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
     double tmpGTO = exp(-gtoA[i] * dr2);
-    for (double & component : components)
+    for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
 
@@ -418,4 +460,4 @@ final normalization
     values[baseIndex + i] += components[i] * componentsF[i];
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Core
