@@ -161,7 +161,7 @@ inline void GaussianSetTools::calculateCutoffs()
     // .. but it's a good approximation since they'll be similar
     unsigned int cIndex = m_basis->cIndices()[i];
     const double coeff = std::abs(coefficients[cIndex]);
-    const double preFactor = coeff * std::pow(r, L);
+    const double prefactor = coeff * std::pow(r, L);
 
     // now loop through all exponents for this L value
     // (e.g., multiple terms - we don't know which is the most diffuse)
