@@ -42,28 +42,24 @@ public:
   }
 
   QList<QAction*> actions() const override;
-
   QStringList menuPath(QAction*) const override;
 
-public slots:
-  void setMolecule(QtGui::Molecule* mol) override;
-  bool readMolecule(QtGui::Molecule& mol) override;
+  void setMolecule(QtGui::Molecule*) override {}
 
 private slots:
   void showDialog();
   void replyFinished(QNetworkReply*);
-  void configurePython();
 
 private:
   QAction* m_downloadAction;
-  QAction* m_configureAction;
 
   QtGui::Molecule* m_molecule;
   QNetworkAccessManager* m_network;
   QString m_moleculeName;
   DownloaderWidget* m_widget;
 };
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_PLUGINDOWNLOADER_H
