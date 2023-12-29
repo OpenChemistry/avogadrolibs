@@ -55,7 +55,7 @@ void ConfigurePythonDialog::setOptions(const QStringList& options)
       QString("%1 (%2)").arg(options.at(i)).arg(versions.at(i)));
   }
 
-  m_ui->environmentCombo->addItem("Other…");
+  m_ui->environmentCombo->addItem(tr("Other…"));
   m_ui->browseWidget->hide();
 }
 
