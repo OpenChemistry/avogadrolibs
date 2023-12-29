@@ -11,6 +11,7 @@
 #include <avogadro/quantumio/mopacaux.h>
 #include <avogadro/quantumio/nwchemjson.h>
 #include <avogadro/quantumio/nwchemlog.h>
+#include <avogadro/quantumio/orca.h>
 
 namespace py = pybind11;
 
@@ -68,12 +69,14 @@ PYBIND11_MODULE(io, m)
 
   /// Add the quantum IO formats, we should probably move them over soon, but
   /// get things working for now...
+  Io::FileFormatManager::registerFormat(new GAMESSUSOutput);
   Io::FileFormatManager::registerFormat(new GaussianFchk);
   Io::FileFormatManager::registerFormat(new GaussianCube);
   Io::FileFormatManager::registerFormat(new MoldenFile);
   Io::FileFormatManager::registerFormat(new MopacAux);
   Io::FileFormatManager::registerFormat(new NWChemJson);
   Io::FileFormatManager::registerFormat(new NWChemLog);
+  Io::FileFormatManager::registerFormat(new ORCAOutput);
 
   /// This class uses a singleton pattern, make it accessible through Python.
   py::class_<ffm>(m, "FileFormatManager")
