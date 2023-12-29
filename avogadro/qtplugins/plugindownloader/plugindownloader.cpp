@@ -17,7 +17,6 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-// #include <libarchive/archive.h>
 namespace Avogadro::QtPlugins {
 
 PluginDownloader::PluginDownloader(QObject* parent_)
