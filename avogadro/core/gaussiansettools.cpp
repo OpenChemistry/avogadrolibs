@@ -146,7 +146,7 @@ inline void GaussianSetTools::calculateCutoffs()
   // .. so we calculate it for whatever L values in this basis set
 
   const double threshold = 0.03 * 0.001; // 0.1% of a typical isovalue
-  const double maxDistance = 15.0;       // 15 Angstroms
+  const double maxDistance = 100.0;      // just in case (diffuse functions)
 
   // get the exponents and normalized coefficients
   const std::vector<double>& exponents = m_basis->gtoA();
@@ -167,7 +167,8 @@ inline void GaussianSetTools::calculateCutoffs()
     for (unsigned int j = m_basis->gtoIndices()[i];
          j < m_basis->gtoIndices()[i + 1]; ++j) {
       double alpha = exponents[j];
-      double r = std::sqrt(L / (2 * alpha));
+      // except for S, we don't want to start at the origin
+      double r = std::min(maxDistance, std::sqrt(L / (2 * alpha)));
       double value = coeff * std::pow(r, L) * std::exp(-alpha * r * r);
 
       while (value > threshold && r < maxDistance) {
