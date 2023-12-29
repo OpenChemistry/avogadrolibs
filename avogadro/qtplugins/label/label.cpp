@@ -66,7 +66,8 @@ struct LayerLabel : Core::LayerData
     Index = 0x01,
     Name = 0x02,
     Custom = 0x04,
-    Ordinal = 0x08
+    Ordinal = 0x08,
+    UniqueID = 0x16
   };
   unsigned short atomOptions;
   unsigned short residueOptions;
@@ -147,7 +148,7 @@ struct LayerLabel : Core::LayerData
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
-      char elements[] = { None, Index, Name, Custom, Ordinal };
+      char elements[] = { None, Index, Name, Custom, Ordinal, UniqueID };
       for (char option : elements) {
         if (option == 0) {
           atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
@@ -172,6 +173,11 @@ struct LayerLabel : Core::LayerData
             text << ((text.size() == 0) ? QObject::tr("Element & Number")
                                         : QObject::tr("El.&No."));
             val |= LabelOptions::Ordinal;
+          }
+          if (option & LabelOptions::UniqueID) {
+            text << ((text.size() == 0) ? QObject::tr("Unique ID")
+                                        : QObject::tr("Un.ID"));
+            val |= LabelOptions::UniqueID;
           }
           QString join = QObject::tr(", ");
           atom->addItem(text.join(join), QVariant(val));
@@ -326,6 +332,9 @@ void Label::processAtom(const Core::Molecule& molecule,
       text += (text == "" ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
+    }
+    if (interface.atomOptions & LayerLabel::LabelOptions::UniqueID) {
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
