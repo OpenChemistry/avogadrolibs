@@ -11,6 +11,8 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+class ConfigurePythonDialog;
+
 /**
  * @brief Configure Python environment through a dialog.
  */
@@ -36,6 +38,7 @@ private slots:
 
 private:
   QAction* m_action;
+  ConfigurePythonDialog* m_dialog;
 };
 
 } // namespace QtPlugins

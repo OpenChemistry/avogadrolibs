@@ -27,11 +27,11 @@ public:
   ~ConfigurePythonDialog() override;
 
   void setOptions(const QStringList& options);
-
   void setCurrentOption(const QString& option);
   QString currentOption() const;
 
 protected slots:
+  void optionChanged(int index);
   void accept() override;
 
 private:

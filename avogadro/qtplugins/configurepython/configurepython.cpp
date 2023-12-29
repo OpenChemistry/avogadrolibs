@@ -9,21 +9,21 @@
 
 #include <avogadro/qtgui/avogadropython.h>
 #include <avogadro/qtgui/filebrowsewidget.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
-#include <QDebug>
-#include <QDialogButtonBox>
-#include <QLabel>
-#include <QMessageBox>
-#include <QSettings>
-#include <QVBoxLayout>
+#include <QtCore/QDebug>
+#include <QtCore/QSettings>
 
 namespace Avogadro::QtPlugins {
 
+using QtGui::FileBrowseWidget;
+using QtGui::Utilities::findExecutablePaths;
+
 ConfigurePython::ConfigurePython(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
+    m_dialog(nullptr)
 {
-  m_action = new QAction(this);
   m_action->setEnabled(true);
   m_action->setText(tr("Python Settings…"));
   m_action->setProperty("menu priority", 510);
@@ -47,59 +47,47 @@ QStringList ConfigurePython::menuPath(QAction*) const
 
 void ConfigurePython::showDialog()
 {
+  if (m_dialog == nullptr) {
+    m_dialog = new ConfigurePythonDialog(qobject_cast<QWidget*>(parent()));
+    connect(m_dialog, SIGNAL(accepted()), SLOT(accept()));
+    connect(m_dialog, SIGNAL(rejected()), SLOT(reject()));
+  }
+
+  // Populate the dialog with the current settings
   // TODO:
   // - check for conda environments
-  // - check for python in PATH
-  // - offer choices for python interpreter
-  // - .. or "other..." to set the path manually
+  // - get versions for each interpreter
 
-  // Create objects
-  QSettings settings;
-  QDialog dlg(qobject_cast<QWidget*>(parent()));
-  auto* label = new QLabel;
-  auto* layout = new QVBoxLayout;
-  auto* browser = new QtGui::FileBrowseWidget;
-  auto* buttonBox = new QDialogButtonBox;
-
-  // Configure objects
   // Check for python interpreter in env var
   QString pythonInterp =
     QString::fromLocal8Bit(qgetenv("AVO_PYTHON_INTERPRETER"));
   if (pythonInterp.isEmpty()) {
     // Check settings
+    QSettings settings;
     pythonInterp = settings.value("interpreters/python", QString()).toString();
   }
   // Use compile-time default if still not found.
   if (pythonInterp.isEmpty())
     pythonInterp = QString(pythonInterpreterPath);
-  browser->setMode(QtGui::FileBrowseWidget::ExecutableFile);
-  browser->setFileName(pythonInterp);
 
-  buttonBox->setStandardButtons(QDialogButtonBox::Ok |
-                                QDialogButtonBox::Cancel);
+  // get the list from the system path
+  QStringList names;
+#ifdef Q_OS_WIN
+  names << "python3.exe"
+        << "python.exe";
+#else
+  names << "python3"
+        << "python";
+#endif
 
-  dlg.setWindowTitle(tr("Set path to Python interpreter:"));
-  label->setText(tr("Select the python interpreter used to run input generator "
-                    "scripts.\nAvogadro must be restarted for any changes to "
-                    "take effect."));
+  QStringList pythonInterps = findExecutablePaths(names);
 
-  // Build layout
-  layout->addWidget(label);
-  layout->addWidget(browser);
-  layout->addWidget(buttonBox);
-  dlg.setLayout(layout);
+  // Add the current interpreter to the list if it's not already there.
+  if (!pythonInterps.contains(pythonInterp))
+    pythonInterps.prepend(pythonInterp);
 
-  // Connect
-  connect(buttonBox, SIGNAL(accepted()), &dlg, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
-
-  // Show dialog
-  auto response = static_cast<QDialog::DialogCode>(dlg.exec());
-  if (response != QDialog::Accepted)
-    return;
-
-  // Handle response
-  settings.setValue("interpreters/python", browser->fileName());
+  m_dialog->setOptions(pythonInterps);
+  m_dialog->show();
 }
 
 } // namespace Avogadro::QtPlugins
