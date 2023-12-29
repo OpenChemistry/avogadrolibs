@@ -5,9 +5,9 @@
 
 #include "filebrowsewidget.h"
 
+#include <QFileSystemModel>
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QFileDialog>
-#include <QFileSystemModel>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
@@ -19,13 +19,9 @@
 namespace Avogadro::QtGui {
 
 FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
-  : QWidget(theParent)
-  , m_mode()
-  , // use the setter to initialize filters.
-  m_valid(false)
-  , m_fileSystemModel(new QFileSystemModel(this))
-  , m_button(new QPushButton(tr("Browse")))
-  , m_edit(new QLineEdit)
+  : QWidget(theParent), m_mode(), // use the setter to initialize filters.
+    m_valid(false), m_fileSystemModel(new QFileSystemModel(this)),
+    m_button(new QPushButton(tr("Browse"))), m_edit(new QLineEdit)
 {
   auto* hbox = new QHBoxLayout;
   hbox->addWidget(m_edit);
@@ -152,6 +148,37 @@ void FileBrowseWidget::fileNameNoMatch()
   m_valid = false;
 }
 
+QStringList FileBrowseWidget::searchSystemPathForFiles(const QStringList& execs)
+{
+  QStringList result;
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  if (!env.contains(QStringLiteral("PATH")))
+    return result;
+
+  static QString pathSplitter =
+#ifdef Q_OS_WIN32
+    ";"
+#else  // WIN32
+    ":"
+#endif // WIN32
+    ;
+  QStringList paths =
+    env.value(QStringLiteral("PATH")).split(pathSplitter, Qt::SkipEmptyParts);
+
+  foreach (const QString& exec, execs) {
+    foreach (const QString& path, paths) {
+      QFileInfo info(path + "/" + exec);
+      if (!info.exists() || !info.isFile()) {
+        continue;
+      }
+      result << info.absoluteFilePath();
+      break;
+    }
+  }
+
+  return result;
+}
+
 QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 {
   QString result;
@@ -165,9 +192,9 @@ QString FileBrowseWidget::searchSystemPathForFile(const QString& exec)
 #else  // WIN32
     ":"
 #endif // WIN32
-  ;
-  QStringList paths = env.value(QStringLiteral("PATH"))
-                         .split(pathSplitter, Qt::SkipEmptyParts);
+    ;
+  QStringList paths =
+    env.value(QStringLiteral("PATH")).split(pathSplitter, Qt::SkipEmptyParts);
 
   foreach (const QString& path, paths) {
     QFileInfo info(path + "/" + exec);
@@ -201,4 +228,4 @@ FileBrowseWidget::Mode FileBrowseWidget::mode() const
   return m_mode;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
