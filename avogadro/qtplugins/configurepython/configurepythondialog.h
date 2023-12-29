@@ -30,9 +30,14 @@ public:
   void setCurrentOption(const QString& option);
   QString currentOption() const;
 
+signals:
+  void accepted();
+  void rejected();
+
 protected slots:
   void optionChanged(int index);
   void accept() override;
+  void reject() override;
 
 private:
   Ui::ConfigurePythonDialog* m_ui;

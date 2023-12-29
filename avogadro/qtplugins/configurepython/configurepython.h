@@ -35,6 +35,7 @@ public:
 
 private slots:
   void showDialog();
+  void accept();
 
 private:
   QAction* m_action;

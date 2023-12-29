@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Insert Molecule…</string>
+   <string>Python Settings…</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>

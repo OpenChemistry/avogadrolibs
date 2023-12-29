@@ -45,12 +45,23 @@ QStringList ConfigurePython::menuPath(QAction*) const
   return QStringList() << tr("&Extensions");
 }
 
+void ConfigurePython::accept()
+{
+  if (m_dialog == nullptr)
+    return;
+
+  // Save the settings
+  QSettings settings;
+  settings.setValue("interpreters/python", m_dialog->currentOption());
+
+  // TODO: reload the python interpreters
+}
+
 void ConfigurePython::showDialog()
 {
   if (m_dialog == nullptr) {
     m_dialog = new ConfigurePythonDialog(qobject_cast<QWidget*>(parent()));
     connect(m_dialog, SIGNAL(accepted()), SLOT(accept()));
-    connect(m_dialog, SIGNAL(rejected()), SLOT(reject()));
   }
 
   // Populate the dialog with the current settings

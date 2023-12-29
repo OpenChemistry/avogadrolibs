@@ -6,7 +6,7 @@
 #include "configurepythondialog.h"
 #include "ui_configurepythondialog.h"
 
-#include <QtCore/QSettings>
+#include <QtCore/QProcess>
 
 namespace Avogadro::QtPlugins {
 
@@ -18,6 +18,9 @@ ConfigurePythonDialog::ConfigurePythonDialog(QWidget* aParent)
 
   connect(m_ui->environmentCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(optionChanged(int)));
+
+  connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
+  connect(m_ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
 }
 
 ConfigurePythonDialog::~ConfigurePythonDialog()
@@ -28,14 +31,32 @@ ConfigurePythonDialog::~ConfigurePythonDialog()
 void ConfigurePythonDialog::setOptions(const QStringList& options)
 {
   m_ui->environmentCombo->clear();
-  m_ui->environmentCombo->addItems(options);
-  m_ui->environmentCombo->addItem("Other…");
 
-  QSettings settings;
-  QString lastUsed = settings.value("ConfigurePython/lastUsed").toString();
-  int index = m_ui->environmentCombo->findText(lastUsed);
-  if (index >= 0)
-    m_ui->environmentCombo->setCurrentIndex(index);
+  // get the Python version from each interpreter
+  QStringList versions, arguments;
+  QProcess process;
+  arguments << "-V";
+  foreach (const QString& option, options) {
+    process.start(option, arguments);
+    if (process.waitForFinished()) {
+      QString output = process.readAllStandardOutput();
+      if (output.startsWith("Python")) {
+        versions << output.split(" ").at(1);
+      } else {
+        versions << tr("Unknown");
+      }
+    } else {
+      versions << tr("Unknown");
+    }
+  }
+
+  for (int i = 0; i < options.size(); ++i) {
+    m_ui->environmentCombo->addItem(
+      QString("%1 (%2)").arg(options.at(i)).arg(versions.at(i)));
+  }
+
+  m_ui->environmentCombo->addItem("Other…");
+  m_ui->browseWidget->hide();
 }
 
 void ConfigurePythonDialog::optionChanged(int index)
@@ -56,7 +77,27 @@ QString ConfigurePythonDialog::currentOption() const
       m_ui->environmentCombo->count() - 1)
     return m_ui->browseWidget->fileName();
 
-  return m_ui->environmentCombo->currentText();
+  QString path = m_ui->environmentCombo->currentText();
+  // remove the Python version to get the path
+  int index = path.indexOf(" (");
+  if (index >= 0)
+    return path.left(index);
+
+  return path;
+}
+
+void ConfigurePythonDialog::reject()
+{
+  QDialog::reject();
+
+  emit rejected();
+}
+
+void ConfigurePythonDialog::accept()
+{
+  QDialog::accept();
+
+  emit accepted();
 }
 
 void ConfigurePythonDialog::setCurrentOption(const QString& option)
@@ -64,13 +105,6 @@ void ConfigurePythonDialog::setCurrentOption(const QString& option)
   int index = m_ui->environmentCombo->findText(option);
   if (index >= 0)
     m_ui->environmentCombo->setCurrentIndex(index);
-}
-
-void ConfigurePythonDialog::accept()
-{
-  QSettings settings;
-  settings.setValue("ConfigurePython/lastUsed", currentOption());
-  QDialog::accept();
 }
 
 } // namespace Avogadro::QtPlugins
