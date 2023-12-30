@@ -377,8 +377,6 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     // - otherwise use the template
     Molecule templateMolecule;
 
-    qDebug() << "ligandString: " << m_toolWidget->ligandString();
-
     if (m_toolWidget->ligandString() == "Clipboard") {
       const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
