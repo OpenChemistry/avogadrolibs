@@ -59,7 +59,8 @@ private:
       : name("Error"), description("Error"), releaseVersion("Error"),
         type("other"), updatedAt("Error"), zipballUrl("Error"),
         baseUrl("Error"), readmeUrl("Error"), hasRelease(false)
-    {}
+    {
+    }
   };
 
   struct downloadEntry
@@ -74,6 +75,8 @@ private:
   void getRepoData(QString url = "https://avogadro.cc/plugins.json");
   void downloadNext();
   bool checkSHA1(QByteArray);
+  // check if we should install requirements.txt
+  bool checkToInstall();
 
   std::vector<repo> m_repoList;
   Ui::DownloaderWidget* m_ui;
