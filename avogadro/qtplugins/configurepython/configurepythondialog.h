@@ -26,9 +26,14 @@ public:
   explicit ConfigurePythonDialog(QWidget* parent = nullptr);
   ~ConfigurePythonDialog() override;
 
+  void setupCondaEnvironment();
+
   void setOptions(const QStringList& options);
   void setCurrentOption(const QString& option);
   QString currentOption() const;
+
+  QString condaPath() const;
+  QString condaEnvironment() const;
 
 signals:
   void accepted();
@@ -41,6 +46,7 @@ protected slots:
 
 private:
   Ui::ConfigurePythonDialog* m_ui;
+  QStringList m_condaEnvironments;
 };
 
 } // namespace QtPlugins

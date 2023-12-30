@@ -21,11 +21,76 @@ ConfigurePythonDialog::ConfigurePythonDialog(QWidget* aParent)
 
   connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
   connect(m_ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
+
+  // look for conda environments
+  QProcess condaProcess;
+  QSettings settings;
+  QString condaPath =
+    settings.value("interpreters/condaPath", "conda").toString();
+  // check if conda is executable
+  if (!QFileInfo(condaPath).isExecutable())
+    return;
+
+  // set the path to conda
+  settings.setValue("interpreters/condaPath", condaPath);
+
+  // get the list of environments
+  condaProcess.start(condaPath, QStringList() << "env"
+                                              << "list");
+  if (condaProcess.waitForFinished()) {
+    QString output = condaProcess.readAllStandardOutput();
+    QStringList lines = output.split("\n");
+    foreach (const QString& line, lines) {
+      if (line.startsWith("#"))
+        continue;
+
+      QStringList parts = line.split(" ");
+      if (parts.size() > 1)
+        m_condaEnvironments << parts.at(0);
+    }
+  }
+  if (m_condaEnvironments.size() < 2) {
+    // no environment or only the base found
+    setupCondaEnvironment();
+  }
 }
 
 ConfigurePythonDialog::~ConfigurePythonDialog()
 {
   delete m_ui;
+}
+
+void ConfigurePythonDialog::setupCondaEnvironment()
+{
+  // suggest the user create a new environment through a dialog
+
+  QString newEnvironment;
+
+  // create the environment
+  QProcess condaProcess;
+  QSettings settings;
+  QString condaPath =
+    settings.value("interpreters/condaPath", "conda").toString();
+  // check if conda is executable
+  if (!QFileInfo(condaPath).isExecutable())
+    return;
+
+  QStringList arguments;
+  arguments << "create"
+            << "-n" << newEnvironment << "--clone"
+            << "base";
+  condaProcess.start(condaPath, arguments);
+}
+
+void ConfigurePythonDialog::condaPath() const
+{
+  QSettings settings;
+  return settings.value("interpreters/condaPath").toString();
+}
+
+void ConfigurePythonDialog::condaEnvironment() const
+{
+  return "";
 }
 
 void ConfigurePythonDialog::setOptions(const QStringList& options)
@@ -52,7 +117,7 @@ void ConfigurePythonDialog::setOptions(const QStringList& options)
 
   for (int i = 0; i < options.size(); ++i) {
     m_ui->environmentCombo->addItem(
-      QString("%1 (%2)").arg(options.at(i)).arg(versions.at(i)));
+      QString("Python %1 (%2)").arg(versions.at(i)).arg(options.at(i)));
   }
 
   m_ui->environmentCombo->addItem(tr("Other…"));
