@@ -1274,8 +1274,9 @@ msgstr "运行脚本 '%1 %2' 时出错：等待启动超时（%3）。"
 msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
-msgstr "运行脚本 '%1 %2' 时出错：写入 stdin 失败（len=%3，已写入 %4 字节，QProcess "
-"错误：%5）。"
+msgstr ""
+"运行脚本 '%1 %2' 时出错：写入 stdin 失败（len=%3，已写入 %4 字节，QProcess 错"
+"误：%5）。"
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
@@ -3656,7 +3657,8 @@ msgstr ""
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
-msgstr "出现内部错误：OpenBabel:: 已调用 readMolecule，但没有可用于解析的输出！"
+msgstr ""
+"出现内部错误：OpenBabel:: 已调用 readMolecule，但没有可用于解析的输出！"
 
 #: qtplugins/openbabel/openbabel.cpp:219
 #, qt-format
@@ -5352,8 +5354,8 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>勾选以默认阻止该作业出现在 MoleQueue GUI "
-"界面中。</p></body></html>"
+"<html><head/><body><p>勾选以默认阻止该作业出现在 MoleQueue GUI 界面中。</p></"
+"body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5365,7 +5367,8 @@ msgstr "在 MoleQueue 中隐藏作业："
 msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
-msgstr "<html><head/><body><p>当作业状态变更时，显示系统弹窗提醒。</p></body></html>"
+msgstr ""
+"<html><head/><body><p>当作业状态变更时，显示系统弹窗提醒。</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8268,11 +8271,10 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
-"<html><head/><body><p>周期维度数</p><p><br/></p><p>若设置为 1，"
-"材料将仅在晶体的 A 轴方向上周期拓展，</p><p><br/></p><p>若设置为 2，"
-"材料将同时在晶体的 A 轴、B 轴方向上周期拓展，</p><p><br/></p><p>若设置为 3，"
-"材料将同时在晶体的 A 轴、B 轴、C 轴方向上周期拓展。</p><p><br/"
-"></p></body></html>"
+"<html><head/><body><p>周期维度数</p><p><br/></p><p>若设置为 1，材料将仅在晶体"
+"的 A 轴方向上周期拓展，</p><p><br/></p><p>若设置为 2，材料将同时在晶体的 A "
+"轴、B 轴方向上周期拓展，</p><p><br/></p><p>若设置为 3，材料将同时在晶体的 A "
+"轴、B 轴、C 轴方向上周期拓展。</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8296,11 +8298,11 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"cuiweicui1985@gmail.com,rainofchaos@gmail.com,yjjart@gmail."
-"com,sihanzheng@gmail.com,weitao1979@gmail.com,wantinghard@gmail.com,avogadro-"
-"devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail."
-"com,chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail."
-"com,sihanzheng@gmail.com,cyliang532@gmail.com"
+"cuiweicui1985@gmail.com,rainofchaos@gmail.com,yjjart@gmail.com,"
+"sihanzheng@gmail.com,weitao1979@gmail.com,wantinghard@gmail.com,avogadro-"
+"devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,"
+"chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail.com,"
+"sihanzheng@gmail.com,cyliang532@gmail.com"
 
 #, fuzzy
 #~| msgid "Fragment..."
