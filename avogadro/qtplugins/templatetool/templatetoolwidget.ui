@@ -483,12 +483,27 @@
            </item>
            <item>
             <property name="text">
+             <string>ethylene</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ethyne</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>nitro</string>
             </property>
            </item>
            <item>
             <property name="text">
              <string>phenyl</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>phosphate</string>
             </property>
            </item>
            <item>

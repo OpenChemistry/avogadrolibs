@@ -33,9 +33,12 @@
     <file>ligands/6-edta.png</file>
     <file>ligands/amide.png</file>
     <file>ligands/carboxylate.png</file>
+    <file>ligands/ethylene.png</file>
+    <file>ligands/ethyne.png</file>
     <file>ligands/ester.png</file>
     <file>ligands/nitro.png</file>
     <file>ligands/phenyl.png</file>
+    <file>ligands/phosphate.png</file>
     <file>ligands/sulfonate.png</file>
     <file>ligands/eta2-ethylene.png</file>
     <file>ligands/eta5-cyclopentyl.png</file>
@@ -78,8 +81,11 @@
     <file>ligands/amide.cjson</file>
     <file>ligands/carboxylate.cjson</file>
     <file>ligands/ester.cjson</file>
+    <file>ligands/ethylene.cjson</file>
+    <file>ligands/ethyne.cjson</file>
     <file>ligands/nitro.cjson</file>
     <file>ligands/phenyl.cjson</file>
+    <file>ligands/phosphate.cjson</file>
     <file>ligands/sulfonate.cjson</file>
     <file>ligands/eta2-ethylene.cjson</file>
     <file>ligands/eta5-cyclopentyl.cjson</file>
