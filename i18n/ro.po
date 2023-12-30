@@ -2,13 +2,14 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Irina Puscas <irinapuscas82@gmail.com>, 2021.
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-24 02:05+0000\n"
-"PO-Revision-Date: 2021-02-13 01:19+0000\n"
-"Last-Translator: Irina Puscas <irinapuscas82@gmail.com>\n"
+"PO-Revision-Date: 2023-12-31 04:46+0000\n"
+"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
 "Language: ro\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -167,7 +168,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:114 qtgui/containerwidget.cpp:35
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:374
 msgid "Unknown"
@@ -447,7 +448,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "Nici o molecula setata in BackgroundFileFormat!"
+msgstr "Nici o moleculă definită în „BackgroundFileFormat”!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -455,7 +456,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Niciun nume de fișier definit în „BackgroundFileFormat”!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
@@ -1204,7 +1205,7 @@ msgstr ""
 
 #: qtgui/moleculemodel.cpp:92
 msgid "Untitled"
-msgstr ""
+msgstr "Fără titlu"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
@@ -1467,13 +1468,13 @@ msgstr ""
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
-msgstr ""
+msgstr "&Fişier"
 
 #: qtplugins/3dmol/3dmol.cpp:51 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
-msgstr ""
+msgstr "&Exportare"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1821,7 +1822,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:76
 msgid "&View"
-msgstr ""
+msgstr "&Vizualizare"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 msgid "Color Atoms"
@@ -1942,7 +1943,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
 msgid "&Build"
-msgstr ""
+msgstr "&Construire"
 
 #: qtplugins/bonding/bonding.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:445
@@ -2098,7 +2099,7 @@ msgstr ""
 #: qtplugins/plugindownloader/plugindownloader.cpp:40
 #: qtplugins/quantuminput/quantuminput.cpp:69 qtplugins/yaehmop/yaehmop.cpp:112
 msgid "&Extensions"
-msgstr ""
+msgstr "&Extensii"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
@@ -2312,7 +2313,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/propertytables/propertyview.cpp:283:252
 msgid "Copy"
-msgstr ""
+msgstr "Copiază"
 
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2328,13 +2329,13 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:33:249
 msgid "Cut"
-msgstr ""
+msgstr "Taie"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:34:261
 msgid "Clear"
-msgstr ""
+msgstr "Curățare"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -2342,7 +2343,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
-msgstr ""
+msgstr "&Editare"
 
 #: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
@@ -2717,7 +2718,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 msgid "&Import"
-msgstr ""
+msgstr "&Import"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 msgid "Fetch PDB"
@@ -2747,12 +2748,13 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Descărcarea din rețea a eșuat"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr ""
+"Depășire a timpului de așteptare pentru conectarea la rețea sau altă eroare."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -4253,7 +4255,7 @@ msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Center"
-msgstr ""
+msgstr "Centrare"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
@@ -4289,11 +4291,11 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "Selectează tot"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr ""
+msgstr "Nu selectați nimic"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:549
 msgid "Invert Selection"
@@ -4341,7 +4343,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
-msgstr ""
+msgstr "&Selectați"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
@@ -7200,7 +7202,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 msgid "&Close"
-msgstr ""
+msgstr "În&chide"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
@@ -7888,7 +7890,11 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
+"Remus-Gabriel Chelu, Irina Puscas, contribuții Launchpad: Calin Alexandru, "
+"Razvan Stefanescu"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
+"remusgabriel.chelu@disroot.org,irinapuscas82@gmail.com,alexandru136@gmail."
+"com,razvan.stefanescu@gmail.com"
