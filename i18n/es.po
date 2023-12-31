@@ -6,7 +6,7 @@
 # J. Lavoie <j.lavoie@net-c.ca>, 2021.
 # Aritz Erkiaga <aerkiaga3@gmail.com>, 2022.
 # Andrés Henao <andreshenao31@gmail.com>, 2022, 2023.
-# gallegonovato <fran-carro@hotmail.es>, 2022, 2023.
+# gallegonovato <fran-carro@hotmail.es>, 2022, 2023, 2024.
 # William <eduardo.957@hotmail.com>, 2022.
 # Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>, 2023.
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-31 02:06+0000\n"
-"PO-Revision-Date: 2023-12-26 13:12+0000\n"
+"PO-Revision-Date: 2024-01-02 06:08+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1746,7 +1746,7 @@ msgstr "Guardar Archivo de Entrada APBS"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "Entrada APBS (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -2277,15 +2277,15 @@ msgstr "Ejecutar secuencias de comandos externas"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:28:225
 msgid "Python Settings…"
-msgstr ""
+msgstr "Configuración de Python…"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "ConfigurePython"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Configurar entornos Python."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -5510,11 +5510,13 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Seleccione la versión de Python utilizada para ejecutar scripts.\n"
+"Avogadro debe reiniciarse para que los cambios surtan efecto."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment:"
-msgstr ""
+msgstr "Entorno:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
@@ -8043,12 +8045,12 @@ msgstr "éster"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
-msgstr ""
+msgstr "etileno"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "Acetileno"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8063,7 +8065,7 @@ msgstr "fenilo"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
-msgstr ""
+msgstr "fosfato"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
