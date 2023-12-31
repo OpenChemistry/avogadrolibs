@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-24 02:05+0000\n"
-"PO-Revision-Date: 2023-12-30 03:59+0000\n"
+"PO-Revision-Date: 2023-12-31 04:46+0000\n"
 "Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
@@ -489,7 +489,7 @@ msgstr "无法解决程序选择二。这是一个bug。"
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "BackgroundFileFormat 中没有设置分子！"
+msgstr "没有在 BackgroundFileFormat 中设置分子！"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -1789,23 +1789,21 @@ msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:106
 #: qtplugins/surfaces/surfaces.cpp:760
-#, fuzzy
 msgctxt "colormap"
 msgid "Heat"
-msgstr "加热"
+msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
-msgstr "热的"
+msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:764
-#, fuzzy
 msgctxt "colormap"
 msgid "Gray"
-msgstr "灰色"
+msgstr "Gray"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1813,7 +1811,7 @@ msgstr "灰色"
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
-msgstr "岩浆"
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -1821,7 +1819,7 @@ msgstr "岩浆"
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
-msgstr "火焰"
+msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -1829,7 +1827,7 @@ msgstr "火焰"
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
-msgstr "等离子体"
+msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
@@ -1855,11 +1853,9 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1790
-#, fuzzy
-#| msgid "Spectra"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "光谱"
+msgstr "Spectral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1869,7 +1865,7 @@ msgstr "光谱"
 #: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1787
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1877,11 +1873,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1781
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "取消"
+msgstr "Balance"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1891,7 +1885,7 @@ msgstr "取消"
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1784
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Blue-DarkRed"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1903,11 +1897,11 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1793
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:138
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "将颜色主题应用于原子和残基。"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 #: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
@@ -1951,7 +1945,7 @@ msgstr "颜色"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
 msgid "Atom scale"
-msgstr ""
+msgstr "原子尺寸比例"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
 #, fuzzy
@@ -1990,6 +1984,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"化学键操作工具\n"
+"\n"
+"鼠标左键：按下并拖动以旋转视图。\n"
+"鼠标中键：按下并拖动以缩放。\n"
+"鼠标右键：按下并拖动以移动视图。\n"
+"双击：重设视图。\n"
+"\n"
+"鼠标左键 & 在化学键上拖动以设置操作平面：\n"
+"鼠标左键 & 在成键原子上拖动以改变键角\n"
+"鼠标右键 & 在成键原子上拖动以改变键长"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:776
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:864
@@ -1998,7 +2002,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:212
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:798
 #: qtplugins/editor/editor.cpp:260 qtplugins/measuretool/measuretool.cpp:219
@@ -2193,7 +2197,7 @@ msgstr "渲染原子间的紧密接触。"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Contact"
-msgstr ""
+msgstr "接触"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Salt Bridge"
@@ -2201,11 +2205,11 @@ msgstr "盐桥"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
-msgstr ""
+msgstr "排斥作用"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
-msgstr ""
+msgstr "编辑颜色透明度图…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2219,11 +2223,11 @@ msgstr "扩展(&E)"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "颜色透明度图"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
-msgstr ""
+msgstr "编辑颜色透明度图，主要用于体积渲染。"
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
@@ -2247,7 +2251,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:215
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "正在处理 %1"
 
 #: qtplugins/commandscripts/command.cpp:270
 #: qtplugins/quantuminput/quantuminput.cpp:178
@@ -2268,7 +2272,7 @@ msgstr "命令脚本"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
-msgstr ""
+msgstr "运行外部指令和脚本"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
@@ -2560,7 +2564,7 @@ msgstr "能量"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
-msgstr ""
+msgstr "能量和力"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
@@ -2572,7 +2576,7 @@ msgstr "几何优化"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "电子结构方法（DFT）"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
@@ -2580,56 +2584,56 @@ msgstr "分子力学"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr ""
+msgstr "杂交量子经典方法 （尚不支持）"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:719
 msgid "NONE"
-msgstr ""
+msgstr "NONE"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1360
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "原子的"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
-msgstr ""
+msgstr "CORE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
 msgid "DENSITIES"
-msgstr ""
+msgstr "DENSITIES"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "HISTORY_RESTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "RANDOM"
-msgstr ""
+msgstr "随机"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
 msgid "RESTART"
-msgstr ""
+msgstr "重启"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
 msgid "SPARSE"
@@ -2725,7 +2729,7 @@ msgstr "从剪贴板导入晶体"
 
 #: qtplugins/crystal/crystal.cpp:175
 msgid "Wrap atoms into the unit cell."
-msgstr ""
+msgstr "将原子移动到晶胞。"
 
 #: qtplugins/crystal/crystal.cpp:177
 msgid "Rotate the unit cell to the standard orientation."
@@ -2797,6 +2801,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"绘制工具\n"
+"\n"
+"鼠标左键：按下并拖动以创建原子和化学键\n"
+"鼠标右键：删除原子"
 
 #: qtplugins/editor/editor.cpp:104
 msgid "Draw Atom"
@@ -2819,7 +2827,7 @@ msgstr "距离："
 #: qtplugins/editor/editor.cpp:258
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -2875,7 +2883,7 @@ msgstr "无法读取 PDB 分子：%1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB 代码"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2897,7 +2905,7 @@ msgstr "网络下载失败"
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr "网络超时或发生其它错误."
+msgstr "网络超时或发生其它错误。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -2911,7 +2919,7 @@ msgstr "从 PDB 获取"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "从 Protein Data Bank 下载 PDB 模型"
 
 #: qtplugins/focus/focus.cpp:22
 #, fuzzy
@@ -2921,19 +2929,19 @@ msgstr "选择"
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
-msgstr ""
+msgstr "未聚焦"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "聚焦"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "将视图聚焦于特定特征。"
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "为分子中的原子渲染力场可视化。"
 
 #: qtplugins/forcefield/forcefield.cpp:75
 #, fuzzy
@@ -3005,21 +3013,21 @@ msgstr "力场"
 
 #: qtplugins/forcefield/obmmenergy.cpp:82
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "广义 Amber 力场"
 
 #: qtplugins/forcefield/obmmenergy.cpp:96
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "Merck分子力场 94"
 
 #: qtplugins/forcefield/scriptenergy.cpp:240
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "检索能量脚本的元数据时出错： %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:250
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "解析能量脚本的元数据时出错： %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:258
 #, qt-format
@@ -3027,6 +3035,8 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"解析能量脚本的元数据时出错： %1\n"
+"结果不是 JSON 对象。\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3167,11 +3177,11 @@ msgstr "插入 DNA/RNA…"
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:161
 msgid "Uracil"
-msgstr ""
+msgstr "尿嘧啶（U）"
 
 #: qtplugins/insertdna/insertdna.cpp:167
 #, fuzzy
@@ -3184,7 +3194,7 @@ msgstr "T"
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
 #: qtplugins/insertdna/insertdna.cpp:168:612
 msgid "Thymine"
-msgstr ""
+msgstr "胸腺嘧啶（T）"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
