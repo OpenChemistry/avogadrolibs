@@ -17,6 +17,7 @@
 #include <QtCore/QSysInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
+#include <QtWidgets/QMessageBox>
 
 namespace Avogadro::QtPlugins {
 
@@ -75,7 +76,7 @@ ConfigurePython::ConfigurePython(QObject* parent_)
       if (miniforge.isValid()) {
         QDesktopServices::openUrl(miniforge);
         // open install instructions
-        QDesktopServices::openURL(QUrl("https://github.com/conda-forge/"
+        QDesktopServices::openUrl(QUrl("https://github.com/conda-forge/"
                                        "miniforge?tab=readme-ov-file#install"));
       }
     }

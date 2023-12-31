@@ -11,6 +11,8 @@
 namespace Avogadro {
 namespace QtPlugins {
 
+class CondaDialog;
+
 namespace Ui {
 class ConfigurePythonDialog;
 }
@@ -46,6 +48,7 @@ protected slots:
 
 private:
   Ui::ConfigurePythonDialog* m_ui;
+  CondaDialog* m_condaUi;
   QStringList m_condaEnvironments;
 };
 
