@@ -433,7 +433,10 @@ size_t Graph::edgeCount() const
 
 std::vector<size_t> Graph::neighbors(size_t index) const
 {
-  assert(index < size());
+  if (index <= size()) {
+    std::vector<size_t> emptyVector;
+    return std::vector<size_t>(emptyVector);
+  }
   return std::vector<size_t>(m_adjacencyList[index]);
 }
 
