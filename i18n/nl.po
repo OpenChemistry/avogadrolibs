@@ -329,7 +329,7 @@ msgstr "Output-fout"
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr "Gefaald om te schrijven."
+msgstr "Schrijven naar bestand %1 mislukt."
 
 #: molequeue/inputgeneratorwidget.cpp:482
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
