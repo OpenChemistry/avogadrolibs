@@ -304,7 +304,7 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:454
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr "Interne fouten konden geen tekst Widget vinden voor bestand '57X: '"
+msgstr "Interne fouten konden geen tekst-widget vinden voor bestand '%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:470
 #: molequeue/inputgeneratorwidget.cpp:581
