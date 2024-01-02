@@ -5,13 +5,15 @@
 # Koen Roggemans <koen@roggemans.net>, 2022, 2024.
 # Joeri van Limpt <joerivanlimpt@live.nl>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-31 02:06+0000\n"
 "PO-Revision-Date: 2024-01-02 10:46+0000\n"
-"Last-Translator: Koen Roggemans <koen@roggemans.net>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
 "Language: nl\n"
@@ -294,7 +296,7 @@ msgstr "Toon &Waarschuwingen"
 
 #: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Er is een fout opgetreden."
 
 #: molequeue/inputgeneratorwidget.cpp:442
 msgid "Select output filename"
