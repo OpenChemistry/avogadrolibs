@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Koen Roggemans <koen@roggemans.net>, 2022.
 # Joeri van Limpt <joerivanlimpt@live.nl>, 2023.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-31 02:06+0000\n"
-"PO-Revision-Date: 2023-12-13 18:59+0000\n"
-"Last-Translator: Joeri van Limpt <joerivanlimpt@live.nl>\n"
+"PO-Revision-Date: 2024-01-02 10:42+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
 "Language: nl\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-rc\n"
+"X-Generator: Weblate 5.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -120,6 +121,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Parse fout bij offset 22X:\n"
+"Raw JSON:\n"
+"\n"
+"43X"
 
 #: molequeue/inputgenerator.cpp:350
 #, qt-format
@@ -143,6 +148,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Error generating cjson object: Parse fout bij offset 53X:\n"
+"Raw JSON:\n"
+"\n"
+"_"
 
 #: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -150,6 +159,8 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Error generator Cjson object: Geadresseerde JSON is geen object:\n"
+"_"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
