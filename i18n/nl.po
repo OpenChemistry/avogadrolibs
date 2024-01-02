@@ -2,7 +2,7 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Koen Roggemans <koen@roggemans.net>, 2022.
+# Koen Roggemans <koen@roggemans.net>, 2022, 2024.
 # Joeri van Limpt <joerivanlimpt@live.nl>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-31 02:06+0000\n"
 "PO-Revision-Date: 2024-01-02 10:42+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Koen Roggemans <koen@roggemans.net>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
 "Language: nl\n"
@@ -1546,10 +1546,8 @@ msgid "Align to Axis"
 msgstr "Uitlijning instellingen"
 
 #: qtplugins/aligntool/aligntool.cpp:304
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "Geef de x, y en z assen weer op de oorsprong"
+msgstr "Centreer het atoom op de oorsprong."
 
 #: qtplugins/aligntool/aligntool.cpp:307
 msgid "Rotate the molecule to align the atom to the specified axis."
