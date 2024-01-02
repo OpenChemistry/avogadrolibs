@@ -286,7 +286,7 @@ msgstr "Script geeft waarschuwingen terug:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:368
 msgid "Hide &Warnings"
-msgstr "Verstop je"
+msgstr "Verberg &Waarschuwingen"
 
 #: molequeue/inputgeneratorwidget.cpp:374
 msgid "Show &Warnings"
