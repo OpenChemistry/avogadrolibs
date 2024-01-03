@@ -94,7 +94,6 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        cache: true
         version: ${{ env.QT_VERSION }}
         aqtversion: '==3.1.*'
         modules: 'qt5compat'
@@ -104,15 +103,6 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
-
-    - name: Grab cache files
-      uses: actions/cache@v3
-      if: runner.os != 'Windows'
-      with:
-        path: |
-          ${{ runner.workspace }}/build/thirdparty
-          ${{ runner.workspace }}/build/Downloads
-        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Configure
       run: |
