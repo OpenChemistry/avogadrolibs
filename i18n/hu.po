@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
-# ovari <ovari123@zoho.com>, 2021, 2022, 2023.
+# ovari <ovari123@zoho.com>, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-12-31 02:06+0000\n"
-"PO-Revision-Date: 2023-12-08 03:04+0000\n"
+"PO-Revision-Date: 2024-01-03 21:23+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1095,7 +1095,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 üzenet"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -1537,10 +1537,8 @@ msgid "Modify Molecule"
 msgstr "Molekula módosítása"
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "Draw Settings"
 msgid "Settings"
-msgstr "Rajzolás beállításai"
+msgstr "Beállítások"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1746,7 +1744,7 @@ msgstr "APBS bemeneti fájl mentése"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "APBS-bemenet (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -2280,15 +2278,15 @@ msgstr "Külső parancsfájl futtatása"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:28:225
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python beállításai…"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "Python beállítása"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Python-környezetek beállításai."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2777,10 +2775,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Kristályspecifikus szerkesztő/elemző eszközök."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Color:"
 msgid "Color axes:"
-msgstr "Szín:"
+msgstr "Színes tengelyek:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3211,10 +3207,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "DNS/RNS-töredékek beszúrása párbeszédpanelen keresztül."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "Molekula"
+msgstr "Molekula…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3567,11 +3561,11 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:54
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Forgassa el a jelenetet az x, y vagy z tengely mentén."
 
 #: qtplugins/navigator/navigator.cpp:55
 msgid "Zoom the scene."
-msgstr ""
+msgstr "A jelenet nagyítása."
 
 #: qtplugins/navigator/navigator.cpp:56
 #, fuzzy
