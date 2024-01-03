@@ -8,7 +8,7 @@ jobs:
     if: ${{ github.ref != 'refs/heads/master' }}
     steps:
     - name: 'Install clang-format'
-      run: sudo apt-get -qq install clang-format-13
+      run: sudo apt-get -qq install clang-format-15
 
     - uses: actions/checkout@v4
 
