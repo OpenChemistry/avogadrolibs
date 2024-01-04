@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-02 06:08+0000\n"
+"PO-Revision-Date: 2024-01-05 17:07+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -2283,12 +2283,14 @@ msgstr "Configuración de Python…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Instalar Python"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Python se utiliza para muchas funciones de Avogadro. ¿Quieres descargar "
+"Python?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -3292,7 +3294,7 @@ msgstr "Elemento y Número"
 
 #: qtplugins/label/label.cpp:165
 msgid "Element & ID"
-msgstr ""
+msgstr "Elemento e identificación"
 
 #: qtplugins/label/label.cpp:180
 msgid "Atom Label:"
@@ -4125,14 +4127,16 @@ msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
+"Este plugin requiere la instalación de ciertos paquetes.\n"
+"¿Desea instalarlos?"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:304
 msgid "Always"
-msgstr ""
+msgstr "Siempre"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:305
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:366
 #, qt-format
@@ -5528,16 +5532,19 @@ msgid ""
 "Would you like to create a new environment for Avogadro?\n"
 "This will make a copy of your base environment.\n"
 msgstr ""
+"Sólo existe el entorno conda \"base\".\n"
+"¿Desea crear un nuevo entorno para Avogadro?\n"
+"Esto hará una copia de su entorno base.\n"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment name:"
-msgstr ""
+msgstr "Nombre del entorno:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr ""
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
