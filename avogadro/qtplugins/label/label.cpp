@@ -62,11 +62,12 @@ struct LayerLabel : Core::LayerData
 {
   enum LabelOptions
   {
-    None = 0x00,
-    Index = 0x01,
-    Name = 0x02,
-    Custom = 0x04,
-    Ordinal = 0x08
+    None = 0,
+    Index = 1,
+    Name = 2,
+    Custom = 4,
+    Ordinal = 8,
+    UniqueID = 16
   };
   unsigned short atomOptions;
   unsigned short residueOptions;
@@ -79,8 +80,10 @@ struct LayerLabel : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    atomOptions = settings.value("label/atomoptions", 0x02).toInt();
-    residueOptions = settings.value("label/residueoptions", 0x00).toInt();
+    atomOptions =
+      settings.value("label/atomoptions", LabelOptions::Name).toInt();
+    residueOptions =
+      settings.value("label/residueoptions", LabelOptions::None).toInt();
     radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
 
     auto q_color =
@@ -147,43 +150,33 @@ struct LayerLabel : Core::LayerData
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
-      char elements[] = { None, Index, Name, Custom, Ordinal };
-      for (char option : elements) {
-        if (option == 0) {
-          atom->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
-        } else {
-          char val = LabelOptions::None;
-          QStringList text;
-          if (option & LabelOptions::Custom) {
-            text << QObject::tr("Custom");
-            val = LabelOptions::Custom;
-          }
-          if (option & LabelOptions::Index) {
-            text << ((text.size() == 0) ? QObject::tr("Index")
-                                        : QObject::tr("In."));
-            val |= LabelOptions::Index;
-          }
-          if (option & LabelOptions::Name) {
-            text << ((text.size() == 0) ? QObject::tr("Element")
-                                        : QObject::tr("El."));
-            val |= LabelOptions::Name;
-          }
-          if (option & LabelOptions::Ordinal) {
-            text << ((text.size() == 0) ? QObject::tr("Element & Number")
-                                        : QObject::tr("El.&No."));
-            val |= LabelOptions::Ordinal;
-          }
-          QString join = QObject::tr(", ");
-          atom->addItem(text.join(join), QVariant(val));
-          if (val == atomOptions) {
-            atom->setCurrentText(text.join(join));
-          }
+
+      // set up the various atom options
+      char val = LabelOptions::None;
+      QStringList text;
+
+      // first add the individual options
+      atom->addItem(QObject::tr("None"), int(LabelOptions::None));
+      atom->addItem(QObject::tr("Index"), int(LabelOptions::Index));
+      atom->addItem(QObject::tr("Unique ID"), int(LabelOptions::UniqueID));
+      atom->addItem(QObject::tr("Element"), int(LabelOptions::Name));
+      atom->addItem(QObject::tr("Element & Number"),
+                    int(LabelOptions::Ordinal));
+      atom->addItem(QObject::tr("Element & ID"),
+                    int(LabelOptions::Name | LabelOptions::UniqueID));
+      atom->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
+
+      // check for current option based on item data
+      for (int i = 0; i < atom->count(); ++i) {
+        if (atom->itemData(i).toInt() == atomOptions) {
+          atom->setCurrentIndex(i);
+          break;
         }
       }
+
       QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(atomLabelType(int)));
 
-      atom->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Atom Label:"), atom);
 
       auto* residue = new QComboBox;
@@ -214,7 +207,7 @@ struct LayerLabel : Core::LayerData
       QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
                        SLOT(residueLabelType(int)));
 
-      residue->model()->sort(0, Qt::AscendingOrder);
+      // residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
 
       v->addLayout(form);
@@ -294,7 +287,6 @@ void Label::processAtom(const Core::Molecule& molecule,
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
-
   std::map<unsigned char, size_t> atomCount;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
@@ -312,6 +304,7 @@ void Label::processAtom(const Core::Molecule& molecule,
 
     auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
     std::string text = "";
+
     if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + atom.label();
     }
@@ -326,6 +319,9 @@ void Label::processAtom(const Core::Molecule& molecule,
       text += (text == "" ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
+    }
+    if (interface.atomOptions & LayerLabel::LabelOptions::UniqueID) {
+      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
