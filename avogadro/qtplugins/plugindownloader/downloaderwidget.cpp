@@ -9,11 +9,14 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QProcess>
 #include <QtCore/QRegularExpression>
+#include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
 #include <QtWidgets/QGraphicsRectItem>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTableWidgetItem>
@@ -273,6 +276,48 @@ void DownloaderWidget::downloadNext()
   }
 }
 
+bool DownloaderWidget::checkToInstall()
+{
+  QSettings settings;
+
+  // check if we've asked the user before
+  bool neverInstall =
+    settings.value("neverInstallRequirements", false).toBool();
+  if (neverInstall)
+    return false;
+
+  bool alwaysInstall =
+    settings.value("alwaysInstallRequirements", false).toBool();
+  if (alwaysInstall)
+    return true;
+
+  // okay, ask the user before installing
+  QMessageBox msgBox;
+  msgBox.setText(tr("This plugin requires certain packages to be installed.\n"
+                    "Do you want to install them?"));
+  msgBox.setIcon(QMessageBox::Question);
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::Yes);
+
+  // add buttons for "Yes Always" and "No, Never"
+  QPushButton* yesAlwaysButton =
+    msgBox.addButton(tr("Always"), QMessageBox::YesRole);
+  QPushButton* neverButton = msgBox.addButton(tr("Never"), QMessageBox::NoRole);
+  msgBox.exec();
+
+  if (msgBox.clickedButton() == yesAlwaysButton) {
+    settings.setValue("alwaysInstallRequirements", true);
+    return true;
+  } else if (msgBox.clickedButton() == neverButton) {
+    settings.setValue("neverInstallRequirements", true);
+    return false;
+  } else if (msgBox.clickedButton() == msgBox.button(QMessageBox::Yes)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // The download url for Github is always a redirect to the actual zip
 void DownloaderWidget::handleRedirect()
 {
@@ -364,6 +409,52 @@ void DownloaderWidget::unzipPlugin()
           // and move the directory into place, e.g.
           // OpenChemistry-crystals-a7c672d
           QDir().rename(extractDirectory + '/' + newFiles[0], destination);
+
+          // check if there's a requirements.txt file
+          // .. if so, install with conda or pip
+          QString requirementsFile(destination + "/requirements.txt");
+          if (QFile::exists(requirementsFile) && checkToInstall()) {
+            // use conda if available
+            QSettings settings;
+            QString condaEnv = settings.value("condaEnvironment").toString();
+            QString condaPath = settings.value("condaPath").toString();
+            if (!condaEnv.isEmpty() && !condaPath.isEmpty()) {
+              // install with conda
+              QStringList arguments;
+              arguments << "install"
+                        << "-y"
+                        << "-c"
+                        << "conda-forge"
+                        << "--file" << requirementsFile << "-n" << condaEnv;
+              QProcess* process = new QProcess(this);
+              process->start(condaPath, arguments);
+              process->waitForFinished();
+              QString output(process->readAllStandardOutput());
+              QString error(process->readAllStandardError());
+              if (!output.isEmpty())
+                m_ui->readmeBrowser->append(output);
+              if (!error.isEmpty())
+                m_ui->readmeBrowser->append(error);
+            } else {
+              // use pip
+              QStringList arguments;
+              arguments << "-m"
+                        << "pip"
+                        << "install"
+                        << "-r" << requirementsFile;
+              QProcess* process = new QProcess(this);
+              QString pythonPath =
+                settings.value("interpreters/python", "python").toString();
+              process->start(pythonPath, arguments);
+              process->waitForFinished();
+              QString output(process->readAllStandardOutput());
+              QString error(process->readAllStandardError());
+              if (!output.isEmpty())
+                m_ui->readmeBrowser->append(output);
+              if (!error.isEmpty())
+                m_ui->readmeBrowser->append(error);
+            }
+          }
         }
       }
     } else {
@@ -378,4 +469,4 @@ void DownloaderWidget::unzipPlugin()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
