@@ -3,6 +3,6 @@ avogadro_plugin(ConfigurePython
   ExtensionPlugin
   configurepython.h
   ConfigurePython
-  "configurepython.cpp;configurepythondialog.cpp"
-  "configurepythondialog.ui"
+  "condadialog.cpp;configurepython.cpp;configurepythondialog.cpp"
+  "condadialog.ui;configurepythondialog.ui"
 )

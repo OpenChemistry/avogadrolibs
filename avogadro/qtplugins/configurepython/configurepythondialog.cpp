@@ -4,14 +4,19 @@
 ******************************************************************************/
 
 #include "configurepythondialog.h"
+#include "condadialog.h"
+
 #include "ui_configurepythondialog.h"
 
+#include <QDebug>
+#include <QFileInfo>
 #include <QtCore/QProcess>
+#include <QtCore/QSettings>
 
 namespace Avogadro::QtPlugins {
 
 ConfigurePythonDialog::ConfigurePythonDialog(QWidget* aParent)
-  : QDialog(aParent), m_ui(new Ui::ConfigurePythonDialog)
+  : QDialog(aParent), m_ui(new Ui::ConfigurePythonDialog), m_condaUi(nullptr)
 {
   m_ui->setupUi(this);
   m_ui->browseWidget->hide();
@@ -21,6 +26,38 @@ ConfigurePythonDialog::ConfigurePythonDialog(QWidget* aParent)
 
   connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
   connect(m_ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
+
+  // look for conda environments
+  QProcess condaProcess;
+  QSettings settings;
+  QString condaPath =
+    settings.value("interpreters/condaPath", "conda").toString();
+  // check if conda is executable
+  if (!QFileInfo(condaPath).isExecutable())
+    return;
+
+  // set the path to conda
+  settings.setValue("interpreters/condaPath", condaPath);
+
+  // get the list of environments
+  condaProcess.start(condaPath, QStringList() << "env"
+                                              << "list");
+  if (condaProcess.waitForFinished()) {
+    QString output = condaProcess.readAllStandardOutput();
+    QStringList lines = output.split("\n");
+    foreach (const QString& line, lines) {
+      if (line.startsWith("#"))
+        continue;
+
+      QStringList parts = line.split(" ");
+      if (parts.size() > 1)
+        m_condaEnvironments << parts.at(0);
+    }
+  }
+  if (m_condaEnvironments.size() < 2) {
+    // no environment or only the base found
+    setupCondaEnvironment();
+  }
 }
 
 ConfigurePythonDialog::~ConfigurePythonDialog()
@@ -28,9 +65,67 @@ ConfigurePythonDialog::~ConfigurePythonDialog()
   delete m_ui;
 }
 
+void ConfigurePythonDialog::setupCondaEnvironment()
+{
+  // suggest the user create a new environment through a dialog
+  if (m_condaUi == nullptr) {
+    m_condaUi = new CondaDialog(qobject_cast<QWidget*>(parent()));
+  }
+  int choice = m_condaUi->exec();
+  if (choice == QDialog::Rejected)
+    return;
+
+  QString newEnvironment = m_condaUi->environmentName();
+  if (newEnvironment.isEmpty())
+    return;
+
+  // create the environment
+  QProcess condaProcess;
+  QSettings settings;
+  QString condaPath =
+    settings.value("interpreters/condaPath", "conda").toString();
+  // check if conda is executable
+  if (!QFileInfo(condaPath).isExecutable())
+    return;
+
+  QStringList arguments;
+  arguments << "create"
+            << "-n" << newEnvironment << "--clone"
+            << "base";
+  condaProcess.start(condaPath, arguments);
+  if (condaProcess.waitForFinished()) {
+    QString output = condaProcess.readAllStandardOutput();
+    if (output.contains("done")) {
+      // environment created
+      m_condaEnvironments << newEnvironment;
+      settings.setValue("interpreters/condaEnvironment", newEnvironment);
+    }
+  }
+}
+
+QString ConfigurePythonDialog::condaPath() const
+{
+  QSettings settings;
+  QString path = settings.value("interpreters/condaPath").toString();
+  return path;
+}
+
+QString ConfigurePythonDialog::condaEnvironment() const
+{
+  QSettings settings;
+  QString environment =
+    settings.value("interpreters/condaEnvironment").toString();
+  return environment;
+}
+
 void ConfigurePythonDialog::setOptions(const QStringList& options)
 {
   m_ui->environmentCombo->clear();
+
+  // add all conda environments
+  foreach (const QString& environment, m_condaEnvironments) {
+    m_ui->environmentCombo->addItem(QString("%1 (conda)").arg(environment));
+  }
 
   // get the Python version from each interpreter
   QStringList versions, arguments;
@@ -78,8 +173,38 @@ QString ConfigurePythonDialog::currentOption() const
     return m_ui->browseWidget->fileName();
 
   QString path = m_ui->environmentCombo->currentText();
+  // check if this is a conda choice
+  int index = path.indexOf(" (conda)");
+  if (index >= 0) {
+    // get the environment name
+    QString environment = path.left(index);
+    QSettings settings;
+    settings.setValue("interpreters/condaEnvironment", environment);
+
+    // activate the environment and get the path to the python interpreter
+    QProcess condaProcess;
+    QString condaPath =
+      settings.value("interpreters/condaPath", "conda").toString();
+    // check if conda is executable
+    if (!QFileInfo(condaPath).isExecutable())
+      return QString();
+    condaProcess.start(condaPath, QStringList()
+                                    << "run"
+                                    << "-n" << environment << "which"
+                                    << "python");
+    if (condaProcess.waitForFinished()) {
+      QString output = condaProcess.readAllStandardOutput();
+      qDebug() << " output: " << output << "\n";
+      if (output.contains("python")) {
+        // remove the newline
+        output.remove("\n");
+        return output;
+      }
+    }
+  }
+
   // remove the Python version to get the path
-  int index = path.indexOf(" (");
+  index = path.indexOf(" (");
   if (index >= 0)
     return path.left(index);
 

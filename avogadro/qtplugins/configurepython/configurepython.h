@@ -31,6 +31,8 @@ public:
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
 
+  QStringList pythonPaths() const;
+
   void setMolecule(QtGui::Molecule*) override {}
 
 private slots:
