@@ -8,13 +8,13 @@
 # FAN JI <sifan95.ji@gmail.com>, 2022.
 # Shusong Zhang <sszhang@mail.nwpu.edu.cn>, 2023.
 # alchemistcai <alchemistcai@163.com>, 2023.
-# Chiyu Liang <532117255@qq.com>, 2023.
+# Chiyu Liang <532117255@qq.com>, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-12-24 02:05+0000\n"
-"PO-Revision-Date: 2023-12-30 03:59+0000\n"
+"POT-Creation-Date: 2024-01-04 01:57+0000\n"
+"PO-Revision-Date: 2024-01-02 06:08+0000\n"
 "Last-Translator: Chiyu Liang <532117255@qq.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
@@ -193,6 +193,8 @@ msgid "Close"
 msgstr "关闭"
 
 #: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:374
+#: qtplugins/configurepython/configurepythondialog.cpp:141
+#: qtplugins/configurepython/configurepythondialog.cpp:144
 msgid "Unknown"
 msgstr "未知"
 
@@ -489,7 +491,7 @@ msgstr "无法解决程序选择二。这是一个bug。"
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr "BackgroundFileFormat 中没有设置分子！"
+msgstr "没有在 BackgroundFileFormat 中设置分子！"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -532,7 +534,7 @@ msgstr "硼"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1925
+#: qtgui/elementtranslator.cpp:34:1950
 msgid "Carbon"
 msgstr "碳"
 
@@ -614,13 +616,13 @@ msgstr "锰"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1928
+#: qtgui/elementtranslator.cpp:94:1953
 msgid "Iron"
 msgstr "铁"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1931
+#: qtgui/elementtranslator.cpp:97:1956
 msgid "Cobalt"
 msgstr "钴"
 
@@ -988,15 +990,15 @@ msgstr "鿬"
 msgid "Oganesson"
 msgstr "鿫"
 
-#: qtgui/filebrowsewidget.cpp:27
+#: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
 msgstr "浏览"
 
-#: qtgui/filebrowsewidget.cpp:101
+#: qtgui/filebrowsewidget.cpp:97
 msgid "Select file:"
 msgstr "选择文件："
 
-#: qtgui/filebrowsewidget.cpp:104
+#: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
 msgstr "选择可执行文件："
 
@@ -1105,7 +1107,7 @@ msgstr "标签页 %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:177:666
+#: qtgui/jsonwidget.cpp:177:691
 msgid "Title"
 msgstr "标题"
 
@@ -1212,10 +1214,9 @@ msgid "Labels"
 msgstr "标签"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
-#, fuzzy
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr "甘草"
+msgstr "棍棒"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
@@ -1352,7 +1353,7 @@ msgstr "添加图层信息"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
 #: qtplugins/select/select.cpp:560
-#: qtplugins/selectiontool/selectiontool.cpp:254:1636
+#: qtplugins/selectiontool/selectiontool.cpp:254:1661
 #, fuzzy
 msgid "Change Layer"
 msgstr "更改键级"
@@ -1372,7 +1373,7 @@ msgstr "清除原子"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
-#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:459
+#: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:484
 msgid "Adjust Hydrogens"
 msgstr "调整氢原子数目"
 
@@ -1572,7 +1573,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:75:1693
+#: qtplugins/aligntool/aligntool.cpp:75:1718
 msgid "Axis:"
 msgstr "轴："
 
@@ -1583,10 +1584,8 @@ msgid "Align at Origin"
 msgstr "对齐设置"
 
 #: qtplugins/aligntool/aligntool.cpp:188
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "对齐设置"
+msgstr "对齐到轴"
 
 #: qtplugins/aligntool/aligntool.cpp:304
 msgid "Center the atom at the origin."
@@ -1597,10 +1596,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr "旋转分子以将原子对齐到选定的坐标轴。"
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "对齐"
+msgstr "对齐工具"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
@@ -1618,7 +1615,7 @@ msgstr "打开输出文件…"
 #: qtplugins/gamessinput/gamessinput.cpp:52
 #: qtplugins/lammpsinput/lammpsinput.cpp:48
 #: qtplugins/openmminput/openmminput.cpp:46
-#: qtplugins/quantuminput/quantuminput.cpp:71
+#: qtplugins/quantuminput/quantuminput.cpp:64
 msgid "&Input"
 msgstr "输入(&I)"
 
@@ -1628,7 +1625,7 @@ msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:72
-#: qtplugins/quantuminput/quantuminput.cpp:95
+#: qtplugins/quantuminput/quantuminput.cpp:88
 msgid "Open Output File"
 msgstr "打开输出文件"
 
@@ -1706,7 +1703,7 @@ msgstr "PQR 文件 (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/propertytables/propertyview.cpp:243
 #: qtplugins/propertytables/propertyview.cpp:276
-#: qtplugins/quantuminput/quantuminput.cpp:111
+#: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "错误"
 
@@ -1724,8 +1721,8 @@ msgid "Save APBS Input File"
 msgstr "保存 APBS 输入文件"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
-msgid "ABPS Input (*.in)"
-msgstr "APBS 输入文件 (*.in)"
+msgid "APBS Input (*.in)"
+msgstr "APBS 输入 (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -1744,9 +1741,8 @@ msgid "By Custom Color…"
 msgstr "自定义颜色…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
 msgid "By Atomic Index"
-msgstr "原子索引"
+msgstr "原子编号"
 
 #: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance"
@@ -1789,23 +1785,21 @@ msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:106
 #: qtplugins/surfaces/surfaces.cpp:760
-#, fuzzy
 msgctxt "colormap"
 msgid "Heat"
-msgstr "加热"
+msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
-msgstr "热的"
+msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:764
-#, fuzzy
 msgctxt "colormap"
 msgid "Gray"
-msgstr "灰色"
+msgstr "Gray"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1813,7 +1807,7 @@ msgstr "灰色"
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
-msgstr "岩浆"
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -1821,7 +1815,7 @@ msgstr "岩浆"
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
-msgstr "火焰"
+msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
@@ -1829,7 +1823,7 @@ msgstr "火焰"
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
-msgstr "等离子体"
+msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
@@ -1854,44 +1848,40 @@ msgstr "Cividis"
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1790
-#, fuzzy
-#| msgid "Spectra"
+#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1815
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "光谱"
+msgstr "Spectral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1787
+#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1812
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1781
-#, fuzzy
-#| msgid "Cancel"
+#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1806
 msgctxt "colormap"
 msgid "Balance"
-msgstr "取消"
+msgstr "Balance"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1784
+#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1809
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Blue-DarkRed"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1900,14 +1890,14 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:130
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1793
+#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1818
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:138
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "将颜色主题应用于原子和残基。"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 #: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
@@ -1938,7 +1928,7 @@ msgstr "已选的颜色"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1778
+#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1803
 #, fuzzy
 #| msgid "Color:"
 msgid "Colormap:"
@@ -1951,7 +1941,7 @@ msgstr "颜色"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
 msgid "Atom scale"
-msgstr ""
+msgstr "原子尺寸比例"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
 #, fuzzy
@@ -1990,6 +1980,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"化学键操作工具\n"
+"\n"
+"鼠标左键：按下并拖动以旋转视图。\n"
+"鼠标中键：按下并拖动以缩放。\n"
+"鼠标右键：按下并拖动以移动视图。\n"
+"双击：重设视图。\n"
+"\n"
+"鼠标左键 & 在化学键上拖动以设置操作平面：\n"
+"鼠标左键 & 在成键原子上拖动以改变键角\n"
+"鼠标右键 & 在成键原子上拖动以改变键长"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:776
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:864
@@ -1998,7 +1998,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:212
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:798
 #: qtplugins/editor/editor.cpp:260 qtplugins/measuretool/measuretool.cpp:219
@@ -2170,7 +2170,7 @@ msgstr "添加中心点和质心。"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
 #: qtplugins/closecontacts/closecontacts.cpp:215
-#: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:381
+#: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:406
 msgid " Å"
 msgstr " Å"
 
@@ -2193,7 +2193,7 @@ msgstr "渲染原子间的紧密接触。"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Contact"
-msgstr ""
+msgstr "接触"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Salt Bridge"
@@ -2201,29 +2201,30 @@ msgstr "盐桥"
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Repulsive"
-msgstr ""
+msgstr "排斥作用"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
-msgstr ""
+msgstr "编辑颜色透明度图…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
+#: qtplugins/configurepython/configurepython.cpp:99
 #: qtplugins/forcefield/forcefield.cpp:126
 #: qtplugins/openbabel/openbabel.cpp:113
-#: qtplugins/plugindownloader/plugindownloader.cpp:40
-#: qtplugins/quantuminput/quantuminput.cpp:69 qtplugins/yaehmop/yaehmop.cpp:112
+#: qtplugins/plugindownloader/plugindownloader.cpp:41
+#: qtplugins/yaehmop/yaehmop.cpp:112
 msgid "&Extensions"
 msgstr "扩展(&E)"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "颜色透明度图"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
-msgstr ""
+msgstr "编辑颜色透明度图，主要用于体积渲染。"
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
@@ -2235,7 +2236,7 @@ msgstr "脚本(&S)"
 #: qtplugins/gamessinput/gamessinput.cpp:89
 #: qtplugins/lammpsinput/lammpsinput.cpp:65
 #: qtplugins/openmminput/openmminput.cpp:63
-#: qtplugins/quantuminput/quantuminput.cpp:112
+#: qtplugins/quantuminput/quantuminput.cpp:105
 #, qt-format
 msgid ""
 "Error reading output file '%1':\n"
@@ -2247,10 +2248,9 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:215
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "正在处理 %1"
 
 #: qtplugins/commandscripts/command.cpp:270
-#: qtplugins/quantuminput/quantuminput.cpp:178
 msgid "Set path to Python interpreter:"
 msgstr "设置 Python 解释器路径："
 
@@ -2268,7 +2268,46 @@ msgstr "命令脚本"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
+msgstr "运行外部指令和脚本"
+
+#. i18n: file: qtplugins/configurepython/condadialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
+#. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
+#: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
+msgid "Python Settings…"
+msgstr "Python 设置…"
+
+#: qtplugins/configurepython/configurepython.cpp:46
+msgid "Install Python"
 msgstr ""
+
+#: qtplugins/configurepython/configurepython.cpp:47
+msgid ""
+"Python is used for many Avogadro features. Do you want to download Python?"
+msgstr ""
+
+#: qtplugins/configurepython/configurepython.h:26
+msgid "ConfigurePython"
+msgstr "配置 Python"
+
+#: qtplugins/configurepython/configurepython.h:29
+msgid "Configure Python environments."
+msgstr "配置 Python 环境。"
+
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
+#. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
+#: qtplugins/configurepython/configurepythondialog.cpp:153
+#: qtplugins/editor/editortoolwidget.cpp:129
+#: qtplugins/templatetool/templatetoolwidget.cpp:316
+#: qtplugins/templatetool/templatetoolwidget.cpp:329
+#: qtplugins/templatetool/templatetoolwidget.cpp:337
+#: qtplugins/templatetool/templatetoolwidget.cpp:345
+#: qtplugins/templatetool/templatetoolwidget.cpp:353
+#: qtplugins/templatetool/templatetoolwidget.cpp:361
+#: qtplugins/templatetool/templatetoolwidget.cpp:424:2088
+msgid "Other…"
+msgstr "其它…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
@@ -2323,14 +2362,12 @@ msgid "Invalid atom label."
 msgstr "无效的原子序数。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "无效的原子序数。"
+msgstr "无效的原子编号。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
 msgid "Atomic index."
-msgstr "原子指数。"
+msgstr "原子编号。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
@@ -2399,7 +2436,7 @@ msgstr "修改原子坐标"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:158:1820 rc.cpp:1850
+#: qtplugins/label/label.cpp:167:1845 rc.cpp:1875
 msgid "Custom"
 msgstr "自定义"
 
@@ -2442,7 +2479,7 @@ msgstr "Turbomole 格式"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
-#: qtplugins/propertytables/propertyview.cpp:283:252
+#: qtplugins/propertytables/propertyview.cpp:283:277
 msgid "Copy"
 msgstr "复制"
 
@@ -2458,13 +2495,13 @@ msgstr "国际化合物标识"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
-#: qtplugins/copypaste/copypaste.cpp:33:249
+#: qtplugins/copypaste/copypaste.cpp:33:274
 msgid "Cut"
 msgstr "剪切"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
-#: qtplugins/copypaste/copypaste.cpp:34:261
+#: qtplugins/copypaste/copypaste.cpp:34:286
 msgid "Clear"
 msgstr "清除"
 
@@ -2554,13 +2591,13 @@ msgstr "为 CP2K 生成输入。"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:83:1180
+#: qtplugins/forcefield/forcefield.cpp:83:1205
 msgid "Energy"
 msgstr "能量"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
-msgstr ""
+msgstr "能量和力"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
@@ -2572,7 +2609,7 @@ msgstr "几何优化"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "电子结构方法（DFT）"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
@@ -2580,64 +2617,64 @@ msgstr "分子力学"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr ""
+msgstr "杂交量子经典方法 （尚不支持）"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:719
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
 msgid "NONE"
-msgstr ""
+msgstr "NONE"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1360
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1385
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "原子的"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
-msgstr ""
+msgstr "CORE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
 msgid "DENSITIES"
-msgstr ""
+msgstr "DENSITIES"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "HISTORY_RESTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "RANDOM"
-msgstr ""
+msgstr "RANDOM"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
 msgid "RESTART"
-msgstr ""
+msgstr "RESTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
 msgid "SPARSE"
-msgstr ""
+msgstr "SPARSE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:420
 msgid "BROYDEN"
-msgstr ""
+msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
 #, fuzzy
@@ -2646,7 +2683,7 @@ msgstr "共轭梯度法"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
 msgid "DIIS"
-msgstr ""
+msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
 #, fuzzy
@@ -2725,7 +2762,7 @@ msgstr "从剪贴板导入晶体"
 
 #: qtplugins/crystal/crystal.cpp:175
 msgid "Wrap atoms into the unit cell."
-msgstr ""
+msgstr "将原子移动到晶胞内。"
 
 #: qtplugins/crystal/crystal.cpp:177
 msgid "Rotate the unit cell to the standard orientation."
@@ -2797,6 +2834,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"绘制工具\n"
+"\n"
+"鼠标左键：按下并拖动以创建原子和化学键\n"
+"鼠标右键：删除原子"
 
 #: qtplugins/editor/editor.cpp:104
 msgid "Draw Atom"
@@ -2819,30 +2860,17 @@ msgstr "距离："
 #: qtplugins/editor/editor.cpp:258
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
 msgstr "编辑器工具"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
-#. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#: qtplugins/editor/editortoolwidget.cpp:129
-#: qtplugins/templatetool/templatetoolwidget.cpp:316
-#: qtplugins/templatetool/templatetoolwidget.cpp:329
-#: qtplugins/templatetool/templatetoolwidget.cpp:337
-#: qtplugins/templatetool/templatetoolwidget.cpp:345
-#: qtplugins/templatetool/templatetoolwidget.cpp:353
-#: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:2054
-msgid "Other…"
-msgstr "其它…"
-
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:217
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1799 rc.cpp:1817
+#: qtplugins/editor/editortoolwidget.cpp:208:1824 rc.cpp:1842
 msgid "Automatic"
 msgstr "自动化"
 
@@ -2875,7 +2903,7 @@ msgstr "无法读取 PDB 分子：%1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB 代码"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2897,7 +2925,7 @@ msgstr "网络下载失败"
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr "网络超时或发生其它错误."
+msgstr "网络超时或发生其它错误。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -2911,7 +2939,7 @@ msgstr "从 PDB 获取"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "从 Protein Data Bank 下载 PDB 模型"
 
 #: qtplugins/focus/focus.cpp:22
 #, fuzzy
@@ -2921,19 +2949,19 @@ msgstr "选择"
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
-msgstr ""
+msgstr "未聚焦"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "聚焦"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "将视图聚焦于特定特征。"
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "为分子中的原子渲染力场可视化。"
 
 #: qtplugins/forcefield/forcefield.cpp:75
 #, fuzzy
@@ -3005,21 +3033,21 @@ msgstr "力场"
 
 #: qtplugins/forcefield/obmmenergy.cpp:82
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "广义 Amber 力场"
 
 #: qtplugins/forcefield/obmmenergy.cpp:96
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "Merck 分子力场 94"
 
 #: qtplugins/forcefield/scriptenergy.cpp:240
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "检索能量脚本的元数据时出错： %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:250
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "解析能量脚本的元数据时出错： %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:258
 #, qt-format
@@ -3027,6 +3055,8 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"解析能量脚本的元数据时出错： %1\n"
+"结果不是 JSON 对象。\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3167,11 +3197,11 @@ msgstr "插入 DNA/RNA…"
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:161
 msgid "Uracil"
-msgstr ""
+msgstr "尿嘧啶"
 
 #: qtplugins/insertdna/insertdna.cpp:167
 #, fuzzy
@@ -3182,15 +3212,15 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:168:612
+#: qtplugins/insertdna/insertdna.cpp:168:637
 msgid "Thymine"
-msgstr ""
+msgstr "胸腺嘧啶"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
-#: qtplugins/lineformatinput/lineformatinput.cpp:123:1021
+#: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
 msgid "Insert Molecule…"
 msgstr "插入分子…"
 
@@ -3207,7 +3237,7 @@ msgstr "插入 DNA"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "通过对话框插入 DNA / RNA 片段。"
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 msgid "Molecule…"
@@ -3220,11 +3250,11 @@ msgstr "晶体…"
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "读取文件时出错 （%1）。"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
-#: qtplugins/insertfragment/insertfragment.cpp:117:354
+#: qtplugins/insertfragment/insertfragment.cpp:117:379
 msgid "Import Crystal"
 msgstr "导入晶体结构"
 
@@ -3241,12 +3271,12 @@ msgstr "插入片段"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "插入分子片段以构建更大的分子。"
 
-#: qtplugins/label/label.cpp:136 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/label/label.cpp:139 qtplugins/meshes/meshes.cpp:173
 #: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr "颜色:"
 
-#: qtplugins/label/label.cpp:146
+#: qtplugins/label/label.cpp:149
 #, fuzzy
 msgid "Distance from center:"
 msgstr "距离："
@@ -3259,67 +3289,59 @@ msgstr "距离："
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:153 qtplugins/label/label.cpp:193:1369
+#: qtplugins/label/label.cpp:159 qtplugins/label/label.cpp:186:1394
 msgid "None"
 msgstr "无"
 
-#: qtplugins/label/label.cpp:162
+#: qtplugins/label/label.cpp:160
 msgid "Index"
-msgstr ""
+msgstr "原子编号"
 
-#: qtplugins/label/label.cpp:163
-msgid "In."
-msgstr "输入。"
+#: qtplugins/label/label.cpp:161
+msgid "Unique ID"
+msgstr "唯一D"
 
-#: qtplugins/label/label.cpp:167 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:162 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "元素"
 
-#: qtplugins/label/label.cpp:168
-msgid "El."
-msgstr ""
-
-#: qtplugins/label/label.cpp:172
+#: qtplugins/label/label.cpp:163
 msgid "Element & Number"
 msgstr "元素与编号"
 
-#: qtplugins/label/label.cpp:173
-msgid "El.&No."
-msgstr "元素与编号"
-
-#: qtplugins/label/label.cpp:176
-msgid ", "
+#: qtplugins/label/label.cpp:165
+msgid "Element & ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:187
+#: qtplugins/label/label.cpp:180
 #, fuzzy
 msgid "Atom Label:"
 msgstr "群组标签:"
 
-#: qtplugins/label/label.cpp:198 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
 #, fuzzy
 msgid "ID"
 msgstr "D"
 
-#: qtplugins/label/label.cpp:202
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/label/label.cpp:195
+#: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
-#: qtplugins/label/label.cpp:206
+#: qtplugins/label/label.cpp:199
 #, fuzzy
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:218
+#: qtplugins/label/label.cpp:211
 msgid "Residue Label:"
 msgstr "残基标签："
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "在球棍模型上展示标签。"
 
 #: qtplugins/label/labeleditor.cpp:29
 #, fuzzy
@@ -3332,6 +3354,9 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"原子标签工具\n"
+"\n"
+"鼠标左键：在原子上点击以添加自定义标签"
 
 #: qtplugins/label/labeleditor.cpp:67
 #, fuzzy
@@ -3340,7 +3365,7 @@ msgstr "创建表面"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "标签编辑工具"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
@@ -3348,11 +3373,11 @@ msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
-msgstr ""
+msgstr "LAMMPS 输入"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "生成 LAMMMPS 输入文件。"
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 #, fuzzy
@@ -3364,7 +3389,7 @@ msgstr ""
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
-msgstr ""
+msgstr "将原子渲染为棍棒模型。"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
@@ -3407,6 +3432,10 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate selected atoms.\n"
 msgstr ""
+"操作工具\n"
+"\n"
+"鼠标左键：点击并拖动以移动原子\n"
+"鼠标右键：点击并拖动以旋转选中的原子。\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3427,6 +3456,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"测量工具\n"
+"\n"
+"鼠标左键：选择至多四个原子。\n"
+"\t将测量原子1-2和原子2-3之间的距离\n"
+"\t将角度原子1-3的角度，以2号原子为顶点\n"
+"\t将按1-2-3-4的顺序测定二面角\n"
+"鼠标右键: \t重置测量。"
 
 #: qtplugins/measuretool/measuretool.cpp:191
 #: qtplugins/measuretool/measuretool.cpp:202
@@ -3450,13 +3486,13 @@ msgstr "测量"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:167:1627
+#: qtplugins/meshes/meshes.cpp:167:1652
 msgid "Opacity:"
 msgstr "不透明度："
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
-msgstr ""
+msgstr "渲染多边形网格。"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
@@ -3482,7 +3518,7 @@ msgstr "属性(&P)"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
-#: qtplugins/molecularproperties/molecularproperties.h:31:1081
+#: qtplugins/molecularproperties/molecularproperties.h:31:1106
 msgid "Molecular Properties"
 msgstr "分子属性"
 
@@ -3506,7 +3542,7 @@ msgstr "没有分子集合"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1111
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1136
 #, fuzzy
 #| msgid "Molecule Charge:"
 msgid "Molecule Name:"
@@ -3515,7 +3551,7 @@ msgstr "分子电荷:"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:219
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:1087
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:1112
 #, fuzzy
 msgid "Molecular Mass (g/mol):"
 msgstr "分子量 (g/mol):"
@@ -3523,21 +3559,21 @@ msgstr "分子量 (g/mol):"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1093
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1118
 msgid "Chemical Formula:"
 msgstr "化学方程:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:223
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:236:1099
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:236:1124
 msgid "Number of Atoms:"
 msgstr "原子的数量:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:225
-#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:238:1105
+#: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:238:1130
 msgid "Number of Bonds:"
 msgstr "化学键的数量:"
 
@@ -3553,14 +3589,19 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"导航工具\n"
+"\n"
+"鼠标左键：点击并拖动以旋转视角。\n"
+"鼠标中键：点击并拖动以缩放。\n"
+"鼠标右键：点击并拖动以移动视角。\n"
 
 #: qtplugins/navigator/navigator.cpp:54
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "绕 x/y/z 轴旋转场景。"
 
 #: qtplugins/navigator/navigator.cpp:55
 msgid "Zoom the scene."
-msgstr ""
+msgstr "缩放场景。"
 
 #: qtplugins/navigator/navigator.cpp:56
 msgid "Translate the scene."
@@ -3568,13 +3609,15 @@ msgstr "移动场景(&T)..."
 
 #: qtplugins/navigator/navigator.cpp:97
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "滚动时反向缩放"
 
 #: qtplugins/navigator/navigator.cpp:99
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
 msgstr ""
+"默认：向下滚动以缩小，向上滚动以放大\n"
+"反向：向上滚动以缩小，向下滚动以放大"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
@@ -3602,7 +3645,7 @@ msgstr "容差："
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "渲染一些非共价相互作用。"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 #, fuzzy
@@ -3612,7 +3655,7 @@ msgstr "氢"
 
 #: qtplugins/noncovalent/noncovalent.h:53
 msgid "Chalcogen"
-msgstr ""
+msgstr "氧族元素"
 
 #: qtplugins/openbabel/openbabel.cpp:54
 msgid "Configure Force Field…"
@@ -3639,7 +3682,7 @@ msgstr "删除氢原子"
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "未找到 %1！正在禁用 Open Babel 插件操作。"
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
@@ -3647,11 +3690,11 @@ msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:120
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Open Babel 文件格式尚未准备好被添加。"
 
 #: qtplugins/openbabel/openbabel.cpp:204
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "正在从 Open Babel 载入分子…"
 
 #: qtplugins/openbabel/openbabel.cpp:210
 msgid ""
@@ -3683,7 +3726,7 @@ msgstr "无效的分子。无法优化几何形状。"
 
 #: qtplugins/openbabel/openbabel.cpp:442
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "无法通过 Open Babel 优化几何结构。"
 
 #: qtplugins/openbabel/openbabel.cpp:467
 msgid "Optimizing Geometry (Open Babel)"
@@ -3697,13 +3740,13 @@ msgstr "生成中…"
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
-msgstr ""
+msgstr "生成当前分子的 Open Babel 表示时发生内部错误。"
 
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr ""
+msgstr "启动 %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:507 qtplugins/openbabel/openbabel.cpp:515
 #: qtplugins/openbabel/openbabel.cpp:658 qtplugins/openbabel/openbabel.cpp:666
@@ -3724,7 +3767,7 @@ msgstr "正在更新分子…"
 #: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
 #: qtplugins/openbabel/openbabel.cpp:770 qtplugins/openbabel/openbabel.cpp:952
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "解释 Open Babel 输出时出错。"
 
 #: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
 #: qtplugins/openbabel/openbabel.cpp:782
@@ -3736,15 +3779,15 @@ msgstr "obabel 输出中的原子数 （%1） 与原始分子中的原子数 （
 
 #: qtplugins/openbabel/openbabel.cpp:569
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr ""
+msgstr "无效的分子。无法生成构象异构体。"
 
 #: qtplugins/openbabel/openbabel.cpp:587
 msgid "Cannot generate conformers with Open Babel."
-msgstr ""
+msgstr "无法通过 Open Babel 生成构象异构体。"
 
 #: qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating Conformers (Open Babel)"
-msgstr "生成构像异构体 (Open Babel)"
+msgstr "生成构象异构体 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:712
 #, fuzzy
@@ -3753,7 +3796,7 @@ msgstr "构象异构体%1"
 
 #: qtplugins/openbabel/openbabel.cpp:721
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "无法通过 Open Babel 打开文件。"
 
 #: qtplugins/openbabel/openbabel.cpp:727
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3761,7 +3804,7 @@ msgstr "无效的分子：无法检测化学键。"
 
 #: qtplugins/openbabel/openbabel.cpp:733
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "检测成键 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Generating XYZ representation…"
@@ -3840,7 +3883,7 @@ msgstr "正在读取 obabel 输出…"
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
-msgstr ""
+msgstr "Open Babel 正在运行。请等待其他操作完成后再重试。"
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
@@ -3856,11 +3899,11 @@ msgstr "&OpenMM 脚本…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM 输入"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "生成 OpenMM 输入。"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 #, fuzzy
@@ -3876,7 +3919,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
@@ -3884,32 +3927,32 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1053
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1270
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1295
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
 #: qtplugins/openmminput/openmminputdialog.cpp:1042
 #: qtplugins/openmminput/openmminputdialog.cpp:1049
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3918,9 +3961,9 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
-#: qtplugins/openmminput/openmminputdialog.cpp:1069:1387 rc.cpp:1402
+#: qtplugins/openmminput/openmminputdialog.cpp:1069:1412 rc.cpp:1427
 msgid "True"
-msgstr ""
+msgstr "True"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
@@ -3964,7 +4007,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:113:1853
+#: qtplugins/playertool/playertool.cpp:113:1878
 msgid "Frame:"
 msgstr "帧："
 
@@ -3973,7 +4016,7 @@ msgstr "帧："
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " 共 %0"
 
 #: qtplugins/playertool/playertool.cpp:131
 #, fuzzy
@@ -3982,14 +4025,14 @@ msgstr "动态绑定？"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:139:1859
+#: qtplugins/playertool/playertool.cpp:139:1884
 msgid "Record Movie…"
 msgstr "录制视频…"
 
 #: qtplugins/playertool/playertool.cpp:243
 #: qtplugins/playertool/playertool.cpp:348
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "视频 (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:245
 msgid "Export Bitmap Graphics"
@@ -3997,19 +4040,19 @@ msgstr "导出位图图形"
 
 #: qtplugins/playertool/playertool.cpp:246
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "视频 (*.mp4);;视频 (*.avi);;动图 (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:884
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "动图 (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:266
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "GIF 帧率支持警告"
 
 #: qtplugins/playertool/playertool.cpp:267
 msgid "The GIF file format does not support frame rates over 100 FPS."
-msgstr ""
+msgstr "GIF 文件格式不支持 100 FPS 以上的帧率。"
 
 #: qtplugins/playertool/playertool.cpp:312
 #, fuzzy
@@ -4018,7 +4061,7 @@ msgstr "视频文件 (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:957
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "错误：无法向视频中添加帧。"
 
 #: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
@@ -4039,7 +4082,7 @@ msgstr "绘制径向分布函数…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "生成对分布函数图样时失败"
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
@@ -4047,11 +4090,11 @@ msgstr "错误消息： "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr ""
+msgstr "生成并绘制对分布函数曲线。"
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
@@ -4059,11 +4102,11 @@ msgstr "绘制 RMSD 曲线…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
-msgstr ""
+msgstr "PlotRmsd"
 
 #: qtplugins/plotrmsd/plotrmsd.h:64
 msgid "Generate and plot an RMSD curve."
-msgstr ""
+msgstr "生成并绘制 RMSD 曲线。"
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
@@ -4099,55 +4142,69 @@ msgstr "PlotXrd"
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "使用 ObjCryst++ 生成并绘制理论 XRD 图样。"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Update"
-msgstr ""
+msgstr "升级"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:60
+#: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Version"
-msgstr ""
+msgstr "版本"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:61
+#: qtplugins/plugindownloader/downloaderwidget.cpp:64
 msgid "Description"
+msgstr "描述"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:296
+msgid ""
+"This plugin requires certain packages to be installed.\n"
+"Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:321
+#: qtplugins/plugindownloader/downloaderwidget.cpp:304
+msgid "Always"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:305
+msgid "Never"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:366
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "正在下载 %1 到 %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:334
+#: qtplugins/plugindownloader/downloaderwidget.cpp:379
 #, qt-format
 msgid "Extracting %1 to %2\n"
-msgstr ""
+msgstr "正在提取 %1 到 %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:337
+#: qtplugins/plugindownloader/downloaderwidget.cpp:382
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "已完成 %1 份文件\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:341
+#: qtplugins/plugindownloader/downloaderwidget.cpp:386
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "提取成功\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:371
+#: qtplugins/plugindownloader/downloaderwidget.cpp:462
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr ""
+msgstr "提取时出错：%1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1609
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1634
 msgid "Download Plugins…"
 msgstr "下载插件…"
 
 #: qtplugins/plugindownloader/plugindownloader.h:37
 msgid "Download Plugins"
-msgstr ""
+msgstr "下载插件"
 
 #: qtplugins/plugindownloader/plugindownloader.h:41
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "从 Github 仓库下载插件。"
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -4161,11 +4218,11 @@ msgstr "保存视频文件"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr ""
+msgstr "PLY (*.ply);;文本文件 (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
-msgstr ""
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
 #, fuzzy
@@ -4252,7 +4309,7 @@ msgstr "长度%1"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
-msgstr ""
+msgstr "链"
 
 #: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
@@ -4311,7 +4368,7 @@ msgstr "螺旋"
 #: qtplugins/propertytables/propertymodel.cpp:815
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr ""
+msgstr "弯曲"
 
 #: qtplugins/propertytables/propertymodel.cpp:817
 #, fuzzy
@@ -4328,22 +4385,22 @@ msgstr "表格"
 #: qtplugins/propertytables/propertymodel.cpp:821
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr ""
+msgstr "310 螺旋"
 
 #: qtplugins/propertytables/propertymodel.cpp:823
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "β 桥"
 
 #: qtplugins/propertytables/propertymodel.cpp:825
 msgctxt "protein turn secondary structure"
 msgid "Turn"
-msgstr ""
+msgstr "转角"
 
 #: qtplugins/propertytables/propertymodel.cpp:827
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "卷曲"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -4412,7 +4469,7 @@ msgstr "导出"
 
 #: qtplugins/propertytables/propertyview.cpp:232
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr ""
+msgstr "CSV 文件 (*.csv);;所有文件 (*)"
 
 #: qtplugins/propertytables/propertyview.cpp:244
 #, fuzzy
@@ -4443,7 +4500,7 @@ msgstr "分子图像…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "带有孤对电子的分子图像…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:60
 msgid "Atomic Charge…"
@@ -4461,18 +4518,6 @@ msgstr "WFN 文件 (*.wfn);;所有文件 (*.*)"
 msgid "QTAIM extension"
 msgstr "QTAIM 拓展"
 
-#: qtplugins/quantuminput/quantuminput.cpp:179
-msgid ""
-"Select the python interpreter used to run input generator scripts.\n"
-"Avogadro must be restarted for any changes to take effect."
-msgstr ""
-"选择用以运行输入文件生成脚本的 Python 解释器。\n"
-"更改将在 Avogadro 重启后生效。"
-
-#: qtplugins/quantuminput/quantuminput.cpp:230
-msgid "Set Python Path…"
-msgstr ""
-
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
 msgstr "量子输入"
@@ -4487,11 +4532,11 @@ msgstr "居中"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr "对齐视图与坐标轴"
+msgstr "对齐视角到坐标轴"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr "对齐视图到坐标轴。"
+msgstr "对齐视角到坐标轴。"
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4500,7 +4545,7 @@ msgstr "重置"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "操作视图相机。"
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 #, fuzzy
@@ -4510,7 +4555,7 @@ msgstr "脚本电荷模型"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
-msgstr ""
+msgstr "从外部脚本加载静电模型。"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
@@ -4570,7 +4615,7 @@ msgstr "选择"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "以选中内容创建新图层"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
@@ -4603,11 +4648,11 @@ msgstr "原子索引"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "按原子编号选择"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "要选择的原子："
 
 #: qtplugins/select/select.cpp:446
 #, fuzzy
@@ -4617,11 +4662,11 @@ msgstr "删除原子"
 
 #: qtplugins/select/select.cpp:481
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "按残基选择原子"
 
 #: qtplugins/select/select.cpp:482
 msgid "Residues to Select:"
-msgstr ""
+msgstr "要选择的残基："
 
 #: qtplugins/select/select.cpp:487
 msgid "Select Residue"
@@ -4629,7 +4674,7 @@ msgstr "选择残基"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1892
+#: qtplugins/select/select.h:30:1917
 msgid "Select"
 msgstr "选择"
 
@@ -4647,6 +4692,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"选择工具\n"
+"\n"
+"鼠标左键：单击以选中单个原子、残基或片段\n"
+"\t拖动以选择一定范围内的原子\n"
+"鼠标右键：分子外单击以清除选中内容\n"
+"使用 Ctrl 选中/取消选中，使用 Shift 添加到选区。\n"
+"双击：选择整个片段。"
 
 #: qtplugins/selectiontool/selectiontool.cpp:238
 msgid "Paint Atoms"
@@ -4668,7 +4720,7 @@ msgstr "检测空间群…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1877
+#: qtplugins/spacegroup/spacegroup.cpp:68:1902
 msgid "Symmetrize"
 msgstr "对称"
 
@@ -4691,7 +4743,7 @@ msgstr "空间群"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
+msgstr "按照晶体空间群填充对称原子。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:199
 msgid "Failure"
@@ -4785,7 +4837,7 @@ msgstr "绘制光谱…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1651
+#: qtplugins/spectra/spectra.h:36:1676
 #, fuzzy
 #| msgid "Spectra"
 msgid "Spectra"
@@ -4806,7 +4858,7 @@ msgstr "红外"
 
 #: qtplugins/spectra/spectradialog.cpp:205
 msgid "Raman"
-msgstr ""
+msgstr "拉曼"
 
 #: qtplugins/spectra/spectradialog.cpp:208
 msgid "NMR"
@@ -4820,7 +4872,7 @@ msgstr "电子密度"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "圆二色性"
 
 #: qtplugins/spectra/spectradialog.cpp:219
 #: qtplugins/spectra/spectradialog.cpp:410
@@ -4905,23 +4957,23 @@ msgstr "电子密度"
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
 msgid "eV"
-msgstr ""
+msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "圆二色光谱"
 
 #: qtplugins/spectra/spectradialog.cpp:398
 msgid "eV)"
-msgstr ""
+msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
-msgstr ""
+msgstr "溶剂可用"
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Excluded"
-msgstr ""
+msgstr "排除溶剂"
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
 #, fuzzy
@@ -4958,7 +5010,7 @@ msgstr "(LUMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
-msgstr ""
+msgstr "从文件"
 
 #: qtplugins/surfaces/surfaces.cpp:83
 msgid "Create Surfaces…"
@@ -5002,7 +5054,7 @@ msgstr "使用 VRML 渲染场景。"
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a cube supplied with the file."
-msgstr ""
+msgstr "渲染文件提供的立方体。"
 
 #: qtplugins/surfaces/surfaces.cpp:586
 #, fuzzy
@@ -5021,7 +5073,7 @@ msgstr "计算分子轨道%L1"
 
 #: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
 msgid "Movie AVI (*.avi)"
-msgstr ""
+msgstr "电影 AVI (*.avi)"
 
 #: qtplugins/surfaces/surfaces.cpp:863
 msgid "Export Movie"
@@ -5029,7 +5081,7 @@ msgstr "导出视频"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "电影 MP4 (*.mp4);;电影 AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
@@ -5037,7 +5089,7 @@ msgstr "表面"
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "读取并渲染表面。"
 
 #: qtplugins/svg/svg.cpp:30
 msgid "&SVG…"
@@ -5045,7 +5097,7 @@ msgstr "&SVG…"
 
 #: qtplugins/svg/svg.cpp:258
 msgid "SVG (*.svg)"
-msgstr ""
+msgstr "SVG (*.svg)"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
@@ -5053,7 +5105,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "将场景渲染到 SVG 文件。"
 
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Class"
@@ -5065,7 +5117,7 @@ msgstr "对称性…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1862
+#: qtplugins/symmetry/symmetry.h:34:1887
 msgid "Symmetry"
 msgstr "对称"
 
@@ -5089,11 +5141,11 @@ msgstr "群组%1"
 #: qtplugins/symmetry/symmetrywidget.cpp:348
 #, qt-format
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
 msgid "Template"
-msgstr ""
+msgstr "模板"
 
 #: qtplugins/templatetool/templatetool.cpp:84
 msgid ""
@@ -5105,6 +5157,12 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
+"模板工具\n"
+"\n"
+"插入片段，包括金属中心。\n"
+"选择元素和配位结构，然后点击以插入一个片段。\n"
+"\n"
+"选择一个配体或官能团，然后在氢原子上点击以附加。"
 
 #: qtplugins/templatetool/templatetool.cpp:302
 #, fuzzy
@@ -5112,7 +5170,7 @@ msgstr ""
 msgid "Insert Template"
 msgstr "插入多肽"
 
-#: qtplugins/templatetool/templatetool.cpp:562
+#: qtplugins/templatetool/templatetool.cpp:560
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
@@ -5138,7 +5196,7 @@ msgstr "振动模式…"
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
-msgstr ""
+msgstr "显示振动模式对话框。"
 
 #: qtplugins/vibrations/vibrations.cpp:91
 #, fuzzy
@@ -5148,15 +5206,15 @@ msgstr "显示光谱和振动模式。"
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
-msgstr ""
+msgstr "设置振幅。"
 
 #: qtplugins/vibrations/vibrations.cpp:95
 msgid "Start the vibrational animation."
-msgstr ""
+msgstr "开始振动动画演示。"
 
 #: qtplugins/vibrations/vibrations.cpp:97
 msgid "Stop the vibrational animation."
-msgstr ""
+msgstr "停止振动动画演示。"
 
 #: qtplugins/vibrations/vibrations.h:33
 #, fuzzy
@@ -5200,7 +5258,7 @@ msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:210 qtplugins/yaehmop/yaehmop.cpp:434
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "无法计算能带结构：没有晶胞！"
 
 #: qtplugins/yaehmop/yaehmop.cpp:300
 #, qt-format
@@ -5578,6 +5636,36 @@ msgstr ""
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Opacity"
+msgstr ""
+
+#. i18n: file: qtplugins/configurepython/condadialog.ui:29
+#. i18n: ectx: property (text), widget (QLabel, textLabel)
+msgid ""
+"Only the “base” conda environment exists.\n"
+"Would you like to create a new environment for Avogadro?\n"
+"This will make a copy of your base environment.\n"
+msgstr ""
+
+#. i18n: file: qtplugins/configurepython/condadialog.ui:38
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Environment name:"
+msgstr ""
+
+#. i18n: file: qtplugins/configurepython/condadialog.ui:45
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
+msgid "avogadro"
+msgstr ""
+
+#. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
+#. i18n: ectx: property (text), widget (QLabel, textLabel)
+msgid ""
+"Select the Python version used to run scripts.\n"
+"Avogadro must be restarted for any changes to take effect."
+msgstr ""
+
+#. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Environment:"
 msgstr ""
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
@@ -7195,9 +7283,8 @@ msgstr "Ewald 容差："
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
-#, fuzzy
 msgid "Constraints:"
-msgstr "约束："
+msgstr "约束条件："
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -8103,17 +8190,32 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
+msgid "ethylene"
+msgstr ""
+
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
+#. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
+msgid "ethyne"
+msgstr ""
+
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
+#. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #, fuzzy
 #| msgid "Nitrogen"
 msgid "nitro"
 msgstr "氮"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
 msgstr ""
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:506
+#. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
+msgid "phosphate"
+msgstr ""
+
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
 msgstr ""
@@ -8303,6 +8405,28 @@ msgstr ""
 "devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,"
 "chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail.com,"
 "sihanzheng@gmail.com,cyliang532@gmail.com"
+
+#~ msgid "In."
+#~ msgstr "输入。"
+
+#~ msgid "El."
+#~ msgstr "元素名"
+
+#~ msgid "El.&No."
+#~ msgstr "元素与编号"
+
+#~ msgid ", "
+#~ msgstr ", "
+
+#~ msgid "ABPS Input (*.in)"
+#~ msgstr "APBS 输入文件 (*.in)"
+
+#~ msgid ""
+#~ "Select the python interpreter used to run input generator scripts.\n"
+#~ "Avogadro must be restarted for any changes to take effect."
+#~ msgstr ""
+#~ "选择用以运行输入文件生成脚本的 Python 解释器。\n"
+#~ "更改将在 Avogadro 重启后生效。"
 
 #, fuzzy
 #~| msgid "Fragment..."
@@ -9656,9 +9780,6 @@ msgstr ""
 
 #~ msgid "Residue number"
 #~ msgstr "残基序数"
-
-#~ msgid "Unique ID"
-#~ msgstr "唯一D"
 
 #~ msgid "Bond length"
 #~ msgstr "键长"
