@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-06 16:01+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -4032,7 +4031,7 @@ msgstr "ვალენსი"
 
 #: qtplugins/propertytables/propertymodel.cpp:413
 msgid "Formal Charge"
-msgstr "ფორმალური მუხტი:"
+msgstr "ფორმალური მუხტი"
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 msgid "Partial Charge"
