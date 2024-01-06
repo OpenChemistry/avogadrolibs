@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-06 16:01+0000\n"
+"PO-Revision-Date: 2024-01-06 16:06+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -1037,7 +1037,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr "მოლეკულის წარმოდგენის სტრიქონში შენახვის შეცდომა: %1"
+msgstr "მოლეკულის წარმოდგენის სტრიქონში ჩაწერის შეცდომა: %1"
 
 #: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
@@ -2279,7 +2279,7 @@ msgstr "Z კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'a' lattice coordinate."
-msgstr "'c' ბადის კოორდინატი."
+msgstr "'a' ბადის კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
 msgid "'b' lattice coordinate."
@@ -3335,7 +3335,7 @@ msgstr "&თვისებები"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
 #: qtplugins/molecularproperties/molecularproperties.h:31:1106
 msgid "Molecular Properties"
-msgstr "მოლეკულის თვისებები"
+msgstr "მოლეკულური თვისებები"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
@@ -4289,7 +4289,7 @@ msgstr "ცენტრი"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr "ხედის გასწორება ღერძებზე"
+msgstr "ხედის სწორება ღერძებზე"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
@@ -4759,7 +4759,7 @@ msgstr "ვიდეოს გატანა"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr "ვიდეო (*.mp4);;ვიდეო (*.avi);;GIF (*.gif)"
+msgstr "კინო MP4 (*.mp4);;ფილმი AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
@@ -4962,7 +4962,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.h:39
 msgid "Yaehmop"
-msgstr "&Yaehmop"
+msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:88
 msgid "Perform extended Hückel calculations with yaehmop."
