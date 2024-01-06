@@ -2,7 +2,7 @@
 # Copyright (C) 2006-2021 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Temuri Doghonadze <temuri@delta-net.ge>, 2022.
-# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-06 15:57+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -1448,10 +1447,8 @@ msgid "Modify Molecule"
 msgstr ""
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "Server settings"
 msgid "Settings"
-msgstr "სერვერის მორგება"
+msgstr "მორგება"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -2658,10 +2655,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Color:"
 msgid "Color axes:"
-msgstr "ფერი:"
+msgstr "ფერის ღერძები:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -4567,11 +4562,8 @@ msgstr "სპექტრის დახაზვა…"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1676
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Spectra"
-msgstr "სპექტრალური"
+msgstr "სპექტრები"
 
 #: qtplugins/spectra/spectra.h:38
 msgid "Display spectra plots."
@@ -4590,10 +4582,8 @@ msgid "NMR"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
-msgstr "ელექტრონი"
+msgstr "ელექტრონული"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
@@ -4605,16 +4595,12 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
-#, fuzzy
-#| msgid "Select Backbone"
 msgid "Select Background Color"
-msgstr "აირჩიეთ ხერხემალი"
+msgstr "აირჩიეთ ფონის ფერი"
 
 #: qtplugins/spectra/spectradialog.cpp:269
-#, fuzzy
-#| msgid "Select Colormap"
 msgid "Select Foreground Color"
-msgstr "აირჩიეთ ფერების რუკა"
+msgstr "აირჩიეთ წინა პლანის ფერი"
 
 #: qtplugins/spectra/spectradialog.cpp:282
 msgid "Select Calculated Spectra Color"
@@ -4638,34 +4624,24 @@ msgid "Transmission"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Raman Spectra"
-msgstr "სპექტრალური"
+msgstr "რამანის სპექტრი"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Density"
 msgid "Intensity"
-msgstr "სიმკვრივე"
+msgstr "ინტენსივობა"
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "NMR Spectra"
-msgstr "სპექტრალური"
+msgstr "NMR სპექტრი"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Chemical Name"
 msgid "Chemical Shift (ppm)"
-msgstr "ქიმიური სახელი"
+msgstr "ქიმიური წანაცვლება (პპმ)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
 msgid "Electronic Spectra"
@@ -4906,10 +4882,8 @@ msgid "Stop the vibrational animation."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.h:33
-#, fuzzy
-#| msgid "Operations"
 msgid "Vibrations"
-msgstr "ოპერაციები"
+msgstr "ვიბრაციები"
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Display vibrational modes."
@@ -7294,17 +7268,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
-#| msgid "Export CSV"
 msgid "Export Data"
-msgstr "CSV-ის გატანა"
+msgstr "მონაცემების გატანა"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
-#, fuzzy
-#| msgid "Close"
 msgid "&Close"
-msgstr "დახურვა"
+msgstr "&დახურვა"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
@@ -7338,10 +7308,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Line width:"
 msgid "Peak Width:"
-msgstr "ხაზის სიგანე:"
+msgstr "მაქს. სიგანე:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:216
 #. i18n: ectx: property (text), widget (QLabel, label_27)
@@ -7398,10 +7366,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:375
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Calculate:"
 msgid "Calculated Spectra:"
-msgstr "გამოთვლა:"
+msgstr "გამოთვლილი სპექტრი:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7410,10 +7376,8 @@ msgstr "ფონტის ზომა:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -7437,10 +7401,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:434
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Line width:"
 msgid "Line Size:"
-msgstr "ხაზის სიგანე:"
+msgstr "ხაზის ზომა:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:507
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
