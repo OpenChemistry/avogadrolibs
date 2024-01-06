@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-06 15:57+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2024-01-06 15:58+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -459,7 +460,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat-ში ფაილის სახელი მითითებული არაა!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
@@ -1037,7 +1038,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "მოლეკულის წარმოდგენის სტრიქონში შენახვის შეცდომა: %1"
 
 #: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
@@ -2279,11 +2280,11 @@ msgstr "Z კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'c' ბადის კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'c' ბადის კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
 msgid "'c' lattice coordinate."
