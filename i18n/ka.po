@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-06 16:06+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-01-07 17:06+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -5257,7 +5256,7 @@ msgstr ""
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
-msgstr "მაქსიმალური დაშორება:"
+msgstr "მინიმალური დაშორება:"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
@@ -5305,7 +5304,7 @@ msgstr ""
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr "Avogadro"
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
