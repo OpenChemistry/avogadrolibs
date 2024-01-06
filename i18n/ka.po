@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-06 15:58+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"PO-Revision-Date: 2024-01-06 16:00+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -3335,7 +3336,7 @@ msgstr "&თვისებები"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
 #: qtplugins/molecularproperties/molecularproperties.h:31:1106
 msgid "Molecular Properties"
-msgstr ""
+msgstr "მოლეკულის თვისებები"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
@@ -3819,7 +3820,7 @@ msgstr "ვიდეო (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:245
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Bitmap გრაფიკის ექსპორტი"
 
 #: qtplugins/playertool/playertool.cpp:246
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -3848,7 +3849,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "ფაილის შენახვის შეცდომა: %1 ."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -3944,11 +3945,11 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:304
 msgid "Always"
-msgstr ""
+msgstr "ყოველთვის"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:305
 msgid "Never"
-msgstr ""
+msgstr "არასდროს"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:366
 #, qt-format
@@ -4031,7 +4032,7 @@ msgstr "ვალენსი"
 
 #: qtplugins/propertytables/propertymodel.cpp:413
 msgid "Formal Charge"
-msgstr ""
+msgstr "ფორმალური მუხტი:"
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 msgid "Partial Charge"
