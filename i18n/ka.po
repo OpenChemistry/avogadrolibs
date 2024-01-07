@@ -2,13 +2,14 @@
 # Copyright (C) 2006-2021 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Temuri Doghonadze <temuri@delta-net.ge>, 2022.
-# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2023-12-20 22:12+0000\n"
+"PO-Revision-Date: 2024-01-07 17:06+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -450,7 +451,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat-ში მოლეკულა დაყენებული არაა!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
@@ -458,7 +459,7 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat-ში ფაილის სახელი მითითებული არაა!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
@@ -1036,7 +1037,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "მოლეკულის წარმოდგენის სტრიქონში ჩაწერის შეცდომა: %1"
 
 #: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
@@ -1446,10 +1447,8 @@ msgid "Modify Molecule"
 msgstr ""
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "Server settings"
 msgid "Settings"
-msgstr "სერვერის მორგება"
+msgstr "მორგება"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -2280,11 +2279,11 @@ msgstr "Z კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:473
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a' ბადის კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:484
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'b' ბადის კოორდინატი."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
 msgid "'c' lattice coordinate."
@@ -2656,10 +2655,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Color:"
 msgid "Color axes:"
-msgstr "ფერი:"
+msgstr "ფერის ღერძები:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3338,7 +3335,7 @@ msgstr "&თვისებები"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
 #: qtplugins/molecularproperties/molecularproperties.h:31:1106
 msgid "Molecular Properties"
-msgstr ""
+msgstr "მოლეკულური თვისებები"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
@@ -3822,7 +3819,7 @@ msgstr "ვიდეო (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:245
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Bitmap გრაფიკის ექსპორტი"
 
 #: qtplugins/playertool/playertool.cpp:246
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
@@ -3851,7 +3848,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "ფაილის შენახვის შეცდომა: %1 ."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -3947,11 +3944,11 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:304
 msgid "Always"
-msgstr ""
+msgstr "ყოველთვის"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:305
 msgid "Never"
-msgstr ""
+msgstr "არასდროს"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:366
 #, qt-format
@@ -4034,7 +4031,7 @@ msgstr "ვალენსი"
 
 #: qtplugins/propertytables/propertymodel.cpp:413
 msgid "Formal Charge"
-msgstr ""
+msgstr "ფორმალური მუხტი"
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 msgid "Partial Charge"
@@ -4292,7 +4289,7 @@ msgstr "ცენტრი"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr ""
+msgstr "ხედის სწორება ღერძებზე"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
@@ -4565,11 +4562,8 @@ msgstr "სპექტრის დახაზვა…"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1676
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Spectra"
-msgstr "სპექტრალური"
+msgstr "სპექტრები"
 
 #: qtplugins/spectra/spectra.h:38
 msgid "Display spectra plots."
@@ -4588,10 +4582,8 @@ msgid "NMR"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
-msgstr "ელექტრონი"
+msgstr "ელექტრონული"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
@@ -4603,16 +4595,12 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
-#, fuzzy
-#| msgid "Select Backbone"
 msgid "Select Background Color"
-msgstr "აირჩიეთ ხერხემალი"
+msgstr "აირჩიეთ ფონის ფერი"
 
 #: qtplugins/spectra/spectradialog.cpp:269
-#, fuzzy
-#| msgid "Select Colormap"
 msgid "Select Foreground Color"
-msgstr "აირჩიეთ ფერების რუკა"
+msgstr "აირჩიეთ წინა პლანის ფერი"
 
 #: qtplugins/spectra/spectradialog.cpp:282
 msgid "Select Calculated Spectra Color"
@@ -4636,34 +4624,24 @@ msgid "Transmission"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Raman Spectra"
-msgstr "სპექტრალური"
+msgstr "რამანის სპექტრი"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Density"
 msgid "Intensity"
-msgstr "სიმკვრივე"
+msgstr "ინტენსივობა"
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "NMR Spectra"
-msgstr "სპექტრალური"
+msgstr "NMR სპექტრი"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Chemical Name"
 msgid "Chemical Shift (ppm)"
-msgstr "ქიმიური სახელი"
+msgstr "ქიმიური წანაცვლება (პპმ)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
 msgid "Electronic Spectra"
@@ -4781,7 +4759,7 @@ msgstr "ვიდეოს გატანა"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "კინო MP4 (*.mp4);;ფილმი AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
@@ -4904,10 +4882,8 @@ msgid "Stop the vibrational animation."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.h:33
-#, fuzzy
-#| msgid "Operations"
 msgid "Vibrations"
-msgstr "ოპერაციები"
+msgstr "ვიბრაციები"
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Display vibrational modes."
@@ -4986,7 +4962,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.h:39
 msgid "Yaehmop"
-msgstr ""
+msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:88
 msgid "Perform extended Hückel calculations with yaehmop."
@@ -5280,7 +5256,7 @@ msgstr ""
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
-msgstr ""
+msgstr "მინიმალური დაშორება:"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
@@ -5328,7 +5304,7 @@ msgstr ""
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr ""
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -5345,7 +5321,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
 msgid "Coordinate Editor"
-msgstr ""
+msgstr "კოორდინატების რედაქტორი"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5422,7 +5398,7 @@ msgstr "გამოყენება"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
 msgid "CP2K Input"
-msgstr ""
+msgstr "CP2K შეტანა"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
@@ -6163,7 +6139,7 @@ msgstr "გადაბმა"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:226
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "charge"
-msgstr ""
+msgstr "მუხტი"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6752,7 +6728,7 @@ msgstr "Å"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "ენერგიის კონვერგენცია:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
@@ -7292,17 +7268,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
-#| msgid "Export CSV"
 msgid "Export Data"
-msgstr "CSV-ის გატანა"
+msgstr "მონაცემების გატანა"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
-#, fuzzy
-#| msgid "Close"
 msgid "&Close"
-msgstr "დახურვა"
+msgstr "&დახურვა"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
@@ -7322,7 +7294,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
-msgstr ""
+msgstr "წანაცვლება:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -7336,10 +7308,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Line width:"
 msgid "Peak Width:"
-msgstr "ხაზის სიგანე:"
+msgstr "მაქს. სიგანე:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:216
 #. i18n: ectx: property (text), widget (QLabel, label_27)
@@ -7349,14 +7319,14 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:224
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
 msgid "&Appearance"
-msgstr ""
+msgstr "&გარეგნობა"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QCheckBox, cb_import)
 #. i18n: file: qtplugins/spectra/spectradialog.ui:304
 #. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
 msgid "Show"
-msgstr ""
+msgstr "ჩვენება"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
@@ -7392,14 +7362,12 @@ msgstr "&გატანა…"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:362
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Background:"
-msgstr ""
+msgstr "ფონი:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:375
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Calculate:"
 msgid "Calculated Spectra:"
-msgstr "გამოთვლა:"
+msgstr "გამოთვლილი სპექტრი:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7408,10 +7376,8 @@ msgstr "ფონტის ზომა:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -7421,7 +7387,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:416
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
-msgstr ""
+msgstr "14"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:421
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -7431,14 +7397,12 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:426
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
-msgstr ""
+msgstr "18"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:434
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Line width:"
 msgid "Line Size:"
-msgstr "ხაზის სიგანე:"
+msgstr "ხაზის ზომა:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:507
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
