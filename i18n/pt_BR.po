@@ -5,13 +5,14 @@
 # Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021, 2022.
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
 # Alexandre R Soares <ntegti@zipmail.com.br>, 2021.
+# "Kirito ._." <kiritokunn18@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2022-11-27 00:47+0000\n"
-"Last-Translator: Gustavo Sousa Jr <grsousajunior@gmail.com>\n"
+"PO-Revision-Date: 2024-01-11 10:06+0000\n"
+"Last-Translator: \"Kirito ._.\" <kiritokunn18@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1090,10 +1091,8 @@ msgid "All files"
 msgstr "Todos os Arquivos"
 
 #: qtgui/fileformatdialog.cpp:282
-#, fuzzy
-#| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Todos os formatos suportados (%1);;"
+msgstr "Todos os formatos suportados"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
