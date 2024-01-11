@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>animate.png</file>
-        <file>animate@2x.png</file>
+        <file>player_light.svg</file>
+        <file>player_dark.svg</file>
     </qresource>
 </RCC>

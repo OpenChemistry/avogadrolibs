@@ -48,7 +48,7 @@ SelectionTool::SelectionTool(QObject* parent_)
     m_layerManager("Selection Tool")
 {
   m_activateAction->setText(tr("Selection"));
-  m_activateAction->setIcon(QIcon(":/icons/selectiontool.png"));
+  m_activateAction->setIcon(QIcon(":/icons/selection_light.svg"));
   m_activateAction->setToolTip(
     tr("Selection Tool\n\n"
        "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
