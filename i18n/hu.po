@@ -5,13 +5,14 @@
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
 # ovari <ovari123@zoho.com>, 2021, 2022, 2023, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-14 12:31+0000\n"
-"Last-Translator: ovari <ovari123@zoho.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -4796,7 +4797,7 @@ msgstr "Infravörös"
 
 #: qtplugins/spectra/spectradialog.cpp:205
 msgid "Raman"
-msgstr ""
+msgstr "Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:208
 msgid "NMR"
@@ -4810,7 +4811,7 @@ msgstr "elektron"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "Körforgásos dikroizmus"
 
 #: qtplugins/spectra/spectradialog.cpp:219
 #: qtplugins/spectra/spectradialog.cpp:410
@@ -6915,7 +6916,7 @@ msgstr "gyermekek száma minden szülő geometria számára"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Children:"
-msgstr ""
+msgstr "Gyermekek:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
