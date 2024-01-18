@@ -119,7 +119,7 @@ BondCentricTool::BondCentricTool(QObject* parent_)
     m_planeSnapIncr(10.f), m_snapPlaneToBonds(true)
 {
   m_activateAction->setText(tr("Bond-Centric Manipulation"));
-  m_activateAction->setIcon(QIcon(":/icons/bondcentrictool.png"));
+  m_activateAction->setIcon(QIcon(":/icons/bondcentric_light.svg"));
   m_activateAction->setToolTip(
     tr("Bond Centric Manipulation Tool\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"

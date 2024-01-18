@@ -52,7 +52,7 @@ MeasureTool::MeasureTool(QObject* parent_)
     m_molecule(nullptr), m_rwMolecule(nullptr), m_renderer(nullptr)
 {
   m_activateAction->setText(tr("Measure"));
-  m_activateAction->setIcon(QIcon(":/icons/measuretool.png"));
+  m_activateAction->setIcon(QIcon(":/icons/measure_light.svg"));
   m_activateAction->setToolTip(
     tr("Measure Tool\n\n"
        "Left Mouse: \tSelect up to four Atoms.\n"
