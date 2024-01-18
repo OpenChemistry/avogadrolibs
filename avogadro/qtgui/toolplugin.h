@@ -40,6 +40,9 @@ class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
 {
   Q_OBJECT
 
+private:
+  static bool darkTheme;
+
 public:
   explicit ToolPlugin(QObject* parent = nullptr);
   ~ToolPlugin() override;

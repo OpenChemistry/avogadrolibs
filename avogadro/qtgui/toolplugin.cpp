@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "toolplugin.h"
+#include <QtGui/QPalette>
 
 namespace Avogadro::QtGui {
 
@@ -57,5 +58,15 @@ bool ToolPlugin::handleCommand(const QString& command,
 }
 
 ToolPluginFactory::~ToolPluginFactory() {}
+
+// Method suggested by Qt to determine if theme is dark pre Qt6.5
+static bool shouldApplyDarkFrame()
+{
+  const QPalette defaultPalette;
+    return defaultPalette.color(QPalette::WindowText).lightness()
+      > defaultPalette.color(QPalette::Window).lightness();
+}
+
+bool ToolPlugin::darkTheme = shouldApplyDarkFrame();
 
 } // namespace Avogadro::QtGui
