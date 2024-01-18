@@ -11,13 +11,14 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
+#include <QOpenGLFramebufferObject>
+#include <QOpenGLWidget>
 #include <QtCore/QBuffer>
 #include <QtCore/QProcess>
 #include <QtGui/QIcon>
-#include <QOpenGLFramebufferObject>
 #include <QtGui/QScreen>
 #include <QtGui/QWindow>
-#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
@@ -25,7 +26,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
-#include <QOpenGLWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
@@ -40,21 +40,25 @@ namespace Avogadro::QtPlugins {
 using QtGui::Molecule;
 
 PlayerTool::PlayerTool(QObject* parent_)
-  : QtGui::ToolPlugin(parent_)
-  , m_activateAction(new QAction(this))
-  , m_molecule(nullptr)
-  , m_renderer(nullptr)
-  , m_currentFrame(0)
-  , m_toolWidget(nullptr)
-  , m_frameIdx(nullptr)
-  , m_slider(nullptr)
+  : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
+    m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
+    m_toolWidget(nullptr), m_frameIdx(nullptr), m_slider(nullptr)
 {
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setIcon(QIcon(":/icons/player_light.svg"));
   m_activateAction->setToolTip(tr("Animation Tool"));
+  setIcon();
 }
 
 PlayerTool::~PlayerTool() {}
+
+void PlayerTool::setIcon(bool darkTheme)
+{
+  if (darkTheme) {
+    m_activateAction->setIcon(QIcon(":/icons/player_dark.svg"));
+  } else {
+    m_activateAction->setIcon(QIcon(":/icons/player_light.svg"));
+  }
+}
 
 QWidget* PlayerTool::toolWidget() const
 {
@@ -228,7 +232,7 @@ void PlayerTool::recordMovie()
 #else
   qreal scaling = qApp->devicePixelRatio();
 #endif
-  int EXPORT_WIDTH = m_glWidget->width() * scaling; 
+  int EXPORT_WIDTH = m_glWidget->width() * scaling;
   int EXPORT_HEIGHT = m_glWidget->height() * scaling;
 
   if (m_timer.isActive())
@@ -255,7 +259,7 @@ void PlayerTool::recordMovie()
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
-  //m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
+  // m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
 
   if (selfFilter == tr("GIF (*.gif)")) {
     GifWriter writer;
@@ -412,4 +416,4 @@ void PlayerTool::setSliderLimit()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

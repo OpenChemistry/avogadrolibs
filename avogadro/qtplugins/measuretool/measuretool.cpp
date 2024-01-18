@@ -28,10 +28,10 @@
 
 #include <avogadro/core/angletools.h>
 
+#include <QAction>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QMouseEvent>
-#include <QAction>
 
 #include <QDebug>
 
@@ -52,7 +52,6 @@ MeasureTool::MeasureTool(QObject* parent_)
     m_molecule(nullptr), m_rwMolecule(nullptr), m_renderer(nullptr)
 {
   m_activateAction->setText(tr("Measure"));
-  m_activateAction->setIcon(QIcon(":/icons/measure_light.svg"));
   m_activateAction->setToolTip(
     tr("Measure Tool\n\n"
        "Left Mouse: \tSelect up to four Atoms.\n"
@@ -60,9 +59,18 @@ MeasureTool::MeasureTool(QObject* parent_)
        "\tAngle is measured between 1-3 using 2 as the common point\n"
        "\tDihedral is measured between 1-2-3-4\n"
        "Right Mouse: \tReset the measurements."));
+  setIcon();
 }
 
 MeasureTool::~MeasureTool() {}
+
+void MeasureTool::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/measure_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/measure_light.svg"));
+}
 
 QWidget* MeasureTool::toolWidget() const
 {
@@ -279,4 +287,4 @@ bool MeasureTool::toggleAtom(const Rendering::Identifier& atom)
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

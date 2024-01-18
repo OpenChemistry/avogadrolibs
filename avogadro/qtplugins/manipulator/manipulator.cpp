@@ -47,17 +47,24 @@ Manipulator::Manipulator(QObject* parent_)
     m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Manipulate"));
-  m_activateAction->setIcon(QIcon(":/icons/manipulator_light.svg"));
   m_activateAction->setToolTip(
     tr("Manipulation Tool\n\n"
        "Left Mouse: \tClick and drag to move atoms\n"
        "Right Mouse: \tClick and drag to rotate selected atoms.\n"));
-
+  setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
           SLOT(buttonClicked(QAbstractButton*)));
 }
 
 Manipulator::~Manipulator() {}
+
+void Manipulator::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/manipulator_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/manipulator_light.svg"));
+}
 
 QWidget* Manipulator::toolWidget() const
 {

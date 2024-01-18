@@ -48,7 +48,6 @@ SelectionTool::SelectionTool(QObject* parent_)
     m_layerManager("Selection Tool")
 {
   m_activateAction->setText(tr("Selection"));
-  m_activateAction->setIcon(QIcon(":/icons/selection_light.svg"));
   m_activateAction->setToolTip(
     tr("Selection Tool\n\n"
        "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
@@ -56,9 +55,18 @@ SelectionTool::SelectionTool(QObject* parent_)
        "Right Mouse: \tClick outside the molecule to clear selection\n"
        "Use Ctrl to toggle the selection and shift to add to the selection.\n"
        "Double-Click: \tSelect an entire fragment."));
+  setIcon();
 }
 
 SelectionTool::~SelectionTool() {}
+
+void SelectionTool::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/selection_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/selection_light.svg"));
+}
 
 QWidget* SelectionTool::toolWidget() const
 {

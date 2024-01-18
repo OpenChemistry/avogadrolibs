@@ -27,12 +27,12 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
+#include <QAction>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
@@ -69,15 +69,23 @@ Editor::Editor(QObject* parent_)
     m_fixValenceLater(false), m_layerManager("Editor")
 {
   m_activateAction->setText(tr("Draw"));
-  m_activateAction->setIcon(QIcon(":/icons/editor_light.svg"));
   m_activateAction->setToolTip(
     tr("Draw Tool\n\n"
        "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
        "Right Mouse: \tDelete Atom"));
+  setIcon();
   reset();
 }
 
 Editor::~Editor() {}
+
+void Editor::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/editor_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/editor_light.svg"));
+}
 
 QWidget* Editor::toolWidget() const
 {

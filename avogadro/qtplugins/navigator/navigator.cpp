@@ -37,15 +37,22 @@ Navigator::Navigator(QObject* parent_)
     m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Navigate"));
-  m_activateAction->setIcon(QIcon(":/icons/navigator_light.svg"));
   m_activateAction->setToolTip(
     tr("Navigation Tool\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
        "Right Mouse: \tClick and drag to move the view.\n"));
-
+  setIcon();
   QSettings settings;
   m_zoomDirection = settings.value("navigator/zoom", 1).toInt();
+}
+
+void Navigator::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/navigator_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/navigator_light.svg"));
 }
 
 void Navigator::registerCommands()
