@@ -36,8 +36,8 @@ vtkAvogadroActor::~vtkAvogadroActor()
 int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
 {
   if (!m_initialized) {
-    GLenum result = glewContextInit();
-    if (result != GLEW_OK) {
+    GLenum result = glewInit();
+    if (result != GLEW_OK && result != GLEW_ERROR_NO_GLX_DISPLAY) {
       cout << "Error, could not initialize GLEW." << endl;
       return 0;
     }
