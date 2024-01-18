@@ -59,7 +59,7 @@ jobs:
         fetch-depth: 2
 
     - name: Grab cache files
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       if: runner.os != 'Windows'
       with:
         path: |
