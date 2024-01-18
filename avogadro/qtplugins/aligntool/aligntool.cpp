@@ -51,7 +51,7 @@ AlignTool::AlignTool(QObject* parent_)
     m_alignType(0), m_axis(0)
 {
   m_activateAction->setText(tr("Align"));
-  m_activateAction->setIcon(QIcon(":/icons/align.png"));
+  m_activateAction->setIcon(QIcon(":/icons/align_light.svg"));
   m_activateAction->setToolTip(
     tr("Align Molecules\n\n"
        "Left Mouse: \tSelect up to two atoms.\n"

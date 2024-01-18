@@ -5,13 +5,16 @@
 # Szabolcs Kalapos <kalapos.szabolcs@gmail.com>, 2020.
 # SoftwareByRedline <krajczar.david41@gmail.com>, 2021.
 # ovari <ovari123@zoho.com>, 2021, 2022, 2023, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-03 21:23+0000\n"
-"Last-Translator: ovari <ovari123@zoho.com>\n"
+"PO-Revision-Date: 2024-01-14 12:31+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -2284,12 +2287,14 @@ msgstr "Python beállításai…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Python telepítése"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"A Python számos Avogadro szolgáltatáshoz használatos. Szeretné letölteni a "
+"Python-t?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -3288,7 +3293,7 @@ msgstr "Elemnév és elemszám"
 
 #: qtplugins/label/label.cpp:165
 msgid "Element & ID"
-msgstr ""
+msgstr "Elem és azonosító"
 
 #: qtplugins/label/label.cpp:180
 msgid "Atom Label:"
@@ -3571,10 +3576,8 @@ msgid "Zoom the scene."
 msgstr "A jelenet nagyítása."
 
 #: qtplugins/navigator/navigator.cpp:56
-#, fuzzy
-#| msgid "Translate by:"
 msgid "Translate the scene."
-msgstr "Fordító:"
+msgstr "Jelenet mozgassa."
 
 #: qtplugins/navigator/navigator.cpp:97
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3630,10 +3633,8 @@ msgid "Configure Force Field…"
 msgstr "Erőtér beállítása…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Konformer keresés"
+msgstr "Konformer keresése…"
 
 #: qtplugins/openbabel/openbabel.cpp:66
 msgid "Perceive Bonds"
@@ -3650,7 +3651,7 @@ msgstr "Hidrogénatomok eltávolítása"
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "%1 nem található! Az Open Babel beépülő modul műveleteinek letiltása."
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
@@ -3706,10 +3707,8 @@ msgid "Optimizing Geometry (Open Babel)"
 msgstr "Geometria optimalizálása („Open Babel” kémiai eszköztár)"
 
 #: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
-#, fuzzy
-#| msgid "Generating MDL…"
 msgid "Generating…"
-msgstr "MDL létrehozása…"
+msgstr "Létrehozás folyamatban…"
 
 #: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
 msgid ""
@@ -3757,29 +3756,22 @@ msgstr ""
 "molekula atomjainak számával (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:569
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "A molekula érvénytelen. Nem lehet optimalizálni a geometriát."
+msgstr "Molekula érvénytelen. Nem lehet létrehozni a konformereket."
 
 #: qtplugins/openbabel/openbabel.cpp:587
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
 msgstr ""
-"A fájl megnyitása nem sikerült az „Open Babel” kémiai eszköztár "
+"Nem lehet létrehozni a konformereket az „Open Babel” kémiai eszköztár "
 "használatával."
 
 #: qtplugins/openbabel/openbabel.cpp:620
-#, fuzzy
-#| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "Kötések érzékelése („Open Babel” kémiai eszköztár)"
+msgstr "Konformerek („Open Babel” kémiai eszköztár) létrehozása"
 
 #: qtplugins/openbabel/openbabel.cpp:712
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Konformer %1"
+msgstr "Konformerek létrehozása"
 
 #: qtplugins/openbabel/openbabel.cpp:721
 msgid "Cannot open file with Open Babel."
@@ -4148,14 +4140,16 @@ msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
+"Ehhez a beépülő modulhoz bizonyos csomagok telepítése szükséges.\n"
+"Telepíteni szeretné őket?"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:304
 msgid "Always"
-msgstr ""
+msgstr "Mindig"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:305
 msgid "Never"
-msgstr ""
+msgstr "Soha"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:366
 #, qt-format
@@ -4433,34 +4427,24 @@ msgid "Molecule Properties"
 msgstr "Molekula tulajdonságai"
 
 #: qtplugins/propertytables/propertyview.cpp:231
-#, fuzzy
-#| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Exportálás"
+msgstr "Exportálás CSV-fájlként"
 
 #: qtplugins/propertytables/propertyview.cpp:232
-#, fuzzy
-#| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN-fájlok (*.wfn);;Minden fájl (*.*)"
+msgstr "CSV-fájlok (*.csv);;Minden fájl (*)"
 
 #: qtplugins/propertytables/propertyview.cpp:244
-#, fuzzy
-#| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "Nem sikerült megnyitni '%1' fájlt íráshoz."
+msgstr "Nem lehetett megnyitni a fájlt íráshoz."
 
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Hiba történt a szerkezetfájl (%1) olvasásakor."
+msgstr "Hiba történt a fájl írása közben."
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "&Exportálás"
+msgstr "Exportálás…"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4796,152 +4780,109 @@ msgid "Space group features for crystals."
 msgstr "A tércsoport jellemzői a kristályokhoz."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Spektrum importálása"
+msgstr "Spektrumok ábrázolása…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1676
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Spectra"
-msgstr "Kísérteties"
+msgstr "Spektrumok"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "Kísérteties és rezgési módok megjelenítése."
+msgstr "Spektrábrák megjelenítése."
 
 #: qtplugins/spectra/spectradialog.cpp:201
-#, fuzzy
-#| msgctxt "Infrared spectra option"
-#| msgid "Infrared"
 msgid "Infrared"
 msgstr "Infravörös"
 
 #: qtplugins/spectra/spectradialog.cpp:205
 msgid "Raman"
-msgstr ""
+msgstr "Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:208
 msgid "NMR"
 msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
-msgstr "elektron"
+msgstr "Elektronikus"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "Körforgásos dikroizmus"
 
 #: qtplugins/spectra/spectradialog.cpp:219
 #: qtplugins/spectra/spectradialog.cpp:410
-#, fuzzy
-#| msgid "Transition State"
 msgid "Density of States"
-msgstr "Átmeneti állapot"
+msgstr "Állapotok sűrűsége"
 
 #: qtplugins/spectra/spectradialog.cpp:256
-#, fuzzy
-#| msgid "Select Backbone"
 msgid "Select Background Color"
-msgstr "Gerincatomok kijelölése"
+msgstr "Háttérszín kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:269
-#, fuzzy
-#| msgid "Select Colormap"
 msgid "Select Foreground Color"
-msgstr "Színleképezés kijelölése"
+msgstr "Előtérszín kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:282
-#, fuzzy
-#| msgid "Calculated Spectra:"
 msgid "Select Calculated Spectra Color"
-msgstr "Számított spektrum:"
+msgstr "Számított spektrum színének kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:294
-#, fuzzy
-#| msgid "Imported Spectra:"
 msgid "Select Imported Spectra Color"
-msgstr "Importált spektrum:"
+msgstr "Importált spektrum színének kijelölése"
 
 #: qtplugins/spectra/spectradialog.cpp:342
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "Rezgési módok"
+msgstr "Rezgési spektrumok"
 
 #: qtplugins/spectra/spectradialog.cpp:343
 #: qtplugins/spectra/spectradialog.cpp:357
-#, fuzzy
-#| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Hullámszám (cm<sup>-1</sup>)"
+msgstr "Hullámszám (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Átmeneti állapot"
+msgstr "Átvitel"
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Spektrum importálása"
+msgstr "Raman-spektrum"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Density"
 msgid "Intensity"
-msgstr "Sűrűség"
+msgstr "Erősség"
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "NMR Spectra"
-msgstr "Kísérteties"
+msgstr "NMR-spektrum"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Shift (ppm)"
 msgid "Chemical Shift (ppm)"
-msgstr "Eltolódás (ppm)"
+msgstr "Kémiai eltolódás (millió rész)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Elektronsűrűség"
+msgstr "Elektronikus spektrum"
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
-#, fuzzy
-#| msgid " eV"
 msgid "eV"
-msgstr " eV"
+msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "Körforgásos dikroizmus spektruma"
 
 #: qtplugins/spectra/spectradialog.cpp:398
-#, fuzzy
-#| msgid " eV"
 msgid "eV)"
-msgstr " eV"
+msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5173,16 +5114,12 @@ msgid "Stop the vibrational animation."
 msgstr "Rezgés-animáció leállítása."
 
 #: qtplugins/vibrations/vibrations.h:33
-#, fuzzy
-#| msgid "Vibration"
 msgid "Vibrations"
-msgstr "Vibráció"
+msgstr "Rezgés"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display vibrational modes."
-msgstr "Kísérteties és rezgési módok megjelenítése."
+msgstr "Rezgési módok megjelenítése."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -5608,16 +5545,19 @@ msgid ""
 "Would you like to create a new environment for Avogadro?\n"
 "This will make a copy of your base environment.\n"
 msgstr ""
+"Csak az „alap” konda környezet létezik.\n"
+"Szeretne új környezetet teremteni az Avogadro számára?\n"
+"Ez másolatot készít az alapkörnyezetről.\n"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment name:"
-msgstr ""
+msgstr "Környezetnév:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
 msgid "avogadro"
-msgstr ""
+msgstr "avogadro"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -5625,11 +5565,14 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"A parancsfájlok kijelölésének futtatására használt Python verzió.\n"
+"Az Avogadro alkalmazást újra kell indítani, hogy a változtatások életbe "
+"lépjenek."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment:"
-msgstr ""
+msgstr "Környezet:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
@@ -6930,10 +6873,8 @@ msgstr "Módszer"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Konformerek száma"
+msgstr "Konformerek száma:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -6953,66 +6894,58 @@ msgstr "Súlyozott rotor keresés"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
 msgid "Genetic algorithm search"
-msgstr ""
+msgstr "Genetikai algoritmus keresése"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
-#| msgid "Optimization algorithm:"
 msgid "Optimization per conformer:"
-msgstr "Optimalizáló algoritmus:"
+msgstr "Optimalizálás konformerenként:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
 msgid "Genetic Algorithm Options"
-msgstr ""
+msgstr "Genetikai algoritmus beállításai"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:102
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr ""
+msgstr "gyermekek száma minden szülő geometria számára"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Children:"
-msgstr ""
+msgstr "Gyermekek:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr ""
+msgstr "mutációs gyakoriság (alacsonyabb = gyakrabban fordul elő)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Multiplicity:"
 msgid "Mutability:"
-msgstr "Multiplicitás:"
+msgstr "Változékonyság:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr ""
+msgstr "azonos nemzedékek száma a konvergencia eléréséig"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Energy convergence:"
 msgid "Convergence:"
-msgstr "Energia összefolyattatása:"
+msgstr "Konvergencia:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Nonbonded method:"
 msgid "Scoring method:"
-msgstr "Nem-kötési módszer:"
+msgstr "Pontozási módszer:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -7020,11 +6953,13 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"pontozási módszer a genetikai algoritmushoz (RMSD = geometriai távolság, "
+"energia = legalacsonyabb energiák)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7626,10 +7561,8 @@ msgstr "Szín alkalmazása"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
-#, fuzzy
-#| msgid "Spectra and Vibrations"
 msgid "Spectra Visualization"
-msgstr "Kísérteties és rezgések"
+msgstr "Spektrábrázolás"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
@@ -7638,10 +7571,8 @@ msgstr "&Adatok betöltése..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
-#| msgid "&Export"
 msgid "Export Data"
-msgstr "&Exportálás"
+msgstr "Adatok exportálása"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -7650,51 +7581,43 @@ msgstr "&Bezárás"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#, fuzzy
-#| msgid "&Scaling Factor:"
 msgid "Scale Factor:"
-msgstr "&Méretezési tényező:"
+msgstr "Nagyítási tényező"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Minimum:"
+msgstr "Legalacsonyabb X-tengely:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:115
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "X-Axis Maximum:"
-msgstr ""
+msgstr "Legnagyobb X-tengely:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
-msgstr ""
+msgstr "Eltolás:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Y-Axis Maximum:"
-msgstr ""
+msgstr "Legnagyobb Y-tengely:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Minimum:"
+msgstr "Legalacsonyabb Y-tengely:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Peak width:"
 msgid "Peak Width:"
 msgstr "Csúcs szélessége:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:216
 #. i18n: ectx: property (text), widget (QLabel, label_27)
 msgid "Peak Threshold:"
-msgstr ""
+msgstr "Csúcs küszöbérték:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:224
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -7711,7 +7634,7 @@ msgstr "Megjelenítés"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr ""
+msgstr "Kísérleti spektrumok CSV-fájl importálása, átfedés az ábrán."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -7751,61 +7674,53 @@ msgstr "Számított spektrum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Állandó méret"
+msgstr "Betűméret:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:416
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
-msgstr ""
+msgstr "14"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:421
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:426
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
-msgstr ""
+msgstr "18"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:434
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Line width:"
 msgid "Line Size:"
-msgstr "Vonalvastagság:"
+msgstr "Vonalméret:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:507
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:512
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
-msgstr ""
+msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "Műveletek"
+msgstr "&Beállítások…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:568
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
@@ -7816,6 +7731,12 @@ msgid ""
 "Middle click + drag: Zoom to region\n"
 "Scroll wheel: Zoom to cursor"
 msgstr ""
+"Vezérlők:\n"
+"Kattintson duplán a bal egérgombbal: Az alapértelmezett tengelykorlátok "
+"visszaállítása\n"
+"Jobb kattintás + húzás: Terület mozgatása\n"
+"Középső kattintás + húzás: Nagyítás a régióra\n"
+"Görgető: Nagyítás a kurzorra"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -8145,64 +8066,58 @@ msgstr "Ligand:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "Csoport név %1"
+msgstr "Csoportok"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Group:"
-msgstr "Csoport név %1"
+msgstr "Csoport:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
-msgstr ""
+msgstr "amid"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:476
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
-msgstr ""
+msgstr "karboxilát"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:481
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
-msgstr ""
+msgstr "észter"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
-msgstr ""
+msgstr "etilén"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "etin"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogén"
+msgstr "nitro"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr ""
+msgstr "fenil"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
-msgstr ""
+msgstr "foszfát"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr ""
+msgstr "szulfonát"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)

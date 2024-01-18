@@ -43,8 +43,8 @@
     <file>ligands/eta2-ethylene.png</file>
     <file>ligands/eta5-cyclopentyl.png</file>
     <file>ligands/eta6-benzene.png</file>
-    <file>template.png</file>
-    <file>template@2x.png</file>
+    <file>template_light.svg</file>
+    <file>template_dark.svg</file>
   </qresource>
   <qresource prefix="/templates">
     <file>centers/1-lin.cjson</file>

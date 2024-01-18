@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>align.png</file>
-        <file>align@2x.png</file>
+        <file>align_light.svg</file>
+        <file>align_dark.svg</file>
     </qresource>
 </RCC>

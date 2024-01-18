@@ -37,7 +37,7 @@ Navigator::Navigator(QObject* parent_)
     m_currentAction(Nothing)
 {
   m_activateAction->setText(tr("Navigate"));
-  m_activateAction->setIcon(QIcon(":/icons/navigator.png"));
+  m_activateAction->setIcon(QIcon(":/icons/navigator_light.svg"));
   m_activateAction->setToolTip(
     tr("Navigation Tool\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"

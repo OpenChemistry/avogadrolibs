@@ -69,7 +69,7 @@ Editor::Editor(QObject* parent_)
     m_fixValenceLater(false), m_layerManager("Editor")
 {
   m_activateAction->setText(tr("Draw"));
-  m_activateAction->setIcon(QIcon(":/icons/editor.png"));
+  m_activateAction->setIcon(QIcon(":/icons/editor_light.svg"));
   m_activateAction->setToolTip(
     tr("Draw Tool\n\n"
        "Left Mouse: \tClick and Drag to create Atoms and Bond\n"

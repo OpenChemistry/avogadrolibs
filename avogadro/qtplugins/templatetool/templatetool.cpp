@@ -79,7 +79,7 @@ TemplateTool::TemplateTool(QObject* parent_)
     m_fixValenceLater(false)
 {
   m_activateAction->setText(tr("Template"));
-  m_activateAction->setIcon(QIcon(":/icons/template.png"));
+  m_activateAction->setIcon(QIcon(":/icons/template_light.svg"));
   m_activateAction->setToolTip(
     tr("Template Tool\n\n"
        "Insert fragments, including metal centers.\n"
