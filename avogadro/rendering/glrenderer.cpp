@@ -56,7 +56,7 @@ GLRenderer::~GLRenderer()
 void GLRenderer::initialize()
 {
   GLenum result = glewInit();
-  m_valid = (result == GLEW_OK);
+  m_valid = (result == GLEW_OK || result == GLEW_ERROR_NO_GLX_DISPLAY);
   if (!m_valid) {
     m_error += "GLEW could not be initialized.\n";
     return;
