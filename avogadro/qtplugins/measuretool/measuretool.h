@@ -35,6 +35,7 @@ public:
   unsigned char priority() const override { return 60; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule*) override;
   void setEditMolecule(QtGui::RWMolecule*) override;
@@ -49,7 +50,7 @@ public:
 private:
   Vector3ub contrastingColor(const Vector3ub& rgb) const;
   bool toggleAtom(const Rendering::Identifier& atom);
-  template<typename T>
+  template <typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,
                     QVector<Vector3>& positions);
 

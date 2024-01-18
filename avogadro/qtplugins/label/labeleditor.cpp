@@ -10,8 +10,8 @@
 #include <avogadro/rendering/primitive.h>
 #include <avogadro/rendering/textlabel3d.h>
 
-#include <QKeyEvent>
 #include <QAction>
+#include <QKeyEvent>
 
 namespace Avogadro::QtPlugins {
 
@@ -27,13 +27,21 @@ LabelEditor::LabelEditor(QObject* parent_)
     m_selected(false), m_text("")
 {
   m_activateAction->setText(tr("Edit Labels"));
-  m_activateAction->setIcon(QIcon(":/icons/label_light.svg"));
   m_activateAction->setToolTip(
     tr("Atom Label Tool\n\n"
        "Left Mouse: \tClick on Atoms to add Custom Labels"));
+  setIcon();
 }
 
 LabelEditor::~LabelEditor() {}
+
+void LabelEditor::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/label_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/label_light.svg"));
+}
 
 QUndoCommand* LabelEditor::mouseReleaseEvent(QMouseEvent*)
 {
@@ -130,4 +138,4 @@ void LabelEditor::draw(Rendering::GroupNode& node)
   TextLabel3D* atomLabel = createLabel(m_text.toStdString(), pos, radius);
   geometry->addDrawable(atomLabel);
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

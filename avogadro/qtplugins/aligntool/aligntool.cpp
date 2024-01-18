@@ -51,7 +51,6 @@ AlignTool::AlignTool(QObject* parent_)
     m_alignType(0), m_axis(0)
 {
   m_activateAction->setText(tr("Align"));
-  m_activateAction->setIcon(QIcon(":/icons/align_light.svg"));
   m_activateAction->setToolTip(
     tr("Align Molecules\n\n"
        "Left Mouse: \tSelect up to two atoms.\n"
@@ -59,12 +58,21 @@ AlignTool::AlignTool(QObject* parent_)
        "\tThe second atom is aligned to the selected axis.\n"
        "Right Mouse: \tReset alignment.\n"
        "Double-Click: \tCenter the atom at the origin."));
+  setIcon();
 }
 
 AlignTool::~AlignTool()
 {
   if (m_toolWidget)
     m_toolWidget->deleteLater();
+}
+
+void AlignTool::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/align_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/align_light.svg"));
 }
 
 QWidget* AlignTool::toolWidget() const

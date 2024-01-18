@@ -33,6 +33,7 @@ public:
   unsigned char priority() const override { return 10; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule* mol) override { m_molecule = mol; }
   void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }

@@ -37,6 +37,7 @@ public:
   unsigned char priority() const override { return 80; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   QUndoCommand* mousePressEvent(QMouseEvent* e) override;
   QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
