@@ -49,6 +49,7 @@ const int configureAction = 2;
 const int freezeAction = 3;
 const int unfreezeAction = 4;
 const int constraintAction = 5;
+const int forcesAction = 6;
 
 Forcefield::Forcefield(QObject* parent_)
   : ExtensionPlugin(parent_), m_method(nullptr)
@@ -63,12 +64,12 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
-  refreshScripts();
-  /* @todo - finish OBMM interface
+  // add the openbabel calculators first
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
-  */
+
+  refreshScripts();
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
@@ -84,6 +85,14 @@ Forcefield::Forcefield(QObject* parent_)
   action->setData(energyAction);
   action->setProperty("menu priority", 910);
   connect(action, SIGNAL(triggered()), SLOT(energy()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Forces")); // calculate gradients
+  action->setData(forcesAction);
+  action->setProperty("menu priority", 910);
+  connect(action, SIGNAL(triggered()), SLOT(forces()));
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -295,6 +304,11 @@ void Forcefield::optimize()
         forces[i] = -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1],
                                    gradient[3 * i + 2]);
       }
+    } else {
+      // reset to last positions
+      positions = lastPositions;
+      gradient = Eigen::VectorXd::Zero(3 * n);
+      break;
     }
 
     // todo - merge these into one undo step
@@ -307,18 +321,12 @@ void Forcefield::optimize()
       lastPositions = positions;
 
       // check for convergence
-      /*
       if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
         break;
       if (fabs(currentEnergy - energy) < m_tolerance)
         break;
-      */
 
       energy = currentEnergy;
-    } else {
-      // reset to last positions
-      positions = lastPositions;
-      gradient = Eigen::VectorXd::Zero(3 * n);
     }
   }
 
@@ -342,6 +350,52 @@ void Forcefield::energy()
   Real energy = m_method->value(positions);
 
   QString msg(tr("%1 Energy = %L2").arg(m_methodName.c_str()).arg(energy));
+  QMessageBox::information(nullptr, tr("Avogadro"), msg);
+}
+
+void Forcefield::forces()
+{
+  if (m_molecule == nullptr || m_method == nullptr)
+    return;
+
+  int n = m_molecule->atomCount();
+
+  // double-check the mask
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != 3 * n) {
+    mask = Eigen::VectorXd::Zero(3 * n);
+    // set to 1.0
+    for (Index i = 0; i < 3 * n; ++i) {
+      mask[i] = 1.0;
+    }
+  }
+  m_method->setMolecule(m_molecule);
+  m_method->setMask(mask);
+
+  // we have to cast the current 3d positions into a VectorXd
+  Core::Array<Vector3> pos = m_molecule->atomPositions3d();
+  double* p = pos[0].data();
+  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+  Eigen::VectorXd positions = map;
+
+  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
+  // just to get the right size / shape
+  // we'll use this to draw the force arrows
+  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
+
+  m_method->gradient(positions, gradient);
+
+  for (size_t i = 0; i < n; ++i) {
+    forces[i] =
+      -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1], gradient[3 * i + 2]);
+  }
+
+  m_molecule->setForceVectors(forces);
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+  m_molecule->emitChanged(changes);
+
+  QString msg(
+    tr("%1 Force Norm = %L2").arg(m_methodName.c_str()).arg(gradient.norm()));
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
