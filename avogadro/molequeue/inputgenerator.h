@@ -592,7 +592,7 @@ public slots:
 private:
   QtGui::PythonScript* m_interpreter;
 
-  void setDefaultPythonInterpretor();
+  void setDefaultPythonInterpreter();
   QByteArray execute(const QStringList& args,
                      const QByteArray& scriptStdin = QByteArray()) const;
   bool parseJson(const QByteArray& json, QJsonDocument& doc) const;
