@@ -136,7 +136,7 @@ void InterfaceScript::setScriptFilePath(const QString& scriptFile)
 
 void InterfaceScript::reset()
 {
-  m_interpreter->setDefaultPythonInterpretor();
+  m_interpreter->setDefaultPythonInterpreter();
   m_interpreter->setScriptFilePath(QString());
   m_moleculeExtension = QLatin1String("Unknown");
   m_displayName = QString();

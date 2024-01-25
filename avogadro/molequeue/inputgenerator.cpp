@@ -118,7 +118,7 @@ void InputGenerator::setScriptFilePath(const QString& scriptFile)
 
 void InputGenerator::reset()
 {
-  m_interpreter->setDefaultPythonInterpretor();
+  m_interpreter->setDefaultPythonInterpreter();
   m_interpreter->setScriptFilePath(QString());
   m_moleculeExtension = "Unknown";
   m_displayName = QString();

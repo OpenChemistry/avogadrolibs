@@ -20,14 +20,14 @@ PythonScript::PythonScript(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
     m_scriptFilePath(scriptFilePath_), m_process(nullptr)
 {
-  setDefaultPythonInterpretor();
+  setDefaultPythonInterpreter();
 }
 
 PythonScript::PythonScript(QObject* parent_)
   : QObject(parent_), m_debug(!qgetenv("AVO_PYTHON_SCRIPT_DEBUG").isEmpty()),
     m_process(nullptr)
 {
-  setDefaultPythonInterpretor();
+  setDefaultPythonInterpreter();
 }
 
 PythonScript::~PythonScript() {}
@@ -37,7 +37,7 @@ void PythonScript::setScriptFilePath(const QString& scriptFile)
   m_scriptFilePath = scriptFile;
 }
 
-void PythonScript::setDefaultPythonInterpretor()
+void PythonScript::setDefaultPythonInterpreter()
 {
   if (m_pythonInterpreter.isEmpty()) {
     m_pythonInterpreter =
