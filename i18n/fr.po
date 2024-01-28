@@ -3,15 +3,15 @@
 # Maxime Leroy <lisacintosh@gmail.com>, 2021, 2022.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
 # Translator <kvb@tuta.io>, 2022, 2023.
-# Norwid Behrnd <nbehrnd@yahoo.com>, 2023.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024.
 # research11111 <urgent.research@mailo.fr>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2023-11-06 11:35+0000\n"
-"Last-Translator: research11111 <urgent.research@mailo.fr>\n"
+"PO-Revision-Date: 2024-01-23 16:01+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1287,7 +1287,7 @@ msgstr "Fil de fer"
 
 #: qtgui/moleculemodel.cpp:92
 msgid "Untitled"
-msgstr "Sans nom"
+msgstr "Sans titre"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
