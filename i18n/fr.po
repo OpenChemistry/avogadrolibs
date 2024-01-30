@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-30 15:31+0000\n"
+"PO-Revision-Date: 2024-01-30 18:03+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -7798,7 +7798,7 @@ msgstr "o"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
-msgstr "< < Options.."
+msgstr "&Options…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:568
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
