@@ -6,13 +6,15 @@
 # Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024.
 # research11111 <urgent.research@mailo.fr>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-30 15:26+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-30 15:28+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3254,10 +3256,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "Insérer des fragments d’ADN/ARN par une boîte de dialogue."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "Molécule"
+msgstr "&Molécule…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3670,8 +3670,6 @@ msgid "Configure Force Field…"
 msgstr "Configurer le champ de force…"
 
 #: qtplugins/openbabel/openbabel.cpp:60
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
 msgstr "Recherche de conformères"
 
