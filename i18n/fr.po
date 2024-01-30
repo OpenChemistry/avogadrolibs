@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-23 16:01+0000\n"
+"PO-Revision-Date: 2024-01-30 15:26+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -50,7 +50,7 @@ msgstr "Avertissement de non-chaîne de caractères renvoyé."
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr "Le membre \"warnings\" n'est pas une liste."
+msgstr "Le membre \"warnings\" n'est pas un tableau."
 
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:366
 #, qt-format
@@ -60,14 +60,14 @@ msgstr "Le fichier de référence '%1' n'existe pas."
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr "Erreur de remplissage du fichier %1 : %2"
+msgstr "Erreur de remplissage du fichier %1 : %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
-"Le fichier '%1' est mal structuré. Il manque les membres 'contents' et "
+"Le fichier '%1' est mal structuré. Il manque les membres 'contents' ou "
 "'filePath'."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:405
@@ -76,14 +76,14 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"Le fichier d'entrée est mal structuré : le nom du fichier ou le contenu sont "
-"manquants ou ne sont pas des textes :\n"
+"Le fichier d'entrée est mal structuré : le nom du fichier ou le contenu sont "
+"manquants ou ne sont pas des textes :\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr "Le fichier à la position %1 est mal structuré : Ce n'est pas un objet."
+msgstr "Le fichier à la position %1 est mal structuré : Ce n'est pas un objet."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
@@ -111,7 +111,7 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
-"Sortie du script :\n"
+"Sortie du script :\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:326 qtgui/interfacescript.cpp:496
@@ -122,8 +122,8 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Erreur d'interprétation à l'emplacement %L1 : '%2'\n"
-"JSON brut :\n"
+"Erreur d'interprétation à l'emplacement %L1 : '%2'\n"
+"JSON brut :\n"
 "\n"
 "%3"
 
@@ -132,7 +132,7 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Erreur à l'écriture de la représentation en chaîne de caractères : Fichier "
+"Erreur à l'écriture de la représentation en chaîne de caractères : Fichier "
 "au format %1 non reconnu"
 
 #: molequeue/inputgenerator.cpp:358
@@ -141,7 +141,7 @@ msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
 "Erreur à l'écriture de la représentation de la molécule en chaîne de "
-"caractère : %1"
+"caractère : %1"
 
 #: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -151,9 +151,9 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"Erreur en générant l'objet cjson : l'interprétation à échouée à la position "
-"%1:%2\n"
-"JSON brut :\n"
+"Erreur en générant l'objet cjson : l'interprétation à échouée à la position "
+"%1 :%2\n"
+"JSON brut :\n"
 "\n"
 "%3"
 
@@ -178,7 +178,7 @@ msgstr "Générateur d'entrée %1"
 
 #: molequeue/inputgeneratorwidget.cpp:114
 msgid "Continue"
-msgstr "Poursuivre"
+msgstr "Continuer"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:130
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -222,33 +222,33 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-"Le fichier suivant a été modifié :\n"
+"Le fichier suivant a été modifié :\n"
 "\n"
 "%1\n"
 "\n"
 "Voulez-vous écraser vos modifications pour tenir compte de la nouvelle "
-"géométrie ou des options du travail ?"
+"géométrie ou des options du travail ?"
 msgstr[1] ""
-"Les fichiers suivants ont été modifiés :\n"
+"Les fichiers suivants ont été modifiés :\n"
 "\n"
 "%1\n"
 "\n"
 "Voulez-vous écraser vos modifications pour tenir compte de la nouvelle "
-"géométrie ou des options du travail ?"
+"géométrie ou des options du travail ?"
 
 #: molequeue/inputgeneratorwidget.cpp:162
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr "Remplacer les fichiers d'entrée modifiés ?"
+msgstr "Remplacer les fichiers d'entrée modifiés ?"
 
 #: molequeue/inputgeneratorwidget.cpp:188
 msgid "Problems occurred during input generation:"
-msgstr "Des problèmes sont survenus pendant la génération de l'entrée :"
+msgstr "Des problèmes sont survenus pendant la génération de l'entrée :"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
-msgstr "Aucun fichier d'entrée à sauvegarder !"
+msgstr "Aucun fichier d'entrée à sauvegarder !"
 
 #: molequeue/inputgeneratorwidget.cpp:285
 #: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
@@ -287,7 +287,7 @@ msgstr "La tâche n'est pu aboutir complètement."
 
 #: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr "Le script à renvoyé ces avertissements :\n"
+msgstr "Le script à renvoyé ces avertissements :\n"
 
 #: molequeue/inputgeneratorwidget.cpp:368
 msgid "Hide &Warnings"
@@ -299,7 +299,7 @@ msgstr "Afficher les a&vertissements"
 
 #: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr "Une erreur est survenue :"
+msgstr "Une erreur est survenue :"
 
 #: molequeue/inputgeneratorwidget.cpp:442
 msgid "Select output filename"
@@ -335,7 +335,7 @@ msgstr "Erreur à la sortie"
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr "L'écriture du fichier %1 a échoué."
+msgstr "L'écriture du fichier %1 a échouée."
 
 #: molequeue/inputgeneratorwidget.cpp:482
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
@@ -348,14 +348,14 @@ msgstr "Sélectionnez le dossier de sortie"
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr "%1 : Ce dossier n'existe pas !"
+msgstr "%1 : Ce dossier n'existe pas !"
 
 #: molequeue/inputgeneratorwidget.cpp:505
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr "%1 : Ce dossier ne peut être lu !"
+msgstr "%1 : Ce dossier ne peut pas être lu !"
 
 #: molequeue/inputgeneratorwidget.cpp:515
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -364,7 +364,7 @@ msgstr "%1 : Ce dossier ne peut être lu !"
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr "%1 : Ce fichier va être remplacé."
+msgstr "%1 : Ce fichier va être remplacé."
 
 #: molequeue/inputgeneratorwidget.cpp:520
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -373,7 +373,7 @@ msgstr "%1 : Ce fichier va être remplacé."
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr "%1 : Ce fichier n'est pas inscriptible."
+msgstr "%1 : Ce fichier n'est pas inscriptible."
 
 #: molequeue/inputgeneratorwidget.cpp:533
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
@@ -392,7 +392,7 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
-"Ces fichiers d'entrée ne sont pas inscriptibles :\n"
+"Ces fichiers d'entrée ne sont pas inscriptibles :\n"
 "\n"
 "%1"
 
@@ -409,11 +409,11 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
-"Ces fichiers d'entrée ne sont pas inscriptibles :\n"
+"Ces fichiers d'entrée ne sont pas inscriptibles :\n"
 "\n"
 "%1\n"
 "\n"
-"Avertissements :\n"
+"Avertissements :\n"
 "\n"
 "%2"
 
@@ -428,11 +428,11 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
-"Avertissement :\n"
+"Avertissement :\n"
 "\n"
 "%1\n"
 "\n"
-"Voulez-vous continuer ?"
+"Voulez-vous continuer ?"
 
 #: molequeue/inputgeneratorwidget.cpp:561
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
@@ -508,7 +508,7 @@ msgstr "Erreur interne."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr "Impossible de sélectionner un programme. Ceci est un bug."
+msgstr "Impossible de résoudre la sélection du programme. Ceci est un bug."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
@@ -516,7 +516,7 @@ msgstr "Aucune molécule définie dans « BackgroundFileFormat » !"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr "Aucun Io::FileFormat défini dans « BackgroundFileFormat » !"
+msgstr "Aucun Io::FileFormat défini dans « BackgroundFileFormat » !"
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
@@ -1020,7 +1020,7 @@ msgstr "Sélectionner un fichier :"
 
 #: qtgui/filebrowsewidget.cpp:100
 msgid "Select executable:"
-msgstr "Sélectionner un exécutable :"
+msgstr "Sélectionner un fichier exécutable :"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1034,7 +1034,7 @@ msgid ""
 "want to add it?"
 msgstr ""
 "L'extension de fichier est manquante et le format ne peut pas être défini. "
-"Voulez-vous l'ajouter ?"
+"Voulez-vous l'ajouter ?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1045,7 +1045,7 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
-msgstr "responsable"
+msgstr "gestionnaires"
 
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
@@ -1065,7 +1065,7 @@ msgstr "lire"
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
-msgstr "auteurs"
+msgstr "éditeur"
 
 #: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
@@ -1075,7 +1075,8 @@ msgstr "écrire"
 #: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
-msgstr "Plusieurs %1 trouvés qui peuvent %2 ce format. Lequel utiliser ?"
+msgstr ""
+"Plusieurs %1 ont été trouvés qui peuvent %2 ce format. Lequel utiliser ?"
 
 #: qtgui/fileformatdialog.cpp:279
 msgid "All files"
@@ -1095,21 +1096,22 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 message"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Erreur lors de la modification de la représentation de la molécule : format "
-"de fichier non reconnu : %1"
+"Erreur lors de la écriture de la représentation moléculaire en chaîne de "
+"caractères : format de fichier non reconnu : %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
-"Erreur lors de la modification de la représentation de la molécule : %1"
+"Erreur lors de la écriture de la représentation moléculaire en chaîne de "
+"caractères : %1"
 
 #: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
@@ -1123,7 +1125,7 @@ msgstr "L'option '%1' n'est pas une référence vers un objet."
 #: qtgui/jsonwidget.cpp:93
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr "'type' n'est pas une chaine pour l'option '%1'."
+msgstr "'type' n'est pas une chaîne de caractères pour l'option '%1'."
 
 #: qtgui/jsonwidget.cpp:100
 #, qt-format
@@ -1172,7 +1174,7 @@ msgstr "Multiplicité"
 #: qtgui/jsonwidget.cpp:558
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr "Erreur : la valeur doit être un objet pour la clé '%1'."
+msgstr "Erreur : la valeur doit être un objet pour la clé '%1'."
 
 #: qtgui/jsonwidget.cpp:591
 #, qt-format
@@ -1226,10 +1228,9 @@ msgid "Ball and Stick"
 msgstr "Boules-bâtonnets"
 
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Animations"
+msgstr "cartoons"
 
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
@@ -1246,7 +1247,7 @@ msgstr "Force"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
 msgid "Labels"
-msgstr "Étiquette"
+msgstr "Étiquettes"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1260,7 +1261,7 @@ msgstr "Maillages"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr "Non covalente"
+msgstr "non covalent"
 
 #: qtgui/layermodel.cpp:153
 msgctxt "quantum theory of atoms in molecules"
@@ -1301,8 +1302,8 @@ msgstr "Tableau périodique"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
-"Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente écoulé "
-"pour le démarage (%3)."
+"Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente pour le "
+"démarrer est écoulé (%3)."
 
 #: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
@@ -1317,8 +1318,8 @@ msgstr ""
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
-"Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente écoulé "
-"pour finir (%3)."
+"Erreur lors de l'exécution du programme « %1 %2 » : Délai d'attente pour le "
+"finir est écoulé (%3)."
 
 #: qtgui/pythonscript.cpp:136
 #, qt-format
@@ -1328,28 +1329,28 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Erreur lors de l'exécution du script « %1 %2 » : Code de sortie anormal %3 "
-"(%4 : %5)\n"
+"Erreur lors de l'exécution du script « %1 %2 » : Code de sortie anormal %3 ("
+"%4 : %5)\n"
 "\n"
-"Sortie :\n"
+"Sortie :\n"
 "%6"
 
 #: qtgui/pythonscript.cpp:145
 #, qt-format
 msgid "Warning '%1'"
-msgstr "Rappel '%1'"
+msgstr "Avertissement '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
-msgstr "Échec de lancement du script."
+msgstr "Le démarrage du script a échoué."
 
 #: qtgui/pythonscript.cpp:270
 msgid "Script crashed."
-msgstr "Plantage du script."
+msgstr "Le script s'est écrasé."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr "Délai d'attente du programme écoulé."
+msgstr "Délai d'attente du programme est écoulé."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
@@ -1374,7 +1375,7 @@ msgstr "Retirer le calque"
 
 #: qtgui/rwlayermanager.cpp:201
 msgid "Remove Layer Info"
-msgstr "Retirer les informations du calque"
+msgstr "Supprimer les informations du calque"
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1399,7 +1400,7 @@ msgstr "Ajouter un atome"
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
 #: qtplugins/editor/editor.cpp:123
 msgid "Remove Atom"
-msgstr "Effacer l'atome"
+msgstr "Supprimer l'atome"
 
 #: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
@@ -1413,11 +1414,11 @@ msgstr "Ajuster les hydrogènes"
 
 #: qtgui/rwmolecule.cpp:143
 msgid "Change Elements"
-msgstr "Changer les éléments"
+msgstr "Modifier les éléments"
 
 #: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
-msgstr "Changer un élément"
+msgstr "Modifier un élément"
 
 #: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
@@ -1433,7 +1434,7 @@ msgstr "Modifier la couleur de l'atome"
 
 #: qtgui/rwmolecule.cpp:257
 msgid "Change Atom Layer"
-msgstr "Changer le calque des atomes"
+msgstr "Modifier le calque des atomes"
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1457,7 +1458,7 @@ msgstr "Changer l'ordre des liaisons"
 
 #: qtgui/rwmolecule.cpp:354
 msgid "Update Bonds"
-msgstr "Ajuster aux liaisons"
+msgstr "Mettre à jour les liaisons"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
@@ -1465,15 +1466,15 @@ msgstr "Mettre à jour la liaison"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell"
-msgstr "Ajouter une maille conventionnelle"
+msgstr "Ajouter une maille élémentaire"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
-msgstr "Supprimer la maille conventionnelle"
+msgstr "Supprimer la maille élémentaire"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
-msgstr "Modifier la maille conventionnelle"
+msgstr "Modifier la maille élémentaire"
 
 #: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
@@ -1481,11 +1482,11 @@ msgstr "Regrouper les atomes dans la maille"
 
 #: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
-msgstr "Redimensionner le volume de maille"
+msgstr "Redimensionner le volume de la maille"
 
 #: qtgui/rwmolecule.cpp:527
 msgid "Build Super Cell"
-msgstr "Construire les supercellules"
+msgstr "Construire une supermaille"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
@@ -1493,7 +1494,7 @@ msgstr "Réduction de Niggli"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
-msgstr "Tourner vers l'orientation standard"
+msgstr "Pivoter vers l'orientation standard"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
@@ -1502,15 +1503,15 @@ msgstr "Réduire à une maille primitive"
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:240
 msgid "Conventionalize Cell"
-msgstr "Maille conventionnelle"
+msgstr "Réduire à une maille conventionnelle"
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
 msgid "Symmetrize Cell"
-msgstr "Symétriser la cellule"
+msgstr "Symétriser la maille"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
-msgstr "Remplir la maille conventionnelle"
+msgstr "Remplir la maille élémentaire"
 
 #: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1518,16 +1519,15 @@ msgstr "Réduire la maille à l'unité asymétrique"
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
-msgstr "Changer les positions des atomes"
+msgstr "Modifier les positions des atomes"
 
 #: qtgui/rwmolecule.h:224
 msgid "Change Atom Position"
-msgstr "Changer la position de l'atome"
+msgstr "Modifier la position de l'atome"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Changer l'ordre des liaisons"
+msgstr "Modifier l'étiquette de l'atome"
 
 #: qtgui/rwmolecule.h:234
 msgid "Change Selection"
