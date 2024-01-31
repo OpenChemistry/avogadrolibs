@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:24+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:33+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4154,7 +4154,7 @@ msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
-"Ce plugin nécessite certains paquets à installer.\n"
+"Ce greffon nécessite certains paquets à installer.\n"
 "Vous voulez les installer ?"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:304
@@ -4171,23 +4171,23 @@ msgid "Downloading %1 to %2\n"
 msgstr "Téléchargement de %1 vers %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:379
-#, qt-format
+#, fuzzy, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extraction de %1 vers %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:382
-#, qt-format
+#, fuzzy, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 fichiers terminés\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:386
 msgid "Extraction successful\n"
-msgstr "Extraction avec succès\n"
+msgstr "Extraction réussie\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:462
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr "Erreur lors de l'extraction : %1"
+msgstr "Erreur lors de l'extraction : %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
@@ -4292,7 +4292,7 @@ msgstr "Atome terminal"
 
 #: qtplugins/propertytables/propertymodel.cpp:439
 msgid "Bond Order"
-msgstr "Ordre de la liaison"
+msgstr "Ordre de liaison"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 msgctxt "in Angstrom"
@@ -4301,7 +4301,7 @@ msgstr "Longueur (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
-msgstr "Chaine"
+msgstr "Chaîne"
 
 #: qtplugins/propertytables/propertymodel.cpp:458
 msgid "Secondary Structure"
@@ -4340,7 +4340,7 @@ msgstr "Atome 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 msgid "Adjust Fragment"
-msgstr "Ajuster fragment"
+msgstr "Ajuster le fragment"
 
 #: qtplugins/propertytables/propertymodel.cpp:813
 msgctxt "pi helix"
@@ -4373,7 +4373,6 @@ msgid "β Bridge"
 msgstr "Pont β"
 
 #: qtplugins/propertytables/propertymodel.cpp:825
-#, fuzzy
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Tourne"
@@ -4389,7 +4388,7 @@ msgstr "Propriétés de l'atome…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 msgid "Bond Properties…"
-msgstr "Propriétés de liaison…"
+msgstr "Propriétés de la liaison…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 msgid "Angle Properties…"
@@ -4397,7 +4396,7 @@ msgstr "Propriétés de l'angle…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 msgid "Torsion Properties…"
-msgstr "Propriétés de torsion…"
+msgstr "Propriétés de la torsion…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
