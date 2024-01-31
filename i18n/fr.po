@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 21:18+0000\n"
+"PO-Revision-Date: 2024-01-31 21:31+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -3362,15 +3362,16 @@ msgstr "Données entrée LAMMPS"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr "Générer l'entrée pour LAMMPS."
+msgstr "Générer de données d'entrée pour LAMMPS."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
-"Souhaitez-vous mettre à jour le texte pré-visualisé, en perdant tous les "
-"changements apportés dans le panneau de pré-visualisation de Lammps ?"
+"Souhaitez-vous de mettre à jour le texte de l'aperçu, en perdant toutes les "
+"modifications apportées dans le volet d'aperçu de la plate-forme d'entrée "
+"Lammps ?"
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
@@ -3387,11 +3388,12 @@ msgstr "InChI…"
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
 msgid "No descriptors found!"
-msgstr "Aucune description trouvée !"
+msgstr "Aucun descripteur n'a été trouvé !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
+#, fuzzy
 msgid "No line format readers found!"
-msgstr "Lecteur de format sur une ligne non trouvé !"
+msgstr "Lecteur de format sur une ligne non trouvé !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "Unable to load requested format reader."
@@ -3418,8 +3420,8 @@ msgid ""
 msgstr ""
 "Outil de manipulation\n"
 "\n"
-"Bouton gauche :\tcliquer et glisser-déposer pour déplacer des atomes.\n"
-"Bouton droit :\tcliquer et glisser-déposer pour effectuer une rotation des "
+"Bouton gauche :\tcliquer et glisser-déposer pour déplacer des atomes.\n"
+"Bouton droit :\tcliquer et glisser-déposer pour effectuer une rotation des "
 "atomes sélectionnés.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
@@ -3443,25 +3445,25 @@ msgid ""
 msgstr ""
 "Outil de mesure\n"
 "\n"
-"Bouton gauche :\tsélectionner jusqu'à quatre atomes.\n"
-"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le "
-"3ème.\n"
+"Bouton gauche :\tsélectionner jusqu'à quatre atomes.\n"
+"\tLes distances sont mesurées entre le 1er et le 2ème et le 2ème et le 3ème."
+"\n"
 "\tL'angle est mesuré entre le 1er et le 3ème autour du 2ème.\n"
 "\tLe dièdre est mesuré entre le 1er, le 2ème, le 3ème et le 4ème.\n"
-"Bouton droit :\teffacement des mesures."
+"Bouton droit :\teffacement des mesures."
 
 #: qtplugins/measuretool/measuretool.cpp:191
 #: qtplugins/measuretool/measuretool.cpp:202
 msgid "Dihedral:"
-msgstr "Dièdre :"
+msgstr "Dièdre :"
 
 #: qtplugins/measuretool/measuretool.cpp:192
 msgid "Angle:"
-msgstr "Angle :"
+msgstr "Angle :"
 
 #: qtplugins/measuretool/measuretool.cpp:210
 msgid "Angles:"
-msgstr "Angles :"
+msgstr "Angles :"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
@@ -3472,7 +3474,7 @@ msgstr "Outil de mesure"
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/meshes/meshes.cpp:167:1652
 msgid "Opacity:"
-msgstr "Opacité :"
+msgstr "Opacité :"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
@@ -3484,7 +3486,7 @@ msgstr "&Moléculaire…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:33
 msgid "View general properties of a molecule."
-msgstr "Les propriétés générales de la vue d'une molécule."
+msgstr "Voir les propriétés générales d'une molécule."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3492,7 +3494,7 @@ msgstr "Les propriétés générales de la vue d'une molécule."
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
-msgstr "&Analytique"
+msgstr "&Analyse"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3520,42 +3522,42 @@ msgstr "(en attente)"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:124
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:140
 msgid "unknown molecule"
-msgstr "[molécule inconnue]"
+msgstr "molécule inconnue"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1136
 msgid "Molecule Name:"
-msgstr "Nom de la molécule :"
+msgstr "Nom de la molécule :"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:219
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:1112
 msgid "Molecular Mass (g/mol):"
-msgstr "Masse moléculaire (g/mol) :"
+msgstr "Masse moléculaire (g/mol) :"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1118
 msgid "Chemical Formula:"
-msgstr "Formule chimique :"
+msgstr "Formule chimique :"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:223
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:236:1124
 msgid "Number of Atoms:"
-msgstr "Nombre d'atomes :"
+msgstr "Nombre d'atomes :"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:225
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:238:1130
 msgid "Number of Bonds:"
-msgstr "Nombre de liaisons :"
+msgstr "Nombre de liaisons :"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -3571,10 +3573,10 @@ msgid ""
 msgstr ""
 "Outil de navigation\n"
 "\n"
-"Bouton gauche :\tcliquer et glisser-déposer pour tourner la vue.\n"
-"Bouton central :\tcliquer et glisser-déposer pour effectuer un zoom avant ou "
+"Bouton gauche :\tcliquer et glisser-déposer pour tourner la vue.\n"
+"Bouton central :\tcliquer et glisser-déposer pour effectuer un zoom avant ou "
 "arrière.\n"
-"Bouton droit :\tcliquer et glisser déposer pour déplacer la vue.\n"
+"Bouton droit :\tcliquer et glisser déposer pour déplacer la vue.\n"
 
 #: qtplugins/navigator/navigator.cpp:54
 msgid "Rotate the scene along the x, y, or z axes."
