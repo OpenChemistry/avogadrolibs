@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 23:16+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4861,10 +4861,8 @@ msgid "Select Imported Spectra Color"
 msgstr "Choisir la couleur des spectres importés"
 
 #: qtplugins/spectra/spectradialog.cpp:342
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "Modes vibratoires"
+msgstr "Spectra vibrationnel"
 
 #: qtplugins/spectra/spectradialog.cpp:343
 #: qtplugins/spectra/spectradialog.cpp:357
