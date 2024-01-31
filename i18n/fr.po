@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 23:29+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 23:35+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2975,7 +2975,7 @@ msgstr "Optimiser"
 
 #: qtplugins/forcefield/forcefield.cpp:91
 msgid "Configure…"
-msgstr "Configurer"
+msgstr "Configurer…"
 
 #: qtplugins/forcefield/forcefield.cpp:103
 msgid "Freeze Selected Atoms"
@@ -5094,7 +5094,7 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
-"Template Tool\n"
+"Outil de Templates\n"
 "\n"
 "Insérer des fragments, y compris des centres métalliques.\n"
 "Sélectionnez un élément et la géométrie de coordination, puis cliquez pour "
@@ -5105,7 +5105,7 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:302
 msgid "Insert Template"
-msgstr "Insérer modèle"
+msgstr "Insérer Template"
 
 #: qtplugins/templatetool/templatetool.cpp:560
 msgid "Insert Ligand"
@@ -5113,10 +5113,8 @@ msgstr "Insérer un ligand"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
-#| msgid "Manipulate tool"
 msgid "Template tool"
-msgstr "Outil de manipulation"
+msgstr "Outil de Templates"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5133,7 +5131,7 @@ msgstr "Modes de vibrations…"
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
-msgstr "Montre l'interface à propos des modes vibrationnels."
+msgstr "Afficher la boîte de dialogue des modes vibrationnels."
 
 #: qtplugins/vibrations/vibrations.cpp:91
 #, fuzzy
