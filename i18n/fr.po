@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 13:56+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2074,7 +2074,7 @@ msgstr "Supprimer les liaisons de tous les atomes ou des atomes sélectionnés."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Créer des liens entre tous les atomes sélectionnés."
 
 #: qtplugins/bonding/bonding.cpp:77
 #, fuzzy
