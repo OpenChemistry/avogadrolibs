@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 20:58+0000\n"
+"PO-Revision-Date: 2024-01-31 21:08+0000\n"
 "Last-Translator: Emir <bitigchi@me.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -1398,7 +1398,7 @@ msgstr "Atomları Temizle"
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
 #: qtgui/rwmolecule.cpp:107 qtgui/rwmolecule.cpp:115:484
 msgid "Adjust Hydrogens"
-msgstr "Hidrojenleri Ayarlayın"
+msgstr "Hidrojenleri ayarla"
 
 #: qtgui/rwmolecule.cpp:143
 msgid "Change Elements"
@@ -2894,7 +2894,7 @@ msgstr "Düzenleyici aracı"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/editor/editortoolwidget.cpp:208:1824 rc.cpp:1842
 msgid "Automatic"
-msgstr "Otomatik"
+msgstr "Kendiliğinden"
 
 #: qtplugins/editor/editortoolwidget.cpp:209
 msgid "Single"
@@ -3167,7 +3167,7 @@ msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
-msgstr "Hidrojenleri &Ayarla"
+msgstr "Hidrojenleri &ayarla"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
 msgid "Add Hydrogens"
@@ -3365,7 +3365,7 @@ msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "Top ve çubuk biçemlerinde etiketleri görüntüleyin."
 
 #: qtplugins/label/labeleditor.cpp:29
 msgid "Edit Labels"
@@ -5262,7 +5262,7 @@ msgstr "Sahneyi VRML kullanarak işleyin."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Molekülü bir telekafes olarak oluşturun."
 
 #: qtplugins/yaehmop/yaehmop.cpp:91
 msgid "Calculate Band Structure…"
@@ -6072,7 +6072,7 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr ""
+msgstr "Bağ sırası:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -7232,7 +7232,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "single"
-msgstr ""
+msgstr "tek"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
@@ -7242,7 +7242,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "double"
-msgstr ""
+msgstr "çift"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
 #. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
