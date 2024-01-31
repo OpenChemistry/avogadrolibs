@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 21:31+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 21:39+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3580,11 +3580,11 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:54
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr "Tourner la scène le long des axes x, y ou z."
+msgstr "Tourner la scène selon les axes x, y ou z."
 
 #: qtplugins/navigator/navigator.cpp:55
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Magnifier la scène."
 
 #: qtplugins/navigator/navigator.cpp:56
 #, fuzzy
@@ -3594,19 +3594,19 @@ msgstr "&Translation d'atomes..."
 
 #: qtplugins/navigator/navigator.cpp:97
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Inverser le sens du zoom sur le bouton de la rouelle"
 
 #: qtplugins/navigator/navigator.cpp:99
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
 msgstr ""
-"Défaut : Défiler vers le bas pour réduire, vers le haut pour agrandir\n"
-"Inversé : Défiler vers le haut pour réduire, vers le bas pour agrandir"
+"Défaut : Défiler vers le bas pour réduire, vers le haut pour agrandir\n"
+"Inversé : Défiler vers le haut pour réduire, vers le bas pour agrandir"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
-msgstr "Naviguer dans l’outil"
+msgstr "Outil de navigation"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
@@ -3614,7 +3614,7 @@ msgstr "Nom chimique"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr "Base de données réseau"
+msgstr "Base de données en réseau"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
@@ -3628,7 +3628,7 @@ msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
-msgstr "Tolérance de l'angle :"
+msgstr "Tolérance de l'angle :"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
