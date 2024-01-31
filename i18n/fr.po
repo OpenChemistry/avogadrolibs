@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 19:27+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 19:35+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2290,12 +2290,12 @@ msgstr "Installer Python"
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
-"Python est utilisé pour de nombreuses fonctionnalités Avogadro. Voulez-vous "
-"télécharger Python ?"
+"Python est utilisé pour de nombreuses fonctionnalités d'Avogadro. Voulez-"
+"vous télécharger Python ?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "Configurer Python"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
@@ -2317,7 +2317,7 @@ msgstr "Autres…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
-msgstr "Éditeur des coordonnées cartésiennes …"
+msgstr "Éditeur des &coordonnées cartésiennes d'atomes…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -2325,11 +2325,11 @@ msgstr "Éditeur de coordonnées"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr "Modifier le texte des coordonnées de l’atome."
+msgstr "Édition textuelle des coordonnées de l’atome."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:224
 msgid "Overwrite changes?"
-msgstr "Écraser les modifications ?"
+msgstr "Remplacer les modifications ?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:225
 msgid ""
@@ -2337,7 +2337,7 @@ msgid ""
 "and revert to the current molecule?"
 msgstr ""
 "Le document texte a été modifié. Voulez-vous annuler les modifications et "
-"revenir à la molécule actuelle ?"
+"revenir à la molécule actuelle ?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:352
 msgid "Too few entries on line."
