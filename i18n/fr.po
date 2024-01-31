@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:09+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:15+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4038,12 +4038,12 @@ msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:266
 msgid "GIF FPS support warning"
-msgstr "GIF FPS avertissement"
+msgstr "avertissement GIF nombre IPS supporté"
 
 #: qtplugins/playertool/playertool.cpp:267
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
-"Le format de ficher GIF ne supporte pas les fréquences d'images supérieur à "
+"Le format de ficher GIF ne supporte pas une cadence d'images supérieure à "
 "100 IPS."
 
 #: qtplugins/playertool/playertool.cpp:312
@@ -4051,8 +4051,9 @@ msgid "Movie (*.avi)"
 msgstr "Vidéo (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:957
+#, fuzzy
 msgid "Error: cannot add frame to video."
-msgstr "Erreur : ne peut ajouter de trame à la vidéo."
+msgstr "Erreur : ne peut ajouter de trame à la vidéo."
 
 #: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
