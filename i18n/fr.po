@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 17:12+0000\n"
+"PO-Revision-Date: 2024-01-31 19:27+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -1232,7 +1232,7 @@ msgstr "Boules-bâtonnets"
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "cartoons"
+msgstr "Cartoons"
 
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
@@ -1272,7 +1272,7 @@ msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr "éléments de symétrie"
+msgstr "Éléments de symétrie"
 
 #: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1794,7 +1794,7 @@ msgstr "Par acide aminé"
 
 #: qtplugins/applycolors/applycolors.cpp:89
 msgid "By Shapely Scheme"
-msgstr "par schéma Shapely"
+msgstr "Par schéma Shapely"
 
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1929,11 +1929,11 @@ msgstr "&Vue"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 msgid "Color Atoms"
-msgstr "colorer les atomes"
+msgstr "Colorer les atomes"
 
 #: qtplugins/applycolors/applycolors.cpp:151
 msgid "Color Residues"
-msgstr "colorer les résidus"
+msgstr "Colorer les résidus"
 
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
@@ -2111,12 +2111,12 @@ msgstr "Ruban"
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "cartoon simple"
+msgstr "Cartoon simple"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr "cartoon"
+msgstr "Cartoon"
 
 #: qtplugins/cartoons/cartoons.cpp:99
 msgctxt "protein rendering style"
@@ -2125,15 +2125,15 @@ msgstr "Corde"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Représenter la biomolécule par de rubans et de cartoons."
 
 #: qtplugins/centroid/centroid.cpp:20
 msgid "Add Centroid"
-msgstr "Ajouter le centroïde"
+msgstr "Ajouter un centroïde"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
-msgstr "Ajouter le centre de masse"
+msgstr "Ajouter un barycentre"
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
@@ -2146,7 +2146,7 @@ msgstr "Centroïde"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
-msgstr "Ajouter des centroïdes et centres de masse."
+msgstr "Ajouter des centroïdes et barycentres."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -2180,18 +2180,18 @@ msgstr " Å"
 #: qtplugins/closecontacts/closecontacts.cpp:232
 #: qtplugins/noncovalent/noncovalent.cpp:369
 msgid "Maximum distance:"
-msgstr "Distance maximale :"
+msgstr "Distance maximale :"
 
 #: qtplugins/closecontacts/closecontacts.cpp:233
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:88
 msgid "Line width:"
-msgstr "Épaisseur ligne :"
+msgstr "Épaisseur de la ligne :"
 
 #: qtplugins/closecontacts/closecontacts.h:34
 msgid "Render close contacts between atoms."
-msgstr "Affiche les forces de déplacement sur les atomes."
+msgstr "Afficher les contact étroits entre les atomes."
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Contact"
@@ -2207,7 +2207,7 @@ msgstr "Répulsif"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
-msgstr "Modifier la carte d'opacité des couleurs…"
+msgstr "Modifier la palette d'opacité des couleurs…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2227,8 +2227,8 @@ msgstr "ColorOpacityMap"
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
 msgstr ""
-"Modifier la carte d'opacité des couleurs, principalement pour la "
-"modélisation des volumes."
+"Modifier la palette d'opacité des couleurs, principalement pour le rendu des "
+"volumes."
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
@@ -2246,7 +2246,7 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
-"Erreur lors de la lecture du fichier produit « %1 » :\n"
+"Erreur lors de la lecture du fichier de sortie « %1 » :\n"
 "%2"
 
 #: qtplugins/commandscripts/command.cpp:215
@@ -2256,23 +2256,23 @@ msgstr "Traitement %1"
 
 #: qtplugins/commandscripts/command.cpp:270
 msgid "Set path to Python interpreter:"
-msgstr "Définir le chemin d'accès à l'interpréteur Python :"
+msgstr "Définir le chemin d'accès à l'interpréteur Python :"
 
 #: qtplugins/commandscripts/command.cpp:272
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
-"Sélectionnez l'interpréteur Python pour exécuter des scripts externes\n"
+"Sélectionnez l'interpréteur Python pour exécuter des scripts externes.\n"
 "Avogadro doit être redémarré pour que les modifications prennent effet."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr "Commandes de programme"
+msgstr "Scripts de commande"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
-msgstr "Exécuter des commandes de programme externe"
+msgstr "Exécuter des scripts de commande externes"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
@@ -2280,11 +2280,11 @@ msgstr "Exécuter des commandes de programme externe"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Paramètres Python…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Installer Python"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
