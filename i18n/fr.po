@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:44+0000\n"
+"PO-Revision-Date: 2024-01-31 22:49+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -4538,16 +4538,15 @@ msgstr "Formats des fichiers script"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
-msgstr ""
-"Chargez les lecteurs de fichiers/écritures à partir de scripts externes."
+msgstr "Charger les lecteurs de fichiers/éditeurs à partir de scripts externes."
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr "Tout sélectionner"
+msgstr "Sélectionner tout"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr "Ne rien sélectionner"
+msgstr "Sélectionner aucun"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:549
 msgid "Invert Selection"
@@ -4559,7 +4558,7 @@ msgstr "Sélectionner par élément…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
-msgstr "Sélectionner par l'indice de l'atome…"
+msgstr "Sélectionner par l'indice atomique…"
 
 #: qtplugins/select/select.cpp:63
 msgid "Select by Residue…"
@@ -4567,11 +4566,11 @@ msgstr "Sélectionner par résidu…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
-msgstr "Sélectionner les atomes du résidu…"
+msgstr "Sélectionner des atomes du résidu…"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
-msgstr "Sélectioner les atomes du résidu…"
+msgstr "Sélectionner des atomes de la chaîne latérale…"
 
 #: qtplugins/select/select.cpp:78
 msgid "Select Water…"
@@ -4587,7 +4586,7 @@ msgstr "Réduire sélection"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr "Créer un nouveau calque avec la selection"
+msgstr "Créer un nouveau calque avec la sélection"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
@@ -4619,7 +4618,7 @@ msgstr "Sélectionner les atomes par indice"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr "Atomes à sélectionner :"
+msgstr "Atomes à sélectionner :"
 
 #: qtplugins/select/select.cpp:446
 msgid "Select Atom"
