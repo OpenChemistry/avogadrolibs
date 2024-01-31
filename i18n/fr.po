@@ -13,8 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 23:17+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4863,14 +4862,12 @@ msgstr "Choisir la couleur des spectres importés"
 
 #: qtplugins/spectra/spectradialog.cpp:342
 msgid "Vibrational Spectra"
-msgstr "Spectra vibrationnel"
+msgstr "Spectres vibrationnel"
 
 #: qtplugins/spectra/spectradialog.cpp:343
 #: qtplugins/spectra/spectradialog.cpp:357
-#, fuzzy
-#| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Fréquence (cm<sup>-1</sup>)"
+msgstr "nombre d'ondes (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
 msgid "Transmission"
