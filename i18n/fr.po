@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:49+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:50+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4626,7 +4626,7 @@ msgstr "Sélectionner un atome"
 
 #: qtplugins/select/select.cpp:481
 msgid "Select Atoms by Residue"
-msgstr "Sélectionnez les atomes par Residue"
+msgstr "Sélectionnez des atomes par résidu"
 
 #: qtplugins/select/select.cpp:482
 msgid "Residues to Select:"
