@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 21:52+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:09+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3785,7 +3785,7 @@ msgstr "Génération des conformères (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:712
 msgid "Generate Conformers"
-msgstr "Generate Conformers"
+msgstr "Générer des conformères"
 
 #: qtplugins/openbabel/openbabel.cpp:721
 msgid "Cannot open file with Open Babel."
@@ -3793,19 +3793,19 @@ msgstr "Impossible d'ouvrir le fichier avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:727
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr "Molécule invalide : Impossible de déceler les liaisons."
+msgstr "Molécule invalide : Impossible de percevoir les liaisons."
 
 #: qtplugins/openbabel/openbabel.cpp:733
 msgid "Perceiving Bonds (Open Babel)"
-msgstr "Déceler les liaisons (OpenBabel)"
+msgstr "Percevoir les liaisons (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Generating XYZ representation…"
-msgstr "Génération une représantation XYZ…"
+msgstr "Génération d'une représentation XYZ…"
 
 #: qtplugins/openbabel/openbabel.cpp:741
 msgid "Error generating XYZ string."
-msgstr "Erreur lors de la génération de la chaîne XYZ."
+msgstr "Erreur lors de la génération de la chaîne de caractères XYZ."
 
 #: qtplugins/openbabel/openbabel.cpp:752
 #, qt-format
@@ -3814,7 +3814,7 @@ msgstr "Conversion de XYZ en Open Babel avec %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:762
 msgid "Updating molecule from Open Babel…"
-msgstr "Actualisation de la molécule depuis OpenBabel…"
+msgstr "Mise à jour la molécule depuis OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:814 qtplugins/openbabel/openbabel.cpp:856
 msgid "Cannot add hydrogens with Open Babel."
@@ -3826,11 +3826,11 @@ msgstr "Ajouter des hydrogènes (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:820
 msgid "Generating Open Babel input…"
-msgstr "Génération de l'entrée de OpenBabel…"
+msgstr "Génération des données d'entrée pour OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
 msgid "Error generating Open Babel input."
-msgstr "Erreur lors de la génération de l'entrée de OpenBabel."
+msgstr "Erreur lors de la génération de données d'entrée de OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
 #: qtplugins/openbabel/openbabel.cpp:933
@@ -3840,11 +3840,11 @@ msgstr "%1 en cours…"
 
 #: qtplugins/openbabel/openbabel.cpp:863
 msgid "Add hydrogens for pH"
-msgstr "Ajouter de l'hydrogène au pH"
+msgstr "Ajouter des hydrogènes pour un pH de"
 
 #: qtplugins/openbabel/openbabel.cpp:863
 msgid "pH:"
-msgstr "pH :"
+msgstr "pH :"
 
 #: qtplugins/openbabel/openbabel.cpp:870 qtplugins/openbabel/openbabel.cpp:912
 msgid "Generating obabel input…"
@@ -3856,7 +3856,7 @@ msgstr "Impossible de supprimer les hydrogènes avec OpenBabel."
 
 #: qtplugins/openbabel/openbabel.cpp:911
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Retirer les hydrogènes (OpenBabel)"
+msgstr "Supprimer les hydrogènes (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:920
 msgid "Error generating Open Babel data."
@@ -3880,7 +3880,7 @@ msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr "Intéragir avec les fonctionnalitées de OpenBabel."
+msgstr "Interagir avec les fonctionnalités d'OpenBabel."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -3899,8 +3899,9 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
-"Souhaitez-vous mettre à jour le texte pré-visualisé, en perdant tous les "
-"changements apportés dans le panneau de pré-visualisation de OpenMM ?"
+"Souhaitez-vous mettre à jour le texte de l'aperçu, en perdant tous les "
+"changements effectués dans le panneau d'aperçu de la plate-forme d'entrée "
+"d'OpenMM ?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -3921,10 +3922,12 @@ msgstr "gro"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1295
+#, fuzzy
 msgid "input.prmtop"
 msgstr "entrée.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
+#, fuzzy
 msgid "input.top"
 msgstr "entrée.top"
 
@@ -3940,6 +3943,7 @@ msgid "prmtop"
 msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
+#, fuzzy
 msgid "top"
 msgstr "haut"
 
@@ -3957,15 +3961,15 @@ msgstr "Vrai"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 msgid "Reference Axes"
-msgstr "Référence des axes"
+msgstr "Axes de référence"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
-msgstr "Recouvrir des axes de référence"
+msgstr "Superposition des axes de référence"
 
 #: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
-msgstr "Afficher les références des axes dans le coin de l'écran."
+msgstr "Afficher les axes de référence au coin de l'écran."
 
 #: qtplugins/playertool/playertool.cpp:52
 msgid "Player"
@@ -3985,18 +3989,18 @@ msgstr "Arrêter"
 
 #: qtplugins/playertool/playertool.cpp:83
 msgid "Frame rate:"
-msgstr "Fréquence d'images :"
+msgstr "Fréquence d'images :"
 
 #: qtplugins/playertool/playertool.cpp:89
 msgctxt "frames per second"
 msgid " FPS"
-msgstr " FPS"
+msgstr " IPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:113:1878
 msgid "Frame:"
-msgstr "Image :"
+msgstr "Image :"
 
 #: qtplugins/playertool/playertool.cpp:120
 #: qtplugins/playertool/playertool.cpp:411
@@ -4007,7 +4011,7 @@ msgstr " sur %0"
 
 #: qtplugins/playertool/playertool.cpp:131
 msgid "Dynamic bonding?"
-msgstr "Liaisons dynamiques ?"
+msgstr "Liaisons dynamiques ?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
