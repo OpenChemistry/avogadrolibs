@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 19:35+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2299,7 +2299,7 @@ msgstr "Configurer Python"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Configurer les environnements Python."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2362,10 +2362,8 @@ msgid "Element symbol."
 msgstr "Symbole de l'élément."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "Numéro atomique invalide."
+msgstr "L'étiquette d'atome invalide."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 msgid "Invalid atomic index."
