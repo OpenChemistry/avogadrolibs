@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 21:18+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3339,9 +3339,9 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
-"Atom Label Tool\n"
+"Outil axé sur les étiquettes d'atomes\n"
 "\n"
-"Mouse gauche : Cliquez sur les atomes pour ajouter des étiquettes "
+"Bouton gauche : Cliquez sur les atomes pour ajouter des étiquettes "
 "personnalisées"
 
 #: qtplugins/label/labeleditor.cpp:67
@@ -3350,7 +3350,7 @@ msgstr "Créer une étiquette"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr "Outil éditeur d'étiquettes"
+msgstr "Outil d'édition d'étiquettes"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
@@ -3358,7 +3358,7 @@ msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
-msgstr "Entrée LAMMPS"
+msgstr "Données entrée LAMMPS"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
