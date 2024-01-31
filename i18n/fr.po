@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 21:08+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3252,9 +3253,8 @@ msgid "Insert Fragment"
 msgstr "Insérer un fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:35
-#, fuzzy
 msgid "InsertFragment"
-msgstr "Insérer fragment"
+msgstr "Insérer un fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:60
 msgid "Insert molecular fragments for building larger molecules."
