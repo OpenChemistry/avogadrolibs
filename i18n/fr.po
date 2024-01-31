@@ -13,8 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 22:33+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4443,10 +4442,8 @@ msgid "Molecule Properties"
 msgstr "Propriétés de la molécule"
 
 #: qtplugins/propertytables/propertyview.cpp:231
-#, fuzzy
-#| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Exporter"
+msgstr "Export CSV"
 
 #: qtplugins/propertytables/propertyview.cpp:232
 #, fuzzy
