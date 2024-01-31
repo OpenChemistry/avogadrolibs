@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 20:46+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2970,16 +2971,12 @@ msgstr ""
 "Modéliser la visualisation du champs de force pour les atomes de la molécule."
 
 #: qtplugins/forcefield/forcefield.cpp:75
-#, fuzzy
-#| msgid "Optimization"
 msgid "Optimize"
-msgstr "Optimisation"
+msgstr "Optimiser"
 
 #: qtplugins/forcefield/forcefield.cpp:91
-#, fuzzy
-#| msgid "Configure Bonding…"
 msgid "Configure…"
-msgstr "Configurer les liaisons…"
+msgstr "Configurer"
 
 #: qtplugins/forcefield/forcefield.cpp:103
 msgid "Freeze Selected Atoms"
@@ -2990,8 +2987,6 @@ msgid "Unfreeze Selected Atoms"
 msgstr "Décongeler les atomes sélectionnés"
 
 #: qtplugins/forcefield/forcefield.cpp:126
-#, fuzzy
-#| msgid "Calculate"
 msgid "&Calculate"
 msgstr "Calculer"
 
