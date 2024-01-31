@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:37+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:43+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4455,7 +4455,7 @@ msgstr "Impossible d'ouvrir le fichier pour l'écriture."
 
 #: qtplugins/propertytables/propertyview.cpp:276
 msgid "Error writing to the file."
-msgstr "Erreur à écrire au fichier."
+msgstr "Erreur lors de l'écriture au fichier."
 
 #: qtplugins/propertytables/propertyview.cpp:288
 msgid "Export…"
@@ -4500,7 +4500,7 @@ msgstr "Entrée quantique"
 
 #: qtplugins/quantuminput/quantuminput.h:46
 msgid "Generate input for quantum codes."
-msgstr "Générer les données d'entrées pour les codes quantiques."
+msgstr "Générer les données d'entrée pour les codes quantiques."
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Center"
@@ -4511,10 +4511,8 @@ msgid "Align View to Axes"
 msgstr "Aligner la vue sur les axes"
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align view to axes."
-msgstr "Aligner la vue sur les axes"
+msgstr "Aligner la vue sur les axes."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4522,9 +4520,10 @@ msgstr "Réinitialiser la vue"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr "Manipuler la caméra de la vue."
+msgstr "Manipuler la caméra de la visualisation."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
+#, fuzzy
 msgid "Script Charge Models"
 msgstr "Programme de la modélisation des charges"
 
