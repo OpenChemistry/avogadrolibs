@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 21:52+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3781,7 +3781,7 @@ msgstr "Ne peut pas générer des conformères avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating Conformers (Open Babel)"
-msgstr "Generating Conformers (Open Babel)"
+msgstr "Génération des conformères (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:712
 #, fuzzy
