@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 13:57+0000\n"
+"PO-Revision-Date: 2024-01-31 17:12+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -2078,20 +2078,20 @@ msgstr "Créer des liaisons parmi tous les atomes ou les atomes sélectionnés."
 
 #: qtplugins/bonding/bonding.cpp:77
 msgid "Perceive bond orders."
-msgstr "Des ordres de caution."
+msgstr "Percevoir l'ordre de liaisons."
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
-msgstr "Liens"
+msgstr "Liaisons"
 
 #: qtplugins/bonding/bonding.h:36
 msgid "Perform bonding operations."
-msgstr "Effectuer les opérations de liaison."
+msgstr "Effectuer des opérations axées sur les liaisons."
 
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr "Structure"
+msgstr "Squelette"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
@@ -2101,7 +2101,7 @@ msgstr "Trace"
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr "Tube"
+msgstr "Tuyau"
 
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
@@ -2111,12 +2111,12 @@ msgstr "Ruban"
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Animation simple"
+msgstr "cartoon simple"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr "Animation"
+msgstr "cartoon"
 
 #: qtplugins/cartoons/cartoons.cpp:99
 msgctxt "protein rendering style"
