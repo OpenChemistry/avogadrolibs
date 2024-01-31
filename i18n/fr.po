@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 21:50+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 21:51+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3773,7 +3773,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:569
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molécule invalide. Ne peut pas générer des conformités."
+msgstr "Molécule invalide. Impossible de générer des conformères."
 
 #: qtplugins/openbabel/openbabel.cpp:587
 #, fuzzy
