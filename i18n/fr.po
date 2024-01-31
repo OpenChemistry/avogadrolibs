@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 23:11+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4832,10 +4833,8 @@ msgid "NMR"
 msgstr "RMN"
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
-msgstr "électron"
+msgstr "Électronique"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
