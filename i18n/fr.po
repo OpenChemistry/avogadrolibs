@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 23:08+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 23:11+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4802,7 +4802,7 @@ msgstr "Caractéristiques des groupes d'espace pour les cristaux."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
-msgstr "Plot Spectra.."
+msgstr "Plot des Spectres…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4820,22 +4820,16 @@ msgid "Display spectra plots."
 msgstr "Montre spectres et mode vibrationnels."
 
 #: qtplugins/spectra/spectradialog.cpp:201
-#, fuzzy
-#| msgctxt "Infrared spectra option"
-#| msgid "Infrared"
 msgid "Infrared"
 msgstr "Infrarouge"
 
 #: qtplugins/spectra/spectradialog.cpp:205
-#, fuzzy
-#| msgctxt "Raman spectrum"
-#| msgid "Raman"
 msgid "Raman"
 msgstr "Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:208
 msgid "NMR"
-msgstr "NMR"
+msgstr "RMN"
 
 #: qtplugins/spectra/spectradialog.cpp:211
 #, fuzzy
