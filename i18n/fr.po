@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 19:35+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 20:46+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2363,15 +2363,15 @@ msgstr "Symbole de l'élément."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
 msgid "Invalid atom label."
-msgstr "L'étiquette d'atome invalide."
+msgstr "L'étiquette d'atome est invalide."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 msgid "Invalid atomic index."
-msgstr "Indice atomique invalide."
+msgstr "Indice atomique est invalide."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
 msgid "Atomic index."
-msgstr "Par indice d'atome."
+msgstr "Indice atomique."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
@@ -2379,7 +2379,7 @@ msgstr "Numéro atomique invalide."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:429
 msgid "Atomic number."
-msgstr "Numéro d'atome."
+msgstr "Numéro atomique."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:438
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:449
@@ -2416,7 +2416,7 @@ msgstr "coordonnée « c » du réseau."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:579
 msgid "Error applying geometry"
-msgstr "Erreur lorsque la géométrie est appliquée"
+msgstr "Erreur d'application de la géométrie"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:580
 msgid ""
@@ -2428,7 +2428,7 @@ msgstr ""
 "Impossible d’analyser les spécifications de la géométrie. Corrigez les "
 "erreurs surlignées et ressayez.\n"
 "\n"
-"(Aide : passez la souris sur le texte rouge pour obtenir une description de "
+"(Aide : passez la souris sur le texte rouge pour obtenir une description de "
 "l’erreur.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
@@ -2523,7 +2523,7 @@ msgstr "Copier comme"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
-msgstr "Erreur pour couper la molécule"
+msgstr "Erreur lors de tailler la molécule"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error generating clipboard data."
@@ -2536,7 +2536,7 @@ msgid ""
 "Output format: %1\n"
 "%2"
 msgstr ""
-"Format de sortie : %1\n"
+"Format de sortie : %1\n"
 "%2"
 
 #: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
@@ -2545,7 +2545,7 @@ msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
-"Erreur du lecteur :\n"
+"Erreur du lecteur :\n"
 "%1"
 
 #: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
@@ -2554,7 +2554,7 @@ msgstr "Erreur pour coller la molécule"
 
 #: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr "Impossible de coller la molécule : presse-papier vide !"
+msgstr "Impossible de coller la molécule : presse-papier vide !"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
@@ -2567,7 +2567,7 @@ msgid ""
 "Detected format: %1\n"
 "%2"
 msgstr ""
-"Format détecté : %1\n"
+"Format détecté : %1\n"
 "%2"
 
 #: qtplugins/copypaste/copypaste.h:31
@@ -2611,7 +2611,7 @@ msgstr "Optimisation de la géométrie"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr "Méthodes de la structure éléctronique (DFT)"
+msgstr "Méthodes de la structure électronique (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
@@ -2629,6 +2629,7 @@ msgstr "EWALD"
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
+#, fuzzy
 msgid "NONE"
 msgstr "AUCUN"
 
@@ -2688,7 +2689,7 @@ msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
 msgid "Steepest descent"
-msgstr "Plus grande pente"
+msgstr "Décente la plus forte"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
 #: qtplugins/gamessinput/gamessinputdialog.cpp:418
@@ -2696,13 +2697,13 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
-"Le fichier d'entrée a été modifié. Voulez-vous écraser vos modifications "
-"pour utiliser la nouvelle géométrie ou les options de travail ?"
+"Le fichier d'entrée a été modifié. Voulez-vous remplacer vos modifications "
+"pour utiliser la nouvelle géométrie ou les options de travail ?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "Overwrite modified input file?"
-msgstr "Écraser le fichier d'entrée modifié ?"
+msgstr "Remplacer le fichier d'entrée modifié ?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:948
 msgid "Save CP2K input file"
@@ -2734,7 +2735,7 @@ msgstr "Pivoter vers l'&orientation standard"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr "Mettre à l'échelle la maille &Volume…"
+msgstr "Redimensionner la maille à un &Volume…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
@@ -2752,29 +2753,26 @@ msgstr "&Cristal"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr "Effacer la &maille conventionnelle"
+msgstr "Supprimer la &maille élémentaire"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr "Afficher la &maille conventionnelle"
+msgstr "Afficher la &maille élémentaire"
 
 #: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
 msgstr "Importer un cristal depuis le presse-papiers"
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
-#| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Garder les atomes dans la maille"
+msgstr "Envelopper les atomes dans la maille."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Tourner vers l'orientation standard"
+msgstr "Tourner la maille pour obtenir l'orientation standard."
 
 #: qtplugins/crystal/crystal.cpp:215
+#, fuzzy
 msgid "Niggli Reduce Crystal"
 msgstr "Réduire le cristal Niggli"
 
@@ -2788,7 +2786,7 @@ msgstr "Cristal"
 
 #: qtplugins/crystal/crystal.h:69
 msgid "Tools for crystal-specific editing/analysis."
-msgstr "Outils pour la modification/l'analyse spécifique des crystaux."
+msgstr "Outils axés sur l'édition et l'analyse des cristaux."
 
 #: qtplugins/crystal/crystalscene.cpp:178
 #, fuzzy
@@ -2798,11 +2796,11 @@ msgstr "Couleurs :"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
-msgstr "Couleur de ligne :"
+msgstr "Couleur de ligne :"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr "Afficher les limites des mailles."
+msgstr "Afficher les limites de la maille."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
@@ -2815,7 +2813,7 @@ msgstr "Échec lors de la lecture des données avec le format fourni."
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
 msgid "No unit cell present."
-msgstr "Aucune maille presente."
+msgstr "Aucune maille est présente."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -2843,9 +2841,9 @@ msgid ""
 msgstr ""
 "Outil de dessin\n"
 "\n"
-"Clic gauche :\tCliquer et glisser-déposer pour ajouter des atomes et des "
+"Clic gauche :\tCliquer et glisser-déposer pour ajouter des atomes et des "
 "liaisons\n"
-"Clic droit :\tEffacer un atome"
+"Clic droit :\tSupprimer un atome"
 
 #: qtplugins/editor/editor.cpp:104
 msgid "Draw Atom"
@@ -2862,7 +2860,7 @@ msgstr "Supprimer la liaison"
 #: qtplugins/editor/editor.cpp:255 qtplugins/measuretool/measuretool.cpp:193
 #: qtplugins/measuretool/measuretool.cpp:218
 msgid "Distance:"
-msgstr "Distance :"
+msgstr "Distance :"
 
 #: qtplugins/editor/editor.cpp:258
 #, qt-format
@@ -2906,7 +2904,7 @@ msgstr "Récupérer la PDB"
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Impossible de lire la molécule PDB : %1"
+msgstr "Impossible de lire la molécule PDB : %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:80
 msgid "PDB Code"
@@ -2932,13 +2930,13 @@ msgstr "Le téléchargement depuis le réseau a échoué"
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr "Délai d'attente réseau expiré, ou autre erreur."
+msgstr "Délai d'attente du réseau expiré, ou autre erreur."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr "La molécule spécifiée n'a pas pu être trouvée : %1"
+msgstr "La molécule spécifiée n'a pas pu être trouvée : %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
@@ -2955,7 +2953,7 @@ msgstr "Sélection du focus"
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
-msgstr "Retirer focus"
+msgstr "Retirer le focus"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
@@ -2963,9 +2961,10 @@ msgstr "Donner focus"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Focaliser la vue sur des caractéristiques spécifiques."
 
 #: qtplugins/force/force.h:33
+#, fuzzy
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 "Modéliser la visualisation du champs de force pour les atomes de la molécule."
@@ -2983,16 +2982,12 @@ msgid "Configure…"
 msgstr "Configurer les liaisons…"
 
 #: qtplugins/forcefield/forcefield.cpp:103
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Importer les atomes sélectionnés"
+msgstr "Congeler les atomes sélectionnés"
 
 #: qtplugins/forcefield/forcefield.cpp:110
-#, fuzzy
-#| msgid "Bond Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Lier les atomes sélectionnés"
+msgstr "Décongeler les atomes sélectionnés"
 
 #: qtplugins/forcefield/forcefield.cpp:126
 #, fuzzy
