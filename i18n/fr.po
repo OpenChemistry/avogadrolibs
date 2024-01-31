@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 21:43+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 21:46+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3665,7 +3665,8 @@ msgstr "Supprimer les Hydrogènes"
 #: qtplugins/openbabel/openbabel.cpp:95
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr "%1 pas trouvé ! Disabling Open Babel plugin actions."
+msgstr ""
+"%1 n'a pas été trouvé ! Désactivation des actions des greffons Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
@@ -3680,12 +3681,13 @@ msgid "Loading molecule from Open Babel…"
 msgstr "Chargement de la molécule depuis OpenBabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:210
+#, fuzzy
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
-"Une erreur interne s'est produite : OpenBabel::readMolecule a été appelé, "
-"mais aucun résultat n'est disponible pour être analysé !"
+"Une erreur interne s'est produite : OpenBabel::readMolecule a été appelé, "
+"mais aucun résultat n'est disponible pour être analysé !"
 
 #: qtplugins/openbabel/openbabel.cpp:219
 #, qt-format
