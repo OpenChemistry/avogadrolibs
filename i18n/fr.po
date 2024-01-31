@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 23:01+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 23:07+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4754,8 +4754,8 @@ msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
-"La cellule de la Convention a échoué.\n"
-"Vérifiez votre cristal et essayez à nouveau avec une tolérance différente."
+"L’établissement d'une maille conventionnelle a échoué.\n"
+"Vérifiez vos données et essayez-le à nouveau avec une tolérance différente."
 
 #: qtplugins/spacegroup/spacegroup.cpp:278
 msgid ""
@@ -4763,7 +4763,7 @@ msgid ""
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 "Échec de la symétrisation.\n"
-"Veuillez vérifier votre cristal et essayer à nouveau avec une autre "
+"Veuillez vérifier vos données et essayez-la à nouveau avec une autre "
 "tolérance."
 
 #: qtplugins/spacegroup/spacegroup.cpp:336 qtplugins/yaehmop/yaehmop.cpp:209
@@ -4774,7 +4774,7 @@ msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:337
 msgid "Select tolerance in Å:"
-msgstr "Sélectionner la tolérance en Å :"
+msgstr "Sélectionner la tolérance en Å :"
 
 #: qtplugins/spacegroup/spacegroup.cpp:353
 msgid "International"
@@ -4786,7 +4786,7 @@ msgstr "Hall"
 
 #: qtplugins/spacegroup/spacegroup.cpp:353
 msgid "Hermann-Mauguin"
-msgstr "Hermann-Maugin"
+msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:366
 msgid "Select Space Group"
