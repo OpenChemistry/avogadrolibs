@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 20:58+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 21:08+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3049,7 +3049,7 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
-"Métadonnées d'erreur pour le script énergie : %1\n"
+"Erreur lors de l'analyse des métadonnées du script d'énergie : %1\n"
 "Le résultat n'est pas un objet JSON.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
@@ -3062,11 +3062,11 @@ msgstr "Données d’entrée GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr "Générer les données d'entrées pour GAMESS."
+msgstr "Générer les données d'entrée pour GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:225
 msgid "Single Point"
-msgstr "Point simple"
+msgstr "Point unique"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:228
 msgid "Equilibrium Geometry"
@@ -3081,6 +3081,7 @@ msgid "Frequencies"
 msgstr "Fréquences"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:303
+#, fuzzy
 msgid "Core Potential"
 msgstr "Potentiel de cœur"
 
@@ -3142,7 +3143,7 @@ msgstr "Ajouter les hydrogènes"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
 msgid "Remove E&xtra Hydrogens"
-msgstr "Retirer les hydrogènes &supplémentaires"
+msgstr "Supprimer les hydrogènes &supplémentaires"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
@@ -3150,7 +3151,7 @@ msgstr "&Retirer tous les hydrogènes"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
-msgstr "Ajouter/retirer de l'hydrogène de la molécule actuelle."
+msgstr "Ajouter/supprimer des hydrogènes de la molécule actuelle."
 
 #: qtplugins/hydrogens/hydrogens.cpp:59
 msgid "&Hydrogens"
