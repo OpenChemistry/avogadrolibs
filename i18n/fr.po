@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:53+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:56+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4709,6 +4709,7 @@ msgid "Space Group"
 msgstr "Groupe d'espace"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
+#, fuzzy
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr "Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
 
@@ -4721,8 +4722,8 @@ msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
-"La détection du groupe d'espace a échoué.\n"
-"Souhaitez-vous réessayer avec une tolérance différente ?"
+"La détection du groupe d'espace a échouée.\n"
+"Souhaitez-vous la réessayer avec une tolérance différente ?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:215
 msgid "Primitive Reduction"
@@ -4736,8 +4737,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
-"La tolérance est actuellement définie à : %1.\n"
-"Continuer avec cette tolérance ?"
+"La tolérance est actuellement définie à : %1.\n"
+"Continuer avec cette tolérance ?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:229
 msgid ""
