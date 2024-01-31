@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:15+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:22+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4070,15 +4070,15 @@ msgstr "Lecture des trajectoires"
 
 #: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
-msgstr "Plot Paire Fonction de distribution.."
+msgstr "Tracer la fonction de distribution des paires (PDF)…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
-msgstr "Échec de génération d'un motif PDF"
+msgstr "Échec de génération d'un modèle PDF"
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
-msgstr "Message d'erreur : "
+msgstr "Message d'erreur : "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
@@ -4087,6 +4087,7 @@ msgstr "PlotPdf"
 #: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
 msgstr ""
+"Calculer et tracer la courbe de la fonction de distribution des paires (PDF)."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
@@ -4105,6 +4106,7 @@ msgid "Plot Theoretical XRD Pattern…"
 msgstr "Tracer le diagramme XRD théorique…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
+#, fuzzy
 msgid "Failed to generate XRD pattern"
 msgstr "Échec lors de la génération du modèle XRD"
 
@@ -4114,17 +4116,17 @@ msgstr "Échec de conversion de la molécule au format CIF."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr "Les données genXrdPattern apparaissent d'être corrompues !"
+msgstr "Les données genXrdPattern apparaissent d'être corrompues !"
 
 #: qtplugins/plotxrd/plotxrd.cpp:230
 msgid "Error: could not find genXrdPattern executable!"
-msgstr "Erreur : impossible de localiser l’exécutable genXrdPattern !"
+msgstr "Erreur : impossible de localiser l’exécutable genXrdPattern !"
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
 #: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
-msgstr "Erreur : "
+msgstr "Erreur : "
 
 #: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
