@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 22:44+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4532,6 +4532,7 @@ msgid "Load electrostatic models from external scripts."
 msgstr "Chargez des modèles électrostatiques à partir de scripts externes."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
+#, fuzzy
 msgid "Script File Formats"
 msgstr "Formats des fichiers script"
 
