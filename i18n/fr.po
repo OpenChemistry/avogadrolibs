@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 23:17+0000\n"
+"PO-Revision-Date: 2024-01-31 23:19+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -4874,10 +4874,8 @@ msgid "Transmission"
 msgstr "Transmission"
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Importer des spectres"
+msgstr "Spectres Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
@@ -4888,15 +4886,10 @@ msgid "Intensity"
 msgstr "Intensité"
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "NMR Spectra"
-msgstr "Spectral"
+msgstr "Spectres RMN"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Shift (ppm)"
 msgid "Chemical Shift (ppm)"
 msgstr "Déplacement chimique (ppm)"
 
