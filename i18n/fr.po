@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 21:14+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3330,10 +3331,8 @@ msgid "Display labels on ball and stick style."
 msgstr "Afficher un modèle boule-bâtonnets étiqueté."
 
 #: qtplugins/label/labeleditor.cpp:29
-#, fuzzy
-#| msgid "Bond Labels"
 msgid "Edit Labels"
-msgstr "Etiquettes des liaisons"
+msgstr "Modifier le label"
 
 #: qtplugins/label/labeleditor.cpp:32
 msgid ""
