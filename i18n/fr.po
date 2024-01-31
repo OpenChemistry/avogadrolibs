@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 22:50+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-01-31 22:53+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4639,10 +4639,12 @@ msgstr "Sélectionner le résidu"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1917
+#, fuzzy
 msgid "Select"
 msgstr "Sélectionner"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
+#, fuzzy
 msgid "Selection"
 msgstr "Sélection"
 
@@ -4658,13 +4660,13 @@ msgid ""
 msgstr ""
 "Outil de sélection\n"
 "\n"
-"Bouton gauche :\tcliquer pour sélectionner des atomes, des résidus ou des "
+"Bouton gauche :\tcliquer pour sélectionner des atomes, des résidus ou des "
 "fragments.\n"
 "\tGlisser-déposer pour sélectionner un ensemble d'atomes.\n"
-"Bouton droit :\tcliquer dans un espace vide pour annuler la sélection.\n"
+"Bouton droit :\tcliquer dans un espace vide pour annuler la sélection.\n"
 "Utiliser la touche Ctrl pour inverser la sélection et la touche majuscule "
 "pour y en ajouter.\n"
-"Double-clic :\tsélectionner tout un fragment."
+"Double-clic :\tsélectionner tout un fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:238
 msgid "Paint Atoms"
@@ -4700,7 +4702,7 @@ msgstr "Réduire à l'unité asymétrique"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
-msgstr "Définir tolérance…"
+msgstr "Définir la tolérance…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
