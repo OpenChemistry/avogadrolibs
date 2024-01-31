@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 21:16+0000\n"
+"PO-Revision-Date: 2024-01-31 21:18+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -3362,7 +3362,7 @@ msgstr "Entrée LAMMPS"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "Générer l'entrée pour LAMMPS."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
