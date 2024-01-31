@@ -13,8 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 13:55+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -258,7 +257,7 @@ msgstr "Aucun fichier d'entrée à sauvegarder !"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:976
 #: qtplugins/gamessinput/gamessinputdialog.cpp:685
 msgid "Cannot connect to MoleQueue"
-msgstr "La connexion à MoleQueue a échoué"
+msgstr "La connexion à MoleQueue a échouée"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 #: molequeue/inputgeneratorwidget.cpp:594 molequeue/molequeuewidget.cpp:70
@@ -268,8 +267,8 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
-"La connexion à MoleQueue a échoué. Veuillez vérifier qu'il est bien lancé, "
-"puis réessayez."
+"La connexion au serveur MoleQueue a échouée. Veuillez vérifier qu'il est "
+"bien lancé, puis réessayez."
 
 #: molequeue/inputgeneratorwidget.cpp:317
 #, qt-format
@@ -280,13 +279,13 @@ msgstr "Soumettre le calcul %1"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1013
 #: qtplugins/gamessinput/gamessinputdialog.cpp:722
 msgid "Job Failed"
-msgstr "La tâche a échoué"
+msgstr "La tâche a échouée"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1014
 #: qtplugins/gamessinput/gamessinputdialog.cpp:723
 msgid "The job did not complete successfully."
-msgstr "La tâche n'est pu aboutir complètement."
+msgstr "La tâche n'a pas pu aboutir complètement."
 
 #: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
@@ -1679,7 +1678,7 @@ msgstr "Erreur lors de la lecture du fichier OpenDX : %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
-msgstr "Erreur de lecture du fichier OpenDX : aucun cube trouvé"
+msgstr "Erreur de lecture du fichier OpenDX : aucun cube trouvé"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -1689,7 +1688,7 @@ msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:34
 msgid "Interact with APBS utilities."
-msgstr "Intéragir avec les outils de APBS."
+msgstr "Interagir avec les outils d'APBS."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
@@ -1735,7 +1734,7 @@ msgstr "Erreur"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr "Erreur lors exécution de APBS : %1"
+msgstr "Erreur lors de l'exécution d'APBS : %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
@@ -1779,7 +1778,7 @@ msgstr "Par élément"
 
 #: qtplugins/applycolors/applycolors.cpp:69
 msgid "By Chain"
-msgstr "Par chaine"
+msgstr "Par chaîne"
 
 #: qtplugins/applycolors/applycolors.cpp:74
 msgid "By Partial Charge…"
@@ -1787,15 +1786,15 @@ msgstr "Par charge partielle…"
 
 #: qtplugins/applycolors/applycolors.cpp:79
 msgid "By Secondary Structure"
-msgstr "Par la structure secondaire"
+msgstr "Par structure secondaire"
 
 #: qtplugins/applycolors/applycolors.cpp:84
 msgid "By Amino Acid"
-msgstr "Par acides aminés"
+msgstr "Par acide aminé"
 
 #: qtplugins/applycolors/applycolors.cpp:89
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "par schéma Shapely"
 
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1809,19 +1808,19 @@ msgstr "Parula"
 #: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
-msgstr "Chaleur"
+msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
-msgstr "Chaud"
+msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
-msgstr "Gris"
+msgstr "Gray"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1883,7 +1882,7 @@ msgstr "Spectral"
 #: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1812
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr "Froid-chaud"
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1903,7 +1902,7 @@ msgstr "Balance"
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1809
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr "Bleu-RougeFoncé"
+msgstr "Blue-DarkRed"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1930,16 +1929,16 @@ msgstr "&Vue"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 msgid "Color Atoms"
-msgstr "Atomes colorés"
+msgstr "colorer les atomes"
 
 #: qtplugins/applycolors/applycolors.cpp:151
 msgid "Color Residues"
-msgstr "Résidus colorés"
+msgstr "colorer les résidus"
 
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
 msgid "Select Colormap"
-msgstr "Sélectionner la palette de couleur"
+msgstr "Sélectionner la palette de couleurs"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1948,7 +1947,7 @@ msgstr "Sélectionner la palette de couleur"
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1803
 msgid "Colormap:"
-msgstr "Carte des couleurs :"
+msgstr "Palette des couleurs :"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -1974,11 +1973,12 @@ msgstr "Afficher les hydrogènes"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr "Afficher les atomes avec des sphères et les liens avec des cylindres."
+msgstr ""
+"Représenter les atomes par des sphères et les liaisons par des cylindres."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:121
 msgid "Bond-Centric Manipulation"
-msgstr "Manipulation centrique des liaisons"
+msgstr "Manipulation axée sur les liaisons"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:124
 msgid ""
@@ -1993,16 +1993,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Outil de manipulation centrique des liaisons\n"
+"Outil de manipulation axée sur les liaisons\n"
 "\n"
-"Bouton gauche :\tcliquer et glisser pour tourner la vue.\n"
-"Bouton central :\tcliquer et glisser pour effectuer un zoom avant ou "
-"arrière.\n"
-"Bouton droit :\tcliquer et glisser pour déplacer la vue.\n"
-"Double clic :\tréinitialisation de la vue.\n"
+"Bouton gauche :\tcliquer et glisser pour tourner la vue.\n"
+"Bouton central :\tcliquer et glisser pour effectuer un zoom avant ou arrière."
 "\n"
-"Clic gauche et glisser sur une liaison pour définir le plan de "
-"manipulation :\n"
+"Bouton droit :\tcliquer et glisser pour déplacer la vue.\n"
+"Double clic :\tréinitialisation de la vue.\n"
+"\n"
+"Clic gauche et glisser sur une liaison pour définir le plan de manipulation :"
+"\n"
 "Clic gauche et glisser un des atomes de la liaison pour modifier son angle\n"
 "Clic droit et glisser un des atomes de la liaison pour modifier sa distance"
 
@@ -2025,7 +2025,7 @@ msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:168
 msgid "Bond centric manipulation tool."
-msgstr "Outil de manipulation centrique des liaisons."
+msgstr "Outil de manipulation axée sur les liaisons."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:173
 msgid ""
@@ -2040,7 +2040,7 @@ msgstr "Lier les atomes"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
-msgstr "Afficher les indices de liaison"
+msgstr "Percevoir l'ordre de liaisons"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
