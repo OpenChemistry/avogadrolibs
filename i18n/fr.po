@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-01-31 19:27+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2138,7 +2138,7 @@ msgstr "Ajouter un barycentre"
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Ajouter Perpendiculaire"
 
 #: qtplugins/centroid/centroid.h:26
 msgid "Centroid"
@@ -2290,6 +2290,8 @@ msgstr "Installer Python"
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Python est utilisé pour de nombreuses fonctionnalités Avogadro. Voulez-vous "
+"télécharger Python ?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
