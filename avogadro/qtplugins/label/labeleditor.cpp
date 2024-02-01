@@ -13,6 +13,8 @@
 #include <QAction>
 #include <QKeyEvent>
 
+#include <QDebug>
+
 namespace Avogadro::QtPlugins {
 
 using Core::Elements;
@@ -57,7 +59,7 @@ QUndoCommand* LabelEditor::keyPressEvent(QKeyEvent* e)
 {
   if (m_selected && !e->text().isEmpty()) {
     e->accept();
-    auto text = e->text()[0];
+    const QChar text = e->text()[0];
     if (text.isPrint()) {
       m_text.append(text);
     } else if (e->key() == Qt::Key_Backspace) {
@@ -77,6 +79,10 @@ void LabelEditor::save()
   m_molecule->endMergeMode();
   m_text.clear();
   m_selectedAtom = RWAtom();
+
+  // make sure the label display is made active
+  qDebug() << "Requesting active display types";
+  emit requestActiveDisplayTypes(QStringList() << "Labels");
 }
 
 QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)

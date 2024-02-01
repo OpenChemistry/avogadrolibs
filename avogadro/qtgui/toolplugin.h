@@ -137,6 +137,13 @@ signals:
    */
   void registerCommand(QString command, QString description);
 
+  /**
+   * Request a specific display type (or types) are made active.
+   * This can be useful when loading a specific type of data that
+   * would be most readily viewed with a specialized view.
+   */
+  void requestActiveDisplayTypes(QStringList displayTypes);
+
 public slots:
   /**
    * Called when the current molecule changes.
