@@ -144,8 +144,8 @@ signals:
   void requestActiveTool(QString toolName);
 
   /**
-   * Request a specific display type (or types) are active, and all others are
-   * disabled. This can be useful when loading a specific type of data that
+   * Request a specific display type (or types) are made active.
+   * This can be useful when loading a specific type of data that
    * would be most readily viewed with a specialized view.
    */
   void requestActiveDisplayTypes(QStringList displayTypes);
