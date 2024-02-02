@@ -127,7 +127,7 @@ QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
   QByteArray result, line;
   m_process->write(input + "\n");
   QThread::msleep(1);
-  m_process->waitForReadyRead(500);
+  m_process->waitForReadyRead(50);
   bool gotInvalid = false;
   while (m_process->canReadLine() && !line.startsWith("command >")) {
     line = m_process->readLine();
@@ -137,7 +137,7 @@ QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
   if (!result.contains("invalid command\n command >")) {
     m_process->write(" \n");
     QThread::msleep(1);
-    m_process->waitForReadyRead(500);
+    m_process->waitForReadyRead(50);
     while (m_process->canReadLine()) {
       line = m_process->readLine();
       result += line;

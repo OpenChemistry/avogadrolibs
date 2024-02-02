@@ -64,7 +64,7 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
-  // add the openbabel calculators first
+  // add the openbabel calculators in case they don't exist
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
@@ -261,7 +261,7 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = 5;
+  crit.iterations = 2;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
