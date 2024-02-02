@@ -31,9 +31,6 @@
 
 #include <cppoptlib/meta.h>
 #include <cppoptlib/problem.h>
-#include <cppoptlib/solver/bfgssolver.h>
-#include <cppoptlib/solver/conjugatedgradientdescentsolver.h>
-#include <cppoptlib/solver/gradientdescentsolver.h>
 #include <cppoptlib/solver/lbfgssolver.h>
 
 namespace Avogadro {
@@ -132,7 +129,11 @@ QList<QAction*> Forcefield::actions() const
 QStringList Forcefield::menuPath(QAction* action) const
 {
   QStringList path;
-  path << tr("&Extensions") << tr("&Calculate");
+  if (action->data().toInt() == optimizeAction)
+    path << tr("&Extensions");
+  else
+    path << tr("&Extensions") << tr("&Calculate");
+
   return path;
 }
 
@@ -229,7 +230,6 @@ void Forcefield::optimize()
   m_molecule->undoMolecule()->setInteractive(true);
 
   cppoptlib::LbfgsSolver<EnergyCalculator> solver;
-  // cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
 

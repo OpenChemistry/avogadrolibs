@@ -17,52 +17,6 @@
 
 namespace Avogadro::QtPlugins {
 
-class OBMMEnergy::ProcessListener : public QObject
-{
-  Q_OBJECT
-public:
-  ProcessListener(QProcess* proc)
-    : QObject(), m_finished(false), m_process(proc)
-  {
-  }
-
-  bool waitForOutput(QByteArray output, int msTimeout = 2000)
-  {
-    connect(m_process, SIGNAL(readyRead()), SLOT(readyRead()));
-    if (!wait(msTimeout))
-      return false;
-
-    // success!
-    output = m_output;
-    disconnect(m_process, nullptr, nullptr, nullptr);
-    m_finished = false;
-    return true;
-  }
-
-public slots:
-  void readyRead()
-  {
-    m_finished = true;
-    m_output = m_process->readAllStandardOutput();
-  }
-
-private:
-  bool wait(int msTimeout)
-  {
-    QTimer timer;
-    timer.start(msTimeout);
-
-    while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::AllEvents, 500);
-
-    return m_finished;
-  }
-
-  QProcess* m_process;
-  bool m_finished;
-  QByteArray m_output;
-};
-
 OBMMEnergy::OBMMEnergy(const std::string& method)
   : m_identifier(method), m_name(method), m_process(nullptr),
     m_molecule(nullptr),
@@ -127,8 +81,7 @@ QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
   QByteArray result, line;
   m_process->write(input + "\n");
   QThread::msleep(1);
-  m_process->waitForReadyRead(50);
-  bool gotInvalid = false;
+  m_process->waitForReadyRead(5);
   while (m_process->canReadLine() && !line.startsWith("command >")) {
     line = m_process->readLine();
     result += line;
@@ -137,7 +90,7 @@ QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
   if (!result.contains("invalid command\n command >")) {
     m_process->write(" \n");
     QThread::msleep(1);
-    m_process->waitForReadyRead(50);
+    m_process->waitForReadyRead(5);
     while (m_process->canReadLine()) {
       line = m_process->readLine();
       result += line;
@@ -241,7 +194,7 @@ void OBMMEnergy::setMolecule(Core::Molecule* mol)
   }
 
   QByteArray input, line, result;
-  bool ready = m_process->waitForReadyRead();
+  m_process->waitForReadyRead();
   result.clear();
   while (!result.contains("command >")) {
     result += m_process->readLine();
