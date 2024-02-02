@@ -23,10 +23,6 @@ namespace Io {
 class FileFormat;
 }
 
-namespace QtGui {
-class PythonScript;
-}
-
 namespace QtPlugins {
 
 class OBMMEnergy : public Avogadro::Calc::EnergyCalculator
@@ -73,7 +69,7 @@ public:
   /**
    * @brief Synchronous use of the QProcess.
    */
-  class ProcessListener;
+  QByteArray writeAndRead(const QByteArray& input);
 
 private:
   Core::Molecule* m_molecule;
