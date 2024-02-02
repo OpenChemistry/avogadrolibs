@@ -74,6 +74,7 @@ public:
    * @brief Synchronous use of the QProcess.
    */
   class ProcessListener;
+  QByteArray writeAndRead(const QByteArray& input);
 
 private:
   Core::Molecule* m_molecule;

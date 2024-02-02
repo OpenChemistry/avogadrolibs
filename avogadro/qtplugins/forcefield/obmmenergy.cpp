@@ -12,6 +12,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QThread>
 #include <QtCore/QTimer>
 
 namespace Avogadro::QtPlugins {
@@ -118,6 +119,34 @@ OBMMEnergy::~OBMMEnergy()
   delete m_process;
 }
 
+QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
+{
+  if (m_process == nullptr)
+    return QByteArray();
+
+  QByteArray result, line;
+  m_process->write(input + "\n");
+  QThread::msleep(1);
+  m_process->waitForReadyRead(500);
+  bool gotInvalid = false;
+  while (m_process->canReadLine() && !line.startsWith("command >")) {
+    line = m_process->readLine();
+    result += line;
+  }
+  // check if we've really flushed the output
+  if (!result.contains("invalid command\n command >")) {
+    m_process->write(" \n");
+    QThread::msleep(1);
+    m_process->waitForReadyRead(500);
+    while (m_process->canReadLine()) {
+      line = m_process->readLine();
+      result += line;
+    }
+  }
+  result += m_process->readAllStandardOutput();
+  return result;
+}
+
 void OBMMEnergy::setupProcess()
 {
   if (m_process != nullptr) {
@@ -207,45 +236,28 @@ void OBMMEnergy::setMolecule(Core::Molecule* mol)
   m_process->start(m_executable, QStringList() << m_tempFile.fileName());
   if (!m_process->waitForStarted()) {
     // appendError("Error starting process.");
+    qDebug() << "OBMM: Error starting process.";
     return;
   }
-  qDebug() << " state: " << m_process->state();
 
-  //  ProcessListener listener(m_process);
-  QByteArray line, result;
-  result = m_process->readAllStandardOutput();
-
-  // okay, we need to write "load <filename>" to the interpreter
-  // and then read the response
-  QByteArray input = "load " + m_tempFile.fileName().toLocal8Bit() + "\n\n";
-  m_process->write(input);
+  QByteArray input, line, result;
   bool ready = m_process->waitForReadyRead();
   result.clear();
   while (!result.contains("command >")) {
-    line = m_process->readLine();
-    qDebug() << " read " << line;
-    result += line;
-  }
-  m_process->readAllStandardOutput();
-
-  input = "\n";
-  m_process->write(input);
-  ready = m_process->waitForReadyRead();
-  result.clear();
-  result = m_process->readAllStandardOutput();
-  qDebug() << "OBMM: " << result;
-
-  // set the method m_identifier.c_str() +
-  qDebug() << " setting force field";
-  input = QByteArray("ff UFF\n\n");
-  m_process->write(input);
-  ready = m_process->waitForReadyRead();
-  result.clear();
-  while (!result.contains("command >")) {
     result += m_process->readLine();
+    if (!m_process->canReadLine())
+      break;
   }
   result += m_process->readAllStandardOutput();
-  qDebug() << "OBMM ff: " << result;
+
+  // set the method m_identifier.c_str() +
+  input = QByteArray("ff ") + m_identifier.c_str();
+  result = writeAndRead(input);
+
+  // okay, we need to write "load <filename>" to the interpreter
+  // and then read the response
+  input = "load " + m_tempFile.fileName().toLocal8Bit();
+  result = writeAndRead(input);
 }
 
 Real OBMMEnergy::value(const Eigen::VectorXd& x)
@@ -253,14 +265,7 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
   if (m_molecule == nullptr || m_process == nullptr)
     return 0.0; // nothing to do
 
-  QByteArray input = "\n";
-  m_process->waitForReadyRead();
-  QByteArray result;
-  while (!result.contains("command >")) {
-    result += m_process->readLine();
-  }
-  result += m_process->readAllStandardOutput();
-  qDebug() << " starting " << result;
+  QByteArray input, result;
 
   // write the new coordinates and read the energy
   input = "coord\n";
@@ -269,44 +274,23 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
     input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
              QString::number(x[i + 2]) + "\n";
   }
-  input += "\n\n";
 
-  m_process->write(input);
-  m_process->waitForReadyRead();
-  result.clear();
-  while (!result.contains("command >")) {
-    result += m_process->readLine();
-  }
-  result += m_process->readAllStandardOutput();
-
-  qDebug() << " asking energy " << result << m_process->state();
+  result = writeAndRead(input);
 
   // now ask for the energy
-  input = "energy\n\n\n";
-  m_process->write(input);
-  m_process->waitForReadyRead();
-  qDebug() << " waiting for read ";
-  result.clear();
-  while (!result.contains("command >")) {
-    result += m_process->readLine();
-  }
-  result += m_process->readAllStandardOutput();
-
-  qDebug() << "OBMM: " << result;
+  input = "energy\n";
+  result = writeAndRead(input);
 
   // go through lines in result until we see "total energy"
   QStringList lines = QString(result).remove('\r').split('\n');
   double energy = 0.0;
   for (auto line : lines) {
     if (line.contains("total energy =")) {
-      qDebug() << " OBMM: " << line;
       QStringList items = line.split(" ", Qt::SkipEmptyParts);
       if (items.size() > 4)
         energy = items[3].toDouble();
     }
   }
-
-  qDebug() << " OBMM: " << energy << " done";
 
   return energy; // if conversion fails, returns 0.0
 }
@@ -316,35 +300,19 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   if (m_molecule == nullptr || m_process == nullptr)
     return;
 
-  qDebug() << "OBMM: gradient";
-
   // write the new coordinates and read the energy
-  QByteArray input = "coord\n\n";
+  QByteArray result, input = "coord\n";
   for (Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
     input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
              QString::number(x[i + 2]) + "\n";
   }
 
-  m_process->write(input);
-  qDebug() << "OBMM Grad wrote coords";
-  QByteArray result;
-  m_process->waitForReadyRead();
-  while (m_process->canReadLine()) {
-    result += m_process->readLine();
-  }
-
-  qDebug() << "OBMM: " << result;
+  result = writeAndRead(input);
 
   // now ask for the energy
-  input = "grad\n\n";
-  m_process->write(input);
-  m_process->waitForReadyRead();
-  while (m_process->canReadLine()) {
-    result += m_process->readLine();
-  }
-
-  qDebug() << "OBMM: grad: " << result;
+  input = "grad";
+  result = writeAndRead(input);
 
   // go through lines in result until we see "gradient "
   QStringList lines = QString(result).remove('\r').split('\n');
@@ -353,13 +321,12 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   for (auto line : lines) {
     if (line.contains("gradient")) {
       readingGradient = true;
-      qDebug() << " Got a gradient ";
       continue;
     }
     if (readingGradient) {
       QStringList items = line.split(" ", Qt::SkipEmptyParts);
       if (items.size() == 3) {
-        grad[3 * i] = -1.0 * items[0].toDouble();
+        grad[3 * i] = items[0].toDouble();
         grad[3 * i + 1] = items[1].toDouble();
         grad[3 * i + 2] = items[2].toDouble();
         ++i;
@@ -367,7 +334,6 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     }
   }
 
-  qDebug() << " grad norm: " << grad.norm();
   grad *= -1; // OpenBabel outputs forces, not grads
 
   cleanGradients(grad);
