@@ -70,7 +70,8 @@ Forcefield::Forcefield(QObject* parent_)
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize"));
+  action->setText(tr("Optimize Geometry"));
+  action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   action->setData(optimizeAction);
   action->setProperty("menu priority", 920);
   connect(action, SIGNAL(triggered()), SLOT(optimize()));
