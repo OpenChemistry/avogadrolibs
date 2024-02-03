@@ -61,12 +61,12 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
+  refreshScripts();
+
   // add the openbabel calculators in case they don't exist
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
-
-  refreshScripts();
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
