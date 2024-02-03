@@ -11,7 +11,8 @@ if (BUILD_GPL_PLUGINS)
     obenergy.cpp
   )
   add_definitions(-DBUILD_GPL_PLUGINS)
-  include_directories(${OpenBabel3_INCLUDE_DIRS} ${OpenBabel3_INCLUDE_DIR})
+  include_directories(${OpenBabel3_INCLUDE_DIRS} ${OpenBabel3_INCLUDE_DIR}
+  ${AvogadroLibs_BINARY_DIR}/../prefix/include/openbabel3)
 endif()
 
 avogadro_plugin(Forcefield
