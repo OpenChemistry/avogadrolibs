@@ -65,6 +65,8 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
+  refreshScripts();
+
   // add the openbabel calculators in case they don't exist
 #ifdef BUILD_GPL_PLUGINS
   // These directly use Open Babel and are fast
