@@ -8,6 +8,10 @@
 #include "obmmenergy.h"
 #include "scriptenergy.h"
 
+#ifdef BUILD_GPL_PLUGINS
+#include "obenergy.h"
+#endif
+
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 
@@ -62,15 +66,22 @@ Forcefield::Forcefield(QObject* parent_)
   settings.endGroup();
 
   // add the openbabel calculators in case they don't exist
+#ifdef BUILD_GPL_PLUGINS
+  Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
+  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
+  Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
+#else
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
+#endif
 
   refreshScripts();
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize"));
+  action->setText(tr("Optimize Geometry"));
+  action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   action->setData(optimizeAction);
   action->setProperty("menu priority", 920);
   connect(action, SIGNAL(triggered()), SLOT(optimize()));

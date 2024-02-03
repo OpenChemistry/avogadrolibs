@@ -5,6 +5,15 @@ set(forcefield_srcs
   scriptenergy.cpp
 )
 
+if (BUILD_GPL_PLUGINS)
+  find_package(OpenBabel3 REQUIRED)
+  list(APPEND forcefield_srcs
+    obenergy.cpp
+  )
+  add_definitions(-DBUILD_GPL_PLUGINS)
+  include_directories(${OpenBabel3_INCLUDE_DIRS} ${OpenBabel3_INCLUDE_DIR})
+endif()
+
 avogadro_plugin(Forcefield
   "Force field optimization and dynamics"
   ExtensionPlugin
@@ -15,6 +24,10 @@ avogadro_plugin(Forcefield
 )
 
 target_link_libraries(Forcefield PRIVATE Avogadro::Calc)
+
+if (BUILD_GPL_PLUGINS)
+  target_link_libraries(Forcefield PRIVATE OpenBabel3)
+endif()
 
 # Bundled forcefield scripts
 set(forcefields

@@ -45,7 +45,6 @@ OpenBabel::OpenBabel(QObject* p)
   auto* action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Optimize Geometry"));
-  action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
   m_actions.push_back(action);
 
