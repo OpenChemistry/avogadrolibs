@@ -6,7 +6,7 @@
 #  OpenBabel3_INCLUDE_DIRS - the OpenBabel include directories
 #  OpenBabel3_LIBRARY      - The OpenBabel library
 #
-find_path(OpenBabel3_INCLUDE_DIR openbabel3)
+find_path(OpenBabel3_INCLUDE_DIR openbabel3/openbabel/babelconfig.h)
 find_library(OpenBabel3_LIBRARY NAMES openbabel openbabel3)
 
 include(FindPackageHandleStandardArgs)

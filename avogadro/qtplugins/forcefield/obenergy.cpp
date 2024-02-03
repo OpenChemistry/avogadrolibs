@@ -8,8 +8,9 @@
 
 #include <avogadro/core/molecule.h>
 
-#include <openbabel/atom.h>
 #include <openbabel/babelconfig.h>
+
+#include <openbabel/atom.h>
 #include <openbabel/base.h>
 #include <openbabel/forcefield.h>
 #include <openbabel/math/vector3.h>
