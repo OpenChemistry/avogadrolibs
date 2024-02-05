@@ -6,13 +6,14 @@
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
 # Alexandre R Soares <ntegti@zipmail.com.br>, 2021.
 # "Kirito ._." <kiritokunn18@gmail.com>, 2024.
+# Iago Emanuel <iagoemanuel@live.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-11 10:06+0000\n"
-"Last-Translator: \"Kirito ._.\" <kiritokunn18@gmail.com>\n"
+"PO-Revision-Date: 2024-02-05 22:54+0000\n"
+"Last-Translator: Iago Emanuel <iagoemanuel@live.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1104,7 +1105,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "Mensagem %1"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -1239,7 +1240,7 @@ msgstr "Ilustração"
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Fechar contatos"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1399,7 +1400,7 @@ msgstr "Adicionar Camada"
 
 #: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Adicionar camada de informação"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
