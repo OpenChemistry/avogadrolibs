@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-05 21:21+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-05 22:54+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3367,7 +3367,7 @@ msgstr ""
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
-msgstr "Atomes de râle comme la réglisse / bâtons."
+msgstr "Faire un rendu d'atomes comme bâtonnets."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
@@ -3383,9 +3383,8 @@ msgid "No descriptors found!"
 msgstr "Aucun descripteur n'a été trouvé !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
-#, fuzzy
 msgid "No line format readers found!"
-msgstr "Lecteur de format sur une ligne non trouvé !"
+msgstr "Aucun éditeur de texte ligne par ligne n'a pas été trouvé !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "Unable to load requested format reader."
@@ -3398,6 +3397,8 @@ msgstr "LineFormatInput"
 #: qtplugins/lineformatinput/lineformatinput.h:54
 msgid "Load single-line molecule descriptors through an input dialog."
 msgstr ""
+"Charger des descripteurs d'une seule ligne pour une molécule par le biais "
+"d'un dialogue de saisie."
 
 #: qtplugins/manipulator/manipulator.cpp:49
 msgid "Manipulate"
@@ -3470,7 +3471,7 @@ msgstr "Opacité :"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
-msgstr ""
+msgstr "Faire un rendu du maillage des polygones."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
@@ -3579,10 +3580,8 @@ msgid "Zoom the scene."
 msgstr "Magnifier la scène."
 
 #: qtplugins/navigator/navigator.cpp:56
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Translation d'atomes..."
+msgstr "&Translater la scène."
 
 #: qtplugins/navigator/navigator.cpp:97
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3662,18 +3661,17 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:113
 msgid "&Open Babel"
-msgstr "&OpenBabel"
+msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:120
 msgid "The Open Babel file formats are not ready to be added."
-msgstr "Les formats de fichiers de OpenBabel ne sont pas prêt à être ajouté."
+msgstr "Les formats de fichiers d'Open Babel ne sont pas prêt à être ajouté."
 
 #: qtplugins/openbabel/openbabel.cpp:204
 msgid "Loading molecule from Open Babel…"
-msgstr "Chargement de la molécule depuis OpenBabel…"
+msgstr "Chargement de la molécule depuis Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:210
-#, fuzzy
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
@@ -3685,11 +3683,11 @@ msgstr ""
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr ""
-"Une erreur interne s'est produite pendant l'exécution de OpenBabel (%1)."
+"Une erreur interne s'est produite pendant l'exécution de Open Babel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:229
 msgid "Error parsing openbabel output."
-msgstr "Erreur lors de l'analyse des résultats de OpenBabel."
+msgstr "Erreur lors de l'analyse des résultats d'Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:371 qtplugins/openbabel/openbabel.cpp:399
 #: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
@@ -3707,11 +3705,11 @@ msgstr "Molécule invalide. La géométrie ne peut pas être optimisée."
 
 #: qtplugins/openbabel/openbabel.cpp:442
 msgid "Cannot optimize geometry with Open Babel."
-msgstr "Impossible d'optimiser la géométrie avec OpenBabel."
+msgstr "Impossible d'optimiser la géométrie avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:467
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "Optimisation de la géométrie (OpenBabel)"
+msgstr "Optimisation de la géométrie (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
 msgid "Generating…"
@@ -3723,7 +3721,7 @@ msgid ""
 "the current molecule."
 msgstr ""
 "Une erreur interne s'est produite lors de la génération d'une représentation "
-"OpenBabel de la molécule actuelle."
+"Open Babel de la molécule actuelle."
 
 #: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
 #, qt-format
@@ -3749,9 +3747,8 @@ msgstr "Mise à jour de la molécule…"
 
 #: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
 #: qtplugins/openbabel/openbabel.cpp:770 qtplugins/openbabel/openbabel.cpp:952
-#, fuzzy
 msgid "Error interpreting Open Babel output."
-msgstr "Erreur lors de l'interprétation de la sortie de OpenBabel."
+msgstr "Erreur lors de l'interprétation de la sortie de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
 #: qtplugins/openbabel/openbabel.cpp:782
@@ -3781,7 +3778,7 @@ msgstr "Générer des conformères"
 
 #: qtplugins/openbabel/openbabel.cpp:721
 msgid "Cannot open file with Open Babel."
-msgstr "Impossible d'ouvrir le fichier avec OpenBabel."
+msgstr "Impossible d'ouvrir le fichier avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:727
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3789,7 +3786,7 @@ msgstr "Molécule invalide : Impossible de percevoir les liaisons."
 
 #: qtplugins/openbabel/openbabel.cpp:733
 msgid "Perceiving Bonds (Open Babel)"
-msgstr "Percevoir les liaisons (OpenBabel)"
+msgstr "Percevoir les liaisons (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:734
 msgid "Generating XYZ representation…"
@@ -3806,29 +3803,29 @@ msgstr "Conversion de XYZ en Open Babel avec %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:762
 msgid "Updating molecule from Open Babel…"
-msgstr "Mise à jour la molécule depuis OpenBabel…"
+msgstr "Mise à jour la molécule depuis Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:814 qtplugins/openbabel/openbabel.cpp:856
 msgid "Cannot add hydrogens with Open Babel."
-msgstr "Impossible d'ajouter des hydrogènes avec OpenBabel."
+msgstr "Impossible d'ajouter des hydrogènes avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:819 qtplugins/openbabel/openbabel.cpp:869
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Ajouter des hydrogènes (OpenBabel)"
+msgstr "Ajouter des hydrogènes (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:820
 msgid "Generating Open Babel input…"
-msgstr "Génération des données d'entrée pour OpenBabel…"
+msgstr "Génération des données d'entrée pour Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
 msgid "Error generating Open Babel input."
-msgstr "Erreur lors de la génération de données d'entrée de OpenBabel."
+msgstr "Erreur lors de la génération de données d'entrée de Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
 #: qtplugins/openbabel/openbabel.cpp:933
 #, qt-format
 msgid "Running %1…"
-msgstr "%1 en cours…"
+msgstr "En cours de l’exécution %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:863
 msgid "Add hydrogens for pH"
@@ -3840,39 +3837,39 @@ msgstr "pH :"
 
 #: qtplugins/openbabel/openbabel.cpp:870 qtplugins/openbabel/openbabel.cpp:912
 msgid "Generating obabel input…"
-msgstr "Génération de l'entrée d'Obabel…"
+msgstr "Génération de l'entrée d'Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:906
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr "Impossible de supprimer les hydrogènes avec OpenBabel."
+msgstr "Impossible de supprimer les hydrogènes avec Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:911
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Supprimer les hydrogènes (OpenBabel)"
+msgstr "Supprimer les hydrogènes (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:920
 msgid "Error generating Open Babel data."
-msgstr "Erreur lors de la génération des données de OpenBabel."
+msgstr "Erreur lors de la génération des données d'Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:943
 msgid "Reading obabel output…"
-msgstr "Lecture des résultats de Obabel…"
+msgstr "Lecture des résultats d'Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:1006
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
-"OpenBabel est déjà en cours d'exécution. Attendez que l'opération soit "
+"Open Babel est déjà en cours d'exécution. Attendez que l'opération soit "
 "terminée et réessayez."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
-msgstr "OpenBabel"
+msgstr "Open Babel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr "Interagir avec les fonctionnalités d'OpenBabel."
+msgstr "Interagir avec les fonctionnalités d'Open Babel."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -3891,7 +3888,7 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
-"Souhaitez-vous mettre à jour le texte de l'aperçu, en perdant tous les "
+"Souhaitez-vous de mettre à jour le texte de l'aperçu, en perdant tous les "
 "changements effectués dans le panneau d'aperçu de la plate-forme d'entrée "
 "d'OpenMM ?"
 
@@ -3914,14 +3911,12 @@ msgstr "gro"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1295
-#, fuzzy
 msgid "input.prmtop"
-msgstr "entrée.prmtop"
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
-#, fuzzy
 msgid "input.top"
-msgstr "entrée.top"
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
@@ -3935,9 +3930,8 @@ msgid "prmtop"
 msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
-#, fuzzy
 msgid "top"
-msgstr "haut"
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3947,7 +3941,6 @@ msgstr "haut"
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1412 rc.cpp:1427
-#, fuzzy
 msgid "True"
 msgstr "Vrai"
 
@@ -4043,9 +4036,8 @@ msgid "Movie (*.avi)"
 msgstr "Vidéo (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:957
-#, fuzzy
 msgid "Error: cannot add frame to video."
-msgstr "Erreur : ne peut ajouter de trame à la vidéo."
+msgstr "Erreur : ne peut ajouter la trame à la vidéo."
 
 #: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
@@ -4066,7 +4058,7 @@ msgstr "Tracer la fonction de distribution des paires (PDF)…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
-msgstr "Échec de génération d'un modèle PDF"
+msgstr "Échec de générer un modèle PDF"
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
@@ -4095,12 +4087,11 @@ msgstr "Générer et tracer une courbe RMSD."
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
-msgstr "Tracer le diagramme XRD théorique…"
+msgstr "Tracer le diffractogramme XRD théorique…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
-#, fuzzy
 msgid "Failed to generate XRD pattern"
-msgstr "Échec lors de la génération du modèle XRD"
+msgstr "Échec de générer un diffractogramme XRD théorique"
 
 #: qtplugins/plotxrd/plotxrd.cpp:157
 msgid "Failed to convert molecule to CIF format."
@@ -4163,14 +4154,14 @@ msgid "Downloading %1 to %2\n"
 msgstr "Téléchargement de %1 vers %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:379
-#, fuzzy, qt-format
+#, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extraction de %1 vers %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:382
-#, fuzzy, qt-format
+#, qt-format
 msgid "Finished %1 files\n"
-msgstr "%1 fichiers terminés\n"
+msgstr "%1 fichiers traités\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:386
 msgid "Extraction successful\n"
@@ -4196,10 +4187,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr "Télécharger les greffons depuis les répertoires GitHub."
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
-#| msgid "VRML Render…"
 msgid "PLY Render…"
-msgstr "Rendu VRML…"
+msgstr "Rendu PLY…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4232,7 +4221,7 @@ msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Faire un rendu avec POV-Ray."
 
 #: qtplugins/propertytables/propertymodel.cpp:411
 msgid "Valence"
@@ -4398,8 +4387,8 @@ msgstr "Propriétés des résidus…"
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
-"Tableaux d'affichage et de modification des propriétés des atomes, des "
-"liaisons, des angles et des angles de torsion."
+"Tableaux pour afficher et modifier des propriétés des atomes, des liaisons, "
+"des angles et des angles de torsion."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
@@ -4435,7 +4424,7 @@ msgstr "Propriétés de la molécule"
 
 #: qtplugins/propertytables/propertyview.cpp:231
 msgid "Export CSV"
-msgstr "Export CSV"
+msgstr "Export en format CSV"
 
 #: qtplugins/propertytables/propertyview.cpp:232
 msgid "CSV Files (*.csv);;All Files (*)"
@@ -4524,7 +4513,6 @@ msgid "Load electrostatic models from external scripts."
 msgstr "Chargez des modèles électrostatiques à partir de scripts externes."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
-#, fuzzy
 msgid "Script File Formats"
 msgstr "Formats des fichiers script"
 
@@ -4631,12 +4619,10 @@ msgstr "Sélectionner le résidu"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1917
-#, fuzzy
 msgid "Select"
 msgstr "Sélectionner"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
-#, fuzzy
 msgid "Selection"
 msgstr "Sélection"
 
@@ -4685,7 +4671,7 @@ msgstr "Symétriser"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
-msgstr "Remplir la maille élémentaire…"
+msgstr "Remplir la maille…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:315
@@ -4799,17 +4785,12 @@ msgstr "Plot des Spectres…"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1676
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Spectra"
-msgstr "Spectral"
+msgstr "Spectres"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "Montre spectres et mode vibrationnels."
+msgstr "Afficher les spectres."
 
 #: qtplugins/spectra/spectradialog.cpp:201
 msgid "Infrared"
@@ -4908,7 +4889,7 @@ msgstr "accessible au solvant"
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Excluded"
-msgstr "Solvant Exclus"
+msgstr "solvant exclus"
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
 msgid "Molecular Orbital"
@@ -4948,36 +4929,31 @@ msgstr "Créer les surfaces…"
 
 #: qtplugins/surfaces/surfaces.cpp:111
 msgid "Render the van der Waals surface."
-msgstr "Affiche la surface van der Waals."
+msgstr "Faire un rendu la surface van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:113
 msgid "Render the van der Waals molecular surface."
-msgstr "Faire une rendu de la surface molécule van der Waals."
+msgstr "Faire un rendu de la surface moléculaire van der Waals."
 
 #: qtplugins/surfaces/surfaces.cpp:115
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Faire une rendu de la surface moléculaire accessible au solvant."
+msgstr "Faire un rendu de la surface moléculaire accessible au solvant."
 
 #: qtplugins/surfaces/surfaces.cpp:117
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "Faire une rendu de la molécule en fil de fer."
+msgstr "Faire un rendu de la surface moléculaire du solvant exclu."
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
 msgid "Render a molecular orbital."
-msgstr "Faire un rendu de l'orbitale moléculaire."
+msgstr "Faire un rendu d'une orbitale moléculaire."
 
 #: qtplugins/surfaces/surfaces.cpp:121
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Rendre la densité électronique."
+msgstr "Faire un rendu de la densité électronique."
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Render the scene using VRML."
 msgid "Render the spin density."
-msgstr "Faire un rendu de la scène avec VRML."
+msgstr "Faire un rendu de la densité spin."
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a cube supplied with the file."
@@ -5043,13 +5019,12 @@ msgstr "Symétrie…"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/symmetry/symmetry.h:34:1887
-#, fuzzy
 msgid "Symmetry"
 msgstr "Symétrie"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
-msgstr ""
+msgstr "Fournir une fonctionnalité de symétrie."
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
