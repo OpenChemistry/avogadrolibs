@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-01-31 23:41+0000\n"
+"PO-Revision-Date: 2024-02-03 19:01+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -4904,7 +4904,7 @@ msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "Spectres de dichroïsme circulaire"
 
 #: qtplugins/spectra/spectradialog.cpp:398
 msgid "eV)"
@@ -4927,10 +4927,8 @@ msgid "Electron Density"
 msgstr "Densité électronique"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Density"
 msgid "Spin Density"
-msgstr "Densité"
+msgstr "Densité spin"
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
@@ -4998,9 +4996,8 @@ msgid "Calculating electron density"
 msgstr "Calcul de la densité électronique en cours"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Calcul de la densité électronique en cours"
+msgstr "Calcul de la densité spin en cours"
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
