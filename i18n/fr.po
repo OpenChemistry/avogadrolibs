@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-03 19:01+0000\n"
+"PO-Revision-Date: 2024-02-05 21:21+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -41,7 +41,7 @@ msgid ""
 "%1"
 msgstr ""
 "La sortie du script --print-options doit être un objet JSON à la racine. "
-"Reçu :\n"
+"Reçu :\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:210
@@ -79,7 +79,7 @@ msgid ""
 "%1"
 msgstr ""
 "Le fichier d'entrée est mal structuré : le nom du fichier ou le contenu sont "
-"manquants ou ne sont pas des textes :\n"
+"manquants ou ne sont pas une des chaînes des caractères :\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:411
@@ -289,7 +289,7 @@ msgstr "La tâche n'a pas pu aboutir complètement."
 
 #: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr "Le script à renvoyé ces avertissements :\n"
+msgstr "Le script à renvoyé des avertissements :\n"
 
 #: molequeue/inputgeneratorwidget.cpp:368
 msgid "Hide &Warnings"
@@ -305,7 +305,7 @@ msgstr "Une erreur est survenue :"
 
 #: molequeue/inputgeneratorwidget.cpp:442
 msgid "Select output filename"
-msgstr "Sélectionnez un fichier de sortie"
+msgstr "Sélectionnez le nom du fichier de sortie"
 
 #: molequeue/inputgeneratorwidget.cpp:454
 #, qt-format
@@ -382,8 +382,8 @@ msgstr "%1 : Ce fichier n'est pas inscriptible."
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
-"Les fichiers d'entrée n'ont pas pu être inscrits à cause d'une erreur "
-"inconnue."
+"En raison d'une erreur inconnue, il est impossible d'écrire les fichiers "
+"d'entrée."
 
 #: molequeue/inputgeneratorwidget.cpp:537
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -452,7 +452,7 @@ msgstr "Soumettre la tâche à MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr "Délai de soumission de tâche expiré"
+msgstr "Délai de soumission de tâche est expiré"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
@@ -474,7 +474,7 @@ msgstr "Récupération des informations sur les tâches terminées…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr "Délai de tâche dépassé"
+msgstr "Délai de tâche est dépassé"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
@@ -502,7 +502,7 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr "Échec du client de soumettre une tâche à MoleQueue."
+msgstr "Échec du client pour soumettre une tâche à MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
@@ -1027,7 +1027,7 @@ msgstr "Sélectionner un fichier exécutable :"
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
-"Impossible de trouver un lecteur de fichier approprié pour le fichier "
+"Impossible de trouver un lecteur de fichiers approprié pour le fichier "
 "sélectionné."
 
 #: qtgui/fileformatdialog.cpp:100
@@ -1035,8 +1035,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
-"L'extension de fichier est manquante et le format ne peut pas être défini. "
-"Voulez-vous l'ajouter ?"
+"L'extension de fichier est manquante, le format ne peut donc pas être "
+"déterminé. Voulez-vous l'ajouter ?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1147,7 +1147,7 @@ msgstr "Titre"
 
 #: qtgui/jsonwidget.cpp:181
 msgid "Filename Base"
-msgstr "Base du nom de fichier"
+msgstr "Nome de Base du fichier"
 
 #: qtgui/jsonwidget.cpp:186
 msgid "Processor Cores"
@@ -1241,7 +1241,7 @@ msgstr "Contacts proches"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr "Réseau de Bravais"
+msgstr "Réseau Cristallin"
 
 #: qtgui/layermodel.cpp:143 qtplugins/force/force.h:28
 msgid "Force"
@@ -1406,7 +1406,7 @@ msgstr "Supprimer l'atome"
 
 #: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
-msgstr "Effacer les atomes"
+msgstr "Supprimer les atomes"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1452,7 +1452,7 @@ msgstr "Supprimer les liaisons"
 
 #: qtgui/rwmolecule.cpp:320
 msgid "Set Bond Orders"
-msgstr "Définir l'ordre de liaison"
+msgstr "Définir l'ordre de liaisons"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
@@ -1468,15 +1468,15 @@ msgstr "Mettre à jour la liaison"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell"
-msgstr "Ajouter une maille élémentaire"
+msgstr "Ajouter une maille"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
-msgstr "Supprimer la maille élémentaire"
+msgstr "Supprimer la maille"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
-msgstr "Modifier la maille élémentaire"
+msgstr "Modifier la maille"
 
 #: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
@@ -1513,7 +1513,7 @@ msgstr "Symétriser la maille"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
-msgstr "Remplir la maille élémentaire"
+msgstr "Remplir la maille"
 
 #: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1674,7 +1674,7 @@ msgstr "Erreur OpenDX"
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr "Erreur lors de la lecture du fichier OpenDX : %1"
+msgstr "Erreur de lecture du fichier OpenDX : %1"
 
 #: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
@@ -1738,7 +1738,7 @@ msgstr "Erreur lors de l'exécution d'APBS : %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
-msgstr "Veuillez spécifier un fichier PDB"
+msgstr "Veuillez spécifier le fichier PDB"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -2138,7 +2138,7 @@ msgstr "Ajouter un barycentre"
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr "Ajouter Perpendiculaire"
+msgstr "Ajouter une Perpendiculaire"
 
 #: qtplugins/centroid/centroid.h:26
 msgid "Centroid"
@@ -2191,7 +2191,7 @@ msgstr "Épaisseur de la ligne :"
 
 #: qtplugins/closecontacts/closecontacts.h:34
 msgid "Render close contacts between atoms."
-msgstr "Afficher les contact étroits entre les atomes."
+msgstr "Afficher les contact proche entre les atomes."
 
 #: qtplugins/closecontacts/closecontacts.h:52
 msgid "Contact"
@@ -2227,8 +2227,8 @@ msgstr "ColorOpacityMap"
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
 msgstr ""
-"Modifier la palette d'opacité des couleurs, principalement pour le rendu des "
-"volumes."
+"Modifier la palette d'opacité des couleurs, principalement pour les rendus "
+"des volumes."
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
@@ -2246,7 +2246,7 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
-"Erreur lors de la lecture du fichier de sortie « %1 » :\n"
+"Erreur de lecture du fichier de sortie « %1 » :\n"
 "%2"
 
 #: qtplugins/commandscripts/command.cpp:215
@@ -2442,7 +2442,7 @@ msgstr "Modifier les coordonnées de l’atome"
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
 #: qtplugins/label/label.cpp:167:1845 rc.cpp:1875
 msgid "Custom"
-msgstr "Personnalisée"
+msgstr "Personnalisé"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:634
 msgid "XYZ format (symbols)"
@@ -2629,7 +2629,6 @@ msgstr "EWALD"
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
-#, fuzzy
 msgid "NONE"
 msgstr "AUCUN"
 
@@ -2657,7 +2656,7 @@ msgstr "DENSITÉS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr "REDEMARRER_L'HISTORIQUE"
+msgstr "REDÉMARRER_L'HISTORIQUE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
@@ -2689,7 +2688,7 @@ msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
 msgid "Steepest descent"
-msgstr "Décente la plus forte"
+msgstr "Descente la plus forte"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
 #: qtplugins/gamessinput/gamessinputdialog.cpp:418
@@ -2753,11 +2752,11 @@ msgstr "&Cristal"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr "Supprimer la &maille élémentaire"
+msgstr "Supprimer la &maille"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr "Afficher la &maille élémentaire"
+msgstr "Afficher la &maille"
 
 #: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
@@ -2772,13 +2771,12 @@ msgid "Rotate the unit cell to the standard orientation."
 msgstr "Tourner la maille pour obtenir l'orientation standard."
 
 #: qtplugins/crystal/crystal.cpp:215
-#, fuzzy
 msgid "Niggli Reduce Crystal"
-msgstr "Réduire le cristal Niggli"
+msgstr "Réduire le cristal (algorithme Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "The unit cell is already reduced."
-msgstr "Cette maille conventionnelle est déjà réduite."
+msgstr "Cette maille est déjà réduite."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
@@ -2789,10 +2787,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Outils axés sur l'édition et l'analyse des cristaux."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Couleurs :"
+msgstr "Couleurs d'axes :"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -2930,7 +2926,7 @@ msgstr "Le téléchargement depuis le réseau a échoué"
 #: qtplugins/fetchpdb/fetchpdb.cpp:105
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr "Délai d'attente du réseau expiré, ou autre erreur."
+msgstr "Délai d'attente du réseau est expiré, ou autre erreur."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:123
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -2964,10 +2960,8 @@ msgid "Focus the view on specific features."
 msgstr "Focaliser la vue sur des caractéristiques spécifiques."
 
 #: qtplugins/force/force.h:33
-#, fuzzy
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
-"Modéliser la visualisation du champs de force pour les atomes de la molécule."
+msgstr "Faire un rendu du champs de force pour les atomes de la molécule."
 
 #: qtplugins/forcefield/forcefield.cpp:75
 msgid "Optimize"
@@ -3081,7 +3075,6 @@ msgid "Frequencies"
 msgstr "Fréquences"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:303
-#, fuzzy
 msgid "Core Potential"
 msgstr "Potentiel de cœur"
 
@@ -3147,7 +3140,7 @@ msgstr "Supprimer les hydrogènes &supplémentaires"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr "&Retirer tous les hydrogènes"
+msgstr "&Supprimer tous les hydrogènes"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
@@ -3239,7 +3232,7 @@ msgstr "Cristal…"
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr "Erreur lors de lecture du fichier (%1)."
+msgstr "Erreur de lecture du fichier (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
@@ -3278,7 +3271,6 @@ msgstr "Distance du centre :"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/label/label.cpp:159 qtplugins/label/label.cpp:186:1394
-#, fuzzy
 msgid "None"
 msgstr "Rien"
 
