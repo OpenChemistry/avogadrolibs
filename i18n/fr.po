@@ -12,9 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-05 22:59+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-02-05 23:04+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5116,13 +5115,11 @@ msgstr "Arrêter l'animation des vibrations."
 
 #: qtplugins/vibrations/vibrations.h:33
 msgid "Vibrations"
-msgstr "Vibration"
+msgstr "Vibrations"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display vibrational modes."
-msgstr "Montre spectres et mode vibrationnels."
+msgstr "Afficher les modes vibrationnels."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -5142,7 +5139,7 @@ msgstr "Faire un rendu de la scène avec VRML."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
-msgstr "Faire une rendu de la molécule en fil de fer."
+msgstr "Faire un rendu de la molécule en fil de fer."
 
 #: qtplugins/yaehmop/yaehmop.cpp:91
 msgid "Calculate Band Structure…"
