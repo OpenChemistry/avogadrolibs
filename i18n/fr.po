@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-05 23:04+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5151,7 +5151,7 @@ msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:210 qtplugins/yaehmop/yaehmop.cpp:434
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr "Impossible de calculer la structure de la bande : pas de cellule !"
+msgstr "Impossible de calculer la structure de bandes : pas de maille !"
 
 #: qtplugins/yaehmop/yaehmop.cpp:300
 #, qt-format
