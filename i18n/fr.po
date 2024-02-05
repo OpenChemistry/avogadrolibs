@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-05 22:54+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3388,7 +3388,7 @@ msgstr "Aucun éditeur de texte ligne par ligne n'a pas été trouvé !"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "Impossible de charger le lecteur de format demandé."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -5098,10 +5098,8 @@ msgid "Show the vibrational modes dialog."
 msgstr "Afficher la boîte de dialogue des modes vibrationnels."
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Set the vibrational mode."
-msgstr "Modes vibratoires"
+msgstr "Réglez le mode vibrationnel."
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
