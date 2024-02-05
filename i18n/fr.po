@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-05 21:21+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1098,7 +1098,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr "%1 message"
+msgstr "%1 Message"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -1551,7 +1551,7 @@ msgstr "Impossible d’charger le script %1"
 #: qtgui/scriptloader.cpp:68
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr "Rechercher des scripts %1 dans le chemin de %2"
+msgstr "Vérification des scripts %1 dans le chemin %2"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
@@ -3367,7 +3367,7 @@ msgstr ""
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
-msgstr ""
+msgstr "Atomes de râle comme la réglisse / bâtons."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
