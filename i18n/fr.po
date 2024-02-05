@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-05 23:32+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-05 23:36+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5312,13 +5312,13 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
-"<html><head/><body><p><p>Vérifiez pour éviter que ce travail ne s'affiche "
-"dans l'interface utilisateur MoleQueue par défaut</p></body></html>"
+"<html><head/><body><p>Test pour éviter que cette tâche apparaisse dans "
+"l'interface graphique de MoleQueue par défaut.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr "Masquer la tâche dans MoleQueue :"
+msgstr "Masquer la tâche dans MoleQueue :"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
