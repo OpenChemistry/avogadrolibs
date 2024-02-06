@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-06 00:09+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5757,8 +5758,6 @@ msgstr "Poisson EWALD Alpha"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_23)
-#, fuzzy
-#| msgid "Poiosson EWALD GMAX"
 msgid "Poisson EWALD GMAX"
 msgstr "Poisson EWALD GMAX"
 
