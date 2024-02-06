@@ -5803,7 +5803,7 @@ msgstr "OUTER EPS SCF"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
-msgstr ""
+msgstr "OT T MINIMIZER"
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
