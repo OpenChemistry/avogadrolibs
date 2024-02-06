@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-06 00:51+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7285,7 +7286,7 @@ msgstr "VariableVerlet"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:537
 #. i18n: ectx: property (text), widget (QLabel, label_timestep)
 msgid "Timestep:"
-msgstr ""
+msgstr "Période de temps :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
