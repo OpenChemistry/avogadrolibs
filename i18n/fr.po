@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-06 00:09+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5743,12 +5743,12 @@ msgstr ""
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:304
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "FF RCUT NB"
-msgstr ""
+msgstr "FF RCUT NB"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:341
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Poisson EWALD type"
-msgstr ""
+msgstr "Poisson EWALD type"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_11)
