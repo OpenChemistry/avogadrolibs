@@ -5793,7 +5793,7 @@ msgstr "SCF GUESS"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
-msgstr ""
+msgstr "OUTER MAX SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
 #. i18n: ectx: property (text), widget (QLabel, label_25)
