@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-06 00:22+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-06 00:40+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5985,7 +5985,7 @@ msgstr "Convergence de l'énergie :"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Step limit:"
-msgstr "Limite d'étape :"
+msgstr "Limite d'étapes :"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:59
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
@@ -6035,7 +6035,7 @@ msgstr "Méthode d'optimisation"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force field:"
-msgstr "Champs de force :"
+msgstr "Champs de force :"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:142
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
@@ -6107,7 +6107,7 @@ msgstr "inchi"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Search By: "
-msgstr "Rechercher par : "
+msgstr "Rechercher par : "
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6191,7 +6191,7 @@ msgstr "T"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Sequence:"
-msgstr "Séquence :"
+msgstr "Séquence :"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
@@ -6225,12 +6225,12 @@ msgstr "Autre"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Bases Per Turn:"
-msgstr "Bases par tour :"
+msgstr "Bases par tour :"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Strands:"
-msgstr "Brins :"
+msgstr "Brins :"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
@@ -6502,12 +6502,12 @@ msgstr "Température"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
-msgstr "Sélectionnez le nombre de chaines Nosé-Hoover dans l'ensemble NVT."
+msgstr "Sélectionnez le nombre de chaînes Nosé-Hoover dans l'ensemble NVT."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "NH Chains"
-msgstr "Chaines NH"
+msgstr "Chaînes NH"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:393
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -6724,14 +6724,14 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:784
 #. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
+#, fuzzy
 msgid "Zero Angular Momentum"
 msgstr "Quantité de mouvement angulaire nulle"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:807
 #. i18n: ectx: property (toolTip), widget (QLabel, label_10)
 msgid "Control the thermodynamic output during the simulation."
-msgstr ""
-"Vérifier le fichier de sortie de la thermodynamique pendant la simulation."
+msgstr "Contrôler la sortie thermodynamique pendant la simulation."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -6741,7 +6741,7 @@ msgstr "Sortie"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Output Interval"
-msgstr "Intervalle de fichier de sortie"
+msgstr "Intervalle de sortie"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
@@ -6857,8 +6857,6 @@ msgstr "Méthode"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of conformers"
 msgid "Number of conformers:"
 msgstr "Nombre de conformères :"
 
