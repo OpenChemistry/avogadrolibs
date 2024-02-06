@@ -5783,7 +5783,7 @@ msgstr "MAX SCF"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:505
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "EPS SCF"
-msgstr ""
+msgstr "EPS SCF"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
 #. i18n: ectx: property (text), widget (QLabel, label_13)
