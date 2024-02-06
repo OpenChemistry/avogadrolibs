@@ -17,4 +17,5 @@ target_link_libraries(NetworkDatabases
 if(WIN32)
   # for https support
   target_link_libraries(NetworkDatabases PRIVATE OpenSSL::SSL OpenSSL::Crypto OpenSSL::applink)
+  install(FILES ${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY} DESTINATION ${INSTALL_RUNTIME_DIR})
 endif()
