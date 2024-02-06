@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-06 01:16+0000\n"
+"PO-Revision-Date: 2024-02-06 01:18+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -8110,7 +8110,7 @@ msgstr "nitro"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr "phenyl"
+msgstr "phényle"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
