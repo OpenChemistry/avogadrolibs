@@ -12,9 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
-"PO-Revision-Date: 2024-02-06 00:51+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-02-06 00:53+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7296,7 +7295,7 @@ msgstr " fs"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
-msgstr "Erreur de tolérance :"
+msgstr "Tolérance d'erreur :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
@@ -7326,7 +7325,7 @@ msgstr "Monte Carlo"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
 msgid "Pressure:"
-msgstr "Pression :"
+msgstr "Pression :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:669
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, pressureSpin)
@@ -7341,7 +7340,7 @@ msgstr "Intervalle du régulateur barostatique"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
 msgid "Reporters:"
-msgstr "Reporteurs :"
+msgstr "Reporteurs :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
