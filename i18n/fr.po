@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-01-04 01:57+0000\n"
 "PO-Revision-Date: 2024-02-06 01:03+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7669,10 +7669,8 @@ msgstr "Taille de caractères :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
