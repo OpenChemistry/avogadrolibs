@@ -65,22 +65,12 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
-  // add the openbabel calculators in case they don't exist
-#ifdef BUILD_GPL_PLUGINS
-  // These directly use Open Babel and are fast
-  Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
-  Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
-#endif
-
   refreshScripts();
 
-#ifndef BUILD_GPL_PLUGINS
   // These call obmm and can be slow
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
-#endif
 
   QAction* action = new QAction(this);
   action->setEnabled(true);
