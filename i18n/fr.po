@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-07 23:23+0000\n"
+"PO-Revision-Date: 2024-02-07 23:51+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -6948,8 +6948,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
-"méthode de notation pour l'algorithme génétique (RMSD = distance "
-"géométrique, énergie = énergie inférieure)"
+"méthode d'évaluation de l'algorithme génétique (RMSD = distance géométrique, "
+"énergie = énergie les plus basses)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -6964,7 +6964,7 @@ msgstr "Algorithme d'optimisation :"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
+msgstr "Technique de la recherche linéaire :"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
@@ -6989,7 +6989,7 @@ msgstr "Méthode de Newton"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "limiter les interactions non-covalentes"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7016,17 +7016,17 @@ msgstr "Å"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "convergence « d'énergie » :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
 msgid "OpenMM Script Builder"
-msgstr ""
+msgstr "éditeur des scripts OpenMM"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label_jobScript)
 msgid "Job script:"
-msgstr ""
+msgstr "Nom du script de tâche :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
@@ -7250,7 +7250,7 @@ msgstr "Vecteur vitesse initiale aléatoire :"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr "Génération Temp :"
+msgstr "Temp. de génération :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
