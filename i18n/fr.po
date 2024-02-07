@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-07 23:51+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7004,7 +7004,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "distance de coupure électrostatique :"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
@@ -7367,7 +7367,7 @@ msgstr "PDB"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Intervalle de rapport :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
@@ -7387,12 +7387,12 @@ msgstr "Minimiser ?"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
 msgid "Max. Minimize Steps:"
-msgstr ""
+msgstr "Max. Minimize Steps :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr ""
+msgstr "StateData options :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
