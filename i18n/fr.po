@@ -12,8 +12,9 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-06 01:31+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-07 19:19+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2972,7 +2973,7 @@ msgstr "Optimisation de la géométrie"
 
 #: qtplugins/forcefield/forcefield.cpp:90
 msgid "Forces"
-msgstr ""
+msgstr "Forces"
 
 #: qtplugins/forcefield/forcefield.cpp:98
 msgid "Configure…"
