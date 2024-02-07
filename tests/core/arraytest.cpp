@@ -110,3 +110,33 @@ TEST(ArrayTest, operators)
   swap(a1, a2);
   EXPECT_TRUE(a2 == a1c);
 }
+
+TEST(ArrayTest, detachWithCopy) 
+{
+  // Verify the data matches for the two arrays
+  Array<int> array(0, 1);
+  Array<int> array2 = array;
+  EXPECT_EQ(array.size(), array2.size());
+  EXPECT_EQ(array.constData(), array2.constData());
+
+  // Detach the two arrays but make array2 a copy of array 
+  array2.detachWithCopy();
+  EXPECT_EQ(array.constData(), array2.constData());
+
+  // If array is edited, changes do not go to array2
+  array.push_back(12345);
+  EXPECT_NE(array.size(), array2.size());
+  EXPECT_NE(array.constData(), array2.constData());
+}
+
+TEST(ArrayTest, pop_back)
+{
+  Array<int> array(0, 1);
+  Array<int> array2;
+  array2.push_back(0);
+
+  // Verify the last element in array is deleted 
+  array.pop_back();
+  EXPECT_EQ(array.size(), static_cast<size_t>(1));
+  EXPECT_EQ(array.constData(), array2.constData());
+}
