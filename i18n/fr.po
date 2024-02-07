@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-07 23:23+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -6929,7 +6929,8 @@ msgstr "Mutabilité :"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr "nombre de générations identiques avant la convergence"
+msgstr ""
+"nombre de générations identiques pour prouver que la convergence est atteinte"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
