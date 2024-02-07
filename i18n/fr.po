@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-07 23:21+0000\n"
+"PO-Revision-Date: 2024-02-07 23:23+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -6947,6 +6947,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"méthode de notation pour l'algorithme génétique (RMSD = distance "
+"géométrique, énergie = énergie inférieure)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
