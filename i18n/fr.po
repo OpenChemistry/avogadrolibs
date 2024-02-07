@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-07 23:56+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-08 00:03+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7510,13 +7510,13 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
-"<html><head/><body><p><p>Le nombre de points de 2theta à générer</"
-"p><p>Default : 1000</p></body></html>"
+"<html><head/><body><p>Le nombre de points de 2theta à générer</p><p>Valeur "
+"par défault : 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2*theta:"
-msgstr "Max 2*theta :"
+msgstr "Max 2*thêta :"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -7590,7 +7590,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
-msgstr ""
+msgstr "offset :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_10)
