@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-01-04 01:57+0000\n"
+"POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2023-10-07 12:12+0000\n"
 "Last-Translator: Hoseok Seo <ddinghoya@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -1347,7 +1347,7 @@ msgstr "레이어 정보 추가"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
 #: qtplugins/select/select.cpp:560
-#: qtplugins/selectiontool/selectiontool.cpp:254:1661
+#: qtplugins/selectiontool/selectiontool.cpp:262:1661
 msgid "Change Layer"
 msgstr "레이어 변경"
 
@@ -1356,7 +1356,7 @@ msgid "Add Atom"
 msgstr "원자 추가"
 
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
-#: qtplugins/editor/editor.cpp:123
+#: qtplugins/editor/editor.cpp:131
 msgid "Remove Atom"
 msgstr "원자 제거하기"
 
@@ -1534,11 +1534,11 @@ msgstr "내보내기(&E)"
 msgid "ThreeDMol"
 msgstr "3DMol"
 
-#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:88
+#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:96
 msgid "Align"
 msgstr "정렬"
 
-#: qtplugins/aligntool/aligntool.cpp:56
+#: qtplugins/aligntool/aligntool.cpp:55
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1551,29 +1551,29 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:75:1718
+#: qtplugins/aligntool/aligntool.cpp:83:1718
 msgid "Axis:"
 msgstr "축:"
 
-#: qtplugins/aligntool/aligntool.cpp:152
+#: qtplugins/aligntool/aligntool.cpp:160
 #, fuzzy
 #| msgid "Align Settings"
 msgid "Align at Origin"
 msgstr "정렬 설정"
 
-#: qtplugins/aligntool/aligntool.cpp:188
+#: qtplugins/aligntool/aligntool.cpp:196
 #, fuzzy
 #| msgid "Align View to Axes"
 msgid "Align to Axis"
 msgstr "축에 보기 정렬"
 
-#: qtplugins/aligntool/aligntool.cpp:304
+#: qtplugins/aligntool/aligntool.cpp:312
 #, fuzzy
 #| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
 msgstr "x, y, z축을 기원으로 표현"
 
-#: qtplugins/aligntool/aligntool.cpp:307
+#: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
@@ -1671,18 +1671,18 @@ msgstr "PQR 파일 (*.pqr)"
 #: qtplugins/gamessinput/gamessinput.cpp:88
 #: qtplugins/insertfragment/insertfragment.cpp:107
 #: qtplugins/lammpsinput/lammpsinput.cpp:64
-#: qtplugins/openbabel/openbabel.cpp:209 qtplugins/openbabel/openbabel.cpp:218
-#: qtplugins/openbabel/openbabel.cpp:228 qtplugins/openbabel/openbabel.cpp:370
-#: qtplugins/openbabel/openbabel.cpp:398 qtplugins/openbabel/openbabel.cpp:423
-#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:486
-#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:549
-#: qtplugins/openbabel/openbabel.cpp:568 qtplugins/openbabel/openbabel.cpp:577
-#: qtplugins/openbabel/openbabel.cpp:637 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:700 qtplugins/openbabel/openbabel.cpp:726
-#: qtplugins/openbabel/openbabel.cpp:740 qtplugins/openbabel/openbabel.cpp:769
-#: qtplugins/openbabel/openbabel.cpp:781 qtplugins/openbabel/openbabel.cpp:827
-#: qtplugins/openbabel/openbabel.cpp:877 qtplugins/openbabel/openbabel.cpp:919
-#: qtplugins/openbabel/openbabel.cpp:951
+#: qtplugins/openbabel/openbabel.cpp:208 qtplugins/openbabel/openbabel.cpp:217
+#: qtplugins/openbabel/openbabel.cpp:227 qtplugins/openbabel/openbabel.cpp:369
+#: qtplugins/openbabel/openbabel.cpp:397 qtplugins/openbabel/openbabel.cpp:422
+#: qtplugins/openbabel/openbabel.cpp:431 qtplugins/openbabel/openbabel.cpp:485
+#: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
+#: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
+#: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:725
+#: qtplugins/openbabel/openbabel.cpp:739 qtplugins/openbabel/openbabel.cpp:768
+#: qtplugins/openbabel/openbabel.cpp:780 qtplugins/openbabel/openbabel.cpp:826
+#: qtplugins/openbabel/openbabel.cpp:876 qtplugins/openbabel/openbabel.cpp:918
+#: qtplugins/openbabel/openbabel.cpp:950
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/propertytables/propertyview.cpp:243
 #: qtplugins/propertytables/propertyview.cpp:276
@@ -1938,7 +1938,7 @@ msgstr "원자를 구체로, 결합을 실린더로 렌더링합니다."
 msgid "Bond-Centric Manipulation"
 msgstr "결합 중심 조작"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:124
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:123
 msgid ""
 "Bond Centric Manipulation Tool\n"
 "\n"
@@ -1962,28 +1962,28 @@ msgstr ""
 "결합내 원자 중 하나를 마우스 왼쪽 버튼으로 클릭과 드래그로 각도 변경 \n"
 "결합내 원자 중 하나를 마우스 오른쪽 버튼으로 클릭과 드래그로 길이 변경"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:776
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:864
-#: qtplugins/measuretool/measuretool.cpp:203
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:784
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:872
 #: qtplugins/measuretool/measuretool.cpp:211
-#: qtplugins/measuretool/measuretool.cpp:212
+#: qtplugins/measuretool/measuretool.cpp:219
+#: qtplugins/measuretool/measuretool.cpp:220
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:798
-#: qtplugins/editor/editor.cpp:260 qtplugins/measuretool/measuretool.cpp:219
-#: qtplugins/measuretool/measuretool.cpp:220
-#: qtplugins/measuretool/measuretool.cpp:222
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:806
+#: qtplugins/editor/editor.cpp:268 qtplugins/measuretool/measuretool.cpp:227
+#: qtplugins/measuretool/measuretool.cpp:228
+#: qtplugins/measuretool/measuretool.cpp:230
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:168
+#: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
 msgstr "결합 중심 조작 도구입니다."
 
-#: qtplugins/bondcentrictool/bondcentrictool.h:173
+#: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
@@ -2170,8 +2170,9 @@ msgstr "색상 불투명도 지도 편집…"
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
 #: qtplugins/configurepython/configurepython.cpp:99
-#: qtplugins/forcefield/forcefield.cpp:126
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/forcefield/forcefield.cpp:134
+#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:112
 msgid "&Extensions"
@@ -2547,7 +2548,7 @@ msgstr "CP2K에 대한 입력을 생성합니다."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:83:1205
+#: qtplugins/forcefield/forcefield.cpp:82:1205
 msgid "Energy"
 msgstr "에너지"
 
@@ -2783,11 +2784,11 @@ msgstr "현재 분자에서 사용자 정의 원소 유형을 조작합니다."
 msgid "Custom Elements"
 msgstr "사용자 정의 원소"
 
-#: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:110
+#: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:118
 msgid "Draw"
 msgstr "그리기"
 
-#: qtplugins/editor/editor.cpp:74
+#: qtplugins/editor/editor.cpp:73
 msgid ""
 "Draw Tool\n"
 "\n"
@@ -2799,24 +2800,24 @@ msgstr ""
 "왼쪽 마우스: \t클릭 및 드래그로 원자 및 결합 생성 \n"
 "오른쪽 마우스: \t원자 삭제"
 
-#: qtplugins/editor/editor.cpp:104
+#: qtplugins/editor/editor.cpp:112
 msgid "Draw Atom"
 msgstr "원자 그리기"
 
-#: qtplugins/editor/editor.cpp:114
+#: qtplugins/editor/editor.cpp:122
 msgid "Change Bond Type"
 msgstr "결합 유형 변경"
 
-#: qtplugins/editor/editor.cpp:127
+#: qtplugins/editor/editor.cpp:135
 msgid "Remove Bond"
 msgstr "결합 삭제"
 
-#: qtplugins/editor/editor.cpp:255 qtplugins/measuretool/measuretool.cpp:193
-#: qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/editor/editor.cpp:263 qtplugins/measuretool/measuretool.cpp:201
+#: qtplugins/measuretool/measuretool.cpp:226
 msgid "Distance:"
 msgstr "거리:"
 
-#: qtplugins/editor/editor.cpp:258
+#: qtplugins/editor/editor.cpp:266
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -2920,54 +2921,59 @@ msgstr "특정 기능에 초점을 맞춥니다."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "분자의 원자에 대한 역장 시각화를 렌더링합니다."
 
-#: qtplugins/forcefield/forcefield.cpp:75
-#, fuzzy
-#| msgid "Optimize Geometry"
-msgid "Optimize"
+#: qtplugins/forcefield/forcefield.cpp:73
+#: qtplugins/forcefield/forcefield.cpp:318 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/openbabel/openbabel.cpp:559
+msgid "Optimize Geometry"
 msgstr "기하학 최적화"
 
-#: qtplugins/forcefield/forcefield.cpp:91
+#: qtplugins/forcefield/forcefield.cpp:90
+msgid "Forces"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:98
 #, fuzzy
 #| msgid "Configure Bonding…"
 msgid "Configure…"
 msgstr "결합 구성…"
 
-#: qtplugins/forcefield/forcefield.cpp:103
+#: qtplugins/forcefield/forcefield.cpp:110
 #, fuzzy
 #| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
 msgstr "선택된 원자 내보내기"
 
-#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:117
 #, fuzzy
 #| msgid "Bond Selected Atoms"
 msgid "Unfreeze Selected Atoms"
 msgstr "선택된 원자 결합"
 
-#: qtplugins/forcefield/forcefield.cpp:126
+#: qtplugins/forcefield/forcefield.cpp:136
 #, fuzzy
 #| msgid "Calculate"
 msgid "&Calculate"
 msgstr "계산"
 
-#: qtplugins/forcefield/forcefield.cpp:303 qtplugins/openbabel/openbabel.cpp:47
-#: qtplugins/openbabel/openbabel.cpp:560
-msgid "Optimize Geometry"
-msgstr "기하학 최적화"
-
-#: qtplugins/forcefield/forcefield.cpp:344
+#: qtplugins/forcefield/forcefield.cpp:353
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
 msgstr "에너지 = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:345
-#: qtplugins/playertool/playertool.cpp:343
-#: qtplugins/playertool/playertool.cpp:375 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/forcefield/forcefield.cpp:354
+#: qtplugins/forcefield/forcefield.cpp:400
+#: qtplugins/playertool/playertool.cpp:347
+#: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "아보가드로"
+
+#: qtplugins/forcefield/forcefield.cpp:399
+#, qt-format
+msgid "%1 Force Norm = %L2"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:46
 #, fuzzy
@@ -2987,17 +2993,17 @@ msgstr "힘 영역 최적화"
 msgid "Autodetect (%1)"
 msgstr "자동 감지 (%1)"
 
-#: qtplugins/forcefield/obmmenergy.cpp:77
+#: qtplugins/forcefield/obmmenergy.cpp:33
 #, fuzzy
 #| msgid "Force Field"
 msgid "Universal Force Field"
 msgstr "힘 영역"
 
-#: qtplugins/forcefield/obmmenergy.cpp:82
+#: qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obmmenergy.cpp:96
+#: qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
@@ -3102,7 +3108,7 @@ msgstr "GAMESS 계산 제출"
 msgid "&Adjust Hydrogens"
 msgstr "수소 조정(&A)"
 
-#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:72
+#: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
 msgid "Add Hydrogens"
 msgstr "수소 추가"
 
@@ -3294,11 +3300,11 @@ msgstr "잔류물 레이블:"
 msgid "Display labels on ball and stick style."
 msgstr "볼 및 스틱 스타일에 레이블을 표시합니다."
 
-#: qtplugins/label/labeleditor.cpp:29
+#: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
 msgstr "레이블 편집"
 
-#: qtplugins/label/labeleditor.cpp:32
+#: qtplugins/label/labeleditor.cpp:33
 msgid ""
 "Atom Label Tool\n"
 "\n"
@@ -3308,7 +3314,7 @@ msgstr ""
 " \n"
 "왼쪽 마우스: \t사용자 정의 레이블을 추가하려면 원자 클릭"
 
-#: qtplugins/label/labeleditor.cpp:67
+#: qtplugins/label/labeleditor.cpp:77
 msgid "Create Label"
 msgstr "라벨 생성"
 
@@ -3373,7 +3379,7 @@ msgstr "입력 대화상자를 통해 단일 선 분자 설명문구를 불러�
 msgid "Manipulate"
 msgstr "조작"
 
-#: qtplugins/manipulator/manipulator.cpp:52
+#: qtplugins/manipulator/manipulator.cpp:51
 msgid ""
 "Manipulation Tool\n"
 "\n"
@@ -3394,7 +3400,7 @@ msgstr "조작 도구"
 msgid "Measure"
 msgstr "측정"
 
-#: qtplugins/measuretool/measuretool.cpp:57
+#: qtplugins/measuretool/measuretool.cpp:56
 msgid ""
 "Measure Tool\n"
 "\n"
@@ -3412,16 +3418,16 @@ msgstr ""
 "\t이면체는 1-2-3-4 사이에서 측정 \n"
 "오른쪽 마우스: \t측정값을 재설정합니다."
 
-#: qtplugins/measuretool/measuretool.cpp:191
-#: qtplugins/measuretool/measuretool.cpp:202
+#: qtplugins/measuretool/measuretool.cpp:199
+#: qtplugins/measuretool/measuretool.cpp:210
 msgid "Dihedral:"
 msgstr "이면각:"
 
-#: qtplugins/measuretool/measuretool.cpp:192
+#: qtplugins/measuretool/measuretool.cpp:200
 msgid "Angle:"
 msgstr "각도:"
 
-#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:218
 msgid "Angles:"
 msgstr "각도:"
 
@@ -3523,7 +3529,7 @@ msgstr "결합의 수:"
 msgid "Navigate"
 msgstr "탐색"
 
-#: qtplugins/navigator/navigator.cpp:42
+#: qtplugins/navigator/navigator.cpp:41
 msgid ""
 "Navigation Tool\n"
 "\n"
@@ -3537,25 +3543,25 @@ msgstr ""
 "중간 마무스: \t클릭과 드래그로 확대 또는 축소합니다. \n"
 "오른쪽 마우스: \t클릭과 드래그로 보기를 이동합니다.\n"
 
-#: qtplugins/navigator/navigator.cpp:54
+#: qtplugins/navigator/navigator.cpp:61
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:55
+#: qtplugins/navigator/navigator.cpp:62
 msgid "Zoom the scene."
 msgstr ""
 
-#: qtplugins/navigator/navigator.cpp:56
+#: qtplugins/navigator/navigator.cpp:63
 #, fuzzy
 #| msgid "Translate by:"
 msgid "Translate the scene."
 msgstr "번역가:"
 
-#: qtplugins/navigator/navigator.cpp:97
+#: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "스크롤 시 확대/축소의 반대 방향"
 
-#: qtplugins/navigator/navigator.cpp:99
+#: qtplugins/navigator/navigator.cpp:106
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
@@ -3599,46 +3605,46 @@ msgstr "수소"
 msgid "Chalcogen"
 msgstr "칼코겐"
 
-#: qtplugins/openbabel/openbabel.cpp:54
+#: qtplugins/openbabel/openbabel.cpp:53
 msgid "Configure Force Field…"
 msgstr "역장 구성…"
 
-#: qtplugins/openbabel/openbabel.cpp:60
+#: qtplugins/openbabel/openbabel.cpp:59
 #, fuzzy
 #| msgid "Conformer Search..."
 msgid "Conformer Search…"
 msgstr "이형태체 검색..."
 
-#: qtplugins/openbabel/openbabel.cpp:66
+#: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
 msgstr "결합 감지"
 
-#: qtplugins/openbabel/openbabel.cpp:78
+#: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add Hydrogens for pH…"
 msgstr "pH용 수소 추가…"
 
-#: qtplugins/openbabel/openbabel.cpp:84
+#: qtplugins/openbabel/openbabel.cpp:83
 msgid "Remove Hydrogens"
 msgstr "수소 제거"
 
-#: qtplugins/openbabel/openbabel.cpp:95
+#: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:113
+#: qtplugins/openbabel/openbabel.cpp:112
 msgid "&Open Babel"
 msgstr "바벨 열기(&O)"
 
-#: qtplugins/openbabel/openbabel.cpp:120
+#: qtplugins/openbabel/openbabel.cpp:119
 msgid "The Open Babel file formats are not ready to be added."
 msgstr "바벨 파일 열기 형식을 추가할 준비가 되지 않았습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:204
+#: qtplugins/openbabel/openbabel.cpp:203
 msgid "Loading molecule from Open Babel…"
 msgstr "바벨 열기에서 분자 불러오는 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:210
+#: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
@@ -3646,17 +3652,17 @@ msgstr ""
 "내부 오류가 발생했습니다: OpenBabel::readMolecule이 호출되었지만 구문 분석에 "
 "사용할 수 있는 obabel 출력이 없습니다!"
 
-#: qtplugins/openbabel/openbabel.cpp:219
+#: qtplugins/openbabel/openbabel.cpp:218
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
 msgstr "바벨 (%1) 열기를 실행하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:229
+#: qtplugins/openbabel/openbabel.cpp:228
 msgid "Error parsing openbabel output."
 msgstr "openbabel 출력을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:371 qtplugins/openbabel/openbabel.cpp:399
-#: qtplugins/openbabel/openbabel.cpp:433 qtplugins/openbabel/openbabel.cpp:578
+#: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
+#: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
 #, qt-format
 msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
@@ -3664,38 +3670,38 @@ msgid ""
 msgstr ""
 "지원되는 forcefields 목록을 검색하는 동안 오류가 발생했습니다. ('%1' 사용)."
 
-#: qtplugins/openbabel/openbabel.cpp:424
+#: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
 msgstr "분자가 잘못되었습니다. 기하학을 최적화할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:442
+#: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
 msgstr "바벨 열기로 기하학을 최적화할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:467
+#: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
 msgstr "기하학 최적화 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:468 qtplugins/openbabel/openbabel.cpp:621
+#: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 #, fuzzy
 #| msgid "Generating MDL…"
 msgid "Generating…"
 msgstr "MDL 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:487 qtplugins/openbabel/openbabel.cpp:638
+#: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr "현재 분자의 바벨 열기 표현을 생성하는 동안 내부 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:493 qtplugins/openbabel/openbabel.cpp:644
+#: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
 msgstr "%1 시작 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:507 qtplugins/openbabel/openbabel.cpp:515
-#: qtplugins/openbabel/openbabel.cpp:658 qtplugins/openbabel/openbabel.cpp:666
+#: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
+#: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
 #, qt-format
 msgid ""
 "Step %1 of %2\n"
@@ -3706,17 +3712,17 @@ msgstr ""
 "현재 에너지: %3 \n"
 "dE: %4"
 
-#: qtplugins/openbabel/openbabel.cpp:529 qtplugins/openbabel/openbabel.cpp:680
+#: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
 msgstr "분자 업데이트 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:537 qtplugins/openbabel/openbabel.cpp:688
-#: qtplugins/openbabel/openbabel.cpp:770 qtplugins/openbabel/openbabel.cpp:952
+#: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
+#: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
 msgid "Error interpreting Open Babel output."
 msgstr "바벨 열기 출력을 해석하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:550 qtplugins/openbabel/openbabel.cpp:701
-#: qtplugins/openbabel/openbabel.cpp:782
+#: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
+#: qtplugins/openbabel/openbabel.cpp:781
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -3724,110 +3730,110 @@ msgid ""
 msgstr ""
 "obabel 출력의 원자 수 (%1)가 원래 분자의 원자 수 (%2)와 일치하지 않습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:569
+#: qtplugins/openbabel/openbabel.cpp:568
 #, fuzzy
 #| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr "분자가 잘못되었습니다. 기하학을 최적화할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:587
+#: qtplugins/openbabel/openbabel.cpp:586
 #, fuzzy
 #| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
 msgstr "바벨 열기로 파일을 열 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:620
+#: qtplugins/openbabel/openbabel.cpp:619
 #, fuzzy
 #| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
 msgstr "결합 인식 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:712
+#: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
 #| msgid "Conformer %1"
 msgid "Generate Conformers"
 msgstr "이형태체 %1"
 
-#: qtplugins/openbabel/openbabel.cpp:721
+#: qtplugins/openbabel/openbabel.cpp:720
 msgid "Cannot open file with Open Babel."
 msgstr "바벨 열기로 파일을 열 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:727
+#: qtplugins/openbabel/openbabel.cpp:726
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "잘못된 분자: 결합을 인식할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:733
+#: qtplugins/openbabel/openbabel.cpp:732
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "결합 인식 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:733
 msgid "Generating XYZ representation…"
 msgstr "XYZ 표현 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:741
+#: qtplugins/openbabel/openbabel.cpp:740
 msgid "Error generating XYZ string."
 msgstr "XYZ 문자열을 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:752
+#: qtplugins/openbabel/openbabel.cpp:751
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "%1을(를) 사용하여 XYZ를 바벨 열기로 변환 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:762
+#: qtplugins/openbabel/openbabel.cpp:761
 msgid "Updating molecule from Open Babel…"
 msgstr "바벨 열기에서 분자 업데이트 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:814 qtplugins/openbabel/openbabel.cpp:856
+#: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "바벨 열기로 수소를 추가할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:819 qtplugins/openbabel/openbabel.cpp:869
+#: qtplugins/openbabel/openbabel.cpp:818 qtplugins/openbabel/openbabel.cpp:868
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "수소 추가 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:820
+#: qtplugins/openbabel/openbabel.cpp:819
 msgid "Generating Open Babel input…"
 msgstr "바벨 열기 입력 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:828 qtplugins/openbabel/openbabel.cpp:878
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Error generating Open Babel input."
 msgstr "바벨 열기 입력을 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:841 qtplugins/openbabel/openbabel.cpp:891
-#: qtplugins/openbabel/openbabel.cpp:933
+#: qtplugins/openbabel/openbabel.cpp:840 qtplugins/openbabel/openbabel.cpp:890
+#: qtplugins/openbabel/openbabel.cpp:932
 #, qt-format
 msgid "Running %1…"
 msgstr "%1 실행 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:863
+#: qtplugins/openbabel/openbabel.cpp:862
 msgid "Add hydrogens for pH"
 msgstr "pH에 대한 수소 추가"
 
-#: qtplugins/openbabel/openbabel.cpp:863
+#: qtplugins/openbabel/openbabel.cpp:862
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:870 qtplugins/openbabel/openbabel.cpp:912
+#: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
 msgstr "obabel 입력 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:906
+#: qtplugins/openbabel/openbabel.cpp:905
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "바벨 열기로 수소를 제거할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:911
+#: qtplugins/openbabel/openbabel.cpp:910
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "수소 제거 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:920
+#: qtplugins/openbabel/openbabel.cpp:919
 msgid "Error generating Open Babel data."
 msgstr "바벨 열기를 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:943
+#: qtplugins/openbabel/openbabel.cpp:942
 msgid "Reading obabel output…"
 msgstr "obabel 출력을 읽는 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:1006
+#: qtplugins/openbabel/openbabel.cpp:1005
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -3927,88 +3933,88 @@ msgstr "참조 축 오버레이"
 msgid "Render reference axes in the corner of the display."
 msgstr "디스플레이 모서리에 참조 축을 렌더링합니다."
 
-#: qtplugins/playertool/playertool.cpp:52
+#: qtplugins/playertool/playertool.cpp:47
 msgid "Player"
 msgstr "플레이어"
 
-#: qtplugins/playertool/playertool.cpp:54
+#: qtplugins/playertool/playertool.cpp:48
 msgid "Animation Tool"
 msgstr "애니메이션 도구"
 
-#: qtplugins/playertool/playertool.cpp:69
+#: qtplugins/playertool/playertool.cpp:73
 msgid "Play"
 msgstr "재생"
 
-#: qtplugins/playertool/playertool.cpp:72
+#: qtplugins/playertool/playertool.cpp:76
 msgid "Stop"
 msgstr "중지"
 
-#: qtplugins/playertool/playertool.cpp:83
+#: qtplugins/playertool/playertool.cpp:87
 msgid "Frame rate:"
 msgstr "프레임율:"
 
-#: qtplugins/playertool/playertool.cpp:89
+#: qtplugins/playertool/playertool.cpp:93
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:113:1878
+#: qtplugins/playertool/playertool.cpp:117:1878
 msgid "Frame:"
 msgstr "프레임:"
 
-#: qtplugins/playertool/playertool.cpp:120
-#: qtplugins/playertool/playertool.cpp:411
+#: qtplugins/playertool/playertool.cpp:124
+#: qtplugins/playertool/playertool.cpp:415
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
 msgstr " %0 의"
 
-#: qtplugins/playertool/playertool.cpp:131
+#: qtplugins/playertool/playertool.cpp:135
 msgid "Dynamic bonding?"
 msgstr "역동적인 결합입니까?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:139:1884
+#: qtplugins/playertool/playertool.cpp:143:1884
 msgid "Record Movie…"
 msgstr "동영상 녹화…"
 
-#: qtplugins/playertool/playertool.cpp:243
-#: qtplugins/playertool/playertool.cpp:348
+#: qtplugins/playertool/playertool.cpp:247
+#: qtplugins/playertool/playertool.cpp:352
 msgid "Movie (*.mp4)"
 msgstr "동영상 (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:245
+#: qtplugins/playertool/playertool.cpp:249
 msgid "Export Bitmap Graphics"
 msgstr "비트맵 그래픽 내보내기"
 
-#: qtplugins/playertool/playertool.cpp:246
+#: qtplugins/playertool/playertool.cpp:250
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "동영상 (*.mp4);;동영상 (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:260 qtplugins/surfaces/surfaces.cpp:884
+#: qtplugins/playertool/playertool.cpp:264 qtplugins/surfaces/surfaces.cpp:884
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:266
+#: qtplugins/playertool/playertool.cpp:270
 msgid "GIF FPS support warning"
 msgstr "GIF FPS 지원 경고"
 
-#: qtplugins/playertool/playertool.cpp:267
+#: qtplugins/playertool/playertool.cpp:271
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr "GIF 파일 형식은 100 FPS 이상의 프레임 속도를 지원하지 않습니다."
 
-#: qtplugins/playertool/playertool.cpp:312
+#: qtplugins/playertool/playertool.cpp:316
 msgid "Movie (*.avi)"
 msgstr "동영상 (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:344 qtplugins/surfaces/surfaces.cpp:957
+#: qtplugins/playertool/playertool.cpp:348 qtplugins/surfaces/surfaces.cpp:957
 msgid "Error: cannot add frame to video."
 msgstr "오류: 비디오에 프레임을 추가할 수 없습니다."
 
-#: qtplugins/playertool/playertool.cpp:376 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "%1 파일을 저장할 수 없습니다."
@@ -4600,7 +4606,7 @@ msgstr "선택"
 msgid "Selection"
 msgstr "선택"
 
-#: qtplugins/selectiontool/selectiontool.cpp:53
+#: qtplugins/selectiontool/selectiontool.cpp:52
 msgid ""
 "Selection Tool\n"
 "\n"
@@ -4618,7 +4624,7 @@ msgstr ""
 "Ctrl을 사용하여 선택을 전환하고 Shift를 사용하여 선택에 추가합니다. \n"
 "더블 클릭: \t전체 조각을 선택합니다."
 
-#: qtplugins/selectiontool/selectiontool.cpp:238
+#: qtplugins/selectiontool/selectiontool.cpp:246
 msgid "Paint Atoms"
 msgstr "원자 색칠"
 
@@ -5061,7 +5067,7 @@ msgstr "%1 %2"
 msgid "Template"
 msgstr "템플레이트"
 
-#: qtplugins/templatetool/templatetool.cpp:84
+#: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
 "Template Tool\n"
 "\n"
@@ -5072,11 +5078,11 @@ msgid ""
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:302
+#: qtplugins/templatetool/templatetool.cpp:309
 msgid "Insert Template"
 msgstr "템플레이트 삽입"
 
-#: qtplugins/templatetool/templatetool.cpp:560
+#: qtplugins/templatetool/templatetool.cpp:567
 msgid "Insert Ligand"
 msgstr "리간드 삽입"
 
@@ -8388,6 +8394,11 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com"
+
+#, fuzzy
+#~| msgid "Optimize Geometry"
+#~ msgid "Optimize"
+#~ msgstr "기하학 최적화"
 
 #~ msgid "In."
 #~ msgstr "In."
