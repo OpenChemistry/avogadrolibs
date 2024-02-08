@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-08 00:18+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7590,7 +7591,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
-msgstr "offset :"
+msgstr "Décalage :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -7895,7 +7896,7 @@ msgstr "lâche"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr ""
+msgstr "Très lâche"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
