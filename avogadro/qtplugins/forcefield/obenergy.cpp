@@ -49,6 +49,15 @@ OBEnergy::OBEnergy(const std::string& method)
   d->m_forceField = static_cast<OBForceField*>(
     OBPlugin::GetPlugin("forcefields", method.c_str()));
 
+  qDebug() << "OBEnergy: method: " << method.c_str();
+  if (d->m_forceField == nullptr) {
+    qDebug() << "OBEnergy: method not found: " << method.c_str();
+
+    for (const char* plugin : OBPlugin::GetPlugins("forcefields")) {
+      qDebug() << "OBEnergy: available method: " << plugin;
+    }
+  }
+
   if (method == "UFF") {
     m_description = tr("Universal Force Field");
     m_elements.reset();

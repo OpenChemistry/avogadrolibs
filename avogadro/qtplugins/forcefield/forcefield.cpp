@@ -71,11 +71,13 @@ Forcefield::Forcefield(QObject* parent_)
   // add the openbabel calculators in case they don't exist
 #ifdef BUILD_GPL_PLUGINS
   // These directly use Open Babel and are fast
+  qDebug() << " registering GPL plugins";
   Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
 #else
   // These call obmm and can be slower
+  qDebug() << " registering obmm plugins";
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
