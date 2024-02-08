@@ -59,7 +59,7 @@ jobs:
             cmake_flags: "",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
-            ssl_env: "D:\\a\\avogadroapp\\Qt\\Tools\\OpenSSLv3\\Win_x64",
+            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
