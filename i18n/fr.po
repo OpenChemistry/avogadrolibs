@@ -12,8 +12,9 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-08 00:53+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2024-02-08 00:59+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4697,10 +4698,8 @@ msgid "Space Group"
 msgstr "Groupe d'espace"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
-#, fuzzy
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
-"Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
+msgstr "Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
 
 #: qtplugins/spacegroup/spacegroup.cpp:199
 msgid "Failure"
