@@ -52,10 +52,7 @@ OBEnergy::OBEnergy(const std::string& method)
   qDebug() << "OBEnergy: method: " << method.c_str();
   if (d->m_forceField == nullptr) {
     qDebug() << "OBEnergy: method not found: " << method.c_str();
-
-    for (const char* plugin : OBPlugin::GetPlugins("forcefields")) {
-      qDebug() << "OBEnergy: available method: " << plugin;
-    }
+    qDebug() << OBPlugin::ListAsString("forcefields").c_str();
   }
 
   if (method == "UFF") {
