@@ -12,9 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-08 00:18+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-02-08 00:37+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -7896,7 +7895,7 @@ msgstr "lâche"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr "Très lâche"
+msgstr "très lâche"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
@@ -7963,61 +7962,57 @@ msgstr "Coordination :"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:227
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Octahedral"
-msgstr ""
+msgstr "6 : octaédrique"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:192
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
-#| msgid "Linear"
 msgid "1: Linear"
-msgstr "Linéaire"
+msgstr "1 : Linéaire"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:197
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
-#| msgid "Linear"
 msgid "2: Linear"
-msgstr "Linéaire"
+msgstr "2 : Linéaire"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:202
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "3: Trigonal Planar"
-msgstr ""
+msgstr "3 : trigonal (plan)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Tetrahedral"
-msgstr ""
+msgstr "4 : Tétraèdre"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Square Planar"
-msgstr ""
+msgstr "4 : Carré (plan)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Trigonal Bipyramidal"
-msgstr ""
+msgstr "5 : Bipyramide trigonale"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:222
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Square Pyramidal"
-msgstr ""
+msgstr "5 : Pyramide à base carrée"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Trigonal Prism"
-msgstr ""
+msgstr "6 : Prisme trigonal"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "7: Pentagonal Bipyramidal"
-msgstr ""
+msgstr "7 : Bipyramide pentagonale"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:242
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "8: Square Antiprism"
-msgstr ""
+msgstr "8 : Antiprisme carré"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:315
 #. i18n: ectx: attribute (title), widget (QWidget, ligandTab)
