@@ -12,8 +12,9 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-06 01:31+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-08 00:59+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2739,7 +2740,7 @@ msgstr "Redimensionner la maille à un &Volume…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr "Construction &de la supercellule…"
+msgstr "Construction &d'une supermaille…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2972,7 +2973,7 @@ msgstr "Optimisation de la géométrie"
 
 #: qtplugins/forcefield/forcefield.cpp:90
 msgid "Forces"
-msgstr ""
+msgstr "Forces"
 
 #: qtplugins/forcefield/forcefield.cpp:98
 msgid "Configure…"
@@ -3007,7 +3008,7 @@ msgstr "Avogadro"
 #: qtplugins/forcefield/forcefield.cpp:399
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 Norme de force = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
 msgid "Forcefield optimization"
@@ -4697,10 +4698,8 @@ msgid "Space Group"
 msgstr "Groupe d'espace"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
-#, fuzzy
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
-"Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
+msgstr "Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
 
 #: qtplugins/spacegroup/spacegroup.cpp:199
 msgid "Failure"
@@ -5308,8 +5307,8 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Supprimer les fichiers intermédiaires au fin du "
-"travail. Les résultats seront gardées dans la mémoire cache locale de "
+"<html><head/><body><p>Supprimer les fichiers intermédiaires dès que la tâche "
+"est accomplie. Les résultats seront gardées dans la mémoire cache locale de "
 "MoleQueue.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
@@ -5338,7 +5337,7 @@ msgid ""
 "changes.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Afficher une notification contextuelle du système dès "
-"que le statut d'un travail change.</p></body></html>"
+"que le statut d'une tâche change.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -5358,7 +5357,7 @@ msgstr "Renommer les éléments"
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
 msgid "Insert Fragment…"
-msgstr "Insérer fragment…"
+msgstr "Insérer un fragment…"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5369,7 +5368,7 @@ msgstr "Filtre :"
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
 msgstr ""
-"Saisir un nom ou une partie d'un nom pour n'afficher que les fichiers "
+"Saisissez un nom ou une partie d'un nom pour n'afficher que les fichiers "
 "correspondants."
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:86
@@ -5509,7 +5508,7 @@ msgstr "Modèle de charge :"
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Distance Tolerance:"
-msgstr "Tolérance de la distance :"
+msgstr "Tolérance de distance :"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5529,12 +5528,12 @@ msgstr "Cube"
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Enable volume rendering"
-msgstr ""
+msgstr "Activer le rendu du volume"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "Activer le rendu de surface"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5574,7 +5573,7 @@ msgid ""
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
 "Sélectionnez la version Python utilisée pour exécuter des scripts.\n"
-"Avogadro doit être redémarré pour que les modifications soient prises en "
+"Ensuite, redémarrez Avogadro pour que les modifications soient prises en "
 "compte."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
@@ -5600,7 +5599,7 @@ msgstr "Unité de distance :"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:46
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
 msgid "Angstrom"
-msgstr "Angstrom"
+msgstr "Angström"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, distanceUnit)
@@ -5820,38 +5819,38 @@ msgstr "OT T MINIMIZER"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
-"Extension de fichier pour les conversions d'OpenBabel (par défaut - "
-"Avogadro::POSCAR) :"
+"Extension de fichier pour les conversions d'Open Babel (par défaut - "
+"Avogadro::POSCAR) :"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
 msgid "Supercell Parameters"
-msgstr "Paramètres des supermailles"
+msgstr "Paramètres de la supermaille"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:22
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Super Cell Options"
-msgstr "Options des supermailles"
+msgstr "empilements de la maille actuelle"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A repeat:"
-msgstr "répétition A :"
+msgstr "multiples le long de l'axe a :"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B repeat:"
-msgstr "répétition B :"
+msgstr "multiples le long de l'axe b :"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
-msgstr "répétition C :"
+msgstr "multiples le long de l'axe c :"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
 msgid "Unit Cell Editor"
-msgstr "éditeur de la maille"
+msgstr "Éditeur de la maille"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5905,19 +5904,19 @@ msgstr "°"
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:231
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Cell Matrix:"
-msgstr ""
+msgstr "Cell Matrix :"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:248
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Fractional Matrix:"
-msgstr ""
+msgstr "Fractional Matrice  :"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:278
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:114
 #. i18n: ectx: property (text), widget (QCheckBox, transformAtoms)
 msgid "&Transform Atoms"
-msgstr "&Transformer les atomes"
+msgstr "&Repositionner les atomes"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:300
 #. i18n: ectx: property (text), widget (QPushButton, apply)
@@ -5936,9 +5935,8 @@ msgstr "&Masquer"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
-#, fuzzy
 msgid "Scale Unit Cell Volume"
-msgstr "Mettre le volume de maille conventionnelle à l'échelle"
+msgstr "Redimensionner la maille à un volume"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5948,7 +5946,7 @@ msgstr "Nouveau &volume :"
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "&Scaling Factor:"
-msgstr ""
+msgstr "&Coefficient multiplicateur :"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6029,10 +6027,8 @@ msgstr " étapes"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Constraint Tolerance:"
 msgid "Gradient convergence:"
-msgstr "Tolérance des contraintes :"
+msgstr "Convergence du gradient :"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:126
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -6294,16 +6290,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
-"css\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
-"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
-"html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6425,7 +6421,7 @@ msgstr "charge"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:231
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "dipole"
-msgstr "dipole"
+msgstr "dipôle"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6622,16 +6618,19 @@ msgstr "fm"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
+#, fuzzy
 msgid "Change Y boundary style."
 msgstr "Modifier le style de la limite en Y."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
+#, fuzzy
 msgid "Change X boundary style."
 msgstr "Modifier le style de la limite en X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
+#, fuzzy
 msgid "Select boundary Styles in X, Y and Z directions."
 msgstr "Sélectionner les styles des limites en X, Y et Z."
 
@@ -6643,7 +6642,7 @@ msgstr "Limite"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:589
 #. i18n: ectx: property (toolTip), widget (QLabel, label_5)
 msgid "Number of replicants in X, Y and Z directions."
-msgstr "Nombre de répliquant en X, Y, Z."
+msgstr "Nombre de répliquants en directions X, Y, et Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6670,12 +6669,12 @@ msgstr "Reproduire en Z."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:659
 #. i18n: ectx: property (toolTip), widget (QSpinBox, runSpin)
 msgid "Total number of timesteps to run the simulation."
-msgstr "Nombre total d'intervalle de temps pour la simulation."
+msgstr "Nombre total des pas de temps pour la simulation."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:652
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Steps"
-msgstr "Pas total"
+msgstr "Nombre total des pas"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:685
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6685,7 +6684,7 @@ msgstr "Intervalle de copie"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:715
 #. i18n: ectx: property (toolTip), widget (QLabel, label_8)
 msgid "Set the initial atom velocities for the simulation."
-msgstr "Fixer les vélocités initiales des atomes pour la simulation."
+msgstr "Définir les vélocités initiales des atomes pour la simulation."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -6735,7 +6734,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:784
 #. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
-#, fuzzy
 msgid "Zero Angular Momentum"
 msgstr "Quantité de mouvement angulaire nulle"
 
@@ -6767,7 +6765,7 @@ msgstr "3d"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:867
 #. i18n: ectx: property (toolTip), widget (QComboBox, thermoStyleCombo)
 msgid "Thermodynamic output style."
-msgstr "Style de fichier de sortie de la thermodynamique."
+msgstr "Style de sortie thermodynamique."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:871
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
@@ -6811,7 +6809,7 @@ msgstr "Y"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr "Translater de :"
+msgstr "Translater par :"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6874,29 +6872,27 @@ msgstr "Nombre de conformères :"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
 msgid "Systematic rotor search"
-msgstr "Recherche systématique de rotor"
+msgstr "Recherche systématique de rotateurs"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:47
 #. i18n: ectx: property (text), widget (QRadioButton, randomRadio)
 msgid "Random rotor search"
-msgstr "Recherche aléatoire de rotor"
+msgstr "Recherche aléatoire de rotateurs"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:54
 #. i18n: ectx: property (text), widget (QRadioButton, weightedRadio)
 msgid "Weighted rotor search"
-msgstr "Recherche pondérée de rotor"
+msgstr "Recherche pondérée de rotateurs"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
 msgid "Genetic algorithm search"
-msgstr "Algorithme de recherche génétique"
+msgstr "Recherche par algorithme génétique"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
-#| msgid "Optimization algorithm:"
 msgid "Optimization per conformer:"
-msgstr "Algorithme d'optimisation :"
+msgstr "Optimisation par conformères :"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -6933,6 +6929,7 @@ msgstr "Mutabilité :"
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
 msgstr ""
+"nombre de générations identiques pour prouver que la convergence est atteinte"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -6941,10 +6938,8 @@ msgstr "Convergence :"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Scoring method"
 msgid "Scoring method:"
-msgstr "Méthode d'évaluation"
+msgstr "Méthode d'évaluation :"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -6952,6 +6947,8 @@ msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
 msgstr ""
+"méthode d'évaluation de l'algorithme génétique (RMSD = distance géométrique, "
+"énergie = énergie les plus basses)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -6966,7 +6963,7 @@ msgstr "Algorithme d'optimisation :"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Line search technique:"
-msgstr ""
+msgstr "Technique de la recherche linéaire :"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
@@ -6991,7 +6988,7 @@ msgstr "Méthode de Newton"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "limiter les interactions non-covalentes"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7006,7 +7003,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "electrostatic cutoff distance:"
-msgstr ""
+msgstr "distance de coupure électrostatique :"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, vdwCutoff)
@@ -7018,17 +7015,17 @@ msgstr "Å"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "\"Energy\" convergence:"
-msgstr ""
+msgstr "convergence « d'énergie » :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, OpenMMInputDialog)
 msgid "OpenMM Script Builder"
-msgstr ""
+msgstr "éditeur des scripts OpenMM"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label_jobScript)
 msgid "Job script:"
-msgstr ""
+msgstr "Nom du script de tâche :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:47
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, jobScriptEdit)
@@ -7038,7 +7035,7 @@ msgstr "script"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:54
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 msgid "Input Coords:"
-msgstr ""
+msgstr "Coordonnées d'entrée :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:64
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputCoordEdit)
@@ -7048,7 +7045,7 @@ msgstr "input.pdb"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:71
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Input Topology:"
-msgstr ""
+msgstr "Topologie d'entrée :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
@@ -7252,7 +7249,7 @@ msgstr "Vecteur vitesse initiale aléatoire :"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:465
 #. i18n: ectx: property (text), widget (QLabel, label_generationTemp)
 msgid "Generation Temp:"
-msgstr "Génération Temp :"
+msgstr "Temp. de génération :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:481
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, generationTemperatureSpin)
@@ -7369,7 +7366,7 @@ msgstr "PDB"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Intervalle de rapport :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
@@ -7389,12 +7386,12 @@ msgstr "Minimiser ?"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:821
 #. i18n: ectx: property (text), widget (QLabel, label_minimizeSteps)
 msgid "Max. Minimize Steps:"
-msgstr ""
+msgstr "Max. Minimize Steps :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:841
 #. i18n: ectx: property (text), widget (QLabel, label_stateDataOptions)
 msgid "StateData options:"
-msgstr ""
+msgstr "Options de StateData :"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
@@ -7454,7 +7451,7 @@ msgstr "Rayon maximal :"
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
 msgid "Step (dr):"
-msgstr ""
+msgstr "Étape (dr) :"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
@@ -7504,7 +7501,7 @@ msgid ""
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
 "<html><head/><body><p>La longueur d'onde des rayons X en Angströms. </"
-"p><p>Default : 1.50560 Å</p></body></html>"
+"p><p>Valeur par défaut : 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -7512,11 +7509,13 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Le nombre de points de 2theta à générer</p><p>Valeur "
+"par défault : 1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2*theta:"
-msgstr "Max 2*theta :"
+msgstr "Max 2*thêta :"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
@@ -7590,7 +7589,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
-msgstr ""
+msgstr "Décalage :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -7633,7 +7632,7 @@ msgstr "Afficher"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "Importe un tsv de spectres expérimentaux à superposer au tracé."
+msgstr "Importe un fichier tsv de spectres expérimentaux à superposer au tracé."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -7716,7 +7715,7 @@ msgstr "x"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:512
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
-msgstr "o"
+msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
@@ -7761,7 +7760,7 @@ msgstr "bêta"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr "Couleur par :"
+msgstr "Colorer par :"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -7776,7 +7775,7 @@ msgstr "Résolution :"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:224
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "Very Low"
-msgstr "Très bas"
+msgstr "Très basse"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:229
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -7808,7 +7807,7 @@ msgstr "Valeur d'isosurface :"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
 msgid " "
-msgstr ""
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7820,7 +7819,7 @@ msgstr "Lissage :"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:375
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 msgid "Light"
-msgstr "Clair"
+msgstr "Faible"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
@@ -7880,22 +7879,22 @@ msgstr "Tolérance :"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Tight"
-msgstr "Exacte"
+msgstr "serrée"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:230
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Normal"
-msgstr "Normal"
+msgstr "normale"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:235
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Loose"
-msgstr "Approximative"
+msgstr "lâche"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr ""
+msgstr "très lâche"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
@@ -7962,61 +7961,57 @@ msgstr "Coordination :"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:227
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Octahedral"
-msgstr ""
+msgstr "6 : octaédrique"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:192
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
-#| msgid "Linear"
 msgid "1: Linear"
-msgstr "Linéaire"
+msgstr "1 : Linéaire"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:197
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
-#| msgid "Linear"
 msgid "2: Linear"
-msgstr "Linéaire"
+msgstr "2 : Linéaire"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:202
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "3: Trigonal Planar"
-msgstr ""
+msgstr "3 : trigonal (plan)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Tetrahedral"
-msgstr ""
+msgstr "4 : Tétraèdre"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Square Planar"
-msgstr ""
+msgstr "4 : Carré (plan)"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Trigonal Bipyramidal"
-msgstr ""
+msgstr "5 : Bipyramide trigonale"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:222
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Square Pyramidal"
-msgstr ""
+msgstr "5 : Pyramide à base carrée"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Trigonal Prism"
-msgstr ""
+msgstr "6 : Prisme trigonal"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "7: Pentagonal Bipyramidal"
-msgstr ""
+msgstr "7 : Bipyramide pentagonale"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:242
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "8: Square Antiprism"
-msgstr ""
+msgstr "8 : Antiprisme carré"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:315
 #. i18n: ectx: attribute (title), widget (QWidget, ligandTab)
@@ -8031,38 +8026,32 @@ msgstr "Type :"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Monodentate"
-msgstr ""
+msgstr "Monodenté"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:336
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Bidentate"
-msgstr ""
+msgstr "Bidenté"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "État de transition"
+msgstr "Tridenté"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "État de transition"
+msgstr "Tetradenté"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "État de transition"
+msgstr "Hexadenté"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Haptic"
-msgstr ""
+msgstr "Haptique"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8076,10 +8065,8 @@ msgstr "Ligand :"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "Groupe %1"
+msgstr "Groupes"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8109,7 +8096,7 @@ msgstr "éthylène"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "éthyne"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8144,7 +8131,7 @@ msgstr "Amplitude :"
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 msgid "Start Animation"
-msgstr "Commencer l'animation"
+msgstr "Démarrer l'animation"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
@@ -8199,7 +8186,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr "Niveler niveau de Fermi à zéro ?"
+msgstr "Niveler le niveau de Fermi à zéro ?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
