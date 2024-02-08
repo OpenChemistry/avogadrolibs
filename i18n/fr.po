@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-08 00:38+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -8032,7 +8032,7 @@ msgstr "Monodenté"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:336
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Bidentate"
-msgstr ""
+msgstr "Bidentate"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
