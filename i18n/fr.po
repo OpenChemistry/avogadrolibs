@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-08 00:03+0000\n"
+"PO-Revision-Date: 2024-02-08 00:18+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -7633,7 +7633,7 @@ msgstr "Afficher"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "Importe un tsv de spectres expérimentaux à superposer au tracé."
+msgstr "Importe un fichier tsv de spectres expérimentaux à superposer au tracé."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -7716,7 +7716,7 @@ msgstr "x"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:512
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
-msgstr "o"
+msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
@@ -7761,7 +7761,7 @@ msgstr "bêta"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr "Couleur par :"
+msgstr "Colorer par :"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -7776,7 +7776,7 @@ msgstr "Résolution :"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:224
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 msgid "Very Low"
-msgstr "Très bas"
+msgstr "Très basse"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:229
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -7820,7 +7820,7 @@ msgstr "Lissage :"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:375
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 msgid "Light"
-msgstr "Clair"
+msgstr "Faible"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
@@ -7880,17 +7880,17 @@ msgstr "Tolérance :"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Tight"
-msgstr "Exacte"
+msgstr "serrée"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:230
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Normal"
-msgstr "Normal"
+msgstr "normale"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:235
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Loose"
-msgstr "Approximative"
+msgstr "lâche"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
