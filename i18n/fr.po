@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-08 00:41+0000\n"
+"PO-Revision-Date: 2024-02-08 00:53+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -8067,7 +8067,7 @@ msgstr "Ligand :"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 msgid "Groups"
-msgstr "Groups"
+msgstr "Groupes"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8132,7 +8132,7 @@ msgstr "Amplitude :"
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 msgid "Start Animation"
-msgstr "Commencer l'animation"
+msgstr "Démarrer l'animation"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
@@ -8187,7 +8187,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr "Niveler niveau de Fermi à zéro ?"
+msgstr "Niveler le niveau de Fermi à zéro ?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
