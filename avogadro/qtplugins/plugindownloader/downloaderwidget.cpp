@@ -46,7 +46,7 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::DownloaderWidget)
 {
   m_filePath =
-    QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
   m_NetworkAccessManager = new QNetworkAccessManager(this);
   m_ui->setupUi(this);
   // enable links in the readme to open an external browser
