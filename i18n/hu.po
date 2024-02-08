@@ -7,14 +7,14 @@
 # ovari <ovari123@zoho.com>, 2021, 2022, 2023, 2024.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# Mirkó Attila <kisatti007hun@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-01-14 12:31+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-02-09 20:00+0000\n"
+"Last-Translator: Mirkó Attila <kisatti007hun@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -2973,7 +2973,7 @@ msgstr "Geometria optimalizálása"
 
 #: qtplugins/forcefield/forcefield.cpp:90
 msgid "Forces"
-msgstr ""
+msgstr "Erők"
 
 #: qtplugins/forcefield/forcefield.cpp:98
 msgid "Configure…"
@@ -3008,7 +3008,7 @@ msgstr "Avogadro"
 #: qtplugins/forcefield/forcefield.cpp:399
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 Erő Norm = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
 msgid "Forcefield optimization"
