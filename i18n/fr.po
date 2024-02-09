@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-08 00:59+0000\n"
+"PO-Revision-Date: 2024-02-09 21:24+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -5637,6 +5637,28 @@ msgid ""
 "optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Spécification du format. Chaque caractère représente "
+"une valeur à écrire par atome :</p><p><span style=\" font-weight:600;\">#</"
+"span> - Indice atomique (1, 2, ..., numAtoms)<br/><span style=\" font-"
+"weight:600;\">Z</span> - Nombre atomique (par exemple \"6\" pour carbone)<br/"
+"><span style=\" font-weight:600;\">G</span> - Nombre atomique, style GAMESS ("
+"par exemple \"6.0\" pour carbone)<br/><span style=\" font-weight:600;\">N</"
+"span> - nom de l'élément (par exemple \"carbone\")<br/><span style=\" font-"
+"weight:600;\">S</span> - Symbole d'élément (par exemple \"C\" pour Carbone)<"
+"br/><span style=\" font-weight:700;\">L</span> - étiquette de l'atome (par "
+"exemple \"C2\" comme deuxième atome du carbone, \"H1\" comme le premier "
+"hydrogène) <br/><span style=\" font-weight:600;\">x</span> - coordonnée de "
+"position X<br/><span style=\" font-weight:600;\">y</span> - coordonné de "
+"position Y<br/><span style=\" font-weight:600;\">z</span> - coordonnée de "
+"position Z<br/><span style=\" font-weight:600;\">a</span> - coordonnée du "
+"réseau 'a' (cristaux uniquement)<br/><span style=\" font-weight:600;\">b</"
+"span> - coordonnée du réseau 'b' (cristaux uniquement)<br/><span style=\" "
+"font-weight:600;\">c</span> - coordonnée du réseau 'c' (cristaux uniquement)<"
+"br/><span style=\" font-weight:600;\">_</span> - Un espace littéral (\" \"), "
+"utile pour l'alignement<br/><span style=\" font-weight:600;\">0</span> - Un "
+"0 littéral (\"0\"), utile comme option ou drapeau d'optimisation<br/><span "
+"style=\" font-weight:600;\">1</span> - Un 1 littéral (\"1\"), utile comme "
+"option ou drapeau d'optimisation<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6618,21 +6640,18 @@ msgstr "fm"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
-#, fuzzy
 msgid "Change Y boundary style."
-msgstr "Modifier le style de la limite en Y."
+msgstr "Modifier le style de délimitation selon la direction Y."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
-#, fuzzy
 msgid "Change X boundary style."
-msgstr "Modifier le style de la limite en X."
+msgstr "Modifier le style de délimitation selon la direction X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
-#, fuzzy
 msgid "Select boundary Styles in X, Y and Z directions."
-msgstr "Sélectionner les styles des limites en X, Y et Z."
+msgstr "Sélectionner les styles de délimitation selon les directions X, Y et Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_boundary)
@@ -7464,6 +7483,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>L'élargissement du pic à la base du pic (en "
+"degrés)</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7471,6 +7492,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
+"<html><head/><body><p>La valeur maximale 2thêta en degrés</p><p>Valeur par "
+"défaut : 162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -7478,6 +7501,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
+"<html><head/><body><p>L'élargissement des bases des pics en degrés.</"
+"p><p>Valeur par défaut : 0,52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7605,10 +7630,8 @@ msgstr "Minimum :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Peak width:"
 msgid "Peak Width:"
-msgstr "Largeur du pic :"
+msgstr "Largeur du pic :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:216
 #. i18n: ectx: property (text), widget (QLabel, label_27)
@@ -8169,6 +8192,14 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>Le niveau de Fermi doit être connu avant de cocher "
+"cette case. Vous pouvez déterminer le niveau de Fermi en effectuant un "
+"calcul de la densité d'états et en affichant les données (il sera en haut "
+"des données). Ainsi, dès que le calcul de densité d'états est accompli, le "
+"niveau de Fermi sera automatiquement accordé au résultat du calcul de "
+"densité d'états.</p><p>Si cette case est cochée, assurez-vous que le niveau "
+"de Fermi correct est défini dans la boîte sur la droite.</p><p>Valeur à "
+"défaut : off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -8223,6 +8254,18 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Enter k-points spéciaux comme tels :</p><p>L 0.5 0.5 0."
+"5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>C'est-à-dire, &lt;symbole&gt;"
+" &lt;x&gt; &lt;y&gt; &lt;z&gt; où x, y, et z sont des coordonnées "
+"fractionnaires en espace réciproque. Les lignes seront tracées en reliant "
+"ces points k sur le graphique dans l'ordre où vous les mettez. Veuillez "
+"noter que l'orientation de votre cellule peut avoir un effet sur les "
+"emplacements de ces points d'espace réciproque.</p><p>Si le groupe d'espace "
+"du cristal a été perçu ou réglé, les points de k spéciaux seront "
+"automatiquement remplis des points de symétrie haute cellule primitive pour "
+"ce groupe d'espace. Il y a quelques groupes d'espaces différents points de "
+"symétrie haute en fonction du treillis (comme si un &gt; b ou un &lt; b) - "
+"qui est pris en compte automatiquement</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -8256,6 +8299,10 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Entrez le nombre de points k qui relieront les points "
+"k spéciaux. Plus il y a de points k, plus le graphique est lissé, mais le "
+"calcul peut prendre plus de temps.</p><p>Valeur par défaut : "
+"40</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -8281,6 +8328,12 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Le nombre de dimensions périodiques.</p><p><br/></"
+"p><p>Si vous le ajuster à 1, le matériau sera périodique seulement le long "
+"du vecteur A du cristal.</p><p><br/></p><p>Si égal à 2, la périodicité du "
+"matériau est le long les vecteurs A et B du cristal.</p><p><br/></p><p>Si "
+"égal à 3, la périodicité suit les vecteurs A, B et C du cristal.</p><p><br/"
+"></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
