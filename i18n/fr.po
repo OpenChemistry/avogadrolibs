@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-09 21:32+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -8210,6 +8210,9 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Ajustez les énergies pour que le zéro soit le Fermi ? "
+"Seulement disponible si nous comptons sur le niveau Fermi.</p><p><br/></"
+"p><p>Default : off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
