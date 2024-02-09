@@ -18,6 +18,7 @@
 #include <openbabel/obconversion.h>
 #include <openbabel/obiter.h>
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 
@@ -43,6 +44,11 @@ OBEnergy::OBEnergy(const std::string& method)
   : m_identifier(method), m_name(method), m_molecule(nullptr)
 {
   d = new Private;
+
+  // make sure we set the Open Babel variables for data files
+#if defined(_WIN32)
+  qputenv("BABEL_DATADIR", QCoreApplication::applicationDirPath() + "/data");
+#else
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
