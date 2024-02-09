@@ -146,6 +146,10 @@ jobs:
         tools-only: 'true'
         tools: 'tools_opensslv3_x64'
 
+    - name: Setup tmate session
+      if: runner.os == 'Windows'
+      uses: mxschmitt/action-tmate@v3
+
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
