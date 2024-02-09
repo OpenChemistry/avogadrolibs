@@ -47,7 +47,9 @@ OBEnergy::OBEnergy(const std::string& method)
 
   // make sure we set the Open Babel variables for data files
 #ifdef _WIN32
-  qputenv("BABEL_DATADIR", QCoreApplication::applicationDirPath() + "/data");
+  QByteArray dataDir =
+    QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
+  qputenv("BABEL_DATADIR", dataDir);
 #endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
