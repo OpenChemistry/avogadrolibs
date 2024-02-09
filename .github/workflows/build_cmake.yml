@@ -59,7 +59,6 @@ jobs:
             cmake_flags: "",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
-            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
@@ -134,21 +133,6 @@ jobs:
         aqtversion: '==3.1.*'
         cache: true
         version: ${{ env.QT_VERSION }}
-
-    - name: Install OpenSSL (Win64)
-      if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
-      with:
-        aqtversion: '==3.1.*'
-        cache: true
-        host: 'windows'
-        target: 'desktop'
-        tools-only: 'true'
-        tools: 'tools_opensslv3_x64'
-
-    - name: Setup tmate session
-      if: runner.os == 'Windows'
-      uses: mxschmitt/action-tmate@v3
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
