@@ -140,3 +140,5 @@ TEST(ArrayTest, pop_back)
   EXPECT_EQ(array.size(), static_cast<size_t>(1));
   EXPECT_EQ(array.constData(), array2.constData());
 }
+
+//does this work?
