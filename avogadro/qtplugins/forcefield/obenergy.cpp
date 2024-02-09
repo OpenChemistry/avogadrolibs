@@ -46,9 +46,9 @@ OBEnergy::OBEnergy(const std::string& method)
   d = new Private;
 
   // make sure we set the Open Babel variables for data files
-#if defined(_WIN32)
+#ifdef _WIN32
   qputenv("BABEL_DATADIR", QCoreApplication::applicationDirPath() + "/data");
-#else
+#endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
