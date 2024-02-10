@@ -18,6 +18,7 @@
 #include <openbabel/obconversion.h>
 #include <openbabel/obiter.h>
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 
@@ -43,11 +44,24 @@ OBEnergy::OBEnergy(const std::string& method)
   : m_identifier(method), m_name(method), m_molecule(nullptr)
 {
   d = new Private;
+
+  // make sure we set the Open Babel variables for data files
+#ifdef _WIN32
+  QByteArray dataDir =
+    QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
+  qputenv("BABEL_DATADIR", dataDir);
+#endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();
 
   d->m_forceField = static_cast<OBForceField*>(
     OBPlugin::GetPlugin("forcefields", method.c_str()));
+
+  qDebug() << "OBEnergy: method: " << method.c_str();
+  if (d->m_forceField == nullptr) {
+    qDebug() << "OBEnergy: method not found: " << method.c_str();
+    qDebug() << OBPlugin::ListAsString("forcefields").c_str();
+  }
 
   if (method == "UFF") {
     m_description = tr("Universal Force Field");
