@@ -56,7 +56,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\\a\\Tools\\OpenSSL\\Win_x64",
+            cmake_flags: "",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -130,19 +130,9 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        cache: True
+        aqtversion: '==3.1.*'
+        cache: true
         version: ${{ env.QT_VERSION }}
-
-    - name: Install OpenSSL (Win64)
-      if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
-      with:
-        cache: True
-        tools: 'tools_opensslv3_x64'
-        version: ${{ env.QT_VERSION }}
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_msvc2019_64'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -268,12 +258,16 @@ jobs:
         if [ -z "${P12_PASSWORD}" ]; then
           unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
         fi
+        if [ -z "${OPENSSL_ROOT_DIR}" ]; then
+          unset OPENSSL_ROOT_DIR
+        fi
         [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
       env:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
 
     - name: AppImage
       if: matrix.config.os == 'ubuntu-20.04' && matrix.config.build_type == 'Release'
