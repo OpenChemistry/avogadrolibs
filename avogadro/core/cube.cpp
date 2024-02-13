@@ -7,21 +7,17 @@
 
 #include "molecule.h"
 #include "mutex.h"
+#include <memory>
 
 namespace Avogadro::Core {
 
-Cube::Cube()
-  : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
-    m_spacing(0.0, 0.0, 0.0), m_points(0, 0, 0), m_minValue(0.0),
-    m_maxValue(0.0), m_lock(new Mutex)
-{
-}
+    Cube::Cube()
+            : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
+              m_spacing(0.0, 0.0, 0.0), m_points(0, 0, 0), m_minValue(0.0),
+              m_maxValue(0.0),
+              m_lock(std::make_unique<Mutex>()) // Initializes m_lock with a new Mutex instance
 
-Cube::~Cube()
-{
-  delete m_lock;
-  m_lock = nullptr;
-}
+    Cube:: ~Cube() = default; // With unique_ptr, default destructor is fine.
 
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
                      const Vector3i& points)
