@@ -8,14 +8,16 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+
+#include <QDebug>
 
 namespace Avogadro::QtPlugins {
 
@@ -50,6 +52,8 @@ bool FetchPDB::readMolecule(QtGui::Molecule& mol)
 {
   if (m_moleculeData.isEmpty() || m_moleculeName.isEmpty())
     return false;
+
+  qDebug() << "Reading molecule from temp file: " << m_tempFileName;
 
   bool readOK = Io::FileFormatManager::instance().readFile(
     mol, m_tempFileName.toStdString(), "mmtf");
@@ -115,6 +119,9 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   out.write(m_moleculeData);
   out.close();
 
+  qDebug() << " FetchPDB received data from network and wrote to temp file: "
+           << m_tempFileName;
+
   // Check if the file was successfully downloaded
   if (m_moleculeData.contains("Error report") ||
       m_moleculeData.contains("Page not found (404)")) {
@@ -127,4 +134,4 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   emit moleculeReady(1);
   reply->deleteLater();
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
