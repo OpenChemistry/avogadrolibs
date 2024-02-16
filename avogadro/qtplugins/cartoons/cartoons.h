@@ -27,7 +27,10 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Cartoons", "protein ribbon / cartoon rendering"); }
+  QString name() const override
+  {
+    return tr("Cartoons", "protein ribbon / cartoon rendering");
+  }
 
   QString description() const override
   {
@@ -35,6 +38,7 @@ public:
   }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {

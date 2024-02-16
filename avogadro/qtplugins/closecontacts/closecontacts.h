@@ -27,14 +27,18 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Close Contacts", "rendering of non-covalent close contacts"); }
+  QString name() const override
+  {
+    return tr("Close Contacts", "rendering of non-covalent close contacts");
+  }
 
   QString description() const override
   {
     return tr("Render close contacts between atoms.");
   }
-  
+
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {
@@ -47,10 +51,10 @@ public slots:
 
 private:
   std::string m_name = "Close Contacts";
-  
-  const std::array<QString, 3> INTERACTION_NAMES = {
-	tr("Contact"), tr("Salt Bridge"), tr("Repulsive")
-  };
+
+  const std::array<QString, 3> INTERACTION_NAMES = { tr("Contact"),
+                                                     tr("Salt Bridge"),
+                                                     tr("Repulsive") };
 
   std::array<double, 3> m_maximumDistances;
   std::array<Vector3ub, 3> m_lineColors;

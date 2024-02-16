@@ -33,8 +33,9 @@ public:
   {
     return tr("Render a few non-covalent interactions.");
   }
-  
+
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {
@@ -48,11 +49,11 @@ public slots:
 
 private:
   const std::string m_name = "Non-Covalent";
-  
-  const std::array<QString, 3> INTERACTION_NAMES = {
-	tr("Hydrogen"), tr("Halogen"), tr("Chalcogen")
-  };
-  
+
+  const std::array<QString, 3> INTERACTION_NAMES = { tr("Hydrogen"),
+                                                     tr("Halogen"),
+                                                     tr("Chalcogen") };
+
   std::array<double, 3> m_angleTolerancesDegrees;
   std::array<double, 3> m_maximumDistances;
   std::array<Vector3ub, 3> m_lineColors;

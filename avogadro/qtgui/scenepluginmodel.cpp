@@ -86,7 +86,7 @@ QVariant ScenePluginModel::data(const QModelIndex& index_, int role) const
     switch (role) {
       case Qt::DisplayRole:
       case Qt::EditRole:
-        return (item->setupWidget() != nullptr) ? "•••" : " ";
+        return (item->hasSetupWidget()) ? "•••" : " ";
       case Qt::ToolTipRole:
       case Qt::WhatsThisRole:
         return tr("Settings");

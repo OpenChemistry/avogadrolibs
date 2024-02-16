@@ -36,6 +36,7 @@ public:
   }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
 private slots:
   void setColor(const QColor& color);
