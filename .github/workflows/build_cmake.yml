@@ -142,11 +142,10 @@ jobs:
 
     - name: Grab cache files
       uses: actions/cache@v4
-      if: runner.os != 'Windows'
       with:
         path: |
-          ${{ runner.workspace }}/build/Downloads
-        key: ${{ matrix.config.name }}-downloads
+          ${{ runner.workspace }}/build/thirdparty
+        key: ${{ matrix.config.name }}-thirdparty
 
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@main
