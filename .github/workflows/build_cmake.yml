@@ -56,8 +56,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "",
-            build_flags: "-j 4",
+            cmake_flags: "-G Ninja",
             cpack_flags: "-G NSIS",
           }
         - {
