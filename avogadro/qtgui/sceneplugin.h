@@ -77,13 +77,26 @@ public:
    */
   virtual void setEnabled(bool enable);
 
+  /**
+   * @return the widget for plugin settings (e.g., colors, widths, etc.)
+   */
   virtual QWidget* setupWidget();
+  /**
+   * This method exists to query without creating the widget.
+   * @return true if the plugin has a setup widget
+   */
+  virtual bool hasSetupWidget() const { return false; }
 
   /**
-  * Returns if this plugin should be considered in the default behavior,
-  * or it should reset to true or false.
-  */
-  enum DefaultBehavior { Ignore, False, True };
+   * Returns if this plugin should be considered in the default behavior,
+   * or it should reset to true or false.
+   */
+  enum DefaultBehavior
+  {
+    Ignore,
+    False,
+    True
+  };
   virtual DefaultBehavior defaultBehavior() const { return Ignore; }
 
 signals:

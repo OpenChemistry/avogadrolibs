@@ -30,6 +30,8 @@ public:
   }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
+
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
