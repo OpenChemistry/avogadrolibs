@@ -452,23 +452,23 @@ void Select::selectAtomIndex()
       auto range = item.split('-');
       if (range.size() == 2) {
         bool ok1, ok2;
-        int k=m_molecule->atomCount();
+        int k = m_molecule->atomCount();
         int start = range.first().toInt(&ok1);
         int last = range.back().toInt(&ok2);
         if (ok1 && ok2) {
-          if(start<k)
-          for (int i = start; i <= last; ++i)
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
-                                                        undoText);
+          if (start < k)
+            for (int i = start; i <= last; ++i)
+              m_molecule->undoMolecule()->setAtomSelected(
+                i, evalSelect(true, i), undoText);
         }
       }
     } else {
       int i = item.toInt(&ok);
       int k = m_molecule->atomCount();
       if (ok)
-        if(i<k)
-        m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
-                                                    undoText);
+        if (i < k)
+          m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                      undoText);
     }
   }
 
