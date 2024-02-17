@@ -19,9 +19,10 @@ Centroid::Centroid(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
     m_centroidAction(new QAction(tr("Add Centroid"), this)),
     m_comAction(new QAction(tr("Add Center of Mass"), this)),
-    m_normalAction(new QAction(
-      tr("Add Perpendicular", "add a point normal to the plane of the molecule"),
-      this))
+    m_normalAction(
+      new QAction(tr("Add Perpendicular",
+                     "add a point normal to the plane of the molecule"),
+                  this))
 {
   m_centroidAction->setProperty("menu priority", 190);
   m_comAction->setProperty("menu priority", 180);
@@ -52,6 +53,9 @@ void Centroid::setMolecule(QtGui::Molecule* mol)
 
 void Centroid::addCentroid()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   if (m_molecule->isSelectionEmpty()) {
     m_molecule->addAtom(0, m_molecule->centerOfGeometry());
   } else {
@@ -74,6 +78,9 @@ void Centroid::addCentroid()
 
 void Centroid::addCenterOfMass()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   if (m_molecule->isSelectionEmpty()) {
     m_molecule->addAtom(0, m_molecule->centerOfMass());
   } else {
@@ -102,6 +109,9 @@ void Centroid::addCenterOfMass()
 
 void Centroid::normal()
 {
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
   if (m_molecule->isSelectionEmpty()) {
     auto pair = m_molecule->bestFitPlane();
     m_molecule->addAtom(0.0, pair.second * 2.0);
