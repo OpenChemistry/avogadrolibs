@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-18 17:26+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -94,7 +94,7 @@ msgstr "'files' Mitglied ist nicht ein Array."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr "'datei'-mitglied fehlt."
+msgstr "'files'-Mitglied fehlt."
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -106,7 +106,7 @@ msgstr "Das Mitglied 'mainFile' muss eine Zeichenkette sein."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
-msgstr "Die Antwort muss ein JSON-Objekt der obersten Ebene sein."
+msgstr "Die Antwort muss ein JSON-Objekt auf der obersten Ebene sein."
 
 #: molequeue/inputgenerator.cpp:283 qtgui/interfacescript.cpp:452
 #, qt-format
@@ -125,6 +125,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Analysefehler bei Offset %L1: '%2'\n"
+"Raw-JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:350
 #, qt-format
@@ -148,6 +152,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Fehler beim Generieren des cjson-Objekts: Analysefehler bei Offset %1: %2\n"
+"Raw-JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:379 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -155,10 +163,12 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Fehler Generator cjson-Objekt: Geparstes JSON ist kein Objekt:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr "Eingabe Generator (Fehler)"
+msgstr "Eingabegenerator (Fehler)"
 
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
@@ -298,7 +308,7 @@ msgstr "Namen der Ausgabedatei wählen"
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
-"Interner Fehler: Es konnte kein Textwidget für den Dateinamen '%1' gefunden "
+"Interner Fehler: Text-Widget für den Dateinamen '%1' konnte nicht gefunden "
 "werden"
 
 #: molequeue/inputgeneratorwidget.cpp:470
@@ -353,7 +363,7 @@ msgstr "%1: Verzeichnis kann nicht gelesen werden!"
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr "%1: Datei wird überschrieben."
+msgstr "%1: Datei wird überschrieben werden."
 
 #: molequeue/inputgeneratorwidget.cpp:520
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -443,13 +453,13 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Timeout: Avogadro wartet nicht mehr auf eine Antwort von MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr "Warten auf Abschlus der Aufgabe %1 \"%2\"…"
+msgstr "Warten auf Abschluss der Aufgabe %1 \"%2\"…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
