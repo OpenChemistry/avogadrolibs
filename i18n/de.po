@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1091,7 +1091,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 Nachricht"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -1119,7 +1119,7 @@ msgstr "Option '%1' bezieht sich auf kein Objekt."
 #: qtgui/jsonwidget.cpp:93
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr ""
+msgstr "'Typ' ist kein String für Option '%1'."
 
 #: qtgui/jsonwidget.cpp:100
 #, qt-format
