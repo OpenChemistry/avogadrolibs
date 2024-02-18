@@ -15,8 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-18 18:17+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1717,7 +1716,7 @@ msgstr "Fehler"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr "Fehler bei APBS: %1"
+msgstr "Fehler beim Ausführen von APBS: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
@@ -1749,7 +1748,7 @@ msgstr "Nach benutzerdefinierter Farbe…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
 msgid "By Atomic Index"
-msgstr "Nach Atomindiz"
+msgstr "Nach Atomindex"
 
 #: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance"
@@ -1777,7 +1776,7 @@ msgstr "Nach Aminosäure"
 
 #: qtplugins/applycolors/applycolors.cpp:89
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "Nach Shapely-Schema"
 
 #: qtplugins/applycolors/applycolors.cpp:104
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1791,19 +1790,19 @@ msgstr "Parula"
 #: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
-msgstr "Hitze"
+msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
-msgstr "Heiß"
+msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
-msgstr "Grau"
+msgstr "Gray"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
@@ -1855,7 +1854,7 @@ msgstr "Cividis"
 #: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1815
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Spektral"
+msgstr "Spectral"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1873,11 +1872,9 @@ msgstr "Coolwarm"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1806
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Abbrechen"
+msgstr "Balance"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1939,13 +1936,12 @@ msgid "ApplyColors"
 msgstr "Farben anwenden"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
-#, fuzzy
 msgid "Atom scale"
-msgstr "Atomstil"
+msgstr "Atomgröße"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
 msgid "Bond scale"
-msgstr "Bindung skalieren"
+msgstr "Bindungsgröße"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
@@ -1959,7 +1955,7 @@ msgstr "Wasserstoffatome anzeigen"
 
 #: qtplugins/ballandstick/ballandstick.h:33
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr "Atome als Sphären und Bindungen als Zylinder rendern."
+msgstr "Atome als Kugeln und Bindungen als Zylinder rendern."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:121
 msgid "Bond-Centric Manipulation"
@@ -2020,16 +2016,18 @@ msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
-msgstr "Bindungsorientiertes Manipulationswerkzeug."
+msgstr "Bindungsorientiertes Bearbeitungswerkzeug."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Werkzeug, um die Molekülgeometrie durch Änderung von Bindungslängen und -"
+"winkeln zu bearbeiten."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Atome binden"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
@@ -2040,6 +2038,7 @@ msgid "Remove Bonds"
 msgstr "Bindungen entfernen"
 
 #: qtplugins/bonding/bonding.cpp:31
+#, fuzzy
 msgid "Configure Bonding…"
 msgstr "Bindung einrichten…"
 
@@ -2053,6 +2052,7 @@ msgstr "Ausgewählte Atome verbinden"
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
+#, fuzzy
 msgid "&Build"
 msgstr "S&truktur"
 
