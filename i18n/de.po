@@ -9,13 +9,15 @@
 # Jörn Weigend <das.jott@gmail.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-19 19:02+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: matterhorn103 <83813148+matterhorn103@users.noreply.github."
+"com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2115,7 +2117,7 @@ msgstr "Cartoon"
 #: qtplugins/cartoons/cartoons.cpp:99
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "Seil"
 
 #: qtplugins/cartoons/cartoons.h:34
 msgid "Display of biomolecule ribbons / cartoons."
