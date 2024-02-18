@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-18 18:07+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1598,11 +1598,9 @@ msgstr "Ausgewähltes Atom am Ursprung zentrieren."
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
-"Drehen Sie das Molekül, um das Atom auf die angegebene Achse auszurichten."
+"Das Molekül drehen, um das Atom entlang der ausgewählten Achse auszurichten."
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
 msgstr "Auswahlwerkzeug"
 
@@ -1647,7 +1645,7 @@ msgstr "I/O Fehler"
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr "Lesen von Strukturdatei (%1) fehlgeschlagen."
+msgstr "Das Lesen der Strukturdatei (%1) ist fehlgeschlagen."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
@@ -1659,6 +1657,7 @@ msgid "Error reading OpenDX file: %1"
 msgstr "Fehler beim Lesen von OpenDX-Datei: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
+#, fuzzy
 msgid "Error reading OpenDX file: No cube found"
 msgstr "Lesen von OpenDX-Datei fehlgeschlagen: kein Cube gefunden"
 
