@@ -5,7 +5,7 @@
 # matterhorn103 <milner94@live.co.uk>, 2022, 2023.
 # Sebastian Ehlert <awvwgk@gmail.com>, 2022.
 # "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
-# Norwid Behrnd <nbehrnd@yahoo.com>, 2023.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024.
 # Jörn Weigend <das.jott@gmail.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-18 17:13+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -41,14 +41,14 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
-"Skript --print-options Ausgabe muss ein JSON-Objekt auf oberster Ebene sein. "
-"Bekommen:\n"
+"Die Ausgabe von script --print-options muss ein JSON-Objekt auf oberster "
+"Ebene sein. Erhalten:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
-msgstr "Warnung ohne String zurückgegeben."
+msgstr "'Kein-String' Warnung zurückgegeben."
 
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
@@ -63,15 +63,15 @@ msgstr "Die Referenzdatei '%1' ist nicht vorhanden."
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr "Fehler beim Schreiben in die Datei %1: %2"
+msgstr "Fehler beim Füllen der Datei %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
-"Datei '%1' schlecht formatiert. Fehlende Zeichenketten 'contents' oder "
-"'filePath'."
+"Datei '%1' ist schlecht formatiert. Fehlende String-Mitglieder 'contents' "
+"oder 'filePath'."
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:405
 #, qt-format
@@ -79,7 +79,7 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"Fehlerhafter Dateieintrag: Dateiname/Inhalt fehlt oder ist keine "
+"Fehlerhafter Dateieintrag: Dateiname / Inhalt fehlt oder ist keine "
 "Zeichenfolgen:\n"
 "%1"
 
