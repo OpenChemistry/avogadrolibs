@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-18 17:49+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-18 18:04+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1329,7 +1329,7 @@ msgstr "Das Skript ist abgestürzt."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr "Das Skript wurde abgebrochen (timeout)."
+msgstr "Die Ausführung des Skriptes wurde abgebrochen (timeout)."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
@@ -1346,23 +1346,23 @@ msgstr "Unbekannter Fehler."
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:105
 #: qtgui/rwlayermanager.cpp:131
 msgid "Modify Layers"
-msgstr "Schichten ändern"
+msgstr "Ebenen ändern"
 
 #: qtgui/rwlayermanager.cpp:194
 msgid "Remove Layer"
-msgstr "Schicht entfernen"
+msgstr "Ebene entfernen"
 
 #: qtgui/rwlayermanager.cpp:201
 msgid "Remove Layer Info"
-msgstr "Schichtinfos entfernen"
+msgstr "Informationen der Ebenen entfernen"
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
-msgstr "Schicht hinzufügen"
+msgstr "Ebene hinzufügen"
 
 #: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer Info"
-msgstr "Schichtinfos hinzufügen"
+msgstr "Informationen zur Ebene hinzufügen"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1370,7 +1370,7 @@ msgstr "Schichtinfos hinzufügen"
 #: qtplugins/select/select.cpp:560
 #: qtplugins/selectiontool/selectiontool.cpp:262:1661
 msgid "Change Layer"
-msgstr "Schicht verändern"
+msgstr "Ebene verändern"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1413,7 +1413,7 @@ msgstr "Atomfarbe ändern"
 
 #: qtgui/rwmolecule.cpp:257
 msgid "Change Atom Layer"
-msgstr "Atomschicht ändern"
+msgstr "Atomebene ändern"
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1433,7 +1433,7 @@ msgstr "Bindungsordnungen setzen"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
-msgstr "Anzahl der Bindungen ändern"
+msgstr "Bindungsordnung ändern"
 
 #: qtgui/rwmolecule.cpp:354
 msgid "Update Bonds"
@@ -1453,7 +1453,7 @@ msgstr "Elementarzelle entfernen"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
-msgstr "Elementarzelle ändern"
+msgstr "Elementarzelle bearbeiten"
 
 #: qtgui/rwmolecule.cpp:484
 #, fuzzy
@@ -1462,7 +1462,7 @@ msgstr "Atome um Zelle &wickeln"
 
 #: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
-msgstr "Skaliere Volumen der Zelle"
+msgstr "Zellvolumen skalieren"
 
 #: qtgui/rwmolecule.cpp:527
 msgid "Build Super Cell"
@@ -1474,16 +1474,16 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
-msgstr "In Standardrichtung drehen"
+msgstr "In Standardorientierung drehen"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
-msgstr "Auf die primitive Zelle reduzieren"
+msgstr "Auf eine primitive Zelle reduzieren"
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:240
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "auf eine konventionelle Zelle zurückführen"
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
 msgid "Symmetrize Cell"
@@ -1524,10 +1524,9 @@ msgid "Settings"
 msgstr "&Einstellungen"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Datei %1 kann nicht gespeichert werden."
+msgstr "Skript %1 kann nicht geladen werden"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -1585,22 +1584,16 @@ msgid "Axis:"
 msgstr "Achse:"
 
 #: qtplugins/aligntool/aligntool.cpp:160
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Einstellungen anpassen"
+msgstr "Am Ursprung ausrichten"
 
 #: qtplugins/aligntool/aligntool.cpp:196
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "Ansicht an den Achsen ausrichten"
+msgstr "An der Achse ausrichten"
 
 #: qtplugins/aligntool/aligntool.cpp:312
-#, fuzzy
-#| msgid "selected atom to origin"
 msgid "Center the atom at the origin."
-msgstr "ausgewähltes Atom zum Ursprung"
+msgstr "Ausgewähltes Atom am Ursprung zentrieren."
 
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
