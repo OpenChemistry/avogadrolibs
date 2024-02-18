@@ -90,7 +90,7 @@ msgstr "Fehlerhafter Dateieintrag bei Index %1: Kein Objekt."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr "'files' mitglied nicht ein array."
+msgstr "'files' Mitglied ist nicht ein Array."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
