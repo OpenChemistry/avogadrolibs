@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-18 17:42+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-18 17:48+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1119,12 +1119,12 @@ msgstr "Option '%1' bezieht sich auf kein Objekt."
 #: qtgui/jsonwidget.cpp:93
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr "'Typ' ist kein String für Option '%1'."
+msgstr "'type' ist kein String für Option '%1'."
 
 #: qtgui/jsonwidget.cpp:100
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr "Option '%1' wurde nicht gefunden."
+msgstr "Option '%1' konnte nicht gefunden werden."
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
@@ -1209,14 +1209,13 @@ msgstr "[Kein Molekül]"
 #: qtgui/layermodel.cpp:85
 #, qt-format
 msgid "Layer %1"
-msgstr "Schicht %1"
+msgstr "Ebene %1"
 
 #: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
 msgid "Ball and Stick"
 msgstr "Kugel-Stab"
 
 #: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Cartoon"
@@ -1236,7 +1235,7 @@ msgstr "Kraft"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
 msgid "Labels"
-msgstr "Bezeichnungen"
+msgstr "Beschriftungen"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
