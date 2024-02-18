@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-18 17:26+0000\n"
+"PO-Revision-Date: 2024-02-18 17:42+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -485,7 +485,7 @@ msgstr "Job-Abgabe fehlgeschlagen"
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr "Der Auftrag wurde von MoleQueue abgelehnt: %1"
+msgstr "Der Auftrag wurde von MoleQueue abgewiesen: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
@@ -493,7 +493,7 @@ msgstr "Kein Programm ausgewählt."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr "Zielprogramm von Liste \"Warteschlange und Programm\" auswählen."
+msgstr "Zielprogramm aus der Liste \"Warteschlange und Programm\" auswählen."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
@@ -693,7 +693,7 @@ msgstr "Yttrium"
 
 #: qtgui/elementtranslator.cpp:136
 msgid "Zirconium"
-msgstr "Zirconium"
+msgstr "Zirkonium"
 
 #: qtgui/elementtranslator.cpp:139
 msgid "Niobium"
@@ -1067,7 +1067,7 @@ msgid "write"
 msgstr "schreiben"
 
 #: qtgui/fileformatdialog.cpp:179
-#, qt-format
+#, fuzzy, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 "Mehrere %1 gefunden, die dieses Format %2 können. Welcher soll verwendet "
@@ -1085,7 +1085,8 @@ msgstr "Alle unterstützte Formate"
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
 msgstr ""
-"Lesen von Moleküldarstellung fehlgeschlagen: Unbekanntes Dateiformat: %1"
+"Das Lesen der Moleküldarstellung ist fehlgeschlagen: Unbekanntes Dateiformat:"
+" %1"
 
 #: qtgui/interfacescript.cpp:295
 #, qt-format
@@ -1097,14 +1098,14 @@ msgstr ""
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Schreiben von Moleküldarstellung in String fehlgeschlagen: Unbekanntes "
-"Dateiformat: %1"
+"Das Schreiben von Moleküldarstellung als ein String ist fehlgeschlagen: "
+"Unbekanntes Dateiformat: %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
-"Fehler beim Schreiben der molekularen Darstellung in eine Zeichenkette: %1"
+"Fehler beim Schreiben der molekularen Darstellung als eine Zeichenkette: %1"
 
 #: qtgui/jsonwidget.cpp:55
 msgid "'userOptions' missing."
