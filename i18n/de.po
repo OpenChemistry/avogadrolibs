@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-18 18:04+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1470,7 +1470,7 @@ msgstr "Superzelle erstellen"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Niggli Reduktion"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
@@ -1531,7 +1531,7 @@ msgstr "Skript %1 kann nicht geladen werden"
 #: qtgui/scriptloader.cpp:68
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr ""
+msgstr "Überprüfen von %1 Skripten im Pfad %2"
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
@@ -1598,6 +1598,7 @@ msgstr "Ausgewähltes Atom am Ursprung zentrieren."
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
+"Drehen Sie das Molekül, um das Atom auf die angegebene Achse auszurichten."
 
 #: qtplugins/aligntool/aligntool.h:30
 #, fuzzy
