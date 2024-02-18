@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-02-18 18:17+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-02-19 19:02+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2063,17 +2063,15 @@ msgstr "Bindung"
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Remove bonds from all or selected atoms."
-msgstr "Entfernen Sie Bindungen von allen oder ausgewählten Atomen."
+msgstr "Entfernen von Bindungen aller oder von ausgewählten Atomen."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Alle oder nur ausgewählte Atome verbinden."
 
 #: qtplugins/bonding/bonding.cpp:77
-#, fuzzy
-#| msgid "Perceive Bond Orders"
 msgid "Perceive bond orders."
-msgstr "Bindungsordnungen erkennen"
+msgstr "Bindungsordnungen erkennen."
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -2097,7 +2095,7 @@ msgstr "Verfolgung"
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr "Tube"
+msgstr "Röhre"
 
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
@@ -2107,7 +2105,7 @@ msgstr "Band"
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Einfaches Cartoon"
+msgstr "Einfacher Cartoon"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
