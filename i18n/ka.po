@@ -2621,7 +2621,7 @@ msgstr "&კრისტალი"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr "ერთეულის უჯრედის წაშლა"
+msgstr "&ერთეულის უჯრედის წაშლა"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
