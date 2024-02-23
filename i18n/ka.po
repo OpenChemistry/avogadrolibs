@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
 "PO-Revision-Date: 2024-02-23 04:18+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -2603,7 +2604,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr ""
+msgstr "უჯრედის მოცულობის შეცვლა"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
