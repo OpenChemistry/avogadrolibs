@@ -4301,7 +4301,7 @@ msgstr "ხედის სწორება ღერძებზე"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr "ხედის სწორება ღერძებზე"
+msgstr "ხედის სწორება ღერძებზე."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -5031,7 +5031,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
-msgstr ""
+msgstr "გამოთვლის გადაცემა…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
