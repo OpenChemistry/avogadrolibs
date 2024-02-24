@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2024-01-07 17:06+0000\n"
+"PO-Revision-Date: 2024-02-24 01:26+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -455,7 +455,7 @@ msgstr "BackgroundFileFormat-ში მოლეკულა დაყენე�
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormat-ში Io::FileFormat დაყენებული არაა!"
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
@@ -1534,7 +1534,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:36
 msgid "Open Output File…"
-msgstr ""
+msgstr "გამოტანის ფაილის გახსნა…"
 
 #: qtplugins/apbs/apbs.cpp:49 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:52
@@ -1670,7 +1670,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance"
-msgstr ""
+msgstr "დაშორებით"
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -1686,7 +1686,7 @@ msgstr "ნაწილობრივი მუხტით…"
 
 #: qtplugins/applycolors/applycolors.cpp:79
 msgid "By Secondary Structure"
-msgstr ""
+msgstr "მეორადი სტრუქტურით"
 
 #: qtplugins/applycolors/applycolors.cpp:84
 msgid "By Amino Acid"
@@ -1929,7 +1929,7 @@ msgstr "ბმის მიმდევრობის აღქმა"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
-msgstr ""
+msgstr "ბმების წაშლა"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
@@ -2579,7 +2579,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:997
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "CP2K გამოთვლის გადაცემა"
 
 #: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
@@ -2591,7 +2591,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
-msgstr ""
+msgstr "ერთეულის უჯრედის ჩასწორება…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -2603,7 +2603,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr ""
+msgstr "უჯრედის &მოცულობის მასშტაბი…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
@@ -2621,11 +2621,11 @@ msgstr "&კრისტალი"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr ""
+msgstr "&ერთეულის უჯრედის წაშლა"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr ""
+msgstr "ე&რთეულის უჯრედის დამატება"
 
 #: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
@@ -2955,15 +2955,15 @@ msgstr "წყალი"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:336
 msgid "Singlet"
-msgstr ""
+msgstr "ერთი"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:339
 msgid "Doublet"
-msgstr ""
+msgstr "ორმაგი"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:342
 msgid "Triplet"
-msgstr ""
+msgstr "სამმაგი"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:357
 msgid "Dication"
@@ -3113,7 +3113,7 @@ msgstr "ფრაგმენტის ჩასმა"
 
 #: qtplugins/insertfragment/insertfragment.h:35
 msgid "InsertFragment"
-msgstr ""
+msgstr "ფრაგმენტის ჩასმა"
 
 #: qtplugins/insertfragment/insertfragment.h:60
 msgid "Insert molecular fragments for building larger molecules."
@@ -3305,7 +3305,7 @@ msgstr "კუთხეები:"
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
-msgstr ""
+msgstr "მანძილმზომი"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -4191,7 +4191,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
-msgstr ""
+msgstr "ნარჩენების თვისებები…"
 
 #: qtplugins/propertytables/propertytables.cpp:67
 msgid ""
@@ -4240,7 +4240,7 @@ msgstr "CSV ფაილები (*.csv);;ყველა ფაილი (*)"
 
 #: qtplugins/propertytables/propertyview.cpp:244
 msgid "Could not open the file for writing."
-msgstr ""
+msgstr "ფაილის ჩასაწერად გახსნა ვერ ხერხდება."
 
 #: qtplugins/propertytables/propertyview.cpp:276
 msgid "Error writing to the file."
@@ -4301,7 +4301,7 @@ msgstr "ხედის სწორება ღერძებზე"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr ""
+msgstr "ხედის სწორება ღერძებზე."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -5031,7 +5031,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
-msgstr ""
+msgstr "გამოთვლის გადაცემა…"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -5169,7 +5169,7 @@ msgstr "..."
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr ""
+msgstr "ძალის ველი:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -5324,7 +5324,7 @@ msgstr ""
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment:"
-msgstr ""
+msgstr "გარემო:"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CoordinateEditorDialog)
@@ -5483,7 +5483,7 @@ msgstr ""
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:215
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Functional"
-msgstr ""
+msgstr "ფუნქციონალი"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:258
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
@@ -5689,12 +5689,12 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "&Scaling Factor:"
-msgstr ""
+msgstr "გადიდები&ს მასშტაბი:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:51
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Current Volume:"
-msgstr ""
+msgstr "მიმდინარე მოცულობა:"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:58
 #. i18n: ectx: property (text), widget (QLabel, currentVolume)
@@ -5785,7 +5785,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force field:"
-msgstr ""
+msgstr "ძალის ველი:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:142
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
@@ -5817,12 +5817,12 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr ""
+msgstr "მუხტი:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 msgid "Import From PQR…"
-msgstr ""
+msgstr "PQR-დან შემოტანა…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -6031,6 +6031,18 @@ msgid ""
 "#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
 "html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6548,7 +6560,7 @@ msgstr "Y-ღერძი"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Z-axis"
-msgstr ""
+msgstr "Z-ღერძი"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6916,7 +6928,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 msgid "Constraints:"
-msgstr ""
+msgstr "შეზღუდვები:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -7208,7 +7220,7 @@ msgstr "წერტილების რაოდენობა:"
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Peak width:"
-msgstr ""
+msgstr "მაქს. სიგანე:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7287,7 +7299,7 @@ msgstr "&დახურვა"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Scale Factor:"
-msgstr ""
+msgstr "გადიდების ფაქტორი:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7440,7 +7452,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
 msgid "Create Surfaces"
-msgstr ""
+msgstr "ზედაპირების შექმნა"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:37
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7559,7 +7571,7 @@ msgstr "ოპერაციები"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
 msgid "Symmetry elements:"
-msgstr ""
+msgstr "სიმეტრიის ელემენტები:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:145
 #. i18n: ectx: attribute (title), widget (QWidget, subgroupsTab)
