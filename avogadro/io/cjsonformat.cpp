@@ -215,7 +215,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json layerJson = atoms["layer"];
     if (isNumericArray(layerJson)) {
       auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-      for (Index i = 0; i < atomCount; ++i) {
+      for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
         while (layerJson[i] > layer.maxLayer()) {
           layer.addLayer();
         }
@@ -242,8 +242,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
 
     // are there bond labels?
     json bondLabels = bonds["labels"];
-    if (bondLabels.is_array() && bondLabels.size() == molecule.bondCount()) {
-      for (unsigned int i = 0; i < molecule.bondCount(); ++i) {
+    if (bondLabels.is_array()) {
+      for (unsigned int i = 0;
+           i < molecule.bondCount() && i < bondLabels.size(); ++i) {
         molecule.setBondLabel(i, bondLabels[i]);
       }
     }
