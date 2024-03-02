@@ -191,8 +191,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
 
-    else if (startsWith(buffer, "TER")) { //  This is very important, each TER
-                                          //  record also counts in the serial.
+    else if (startsWith(buffer, "TER") &&
+             buffer.length() >= 11) { //  This is very important, each TER
+                                      //  record also counts in the serial.
       // Need to account for that when comparing with CONECT
       terList.push_back(lexicalCast<int>(buffer.substr(6, 5), ok));
 
