@@ -8,11 +8,11 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -52,7 +52,7 @@ bool FetchPDB::readMolecule(QtGui::Molecule& mol)
     return false;
 
   bool readOK = Io::FileFormatManager::instance().readFile(
-    mol, m_tempFileName.toStdString(), "mmtf");
+    mol, m_tempFileName.toStdString(), "pdb");
   if (readOK) // worked, so set the filename
     mol.setData("name", m_moleculeName.toStdString());
   else
@@ -85,9 +85,7 @@ void FetchPDB::showDialog()
 
   // Hard coding the PDB download URL
   m_network->get(QNetworkRequest(
-    //    QUrl("https://files.rcsb.org/download/" + pdbCode + ".pdb")));
-    // prefer MMTF - smaller and more efficient (also could use .mmtf.gz)
-    QUrl("https://mmtf.rcsb.org/v1.0/full/" + pdbCode)));
+    QUrl("https://files.rcsb.org/download/" + pdbCode + ".pdb")));
 
   m_moleculeName = pdbCode;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(pdbCode));
@@ -109,7 +107,7 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
 
   m_moleculeData = reply->readAll();
   m_tempFileName =
-    QDir::tempPath() + QDir::separator() + m_moleculeName + ".mmtf";
+    QDir::tempPath() + QDir::separator() + m_moleculeName + ".pdb";
   QFile out(m_tempFileName);
   out.open(QIODevice::WriteOnly);
   out.write(m_moleculeData);
@@ -127,4 +125,4 @@ void FetchPDB::replyFinished(QNetworkReply* reply)
   emit moleculeReady(1);
   reply->deleteLater();
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
