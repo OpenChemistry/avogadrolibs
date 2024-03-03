@@ -144,8 +144,6 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (buffer.size() >= 78) {
         element = buffer.substr(76, 2);
         element = trimmed(element);
-        if (element == "SE") // For Sulphur
-          element = 'S';
         if (element.length() == 2)
           element[1] = std::tolower(element[1]);
 
@@ -160,6 +158,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         // remove any trailing digits
         while (element.size() && std::isdigit(element.back()))
           element.pop_back();
+
+        if (element == "SE") // For Sulphur
+          element = 'S';
 
         atomicNum = Elements::atomicNumberFromSymbol(element);
         if (atomicNum == 255) {
