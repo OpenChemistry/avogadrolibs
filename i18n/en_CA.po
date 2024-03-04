@@ -6,21 +6,22 @@
 # ovari <ovari123@zoho.com>, 2022.
 # Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 # matterhorn103 <milner94@live.co.uk>, 2023.
+# "Carson Geller (Cart)" <cartrigger@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-02-04 02:02+0000\n"
-"PO-Revision-Date: 2023-11-08 19:34+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
-"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
-"avogadro/avogadrolibs/en_GB/>\n"
-"Language: en_GB\n"
+"PO-Revision-Date: 2024-03-04 01:54+0000\n"
+"Last-Translator: \"Carson Geller (Cart)\" <cartrigger@gmail.com>\n"
+"Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/en_CA/>\n"
+"Language: en_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1078,7 +1079,7 @@ msgstr "Error reading molecule representation: Unrecognized file format: %1"
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 Message"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -1508,10 +1509,8 @@ msgid "Modify Molecule"
 msgstr "Modify Molecule"
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "&Settings"
 msgid "Settings"
-msgstr "&Settings"
+msgstr "Settings"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1716,7 +1715,7 @@ msgstr "Save APBS Input File"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "APBS Input (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -2245,24 +2244,25 @@ msgstr "Run external script commands"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python Settings…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Install Python"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Python is used for many Avogadro features. Do you want to download Python?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "ConfigurePython"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Configure Python environments."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2749,10 +2749,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Tools for crystal-specific editing/analysis."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Colours:"
+msgstr "Colour axes:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -2932,7 +2930,7 @@ msgstr "&Optimize Geometry"
 
 #: qtplugins/forcefield/forcefield.cpp:90
 msgid "Forces"
-msgstr ""
+msgstr "Forces"
 
 #: qtplugins/forcefield/forcefield.cpp:98
 msgid "Configure…"
@@ -2967,7 +2965,7 @@ msgstr "Avogadro"
 #: qtplugins/forcefield/forcefield.cpp:399
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 Force Norm = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
 msgid "Forcefield optimization"
@@ -3190,10 +3188,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "Insert DNA / RNA fragments through a dialog."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "Molecule"
+msgstr "Molecule…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3262,7 +3258,7 @@ msgstr "Element & Number"
 
 #: qtplugins/label/label.cpp:165
 msgid "Element & ID"
-msgstr ""
+msgstr "Element & ID"
 
 #: qtplugins/label/label.cpp:180
 msgid "Atom Label:"
