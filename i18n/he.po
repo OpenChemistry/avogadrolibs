@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-02-04 02:02+0000\n"
+"POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2016-06-10 06:32+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -1143,13 +1143,13 @@ msgstr ""
 msgid "Ball and Stick"
 msgstr "כדור-מקל"
 
-#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
+#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:32
 #, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "סרט"
 
-#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
+#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr ""
@@ -1299,7 +1299,7 @@ msgstr ""
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
-#: qtplugins/select/select.cpp:560
+#: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1661
 msgid "Change Layer"
 msgstr ""
@@ -1412,11 +1412,11 @@ msgid "Reduce to Primitive"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
-#: qtplugins/spacegroup/spacegroup.cpp:240
+#: qtplugins/spacegroup/spacegroup.cpp:259
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
 msgstr ""
 
@@ -1953,7 +1953,7 @@ msgstr ""
 msgid "Bond Selected Atoms"
 msgstr "בחר צבע לתוויות אטומים"
 
-#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
+#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -2025,7 +2025,7 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.h:34
+#: qtplugins/cartoons/cartoons.h:37
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
@@ -2092,19 +2092,19 @@ msgstr "צבע על פי מרחק"
 msgid "Line width:"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:34
+#: qtplugins/closecontacts/closecontacts.h:37
 msgid "Render close contacts between atoms."
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:55
 msgid "Contact"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:56
 msgid "Salt Bridge"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:57
 msgid "Repulsive"
 msgstr ""
 
@@ -2116,8 +2116,8 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
 #: qtplugins/configurepython/configurepython.cpp:99
-#: qtplugins/forcefield/forcefield.cpp:134
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:151
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:112
@@ -2477,7 +2477,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:82:1205
+#: qtplugins/forcefield/forcefield.cpp:97:1205
 msgid "Energy"
 msgstr ""
 
@@ -2779,33 +2779,45 @@ msgstr ""
 msgid "Could not read the PDB molecule: %1"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:80
+#: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:81
+#: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:93
+#: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
+msgid "Invalid PDB Code"
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:82
+msgid "The PDB code must be exactly 4 characters long."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:90
+msgid "The first character of the PDB code must be 1-9."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
+#: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:105
+#: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr ""
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:123
+#: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
@@ -2839,43 +2851,43 @@ msgstr ""
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:318 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:90
+#: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:98
+#: qtplugins/forcefield/forcefield.cpp:113
 msgid "Configure…"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:125
 #, fuzzy
 #| msgid "Select Atom Labels Color"
 msgid "Freeze Selected Atoms"
 msgstr "בחר צבע לתוויות אטומים"
 
-#: qtplugins/forcefield/forcefield.cpp:117
+#: qtplugins/forcefield/forcefield.cpp:132
 #, fuzzy
 #| msgid "Select Atom Labels Color"
 msgid "Unfreeze Selected Atoms"
 msgstr "בחר צבע לתוויות אטומים"
 
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:151
 msgid "&Calculate"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:353
+#: qtplugins/forcefield/forcefield.cpp:368
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:354
-#: qtplugins/forcefield/forcefield.cpp:400
+#: qtplugins/forcefield/forcefield.cpp:369
+#: qtplugins/forcefield/forcefield.cpp:415
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -2883,7 +2895,7 @@ msgstr ""
 msgid "Avogadro"
 msgstr "אבוגדרו"
 
-#: qtplugins/forcefield/forcefield.cpp:399
+#: qtplugins/forcefield/forcefield.cpp:414
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -2902,15 +2914,15 @@ msgstr ""
 msgid "Autodetect (%1)"
 msgstr ""
 
-#: qtplugins/forcefield/obmmenergy.cpp:33
+#: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obmmenergy.cpp:38
+#: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
 msgstr ""
 
-#: qtplugins/forcefield/obmmenergy.cpp:52
+#: qtplugins/forcefield/obenergy.cpp:86 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
@@ -3482,13 +3494,13 @@ msgstr ""
 msgid "Render a few non-covalent interactions."
 msgstr ""
 
-#: qtplugins/noncovalent/noncovalent.h:53
+#: qtplugins/noncovalent/noncovalent.h:54
 #, fuzzy
 #| msgid "Hydrogen"
 msgid "Halogen"
 msgstr "מימן"
 
-#: qtplugins/noncovalent/noncovalent.h:53
+#: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
 msgstr ""
 
@@ -4371,7 +4383,7 @@ msgstr ""
 msgid "Select None"
 msgstr ""
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:549
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
 msgstr ""
 
@@ -4453,15 +4465,15 @@ msgstr ""
 msgid "Select Atom"
 msgstr "בחר צבע לתוויות אטומים"
 
-#: qtplugins/select/select.cpp:481
+#: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
 msgstr ""
 
-#: qtplugins/select/select.cpp:482
+#: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
 msgstr ""
 
-#: qtplugins/select/select.cpp:487
+#: qtplugins/select/select.cpp:491
 msgid "Select Residue"
 msgstr ""
 
@@ -4516,7 +4528,7 @@ msgid "Fill Unit Cell…"
 msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
-#: qtplugins/spacegroup/spacegroup.cpp:315
+#: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
 msgstr ""
 
@@ -4532,71 +4544,82 @@ msgstr ""
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:199
+#: qtplugins/spacegroup/spacegroup.cpp:187
+msgid "Perceive Space Group"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:188
+#, qt-format
+msgid ""
+"The space group is already set to: %1.\n"
+"Would you like to overwrite it?"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:200
+#: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:215
+#: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:216
-#: qtplugins/spacegroup/spacegroup.cpp:241
-#: qtplugins/spacegroup/spacegroup.cpp:266
+#: qtplugins/spacegroup/spacegroup.cpp:235
+#: qtplugins/spacegroup/spacegroup.cpp:260
+#: qtplugins/spacegroup/spacegroup.cpp:285
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:229
+#: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:254
+#: qtplugins/spacegroup/spacegroup.cpp:273
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:278
+#: qtplugins/spacegroup/spacegroup.cpp:297
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:336 qtplugins/yaehmop/yaehmop.cpp:209
+#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:209
 #: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
 msgstr "אבוגדרו"
 
-#: qtplugins/spacegroup/spacegroup.cpp:337
+#: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:366
+#: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
 msgstr ""
 

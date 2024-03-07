@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-02-04 02:02+0000\n"
+"POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-02-10 22:01+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -1229,12 +1229,12 @@ msgstr "Calque %1"
 msgid "Ball and Stick"
 msgstr "Boules-bâtonnets"
 
-#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
+#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:32
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Cartoons"
 
-#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
+#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "Contacts proches"
@@ -1390,7 +1390,7 @@ msgstr "Ajouter des informations au calque"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
-#: qtplugins/select/select.cpp:560
+#: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1661
 msgid "Change Layer"
 msgstr "Changer le calque"
@@ -1503,11 +1503,11 @@ msgid "Reduce to Primitive"
 msgstr "Réduire à une maille primitive"
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
-#: qtplugins/spacegroup/spacegroup.cpp:240
+#: qtplugins/spacegroup/spacegroup.cpp:259
 msgid "Conventionalize Cell"
 msgstr "Réduire à une maille conventionnelle"
 
-#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
 msgstr "Symétriser la maille"
 
@@ -2054,7 +2054,7 @@ msgstr "Configurer les liaisons…"
 msgid "Bond Selected Atoms"
 msgstr "Lier les atomes sélectionnés"
 
-#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
+#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -2123,7 +2123,7 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr "Corde"
 
-#: qtplugins/cartoons/cartoons.h:34
+#: qtplugins/cartoons/cartoons.h:37
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr "Représenter la biomolécule par de rubans et de cartoons."
 
@@ -2189,19 +2189,19 @@ msgstr "Distance maximale :"
 msgid "Line width:"
 msgstr "Épaisseur de la ligne :"
 
-#: qtplugins/closecontacts/closecontacts.h:34
+#: qtplugins/closecontacts/closecontacts.h:37
 msgid "Render close contacts between atoms."
 msgstr "Afficher les contact proche entre les atomes."
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:55
 msgid "Contact"
 msgstr "Contact"
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:56
 msgid "Salt Bridge"
 msgstr "Pont salin"
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:57
 msgid "Repulsive"
 msgstr "Répulsif"
 
@@ -2213,8 +2213,8 @@ msgstr "Modifier la palette d'opacité des couleurs…"
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
 #: qtplugins/configurepython/configurepython.cpp:99
-#: qtplugins/forcefield/forcefield.cpp:134
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:151
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:112
@@ -2594,7 +2594,7 @@ msgstr "Générer les données d’entrées pour CP2K."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:82:1205
+#: qtplugins/forcefield/forcefield.cpp:97:1205
 msgid "Energy"
 msgstr "Énergie"
 
@@ -2903,33 +2903,45 @@ msgstr "Récupérer la PDB"
 msgid "Could not read the PDB molecule: %1"
 msgstr "Impossible de lire la molécule PDB : %1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:80
+#: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
 msgstr "Identifiant PDB"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:81
+#: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
 msgstr "Structure chimique à télécharger."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:93
+#: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
+msgid "Invalid PDB Code"
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:82
+msgid "The PDB code must be exactly 4 characters long."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:90
+msgid "The first character of the PDB code must be 1-9."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr "Requête pour %1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
+#: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr "Le téléchargement depuis le réseau a échoué"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:105
+#: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr "Délai d'attente du réseau est expiré, ou autre erreur."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:123
+#: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
@@ -2964,39 +2976,39 @@ msgstr "Focaliser la vue sur des caractéristiques spécifiques."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Faire un rendu du champs de force pour les atomes de la molécule."
 
-#: qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:318 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Optimisation de la géométrie"
 
-#: qtplugins/forcefield/forcefield.cpp:90
+#: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
 msgstr "Forces"
 
-#: qtplugins/forcefield/forcefield.cpp:98
+#: qtplugins/forcefield/forcefield.cpp:113
 msgid "Configure…"
 msgstr "Configurer…"
 
-#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:125
 msgid "Freeze Selected Atoms"
 msgstr "Congeler les atomes sélectionnés"
 
-#: qtplugins/forcefield/forcefield.cpp:117
+#: qtplugins/forcefield/forcefield.cpp:132
 msgid "Unfreeze Selected Atoms"
 msgstr "Décongeler les atomes sélectionnés"
 
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:151
 msgid "&Calculate"
 msgstr "&Calculer"
 
-#: qtplugins/forcefield/forcefield.cpp:353
+#: qtplugins/forcefield/forcefield.cpp:368
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Énergie = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:354
-#: qtplugins/forcefield/forcefield.cpp:400
+#: qtplugins/forcefield/forcefield.cpp:369
+#: qtplugins/forcefield/forcefield.cpp:415
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -3004,7 +3016,7 @@ msgstr "%1 Énergie = %L2"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:399
+#: qtplugins/forcefield/forcefield.cpp:414
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Norme de force = %L2"
@@ -3023,15 +3035,15 @@ msgstr "Optimisation par champ de force, y comprit les scripts"
 msgid "Autodetect (%1)"
 msgstr "Détection automatique (%1)"
 
-#: qtplugins/forcefield/obmmenergy.cpp:33
+#: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
 msgstr "Champ de force universel (UFF)"
 
-#: qtplugins/forcefield/obmmenergy.cpp:38
+#: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
 msgstr "Champ de force Amber (GAFF)"
 
-#: qtplugins/forcefield/obmmenergy.cpp:52
+#: qtplugins/forcefield/obenergy.cpp:86 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
 msgstr "Champ de force Merck (MMFF94)"
 
@@ -3634,11 +3646,11 @@ msgstr "Tolérance de l'angle :"
 msgid "Render a few non-covalent interactions."
 msgstr "Afficher quelques interactions non covalentes."
 
-#: qtplugins/noncovalent/noncovalent.h:53
+#: qtplugins/noncovalent/noncovalent.h:54
 msgid "Halogen"
 msgstr "Halogène"
 
-#: qtplugins/noncovalent/noncovalent.h:53
+#: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
 msgstr "Chalcogène"
 
@@ -4537,7 +4549,7 @@ msgstr "Sélectionner tout"
 msgid "Select None"
 msgstr "Sélectionner aucun"
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:549
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
 msgstr "Inverser la sélection"
 
@@ -4613,15 +4625,15 @@ msgstr "Atomes à sélectionner :"
 msgid "Select Atom"
 msgstr "Sélectionner un atome"
 
-#: qtplugins/select/select.cpp:481
+#: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
 msgstr "Sélectionnez des atomes par résidu"
 
-#: qtplugins/select/select.cpp:482
+#: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
 msgstr "Résidus à sélectionner :"
 
-#: qtplugins/select/select.cpp:487
+#: qtplugins/select/select.cpp:491
 msgid "Select Residue"
 msgstr "Sélectionner le résidu"
 
@@ -4683,7 +4695,7 @@ msgid "Fill Unit Cell…"
 msgstr "Remplir la maille…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
-#: qtplugins/spacegroup/spacegroup.cpp:315
+#: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
 msgstr "Réduire à l'unité asymétrique"
 
@@ -4697,13 +4709,25 @@ msgstr "Groupe d'espace"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr "Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
+msgstr ""
+"Remplir les atomes symétriques basés sur le groupe d'espace cristallin."
 
-#: qtplugins/spacegroup/spacegroup.cpp:199
+#: qtplugins/spacegroup/spacegroup.cpp:187
+msgid "Perceive Space Group"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:188
+#, qt-format
+msgid ""
+"The space group is already set to: %1.\n"
+"Would you like to overwrite it?"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
 msgstr "Échec"
 
-#: qtplugins/spacegroup/spacegroup.cpp:200
+#: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
@@ -4711,13 +4735,13 @@ msgstr ""
 "La détection du groupe d'espace a échouée.\n"
 "Souhaitez-vous la réessayer avec une tolérance différente ?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:215
+#: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
 msgstr "Réduction primitive"
 
-#: qtplugins/spacegroup/spacegroup.cpp:216
-#: qtplugins/spacegroup/spacegroup.cpp:241
-#: qtplugins/spacegroup/spacegroup.cpp:266
+#: qtplugins/spacegroup/spacegroup.cpp:235
+#: qtplugins/spacegroup/spacegroup.cpp:260
+#: qtplugins/spacegroup/spacegroup.cpp:285
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
@@ -4726,7 +4750,7 @@ msgstr ""
 "La tolérance est actuellement définie à : %1.\n"
 "Continuer avec cette tolérance ?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:229
+#: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4735,7 +4759,7 @@ msgstr ""
 "Vérifiez vos données et essayez à nouveau une réduction avec une tolérance "
 "différente."
 
-#: qtplugins/spacegroup/spacegroup.cpp:254
+#: qtplugins/spacegroup/spacegroup.cpp:273
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4743,7 +4767,7 @@ msgstr ""
 "L’établissement d'une maille conventionnelle a échoué.\n"
 "Vérifiez vos données et essayez-le à nouveau avec une tolérance différente."
 
-#: qtplugins/spacegroup/spacegroup.cpp:278
+#: qtplugins/spacegroup/spacegroup.cpp:297
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4752,29 +4776,29 @@ msgstr ""
 "Veuillez vérifier vos données et essayez-la à nouveau avec une autre "
 "tolérance."
 
-#: qtplugins/spacegroup/spacegroup.cpp:336 qtplugins/yaehmop/yaehmop.cpp:209
+#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:209
 #: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
-#: qtplugins/spacegroup/spacegroup.cpp:337
+#: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
 msgstr "Sélectionner la tolérance en Å :"
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
 msgstr "International"
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
 msgstr "Hall"
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
 msgstr "Hermann-Mauguin"
 
-#: qtplugins/spacegroup/spacegroup.cpp:366
+#: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
 msgstr "Choisissez un groupe d'espace"
 
@@ -5639,24 +5663,25 @@ msgstr ""
 "une valeur à écrire par atome :</p><p><span style=\" font-weight:600;\">#</"
 "span> - Indice atomique (1, 2, ..., numAtoms)<br/><span style=\" font-"
 "weight:600;\">Z</span> - Nombre atomique (par exemple \"6\" pour carbone)<br/"
-"><span style=\" font-weight:600;\">G</span> - Nombre atomique, style GAMESS ("
-"par exemple \"6.0\" pour carbone)<br/><span style=\" font-weight:600;\">N</"
+"><span style=\" font-weight:600;\">G</span> - Nombre atomique, style GAMESS "
+"(par exemple \"6.0\" pour carbone)<br/><span style=\" font-weight:600;\">N</"
 "span> - nom de l'élément (par exemple \"carbone\")<br/><span style=\" font-"
-"weight:600;\">S</span> - Symbole d'élément (par exemple \"C\" pour Carbone)<"
-"br/><span style=\" font-weight:700;\">L</span> - étiquette de l'atome (par "
-"exemple \"C2\" comme deuxième atome du carbone, \"H1\" comme le premier "
-"hydrogène) <br/><span style=\" font-weight:600;\">x</span> - coordonnée de "
-"position X<br/><span style=\" font-weight:600;\">y</span> - coordonné de "
-"position Y<br/><span style=\" font-weight:600;\">z</span> - coordonnée de "
-"position Z<br/><span style=\" font-weight:600;\">a</span> - coordonnée du "
-"réseau 'a' (cristaux uniquement)<br/><span style=\" font-weight:600;\">b</"
-"span> - coordonnée du réseau 'b' (cristaux uniquement)<br/><span style=\" "
-"font-weight:600;\">c</span> - coordonnée du réseau 'c' (cristaux uniquement)<"
-"br/><span style=\" font-weight:600;\">_</span> - Un espace littéral (\" \"), "
-"utile pour l'alignement<br/><span style=\" font-weight:600;\">0</span> - Un "
-"0 littéral (\"0\"), utile comme option ou drapeau d'optimisation<br/><span "
-"style=\" font-weight:600;\">1</span> - Un 1 littéral (\"1\"), utile comme "
-"option ou drapeau d'optimisation<br/></p></body></html>"
+"weight:600;\">S</span> - Symbole d'élément (par exemple \"C\" pour "
+"Carbone)<br/><span style=\" font-weight:700;\">L</span> - étiquette de "
+"l'atome (par exemple \"C2\" comme deuxième atome du carbone, \"H1\" comme le "
+"premier hydrogène) <br/><span style=\" font-weight:600;\">x</span> - "
+"coordonnée de position X<br/><span style=\" font-weight:600;\">y</span> - "
+"coordonné de position Y<br/><span style=\" font-weight:600;\">z</span> - "
+"coordonnée de position Z<br/><span style=\" font-weight:600;\">a</span> - "
+"coordonnée du réseau 'a' (cristaux uniquement)<br/><span style=\" font-"
+"weight:600;\">b</span> - coordonnée du réseau 'b' (cristaux uniquement)<br/"
+"><span style=\" font-weight:600;\">c</span> - coordonnée du réseau "
+"'c' (cristaux uniquement)<br/><span style=\" font-weight:600;\">_</span> - "
+"Un espace littéral (\" \"), utile pour l'alignement<br/><span style=\" font-"
+"weight:600;\">0</span> - Un 0 littéral (\"0\"), utile comme option ou "
+"drapeau d'optimisation<br/><span style=\" font-weight:600;\">1</span> - Un 1 "
+"littéral (\"1\"), utile comme option ou drapeau d'optimisation<br/></p></"
+"body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6310,16 +6335,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6649,7 +6674,8 @@ msgstr "Modifier le style de délimitation selon la direction X."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
 msgid "Select boundary Styles in X, Y and Z directions."
-msgstr "Sélectionner les styles de délimitation selon les directions X, Y et Z."
+msgstr ""
+"Sélectionner les styles de délimitation selon les directions X, Y et Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_boundary)
@@ -7481,8 +7507,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>L'élargissement du pic à la base du pic (en "
-"degrés)</p></body></html>"
+"<html><head/><body><p>L'élargissement du pic à la base du pic (en degrés)</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7645,7 +7671,8 @@ msgstr "Afficher"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "Importe un fichier tsv de spectres expérimentaux à superposer au tracé."
+msgstr ""
+"Importe un fichier tsv de spectres expérimentaux à superposer au tracé."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -8247,9 +8274,9 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Enter k-points spéciaux comme tels :</p><p>L 0.5 0.5 0."
-"5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>C'est-à-dire, &lt;symbole&gt;"
-" &lt;x&gt; &lt;y&gt; &lt;z&gt; où x, y, et z sont des coordonnées "
+"<html><head/><body><p>Enter k-points spéciaux comme tels :</p><p>L 0.5 0.5 "
+"0.5</p><p>G 0.0 0.0 0.0</p><p>X 0.5 0.0 0.5</p><p>C'est-à-dire, &lt;"
+"symbole&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; où x, y, et z sont des coordonnées "
 "fractionnaires en espace réciproque. Les lignes seront tracées en reliant "
 "ces points k sur le graphique dans l'ordre où vous les mettez. Veuillez "
 "noter que l'orientation de votre cellule peut avoir un effet sur les "
@@ -8294,8 +8321,8 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Entrez le nombre de points k qui relieront les points "
 "k spéciaux. Plus il y a de points k, plus le graphique est lissé, mais le "
-"calcul peut prendre plus de temps.</p><p>Valeur par défaut : "
-"40</p></body></html>"
+"calcul peut prendre plus de temps.</p><p>Valeur par défaut : 40</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -8303,8 +8330,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Limiter l'intervalle des ordonnées dans le graphique "
-"?</p><p>Valeur par défaut : off</p></body></html>"
+"<html><head/><body><p>Limiter l'intervalle des ordonnées dans le graphique ?"
+"</p><p>Valeur par défaut : off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)

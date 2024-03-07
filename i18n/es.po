@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-02-04 02:02+0000\n"
+"POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-01 11:00+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
@@ -1229,12 +1229,12 @@ msgstr "Capa %1"
 msgid "Ball and Stick"
 msgstr "Bola y Varilla"
 
-#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:30
+#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:32
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Esquemático"
 
-#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:30
+#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "Cerrar Contactos"
@@ -1390,7 +1390,7 @@ msgstr "Añadir Información de la Capa"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
-#: qtplugins/select/select.cpp:560
+#: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1661
 msgid "Change Layer"
 msgstr "Cambiar Capa"
@@ -1503,11 +1503,11 @@ msgid "Reduce to Primitive"
 msgstr "Reducir a una Celda Primitiva"
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
-#: qtplugins/spacegroup/spacegroup.cpp:240
+#: qtplugins/spacegroup/spacegroup.cpp:259
 msgid "Conventionalize Cell"
 msgstr "Convencionalizar Celda"
 
-#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:265
+#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
 msgstr "Dar Simetría a la Celda"
 
@@ -2053,7 +2053,7 @@ msgstr "Configurar Enlaces…"
 msgid "Bond Selected Atoms"
 msgstr "Enlazar Átomos Seleccionadaos"
 
-#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:45
+#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -2122,7 +2122,7 @@ msgctxt "protein rendering style"
 msgid "Rope"
 msgstr "Cuerda"
 
-#: qtplugins/cartoons/cartoons.h:34
+#: qtplugins/cartoons/cartoons.h:37
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr "Mostrar cintas/dibujos de biomoléculas."
 
@@ -2188,19 +2188,19 @@ msgstr "Distancia máxima:"
 msgid "Line width:"
 msgstr "Ancho de línea:"
 
-#: qtplugins/closecontacts/closecontacts.h:34
+#: qtplugins/closecontacts/closecontacts.h:37
 msgid "Render close contacts between atoms."
 msgstr "Representar contactos cercanos entre átomos."
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:55
 msgid "Contact"
 msgstr "Contacto"
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:56
 msgid "Salt Bridge"
 msgstr "Puente Salino"
 
-#: qtplugins/closecontacts/closecontacts.h:52
+#: qtplugins/closecontacts/closecontacts.h:57
 msgid "Repulsive"
 msgstr "Repulsivo"
 
@@ -2212,8 +2212,8 @@ msgstr "Editar Mapa de Opacidad de Color…"
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
 #: qtplugins/configurepython/configurepython.cpp:99
-#: qtplugins/forcefield/forcefield.cpp:134
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:149
+#: qtplugins/forcefield/forcefield.cpp:151
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:112
@@ -2593,7 +2593,7 @@ msgstr "Generar entrada para CP2K."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:82:1205
+#: qtplugins/forcefield/forcefield.cpp:97:1205
 msgid "Energy"
 msgstr "Energía"
 
@@ -2901,33 +2901,45 @@ msgstr "Obtener PDB"
 msgid "Could not read the PDB molecule: %1"
 msgstr "No se puede leer la molécula de PDB: %1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:80
+#: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
 msgstr "Código PDB"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:81
+#: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
 msgstr "Estructura química para descargar."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:93
+#: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
+msgid "Invalid PDB Code"
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:82
+msgid "The PDB code must be exactly 4 characters long."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:90
+msgid "The first character of the PDB code must be 1-9."
+msgstr ""
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
 msgstr "Consultando para %1"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:104 qtplugins/fetchpdb/fetchpdb.cpp:122
+#: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
 msgstr "Fallo al Descargar desde la Red"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:105
+#: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
 msgstr "Se superó el tiempo de espera de la red u otro error."
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:123
+#: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
@@ -2963,39 +2975,39 @@ msgstr ""
 "Representar la visualización del campo de fuerza para los átomos de la "
 "molécula."
 
-#: qtplugins/forcefield/forcefield.cpp:73
-#: qtplugins/forcefield/forcefield.cpp:318 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Optimizar Geometría"
 
-#: qtplugins/forcefield/forcefield.cpp:90
+#: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
 msgstr "Forces"
 
-#: qtplugins/forcefield/forcefield.cpp:98
+#: qtplugins/forcefield/forcefield.cpp:113
 msgid "Configure…"
 msgstr "Configurar…"
 
-#: qtplugins/forcefield/forcefield.cpp:110
+#: qtplugins/forcefield/forcefield.cpp:125
 msgid "Freeze Selected Atoms"
 msgstr "Fijar los Átomos Seleccionados"
 
-#: qtplugins/forcefield/forcefield.cpp:117
+#: qtplugins/forcefield/forcefield.cpp:132
 msgid "Unfreeze Selected Atoms"
 msgstr "Liberar los Átomos Seleccionadaos"
 
-#: qtplugins/forcefield/forcefield.cpp:136
+#: qtplugins/forcefield/forcefield.cpp:151
 msgid "&Calculate"
 msgstr "&Calcular"
 
-#: qtplugins/forcefield/forcefield.cpp:353
+#: qtplugins/forcefield/forcefield.cpp:368
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energía = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:354
-#: qtplugins/forcefield/forcefield.cpp:400
+#: qtplugins/forcefield/forcefield.cpp:369
+#: qtplugins/forcefield/forcefield.cpp:415
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -3003,7 +3015,7 @@ msgstr "%1 Energía = %L2"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:399
+#: qtplugins/forcefield/forcefield.cpp:414
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -3023,15 +3035,15 @@ msgstr ""
 msgid "Autodetect (%1)"
 msgstr "Autodetectar (%1)"
 
-#: qtplugins/forcefield/obmmenergy.cpp:33
+#: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
 msgstr "Campo de Fuerza Universal"
 
-#: qtplugins/forcefield/obmmenergy.cpp:38
+#: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
 msgstr "Campo de Fuerza Generalizado de Amber"
 
-#: qtplugins/forcefield/obmmenergy.cpp:52
+#: qtplugins/forcefield/obenergy.cpp:86 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
 msgstr "Campo de Fuerza Molecular 94 de Merck"
 
@@ -3628,11 +3640,11 @@ msgstr "Tolerancia del Ángulo:"
 msgid "Render a few non-covalent interactions."
 msgstr "Representar algunas interacciones no covalentes."
 
-#: qtplugins/noncovalent/noncovalent.h:53
+#: qtplugins/noncovalent/noncovalent.h:54
 msgid "Halogen"
 msgstr "Halógeno"
 
-#: qtplugins/noncovalent/noncovalent.h:53
+#: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
 msgstr "Calcógeno"
 
@@ -4525,7 +4537,7 @@ msgstr "Seleccionar Todo"
 msgid "Select None"
 msgstr "No Seleccionar Nada"
 
-#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:549
+#: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
 msgstr "Invertir Selección"
 
@@ -4601,15 +4613,15 @@ msgstr "Átomo a Seleccionar:"
 msgid "Select Atom"
 msgstr "Seleccionar Átomo"
 
-#: qtplugins/select/select.cpp:481
+#: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
 msgstr "Seleccionar Átomos por Residuo"
 
-#: qtplugins/select/select.cpp:482
+#: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
 msgstr "Residuos a Seleccionar:"
 
-#: qtplugins/select/select.cpp:487
+#: qtplugins/select/select.cpp:491
 msgid "Select Residue"
 msgstr "Seleccionar Residuo"
 
@@ -4672,7 +4684,7 @@ msgid "Fill Unit Cell…"
 msgstr "Llenar Celda Unidad…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
-#: qtplugins/spacegroup/spacegroup.cpp:315
+#: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
 msgstr "Reducir a una Unidad Asimétrica"
 
@@ -4688,11 +4700,22 @@ msgstr "Grupo Espacial"
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr "Rellenar átomos simétricos en función del grupo espacial del cristal."
 
-#: qtplugins/spacegroup/spacegroup.cpp:199
+#: qtplugins/spacegroup/spacegroup.cpp:187
+msgid "Perceive Space Group"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:188
+#, qt-format
+msgid ""
+"The space group is already set to: %1.\n"
+"Would you like to overwrite it?"
+msgstr ""
+
+#: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
 msgstr "Fallo"
 
-#: qtplugins/spacegroup/spacegroup.cpp:200
+#: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
@@ -4700,13 +4723,13 @@ msgstr ""
 "La percepción del grupo espacial ha fallado.\n"
 "¿Desea volver a intentarlo con una tolerancia diferente?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:215
+#: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
 msgstr "Reducción Primitiva"
 
-#: qtplugins/spacegroup/spacegroup.cpp:216
-#: qtplugins/spacegroup/spacegroup.cpp:241
-#: qtplugins/spacegroup/spacegroup.cpp:266
+#: qtplugins/spacegroup/spacegroup.cpp:235
+#: qtplugins/spacegroup/spacegroup.cpp:260
+#: qtplugins/spacegroup/spacegroup.cpp:285
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
@@ -4715,7 +4738,7 @@ msgstr ""
 "La tolerancia está actualmente establecida en: %1.\n"
 "¿Continuar con esta tolerancia?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:229
+#: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4724,7 +4747,7 @@ msgstr ""
 "Por favor, comprobar el cristal e intentarlo de nuevo con una tolerancia "
 "diferente."
 
-#: qtplugins/spacegroup/spacegroup.cpp:254
+#: qtplugins/spacegroup/spacegroup.cpp:273
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4733,7 +4756,7 @@ msgstr ""
 "Por favor, comprobar el cristal e intentarlo de nuevo con una tolerancia "
 "diferente."
 
-#: qtplugins/spacegroup/spacegroup.cpp:278
+#: qtplugins/spacegroup/spacegroup.cpp:297
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4742,29 +4765,29 @@ msgstr ""
 "Por favor, comprobar el cristal e intentarlo de nuevo con una tolerancia "
 "diferente."
 
-#: qtplugins/spacegroup/spacegroup.cpp:336 qtplugins/yaehmop/yaehmop.cpp:209
+#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:209
 #: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
-#: qtplugins/spacegroup/spacegroup.cpp:337
+#: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
 msgstr "Seleccionar tolerancia en Å:"
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
 msgstr "Internacional"
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
 msgstr "Sala"
 
-#: qtplugins/spacegroup/spacegroup.cpp:353
+#: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
 msgstr "Hermann-Mauguin"
 
-#: qtplugins/spacegroup/spacegroup.cpp:366
+#: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
 msgstr "Seleccionar un Grupo Espacial"
 
