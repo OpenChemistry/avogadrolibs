@@ -15,13 +15,13 @@
 
 #include <avogadro/rendering/camera.h>
 
+#include <QAction>
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QAction>
-#include <QtWidgets/QApplication>
 #include <QtGui/QWindow>
+#include <QtWidgets/QApplication>
 
 namespace Avogadro::QtOpenGL {
 
@@ -169,7 +169,9 @@ void GLWidget::setDefaultTool(const QString& name)
 {
   foreach (QtGui::ToolPlugin* tool, m_tools) {
     QAction* toolAction = tool->activateAction();
-    if (tool->name() == name || (toolAction && toolAction->text() == name)) {
+
+    if (tool->objectName() == name || tool->name() == name ||
+        (toolAction && toolAction->text() == name)) {
       setDefaultTool(tool);
       return;
     }
@@ -332,4 +334,4 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     QOpenGLWidget::keyReleaseEvent(e);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL
