@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-02-10 22:01+0000\n"
+"PO-Revision-Date: 2024-03-12 22:01+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1570,7 +1570,7 @@ msgstr "&Fichier"
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
-msgstr "&Exporter"
+msgstr "E&xporter"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -2129,16 +2129,16 @@ msgstr "Représenter la biomolécule par de rubans et de cartoons."
 
 #: qtplugins/centroid/centroid.cpp:20
 msgid "Add Centroid"
-msgstr "Ajouter un centroïde"
+msgstr "Ajouter un &centroïde"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
-msgstr "Ajouter un barycentre"
+msgstr "Ajouter un &barycentre"
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr "Ajouter une Perpendiculaire"
+msgstr "Ajouter une &perpendiculaire"
 
 #: qtplugins/centroid/centroid.h:26
 msgid "Centroid"
@@ -2219,7 +2219,7 @@ msgstr "Modifier la palette d'opacité des couleurs…"
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:112
 msgid "&Extensions"
-msgstr "&Extensions"
+msgstr "E&xtensions"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
@@ -2508,7 +2508,7 @@ msgstr "Couper"
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:34:286
 msgid "Clear"
-msgstr "Effacer"
+msgstr "&Effacer"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -4812,7 +4812,7 @@ msgstr "Caractéristiques des groupes d'espace pour les cristaux."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
-msgstr "Plot des Spectres…"
+msgstr "&Plot des Spectres…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4957,7 +4957,7 @@ msgstr "Depuis le fichier"
 
 #: qtplugins/surfaces/surfaces.cpp:83
 msgid "Create Surfaces…"
-msgstr "Créer les surfaces…"
+msgstr "&Créer les surfaces…"
 
 #: qtplugins/surfaces/surfaces.cpp:111
 msgid "Render the van der Waals surface."
@@ -5123,7 +5123,7 @@ msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:27
 msgid "Vibrational Modes…"
-msgstr "Modes de vibrations…"
+msgstr "&Modes de vibrations…"
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
@@ -8161,7 +8161,7 @@ msgstr "sulfonate"
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
 msgid "Vibrational Modes"
-msgstr "Modes vibratoires"
+msgstr "&Modes vibratoires"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-01 11:00+0000\n"
+"PO-Revision-Date: 2024-03-12 22:01+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -2912,15 +2912,15 @@ msgstr "Estructura química para descargar."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Código PDB incorrecto"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "El código PDB debe tener exactamente 4 caracteres."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "El primer carácter del código PDB debe ser 1-9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
