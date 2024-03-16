@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-16 12:40+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -3531,7 +3531,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr "X, y, 또는 z axes를 따라 장면을 회전합니다."
+msgstr "X, y, 또는 z 축을 따라 장면 회전."
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Zoom the scene."
