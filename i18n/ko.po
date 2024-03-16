@@ -7519,7 +7519,7 @@ msgstr "척도 인자:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "X-Axis Minimum:"
-msgstr "최소 X 축:"
+msgstr "최소 X-축:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:115
 #. i18n: ectx: property (text), widget (QLabel, label_9)
