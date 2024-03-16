@@ -11,9 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 12:28+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-03-16 12:36+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -2947,13 +2946,12 @@ msgstr "선택된 원자 멈춤 해제"
 
 #: qtplugins/forcefield/forcefield.cpp:151
 msgid "&Calculate"
-msgstr "계산"
+msgstr "&계산"
 
 #: qtplugins/forcefield/forcefield.cpp:368
-#, fuzzy, qt-format
-#| msgid "Energy = %L1 %2"
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "에너지 = %L1 %2"
+msgstr "%1 에너지 = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:369
 #: qtplugins/forcefield/forcefield.cpp:415
@@ -2967,19 +2965,15 @@ msgstr "아보가드로"
 #: qtplugins/forcefield/forcefield.cpp:414
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 강도 기준 = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield optimization"
-msgstr "힘 영역 최적화"
+msgstr "역장 최적화"
 
 #: qtplugins/forcefield/forcefield.h:50
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield minimization, including scripts"
-msgstr "힘 영역 최적화"
+msgstr "스크립트를 포함한 역장 최소화"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -2988,14 +2982,12 @@ msgid "Autodetect (%1)"
 msgstr "자동 감지 (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "힘 영역"
+msgstr "범용 역 장"
 
 #: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "일반화된 호박색 역 장"
 
 #: qtplugins/forcefield/obenergy.cpp:86 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
