@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 14:25+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-03-16 15:05+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -4640,8 +4640,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
-"우주 그룹은 이미 설정된다 : %1.\n"
-"당신은 그것을 덮고 싶습니까?"
+"공간 그룹은 이미 다음으로 설정되어 있습니다: %1.\n"
+"덮어쓸까요?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
@@ -4729,30 +4729,20 @@ msgid "Space group features for crystals."
 msgstr "결정체에 대한 공간 그룹 기능입니다."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "스펙트럼 가져오기"
+msgstr "스펙트럼 플롯…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1676
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Spectra"
 msgstr "스펙트럼"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "스펙트럼 및 진동 모드를 표시합니다."
+msgstr "스펙트럼 플롯을 표시합니다."
 
 #: qtplugins/spectra/spectradialog.cpp:201
-#, fuzzy
-#| msgctxt "Infrared spectra option"
-#| msgid "Infrared"
 msgid "Infrared"
 msgstr "적외선"
 
@@ -4761,67 +4751,50 @@ msgid "Raman"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:208
-#, fuzzy
-#| msgctxt "NMR spectra option"
-#| msgid "NMR"
 msgid "NMR"
 msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
 msgstr "전자"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "원편광 이색성"
 
 #: qtplugins/spectra/spectradialog.cpp:219
 #: qtplugins/spectra/spectradialog.cpp:410
-#, fuzzy
-#| msgid "Transition State"
 msgid "Density of States"
-msgstr "전이 상태"
+msgstr "상태 밀도"
 
 #: qtplugins/spectra/spectradialog.cpp:256
 msgid "Select Background Color"
 msgstr "배경색상 선택"
 
 #: qtplugins/spectra/spectradialog.cpp:269
-#, fuzzy
-#| msgid "Select Background Color"
 msgid "Select Foreground Color"
-msgstr "배경색상 선택"
+msgstr "전면 색상 선택"
 
 #: qtplugins/spectra/spectradialog.cpp:282
-#, fuzzy
-#| msgid "Export Calculated Spectrum"
 msgid "Select Calculated Spectra Color"
-msgstr "계산된 스펙트럼 내보내기"
+msgstr "계산된 스펙트럼 색상 선택"
 
 #: qtplugins/spectra/spectradialog.cpp:294
-#, fuzzy
-#| msgid "Imported Spectra:"
 msgid "Select Imported Spectra Color"
-msgstr "가져온 스펙트럼:"
+msgstr "가져온 스펙트럼 색상 선택"
 
 #: qtplugins/spectra/spectradialog.cpp:342
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "진동 모드"
+msgstr "진동식 스펙트럼"
 
 #: qtplugins/spectra/spectradialog.cpp:343
 #: qtplugins/spectra/spectradialog.cpp:357
 msgid "Wavenumbers (cm⁻¹)"
-msgstr ""
+msgstr "파수 (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "전이 상태"
+msgstr "전달"
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
