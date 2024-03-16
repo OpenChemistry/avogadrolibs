@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 09:40+0000\n"
+"PO-Revision-Date: 2024-03-16 12:17+0000\n"
 "Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -1550,10 +1550,10 @@ msgstr ""
 "Align 분자\n"
 "\n"
 "왼쪽 마우스: 최대 2개의 원자를 선택합니다.\n"
-"첫번째 원자는 근원에서 중심에 둡니다.\n"
+"첫번째 원자는 원점의 중심에 있습니다.\n"
 "두 번째 원자는 선택한 축으로 정렬됩니다.\n"
-"마우스 오른쪽: 재설정 정렬.\n"
-"Double-Click: 출발점의 atom 센터."
+"마우스 오른쪽: 정렬 재설정.\n"
+"Double-Click: 원자를 원점 중심에 나두기."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1562,32 +1562,24 @@ msgid "Axis:"
 msgstr "축:"
 
 #: qtplugins/aligntool/aligntool.cpp:160
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "정렬 설정"
+msgstr "원점에 정렬"
 
 #: qtplugins/aligntool/aligntool.cpp:196
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "축에 보기 정렬"
+msgstr "축에 정렬"
 
 #: qtplugins/aligntool/aligntool.cpp:312
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "x, y, z축을 기원으로 표현"
+msgstr "원점에 원자를 중심에 두기."
 
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
-msgstr "선택 도구"
+msgstr "정렬 도구"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
@@ -1711,7 +1703,7 @@ msgstr "APBS 입력 파일 저장"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "APBS 입력 (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -2031,17 +2023,15 @@ msgstr "결합"
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "모든 또는 선택한 원자에서 결합을 제거합니다."
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "모든 또는 선택한 원자 사이의 결합을 생성합니다."
 
 #: qtplugins/bonding/bonding.cpp:77
-#, fuzzy
-#| msgid "Perceive Bond Orders"
 msgid "Perceive bond orders."
-msgstr "결합 차수 감지"
+msgstr "결합 순서를 이해합니다."
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -2242,24 +2232,24 @@ msgstr "외부 스크립트 명령어 실행"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "파이썬 설정…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "파이썬 설치"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
-msgstr ""
+msgstr "파이썬은 많은 Avogadro 기능에 사용됩니다. 파이썬을 내려받을까요?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "파이썬구성"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "파이썬 환경을 구성합니다."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2322,10 +2312,8 @@ msgid "Element symbol."
 msgstr "원소 기호입니다."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "잘못된 원자 번호입니다."
+msgstr "잘못된 원자 명칭."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 msgid "Invalid atomic index."
@@ -2724,16 +2712,12 @@ msgid "Import Crystal from Clipboard"
 msgstr "클립보드에서 결정체 가져오기"
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
-#| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "원자를 단위 격자로 감싸기(&W)"
+msgstr "원자를 단위 셀로 감싸기 ."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "표준 방향으로 회전"
+msgstr "단위 셀을 표준 방향으로 회전."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
@@ -2752,10 +2736,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "결정체 전용 편집/분석을 위한 도구입니다."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Color:"
 msgid "Color axes:"
-msgstr "색상:"
+msgstr "색상 축:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -2878,7 +2860,7 @@ msgstr "다운로드할 화학 구조입니다."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "잘못된 PDB 코드"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
