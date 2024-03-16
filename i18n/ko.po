@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-16 14:01+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -4378,10 +4378,8 @@ msgid "Could not open the file for writing."
 msgstr "쓰기 위한 파일을 열 수 없습니다."
 
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "구조 파일 (%1)을(를) 읽는 동안 오류가 발생했습니다."
+msgstr "파일에 오류 쓰기."
 
 #: qtplugins/propertytables/propertyview.cpp:288
 #, fuzzy
