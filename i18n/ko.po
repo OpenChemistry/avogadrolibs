@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-16 15:45+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -5506,6 +5506,8 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"스크립트를 실행하는 데 사용되는 Python 버전을 선택합니다.\n"
+"Avogadro는 어떤 변경 사항에 대해 다시 시작해야합니다."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
