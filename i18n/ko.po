@@ -12,8 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-16 13:41+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -3613,7 +3612,7 @@ msgstr "수소 제거"
 #: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr "%1 찾을 수 없습니다! Open Babel 플러그인 작업을 해제."
+msgstr "%1를 찾을 수 없습니다! 오픈 바벨 플러그인 작업 비활성."
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "&Open Babel"
