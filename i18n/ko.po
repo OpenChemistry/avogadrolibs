@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 13:41+0000\n"
+"PO-Revision-Date: 2024-03-16 13:52+0000\n"
 "Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -3666,7 +3666,7 @@ msgstr "기하학 최적화 (바벨 열기)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
-msgstr "생성 중"
+msgstr "생성 중…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
@@ -3711,28 +3711,20 @@ msgstr ""
 "obabel 출력의 원자 수 (%1)가 원래 분자의 원자 수 (%2)와 일치하지 않습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "분자가 잘못되었습니다. 기하학을 최적화할 수 없습니다."
+msgstr "분자가 잘못되었습니다. 이형태체를 생성 할 수 없습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "바벨 열기로 파일을 열 수 없습니다."
+msgstr "오픈 바벨과 함께 이형태체를 생성 할 수 없습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
-#| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "결합 인식 (바벨 열기)"
+msgstr "이형태체 생성 중 (오픈 바벨)"
 
 #: qtplugins/openbabel/openbabel.cpp:711
-#, fuzzy
-#| msgid "Conformer %1"
 msgid "Generate Conformers"
-msgstr "이형태체 %1"
+msgstr "이형태체 생성"
 
 #: qtplugins/openbabel/openbabel.cpp:720
 msgid "Cannot open file with Open Babel."
