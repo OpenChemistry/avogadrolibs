@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 16:51+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-03-16 16:56+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -6892,7 +6892,7 @@ msgstr "유전 알고리즘에 대한 계산 방법 (RMSD = 기하학 거리, �
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7493,10 +7493,8 @@ msgstr "색상 적용"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
-#, fuzzy
-#| msgid "Spectra and Vibrations"
 msgid "Spectra Visualization"
-msgstr "스펙트럼 및 진동"
+msgstr "스펙트럼 시각화"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
@@ -7505,10 +7503,8 @@ msgstr "데이터 읽기(&L)..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
-#| msgid "&Export"
 msgid "Export Data"
-msgstr "내보내기(&E)"
+msgstr "자료 내보내기"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
