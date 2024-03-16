@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 12:40+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-03-16 13:41+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -3535,13 +3535,11 @@ msgstr "X, y, 또는 z 축을 따라 장면 회전."
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Zoom the scene."
-msgstr "줌 the 장면."
+msgstr "장면 확대/축소."
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "Translate by:"
 msgid "Translate the scene."
-msgstr "번역가:"
+msgstr "장면 번역."
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3596,10 +3594,8 @@ msgid "Configure Force Field…"
 msgstr "역장 구성…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search..."
 msgid "Conformer Search…"
-msgstr "이형태체 검색..."
+msgstr "이형태체 검색…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
