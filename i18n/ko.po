@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-16 15:05+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -4748,7 +4748,7 @@ msgstr "적외선"
 
 #: qtplugins/spectra/spectradialog.cpp:205
 msgid "Raman"
-msgstr ""
+msgstr "라만"
 
 #: qtplugins/spectra/spectradialog.cpp:208
 msgid "NMR"
@@ -4797,10 +4797,8 @@ msgid "Transmission"
 msgstr "전달"
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "스펙트럼 가져오기"
+msgstr "라만 스펙트럼"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
