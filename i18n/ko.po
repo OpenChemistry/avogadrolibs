@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 12:38+0000\n"
+"PO-Revision-Date: 2024-03-16 12:39+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
@@ -3260,7 +3260,7 @@ msgstr "원소 번호"
 
 #: qtplugins/label/label.cpp:165
 msgid "Element & ID"
-msgstr ""
+msgstr "성분 & ID"
 
 #: qtplugins/label/label.cpp:180
 msgid "Atom Label:"
