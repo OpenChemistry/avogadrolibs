@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-03-16 16:40+0000\n"
-"Last-Translator: simmon <simmon@nplob.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -6845,7 +6845,7 @@ msgstr "유전 알고리즘 옵션"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:112
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 msgid "number of children for each parent geometry"
-msgstr ""
+msgstr "각 부모 기하학을 위한 아이들의 수"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
