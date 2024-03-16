@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 17:08+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-03-16 17:12+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -7566,7 +7566,7 @@ msgstr "보기"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "실험 spectra의 tsv를 플로우에 과감하게 가져옵니다."
+msgstr "실험 스펙트럼의 tsv를 가져오고 플롯에 씌우다."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -7611,47 +7611,43 @@ msgstr "글꼴 크기:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:416
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
-msgstr ""
+msgstr "14"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:421
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:426
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
-msgstr ""
+msgstr "18"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:434
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Line width:"
 msgid "Line Size:"
-msgstr "선의 폭:"
+msgstr "선 크기:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:507
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:512
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
-msgstr ""
+msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
