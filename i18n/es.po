@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-12 22:01+0000\n"
+"PO-Revision-Date: 2024-03-16 16:40+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -3018,7 +3018,7 @@ msgstr "Avogadro"
 #: qtplugins/forcefield/forcefield.cpp:414
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 Criterios de la fuerza = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
 msgid "Forcefield optimization"
@@ -4702,7 +4702,7 @@ msgstr "Rellenar átomos simétricos en función del grupo espacial del cristal.
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Reconocimiento de grupos espaciales"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -4710,6 +4710,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"El grupo espacial ya está configurado en: %1.\n"
+"¿Desea sobrescribirlo?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
