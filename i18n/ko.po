@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 17:12+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-03-16 17:14+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -7664,10 +7664,10 @@ msgid ""
 "Scroll wheel: Zoom to cursor"
 msgstr ""
 "통제:\n"
-"더블 왼쪽 클릭: 기본 축 제한 복원\n"
-"오른쪽 클릭 + 드래그: 연락처\n"
-"중간 클릭 + 드래그: 줌 지역\n"
-"스크롤 휠: 줌으로 커서"
+"두 번 왼쪽 누르기: 기본 축 제한 복원\n"
+"오른쪽 누르기 + 끌기: 플롯 이동\n"
+"중간 누르기 + 끌기: 지역으로 확대/축소\n"
+"스크롤 휠: 커서로 확대/축소"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -7997,10 +7997,8 @@ msgstr "리간드:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "그룹 %1"
+msgstr "그룹"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
