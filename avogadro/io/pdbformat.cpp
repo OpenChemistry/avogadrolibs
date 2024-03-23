@@ -8,6 +8,16 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <QApplication>
+#include <QWidget>
+#include <QLabel>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QFileDialog>
+#include <QDebug>
+#include <fstream>
+#include <sstream>
+#include <vector>
 #include <avogadro/core/secondarystructure.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
@@ -328,3 +338,99 @@ void PdbFormat::perceiveSubstitutedCations(Core::Molecule& molecule)
 }
 
 } // namespace Avogadro::Io
+
+// vector3 class representing 3D coordinates
+class vector3 {
+public:
+    double x, y, z;
+};
+
+// MainWin class
+class MainWin : public QWidget {
+public:
+    MainWin(QWidget *parent = nullptr) : QWidget(parent) {
+        setAcceptDrops(true);
+        
+        browseButton = new QPushButton("Browse", this);
+        browseButton->setGeometry(10, 10, 100, 30);
+        connect(browseButton, &QPushButton::clicked, this, &MainWin::browseFile);
+    }
+
+protected:
+    // Override drag enter event - to accept if they contain URLs
+    void dragEnterEvent(QDragEnterEvent *event) override {
+        if (event->mimeData()->hasUrls()) {
+            event->acceptProposedAction();
+        }
+    }
+
+    // Override drop event - to handle dropping of files 
+    void dropEvent(QDropEvent *event) override {
+        const QMimeData *mimeData = event->mimeData();
+        if (mimeData->hasUrls()) {
+            QList<QUrl> urlList = mimeData->urls();
+            QString filename = urlList.at(0).toLocalFile();
+            if (filename.endsWith(".pdb", Qt::CaseInsensitive)) {
+                readPDBFile(filename);
+            }
+        }
+    }
+
+private slots:
+    // Slot to handle browse button click
+    void browseFile() {
+        QString filename = QFileDialog::getOpenFileName(this, "Open PDB File", "", "PDB Files (*.pdb)");
+        if (!filename.isEmpty()) {
+            readPDBFile(filename);
+        }
+    }
+
+private:
+    // Function to read PDB file
+    void readPDBFile(const QString &filename) {
+        std::ifstream file(filename.toStdString());
+        if (!file.is_open()) {
+            qDebug() << "Failed to open file:" << filename;
+            return;
+        }
+
+        std::string line;
+        std::vector<vector3> frame;
+        while (std::getline(file, line)) {
+            if (line.find("ENDMDL") != std::string::npos) {
+                processFrame(frame);
+                frame.clear();
+            } else if (line.find("ATOM") == 0 || line.find("HETATM") == 0) {
+                std::istringstream iss(line.substr(30, 24));
+                vector3 coordinates;
+                iss >> coordinates.x >> coordinates.y >> coordinates.z;
+                frame.push_back(coordinates);
+            }
+        }
+        if (!frame.empty()) {
+            processFrame(frame);
+        }
+    }//storing the coordinates in frame vector 
+
+    void processFrame(const std::vector<Vector3> &frame) {
+        //printing the (x,y,z) coordinates
+        qDebug() << "New Frame:";
+        for (const auto &coord : frame) {
+            qDebug() << "X : " << coord.x << "Y : " << coord.y << "Z : " << coord.z;
+        }
+    }
+
+    QPushButton *browseButton;
+};
+
+int main(int argc, char *argv[]) {
+    //GUI window for drag and drop of pdb files 
+    QApplication app(argc, argv);
+
+    MainWindow mainWindow;
+    mainWindow.setWindowTitle("PDB File Reader");
+    mainWindow.resize(400, 300);
+    mainWindow.show();
+
+    return app.exec();
+} //Qt application with a browse button 
