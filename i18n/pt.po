@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Editor Do Sonic BR <sonicbr12345@gmail.com>, 2020.
-# ssantos <ssantos@web.de>, 2020, 2021, 2023.
+# ssantos <ssantos@web.de>, 2020, 2021, 2023, 2024.
 # Joana Vieira <joanaoliveiravieira8@gmail.com>, 2020.
 # João Tiago Antunes <jtiago.cbr@gmail.com>, 2020.
 # Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2023-01-11 10:11+0000\n"
+"PO-Revision-Date: 2024-03-24 15:20+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -7947,7 +7947,7 @@ msgstr "Máx 2*theta:"
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download Selected"
-msgstr "Download Selecionados"
+msgstr "Descarregar Selecionados"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
