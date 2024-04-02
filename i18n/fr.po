@@ -13,7 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-04-02 20:21+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4714,7 +4715,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Détecter le groupe d'espace …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
