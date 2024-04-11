@@ -85,7 +85,7 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 }
 
 SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
+  : m_pixelRatio(1.0f), m_aoEnabled(true), m_dofEnabled(true), m_aoStrength(1.0f),
     m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0),
     d(new Private)
 {
@@ -156,6 +156,7 @@ void SolidPipeline::end()
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofEnabled", m_dofEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   glDrawArrays(GL_TRIANGLES, 0, 6);
