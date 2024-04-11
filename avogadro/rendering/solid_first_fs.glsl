@@ -25,6 +25,8 @@ uniform sampler2D inRGBTex;
 uniform sampler2D inDepthTex;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inAoEnabled;
+// 1.0 if enabled, 0.0 if disabled
+uniform float inDofEnabled;
 // Shadow strength for SSAO
 uniform float inAoStrength;
 // 1.0 if enabled, 0.0 if disabled
@@ -64,6 +66,47 @@ vec3 getNormalNear(vec2 normalUV)
 float lerp(float a, float b, float f)
 {
     return a + f * (b - a);
+}
+
+float rand(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float depthToZ(float depth) {
+  float eyeZ = ((height * 0.57735) /2.0);
+  float near = eyeZ / 10.0;
+  float far = eyeZ * 10.0;
+  float depthNormalized = 2.0 * depth - 1.0;
+  return 2.0 * near * far / (far + near - depthNormalized * (far - near));
+}
+
+float calcBlur(float z, float pixelScale) {
+  return clamp(abs(z - 300.0), 0.0, 0.5*pixelScale);
+}
+
+vec4 applyBlur(vec2 texCoord) {
+  float pixelScale = max(width, height);
+  float origZ = depthToZ(texture2D(inDepthTex, texCoord).x);
+  float blurAmt = calcBlur(origZ, pixelScale);
+  
+  float total = 1.0;
+  vec4 color = texture2D(inRGBTex, texCoord);
+  // number of samples can be optimized.
+  for (int i = 0; i < 64; i++) {
+    float t = (float(i) / float(64));
+    float angle = (t * 4.0) * 6.28319; 
+    float radius = (t * 2. - 1.); 
+    angle += 1.0 * rand(gl_FragCoord.xy);
+    vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * blurAmt) / pixelScale;
+    float z = depthToZ(texture2D(inDepthTex, texCoord + offset).x);
+    float sampleBlur = calcBlur(z, pixelScale);
+    float weight = float((z >= origZ) || (sampleBlur >= blurAmt * radius + 0.));
+    // weight *= 1.0 / radius; // multiplying weight by inverse of sample distribution
+    vec4 sample = texture2D(inRGBTex, texCoord + offset);
+    color += weight * sample;
+    total += weight;
+  }
+  return color / total;
 }
 
 const vec2 SSAOkernel[16] = vec2[16](
@@ -113,13 +156,20 @@ float computeEdgeLuminosity(vec3 normal)
   return max(0.0, pow(normal.z - 0.1, 1.0 / 3.0));
 }
 
-void main()
-{
+void main() {
+  // Some cleanups required.
   float luminosity = 1.0;
   luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
   luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
-
   vec4 color = texture2D(inRGBTex, UV);
-  gl_FragColor = vec4(color.xyz * luminosity, color.w);
+  if(inDofEnabled == 0.0){
+    gl_FragColor = vec4(color.xyz * luminosity, color.w);
+  }
+  else {
+  // Apply blur to the color texture
+    vec4 blurredColor = applyBlur(UV);
+    vec4 blurColor = vec4(luminosity * blurredColor.xyz, blurredColor.w);
+    gl_FragColor = blurColor;
+  }
   gl_FragDepth = texture2D(inDepthTex, UV).x;
 }

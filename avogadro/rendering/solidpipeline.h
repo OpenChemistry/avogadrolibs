@@ -53,6 +53,12 @@ public:
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
   /**
+   * @brief Get or set whether Depth-of-feild is enabled.
+   */
+  bool getDofEnabled() { return m_dofEnabled; }
+  void setDofEnabled(bool enabled) { m_dofEnabled = enabled; }
+  
+  /**
    * @brief Get or set shadow strength for Ambient Occlusion.
    */
   float getAoStrength() { return m_aoStrength; }
@@ -77,6 +83,7 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
+  bool m_dofEnabled;
   float m_aoStrength;
   bool m_edEnabled;
   float m_edStrength;
