@@ -74,14 +74,14 @@ float rand(vec2 co){
 
 float depthToZ(float depth) {
   float eyeZ = ((height * 0.57735) /2.0);
-  float near = eyeZ / 10.0;
-  float far = eyeZ * 10.0;
+  float near = 5.0;
+  float far = 600.0;
   float depthNormalized = 2.0 * depth - 1.0;
   return 2.0 * near * far / (far + near - depthNormalized * (far - near));
 }
 
 float calcBlur(float z, float pixelScale) {
-  return clamp(abs(z - 300.0), 0.0, 0.5*pixelScale);
+  return clamp(abs(z - 39.0), 0.0, 0.5*pixelScale);
 }
 
 vec4 applyBlur(vec2 texCoord) {
