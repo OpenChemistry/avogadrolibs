@@ -241,12 +241,12 @@ void Forcefield::optimize()
   if (m_molecule == nullptr || m_method == nullptr)
     return;
 
-  if(!m_molecule->atomCount()){
-    QMessageBox::information(nullptr, tr("Avogadro"), 
-    tr("No atoms provided for optimization"));
+  if (!m_molecule->atomCount()) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("No atoms provided for optimization"));
     return;
   }
-  
+
   // merge all coordinate updates into one step for undo
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
@@ -359,7 +359,7 @@ void Forcefield::energy()
 {
   if (m_molecule == nullptr || m_method == nullptr)
     return;
-  
+
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
