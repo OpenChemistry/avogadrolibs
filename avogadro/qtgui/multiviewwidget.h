@@ -54,6 +54,8 @@ public slots:
   void splitVertical();
   void createView();
   void removeView();
+  /** New method to reset all views to their default settings. */
+  void resetAllViews(); // New slot added for resetting all views
 
 private:
   QList<ContainerWidget*> m_children;
@@ -67,7 +69,7 @@ private:
   void splitView(Qt::Orientation orient, ContainerWidget* container);
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_MULTIVIEWWIDGET_H

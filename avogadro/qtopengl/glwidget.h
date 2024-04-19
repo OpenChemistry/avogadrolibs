@@ -12,8 +12,8 @@
 #include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QPointer>
 #include <QOpenGLWidget>
+#include <QPointer>
 
 class QTimer;
 
@@ -126,6 +126,10 @@ public slots:
    * Make the tools in toolList available to the GLWidget. The GLWidget takes
    * ownership of the tools.
    */
+
+  /** New method to reset the camera and other view settings to default. */
+  void resetViewSettings(); // New slot added for resetting view settings
+
   void setTools(const QList<QtGui::ToolPlugin*>& toolList);
 
   /**
@@ -196,7 +200,7 @@ private:
   QTimer* m_renderTimer;
 };
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_GLWIDGET_H
