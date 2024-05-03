@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-04 01:54+0000\n"
+"PO-Revision-Date: 2024-05-03 03:07+0000\n"
 "Last-Translator: \"Carson Geller (Cart)\" <cartrigger@gmail.com>\n"
 "Language-Team: English (Canada) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_CA/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.5.3-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2873,15 +2873,15 @@ msgstr "Chemical structure to download."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Invalid PDB Code"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "The PDB code must be exactly 4 characters long."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "The first character of the PDB code must be 1-9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -3547,7 +3547,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Zoom the scene."
 
 #: qtplugins/navigator/navigator.cpp:63
 #, fuzzy
