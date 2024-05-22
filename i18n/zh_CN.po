@@ -10,13 +10,14 @@
 # alchemistcai <alchemistcai@163.com>, 2023.
 # Chiyu Liang <532117255@qq.com>, 2023, 2024.
 # Sihan Zhang <chemistryzsh@gmail.com>, 2024.
+# KeysBits <KeysBytes@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-04-04 06:01+0000\n"
-"Last-Translator: Sihan Zhang <chemistryzsh@gmail.com>\n"
+"PO-Revision-Date: 2024-05-22 14:08+0000\n"
+"Last-Translator: KeysBits <KeysBytes@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2905,7 +2906,7 @@ msgstr "无法读取 PDB 分子：%1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr "PDB 代码"
+msgstr "PDB编号"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2914,15 +2915,15 @@ msgstr "下载化学结构。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr "无效的 PDB 代码"
+msgstr "无效的PDB编号"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr "PDB 代码必须为四个字符。"
+msgstr "PDB编号必须为四个字符。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "PDB编号的第一个字符必须为1-9。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -2985,7 +2986,7 @@ msgstr "优化几何结构"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
-msgstr ""
+msgstr "相互作用"
 
 #: qtplugins/forcefield/forcefield.cpp:113
 msgid "Configure…"
@@ -3331,7 +3332,7 @@ msgstr "元素与编号"
 
 #: qtplugins/label/label.cpp:165
 msgid "Element & ID"
-msgstr ""
+msgstr "元素 & ID"
 
 #: qtplugins/label/label.cpp:180
 #, fuzzy
@@ -4178,6 +4179,8 @@ msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
+"此插件需要安装特定依赖包。\n"
+"是否安装？"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:304
 msgid "Always"
@@ -4766,7 +4769,7 @@ msgstr "按照晶体空间群填充对称原子。"
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "检测空间群"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -4774,6 +4777,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"空间群已经设定为： %1 。\n"
+"是否覆盖设置？"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
@@ -5296,16 +5301,18 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
+"Yaehmop执行错误：\n"
+"%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:310
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr ""
+msgstr "未能读取Yaehmop能带结构输出！"
 
 #: qtplugins/yaehmop/yaehmop.cpp:322
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
-msgstr ""
+msgstr "在Yaehmop输出中仅发现一个特殊k点！需要两个或以上！"
 
 #: qtplugins/yaehmop/yaehmop.cpp:368
 #, qt-format
@@ -5314,11 +5321,11 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:388
 msgid "Fermi Level"
-msgstr ""
+msgstr "费米能级"
 
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Cannot find Yaehmop"
-msgstr ""
+msgstr "无法找到Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:545
 #, qt-format
@@ -5327,15 +5334,15 @@ msgstr "错误：%1 启动失败"
 
 #: qtplugins/yaehmop/yaehmop.cpp:596
 msgid "Yaehmop Input"
-msgstr ""
+msgstr "Yaehmop输入"
 
 #: qtplugins/yaehmop/yaehmop.h:39
 msgid "Yaehmop"
-msgstr ""
+msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:88
 msgid "Perform extended Hückel calculations with yaehmop."
-msgstr ""
+msgstr "使用Yaehmop进行扩展Hückel方法计算。"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -5481,19 +5488,19 @@ msgstr "插入片段…"
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Filter:"
-msgstr ""
+msgstr "筛选："
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:29
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
-msgstr ""
+msgstr "键入名称或部分名称以显示相应文件。"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:227
 #. i18n: ectx: property (text), widget (QPushButton, insertButton)
 msgid "Insert"
-msgstr ""
+msgstr "插入"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
@@ -5641,7 +5648,7 @@ msgstr "最小距离："
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
 msgid "Volume Rendering"
-msgstr ""
+msgstr "体渲染"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5651,12 +5658,12 @@ msgstr ""
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Enable volume rendering"
-msgstr ""
+msgstr "启用体渲染"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "启用表面渲染"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5675,6 +5682,9 @@ msgid ""
 "Would you like to create a new environment for Avogadro?\n"
 "This will make a copy of your base environment.\n"
 msgstr ""
+"仅有conda “base”环境。\n"
+"是否为Avogadro创建新环境？\n"
+"这将会生成你base环境的副本。\n"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5692,6 +5702,8 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"选择运行脚本的Python版本。\n"
+"Avogadro必须重启以生效。"
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6256,7 +6268,7 @@ msgstr "插入 DNA"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "DNA/RNA Builder"
-msgstr ""
+msgstr "DNA/RNA 构建器"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -6411,7 +6423,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QComboBox, unitsCombo)
 msgid "Select the unit style to be used during the simulation."
-msgstr ""
+msgstr "选择模拟中使用的单位格式。"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:84
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_units)
@@ -6592,7 +6604,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:299
 #. i18n: ectx: property (toolTip), widget (QLineEdit, readDataLine)
 msgid "Specify the name to be used for the coordinate file."
-msgstr ""
+msgstr "指定坐标文件的名称。"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
@@ -6657,7 +6669,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:642
 #. i18n: ectx: property (toolTip), widget (QLineEdit, dumpXYZEdit)
 msgid "Filename of the XYZ file to write during the simulation."
-msgstr ""
+msgstr "模拟中写入的XYZ文件名称。"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:419
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -6669,7 +6681,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:847
 #. i18n: ectx: property (toolTip), widget (QComboBox, dimensionCombo)
 msgid "Number of dimensions in the system."
-msgstr ""
+msgstr "系统维度数。"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
