@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_RENDERING_SOLIDPIPELINE_H
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
+#include "camera.h"
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -53,6 +55,23 @@ public:
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
   /**
+   * @brief Get or set whether Fog is enabled.
+   */
+  bool getFogEnabled() { return m_fogEnabled; }
+  void setFogEnabled(bool enabled) { m_fogEnabled = enabled; }
+
+  /**
+   * @brief Set the modelViewMatrix to its updated one.  
+   */
+  void setModelViewMatrix(const Eigen::Affine3f value) { modelView = value; }
+
+  /**
+   * @brief Set Background Color to it's current value.
+   */  
+  Vector4ub backgroundColor() const { return m_backgroundColor; }
+  void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
+
+  /**
    * @brief Get or set shadow strength for Ambient Occlusion.
    */
   float getAoStrength() { return m_aoStrength; }
@@ -77,6 +96,9 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
+  Vector4ub m_backgroundColor;
+  Eigen::Affine3f modelView; 
+  bool m_fogEnabled;
   float m_aoStrength;
   bool m_edEnabled;
   float m_edStrength;
