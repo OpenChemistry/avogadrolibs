@@ -13,13 +13,14 @@
 # KeysBits <KeysBytes@gmail.com>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# zhang tengshuo <zhangtengshuo@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-05-22 14:08+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-05-31 22:21+0000\n"
+"Last-Translator: zhang tengshuo <zhangtengshuo@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -1248,10 +1249,9 @@ msgid "Van der Waals"
 msgstr "范德华"
 
 #: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
-#, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van der Waals"
+msgstr "Van der Waals（范德华）"
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1336,14 +1336,12 @@ msgid "Modify Layers"
 msgstr "修改图层"
 
 #: qtgui/rwlayermanager.cpp:194
-#, fuzzy
 msgid "Remove Layer"
-msgstr "删除氢原子"
+msgstr "删除图层"
 
 #: qtgui/rwlayermanager.cpp:201
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "删除氢原子"
+msgstr "删除图层信息"
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1358,9 +1356,8 @@ msgstr "添加图层信息"
 #: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1661
-#, fuzzy
 msgid "Change Layer"
-msgstr "更改键级"
+msgstr "更改图层"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1456,9 +1453,8 @@ msgid "Scale Cell Volume"
 msgstr "比例缩放晶胞体积"
 
 #: qtgui/rwmolecule.cpp:527
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "超晶胞"
+msgstr "创建超胞"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
@@ -1490,27 +1486,20 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "约化晶胞为非对称单元"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "改变原子杂化"
+msgstr "调整原子位置"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Position"
-msgstr "改变原子杂化"
+msgstr "调整原子位置"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "改变原子杂化"
+msgstr "调整原子标签"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "忽略选择"
+msgstr "重新选择"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1638,9 +1627,8 @@ msgid "OpenDX File (*.dx)"
 msgstr "OpenDX 文件 (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
-#, fuzzy
 msgid "IO Error"
-msgstr "错误"
+msgstr "读写错误"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
@@ -1753,9 +1741,8 @@ msgid "By Distance"
 msgstr "按距离"
 
 #: qtplugins/applycolors/applycolors.cpp:58
-#, fuzzy
 msgid "By Element"
-msgstr "元素"
+msgstr "按元素"
 
 #: qtplugins/applycolors/applycolors.cpp:69
 msgid "By Chain"
@@ -1911,21 +1898,17 @@ msgid "&View"
 msgstr "视图(&V)"
 
 #: qtplugins/applycolors/applycolors.cpp:149
-#, fuzzy
 msgid "Color Atoms"
-msgstr "颜色"
+msgstr "原子着色"
 
 #: qtplugins/applycolors/applycolors.cpp:151
-#, fuzzy
 msgid "Color Residues"
-msgstr "按残基着色"
+msgstr "残基着色"
 
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "已选的颜色"
+msgstr "选择颜色"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1939,18 +1922,16 @@ msgid "Colormap:"
 msgstr "颜色:"
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "颜色"
+msgstr "应用颜色"
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
 msgid "Atom scale"
 msgstr "原子尺寸比例"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
-#, fuzzy
 msgid "Bond scale"
-msgstr "键角"
+msgstr "键的比例"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
@@ -2039,10 +2020,8 @@ msgid "Configure Bonding…"
 msgstr "配置成键…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "修正所选择的原子"
+msgstr "让选定的原子成键"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2102,10 +2081,9 @@ msgid "Ribbon"
 msgstr "条带"
 
 #: qtplugins/cartoons/cartoons.cpp:97
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "卡通"
+msgstr "简单卡通"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 #, fuzzy
@@ -2129,10 +2107,8 @@ msgid "Add Centroid"
 msgstr "添加限制"
 
 #: qtplugins/centroid/centroid.cpp:21
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Center of Mass"
-msgstr "添加限制"
+msgstr "添加质心"
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
@@ -2140,10 +2116,8 @@ msgid "Add Perpendicular"
 msgstr "添加垂直方向"
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "居中"
+msgstr "质心"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -2180,9 +2154,8 @@ msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:232
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
 msgid "Maximum distance:"
-msgstr "距离："
+msgstr "最大距离："
 
 #: qtplugins/closecontacts/closecontacts.cpp:233
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2319,9 +2292,8 @@ msgid "Atomic &Coordinate Editor…"
 msgstr "原子和坐标编辑器(&C)…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "笛卡尔坐标编辑器"
+msgstr "坐标编辑器"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -2361,10 +2333,8 @@ msgid "Element symbol."
 msgstr "元素符号。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:397
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "无效的原子序数。"
+msgstr "无效的原子标签。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:415
 msgid "Invalid atomic index."
@@ -2412,10 +2382,8 @@ msgid "'b' lattice coordinate."
 msgstr "'b' 晶格坐标。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:495
-#, fuzzy
-#| msgid "Invalid coordinate."
 msgid "'c' lattice coordinate."
-msgstr "无效的坐标。"
+msgstr "c轴晶格坐标"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:579
 msgid "Error applying geometry"
@@ -2519,10 +2487,8 @@ msgid "&Edit"
 msgstr "编辑(&E)"
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "复制"
+msgstr "复制为"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2995,16 +2961,12 @@ msgid "Configure…"
 msgstr "建立力场…"
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "导入选择的原子"
+msgstr "固定选择的原子"
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "修正所选择的原子"
+msgstr "释放所选择的原子"
 
 #: qtplugins/forcefield/forcefield.cpp:151
 msgid "&Calculate"
@@ -3027,7 +2989,7 @@ msgstr "Avogadro"
 #: qtplugins/forcefield/forcefield.cpp:414
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 力的范数 = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
 #, fuzzy
@@ -3048,10 +3010,8 @@ msgid "Autodetect (%1)"
 msgstr "自动检测 (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "力场"
+msgstr "通用力场"
 
 #: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3299,9 +3259,8 @@ msgid "Color:"
 msgstr "颜色:"
 
 #: qtplugins/label/label.cpp:149
-#, fuzzy
 msgid "Distance from center:"
-msgstr "距离："
+msgstr "与中心的距离："
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3337,14 +3296,12 @@ msgid "Element & ID"
 msgstr "元素 & ID"
 
 #: qtplugins/label/label.cpp:180
-#, fuzzy
 msgid "Atom Label:"
-msgstr "群组标签:"
+msgstr "原子标签:"
 
 #: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
-#, fuzzy
 msgid "ID"
-msgstr "D"
+msgstr "ID"
 
 #: qtplugins/label/label.cpp:195
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
@@ -3366,9 +3323,8 @@ msgid "Display labels on ball and stick style."
 msgstr "在球棍模型上展示标签。"
 
 #: qtplugins/label/labeleditor.cpp:31
-#, fuzzy
 msgid "Edit Labels"
-msgstr "标签"
+msgstr "编辑标签"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -3381,9 +3337,8 @@ msgstr ""
 "鼠标左键：在原子上点击以添加自定义标签"
 
 #: qtplugins/label/labeleditor.cpp:77
-#, fuzzy
 msgid "Create Label"
-msgstr "创建表面"
+msgstr "创建标签"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3402,12 +3357,10 @@ msgid "Generate input for LAMMPS."
 msgstr "生成 LAMMMPS 输入文件。"
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
-#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
-msgstr ""
-"您是否希望更新预览文本，并丢失所有在Gaussian输入卡片预览面板中所做的修改？"
+msgstr "您是否希望更新预览文本，所有在Lammps输入预览面板中所做的修改都将丢失？"
 
 #: qtplugins/licorice/licorice.h:33
 msgid "Render atoms as licorice / sticks."
@@ -8432,23 +8385,21 @@ msgstr "维度数："
 msgid "Display Yaehmop Input?"
 msgstr ""
 
-#, fuzzy
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
 "Launchpad Contributions: Ann J,Avogadro Team,Chen Siqiong,Chen Yang,Chiyu "
 "Liang,Colin Zhao,David Gao,Feng Chao,MarkWu,Tao Wei,Wylmer Wang,Xinfeng,Ye "
-"Qing,ZhangCheng,cuiweicui,tmpplus,yjjart,郑思涵,英华,"
+"Qing,ZhangCheng,cuiweicui,tmpplus,yjjart,郑思涵,英华,张腾烁"
 
-#, fuzzy
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"cuiweicui1985@gmail.com,rainofchaos@gmail.com,yjjart@gmail.com,"
-"sihanzheng@gmail.com,weitao1979@gmail.com,wantinghard@gmail.com,avogadro-"
-"devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,"
-"chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail.com,"
-"sihanzheng@gmail.com,cyliang532@gmail.com"
+"cuiweicui1985@gmail.com,rainofchaos@gmail.com,yjjart@gmail."
+"com,sihanzheng@gmail.com,weitao1979@gmail.com,wantinghard@gmail.com,avogadro-"
+"devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail."
+"com,chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail."
+"com,sihanzheng@gmail.com,cyliang532@gmail.com,zhangtengshuo@gmail.com"
 
 #, fuzzy
 #~| msgid "Optimization"
