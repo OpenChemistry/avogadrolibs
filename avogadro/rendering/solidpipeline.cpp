@@ -16,6 +16,8 @@
 
 #include <iostream>
 
+#include<cmath>
+
 namespace Avogadro::Rendering {
 
 class SolidPipeline::Private
@@ -87,8 +89,8 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 
 SolidPipeline::SolidPipeline()
   : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
-    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0),
-    d(new Private), m_backgroundColor(0,0,0,0)
+    m_fogEnabled(true), m_edEnabled(true), m_edStrength(1.0f), 
+    m_width(0), m_height(0), d(new Private), m_backgroundColor(0,0,0,0)
 {
 }
 
@@ -164,13 +166,30 @@ void SolidPipeline::end()
   d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1])/255.0f);
   d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2])/255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-  
-  // TODO: setting modelView uniform. WIP
-  Camera camera;
-  camera.setModelView(modelView);
-  modelView = camera.modelView();
-  // std::cout << modelView.matrix();
+
   glDisableVertexAttribArray(0);
+}
+
+void SolidPipeline::adjustOffset(const Camera& cam) {
+    // Get the model-view matrix from the camera
+    Eigen::Matrix4f modelView = cam.modelView().matrix();
+    
+    // Extract the relevant value from the matrix
+    float zTranslation = modelView(2, 3);
+    
+    // Adjust offSet based on its value
+    float offSet = -zTranslation * 2.4;
+    
+    if (offSet > 200 && offSet < 700) {
+        offSet = std::pow(1.5, -zTranslation / 10) + 300;
+    } 
+    if (offSet > 700) {
+        offSet = -zTranslation * 6;
+    }
+    
+    // Set the uniform value in the shader
+    d->firstStageShaders.setUniformValue("offset", offSet);
+
 }
 
 void SolidPipeline::resize(int width, int height)

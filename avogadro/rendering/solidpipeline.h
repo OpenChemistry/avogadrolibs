@@ -33,6 +33,7 @@ public:
    */
   void begin();
 
+  void adjustOffset(const Camera& camera);
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
    */
@@ -59,11 +60,6 @@ public:
    */
   bool getFogEnabled() { return m_fogEnabled; }
   void setFogEnabled(bool enabled) { m_fogEnabled = enabled; }
-
-  /**
-   * @brief Set the modelViewMatrix to its updated one.  
-   */
-  void setModelViewMatrix(const Eigen::Affine3f value) { modelView = value; }
 
   /**
    * @brief Set Background Color to it's current value.
