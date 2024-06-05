@@ -74,6 +74,12 @@ public:
   void setAoStrength(float strength) { m_aoStrength = strength; }
 
   /**
+   * @brief Get or set shadow strength for Ambient Occlusion.
+   */
+  float getFogStrength() { return m_fogStrength; }
+  void setFogStrength(float strength) { m_fogStrength = strength; }
+
+  /**
    * @brief Get or set whether Edge Detection is enabled.
    */
   bool getEdEnabled() { return m_edEnabled; }
@@ -96,6 +102,7 @@ private:
   Eigen::Affine3f modelView; 
   bool m_fogEnabled;
   float m_aoStrength;
+  float m_fogStrength;
   bool m_edEnabled;
   float m_edStrength;
   int m_width;

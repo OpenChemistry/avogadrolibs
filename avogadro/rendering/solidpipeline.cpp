@@ -88,8 +88,8 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 }
 
 SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
-    m_fogEnabled(true), m_edEnabled(true), m_edStrength(1.0f), 
+  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f), 
+    m_fogStrength(1.0f), m_fogEnabled(true), m_edEnabled(true), m_edStrength(1.0f), 
     m_width(0), m_height(0), d(new Private), m_backgroundColor(0,0,0,0)
 {
 }
@@ -160,6 +160,7 @@ void SolidPipeline::end()
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
+  d->firstStageShaders.setUniformValue("inFogStrength", ((m_fogStrength / 100.0f)- 0.01f));
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("inFogEnabled", m_fogEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("fogR", (m_backgroundColor[0])/255.0f);
@@ -170,6 +171,7 @@ void SolidPipeline::end()
   glDisableVertexAttribArray(0);
 }
 
+// TODO: More precise calculations needed
 void SolidPipeline::adjustOffset(const Camera& cam) {
     // Get the model-view matrix from the camera
     Eigen::Matrix4f modelView = cam.modelView().matrix();

@@ -36,6 +36,8 @@ uniform float inAoEnabled;
 uniform float inFogEnabled;
 // Shadow strength for SSAO
 uniform float inAoStrength;
+// Fog strength
+uniform float inFogStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
 // Rendering surface dimensions, in pixels
@@ -79,7 +81,7 @@ vec4 applyFog(vec2 texCoord) {
   vec4 finalColor = mix(
     texture2D(inRGBTex, texCoord),
     vec4(vec3(fogR, fogG, fogB), 1.),
-    pow(texture2D(inDepthTex, texCoord.xy).r, offset)
+    pow(texture2D(inDepthTex, texCoord.xy).r + inFogStrength, offset)
   );
 return finalColor;
 }
