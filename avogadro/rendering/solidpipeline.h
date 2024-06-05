@@ -74,7 +74,7 @@ public:
   void setAoStrength(float strength) { m_aoStrength = strength; }
 
   /**
-   * @brief Get or set shadow strength for Ambient Occlusion.
+   * @brief Get or set fog strength. 
    */
   float getFogStrength() { return m_fogStrength; }
   void setFogStrength(float strength) { m_fogStrength = strength; }
