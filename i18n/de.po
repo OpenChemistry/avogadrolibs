@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-05-13 07:30+0000\n"
+"PO-Revision-Date: 2024-06-07 20:09+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -245,7 +245,7 @@ msgstr "Geänderte Eingabedateien überschreiben?"
 
 #: molequeue/inputgeneratorwidget.cpp:188
 msgid "Problems occurred during input generation:"
-msgstr "Bei der Eingabegenerierung sind Probleme aufgetreten:"
+msgstr "Bei der Vorbereitung der Eingabe sind Probleme aufgetreten:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
@@ -451,7 +451,7 @@ msgstr "Aufgabe an MoleQueue übermitteln…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Frist für die Auftragsübermittlung abgelaufen"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
@@ -469,7 +469,7 @@ msgstr "Nicht mehr warten"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr "Informationen über die erledigte Aufgabe werden abgerufen…"
+msgstr "Informationen über die erledigte Aufgabe werden abgerufen …"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -478,6 +478,8 @@ msgstr ""
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro wartet nicht weiter auf Details abgeschlossener Aufgaben von "
+"MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
@@ -500,6 +502,7 @@ msgstr "Zielprogramm aus der Liste \"Warteschlange und Programm\" auswählen."
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
 msgstr ""
+"Der Client konnte die Aufgabe nicht erfolgreich bei MoleQueue einreichen."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
@@ -523,11 +526,11 @@ msgstr "Es wurde kein Dateiname im BackgroundFileFormat festgelegt!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr "Horizontal trennen"
+msgstr "Horizontal teilen"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr "Vertikal trennen"
+msgstr "Vertikal teilen"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -1031,8 +1034,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
-"Eine Dateierweiterung fehlt und das Format konnte deswegen nicht bestimmt "
-"werden. Wollen Sie jetzt eine hinzufügen?"
+"Da eine Dateierweiterung fehlt konnte das Format nicht bestimmt werden. "
+"Wollen Sie jetzt eine hinzufügen?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1069,7 +1072,7 @@ msgid "write"
 msgstr "schreiben"
 
 #: qtgui/fileformatdialog.cpp:179
-#, fuzzy, qt-format
+#, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 "Mehrere %1 gefunden, die dieses Format %2 können. Welcher soll verwendet "
@@ -1251,7 +1254,7 @@ msgstr "Polygonnetze"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr "Nicht-kovalent"
+msgstr "nicht-kovalent"
 
 #: qtgui/layermodel.cpp:153
 msgctxt "quantum theory of atoms in molecules"
@@ -1270,7 +1273,7 @@ msgstr "van der Waals"
 #: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van-der-Waals (AO)"
+msgstr "van-der-Waals (AO)"
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -2514,7 +2517,7 @@ msgstr "&Einfügen"
 
 #: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
-msgstr "&Ändern"
+msgstr "&Bearbeiten"
 
 #: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
@@ -8435,40 +8438,13 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,,erik_hahn@gmx.de,,,,armin_mohring@web.de,michael.kogan@gmx.net,"
-"steve@steve-m.de,loniedavid@gmail.com,,,soc@krg-nw.de,,,,erik_hahn@gmx.de,,,,"
-"armin_mohring@web.de,michael.kogan@gmx.net,steve@steve-m.de,loniedavid@gmail."
-"com,,,soc@krg-nw.de,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-"
-"devel@lists.sourceforge.net,,armin_mohring@web.de,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,,armin_mohring@web.de,,cniehaus@gmx.de,,,simon@ochsenreither."
-"de,,,,alexander-hausmann@web.de,,avogadro-devel@lists.sourceforge.net,"
-"eduardgotwig@gmail.com,,armin_mohring@web.de,,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,eduardgotwig@gmail.com,,armin_mohring@web.de,,,cniehaus@gmx."
-"de,,,simon@ochsenreither.de,,,,alexander-hausmann@web.de,,avogadro-"
-"devel@lists.sourceforge.net,eduardgotwig@gmail.com,,armin_mohring@web.de,,"
-"matthias@mailaender.name,,cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,"
-"alexander-hausmann@web.de,,avogadro-devel@lists.sourceforge.net,"
-"eduardgotwig@gmail.com,,,,armin_mohring@web.de,,matthias@mailaender.name,,"
-"cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,"
-"avogadro-devel@lists.sourceforge.net,eduardgotwig@gmail.com,,,,"
-"armin_mohring@web.de,,matthias@mailaender.name,,,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,eduardgotwig@gmail.com,,,,armin_mohring@web.de,,"
-"matthias@mailaender.name,,,cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,"
-"alexander-hausmann@web.de,,avogadro-devel@lists.sourceforge.net,das."
-"surst@gmail.com,d@winzen4.de,david.lauenstein@gmail.com,,g@ox.io,,"
-"friedrichherbst@gmx.de,,,,,armin_mohring@web.de,,,,,niku18@web.de,,,,,,"
-"cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,"
-"avogadro-devel@lists.sourceforge.net,das.surst@gmail.com,d@winzen4.de,david."
-"lauenstein@gmail.com,,g@ox.io,,friedrich-herbst@gmx.de,,,pivan@opmbx.org,,,"
-"armin_mohring@web.de,,,,,niku18@web.de,,,,,,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,das.surst@gmail.com,,david.lauenstein@gmail.com,,g@ox.io,,"
-"friedrich-herbst@gmx.de,,,pivan@opmbx.org,,,armin_mohring@web.de,,,,,"
-"niku18@web.de,,,,,tobannert@gmail.com,cniehaus@gmx.de,,,simon@ochsenreither."
-"de,,"
+",,,erik_hahn@gmx.de,,,,armin_mohring@web.de,michael.kogan@gmx."
+"net,steve@steve-m.de,loniedavid@gmail.com,,,soc@krg-nw.de,,,aleixosk@gmail."
+"com,,avogadro-devel@lists.sourceforge.net,d@winzen4."
+"de,,,,,,,,armin_mohring@web.de,,,,coolx67@gmx.at,,,,,,,,simon@ochsenreither."
+"de,,,aleixosk@gmail.com,,avogadro-devel@lists.sourceforge."
+"net,,,,,,,,,armin_mohring@web.de,,,,coolx67@gmx.at,,,,tobannert@gmail."
+"com,,,,simon@ochsenreither.de"
 
 #, fuzzy
 #~| msgid "Optimization"
