@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-07 20:09+0000\n"
+"PO-Revision-Date: 2024-06-07 21:40+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -1228,7 +1228,7 @@ msgstr "Cartoon"
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr "Enge Kontakte"
+msgstr "Nahe Kontakte"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1479,7 +1479,7 @@ msgstr "Niggli Reduktion"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
-msgstr "In Standardorientierung drehen"
+msgstr "In die Standardorientierung drehen"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
@@ -1496,7 +1496,7 @@ msgstr "Elementarzelle symmetrisieren"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
-msgstr "Elementarzelle ausfüllen"
+msgstr "Elementarzelle füllen"
 
 #: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1575,7 +1575,8 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
-"Moleküle positionieren\n"
+"Moleküle ausrichten\n"
+"\n"
 "Linke Maustaste: \tBis zu zwei Atome auswählen.\n"
 "\tDas erste Atom ist am Ursprung zentriert.\n"
 "\tDas zweite Atom ist an der gewählten Achse ausgerichtet.\n"
@@ -1607,11 +1608,11 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:30
 msgid "Align tool"
-msgstr "Auswahlwerkzeug"
+msgstr "Werkzeug zum Ausrichten"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
-msgstr "Moleküle an einer Kartesischen Achse ausrichten"
+msgstr "Moleküle an einer kartesischen Achse ausrichten"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
@@ -2189,7 +2190,7 @@ msgstr "Linienbreite:"
 
 #: qtplugins/closecontacts/closecontacts.h:37
 msgid "Render close contacts between atoms."
-msgstr "Enge Kontakten zwischen Atomen rendern."
+msgstr "Nahe Kontakte zwischen Atomen rendern."
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Contact"
