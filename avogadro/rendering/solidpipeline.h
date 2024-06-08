@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_RENDERING_SOLIDPIPELINE_H
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
+#include "camera.h"
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -30,7 +32,8 @@ public:
    * @brief Begin solid geometry rendering.
    */
   void begin();
-
+  
+  void adjustOffset(const Camera& camera);
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
    */
@@ -75,6 +78,13 @@ public:
   }
 
   /**
+   * @brief Get or set dof strength. 
+   */
+  float getDofStrength() { return m_dofStrength; }
+  void setDofStrength(float strength) { m_dofStrength = strength; }
+
+
+  /**
    * @brief Get or set the strength of the edge effect
    */
   bool getEdStrength() { return m_edStrength; }
@@ -83,6 +93,8 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
+  Eigen::Affine3f modelView;
+  float m_dofStrength;
   bool m_dofEnabled;
   float m_aoStrength;
   bool m_edEnabled;

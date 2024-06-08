@@ -31,6 +31,10 @@ uniform float inDofEnabled;
 uniform float inAoStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
+// amount of offset when zoom-in or zoom-out.
+uniform float uoffset;
+// Dof strength
+uniform float inDofStrength;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
 
@@ -88,7 +92,11 @@ vec4 applyBlur(vec2 texCoord) {
   float pixelScale = max(width, height);
   float origZ = depthToZ(texture2D(inDepthTex, texCoord).x);
   float blurAmt = calcBlur(origZ, pixelScale);
-  
+  float closeZThreshold = uoffset; 
+  // Skip blurring if the original depth is less than the threshold
+  if (origZ < closeZThreshold) {
+    return texture2D(inRGBTex, texCoord);
+}
   float total = 1.0;
   vec4 color = texture2D(inRGBTex, texCoord);
   // number of samples can be optimized.
@@ -97,7 +105,7 @@ vec4 applyBlur(vec2 texCoord) {
     float angle = (t * 4.0) * 6.28319; 
     float radius = (t * 2. - 1.); 
     angle += 1.0 * rand(gl_FragCoord.xy);
-    vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * blurAmt) / pixelScale;
+    vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * inDofStrength) / pixelScale;
     float z = depthToZ(texture2D(inDepthTex, texCoord + offset).x);
     float sampleBlur = calcBlur(z, pixelScale);
     float weight = float((z >= origZ) || (sampleBlur >= blurAmt * radius + 0.));

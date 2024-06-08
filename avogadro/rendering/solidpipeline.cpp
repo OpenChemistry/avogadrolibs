@@ -8,6 +8,7 @@
 #include "avogadrogl.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "camera.h"
 
 #include "solid_vs.h"
 
@@ -86,7 +87,7 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 
 SolidPipeline::SolidPipeline()
   : m_pixelRatio(1.0f), m_aoEnabled(true), m_dofEnabled(true), m_aoStrength(1.0f),
-    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0),
+    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0), m_dofStrength(1.0f),
     d(new Private)
 {
 }
@@ -157,11 +158,34 @@ void SolidPipeline::end()
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inDofEnabled", m_dofEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofStrength", ((m_dofStrength * 100.0f)));
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
+  std::cout<<(m_dofStrength * 100.0f)<<std::endl;
   glDisableVertexAttribArray(0);
+}
+
+void SolidPipeline::adjustOffset(const Camera& cam) {
+    // Get the model-view matrix from the camera
+    Eigen::Matrix4f modelView = cam.modelView().matrix();
+
+    // Extract the relevant value from the matrix
+    float zTranslation = modelView(2, 3);
+
+    // Adjust offSet based on its value
+    float offSet = -zTranslation * 3.5;
+
+    if (offSet > 200 && offSet < 700) {
+        offSet = std::pow(1.5, -zTranslation / 10) + 300;
+    } 
+    if (offSet > 700) {
+        offSet = -zTranslation * 6;
+    }
+    // std::cout<<offSet<<std::endl;
+    // Set the uniform value in the shader
+    d->firstStageShaders.setUniformValue("uoffset", offSet);
+
 }
 
 void SolidPipeline::resize(int width, int height)
