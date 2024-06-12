@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-06-12 07:21+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1651,7 +1651,7 @@ msgstr "I/O Fehler"
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr "Das Lesen der Strukturdatei (%1) ist fehlgeschlagen."
+msgstr "Fehler beim Lesen der Strukturdatei (%1)."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
@@ -2254,14 +2254,14 @@ msgstr "%1 wird verarbeitet"
 
 #: qtplugins/commandscripts/command.cpp:270
 msgid "Set path to Python interpreter:"
-msgstr "Pfad zu Python-Interpreter angeben:"
+msgstr "Pfad zum Python-Interpreter angeben:"
 
 #: qtplugins/commandscripts/command.cpp:272
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
-"Wähle den Python-Interpreter aus, den zum Ausführen von externen Skripten "
+"Wähle den Python-Interpreter aus, der zum Ausführen externer Skripte "
 "verwendet werden soll.\n"
 "Die Änderung wird erst nach einem Neustart von Avogadro wirksam."
 
@@ -2310,11 +2310,11 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
 #: qtplugins/templatetool/templatetoolwidget.cpp:424:2088
 msgid "Other…"
-msgstr "Andere…"
+msgstr "Andere …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
-msgstr "Kartesischer &Koordinaten-Editor…"
+msgstr "Kartesischer &Koordinaten-Editor …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -2455,15 +2455,15 @@ msgstr "XYZ-Format (Namen)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:636
 msgid "XYZ format (atomic numbers)"
-msgstr "XYZ-Format (Atomsnummern)"
+msgstr "XYZ-Format (Ordnungszahl)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:637
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Gitterkoordinaten (Symbole)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Gitterkoordinaten (Namen)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "Lattice coordinates (atomic numbers)"
@@ -2559,7 +2559,7 @@ msgstr "Molekül konnte nicht eingefügt werden: Zwischenablage leer!"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Fehler beim Lesen der Zwischenablage."
 
 #: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
@@ -3682,10 +3682,8 @@ msgid "Configure Force Field…"
 msgstr "Kraftfeld einrichten…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Konformerensuche"
+msgstr "Konformerensuche …"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -4488,10 +4486,8 @@ msgid "Error writing to the file."
 msgstr "Lesen von Strukturdatei (%1) fehlgeschlagen."
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "&Exportieren"
+msgstr "&Exportieren …"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4850,10 +4846,8 @@ msgid "Space group features for crystals."
 msgstr "Raumgruppenmerkmale für Kristalle."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Spektren importieren"
+msgstr "Spektren zeichnen …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4878,9 +4872,6 @@ msgid "Infrared"
 msgstr "Infrarot"
 
 #: qtplugins/spectra/spectradialog.cpp:205
-#, fuzzy
-#| msgctxt "Raman spectrum"
-#| msgid "Raman"
 msgid "Raman"
 msgstr "Raman"
 
@@ -5777,10 +5768,8 @@ msgstr "Voreinstellungen"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
-#| msgid "Save File"
 msgid "Save File…"
-msgstr "Datei speichern"
+msgstr "Datei speichern …"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7809,10 +7798,8 @@ msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "Operationen"
+msgstr "Optionen …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:568
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
