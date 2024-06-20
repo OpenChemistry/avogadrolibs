@@ -83,6 +83,11 @@ public:
   float getDofStrength() { return m_dofStrength; }
   void setDofStrength(float strength) { m_dofStrength = strength; }
 
+  /**
+  * @brief Set positon of dof
+  */
+  float getDofPosition(){ return m_dofPosition;}
+  void setDofPosition(float position) { m_dofPosition = position; }
 
   /**
    * @brief Get or set the strength of the edge effect
@@ -95,6 +100,7 @@ private:
   bool m_aoEnabled;
   Eigen::Affine3f modelView;
   float m_dofStrength;
+  float m_dofPosition;
   bool m_dofEnabled;
   float m_aoStrength;
   bool m_edEnabled;
