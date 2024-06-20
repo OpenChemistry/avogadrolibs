@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-02-19 19:02+0000\n"
+"PO-Revision-Date: 2024-06-12 14:43+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -245,7 +245,7 @@ msgstr "Geänderte Eingabedateien überschreiben?"
 
 #: molequeue/inputgeneratorwidget.cpp:188
 msgid "Problems occurred during input generation:"
-msgstr "Bei der Eingabegenerierung sind Probleme aufgetreten:"
+msgstr "Bei der Vorbereitung der Eingabe sind Probleme aufgetreten:"
 
 #: molequeue/inputgeneratorwidget.cpp:277
 msgid "No input files to save!"
@@ -451,7 +451,7 @@ msgstr "Aufgabe an MoleQueue übermitteln…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Frist für die Auftragsübermittlung abgelaufen"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
@@ -469,7 +469,7 @@ msgstr "Nicht mehr warten"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr "Informationen über die erledigte Aufgabe werden abgerufen…"
+msgstr "Informationen über die erledigte Aufgabe werden abgerufen …"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -478,6 +478,8 @@ msgstr ""
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro wartet nicht weiter auf Details abgeschlossener Aufgaben von "
+"MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
@@ -500,6 +502,7 @@ msgstr "Zielprogramm aus der Liste \"Warteschlange und Programm\" auswählen."
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
 msgstr ""
+"Der Client konnte die Aufgabe nicht erfolgreich bei MoleQueue einreichen."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
@@ -523,11 +526,11 @@ msgstr "Es wurde kein Dateiname im BackgroundFileFormat festgelegt!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr "Horizontal trennen"
+msgstr "Horizontal teilen"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr "Vertikal trennen"
+msgstr "Vertikal teilen"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -1031,8 +1034,8 @@ msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
 msgstr ""
-"Eine Dateierweiterung fehlt und das Format konnte deswegen nicht bestimmt "
-"werden. Wollen Sie jetzt eine hinzufügen?"
+"Da eine Dateierweiterung fehlt konnte das Format nicht bestimmt werden. "
+"Wollen Sie jetzt eine hinzufügen?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1069,7 +1072,7 @@ msgid "write"
 msgstr "schreiben"
 
 #: qtgui/fileformatdialog.cpp:179
-#, fuzzy, qt-format
+#, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
 "Mehrere %1 gefunden, die dieses Format %2 können. Welcher soll verwendet "
@@ -1225,7 +1228,7 @@ msgstr "Cartoon"
 #: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr "Enge Kontakte"
+msgstr "Nahe Kontakte"
 
 #: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
@@ -1251,7 +1254,7 @@ msgstr "Polygonnetze"
 
 #: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr "Nicht-kovalent"
+msgstr "nicht-kovalent"
 
 #: qtgui/layermodel.cpp:153
 msgctxt "quantum theory of atoms in molecules"
@@ -1270,7 +1273,7 @@ msgstr "van der Waals"
 #: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
-msgstr "Van-der-Waals (AO)"
+msgstr "van-der-Waals (AO)"
 
 #: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1476,7 +1479,7 @@ msgstr "Niggli Reduktion"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
-msgstr "In Standardorientierung drehen"
+msgstr "In die Standardorientierung drehen"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
@@ -1493,7 +1496,7 @@ msgstr "Elementarzelle symmetrisieren"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
-msgstr "Elementarzelle ausfüllen"
+msgstr "Elementarzelle füllen"
 
 #: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
@@ -1572,7 +1575,8 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
-"Moleküle positionieren\n"
+"Moleküle ausrichten\n"
+"\n"
 "Linke Maustaste: \tBis zu zwei Atome auswählen.\n"
 "\tDas erste Atom ist am Ursprung zentriert.\n"
 "\tDas zweite Atom ist an der gewählten Achse ausgerichtet.\n"
@@ -1604,11 +1608,11 @@ msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:30
 msgid "Align tool"
-msgstr "Auswahlwerkzeug"
+msgstr "Werkzeug zum Ausrichten"
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
-msgstr "Moleküle an einer Kartesischen Achse ausrichten"
+msgstr "Moleküle an einer kartesischen Achse ausrichten"
 
 #: qtplugins/apbs/apbs.cpp:31
 msgid "Run APBS…"
@@ -1647,7 +1651,7 @@ msgstr "I/O Fehler"
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr "Das Lesen der Strukturdatei (%1) ist fehlgeschlagen."
+msgstr "Fehler beim Lesen der Strukturdatei (%1)."
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
@@ -2053,9 +2057,8 @@ msgstr "Ausgewählte Atome verbinden"
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
-#, fuzzy
 msgid "&Build"
-msgstr "S&truktur"
+msgstr "&Erstellen"
 
 #: qtplugins/bonding/bonding.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:445
@@ -2187,7 +2190,7 @@ msgstr "Linienbreite:"
 
 #: qtplugins/closecontacts/closecontacts.h:37
 msgid "Render close contacts between atoms."
-msgstr "Enge Kontakten zwischen Atomen rendern."
+msgstr "Nahe Kontakte zwischen Atomen rendern."
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Contact"
@@ -2251,14 +2254,14 @@ msgstr "%1 wird verarbeitet"
 
 #: qtplugins/commandscripts/command.cpp:270
 msgid "Set path to Python interpreter:"
-msgstr "Pfad zu Python-Interpreter angeben:"
+msgstr "Pfad zum Python-Interpreter angeben:"
 
 #: qtplugins/commandscripts/command.cpp:272
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
-"Wähle den Python-Interpreter aus, den zum Ausführen von externen Skripten "
+"Wähle den Python-Interpreter aus, der zum Ausführen externer Skripte "
 "verwendet werden soll.\n"
 "Die Änderung wird erst nach einem Neustart von Avogadro wirksam."
 
@@ -2276,7 +2279,7 @@ msgstr "Externe Skripte ausführen"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python Einstellungen …"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
@@ -2307,11 +2310,11 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
 #: qtplugins/templatetool/templatetoolwidget.cpp:424:2088
 msgid "Other…"
-msgstr "Andere…"
+msgstr "Andere …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
-msgstr "Kartesischer &Koordinaten-Editor…"
+msgstr "Kartesischer &Koordinaten-Editor …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -2368,10 +2371,8 @@ msgid "Invalid atomic index."
 msgstr "Ordnungszahl ungültig."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:417
-#, fuzzy
-#| msgid "By Atomic Index"
 msgid "Atomic index."
-msgstr "Nach Atomindiz"
+msgstr "Atomindex."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:427
 msgid "Invalid atomic number."
@@ -2433,7 +2434,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:615
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Atomkoordinaten bearbeiten"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:254
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -2454,15 +2455,15 @@ msgstr "XYZ-Format (Namen)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:636
 msgid "XYZ format (atomic numbers)"
-msgstr "XYZ-Format (Atomsnummern)"
+msgstr "XYZ-Format (Ordnungszahl)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:637
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Gitterkoordinaten (Symbole)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Gitterkoordinaten (Namen)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "Lattice coordinates (atomic numbers)"
@@ -2515,7 +2516,7 @@ msgstr "&Einfügen"
 
 #: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
-msgstr "&Ändern"
+msgstr "&Bearbeiten"
 
 #: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
@@ -2558,7 +2559,7 @@ msgstr "Molekül konnte nicht eingefügt werden: Zwischenablage leer!"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Fehler beim Lesen der Zwischenablage."
 
 #: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
@@ -3015,10 +3016,9 @@ msgid "&Calculate"
 msgstr "Berechnen"
 
 #: qtplugins/forcefield/forcefield.cpp:368
-#, fuzzy, qt-format
-#| msgid "Energy = %L1 %2"
+#, qt-format
 msgid "%1 Energy = %L2"
-msgstr "Energie = %L1 %2"
+msgstr "%1 Energie = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:369
 #: qtplugins/forcefield/forcefield.cpp:415
@@ -3264,10 +3264,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "DNA- / RNA-Fragmente über einen Dialog einfügen."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "Molekül"
+msgstr "&Molekül …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3681,10 +3679,8 @@ msgid "Configure Force Field…"
 msgstr "Kraftfeld einrichten…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Konformerensuche"
+msgstr "Konformerensuche …"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -4487,10 +4483,8 @@ msgid "Error writing to the file."
 msgstr "Lesen von Strukturdatei (%1) fehlgeschlagen."
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "&Exportieren"
+msgstr "&Exportieren …"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4849,10 +4843,8 @@ msgid "Space group features for crystals."
 msgstr "Raumgruppenmerkmale für Kristalle."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Spektren importieren"
+msgstr "Spektren zeichnen …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4877,9 +4869,6 @@ msgid "Infrared"
 msgstr "Infrarot"
 
 #: qtplugins/spectra/spectradialog.cpp:205
-#, fuzzy
-#| msgctxt "Raman spectrum"
-#| msgid "Raman"
 msgid "Raman"
 msgstr "Raman"
 
@@ -5066,9 +5055,8 @@ msgid "Render a molecular orbital."
 msgstr "Molekülorbital"
 
 #: qtplugins/surfaces/surfaces.cpp:121
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Berechne Elektronendichte"
+msgstr "Rendern der Elektronendichte."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 #, fuzzy
@@ -5777,10 +5765,8 @@ msgstr "Voreinstellungen"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
-#| msgid "Save File"
 msgid "Save File…"
-msgstr "Datei speichern"
+msgstr "Datei speichern …"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7809,10 +7795,8 @@ msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:526
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "Operationen"
+msgstr "Optionen …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:568
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
@@ -8436,40 +8420,13 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,,erik_hahn@gmx.de,,,,armin_mohring@web.de,michael.kogan@gmx.net,"
-"steve@steve-m.de,loniedavid@gmail.com,,,soc@krg-nw.de,,,,erik_hahn@gmx.de,,,,"
-"armin_mohring@web.de,michael.kogan@gmx.net,steve@steve-m.de,loniedavid@gmail."
-"com,,,soc@krg-nw.de,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-"
-"devel@lists.sourceforge.net,,armin_mohring@web.de,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,,armin_mohring@web.de,,cniehaus@gmx.de,,,simon@ochsenreither."
-"de,,,,alexander-hausmann@web.de,,avogadro-devel@lists.sourceforge.net,"
-"eduardgotwig@gmail.com,,armin_mohring@web.de,,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,eduardgotwig@gmail.com,,armin_mohring@web.de,,,cniehaus@gmx."
-"de,,,simon@ochsenreither.de,,,,alexander-hausmann@web.de,,avogadro-"
-"devel@lists.sourceforge.net,eduardgotwig@gmail.com,,armin_mohring@web.de,,"
-"matthias@mailaender.name,,cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,"
-"alexander-hausmann@web.de,,avogadro-devel@lists.sourceforge.net,"
-"eduardgotwig@gmail.com,,,,armin_mohring@web.de,,matthias@mailaender.name,,"
-"cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,"
-"avogadro-devel@lists.sourceforge.net,eduardgotwig@gmail.com,,,,"
-"armin_mohring@web.de,,matthias@mailaender.name,,,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,eduardgotwig@gmail.com,,,,armin_mohring@web.de,,"
-"matthias@mailaender.name,,,cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,"
-"alexander-hausmann@web.de,,avogadro-devel@lists.sourceforge.net,das."
-"surst@gmail.com,d@winzen4.de,david.lauenstein@gmail.com,,g@ox.io,,"
-"friedrichherbst@gmx.de,,,,,armin_mohring@web.de,,,,,niku18@web.de,,,,,,"
-"cniehaus@gmx.de,,,simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,"
-"avogadro-devel@lists.sourceforge.net,das.surst@gmail.com,d@winzen4.de,david."
-"lauenstein@gmail.com,,g@ox.io,,friedrich-herbst@gmx.de,,,pivan@opmbx.org,,,"
-"armin_mohring@web.de,,,,,niku18@web.de,,,,,,cniehaus@gmx.de,,,"
-"simon@ochsenreither.de,,,,,,alexander-hausmann@web.de,,avogadro-devel@lists."
-"sourceforge.net,das.surst@gmail.com,,david.lauenstein@gmail.com,,g@ox.io,,"
-"friedrich-herbst@gmx.de,,,pivan@opmbx.org,,,armin_mohring@web.de,,,,,"
-"niku18@web.de,,,,,tobannert@gmail.com,cniehaus@gmx.de,,,simon@ochsenreither."
-"de,,"
+",,,erik_hahn@gmx.de,,,,armin_mohring@web.de,michael.kogan@gmx."
+"net,steve@steve-m.de,loniedavid@gmail.com,,,soc@krg-nw.de,,,aleixosk@gmail."
+"com,,avogadro-devel@lists.sourceforge.net,d@winzen4."
+"de,,,,,,,,armin_mohring@web.de,,,,coolx67@gmx.at,,,,,,,,simon@ochsenreither."
+"de,,,aleixosk@gmail.com,,avogadro-devel@lists.sourceforge."
+"net,,,,,,,,,armin_mohring@web.de,,,,coolx67@gmx.at,,,,tobannert@gmail."
+"com,,,,simon@ochsenreither.de"
 
 #, fuzzy
 #~| msgid "Optimization"
