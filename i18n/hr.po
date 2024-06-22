@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-22 14:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-06-22 15:35+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3314,12 +3313,12 @@ msgstr "Kut:"
 
 #: qtplugins/measuretool/measuretool.cpp:218
 msgid "Angles:"
-msgstr "Kut:"
+msgstr "Kutovi:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
-msgstr ""
+msgstr "Alat za mjerenje"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -3329,7 +3328,7 @@ msgstr ""
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
-msgstr ""
+msgstr "Iscrtaj poligonalne mreže."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
@@ -3345,7 +3344,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
-msgstr ""
+msgstr "&Analitika"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:43
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3357,7 +3356,7 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
 #: qtplugins/molecularproperties/molecularproperties.h:31:1106
 msgid "Molecular Properties"
-msgstr ""
+msgstr "Svojstva molekula"
 
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:35
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:206
@@ -3373,42 +3372,42 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:124
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:140
 msgid "unknown molecule"
-msgstr ""
+msgstr "nepoznata molekula"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:217
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:228:1136
 msgid "Molecule Name:"
-msgstr ""
+msgstr "Ime molekule:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:35
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:219
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:231:1112
 msgid "Molecular Mass (g/mol):"
-msgstr ""
+msgstr "Molekulska masa (g/mol):"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1118
 msgid "Chemical Formula:"
-msgstr ""
+msgstr "Kemijska formula:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:223
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:236:1124
 msgid "Number of Atoms:"
-msgstr ""
+msgstr "Broj atoma:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:77
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:225
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:238:1130
 msgid "Number of Bonds:"
-msgstr ""
+msgstr "Broj veza:"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -3451,11 +3450,11 @@ msgstr "Alat za kretanje"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
-msgstr ""
+msgstr "Kemijsko ime"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr ""
+msgstr "Mrežne baze podataka"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
@@ -3471,19 +3470,19 @@ msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Prikaži nekoliko nekovalentnih interakcija."
 
 #: qtplugins/noncovalent/noncovalent.h:54
 msgid "Halogen"
-msgstr ""
+msgstr "Halogeni"
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
-msgstr ""
+msgstr "Halkogeni"
 
 #: qtplugins/openbabel/openbabel.cpp:53
 msgid "Configure Force Field…"
-msgstr ""
+msgstr "Konfiguriraj polje sile …"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Conformer Search…"
@@ -3495,11 +3494,11 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add Hydrogens for pH…"
-msgstr ""
+msgstr "Dodaj vodike za pH …"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 msgid "Remove Hydrogens"
-msgstr ""
+msgstr "Ukloni vodike"
 
 #: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
@@ -3567,7 +3566,7 @@ msgstr ""
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr ""
+msgstr "Pokretanje izvršne datoteke %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
 #: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
@@ -3664,11 +3663,11 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:862
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "Dodaj vodike za pH"
 
 #: qtplugins/openbabel/openbabel.cpp:862
 msgid "pH:"
-msgstr ""
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
@@ -3706,15 +3705,15 @@ msgstr ""
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr ""
+msgstr "&OpenMM skripta …"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM unos"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Generiraj unos za OpenMM."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 msgid ""
@@ -3788,15 +3787,15 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:47
 msgid "Player"
-msgstr ""
+msgstr "Player"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Animation Tool"
-msgstr ""
+msgstr "Alat za reprodukciju"
 
 #: qtplugins/playertool/playertool.cpp:73
 msgid "Play"
-msgstr ""
+msgstr "Reproduciraj"
 
 #: qtplugins/playertool/playertool.cpp:76
 msgid "Stop"
