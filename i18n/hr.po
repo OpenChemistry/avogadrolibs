@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-22 15:51+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-06-22 15:59+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4254,7 +4253,7 @@ msgstr "CSV datoteke (*.csv);;Sve datoteke (*)"
 
 #: qtplugins/propertytables/propertyview.cpp:244
 msgid "Could not open the file for writing."
-msgstr "Neuspjelo otvaranje uređaja za pisanje."
+msgstr "Neuspjelo otvaranje datoteke za pisanje."
 
 #: qtplugins/propertytables/propertyview.cpp:276
 msgid "Error writing to the file."
@@ -4319,7 +4318,7 @@ msgstr "Poravnaj pogled na osi."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
-msgstr ""
+msgstr "Resetiraj prikaz"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
@@ -4343,19 +4342,19 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "Odaberi sve"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr ""
+msgstr "Poništi izbor"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "Obrni odabir"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
-msgstr ""
+msgstr "Odaberi po elementu …"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -4375,15 +4374,15 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:78
 msgid "Select Water…"
-msgstr ""
+msgstr "Odaberi vodu …"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
-msgstr ""
+msgstr "Povećaj odabir"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
-msgstr ""
+msgstr "Smanji odabir"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4399,11 +4398,11 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
-msgstr ""
+msgstr "Odaberi element"
 
 #: qtplugins/select/select.cpp:217
 msgid "Select Water"
-msgstr ""
+msgstr "Odaberi vodu"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -4423,7 +4422,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:446
 msgid "Select Atom"
-msgstr ""
+msgstr "Odaberi atom"
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4460,12 +4459,12 @@ msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
 msgid "Paint Atoms"
-msgstr ""
+msgstr "Oboji atome"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "Alat za biranje"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
@@ -4558,7 +4557,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
-msgstr ""
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
