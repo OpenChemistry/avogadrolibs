@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-22 14:19+0000\n"
+"PO-Revision-Date: 2024-06-22 14:21+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -3176,11 +3176,11 @@ msgstr "Element i ID"
 
 #: qtplugins/label/label.cpp:180
 msgid "Atom Label:"
-msgstr ""
+msgstr "Etiketa atoma:"
 
 #: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: qtplugins/label/label.cpp:195
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
@@ -3190,7 +3190,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:199
 msgid " & "
-msgstr ""
+msgstr " i "
 
 #: qtplugins/label/label.cpp:211
 msgid "Residue Label:"
@@ -5856,7 +5856,7 @@ msgstr ""
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:51
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "name"
-msgstr ""
+msgstr "ime"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
