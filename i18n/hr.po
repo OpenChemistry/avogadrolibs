@@ -2,13 +2,15 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Milo Ivir <mail@milotype.de>, 2021, 2022, 2023, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-06-22 14:16+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1171,7 +1173,7 @@ msgstr "Sila"
 
 #: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
 msgid "Labels"
-msgstr ""
+msgstr "Etikete"
 
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
@@ -1275,7 +1277,7 @@ msgstr "Greška pri pisanju."
 
 #: qtgui/pythonscript.cpp:283
 msgid "Unknown error."
-msgstr ""
+msgstr "Nepoznata greška."
 
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:105
 #: qtgui/rwlayermanager.cpp:131
@@ -1292,7 +1294,7 @@ msgstr "Ukloni informacije sloja"
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
-msgstr ""
+msgstr "Dodaj sloj"
 
 #: qtgui/rwlayermanager.cpp:213
 msgid "Add Layer Info"
@@ -3134,11 +3136,11 @@ msgstr ""
 #: qtplugins/label/label.cpp:139 qtplugins/meshes/meshes.cpp:173
 #: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
-msgstr ""
+msgstr "Boja:"
 
 #: qtplugins/label/label.cpp:149
 msgid "Distance from center:"
-msgstr ""
+msgstr "Odmak od teksta:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -4083,7 +4085,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:489
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
-msgstr ""
+msgstr "Vrsta"
 
 #: qtplugins/propertytables/propertymodel.cpp:435
 msgid "Start Atom"
@@ -7740,7 +7742,7 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:321
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
 msgid "Type:"
-msgstr ""
+msgstr "Vrsta:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
