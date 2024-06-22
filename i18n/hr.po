@@ -9,7 +9,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
 "PO-Revision-Date: 2024-06-22 16:10+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4628,7 +4629,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
 msgid "Select Background Color"
-msgstr ""
+msgstr "Odaberi boju pozadine"
 
 #: qtplugins/spectra/spectradialog.cpp:269
 msgid "Select Foreground Color"
@@ -4811,7 +4812,7 @@ msgstr "SVG (*.svg)"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
-msgstr ""
+msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
@@ -4855,7 +4856,7 @@ msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
 msgid "Template"
-msgstr ""
+msgstr "Predložak"
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -5005,7 +5006,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::MoleQueueDialog)
 msgid "Dialog"
-msgstr ""
+msgstr "Dialog"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::MoleQueue::InputGeneratorWidget)
