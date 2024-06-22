@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-22 15:35+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-06-22 15:51+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3804,25 +3803,25 @@ msgstr "Prekini"
 
 #: qtplugins/playertool/playertool.cpp:87
 msgid "Frame rate:"
-msgstr "Sličice po sekundi:"
+msgstr "Broj sličica:"
 
 #: qtplugins/playertool/playertool.cpp:93
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " broj sličica u sekundi"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:117:1878
 msgid "Frame:"
-msgstr ""
+msgstr "Sličica:"
 
 #: qtplugins/playertool/playertool.cpp:124
 #: qtplugins/playertool/playertool.cpp:415
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " od %0"
 
 #: qtplugins/playertool/playertool.cpp:135
 msgid "Dynamic bonding?"
@@ -3832,7 +3831,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:143:1884
 msgid "Record Movie…"
-msgstr ""
+msgstr "Snimi film …"
 
 #: qtplugins/playertool/playertool.cpp:247
 #: qtplugins/playertool/playertool.cpp:352
@@ -3874,7 +3873,7 @@ msgstr "Nije moguće spremiti datoteku %1."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
-msgstr ""
+msgstr "Player"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
@@ -3940,7 +3939,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
-msgstr ""
+msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:86
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
@@ -3975,7 +3974,7 @@ msgstr ""
 #: qtplugins/plugindownloader/downloaderwidget.cpp:366
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Preuzimanje %1 u %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:379
 #, qt-format
@@ -4021,7 +4020,7 @@ msgstr ""
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr ""
+msgstr "PLY (*.ply);;Tekstualna datoteka (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -4037,7 +4036,7 @@ msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray (*.pov);;Tekstualna datoteka (*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
@@ -4061,15 +4060,15 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:417
 msgid "X (Å)"
-msgstr ""
+msgstr "X (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:419
 msgid "Y (Å)"
-msgstr ""
+msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:421
 msgid "Z (Å)"
-msgstr ""
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:423
 #: qtplugins/propertytables/propertymodel.cpp:462
@@ -4078,7 +4077,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:426
 msgid "Atom"
-msgstr ""
+msgstr "Atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/propertytables/propertymodel.cpp:472
@@ -4097,7 +4096,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:439
 msgid "Bond Order"
-msgstr ""
+msgstr "Redoslijed veza"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 msgctxt "in Angstrom"
@@ -4106,20 +4105,20 @@ msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
-msgstr ""
+msgstr "Lanac"
 
 #: qtplugins/propertytables/propertymodel.cpp:458
 msgid "Secondary Structure"
-msgstr ""
+msgstr "Sekundardna struktura"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
-msgstr ""
+msgstr "Heterogen"
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 msgid "Atom 1"
-msgstr ""
+msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4128,24 +4127,24 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:478
 #: qtplugins/propertytables/propertymodel.cpp:495
 msgid "Atom 3"
-msgstr ""
+msgstr "Atom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
 msgid "Angle (°)"
-msgstr ""
+msgstr "Kut (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 msgid "Atom 2"
-msgstr ""
+msgstr "Atom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 msgid "Atom 4"
-msgstr ""
+msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 msgid "Adjust Fragment"
-msgstr ""
+msgstr "Prilagodi fragment"
 
 #: qtplugins/propertytables/propertymodel.cpp:813
 msgctxt "pi helix"
@@ -4189,19 +4188,19 @@ msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
-msgstr ""
+msgstr "Svojstva atoma …"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 msgid "Bond Properties…"
-msgstr ""
+msgstr "Svojstva veze …"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 msgid "Angle Properties…"
-msgstr ""
+msgstr "Svojstva kuta …"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 msgid "Torsion Properties…"
-msgstr ""
+msgstr "Svojstva torzije …"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
@@ -4218,19 +4217,19 @@ msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:43
 msgid "Atom Properties"
-msgstr ""
+msgstr "Svojstva atoma"
 
 #: qtplugins/propertytables/propertyview.cpp:46
 msgid "Bond Properties"
-msgstr ""
+msgstr "Svojstva veze"
 
 #: qtplugins/propertytables/propertyview.cpp:49
 msgid "Angle Properties"
-msgstr ""
+msgstr "Svojstva kuta"
 
 #: qtplugins/propertytables/propertyview.cpp:52
 msgid "Torsion Properties"
-msgstr ""
+msgstr "Svojstva torzije"
 
 #: qtplugins/propertytables/propertyview.cpp:55
 msgid "Conformer Properties"
