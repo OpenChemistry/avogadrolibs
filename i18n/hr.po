@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-22 14:17+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-06-22 14:18+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3092,7 +3091,7 @@ msgstr ""
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr ""
+msgstr "Generiranje 3D molekule …"
 
 #: qtplugins/insertdna/insertdna.h:33
 msgid "InsertDNA"
@@ -3104,22 +3103,22 @@ msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
 msgid "Molecule…"
-msgstr "&Molekula …"
+msgstr "Molekula …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
-msgstr ""
+msgstr "Kristal …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "Greška pri čitanju datoteke (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:117:379
 msgid "Import Crystal"
-msgstr ""
+msgstr "Uvezi kristal"
 
 #: qtplugins/insertfragment/insertfragment.cpp:121
 msgid "Insert Fragment"
