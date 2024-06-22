@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-22 14:21+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-06-22 14:26+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3203,7 +3202,7 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
-msgstr "Uredi etiketu"
+msgstr "Uredi etikete"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -3214,23 +3213,23 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:77
 msgid "Create Label"
-msgstr ""
+msgstr "Stvori etiketu"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Alat za uređivanje etiketa"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
-msgstr ""
+msgstr "&LAMMPS …"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
-msgstr ""
+msgstr "LAMMPS unos"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "Generiraj unos za LAMMPS."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
@@ -3253,7 +3252,7 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
 msgid "No descriptors found!"
-msgstr ""
+msgstr "Nema opisa!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
@@ -6022,7 +6021,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
-msgstr ""
+msgstr "LAMMPS Unos"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
