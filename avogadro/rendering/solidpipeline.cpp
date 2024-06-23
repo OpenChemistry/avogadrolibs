@@ -89,7 +89,7 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 
 SolidPipeline::SolidPipeline()
   : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f), 
-    m_fogStrength(1.0f), m_fogEnabled(true), m_edEnabled(true), m_edStrength(1.0f), 
+    m_fogStrength(1.0f), m_fogPosition(1.0), m_fogEnabled(true), m_edEnabled(true), m_edStrength(1.0f), 
     m_width(0), m_height(0), d(new Private), m_backgroundColor(0,0,0,0)
 {
 }
@@ -160,37 +160,34 @@ void SolidPipeline::end()
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
-  d->firstStageShaders.setUniformValue("inFogStrength", ((m_fogStrength / 100.0f)- 0.01f));
+  d->firstStageShaders.setUniformValue("inFogStrength", (m_fogStrength));
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("inFogEnabled", m_fogEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inFogPosition", m_fogPosition);
   d->firstStageShaders.setUniformValue("fogR", (m_backgroundColor[0])/255.0f);
   d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1])/255.0f);
   d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2])/255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
+  // std::cout<<m_fogStrength<<std::endl;
   glDisableVertexAttribArray(0);
 }
 
 // TODO: More precise calculations needed
 void SolidPipeline::adjustOffset(const Camera& cam) {
-    // Get the model-view matrix from the camera
-    Eigen::Matrix4f modelView = cam.modelView().matrix();
-    
-    // Extract the relevant value from the matrix
-    float zTranslation = modelView(2, 3);
-    
-    // Adjust offSet based on its value
-    float offSet = -zTranslation * 2.4;
-    
-    if (offSet > 200 && offSet < 700) {
-        offSet = std::pow(1.5, -zTranslation / 10) + 300;
-    } 
-    if (offSet > 700) {
-        offSet = -zTranslation * 6;
+
+  //since it's a workaround, I feel like I can optimize it more. 
+    Eigen::Matrix4f projectView = cam.projection().matrix();
+
+    float project = ((((5000 + projectView(2,3) * 1000)/6) + 55) * 100);
+
+    float offSet = 0.000102337 * pow(project,2) - 3.84689 * project + 36182.2;
+    if(project >= 21018.106 && project<21595.588){
+      offSet = 2.63129 * project - 54768.4;
     }
-    
-    // Set the uniform value in the shader
-    d->firstStageShaders.setUniformValue("offset", offSet);
+    else if(project >= 21595.588 ){
+     offSet = 9.952 * project - 212865;
+    }
+    d->firstStageShaders.setUniformValue("uoffset", offSet);
 
 }
 

@@ -40,6 +40,10 @@ uniform float inAoStrength;
 uniform float inFogStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
+// offset for zoom-in and zoom-out
+uniform float uoffset;
+// position for other molecules.
+uniform float inFogPosition;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
 
@@ -81,8 +85,8 @@ vec4 applyFog(vec2 texCoord) {
   vec4 finalColor = mix(
     texture2D(inRGBTex, texCoord),
     vec4(vec3(fogR, fogG, fogB), 1.),
-    pow(texture2D(inDepthTex, texCoord.xy).r + inFogStrength, offset)
-  );
+    pow(texture2D(inDepthTex, texCoord.xy).r, uoffset * inFogPosition/10.0)
+  ) + inFogStrength / 100.0;
 return finalColor;
 }
 

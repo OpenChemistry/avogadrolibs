@@ -80,6 +80,12 @@ public:
   void setFogStrength(float strength) { m_fogStrength = strength; }
 
   /**
+  * @brief Get or set fog position
+  */
+  float getFogPosition(){ return m_fogPosition;}
+  void setFogPosition(float position) { m_fogPosition = position; }
+
+  /**
    * @brief Get or set whether Edge Detection is enabled.
    */
   bool getEdEnabled() { return m_edEnabled; }
@@ -98,6 +104,7 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
+  float m_fogPosition;
   Vector4ub m_backgroundColor;
   Eigen::Affine3f modelView; 
   bool m_fogEnabled;
