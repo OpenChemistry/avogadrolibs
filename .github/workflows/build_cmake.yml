@@ -44,8 +44,8 @@ jobs:
             cpack: "",
           }
         - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
-            os: macos-latest,
+            name: "macOS Clang", artifact: "macOS.dmg",
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
@@ -115,6 +115,18 @@ jobs:
       with:
         repository: openchemistry/molecules
         path: molecules
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: crystals
 
     - name: Checkout i18n
       uses: actions/checkout@v4
