@@ -430,8 +430,11 @@
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_5">
+         <property name="toolTip">
+          <string extracomment="Size in pixels of the line drawing the spectra"/>
+         </property>
          <property name="text">
-          <string>Line Size:</string>
+          <string comment="Size in pixels of the line drawing the spectra">Line Width:</string>
          </property>
         </widget>
        </item>
