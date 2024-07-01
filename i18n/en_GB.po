@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-03-07 04:05+0000\n"
+"POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-06-28 22:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -2935,7 +2935,7 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Render the force field visualizations for the atoms of the molecule."
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "&Optimize Geometry"
@@ -2960,13 +2960,9 @@ msgstr "Unfreeze Selected Atoms"
 msgid "&Calculate"
 msgstr "&Calculate"
 
-#: qtplugins/forcefield/forcefield.cpp:368
-#, qt-format
-msgid "%1 Energy = %L2"
-msgstr "%1 Energy = %L2"
-
-#: qtplugins/forcefield/forcefield.cpp:369
-#: qtplugins/forcefield/forcefield.cpp:415
+#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:375
+#: qtplugins/forcefield/forcefield.cpp:421
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -2974,7 +2970,16 @@ msgstr "%1 Energy = %L2"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:414
+#: qtplugins/forcefield/forcefield.cpp:246
+msgid "No atoms provided for optimization"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:374
+#, qt-format
+msgid "%1 Energy = %L2"
+msgstr "%1 Energy = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:420
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Force Norm = %L2"
@@ -5028,8 +5033,8 @@ msgstr ""
 "Template Tool\n"
 "\n"
 "Insert fragments, including metal centers.\n"
-"Select an element and coordination geometry,then click to insert a fragment."
-"\n"
+"Select an element and coordination geometry,then click to insert a "
+"fragment.\n"
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 
@@ -7659,27 +7664,28 @@ msgstr "16"
 msgid "18"
 msgstr "18"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Line Size:"
-msgstr "Line Size:"
+msgctxt "Size in pixels of the line drawing the spectra"
+msgid "Line Width:"
+msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr "x"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr "y"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "&Options…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -8285,29 +8291,29 @@ msgstr "Display Yaehmop Input?"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Andres Montejo Martinez,DiegoJ,Edgardo "
-"Fredz,Enterhase,Feder Sáiz,Federico Vera,Gabriel Ruiz,Geoff "
-"Hutchison,Gothmog,Javier García Díaz,Luis J. Claros,Pablo Catarecha,Rogelio "
-"Castillo A.,cocoloco, ,Launchpad Contributions:,Gabriel Ruiz,Geoff "
-"Hutchison,Jen Ockwell,Marcus D. Hanwell,kuede, ,Launchpad Contributions:"
-",Avogadro Team, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
-"Hutchison,Marcus D. Hanwell, ,Launchpad Contributions:,Avogadro Team,Brian "
-"Burns,Geoff Hutchison,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:"
-",Avogadro Team,Brian Burns,Geoff Hutchison,Marcus D. Hanwell,ascenseur, "
-",Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Marcus "
-"D. Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian "
-"Burns,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad "
+",Launchpad Contributions:,Andres Montejo Martinez,DiegoJ,Edgardo Fredz,"
+"Enterhase,Feder Sáiz,Federico Vera,Gabriel Ruiz,Geoff Hutchison,Gothmog,"
+"Javier García Díaz,Luis J. Claros,Pablo Catarecha,Rogelio Castillo A.,"
+"cocoloco, ,Launchpad Contributions:,Gabriel Ruiz,Geoff Hutchison,Jen Ockwell,"
+"Marcus D. Hanwell,kuede, ,Launchpad Contributions:,Avogadro Team, ,Launchpad "
+"Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Marcus D. Hanwell, ,"
+"Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Marcus D. "
+"Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
+"Hutchison,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro "
+"Team,Brian Burns,Geoff Hutchison,Marcus D. Hanwell,ascenseur, ,Launchpad "
 "Contributions:,Avogadro Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. "
 "Hanwell,ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
-"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:"
-",Avogadro Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. "
-"Hanwell,ascenseur, ,Launchpad Contributions:,Andi Chandler,Anthony "
-"Harrington,Avogadro Team,Brian Burns,Chris Woollard,Geoff Hutchison,Ken "
-"Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,Andi "
-"Chandler,Anthony Harrington,Avogadro Team,Brian Burns,Chris Woollard,Geoff "
-"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:"
-",Andi Chandler,Anthony Harrington,Avogadro Team,Brian Burns,Chris "
-"Woollard,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur"
+"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,"
+"Avogadro Team,Brian Burns,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,"
+"ascenseur, ,Launchpad Contributions:,Avogadro Team,Brian Burns,Geoff "
+"Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad Contributions:,"
+"Andi Chandler,Anthony Harrington,Avogadro Team,Brian Burns,Chris Woollard,"
+"Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,Launchpad "
+"Contributions:,Andi Chandler,Anthony Harrington,Avogadro Team,Brian Burns,"
+"Chris Woollard,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,ascenseur, ,"
+"Launchpad Contributions:,Andi Chandler,Anthony Harrington,Avogadro Team,"
+"Brian Burns,Chris Woollard,Geoff Hutchison,Ken Sharp,Marcus D. Hanwell,"
+"ascenseur"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
@@ -8331,6 +8337,9 @@ msgstr ""
 "sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph."
 "odell@googlemail.com,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
 "com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com"
+
+#~ msgid "Line Size:"
+#~ msgstr "Line Size:"
 
 #~ msgid "Optimize"
 #~ msgstr "Optimize"

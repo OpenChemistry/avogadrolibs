@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-03-07 04:05+0000\n"
+"POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2016-06-10 06:42+0000\n"
 "Last-Translator: Rockworld <sumoisrock@gmail.com>\n"
 "Language-Team: Thai <th@li.org>\n"
@@ -2829,7 +2829,7 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr ""
@@ -2854,13 +2854,9 @@ msgstr ""
 msgid "&Calculate"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:368
-#, qt-format
-msgid "%1 Energy = %L2"
-msgstr ""
-
-#: qtplugins/forcefield/forcefield.cpp:369
-#: qtplugins/forcefield/forcefield.cpp:415
+#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:375
+#: qtplugins/forcefield/forcefield.cpp:421
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -2868,7 +2864,16 @@ msgstr ""
 msgid "Avogadro"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:414
+#: qtplugins/forcefield/forcefield.cpp:246
+msgid "No atoms provided for optimization"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:374
+#, qt-format
+msgid "%1 Energy = %L2"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:420
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -7409,27 +7414,28 @@ msgstr ""
 msgid "18"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Line Size:"
+msgctxt "Size in pixels of the line drawing the spectra"
+msgid "Line Width:"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
