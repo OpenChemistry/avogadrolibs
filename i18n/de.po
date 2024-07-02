@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-07-02 21:11+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2923,7 +2923,7 @@ msgstr "Ungültiger PDB Code"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "Der PDB-Code muss genau 4 Zeichen lang sein."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
@@ -2998,10 +2998,8 @@ msgid "Configure…"
 msgstr "Konfigurieren …"
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "ausgewählte Atome importieren"
+msgstr "Ausgewählte Atome einfrieren"
 
 #: qtplugins/forcefield/forcefield.cpp:132
 #, fuzzy
@@ -3058,10 +3056,8 @@ msgid "Autodetect (%1)"
 msgstr "Automatische Erkennung (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Kraftfeld"
+msgstr "Universal Kraftfeld"
 
 #: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
