@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-06-12 14:43+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-07-02 20:34+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2681,16 +2681,15 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
 msgid "Conjugate Gradients"
-msgstr "konjugierter Gradient"
+msgstr "konjugierte Gradienten"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
 msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
-#, fuzzy
 msgid "Steepest descent"
-msgstr "Tiefster Abstieg"
+msgstr "Steilster Gradient"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
 #: qtplugins/gamessinput/gamessinputdialog.cpp:418
