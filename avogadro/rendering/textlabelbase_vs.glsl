@@ -1,4 +1,5 @@
-#version 300 es
+#version 400
+precision highp float;
 // Modelview/projection matrix
 uniform mat4 mv;
 uniform mat4 proj;
