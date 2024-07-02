@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-07-02 21:12+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-07-02 21:22+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3057,25 +3057,25 @@ msgstr "Automatische Erkennung (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
-msgstr "Universelles Kraftfeld"
+msgstr "Universelles Kraftfeld (UFF)"
 
 #: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
-msgstr "Allgemeines Amber Force Field"
+msgstr "Allgemeines Amber Kraftfeld (GAFF)"
 
 #: qtplugins/forcefield/obenergy.cpp:86 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "MMFF94 Kraftfeld"
 
 #: qtplugins/forcefield/scriptenergy.cpp:240
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "Fehler während des Abrufens von Metadaten für das Energieskript: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:250
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "Fehler beim Parsen von Metadaten des Energieskriptes: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:258
 #, qt-format
@@ -3083,6 +3083,8 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"Fehler beim Parsen der Metadaten des Energieskriptes: %1\n"
+"Das Ergebnis ist kein JSON-Objekt.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3107,7 +3109,7 @@ msgstr "Gleichgewichtsgeometrie"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:231
 msgid "Transition State"
-msgstr "Übergangsstatus"
+msgstr "Übergangszustand"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:234
 msgid "Frequencies"
@@ -3131,7 +3133,7 @@ msgstr "Singulett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:339
 msgid "Doublet"
-msgstr "Doublett"
+msgstr "Dublett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:342
 msgid "Triplet"
@@ -3163,7 +3165,7 @@ msgstr "GAMESS Eingabedatei abspeichern"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:706
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "GAMESS Berechnung einreichen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
@@ -3192,6 +3194,7 @@ msgid "&Hydrogens"
 msgstr "Wasserstoffatome"
 
 #: qtplugins/hydrogens/hydrogens.h:24
+#, fuzzy
 msgid "Hydrogens"
 msgstr "Wasserstoffatome"
 
