@@ -15,9 +15,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-07-02 21:22+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-07-02 21:46+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3205,7 +3204,7 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.h:34
 msgid "Import From PQR"
-msgstr "Von PQR importieren …"
+msgstr "Von PQR importieren"
 
 #: qtplugins/importpqr/importpqr.h:38
 msgid "Download a molecule from PQR."
@@ -3213,7 +3212,7 @@ msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
-msgstr "DNA/RNA…"
+msgstr "DNA/RNA …"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -3223,7 +3222,7 @@ msgstr "E&infügen"
 
 #: qtplugins/insertdna/insertdna.cpp:79
 msgid "Insert DNA/RNA…"
-msgstr "DNA/RNA einfügen…"
+msgstr "DNA/RNA einfügen …"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3251,16 +3250,14 @@ msgstr "Thymin"
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
 msgid "Insert Molecule…"
-msgstr "Molekül einfügen…"
+msgstr "Molekül einfügen …"
 
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr "3D-Molekül wird generiert…"
+msgstr "3D-Molekül wird generiert …"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "Insert DNA"
 msgid "InsertDNA"
 msgstr "DNA einfügen"
 
@@ -3274,7 +3271,7 @@ msgstr "&Molekül …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
-msgstr "Kristall …"
+msgstr "Kristall …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
@@ -3307,7 +3304,7 @@ msgstr "Farbe:"
 
 #: qtplugins/label/label.cpp:149
 msgid "Distance from center:"
-msgstr "Distanz von Mitte:"
+msgstr "Abstand von der Mitte:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3322,6 +3319,7 @@ msgid "None"
 msgstr "Keine"
 
 #: qtplugins/label/label.cpp:160
+#, fuzzy
 msgid "Index"
 msgstr "Indiz"
 
@@ -3345,9 +3343,8 @@ msgid "Element & ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:180
-#, fuzzy
 msgid "Atom Label:"
-msgstr "Atombezeichnungen"
+msgstr "Atombeschriftung:"
 
 #: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
@@ -3373,10 +3370,8 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-#, fuzzy
-#| msgid "Bond Labels"
 msgid "Edit Labels"
-msgstr "Bindungsbezeichnung"
+msgstr "Beschriftungen bearbeiten"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -3395,7 +3390,7 @@ msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
-msgstr "&LAMMPS…"
+msgstr "&LAMMPS …"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3406,6 +3401,7 @@ msgid "Generate input for LAMMPS."
 msgstr "Eingabe für LAMMPS erstellen."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
+#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
@@ -3414,16 +3410,17 @@ msgstr ""
 "decks gehen verloren."
 
 #: qtplugins/licorice/licorice.h:33
+#, fuzzy
 msgid "Render atoms as licorice / sticks."
 msgstr "Atome als Lakritz/Stäbchen rendern."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
-msgstr "SMILES…"
+msgstr "SMILES …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
-msgstr "InChI…"
+msgstr "InChI …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
@@ -3447,6 +3444,7 @@ msgid "Load single-line molecule descriptors through an input dialog."
 msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:49
+#, fuzzy
 msgid "Manipulate"
 msgstr "Bearbeiten"
 
@@ -3457,7 +3455,7 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate selected atoms.\n"
 msgstr ""
-"Manipulationstool\n"
+"Manipulationswerkzeug\n"
 "\n"
 "Linke Maustaste: \tKlicken und ziehen, um Atome zu bewegen\n"
 "Rechte Maustaste: \tKlicken und ziehen um ausgewählte Atome zu rotieren.\n"
@@ -3465,7 +3463,7 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Bearbeitungswerkzeug"
 
 #: qtplugins/measuretool/measuretool.cpp:54
 msgid "Measure"
@@ -3515,11 +3513,11 @@ msgstr "Intransparenz:"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
-msgstr ""
+msgstr "Polygonnetz darstellen."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
-msgstr "&Molekular…"
+msgstr "&Molekular …"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:33
 msgid "View general properties of a molecule."
@@ -3543,6 +3541,7 @@ msgstr "&Eigenschaften"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
 #: qtplugins/molecularproperties/molecularproperties.h:31:1106
+#, fuzzy
 msgid "Molecular Properties"
 msgstr "Molekulareigenschaften"
 
@@ -3581,7 +3580,7 @@ msgstr "Molare Masse (g/mol):"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1118
 msgid "Chemical Formula:"
-msgstr "chemische Formel:"
+msgstr "Chemische Formel:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -3609,7 +3608,7 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
-"Navigationstool\n"
+"Navigationswerkzeug\n"
 "\n"
 "Linke Maustaste: \t Klicken und ziehen, um die Ansicht zu rotieren.\n"
 "Mittlere Maustaste: Klicken und ziehen, um den Zoom zu verändern.\n"
