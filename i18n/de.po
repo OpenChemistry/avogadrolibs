@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-07-02 21:46+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3616,7 +3616,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Drehen Sie die Szene entlang der x-, y- oder z-Achsen."
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Zoom the scene."
