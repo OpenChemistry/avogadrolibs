@@ -1,17 +1,19 @@
 //#define CONTOUR_LINES
 //#define TOON_SHADING
-
+#version 400
+precision highp float; 
 // normalized corner
-varying vec2 v_corner;
+in vec2 v_corner;
 // color
-varying vec3 v_color;
+in vec3 v_color;
 // position in eye-coordinate space
-varying vec4 v_eyePos;
+in vec4 v_eyePos;
 // sphere radius
-varying float v_radius;
+in float v_radius;
 // AO tile offset
-varying vec2 v_tileOffset;
+in vec2 v_tileOffset;
 
+out vec4 outColor;
 // inverse model-view matrix
 uniform mat4 u_modelView;
 uniform mat3 u_invModelView;
@@ -59,7 +61,7 @@ void main()
     float xi = abs(zz); // [0, contourWidth]
     // eta determines how much the contours are pushed back
     float eta = 0.0004;
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); // black
+    outColor = vec4(0.0, 0.0, 0.0, 1.0); // black
     gl_FragDepth = gl_FragCoord.z - 10e-10 + eta * xi;
     return;
   }
@@ -107,7 +109,7 @@ void main()
 
   // final color
   vec3 color = ambient + diffuse + specular;
-  gl_FragColor = 1.2 * vec4(color, 1.0) * texture2D(u_tex, uv); // AO + Phong reflection [+ contours]
+  outColor = 1.2 * vec4(color, 1.0) * texture2D(u_tex, uv); // AO + Phong reflection [+ contours]
   //gl_FragColor = vec4(color, 1.0); // Phong reflection [+ contours]
   //gl_FragColor = 1.2 * texture2D(u_tex, uv); // AO [+ contours]
   //gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // contours + white atoms

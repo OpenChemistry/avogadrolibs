@@ -12,7 +12,12 @@
 //
 
 // normalized corner: [-1, 1]
-varying vec2 v_corner;
+#version 400
+precision highp float;
+
+in vec2 v_corner;
+
+out vec4 outColor;
 
 void main()
 {
@@ -22,5 +27,5 @@ void main()
     discard;
 
   // draw buffer is not attached, output any color
-  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  outColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

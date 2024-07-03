@@ -7,7 +7,7 @@ out vec4 outColor;
 
 void main(void)
 {
-  outColor = texture2D(u_texture, texc);
+  outColor = texture(u_texture, texc);
   if (outColor.a == 0.)
     discard;
 }

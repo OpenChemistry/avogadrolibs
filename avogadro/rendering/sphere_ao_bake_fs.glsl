@@ -10,13 +10,14 @@
 //
 // Input
 //
-
+#version 400
+precision highp float;
 // the sphere center position: eye coords
-varying vec3 v_pos;
+in vec3 v_pos;
 // the sphere radius
-varying float v_radius;
+in float v_radius;
 // stretched corner: [-1.x, 1.x] (see below)
-varying vec2 v_corner;
+in vec2 v_corner;
 
 //
 // Uniforms
@@ -30,6 +31,8 @@ uniform mat4 u_projection;
 uniform sampler2D u_depthTex;
 // intensity = 1 / (number of light directions)
 uniform float u_intensity;
+
+out vec4 outColor;
 
 /**
  * Inverse gnomonic projection over octahedron unfloded into a square. This
@@ -73,10 +76,10 @@ void main()
   // since we are using flat impostors in the depth texture, cos_alpha needs to be positive
   if (cos_alpha > 0.0 && texture2D(u_depthTex, pos.xy).r > pos.z) {
     // the texel is visible from the light source
-    gl_FragColor = vec4(vec3(1.0, 1.0, 1.0) * cos_alpha * u_intensity, 1.0);
+    outColor = vec4(vec3(1.0, 1.0, 1.0) * cos_alpha * u_intensity, 1.0);
   } else {
     // texel not visible
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    outColor = vec4(0.0, 0.0, 0.0, 0.0);
   }
 
 }

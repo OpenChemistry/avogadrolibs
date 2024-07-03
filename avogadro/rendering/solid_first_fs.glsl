@@ -6,14 +6,17 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#version 120
+#version 400
+precision highp float;
 
 //
 // Input
 //
 
 // texture coordinates
-varying vec2 UV;
+in vec2 UV;
+
+out vec4 outColor;
 
 //
 // Uniforms
@@ -120,6 +123,6 @@ void main()
   luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
 
   vec4 color = texture2D(inRGBTex, UV);
-  gl_FragColor = vec4(color.xyz * luminosity, color.w);
+  outColor = vec4(color.xyz * luminosity, color.w);
   gl_FragDepth = texture2D(inDepthTex, UV).x;
 }
