@@ -37,10 +37,10 @@ uniform float width, height;
 
 vec3 getNormalAt(vec2 normalUV)
 {
-  float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
+  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
+  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
+  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
   float xdelta = xpos - xneg;
   float ydelta = ypos - yneg;
   vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
@@ -49,11 +49,11 @@ vec3 getNormalAt(vec2 normalUV)
 
 vec3 getNormalNear(vec2 normalUV)
 {
-  float cent = texture2D(inDepthTex, normalUV).x;
-  float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  float cent = texture(inDepthTex, normalUV).x;
+  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
+  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
+  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
+  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
   float xposdelta = xpos - cent;
   float xnegdelta = cent - xneg;
   float yposdelta = ypos - cent;
@@ -91,7 +91,7 @@ const vec2 SSAOkernel[16] = vec2[16](
 float computeSSAOLuminosity(vec3 normal)
 {
   float totalOcclusion = 0.0;
-  float depth = texture2D(inDepthTex, UV).x;
+  float depth = texture(inDepthTex, UV).x;
   float A = (width * UV.x + 10 * height * UV.y) * 2.0 * 3.14159265358979 * 5.0 / 16.0;
   float S = sin(A);
   float C = cos(A);
@@ -101,7 +101,7 @@ float computeSSAOLuminosity(vec3 normal)
   );
   for (int i = 0; i < 16; i++) {
     vec2 samplePoint = rotation * SSAOkernel[i];
-    float occluderDepth = texture2D(inDepthTex, UV + samplePoint).x;
+    float occluderDepth = texture(inDepthTex, UV + samplePoint).x;
     vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
     float d = length(occluder);
     float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
@@ -122,7 +122,7 @@ void main()
   luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
   luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
 
-  vec4 color = texture2D(inRGBTex, UV);
+  vec4 color = texture(inRGBTex, UV);
   outColor = vec4(color.xyz * luminosity, color.w);
-  gl_FragDepth = texture2D(inDepthTex, UV).x;
+  gl_FragDepth = texture(inDepthTex, UV).x;
 }

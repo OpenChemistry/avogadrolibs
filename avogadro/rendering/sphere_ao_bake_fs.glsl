@@ -74,7 +74,7 @@ void main()
   float cos_alpha = dot(N, vec3(0, 0, 1));
 
   // since we are using flat impostors in the depth texture, cos_alpha needs to be positive
-  if (cos_alpha > 0.0 && texture2D(u_depthTex, pos.xy).r > pos.z) {
+  if (cos_alpha > 0.0 && texture(u_depthTex, pos.xy).r > pos.z) {
     // the texel is visible from the light source
     outColor = vec4(vec3(1.0, 1.0, 1.0) * cos_alpha * u_intensity, 1.0);
   } else {

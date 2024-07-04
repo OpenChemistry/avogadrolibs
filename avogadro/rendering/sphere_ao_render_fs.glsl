@@ -109,7 +109,7 @@ void main()
 
   // final color
   vec3 color = ambient + diffuse + specular;
-  outColor = 1.2 * vec4(color, 1.0) * texture2D(u_tex, uv); // AO + Phong reflection [+ contours]
+  outColor = 1.2 * vec4(color, 1.0) * texture(u_tex, uv); // AO + Phong reflection [+ contours]
   //gl_FragColor = vec4(color, 1.0); // Phong reflection [+ contours]
   //gl_FragColor = 1.2 * texture2D(u_tex, uv); // AO [+ contours]
   //gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // contours + white atoms
