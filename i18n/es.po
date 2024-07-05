@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-16 16:40+0000\n"
+"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"PO-Revision-Date: 2024-07-02 20:34+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2976,7 +2976,7 @@ msgstr ""
 "molécula."
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Optimizar Geometría"
@@ -3001,13 +3001,9 @@ msgstr "Liberar los Átomos Seleccionadaos"
 msgid "&Calculate"
 msgstr "&Calcular"
 
-#: qtplugins/forcefield/forcefield.cpp:368
-#, qt-format
-msgid "%1 Energy = %L2"
-msgstr "%1 Energía = %L2"
-
-#: qtplugins/forcefield/forcefield.cpp:369
-#: qtplugins/forcefield/forcefield.cpp:415
+#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:375
+#: qtplugins/forcefield/forcefield.cpp:421
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -3015,7 +3011,16 @@ msgstr "%1 Energía = %L2"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:414
+#: qtplugins/forcefield/forcefield.cpp:246
+msgid "No atoms provided for optimization"
+msgstr "No se proporcionan átomos para la optimización"
+
+#: qtplugins/forcefield/forcefield.cpp:374
+#, qt-format
+msgid "%1 Energy = %L2"
+msgstr "%1 Energía = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:420
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Criterios de la fuerza = %L2"
@@ -7729,27 +7734,28 @@ msgstr "16"
 msgid "18"
 msgstr "18"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Line Size:"
-msgstr "Tamaño de la línea:"
+msgctxt "Size in pixels of the line drawing the spectra"
+msgid "Line Width:"
+msgstr "Anchura de la línea:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr "x"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr "y"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "&Opciones…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -8489,6 +8495,9 @@ msgstr ""
 "grovertapia@hotmail.com,,joseb.gutierrez@gmail.com,,,,meilan@adinet.com.uy,"
 "tres.14159@gmail.com,monkey.libre@gmail.com,nzahlut@live.com,,paco@byasl."
 "com,,victorhera@gmail.com,memaljo@yahoo.com,"
+
+#~ msgid "Line Size:"
+#~ msgstr "Tamaño de la línea:"
 
 #~ msgid "Optimize"
 #~ msgstr "Optimizar"

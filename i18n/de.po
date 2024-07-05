@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-06-12 14:43+0000\n"
+"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"PO-Revision-Date: 2024-07-03 22:09+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2681,16 +2681,15 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
 msgid "Conjugate Gradients"
-msgstr "konjugierter Gradient"
+msgstr "konjugierte Gradienten"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
 msgid "DIIS"
 msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
-#, fuzzy
 msgid "Steepest descent"
-msgstr "Tiefster Abstieg"
+msgstr "Steilster Gradient"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
 #: qtplugins/gamessinput/gamessinputdialog.cpp:418
@@ -2698,6 +2697,8 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Die Eingabedatei wurde geändert. Möchten Sie Ihre Änderungen überschreiben, "
+"um die neue Geometrie oder Joboptionen abzubilden?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
@@ -2710,7 +2711,7 @@ msgstr "CP2K-EIngabedatei speichern"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:997
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "CP2K Berechnung einreichen"
 
 #: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
@@ -2722,7 +2723,7 @@ msgstr "Elementarzelle umschalten"
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
-msgstr "Elementarzelle ändern…"
+msgstr "Elementarzelle bearbeiten …"
 
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
@@ -2735,11 +2736,11 @@ msgstr "In Standardorientierung drehen"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr "Zelle auf &Volumen skalieren…"
+msgstr "Zelle auf &Volumen skalieren …"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr "Superzelle bauen…"
+msgstr "Superzelle bauen …"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2803,7 +2804,7 @@ msgstr "Linienfarbe:"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr "Darstellung der Grenzen der Einheitszelle."
+msgstr "Grenzen der Einheitszelle darstellen."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
@@ -2820,11 +2821,11 @@ msgstr "Keine Einheitszelle gegenwärtig."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Benutzerdefinierte Elemente neu zuordnen …"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
-msgstr ""
+msgstr "Benutzerdefinierte Elementtypen im aktuellen Molekül bearbeiten."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
@@ -2841,7 +2842,7 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
-"Zeichentool\n"
+"Zeichenwerkzeug\n"
 "\n"
 "Linke Maustaste:\tKlicken und ziehen um Atome und Bindungen zu erstellen\n"
 "Rechte Maustaste:\tAtom löschen"
@@ -2861,7 +2862,7 @@ msgstr "Bindung entfernen"
 #: qtplugins/editor/editor.cpp:263 qtplugins/measuretool/measuretool.cpp:201
 #: qtplugins/measuretool/measuretool.cpp:226
 msgid "Distance:"
-msgstr "Distanz:"
+msgstr "Abstand:"
 
 #: qtplugins/editor/editor.cpp:266
 #, qt-format
@@ -2918,15 +2919,16 @@ msgstr "Chemische Struktur zum Herunterladen."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Ungültiger PDB Code"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "Der PDB-Code muss genau 4 Zeichen lang sein."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
 msgstr ""
+"Das erste Zeichen des PDB-Codes muss eine Ziffer (1-9, nicht aber 0) sein."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -2949,11 +2951,11 @@ msgstr "Netzwerk-Zeitüberschreitung oder anderer Fehler."
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr "Spezifiziertes Molekül konnte nicht gefunden werden: %1"
+msgstr "Das angegebene Molekül konnte nicht gefunden werden: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
-msgstr "Aus PDB abrufen"
+msgstr "Aus der PDB abrufen"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -2982,26 +2984,22 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Geometrie optimieren"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
-msgstr ""
+msgstr "Kräfte"
 
 #: qtplugins/forcefield/forcefield.cpp:113
-#, fuzzy
-#| msgid "Configure Bonding…"
 msgid "Configure…"
-msgstr "Bindung einrichten…"
+msgstr "Konfigurieren …"
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "ausgewählte Atome importieren"
+msgstr "Ausgewählte Atome einfrieren"
 
 #: qtplugins/forcefield/forcefield.cpp:132
 #, fuzzy
@@ -3015,13 +3013,9 @@ msgstr "Ausgewählte Atome verbinden"
 msgid "&Calculate"
 msgstr "Berechnen"
 
-#: qtplugins/forcefield/forcefield.cpp:368
-#, qt-format
-msgid "%1 Energy = %L2"
-msgstr "%1 Energie = %L2"
-
-#: qtplugins/forcefield/forcefield.cpp:369
-#: qtplugins/forcefield/forcefield.cpp:415
+#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:375
+#: qtplugins/forcefield/forcefield.cpp:421
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -3029,7 +3023,16 @@ msgstr "%1 Energie = %L2"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:414
+#: qtplugins/forcefield/forcefield.cpp:246
+msgid "No atoms provided for optimization"
+msgstr "Keine Atome für die Optimierung bereitgestellt"
+
+#: qtplugins/forcefield/forcefield.cpp:374
+#, qt-format
+msgid "%1 Energy = %L2"
+msgstr "%1 Energie = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:420
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -3053,28 +3056,26 @@ msgid "Autodetect (%1)"
 msgstr "Automatische Erkennung (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:67 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Kraftfeld"
+msgstr "Universelles Kraftfeld (UFF)"
 
 #: qtplugins/forcefield/obenergy.cpp:72 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "Allgemeines Amber Kraftfeld (GAFF)"
 
 #: qtplugins/forcefield/obenergy.cpp:86 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "MMFF94 Kraftfeld"
 
 #: qtplugins/forcefield/scriptenergy.cpp:240
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "Fehler während des Abrufens von Metadaten für das Energieskript: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:250
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "Fehler beim Parsen von Metadaten des Energieskriptes: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:258
 #, qt-format
@@ -3082,6 +3083,8 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"Fehler beim Parsen der Metadaten des Energieskriptes: %1\n"
+"Das Ergebnis ist kein JSON-Objekt.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3106,7 +3109,7 @@ msgstr "Gleichgewichtsgeometrie"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:231
 msgid "Transition State"
-msgstr "Übergangsstatus"
+msgstr "Übergangszustand"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:234
 msgid "Frequencies"
@@ -3130,7 +3133,7 @@ msgstr "Singulett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:339
 msgid "Doublet"
-msgstr "Doublett"
+msgstr "Dublett"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:342
 msgid "Triplet"
@@ -3162,7 +3165,7 @@ msgstr "GAMESS Eingabedatei abspeichern"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:706
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "GAMESS Berechnung einreichen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
@@ -3191,6 +3194,7 @@ msgid "&Hydrogens"
 msgstr "Wasserstoffatome"
 
 #: qtplugins/hydrogens/hydrogens.h:24
+#, fuzzy
 msgid "Hydrogens"
 msgstr "Wasserstoffatome"
 
@@ -3200,7 +3204,7 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.h:34
 msgid "Import From PQR"
-msgstr ""
+msgstr "Von PQR importieren"
 
 #: qtplugins/importpqr/importpqr.h:38
 msgid "Download a molecule from PQR."
@@ -3208,7 +3212,7 @@ msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
-msgstr "DNA/RNA…"
+msgstr "DNA/RNA …"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -3218,7 +3222,7 @@ msgstr "E&infügen"
 
 #: qtplugins/insertdna/insertdna.cpp:79
 msgid "Insert DNA/RNA…"
-msgstr "DNA/RNA einfügen…"
+msgstr "DNA/RNA einfügen …"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3246,16 +3250,14 @@ msgstr "Thymin"
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
 msgid "Insert Molecule…"
-msgstr "Molekül einfügen…"
+msgstr "Molekül einfügen …"
 
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr "3D-Molekül wird generiert…"
+msgstr "3D-Molekül wird generiert …"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "Insert DNA"
 msgid "InsertDNA"
 msgstr "DNA einfügen"
 
@@ -3269,7 +3271,7 @@ msgstr "&Molekül …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
-msgstr "Kristall …"
+msgstr "Kristall …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
@@ -3302,7 +3304,7 @@ msgstr "Farbe:"
 
 #: qtplugins/label/label.cpp:149
 msgid "Distance from center:"
-msgstr "Distanz von Mitte:"
+msgstr "Abstand von der Mitte:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3317,6 +3319,7 @@ msgid "None"
 msgstr "Keine"
 
 #: qtplugins/label/label.cpp:160
+#, fuzzy
 msgid "Index"
 msgstr "Indiz"
 
@@ -3340,9 +3343,8 @@ msgid "Element & ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:180
-#, fuzzy
 msgid "Atom Label:"
-msgstr "Atombezeichnungen"
+msgstr "Atombeschriftung:"
 
 #: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
@@ -3368,10 +3370,8 @@ msgid "Display labels on ball and stick style."
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:31
-#, fuzzy
-#| msgid "Bond Labels"
 msgid "Edit Labels"
-msgstr "Bindungsbezeichnung"
+msgstr "Beschriftungen bearbeiten"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -3390,7 +3390,7 @@ msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
-msgstr "&LAMMPS…"
+msgstr "&LAMMPS …"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3401,6 +3401,7 @@ msgid "Generate input for LAMMPS."
 msgstr "Eingabe für LAMMPS erstellen."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
+#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
@@ -3409,16 +3410,17 @@ msgstr ""
 "decks gehen verloren."
 
 #: qtplugins/licorice/licorice.h:33
+#, fuzzy
 msgid "Render atoms as licorice / sticks."
 msgstr "Atome als Lakritz/Stäbchen rendern."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
-msgstr "SMILES…"
+msgstr "SMILES …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
-msgstr "InChI…"
+msgstr "InChI …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
@@ -3442,6 +3444,7 @@ msgid "Load single-line molecule descriptors through an input dialog."
 msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:49
+#, fuzzy
 msgid "Manipulate"
 msgstr "Bearbeiten"
 
@@ -3452,7 +3455,7 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate selected atoms.\n"
 msgstr ""
-"Manipulationstool\n"
+"Manipulationswerkzeug\n"
 "\n"
 "Linke Maustaste: \tKlicken und ziehen, um Atome zu bewegen\n"
 "Rechte Maustaste: \tKlicken und ziehen um ausgewählte Atome zu rotieren.\n"
@@ -3460,7 +3463,7 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Bearbeitungswerkzeug"
 
 #: qtplugins/measuretool/measuretool.cpp:54
 msgid "Measure"
@@ -3510,11 +3513,11 @@ msgstr "Intransparenz:"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
-msgstr ""
+msgstr "Polygonnetz darstellen."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
 msgid "&Molecular…"
-msgstr "&Molekular…"
+msgstr "&Molekular …"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:33
 msgid "View general properties of a molecule."
@@ -3538,6 +3541,7 @@ msgstr "&Eigenschaften"
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::MolecularPropertiesDialog)
 #: qtplugins/molecularproperties/molecularproperties.h:31:1106
+#, fuzzy
 msgid "Molecular Properties"
 msgstr "Molekulareigenschaften"
 
@@ -3576,7 +3580,7 @@ msgstr "Molare Masse (g/mol):"
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:221
 #: qtplugins/molecularproperties/molecularpropertiesdialog.cpp:233:1118
 msgid "Chemical Formula:"
-msgstr "chemische Formel:"
+msgstr "Chemische Formel:"
 
 #. i18n: file: qtplugins/molecularproperties/molecularpropertiesdialog.ui:63
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -3604,7 +3608,7 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
-"Navigationstool\n"
+"Navigationswerkzeug\n"
 "\n"
 "Linke Maustaste: \t Klicken und ziehen, um die Ansicht zu rotieren.\n"
 "Mittlere Maustaste: Klicken und ziehen, um den Zoom zu verändern.\n"
@@ -3612,17 +3616,15 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:61
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Drehen Sie die Szene entlang der x-, y- oder z-Achse."
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "A&tome verschieben …"
+msgstr "Darstellung verschieben."
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4963,20 +4965,16 @@ msgstr "Elektronendichte"
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
-#, fuzzy
-#| msgid " eV"
 msgid "eV"
-msgstr " eV"
+msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "Circular Dichroism Spectra"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:398
-#, fuzzy
-#| msgid " eV"
 msgid "eV)"
-msgstr " eV"
+msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -7776,29 +7774,28 @@ msgstr ""
 msgid "18"
 msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Line width:"
-msgid "Line Size:"
-msgstr "Linienbreite:"
+msgctxt "Size in pixels of the line drawing the spectra"
+msgid "Line Width:"
+msgstr ""
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr "x"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr "y"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "Optionen …"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -7880,10 +7877,8 @@ msgstr "Isoflächenwert:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
-#, fuzzy
-#| msgid ", "
 msgid " "
-msgstr ", "
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8420,13 +8415,17 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,,erik_hahn@gmx.de,,,,armin_mohring@web.de,michael.kogan@gmx."
-"net,steve@steve-m.de,loniedavid@gmail.com,,,soc@krg-nw.de,,,aleixosk@gmail."
-"com,,avogadro-devel@lists.sourceforge.net,d@winzen4."
-"de,,,,,,,,armin_mohring@web.de,,,,coolx67@gmx.at,,,,,,,,simon@ochsenreither."
-"de,,,aleixosk@gmail.com,,avogadro-devel@lists.sourceforge."
-"net,,,,,,,,,armin_mohring@web.de,,,,coolx67@gmx.at,,,,tobannert@gmail."
-"com,,,,simon@ochsenreither.de"
+",,,erik_hahn@gmx.de,,,,armin_mohring@web.de,michael.kogan@gmx.net,"
+"steve@steve-m.de,loniedavid@gmail.com,,,soc@krg-nw.de,,,aleixosk@gmail.com,,"
+"avogadro-devel@lists.sourceforge.net,d@winzen4.de,,,,,,,,armin_mohring@web."
+"de,,,,coolx67@gmx.at,,,,,,,,simon@ochsenreither.de,,,aleixosk@gmail.com,,"
+"avogadro-devel@lists.sourceforge.net,,,,,,,,,armin_mohring@web.de,,,,"
+"coolx67@gmx.at,,,,tobannert@gmail.com,,,,simon@ochsenreither.de"
+
+#, fuzzy
+#~| msgid "Line width:"
+#~ msgid "Line Size:"
+#~ msgstr "Linienbreite:"
 
 #, fuzzy
 #~| msgid "Optimization"
