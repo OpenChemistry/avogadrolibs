@@ -112,6 +112,14 @@ void GLWidget::resetGeometry()
 {
   m_renderer.resetGeometry();
 }
+void GLWidget::resetViewSettings()
+{
+  // Reset the camera to a default view
+  m_renderer.resetCamera();
+
+  // Additional default resets can be added here if needed
+  update(); //
+}
 
 void GLWidget::setTools(const QList<QtGui::ToolPlugin*>& toolList)
 {
