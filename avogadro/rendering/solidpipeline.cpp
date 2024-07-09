@@ -8,6 +8,7 @@
 #include "avogadrogl.h"
 #include "shader.h"
 #include "shaderprogram.h"
+#include "camera.h"
 
 #include "solid_vs.h"
 
@@ -85,9 +86,9 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 }
 
 SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f),
-    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0),
-    d(new Private)
+  : m_pixelRatio(1.0f), m_aoEnabled(true), m_dofEnabled(true), m_aoStrength(1.0f),
+    m_edEnabled(true), m_edStrength(1.0f), m_width(0), m_height(0), m_dofStrength(1.0f),
+    m_dofPosition(1.0), d(new Private)
 {
 }
 
@@ -156,11 +157,31 @@ void SolidPipeline::end()
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofEnabled", m_dofEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofStrength", ((m_dofStrength) * 100.0f));
+  d->firstStageShaders.setUniformValue("inDofPosition", ((m_dofPosition) /10.0f));
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
   glDisableVertexAttribArray(0);
+}
+
+void SolidPipeline::adjustOffset(const Camera& cam) {
+
+  //since it's a workaround, I feel like I can optimize it more. 
+    Eigen::Matrix4f projectView = cam.projection().matrix();
+
+    float project = ((((5000 + projectView(2,3) * 1000)/6) + 55) * 100);
+
+    float offSet = 0.000102337 * pow(project,2) - 3.84689 * project + 36182.2;
+    if(project >= 21018.106 && project<21595.588){
+      offSet = 2.63129 * project - 54768.4;
+    }
+    else if(project >= 21595.588 ){
+     offSet = 9.952 * project - 212865;
+    }
+    d->firstStageShaders.setUniformValue("uoffset", offSet);
+
 }
 
 void SolidPipeline::resize(int width, int height)
