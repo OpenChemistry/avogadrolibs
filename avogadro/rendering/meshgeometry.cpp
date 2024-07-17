@@ -119,13 +119,7 @@ void MeshGeometry::update()
 
     if (!d->vertexShader->compile())
       cout << d->vertexShader->error() << endl;
-    if (!d->fragmentShader->compi#version 400
-layout(vertices = 4) out;
-
-void main(void) 
-{
-    gl_out[gl_InvocationID].gl_Position =gl_in[gl_InvocationID].gl_Position;
-}le())
+    if (!d->fragmentShader->compile())
       cout << d->fragmentShader->error() << endl;
     if (!d->fragmentShaderOpaque->compile())
       cout << d->fragmentShaderOpaque->error() << endl;
