@@ -130,13 +130,13 @@ bool ShaderProgram::attachShader(const Shader& shader)
                      static_cast<GLuint>(m_fragmentShader));
     }
     m_fragmentShader = shader.handle();
-  } else if(shader.type() == Shader::TessellationControlShader) {
+  } else if(shader.type() == Shader::TessellationControl) {
     if (m_tcsShader != 0){
       glDetachShader(static_cast<GLuint>(m_handle),
       static_cast<GLuint>(m_tcsShader));
     } 
     m_tcsShader = shader.handle();
-  } else if(shader.type() == Shader::TessellationEvaluationShader) {
+  } else if(shader.type() == Shader::TessellationEvaluation) {
     if (m_tevShader != 0){
       glDetachShader(static_cast<GLuint>(m_handle),
       static_cast<GLuint>(m_tevShader));
@@ -188,7 +188,7 @@ bool ShaderProgram::detachShader(const Shader& shader)
         m_fragmentShader = 0;
         return true;
       }
-    case Shader::TessellationControlShader:
+    case Shader::TessellationControl:
       if(m_tcsShader != shader.handle()){
         m_error = "The supplied shader was not attached to this program.";     
         return false;
@@ -198,7 +198,7 @@ bool ShaderProgram::detachShader(const Shader& shader)
         m_tcsShader = 0;
         return true;
       }
-    case Shader::TessellationEvaluationShader:
+    case Shader::TessellationEvaluation:
       if(m_tevShader != shader.handle()){
         m_error = "The supplied shader was not attached to this program.";     
         return false;

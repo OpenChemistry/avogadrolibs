@@ -31,8 +31,8 @@ public:
   {
     Vertex,   /**< Vertex shader */
     Fragment, /**< Fragment shader */
-    TessellationControlShader,
-    TessellationEvaluationShader,
+    TessellationControl,
+    TessellationEvaluation,
     Unknown   /**< Unknown (default) */
   };
 

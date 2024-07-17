@@ -46,9 +46,9 @@ if (m_type == Vertex) {
     type_ = GL_VERTEX_SHADER;
 } else if (m_type == Fragment) {
     type_ = GL_FRAGMENT_SHADER;
-} else if(m_type == TessellationControlShader) {
+} else if(m_type == TessellationControl) {
     type_ = GL_TESS_CONTROL_SHADER;
-} else if(m_type == TessellationEvaluationShader) {
+} else if(m_type == TessellationEvaluation) {
     type_ = GL_TESS_EVALUATION_SHADER;
 }
 

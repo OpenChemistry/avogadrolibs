@@ -24,6 +24,8 @@ namespace {
 #include "mesh_fs.h"
 #include "mesh_opaque_fs.h"
 #include "mesh_vs.h"
+#include "mesh_tcs.h"
+#include "mesh_tev.h"
 } // namespace
 
 using Avogadro::Vector3f;
@@ -49,6 +51,8 @@ public:
   inline static Shader* vertexShader = nullptr;
   inline static Shader* fragmentShader = nullptr;
   inline static Shader* fragmentShaderOpaque = nullptr;
+  inline static Shader* TessellationControlShader = nullptr;
+  inline static Shader* TessellationEvaluationShader = nullptr;
   inline static ShaderProgram* program = nullptr;
   inline static ShaderProgram* programOpaque = nullptr;
 
@@ -105,12 +109,30 @@ void MeshGeometry::update()
     d->fragmentShaderOpaque->setType(Shader::Fragment);
     d->fragmentShaderOpaque->setSource(mesh_opaque_fs);
 
+    d->TessellationControlShader = new Shader;
+    d->TessellationControlShader->setType(Shader::TessellationControl);
+    d->TessellationControlShader->setSource(mesh_tcs);
+
+    d->TessellationEvaluationShader = new Shader;
+    d->TessellationEvaluationShader->setType(Shader::TessellationEvaluation);
+    d->TessellationControlShader->setSource(mesh_tev);
+
     if (!d->vertexShader->compile())
       cout << d->vertexShader->error() << endl;
-    if (!d->fragmentShader->compile())
+    if (!d->fragmentShader->compi#version 400
+layout(vertices = 4) out;
+
+void main(void) 
+{
+    gl_out[gl_InvocationID].gl_Position =gl_in[gl_InvocationID].gl_Position;
+}le())
       cout << d->fragmentShader->error() << endl;
     if (!d->fragmentShaderOpaque->compile())
       cout << d->fragmentShaderOpaque->error() << endl;
+    if (!d->TessellationControlShader->compile())
+      cout << d->TessellationControlShader->error() << endl; 
+    if (!d->TessellationEvaluationShader->compile())
+      cout << d->TessellationEvaluationShader->error() << endl;
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
@@ -125,6 +147,10 @@ void MeshGeometry::update()
     d->programOpaque->attachShader(*d->fragmentShaderOpaque);
     if (!d->programOpaque->link())
       cout << d->programOpaque->error() << endl;
+
+    /*
+    will create shader program for tessellation shader
+    */
   }
 }
 

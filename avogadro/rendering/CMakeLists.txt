@@ -106,6 +106,8 @@ set(shader_files
   "mesh_fs.glsl"
   "mesh_opaque_fs.glsl"
   "mesh_vs.glsl"
+  "mesh_tcs.glsl"
+  "mesh_tev.glsl"
   "solid_vs.glsl"
   "solid_first_fs.glsl"
   "spheres_fs.glsl"
