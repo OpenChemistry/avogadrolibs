@@ -84,7 +84,8 @@ inline GLenum lookupTextureUnit(GLint index)
 } // end anon namespace
 
 ShaderProgram::ShaderProgram()
-  : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false)
+  : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false),
+    m_tcsShader(0), m_tevShader(0)
 {
   initializeTextureUnits();
 }
@@ -129,6 +130,18 @@ bool ShaderProgram::attachShader(const Shader& shader)
                      static_cast<GLuint>(m_fragmentShader));
     }
     m_fragmentShader = shader.handle();
+  } else if(shader.type() == Shader::TessellationControlShader) {
+    if (m_tcsShader != 0){
+      glDetachShader(static_cast<GLuint>(m_handle),
+      static_cast<GLuint>(m_tcsShader));
+    } 
+    m_tcsShader = shader.handle();
+  } else if(shader.type() == Shader::TessellationEvaluationShader) {
+    if (m_tevShader != 0){
+      glDetachShader(static_cast<GLuint>(m_handle),
+      static_cast<GLuint>(m_tevShader));
+    } 
+    m_tevShader = shader.handle();
   } else {
     m_error = "Unknown shader type encountered - this should not happen.";
     return false;
@@ -173,6 +186,26 @@ bool ShaderProgram::detachShader(const Shader& shader)
         glDetachShader(static_cast<GLuint>(m_handle),
                        static_cast<GLuint>(shader.handle()));
         m_fragmentShader = 0;
+        return true;
+      }
+    case Shader::TessellationControlShader:
+      if(m_tcsShader != shader.handle()){
+        m_error = "The supplied shader was not attached to this program.";     
+        return false;
+      } else{
+        glDetachShader(static_cast<GLuint>(m_handle),
+                       static_cast<GLuint>(shader.handle()));    
+        m_tcsShader = 0;
+        return true;
+      }
+    case Shader::TessellationEvaluationShader:
+      if(m_tevShader != shader.handle()){
+        m_error = "The supplied shader was not attached to this program.";     
+        return false;
+      } else{
+        glDetachShader(static_cast<GLuint>(m_handle),
+                       static_cast<GLuint>(shader.handle()));    
+        m_tevShader = 0;
         return true;
       }
     default:

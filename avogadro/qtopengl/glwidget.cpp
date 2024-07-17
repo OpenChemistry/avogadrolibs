@@ -15,19 +15,20 @@
 
 #include <avogadro/rendering/camera.h>
 
+#include <QAction>
+#include <QDebug>
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QAction>
-#include <QtWidgets/QApplication>
 #include <QtGui/QWindow>
+#include <QtWidgets/QApplication>
 
 namespace Avogadro::QtOpenGL {
 
 GLWidget::GLWidget(QWidget* p)
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
-    m_renderTimer(nullptr)
+    m_renderTimer(nullptr), m_logger(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins,
@@ -169,7 +170,9 @@ void GLWidget::setDefaultTool(const QString& name)
 {
   foreach (QtGui::ToolPlugin* tool, m_tools) {
     QAction* toolAction = tool->activateAction();
-    if (tool->name() == name || (toolAction && toolAction->text() == name)) {
+
+    if (tool->objectName() == name || tool->name() == name ||
+        (toolAction && toolAction->text() == name)) {
       setDefaultTool(tool);
       return;
     }
@@ -215,11 +218,46 @@ void GLWidget::updateTimeout()
   update();
 }
 
+void GLWidget::logMessage(const QOpenGLDebugMessage& debugMessage)
+{
+  qDebug() << "  OpenGL: " << debugMessage;
+}
+
 void GLWidget::initializeGL()
 {
   m_renderer.initialize();
-  if (!m_renderer.isValid())
+
+  if (!m_renderer.isValid()) {
+    qWarning("Failed to initialize the renderer.");
+    qWarning() << m_renderer.error().c_str();
     emit rendererInvalid();
+  } else {
+    qDebug() << "     Renderer initialized.";
+  }
+
+  // check the surface format
+  QSurfaceFormat format = this->format();
+  qDebug() << "     Surface format: " << format.majorVersion() << "."
+           << format.minorVersion();
+  // compatibility or core profile?
+  if (format.profile() == QSurfaceFormat::CompatibilityProfile)
+    qDebug() << "     Compatibility profile";
+  else if (format.profile() == QSurfaceFormat::CoreProfile)
+    qDebug() << "     Core profile";
+
+  // multisampling?
+  if (format.samples() > 0)
+    qDebug() << "     Multisampling: " << format.samples();
+
+  // initialize the logger
+  m_logger = new QOpenGLDebugLogger(this);
+  if (m_logger->initialize()) {
+    qDebug() << "     OpenGL debug logger initialized.";
+
+    connect(m_logger, &QOpenGLDebugLogger::messageLogged, this,
+            &GLWidget::logMessage);
+    m_logger->startLogging();
+  }
 }
 
 void GLWidget::resizeGL(int width_, int height_)
@@ -232,6 +270,15 @@ void GLWidget::resizeGL(int width_, int height_)
 void GLWidget::paintGL()
 {
   m_renderer.render();
+
+  // make sure the context is still good
+  if (m_renderer.isValid()) {
+    auto* context = QOpenGLContext::currentContext();
+    if (context) {
+      qDebug() << "  OGL Context" << context->isValid() << " fbo "
+               << context->defaultFramebufferObject();
+    }
+  }
 }
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
@@ -332,4 +379,4 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
     QOpenGLWidget::keyReleaseEvent(e);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL

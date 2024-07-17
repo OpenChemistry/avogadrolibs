@@ -12,8 +12,10 @@
 #include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
-#include <QPointer>
 #include <QOpenGLWidget>
+#include <QPointer>
+
+#include <QOpenGLDebugLogger>
 
 class QTimer;
 
@@ -112,6 +114,11 @@ public slots:
   void updateScene();
 
   /**
+   * OpenGL Error Message logged
+   */
+  void logMessage(const QOpenGLDebugMessage& debugMessage);
+
+  /**
    * Clear the contents of the scene.
    */
   void clearScene();
@@ -194,9 +201,10 @@ private:
   QtGui::ScenePluginModel m_scenePlugins;
 
   QTimer* m_renderTimer;
+  QOpenGLDebugLogger* m_logger;
 };
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_GLWIDGET_H

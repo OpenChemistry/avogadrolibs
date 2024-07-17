@@ -41,7 +41,17 @@ bool Shader::compile()
     m_handle = 0;
   }
 
-  GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+GLenum type_;
+if (m_type == Vertex) {
+    type_ = GL_VERTEX_SHADER;
+} else if (m_type == Fragment) {
+    type_ = GL_FRAGMENT_SHADER;
+} else if(m_type == TessellationControlShader) {
+    type_ = GL_TESS_CONTROL_SHADER;
+} else if(m_type == TessellationEvaluationShader) {
+    type_ = GL_TESS_EVALUATION_SHADER;
+}
+
   GLuint handle_ = glCreateShader(type_);
   const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
   glShaderSource(handle_, 1, &source_, nullptr);
