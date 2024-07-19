@@ -55,7 +55,6 @@ public:
   inline static Shader* TessellationEvaluationShader = nullptr;
   inline static ShaderProgram* program = nullptr;
   inline static ShaderProgram* programOpaque = nullptr;
-
   size_t numberOfVertices;
   size_t numberOfIndices;
 };
@@ -115,7 +114,7 @@ void MeshGeometry::update()
 
     d->TessellationEvaluationShader = new Shader;
     d->TessellationEvaluationShader->setType(Shader::TessellationEvaluation);
-    d->TessellationControlShader->setSource(mesh_tev);
+    d->TessellationEvaluationShader->setSource(mesh_tev);
 
     if (!d->vertexShader->compile())
       cout << d->vertexShader->error() << endl;
@@ -123,14 +122,22 @@ void MeshGeometry::update()
       cout << d->fragmentShader->error() << endl;
     if (!d->fragmentShaderOpaque->compile())
       cout << d->fragmentShaderOpaque->error() << endl;
-    if (!d->TessellationControlShader->compile())
+    if (!d->TessellationControlShader->compile()){
       cout << d->TessellationControlShader->error() << endl; 
-    if (!d->TessellationEvaluationShader->compile())
+    }else{
+      cout << "Success tess-control-shader" <<endl;   
+    }
+    if (!d->TessellationEvaluationShader->compile()){
       cout << d->TessellationEvaluationShader->error() << endl;
+    }else{
+      cout << "Success tess-evaluation-shader" <<endl;
+    }
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
     d->program->attachShader(*d->vertexShader);
+    // d->program->attachShader(*d->TessellationControlShader);
+    // d->program->attachShader(*d->TessellationEvaluationShader);
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
       cout << d->program->error() << endl;
@@ -138,6 +145,8 @@ void MeshGeometry::update()
     if (d->programOpaque == nullptr)
       d->programOpaque = new ShaderProgram;
     d->programOpaque->attachShader(*d->vertexShader);
+    // d->programOpaque->attachShader(*d->TessellationControlShader);
+    // d->programOpaque->attachShader(*d->TessellationEvaluationShader);
     d->programOpaque->attachShader(*d->fragmentShaderOpaque);
     if (!d->programOpaque->link())
       cout << d->programOpaque->error() << endl;
@@ -177,20 +186,6 @@ void MeshGeometry::render(const Camera& camera)
                                  ShaderProgram::NoNormalize)) {
     cout << program->error() << endl;
   }
-  if (!program->enableAttributeArray("color"))
-    cout << program->error() << endl;
-  if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
-                                 sizeof(PackedVertex), UCharType, 4,
-                                 ShaderProgram::Normalize)) {
-    cout << program->error() << endl;
-  }
-  if (!program->enableAttributeArray("normal"))
-    cout << program->error() << endl;
-  if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
-                                 sizeof(PackedVertex), FloatType, 3,
-                                 ShaderProgram::NoNormalize)) {
-    cout << program->error() << endl;
-  }
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
@@ -199,22 +194,22 @@ void MeshGeometry::render(const Camera& camera)
   if (!program->setUniformValue("projection", camera.projection().matrix())) {
     cout << program->error() << endl;
   }
-  Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
-  if (!program->setUniformValue("normalMatrix", normalMatrix))
-    std::cout << program->error() << std::endl;
 
-  // Render the loaded spheres using the shader and bound VBO.
-  glDrawRangeElements(GL_TRIANGLES, 0,
-                      static_cast<GLuint>(d->numberOfVertices - 1),
-                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(0));
+  // Needed correction.
+
+  // glPatchParameteri(GL_PATCH_VERTICES, 4);
+
+  // Needed Correction.
+
+  // glDrawRangeElements(GL_TRIANGLES, 0,
+  //                     static_cast<GLuint>(d->numberOfVertices - 1),
+  //                     static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
+  //                     reinterpret_cast<const GLvoid*>(0));
 
   d->vbo.release();
   d->ibo.release();
 
-  program->disableAttributeArray("vector");
-  program->disableAttributeArray("color");
-  program->disableAttributeArray("normal");
+  program->disableAttributeArray("vertex");
 
   program->release();
 }
