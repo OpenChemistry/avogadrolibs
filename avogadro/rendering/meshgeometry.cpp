@@ -136,8 +136,8 @@ void MeshGeometry::update()
     if (d->program == nullptr)
       d->program = new ShaderProgram;
     d->program->attachShader(*d->vertexShader);
-    // d->program->attachShader(*d->TessellationControlShader);
-    // d->program->attachShader(*d->TessellationEvaluationShader);
+    d->program->attachShader(*d->TessellationControlShader);
+    d->program->attachShader(*d->TessellationEvaluationShader);
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
       cout << d->program->error() << endl;
@@ -145,8 +145,8 @@ void MeshGeometry::update()
     if (d->programOpaque == nullptr)
       d->programOpaque = new ShaderProgram;
     d->programOpaque->attachShader(*d->vertexShader);
-    // d->programOpaque->attachShader(*d->TessellationControlShader);
-    // d->programOpaque->attachShader(*d->TessellationEvaluationShader);
+    d->programOpaque->attachShader(*d->TessellationControlShader);
+    d->programOpaque->attachShader(*d->TessellationEvaluationShader);
     d->programOpaque->attachShader(*d->fragmentShaderOpaque);
     if (!d->programOpaque->link())
       cout << d->programOpaque->error() << endl;
@@ -197,14 +197,14 @@ void MeshGeometry::render(const Camera& camera)
 
   // Needed correction.
 
-  // glPatchParameteri(GL_PATCH_VERTICES, 4);
+  glPatchParameteri(GL_PATCH_VERTICES, 4);
 
   // Needed Correction.
 
-  // glDrawRangeElements(GL_TRIANGLES, 0,
-  //                     static_cast<GLuint>(d->numberOfVertices - 1),
-  //                     static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-  //                     reinterpret_cast<const GLvoid*>(0));
+  glDrawRangeElements(GL_TRIANGLES, 0,
+                      static_cast<GLuint>(d->numberOfVertices - 1),
+                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
+                      reinterpret_cast<const GLvoid*>(0));
 
   d->vbo.release();
   d->ibo.release();
