@@ -139,8 +139,12 @@ void MeshGeometry::update()
     d->program->attachShader(*d->TessellationControlShader);
     d->program->attachShader(*d->TessellationEvaluationShader);
     d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
+    if (!d->program->link()){
       cout << d->program->error() << endl;
+    }else{
+      cout << "shader program linked non-opaque" << endl; 
+    }
+    
 
     if (d->programOpaque == nullptr)
       d->programOpaque = new ShaderProgram;
@@ -148,8 +152,11 @@ void MeshGeometry::update()
     d->programOpaque->attachShader(*d->TessellationControlShader);
     d->programOpaque->attachShader(*d->TessellationEvaluationShader);
     d->programOpaque->attachShader(*d->fragmentShaderOpaque);
-    if (!d->programOpaque->link())
+    if (!d->programOpaque->link()){
       cout << d->programOpaque->error() << endl;
+    }else{
+      cout << "shader program linked" << endl; 
+    }
 
     /*
     will create shader program for tessellation shader
@@ -186,6 +193,20 @@ void MeshGeometry::render(const Camera& camera)
                                  ShaderProgram::NoNormalize)) {
     cout << program->error() << endl;
   }
+  if (!program->enableAttributeArray("color"))
+    cout <<  program->error() << endl;
+  if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
+                                 sizeof(PackedVertex), UCharType, 4,
+                                 ShaderProgram::Normalize)) {
+    cout <<  program->error() << endl;
+  }
+  if (!program->enableAttributeArray("normal"))
+    cout << program->error() << endl;
+  if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
+                                 sizeof(PackedVertex), FloatType, 3,
+                                 ShaderProgram::NoNormalize)) {
+    cout << program->error() << endl;
+  }
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
@@ -194,22 +215,25 @@ void MeshGeometry::render(const Camera& camera)
   if (!program->setUniformValue("projection", camera.projection().matrix())) {
     cout << program->error() << endl;
   }
+  Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
+  if (!program->setUniformValue("normalMatrix", normalMatrix))
+    std::cout << program->error() << std::endl;
+   
 
-  // Needed correction.
-
-  glPatchParameteri(GL_PATCH_VERTICES, 4);
-
-  // Needed Correction.
-
-  glDrawRangeElements(GL_TRIANGLES, 0,
-                      static_cast<GLuint>(d->numberOfVertices - 1),
-                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(0));
+  GLint MaxPatchVertices = 0;
+  glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
+  cout << "max supported patch" << MaxPatchVertices << endl;
+  
+  glPatchParameteri(GL_PATCH_VERTICES, 3);
+  glDrawElements(GL_PATCHES, static_cast<GLsizei>(d->numberOfIndices),
+                 GL_UNSIGNED_INT, reinterpret_cast<const GLvoid*>(0));
 
   d->vbo.release();
   d->ibo.release();
 
   program->disableAttributeArray("vertex");
+  program->disableAttributeArray("color");
+  program->disableAttributeArray("normal");
 
   program->release();
 }
