@@ -1,5 +1,5 @@
-#version 430
-// precision highp float;
+#version 400
+precision highp float;
 
 in vec3 fnormal;
 in vec4 outColor;
