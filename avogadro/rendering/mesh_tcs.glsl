@@ -1,100 +1,79 @@
-#version 400
-precision highp float; // precision qualifier
+#version 410 core
+precision highp float;
 
-// outputing a single CP
 layout(vertices = 1) out;
 
-in vec3 WorldPos_CS_in[];                                                                       
-in vec2 TexCoord_CS_in[];                                                                       
-in vec3 fnormal[];   
+in vec3 vsNormal[];
+in vec3 WorldPos_CS_in[];          
+in vec2 TexCoord_CS_in[];
+in vec3 teVertex[];
 
-struct OutputPatch {
-    vec3 WorldPos_B030;
-    vec3 WorldPos_B021;
-    vec3 WorldPos_B012;
-    vec3 WorldPos_B003;
-    vec3 WorldPos_B102;
-    vec3 WorldPos_B201;
-    vec3 WorldPos_B300;
-    vec3 WorldPos_B210;
-    vec3 WorldPos_B120;
-    vec3 WorldPos_B111;
+patch out vec3 WorldPos_B030;
+patch out vec3 WorldPos_B012;
+patch out vec3 WorldPos_B021;
+patch out vec3 WorldPos_B003;
+patch out vec3 WorldPos_B102;
+patch out vec3 WorldPos_B201;
+patch out vec3 WorldPos_B300;
+patch out vec3 WorldPos_B210;
+patch out vec3 WorldPos_B120;
+patch out vec3 WorldPos_B111;
 
-    vec3 Normal[3];
-    vec2 TexCoord[3];
-};
-
-const float gTessellationLevel = 4.0; // Constant declaration is fine
-
-// encapsulated all the data of the output patch in the OutputPatch 
-// struct above and declared an output variable called oPatch of that type
-
-out patch OutputPatch oPatch;
+patch out vec2 tcsVertex[3];
+patch out vec3 tcsNormal[3];
+patch out vec3 tevVertex[3];
 
 
-// This function is used by CalcPositions() to project a midpoint on 
-// the plane defined by the nearest vertex and its normal.
-vec3 ProjectToPlane(vec3 Point, vec3 PlanePoint, vec3 PlaneNormal) {
+vec3 ProjectToPlane(vec3 Point, vec3 PlanePoint, vec3 PlaneNormal)
+{
     vec3 v = Point - PlanePoint;
     float Len = dot(v, PlaneNormal);
     vec3 d = Len * PlaneNormal;
     return (Point - d);
-}       
-
-void CalcPositions() {
-    // The original vertices stay the same
-    oPatch.WorldPos_B030 = WorldPos_CS_in[0];
-    oPatch.WorldPos_B003 = WorldPos_CS_in[1];
-    oPatch.WorldPos_B300 = WorldPos_CS_in[2];
-    
-    // Edges are named according to the opposing vertex
-    vec3 EdgeB300 = oPatch.WorldPos_B003 - oPatch.WorldPos_B030;
-    vec3 EdgeB030 = oPatch.WorldPos_B300 - oPatch.WorldPos_B003;
-    vec3 EdgeB003 = oPatch.WorldPos_B030 - oPatch.WorldPos_B300;
-    
-    // Generate two midpoints on each edge
-    oPatch.WorldPos_B021 = oPatch.WorldPos_B030 + EdgeB300 / 3.0;
-    oPatch.WorldPos_B012 = oPatch.WorldPos_B030 + EdgeB300 * 2.0 / 3.0;
-    oPatch.WorldPos_B102 = oPatch.WorldPos_B003 + EdgeB030 / 3.0;
-    oPatch.WorldPos_B201 = oPatch.WorldPos_B003 + EdgeB030 * 2.0 / 3.0;
-    oPatch.WorldPos_B210 = oPatch.WorldPos_B300 + EdgeB003 / 3.0;
-    oPatch.WorldPos_B120 = oPatch.WorldPos_B300 + EdgeB003 * 2.0 / 3.0;
-    
-    // Project each midpoint on the plane defined by the nearest vertex and its normal
-    oPatch.WorldPos_B021 = ProjectToPlane(oPatch.WorldPos_B021, oPatch.WorldPos_B030, oPatch.Normal[0]);
-    oPatch.WorldPos_B012 = ProjectToPlane(oPatch.WorldPos_B012, oPatch.WorldPos_B003, oPatch.Normal[1]);
-    oPatch.WorldPos_B102 = ProjectToPlane(oPatch.WorldPos_B102, oPatch.WorldPos_B003, oPatch.Normal[1]);
-    oPatch.WorldPos_B201 = ProjectToPlane(oPatch.WorldPos_B201, oPatch.WorldPos_B300, oPatch.Normal[2]);
-    oPatch.WorldPos_B210 = ProjectToPlane(oPatch.WorldPos_B210, oPatch.WorldPos_B300, oPatch.Normal[2]);
-    oPatch.WorldPos_B120 = ProjectToPlane(oPatch.WorldPos_B120, oPatch.WorldPos_B030, oPatch.Normal[0]);
-    
-    // Handle the center
-    vec3 Center = (oPatch.WorldPos_B003 + oPatch.WorldPos_B030 + oPatch.WorldPos_B300) / 3.0;
-    oPatch.WorldPos_B111 = (oPatch.WorldPos_B021 + oPatch.WorldPos_B012 + oPatch.WorldPos_B102 +
-                            oPatch.WorldPos_B201 + oPatch.WorldPos_B210 + oPatch.WorldPos_B120) / 6.0;
-    oPatch.WorldPos_B111 += (oPatch.WorldPos_B111 - Center) / 2.0;
 }
-    
-void main(void) {
 
-    // The three normals and texture coordinates are copied 
-    // as-is from the input into the output patch.
+void CalcPositions()
+{
+    WorldPos_B030 = WorldPos_CS_in[0];
+    WorldPos_B003 = WorldPos_CS_in[1];
+    WorldPos_B300 = WorldPos_CS_in[2];
 
+    vec3 EdgeB300 = WorldPos_B003 - WorldPos_B030;
+    vec3 EdgeB030 = WorldPos_B300 - WorldPos_B003;
+    vec3 EdgeB003 = WorldPos_B030 - WorldPos_B300;
+
+    WorldPos_B021 = WorldPos_B030 + EdgeB300 / 3.0;
+    WorldPos_B012 = WorldPos_B030 + EdgeB300 * 2.0 / 3.0;
+    WorldPos_B102 = WorldPos_B003 + EdgeB030 / 3.0;
+    WorldPos_B201 = WorldPos_B003 + EdgeB030 * 2.0 / 3.0;
+    WorldPos_B210 = WorldPos_B300 + EdgeB003 / 3.0;
+    WorldPos_B120 = WorldPos_B300 + EdgeB003 * 2.0 / 3.0;
+
+    WorldPos_B021 = ProjectToPlane(WorldPos_B021, WorldPos_B030, normalize(vsNormal[0]));
+    WorldPos_B012 = ProjectToPlane(WorldPos_B012, WorldPos_B003, normalize(vsNormal[1]));
+    WorldPos_B102 = ProjectToPlane(WorldPos_B102, WorldPos_B003, normalize(vsNormal[1]));
+    WorldPos_B201 = ProjectToPlane(WorldPos_B201, WorldPos_B300, normalize(vsNormal[2]));
+    WorldPos_B210 = ProjectToPlane(WorldPos_B210, WorldPos_B300, normalize(vsNormal[2]));
+    WorldPos_B120 = ProjectToPlane(WorldPos_B120, WorldPos_B030, normalize(vsNormal[0]));
+
+    vec3 Center = (WorldPos_B003 + WorldPos_B030 + WorldPos_B300) / 3.0;
+    WorldPos_B111 = (WorldPos_B021 + WorldPos_B012 + WorldPos_B102 +
+                     WorldPos_B201 + WorldPos_B210 + WorldPos_B120) / 6.0;
+    WorldPos_B111 += (WorldPos_B111 - Center) / 2.0;
+}
+
+void main()
+{
     for (int i = 0 ; i < 3 ; i++) {
-        oPatch.Normal[i] = fnormal[i];
-        oPatch.TexCoord[i] = TexCoord_CS_in[i];
-    }  
-
-    // The 10 CPs that we are going to generate contain only a position value.
-    // This is done in a dedicated function called CalcPositions()
+       tcsVertex[i] = TexCoord_CS_in[i];
+       tevVertex[i] = teVertex[i];
+       tcsNormal[i] = vsNormal[i];
+    }
 
     CalcPositions();
 
-    // Calculate the tessellation levels
-    gl_TessLevelOuter[0] = gTessellationLevel;
-    gl_TessLevelOuter[1] = gTessellationLevel;
-    gl_TessLevelOuter[2] = gTessellationLevel;
-    gl_TessLevelOuter[3] = gTessellationLevel;
-    gl_TessLevelInner[0] = gTessellationLevel;
-    gl_TessLevelInner[1] = gTessellationLevel;
+    gl_TessLevelOuter[0] = 40.0; 
+    gl_TessLevelOuter[1] = 40.0;
+    gl_TessLevelOuter[2] = 40.0;
+    gl_TessLevelInner[0] = 40.0;
 }

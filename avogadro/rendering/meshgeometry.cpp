@@ -193,13 +193,6 @@ void MeshGeometry::render(const Camera& camera)
                                  ShaderProgram::NoNormalize)) {
     cout << program->error() << endl;
   }
-  if (!program->enableAttributeArray("color"))
-    cout <<  program->error() << endl;
-  if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
-                                 sizeof(PackedVertex), UCharType, 4,
-                                 ShaderProgram::Normalize)) {
-    cout <<  program->error() << endl;
-  }
   if (!program->enableAttributeArray("normal"))
     cout << program->error() << endl;
   if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),

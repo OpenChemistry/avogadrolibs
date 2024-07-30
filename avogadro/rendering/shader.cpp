@@ -55,6 +55,9 @@ switch (m_type) {
     case TessellationEvaluation:
         type_ = GL_TESS_EVALUATION_SHADER;
         break;
+    default:
+      m_error = "Unknown shader type.";
+      return false;
 }
 
   GLuint handle_ = glCreateShader(type_);
