@@ -1,4 +1,4 @@
-#version 410 core
+#version 400
 precision highp float;
 
 layout(triangles, equal_spacing, ccw) in;
