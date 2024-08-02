@@ -7,6 +7,7 @@ in vec3 vsNormal[];
 in vec3 WorldPos_CS_in[];          
 in vec2 TexCoord_CS_in[];
 in vec3 teVertex[];
+in vec4 vsColor[];
 
 patch out vec3 WorldPos_B030;
 patch out vec3 WorldPos_B012;
@@ -22,7 +23,7 @@ patch out vec3 WorldPos_B111;
 patch out vec2 tcsVertex[3];
 patch out vec3 tcsNormal[3];
 patch out vec3 tevVertex[3];
-
+patch out vec4 tcsColor[3];
 
 vec3 ProjectToPlane(vec3 Point, vec3 PlanePoint, vec3 PlaneNormal)
 {
@@ -68,12 +69,14 @@ void main()
        tcsVertex[i] = TexCoord_CS_in[i];
        tevVertex[i] = teVertex[i];
        tcsNormal[i] = vsNormal[i];
-    }
+       tcsColor[i] = vsColor[i];
 
     CalcPositions();
 
-    gl_TessLevelOuter[0] = 40.0; 
-    gl_TessLevelOuter[1] = 40.0;
-    gl_TessLevelOuter[2] = 40.0;
-    gl_TessLevelInner[0] = 40.0;
+    gl_TessLevelOuter[0] = 50;
+    gl_TessLevelOuter[1] = 50;
+    gl_TessLevelOuter[2] = 50;
+    gl_TessLevelOuter[3] = 50;
+    gl_TessLevelInner[0] = 50;
+    gl_TessLevelInner[1] = 50;
 }
