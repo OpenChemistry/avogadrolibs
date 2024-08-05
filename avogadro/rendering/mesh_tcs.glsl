@@ -70,6 +70,7 @@ void main()
        tevVertex[i] = teVertex[i];
        tcsNormal[i] = vsNormal[i];
        tcsColor[i] = vsColor[i];
+    }
 
     CalcPositions();
 
