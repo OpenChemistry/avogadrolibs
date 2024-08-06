@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-06 07:33+0000\n"
+"PO-Revision-Date: 2024-08-07 08:09+0000\n"
 "Last-Translator: Ricky From Hong Kong <lamricky11@hotmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hant/>\n"
@@ -8325,7 +8325,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:123
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
 msgid " eV"
-msgstr " e)"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
