@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # crlambda <lm3c@protonmail.ch>, 2021.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Ricky From Hong Kong <lamricky11@hotmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-06 07:33+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Ricky From Hong Kong <lamricky11@hotmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -1384,9 +1385,8 @@ msgid "Change Bond Order"
 msgstr "改變鍵級"
 
 #: qtgui/rwmolecule.cpp:354
-#, fuzzy
 msgid "Update Bonds"
-msgstr " 貼近鍵"
+msgstr "更新鍵"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
@@ -3640,10 +3640,8 @@ msgid "Interact with online databases, query structures etc."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:340
-#, fuzzy
-#| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 #, fuzzy
