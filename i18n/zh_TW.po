@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-07 08:09+0000\n"
+"PO-Revision-Date: 2024-08-12 18:09+0000\n"
 "Last-Translator: Ricky From Hong Kong <lamricky11@hotmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/zh_Hant/>\n"
@@ -1573,7 +1573,7 @@ msgstr ""
 #: qtplugins/apbs/apbs.cpp:36
 #, fuzzy
 msgid "Open Output File…"
-msgstr "開啟 WFN 檔"
+msgstr "開啟 WFN 檔…"
 
 #: qtplugins/apbs/apbs.cpp:49 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:52
@@ -1702,9 +1702,8 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:43
 #: qtplugins/applycolors/applycolors.cpp:64
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "自訂顏色"
+msgstr "自訂顏色…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
 #, fuzzy
@@ -1726,10 +1725,8 @@ msgid "By Chain"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:74
-#, fuzzy
-#| msgid "Partial charge"
 msgid "By Partial Charge…"
-msgstr "部份電荷"
+msgstr "部份電荷…"
 
 #: qtplugins/applycolors/applycolors.cpp:79
 #, fuzzy
@@ -2275,15 +2272,12 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:353
 #: qtplugins/templatetool/templatetoolwidget.cpp:361
 #: qtplugins/templatetool/templatetoolwidget.cpp:424:2088
-#, fuzzy
-#| msgid "Other"
 msgid "Other…"
-msgstr "其他"
+msgstr "其他…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "直角坐標編輯器"
+msgstr "直角坐標編輯器（&C）…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
@@ -2694,9 +2688,8 @@ msgid "Toggle Unit Cell"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:52
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "加入單位晶格 (&U)"
+msgstr "加入單位晶格…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -2711,9 +2704,8 @@ msgid "Scale Cell &Volume…"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:74
-#, fuzzy
 msgid "Build &Supercell…"
-msgstr "超級晶格"
+msgstr "超級晶格（&S）…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2965,9 +2957,8 @@ msgid "Forces"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:113
-#, fuzzy
 msgid "Configure…"
-msgstr "設定力場..."
+msgstr "設定力場…"
 
 #: qtplugins/forcefield/forcefield.cpp:125
 #, fuzzy
@@ -3062,10 +3053,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
-#, fuzzy
-#| msgid "&GAMESS"
 msgid "&GAMESS…"
-msgstr "GAMESS (原子分子之電子結構系統)"
+msgstr "GAMESS（原子分子之電子結構系統）（&G）…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 #, fuzzy
@@ -3199,10 +3188,8 @@ msgid "&Insert"
 msgstr "插入"
 
 #: qtplugins/insertdna/insertdna.cpp:79
-#, fuzzy
-#| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "插入"
+msgstr "插入 DNA／RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 #, fuzzy
@@ -3234,10 +3221,8 @@ msgstr ""
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
-#, fuzzy
-#| msgid "Molecule"
 msgid "Insert Molecule…"
-msgstr "分子"
+msgstr "加入分子…"
 
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
@@ -3255,15 +3240,12 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "分子"
+msgstr "分子…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
-#, fuzzy
 msgid "Crystal…"
-msgstr "貼上結晶"
+msgstr "結晶…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
@@ -3410,9 +3392,8 @@ msgid "Render atoms as licorice / sticks."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
-#, fuzzy
 msgid "SMILES…"
-msgstr "SMILES 文字化學式..."
+msgstr "SMILES 文字化學式…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
@@ -3503,9 +3484,8 @@ msgid "Render polygon meshes."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:21
-#, fuzzy
 msgid "&Molecular…"
-msgstr "分子軌域"
+msgstr "分子的（&M）…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:33
 msgid "View general properties of a molecule."
@@ -3664,15 +3644,12 @@ msgid "Chalcogen"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:53
-#, fuzzy
 msgid "Configure Force Field…"
-msgstr "設定力場..."
+msgstr "設定力場…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "找尋構形異構物"
+msgstr "找尋構形異構物…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 #, fuzzy
@@ -3680,9 +3657,8 @@ msgid "Perceive Bonds"
 msgstr "理解鍵嗎?"
 
 #: qtplugins/openbabel/openbabel.cpp:77
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "依照 pH 加上氫"
+msgstr "依照 pH 加上氫…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -3768,9 +3744,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
-#, fuzzy
 msgid "Updating molecule…"
-msgstr "沒有設定分子"
+msgstr "正在更新分子…"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
@@ -3829,9 +3804,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:761
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "沒有設定分子"
+msgstr "正在從 Open Babel 更新分子…"
 
 #: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
 msgid "Cannot add hydrogens with Open Babel."
@@ -4214,9 +4188,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr "PLY 渲染…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4239,9 +4212,8 @@ msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr "POV-Ray 渲染…"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4417,33 +4389,25 @@ msgid "Coil"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:27
-#, fuzzy
-#| msgid "Atom Properties"
 msgid "Atom Properties…"
-msgstr "原子的性質"
+msgstr "原子的性質…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
-#, fuzzy
-#| msgid "Bond Properties"
 msgid "Bond Properties…"
-msgstr "鍵的性質"
+msgstr "鍵的性質…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
-#, fuzzy
-#| msgid "Angle Properties"
 msgid "Angle Properties…"
-msgstr "鍵角的性質"
+msgstr "鍵角的性質…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
-#, fuzzy
-#| msgid "Torsion Properties"
 msgid "Torsion Properties…"
-msgstr "扭力的性質"
+msgstr "扭力的性質…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 #, fuzzy
 msgid "Residue Properties…"
-msgstr "分子性質"
+msgstr "分子性質…"
 
 #: qtplugins/propertytables/propertytables.cpp:67
 #, fuzzy
@@ -4508,10 +4472,8 @@ msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "&匯出"
+msgstr "匯出…"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4525,7 +4487,7 @@ msgstr ""
 #: qtplugins/qtaim/qtaimextension.cpp:46
 #, fuzzy
 msgid "Molecular Graph…"
-msgstr "分子軌域"
+msgstr "分子軌域…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
 msgid "Molecular Graph with Lone Pairs…"
@@ -4534,7 +4496,7 @@ msgstr ""
 #: qtplugins/qtaim/qtaimextension.cpp:60
 #, fuzzy
 msgid "Atomic Charge…"
-msgstr "形式電荷"
+msgstr "形式電荷…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:109
 msgid "Open WFN File"
@@ -4610,10 +4572,8 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
-#| msgid "Color by Element"
 msgid "Select by Element…"
-msgstr "依元素標示顏色"
+msgstr "依元素選擇…"
 
 #: qtplugins/select/select.cpp:58
 #, fuzzy
