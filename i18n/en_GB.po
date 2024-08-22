@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-06-28 22:09+0000\n"
+"PO-Revision-Date: 2024-07-06 17:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -2972,7 +2972,7 @@ msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:246
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "No atoms provided for optimisation"
 
 #: qtplugins/forcefield/forcefield.cpp:374
 #, qt-format
@@ -7668,7 +7668,7 @@ msgstr "18"
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgctxt "Size in pixels of the line drawing the spectra"
 msgid "Line Width:"
-msgstr ""
+msgstr "Line Width:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
