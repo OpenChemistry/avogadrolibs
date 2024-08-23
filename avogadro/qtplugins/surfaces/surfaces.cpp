@@ -376,86 +376,101 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   if (!m_cube)
     m_cube = m_molecule->addCube();
 
-  QFuture future = QtConcurrent::run([=]() {
-    double probeRadius = 0.0;
-    switch (type) {
-      case VanDerWaals:
-        m_cube->setCubeType(Core::Cube::Type::VdW);
-        break;
-      case SolventAccessible:
-        m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
-      case SolventExcluded:
-        probeRadius = 1.4;
-        m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
-        break;
-      default:
-        break;
-    }
-
-    // first, make a list of all atom positions and radii
-    Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    auto* atoms = new std::vector<std::pair<Vector3, double>>();
-    double max_radius = probeRadius;
-    QtGui::RWLayerManager layerManager;
-    for (size_t i = 0; i < m_molecule->atomCount(); i++) {
-      if (!layerManager.visible(m_molecule->layer(i)))
-        continue; // ignore invisible atoms
-      auto radius =
-        Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-      atoms->emplace_back(atomPositions[i], radius);
-      if (radius > max_radius)
-        max_radius = radius;
-    }
-
-    double padding = max_radius + probeRadius;
-    m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
-    m_cube->fill(-1.0);
-
-    const float res = resolution(defaultResolution);
-    const Vector3 min = m_cube->min();
-
-    // then, for each atom, set cubes around it up to a certain radius
-    QFuture innerFuture =
-      QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
-        double startPosX = in.first(0) - in.second;
-        double endPosX = in.first(0) + in.second;
-        int startIndexX = (startPosX - min(0)) / res;
-        int endIndexX = (endPosX - min(0)) / res + 1;
-        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-          double posX = indexX * res + min(0);
-          double radiusXsq = square(in.second) - square(posX - in.first(0));
-          if (radiusXsq < 0.0)
-            continue;
-          double radiusX = sqrt(radiusXsq);
-          double startPosY = in.first(1) - radiusX;
-          double endPosY = in.first(1) + radiusX;
-          int startIndexY = (startPosY - min(1)) / res;
-          int endIndexY = (endPosY - min(1)) / res + 1;
-          for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-            double posY = indexY * res + min(1);
-            double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-            if (lengthXYsq < 0.0)
-              continue;
-            double lengthXY = sqrt(lengthXYsq);
-            double startPosZ = in.first(2) - lengthXY;
-            double endPosZ = in.first(2) + lengthXY;
-            int startIndexZ = (startPosZ - min(2)) / res;
-            int endIndexZ = (endPosZ - min(2)) / res + 1;
-            m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
-                               1.0f);
-          }
-        }
-      });
-
-    innerFuture.waitForFinished();
+  // Start with 0.5 resolution (1st pass)
+  QFuture futureLowRes = QtConcurrent::run([=]() {
+    calculateEDTpass(type, 0.5);
   });
+  
+  // futureLowRes.waitForFinished();
 
-  // SolventExcluded requires an extra pass
-  if (type == SolventExcluded) {
-    m_performEDTStepWatcher.setFuture(future);
-  } else {
-    m_displayMeshWatcher.setFuture(future);
+  // Display the low-resolution mesh
+  m_displayMeshWatcher.setFuture(futureLowRes);
+  
+  // End with 0.1 resolution (2nd pass)
+
+  QFuture futureHighRes = QtConcurrent::run([=]() {
+    calculateEDTpass(type, 0.1); 
+  });
+  // Set the future for high-resolution mesh
+  m_displayMeshWatcher.setFuture(futureHighRes);
+}
+
+
+
+void Surfaces::calculateEDTpass(Type type, float defaultResolution)
+{
+  double probeRadius = 0.0;
+  switch (type) {
+    case VanDerWaals:
+      m_cube->setCubeType(Core::Cube::Type::VdW);
+      break;
+    case SolventAccessible:
+      probeRadius = 1.4;
+      m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
+      break;
+    case SolventExcluded:
+      probeRadius = 1.4;
+      m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
+      break;
+    default:
+      break;
   }
+
+  // first, make a list of all atom positions and radii
+  Array<Vector3> atomPositions = m_molecule->atomPositions3d();
+  auto* atoms = new std::vector<std::pair<Vector3, double>>();
+  double max_radius = probeRadius;
+  QtGui::RWLayerManager layerManager;
+  for (size_t i = 0; i < m_molecule->atomCount(); i++) {
+    if (!layerManager.visible(m_molecule->layer(i)))
+      continue; // ignore invisible atoms
+    auto radius =
+      Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+    atoms->emplace_back(atomPositions[i], radius);
+    if (radius > max_radius)
+      max_radius = radius;
+  }
+
+  double padding = max_radius + probeRadius;
+
+  const float res = resolution(defaultResolution);
+  m_cube->setLimits(*m_molecule, res, padding);
+  m_cube->fill(-1.0);
+  const Vector3 min = m_cube->min();
+
+  // then, for each atom, set cubes around it up to a certain radius
+  QFuture innerFuture =
+    QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
+      double startPosX = in.first(0) - in.second;
+      double endPosX = in.first(0) + in.second;
+      int startIndexX = (startPosX - min(0)) / res;
+      int endIndexX = (endPosX - min(0)) / res + 1;
+      for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+        double posX = indexX * res + min(0);
+        double radiusXsq = square(in.second) - square(posX - in.first(0));
+        if (radiusXsq < 0.0)
+          continue;
+        double radiusX = sqrt(radiusXsq);
+        double startPosY = in.first(1) - radiusX;
+        double endPosY = in.first(1) + radiusX;
+        int startIndexY = (startPosY - min(1)) / res;
+        int endIndexY = (endPosY - min(1)) / res + 1;
+        for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
+          double posY = indexY * res + min(1);
+          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+          if (lengthXYsq < 0.0)
+            continue;
+          double lengthXY = sqrt(lengthXYsq);
+          double startPosZ = in.first(2) - lengthXY;
+          double endPosZ = in.first(2) + lengthXY;
+          int startIndexZ = (startPosZ - min(2)) / res;
+          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
+                             1.0f);
+        }
+      }
+    });
+  innerFuture.waitForFinished();
 }
 
 void Surfaces::performEDTStep()

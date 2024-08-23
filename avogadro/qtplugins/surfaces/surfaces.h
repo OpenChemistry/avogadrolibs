@@ -91,6 +91,7 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT(Type type = Unknown, float defaultResolution = 0.0);
+  void calculateEDTpass(Type type = Unknown, float defaultResolution = 0.0);
   void performEDTStep(); // EDT step for SolventExcluded
   void calculateQM(Type type = Unknown, int index = -1, bool betaSpin = false,
                    float isoValue = 0.0, float defaultResolution = 0.0);
