@@ -332,6 +332,12 @@ float Surfaces::resolution(float specified)
   return r;
 }
 
+
+float inline square(float x)
+{
+  return x * x;
+}
+
 void Surfaces::calculateSurface()
 {
   if (!m_dialog)
@@ -363,9 +369,20 @@ void Surfaces::calculateSurface()
   }
 }
 
-float inline square(float x)
+void Surfaces::meshDisplaying(Type type)
 {
-  return x * x;
+  if (type == Unknown && m_dialog != nullptr)
+    type = m_dialog->surfaceType();
+
+  if (!m_cube)
+    m_cube = m_molecule->addCube();
+
+  // Start with 0.5 resolution (1st pass)
+  QFuture futureLowRes = QtConcurrent::run([=]() {
+    calculateEDTpass(type, 0.1);
+  });
+  
+  m_displayMeshWatcher.setFuture(futureLowRes);
 }
 
 void Surfaces::calculateEDT(Type type, float defaultResolution)
@@ -381,20 +398,60 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     calculateEDTpass(type, 0.5);
   });
   
-  // futureLowRes.waitForFinished();
-
-  // Display the low-resolution mesh
   m_displayMeshWatcher.setFuture(futureLowRes);
   
-  // End with 0.1 resolution (2nd pass)
-
-  QFuture futureHighRes = QtConcurrent::run([=]() {
-    calculateEDTpass(type, 0.1); 
-  });
-  // Set the future for high-resolution mesh
-  m_displayMeshWatcher.setFuture(futureHighRes);
 }
 
+
+void Surfaces::displayMesh()
+{
+  if (!m_cube)
+    return;
+
+  if (m_dialog != nullptr)
+    m_smoothingPasses = m_dialog->smoothingPassesValue();
+  else
+    m_smoothingPasses = 0;
+
+  if (!m_mesh1)
+    m_mesh1 = m_molecule->addMesh();
+  if (!m_meshGenerator1) {
+    m_meshGenerator1 = new QtGui::MeshGenerator;
+    connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
+  }
+  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
+
+  bool isMO = false;
+  // if it's from a file we should "play it safe"
+  if (m_cube->cubeType() == Cube::Type::MO ||
+      m_cube->cubeType() == Cube::Type::FromFile) {
+    isMO = true;
+  }
+
+  if (isMO) {
+    if (!m_mesh2)
+      m_mesh2 = m_molecule->addMesh();
+    if (!m_meshGenerator2) {
+      m_meshGenerator2 = new QtGui::MeshGenerator;
+      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+    }
+    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
+                                 m_smoothingPasses, true);
+  }
+
+  // Start the mesh generation - this needs an improved mutex with a read lock
+  // to function as expected. Write locks are exclusive, read locks can have
+  // many read locks but no write lock.
+  m_meshGenerator1->start();
+  if (isMO)
+    m_meshGenerator2->start();
+
+  // Track how many meshes are left to show.
+  if (isMO)
+    m_meshesLeft = 2;
+  else
+    m_meshesLeft = 1;
+}
 
 
 void Surfaces::calculateEDTpass(Type type, float defaultResolution)
@@ -699,56 +756,6 @@ void Surfaces::stepChanged(int n)
     m_mesh2 = nullptr;
     m_molecule->emitChanged(Molecule::Atoms | Molecule::Added);
   }
-}
-
-void Surfaces::displayMesh()
-{
-  if (!m_cube)
-    return;
-
-  if (m_dialog != nullptr)
-    m_smoothingPasses = m_dialog->smoothingPassesValue();
-  else
-    m_smoothingPasses = 0;
-
-  if (!m_mesh1)
-    m_mesh1 = m_molecule->addMesh();
-  if (!m_meshGenerator1) {
-    m_meshGenerator1 = new QtGui::MeshGenerator;
-    connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
-  }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
-
-  bool isMO = false;
-  // if it's from a file we should "play it safe"
-  if (m_cube->cubeType() == Cube::Type::MO ||
-      m_cube->cubeType() == Cube::Type::FromFile) {
-    isMO = true;
-  }
-
-  if (isMO) {
-    if (!m_mesh2)
-      m_mesh2 = m_molecule->addMesh();
-    if (!m_meshGenerator2) {
-      m_meshGenerator2 = new QtGui::MeshGenerator;
-      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
-    }
-    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
-                                 m_smoothingPasses, true);
-  }
-
-  // Start the mesh generation - this needs an improved mutex with a read lock
-  // to function as expected. Write locks are exclusive, read locks can have
-  // many read locks but no write lock.
-  m_meshGenerator1->start();
-  if (isMO)
-    m_meshGenerator2->start();
-
-  // Track how many meshes are left to show.
-  if (isMO)
-    m_meshesLeft = 2;
-  else
-    m_meshesLeft = 1;
 }
 
 Core::Color3f Surfaces::chargeGradient(double value, double clamp,

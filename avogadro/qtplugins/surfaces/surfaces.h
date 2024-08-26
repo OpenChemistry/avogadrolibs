@@ -91,6 +91,7 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT(Type type = Unknown, float defaultResolution = 0.0);
+  void meshDisplaying(Type type = Unknown);
   void calculateEDTpass(Type type = Unknown, float defaultResolution = 0.0);
   void performEDTStep(); // EDT step for SolventExcluded
   void calculateQM(Type type = Unknown, int index = -1, bool betaSpin = false,
@@ -129,6 +130,8 @@ private:
   /* calculateEDT() -> [performEDTStep()] -> displayMesh() */
   QFutureWatcher<void> m_performEDTStepWatcher;
   QFutureWatcher<void> m_displayMeshWatcher;
+  QFutureWatcher<void> m_displayMeshWatcherLowRes;
+  QFutureWatcher<void> m_displayMeshWatcherHighRes;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
   /* displayMesh() -> meshFinished() */
