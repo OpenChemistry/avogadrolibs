@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023, 2024.
 # Chiyu Liang <532117255@qq.com>, 2023.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-27 22:51+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: molequeue/batchjob.cpp:70
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "バッチジョブ #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
@@ -47,7 +48,7 @@ msgstr "文字列ではない警告が返却されました。"
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' メンバーは配列ではありません."
 
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:366
 #, qt-format
@@ -71,6 +72,9 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"変形したファイルエントリ: filename/contents "
+"が見つからなかったり、文字列がない場合:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:411
 #, qt-format
