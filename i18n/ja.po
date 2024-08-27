@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-27 23:50+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-08-27 23:52+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -1904,13 +1904,14 @@ msgid "ApplyColors"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:91
+#, fuzzy
 msgid "Atom scale"
 msgstr "原子スケール"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
 #, fuzzy
 msgid "Bond scale"
-msgstr "結合角"
+msgstr "結合スケール"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
