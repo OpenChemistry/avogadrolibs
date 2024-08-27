@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-27 23:49+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -1801,6 +1801,7 @@ msgstr "ヴィリディス"
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:774
+#, fuzzy
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "シヴィディウス"
