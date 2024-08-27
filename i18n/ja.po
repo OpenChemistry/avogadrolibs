@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-27 23:52+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-08-27 23:55+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -1990,9 +1990,10 @@ msgid "Bond centric manipulation tool."
 msgstr "結合中心操作ツール"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
+#, fuzzy
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
-msgstr "結束長さや角度を変えて分子形状を編集するツールです."
+msgstr "結合長や結合角を変えて分子構造を編集するツールです。"
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
@@ -2015,7 +2016,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "選択した原子を固定"
+msgstr "選択した原子を結合"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2033,8 +2034,9 @@ msgid "Bond"
 msgstr "結合"
 
 #: qtplugins/bonding/bonding.cpp:74
+#, fuzzy
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "すべて、あるいは選択した原子から結合を削除する。"
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
