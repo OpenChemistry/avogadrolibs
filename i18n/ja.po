@@ -1802,7 +1802,7 @@ msgstr "ヴィリディス"
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "シヴィディウス"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
