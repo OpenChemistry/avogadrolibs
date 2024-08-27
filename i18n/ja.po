@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-27 22:56+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -107,6 +107,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"スクリプト出力:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:326 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -230,7 +232,8 @@ msgstr "MoleQueueに接続できません"
 msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
-msgstr ""
+msgstr "MoleQueue サーバーに接続できません。 "
+"走っていることを確認し、もう一度お試しください."
 
 #: molequeue/inputgeneratorwidget.cpp:317
 #, qt-format
