@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-27 23:11+0000\n"
+"PO-Revision-Date: 2024-08-27 23:13+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1477,7 +1477,7 @@ msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
-msgstr "3DMol HTMLブロック."
+msgstr "3DMol HTMLブロック。"
 
 #: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
@@ -1496,7 +1496,7 @@ msgstr "エクスポート (&E)"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:96
 msgid "Align"
@@ -1527,14 +1527,10 @@ msgid "Axis:"
 msgstr "座標軸:"
 
 #: qtplugins/aligntool/aligntool.cpp:160
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
 msgstr "原点にアラインする"
 
 #: qtplugins/aligntool/aligntool.cpp:196
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
 msgstr "軸にアラインする"
 
