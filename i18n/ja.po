@@ -1068,7 +1068,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:100
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr ""
+msgstr "オプション '%1' が見つかりません."
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
