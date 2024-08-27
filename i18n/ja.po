@@ -1864,8 +1864,9 @@ msgid "Turbo"
 msgstr "ターボ"
 
 #: qtplugins/applycolors/applycolors.cpp:138
+#, fuzzy
 msgid "Apply color schemes to atoms and residues."
-msgstr "原子と残留物にカラースキームを適用します."
+msgstr "原子と残基にカラースキームを適用します。"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 #: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
@@ -1882,7 +1883,7 @@ msgstr "原子の色付け"
 #: qtplugins/applycolors/applycolors.cpp:151
 #, fuzzy
 msgid "Color Residues"
-msgstr "残基による色付け"
+msgstr "残基の色付け"
 
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
