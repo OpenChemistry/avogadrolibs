@@ -1783,6 +1783,7 @@ msgstr "インフェルノ"
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:770
+#, fuzzy
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "プラズマ"
