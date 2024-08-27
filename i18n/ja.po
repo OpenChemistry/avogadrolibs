@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-27 23:14+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -1619,7 +1619,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
-msgstr "PDBを開く ファイル"
+msgstr "PDBファイルを開く"
 
 #: qtplugins/apbs/apbsdialog.cpp:80
 msgid "PDB Files (*.pdb)"
