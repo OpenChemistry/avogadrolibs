@@ -1583,7 +1583,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:62
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDXファイル(*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
