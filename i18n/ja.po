@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-27 22:51+0000\n"
+"PO-Revision-Date: 2024-08-27 22:53+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -83,7 +83,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' メンバーは配列ではありません."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
