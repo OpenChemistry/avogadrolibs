@@ -1627,7 +1627,7 @@ msgstr "PDBファイル(*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:90
 msgid "Open PQR File"
-msgstr ""
+msgstr "PQRを開く ファイル"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "PQR Files (*.pqr)"
