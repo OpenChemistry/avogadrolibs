@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-27 23:11+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -1069,7 +1069,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:100
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr "オプション '%1' が見つかりません."
+msgstr "オプション '%1' が見つかりません。"
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
@@ -1185,7 +1185,7 @@ msgstr "ラベル"
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "リコリス"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
@@ -1413,7 +1413,7 @@ msgstr "スーパーセルの構築"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "ニグリ簡約"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
