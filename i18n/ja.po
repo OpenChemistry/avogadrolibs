@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-27 23:55+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-08-27 23:58+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -2089,6 +2089,7 @@ msgid "Cartoon"
 msgstr "カートゥーン"
 
 #: qtplugins/cartoons/cartoons.cpp:99
+#, fuzzy
 msgctxt "protein rendering style"
 msgid "Rope"
 msgstr "ロープ"
@@ -2116,7 +2117,7 @@ msgstr "中心"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "幾何中心と質量中心を追加する。"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -2174,8 +2175,9 @@ msgid "Salt Bridge"
 msgstr "塩橋"
 
 #: qtplugins/closecontacts/closecontacts.h:57
+#, fuzzy
 msgid "Repulsive"
-msgstr ""
+msgstr "反発"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
@@ -2225,7 +2227,7 @@ msgstr "%1を処理中"
 
 #: qtplugins/commandscripts/command.cpp:270
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Pythonインタープリタへのパスを設定:"
 
 #: qtplugins/commandscripts/command.cpp:272
 msgid ""
