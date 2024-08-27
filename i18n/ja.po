@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-27 23:13+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -1587,7 +1587,7 @@ msgstr "OpenDXファイル(*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
-msgstr ""
+msgstr "IOエラー"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
