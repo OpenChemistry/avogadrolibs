@@ -11,8 +11,9 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-28 01:44+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-08-28 01:52+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -4119,7 +4120,7 @@ msgstr ""
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
 #: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
-msgstr ""
+msgstr "エラー: "
 
 #: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
@@ -4135,7 +4136,7 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Version"
-msgstr ""
+msgstr "バージョン"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:64
 msgid "Description"
@@ -4512,7 +4513,7 @@ msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr ""
+msgstr "ビューを軸にそろえる"
 
 #: qtplugins/resetview/resetview.cpp:52
 #, fuzzy
