@@ -2,14 +2,16 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023, 2024.
 # Chiyu Liang <532117255@qq.com>, 2023.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2023-12-30 03:59+0000\n"
+"PO-Revision-Date: 2024-08-28 01:53+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -18,13 +20,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.7.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "バッチジョブ #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
 msgid "No message specified."
@@ -40,18 +42,19 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:175 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
+#, fuzzy
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "文字列ではない警告が返却されました。"
 
 #: molequeue/inputgenerator.cpp:178 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' メンバーは配列ではありません."
 
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "参照ファイル'%1'は存在しません。"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
 #, qt-format
@@ -65,11 +68,14 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgenerator.cpp:236 qtgui/interfacescript.cpp:405
-#, qt-format
+#, fuzzy, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"不正なファイルエントリ: filename/contents "
+"が見つからないか、文字列ではありません:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:411
 #, qt-format
@@ -78,11 +84,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "'files' メンバーは配列ではありません."
 
 #: molequeue/inputgenerator.cpp:252 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "'files' メンバーが見つかりません。"
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -90,7 +96,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' メンバーは文字列でなければなりません。"
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
@@ -102,6 +108,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"スクリプト出力:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:326 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -119,10 +127,10 @@ msgid ""
 msgstr ""
 
 #: molequeue/inputgenerator.cpp:358
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "分子表現を文字列に保存する際にエラー: %1"
 
 #: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -145,9 +153,9 @@ msgid "Input Generator (error)"
 msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:43
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "%1インプット生成"
+msgstr "%1インプットジェネレータ"
 
 #: molequeue/inputgeneratorwidget.cpp:114
 msgid "Continue"
@@ -225,7 +233,8 @@ msgstr "MoleQueueに接続できません"
 msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
-msgstr ""
+msgstr "MoleQueueサーバに接続できません。起動していることを確認し、もう一度試してくだ"
+"さい。"
 
 #: molequeue/inputgeneratorwidget.cpp:317
 #, qt-format
@@ -242,7 +251,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1014
 #: qtplugins/gamessinput/gamessinputdialog.cpp:723
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "ジョブは正常に完了しませんでした。"
 
 #: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
@@ -262,7 +271,7 @@ msgstr "エラーが起きました:"
 
 #: molequeue/inputgeneratorwidget.cpp:442
 msgid "Select output filename"
-msgstr ""
+msgstr "出力ファイル名を選択"
 
 #: molequeue/inputgeneratorwidget.cpp:454
 #, qt-format
@@ -381,8 +390,9 @@ msgid "Write input files"
 msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:608
+#, fuzzy
 msgid "Configure Job"
-msgstr ""
+msgstr "ジョブの設定"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
@@ -407,8 +417,9 @@ msgid "Stop waiting"
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:105
+#, fuzzy
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "完了したジョブ情報を取得しています…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -441,8 +452,9 @@ msgid "Client failed to submit job to MoleQueue."
 msgstr ""
 
 #: molequeue/molequeuewidget.cpp:150
+#, fuzzy
 msgid "Internal error."
-msgstr ""
+msgstr "内部エラー。"
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
@@ -965,10 +977,11 @@ msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:100
+#, fuzzy
 msgid ""
 "The file extension is missing, so the format cannot be determined.Do you "
 "want to add it?"
-msgstr ""
+msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加したいですか?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1015,7 +1028,7 @@ msgstr "全てのファイル"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr ""
+msgstr "サポートされているすべてのフォーマット"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
@@ -1039,8 +1052,9 @@ msgid "Error writing molecule representation to string: %1"
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:55
+#, fuzzy
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "'userOptions' が見つかりません。"
 
 #: qtgui/jsonwidget.cpp:86
 #, qt-format
@@ -1055,7 +1069,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:100
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr ""
+msgstr "オプション '%1' が見つかりません。"
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
@@ -1074,11 +1088,11 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:186
 msgid "Processor Cores"
-msgstr ""
+msgstr "プロセッサコア"
 
 #: qtgui/jsonwidget.cpp:191
 msgid "Calculation Type"
-msgstr ""
+msgstr "計算のタイプ"
 
 #: qtgui/jsonwidget.cpp:195
 msgid "Theory"
@@ -1171,7 +1185,7 @@ msgstr "ラベル"
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "リコリス"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
@@ -1246,7 +1260,7 @@ msgstr ""
 #: qtgui/pythonscript.cpp:145
 #, qt-format
 msgid "Warning '%1'"
-msgstr ""
+msgstr "警告 '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
@@ -1399,7 +1413,7 @@ msgstr "スーパーセルの構築"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "ニグリ簡約"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
@@ -1463,7 +1477,7 @@ msgstr ""
 
 #: qtplugins/3dmol/3dmol.cpp:41
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "3DMol HTMLブロック。"
 
 #: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
@@ -1482,7 +1496,7 @@ msgstr "エクスポート (&E)"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:96
 msgid "Align"
@@ -1513,14 +1527,10 @@ msgid "Axis:"
 msgstr "座標軸:"
 
 #: qtplugins/aligntool/aligntool.cpp:160
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
 msgstr "原点にアラインする"
 
 #: qtplugins/aligntool/aligntool.cpp:196
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
 msgstr "軸にアラインする"
 
@@ -1532,7 +1542,7 @@ msgstr "選択原子を原点に"
 
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "指定した軸に原子を合わせるために分子を回転させます。"
 
 #: qtplugins/aligntool/aligntool.h:30
 #, fuzzy
@@ -1573,11 +1583,11 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:62
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDXファイル(*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
-msgstr ""
+msgstr "IOエラー"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
@@ -1586,7 +1596,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX エラー"
 
 #: qtplugins/apbs/apbs.cpp:137
 #, qt-format
@@ -1609,19 +1619,19 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
-msgstr ""
+msgstr "PDBファイルを開く"
 
 #: qtplugins/apbs/apbsdialog.cpp:80
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDBファイル(*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:90
 msgid "Open PQR File"
-msgstr ""
+msgstr "PQRファイルを開く"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQRファイル(*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/commandscripts/command.cpp:125
@@ -1732,61 +1742,69 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:106
 #: qtplugins/surfaces/surfaces.cpp:760
+#, fuzzy
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "ヒート"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/surfaces/surfaces.cpp:762
+#, fuzzy
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "ホット"
 
 #: qtplugins/applycolors/applycolors.cpp:110
 #: qtplugins/surfaces/surfaces.cpp:764
+#, fuzzy
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "グレー"
 
 #: qtplugins/applycolors/applycolors.cpp:112
 #: qtplugins/applycolors/applycolors.cpp:207
 #: qtplugins/applycolors/applycolors.cpp:299
 #: qtplugins/surfaces/surfaces.cpp:766
+#, fuzzy
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "マグマ"
 
 #: qtplugins/applycolors/applycolors.cpp:114
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:768
+#, fuzzy
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "インフェルノ"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:208
 #: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:770
+#, fuzzy
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "プラズマ"
 
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:772
+#, fuzzy
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "ヴィリディス"
 
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:209
 #: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:774
+#, fuzzy
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "シヴィディウス"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1806,9 +1824,10 @@ msgstr "スペクトル"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1812
+#, fuzzy
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "クールウォーム"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1826,9 +1845,10 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1809
+#, fuzzy
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "ブルー・ダークレッド"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1838,13 +1858,15 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1818
+#, fuzzy
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "ターボ"
 
 #: qtplugins/applycolors/applycolors.cpp:138
+#, fuzzy
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "原子と残基にカラースキームを適用します。"
 
 #: qtplugins/applycolors/applycolors.cpp:149
 #: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
@@ -1861,7 +1883,7 @@ msgstr "原子の色付け"
 #: qtplugins/applycolors/applycolors.cpp:151
 #, fuzzy
 msgid "Color Residues"
-msgstr "残基による色付け"
+msgstr "残基の色付け"
 
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:305
@@ -1884,12 +1906,12 @@ msgstr ""
 #: qtplugins/ballandstick/ballandstick.cpp:91
 #, fuzzy
 msgid "Atom scale"
-msgstr "原子形式"
+msgstr "原子スケール"
 
 #: qtplugins/ballandstick/ballandstick.cpp:100
 #, fuzzy
 msgid "Bond scale"
-msgstr "結合角"
+msgstr "結合スケール"
 
 #: qtplugins/ballandstick/ballandstick.cpp:103
 #: qtplugins/wireframe/wireframe.cpp:92
@@ -1968,9 +1990,10 @@ msgid "Bond centric manipulation tool."
 msgstr "結合中心操作ツール"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
+#, fuzzy
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
-msgstr ""
+msgstr "結合長や結合角を変えて分子構造を編集するツールです。"
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
@@ -1993,7 +2016,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "選択した原子を固定"
+msgstr "選択した原子を結合"
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2011,8 +2034,9 @@ msgid "Bond"
 msgstr "結合"
 
 #: qtplugins/bonding/bonding.cpp:74
+#, fuzzy
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "すべて、あるいは選択した原子から結合を削除する。"
 
 #: qtplugins/bonding/bonding.cpp:76
 msgid "Create bonds between all or selected atoms."
@@ -2038,14 +2062,16 @@ msgid "Backbone"
 msgstr "バックボーン"
 
 #: qtplugins/cartoons/cartoons.cpp:94
+#, fuzzy
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "トレース"
 
 #: qtplugins/cartoons/cartoons.cpp:95
+#, fuzzy
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "チューブ"
 
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
@@ -2063,9 +2089,10 @@ msgid "Cartoon"
 msgstr "カートゥーン"
 
 #: qtplugins/cartoons/cartoons.cpp:99
+#, fuzzy
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "ロープ"
 
 #: qtplugins/cartoons/cartoons.h:37
 msgid "Display of biomolecule ribbons / cartoons."
@@ -2090,7 +2117,7 @@ msgstr "中心"
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "幾何中心と質量中心を追加する。"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -2148,8 +2175,9 @@ msgid "Salt Bridge"
 msgstr "塩橋"
 
 #: qtplugins/closecontacts/closecontacts.h:57
+#, fuzzy
 msgid "Repulsive"
-msgstr ""
+msgstr "反発"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
@@ -2199,7 +2227,7 @@ msgstr "%1を処理中"
 
 #: qtplugins/commandscripts/command.cpp:270
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Pythonインタープリタへのパスを設定:"
 
 #: qtplugins/commandscripts/command.cpp:272
 msgid ""
@@ -2237,8 +2265,9 @@ msgid "ConfigurePython"
 msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:29
+#, fuzzy
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Python環境の設定."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2493,7 +2522,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "分子を貼り付けできません: クリップボードが空です！"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
@@ -2509,7 +2538,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
-msgstr ""
+msgstr "コピーと貼り付け"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
@@ -2560,7 +2589,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -2573,11 +2602,11 @@ msgstr "なし"
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1385
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
@@ -3871,16 +3900,18 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:522
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
+#, fuzzy
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
 #: qtplugins/openmminput/openmminputdialog.cpp:526
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1053
+#, fuzzy
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
@@ -3896,16 +3927,19 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:926
 #: qtplugins/openmminput/openmminputdialog.cpp:1042
 #: qtplugins/openmminput/openmminputdialog.cpp:1049
+#, fuzzy
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
+#, fuzzy
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
+#, fuzzy
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3915,8 +3949,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1412 rc.cpp:1427
+#, fuzzy
 msgid "True"
-msgstr ""
+msgstr "True"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
@@ -3993,7 +4028,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:250
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "動画 (*.mp4);;動画 (*.avi);;GIF(*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:264 qtplugins/surfaces/surfaces.cpp:884
 msgid "GIF (*.gif)"
@@ -4018,7 +4053,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "ファイル %1 を保存できません。"
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -4038,7 +4073,7 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
-msgstr ""
+msgstr "エラーメッセージ： "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
@@ -4084,7 +4119,7 @@ msgstr ""
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
 #: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
-msgstr ""
+msgstr "エラー: "
 
 #: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
@@ -4100,7 +4135,7 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Version"
-msgstr ""
+msgstr "バージョン"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:64
 msgid "Description"
@@ -4137,7 +4172,7 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:386
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "伸長に成功\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:462
 #, qt-format
@@ -4162,7 +4197,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Render:"
 msgid "PLY Render…"
-msgstr "表示"
+msgstr "PLY表示…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4171,7 +4206,7 @@ msgstr "ファイルを保存"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr ""
+msgstr "PLY(*.ply);;テキストファイル(*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -4187,11 +4222,11 @@ msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray(*.pov);;テキストファイル(*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
@@ -4223,7 +4258,6 @@ msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:423
 #: qtplugins/propertytables/propertymodel.cpp:462
-#, fuzzy
 msgid "Color"
 msgstr "色"
 
@@ -4243,7 +4277,6 @@ msgid "Start Atom"
 msgstr "始めの原子"
 
 #: qtplugins/propertytables/propertymodel.cpp:437
-#, fuzzy
 msgid "End Atom"
 msgstr "終わりの原子"
 
@@ -4280,9 +4313,8 @@ msgstr "頂点"
 
 #: qtplugins/propertytables/propertymodel.cpp:478
 #: qtplugins/propertytables/propertymodel.cpp:495
-#, fuzzy
 msgid "Atom 3"
-msgstr "原子 3"
+msgstr "原子3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4290,18 +4322,14 @@ msgid "Angle (°)"
 msgstr "角度 (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
-#, fuzzy
 msgid "Atom 2"
-msgstr "原子 2"
+msgstr "原子2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
-#, fuzzy
 msgid "Atom 4"
-msgstr "原子 4"
+msgstr "原子4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
 msgstr "フラグメントを調整"
 
@@ -4311,9 +4339,10 @@ msgid "π Helix"
 msgstr "πヘリックス"
 
 #: qtplugins/propertytables/propertymodel.cpp:815
+#, fuzzy
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr ""
+msgstr "屈曲"
 
 #: qtplugins/propertytables/propertymodel.cpp:817
 msgctxt "alpha helix"
@@ -4333,7 +4362,7 @@ msgstr "3-10 ヘリックス"
 #: qtplugins/propertytables/propertymodel.cpp:823
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "βブリッジ"
 
 #: qtplugins/propertytables/propertymodel.cpp:825
 msgctxt "protein turn secondary structure"
@@ -4366,7 +4395,6 @@ msgid "Residue Properties…"
 msgstr "残基のプロパティ…"
 
 #: qtplugins/propertytables/propertytables.cpp:67
-#, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr "原子、結合、角度、二面角のプロパティを表示・編集する表"
@@ -4423,10 +4451,8 @@ msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "エクスポート"
+msgstr "エクスポート…"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4476,14 +4502,15 @@ msgid "Center"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:39
+#, fuzzy
 msgid "Align View to Axes"
-msgstr ""
+msgstr "ビューを軸にそろえる"
 
 #: qtplugins/resetview/resetview.cpp:52
 #, fuzzy
 #| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "ビューを軸にアライン"
+msgstr "ビューを軸にそろえる。"
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4513,7 +4540,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "全て選択"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
@@ -4521,7 +4548,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "選択/非選択を反転"
 
 #: qtplugins/select/select.cpp:53
 #, fuzzy
