@@ -369,37 +369,38 @@ void Surfaces::calculateSurface()
   }
 }
 
-void Surfaces::meshDisplaying(Type type)
-{
-  if (type == Unknown && m_dialog != nullptr)
-    type = m_dialog->surfaceType();
-
-  if (!m_cube)
-    m_cube = m_molecule->addCube();
-
-  // Start with 0.5 resolution (1st pass)
-  QFuture futureLowRes = QtConcurrent::run([=]() {
-    calculateEDTpass(type, 0.1);
-  });
-  
-  m_displayMeshWatcher.setFuture(futureLowRes);
-}
-
 void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
-  if (type == Unknown && m_dialog != nullptr)
+  if (type == Unknown && m_dialog != nullptr){
     type = m_dialog->surfaceType();
-
-  if (!m_cube)
+  }
+  if (!m_cube){
     m_cube = m_molecule->addCube();
-
-  // Start with 0.5 resolution (1st pass)
-  QFuture futureLowRes = QtConcurrent::run([=]() {
-    calculateEDTpass(type, 0.5);
+  }
+  
+  auto* m_molecule2 = new QtGui::Molecule(*m_molecule);
+  m_cube2 = m_molecule2->addCube();
+   
+  auto* m_temp = new Core::Cube(*m_cube);
+  m_cube = m_cube2;
+    
+  // first pass low res. 
+   QFuture futureLowRes = QtConcurrent::run([=]() {
+    calculateEDTpass(m_molecule2, m_cube, type, 0.5);
   });
-  
   m_displayMeshWatcher.setFuture(futureLowRes);
+  m_molecule->emitChanged(QtGui::Molecule::Added);
+
   
+  m_cube = m_temp;
+  // // 2nd pass high res.
+   QFuture futureHighRes = QtConcurrent::run([=]() {
+    calculateEDTpass(m_molecule, m_cube, type, 0.1);
+  });
+
+  m_displayMeshWatcher.setFuture(futureHighRes);
+  m_molecule->emitChanged(QtGui::Molecule::Added);
+
 }
 
 
@@ -421,68 +422,68 @@ void Surfaces::displayMesh()
   }
   m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
 
-  bool isMO = false;
-  // if it's from a file we should "play it safe"
-  if (m_cube->cubeType() == Cube::Type::MO ||
-      m_cube->cubeType() == Cube::Type::FromFile) {
-    isMO = true;
-  }
+  // bool isMO = false;
+  // // if it's from a file we should "play it safe"
+  // if (m_cube->cubeType() == Cube::Type::MO ||
+  //     m_cube->cubeType() == Cube::Type::FromFile) {
+  //   isMO = true;
+  // }
 
-  if (isMO) {
+  // if (isMO) {
     if (!m_mesh2)
       m_mesh2 = m_molecule->addMesh();
     if (!m_meshGenerator2) {
       m_meshGenerator2 = new QtGui::MeshGenerator;
       connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
     }
-    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
+    m_meshGenerator2->initialize(m_cube2, m_mesh2, -m_isoValue,
                                  m_smoothingPasses, true);
-  }
+  // }
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have
   // many read locks but no write lock.
   m_meshGenerator1->start();
-  if (isMO)
+  // if (isMO)
     m_meshGenerator2->start();
 
   // Track how many meshes are left to show.
-  if (isMO)
+  // if (isMO)
     m_meshesLeft = 2;
-  else
-    m_meshesLeft = 1;
+  // else
+    // m_meshesLeft = 1;
 }
 
 
-void Surfaces::calculateEDTpass(Type type, float defaultResolution)
+void Surfaces::calculateEDTpass(QtGui::Molecule* mol, Core::Cube* cube, Type type, float defaultResolution)
 {
   double probeRadius = 0.0;
   switch (type) {
     case VanDerWaals:
-      m_cube->setCubeType(Core::Cube::Type::VdW);
+      cube->setCubeType(Core::Cube::Type::VdW);
       break;
     case SolventAccessible:
       probeRadius = 1.4;
-      m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
+      cube->setCubeType(Core::Cube::Type::SolventAccessible);
       break;
     case SolventExcluded:
       probeRadius = 1.4;
-      m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
+      cube->setCubeType(Core::Cube::Type::SolventExcluded);
       break;
     default:
       break;
   }
 
   // first, make a list of all atom positions and radii
-  Array<Vector3> atomPositions = m_molecule->atomPositions3d();
+  Array<Vector3> atomPositions = mol->atomPositions3d();
   auto* atoms = new std::vector<std::pair<Vector3, double>>();
   double max_radius = probeRadius;
   QtGui::RWLayerManager layerManager;
-  for (size_t i = 0; i < m_molecule->atomCount(); i++) {
-    if (!layerManager.visible(m_molecule->layer(i)))
+  for (size_t i = 0; i < mol->atomCount(); i++) {
+    if (!layerManager.visible(mol->layer(i)))
       continue; // ignore invisible atoms
     auto radius =
-      Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+      Core::Elements::radiusVDW(mol->atomicNumber(i)) + probeRadius;
     atoms->emplace_back(atomPositions[i], radius);
     if (radius > max_radius)
       max_radius = radius;
@@ -491,9 +492,9 @@ void Surfaces::calculateEDTpass(Type type, float defaultResolution)
   double padding = max_radius + probeRadius;
 
   const float res = resolution(defaultResolution);
-  m_cube->setLimits(*m_molecule, res, padding);
-  m_cube->fill(-1.0);
-  const Vector3 min = m_cube->min();
+  cube->setLimits(*mol, res, padding);
+  cube->fill(-1.0);
+  const Vector3 min = cube->min();
 
   // then, for each atom, set cubes around it up to a certain radius
   QFuture innerFuture =
@@ -522,7 +523,7 @@ void Surfaces::calculateEDTpass(Type type, float defaultResolution)
           double endPosZ = in.first(2) + lengthXY;
           int startIndexZ = (startPosZ - min(2)) / res;
           int endIndexZ = (endPosZ - min(2)) / res + 1;
-          m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
+          cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
                              1.0f);
         }
       }
@@ -851,27 +852,10 @@ void Surfaces::colorMesh()
 
 void Surfaces::meshFinished()
 {
-  --m_meshesLeft;
-  if (m_meshesLeft == 0) {
-    colorMesh();
 
-    // finished, so request to enable the mesh display type
-    QStringList displayTypes;
-    displayTypes << tr("Meshes");
-    requestActiveDisplayTypes(displayTypes);
-
-    if (m_recordingMovie) {
-      // Move to the next frame.
-      qDebug() << "Let's get to the next frame…";
-      m_molecule->emitChanged(QtGui::Molecule::Added);
-      movieFrame();
-    } else {
       if (m_dialog != nullptr)
         m_dialog->reenableCalculateButton();
 
-      m_molecule->emitChanged(QtGui::Molecule::Added);
-    }
-  }
 }
 
 void Surfaces::recordMovie()
