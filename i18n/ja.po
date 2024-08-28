@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-28 08:34+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-08-29 09:09+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -29,8 +29,9 @@ msgid "Batch Job #%L1 (%2)"
 msgstr "バッチジョブ #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
+#, fuzzy
 msgid "No message specified."
-msgstr ""
+msgstr "メッセージが指定されていません。"
 
 #: molequeue/inputgenerator.cpp:69 qtgui/interfacescript.cpp:72
 #, qt-format
@@ -57,9 +58,9 @@ msgid "Reference file '%1' does not exist."
 msgstr "参照ファイル'%1'は存在しません。"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "ファイル%1の生成でエラー: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:372
 #, qt-format
@@ -8121,6 +8122,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
+#, fuzzy
 msgid "From Clipboard"
 msgstr "クリップボードから"
 
@@ -8166,7 +8168,7 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "エチン"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8255,8 +8257,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
+#, fuzzy
 msgid "Zero Fermi?"
-msgstr ""
+msgstr "Fermiを0にしますか？"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
