@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-28 01:52+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -4172,7 +4172,7 @@ msgstr ""
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:386
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "伸長に成功\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:462
 #, qt-format
@@ -4197,7 +4197,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Render:"
 msgid "PLY Render…"
-msgstr "表示"
+msgstr "PLY表示…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4226,7 +4226,7 @@ msgstr "POV-Ray(*.pov);;テキストファイル(*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
@@ -4258,7 +4258,6 @@ msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:423
 #: qtplugins/propertytables/propertymodel.cpp:462
-#, fuzzy
 msgid "Color"
 msgstr "色"
 
@@ -4278,7 +4277,6 @@ msgid "Start Atom"
 msgstr "始めの原子"
 
 #: qtplugins/propertytables/propertymodel.cpp:437
-#, fuzzy
 msgid "End Atom"
 msgstr "終わりの原子"
 
@@ -4315,9 +4313,8 @@ msgstr "頂点"
 
 #: qtplugins/propertytables/propertymodel.cpp:478
 #: qtplugins/propertytables/propertymodel.cpp:495
-#, fuzzy
 msgid "Atom 3"
-msgstr "原子 3"
+msgstr "原子3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4325,18 +4322,14 @@ msgid "Angle (°)"
 msgstr "角度 (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
-#, fuzzy
 msgid "Atom 2"
-msgstr "原子 2"
+msgstr "原子2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
-#, fuzzy
 msgid "Atom 4"
-msgstr "原子 4"
+msgstr "原子4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
 msgstr "フラグメントを調整"
 
@@ -4346,9 +4339,10 @@ msgid "π Helix"
 msgstr "πヘリックス"
 
 #: qtplugins/propertytables/propertymodel.cpp:815
+#, fuzzy
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr ""
+msgstr "屈曲"
 
 #: qtplugins/propertytables/propertymodel.cpp:817
 msgctxt "alpha helix"
@@ -4401,7 +4395,6 @@ msgid "Residue Properties…"
 msgstr "残基のプロパティ…"
 
 #: qtplugins/propertytables/propertytables.cpp:67
-#, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr "原子、結合、角度、二面角のプロパティを表示・編集する表"
@@ -4458,10 +4451,8 @@ msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "エクスポート"
+msgstr "エクスポート…"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
