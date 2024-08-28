@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-28 01:53+0000\n"
+"PO-Revision-Date: 2024-08-28 03:15+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -4547,6 +4547,7 @@ msgid "Select None"
 msgstr ""
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
+#, fuzzy
 msgid "Invert Selection"
 msgstr "選択/非選択を反転"
 
@@ -5228,7 +5229,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:368
 #, qt-format
 msgid "Band %1"
-msgstr ""
+msgstr "バンド%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:388
 msgid "Fermi Level"
@@ -5335,12 +5336,12 @@ msgstr ""
 msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
-msgstr ""
+msgstr "<html><head/><body><p>このジョブで予約するプロセッサ数</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Processor cores:"
-msgstr ""
+msgstr "プロセッサコア:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
