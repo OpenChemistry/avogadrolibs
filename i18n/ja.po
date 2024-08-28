@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-08-28 03:53+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -7732,12 +7732,12 @@ msgstr "14"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:421
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
-msgstr "16 日"
+msgstr "16"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:426
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
-msgstr ""
+msgstr "18"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
