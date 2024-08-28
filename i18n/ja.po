@@ -11,8 +11,9 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-28 01:52+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-08-28 01:53+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -4539,7 +4540,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "全て選択"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
@@ -4547,7 +4548,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "選択/非選択を反転"
 
 #: qtplugins/select/select.cpp:53
 #, fuzzy
