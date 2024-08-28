@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-27 23:58+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-08-28 01:42+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -2265,6 +2265,7 @@ msgid "ConfigurePython"
 msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:29
+#, fuzzy
 msgid "Configure Python environments."
 msgstr "Python環境の設定."
 
@@ -2521,7 +2522,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "分子を貼り付けできません: クリップボードが空です！"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
@@ -2588,7 +2589,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -2601,11 +2602,11 @@ msgstr "なし"
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1385
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
@@ -3899,16 +3900,18 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:522
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
+#, fuzzy
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
 #: qtplugins/openmminput/openmminputdialog.cpp:526
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1053
+#, fuzzy
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
@@ -3924,16 +3927,19 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:926
 #: qtplugins/openmminput/openmminputdialog.cpp:1042
 #: qtplugins/openmminput/openmminputdialog.cpp:1049
+#, fuzzy
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
+#, fuzzy
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
+#, fuzzy
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -3943,8 +3949,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1412 rc.cpp:1427
+#, fuzzy
 msgid "True"
-msgstr ""
+msgstr "True"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
