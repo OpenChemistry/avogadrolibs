@@ -980,7 +980,7 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:100
 #, fuzzy
 msgid ""
-"The file extension is missing, so the format cannot be determined.Do you "
+"The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加したいですか?"
 

@@ -1013,7 +1013,7 @@ msgstr "无法为所选文件找到合适的读取器。"
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
-"The file extension is missing, so the format cannot be determined.Do you "
+"The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr "文件缺少拓展名，无法确定格式。现在添加拓展名吗？"
 
