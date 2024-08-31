@@ -101,7 +101,12 @@ private slots:
   void stepChanged(int);
 
   void displayMesh();
+  void generateMesh(Core::Cube* cube, Core::Mesh* mesh, QtGui::MeshGenerator*& meshGenerator, bool isoaValue, bool isMO);
+  // void displayMeshHigher();
+
   void meshFinished();
+  // void meshFinishedHigher();
+
 
   void colorMesh();
   void colorMeshByPotential();
@@ -119,7 +124,7 @@ private:
   QProgressDialog* m_progressDialog = nullptr;
 
   QtGui::Molecule* m_molecule = nullptr;
-  // QtGui::Molecule* m_molecule2 = nullptr;
+  QtGui::Molecule* m_molecule2 = nullptr;
 
   Core::BasisSet* m_basis = nullptr;
 
@@ -133,22 +138,31 @@ private:
   std::vector<Core::Cube*> m_cubes;
   /* One QFutureWatcher per asynchronous slot function, e.g.:*/
   /* calculateEDT() -> [performEDTStep()] -> displayMesh() */
-  QFutureWatcher<void> m_performEDTStepWatcher;
+  QFutureWatcher<void> m_performEDTStepWatcherLow;
+  QFutureWatcher<void> m_performEDTStepWatcherHigh;
+
   QFutureWatcher<void> m_displayMeshWatcher;
+  QFutureWatcher<void> m_displayMeshWatcher2;
   QFutureWatcher<void> m_pataNahi;
   QFutureWatcher<void> m_displayMeshWatcherLowRes;
   QFutureWatcher<void> m_displayMeshWatcherHighRes;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
+  Core::Mesh* m_mesh3 = nullptr;
+
   /* displayMesh() -> meshFinished() */
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
+  QtGui::MeshGenerator* m_meshGenerator3 = nullptr;
 
   float m_isoValue = 0.01;
   int m_smoothingPasses = 6;
   int m_meshesLeft = 0;
+  int m_meshesLeftHigher = 0;
+
 
   bool m_recordingMovie = false;
+  bool lowerRes = true;
   int m_currentFrame = 0;
   int m_frameCount = 1;
   QString m_baseFileName;

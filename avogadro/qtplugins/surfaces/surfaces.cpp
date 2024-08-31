@@ -83,7 +83,8 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   action->setText(tr("Create Surfaces…"));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(displayMesh()));
-  connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
+  connect(&m_performEDTStepWatcherLow, SIGNAL(finished()), SLOT(performEDTStep()));
+  connect(&m_performEDTStepWatcherHigh, SIGNAL(finished()), SLOT(performEDTStep()));
 
   m_actions.push_back(action);
 
@@ -378,82 +379,114 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     m_cube = m_molecule->addCube();
   }
   
-  auto* m_molecule2 = new QtGui::Molecule(*m_molecule);
-  m_cube2 = m_molecule2->addCube();
-   
-  auto* m_temp = new Core::Cube(*m_cube);
-  m_cube = m_cube2;
-    
-  // first pass low res. 
-   QFuture futureLowRes = QtConcurrent::run([=]() {
-    calculateEDTpass(m_molecule2, m_cube, type, 0.5);
-  });
-  m_displayMeshWatcher.setFuture(futureLowRes);
-  m_molecule->emitChanged(QtGui::Molecule::Added);
-
+  m_cube2 = m_molecule->addCube();
   
-  m_cube = m_temp;
-  // // 2nd pass high res.
-   QFuture futureHighRes = QtConcurrent::run([=]() {
+   QFuture future = QtConcurrent::run([=]() {
+    calculateEDTpass(m_molecule, m_cube2, type, 0.5); // using m_cube2 for low res
+  });
+
+    if(type == SolventExcluded){
+    // performEDTStep();
+    // performEDTStep(m_cube2);
+    m_performEDTStepWatcherLow.setFuture(future);
+    qDebug() << "mai to yaha hu";
+  }else{
+    m_displayMeshWatcher.setFuture(future); 
+  }
+
+  // m_displayMeshWatcher.setFuture(futureLowRes); // connected with displayMesh()
+
+    future = QtConcurrent::run([=]() {
     calculateEDTpass(m_molecule, m_cube, type, 0.1);
   });
-
-  m_displayMeshWatcher.setFuture(futureHighRes);
-  m_molecule->emitChanged(QtGui::Molecule::Added);
+  if(type == SolventExcluded){
+    m_performEDTStepWatcherLow.setFuture(future);
+    qDebug() << "mai to yaha hu";
+  }else{
+    m_displayMeshWatcher.setFuture(future); 
+  }
 
 }
 
+void Surfaces::generateMesh(Core::Cube* cube, Core::Mesh* mesh, QtGui::MeshGenerator*& meshGenerator, 
+                            bool isoaValue, bool isMO)
+{
+    if (!mesh)
+        mesh = m_molecule->addMesh();
+    
+    if (!meshGenerator) {
+        meshGenerator = new QtGui::MeshGenerator;
+        connect(meshGenerator, SIGNAL(finished()), SLOT(meshFinished()));
+    }
+
+    meshGenerator->initialize(cube, mesh, isoaValue ? m_isoValue : -m_isoValue, m_smoothingPasses, isMO);
+    meshGenerator->start();
+}
 
 void Surfaces::displayMesh()
 {
-  if (!m_cube)
+    if (!m_cube || !m_cube2)
     return;
 
-  if (m_dialog != nullptr)
-    m_smoothingPasses = m_dialog->smoothingPassesValue();
-  else
-    m_smoothingPasses = 0;
+    if (m_dialog != nullptr)
+        m_smoothingPasses = m_dialog->smoothingPassesValue();
+    else
+        m_smoothingPasses = 0;
 
-  if (!m_mesh1)
-    m_mesh1 = m_molecule->addMesh();
-  if (!m_meshGenerator1) {
-    m_meshGenerator1 = new QtGui::MeshGenerator;
-    connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
-  }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
-
-  // bool isMO = false;
-  // // if it's from a file we should "play it safe"
-  // if (m_cube->cubeType() == Cube::Type::MO ||
-  //     m_cube->cubeType() == Cube::Type::FromFile) {
-  //   isMO = true;
-  // }
-
-  // if (isMO) {
-    if (!m_mesh2)
-      m_mesh2 = m_molecule->addMesh();
-    if (!m_meshGenerator2) {
-      m_meshGenerator2 = new QtGui::MeshGenerator;
-      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+    if (m_cube) {
+        generateMesh(m_cube, m_mesh1, m_meshGenerator1, true, false);
+        m_meshesLeft = 2;
     }
-    m_meshGenerator2->initialize(m_cube2, m_mesh2, -m_isoValue,
-                                 m_smoothingPasses, true);
-  // }
+      m_molecule->clearMeshes();
 
-  // Start the mesh generation - this needs an improved mutex with a read lock
-  // to function as expected. Write locks are exclusive, read locks can have
-  // many read locks but no write lock.
-  m_meshGenerator1->start();
-  // if (isMO)
-    m_meshGenerator2->start();
+    if (m_cube2) {
+        generateMesh(m_cube2, m_mesh2, m_meshGenerator2, true, false);
+        m_meshesLeftHigher = 2;
 
-  // Track how many meshes are left to show.
-  // if (isMO)
-    m_meshesLeft = 2;
-  // else
-    // m_meshesLeft = 1;
+    }
+
+    bool isMO = false;
+    // if it's from a file we should "play it safe"
+    if (m_cube->cubeType() == Cube::Type::MO ||
+      m_cube->cubeType() == Cube::Type::FromFile) {
+    isMO = true;
+  }
+
+  if (isMO) {
+    generateMesh(m_cube, m_mesh3, m_meshGenerator3, false, true);
+    ++m_meshesLeft;
+    ++m_meshesLeftHigher;
+  }
 }
 
+void Surfaces::meshFinished()
+{
+
+  --m_meshesLeft;
+  --m_meshesLeftHigher;
+
+  if ((m_meshesLeft == 2 && m_meshesLeftHigher == 2) || 
+      (m_meshesLeft == 1 && m_meshesLeftHigher == 1) || 
+      (m_meshesLeft == 0 && m_meshesLeftHigher == 0)) {
+    
+    colorMesh();
+    QStringList displayTypes;
+    displayTypes << tr("Meshes");
+    requestActiveDisplayTypes(displayTypes);
+
+    if (m_recordingMovie) {
+      // Move to the next frame.
+      m_molecule->emitChanged(QtGui::Molecule::Added);
+      movieFrame();
+    } else {
+      if (m_dialog != nullptr && m_meshesLeftHigher == 0)
+        m_dialog->reenableCalculateButton();
+      m_molecule->emitChanged(QtGui::Molecule::Added);
+    }
+  }
+  // m_molecule->emitChanged(QtGui::Molecule::Added);
+
+}
 
 void Surfaces::calculateEDTpass(QtGui::Molecule* mol, Core::Cube* cube, Type type, float defaultResolution)
 {
@@ -590,7 +623,7 @@ void Surfaces::performEDTStep()
     innerFuture.waitForFinished();
   });
 
-  m_displayMeshWatcher.setFuture(future);
+  m_displayMeshWatcher.setFuture(future); 
 }
 
 void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
@@ -814,6 +847,10 @@ void Surfaces::colorMeshByPotential()
 {
   const auto model = m_dialog->colorModel().toStdString();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
+  if (!m_mesh1 || m_mesh1->vertices().empty()) {
+    qDebug() << "waah chat gpt";
+    return;
+  }
 
   const auto positionsf = m_mesh1->vertices();
   if (positionsf.empty())
@@ -838,8 +875,9 @@ void Surfaces::colorMeshByPotential()
 
 void Surfaces::colorMesh()
 {
-  if (m_dialog == nullptr)
+  if (m_dialog == nullptr){
     return;
+  }
 
   switch (m_dialog->colorProperty()) {
     case None:
@@ -850,13 +888,34 @@ void Surfaces::colorMesh()
   }
 }
 
-void Surfaces::meshFinished()
-{
 
-      if (m_dialog != nullptr)
-        m_dialog->reenableCalculateButton();
+// void Surfaces::meshFinishedHigher()
+// {
+//   qDebug() << m_meshesLeftHigher << "meshleftHigher" ;
+//   --m_meshesLeftHigher;
+//   if (m_meshesLeftHigher == 0) {
+//     colorMesh();
 
-}
+//     // finished, so request to enable the mesh display type
+//     QStringList displayTypes;
+//     displayTypes << tr("Meshes");
+//     requestActiveDisplayTypes(displayTypes);
+
+//     if (m_recordingMovie) {
+//       // Move to the next frame.
+//       qDebug() << "Let's get to the next frame…";
+//       m_molecule->emitChanged(QtGui::Molecule::Added);
+//       movieFrame();
+//     } else {
+//       // if (m_dialog != nullptr)
+//         // m_dialog->reenableCalculateButton();
+//         qDebug() << "here4";
+        
+//       m_molecule->emitChanged(QtGui::Molecule::Added);
+//     }
+//   }
+// }
+
 
 void Surfaces::recordMovie()
 {
