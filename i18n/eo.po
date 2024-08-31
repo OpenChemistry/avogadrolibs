@@ -1027,7 +1027,7 @@ msgstr "Ne troviĝis taŭga dosierlegilo por la elektita dosiero."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
-"The file extension is missing, so the format cannot be determined.Do you "
+"The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
 

@@ -1007,7 +1007,7 @@ msgstr "선택한 파일에 적합한 파일 리더를 찾을 수 없습니다."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
-"The file extension is missing, so the format cannot be determined.Do you "
+"The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr "파일 확장자가 누락되어 형식을 결정할 수 없습니다. 추가하겠습니까?"
 
