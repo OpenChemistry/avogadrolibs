@@ -21,9 +21,6 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
-// #include <QtCore/QDebug>
-// #include <QQDebug>
-// #include <iostream>
 
 namespace Avogadro::Core {
 
@@ -840,9 +837,6 @@ const Mesh* Molecule::mesh(Index index) const
 void Molecule::clearMeshes()
 {
   while (!m_meshes.empty()) {
-    // qDebug() << "hi";
-    // std::cout << "Deleting mesh:" << m_meshes.back();
-  // std::cout << "All meshes cleared.";
     delete m_meshes.back();
     m_meshes.pop_back();
   }
