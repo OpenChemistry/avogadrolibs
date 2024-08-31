@@ -813,8 +813,9 @@ void Cp2kInputDialog::updatePreviewText()
     file += "    A     10.00000000    0.000000000    0.000000000\n";
     file += "    B     0.000000000    10.00000000    0.000000000\n";
     file += "    C     0.000000000    0.000000000    10.00000000\n";
+    file += "    PERIODIC NONE\n";
   }
-  file += "    &END CELL \n";
+  file += "    &END CELL\n";
 
   if (m_molecule) {
     file += "    &COORD\n";
