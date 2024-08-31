@@ -380,7 +380,8 @@ msgstr "%1: Fișierul nu este inscriptibil."
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr "Fișierele de intrare nu pot fi scrise din cauza unei erori necunoscute."
+msgstr ""
+"Fișierele de intrare nu pot fi scrise din cauza unei erori necunoscute."
 
 #: molequeue/inputgeneratorwidget.cpp:537
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -3630,7 +3631,8 @@ msgstr "Baze de date din rețea"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
-msgstr "Interacționează cu baze de date din rețea, structuri de interogare etc."
+msgstr ""
+"Interacționează cu baze de date din rețea, structuri de interogare etc."
 
 #: qtplugins/noncovalent/noncovalent.cpp:340
 msgid " °"
@@ -4655,8 +4657,8 @@ msgstr ""
 "\tTrageți pentru a selecta un interval de atomi\n"
 "Butonul drept al mouse-ului: \tFaceți clic în afara moleculei pentru a "
 "șterge selecția\n"
-"Utilizați Ctrl pentru a comuta selecția și Shift pentru a adăuga la selecție."
-"\n"
+"Utilizați Ctrl pentru a comuta selecția și Shift pentru a adăuga la "
+"selecție.\n"
 "Dublu clic cu butonul stâng: \tSelectează un fragment întreg."
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
@@ -5652,26 +5654,26 @@ msgid ""
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
 "<html><head/><body><p>Specificarea formatului. Fiecare caracter indică o "
-"valoare de scris pentru fiecare atom:</p><p><span style=\" font-weight:600;\""
-">#</span> - Indicele atomic (1, 2, ..., numAtomi)<br/><span style=\" font-"
+"valoare de scris pentru fiecare atom:</p><p><span style=\" font-weight:600;"
+"\">#</span> - Indicele atomic (1, 2, ..., numAtomi)<br/><span style=\" font-"
 "weight:600;\">Z</span> - Numărul atomic (de exemplu. „6” pentru carbon)<br/"
 "><span style=\" font-weight:600;\">G</span> - Numărul atomic în stilul "
 "GAMESS (de exemplu, „6.0” pentru carbon)<br/><span style=\" font-weight:600;"
 "\">N</span> - Numele elementului (de exemplu, „Carbon”)<br/><span style=\" "
 "font-weight:600;\">S</span> - Simbolul elementului (de exemplu, „C” pentru "
-"carbon)<br/><span style=\" font-weight:700;\">L</span> - Eticheta atomului ("
-"de exemplu, „C2” pentru al doilea atom de carbon, „H1” pentru primul de "
+"carbon)<br/><span style=\" font-weight:700;\">L</span> - Eticheta atomului "
+"(de exemplu, „C2” pentru al doilea atom de carbon, „H1” pentru primul de "
 "hidrogen) <br/><span style=\" font-weight:600;\">x</span> - Coordonata "
 "poziției X<br/><span style=\" font-weight:600;\">y</span> - Coordonata "
 "poziției Y<br/><span style=\" font-weight:600;\">z</span> - Coordonata "
 "poziției Z<br/><span style=\" font-weight:600;\">a</span> - Coordonata "
 "rețelei „a” (numai pentru cristale)<br/><span style=\" font-weight:600;\">b</"
 "span> - Coordonata rețelei „b” (numai pentru cristale)<br/><span style=\" "
-"font-weight:600;\">c</span> - Coordonata rețelei „c” (numai pentru cristale)<"
-"br/><span style=\" font-weight:600;\">_</span> - Un spațiu literal („ ”), "
-"util pentru aliniere<br/><span style=\" font-weight:600;\">0</span> - Un 0 "
-"literal („0”), util pentru fanioanele de optimizare<br/><span style=\" font-"
-"weight:600;\">1</span> - Un 1 literal („1”), util pentru fanioanele de "
+"font-weight:600;\">c</span> - Coordonata rețelei „c” (numai pentru "
+"cristale)<br/><span style=\" font-weight:600;\">_</span> - Un spațiu literal "
+"(„ ”), util pentru aliniere<br/><span style=\" font-weight:600;\">0</span> - "
+"Un 0 literal („0”), util pentru fanioanele de optimizare<br/><span style=\" "
+"font-weight:600;\">1</span> - Un 1 literal („1”), util pentru fanioanele de "
 "optimizare<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
@@ -5855,8 +5857,8 @@ msgstr "OT T MINIMIZER"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
-"Extensia fișierului pentru conversia Open Babel (implicit - "
-"Avogadro::POSCAR):"
+"Extensia fișierului pentru conversia Open Babel (implicit - Avogadro::"
+"POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
@@ -6328,16 +6330,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6420,16 +6422,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -7507,8 +7509,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Valoarea maximă 2theta în grade.</p><p>Implicit: 162."
-"00°</p></body></html>"
+"<html><head/><body><p>Valoarea maximă 2theta în grade.</p><p>Implicit: "
+"162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -7516,8 +7518,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Lărgirea vârfurilor la bază în grade.</p><p>Implicit: 0"
-".52958°</p></body></html>"
+"<html><head/><body><p>Lărgirea vârfurilor la bază în grade.</p><p>Implicit: "
+"0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7540,8 +7542,8 @@ msgid ""
 "<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Lungimea de undă a razelor X în angstromi. "
-"</p><p>Implicit: 1.50560 Å</p></body></html>"
+"<html><head/><body><p>Lungimea de undă a razelor X în angstromi. </"
+"p><p>Implicit: 1.50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -8221,8 +8223,8 @@ msgid ""
 "p><p>Default: off</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Ajustați energiile astfel încât nivelul zero să fie "
-"nivelul Fermi? Disponibil numai dacă se trasează nivelul Fermi.</p><p><br/"
-"></p><p>Implicit: dezactivat</p></body></html>"
+"nivelul Fermi? Disponibil numai dacă se trasează nivelul Fermi.</p><p><br/></"
+"p><p>Implicit: dezactivat</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -8293,8 +8295,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -8311,8 +8313,8 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>Introduceți numărul de puncte k care vor conecta "
 "punctele k speciale. Un număr mai mare de astfel de puncte k va netezi "
-"graficul, dar calculul poate dura mai mult.</p><p>Implicit: "
-"40</p></body></html>"
+"graficul, dar calculul poate dura mai mult.</p><p>Implicit: 40</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -8343,10 +8345,10 @@ msgstr ""
 "<html><head/><body><p>Numărul de dimensiuni periodice.</p><p><br/></"
 "p><p>Dacă este stabilit la 1, materialul va fi periodic numai de-a lungul "
 "vectorului A al cristalului.</p><p><br/></p><p>Dacă este stabilit la 2, "
-"materialul va fi periodic de-a lungul ambilor vectori A și B ai "
-"cristalului.</p><p><br/></p><p>Dacă acesta este stabilit la 3, materialul va "
-"fi periodic de-a lungul vectorilor A, B și C ai cristalului.</p><p><br/"
-"></p></body></html>"
+"materialul va fi periodic de-a lungul ambilor vectori A și B ai cristalului."
+"</p><p><br/></p><p>Dacă acesta este stabilit la 3, materialul va fi periodic "
+"de-a lungul vectorilor A, B și C ai cristalului.</p><p><br/></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)

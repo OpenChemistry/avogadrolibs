@@ -74,8 +74,8 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"不正なファイルエントリ: filename/contents "
-"が見つからないか、文字列ではありません:\n"
+"不正なファイルエントリ: filename/contents が見つからないか、文字列ではありま"
+"せん:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:411
@@ -234,7 +234,8 @@ msgstr "MoleQueueに接続できません"
 msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
-msgstr "MoleQueueサーバに接続できません。起動していることを確認し、もう一度試してくだ"
+msgstr ""
+"MoleQueueサーバに接続できません。起動していることを確認し、もう一度試してくだ"
 "さい。"
 
 #: molequeue/inputgeneratorwidget.cpp:317
@@ -983,7 +984,8 @@ msgstr ""
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
-msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
+msgstr ""
+"ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -5336,7 +5338,8 @@ msgstr ""
 msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
-msgstr "<html><head/><body><p>このジョブで予約するプロセッサ数</p></body></html>"
+msgstr ""
+"<html><head/><body><p>このジョブで予約するプロセッサ数</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
