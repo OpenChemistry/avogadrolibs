@@ -382,7 +382,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   m_cube2 = m_molecule->addCube();
   
    QFuture future = QtConcurrent::run([=]() {
-    calculateEDTpass(m_cube2, type, 0.5); // using m_cube2 for low res
+    calculateEDTpass(m_cube2, type, 0.5);
   });
 
     if(type == SolventExcluded){
@@ -391,15 +391,16 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     m_displayMeshWatcher.setFuture(future); 
   }
 
-  // m_displayMeshWatcher.setFuture(futureLowRes); // connected with displayMesh()
-
+  if(defaultResolution != 0.5){
     future = QtConcurrent::run([=]() {
     calculateEDTpass(m_cube, type, defaultResolution);
   });
+  
   if(type == SolventExcluded){
     m_performEDTStepWatcher.setFuture(future);
   }else{
     m_displayMeshWatcher.setFuture(future); 
+  }
   }
 
 }
@@ -739,9 +740,9 @@ void Surfaces::displayMesh()
         m_meshesLeft = 2;
     }
 
-      m_molecule->clearMeshes();
 
     if (m_cube2) {
+      m_molecule->clearMeshes();
       if(!m_mesh2)
       m_mesh2 = m_molecule->addMesh();
 
