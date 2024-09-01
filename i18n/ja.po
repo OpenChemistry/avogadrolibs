@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-31 18:06+0000\n"
+"PO-Revision-Date: 2024-09-02 08:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -384,6 +384,11 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"警告:\n"
+"\n"
+"%1\n"
+"\n"
+"続けますか?"
 
 #: molequeue/inputgeneratorwidget.cpp:561
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
@@ -422,7 +427,7 @@ msgstr ""
 #: molequeue/molequeuedialog.cpp:105
 #, fuzzy
 msgid "Fetching completed job information…"
-msgstr "完了したジョブ情報を取得しています…"
+msgstr "完了したジョブの情報を取得しています…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -433,8 +438,9 @@ msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:127
+#, fuzzy
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "ジョブの投入でエラー"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
@@ -980,12 +986,10 @@ msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:100
-#, fuzzy
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
-msgstr ""
-"ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
+msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1549,8 +1553,6 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr "指定した軸に原子を合わせるために分子を回転させます。"
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
 msgstr "アラインツール"
 
