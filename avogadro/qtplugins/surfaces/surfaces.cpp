@@ -725,49 +725,37 @@ void Surfaces::generateMesh(Core::Cube* cube, Core::Mesh* mesh, QtGui::MeshGener
 void Surfaces::displayMesh()
 {
     if (!m_cube || !m_cube2)
-    return;
+        return;
 
     if (m_dialog != nullptr)
         m_smoothingPasses = m_dialog->smoothingPassesValue();
     else
         m_smoothingPasses = 0;
 
-    if (m_cube) {
-        if (!m_mesh1)
-        m_mesh1 = m_molecule->addMesh();
+    m_molecule->clearMeshes();
 
+    if (m_cube) {
+        m_mesh1 = m_molecule->addMesh();
         generateMesh(m_cube, m_mesh1, m_meshGenerator1, true, false);
         m_meshesLeft = 2;
     }
 
+    m_molecule->clearMeshes();
 
     if (m_cube2) {
-      m_molecule->clearMeshes();
-      if(!m_mesh2)
-      m_mesh2 = m_molecule->addMesh();
-
+        m_mesh2 = m_molecule->addMesh();
         generateMesh(m_cube2, m_mesh2, m_meshGenerator2, true, false);
         m_meshesLeftPass2 = 2;
-
     }
 
-    bool isMO = false;
-    // if it's from a file we should "play it safe"
-    if (m_cube->cubeType() == Cube::Type::MO ||
-      m_cube->cubeType() == Cube::Type::FromFile) {
-    isMO = true;
-  }
-
-  if (isMO) {
-    if(!m_mesh3)
-    m_mesh3 = m_molecule->addMesh();
-
-    generateMesh(m_cube, m_mesh3, m_meshGenerator3, false, true);
-    ++m_meshesLeft;
-    ++m_meshesLeftPass2;
-  }
+    bool isMO = (m_cube->cubeType() == Cube::Type::MO || m_cube->cubeType() == Cube::Type::FromFile);
+    if (isMO) {
+        m_mesh3 = m_molecule->addMesh();
+        generateMesh(m_cube, m_mesh3, m_meshGenerator3, false, true);
+        ++m_meshesLeft;
+        ++m_meshesLeftPass2;
+    }
 }
-
 
 Core::Color3f Surfaces::chargeGradient(double value, double clamp,
                                        ColormapType colormap) const
