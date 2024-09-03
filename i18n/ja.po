@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-09-04 05:09+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -246,7 +246,7 @@ msgstr "%1の計算を投入"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1013
 #: qtplugins/gamessinput/gamessinputdialog.cpp:722
 msgid "Job Failed"
-msgstr ""
+msgstr "ジョブ失敗"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1014
