@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-09-02 08:09+0000\n"
+"PO-Revision-Date: 2024-09-04 05:09+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -29,7 +29,6 @@ msgid "Batch Job #%L1 (%2)"
 msgstr "バッチジョブ #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
-#, fuzzy
 msgid "No message specified."
 msgstr "メッセージが指定されていません。"
 
@@ -58,7 +57,7 @@ msgid "Reference file '%1' does not exist."
 msgstr "参照ファイル'%1'は存在しません。"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error populating file %1: %2"
 msgstr "ファイル%1の生成でエラー: %2"
 
@@ -3598,7 +3597,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "原子を平行移動..."
+msgstr "シーンを平行移動。"
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
