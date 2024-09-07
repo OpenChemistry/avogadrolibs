@@ -224,7 +224,10 @@ size_t Graph::addEdge(size_t a, size_t b)
       m_subgraphDirty[subgraphA] || m_subgraphDirty[subgraphB];
     for (size_t i : m_subgraphToVertices[subgraphB]) {
       m_subgraphToVertices[subgraphA].insert(i);
-      m_vertexToSubgraph[i] = subgraphA;
+      if (i < m_vertexToSubgraph.size())
+        m_vertexToSubgraph[i] = subgraphA;
+      else
+        m_vertexToSubgraph.push_back(subgraphA);
     }
     // Just leave it empty, it could be reused
     m_subgraphToVertices[subgraphB].clear();
@@ -433,8 +436,7 @@ size_t Graph::edgeCount() const
 
 std::vector<size_t> Graph::neighbors(size_t index) const
 {
-  if(index==size())
-  {
+  if (index == size()) {
     std::vector<size_t> emptyVector;
     return std::vector<size_t>(emptyVector);
   }
