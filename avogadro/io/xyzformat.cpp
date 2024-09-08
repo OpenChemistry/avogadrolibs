@@ -129,8 +129,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Do we have an animation?
   size_t numAtoms2;
-  if (getline(inStream, buffer) && (numAtoms2 = lexicalCast<int>(buffer)) &&
-      numAtoms == numAtoms2) {
+  // check if the next frame has the same number of atoms
+  getline(inStream, buffer); // should be the number of atoms
+  if (buffer[0] == '<')
+    getline(inStream, buffer); // Orca 6 prints ">" separators instead
+
+  if ((numAtoms2 = lexicalCast<int>(buffer)) && numAtoms == numAtoms2) {
     getline(inStream, buffer); // Skip the blank
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
     int coordSet = 1;
