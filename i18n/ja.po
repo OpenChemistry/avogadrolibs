@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-08-31 05:09+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-09-04 05:09+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.7.1-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -29,7 +29,6 @@ msgid "Batch Job #%L1 (%2)"
 msgstr "バッチジョブ #%L1 (%2)"
 
 #: molequeue/client/client.cpp:244
-#, fuzzy
 msgid "No message specified."
 msgstr "メッセージが指定されていません。"
 
@@ -58,7 +57,7 @@ msgid "Reference file '%1' does not exist."
 msgstr "参照ファイル'%1'は存在しません。"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
-#, fuzzy, qt-format
+#, qt-format
 msgid "Error populating file %1: %2"
 msgstr "ファイル%1の生成でエラー: %2"
 
@@ -74,8 +73,8 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
-"不正なファイルエントリ: filename/contents "
-"が見つからないか、文字列ではありません:\n"
+"不正なファイルエントリ: filename/contents が見つからないか、文字列ではありま"
+"せん:\n"
 "%1"
 
 #: molequeue/inputgenerator.cpp:242 qtgui/interfacescript.cpp:411
@@ -234,7 +233,8 @@ msgstr "MoleQueueに接続できません"
 msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
-msgstr "MoleQueueサーバに接続できません。起動していることを確認し、もう一度試してくだ"
+msgstr ""
+"MoleQueueサーバに接続できません。起動していることを確認し、もう一度試してくだ"
 "さい。"
 
 #: molequeue/inputgeneratorwidget.cpp:317
@@ -246,7 +246,7 @@ msgstr "%1の計算を投入"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1013
 #: qtplugins/gamessinput/gamessinputdialog.cpp:722
 msgid "Job Failed"
-msgstr ""
+msgstr "ジョブ失敗"
 
 #: molequeue/inputgeneratorwidget.cpp:334
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1014
@@ -383,6 +383,11 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"警告:\n"
+"\n"
+"%1\n"
+"\n"
+"続けますか?"
 
 #: molequeue/inputgeneratorwidget.cpp:561
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
@@ -421,7 +426,7 @@ msgstr ""
 #: molequeue/molequeuedialog.cpp:105
 #, fuzzy
 msgid "Fetching completed job information…"
-msgstr "完了したジョブ情報を取得しています…"
+msgstr "完了したジョブの情報を取得しています…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -432,8 +437,9 @@ msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
 
 #: molequeue/molequeuedialog.cpp:127
+#, fuzzy
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "ジョブの投入でエラー"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
@@ -979,11 +985,10 @@ msgid "Unable to find a suitable file reader for the selected file."
 msgstr ""
 
 #: qtgui/fileformatdialog.cpp:100
-#, fuzzy
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
-msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加したいですか?"
+msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -1547,8 +1552,6 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr "指定した軸に原子を合わせるために分子を回転させます。"
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
 msgstr "アラインツール"
 
@@ -3594,7 +3597,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "原子を平行移動..."
+msgstr "シーンを平行移動。"
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -5336,7 +5339,8 @@ msgstr ""
 msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
-msgstr "<html><head/><body><p>このジョブで予約するプロセッサ数</p></body></html>"
+msgstr ""
+"<html><head/><body><p>このジョブで予約するプロセッサ数</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)

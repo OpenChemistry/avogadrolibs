@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Andika Tulus Pangestu <andhikatuluspangestu@gmail.com>, 2020.
 # Ferdinand Tampubolon <dnandz@gmail.com>, 2021.
-# Reza Almanda <rezaalmanda27@gmail.com>, 2021.
+# Reza Almanda <rezaalmanda27@gmail.com>, 2021, 2024.
 # RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>, 2021.
 # Jacque Fresco <aidter@use.startmail.com>, 2021.
 # fikril Ha <fikrilha099@gmail.com>, 2021.
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2021-12-22 05:54+0000\n"
+"PO-Revision-Date: 2024-09-09 01:09+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.10\n"
+"X-Generator: Weblate 5.8-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -97,7 +97,7 @@ msgstr "anggota 'dokumen' menghilang."
 
 #: molequeue/inputgenerator.cpp:263 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "Anggota 'mainFile' tidak merujuk pada entri di 'files'."
 
 #: molequeue/inputgenerator.cpp:268 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
@@ -124,20 +124,24 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Error parsing pada offset %L1: '%2' \n"
+"JSON Raw:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:350
-#, fuzzy, qt-format
-#| msgid "Error writing molecule representation to string: %1"
+#, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
-msgstr "Galat saat menulis representasi molekul ke string: %1"
+msgstr ""
+"Error saat menyimpan representasi molekul ke string: Format file yang tidak "
+"dikenali: %1"
 
 #: molequeue/inputgenerator.cpp:358
-#, fuzzy, qt-format
-#| msgid "Error writing molecule representation to string: %1"
+#, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr "Galat saat menulis representasi molekul ke string: %1"
+msgstr "Error saat menyimpan representasi molekul ke string: %1"
 
 #: molequeue/inputgenerator.cpp:370 qtgui/interfacescript.cpp:563
 #, qt-format
