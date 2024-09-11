@@ -54,7 +54,7 @@ jobs:
         - {
             name: "Windows Latest MSVC", artifact: "Win64.exe",
             os: windows-latest,
-            cc: "clang-cl", cxx: "clang-cl",
+            cc: "cl", cxx: "cl",
             build_type: "Release",
             cmake_flags: "-G Ninja",
             build_flags: "-j 2",
