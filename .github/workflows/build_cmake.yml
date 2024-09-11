@@ -317,7 +317,7 @@ jobs:
       continue-on-error: true
 
     - name: Setup tmate session
-      if: runner.os == 'macOS'
+      if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
 
     - name: Upload
