@@ -260,15 +260,15 @@ void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
   // Emit a signal indicating the file formats are ready if read and write
   // formats have both returned their results.
   if (!m_readFormatsPending && !m_writeFormatsPending) {
-    emit fileFormatsReady();
-
     // Update the default format if cjson is available
     if (m_readFormats.contains("Chemical JSON") &&
         m_writeFormats.contains("Chemical JSON")) {
       m_defaultFormat = "cjson";
 
-      qDebug() << "Setting default format to cjson.";
+      qDebug() << "Setting default format to " << m_defaultFormat.c_str();
     }
+
+    emit fileFormatsReady();
   }
 }
 
