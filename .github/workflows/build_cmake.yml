@@ -264,7 +264,7 @@ jobs:
         fi # password exists
 
     - name: Create Mac and Windows Packages
-      if: matrix.config.os == 'windows-latest' || matrix.config.os == 'macos-latest'
+      if: matrix.config.os == 'windows-latest' || runner.os == 'macOS'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
