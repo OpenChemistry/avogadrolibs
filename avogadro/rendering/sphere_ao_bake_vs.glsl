@@ -11,23 +11,25 @@
 // Input
 //
 
+#version 400
+precision highp float;
 // sphere center position: model coords
-attribute vec3 a_pos;
+in vec3 a_pos;
 // corner: [-radius, radius]
-attribute vec2 a_corner;
+in vec2 a_corner;
 // offset for the center of the sphere's AO map texture tile
-attribute vec2 a_tileOffset;
+in vec2 a_tileOffset;
 
 //
 // Output
 //
 
 // the sphere center position: eye coords
-varying vec3 v_pos;
+out vec3 v_pos;
 // the sphere radius
-varying float v_radius;
+out float v_radius;
 // stretched corner: [-1.x, 1.x] (see below)
-varying vec2 v_corner;
+out vec2 v_corner;
 
 //
 // Uniforms
