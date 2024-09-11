@@ -36,7 +36,7 @@ public:
    */
   explicit BackgroundFileFormat(Io::FileFormat* format,
                                 QObject* parent = nullptr);
-  ~BackgroundFileFormat();
+  ~BackgroundFileFormat() override;
 
   /**
    * The molecule instance to read/write.

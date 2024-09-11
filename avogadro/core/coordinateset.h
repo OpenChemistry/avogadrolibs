@@ -85,7 +85,7 @@ class CoordinateSet : public ArraySet
 public:
   CoordinateSet() { m_content = new Holder<T>(T()); }
 
-  ~CoordinateSet() = default;
+  ~CoordinateSet() override = default;
 
   // Properties
   void resize(Index _size) { m_coordinates.resize(_size); }

@@ -43,7 +43,7 @@ class Orbitals : public QtGui::ExtensionPlugin
 
 public:
   explicit Orbitals(QObject* parent = nullptr);
-  ~Orbitals();
+  ~Orbitals() override;
 
   QString name() const override { return tr("Orbital Window"); }
   QString description() const override { return tr("Display orbital lists."); }

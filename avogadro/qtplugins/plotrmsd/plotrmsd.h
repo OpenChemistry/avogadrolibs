@@ -29,15 +29,15 @@ class PlotRmsd : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit PlotRmsd(QObject* parent_ = nullptr);
-  ~PlotRmsd();
+  ~PlotRmsd() override;
 
-  QString name() const { return tr("PlotRmsd"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("PlotRmsd"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 

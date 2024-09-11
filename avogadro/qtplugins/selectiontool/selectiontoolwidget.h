@@ -23,7 +23,7 @@ class SelectionToolWidget : public QWidget
 
 public:
   explicit SelectionToolWidget(QWidget* parent = nullptr);
-  ~SelectionToolWidget();
+  ~SelectionToolWidget() override;
 
   void setDropDown(size_t current, size_t max);
 

@@ -18,16 +18,16 @@ class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
 public:
   explicit @PluginName@Factory(QObject* parent_ = nullptr) : QObject(parent_) {}
 
-  QtGui::@PluginType@* createInstance(QObject* parent_ = nullptr)
+  QtGui::@PluginType@* createInstance(QObject* parent_ = nullptr) override
   {
     auto* object = new @PluginClass@(parent_);
     object->setObjectName("@PluginName@");
     return object;
   }
 
-  QString identifier() const { return "@PluginName@"; }
+  QString identifier() const override { return "@PluginName@"; }
 
-  QString description() const { return "@PluginDescription@"; }
+  QString description() const override { return "@PluginDescription@"; }
 
 };
 

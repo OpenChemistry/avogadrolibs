@@ -40,7 +40,7 @@ public:
   /**
    *  Redraw the widget (i.e., refresh the colored rectangle)
    */
-  void paintEvent(QPaintEvent*);
+  void paintEvent(QPaintEvent*) override;
 
   /**
    * @param color the new color to be used
@@ -74,7 +74,7 @@ protected:
    * Generic event handler, currently defaults to calling parent class
    * (included for future compatibility)
    */
-  bool event(QEvent* e);
+  bool event(QEvent* e) override;
 
   QColor m_color;  //!< The current color
   QString m_title; //!< The current dialog title

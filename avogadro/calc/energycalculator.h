@@ -25,7 +25,7 @@ class AVOGADROCALC_EXPORT EnergyCalculator : public cppoptlib::Problem<Real>
 {
 public:
   EnergyCalculator() = default;
-  ~EnergyCalculator() = default;
+  ~EnergyCalculator() override = default;
 
   /**
    * Create a new instance of the model. Ownership passes to the
@@ -88,7 +88,7 @@ public:
    * Calculate the gradients for this method, defaulting to numerical
    * finite-difference methods
    */
-  virtual void gradient(const TVector& x, TVector& grad) override;
+  void gradient(const TVector& x, TVector& grad) override;
 
   /**
    * Called to 'clean' gradients @param grad (e.g., for constraints)

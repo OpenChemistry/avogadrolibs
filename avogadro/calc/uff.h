@@ -22,7 +22,7 @@ class AVOGADROCALC_EXPORT UFF : public EnergyCalculator
 {
 public:
   UFF();
-  ~UFF();
+  ~UFF() override;
 
   UFF* newInstance() const override { return new UFF; }
 

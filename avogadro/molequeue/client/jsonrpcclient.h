@@ -46,7 +46,7 @@ class AVOGADROMOLEQUEUE_EXPORT JsonRpcClient : public QObject
 
 public:
   explicit JsonRpcClient(QObject* parent_ = nullptr);
-  ~JsonRpcClient();
+  ~JsonRpcClient() override;
 
   /**
    * Query if the client is connected to a server.
