@@ -241,6 +241,11 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       run: |
+        # be sure the DMG can be created easily
+        # https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
+        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo waiting...; while pgrep XProtect; do sleep 3; done;
+
         # create variables
         if [ -n "${P12_PASSWORD}" ]; then
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
