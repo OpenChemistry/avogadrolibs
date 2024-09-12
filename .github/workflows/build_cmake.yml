@@ -57,7 +57,7 @@ jobs:
             cc: "clang-cl", cxx: "clang-cl",
             build_type: "Release",
             cmake_flags: "",
-            build_flags: "-m:2",
+            build_flags: "/p:CL_MPCount=2",
             cpack_flags: "-G NSIS",
           }
         - {
