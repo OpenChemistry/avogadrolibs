@@ -56,8 +56,8 @@ jobs:
             os: windows-latest,
             cc: "clang-cl", cxx: "clang-cl",
             build_type: "Release",
-            cmake_flags: "",
-            build_flags: "-j 2",
+            cmake_flags: "-G Ninja",
+            build_flags: "-j 1",
             cpack_flags: "-G NSIS",
           }
         - {
@@ -96,7 +96,7 @@ jobs:
         fi
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
-      run: choco install ninja
+      uses: seanmiddleditch/gha-setup-ninja@master
 
     - name: Install Fortran (Windows)
       uses: fortran-lang/setup-fortran@v1
