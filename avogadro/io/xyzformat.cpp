@@ -14,8 +14,7 @@
 #include <nlohmann/json.hpp>
 
 #include <iomanip>
-#include <istream>
-#include <ostream>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -131,8 +130,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   size_t numAtoms2;
   // check if the next frame has the same number of atoms
   getline(inStream, buffer); // should be the number of atoms
-  if (buffer[0] == '<')
-    getline(inStream, buffer); // Orca 6 prints ">" separators instead
+  if (buffer.size() == 0 || buffer[0] == '>') {
+    getline(inStream, buffer); // Orca 6 prints ">" separators
+  }
 
   if ((numAtoms2 = lexicalCast<int>(buffer)) && numAtoms == numAtoms2) {
     getline(inStream, buffer); // Skip the blank
@@ -144,6 +144,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       for (size_t i = 0; i < numAtoms; ++i) {
         getline(inStream, buffer);
+        if (inStream.eof()) {
+          numAtoms2 = 0;
+          break; // break this inner loop
+        }
+
         vector<string> tokens(split(buffer, ' '));
         if (tokens.size() < 4) {
           appendError("Not enough tokens in this line: " + buffer);
@@ -157,9 +162,21 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       mol.setCoordinate3d(positions, coordSet++);
 
-      if (!getline(inStream, buffer)) {
+      if (getline(inStream, buffer)) {
+        if (inStream.eof()) {
+          numAtoms2 = 0;
+          break; // break this inner loop
+        }
+
+        if (buffer.size() == 0 || buffer[0] == '>')
+          getline(inStream, buffer); // Orca 6 prints ">" separators
+        if (inStream.eof()) {
+          numAtoms2 = 0;
+          break; // break this inner loop
+        }
+
         numAtoms2 = lexicalCast<int>(buffer);
-        if (numAtoms == numAtoms2)
+        if (numAtoms != numAtoms2)
           break;
       }
 
