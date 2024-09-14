@@ -32,12 +32,10 @@ uniform float offset;
 uniform sampler2D inDepthTex;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inAoEnabled;
-// 1.0 if enabled, 0.0 if disabled
-uniform float inFogEnabled;
+// 0.0 if disabled
+uniform float inFogStrength;
 // Shadow strength for SSAO
 uniform float inAoStrength;
-// Fog strength
-uniform float inFogStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
 // offset for zoom-in and zoom-out
@@ -142,7 +140,7 @@ void main() {
   luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
   luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
   vec4 color = texture2D(inRGBTex, UV);
-  if(inFogEnabled == 0.0){
+  if (inFogStrength == 0.0) {
     gl_FragColor = vec4(color.xyz * luminosity, color.w);
   }
   else {
