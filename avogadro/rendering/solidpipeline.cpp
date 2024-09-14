@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-#include<cmath>
+#include <cmath>
 
 namespace Avogadro::Rendering {
 
@@ -160,22 +160,24 @@ void SolidPipeline::end()
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
-  d->firstStageShaders.setUniformValue("inFogStrength", (m_fogStrength));
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("inFogEnabled", m_fogEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inFogStrength", m_fogEnabled ? m_fogStrength : 0.0f);
   d->firstStageShaders.setUniformValue("inFogPosition", m_fogPosition);
   d->firstStageShaders.setUniformValue("fogR", (m_backgroundColor[0])/255.0f);
   d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1])/255.0f);
   d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2])/255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
-  // std::cout<<m_fogStrength<<std::endl;
   glDisableVertexAttribArray(0);
 }
 
-// TODO: More precise calculations needed
 void SolidPipeline::adjustOffset(const Camera& cam) {
 
-  //since it's a workaround, I feel like I can optimize it more. 
+    // The numbers used in calculations are random.
+    // They help define an offset with the projection-matrix
+    // to make the fog dynamic as the molecule moves away 
+    // from the camera or come closer.
+
     Eigen::Matrix4f projectView = cam.projection().matrix();
 
     float project = ((((5000 + projectView(2,3) * 1000)/6) + 55) * 100);
