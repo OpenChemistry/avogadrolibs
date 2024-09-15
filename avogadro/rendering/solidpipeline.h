@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_RENDERING_SOLIDPIPELINE_H
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
+#include "camera.h"
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -31,6 +33,7 @@ public:
    */
   void begin();
 
+  void adjustOffset(const Camera& camera);
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
    */
@@ -53,10 +56,34 @@ public:
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
   /**
+   * @brief Get or set whether Fog is enabled.
+   */
+  bool getFogEnabled() { return m_fogEnabled; }
+  void setFogEnabled(bool enabled) { m_fogEnabled = enabled; }
+
+  /**
+   * @brief Set Background Color to it's current value.
+   */  
+  Vector4ub backgroundColor() const { return m_backgroundColor; }
+  void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
+
+  /**
    * @brief Get or set shadow strength for Ambient Occlusion.
    */
   float getAoStrength() { return m_aoStrength; }
   void setAoStrength(float strength) { m_aoStrength = strength; }
+
+  /**
+   * @brief Get or set fog strength. 
+   */
+  float getFogStrength() { return m_fogStrength; }
+  void setFogStrength(float strength) { m_fogStrength = strength; }
+
+  /**
+  * @brief Get or set fog position
+  */
+  float getFogPosition(){ return m_fogPosition;}
+  void setFogPosition(float position) { m_fogPosition = position; }
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
@@ -77,7 +104,12 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
+  float m_fogPosition;
+  Vector4ub m_backgroundColor;
+  Eigen::Affine3f modelView; 
+  bool m_fogEnabled;
   float m_aoStrength;
+  float m_fogStrength;
   bool m_edEnabled;
   float m_edStrength;
   int m_width;

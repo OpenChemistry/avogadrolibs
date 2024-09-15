@@ -105,6 +105,7 @@ void GLRenderer::render()
   glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
   m_solidPipeline.end();
+  m_solidPipeline.adjustOffset(m_camera);
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
