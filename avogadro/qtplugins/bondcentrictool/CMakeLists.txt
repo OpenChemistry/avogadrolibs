@@ -19,12 +19,4 @@ avogadro_plugin(BondCentric
   "${bondcentrictool_rcs}"
 )
 
-target_link_libraries(BondCentric
-  PRIVATE
-    Avogadro::Rendering
-    Avogadro::QtOpenGL)
-
-target_include_directories(BondCentric
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(BondCentric PRIVATE Avogadro::QtOpenGL)

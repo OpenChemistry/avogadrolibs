@@ -19,9 +19,4 @@ avogadro_plugin(MeasureTool
   "${measuretool_rcs}"
 )
 
-target_link_libraries(MeasureTool PRIVATE Avogadro::Rendering Avogadro::QtOpenGL)
-
-target_include_directories(MeasureTool
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(MeasureTool PRIVATE Avogadro::QtOpenGL)

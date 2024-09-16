@@ -7,9 +7,4 @@ avogadro_plugin(Focus
   ""
 )
 
-target_link_libraries(Focus PRIVATE Avogadro::Rendering Avogadro::QtOpenGL)
-
-target_include_directories(Focus
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(Focus PRIVATE Avogadro::QtOpenGL)

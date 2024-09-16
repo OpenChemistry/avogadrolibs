@@ -19,9 +19,4 @@ avogadro_plugin(Navigator
   "${navigator_rcs}"
 )
 
-target_link_libraries(Navigator PRIVATE Avogadro::Rendering Avogadro::QtOpenGL)
-
-target_include_directories(Navigator
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(Navigator PRIVATE Avogadro::QtOpenGL)

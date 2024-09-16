@@ -45,9 +45,4 @@ install(DIRECTORY "${AvogadroLibs_SOURCE_DIR}/../fragments"
   PATTERN ".git" EXCLUDE
 )
 
-target_link_libraries(TemplateTool LINK_PRIVATE Avogadro::QtOpenGL Avogadro::Rendering)
-
-target_include_directories(TemplateTool
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(TemplateTool LINK_PRIVATE Avogadro::QtOpenGL)

@@ -21,9 +21,4 @@ avogadro_plugin(Editor
   "${editor_rcs}"
 )
 
-target_link_libraries(Editor PRIVATE Avogadro::Rendering Avogadro::QtOpenGL)
-
-target_include_directories(Editor
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(Editor PRIVATE Avogadro::QtOpenGL)

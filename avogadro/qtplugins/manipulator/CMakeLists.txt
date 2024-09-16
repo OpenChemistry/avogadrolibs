@@ -20,12 +20,4 @@ avogadro_plugin(Manipulator
   "${manipulator_rcs}"
 )
 
-target_link_libraries(Manipulator
-  PRIVATE
-    Avogadro::Rendering
-    Avogadro::QtOpenGL)
-
-target_include_directories(Manipulator
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
+target_link_libraries(Manipulator PRIVATE Avogadro::QtOpenGL)

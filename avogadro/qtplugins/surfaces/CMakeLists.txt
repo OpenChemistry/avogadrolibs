@@ -23,7 +23,6 @@ target_link_libraries(Surfaces
     Avogadro::Calc
     Avogadro::QuantumIO
     Avogadro::QtOpenGL
-    Avogadro::Rendering
     Qt::Concurrent
     gif-h
     gwavi
@@ -34,8 +33,3 @@ if(QT_VERSION EQUAL 6)
     PRIVATE
       Qt6::OpenGL)
 endif()
-
-target_include_directories(Surfaces
-  PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)
