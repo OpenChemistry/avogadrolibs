@@ -15,9 +15,9 @@
 #include <QPointer>
 
 #if QT_VERSION >= 0x060000
-    #include <QtOpenGLWidgets/QOpenGLWidget>
+#include <QtOpenGLWidgets/QOpenGLWidget>
 #else
-    #include <QOpenGLWidget>
+#include <QOpenGLWidget>
 #endif
 
 class QTimer;
