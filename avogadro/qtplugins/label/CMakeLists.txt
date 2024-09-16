@@ -25,4 +25,12 @@ avogadro_plugin(LabelEditor
 )
 
 target_link_libraries(Label LINK_PRIVATE Avogadro::Rendering)
-target_link_libraries(LabelEditor LINK_PRIVATE Avogadro::QtOpenGL)
+target_link_libraries(LabelEditor
+  LINK_PRIVATE
+    Avogadro::Rendering
+    Avogadro::QtOpenGL)
+
+target_include_directories(LabelEditor
+  PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
+    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)

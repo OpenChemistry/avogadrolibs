@@ -675,7 +675,7 @@ QString CoordinateEditorDialog::detectInputFormat() const
   FORMAT_DEBUG(qDebug() << "\n\nExamining sample:" << sample;)
 
   // Split the string into tokens, and identify the type of each.
-  QList<QString> tokens(sample.split(TOKEN_SEPARATOR, QString::SkipEmptyParts));
+  QList<QString> tokens(sample.split(TOKEN_SEPARATOR, Qt::SkipEmptyParts));
   QList<TokenType> tokenTypes;
   tokenTypes.reserve(tokens.size());
   size_t tokenTypeCounts[3] = { 0, 0, 0 };

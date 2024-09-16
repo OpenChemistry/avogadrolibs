@@ -43,7 +43,7 @@ bool tokenize(std::vector<std::string>& vcr, const char* buf,
   splitString += QString(delimstr);
   splitString += QString("]");
   QRegExp splitter(splitString);
-  foreach (const QString& str, tmp.split(splitter, QString::SkipEmptyParts))
+  foreach (const QString& str, tmp.split(splitter, Qt::SkipEmptyParts))
     vcr.push_back(str.toStdString());
 
   return true;
