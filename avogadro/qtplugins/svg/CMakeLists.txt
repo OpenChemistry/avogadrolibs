@@ -10,3 +10,7 @@ avogadro_plugin(SVG
 )
 
 target_link_libraries(SVG PRIVATE Avogadro::QtOpenGL Qt::Svg)
+
+target_include_directories(SVG
+  PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering)

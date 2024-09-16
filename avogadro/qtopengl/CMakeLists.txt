@@ -1,5 +1,5 @@
 if(QT_VERSION EQUAL 6)
-  find_package(Qt6 COMPONENTS  Widgets OpenGLWidgets REQUIRED)
+  find_package(Qt6 REQUIRED COMPONENTS Widgets OpenGLWidgets)
 else()
   find_package(Qt5 COMPONENTS Widgets REQUIRED)
 endif()
@@ -19,7 +19,7 @@ target_sources(QtOpenGL PRIVATE
 )
 
 avogadro_add_library(QtOpenGL)
-target_link_libraries(QtOpenGL Avogadro::Rendering Avogadro::QtGui Qt::Widgets)
+target_link_libraries(QtOpenGL PRIVATE Avogadro::Rendering Avogadro::QtGui Qt::Widgets)
 if(QT_VERSION EQUAL 6)
-  target_link_libraries(QtOpenGL Qt::OpenGLWidgets)
+  target_link_libraries(QtOpenGL PRIVATE Qt6::OpenGLWidgets)
 endif()

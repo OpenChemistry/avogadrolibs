@@ -19,4 +19,9 @@ avogadro_plugin(Selection
   "${tool_rcs}"
 )
 
-target_link_libraries(Selection PRIVATE Avogadro::QtOpenGL)
+target_link_libraries(Selection PRIVATE Avogadro::Rendering Avogadro::QtOpenGL)
+
+target_include_directories(Selection
+  PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../../rendering
+    ${CMAKE_CURRENT_BINARY_DIR}/../../qtopengl)

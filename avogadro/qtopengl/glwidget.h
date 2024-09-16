@@ -13,7 +13,12 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <QPointer>
-#include <QOpenGLWidget>
+
+#if QT_VERSION >= 0x060000
+    #include <QtOpenGLWidgets/QOpenGLWidget>
+#else
+    #include <QOpenGLWidget>
+#endif
 
 class QTimer;
 
