@@ -7,13 +7,14 @@
 # Pavel Fric <fripohled.blogspot.com>, 2010.
 # Martin Slavík <martin.d.slavik@gmail.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Tomáš Poláček <ostriz2@seznam.cz>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-09-18 16:10+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-09-19 05:02+0000\n"
+"Last-Translator: Tomáš Poláček <ostriz2@seznam.cz>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
 "Language: cs\n"
@@ -54,12 +55,12 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr "Referenční soubor \"%1 neexistuje."
+msgstr "Referenční soubor '%1' neexistuje."
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Chyba při vyplňování souboru %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:372
 #, qt-format
