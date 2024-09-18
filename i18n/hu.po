@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-02-09 20:00+0000\n"
-"Last-Translator: Mirkó Attila <kisatti007hun@gmail.com>\n"
+"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"PO-Revision-Date: 2024-09-07 18:09+0000\n"
+"Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
 "Language: hu\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1033,7 +1033,7 @@ msgstr "A kijelölt fájl fájlolvasója nem található."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
-"The file extension is missing, so the format cannot be determined.Do you "
+"The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
 "A fájl kiterjesztése hiányzik, így a formátum nem határozható meg. Hozzá "
@@ -2916,15 +2916,15 @@ msgstr "Letöltendő kémiai szerkezet."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Érvénytelen PDB-kód"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "A PDB-kódnak pontosan 4 karakter hosszúnak kell lennie."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "A PDB-kód első karakterének 1-9 között kell lennie."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -2978,7 +2978,7 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Atomi erőtérek képi megjelenítése a molekula számára."
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Geometria optimalizálása"
@@ -3003,13 +3003,9 @@ msgstr "Kijelölt atomok lefagyásának feloldása"
 msgid "&Calculate"
 msgstr "S&zámítás"
 
-#: qtplugins/forcefield/forcefield.cpp:368
-#, qt-format
-msgid "%1 Energy = %L2"
-msgstr "%1 energia = %L2"
-
-#: qtplugins/forcefield/forcefield.cpp:369
-#: qtplugins/forcefield/forcefield.cpp:415
+#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:375
+#: qtplugins/forcefield/forcefield.cpp:421
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -3017,7 +3013,16 @@ msgstr "%1 energia = %L2"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:414
+#: qtplugins/forcefield/forcefield.cpp:246
+msgid "No atoms provided for optimization"
+msgstr "Nincsenek atomok az optimalizáláshoz"
+
+#: qtplugins/forcefield/forcefield.cpp:374
+#, qt-format
+msgid "%1 Energy = %L2"
+msgstr "%1 energia = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:420
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Erő Norm = %L2"
@@ -4716,7 +4721,7 @@ msgstr "Szimmetrikus atomok kitöltése a kristálytércsoport alapján."
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Tércsoport észlelése"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -4724,6 +4729,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"A tércsoport már be van állítva a következőre: %1.\n"
+"Szeretné felülírni?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
@@ -7733,27 +7740,28 @@ msgstr "16"
 msgid "18"
 msgstr "18"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Line Size:"
-msgstr "Vonalméret:"
+msgctxt "Size in pixels of the line drawing the spectra"
+msgid "Line Width:"
+msgstr "Vonalszélesség:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr "x"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr "y"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "&Beállítások…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -8364,6 +8372,9 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Line Size:"
+#~ msgstr "Vonalméret:"
 
 #~ msgid "Optimize"
 #~ msgstr "Optimalizálás"

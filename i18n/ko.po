@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-03-07 04:05+0000\n"
-"PO-Revision-Date: 2024-03-17 18:01+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"PO-Revision-Date: 2024-09-12 23:51+0000\n"
+"Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ko/>\n"
 "Language: ko\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1007,7 +1007,7 @@ msgstr "선택한 파일에 적합한 파일 리더를 찾을 수 없습니다."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
-"The file extension is missing, so the format cannot be determined.Do you "
+"The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr "파일 확장자가 누락되어 형식을 결정할 수 없습니다. 추가하겠습니까?"
 
@@ -2923,7 +2923,7 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "분자의 원자에 대한 역장 시각화를 렌더링합니다."
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:333 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "기하학 최적화"
@@ -2948,13 +2948,9 @@ msgstr "선택된 원자 멈춤 해제"
 msgid "&Calculate"
 msgstr "&계산"
 
-#: qtplugins/forcefield/forcefield.cpp:368
-#, qt-format
-msgid "%1 Energy = %L2"
-msgstr "%1 에너지 = %L2"
-
-#: qtplugins/forcefield/forcefield.cpp:369
-#: qtplugins/forcefield/forcefield.cpp:415
+#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:375
+#: qtplugins/forcefield/forcefield.cpp:421
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -2962,7 +2958,16 @@ msgstr "%1 에너지 = %L2"
 msgid "Avogadro"
 msgstr "아보가드로"
 
-#: qtplugins/forcefield/forcefield.cpp:414
+#: qtplugins/forcefield/forcefield.cpp:246
+msgid "No atoms provided for optimization"
+msgstr "최적화를 위해 제공되는 원자 없음"
+
+#: qtplugins/forcefield/forcefield.cpp:374
+#, qt-format
+msgid "%1 Energy = %L2"
+msgstr "%1 에너지 = %L2"
+
+#: qtplugins/forcefield/forcefield.cpp:420
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 강도 기준 = %L2"
@@ -5572,21 +5577,20 @@ msgid ""
 msgstr ""
 "<html><head/><body><p>형식 사양. 각 문자는 원자당 쓸 값을 나타냅니다:</"
 "p><p><span style=\" font-weight:600;\">#</span> - 원자 색인 (1, 2, ..., "
-"numAtoms)<br/><span style=\" font-weight:600;\">Z</span> - 원자 번호 (예: "
-"탄소의 경우 \"6\")<br/><span style=\" font-weight:600;\">G</span> - GAMESS-"
-"스타일 원자 번호 (예: 탄소의 경우 \"6.0\")<br/><span style=\" font-"
-"weight:600;\">N</span> - 원소 이름 (예: \"탄소\")<br/><span style=\" font-"
-"weight:600;\">S</span> - 요소 기호 (예: 탄소의 경우 \"C\")<br/><span style=\""
-" font-weight:600;\">x</span> - X 위치 좌표<br/><span style=\" font-"
-"weight:600;\">y</span> - Y 위치 좌표<br/><span style=\" font-weight:600;\""
-">z</span> - Z 위치 좌표<br/><span style=\" font-weight:600;\">a</span> - 'a' "
-"격자 좌표 (결정체만 해당)<br/><span style=\" font-weight:600;\">b</span> - "
-"'b' 격자 좌표 (결정체만 해당)<br/><span style=\" font-weight:600;\">c</span> "
-"- 'c' 격자 좌표 (결정체만 해당)<br/><span style=\" font-weight:600;\">_</"
-"span> - 정렬에 유용한 문자 공백 (\" \")<br/><span style=\" font-weight:600;\""
-">0</span> - 최적화 플래그에 유용한 문자 0 (\"0\")<br/><span style=\" font-"
-"weight:600;\">1</span> - 최적화 플래그에 유용한 문자 1 (\"1\")<br/"
-"></p></body></html>"
+"numAtoms)<br/><span style=\" font-weight:600;\">Z</span> - 원자 번호 (예: 탄"
+"소의 경우 \"6\")<br/><span style=\" font-weight:600;\">G</span> - GAMESS-스타"
+"일 원자 번호 (예: 탄소의 경우 \"6.0\")<br/><span style=\" font-weight:600;"
+"\">N</span> - 원소 이름 (예: \"탄소\")<br/><span style=\" font-weight:600;"
+"\">S</span> - 요소 기호 (예: 탄소의 경우 \"C\")<br/><span style=\" font-"
+"weight:600;\">x</span> - X 위치 좌표<br/><span style=\" font-weight:600;"
+"\">y</span> - Y 위치 좌표<br/><span style=\" font-weight:600;\">z</span> - Z "
+"위치 좌표<br/><span style=\" font-weight:600;\">a</span> - 'a' 격자 좌표 (결"
+"정체만 해당)<br/><span style=\" font-weight:600;\">b</span> - 'b' 격자 좌표 "
+"(결정체만 해당)<br/><span style=\" font-weight:600;\">c</span> - 'c' 격자 좌"
+"표 (결정체만 해당)<br/><span style=\" font-weight:600;\">_</span> - 정렬에 유"
+"용한 문자 공백 (\" \")<br/><span style=\" font-weight:600;\">0</span> - 최적"
+"화 플래그에 유용한 문자 0 (\"0\")<br/><span style=\" font-weight:600;\">1</"
+"span> - 최적화 플래그에 유용한 문자 1 (\"1\")<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6886,8 +6890,9 @@ msgstr "득점 방법:"
 msgid ""
 "scoring method for the genetic algorithm (RMSD = geometric distance, energy "
 "= lowest energies)"
-msgstr "유전 알고리즘에 대한 계산 방법 (RMSD = 기하학 거리, 에너지 = 가장 낮은 "
-"에너지)"
+msgstr ""
+"유전 알고리즘에 대한 계산 방법 (RMSD = 기하학 거리, 에너지 = 가장 낮은 에너"
+"지)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -7634,27 +7639,28 @@ msgstr "16"
 msgid "18"
 msgstr "18"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:434
+#. i18n: file: qtplugins/spectra/spectradialog.ui:437
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Line Size:"
-msgstr "선 크기:"
+msgctxt "Size in pixels of the line drawing the spectra"
+msgid "Line Width:"
+msgstr "선 폭:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:507
+#. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
 msgstr "x"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:512
+#. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
 msgstr "y"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:526
+#. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "&옵션…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:568
+#. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -8255,12 +8261,15 @@ msgstr "야에모프 입력을 표시하겠습니까?"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Launchpad Contributions:,Avogadro Team,Bundo,Kim Hanjo,Para, Sang-hyeon "
-"Lee,dlonie, park gong gu, seokhyun an, simmon"
+"Launchpad Contributions:,Avogadro Team,Bundo,Kim Hanjo,Para, Sang-hyeon Lee,"
+"dlonie, park gong gu, seokhyun an, simmon"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
+
+#~ msgid "Line Size:"
+#~ msgstr "선 크기:"
 
 #, fuzzy
 #~| msgid "Optimize Geometry"

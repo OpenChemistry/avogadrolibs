@@ -44,8 +44,8 @@ jobs:
             cpack: "",
           }
         - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
-            os: macos-latest,
+            name: "macOS Clang", artifact: "macOS.dmg",
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
@@ -115,6 +115,18 @@ jobs:
       with:
         repository: openchemistry/molecules
         path: molecules
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: crystals
 
     - name: Checkout i18n
       uses: actions/checkout@v4
@@ -229,13 +241,18 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       run: |
+        # be sure the DMG can be created easily
+        # https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
+        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo waiting...; while pgrep XProtect; do sleep 3; done;
+
         # create variables
         if [ -n "${P12_PASSWORD}" ]; then
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 -d -o $CERTIFICATE_PATH
 
           # create temporary keychain if the cert is non-zero
           if [ -s $CERTIFICATE_PATH ]; then
@@ -252,7 +269,7 @@ jobs:
         fi # password exists
 
     - name: Create Mac and Windows Packages
-      if: matrix.config.os == 'windows-latest' || matrix.config.os == 'macos-latest'
+      if: matrix.config.os == 'windows-latest' || runner.os == 'macOS'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then

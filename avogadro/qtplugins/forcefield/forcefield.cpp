@@ -241,6 +241,12 @@ void Forcefield::optimize()
   if (m_molecule == nullptr || m_method == nullptr)
     return;
 
+  if (!m_molecule->atomCount()) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("No atoms provided for optimization"));
+    return;
+  }
+
   // merge all coordinate updates into one step for undo
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);

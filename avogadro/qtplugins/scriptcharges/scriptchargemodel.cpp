@@ -357,7 +357,7 @@ void ScriptChargeModel::processElementString(const QString& str)
   QString str2(str);
   str2.replace(',', ' ');
   // then split on whitespace
-  QStringList strList = str2.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+  QStringList strList = str2.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
   foreach (QString sstr, strList) {
     // these should be numbers or ranges (e.g., 1-84)
     if (sstr.contains('-')) {

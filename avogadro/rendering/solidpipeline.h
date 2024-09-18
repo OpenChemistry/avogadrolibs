@@ -62,10 +62,34 @@ public:
   void setDofEnabled(bool enabled) { m_dofEnabled = enabled; }
   
   /**
+   * @brief Get or set whether Fog is enabled.
+   */
+  bool getFogEnabled() { return m_fogEnabled; }
+  void setFogEnabled(bool enabled) { m_fogEnabled = enabled; }
+
+  /**
+   * @brief Set Background Color to it's current value.
+   */  
+  Vector4ub backgroundColor() const { return m_backgroundColor; }
+  void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
+
+  /**
    * @brief Get or set shadow strength for Ambient Occlusion.
    */
   float getAoStrength() { return m_aoStrength; }
   void setAoStrength(float strength) { m_aoStrength = strength; }
+
+  /**
+   * @brief Get or set fog strength. 
+   */
+  float getFogStrength() { return m_fogStrength; }
+  void setFogStrength(float strength) { m_fogStrength = strength; }
+
+  /**
+  * @brief Get or set fog position
+  */
+  float getFogPosition(){ return m_fogPosition;}
+  void setFogPosition(float position) { m_fogPosition = position; }
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
@@ -102,7 +126,11 @@ private:
   float m_dofStrength;
   float m_dofPosition;
   bool m_dofEnabled;
+  float m_fogPosition;
+  Vector4ub m_backgroundColor;
+  bool m_fogEnabled;
   float m_aoStrength;
+  float m_fogStrength;
   bool m_edEnabled;
   float m_edStrength;
   int m_width;

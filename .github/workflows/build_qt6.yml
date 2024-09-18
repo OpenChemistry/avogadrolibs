@@ -39,7 +39,7 @@ jobs:
           }
         - {
             name: "macOS Qt6", artifact: "",
-            os: macos-latest,
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja",

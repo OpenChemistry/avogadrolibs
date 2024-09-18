@@ -224,8 +224,9 @@ Real OBMMEnergy::value(const Eigen::VectorXd& x)
   input = "coord\n";
   for (Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
-    input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
-             QString::number(x[i + 2]) + "\n";
+    input += QString::number(x[i]).toUtf8() + " " +
+             QString::number(x[i + 1]).toUtf8() + " " +
+             QString::number(x[i + 2]).toUtf8() + "\n";
   }
 
   result = writeAndRead(input);
@@ -257,8 +258,9 @@ void OBMMEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   QByteArray result, input = "coord\n";
   for (Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
-    input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
-             QString::number(x[i + 2]) + "\n";
+    input += QString::number(x[i]).toUtf8() + " " +
+             QString::number(x[i + 1]).toUtf8() + " " +
+             QString::number(x[i + 2]).toUtf8() + "\n";
   }
 
   result = writeAndRead(input);
