@@ -238,7 +238,15 @@ void MeasureTool::draw(Rendering::GroupNode& node)
 
   TextProperties overlayTProp;
   overlayTProp.setFontFamily(TextProperties::Mono);
-  overlayTProp.setColorRgb(64, 255, 220);
+
+  Vector3ub color(64, 255, 220);
+  if (m_renderer) {
+    auto backgroundColor = m_renderer->scene().backgroundColor();
+    color = contrastingColor(
+      Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
+  }
+
+  overlayTProp.setColorRgb(color[0], color[1], color[2]);
   overlayTProp.setAlign(TextProperties::HLeft, TextProperties::VBottom);
 
   auto* label = new TextLabel2D;
