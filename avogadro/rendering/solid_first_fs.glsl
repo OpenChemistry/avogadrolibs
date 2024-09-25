@@ -22,32 +22,21 @@ varying vec2 UV;
 // RGB rendered texture
 uniform sampler2D inRGBTex;
 
-// RGB color for applying fog
-uniform float fogR;
-uniform float fogG;
-uniform float fogB;
-uniform float offset;
 
 // Depth rendered texture
 uniform sampler2D inDepthTex;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inAoEnabled;
-// 1.0 if enabled, 0.0 if disabled
-uniform float inDofEnabled;
-// 0.0 if disabled
-uniform float inFogStrength;
 // Shadow strength for SSAO
 uniform float inAoStrength;
 // 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
 // amount of offset when zoom-in or zoom-out.
 uniform float uoffset;
-// Dof strength
+// Dof strength 0.0 if dof is disabled.
 uniform float inDofStrength;
 // Dof position
 uniform float inDofPosition;
-// position for other molecules.
-uniform float inFogPosition;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
 
@@ -127,14 +116,6 @@ vec4 applyBlur(vec2 texCoord) {
   }
   return color / total;
 }
-vec4 applyFog(vec2 texCoord) {
-  vec4 finalColor = mix(
-    texture2D(inRGBTex, texCoord),
-    vec4(vec3(fogR, fogG, fogB), 1.),
-    pow(texture2D(inDepthTex, texCoord.xy).r, uoffset * inFogPosition/10.0)
-  ) + inFogStrength / 100.0;
-return finalColor;
-}
 
 const vec2 SSAOkernel[16] = vec2[16](
   vec2(0.072170, 0.081556),
@@ -184,25 +165,20 @@ float computeEdgeLuminosity(vec3 normal)
 }
 
 void main() {
-  // Some cleanups required.
+
   float luminosity = 1.0;
   luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
   luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
   vec4 color = texture2D(inRGBTex, UV);
-  if (inFogStrength == 0.0 && inDofEnabled == 0.0) {
+  
+  if (inDofStrength == 0.0) {
     gl_FragColor = vec4(color.xyz * luminosity, color.w);
-  }
-  else if (inFogStrength != 0.0) { // apply fog since it's fast.
-  // Apply fog to the color texture
-    vec4 foggedColor = applyFog(UV);
-    vec4 fogColor = vec4(luminosity * foggedColor.xyz, foggedColor.w);
-    gl_FragColor = fogColor;
-  }
-  else {
+  } else {
   // Apply blur to the color texture
     vec4 blurredColor = applyBlur(UV);
     vec4 blurColor = vec4(luminosity * blurredColor.xyz, blurredColor.w);
     gl_FragColor = blurColor;
   }
+
   gl_FragDepth = texture2D(inDepthTex, UV).x;
 }

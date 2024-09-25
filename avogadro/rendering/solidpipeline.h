@@ -122,12 +122,12 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
-  Eigen::Affine3f modelView;
   float m_dofStrength;
   float m_dofPosition;
   bool m_dofEnabled;
   float m_fogPosition;
   Vector4ub m_backgroundColor;
+  Eigen::Affine3f modelView;
   bool m_fogEnabled;
   float m_aoStrength;
   float m_fogStrength;
