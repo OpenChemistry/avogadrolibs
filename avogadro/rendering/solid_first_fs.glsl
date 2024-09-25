@@ -109,7 +109,7 @@ vec4 applyBlur(vec2 texCoord) {
     vec2 offset = (vec2(cos(angle), sin(angle)) * radius * 0.05 * inDofStrength) / pixelScale;
     float z = depthToZ(texture2D(inDepthTex, texCoord + offset).x);
     float sampleBlur = calcBlur(z, pixelScale);
-    float weight = float((z >= origZ) || (sampleBlur >= blurAmt * radius + 0.));
+    float weight = 1.0 - smoothstep(0.0, 1.0, abs(z - origZ) / blurAmt);
     vec4 sample = texture2D(inRGBTex, texCoord + offset);
     color += weight * sample;
     total += weight;
