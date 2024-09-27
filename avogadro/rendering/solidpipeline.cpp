@@ -9,10 +9,10 @@
 #include "shader.h"
 #include "camera.h"
 #include "shaderprogram.h"
+
 #include "solid_vs.h"
 
 #include "solid_first_fs.h"
-#include "solid_fog_fs.h"
 
 #include <iostream>
 
@@ -52,10 +52,8 @@ public:
   GLuint depthTexture;
   GLuint screenVBO;
   ShaderProgram firstStageShaders;
-  ShaderProgram fogStageShaders;
   Shader screenVertexShader;
   Shader firstFragmentShader;
-  Shader fogFragmentShader;         
 };
 
 static const GLfloat s_fullscreenQuad[] = {
@@ -116,30 +114,15 @@ void SolidPipeline::initialize()
   if (!d->screenVertexShader.compile())
     std::cout << d->screenVertexShader.error() << std::endl;
 
-  // shader program for fog.
-  d->fogFragmentShader.setType(Shader::Fragment);
-  d->fogFragmentShader.setSource(solid_fog_fs);
-  if(!d->fogFragmentShader.compile())
-    std::cout << d->fogFragmentShader.error() << std::endl;
-
-  // shader for ao and blur.         
   d->firstFragmentShader.setType(Shader::Fragment);
   d->firstFragmentShader.setSource(solid_first_fs);
   if (!d->firstFragmentShader.compile())
     std::cout << d->firstFragmentShader.error() << std::endl;
 
-  
   d->firstStageShaders.attachShader(d->screenVertexShader);
   d->firstStageShaders.attachShader(d->firstFragmentShader);
   if (!d->firstStageShaders.link())
     std::cout << d->firstStageShaders.error() << std::endl;
-
-  // shaderProgram for fog.     
-  d->fogStageShaders.attachShader(d->screenVertexShader);
-  d->fogStageShaders.attachShader(d->fogFragmentShader);
-  if (!d->fogStageShaders.link())
-    std::cout << d->fogStageShaders.error() << std::endl;
-
 }
 
 void SolidPipeline::begin()
@@ -174,27 +157,20 @@ void SolidPipeline::end()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawBuffer(GL_BACK);
   }
-
-  if(m_fogEnabled){
-  // shader for fog.
-  d->attachStage(d->fogStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
-                 d->depthTexture, m_width, m_height);
-  d->fogStageShaders.setUniformValue("inFogStrength", m_fogStrength);
-  d->fogStageShaders.setUniformValue("inFogPosition", m_fogPosition);
-  d->fogStageShaders.setUniformValue("fogR", (m_backgroundColor[0])/255.0f);
-  d->fogStageShaders.setUniformValue("fogG", (m_backgroundColor[1])/255.0f);
-  d->fogStageShaders.setUniformValue("fogB", (m_backgroundColor[2])/255.0f);
-  } else {
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
-  d->firstStageShaders.setUniformValue("inDofEnabled", m_dofEnabled ? m_dofStrength : 0.0f);
-  d->firstStageShaders.setUniformValue("inDofStrength", ((m_dofStrength) * 100.0f));
+  d->firstStageShaders.setUniformValue("inDofEnabled", m_dofEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
   d->firstStageShaders.setUniformValue("inDofPosition", ((m_dofPosition) /10.0f));
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
-  }
-
+  d->firstStageShaders.setUniformValue("inFogEnabled", m_fogEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inFogStrength", m_fogEnabled ? m_fogStrength : 0.0f);
+  d->firstStageShaders.setUniformValue("inFogPosition", m_fogPosition);
+  d->firstStageShaders.setUniformValue("fogR", (m_backgroundColor[0])/255.0f);
+  d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1])/255.0f);
+  d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2])/255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 6);
   glDisableVertexAttribArray(0);
 }
@@ -216,12 +192,7 @@ void SolidPipeline::adjustOffset(const Camera& cam) {
     else if(project >= 21595.588 ){
      offSet = 9.952 * project - 212865;
     }
-    // setting uniforms.
-    if (m_fogEnabled){
-    d->fogStageShaders.setUniformValue("uoffset", offSet);
-    } else {
     d->firstStageShaders.setUniformValue("uoffset", offSet);
-    }
 
 }
 
