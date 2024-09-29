@@ -127,9 +127,13 @@ private:
               std::vector<double>& values) const;
   void pointF7(unsigned int index, const Vector3& delta, double dr2,
                std::vector<double>& values) const;
+  void pointG(unsigned int index, const Vector3& delta, double dr2,
+              std::vector<double>& values) const;
+  void pointG9(unsigned int index, const Vector3& delta, double dr2,
+               std::vector<double>& values) const;
 
   // map from symmetry to angular momentum
-  // S, SP, P, D, D5, F, F7, G, G9, etc.
+  // S, SP, P, D, D5, F, F7, G, G9, H, H11, I, I13, etc.
   const int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
 };
 
