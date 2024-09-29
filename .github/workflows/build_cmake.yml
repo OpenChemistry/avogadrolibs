@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
 
@@ -40,7 +40,7 @@ jobs:
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
@@ -48,7 +48,7 @@ jobs:
             os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -56,7 +56,7 @@ jobs:
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
