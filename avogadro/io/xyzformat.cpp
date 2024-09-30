@@ -138,6 +138,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     getline(inStream, buffer); // Skip the blank
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
     int coordSet = 1;
+    bool done = false;
     while (numAtoms == numAtoms2) {
       Array<Vector3> positions;
       positions.reserve(numAtoms);
@@ -146,6 +147,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         getline(inStream, buffer);
         if (inStream.eof()) {
           numAtoms2 = 0;
+          done = true;
           break; // break this inner loop
         }
 
@@ -160,7 +162,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         positions.push_back(pos);
       }
 
-      mol.setCoordinate3d(positions, coordSet++);
+      if (!done)
+        mol.setCoordinate3d(positions, coordSet++);
 
       if (getline(inStream, buffer)) {
         if (inStream.eof()) {
