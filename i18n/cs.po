@@ -6,21 +6,23 @@
 # Pavel Fric <pavelfric@seznam.cz>, 2009, 2012.
 # Pavel Fric <fripohled.blogspot.com>, 2010.
 # Martin Slavík <martin.d.slavik@gmail.com>, 2023.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# Tomáš Poláček <ostriz2@seznam.cz>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2023-10-31 11:02+0000\n"
-"Last-Translator: Martin Slavík <martin.d.slavik@gmail.com>\n"
+"PO-Revision-Date: 2024-09-19 05:02+0000\n"
+"Last-Translator: Tomáš Poláček <ostriz2@seznam.cz>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Generator: Weblate 5.8-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -53,12 +55,12 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Referenční soubor '%1' neexistuje."
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Chyba při vyplňování souboru %1: %2"
 
 #: molequeue/inputgenerator.cpp:204 qtgui/interfacescript.cpp:372
 #, qt-format
