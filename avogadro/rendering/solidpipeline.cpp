@@ -88,9 +88,10 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 }
 
 SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(true), m_aoStrength(1.0f), 
-    m_fogStrength(1.0f), m_fogPosition(1.0), m_fogEnabled(true), m_edEnabled(true), m_edStrength(1.0f), 
-    m_width(0), m_height(0), d(new Private), m_backgroundColor(0,0,0,0)
+  : m_pixelRatio(1.0f), m_aoEnabled(true), m_dofEnabled(true), m_aoStrength(1.0f),
+    m_fogStrength(1.0f), m_fogPosition(1.0), m_fogEnabled(true), m_edEnabled(true),
+    m_edStrength(1.0f), m_width(0), m_height(0), m_dofStrength(1.0f),
+    m_dofPosition(1.0), m_backgroundColor(0,0,0,0), d(new Private)
 {
 }
 
@@ -159,6 +160,9 @@ void SolidPipeline::end()
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture, "inDepthTex",
                  d->depthTexture, m_width, m_height);
   d->firstStageShaders.setUniformValue("inAoEnabled", m_aoEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofEnabled", m_dofEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
+  d->firstStageShaders.setUniformValue("inDofPosition", ((m_dofPosition) /10.0f));
   d->firstStageShaders.setUniformValue("inAoStrength", m_aoStrength);
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("inFogEnabled", m_fogEnabled ? 1.0f : 0.0f);
@@ -177,7 +181,6 @@ void SolidPipeline::adjustOffset(const Camera& cam) {
     // They help define an offset with the projection-matrix
     // to make the fog dynamic as the molecule moves away 
     // from the camera or come closer.
-
     Eigen::Matrix4f projectView = cam.projection().matrix();
 
     float project = ((((5000 + projectView(2,3) * 1000)/6) + 55) * 100);
