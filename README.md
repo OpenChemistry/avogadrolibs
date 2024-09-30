@@ -46,6 +46,55 @@ If you would like to build from source we recommend that you
 follow our [building Open Chemistry][Build] guide that will take care of
 building most dependencies.
 
+## Steps for Basic Installation 
+
+### macOS
+1. Install Homebrew (if not installed):
+   
+   `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+   
+2. Install Dependencies:
+
+    `brew install cmake qt5 eigen`
+   
+4. Clone and Build
+
+   `brew link qt --force`
+   
+6. Build with CMake
+  ```
+  mkdir build
+  cd build
+  cmake ..
+  make
+  sudo make install
+```
+### Windows
+1. Install Required Tools
+   * Download and install CMake
+   * Install Qt
+   * Install Visual Studio with C++ development tools
+2. Clone the Repository
+
+   `git clone https://github.com/OpenChemistry/avogadrolibs.git
+cd avogadrolibs
+`
+3. Configure with CMake GUI:
+   * Open CMake GUI, selecr the **source folder** (where ``CMakeLists.txt`` is located)
+   * Set the **build folder** (e.g., ``build/``)
+   * Configure for your Visual Studio Version
+4. Generate Solution
+   * Click "Generate" to create ``.sln`` file
+5. Build with Visual Studio
+   * Open the ``.sln`` file in Visual Stuio and select **release** and **debug** mode
+   * Click **Build Solution**
+
+## General Troubleshooting
+
+* Permission Errors: On macOS and Linux, use  ``sudo`` for installation
+* Build Fails: Ensure dependencies are installed and the correct C++ version is selected
+* Missing Eigen or Qt: Manually pass their paths to CMake using  ``-DCMAKE_PREFIX_PATH``.
+
 ## Contributing
 
 We welcome *all* kinds of contributions as a community project, from bug
@@ -75,3 +124,7 @@ Contributors Hall of Fame:
   [Build]: https://two.avogadro.cc/install/build.html "Building Avogadro"
   [Contribution]: https://two.avogadro.cc/contrib/ "Contribution guide"
   [API]: https://two.avogadro.cc/api/ "API documentation"
+
+## Licensing
+
+To know more about our license please refer to [Avogadro License Information](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE).
