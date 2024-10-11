@@ -25,6 +25,8 @@ avogadro_plugin(LabelEditor
 )
 
 target_link_libraries(Label LINK_PRIVATE Avogadro::Rendering)
+target_link_libraries(Label PRIVATE Avogadro::Calc)
+
 target_link_libraries(LabelEditor
   LINK_PRIVATE
     Avogadro::Rendering

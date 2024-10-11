@@ -8,6 +8,9 @@
 #include <iostream>
 #include <sstream>
 
+// for partial charges
+#include <avogadro/calc/chargemanager.h>
+
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
@@ -67,7 +70,8 @@ struct LayerLabel : Core::LayerData
     Name = 2,
     Custom = 4,
     Ordinal = 8,
-    UniqueID = 16
+    UniqueID = 16,
+    PartialCharge = 32
   };
   unsigned short atomOptions;
   unsigned short residueOptions;
@@ -164,6 +168,8 @@ struct LayerLabel : Core::LayerData
                     int(LabelOptions::Ordinal));
       atom->addItem(QObject::tr("Element & ID"),
                     int(LabelOptions::Name | LabelOptions::UniqueID));
+      atom->addItem(QObject::tr("Partial Charge", "atomic partial charge"),
+                    int(LabelOptions::PartialCharge));
       atom->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
 
       // check for current option based on item data
@@ -282,6 +288,42 @@ void Label::processResidue(const Core::Molecule& molecule,
   }
 }
 
+QString partialCharge(Molecule* molecule, int atom)
+{
+  // TODO: we need to track type and/or calling the charge calculator
+  float charge = 0.0;
+  std::set<std::string> types = molecule->partialChargeTypes();
+  if (types.size() > 0) {
+    auto first = types.cbegin();
+    MatrixX charges = molecule->partialCharges((*first));
+    charge = charges(atom, 0);
+  } else {
+    // find something
+    const auto options =
+      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
+    if (options.size() > 0) {
+      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
+      std::string type;
+      if (options.find("GFN2") != options.end())
+        type = "GFN2";
+      else if (options.find("am1bcc") != options.end())
+        type = "am1bcc";
+      else if (options.find("mmff94") != options.end())
+        type = "mmff94";
+      else if (options.find("gasteiger") != options.end())
+        type = "gasteiger";
+      else
+        type = *options.begin();
+
+      MatrixX charges =
+        Calc::ChargeManager::instance().partialCharges(type, *molecule);
+      charge = charges(atom, 0);
+    }
+  }
+  // e.g. '-0.12' => 5 characters
+  return QString("%L1").arg(charge, 5, 'f', 2);
+}
+
 void Label::processAtom(const Core::Molecule& molecule,
                         Rendering::GroupNode& node, size_t layer)
 {
@@ -305,6 +347,10 @@ void Label::processAtom(const Core::Molecule& molecule,
     auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
     std::string text = "";
 
+    if (interface.atomOptions & LayerLabel::LabelOptions::PartialCharge) {
+      QString charge = partialCharge(const_cast<Molecule*>(&molecule), i);
+      text += charge.toStdString();
+    }
     if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + atom.label();
     }
