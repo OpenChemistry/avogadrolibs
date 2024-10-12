@@ -32,7 +32,7 @@ public:
    * @brief Begin solid geometry rendering.
    */
   void begin();
-
+  
   void adjustOffset(const Camera& camera);
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
@@ -55,6 +55,12 @@ public:
   bool getAoEnabled() { return m_aoEnabled; }
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
+  /**
+   * @brief Get or set whether Depth-of-feild is enabled.
+   */
+  bool getDofEnabled() { return m_dofEnabled; }
+  void setDofEnabled(bool enabled) { m_dofEnabled = enabled; }
+  
   /**
    * @brief Get or set whether Fog is enabled.
    */
@@ -96,6 +102,18 @@ public:
   }
 
   /**
+   * @brief Get or set dof strength. 
+   */
+  float getDofStrength() { return m_dofStrength; }
+  void setDofStrength(float strength) { m_dofStrength = strength; }
+
+  /**
+  * @brief Set positon of dof
+  */
+  float getDofPosition(){ return m_dofPosition;}
+  void setDofPosition(float position) { m_dofPosition = position; }
+
+  /**
    * @brief Get or set the strength of the edge effect
    */
   bool getEdStrength() { return m_edStrength; }
@@ -104,9 +122,12 @@ public:
 private:
   float m_pixelRatio;
   bool m_aoEnabled;
+  float m_dofStrength;
+  float m_dofPosition;
+  bool m_dofEnabled;
   float m_fogPosition;
   Vector4ub m_backgroundColor;
-  Eigen::Affine3f modelView; 
+  Eigen::Affine3f modelView;
   bool m_fogEnabled;
   float m_aoStrength;
   float m_fogStrength;
