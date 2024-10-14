@@ -252,6 +252,7 @@ void MoldenFile::processLine(std::istream& in)
           // or we're at the next vibration
           if (m_vibDisplacements.size() == m_frequencies.size()) {
             // TODO: might need to go back to read intensities
+            in.seekg(currentPos);
             break;
           }
         }
@@ -265,6 +266,12 @@ void MoldenFile::processLine(std::istream& in)
           if (list.size() == 2)
             m_RamanIntensities.push_back(Core::lexicalCast<double>(list[1]));
 
+          if (m_IRintensities.size() == m_frequencies.size()) {
+            // we're done
+            break;
+          }
+
+          currentPos = in.tellg();
           getline(in, line);
           line = Core::trimmed(line);
         }
