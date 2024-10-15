@@ -104,17 +104,18 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     vector<string> tokens(split(properties, ':'));
     unsigned int column = 0;
     for (size_t i = 0; i < tokens.size(); i += 3) {
+      // we can safely assume species and pos are present
+      if (tokens[i] == "charge") {
+        chargeColumn = column;
+        std::cout << " found charges " << chargeColumn << std::endl;
+      } else if (tokens[i] == "force" || tokens[i] == "forces") {
+        forceColumn = column;
+      } // TODO other properties (velocity, spin, selection, etc.)
+
       // increment column based on the count of the property
       if (i + 2 < tokens.size()) {
         column += lexicalCast<unsigned int>(tokens[i + 2]);
       }
-
-      // we can safely assume species and pos are present
-      if (tokens[i] == "charge") {
-        chargeColumn = column;
-      } else if (tokens[i] == "force" || tokens[i] == "forces") {
-        forceColumn = column;
-      } // TODO other properties (velocity, spin, selection, etc.)
     }
   }
 
@@ -175,6 +176,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       chargesMatrix(i, 0) = charges[i];
     }
     mol.setPartialCharges("From File", chargesMatrix);
+
+    std::cout << "Charges set " << charges.size() << " " << mol.atomCount()
+              << std::endl;
   }
 
   // Do we have an animation?
@@ -243,6 +247,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (opts.value("perceiveBonds", true)) {
     mol.perceiveBondsSimple();
     mol.perceiveBondOrders();
+  }
+
+  // check partial charge types
+  auto types = mol.partialChargeTypes();
+  for (const auto& type : types) {
+    std::cout << "Partial charge type: " << type << std::endl;
   }
 
   return true;
