@@ -46,8 +46,9 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
-  while (!in.eof())
+  while (!in.eof() && in.good()) {
     processLine(in);
+  }
 
   auto* basis = new GaussianSet;
 
@@ -246,12 +247,16 @@ void MoldenFile::processLine(std::istream& in)
               getline(in, line);
               line = Core::trimmed(line);
             }
+          } else {
+            // we shouldn't hit this, but better to be safe
+            break;
           }
 
           // okay, we're either done reading
           // or we're at the next vibration
           if (m_vibDisplacements.size() == m_frequencies.size()) {
-            // TODO: might need to go back to read intensities
+            // reset to make sure we don't miss any other sections
+            // (e.g., intensities)
             in.seekg(currentPos);
             break;
           }
