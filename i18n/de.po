@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-10-15 20:30+0000\n"
+"PO-Revision-Date: 2024-10-15 20:39+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2771,10 +2771,8 @@ msgid "Wrap atoms into the unit cell."
 msgstr "Atome in Elementarzelle &halten"
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "In Standardrichtung drehen"
+msgstr "Einheitszelle auf Standardorientierung drehen."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
@@ -4473,10 +4471,8 @@ msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "WFN-Dateien (*.wfn);;Alle Dateitypen (*.*)"
 
 #: qtplugins/propertytables/propertyview.cpp:244
-#, fuzzy
-#| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "Kann Datei '%1' fürs Schreiben nicht öffnen"
+msgstr "Datei kann nicht zum Schreiben geöffnet werden."
 
 #: qtplugins/propertytables/propertyview.cpp:276
 #, fuzzy
@@ -4539,10 +4535,8 @@ msgid "Align View to Axes"
 msgstr "Ansicht an den Achsen ausrichten"
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align view to axes."
-msgstr "Ansicht an den Achsen ausrichten"
+msgstr "Ansicht an den Achsen ausrichten."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -5023,10 +5017,8 @@ msgid "Create Surfaces…"
 msgstr "Oberflächen erzeugen…"
 
 #: qtplugins/surfaces/surfaces.cpp:111
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Zeigt Atome als Van-der-Waals-Wirkungsbereiche an"
+msgstr "Van-der-Waals Oberfläche rendern."
 
 #: qtplugins/surfaces/surfaces.cpp:113
 #, fuzzy
@@ -5047,10 +5039,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr "Molekül als Drahtgittermodell wiedergeben."
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
-#, fuzzy
-#| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "Molekülorbital"
+msgstr "Molekülorbital rendern."
 
 #: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the electron density."
@@ -7741,7 +7731,7 @@ msgstr "Das berechnete Spektrum exportieren"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Font Size:"
-msgstr "Schriftgröße"
+msgstr "Schriftgröße:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
