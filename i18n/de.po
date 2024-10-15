@@ -15,9 +15,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
-"PO-Revision-Date: 2024-10-15 20:39+0000\n"
-"Last-Translator: matterhorn103 <83813148+matterhorn103@users.noreply.github."
-"com>\n"
+"PO-Revision-Date: 2024-10-16 01:51+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1246,7 +1245,7 @@ msgstr "Beschriftungen"
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr "Stäbchen/Lakritz"
+msgstr "Stäbchen"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
@@ -1664,7 +1663,6 @@ msgid "Error reading OpenDX file: %1"
 msgstr "Fehler beim Lesen von OpenDX-Datei: %1"
 
 #: qtplugins/apbs/apbs.cpp:144
-#, fuzzy
 msgid "Error reading OpenDX file: No cube found"
 msgstr "Lesen von OpenDX-Datei fehlgeschlagen: kein Cube gefunden"
 
