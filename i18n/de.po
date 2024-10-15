@@ -16,7 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-06-30 02:14+0000\n"
 "PO-Revision-Date: 2024-10-15 20:39+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: matterhorn103 <83813148+matterhorn103@users.noreply.github."
+"com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1245,7 +1246,7 @@ msgstr "Beschriftungen"
 #: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Stäbchen/Lakritz"
 
 #: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
