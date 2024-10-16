@@ -457,7 +457,7 @@ QString Cp2kInputDialog::generateJobTitle() const
   // Merge theory/basis into theory
   //  replace(QRegExp("\\s+"), "");
 
-  return QString("%1 | %2 | %3").arg(formula, calculation, basis);
+  return QString("%1_%2_%3").arg(formula, calculation, basis);
 }
 
 void Cp2kInputDialog::updatePreviewText()
@@ -654,7 +654,7 @@ void Cp2kInputDialog::updatePreviewText()
 
   switch (method) {
     case DFT:
-      gmethod = "DFT";
+      gmethod = "QS";
       break;
     case MolecularMechanics:
       gmethod = "FIST";
@@ -756,7 +756,8 @@ void Cp2kInputDialog::updatePreviewText()
   file += "&FORCE_EVAL\n";
 
   file += QString("  METHOD %1\n").arg(gmethod);
-  file += "&END FORCE_EVAL\n";
+
+  file += "  &SUBSYS\n";
 
   if (m_molecule) {
     std::vector<unsigned int> atomList;
@@ -782,6 +783,7 @@ void Cp2kInputDialog::updatePreviewText()
         file += QString("        POTENTIAL GTH-%1-q%2\n")
                   .arg(gfunc)
                   .arg(valencee[symbol]);
+        file += QString("    &END KIND\n");
       }
     }
   }
@@ -811,10 +813,12 @@ void Cp2kInputDialog::updatePreviewText()
     file += "    A     10.00000000    0.000000000    0.000000000\n";
     file += "    B     0.000000000    10.00000000    0.000000000\n";
     file += "    C     0.000000000    0.000000000    10.00000000\n";
+    file += "    PERIODIC NONE\n";
   }
-  file += "    &END CELL \n";
+  file += "    &END CELL\n";
 
   if (m_molecule) {
+    file += "    &COORD\n";
     for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
       Core::Atom atom = m_molecule->atom(i);
       file += QString("    %1    %2    %3    %4\n")
@@ -823,8 +827,12 @@ void Cp2kInputDialog::updatePreviewText()
                 .arg(atom.position3d().y(), 9, 'f', 5)
                 .arg(atom.position3d().z(), 9, 'f', 5);
     }
+    file += "    &END COORD\n";
   }
-  if (gmethod == "DFT") {
+
+  file += "  &END SUBSYS\n";
+
+  if (gmethod == "QS") {
     file += "  &DFT\n";
     file += "    BASIS_SET_FILE_NAME  BASIS_SET\n";
     file += "    POTENTIAL_FILE_NAME  GTH_POTENTIALS\n";
@@ -857,7 +865,7 @@ void Cp2kInputDialog::updatePreviewText()
     file += "    &END SCF\n";
 
     file += "    &XC\n";
-    file += QString("      &XC_FUNCTIONAL %1\n").arg(functional);
+    file += QString("      &XC_FUNCTIONAL %1\n").arg(gfunc);
     file += "      &END XC_FUNCTIONAL\n";
     file += "    &END XC\n";
 
@@ -914,6 +922,7 @@ void Cp2kInputDialog::updatePreviewText()
   }
 
   file += " $END\n";
+  file += "&END FORCE_EVAL\n";
 
   ui.previewText->setText(file);
   ui.previewText->document()->setModified(false);
