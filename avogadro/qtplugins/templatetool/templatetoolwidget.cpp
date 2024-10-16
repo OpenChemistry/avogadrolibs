@@ -42,7 +42,7 @@ enum LigandType
   Tetradentate = 3,
   Hexadentate = 4,
   Haptic = 5,
-  Clipboard = 7
+  Clipboard = 6
 };
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
