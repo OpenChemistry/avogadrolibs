@@ -107,7 +107,6 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       // we can safely assume species and pos are present
       if (tokens[i] == "charge") {
         chargeColumn = column;
-        std::cout << " found charges " << chargeColumn << std::endl;
       } else if (tokens[i] == "force" || tokens[i] == "forces") {
         forceColumn = column;
       } // TODO other properties (velocity, spin, selection, etc.)
@@ -167,18 +166,6 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
                 << buffer;
     appendError(errorStream.str());
     return false;
-  }
-
-  // set the charges
-  if (!charges.empty()) {
-    MatrixX chargesMatrix = MatrixX::Zero(mol.atomCount(), 1);
-    for (size_t i = 0; i < charges.size(); ++i) {
-      chargesMatrix(i, 0) = charges[i];
-    }
-    mol.setPartialCharges("From File", chargesMatrix);
-
-    std::cout << "Charges set " << charges.size() << " " << mol.atomCount()
-              << std::endl;
   }
 
   // Do we have an animation?
@@ -249,10 +236,14 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.perceiveBondOrders();
   }
 
-  // check partial charge types
-  auto types = mol.partialChargeTypes();
-  for (const auto& type : types) {
-    std::cout << "Partial charge type: " << type << std::endl;
+  // have to set the charges after creating bonds
+  // (since modifying bonds invalidates the partial charges)
+  if (!charges.empty()) {
+    MatrixX chargesMatrix = MatrixX::Zero(mol.atomCount(), 1);
+    for (size_t i = 0; i < charges.size(); ++i) {
+      chargesMatrix(i, 0) = charges[i];
+    }
+    mol.setPartialCharges("From File", chargesMatrix);
   }
 
   return true;
