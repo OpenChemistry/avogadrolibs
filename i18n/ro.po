@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-10-13 02:35+0000\n"
-"PO-Revision-Date: 2024-08-12 18:09+0000\n"
+"PO-Revision-Date: 2024-10-16 14:33+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.8-rc\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -3320,7 +3320,7 @@ msgstr "Element și ID"
 #: qtplugins/label/label.cpp:171
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Sarcină parțială"
 
 #: qtplugins/label/label.cpp:186
 msgid "Atom Label:"
