@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"POT-Creation-Date: 2024-10-13 02:35+0000\n"
 "PO-Revision-Date: 2024-09-12 23:51+0000\n"
 "Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -2390,7 +2390,7 @@ msgstr "원자 좌표 편집"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:167:1845 rc.cpp:1875
+#: qtplugins/label/label.cpp:173:1845 rc.cpp:1875
 msgid "Custom"
 msgstr "커스텀"
 
@@ -2998,17 +2998,17 @@ msgstr "일반화된 호박색 역 장"
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck 분자 역 장 94"
 
-#: qtplugins/forcefield/scriptenergy.cpp:240
+#: qtplugins/forcefield/scriptenergy.cpp:244
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr "에너지 스크립트에 대한 메타 자료 검색 중 오류: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:250
+#: qtplugins/forcefield/scriptenergy.cpp:254
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr "에너지 스크립트에 대한 메타 자료 구문 분석 중 오류: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:258
+#: qtplugins/forcefield/scriptenergy.cpp:262
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3223,12 +3223,12 @@ msgstr "조각삽입"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "더 큰 분자를 만들기 위해 분자 조각을 삽입합니다."
 
-#: qtplugins/label/label.cpp:139 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/label/label.cpp:143 qtplugins/meshes/meshes.cpp:173
 #: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr "색상:"
 
-#: qtplugins/label/label.cpp:149
+#: qtplugins/label/label.cpp:153
 msgid "Distance from center:"
 msgstr "중심으로부터의 거리:"
 
@@ -3240,50 +3240,55 @@ msgstr "중심으로부터의 거리:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:159 qtplugins/label/label.cpp:186:1394
+#: qtplugins/label/label.cpp:163 qtplugins/label/label.cpp:192:1394
 msgid "None"
 msgstr "없음"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:164
 msgid "Index"
 msgstr "색인"
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:165
 msgid "Unique ID"
 msgstr "고유 ID"
 
-#: qtplugins/label/label.cpp:162 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "원소"
 
-#: qtplugins/label/label.cpp:163
+#: qtplugins/label/label.cpp:167
 msgid "Element & Number"
 msgstr "원소 번호"
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:169
 msgid "Element & ID"
 msgstr "성분 & ID"
 
-#: qtplugins/label/label.cpp:180
+#: qtplugins/label/label.cpp:171
+msgctxt "atomic partial charge"
+msgid "Partial Charge"
+msgstr ""
+
+#: qtplugins/label/label.cpp:186
 msgid "Atom Label:"
 msgstr "원자 레이블:"
 
-#: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:195
+#: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
 msgstr "이름"
 
-#: qtplugins/label/label.cpp:199
+#: qtplugins/label/label.cpp:205
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:211
+#: qtplugins/label/label.cpp:217
 msgid "Residue Label:"
 msgstr "잔류물 레이블:"
 

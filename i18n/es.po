@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"POT-Creation-Date: 2024-10-13 02:35+0000\n"
 "PO-Revision-Date: 2024-07-02 20:34+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
@@ -2440,7 +2440,7 @@ msgstr "Editar Coordenadas Atómicas"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:167:1845 rc.cpp:1875
+#: qtplugins/label/label.cpp:173:1845 rc.cpp:1875
 msgid "Custom"
 msgstr "Personalizado"
 
@@ -3052,19 +3052,19 @@ msgstr "Campo de Fuerza Generalizado de Amber"
 msgid "Merck Molecular Force Field 94"
 msgstr "Campo de Fuerza Molecular 94 de Merck"
 
-#: qtplugins/forcefield/scriptenergy.cpp:240
+#: qtplugins/forcefield/scriptenergy.cpp:244
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr ""
 "Error recuperando metadatos para la secuencia de comandos de energía: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:250
+#: qtplugins/forcefield/scriptenergy.cpp:254
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr ""
 "Error analizando metadatos para la secuencia de comandos de energía: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:258
+#: qtplugins/forcefield/scriptenergy.cpp:262
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3279,12 +3279,12 @@ msgstr "Insertar Fragmento"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Insertar fragmentos moleculares para construir moléculas más grandes."
 
-#: qtplugins/label/label.cpp:139 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/label/label.cpp:143 qtplugins/meshes/meshes.cpp:173
 #: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr "Color:"
 
-#: qtplugins/label/label.cpp:149
+#: qtplugins/label/label.cpp:153
 msgid "Distance from center:"
 msgstr "Distancia desde el centro:"
 
@@ -3296,50 +3296,55 @@ msgstr "Distancia desde el centro:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:159 qtplugins/label/label.cpp:186:1394
+#: qtplugins/label/label.cpp:163 qtplugins/label/label.cpp:192:1394
 msgid "None"
 msgstr "Ninguno"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:164
 msgid "Index"
 msgstr "Índice"
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:165
 msgid "Unique ID"
 msgstr "Identificador único"
 
-#: qtplugins/label/label.cpp:162 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Elemento"
 
-#: qtplugins/label/label.cpp:163
+#: qtplugins/label/label.cpp:167
 msgid "Element & Number"
 msgstr "Elemento y Número"
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:169
 msgid "Element & ID"
 msgstr "Elemento e identificación"
 
-#: qtplugins/label/label.cpp:180
+#: qtplugins/label/label.cpp:171
+msgctxt "atomic partial charge"
+msgid "Partial Charge"
+msgstr ""
+
+#: qtplugins/label/label.cpp:186
 msgid "Atom Label:"
 msgstr "Etiqueta Atómica:"
 
-#: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:195
+#: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
 msgstr "Nombre"
 
-#: qtplugins/label/label.cpp:199
+#: qtplugins/label/label.cpp:205
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:211
+#: qtplugins/label/label.cpp:217
 msgid "Residue Label:"
 msgstr "Etiqueta de Residuo:"
 

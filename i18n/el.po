@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"POT-Creation-Date: 2024-10-13 02:35+0000\n"
 "PO-Revision-Date: 2021-02-13 01:19+0000\n"
 "Last-Translator: Michalis <michalisntovas@yahoo.gr>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
@@ -2447,7 +2447,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:167:1845 rc.cpp:1875
+#: qtplugins/label/label.cpp:173:1845 rc.cpp:1875
 msgid "Custom"
 msgstr "Προσαρμοσμένο"
 
@@ -3104,17 +3104,17 @@ msgstr ""
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:240
+#: qtplugins/forcefield/scriptenergy.cpp:244
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:250
+#: qtplugins/forcefield/scriptenergy.cpp:254
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:258
+#: qtplugins/forcefield/scriptenergy.cpp:262
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3347,12 +3347,12 @@ msgstr "Εισαγωγή τμήματος"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Εισαγωγή μοριακών τμημάτων για κατασκευή μεγαλύτερων μορίων"
 
-#: qtplugins/label/label.cpp:139 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/label/label.cpp:143 qtplugins/meshes/meshes.cpp:173
 #: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr "Χρώμα:"
 
-#: qtplugins/label/label.cpp:149
+#: qtplugins/label/label.cpp:153
 #, fuzzy
 msgid "Distance from center:"
 msgstr "Απόσταση"
@@ -3365,53 +3365,58 @@ msgstr "Απόσταση"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:159 qtplugins/label/label.cpp:186:1394
+#: qtplugins/label/label.cpp:163 qtplugins/label/label.cpp:192:1394
 msgid "None"
 msgstr "Κανένα"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:164
 msgid "Index"
 msgstr ""
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:165
 msgid "Unique ID"
 msgstr "Μοναδικό αναγνωριστικό"
 
-#: qtplugins/label/label.cpp:162 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Στοιχείο"
 
-#: qtplugins/label/label.cpp:163
+#: qtplugins/label/label.cpp:167
 #, fuzzy
 msgid "Element & Number"
 msgstr "Όνομα στοιχείου"
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:169
 msgid "Element & ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:180
+#: qtplugins/label/label.cpp:171
+msgctxt "atomic partial charge"
+msgid "Partial Charge"
+msgstr ""
+
+#: qtplugins/label/label.cpp:186
 #, fuzzy
 msgid "Atom Label:"
 msgstr "Ετικέτες ατόμου"
 
-#: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
 #, fuzzy
 msgid "ID"
 msgstr "ΚΑ"
 
-#: qtplugins/label/label.cpp:195
+#: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
 msgstr ""
 
-#: qtplugins/label/label.cpp:199
+#: qtplugins/label/label.cpp:205
 msgid " & "
 msgstr ""
 
-#: qtplugins/label/label.cpp:211
+#: qtplugins/label/label.cpp:217
 #, fuzzy
 msgid "Residue Label:"
 msgstr "Όνομα υπολοίπου"
