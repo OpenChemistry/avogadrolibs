@@ -87,6 +87,36 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       mol.setUnitCell(cell);
     }
   }
+  // check to see if there's an extended XYZ Properties= line
+  // e.g. Properties=species:S:1:pos:R:3
+  // https://gitlab.com/ase/ase/-/merge_requests/62
+  start = buffer.find("Properties=");
+  unsigned int chargeColumn = 0;
+  unsigned int forceColumn = 0;
+  vector<double> charges;
+  if (start != std::string::npos) {
+    start = start + 11; // skip over "Properties="
+    unsigned int stop = buffer.find(' ', start);
+    unsigned int length = stop - start;
+    // we want to track columns after the position
+    // (esp. charge, spin, force, velocity, etc.)
+    std::string properties = buffer.substr(start, length);
+    vector<string> tokens(split(properties, ':'));
+    unsigned int column = 0;
+    for (size_t i = 0; i < tokens.size(); i += 3) {
+      // we can safely assume species and pos are present
+      if (tokens[i] == "charge") {
+        chargeColumn = column;
+      } else if (tokens[i] == "force" || tokens[i] == "forces") {
+        forceColumn = column;
+      } // TODO other properties (velocity, spin, selection, etc.)
+
+      // increment column based on the count of the property
+      if (i + 2 < tokens.size()) {
+        column += lexicalCast<unsigned int>(tokens[i + 2]);
+      }
+    }
+  }
 
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
@@ -114,6 +144,18 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     Atom newAtom = mol.addAtom(atomicNum);
     newAtom.setPosition3d(pos);
+
+    // check for charge and force columns
+    if (chargeColumn > 0 && chargeColumn < tokens.size()) {
+      charges.push_back(lexicalCast<double>(tokens[chargeColumn]));
+      // we set the charges after all atoms are added
+    }
+    if (forceColumn > 0 && forceColumn < tokens.size()) {
+      Vector3 force(lexicalCast<double>(tokens[forceColumn]),
+                    lexicalCast<double>(tokens[forceColumn + 1]),
+                    lexicalCast<double>(tokens[forceColumn + 2]));
+      newAtom.setForceVector(force);
+    }
   }
 
   // Check that all atoms were handled.
@@ -194,6 +236,16 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.perceiveBondOrders();
   }
 
+  // have to set the charges after creating bonds
+  // (since modifying bonds invalidates the partial charges)
+  if (!charges.empty()) {
+    MatrixX chargesMatrix = MatrixX::Zero(mol.atomCount(), 1);
+    for (size_t i = 0; i < charges.size(); ++i) {
+      chargesMatrix(i, 0) = charges[i];
+    }
+    mol.setPartialCharges("From File", chargesMatrix);
+  }
+
   return true;
 }
 
@@ -251,6 +303,7 @@ std::vector<std::string> XyzFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("xyz");
+  ext.emplace_back("exyz");
   ext.emplace_back("extxyz");
   return ext;
 }
