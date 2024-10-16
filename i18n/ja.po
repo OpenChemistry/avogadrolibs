@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-06-30 02:14+0000\n"
+"POT-Creation-Date: 2024-10-13 02:35+0000\n"
 "PO-Revision-Date: 2024-09-04 05:09+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
@@ -988,7 +988,8 @@ msgstr ""
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
-msgstr "ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
+msgstr ""
+"ファイルの拡張子がないため、フォーマットを決定できません。 追加しますか?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
@@ -2415,7 +2416,7 @@ msgstr "原子座標の編集"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:633
-#: qtplugins/label/label.cpp:167:1845 rc.cpp:1875
+#: qtplugins/label/label.cpp:173:1845 rc.cpp:1875
 msgid "Custom"
 msgstr "カスタム"
 
@@ -3041,17 +3042,17 @@ msgstr ""
 msgid "Merck Molecular Force Field 94"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:240
+#: qtplugins/forcefield/scriptenergy.cpp:244
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:250
+#: qtplugins/forcefield/scriptenergy.cpp:254
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr ""
 
-#: qtplugins/forcefield/scriptenergy.cpp:258
+#: qtplugins/forcefield/scriptenergy.cpp:262
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3272,12 +3273,12 @@ msgstr "フラグメントを挿入"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "分子のフラグメントを挿入してより大きな分子を構築"
 
-#: qtplugins/label/label.cpp:139 qtplugins/meshes/meshes.cpp:173
+#: qtplugins/label/label.cpp:143 qtplugins/meshes/meshes.cpp:173
 #: qtplugins/meshes/meshes.cpp:179
 msgid "Color:"
 msgstr "色:"
 
-#: qtplugins/label/label.cpp:149
+#: qtplugins/label/label.cpp:153
 msgid "Distance from center:"
 msgstr "中心からの距離:"
 
@@ -3289,51 +3290,56 @@ msgstr "中心からの距離:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:159 qtplugins/label/label.cpp:186:1394
+#: qtplugins/label/label.cpp:163 qtplugins/label/label.cpp:192:1394
 msgid "None"
 msgstr "なし"
 
-#: qtplugins/label/label.cpp:160
+#: qtplugins/label/label.cpp:164
 msgid "Index"
 msgstr ""
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:165
 msgid "Unique ID"
 msgstr "ユニークID"
 
-#: qtplugins/label/label.cpp:162 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "元素"
 
-#: qtplugins/label/label.cpp:163
+#: qtplugins/label/label.cpp:167
 #, fuzzy
 msgid "Element & Number"
 msgstr "元素名"
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:169
 msgid "Element & ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:180
+#: qtplugins/label/label.cpp:171
+msgctxt "atomic partial charge"
+msgid "Partial Charge"
+msgstr ""
+
+#: qtplugins/label/label.cpp:186
 msgid "Atom Label:"
 msgstr "原子のラベル:"
 
-#: qtplugins/label/label.cpp:191 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:195
+#: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
 msgstr ""
 
-#: qtplugins/label/label.cpp:199
+#: qtplugins/label/label.cpp:205
 msgid " & "
 msgstr ""
 
-#: qtplugins/label/label.cpp:211
+#: qtplugins/label/label.cpp:217
 msgid "Residue Label:"
 msgstr "残基のラベル:"
 
