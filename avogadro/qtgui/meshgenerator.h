@@ -154,16 +154,10 @@ protected:
    * algorithms. They are taken from the public domain source at
    * http://local.wasp.uwa.edu.au/~pbourke/geometry/polygonise/
    */
-  static const float a2fVertexOffset[8][3];
-  static const int a2iVertexOffset[8][3];
-  static const int a2iEdgeConnection[12][2];
-  static const float a2fEdgeDirection[12][3];
-  static const int a2iTetrahedronEdgeConnection[6][2];
-  static const int a2iTetrahedronsInACube[6][4];
-  static const long aiTetrahedronEdgeFlags[16];
-  static const int a2iTetrahedronTriangles[16][7];
-  static const long aiCubeEdgeFlags[256];
-  static const int a2iTriangleConnectionTable[256][16];
+  static const unsigned char numTris[256]; 
+  static const bool isCut[256][12];  
+  static const char caseTriangles[256][16];
+  static const unsigned char edgeVertices[12][2];     
 };
 
 } // End namespace QtGui
