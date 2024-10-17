@@ -23,6 +23,23 @@ ChargeModel::ChargeModel() : m_dielectric(1.0) {}
 
 ChargeModel::~ChargeModel() {}
 
+Vector3 ChargeModel::dipoleMoment(Molecule& mol)
+{
+  // default is to get the set of partial atomic charges
+  // (some models might do something more sophisticated)
+  const MatrixX charges = partialCharges(mol);
+  // also get the positions of the atoms
+  const Array<Vector3> positions = mol.atomPositions3d();
+
+  Vector3 dipole(0.0, 0.0, 0.0);
+  for (unsigned int i = 0; i < charges.size(); ++i)
+    dipole += charges(i, 0) * positions[i];
+
+  dipole *= 4.80320471257; // convert to Debye from electron-Angstrom
+
+  return dipole;
+}
+
 double ChargeModel::potential(Molecule& mol, const Vector3& point) const
 {
   // default is to get the set of partial atomic charges
@@ -34,6 +51,8 @@ double ChargeModel::potential(Molecule& mol, const Vector3& point) const
   //  calculate the atoms within a cutoff distance
   //  and sum the potentials
 
+  // note this is usually multithreaded by the caller
+  // but more efficient methods can be implemented
   double potential = 0.0;
   for (unsigned int i = 0; i < charges.size(); ++i) {
     double distance = (positions[i] - point).norm();
