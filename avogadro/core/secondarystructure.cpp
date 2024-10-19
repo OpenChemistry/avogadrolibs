@@ -49,14 +49,26 @@ void SecondaryStructureAssigner::assign(Molecule* mol)
       // check to see how far apart the residues are
       int separation = std::abs(int(hBond->residue - hBond->residuePair));
 
-      // just alpha for now
-      if (separation == 4) {
-        m_molecule->residue(hBond->residue)
-          .setSecondaryStructure(Residue::SecondaryStructure::alphaHelix);
+      switch (separation) {
+        case 3: { // 3-10
+          m_molecule->residue(hBond->residue)
+            .setSecondaryStructure(Residue::SecondaryStructure::helix310);
+          break;
+        }
+        case 4: { // alpha
+          m_molecule->residue(hBond->residue)
+            .setSecondaryStructure(Residue::SecondaryStructure::alphaHelix);
+          break;
+        }
+        case 5: { // pi
+          m_molecule->residue(hBond->residue)
+            .setSecondaryStructure(Residue::SecondaryStructure::piHelix);
+          break;
+        }
+        default: {
+          break;
+        }
       }
-      // TODO
-      // 3-10 helix
-      // pi-helix
     }
   }
 
@@ -264,7 +276,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
         recordJ->residuePair = recordI->residue;
       }
     } // end for(j)
-  }   // end for(i)
+  } // end for(i)
 }
 
 } // namespace Avogadro::Core
