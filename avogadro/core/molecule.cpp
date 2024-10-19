@@ -21,7 +21,6 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
-#include <iostream>
 
 namespace Avogadro::Core {
 
@@ -842,6 +841,7 @@ void Molecule::clearMeshes()
     m_meshes.pop_back();
   }
 }
+
 
 Cube* Molecule::addCube()
 {
