@@ -16,13 +16,11 @@ const float Cartoon::ELIPSE_RATIO = 0.75f;
 
 Cartoon::Cartoon()
   : BSplineGeometry(false), m_minRadius(-1.0f), m_maxRadius(-1.0f)
-{
-}
+{}
 
 Cartoon::Cartoon(float minRadius, float maxRadius)
   : BSplineGeometry(false), m_minRadius(minRadius), m_maxRadius(maxRadius)
-{
-}
+{}
 
 vector<ColorNormalVertex> Cartoon::computeCirclePoints(const Eigen::Affine3f& a,
                                                        const Eigen::Affine3f& b,
