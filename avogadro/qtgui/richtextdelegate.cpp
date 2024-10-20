@@ -22,10 +22,12 @@ namespace Avogadro::QtGui {
 // https://gist.github.com/jniemann66/dbc298b35a840bf3f1a2206ea6284c7b
 // and  https://stackoverflow.com/a/66412883/131896
 
-RichTextDelegate::RichTextDelegate(QObject* parent)
-  : QStyledItemDelegate(parent)
+RichTextDelegate::RichTextDelegate(QObject* parent_)
+  : QStyledItemDelegate(parent_)
 {
 }
+
+RichTextDelegate::~RichTextDelegate(){};
 
 QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem& o,
                                  const QModelIndex& index) const
