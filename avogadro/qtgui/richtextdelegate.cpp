@@ -44,21 +44,13 @@ QSize RichTextDelegate::sizeHint(const QStyleOptionViewItem& o,
   doc.setHtml(ov.text);
   doc.setTextWidth(ov.rect.width());
   doc.setDefaultFont(ov.font);
-  doc.setDocumentMargin(1);
 
-  return QSize(doc.idealWidth(), doc.size().height());
+  return QSize(std::ceil(doc.idealWidth()), std::ceil(doc.size().height()));
 }
 
 void RichTextDelegate::paint(QPainter* p, const QStyleOptionViewItem& o,
                              const QModelIndex& index) const
 {
-  if (o.text.isEmpty()) {
-    // no need to do anything if the text is empty
-    QStyledItemDelegate::paint(p, o, index);
-
-    return;
-  }
-
   QStyleOptionViewItem ov = o;
   initStyleOption(&ov, index);
 
@@ -66,17 +58,7 @@ void RichTextDelegate::paint(QPainter* p, const QStyleOptionViewItem& o,
 
   QTextDocument doc;
   doc.setHtml(ov.text);
-
-  QTextOption textOption;
-  textOption.setWrapMode(ov.features & QStyleOptionViewItem::WrapText
-                           ? QTextOption::WordWrap
-                           : QTextOption::ManualWrap);
-  textOption.setTextDirection(ov.direction);
-  doc.setDefaultTextOption(textOption);
   doc.setDefaultFont(ov.font);
-  doc.setDocumentMargin(1);
-  doc.setTextWidth(ov.rect.width());
-  doc.adjustSize();
 
   ov.text = "";
   ov.widget->style()->drawControl(QStyle::CE_ItemViewItem, &ov, p);
