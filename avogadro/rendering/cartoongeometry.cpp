@@ -102,6 +102,10 @@ CartoonType secondaryToCartoonType(Residue::SecondaryStructure sec)
       return Arrow;
     case Residue::SecondaryStructure::alphaHelix:
       return Tail;
+    case Residue::SecondaryStructure::helix310:
+      return Tail;
+    case Residue::SecondaryStructure::piHelix:
+      return Tail;
     default:
       return Body;
   }
@@ -132,4 +136,4 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
   BSplineGeometry::addPoint(pos, color, m_minRadius, group, id);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
