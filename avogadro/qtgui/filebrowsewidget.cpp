@@ -14,7 +14,6 @@
 
 #include <QFileInfo>
 #include <QProcessEnvironment>
-#include <QRegExp>
 
 namespace Avogadro::QtGui {
 
