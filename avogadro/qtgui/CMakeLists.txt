@@ -57,6 +57,7 @@ avogadro_headers(QtGui
   persistentbond.h
   pluginlayermanager.h
   pythonscript.h
+  richtextdelegate.h
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
@@ -85,6 +86,7 @@ target_sources(QtGui PRIVATE
   interfacewidget.cpp
   jsonwidget.cpp
   layermodel.cpp
+  richtextdelegate.cpp
   rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
