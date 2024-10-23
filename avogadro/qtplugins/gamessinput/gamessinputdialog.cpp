@@ -396,7 +396,7 @@ QString GamessInputDialog::generateJobTitle() const
 
   // Merge theory/basis into theory
   theory += "/" + basis;
-  theory.replace(QRegExp("\\s+"), "");
+  theory.replace(QRegularExpression("\\s+"), "");
 
   return QString("%1 | %2 | %3").arg(formula, calculation, theory);
 }

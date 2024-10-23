@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -42,7 +42,7 @@ bool tokenize(std::vector<std::string>& vcr, const char* buf,
   QString splitString("[");
   splitString += QString(delimstr);
   splitString += QString("]");
-  QRegExp splitter(splitString);
+  QRegularExpression splitter(splitString);
   foreach (const QString& str, tmp.split(splitter, Qt::SkipEmptyParts))
     vcr.push_back(str.toStdString());
 

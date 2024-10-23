@@ -165,27 +165,27 @@ GamessHighlighter::GamessHighlighter(QTextDocument* parent_)
              << R"(\s\$DATA\b)";
   rule.format = m_keywordFormat;
   foreach (const QString& pattern, m_keywords) {
-    rule.pattern = QRegExp(pattern);
+    rule.pattern = QRegularExpression(pattern);
     m_highlightingRules.append(rule);
   }
-  rule.pattern = QRegExp(R"(\s\$END\b)");
+  rule.pattern = QRegularExpression(R"(\s\$END\b)");
   m_highlightingRules.append(rule);
 
   m_singleLineCommentFormat.setForeground(Qt::green);
-  rule.pattern = QRegExp("![^\n]*");
+  rule.pattern = QRegularExpression("![^\n]*");
   rule.format = m_singleLineCommentFormat;
   m_highlightingRules.append(rule);
 
   m_numberFormat.setForeground(Qt::blue);
-  rule.pattern = QRegExp(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
+  rule.pattern = QRegularExpression(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
   rule.format = m_numberFormat;
   m_highlightingRules.append(rule);
 
   m_numberFormat.setForeground(Qt::blue);
-  rule.pattern = QRegExp(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
+  rule.pattern = QRegularExpression(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
   rule.format = m_numberFormat;
   m_highlightingRules.append(rule);
-  rule.pattern = QRegExp(R"((\b|[\s-])[0-9]+([0-9]+\b)?|\.[0-9]+\b)");
+  rule.pattern = QRegularExpression(R"((\b|[\s-])[0-9]+([0-9]+\b)?|\.[0-9]+\b)");
   rule.format = m_numberFormat;
   m_highlightingRules.append(rule);
 
@@ -198,7 +198,7 @@ GamessHighlighter::GamessHighlighter(QTextDocument* parent_)
 void GamessHighlighter::highlightBlock(const QString& text)
 {
   // Single line comments
-  QRegExp pattern("![^\n]*");
+  QRegularExpression pattern("![^\n]*");
   int commentIndex = pattern.indexIn(text);
   if (commentIndex >= 0)
     setFormat(commentIndex, pattern.matchedLength(), m_singleLineCommentFormat);
@@ -209,7 +209,7 @@ void GamessHighlighter::highlightBlock(const QString& text)
   int keywordLength = 0;
   if (previousBlockState() != 1) {
     foreach (const QString& regexString, m_keywords) {
-      QRegExp expression(regexString);
+      QRegularExpression expression(regexString);
       expression.setCaseSensitivity(Qt::CaseInsensitive);
       startIndex = expression.indexIn(text);
       keywordLength = expression.matchedLength();
@@ -221,7 +221,7 @@ void GamessHighlighter::highlightBlock(const QString& text)
   }
 
   while (startIndex >= 0) {
-    QRegExp endExpression(R"(\s\$END\b)");
+    QRegularExpression endExpression(R"(\s\$END\b)");
     endExpression.setCaseSensitivity(Qt::CaseInsensitive);
     int endIndex = endExpression.indexIn(text, startIndex);
     int blockLength;
@@ -235,7 +235,7 @@ void GamessHighlighter::highlightBlock(const QString& text)
     setFormat(startIndex + keywordLength, blockLength, m_inDataBlockFormat);
     bool found = false;
     foreach (const QString& regexString, m_keywords) {
-      QRegExp expression(regexString);
+      QRegularExpression expression(regexString);
       int index = expression.indexIn(text, startIndex + blockLength);
       if (index > startIndex) {
         found = true;
@@ -252,7 +252,7 @@ void GamessHighlighter::highlightBlock(const QString& text)
   if (previousBlockState() ==
       1) { // Anything outside of data blocks is a comment
     foreach (const HighlightingRule& rule, m_highlightingRules) {
-      QRegExp expression(rule.pattern);
+      QRegularExpression expression(rule.pattern);
       expression.setCaseSensitivity(Qt::CaseInsensitive);
       int index = text.indexOf(expression);
       while (index >= 0) {

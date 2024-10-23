@@ -87,9 +87,10 @@ void GenericHighlighter::Rule::apply(const QString& text,
         for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
           QString captured = match.captured(i);
           if (!captured.isNull()) {
-            // According to https://stackoverflow.com/questions/28725588/qregularexpression-match-position-in-the-source-string
-            // the index returned is relative to the whole string, not to the
-            // current match
+            // According to StackOverflow user "peppe", who claims to have
+            // written the whole QRegularExpression class, the index returned is
+            // relative to the whole string, not to the current match
+            // https://stackoverflow.com/questions/28725588/qregularexpression-match-position-in-the-source-string
             int index = match.capturedStart(i);
             int length = match.capturedLength(i);
             highlighter.setFormat(index, length, m_format);

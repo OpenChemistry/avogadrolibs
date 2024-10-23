@@ -19,7 +19,7 @@
 
 #include <QSyntaxHighlighter>
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QTextCharFormat>
 
@@ -41,15 +41,15 @@ protected:
 private:
   struct HighlightingRule
   {
-    QRegExp pattern;
+    QRegularExpression pattern;
     QTextCharFormat format;
   };
   QVector<HighlightingRule> m_highlightingRules;
 
   QStringList m_keywords;
 
-  QRegExp m_commentStartExpression;
-  QRegExp m_commentEndExpression;
+  QRegularExpression m_commentStartExpression;
+  QRegularExpression m_commentEndExpression;
 
   QTextCharFormat m_keywordFormat;
   QTextCharFormat m_numberFormat;
