@@ -77,7 +77,7 @@ void GenericHighlighter::Rule::apply(const QString& text,
   for (auto & m_pattern : m_patterns) {
     // each m_pattern is a QRegularExpression
     // We want to highlight every occurrence of m_pattern
-    QRegularExpressionMatchIterator iterator = m_pattern.globalMatch(text)
+    QRegularExpressionMatchIterator iterator = m_pattern.globalMatch(text);
     while (iterator.hasNext()) {
       QRegularExpressionMatch match = iterator.next();
       // If using a regex with capture groups defined, we explicitly don't want
@@ -86,7 +86,7 @@ void GenericHighlighter::Rule::apply(const QString& text,
         // Iterate over capture groups, skipping the implicit group 0
         for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
           QString captured = match.captured(i);
-          if !(captured.isNull()): {
+          if (!captured.isNull()) {
             // According to https://stackoverflow.com/questions/28725588/qregularexpression-match-position-in-the-source-string
             // the index returned is relative to the whole string, not to the
             // current match
