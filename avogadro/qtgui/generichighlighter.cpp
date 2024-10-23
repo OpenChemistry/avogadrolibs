@@ -75,32 +75,37 @@ void GenericHighlighter::Rule::apply(const QString& text,
                                      GenericHighlighter& highlighter)
 {
   for (auto & m_pattern : m_patterns) {
-    int index = m_pattern.indexIn(text);
-    while (index >= 0) {
-      // If using a regex with capture groups defined, only highlight the
-      // capture groups.
+    // each m_pattern is a QRegularExpression
+    // We want to highlight every occurrence of m_pattern
+    QRegularExpressionMatchIterator iterator = m_pattern.globalMatch(text)
+    while (iterator.hasNext()) {
+      QRegularExpressionMatch match = iterator.next();
+      // If using a regex with capture groups defined, we explicitly don't want
+      // to highlight the whole expression, only the capture groups
       if (m_pattern.captureCount() > 0) {
-        QStringList capturedTexts(m_pattern.capturedTexts());
-        QString match(capturedTexts.takeFirst());
-        foreach (const QString& capture, capturedTexts) {
-          int capOffset(match.indexOf(capture));
-          while (capOffset > 0) {
-            int capLength(capture.size());
-            highlighter.setFormat(index + capOffset, capLength, m_format);
-            capOffset = match.indexOf(capture, capOffset + capLength);
+        // Iterate over capture groups, skipping the implicit group 0
+        for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
+          QString captured = match.captured(i);
+          if !(captured.isNull()): {
+            // According to https://stackoverflow.com/questions/28725588/qregularexpression-match-position-in-the-source-string
+            // the index returned is relative to the whole string, not to the
+            // current match
+            int index = match.capturedStart(i);
+            int length = match.capturedLength(i);
+            highlighter.setFormat(index, length, m_format);
           }
         }
-        index = m_pattern.indexIn(text, index + match.size());
       } else {
-        int length(m_pattern.matchedLength());
+        // Straightforward regex with no capture groups, highlight whole match
+        int index = match.capturedStart(0);
+        int length = match.capturedLength(0);
         highlighter.setFormat(index, length, m_format);
-        index = m_pattern.indexIn(text, index + length);
       }
     }
   }
 }
 
-void GenericHighlighter::Rule::addPattern(const QRegExp& regexp)
+void GenericHighlighter::Rule::addPattern(const QRegularExpression& regexp)
 {
   m_patterns.append(regexp);
 }

@@ -148,13 +148,14 @@ void OBProcess::queryReadFormatsPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpression parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString extension = parser.cap(1);
-    QString description = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString extension = match.captured(1);
+    QString description = match.captured(2);
     result.insertMulti(description, extension);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -173,13 +174,14 @@ void OBProcess::queryWriteFormatsPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpression parser(R"(\s*([^\s]+)\s+--\s+([^\n]+)\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString extension = parser.cap(1);
-    QString description = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString extension = match.captured(1);
+    QString description = match.captured(2);
     result.insertMulti(description, extension);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -273,13 +275,14 @@ void OBProcess::queryForceFieldsPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpression parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString key = parser.cap(1);
-    QString desc = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString key = match.captured(1);
+    QString desc = match.captured(2);
     result.insertMulti(key, desc);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -312,13 +315,14 @@ void OBProcess::queryChargesPrepare()
 
   QString output = QString::fromLatin1(m_process->readAllStandardOutput());
 
-  QRegExp parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpression parser(R"(([^\s]+)\s+(\S[^\n]*[^\n\.]+)\.?\n)");
+  QRegularExpressionMatch match;
   int pos = 0;
-  while ((pos = parser.indexIn(output, pos)) != -1) {
-    QString key = parser.cap(1);
-    QString desc = parser.cap(2);
+  while ((match = parser.match(output, pos)).hasMatch()) {
+    QString key = match.captured(1);
+    QString desc = match.captured(2);
     result.insertMulti(key, desc);
-    pos += parser.matchedLength();
+    pos = match.capturedEnd(0);
   }
 
   releaseProcess();
@@ -492,9 +496,10 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Search for the maximum number of steps if we haven't found it yet
   if (m_optimizeGeometryMaxSteps < 0) {
-    QRegExp maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
-    if (maxStepsParser.indexIn(m_optimizeGeometryLog) != -1) {
-      m_optimizeGeometryMaxSteps = maxStepsParser.cap(1).toInt();
+    QRegularExpression maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
+    QRegularExpressionMatch match;
+    if ((match = maxStepsParser.match(m_optimizeGeometryLog)).hasMatch()) {
+      m_optimizeGeometryMaxSteps = match.captured(1).toInt();
       emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps, 0.0,
                                         0.0);
     }
@@ -502,11 +507,16 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegExp lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
-    if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
-      int step = lastStepParser.cap(1).toInt();
-      double energy = lastStepParser.cap(2).toDouble();
-      double lastEnergy = lastStepParser.cap(3).toDouble();
+    QRegularExpression lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    QRegularExpressionMatchIterator matchIterator = lastStepParser.globalMatch(m_optimizeGeometryLog);
+    QRegularExpressionMatch lastMatch;
+    while (matchIterator.hasNext()) {
+        lastMatch = matchIterator.next(); // Capture the last match
+    }
+    if (lastMatch.hasMatch()) {
+      int step = lastMatch.captured(1).toInt();
+      double energy = lastMatch.captured(2).toDouble();
+      double lastEnergy = lastMatch.captured(3).toDouble();
       emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
                                         energy, lastEnergy);
     }
@@ -522,9 +532,10 @@ void OBProcess::conformerReadLog()
 
   // Search for the maximum number of steps if we haven't found it yet
   if (m_optimizeGeometryMaxSteps < 0) {
-    QRegExp maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
-    if (maxStepsParser.indexIn(m_optimizeGeometryLog) != -1) {
-      m_optimizeGeometryMaxSteps = maxStepsParser.cap(1).toInt();
+    QRegularExpression maxStepsParser("\nSTEPS = ([0-9]+)\n\n");
+    QRegularExpressionMatch match;
+    if ((match = maxStepsParser.match(m_optimizeGeometryLog)).hasMatch()) {
+      m_optimizeGeometryMaxSteps = match.captured(1).toInt();
       emit optimizeGeometryStatusUpdate(0, m_optimizeGeometryMaxSteps, 0.0,
                                         0.0);
     }
@@ -532,11 +543,12 @@ void OBProcess::conformerReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegExp lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
-    if (lastStepParser.lastIndexIn(m_optimizeGeometryLog) != -1) {
-      int step = lastStepParser.cap(1).toInt();
-      double energy = lastStepParser.cap(2).toDouble();
-      double lastEnergy = lastStepParser.cap(3).toDouble();
+    QRegularExpression lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    QRegularExpressionMatch match;
+    if ((match = lastStepParser.match(m_optimizeGeometryLog)).hasMatch()) {
+      int step = match.captured(1).toInt();
+      double energy = match.captured(2).toDouble();
+      double lastEnergy = match.captured(3).toDouble();
       emit optimizeGeometryStatusUpdate(step, m_optimizeGeometryMaxSteps,
                                         energy, lastEnergy);
     }
