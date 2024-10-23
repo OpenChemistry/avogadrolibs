@@ -604,6 +604,8 @@ void InterfaceScript::replaceKeywords(QString& str,
   QRegularExpression coordParser(R"(\$\$coords:([^\$]*)\$\$)");
   QRegularExpressionMatch match;
   int ind = 0;
+  // Not sure while this needs to be a while statement since we replace all in
+  // one go? We never iterate ind...
   while ((match = coordParser.match(str, ind)).hasMatch()) {
     // Extract spec and prepare the replacement
     const QString keyword = match.captured(0);
@@ -611,9 +613,6 @@ void InterfaceScript::replaceKeywords(QString& str,
 
     // Replace all blocks with this signature
     str.replace(keyword, generateCoordinateBlock(spec, mol));
-
-    // Update the index for the next match (move past the current match)
-    ind = match.capturedEnd(0);
 
   } // end for coordinate block
 }
@@ -850,49 +849,47 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
 bool InterfaceScript::parsePattern(const QJsonValue& json,
                                    QRegularExpression& pattern) const
 {
-    if (!json.isObject())
-        return false;
+  if (!json.isObject())
+      return false;
 
-    QJsonObject patternObj(json.toObject());
-    QString regexPattern;
-    QRegularExpression::PatternOptions patternOptions = QRegularExpression::NoPatternOption;
+  QJsonObject patternObj(json.toObject());
+  QString regexPattern;
+  QRegularExpression::PatternOptions patternOptions = QRegularExpression::NoPatternOption;
 
-    if (patternObj.contains(QStringLiteral("regexp")) &&
-        patternObj.value(QStringLiteral("regexp")).isString()) {
-        // Use the provided regular expression as-is
-        regexPattern = patternObj.value(QStringLiteral("regexp")).toString();
-    } 
-    else if (patternObj.contains(QStringLiteral("wildcard")) &&
+  if (patternObj.contains(QStringLiteral("regexp")) &&
+      patternObj.value(QStringLiteral("regexp")).isString()) {
+    // Use the provided regular expression as-is
+    regexPattern = patternObj.value(QStringLiteral("regexp")).toString();
+  } else if (patternObj.contains(QStringLiteral("wildcard")) &&
              patternObj.value(QStringLiteral("wildcard")).isString()) {
-        // Convert wildcard pattern (* -> .* and ? -> .)
-        QString wildcard = patternObj.value(QStringLiteral("wildcard")).toString();
-        regexPattern = QRegularExpression::escape(wildcard)
-                        .replace("\\*", ".*")
-                        .replace("\\?", ".");
-    } 
-    else if (patternObj.contains(QStringLiteral("string")) &&
-             patternObj.value(QStringLiteral("string")).isString()) {
-        // Escape the string so it is treated literally in the regex
-        regexPattern = QRegularExpression::escape(
-            patternObj.value(QStringLiteral("string")).toString()
-        );
-    } 
-    else {
-        return false;
+    // Convert wildcard pattern (* -> .* and ? -> .)
+    QString wildcard = patternObj.value(QStringLiteral("wildcard")).toString();
+    regexPattern = QRegularExpression::escape(wildcard)
+                   .replace("\\*", ".*")
+                   .replace("\\?", ".");
+  } 
+  else if (patternObj.contains(QStringLiteral("string")) &&
+           patternObj.value(QStringLiteral("string")).isString()) {
+    // Escape the string so it is treated literally in the regex
+    regexPattern = QRegularExpression::escape(
+      patternObj.value(QStringLiteral("string")).toString()
+    );
+  } else {
+    return false;
+  }
+
+  // Set case sensitivity if specified
+  if (patternObj.contains(QStringLiteral("caseSensitive"))) {
+    bool caseSensitive = patternObj.value(QStringLiteral("caseSensitive")).toBool(true);
+    if (!caseSensitive) {
+      patternOptions |= QRegularExpression::CaseInsensitiveOption;
     }
+  }
 
-    // Set case sensitivity if specified
-    if (patternObj.contains(QStringLiteral("caseSensitive"))) {
-        bool caseSensitive = patternObj.value(QStringLiteral("caseSensitive")).toBool(true);
-        if (!caseSensitive) {
-            patternOptions |= QRegularExpression::CaseInsensitiveOption;
-        }
-    }
+  // Set the final pattern with options
+  pattern = QRegularExpression(regexPattern, patternOptions);
 
-    // Set the final pattern with options
-    pattern = QRegularExpression(regexPattern, patternOptions);
-
-    return pattern.isValid();
+  return pattern.isValid();
 }
 
 } // namespace Avogadro::QtGui
