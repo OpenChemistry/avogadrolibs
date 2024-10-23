@@ -199,9 +199,9 @@ void GamessHighlighter::highlightBlock(const QString& text)
 {
   // Single line comments
   QRegularExpression pattern("![^\n]*");
-  int commentIndex = pattern.indexIn(text);
-  if (commentIndex >= 0)
-    setFormat(commentIndex, pattern.matchedLength(), m_singleLineCommentFormat);
+  QRegularExpressionMatch commentMatch = pattern.match(text);
+  if (commentMatch.hasMatch())
+    setFormat(commentMatch.capturedStart(), commentMatch.capturedLength(), m_singleLineCommentFormat);
 
   setCurrentBlockState(0);
 
@@ -209,11 +209,11 @@ void GamessHighlighter::highlightBlock(const QString& text)
   int keywordLength = 0;
   if (previousBlockState() != 1) {
     foreach (const QString& regexString, m_keywords) {
-      QRegularExpression expression(regexString);
-      expression.setCaseSensitivity(Qt::CaseInsensitive);
-      startIndex = expression.indexIn(text);
-      keywordLength = expression.matchedLength();
-      if (startIndex >= 0) {
+      QRegularExpression expression(regexString, QRegularExpression::CaseInsensitiveOption);
+      QRegularExpressionMatch match = expression.match(text);
+      startIndex = match.capturedStart();
+      keywordLength = match.capturedLength();
+      if (match.hasMatch()) {
         setFormat(startIndex, keywordLength, m_keywordFormat);
         break;
       }
@@ -221,26 +221,27 @@ void GamessHighlighter::highlightBlock(const QString& text)
   }
 
   while (startIndex >= 0) {
-    QRegularExpression endExpression(R"(\s\$END\b)");
-    endExpression.setCaseSensitivity(Qt::CaseInsensitive);
-    int endIndex = endExpression.indexIn(text, startIndex);
+    QRegularExpression endExpression(R"(\s\$END\b)", QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match = endExpression.match(text, startIndex);
+    int endIndex = match.capturedStart();
     int blockLength;
     if (endIndex == -1) {
       setCurrentBlockState(1);
       blockLength = text.length() - startIndex - keywordLength;
     } else {
-      setFormat(endIndex, endExpression.matchedLength(), m_keywordFormat);
+      setFormat(endIndex, match.capturedLength(), m_keywordFormat);
       blockLength = endIndex - startIndex - keywordLength;
     }
     setFormat(startIndex + keywordLength, blockLength, m_inDataBlockFormat);
     bool found = false;
     foreach (const QString& regexString, m_keywords) {
       QRegularExpression expression(regexString);
-      int index = expression.indexIn(text, startIndex + blockLength);
+      QRegularExpressionMatch match = expression.match(text, startIndex + blockLength);
+      int index = match.capturedStart();
       if (index > startIndex) {
         found = true;
         startIndex = index;
-        keywordLength = expression.matchedLength();
+        keywordLength = match.capturedLength();
         setFormat(startIndex, keywordLength, m_keywordFormat);
         break;
       }
@@ -253,12 +254,13 @@ void GamessHighlighter::highlightBlock(const QString& text)
       1) { // Anything outside of data blocks is a comment
     foreach (const HighlightingRule& rule, m_highlightingRules) {
       QRegularExpression expression(rule.pattern);
-      expression.setCaseSensitivity(Qt::CaseInsensitive);
-      int index = text.indexOf(expression);
-      while (index >= 0) {
-        int length = expression.matchedLength();
+      expression.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
+      QRegularExpressionMatchIterator iterator = expression.globalMatch(text);
+      while (iterator.hasNext()) {
+        QRegularExpressionMatch match = iterator.next();
+        int index = match.capturedStart();
+        int length = match.capturedLength();
         setFormat(index, length, rule.format);
-        index = text.indexOf(expression, index + length);
       }
     }
   }
