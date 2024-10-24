@@ -12,10 +12,10 @@
 
 #include <avogadro/core/avogadrocore.h>
 
+#include <QRegularExpression>
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
-#include <QRegularExpression>
 
 class QJsonDocument;
 class QProcess;

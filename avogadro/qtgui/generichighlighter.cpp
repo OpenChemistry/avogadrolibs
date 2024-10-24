@@ -14,9 +14,7 @@ GenericHighlighter::GenericHighlighter(QObject* parent_)
 {
 }
 
-GenericHighlighter::~GenericHighlighter()
-{
-}
+GenericHighlighter::~GenericHighlighter() {}
 
 GenericHighlighter::GenericHighlighter(const GenericHighlighter& other)
   : QSyntaxHighlighter(static_cast<QTextDocument*>(nullptr))
@@ -67,14 +65,14 @@ QList<GenericHighlighter::Rule> GenericHighlighter::rules() const
 
 void GenericHighlighter::highlightBlock(const QString& text)
 {
-  for (auto & m_rule : m_rules)
+  for (auto& m_rule : m_rules)
     m_rule.apply(text, *this);
 }
 
 void GenericHighlighter::Rule::apply(const QString& text,
                                      GenericHighlighter& highlighter)
 {
-  for (auto & m_pattern : m_patterns) {
+  for (auto& m_pattern : m_patterns) {
     // each m_pattern is a QRegularExpression
     // We want to highlight every occurrence of m_pattern
     QRegularExpressionMatchIterator iterator = m_pattern.globalMatch(text);
@@ -116,4 +114,4 @@ void GenericHighlighter::Rule::setFormat(const QTextCharFormat& format)
   m_format = format;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

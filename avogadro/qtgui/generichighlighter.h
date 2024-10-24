@@ -94,7 +94,7 @@ private:
   QList<Rule> m_rules;
 };
 
-} // namespace QtPlugins
+} // namespace QtGui
 } // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H

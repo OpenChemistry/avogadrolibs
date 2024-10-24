@@ -177,15 +177,18 @@ GamessHighlighter::GamessHighlighter(QTextDocument* parent_)
   m_highlightingRules.append(rule);
 
   m_numberFormat.setForeground(Qt::blue);
-  rule.pattern = QRegularExpression(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
+  rule.pattern =
+    QRegularExpression(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
   rule.format = m_numberFormat;
   m_highlightingRules.append(rule);
 
   m_numberFormat.setForeground(Qt::blue);
-  rule.pattern = QRegularExpression(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
+  rule.pattern =
+    QRegularExpression(R"((\b|[\s-])[0-9]+\.([0-9]+\b)?|\.[0-9]+\b)");
   rule.format = m_numberFormat;
   m_highlightingRules.append(rule);
-  rule.pattern = QRegularExpression(R"((\b|[\s-])[0-9]+([0-9]+\b)?|\.[0-9]+\b)");
+  rule.pattern =
+    QRegularExpression(R"((\b|[\s-])[0-9]+([0-9]+\b)?|\.[0-9]+\b)");
   rule.format = m_numberFormat;
   m_highlightingRules.append(rule);
 
@@ -201,7 +204,8 @@ void GamessHighlighter::highlightBlock(const QString& text)
   QRegularExpression pattern("![^\n]*");
   QRegularExpressionMatch commentMatch = pattern.match(text);
   if (commentMatch.hasMatch())
-    setFormat(commentMatch.capturedStart(), commentMatch.capturedLength(), m_singleLineCommentFormat);
+    setFormat(commentMatch.capturedStart(), commentMatch.capturedLength(),
+              m_singleLineCommentFormat);
 
   setCurrentBlockState(0);
 
@@ -209,7 +213,8 @@ void GamessHighlighter::highlightBlock(const QString& text)
   int keywordLength = 0;
   if (previousBlockState() != 1) {
     foreach (const QString& regexString, m_keywords) {
-      QRegularExpression startExpression(regexString, QRegularExpression::CaseInsensitiveOption);
+      QRegularExpression startExpression(
+        regexString, QRegularExpression::CaseInsensitiveOption);
       QRegularExpressionMatch startMatch = startExpression.match(text);
       startIndex = startMatch.capturedStart();
       keywordLength = startMatch.capturedLength();
@@ -221,7 +226,8 @@ void GamessHighlighter::highlightBlock(const QString& text)
   }
 
   while (startIndex >= 0) {
-    QRegularExpression endExpression(R"(\s\$END\b)", QRegularExpression::CaseInsensitiveOption);
+    QRegularExpression endExpression(R"(\s\$END\b)",
+                                     QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatch match = endExpression.match(text, startIndex);
     int endIndex = match.capturedStart();
     int blockLength;
@@ -236,7 +242,8 @@ void GamessHighlighter::highlightBlock(const QString& text)
     bool found = false;
     foreach (const QString& regexString, m_keywords) {
       QRegularExpression newExpression(regexString);
-      QRegularExpressionMatch newMatch = newExpression.match(text, startIndex + blockLength);
+      QRegularExpressionMatch newMatch =
+        newExpression.match(text, startIndex + blockLength);
       int index = newMatch.capturedStart();
       if (index > startIndex) {
         found = true;
@@ -254,8 +261,10 @@ void GamessHighlighter::highlightBlock(const QString& text)
       1) { // Anything outside of data blocks is a comment
     foreach (const HighlightingRule& rule, m_highlightingRules) {
       QRegularExpression otherExpression(rule.pattern);
-      otherExpression.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
-      QRegularExpressionMatchIterator iterator = otherExpression.globalMatch(text);
+      otherExpression.setPatternOptions(
+        QRegularExpression::CaseInsensitiveOption);
+      QRegularExpressionMatchIterator iterator =
+        otherExpression.globalMatch(text);
       while (iterator.hasNext()) {
         QRegularExpressionMatch otherMatch = iterator.next();
         int index = otherMatch.capturedStart();
@@ -270,4 +279,4 @@ void GamessHighlighter::highlightBlock(const QString& text)
     setFormat(80, text.length(), m_errorFormat);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins

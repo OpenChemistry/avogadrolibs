@@ -506,11 +506,13 @@ void OBProcess::optimizeGeometryReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegularExpression lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
-    QRegularExpressionMatchIterator matchIterator = lastStepParser.globalMatch(m_optimizeGeometryLog);
+    QRegularExpression lastStepParser(
+      R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    QRegularExpressionMatchIterator matchIterator =
+      lastStepParser.globalMatch(m_optimizeGeometryLog);
     QRegularExpressionMatch lastMatch;
     while (matchIterator.hasNext()) {
-        lastMatch = matchIterator.next(); // Capture the last match
+      lastMatch = matchIterator.next(); // Capture the last match
     }
     if (lastMatch.hasMatch()) {
       int step = lastMatch.captured(1).toInt();
@@ -542,7 +544,8 @@ void OBProcess::conformerReadLog()
 
   // Emit the last printed step
   if (m_optimizeGeometryMaxSteps >= 0) {
-    QRegularExpression lastStepParser(R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
+    QRegularExpression lastStepParser(
+      R"(\n\s*([0-9]+)\s+([-0-9.]+)\s+([-0-9.]+)\n)");
     QRegularExpressionMatch match;
     if ((match = lastStepParser.match(m_optimizeGeometryLog)).hasMatch()) {
       int step = match.captured(1).toInt();

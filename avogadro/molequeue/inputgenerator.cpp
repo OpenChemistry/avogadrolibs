@@ -21,8 +21,8 @@
 
 namespace Avogadro::MoleQueue {
 
-using QtGui::PythonScript;
 using QtGui::GenericHighlighter;
+using QtGui::PythonScript;
 
 InputGenerator::InputGenerator(const QString& scriptFilePath_, QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
@@ -36,9 +36,7 @@ InputGenerator::InputGenerator(QObject* parent_)
 {
 }
 
-InputGenerator::~InputGenerator()
-{
-}
+InputGenerator::~InputGenerator() {}
 
 bool InputGenerator::debug() const
 {
@@ -242,7 +240,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        }   // end foreach file
+        } // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");
@@ -355,7 +353,8 @@ bool InputGenerator::insertMolecule(QJsonObject& json,
 
   std::string str;
   if (!format->writeString(str, mol)) {
-    m_errors << tr("Error saving molecule representation to string: %1", "%1 = error message")
+    m_errors << tr("Error saving molecule representation to string: %1",
+                   "%1 = error message")
                   .arg(QString::fromStdString(format->error()));
     return false;
   }
@@ -654,7 +653,8 @@ bool InputGenerator::parsePattern(const QJsonValue& json,
 
   QJsonObject patternObj(json.toObject());
   QString regexPattern;
-  QRegularExpression::PatternOptions patternOptions = QRegularExpression::NoPatternOption;
+  QRegularExpression::PatternOptions patternOptions =
+    QRegularExpression::NoPatternOption;
 
   if (patternObj.contains(QStringLiteral("regexp")) &&
       patternObj.value(QStringLiteral("regexp")).isString()) {
@@ -665,22 +665,21 @@ bool InputGenerator::parsePattern(const QJsonValue& json,
     // Convert wildcard pattern (* -> .* and ? -> .)
     QString wildcard = patternObj.value(QStringLiteral("wildcard")).toString();
     regexPattern = QRegularExpression::escape(wildcard)
-                   .replace("\\*", ".*")
-                   .replace("\\?", ".");
-  } 
-  else if (patternObj.contains(QStringLiteral("string")) &&
-           patternObj.value(QStringLiteral("string")).isString()) {
+                     .replace("\\*", ".*")
+                     .replace("\\?", ".");
+  } else if (patternObj.contains(QStringLiteral("string")) &&
+             patternObj.value(QStringLiteral("string")).isString()) {
     // Escape the string so it is treated literally in the regex
     regexPattern = QRegularExpression::escape(
-      patternObj.value(QStringLiteral("string")).toString()
-    );
+      patternObj.value(QStringLiteral("string")).toString());
   } else {
     return false;
   }
 
   // Set case sensitivity if specified
   if (patternObj.contains(QStringLiteral("caseSensitive"))) {
-    bool caseSensitive = patternObj.value(QStringLiteral("caseSensitive")).toBool(true);
+    bool caseSensitive =
+      patternObj.value(QStringLiteral("caseSensitive")).toBool(true);
     if (!caseSensitive) {
       patternOptions |= QRegularExpression::CaseInsensitiveOption;
     }
@@ -692,4 +691,4 @@ bool InputGenerator::parsePattern(const QJsonValue& json,
   return pattern.isValid();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

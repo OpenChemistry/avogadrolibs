@@ -17,11 +17,11 @@ using std::vector;
 namespace Avogadro {
 namespace QuantumIO {
 
-using Quantum::S;
-using Quantum::SP;
-using Quantum::P;
 using Quantum::D;
 using Quantum::F;
+using Quantum::P;
+using Quantum::S;
+using Quantum::SP;
 using Quantum::UU;
 
 using Quantum::orbital;
@@ -170,9 +170,7 @@ GamessukOut::GamessukOut(const QString& qtfilename, GaussianSet* basis)
   GamessukOutNoQt(filename, basis);
 } // end GamessukOut
 
-GamessukOut::~GamessukOut()
-{
-} // end ~GamessukOut
+GamessukOut::~GamessukOut() {} // end ~GamessukOut
 
 void GamessukOut::GamessukOutNoQt(const std::string& filename,
                                   GaussianSet* basis)
@@ -784,5 +782,5 @@ void GamessukOut::load(GaussianSet* basis)
 
 } // end load
 
-} // End Namespace
-}
+} // namespace QuantumIO
+} // namespace Avogadro

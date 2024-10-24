@@ -23,7 +23,7 @@ class FileFormat;
 namespace QtGui {
 class InterfaceScript;
 class InterfaceWidget;
-}
+} // namespace QtGui
 
 namespace QtPlugins {
 
@@ -89,7 +89,7 @@ private:
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_COMMAND_H

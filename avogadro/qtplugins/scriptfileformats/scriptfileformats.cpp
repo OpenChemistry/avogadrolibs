@@ -20,8 +20,7 @@
 
 namespace Avogadro::QtPlugins {
 
-ScriptFileFormats::ScriptFileFormats(QObject* p)
-  : ExtensionPlugin(p)
+ScriptFileFormats::ScriptFileFormats(QObject* p) : ExtensionPlugin(p)
 {
   refreshFileFormats();
 }
@@ -80,4 +79,4 @@ void ScriptFileFormats::registerFileFormats()
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

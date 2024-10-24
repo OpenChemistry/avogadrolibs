@@ -32,7 +32,8 @@ class GamessInputDialog : public QDialog
   Q_OBJECT
 
 public:
-  explicit GamessInputDialog(QWidget* parent_ = nullptr, Qt::WindowFlags f = {});
+  explicit GamessInputDialog(QWidget* parent_ = nullptr,
+                             Qt::WindowFlags f = {});
   ~GamessInputDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);

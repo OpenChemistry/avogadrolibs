@@ -30,7 +30,7 @@ class Molecule;
 namespace QtGui {
 class GenericHighlighter;
 class PythonScript;
-}
+} // namespace QtGui
 
 namespace MoleQueue {
 /**
