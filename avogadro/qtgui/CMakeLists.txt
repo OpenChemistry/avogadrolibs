@@ -1,5 +1,5 @@
 if(QT_VERSION EQUAL 6)
-  find_package(Qt6 COMPONENTS Widgets Core5Compat REQUIRED)
+  find_package(Qt6 COMPONENTS Widgets REQUIRED)
 else()
   find_package(Qt5 COMPONENTS Widgets REQUIRED)
 endif()
@@ -121,6 +121,3 @@ target_sources(QtGui PRIVATE ${RC_SOURCES})
 
 avogadro_add_library(QtGui)
 target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets)
-if(QT_VERSION EQUAL 6)
-  target_link_libraries(QtGui PRIVATE Qt6::Core5Compat)
-endif()
