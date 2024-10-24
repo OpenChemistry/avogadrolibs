@@ -7,7 +7,7 @@ name: Qt6 Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.5.3
+  QT_VERSION: 6.8.0
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.15
@@ -39,7 +39,7 @@ jobs:
           }
         - {
             name: "macOS Qt6", artifact: "",
-            os: macos-13,
+            os: macos-latest,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
@@ -135,7 +135,7 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
-    
+
     - name: Upload
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v4
