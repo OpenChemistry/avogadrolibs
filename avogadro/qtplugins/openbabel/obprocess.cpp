@@ -11,7 +11,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 
-#include <QRegExp>
 #include <QRegularExpression>
 
 namespace Avogadro::QtPlugins {
