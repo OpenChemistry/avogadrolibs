@@ -84,7 +84,7 @@ private:
   QProgressDialog* m_progress;
 
   // maps program name --> script file path
-  QMap<QString, QString> m_commandScripts;
+  QMultiMap<QString, QString> m_commandScripts;
 
   const Io::FileFormat* m_outputFormat;
   QString m_outputFileName;

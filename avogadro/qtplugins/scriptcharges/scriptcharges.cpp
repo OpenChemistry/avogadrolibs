@@ -42,7 +42,7 @@ void ScriptCharges::refreshModels()
   qDeleteAll(m_models);
   m_models.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("charges");
   foreach (const QString& filePath, scriptPaths) {
     auto* model = new ScriptChargeModel(filePath);

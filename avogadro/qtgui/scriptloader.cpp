@@ -44,12 +44,12 @@ bool ScriptLoader::queryProgramName(const QString& scriptFilePath,
   return true;
 }
 
-QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
+QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
 {
   // List of directories to check.
   /// @todo Custom script locations
   QStringList dirs;
-  QMap<QString, QString> scriptList;
+  QMultiMap<QString, QString> scriptList;
 
   // add the default paths
   QStringList stdPaths =
@@ -136,10 +136,10 @@ QMap<QString, QString> ScriptLoader::scriptList(const QString& type)
       if (scriptList.contains(displayName)) {
         // check the last-modified-time of the existing case
         QFileInfo file(filePath);
-        QFileInfo existingFile(scriptList[displayName]);
+        QFileInfo existingFile(scriptList.value(displayName));
         if (file.lastModified() > existingFile.lastModified()) {
           // replace existing with this new entry
-          scriptList.insert(displayName, filePath);
+          scriptList.replace(displayName, filePath);
         }
       } else // new entry
         scriptList.insert(displayName, filePath);

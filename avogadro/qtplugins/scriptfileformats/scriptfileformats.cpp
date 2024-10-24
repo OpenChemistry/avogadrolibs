@@ -46,7 +46,7 @@ void ScriptFileFormats::refreshFileFormats()
   qDeleteAll(m_formats);
   m_formats.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("formatScripts");
   foreach (const QString& filePath, scriptPaths) {
     auto* format = new FileFormatScript(filePath);
