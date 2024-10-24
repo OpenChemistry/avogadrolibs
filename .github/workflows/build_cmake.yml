@@ -37,7 +37,7 @@ jobs:
           }
         - {
             name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-22.04,
+            os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
             build_type: "RelWithDebInfo",
             cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
@@ -82,12 +82,10 @@ jobs:
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
-        sudo add-apt-repository main
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
-        sudo apt-get -qq install libfuse2
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -289,7 +287,7 @@ jobs:
         OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
 
     - name: AppImage
-      if: matrix.config.os == 'ubuntu-22.04' && matrix.config.build_type == 'RelWithDebInfo'
+      if: matrix.config.os == 'ubuntu-20.04' && matrix.config.build_type == 'RelWithDebInfo'
       shell: bash
       run: |
         mkdir appdir
