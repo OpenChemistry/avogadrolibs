@@ -138,14 +138,16 @@ add_subdirectory(templatetool)
 add_subdirectory(vibrations)
 add_subdirectory(vrml)
 
+# These should work after the QRegExp migration
+add_subdirectory(apbs)
+add_subdirectory(cp2kinput)
+add_subdirectory(forcefield)
+add_subdirectory(gamessinput)
+
 if(QT_VERSION EQUAL 5)
-  # This will need some work on the QRegExp migration
-  add_subdirectory(apbs)
+# Still has a QPalette issue in Qt6
   add_subdirectory(coordinateeditor)
-  add_subdirectory(cp2kinput)
-  add_subdirectory(forcefield)
-  add_subdirectory(gamessinput)
-  # The SVG library changed in Qt6
+# The SVG library changed in Qt6
   add_subdirectory(svg)
 endif()
 
@@ -162,11 +164,8 @@ if(USE_VTK)
 endif()
 
 # script plugins (input generators, etc.)
-if(QT_VERSION EQUAL 5)
-  # QRegExp fixes needed in classes these depend on
-  add_subdirectory(commandscripts)
-  add_subdirectory(quantuminput)
-endif()
+add_subdirectory(commandscripts)
+add_subdirectory(quantuminput)
 add_subdirectory(scriptcharges)
 add_subdirectory(scriptfileformats)
 
