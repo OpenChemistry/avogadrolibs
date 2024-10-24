@@ -80,16 +80,19 @@ enum TokenType
 static const QRegularExpression TOKEN_SEPARATOR("[\\s,;]+");
 static const QRegularExpression VALID_TOKEN("[^\\s,;]+");
 // These two need to be exact
-static const QRegularExpression INT_CHECKER(QRegularExpression::anchoredPattern("(:?[+-])?\\d+"));
-static const QRegularExpression DOUBLE_CHECKER(QRegularExpression::anchoredPattern("(:?[+-])?" // Leading sign
-                                                                                   "(:?" // Must match one of the following:
-                                                                                   "\\d*\\.\\d*"           // Fractional part
-                                                                                   "|"                     // or
-                                                                                   "\\d+[Ee](:?[+-])?\\d+" // Exponential part
-                                                                                   "|"                     // or
-                                                                                   "\\d*\\.\\d*"       // Fractional part and
-                                                                                   "[Ee](:?[+-])?\\d+" // Exponential part
-                                                                                   ")"));
+static const QRegularExpression INT_CHECKER(
+  QRegularExpression::anchoredPattern("(:?[+-])?\\d+"));
+static const QRegularExpression DOUBLE_CHECKER(
+  QRegularExpression::anchoredPattern(
+    "(:?[+-])?"             // Leading sign
+    "(:?"                   // Must match one of the following:
+    "\\d*\\.\\d*"           // Fractional part
+    "|"                     // or
+    "\\d+[Ee](:?[+-])?\\d+" // Exponential part
+    "|"                     // or
+    "\\d*\\.\\d*"           // Fractional part and
+    "[Ee](:?[+-])?\\d+"     // Exponential part
+    ")"));
 
 struct AtomStruct
 {
