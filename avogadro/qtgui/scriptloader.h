@@ -39,7 +39,7 @@ public:
   /**
    * @return A map of name -> path for all scripts of the requested @arg type
    */
-  static QMap<QString, QString> scriptList(const QString& type);
+  static QMultiMap<QString, QString> scriptList(const QString& type);
 
   static bool queryProgramName(const QString& scriptFilePath,
                                QString& displayName);

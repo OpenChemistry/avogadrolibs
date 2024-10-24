@@ -485,7 +485,7 @@ void Forcefield::refreshScripts()
   qDeleteAll(m_scripts);
   m_scripts.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("energy");
   foreach (const QString& filePath, scriptPaths) {
     auto* model = new ScriptEnergy(filePath);

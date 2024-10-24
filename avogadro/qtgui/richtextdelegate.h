@@ -21,22 +21,26 @@
 #include <QStyledItemDelegate>
 #include <QTextDocument>
 
-namespace Avogadro {
-namespace QtPlugins {
+#include "avogadroqtguiexport.h"
 
-class RichTextDelegate : public QStyledItemDelegate
+namespace Avogadro {
+namespace QtGui {
+
+class AVOGADROQTGUI_EXPORT RichTextDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
 public:
-  RichTextDelegate(QObject* parent = nullptr)
-    : QStyledItemDelegate(parent){};
+  explicit RichTextDelegate(QObject* parent = 0);
+  ~RichTextDelegate() override;
+
   QSize sizeHint(const QStyleOptionViewItem& o,
                  const QModelIndex& index) const override;
   void paint(QPainter* p, const QStyleOptionViewItem& o,
              const QModelIndex& index) const override;
 };
-}
-}
 
-#endif // AVOGADRO_QTPLUGINS_RICHTEXTDELEGATE_H
+} // namespace QtGui
+} // namespace Avogadro
+
+#endif // AVOGADRO_QTGUI_RICHTEXTDELEGATE_H

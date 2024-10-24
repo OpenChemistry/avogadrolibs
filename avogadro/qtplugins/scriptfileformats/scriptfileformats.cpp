@@ -20,8 +20,7 @@
 
 namespace Avogadro::QtPlugins {
 
-ScriptFileFormats::ScriptFileFormats(QObject* p)
-  : ExtensionPlugin(p)
+ScriptFileFormats::ScriptFileFormats(QObject* p) : ExtensionPlugin(p)
 {
   refreshFileFormats();
 }
@@ -46,7 +45,7 @@ void ScriptFileFormats::refreshFileFormats()
   qDeleteAll(m_formats);
   m_formats.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("formatScripts");
   foreach (const QString& filePath, scriptPaths) {
     auto* format = new FileFormatScript(filePath);
@@ -80,4 +79,4 @@ void ScriptFileFormats::registerFileFormats()
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -15,7 +15,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonValue>
 #include <QtCore/QMimeData>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QClipboard>
 #include <QtGui/QKeyEvent>
 #include <QtNetwork/QNetworkAccessManager>
@@ -98,7 +98,7 @@ void MolecularPropertiesDialog::updateName()
   std::string smiles;
   Io::FileFormatManager::instance().writeString(*m_molecule, smiles, "smi");
   QString smilesString = QString::fromStdString(smiles);
-  smilesString.remove(QRegExp("\\s+.*"));
+  smilesString.remove(QRegularExpression("\\s+.*"));
   QString requestURL =
     QString("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/" +
             QUrl::toPercentEncoding(smilesString) + "/json");
@@ -172,13 +172,17 @@ void MolecularPropertiesDialog::updateMassLabel()
 void MolecularPropertiesDialog::updateFormulaLabel()
 {
   QString formula = QString::fromStdString(m_molecule->formula());
-  QRegExp digitParser("(\\d+)");
+  QRegularExpression digitParser("(\\d+)");
 
-  int ind = digitParser.indexIn(formula);
-  while (ind != -1) {
-    QString digits = digitParser.cap(1);
-    formula.replace(ind, digits.size(), QString("<sub>%1</sub>").arg(digits));
-    ind = digitParser.indexIn(formula, ind + digits.size() + 11);
+  QRegularExpressionMatchIterator i = digitParser.globalMatch(formula);
+  unsigned int offset = 0;
+  while (i.hasNext()) {
+    const QRegularExpressionMatch match = i.next();
+    QString digits = match.captured(1);
+
+    formula.replace(match.capturedStart(1) + offset, digits.size(),
+                    QString("<sub>%1</sub>").arg(digits));
+    offset += 11; // length of <sub>...</sub>
   }
 
   m_ui->formulaLabel->setText(formula);

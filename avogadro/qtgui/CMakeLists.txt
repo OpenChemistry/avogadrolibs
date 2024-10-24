@@ -1,5 +1,5 @@
 if(QT_VERSION EQUAL 6)
-  find_package(Qt6 COMPONENTS Widgets Core5Compat REQUIRED)
+  find_package(Qt6 COMPONENTS Widgets REQUIRED)
 else()
   find_package(Qt5 COMPONENTS Widgets REQUIRED)
 endif()
@@ -57,6 +57,7 @@ avogadro_headers(QtGui
   persistentbond.h
   pluginlayermanager.h
   pythonscript.h
+  richtextdelegate.h
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
@@ -85,6 +86,7 @@ target_sources(QtGui PRIVATE
   interfacewidget.cpp
   jsonwidget.cpp
   layermodel.cpp
+  richtextdelegate.cpp
   rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
@@ -119,6 +121,3 @@ target_sources(QtGui PRIVATE ${RC_SOURCES})
 
 avogadro_add_library(QtGui)
 target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets)
-if(QT_VERSION EQUAL 6)
-  target_link_libraries(QtGui PRIVATE Qt6::Core5Compat)
-endif()
