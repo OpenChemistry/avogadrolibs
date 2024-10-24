@@ -11,7 +11,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QtCore/QHash>
 
 namespace Avogadro {
@@ -88,9 +88,9 @@ public slots:
    * @param executable Executable to call with the filename as the first
    * argument. If the full path to the exectuble is not specified, it must be
    * in the user's $PATH.
-   * @param filePatterns A list of QRegExp objects that the handler can open.
-   * The QRegExp objects must use RegExp, RegExp2, WildCard, or WildCardUnix
-   * pattern syntax, else they will be ignored.
+   * @param filePatterns A list of QRegularExpression objects that the handler
+   * can open. The QRegularExpression objects may only use the new
+   * QRegularExpression pattern syntax.
    * @return The local ID of the request.
    * @note The executable is expected to use the following calling convention
    * to open files:
@@ -99,16 +99,16 @@ executable /absolute/path/to/selected/fileName
 ~~~
    */
   int registerOpenWith(const QString &name, const QString &executable,
-                       const QList<QRegExp> &filePatterns);
+                       const QList<QRegularExpression> &filePatterns);
 
   /**
    * Register a JSON-RPC 2.0 local socket file handler with MoleQueue.
    * @param name GUI name of the file handler.
    * @param rpcServer Name of the local socket that the server is listening on.
    * @param rpcMethod JSON-RPC 2.0 request method to use.
-   * @param filePatterns A list of QRegExp objects that the handler can open.
-   * The QRegExp objects must use RegExp, RegExp2, WildCard, or WildCardUnix
-   * pattern syntax, else they will be ignored.
+   * @param filePatterns A list of QRegularExpression objects that the handler
+   * can open. The QRegularExpression objects may only use the new
+   * QRegularExpression pattern syntax.
    * @return The local ID of the request.
    * @note The following JSON-RPC 2.0 request is sent to the server when the
    * handler is activated:
@@ -127,7 +127,7 @@ executable /absolute/path/to/selected/fileName
    */
   int registerOpenWith(const QString &name,
                        const QString &rpcServer, const QString &rpcMethod,
-                       const QList<QRegExp> &filePatterns);
+                       const QList<QRegularExpression> &filePatterns);
 
   /**
    * @brief Request a list of all file handler names.
@@ -240,7 +240,7 @@ protected:
 
 private:
   QJsonObject buildRegisterOpenWithRequest(const QString &name,
-                                           const QList<QRegExp> &filePatterns,
+                                           const QList<QRegularExpression> &filePatterns,
                                            const QJsonObject &handlerMethod);
 };
 

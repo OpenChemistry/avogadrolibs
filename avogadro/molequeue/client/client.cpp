@@ -113,7 +113,7 @@ int Client::cancelJob(unsigned int moleQueueId)
 }
 
 int Client::registerOpenWith(const QString &name, const QString &executable,
-                             const QList<QRegExp> &filePatterns)
+                             const QList<QRegularExpression> &filePatterns)
 {
   if (!m_jsonRpcClient)
     return -1;
@@ -133,7 +133,7 @@ int Client::registerOpenWith(const QString &name, const QString &executable,
 
 int Client::registerOpenWith(const QString &name,
                              const QString &rpcServer, const QString &rpcMethod,
-                             const QList<QRegExp> &filePatterns)
+                             const QList<QRegularExpression> &filePatterns)
 {
   if (!m_jsonRpcClient)
     return -1;
@@ -258,30 +258,16 @@ void Client::processError(const QJsonObject &error)
 }
 
 QJsonObject Client::buildRegisterOpenWithRequest(
-    const QString &name, const QList<QRegExp> &filePatterns,
+    const QString &name, const QList<QRegularExpression> &filePatterns,
     const QJsonObject &handlerMethod)
 {
    QJsonArray patterns;
-   foreach (const QRegExp &regex, filePatterns) {
-     QJsonObject pattern;
-     switch (regex.patternSyntax()) {
-     case QRegExp::RegExp:
-     case QRegExp::RegExp2:
-       pattern["regexp"] = regex.pattern();
-       break;
-     case QRegExp::Wildcard:
-     case QRegExp::WildcardUnix:
-       pattern["wildcard"] = regex.pattern();
-       break;
-     default:
-     case QRegExp::FixedString:
-     case QRegExp::W3CXmlSchema11:
-       continue;
-     }
-
-     pattern["caseSensitive"] = regex.caseSensitivity() == Qt::CaseSensitive;
-     patterns.append(pattern);
-   }
+   foreach (const QRegularExpression &regex, filePatterns) {
+    QJsonObject pattern;
+    pattern["regex"] = regex.pattern();
+    pattern["caseSensitive"] = regex.patternOptions().testFlag(QRegularExpression::CaseInsensitiveOption);
+    patterns.append(pattern);
+  }
 
    QJsonObject params;
    params["name"] = name;
