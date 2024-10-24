@@ -140,13 +140,12 @@ add_subdirectory(vrml)
 
 # These should work after the QRegExp migration
 add_subdirectory(apbs)
+add_subdirectory(coordinateeditor)
 add_subdirectory(cp2kinput)
 add_subdirectory(forcefield)
 add_subdirectory(gamessinput)
 
 if(QT_VERSION EQUAL 5)
-# Still has a QPalette issue in Qt6
-  add_subdirectory(coordinateeditor)
 # The SVG library changed in Qt6
   add_subdirectory(svg)
 endif()
