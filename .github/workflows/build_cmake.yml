@@ -39,7 +39,7 @@ jobs:
             name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
-            build_type: "Release",
+            build_type: "RelWithDebInfo",
             cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
