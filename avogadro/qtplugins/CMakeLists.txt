@@ -145,10 +145,8 @@ add_subdirectory(cp2kinput)
 add_subdirectory(forcefield)
 add_subdirectory(gamessinput)
 
-if(QT_VERSION EQUAL 5)
 # The SVG library changed in Qt6
-  add_subdirectory(svg)
-endif()
+add_subdirectory(svg)
 
 # Plugins that require VTK
 if(USE_VTK)
