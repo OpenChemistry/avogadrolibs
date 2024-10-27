@@ -23,6 +23,13 @@ Cube::~Cube()
   m_lock = nullptr;
 }
 
+std::vector<float>::const_iterator 
+Cube::getRowIter(size_t j, size_t k) const
+{
+    return m_data.cbegin() + m_points.x() * (k * m_points.y() + j);
+}
+
+
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
                      const Vector3i& points)
 {
@@ -192,6 +199,148 @@ float Cube::value(int i, int j, int k) const
     return m_data[index];
   else
     return 0.0;
+}
+
+std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
+{
+    std::array<std::array<float, 2>, 3> x;
+    std::array<float, 3> run;
+
+    size_t dataIdx = i + j * m_points.x() + k * m_points.x() * m_points.y();
+
+    if (i == 0)
+    {
+        x[0][0] = m_data[dataIdx + 1];
+        x[0][1] = m_data[dataIdx];
+        run[0] = m_spacing[0];
+    }
+    else if (i == (m_points.x() - 1))
+    {
+        x[0][0] = m_data[dataIdx];
+        x[0][1] = m_data[dataIdx - 1];
+        run[0] = m_spacing[0];
+    }
+    else
+    {
+        x[0][0] = m_data[dataIdx + 1];
+        x[0][1] = m_data[dataIdx - 1];
+        run[0] = 2 * m_spacing[0];
+    }
+
+    if (j == 0)
+    {
+        x[1][0] = m_data[dataIdx + nx];
+        x[1][1] = m_data[dataIdx];
+        run[1] = m_spacing[1];
+    }
+    else if (j == (m_points.y() - 1))
+    {
+        x[1][0] = m_data[dataIdx];
+        x[1][1] = m_data[dataIdx - m_points.x()];
+        run[1] = m_spacing[1];
+    }
+    else
+    {
+        x[1][0] = m_data[dataIdx + m_points.x()];
+        x[1][1] = m_data[dataIdx - m_points.x()];
+        run[1] = 2 * m_spacing[1];
+    }
+
+    if (k == 0)
+    {
+        x[2][0] = m_data[dataIdx + m_points.x() * m_points.y()];
+        x[2][1] = m_data[dataIdx];
+        run[2] = m_spacing[2];
+    }
+    else if (k == (m_points.z() - 1))
+    {
+        x[2][0] = m_data[dataIdx];
+        x[2][1] = m_data[dataIdx - m_points.x() * m_points.y()];
+        run[2] = m_spacing[2];
+    }
+    else
+    {
+        x[2][0] = m_data[dataIdx + m_points.x() * m_points.y()];
+        x[2][1] = m_data[dataIdx - m_points.x() * m_points.y()];
+        run[2] = 2 * m_spacing[2];
+    }
+
+    std::array<scalar_t, 3> ret;
+
+    ret[0] = (x[0][1] - x[0][0]) / run[0];
+    ret[1] = (x[1][1] - x[1][0]) / run[1];
+    ret[2] = (x[2][1] - x[2][0]) / run[2];
+
+    return ret;
+}
+
+std::array<scalar_t, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
+{
+    std::array<scalar_t, 8> vals;
+
+    size_t idx = i + j * m_points.x() + k * m_points.x() * m_points.y();
+
+    vals[0] = getData(i, j, k);
+    vals[1] = getData(i + 1, j, k);
+    vals[2] = getData(i + 1, j + 1, k);
+    vals[3] = getData(i, j + 1, k);
+    vals[4] = getData(i, j, k + 1);
+    vals[5] = getData(i + 1, j, k + 1);
+    vals[6] = getData(i + 1, j + 1, k + 1);
+    vals[7] = getData(i, j + 1, k + 1);
+
+    return vals;
+}
+
+
+inline scalar_t
+Cube::getData(size_t i, size_t j, size_t k) const
+{
+    return m_data[k * m_points.x() * m_points.y() + j * m_points.x() + i];
+}
+
+
+std::array<Vector3, 8> Cube::getPosCube(size_t i, size_t j, size_t k) const
+{
+  std::array<std::array<float, 3>, 8> pos;
+
+  float xpos = m_min.x() + i * m_spacing.x();
+  float ypos = m_min.y() + j * m_spacing.y();
+  float zpos = m_min.z() + k * m_spacing.z();
+
+  pos[0][0] = xpos;
+  pos[0][1] = ypos;
+  pos[0][2] = zpos;
+
+  pos[1][0] = xpos + m_spacing.x();
+  pos[1][1] = ypos;
+  pos[1][2] = zpos;
+
+  pos[2][0] = xpos + m_spacing.x();
+  pos[2][1] = ypos + m_spacing.y();
+  pos[2][2] = zpos;
+
+  pos[3][0] = xpos;
+  pos[3][1] = ypos + m_spacing.y();
+  pos[3][2] = zpos;
+
+  pos[4][0] = xpos;
+  pos[4][1] = ypos;
+  pos[4][2] = zpos + m_spacing.z();
+
+  pos[5][0] = xpos + m_spacing.x();
+  pos[5][1] = ypos;
+  pos[5][2] = zpos + m_spacing.z();
+
+  pos[6][0] = xpos + m_spacing.x();
+  pos[6][1] = ypos + m_spacing.y();
+  pos[6][2] = zpos + m_spacing.z();
+
+  pos[7][0] = xpos;
+  pos[7][1] = ypos + m_spacing.y();
+  pos[7][2] = zpos + m_spacing.z();
+
+  return pos;
 }
 
 float Cube::value(const Vector3i& pos) const

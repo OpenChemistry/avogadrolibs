@@ -133,6 +133,9 @@ public:
    */
   bool addData(const std::vector<float>& values);
 
+
+  std::vector<float>::const_iterator getRowIter(size_t j, size_t k) const;
+
   /**
    * @return Index of the point closest to the position supplied.
    * @param pos Position to get closest index for.
@@ -240,6 +243,7 @@ protected:
   Vector3 m_min, m_max, m_spacing;
   Vector3i m_points;
   float m_minValue, m_maxValue;
+  std::vector<float> data
   std::string m_name;
   Type m_cubeType;
   Mutex* m_lock;

@@ -81,6 +81,17 @@ public:
    */
   void run() override;
 
+  struct gridEdge {
+    int xl;     // Left trim index
+    int xr;     // Right trim index
+    int xstart; // X-coordinate start index
+    int ystart; // Y-coordinate start index
+    int zstart; // Z-coordinate start index
+
+    gridEdge() : xl(-1), xr(-1), xstart(-1), ystart(-1), zstart(-1) {}
+  }; 
+
+  void FlyingEdgesAlgorithmPass1();
   /**
    * @return The Cube being used by the class.
    */
@@ -144,8 +155,18 @@ protected:
   Vector3f m_stepSize;      /** The step size vector for cube. */
   Vector3f m_min;           /** The minimum point in the cube. */
   Vector3i m_dim;           /** The dimensions of the cube. */
+
+  std::array<std::array<float, 3>, 8> cube_t;
+  std::array<float, 8> scalarCube_t;
+
   Core::Array<Vector3f> m_vertices, m_normals;
   Core::Array<unsigned int> m_indices;
+  std::vector<gridEdge> gridEdges;
+  std::vector<size_t> triCounter;  // size of (ny-1)*(nz-1)
+  std::vector<unsigned char> edgeCases; 
+  std::vector<std::array<float, 3> > points;  //
+  std::vector<std::array<float, 3> > normals; // The output
+  std::vector<std::array<size_t, 3> > tris;     
   int m_progmin;
   int m_progmax;
 

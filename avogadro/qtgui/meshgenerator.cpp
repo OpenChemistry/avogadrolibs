@@ -63,6 +63,8 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
     m_stepSize[i] = static_cast<float>(m_cube->spacing()[i]);
   m_min = m_cube->min().cast<float>();
   m_dim = m_cube->dimensions();
+  edgeCases.resize((m_dim.x() - 1) * (m_dim.y() - 1) * (m_dim.z() - 1));
+  gridEdges.resize(m_dim.y() * m_dim.z());
   m_progmax = m_dim.x();
   
   // Similar to setting up sliceSize and grid traversal boundaries in BlockMarchFunctor.cpp:
@@ -71,6 +73,401 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   m_cube->lock()->unlock();
   return true;
 }
+
+void MeshGenerator::FlyingEdgesAlgorithmPass1()
+{
+  // Loop through z-dimension
+  for(size_t k = 0; k != m_dim.z(); ++k) {
+  // Loop through y-dimension    
+  for(size_t j = 0; j != m_dim.y(); ++j)
+  {
+
+  // Calculate the starting position of edgeCases for the current row    
+
+    auto curEdgeCases = edgeCases.begin() + (m_dim.x() - 1) * (k * m_dim.y() + j);
+
+  // Get an iterator to the current row of point values
+
+    auto curPointValues = m_cube->getRowIter(j, k);
+    
+  // Initialize the isGE array to track isosurface crossings
+    std::array<bool, 2> isGE;
+    isGE[0] = (curPointValues[0] >= m_iso); // first element initialization   
+
+  // loop through x-dimension     
+    for(int i = 1; i != m_dim.x(); ++i)
+    {
+      // update isGE for the current point
+      isGE[i % 2] = (curPointValues[i] >= m_iso);
+
+      // calculate edge case and update curEdgeCase         
+      curEdgeCases[i-1] = calcCaseEdge(isGE[(i+1)%2], isGE[i%2]);
+    }
+  }
+}
+
+  for(size_t k = 0; k != m_dim.z(); ++k){
+    for(size_t j = 0; j != m_dim.y(); ++j)
+    {
+        gridEdge& curGridEdge = gridEdges[k * m_dim.y() + j];
+        curGridEdge.xl = m_dim.x();  
+
+        for(int i = 1; i != m_dim.x(); ++i)
+        {
+          // if the edge is cut     
+          if(isCutEdge(i-1, j, k))
+          {
+            if(curGridEdge.xl == m_dim.x())
+            {
+              curGridEdge.xl = i-1;
+            }
+            curGridEdge.xr = i;
+          }
+        }
+     }}
+}
+
+
+void MeshGenerator::FlyingEdgesAlgorithmPass2()
+{
+
+    for(size_t k = 0; k != m_dim.z() - 1; ++k){
+       for(size_t j = 0; j != m_dim.y() - 1; ++j)
+       {
+        // find adjusted trim values    
+        size_t xl, xr;
+        calcTrimValues(xl, xr, j, k); // xl, xr set in this function
+
+        gridEdge& g0 = gridEdges[k * m_dim.y() + j];
+        gridEdge& ge1 = gridEdges[k*m_dim.y() +j + 1];
+        gridEdge& ge2 = gridEdges[(k+1) * m_dim.y() + j];
+        gridEdge& ge3 = gridEdges[(k+1) * m_dim.y() + j + 1];
+
+        auto const& ec0 = edgeCases.begin() + (m_dim.x()-1) * (k * m_dim.y() + j);
+        auto const& ec1 = edgeCases.begin() + (m_dim.x()-1) * (k * m_dim.y() + j + 1);
+        auto const& ec2 = edgeCases.begin() + (m_dim.x()-1) * ((k+1) * m_dim.y() + j);
+        auto const& ec3 = edgeCases.begin() + (m_dim.x()-1) * ((k+1) * m_dim.y() + j + 1);
+
+        // Count the number of triangles along this row of cubes
+        size_t& curTriCounter = *(triCounter.begin() + k * (m_dim.y() - 1) + j);
+
+        auto curCubeCaseIds = cubeCases.begin() + (m_dim.x() - 1) * (k * (m_dim.y() - 1) + j);
+
+        bool isYEnd = (j == m_dim.y() - 2);
+        bool isZEnd = (k == m_dim.z() - 2);
+
+        for(size_t i = xl; i != xr; ++i)
+        {
+          bool isXEnd = (i == m_dim.x() - 2);
+
+          unsigned char caseId = calcCubeCase(ec0[i], ec1[i], ec2[i], ec3[i]);
+
+          curCubeCaseIds[i] = caseId;
+
+          if(caseId == 0 || caseId == 255)
+          {
+            continue;
+          }
+
+
+        curTrimCounter += numTris[caseId];
+        
+        const bool* isCutCase = isCut[caseId]; // size 12
+        
+
+        ge0.xstart += isCutCase[0];    
+        ge0.ystart += isCutCase[3];
+        ge0.zstart += isCutCase[8];
+
+        if(isXEnd)
+        {
+          ge0.ystart += isCutCase[1];
+          ge0.zstart += isCutCase[9];
+        }
+
+        if(isYEnd)
+        {
+          ge1.xstart += isCutCase[2];
+          ge1.zstart += isCutCase[10];
+        }
+        if(isZEnd)
+        {
+          ge2.xstart += isCutCase[4];
+          ge2.ystart += isCutCase[7];
+        }
+        if(isXEnd and isYEnd)
+        {
+          ge1.zstart += isCutCase[11];
+        }
+        if(isXEnd and isZEnd)
+        {
+          ge2.ystart += isCutCase[5];
+        }
+        if(isYEnd and isZEnd)
+        {
+          ge3.xstart += isCutCase[6];
+        }
+
+        }
+
+       }
+    }
+}
+
+
+
+void MeshGenerator::FlyingEdgesAlgorithmPass3()
+{
+
+    size_t tmp;
+    size_t triAccum = 0;
+    for(size_t k = 0; k != m_dim.z()-1; ++k) {
+    for(size_t j = 0; j != m_dim.y()-1; ++j)
+    {
+        size_t& curTriCounter = triCounter[k*(m_dim.y()-1)+j];
+
+        tmp = curTriCounter;
+        curTriCounter = triAccum;
+        triAccum += tmp;
+    }}
+
+    size_t pointAccum = 0;
+    for(size_t k = 0; k != m_dim.z(); ++k) {
+    for(size_t j = 0; j != m_dim.y(); ++j)
+    {
+        gridEdge& curGridEdge = gridEdges[k * m_dim.y() + j];
+
+        tmp = curGridEdge.xstart;
+        curGridEdge.xstart = pointAccum;
+        pointAccum += tmp;
+
+        tmp = curGridEdge.ystart;
+        curGridEdge.ystart = pointAccum;
+        pointAccum += tmp;
+
+        tmp = curGridEdge.zstart;
+        curGridEdge.zstart = pointAccum;
+        pointAccum += tmp;
+    }}
+
+    points = std::vector<std::array<float, 3> >(pointAccum);
+    normals = std::vector<std::array<float, 3> >(pointAccum);
+    tris = std::vector<std::array<size_t, 3> >(triAccum);
+}
+
+void MeshGenerator::FlyingEdgesAlgorithmPass4()
+{
+ for(size_t k = 0; k != m_dim.z()-1; ++k) {
+    for(size_t j = 0; j != m_dim.y()-1; ++j)
+    {
+        // find adjusted trim values
+        size_t xl, xr;
+        calcTrimValues(xl, xr, j, k); // xl, xr set in this function
+
+        if(xl == xr)
+            continue;
+
+        size_t triIdx = triCounter[k*(m_dim.y()-1) + j];
+        auto curCubeCaseIds = cubeCases.begin() + (m_dim.x()-1)*(k*(m_dim.y()-1) + j);
+
+        gridEdge const& ge0 = gridEdges[k* m_dim.y() + j];
+        gridEdge const& ge1 = gridEdges[k* m_dim.y() + j + 1];
+        gridEdge const& ge2 = gridEdges[(k+1)* m_dim.y() + j];
+        gridEdge const& ge3 = gridEdges[(k+1)* m_dim.y() + j + 1];
+
+        size_t x0counter = 0;
+        size_t y0counter = 0;
+        size_t z0counter = 0;
+
+        size_t x1counter = 0;
+        size_t z1counter = 0;
+
+        size_t x2counter = 0;
+        size_t y2counter = 0;
+
+        size_t x3counter = 0;
+
+        bool isYEnd = (j == m_dim.y()-2);
+        bool isZEnd = (k == m_dim.z()-2);
+
+        for(size_t i = xl; i != xr; ++i)
+        {
+            bool isXEnd = (i == nx-2);
+
+            unsigned char caseId = curCubeCaseIds[i];
+
+            if(caseId == 0 || caseId == 255)
+            {
+                continue;
+            }
+
+            cube_t        pointCube = m_cube->getPosCube(i, j, k);
+            scalarCube_t  isovalCube = m_cube->getValsCube(i, j, k);
+            cube_t        gradCube = m_cube->getGradCube(i, j, k);
+
+            // Add Points and normals.
+            // Calculate global indices for triangles
+            std::array<size_t, 12> globalIdxs;
+
+            if(isCut[0])
+            {
+                size_t idx = ge0.xstart + x0counter;
+                points[idx] = interpolateOnCube(pointCube, isovalCube, 0);
+                normals[idx] = interpolateOnCube(gradCube, isovalCube, 0);
+                globalIdxs[0] = idx;
+                ++x0counter;
+            }
+
+            if(isCut[3])
+            {
+                size_t idx = ge0.ystart + y0counter;
+                points[idx] = interpolateOnCube(pointCube, isovalCube, 3);
+                normals[idx] = interpolateOnCube(gradCube, isovalCube, 3);
+                globalIdxs[3] = idx;
+                ++y0counter;
+            }
+
+            if(isCut[8])
+            {
+                size_t idx = ge0.zstart + z0counter;
+                points[idx] = interpolateOnCube(pointCube, isovalCube, 8);
+                normals[idx] = interpolateOnCube(gradCube, isovalCube, 8);
+                globalIdxs[8] = idx;
+                ++z0counter;
+            }
+
+            // Note:
+            //   e1, e5, e9 and e11 will be visited in the next iteration
+            //   when they are e3, e7, e8 and 10 respectively. So don't
+            //   increment their counters. When the cube is an edge cube,
+            //   their counters don't need to be incremented because they
+            //   won't be used agin.
+
+            // Manage boundary cases if needed. Otherwise just update
+            // globalIdx.
+            if(isCut[1])
+            {
+                size_t idx = ge0.ystart + y0counter;
+                if(isXEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 1);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 1);
+                    // y0counter counter doesn't need to be incremented
+                    // because it won't be used again.
+                }
+                globalIdxs[1] = idx;
+            }
+
+            if(isCut[9])
+            {
+                size_t idx = ge0.zstart + z0counter;
+                if(isXEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 9);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 9);
+                    // z0counter doesn't need to in incremented.
+                }
+                globalIdxs[9] = idx;
+            }
+
+            if(isCut[2])
+            {
+                size_t idx = ge1.xstart + x1counter;
+                if(isYEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 2);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 2);
+                }
+                globalIdxs[2] = idx;
+                ++x1counter;
+            }
+
+            if(isCut[10])
+            {
+                size_t idx = ge1.zstart + z1counter;
+
+                if(isYEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 10);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 10);
+                }
+                globalIdxs[10] = idx;
+                ++z1counter;
+            }
+
+            if(isCut[4])
+            {
+                size_t idx = ge2.xstart + x2counter;
+                if(isZEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 4);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 4);
+                }
+                globalIdxs[4] = idx;
+                ++x2counter;
+            }
+
+            if(isCut[7])
+            {
+                size_t idx = ge2.ystart + y2counter;
+                if(isZEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 7);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 7);
+                }
+                globalIdxs[7] = idx;
+                ++y2counter;
+            }
+
+            if(isCut[11])
+            {
+                size_t idx = ge1.zstart + z1counter;
+                if(isXEnd and isYEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 11);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 11);
+                    // z1counter does not need to be incremented.
+                }
+                globalIdxs[11] = idx;
+            }
+
+            if(isCut[5])
+            {
+                size_t idx = ge2.ystart + y2counter;
+                if(isXEnd and isZEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 5);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 5);
+                    // y2 counter does not need to be incremented.
+                }
+                globalIdxs[5] = idx;
+            }
+
+            if(isCut[6])
+            {
+                size_t idx = ge3.xstart + x3counter;
+                if(isYEnd and isZEnd)
+                {
+                    points[idx] = interpolateOnCube(pointCube, isovalCube, 6);
+                    normals[idx] = interpolateOnCube(gradCube, isovalCube, 6);
+                }
+                globalIdxs[6] = idx;
+                ++x3counter;
+            }
+
+            // Add triangles
+            const char* caseTri = caseTriangles[caseId]; // size 16
+            for(int idx = 0; caseTri[idx] != -1; idx += 3)
+            {
+                tris[triIdx][0] = globalIdxs[caseTri[idx]];
+                tris[triIdx][1] = globalIdxs[caseTri[idx+1]];
+                tris[triIdx][2] = globalIdxs[caseTri[idx+2]];
+                ++triIdx;
+            }
+        }
+    }}
+}
+
 
 void MeshGenerator::run()
 {
@@ -245,8 +642,110 @@ bool MeshGenerator::marchingCube(const Vector3i& pos)
   return true;
 }
 
+unsigned char MeshGenerator::calcCubeCase(
+    unsigned char const& ec0, unsigned char const& ec1,
+    unsigned char const& ec2, unsigned char const& ec3) const
+{
+    // ec0 | (i, j, k)
+    // ec1 | (i, j+1, k)
+    // ec2 | (i, j, k+1)
+    // ec3 | (i, j+1, k+1)
+
+    unsigned char caseId = 0;
+    if ((ec0 == 0) || (ec0 == 2)) // Vertex 0 at (i, j, k)
+        caseId |= 1;
+    if ((ec0 == 0) || (ec0 == 1)) // Vertex 1 at (i+1, j, k)
+        caseId |= 2;
+    if ((ec1 == 0) || (ec1 == 1)) // Vertex 2 at (i+1, j+1, k)
+        caseId |= 4;
+    if ((ec1 == 0) || (ec1 == 2)) // Vertex 3 at (i, j+1, k)
+        caseId |= 8;
+    if ((ec2 == 0) || (ec2 == 2)) // Vertex 4 at (i, j, k+1)
+        caseId |= 16;
+    if ((ec2 == 0) || (ec2 == 1)) // Vertex 5 at (i+1, j, k+1)
+        caseId |= 32;
+    if ((ec3 == 0) || (ec3 == 1)) // Vertex 6 at (i+1, j+1, k+1)
+        caseId |= 64;
+    if ((ec3 == 0) || (ec3 == 2)) // Vertex 7 at (i, j+1, k+1)
+        caseId |= 128;
+    return caseId;
+}
 
 
+bool MeshGenerator::isCutEdge(size_t i, size_t j, size_t k) const
+{
+  size_t nx = m_dim.x();
+  size_t ny = m_dim.y();
+  size_t nz = m_dim.z();
+
+  // Assuming edgeCases are all set
+  size_t edgeCaseIdx = k * (nx - 1) * ny + j * (nx - 1) + i;
+  unsigned char edgeCase = edgeCases[edgeCaseIdx];
+
+  if (edgeCase == 1 || edgeCase == 2)
+  {
+    return true;
+  }
+
+  if (j != ny - 1)
+  {
+    size_t edgeCaseIdxY = k * (nx - 1) * ny + (j + 1) * (nx - 1) + i;
+    unsigned char edgeCaseY = edgeCases[edgeCaseIdxY];
+
+    // If the sum is odd, the edge along the y-axis is cut
+    if ((edgeCase + edgeCaseY) % 2 == 1)
+    {
+      return true;
+    }
+  }
+
+  if (k != nz - 1)
+  {
+    size_t edgeCaseIdxZ = (k + 1) * (nx - 1) * ny + j * (nx - 1) + i;
+    unsigned char edgeCaseZ = edgeCases[edgeCaseIdxZ];
+
+    // If the sum is odd, the edge along the z-axis is cut
+    if ((edgeCase + edgeCaseZ) % 2 == 1)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+unsigned char MeshGenerator::calcCaseEdge(bool const& prevEdge, bool const& currEdge) const
+{
+    // o -- is greater than or equal to
+    // case 0: prevEdge = true, currEdge = true
+    // case 1: prevEdge = false, currEdge = true
+    // case 2: prevEdge = true, currEdge = false
+    // case 3: prevEdge = false, currEdge = false
+    if (prevEdge && currEdge)
+        return 0;
+    if (!prevEdge && currEdge)
+        return 1;
+    if (prevEdge && !currEdge)
+        return 2;
+    else // !prevEdge && !currEdge
+        return 3;
+}
+
+void MeshGenerator::calcTrimValues(size_t& xl, size_t& xr, size_t const& j, size_t const& k) const
+{
+  size_t ny = m_dim.y();
+
+  const gridEdge& ge0 = gridEdges[k * ny + j];
+  const gridEdge& ge1 = gridEdges[k * ny + j + 1];
+  const gridEdge& ge2 = gridEdges[(k + 1) * ny + j];
+  const gridEdge& ge3 = gridEdges[(k + 1) * ny + j + 1];
+
+  xl = std::min({ge0.xl, ge1.xl, ge2.xl, ge3.xl});
+  xr = std::max({ge0.xr, ge1.xr, ge2.xr, ge3.xr});
+
+  if (xl > xr)
+    xl = xr;
+}
 
 // flying edges tables using: 
 
