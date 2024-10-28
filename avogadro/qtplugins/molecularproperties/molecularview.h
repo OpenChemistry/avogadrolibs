@@ -6,7 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_MOLECULARVIEW_H
 #define AVOGADRO_QTPLUGINS_MOLECULARVIEW_H
 
-#include "propertymodel.h"
+#include "molecularmodel.h"
 
 #include <QtWidgets/QTableView>
 
@@ -25,7 +25,7 @@ public:
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous) override;
   void setMolecule(QtGui::Molecule* molecule);
-  void setSourceModel(PropertyModel* model) { m_model = model; }
+  void setSourceModel(MolecularModel* model) { m_model = model; }
   void hideEvent(QHideEvent* event) override;
   void contextMenuEvent(QContextMenuEvent* event) override;
 

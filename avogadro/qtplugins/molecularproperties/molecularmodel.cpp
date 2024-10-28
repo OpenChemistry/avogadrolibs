@@ -10,6 +10,7 @@
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QColor>
 
 #include <limits>
@@ -18,15 +19,15 @@ namespace Avogadro {
 
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
-using QtGui::RWAtom;
-using QtGui::RWBond;
-using std::numeric_limits;
-using std::pair;
-using std::vector;
 
 MolecularModel::MolecularModel(QObject* parent)
   : QAbstractTableModel(parent), m_molecule(nullptr)
 {
+}
+
+void MolecularModel::setMolecule(QtGui::Molecule* molecule)
+{
+  m_molecule = molecule;
 }
 
 int MolecularModel::rowCount(const QModelIndex& parent) const
@@ -42,13 +43,12 @@ int MolecularModel::rowCount(const QModelIndex& parent) const
   // and then however many keys are in the property map
   int rows = 5;
   if (m_molecule->residueCount() > 0)
-    rows += 2;
+    rows += 1; // TODO chains
   if (m_molecule->coordinate3dCount() > 0)
     ++rows;
 
   const auto& properties = m_molecule->dataMap();
-  if (m_molecule->propertyKeys().size() > 0)
-    rows += m_molecule->propertyKeys().size();
+  rows += properties.names().size(); // 0 or more
 
   return 0;
 }
@@ -94,7 +94,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
 
   // handle text alignments
   if (role == Qt::TextAlignmentRole) {
-    return toVariant(Qt::AlignHCenter | Qt::AlignVRight);
+    return toVariant(Qt::AlignHCenter | Qt::AlignRight);
   }
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
@@ -107,26 +107,35 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   } else if (row == Formula) {
     return formatFormula(m_molecule->formula());
   } else if (row == Atoms) {
-    return m_molecule->atomCount();
+    return QVariant::fromValue(m_molecule->atomCount());
   } else if (row == Bonds) {
-    return m_molecule->bondCount();
+    return QVariant::fromValue(m_molecule->bondCount());
   }
 
-  // TODO: figure out if we have conformers, etc.
-
-  /*
-  } else if (row == Residues) {
-    return m_molecule->residueCount();
-  } else if (row == Chains) {
-    return m_molecule->chainCount();
-  } else if (row == Conformers) {
-    return m_molecule->coordinate3dCount();
+  int offset = row - Bonds;
+  bool conformers = (m_molecule->coordinate3dCount() > 0);
+  bool residues = (m_molecule->residueCount() > 0);
+  if (conformers && offset == 0) {
+    return m_molecule->coordinate3dCount(); // conformers first
+  }
+  offset -= conformers ? 1 : 0; // tweak for conformer line
+  if (residues && offset == 0) {
+    return QVariant::fromValue(m_molecule->residueCount()); // residues next
+  }
+  offset -= residues ? 1 : 0; // tweak for residues line
+  /* TODO - chains
+  if (residues && offset == 0) {
+    return m_molecule->chainCount(); // chains next
   }
   */
 
   // now we're looping through the property map
   const auto map = m_molecule->dataMap();
-  unsigned int howManyRows = row - 5; // tweak for residues, etc.
+  auto it = map.begin();
+  std::advance(it, offset);
+  if (it != map.end()) {
+    return QString::fromStdString(it->second.toString());
+  }
 
   return QVariant();
 }
@@ -151,24 +160,47 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Value");
   } else if (orientation == Qt::Vertical) {
     if (section == Name)
-      return tr("Name");
+      return tr("Molecule Name");
     else if (section == Mass)
-      return tr("Molar Mass (g/mol)");
+      return tr("Molecular Mass (g/mol)");
     else if (section == Formula)
-      return tr("Formula");
+      return tr("Chemical Formula");
     else if (section == Atoms)
       return tr("Number of Atoms");
     else if (section == Bonds)
       return tr("Number of Bonds");
 
-    else
-      return QVariant();
+    int offset = section - Bonds;
+    bool conformers = (m_molecule->coordinate3dCount() > 0);
+    bool residues = (m_molecule->residueCount() > 0);
+    if (conformers && offset == 0) {
+      return tr("Coordinate Sets"); // conformers first
+    }
+    offset -= conformers ? 1 : 0; // tweak for conformer line
+    if (residues && offset == 0) {
+      return tr("Number of Residues");
+    }
+    offset -= residues ? 1 : 0; // tweak for residues line
+    /* TODO - chains
+    if (residues && offset == 0) {
+      return tr("Number of Chains");
+    }
+    */
+
+    // now we're looping through the property map
+    const auto map = m_molecule->dataMap();
+    auto it = map.begin();
+    std::advance(it, offset);
+    if (it != map.end()) {
+      return QString::fromStdString(it->first);
+    }
+
+    return QVariant();
 
   } else // row headers
     return QVariant();
-}
 
-return QVariant();
+  return QVariant();
 }
 
 Qt::ItemFlags MolecularModel::flags(const QModelIndex& index) const
@@ -179,24 +211,6 @@ Qt::ItemFlags MolecularModel::flags(const QModelIndex& index) const
   // return QAbstractItemModel::flags(index) | Qt::ItemIsEditable
   // for the types and columns that can be edited
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
-  if (m_type == AtomType) {
-    if (index.column() == AtomDataElement ||
-        index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
-        index.column() == AtomDataY || index.column() == AtomDataZ)
-      return editable;
-    // TODO: Color
-  } else if (m_type == BondType) {
-    if (index.column() == BondDataOrder || index.column() == BondDataLength)
-      return editable;
-  } else if (m_type == ResidueType) {
-    // TODO: Color
-  } else if (m_type == AngleType) {
-    if (index.column() == AngleDataValue)
-      return editable;
-  } else if (m_type == TorsionType) {
-    if (index.column() == TorsionDataValue)
-      return editable;
-  }
 
   return QAbstractItemModel::flags(index);
 }
@@ -210,104 +224,8 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
   if (role != Qt::EditRole)
     return false;
 
-  // If an item is actually editable, we should invalidate the cache
-  // We can still use the cached data -- we just invalidate now
-  // So that we can call "return" and have the cache invalid when we leave
-  m_validCache = false;
-  auto* undoMolecule = m_molecule->undoMolecule();
-
-  if (m_type == AtomType) {
-    Vector3 v = m_molecule->atomPosition3d(index.row());
-
-    switch (static_cast<AtomColumn>(index.column())) {
-      case AtomDataFormalCharge: {
-        bool ok;
-        int charge = value.toInt(&ok);
-        if (ok) {
-          undoMolecule->setFormalCharge(index.row(), charge);
-        }
-        break;
-      }
-      case AtomDataElement: { // atomic number
-        // Try first as a number
-        bool ok;
-        int atomicNumber = value.toInt(&ok);
-        if (ok)
-          undoMolecule->setAtomicNumber(index.row(), atomicNumber);
-        else {
-          // try a symbol
-          atomicNumber = Core::Elements::atomicNumberFromSymbol(
-            value.toString().toStdString());
-
-          if (atomicNumber != Avogadro::InvalidElement) {
-            undoMolecule->setAtomicNumber(index.row(), atomicNumber);
-          } else
-            return false;
-        } // not a number
-        break;
-      }
-      case AtomDataX:
-        v[0] = value.toDouble();
-        break;
-      case AtomDataY:
-        v[1] = value.toDouble();
-        break;
-      case AtomDataZ:
-        v[2] = value.toDouble();
-        break;
-      default:
-        return false;
-    }
-    undoMolecule->setAtomPosition3d(index.row(), v);
-
-    // cleanup atom changes
-    emit dataChanged(index, index);
-    m_molecule->emitChanged(Molecule::Atoms);
-    return true;
-  } else if (m_type == BondType) {
-    switch (static_cast<BondColumn>(index.column())) {
-      case BondDataOrder:
-        undoMolecule->setBondOrder(index.row(), value.toInt());
-        break;
-      case BondDataLength:
-        setBondLength(index.row(), value.toDouble());
-        break;
-      default:
-        return false;
-    }
-
-    emit dataChanged(index, index);
-    m_molecule->emitChanged(Molecule::Bonds);
-    return true;
-  } else if (m_type == AngleType) {
-    if (index.column() == AngleDataValue) {
-      setAngle(index.row(), value.toDouble());
-      emit dataChanged(index, index);
-      m_molecule->emitChanged(Molecule::Atoms);
-      return true;
-    }
-  } else if (m_type == TorsionType) {
-    if (index.column() == TorsionDataValue) {
-      setTorsion(index.row(), value.toDouble());
-      emit dataChanged(index, index);
-      m_molecule->emitChanged(Molecule::Atoms);
-      return true;
-    }
-  }
-
+  // TODO allow editing name
   return false;
-}
-
-void MolecularModel::setMolecule(QtGui::Molecule* molecule)
-{
-  if (molecule && molecule != m_molecule) {
-    m_molecule = molecule;
-
-    updateCache();
-
-    connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-            SLOT(updateTable(unsigned int)));
-  }
 }
 
 void MolecularModel::updateTable(unsigned int flags)
