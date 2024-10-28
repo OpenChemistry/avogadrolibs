@@ -50,7 +50,7 @@ int MolecularModel::rowCount(const QModelIndex& parent) const
   const auto& properties = m_molecule->dataMap();
   rows += properties.names().size(); // 0 or more
 
-  return 0;
+  return rows;
 }
 
 int MolecularModel::columnCount(const QModelIndex& parent) const
