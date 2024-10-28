@@ -135,6 +135,8 @@ void MolecularModel::updateNameReady(QNetworkReply* reply)
     }
   }
 
+  emit dataChanged(index(Name, 0), index(Name, 0));
+
   reply->deleteLater();
 }
 
