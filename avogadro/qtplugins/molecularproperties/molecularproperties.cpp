@@ -6,12 +6,16 @@
 #include "molecularproperties.h"
 #include "molecularview.h"
 
+#include <avogadro/qtgui/richtextdelegate.h>
+
 #include <QAction>
 #include <QStringList>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QVBoxLayout>
+
+using Avogadro::QtGui::RichTextDelegate;
 
 namespace Avogadro::QtPlugins {
 
@@ -68,6 +72,8 @@ void MolecularProperties::showDialog()
   view->setMolecule(m_molecule);
   view->setSourceModel(model);
   view->setModel(model);
+
+  view->setItemDelegateForColumn(0, new RichTextDelegate(view));
 
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   view->resizeColumnsToContents();

@@ -59,9 +59,9 @@ int MolecularModel::columnCount(const QModelIndex& parent) const
   return 1; // values
 }
 
-QString formatFormula(std::string f)
+QString formatFormula(Molecule* m)
 {
-  QString formula = QString::fromStdString(f);
+  QString formula = QString::fromStdString(molecule->formula());
   QRegularExpression digitParser("(\\d+)");
 
   QRegularExpressionMatchIterator i = digitParser.globalMatch(formula);
@@ -74,6 +74,12 @@ QString formatFormula(std::string f)
                     QString("<sub>%1</sub>").arg(digits));
     offset += 11; // length of <sub>...</sub>
   }
+
+  // add total charge as a superscript
+  int charge = m->totalCharge();
+  if (charge != 0)
+    formula += QString("<sup>%1</sup>").arg(charge);
+
   return formula;
 }
 
@@ -105,7 +111,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   } else if (row == Mass) {
     return m_molecule->mass();
   } else if (row == Formula) {
-    return formatFormula(m_molecule->formula());
+    return formatFormula(m_molecule);
   } else if (row == Atoms) {
     return QVariant::fromValue(m_molecule->atomCount());
   } else if (row == Bonds) {
