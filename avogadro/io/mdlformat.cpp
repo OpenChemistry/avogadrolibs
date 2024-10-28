@@ -182,7 +182,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Apply charges.
-  for (auto & i : chargeList) {
+  for (auto& i : chargeList) {
     size_t index = i.first;
     signed int charge = i.second;
     mol.setFormalCharge(index, charge);
@@ -260,13 +260,23 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
         << "  0  0  0  0\n";
   }
   // Properties block.
-  for (auto & i : chargeList) {
+  for (auto& i : chargeList) {
     Index atomIndex = i.first;
     signed int atomCharge = i.second;
     out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
         << setw(3) << atomCharge << "\n";
   }
+  // TODO: isotopes, etc.
   out << "M  END\n";
+  // Data block
+  if (m_writeProperties) {
+    const auto dataMap = mol.dataMap();
+    for (const auto& key : dataMap.names()) {
+      out << "> <" << key << ">\n";
+      out << dataMap.value(key).toString() << "\n";
+      out << "\n"; // empty line between data blocks
+    }
+  }
 
   if (isMode(FileFormat::MultiMolecule))
     out << "$$$$\n";
@@ -278,7 +288,6 @@ std::vector<std::string> MdlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("mol");
-  ext.emplace_back("sdf");
   return ext;
 }
 
@@ -289,4 +298,4 @@ std::vector<std::string> MdlFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io

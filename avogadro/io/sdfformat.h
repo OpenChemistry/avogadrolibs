@@ -3,36 +3,39 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_IO_MDLFORMAT_H
-#define AVOGADRO_IO_MDLFORMAT_H
+#ifndef AVOGADRO_IO_SDFFORMAT_H
+#define AVOGADRO_IO_SDFFORMAT_H
 
 #include "fileformat.h"
+#include "mdlformat.h"
 
 namespace Avogadro {
 namespace Io {
 
 /**
- * @class MdlFormat mdlformat.h <avogadro/io/mdlformat.h>
- * @brief Implementation of the generic MDL format.
+ * @class SdfFormat sdfformat.h <avogadro/io/sdfformat.h>
+ * @brief Implementation of the generic SDF format.
  * @author Marcus D. Hanwell
+ *
+ * Differs from the MDL / Mol format in that it includes properties
  *
  * Currently just supports V2000 of the format.
  */
 
-class AVOGADROIO_EXPORT MdlFormat : public FileFormat
+class AVOGADROIO_EXPORT SdfFormat : public MdlFormat
 {
 public:
-  MdlFormat();
-  ~MdlFormat() override;
+  SdfFormat();
+  ~SdfFormat() override;
 
   Operations supportedOperations() const override
   {
     return ReadWrite | MultiMolecule | File | Stream | String;
   }
 
-  FileFormat* newInstance() const override { return new MdlFormat; }
-  std::string identifier() const override { return "Avogadro: MDL"; }
-  std::string name() const override { return "MDL"; }
+  FileFormat* newInstance() const override { return new SdfFormat; }
+  std::string identifier() const override { return "Avogadro: SDF"; }
+  std::string name() const override { return "SDF"; }
   std::string description() const override
   {
     return "Generic format that contains atoms, bonds, positions.";
@@ -55,7 +58,7 @@ public:
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 
 protected:
-  bool m_writeProperties = false;
+  bool m_writeProperties = true;
 };
 
 } // namespace Io

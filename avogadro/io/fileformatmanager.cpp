@@ -15,6 +15,7 @@
 #include "lammpsformat.h"
 #include "mdlformat.h"
 #include "pdbformat.h"
+#include "sdfformat.h"
 #include "trrformat.h"
 #include "turbomoleformat.h"
 #include "vaspformat.h"
