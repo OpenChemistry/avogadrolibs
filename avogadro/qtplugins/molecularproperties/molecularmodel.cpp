@@ -159,6 +159,9 @@ int MolecularModel::rowCount(const QModelIndex& parent) const
 
   const auto& properties = m_molecule->dataMap();
   rows += properties.names().size(); // 0 or more
+  // if "name" is in the properties, we don't need it twice
+  if (properties.hasValue("name"))
+    --rows;
 
   return rows;
 }
@@ -212,7 +215,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
 
   // handle text alignments
   if (role == Qt::TextAlignmentRole) {
-    return toVariant(Qt::AlignHCenter | Qt::AlignRight);
+    return toVariant(Qt::AlignRight);
   }
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
@@ -251,6 +254,9 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   const auto map = m_molecule->dataMap();
   auto it = map.begin();
   std::advance(it, offset);
+  if (it->first == "name")
+    std::advance(it, 1); // skip the name if it's in the properties
+
   if (it != map.end()) {
     return QString::fromStdString(it->second.toString());
   }
@@ -261,21 +267,24 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
 QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
                                     int role) const
 {
+  // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
+  auto toVariant = [&](auto flags) {
+    return static_cast<Qt::Alignment::Int>(flags);
+  };
+
   // handle text alignments
   if (role == Qt::TextAlignmentRole) {
     if (orientation == Qt::Vertical) {
-      return Qt::AlignHCenter; // XYZ coordinates
+      return toVariant(Qt::AlignLeft);
     }
+    return toVariant(Qt::AlignHCenter);
   }
 
   if (role != Qt::DisplayRole)
     return QVariant();
 
   if (orientation == Qt::Horizontal) {
-    if (section == 0)
-      return tr("Property");
-    else if (section == 1)
-      return tr("Value");
+    return tr("Property");
   } else if (orientation == Qt::Vertical) {
     if (section == Name)
       return tr("Molecule Name");
@@ -309,6 +318,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
     const auto map = m_molecule->dataMap();
     auto it = map.begin();
     std::advance(it, offset);
+    if (it->first == "name")
+      std::advance(it, 1); // skip the name if it's in the properties
     if (it != map.end()) {
       return QString::fromStdString(it->first);
     }

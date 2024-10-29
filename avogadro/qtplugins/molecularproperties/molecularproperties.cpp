@@ -73,9 +73,15 @@ void MolecularProperties::showDialog()
   view->setSourceModel(model);
   view->setModel(model);
 
+  // set the headers to true
+  QFont font = view->horizontalHeader()->font();
+  font.setBold(true);
+  view->horizontalHeader()->setFont(font);
+  view->verticalHeader()->setFont(font);
+
   view->setItemDelegateForColumn(0, new RichTextDelegate(view));
 
-  view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  view->horizontalHeader()->setStretchLastSection(true);
   view->resizeColumnsToContents();
 
   layout->addWidget(view);

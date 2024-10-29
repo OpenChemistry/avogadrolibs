@@ -40,11 +40,8 @@ MolecularView::MolecularView(QWidget* parent)
 
   QHeaderView* horizontal = this->horizontalHeader();
   horizontal->setSectionResizeMode(QHeaderView::Interactive);
-  horizontal->setMinimumSectionSize(75);
   QHeaderView* vertical = this->verticalHeader();
   vertical->setSectionResizeMode(QHeaderView::Interactive);
-  vertical->setMinimumSectionSize(30);
-  vertical->setDefaultAlignment(Qt::AlignCenter);
 
   // You can select everything (e.g., to copy, select all, etc.)
   setCornerButtonEnabled(true);
