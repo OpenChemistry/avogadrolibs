@@ -56,9 +56,6 @@ public:
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
-
-protected:
-  bool m_writeProperties = true;
 };
 
 } // namespace Io

@@ -40,6 +40,25 @@ MdlFormat::MdlFormat() {}
 
 MdlFormat::~MdlFormat() {}
 
+void handlePartialCharges(Core::Molecule& mol, std::string data)
+{
+  // the string starts with the number of charges
+  // then atom index  charge
+  MatrixX charges(mol.atomCount(), 1);
+  std::istringstream iss(data);
+  size_t numCharges;
+  iss >> numCharges;
+  for (size_t i = 0; i < numCharges; ++i) {
+    size_t index;
+    Real charge;
+    iss >> index >> charge;
+    // prints with atom index 1, not zero
+    charges(index - 1, 0) = charge;
+  }
+
+  mol.setPartialCharges("MMFF94", charges);
+}
+
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
@@ -208,7 +227,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       return true;
     if (inValue) {
       if (buffer.empty() && dataName.length() > 0) {
-        mol.setData(dataName, dataValue);
+        // check for partial charges
+        if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
+          handlePartialCharges(mol, dataValue);
+        else
+          mol.setData(dataName, dataValue);
         dataName.clear();
         dataValue.clear();
         inValue = false;
