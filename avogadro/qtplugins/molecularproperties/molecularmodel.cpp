@@ -6,6 +6,7 @@
 #include "molecularmodel.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
@@ -26,6 +27,8 @@
 
 namespace Avogadro {
 
+using Avogadro::Core::BasisSet;
+using Avogadro::Core::GaussianSet;
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 
@@ -226,11 +229,20 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
       return QVariant::fromValue(m_molecule->atomCount());
     case 4:
       return QVariant::fromValue(m_molecule->bondCount());
-    default:
-      std::advance(it, row);
-      return QString::fromStdString(it->second.toString());
   }
-  return QVariant();
+
+  std::advance(it, row);
+  auto key = it->first;
+  if (key == " 6coordinateSets")
+    return QVariant::fromValue(m_molecule->coordinate3dCount());
+  else if (key == " 7residues")
+    return QVariant::fromValue(m_molecule->residueCount());
+  else if (key == " 9totalCharge")
+    return QVariant::fromValue(m_molecule->totalCharge());
+  else if (key == " 10totalSpinMultiplicity")
+    return QVariant::fromValue(m_molecule->totalSpinMultiplicity());
+
+  return QString::fromStdString(it->second.toString());
 }
 
 QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
@@ -279,6 +291,24 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Net Charge");
     else if (it->first == " 10totalSpinMultiplicity")
       return tr("Net Spin Multiplicity");
+    else if (it->first == "homoEnergy")
+      return tr("HOMO Energy (eV)", "highest occupied molecular orbital");
+    else if (it->first == "lumoEnergy")
+      return tr("LUMO Energy (eV)", "lowest unoccupied molecular orbital");
+    else if (it->first == "somoEnergy")
+      return tr("SOMO Energy (eV)", "singly-occupied molecular orbital");
+    else if (it->first == "totalEnergy")
+      return tr("Total Energy (Hartree)",
+                "total electronic energy in Hartrees");
+    else if (it->first == "zpe")
+      return tr("Zero Point Energy (kcal/mol)",
+                "zero point vibrational energy");
+    else if (it->first == "enthalpy")
+      return tr("Enthalpy (kcal/mol)");
+    else if (it->first == "entropy")
+      return tr("Entropy (kcal/mol•K)");
+    else if (it->first == "gibbs")
+      return tr("Gibbs Free Energy (kcal/mol)");
     else if (it != map.end())
       return QString::fromStdString(it->first);
 
@@ -360,13 +390,21 @@ void MolecularModel::updateTable(unsigned int flags)
     m_propertiesCache.setValue(" 10totalSpinMultiplicity",
                                m_molecule->totalSpinMultiplicity());
 
+  // TODO check for homo, lumo, or somo energies
+  // m_propertiesCache.setValue("homoEnergy", energy);
+  // m_propertiesCache.setValue("lumoEnergy", energy);
+  // m_propertiesCache.setValue("somoEnergy", energy);
+
   // ignore potentially duplicate properties
   const auto& properties = m_molecule->dataMap();
-  for (const auto& key : m_propertiesCache.names()) {
+  for (const auto& key : properties.names()) {
     if (key == "formula" || key == "name" || key == "fileName" ||
         key == "energies" || key == "totalCharge" ||
         key == "totalSpinMultiplicity")
       continue; // skip these
+
+    if (properties.value(key).toString().empty())
+      continue; // don't bother with an empty value
 
     m_propertiesCache.setValue(key, properties.value(key));
   }
