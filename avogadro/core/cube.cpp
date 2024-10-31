@@ -7,6 +7,7 @@
 
 #include "molecule.h"
 #include "mutex.h"
+#include <iostream>
 
 namespace Avogadro::Core {
 
@@ -23,10 +24,14 @@ Cube::~Cube()
   m_lock = nullptr;
 }
 
-std::vector<float>::const_iterator 
-Cube::getRowIter(size_t j, size_t k) const
+std::vector<float>::const_iterator Cube::getRowIter(size_t j, size_t k) const
 {
-    return m_data.cbegin() + m_points.x() * (k * m_points.y() + j);
+    size_t startIdx = k * m_points.x() * m_points.y() + j * m_points.x();
+    if (startIdx >= m_data.size()) {
+        std::cout << "Error: startIdx out of bounds in getRowIter.\n";
+        // return m_data.cend();
+    }
+    return m_data.cbegin() + startIdx;
 }
 
 
@@ -229,7 +234,7 @@ std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
 
     if (j == 0)
     {
-        x[1][0] = m_data[dataIdx + nx];
+        x[1][0] = m_data[dataIdx + m_points.x()];
         x[1][1] = m_data[dataIdx];
         run[1] = m_spacing[1];
     }
@@ -265,7 +270,7 @@ std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
         run[2] = 2 * m_spacing[2];
     }
 
-    std::array<scalar_t, 3> ret;
+    std::array<float, 3> ret;
 
     ret[0] = (x[0][1] - x[0][0]) / run[0];
     ret[1] = (x[1][1] - x[1][0]) / run[1];
@@ -274,9 +279,26 @@ std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
     return ret;
 }
 
-std::array<scalar_t, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
+std::array<std::array<float, 3>, 8>
+Cube::getGradCube(size_t i, size_t j, size_t k) const
 {
-    std::array<scalar_t, 8> vals;
+    std::array<std::array<float, 3>, 8> grad;
+
+    grad[0] = computeGradient(i, j, k);
+    grad[1] = computeGradient(i + 1, j, k);
+    grad[2] = computeGradient(i + 1, j + 1, k);
+    grad[3] = computeGradient(i, j + 1, k);
+    grad[4] = computeGradient(i, j, k + 1);
+    grad[5] = computeGradient(i + 1, j, k + 1);
+    grad[6] = computeGradient(i + 1, j + 1, k + 1);
+    grad[7] = computeGradient(i, j + 1, k + 1);
+
+    return grad;
+}
+
+std::array<float, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
+{
+    std::array<float, 8> vals;
 
     size_t idx = i + j * m_points.x() + k * m_points.x() * m_points.y();
 
@@ -293,14 +315,14 @@ std::array<scalar_t, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
 }
 
 
-inline scalar_t
+inline float
 Cube::getData(size_t i, size_t j, size_t k) const
 {
     return m_data[k * m_points.x() * m_points.y() + j * m_points.x() + i];
 }
 
 
-std::array<Vector3, 8> Cube::getPosCube(size_t i, size_t j, size_t k) const
+std::array<std::array<float, 3>, 8> Cube::getPosCube(size_t i, size_t j, size_t k) const
 {
   std::array<std::array<float, 3>, 8> pos;
 

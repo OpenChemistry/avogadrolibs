@@ -13,6 +13,7 @@
 #include "vector.h"
 
 #include <vector>
+#include <array>  // Include this for std::array
 
 namespace Avogadro {
 namespace Core {
@@ -23,9 +24,7 @@ class Mutex;
 /**
  * @class Cube cube.h <avogadro/core/cube.h>
  * @brief Provide a data structure for regularly spaced 3D grids.
- * @author Marcus D. Hanwell
  */
-
 class AVOGADROCORE_EXPORT Cube
 {
 public:
@@ -118,7 +117,7 @@ public:
   bool setLimits(const Molecule& mol, float spacing, float padding);
 
   /**
-   * @return Vector containing all the data in a one-dimensional array.
+   * @return Pointer to the vector containing all the data in a one-dimensional array.
    */
   std::vector<float>* data();
   const std::vector<float>* data() const;
@@ -133,7 +132,9 @@ public:
    */
   bool addData(const std::vector<float>& values);
 
-
+  /**
+   * @return Const iterator to the beginning of a specific row in the cube data.
+   */
   std::vector<float>::const_iterator getRowIter(size_t j, size_t k) const;
 
   /**
@@ -204,7 +205,7 @@ public:
    * @param value Value to fill the cube with.
    */
   void fill(float value);
-  
+
   /**
    * Sets all indices in a Z stripe of the cube to the specified value.
    * @param i x component of the position.
@@ -218,12 +219,12 @@ public:
   );
 
   /**
-   * @return The minimum  value at any point in the Cube.
+   * @return The minimum value at any point in the Cube.
    */
   float minValue() const { return m_minValue; }
 
   /**
-   * @return The maximum  value at any point in the Cube.
+   * @return The maximum value at any point in the Cube.
    */
   float maxValue() const { return m_maxValue; }
 
@@ -238,12 +239,51 @@ public:
    */
   Mutex* lock() const { return m_lock; }
 
+  // Add declarations for the functions defined in cube.cpp
+  /**
+   * Compute the gradient at a specific point in the cube.
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Gradient vector at the specified point.
+   */
+  std::array<float, 3> computeGradient(size_t i, size_t j, size_t k) const;
+
+  /**
+   * Get the values of the eight corners of a cube cell.
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Array of values at the eight corners.
+   */
+  std::array<float, 8> getValsCube(size_t i, size_t j, size_t k) const;
+
+
+  std::array<std::array<float, 3>, 8> getGradCube(size_t i, size_t j, size_t k) const;        
+  /**
+   * Get the data value at the specified indices.
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Value at the specified indices.
+   */
+  float getData(size_t i, size_t j, size_t k) const;
+
+  /**
+   * Get the positions of the eight corners of a cube cell.
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Array of positions at the eight corners.
+   */
+std::array<std::array<float, 3>, 8> getPosCube(size_t i, size_t j, size_t k) const;
+
 protected:
   std::vector<float> m_data;
   Vector3 m_min, m_max, m_spacing;
   Vector3i m_points;
   float m_minValue, m_maxValue;
-  std::vector<float> data
+  // Removed conflicting 'data' member variable
   std::string m_name;
   Type m_cubeType;
   Mutex* m_lock;
