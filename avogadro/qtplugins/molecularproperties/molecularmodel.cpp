@@ -48,18 +48,22 @@ void MolecularModel::setMolecule(QtGui::Molecule* molecule)
       m_autoName = false;
     m_name = QString::fromStdString(molecule->data("name").toString());
   }
+
+  // make sure we know if the molecule changed
+  connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateTable(uint)));
+  updateTable(QtGui::Molecule::Added);
 }
 
 QString MolecularModel::name() const
 {
+  if (!m_molecule || m_molecule->atomCount() == 0)
+    return m_name; // empty
+
   // if we have a defined name
   // or we're not ready to update
   // then return the current name
-  if (!m_autoName || m_nameRequestPending)
+  if (!m_autoName || !m_nameUpdateNeeded || m_nameRequestPending)
     return m_name;
-
-  if (!m_molecule || m_molecule->atomCount() == 0)
-    return m_name; // empty
 
   // okay, kick off the update
   m_name = tr("(pending)", "asking server for molecule name");
@@ -87,6 +91,9 @@ void MolecularModel::canUpdateName()
 
 void MolecularModel::updateNameReady(QNetworkReply* reply)
 {
+  // finished a request, don't need this until next modification
+  m_nameUpdateNeeded = false;
+
   // Read in all the data
   if (!reply->isReadable()) {
     reply->deleteLater();
@@ -147,23 +154,7 @@ int MolecularModel::rowCount(const QModelIndex& parent) const
   if (!m_molecule)
     return 0;
 
-  // we have 5 guaranteed rows (name, mass, formula atoms, bonds)
-  // if we have residues, then two more (residues, chains)
-  // if we have conformers, we should add another row
-  // and then however many keys are in the property map
-  int rows = 5;
-  if (m_molecule->residueCount() > 0)
-    rows += 1; // TODO chains
-  if (m_molecule->coordinate3dCount() > 0)
-    ++rows;
-
-  const auto& properties = m_molecule->dataMap();
-  rows += properties.names().size(); // 0 or more
-  // if "name" is in the properties, we don't need it twice
-  if (properties.hasValue("name"))
-    --rows;
-
-  return rows;
+  return m_propertiesCache.size();
 }
 
 int MolecularModel::columnCount(const QModelIndex& parent) const
@@ -221,46 +212,24 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
 
-  if (row == Name) {
-    return this->name();
-  } else if (row == Mass) {
-    return m_molecule->mass();
-  } else if (row == Formula) {
-    return formatFormula(m_molecule);
-  } else if (row == Atoms) {
-    return QVariant::fromValue(m_molecule->atomCount());
-  } else if (row == Bonds) {
-    return QVariant::fromValue(m_molecule->bondCount());
-  }
-
-  int offset = row - Bonds;
-  bool conformers = (m_molecule->coordinate3dCount() > 0);
-  bool residues = (m_molecule->residueCount() > 0);
-  if (conformers && offset == 0) {
-    return m_molecule->coordinate3dCount(); // conformers first
-  }
-  offset -= conformers ? 1 : 0; // tweak for conformer line
-  if (residues && offset == 0) {
-    return QVariant::fromValue(m_molecule->residueCount()); // residues next
-  }
-  offset -= residues ? 1 : 0; // tweak for residues line
-  /* TODO - chains
-  if (residues && offset == 0) {
-    return m_molecule->chainCount(); // chains next
-  }
-  */
-
-  // now we're looping through the property map
-  const auto map = m_molecule->dataMap();
+  const auto map = m_propertiesCache;
   auto it = map.begin();
-  std::advance(it, offset);
-  if (it->first == "name")
-    std::advance(it, 1); // skip the name if it's in the properties
 
-  if (it != map.end()) {
-    return QString::fromStdString(it->second.toString());
+  switch (row) {
+    case 0:
+      return name();
+    case 1:
+      return m_molecule->mass();
+    case 2:
+      return formatFormula(m_molecule);
+    case 3:
+      return QVariant::fromValue(m_molecule->atomCount());
+    case 4:
+      return QVariant::fromValue(m_molecule->bondCount());
+    default:
+      std::advance(it, row);
+      return QString::fromStdString(it->second.toString());
   }
-
   return QVariant();
 }
 
@@ -286,43 +255,32 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
   if (orientation == Qt::Horizontal) {
     return tr("Property");
   } else if (orientation == Qt::Vertical) {
-    if (section == Name)
-      return tr("Molecule Name");
-    else if (section == Mass)
-      return tr("Molecular Mass (g/mol)");
-    else if (section == Formula)
-      return tr("Chemical Formula");
-    else if (section == Atoms)
-      return tr("Number of Atoms");
-    else if (section == Bonds)
-      return tr("Number of Bonds");
 
-    int offset = section - Bonds;
-    bool conformers = (m_molecule->coordinate3dCount() > 0);
-    bool residues = (m_molecule->residueCount() > 0);
-    if (conformers && offset == 0) {
-      return tr("Coordinate Sets"); // conformers first
-    }
-    offset -= conformers ? 1 : 0; // tweak for conformer line
-    if (residues && offset == 0) {
-      return tr("Number of Residues");
-    }
-    offset -= residues ? 1 : 0; // tweak for residues line
-    /* TODO - chains
-    if (residues && offset == 0) {
-      return tr("Number of Chains");
-    }
-    */
-
-    // now we're looping through the property map
-    const auto map = m_molecule->dataMap();
+    const auto map = m_propertiesCache;
     auto it = map.begin();
-    std::advance(it, offset);
-    if (it->first == "name")
-      std::advance(it, 1); // skip the name if it's in the properties
-    if (it != map.end()) {
+    std::advance(it, section);
+    if (it->first == " 1name")
+      return tr("Molecule Name");
+    else if (it->first == " 2mass")
+      return tr("Molecular Mass (g/mol)");
+    else if (it->first == " 3formula")
+      return tr("Chemical Formula");
+    else if (it->first == " 4atoms")
+      return tr("Number of Atoms");
+    else if (it->first == " 5bonds")
+      return tr("Number of Bonds");
+    else if (it->first == " 6coordinateSets")
+      return tr("Coordinate Sets");
+    else if (it->first == " 7residues")
+      return tr("Number of Residues");
+    else if (it->first == " 8chains")
+      return tr("Number of Chains");
+    else if (it->first == " 9totalCharge")
+      return tr("Net Charge");
+    else if (it->first == " 10totalSpinMultiplicity")
+      return tr("Net Spin Multiplicity");
+    else if (it != map.end())
       return QString::fromStdString(it->first);
-    }
 
     return QVariant();
 
@@ -353,12 +311,66 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
   if (role != Qt::EditRole)
     return false;
 
-  // TODO allow editing name
+  // TODO allow editing name, total charge, total spin multiplicity
   return false;
 }
 
 void MolecularModel::updateTable(unsigned int flags)
 {
+  // cache all the properties
+  m_propertiesCache.clear();
+  if (m_molecule == nullptr)
+    return;
+
+  m_nameUpdateNeeded = true;
+
+  // we use internal key names here and
+  // update the display names in the headerData method
+  m_propertiesCache.setValue(" 1name", name());
+  m_propertiesCache.setValue(" 2mass", m_molecule->mass());
+  m_propertiesCache.setValue(" 3formula", formatFormula(m_molecule));
+  m_propertiesCache.setValue(" 4atoms", m_molecule->atomCount());
+  m_propertiesCache.setValue(" 5bonds", m_molecule->bondCount());
+  if (m_molecule->coordinate3dCount() > 0)
+    m_propertiesCache.setValue(" 6coordinateSets",
+                               m_molecule->coordinate3dCount());
+  if (m_molecule->residueCount() > 0) {
+    m_propertiesCache.setValue(" 7residues", m_molecule->residueCount());
+
+    // figure out if we have multiple chains
+    unsigned int chainCount = 0;
+    unsigned int offset = 0;
+    for (Index i = 0; i < m_molecule->residueCount(); ++i) {
+      char chainId = m_molecule->residue(i).chainId();
+      if (chainId >= 'A' && chainId <= 'Z')
+        offset = chainId - 'A';
+      else if (chainId >= 'a' && chainId <= 'z')
+        offset = chainId - 'a';
+      else if (chainId >= '0' && chainId <= '9')
+        offset = chainId - '0' + 15; // starts at 'P'
+
+      chainCount = std::max(chainCount, offset);
+    }
+    m_propertiesCache.setValue(" 8chains", chainCount);
+  }
+
+  if (m_molecule->totalCharge() != 0)
+    m_propertiesCache.setValue(" 9totalCharge", m_molecule->totalCharge());
+  if (m_molecule->totalSpinMultiplicity() != 1)
+    m_propertiesCache.setValue(" 10totalSpinMultiplicity",
+                               m_molecule->totalSpinMultiplicity());
+
+  // ignore potentially duplicate properties
+  const auto& properties = m_molecule->dataMap();
+  for (const auto& key : m_propertiesCache.names()) {
+    if (key == "formula" || key == "name" || key == "fileName" ||
+        key == "energies" || key == "totalCharge" ||
+        key == "totalSpinMultiplicity")
+      continue; // skip these
+
+    m_propertiesCache.setValue(key, properties.value(key));
+  }
+
   if (flags & Molecule::Added || flags & Molecule::Removed) {
     // tear it down and rebuild the model
     beginResetModel();

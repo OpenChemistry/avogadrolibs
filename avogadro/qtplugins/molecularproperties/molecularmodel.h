@@ -14,6 +14,7 @@
 class QNetworkAccessManager;
 class QNetworkReply;
 
+#include <avogadro/core/variantmap.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
 namespace Avogadro {
@@ -60,8 +61,11 @@ public:
 private:
   QtGui::Molecule* m_molecule = nullptr;
   mutable QString m_name;
-  mutable bool m_autoName = true;
   mutable bool m_nameRequestPending = false;
+
+  bool m_autoName = true;
+  bool m_nameUpdateNeeded = true;
+  Core::VariantMap m_propertiesCache;
 
   QNetworkAccessManager* m_network = nullptr;
 };
