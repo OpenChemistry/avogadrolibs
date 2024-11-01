@@ -26,12 +26,13 @@ Cube::~Cube()
 
 std::vector<float>::const_iterator Cube::getRowIter(size_t j, size_t k) const
 {
-    size_t startIdx = k * m_points.x() * m_points.y() + j * m_points.x();
-    if (startIdx >= m_data.size()) {
-        std::cout << "Error: startIdx out of bounds in getRowIter.\n";
-        // return m_data.cend();
-    }
-    return m_data.cbegin() + startIdx;
+    // size_t startIdx = k * m_points.x() * m_points.y() + j * m_points.x();
+    // if (startIdx >= m_data.size()) {
+    //     std::cout << "Error: startIdx out of bounds in getRowIter.\n";
+    //     return m_data.cend();
+    // }
+    return m_data.cbegin() + m_points.x() * (k * m_points.y() + j);
+    // return m_data.cbegin() + startIdx;
 }
 
 

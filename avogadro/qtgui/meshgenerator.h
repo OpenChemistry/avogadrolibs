@@ -208,7 +208,7 @@ protected:
   std::vector<unsigned char> edgeCases; 
   Core::Array<Vector3f> points;  //
   Core::Array<Vector3f> normals; // The output
-  std::vector<std::array<size_t, 3> > tris;     
+  Core::Array<Vector3f> tris;     
   int m_progmin;
   int m_progmax;
 

@@ -83,7 +83,7 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
   // Loop through z-dimension
-  qDebug() << "i started";
+  // qDebug() << "1st started";
   size_t nx = m_dim.x();
   size_t ny = m_dim.y();
   size_t nz = m_dim.z();
@@ -116,7 +116,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
     }
   }
 }
-  qDebug() << "kafi door aagya";
+  // qDebug() << "kafi door aagya";
 
 
   for(size_t k = 0; k != nz; ++k){
@@ -138,12 +138,14 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
           }  
         }
      }}
+  // qDebug() << "1st ended";
+
 }
 
 
 void MeshGenerator::FlyingEdgesAlgorithmPass2()
 {
-  qDebug() << "pass 2 started";
+  // qDebug() << "pass 2 started";
     size_t nx = m_dim.x();
     size_t ny = m_dim.y();
     size_t nz = m_dim.z();
@@ -225,6 +227,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
         }
        }
     }
+  // qDebug() << "2nd ended";
+    
 }
 
 
@@ -232,7 +236,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
 void MeshGenerator::FlyingEdgesAlgorithmPass3()
 {
 
-    qDebug() << "pass 3 started";
+    // qDebug() << "pass 3 started";
     size_t tmp;
     size_t triAccum = 0;
     size_t nx = m_dim.x();
@@ -269,11 +273,14 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 
     points.resize(pointAccum);
     normals.resize(pointAccum);
-    tris = std::vector<std::array<size_t, 3> >(triAccum);
+    tris.resize(triAccum);
+  // qDebug() << "pass 3 ended";
+
 }
 
 void MeshGenerator::FlyingEdgesAlgorithmPass4()
 {
+  // qDebug() << "pass 4 started";
 
     size_t nx = m_dim.x();
     size_t ny = m_dim.y();
@@ -334,8 +341,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             if(isCut[0])
             {
                 size_t idx = ge0.xstart + x0counter;
+                std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 0);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 0);
-                points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+
+                points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                 normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 globalIdxs[0] = idx;
                 ++x0counter;
@@ -344,8 +353,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             if(isCut[3])
             {
                 size_t idx = ge0.ystart + y0counter;
+                std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 3);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 3);
-                points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                 normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 globalIdxs[3] = idx;
                 ++y0counter;
@@ -354,8 +364,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             if(isCut[8])
             {
                 size_t idx = ge0.zstart + z0counter;
+                std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 8);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 8);
-                points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                 normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 globalIdxs[8] = idx;
                 ++z0counter;
@@ -375,9 +386,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge0.ystart + y0counter;
                 if(isXEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 1);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 1);                  
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points.push_back(Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]));
+                    normals.push_back(Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]));
                     // y0counter counter doesn't need to be incremented
                     // because it won't be used again.
                 }
@@ -389,8 +401,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge0.zstart + z0counter;
                 if(isXEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 9);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 9);                                    
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                     // z0counter doesn't need to in incremented.
                 }
@@ -402,8 +415,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge1.xstart + x1counter;
                 if(isYEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 2);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 2);                                                      
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[2] = idx;
@@ -416,9 +430,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
                 if(isYEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 10);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 10);                                                      
                   
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[10] = idx;
@@ -430,9 +445,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge2.xstart + x2counter;
                 if(isZEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 4);
+
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 4);                                                      
 
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[4] = idx;
@@ -444,9 +461,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge2.ystart + y2counter;
                 if(isZEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 7);
+
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 7);                                                      
 
-                    points[idx] =  Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[7] = idx;
@@ -458,9 +477,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge1.zstart + z1counter;
                 if(isXEnd and isYEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 11);
+
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 11);                                                      
 
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                     // z1counter does not need to be incremented.
                 }
@@ -472,9 +493,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge2.ystart + y2counter;
                 if(isXEnd and isZEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 5);
+
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 5);                                                      
 
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                     // y2 counter does not need to be incremented.
                 }
@@ -486,9 +509,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 size_t idx = ge3.xstart + x3counter;
                 if(isYEnd and isZEnd)
                 {
+                    std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 6);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 6);                                                      
 
-                    points[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
                     normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[6] = idx;
@@ -506,6 +530,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             }
         }
     }}
+  // qDebug() << "pass 4 ended";
+
 }
 
 
@@ -516,43 +542,26 @@ void MeshGenerator::run()
     return;
   }
 
-  // Mark the mesh as being worked on and clear it
   m_mesh->setStable(false);
   m_mesh->clear();
 
-  // Perform the Flying Edges algorithm passes
   FlyingEdgesAlgorithmPass1();
   FlyingEdgesAlgorithmPass2();
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
+  
+  qDebug() << "size-point" << points.size();
+  qDebug() << "size-normals" << normals.size();
 
-  // Now assemble the mesh from the generated data
-  // std::vector<Vector3f> meshVertices;
-  // std::vector<Vector3f> meshNormals;
-  // std::vector<unsigned int> meshIndices;
 
-  // for (const auto& tri : tris) {
-  //   for (size_t idx = 0; idx < 3; ++idx) {
-  //     size_t pointIdx = tri[idx];
-  //     meshVertices.push_back(points[pointIdx]);
-  //     meshNormals.push_back(normals[pointIdx]);
-  //     // meshIndices.push_back(static_cast<unsigned int>(meshVertices.size()) - 1);
-  //   }
-  // }
-
-  // Copy the data to m_mesh
   m_mesh->setVertices(points);
   m_mesh->setNormals(normals);
-  // m_mesh->setIndices(meshIndices);
   m_mesh->setStable(true);
 
-  // Clear temporary data
-  points.clear();
-  normals.clear();
-  // tris.clear();
+  points.resize(0);
 
-  // Smooth out the mesh (if required)
-  // m_mesh->smooth(m_passes);
+  normals.resize(0);
+
 }
 
 
