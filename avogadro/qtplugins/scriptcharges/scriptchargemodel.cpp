@@ -13,6 +13,7 @@
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/pdbformat.h>
+#include <avogadro/io/sdfformat.h>
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
@@ -199,8 +200,10 @@ ScriptChargeModel::Format ScriptChargeModel::stringToFormat(
     return Cjson;
   else if (str == "cml")
     return Cml;
-  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+  else if (str == "mdl" || str == "mol")
     return Mdl;
+  else if (str == "sdf")
+    return Sdf;
   else if (str == "pdb")
     return Pdb;
   else if (str == "xyz")
@@ -220,6 +223,8 @@ Io::FileFormat* ScriptChargeModel::createFileFormat(
       return new Io::MdlFormat;
     case Pdb:
       return new Io::PdbFormat;
+    case Sdf:
+      return new Io::SdfFormat;
     case Xyz:
       return new Io::XyzFormat;
     default:

@@ -39,8 +39,9 @@ public:
     NotUsed,
     Cjson,
     Cml,
-    Mdl, // sdf
+    Mdl,
     Pdb,
+    Sdf,
     Xyz
   };
 

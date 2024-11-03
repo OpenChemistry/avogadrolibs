@@ -1,10 +1,15 @@
+set(molecularproperties_srcs
+  molecularproperties.cpp
+  molecularmodel.cpp
+  molecularview.cpp
+)
+
 avogadro_plugin(MolecularProperties
   "Show a window with basic molecular properties."
   ExtensionPlugin
   molecularproperties.h
   MolecularProperties
-  "molecularproperties.cpp;molecularpropertiesdialog.cpp"
-  "molecularpropertiesdialog.ui"
+  "${molecularproperties_srcs}"
 )
 
 # to fetch the molecule name from PubChem
