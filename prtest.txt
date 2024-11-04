@@ -1,0 +1,20 @@
+更改：
+
+构建配置更新：
+
+在 CMakeLists.txt 中添加 Qt6::Core5Compat、Qt6::OpenGLWidgets 和 Qt6::OpenGL 的链接配置。
+cmake
+复制代码
+target_link_libraries(${TARGET_NAME}
+    Qt6::Core5Compat
+    Qt6::OpenGLWidgets
+    Qt6::OpenGL
+)
+代码兼容性调整：
+
+将 QRegExp 的使用替换为 QRegularExpression，以提高与 Qt6 的兼容性。
+// 旧代码
+QRegExp regex("pattern");
+
+// 新代码
+QRegularExpression regex("pattern");
