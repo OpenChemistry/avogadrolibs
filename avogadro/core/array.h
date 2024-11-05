@@ -44,18 +44,15 @@ public:
   explicit ArrayRefContainer(const size_t n,
                              const ValueType& value = ValueType())
     : m_ref(1), data(n, value)
-  {
-  }
+  {}
 
   ArrayRefContainer(const ArrayRefContainer& other) : m_ref(1), data(other.data)
-  {
-  }
+  {}
 
   template <typename InputIterator>
   ArrayRefContainer(InputIterator first, InputIterator last)
     : m_ref(1), data(first, last)
-  {
-  }
+  {}
 
   // Increment the reference count.
   void reref() { ++m_ref; }
@@ -121,13 +118,11 @@ public:
 
   explicit Array(const size_t n, const ValueType& value = ValueType())
     : d(new Container(n, value))
-  {
-  }
+  {}
 
   template <typename InputIterator>
   Array(InputIterator first, InputIterator last) : d(new Container(first, last))
-  {
-  }
+  {}
 
   /** Copy constructor, note the copy made of the internal data of other. */
   Array(const Array& other)

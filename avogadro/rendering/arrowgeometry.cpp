@@ -46,8 +46,7 @@ ArrowGeometry::ArrowGeometry() : m_dirty(false), d(new Private) {}
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices),
     m_lineStarts(other.m_lineStarts), m_dirty(true), d(new Private)
-{
-}
+{}
 
 ArrowGeometry::~ArrowGeometry()
 {

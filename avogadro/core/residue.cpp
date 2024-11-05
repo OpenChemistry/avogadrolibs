@@ -15,21 +15,18 @@ Residue::Residue() {}
 Residue::Residue(std::string& name)
   : m_residueName(name), m_chainId('A'), m_heterogen(false), m_color(0, 0, 0),
     m_customColorSet(false), m_secondaryStructure(undefined)
-{
-}
+{}
 
 Residue::Residue(std::string& name, Index& number)
   : m_residueName(name), m_residueId(number), m_chainId('A'),
     m_heterogen(false), m_color(0, 0, 0), m_customColorSet(false),
     m_secondaryStructure(undefined)
-{
-}
+{}
 
 Residue::Residue(std::string& name, Index& number, char& id)
   : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false),
     m_color(0, 0, 0), m_customColorSet(false), m_secondaryStructure(undefined)
-{
-}
+{}
 
 Residue::Residue(const Residue& other)
   : m_residueName(other.m_residueName), m_residueId(other.m_residueId),
@@ -37,8 +34,7 @@ Residue::Residue(const Residue& other)
     m_heterogen(other.m_heterogen), m_color(other.m_color),
     m_customColorSet(other.m_customColorSet),
     m_secondaryStructure(other.m_secondaryStructure)
-{
-}
+{}
 
 Residue& Residue::operator=(Residue other)
 {

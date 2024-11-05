@@ -129,8 +129,7 @@ public:
   RemoveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer)
     : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol),
       m_layer(layer)
-  {
-  }
+  {}
 
   void redo() override
   {

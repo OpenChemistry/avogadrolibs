@@ -149,8 +149,7 @@ struct BackboneResidue
     : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
       secondaryStructure(sec)
 
-  {
-  }
+  {}
   Vector3f pos;
   Vector3ub color1;
   Vector3ub color2;

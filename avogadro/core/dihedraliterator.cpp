@@ -16,8 +16,7 @@ using namespace std;
 
 DihedralIterator::DihedralIterator(const Molecule* mol)
   : m_current(0, 0, 0, 0), m_mol(mol)
-{
-}
+{}
 
 Dihedral DihedralIterator::begin()
 {
@@ -88,9 +87,9 @@ Dihedral DihedralIterator::operator++()
           return m_current;
         }
 
-      } // end "d" loop
+      }              // end "d" loop
       valid = false; // we couldn't find a "d", so find a new "a"
-    } // end if()
+    }                // end if()
 
     // try to find a new "a"
     for (const auto maybeA : graph.neighbors(b)) {

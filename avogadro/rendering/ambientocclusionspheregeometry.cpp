@@ -1081,15 +1081,13 @@ public:
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry()
   : m_dirty(false), d(new Private)
-{
-}
+{}
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry(
   const AmbientOcclusionSphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{
-}
+{}
 
 AmbientOcclusionSphereGeometry::~AmbientOcclusionSphereGeometry()
 {

@@ -763,7 +763,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
             if (Core::trimmed(key).empty())
               getline(in, key); // skip the blank line after the MOs
-          } // finished parsing 2nd. MOs
+          }                     // finished parsing 2nd. MOs
           if (m_MOcoeffs.size() != numRows * numRows) {
             m_orcaSuccess = false;
           }
@@ -775,7 +775,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
       }
       default:;
     } // end switch
-  } // end if (mode)
+  }   // end if (mode)
 }
 
 void ORCAOutput::load(GaussianSet* basis)

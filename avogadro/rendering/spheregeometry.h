@@ -18,8 +18,7 @@ struct SphereColor
 {
   SphereColor(Vector3f centre, float r, Vector3ub c)
     : center(centre), radius(r), color(c)
-  {
-  }
+  {}
   Vector3f center;
   float radius;
   Vector3ub color;

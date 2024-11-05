@@ -11,8 +11,7 @@
 vtkStandardNewMacro(vtkCustomPiecewiseControlPointsItem)
 
   vtkCustomPiecewiseControlPointsItem::vtkCustomPiecewiseControlPointsItem()
-{
-}
+{}
 
 vtkCustomPiecewiseControlPointsItem::~vtkCustomPiecewiseControlPointsItem() {}
 

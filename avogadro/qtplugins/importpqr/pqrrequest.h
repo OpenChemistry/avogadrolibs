@@ -107,8 +107,7 @@ private:
     result()
       : inchikey("Error"), name("Error"), mol2url("Error"), formula("Error"),
         mass(-1.0)
-    {
-    }
+    {}
   };
   /** An array to hold all results from a query */
   std::vector<result> results;

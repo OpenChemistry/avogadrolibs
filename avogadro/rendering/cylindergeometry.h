@@ -18,8 +18,7 @@ struct CylinderColor
   CylinderColor(const Vector3f& pos1, const Vector3f& pos2, float r,
                 const Vector3ub& c, const Vector3ub& c2 = Vector3ub::Zero())
     : end1(pos1), end2(pos2), radius(r), color(c), color2(c2)
-  {
-  }
+  {}
 
   Vector3f end1;
   Vector3f end2;

@@ -288,8 +288,8 @@ void QTAIMExtension::triggered()
               }
             }
           } // bond pairs
-        } // atom1
-      } // atom 0
+        }   // atom1
+      }     // atom 0
 
       m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
       m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -460,8 +460,8 @@ void QTAIMExtension::triggered()
               }
             }
           } // bond pairs
-        } // atom1
-      } // atom 0
+        }   // atom1
+      }     // atom 0
 
       m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
       m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);
@@ -668,8 +668,8 @@ void QTAIMExtension::triggered()
                 }
               }
             } // bond pairs
-          } // atom1
-        } // atom 0
+          }   // atom1
+        }     // atom 0
 
         m_molecule->setProperty("QTAIMXBondCriticalPoints", xBCPsVariantList);
         m_molecule->setProperty("QTAIMYBondCriticalPoints", yBCPsVariantList);

@@ -16,8 +16,7 @@ using namespace std;
 
 AngleIterator::AngleIterator(const Molecule* mol)
   : m_current(0, 0, 0), m_mol(mol)
-{
-}
+{}
 
 Angle AngleIterator::begin()
 {
@@ -50,9 +49,9 @@ Angle AngleIterator::operator++()
             return m_current;
           }
 
-        } // end "c" loop
+        }              // end "c" loop
         valid = false; // we couldn't find a "c", so find a new "a"
-      } // end if()
+      }                // end if()
 
       // can we find a new edge?
       for (const auto maybeA : graph.neighbors(b)) {

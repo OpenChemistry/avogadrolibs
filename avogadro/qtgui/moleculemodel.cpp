@@ -14,8 +14,7 @@ namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
-{
-}
+{}
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
 {
