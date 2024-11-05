@@ -180,9 +180,7 @@ inline UnitCell::UnitCell(const UnitCell& other)
 {
 }
 
-inline UnitCell::~UnitCell()
-{
-}
+inline UnitCell::~UnitCell() {}
 
 inline UnitCell& UnitCell::operator=(UnitCell other)
 {

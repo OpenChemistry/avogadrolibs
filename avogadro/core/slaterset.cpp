@@ -10,20 +10,16 @@
 
 #include <Eigen/LU>
 
-using std::vector;
+using Eigen::SelfAdjointEigenSolver;
 using std::cout;
 using std::endl;
-using Eigen::SelfAdjointEigenSolver;
+using std::vector;
 
 namespace Avogadro::Core {
 
-SlaterSet::SlaterSet() : m_initialized(false)
-{
-}
+SlaterSet::SlaterSet() : m_initialized(false) {}
 
-SlaterSet::~SlaterSet()
-{
-}
+SlaterSet::~SlaterSet() {}
 
 bool SlaterSet::addSlaterIndices(const std::vector<int>& i)
 {
@@ -79,9 +75,7 @@ unsigned int SlaterSet::molecularOrbitalCount(ElectronType)
   return static_cast<unsigned int>(m_overlap.cols());
 }
 
-void SlaterSet::outputAll()
-{
-}
+void SlaterSet::outputAll() {}
 
 void SlaterSet::initCalculation()
 {
@@ -145,7 +139,7 @@ void SlaterSet::initCalculation()
     }
   }
   // Convert the exponents into Angstroms
-  for (double & m_zeta : m_zetas)
+  for (double& m_zeta : m_zetas)
     m_zeta = m_zeta / BOHR_TO_ANGSTROM_D;
 
   m_initialized = true;
@@ -158,4 +152,4 @@ inline unsigned int SlaterSet::factorial(unsigned int n)
   return (n * factorial(n - 1));
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Core

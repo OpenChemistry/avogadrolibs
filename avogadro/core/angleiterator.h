@@ -10,8 +10,8 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
 #include <tuple>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -26,28 +26,25 @@ public:
   /**
    * Constructor.
    */
-  AngleIterator(const Molecule *mol);
+  AngleIterator(const Molecule* mol);
 
   ~AngleIterator() {}
 
-  Angle* operator*() {
-    return &m_current;
-  }
+  Angle* operator*() { return &m_current; }
 
   Angle begin();
 
-  Angle end() const {
-    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
-  }
+  Angle end() const { return std::make_tuple(MaxIndex, MaxIndex, MaxIndex); }
 
   Angle operator++();
 
-  bool operator!=(const AngleIterator& other ) {
+  bool operator!=(const AngleIterator& other)
+  {
     return m_current != other.m_current;
   }
 
 private:
-  Angle     m_current;
+  Angle m_current;
   const Molecule* m_mol;
 };
 

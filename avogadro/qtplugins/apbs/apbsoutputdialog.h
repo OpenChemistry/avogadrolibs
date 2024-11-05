@@ -50,7 +50,7 @@ public:
 private:
   Ui::ApbsOutputDialog* m_ui;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_APBS_APBSOUTPUTDIALOG_H

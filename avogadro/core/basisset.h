@@ -195,7 +195,7 @@ inline unsigned int BasisSet::electronCount(ElectronType type) const
   }
 }
 
-} // End namesapce Core
+} // namespace Core
 } // End namespace Avogadro
 
 #endif

@@ -63,7 +63,7 @@ Matrix<qreal, 3, 1> plusOneSignatureLocatorGradient(
   const Matrix<qreal, 3, 1>& g, const Matrix<qreal, 3, 3>& H);
 Matrix<qreal, 3, 1> plusThreeSignatureLocatorGradient(
   const Matrix<qreal, 3, 1>& g, const Matrix<qreal, 3, 3>& H);
-}
+} // namespace QTAIMMathUtilities
 
 } // namespace QtPlugins
 } // namespace Avogadro

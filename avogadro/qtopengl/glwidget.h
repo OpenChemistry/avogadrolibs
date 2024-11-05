@@ -201,7 +201,7 @@ private:
   QTimer* m_renderTimer;
 };
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_GLWIDGET_H

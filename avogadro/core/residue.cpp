@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "molecule.h"
 #include "residue.h"
+#include "molecule.h"
 #include "residuecolors.h"
 #include "residuedata.h"
 
@@ -13,24 +13,32 @@ namespace Avogadro::Core {
 Residue::Residue() {}
 
 Residue::Residue(std::string& name)
-  : m_residueName(name), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false), m_secondaryStructure(undefined)
-{}
+  : m_residueName(name), m_chainId('A'), m_heterogen(false), m_color(0, 0, 0),
+    m_customColorSet(false), m_secondaryStructure(undefined)
+{
+}
 
 Residue::Residue(std::string& name, Index& number)
-  : m_residueName(name), m_residueId(number), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false), m_secondaryStructure(undefined)
-{}
+  : m_residueName(name), m_residueId(number), m_chainId('A'),
+    m_heterogen(false), m_color(0, 0, 0), m_customColorSet(false),
+    m_secondaryStructure(undefined)
+{
+}
 
 Residue::Residue(std::string& name, Index& number, char& id)
-  : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false), m_color(0,0,0), m_customColorSet(false), m_secondaryStructure(undefined)
-{}
+  : m_residueName(name), m_residueId(number), m_chainId(id), m_heterogen(false),
+    m_color(0, 0, 0), m_customColorSet(false), m_secondaryStructure(undefined)
+{
+}
 
 Residue::Residue(const Residue& other)
   : m_residueName(other.m_residueName), m_residueId(other.m_residueId),
     m_chainId(other.m_chainId), m_atomNameMap(other.m_atomNameMap),
-    m_heterogen(other.m_heterogen), m_color(other.m_color), 
+    m_heterogen(other.m_heterogen), m_color(other.m_color),
     m_customColorSet(other.m_customColorSet),
     m_secondaryStructure(other.m_secondaryStructure)
-{}
+{
+}
 
 Residue& Residue::operator=(Residue other)
 {
@@ -55,7 +63,7 @@ void Residue::addResidueAtom(const std::string& name, const Atom& atom)
 std::vector<Atom> Residue::residueAtoms() const
 {
   std::vector<Atom> res;
-  for (const auto & it : m_atomNameMap) {
+  for (const auto& it : m_atomNameMap) {
     res.push_back(it.second);
   }
   return res;
@@ -74,7 +82,7 @@ Atom Residue::getAtomByName(std::string name) const
 
 std::string Residue::getAtomName(const Atom atom) const
 {
-  for (const auto & it : m_atomNameMap) {
+  for (const auto& it : m_atomNameMap) {
     if (it.second == atom) {
       return it.first;
     }
@@ -84,7 +92,7 @@ std::string Residue::getAtomName(const Atom atom) const
 
 std::string Residue::getAtomName(const Index index) const
 {
-  for (const auto & it : m_atomNameMap) {
+  for (const auto& it : m_atomNameMap) {
     if (it.second.index() == index) {
       return it.first;
     }
@@ -159,4 +167,4 @@ bool Residue::hasAtomByIndex(Index index) const
   return false;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

@@ -649,4 +649,4 @@ void InputGeneratorWidget::updateOptions()
   setOptionDefaults();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

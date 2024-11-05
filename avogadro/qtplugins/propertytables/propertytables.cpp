@@ -149,4 +149,4 @@ void PropertyTables::showDialog()
   dialog->show();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

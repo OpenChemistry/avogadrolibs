@@ -7,9 +7,7 @@
 
 namespace Avogadro::QtGui {
 
-ElementTranslator::ElementTranslator() : QObject()
-{
-}
+ElementTranslator::ElementTranslator() : QObject() {}
 
 QString ElementTranslator::name(int element)
 {
@@ -382,4 +380,4 @@ int ElementTranslator::numberOfElements()
   return 118;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui

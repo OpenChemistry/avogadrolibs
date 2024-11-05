@@ -11,10 +11,10 @@
 #include <avogadro/core/residuecolors.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QStringList>
 #include <QAction>
 #include <QColorDialog>
 #include <QInputDialog>
+#include <QStringList>
 
 using namespace tinycolormap;
 
@@ -247,14 +247,14 @@ void ApplyColors::applyChargeColors()
 
   // populate the dialog to choose the model and colormap
   ChargeColorDialog dialog;
-  for (const auto &model : identifiers) {
+  for (const auto& model : identifiers) {
     auto name = Calc::ChargeManager::instance().nameForModel(model);
     dialog.modelCombo->addItem(name.c_str(), model.c_str());
   }
   dialog.exec();
   if (dialog.result() != QDialog::Accepted)
     return;
-  
+
   // get the model and colormap
   const auto model = dialog.modelCombo->currentData().toString().toStdString();
   const auto colormapName = dialog.colorMapCombo->currentText();
@@ -567,4 +567,4 @@ void ApplyColors::applyShapelyColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

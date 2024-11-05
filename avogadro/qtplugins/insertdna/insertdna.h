@@ -53,7 +53,7 @@ private:
 
   QtGui::Molecule* m_molecule;
   Io::FileFormat* m_reader;
-  InsertDNADialog *m_dialog;
+  InsertDNADialog* m_dialog;
 
   void constructDialog();
 };

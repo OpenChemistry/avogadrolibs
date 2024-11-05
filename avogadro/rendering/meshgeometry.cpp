@@ -58,14 +58,16 @@ public:
 
 MeshGeometry::MeshGeometry()
   : m_color(255, 0, 0), m_opacity(255), m_dirty(false), d(new Private)
-{}
+{
+}
 
 MeshGeometry::MeshGeometry(const MeshGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices), m_indices(other.m_indices),
     m_color(other.m_color), m_opacity(other.m_opacity),
     m_dirty(true), // Force rendering internals to be rebuilt
     d(new Private)
-{}
+{
+}
 
 MeshGeometry::~MeshGeometry()
 {
@@ -153,22 +155,22 @@ void MeshGeometry::render(const Camera& camera)
   if (!program->enableAttributeArray("vertex"))
     cout << program->error() << endl;
   if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                 sizeof(PackedVertex), FloatType, 3,
-                                 ShaderProgram::NoNormalize)) {
+                                  sizeof(PackedVertex), FloatType, 3,
+                                  ShaderProgram::NoNormalize)) {
     cout << program->error() << endl;
   }
   if (!program->enableAttributeArray("color"))
     cout << program->error() << endl;
   if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
-                                 sizeof(PackedVertex), UCharType, 4,
-                                 ShaderProgram::Normalize)) {
+                                  sizeof(PackedVertex), UCharType, 4,
+                                  ShaderProgram::Normalize)) {
     cout << program->error() << endl;
   }
   if (!program->enableAttributeArray("normal"))
     cout << program->error() << endl;
   if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
-                                 sizeof(PackedVertex), FloatType, 3,
-                                 ShaderProgram::NoNormalize)) {
+                                  sizeof(PackedVertex), FloatType, 3,
+                                  ShaderProgram::NoNormalize)) {
     cout << program->error() << endl;
   }
 
@@ -291,4 +293,4 @@ void MeshGeometry::clear()
   m_dirty = true;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

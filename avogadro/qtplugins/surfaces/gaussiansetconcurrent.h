@@ -17,7 +17,7 @@ class Cube;
 class Molecule;
 class GaussianSet;
 class GaussianSetTools;
-}
+} // namespace Core
 
 namespace QtPlugins {
 
@@ -74,7 +74,7 @@ private:
   static void processDensity(GaussianShell& shell);
   static void processSpinDensity(GaussianShell& shell);
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // GAUSSIANSETCONCURRENT_H

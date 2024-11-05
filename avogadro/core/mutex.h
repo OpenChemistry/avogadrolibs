@@ -47,7 +47,7 @@ private:
   class PIMPL;
   PIMPL* d;
 };
-}
-}
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_MUTEX_H

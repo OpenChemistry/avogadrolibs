@@ -53,10 +53,10 @@
 
 #include <QPair>
 
-//#ifdef __cplusplus
-// extern "C"
+// #ifdef __cplusplus
+//  extern "C"
 //{
-//#endif /* __cplusplus */
+// #endif /* __cplusplus */
 
 /* USAGE: Call adapt_integrate with your function as described below.
 
@@ -96,9 +96,9 @@ int adapt_integrate_v(unsigned int fdim, integrand_v f, void* fdata,
                       unsigned int maxEval, double reqAbsError,
                       double reqRelError, double* val, double* err);
 
-//#ifdef __cplusplus
-//}  /* extern "C" */
-//#endif /* __cplusplus */
+// #ifdef __cplusplus
+// }  /* extern "C" */
+// #endif /* __cplusplus */
 
 #include "qtaimcriticalpointlocator.h"
 #include "qtaimlsodaintegrator.h"

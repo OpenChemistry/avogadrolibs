@@ -60,4 +60,4 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

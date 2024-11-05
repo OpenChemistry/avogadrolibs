@@ -104,7 +104,7 @@ private:
   std::vector<T> m_coordinates;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_COORDINATESET_H

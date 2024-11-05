@@ -13,8 +13,7 @@ namespace Avogadro::QtGui {
 using std::swap;
 
 Molecule::Molecule(QObject* p)
-  : QObject(p), Core::Molecule(),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(p), Core::Molecule(), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(true);
 }
@@ -204,8 +203,8 @@ void Molecule::swapAtom(Index a, Index b)
   Core::Molecule::swapAtom(a, b);
 }
 
-Molecule::BondType Molecule::addBond(Index a, Index b,
-                                     unsigned char order, Index uniqueId)
+Molecule::BondType Molecule::addBond(Index a, Index b, unsigned char order,
+                                     Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size()) ||
       m_bondUniqueIds[uniqueId] != MaxIndex) {
@@ -311,4 +310,4 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

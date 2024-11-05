@@ -25,8 +25,8 @@ using Avogadro::QtGui::FileFormatDialog;
 namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_),
-    m_molecule(nullptr), m_reader(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_reader(nullptr)
 {
   auto* action = new QAction(tr("SMILES…"), this);
   action->setProperty("menu priority", 800);
@@ -137,4 +137,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -28,15 +28,15 @@
 #include <sstream>
 #include <string>
 
-using Avogadro::Io::FileFormatManager;
 using Avogadro::Core::Cube;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::GaussianSetTools;
+using Avogadro::Core::Molecule;
+using Avogadro::Io::FileFormatManager;
 using std::cin;
 using std::cout;
 using std::endl;
-using std::string;
 using std::ostringstream;
+using std::string;
 
 using Eigen::Vector3d;
 using Eigen::Vector3i;

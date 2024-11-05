@@ -60,7 +60,7 @@ private:
   QString m_moleculePath;
   QByteArray m_moleculeData;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_IMPORTPQR_H

@@ -46,7 +46,8 @@ ArrowGeometry::ArrowGeometry() : m_dirty(false), d(new Private) {}
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices),
     m_lineStarts(other.m_lineStarts), m_dirty(true), d(new Private)
-{}
+{
+}
 
 ArrowGeometry::~ArrowGeometry()
 {
@@ -95,10 +96,8 @@ void ArrowGeometry::render(const Camera& camera)
   }
 
   // Render the arrows using the shader.
-  for (auto & m_vertice : m_vertices) {
-    Vector3f v3 =
-      m_vertice.first +
-      0.8 * (m_vertice.second - m_vertice.first);
+  for (auto& m_vertice : m_vertices) {
+    Vector3f v3 = m_vertice.first + 0.8 * (m_vertice.second - m_vertice.first);
     drawLine(m_vertice.first, v3, 2);
     drawCone(v3, m_vertice.second, 0.05, 1.0);
   }
@@ -188,4 +187,4 @@ void ArrowGeometry::addSingleArrow(const Vector3f& pos1, const Vector3f& pos2)
   m_dirty = true;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

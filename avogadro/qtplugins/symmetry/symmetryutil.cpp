@@ -70,4 +70,4 @@ QString operationSymbol(const msym::msym_symmetry_operation_t* operation)
 
   return symbol;
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins::SymmetryUtil

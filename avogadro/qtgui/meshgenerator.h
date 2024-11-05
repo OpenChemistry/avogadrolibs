@@ -18,7 +18,7 @@ namespace Avogadro {
 namespace Core {
 class Cube;
 class Mesh;
-}
+} // namespace Core
 
 namespace QtGui {
 
@@ -57,7 +57,8 @@ public:
    * @return True if the MeshGenerator was successfully initialized.
    */
   MeshGenerator(const Core::Cube* cube, Core::Mesh* mesh, float iso,
-                int passes = 6, bool reverse = false, QObject* parent = nullptr);
+                int passes = 6, bool reverse = false,
+                QObject* parent = nullptr);
 
   /**
    * Destructor.

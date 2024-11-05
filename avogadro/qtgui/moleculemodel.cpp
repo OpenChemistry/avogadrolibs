@@ -3,8 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "molecule.h"
 #include "moleculemodel.h"
+#include "molecule.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
@@ -14,7 +14,8 @@ namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
-{}
+{
+}
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
 {
@@ -197,4 +198,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

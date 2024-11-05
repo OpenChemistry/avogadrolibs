@@ -82,4 +82,4 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

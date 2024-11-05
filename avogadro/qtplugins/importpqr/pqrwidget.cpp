@@ -35,8 +35,8 @@ PQRWidget::~PQRWidget()
 }
 
 /**
-* @brief Called when the search button is clicked to send a query to PQR
-*/
+ * @brief Called when the search button is clicked to send a query to PQR
+ */
 void PQRWidget::searchAction()
 {
   ui->downloadButton->setEnabled(false);
@@ -46,12 +46,12 @@ void PQRWidget::searchAction()
 }
 
 /**
-* @brief Called when a table result is double clicked to display preview
-* information
-* about the result before downloading.
-* @param row The row of the result selected.
-* @param col The column of the result selected.
-*/
+ * @brief Called when a table result is double clicked to display preview
+ * information
+ * about the result before downloading.
+ * @param row The row of the result selected.
+ * @param col The column of the result selected.
+ */
 void PQRWidget::molSelected(int row, int)
 {
   currentlySelectedMol = request->molSelected(row);
@@ -62,8 +62,8 @@ void PQRWidget::molSelected(int row, int)
 }
 
 /**
-* @brief Called when PNG data is ready to be loaded
-*/
+ * @brief Called when PNG data is ready to be loaded
+ */
 void PQRWidget::loadPNG(QByteArray& pngData)
 {
   QPixmap pixmap;
@@ -74,10 +74,10 @@ void PQRWidget::loadPNG(QByteArray& pngData)
 }
 
 /**
-* @brief Called when the download button is clicked to send a request to
-* download
-* molecule information from PQR.
-*/
+ * @brief Called when the download button is clicked to send a request to
+ * download
+ * molecule information from PQR.
+ */
 void PQRWidget::downloadMol()
 {
   QString mol2url = currentlySelectedMol;
@@ -93,4 +93,4 @@ void PQRWidget::loadMolecule(QByteArray& molData, QString name)
   plugin->setMoleculeData(molData, name);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

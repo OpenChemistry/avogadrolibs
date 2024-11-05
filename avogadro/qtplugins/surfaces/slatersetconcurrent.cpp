@@ -16,9 +16,9 @@
 
 namespace Avogadro::QtPlugins {
 
+using Core::Cube;
 using Core::SlaterSet;
 using Core::SlaterSetTools;
-using Core::Cube;
 
 struct SlaterShell
 {
@@ -45,8 +45,8 @@ void SlaterSetConcurrent::setMolecule(Core::Molecule* mol)
   if (!mol)
     return;
   m_set = dynamic_cast<SlaterSet*>(mol->basisSet());
-  
-    delete m_tools;
+
+  delete m_tools;
   m_tools = new SlaterSetTools(mol);
 }
 
@@ -121,4 +121,4 @@ void SlaterSetConcurrent::processSpinDensity(SlaterShell& shell)
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
 }
-}
+} // namespace Avogadro::QtPlugins

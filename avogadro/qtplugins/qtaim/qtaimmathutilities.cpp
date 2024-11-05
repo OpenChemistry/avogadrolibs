@@ -304,4 +304,4 @@ Matrix<qreal, 3, 1> plusThreeSignatureLocatorGradient(
   return value;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins::QTAIMMathUtilities

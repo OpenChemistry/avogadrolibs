@@ -58,7 +58,7 @@ private:
   QString m_pqrFileName;
   QString m_cubeFileName;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_APBS_APBS_H

@@ -208,8 +208,7 @@ bool TurbomoleFormat::write(std::ostream& outStream, const Core::Molecule& mol)
               << std::setprecision(10) << atom.position3d().y() << " "
               << std::setw(18) << std::right << std::fixed
               << std::setprecision(10) << atom.position3d().z() << " "
-              << std::setw(5)
-              << std::right << symbol << "\n";
+              << std::setw(5) << std::right << symbol << "\n";
   }
 
   if (mol.unitCell()) {

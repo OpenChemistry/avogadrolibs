@@ -7,10 +7,10 @@
 
 #include <avogadro/rendering/textproperties.h>
 
+#include <QTransform>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QImage>
-#include <QTransform>
 #include <QtGui/QPainter>
 #include <QtGui/QPolygonF>
 
@@ -260,4 +260,4 @@ void QtTextRenderStrategy::argbToRgba(unsigned char* buffer, size_t pixels)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL

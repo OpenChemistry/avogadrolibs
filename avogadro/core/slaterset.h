@@ -159,7 +159,7 @@ private:
   unsigned int factorial(unsigned int n);
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif

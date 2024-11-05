@@ -81,8 +81,7 @@ private:
   std::vector<int> m_fragment;
   Eigen::Affine3d m_transform;
   bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond,
-                      const QtGui::RWAtom& startAtom);
+  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
   bool fragmentRecurse(const QtGui::RWBond& bond,
                        const QtGui::RWAtom& startAtom,
                        const QtGui::RWAtom& currentAtom);

@@ -30,10 +30,9 @@ public:
     unsigned char padding[4]; //  4 bytes
 
     PackedVertex(const Vector4ub& c, const Vector3f& n, const Vector3f& v)
-      : color(c)
-      , normal(n)
-      , vertex(v)
-    {}
+      : color(c), normal(n), vertex(v)
+    {
+    }
 
     static int colorOffset() { return 0; }
     static int normalOffset() { return static_cast<int>(sizeof(Vector4ub)); }

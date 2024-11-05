@@ -25,9 +25,7 @@ QTAIMEngine::QTAIMEngine(QObject* aParent)
 {
 }
 
-QTAIMEngine::~QTAIMEngine()
-{
-}
+QTAIMEngine::~QTAIMEngine() {}
 
 void QTAIMEngine::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
@@ -226,4 +224,4 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

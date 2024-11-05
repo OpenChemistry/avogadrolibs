@@ -79,7 +79,7 @@ private:
 PidMatrix::PidMatrix(size_t size)
 {
   m_size = size;
-  m_values = new std::vector<std::vector<size_t>>[ size * size ];
+  m_values = new std::vector<std::vector<size_t>>[size * size];
 }
 
 PidMatrix::~PidMatrix()
@@ -117,7 +117,7 @@ std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
     path.push_back(j);
     splicedPaths.push_back(path);
   } else if (ijPaths.empty()) {
-    for (auto & jkPath : jkPaths) {
+    for (auto& jkPath : jkPaths) {
       std::vector<size_t> path;
       path.push_back(j);
       path.insert(path.end(), jkPath.begin(), jkPath.end());
@@ -130,7 +130,7 @@ std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
     }
   } else {
     for (auto path : ijPaths) {
-      for (auto & jkPath : jkPaths) {
+      for (auto& jkPath : jkPaths) {
         path.push_back(j);
         path.insert(path.end(), jkPath.begin(), jkPath.end());
         splicedPaths.push_back(path);
@@ -215,13 +215,9 @@ private:
 };
 
 // --- Construction and Destruction ---------------------------------------- //
-Sssr::Sssr()
-{
-}
+Sssr::Sssr() {}
 
-Sssr::~Sssr()
-{
-}
+Sssr::~Sssr() {}
 
 // --- Properties ---------------------------------------------------------- //
 size_t Sssr::size() const
@@ -266,7 +262,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
   std::set<size_t> pathSet;
   pathSet.insert(path.begin(), path.end());
 
-  for (const auto & ring : m_rings) {
+  for (const auto& ring : m_rings) {
     std::set<size_t> ringSet;
     ringSet.insert(ring.begin(), ring.end());
 
@@ -293,7 +289,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
                                   std::max(path.front(), path.back())));
 
   // Remove bonds from path bonds that are already in a smaller ring.
-  for (const auto & ring : m_rings) {
+  for (const auto& ring : m_rings) {
     if (ring.size() >= path.size())
       continue;
 
@@ -307,7 +303,7 @@ bool Sssr::isUnique(const std::vector<size_t>& path) const
   }
 
   // Check if any other ring contains the same bonds.
-  for (const auto & ring : m_rings) {
+  for (const auto& ring : m_rings) {
     std::set<std::pair<size_t, size_t>> ringBonds;
 
     // Add ring bonds.
@@ -406,7 +402,7 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
   // Algorithm 3 - find sssr from the ring candidate set.
   Sssr sssr;
 
-  for (auto & candidate : candidates) {
+  for (auto& candidate : candidates) {
     // odd sized ring
     if (candidate.size() & 1) {
       for (size_t i = 0; i < Pt(candidate.start(), candidate.end()).size();
@@ -463,9 +459,7 @@ RingPerceiver::RingPerceiver(const Molecule* m)
 {
 }
 
-RingPerceiver::~RingPerceiver()
-{
-}
+RingPerceiver::~RingPerceiver() {}
 
 void RingPerceiver::setMolecule(const Molecule* m)
 {
@@ -492,4 +486,4 @@ std::vector<std::vector<size_t>>& RingPerceiver::rings()
   return m_rings;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

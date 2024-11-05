@@ -35,8 +35,7 @@ public:
    * @param cartTol The cartesian tolerance for spglib.
    * @return The Hall number for the crystal.
    */
-  static unsigned short getHallNumber(Molecule& mol,
-                                      double cartTol = 1e-5);
+  static unsigned short getHallNumber(Molecule& mol, double cartTol = 1e-5);
 
   /**
    * Use spglib to reduce the crystal to a primitive cell. Unless the molecule
@@ -87,7 +86,7 @@ private:
                               bool idealize);
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_AVO_SPGLIB_H

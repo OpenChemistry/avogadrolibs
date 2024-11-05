@@ -201,7 +201,7 @@ public:
    * @param value Value to fill the cube with.
    */
   void fill(float value);
-  
+
   /**
    * Sets all indices in a Z stripe of the cube to the specified value.
    * @param i x component of the position.
@@ -210,9 +210,8 @@ public:
    * @param klast last z position to fill.
    * @param value Value to fill the stripe with.
    */
-  bool fillStripe(
-    unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, float value
-  );
+  bool fillStripe(unsigned int i, unsigned int j, unsigned int kfirst,
+                  unsigned int klast, float value);
 
   /**
    * @return The minimum  value at any point in the Cube.
@@ -258,7 +257,7 @@ inline bool Cube::setValue(unsigned int i, float value_)
     return false;
 }
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_CUBE_H

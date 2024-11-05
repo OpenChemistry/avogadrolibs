@@ -26,7 +26,10 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Van der Waals (AO)", "ambient occlusion"); }
+  QString name() const override
+  {
+    return tr("Van der Waals (AO)", "ambient occlusion");
+  }
 
   QString description() const override
   {

@@ -135,7 +135,8 @@ void PlotXrd::displayDialog()
   const char* windowName = "Theoretical XRD Pattern";
 
   if (!m_chartDialog)
-    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
@@ -279,4 +280,4 @@ bool PlotXrd::executeGenXrdPattern(const QStringList& args,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

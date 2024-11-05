@@ -65,7 +65,7 @@ int isDouble(map<string, int>& header)
   int size = 0;
   string headerKeys[] = { "box_size", "x_size", "v_size", "f_size" };
 
-  for (auto & headerKey : headerKeys) {
+  for (auto& headerKey : headerKeys) {
     if (header[headerKey] != 0) {
       if (headerKey == "box_size") {
         size = (int)(header[headerKey] / DIM * DIM);
@@ -156,7 +156,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
-  for (auto & _kid : keyCheck) {
+  for (auto& _kid : keyCheck) {
     if (header[_kid] != 0) {
       if (doubleStatus) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, DIM * DIM);
@@ -199,7 +199,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
   unsigned char customElementCounter = CustomElementMin;
 
   // Reading the coordinates of positions, velocities and forces
-  for (auto & _kid : keyCheck2) {
+  for (auto& _kid : keyCheck2) {
     natoms = header["natoms"];
     double coordsDouble[DIM];
     float coordsFloat[DIM];
@@ -245,8 +245,9 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     // Set the custom element map if needed
     if (!atomTypes.empty()) {
       Molecule::CustomElementMap elementMap;
-      for (const auto & atomType : atomTypes) {
-        elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
+      for (const auto& atomType : atomTypes) {
+        elementMap.insert(
+          std::make_pair(atomType.second, "Atom " + atomType.first));
       }
       mol.setCustomElementMap(elementMap);
     }
@@ -317,7 +318,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
-    for (auto & _kid : keyCheck) {
+    for (auto& _kid : keyCheck) {
       if (header[_kid] != 0) {
         natoms = header["natoms"];
         if (doubleStatus) {
@@ -361,7 +362,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     positions.reserve(natoms);
 
     // Reading the coordinates of positions, velocities and forces
-    for (auto & _kid : keyCheck2) {
+    for (auto& _kid : keyCheck2) {
       double coordsDouble[DIM];
       float coordsFloat[DIM];
       for (int i = 0; i < natoms; ++i) {
@@ -419,4 +420,4 @@ std::vector<std::string> TrrFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Io

@@ -16,9 +16,10 @@ namespace Rendering {
 /**
  * @class Quad quad.h
  * <avogadro/rendering/quad.h>
- * @brief The Quad class is a convenience class for creating a quadrilateral mesh.
+ * @brief The Quad class is a convenience class for creating a quadrilateral
+ * mesh.
  */
-class AVOGADRORENDERING_EXPORT  Quad : public MeshGeometry
+class AVOGADRORENDERING_EXPORT Quad : public MeshGeometry
 {
 public:
   Quad() {}

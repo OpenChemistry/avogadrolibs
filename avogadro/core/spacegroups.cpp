@@ -26,7 +26,7 @@ SpaceGroups::~SpaceGroups() {}
 
 unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
-  unsigned short hall = 0; // can't find anything
+  unsigned short hall = 0;               // can't find anything
   const unsigned short hall_count = 531; // 530 but first one is empty
   // some files use " instead of = for the space group symbol
   std::string sg = spaceGroup;

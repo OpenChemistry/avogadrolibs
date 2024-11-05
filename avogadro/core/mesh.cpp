@@ -74,7 +74,7 @@ bool Mesh::addVertices(const Core::Array<Vector3f>& values)
   if (m_vertices.capacity() < m_vertices.size() + values.size())
     m_vertices.reserve(m_vertices.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (const auto & value : values)
+    for (const auto& value : values)
       m_vertices.push_back(value);
     return true;
   } else {
@@ -104,7 +104,7 @@ bool Mesh::addNormals(const Core::Array<Vector3f>& values)
   if (m_normals.capacity() < m_normals.size() + values.size())
     m_normals.reserve(m_normals.capacity() * 2);
   if (values.size() % 3 == 0) {
-    for (const auto & value : values)
+    for (const auto& value : values)
       m_normals.push_back(value);
     return true;
   } else {
@@ -189,9 +189,8 @@ void Mesh::smooth(int iterationCount)
   Array<Vector3> planarList(m_vertices.size());
   for (size_t i = 0; i < m_vertices.size(); i++)
     // Empirical constant to make the distribution more homogeneous
-    planarList[i] = Vector3(
-      double(m_vertices[i](0) + 1.31*m_vertices[i](1)),
-    0.0, m_vertices[i](2));
+    planarList[i] = Vector3(double(m_vertices[i](0) + 1.31 * m_vertices[i](1)),
+                            0.0, m_vertices[i](2));
   NeighborPerceiver perceiver(planarList, 0.1);
 
   // Identify degenerate vertices
@@ -203,7 +202,7 @@ void Mesh::smooth(int iterationCount)
       continue;
     perceiver.getNeighborsInclusiveInPlace(neighbors, planarList[i]);
     size_t vertexID = vertexIDToIndices.size();
-    for (size_t n: neighbors) {
+    for (size_t n : neighbors) {
       if ((m_vertices[n] - m_vertices[i]).norm() < 0.0001) {
         if (vertexID == vertexIDToIndices.size())
           vertexIDToIndices.emplace_back();
@@ -216,17 +215,16 @@ void Mesh::smooth(int iterationCount)
   // Compute 1-ring
   std::vector<std::vector<size_t>> vertexIDTo1Ring(vertexIDToIndices.size());
   for (size_t id = 0; id < vertexIDToIndices.size(); id++) {
-    for (size_t v: vertexIDToIndices[id]) {
+    for (size_t v : vertexIDToIndices[id]) {
       size_t relative = v % 3;
       size_t triangle = v - relative;
-      std::array<size_t, 2> candidates{{
-        triangle + (relative + 1) % 3,
-        triangle + (relative + 2) % 3
-      }};
-      for (size_t candidate: candidates) {
+      std::array<size_t, 2> candidates{ { triangle + (relative + 1) % 3,
+                                          triangle + (relative + 2) % 3 } };
+      for (size_t candidate : candidates) {
         size_t newID = indexToVertexID[candidate];
-        if (std::find(vertexIDToIndices[id].begin(), vertexIDToIndices[id].end(), newID)
-        == vertexIDToIndices[id].end())
+        if (std::find(vertexIDToIndices[id].begin(),
+                      vertexIDToIndices[id].end(),
+                      newID) == vertexIDToIndices[id].end())
           vertexIDTo1Ring[id].push_back(newID);
       }
     }
@@ -242,12 +240,12 @@ void Mesh::smooth(int iterationCount)
     // Apply Laplacian smoothing
     for (size_t id = 0; id < inputVertices.size(); id++) {
       Vector3f output(0.0f, 0.0f, 0.0f);
-      for (size_t neighbor: vertexIDTo1Ring[id])
+      for (size_t neighbor : vertexIDTo1Ring[id])
         output += inputVertices[neighbor];
       output += weight * inputVertices[id];
       output *= 1.0f / (weight + vertexIDTo1Ring[id].size());
       if (iteration == 1)
-        for (size_t i: vertexIDToIndices[id])
+        for (size_t i : vertexIDToIndices[id])
           m_vertices[i] = output;
       else
         m_vertices[vertexIDToIndices[id][0]] = output;
@@ -255,20 +253,20 @@ void Mesh::smooth(int iterationCount)
   }
 
   // Recompute normals
-  for (auto & vertexIDToIndice : vertexIDToIndices) {
+  for (auto& vertexIDToIndice : vertexIDToIndices) {
     Vector3f normal(0.0f, 0.0f, 0.0f);
-    for (size_t v: vertexIDToIndice) {
+    for (size_t v : vertexIDToIndice) {
       size_t relative = v % 3;
       size_t triangle = v - relative;
-      Vector3f &a = m_vertices[v];
-      Vector3f &b = m_vertices[triangle + (relative + 1) % 3];
-      Vector3f &c = m_vertices[triangle + (relative + 2) % 3];
+      Vector3f& a = m_vertices[v];
+      Vector3f& b = m_vertices[triangle + (relative + 1) % 3];
+      Vector3f& c = m_vertices[triangle + (relative + 2) % 3];
       Vector3f triangleNormal = (b - a).cross(c - a);
       normal += triangleNormal.normalized();
     }
-    for (size_t i: vertexIDToIndice)
+    for (size_t i : vertexIDToIndice)
       m_normals[i] = normal.normalized();
   }
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Core

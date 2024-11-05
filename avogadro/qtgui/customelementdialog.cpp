@@ -130,7 +130,8 @@ void CustomElementDialog::prepareForm()
     if ((match = map.find(customElement)) != map.end())
       addRow(customElement, QString::fromStdString(match->second));
     else
-      addRow(customElement, QString::fromStdString(Elements::name(customElement)));
+      addRow(customElement,
+             QString::fromStdString(Elements::name(customElement)));
   }
 }
 
@@ -150,4 +151,4 @@ void CustomElementDialog::addRow(unsigned char elementId, const QString& name)
   m_ui->form->addRow(name + ":", combo);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

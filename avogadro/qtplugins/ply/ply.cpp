@@ -10,11 +10,11 @@
 #include <avogadro/rendering/plyvisitor.h>
 #include <avogadro/rendering/scene.h>
 
+#include <QAction>
 #include <QtCore/QTextStream>
 #include <QtGui/QClipboard>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
-#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -31,9 +31,7 @@ PLY::PLY(QObject* p)
   connect(m_action, SIGNAL(triggered()), SLOT(render()));
 }
 
-PLY::~PLY()
-{
-}
+PLY::~PLY() {}
 
 QList<QAction*> PLY::actions() const
 {
@@ -82,4 +80,4 @@ void PLY::render()
   file.close();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

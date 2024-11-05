@@ -261,7 +261,8 @@ float Cube::value(const Vector3& pos) const
          value(hC.x(), hC.y(), hC.z()) * P.x() * P.y() * P.z();
 }
 
-bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k, float value_)
+bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k,
+                    float value_)
 {
   unsigned int index = i * m_points.y() * m_points.z() + j * m_points.z() + k;
   if (index >= m_data.size())
@@ -280,18 +281,19 @@ void Cube::fill(float value_)
   m_minValue = m_maxValue = value_;
 }
 
-bool Cube::fillStripe(
-  unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, float value_
-) {
-  unsigned int stripeStartIndex = i * m_points.y() * m_points.z() + j * m_points.z();
+bool Cube::fillStripe(unsigned int i, unsigned int j, unsigned int kfirst,
+                      unsigned int klast, float value_)
+{
+  unsigned int stripeStartIndex =
+    i * m_points.y() * m_points.z() + j * m_points.z();
   unsigned int firstIndex = stripeStartIndex + kfirst;
   if (firstIndex >= m_data.size())
     return false;
   unsigned int lastIndex = stripeStartIndex + klast;
   if (lastIndex >= m_data.size())
     return false;
-  std::fill(&m_data[firstIndex], &m_data[lastIndex+1], value_);
+  std::fill(&m_data[firstIndex], &m_data[lastIndex + 1], value_);
   return true;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Core

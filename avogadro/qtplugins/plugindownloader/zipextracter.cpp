@@ -36,7 +36,7 @@ int ZipExtracter::copyData(struct archive* ar, struct archive* aw)
 char* ZipExtracter::convert(const std::string& str)
 {
   char* result = new char[str.length() + 1];
-  strncpy(result, str.c_str(), str.length()+1); // make sure to nul-terminate
+  strncpy(result, str.c_str(), str.length() + 1); // make sure to nul-terminate
   return result;
 }
 
@@ -154,4 +154,4 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
   return toReturn;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

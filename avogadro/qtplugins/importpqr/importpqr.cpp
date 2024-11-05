@@ -77,4 +77,4 @@ void ImportPQR::setMoleculeData(QByteArray& molData, QString name)
   m_dialog->hide();
   emit moleculeReady(1);
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

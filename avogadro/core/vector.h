@@ -33,6 +33,6 @@ struct Frustrum
   Vector3f planes[4];
 };
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_VECTOR_H

@@ -53,7 +53,7 @@ private:
   Core::Cube* m_cube;
   QString m_errorString;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_APBS_OPENDXREADER_H

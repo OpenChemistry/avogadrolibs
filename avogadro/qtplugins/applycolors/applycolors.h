@@ -57,7 +57,6 @@ private:
   QColorDialog* m_dialog;
 
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
-
 };
 
 } // namespace QtPlugins

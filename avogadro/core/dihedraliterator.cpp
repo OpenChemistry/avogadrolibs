@@ -16,7 +16,8 @@ using namespace std;
 
 DihedralIterator::DihedralIterator(const Molecule* mol)
   : m_current(0, 0, 0, 0), m_mol(mol)
-{}
+{
+}
 
 Dihedral DihedralIterator::begin()
 {
@@ -87,9 +88,9 @@ Dihedral DihedralIterator::operator++()
           return m_current;
         }
 
-      }              // end "d" loop
+      } // end "d" loop
       valid = false; // we couldn't find a "d", so find a new "a"
-    }                // end if()
+    } // end if()
 
     // try to find a new "a"
     for (const auto maybeA : graph.neighbors(b)) {
@@ -103,46 +104,46 @@ Dihedral DihedralIterator::operator++()
 
     // find our current bond and go to the next
     if (!valid) {
-    bool nextBond = false;
-    for (bcBond = 0; bcBond < bondCount; ++bcBond) {
-      auto bc = m_mol->bondPair(bcBond);
-      Index maybeB = bc.first;
-      Index maybeC = bc.second;
+      bool nextBond = false;
+      for (bcBond = 0; bcBond < bondCount; ++bcBond) {
+        auto bc = m_mol->bondPair(bcBond);
+        Index maybeB = bc.first;
+        Index maybeC = bc.second;
 
-      if (nextBond) {
-        b = maybeB;
-        c = maybeC;
+        if (nextBond) {
+          b = maybeB;
+          c = maybeC;
 
-        // find an a
-        for (const auto maybeA : graph.neighbors(b)) {
-          if (maybeA != c) {
-            a = maybeA;
-            valid = true; // maybe
-            break;
+          // find an a
+          for (const auto maybeA : graph.neighbors(b)) {
+            if (maybeA != c) {
+              a = maybeA;
+              valid = true; // maybe
+              break;
+            }
           }
-        }
-        if (!valid) {
-          continue; // need to find a new bond with real neighbors
+          if (!valid) {
+            continue; // need to find a new bond with real neighbors
+          }
+
+          // try to find a new d
+          for (const auto maybeD : graph.neighbors(c)) {
+            if (maybeD != b && maybeD != a) {
+              m_current = make_tuple(a, b, c, maybeD);
+              return m_current; // done
+            }
+          }
+          // didn't find a good "d", so try a new bond
+          break;
         }
 
-        // try to find a new d
-        for (const auto maybeD : graph.neighbors(c)) {
-          if (maybeD != b && maybeD != a) {
-            m_current = make_tuple(a, b, c, maybeD);
-            return m_current; // done
-          }
+        if (!nextBond && maybeB == b && maybeC == c) {
+          // found current bond
+          nextBond = true;
         }
-        // didn't find a good "d", so try a new bond
-        break;
       }
 
-      if (!nextBond && maybeB == b && maybeC == c) {
-        // found current bond
-        nextBond = true;
-      }
-    }
-
-    valid = nextBond;
+      valid = nextBond;
     }
   } while (valid && bcBond < bondCount);
 
@@ -150,4 +151,4 @@ Dihedral DihedralIterator::operator++()
   return make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 } // end ++ operator
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

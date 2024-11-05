@@ -204,8 +204,8 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(Index index)
-  const
+typename BondTemplate<Molecule_T>::AtomType
+BondTemplate<Molecule_T>::getOtherAtom(Index index) const
 {
   if (atom1().index() == index)
     return atom2();
@@ -214,9 +214,9 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAt
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(
-    BondTemplate<Molecule_T>::AtomType atom
-) const
+typename BondTemplate<Molecule_T>::AtomType
+BondTemplate<Molecule_T>::getOtherAtom(
+  BondTemplate<Molecule_T>::AtomType atom) const
 {
   return getOtherAtom(atom.index());
 }
@@ -233,7 +233,7 @@ unsigned char BondTemplate<Molecule_T>::order() const
   return m_molecule->bondOrders()[m_index];
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_BOND_H

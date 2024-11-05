@@ -60,7 +60,7 @@ private:
   QList<ScenePlugin*> m_scenePlugins;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_SCENEPLUGINMODEL_H

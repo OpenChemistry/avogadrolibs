@@ -26,7 +26,10 @@ public:
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Licorice", "stick / licorice rendering"); }
+  QString name() const override
+  {
+    return tr("Licorice", "stick / licorice rendering");
+  }
 
   QString description() const override
   {

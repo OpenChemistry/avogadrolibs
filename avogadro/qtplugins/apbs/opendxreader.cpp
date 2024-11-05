@@ -15,13 +15,9 @@ namespace Avogadro::QtPlugins {
 
 using Core::Cube;
 
-OpenDxReader::OpenDxReader() : m_cube(nullptr)
-{
-}
+OpenDxReader::OpenDxReader() : m_cube(nullptr) {}
 
-OpenDxReader::~OpenDxReader()
-{
-}
+OpenDxReader::~OpenDxReader() {}
 
 bool OpenDxReader::readFile(const QString& fileName)
 {
@@ -97,4 +93,4 @@ Cube* OpenDxReader::cube() const
 {
   return m_cube;
 }
-}
+} // namespace Avogadro::QtPlugins

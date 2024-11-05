@@ -120,4 +120,4 @@ size_t Layer::layerCount() const
   return m_maxLayer + 1;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

@@ -10,8 +10,8 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
 #include <tuple>
+#include <vector>
 
 namespace Avogadro {
 namespace Core {
@@ -26,28 +26,28 @@ public:
   /**
    * Constructor.
    */
-  DihedralIterator(const Molecule *mol);
+  DihedralIterator(const Molecule* mol);
 
   ~DihedralIterator() {}
 
-  Dihedral* operator*() {
-    return &m_current;
-  }
+  Dihedral* operator*() { return &m_current; }
 
   Dihedral begin();
 
-  Dihedral end() const {
+  Dihedral end() const
+  {
     return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
   }
 
   Dihedral operator++();
 
-  bool operator!=(const DihedralIterator& other ) {
+  bool operator!=(const DihedralIterator& other)
+  {
     return m_current != other.m_current;
   }
 
 private:
-  Dihedral     m_current;
+  Dihedral m_current;
   const Molecule* m_mol;
 };
 

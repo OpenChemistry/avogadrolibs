@@ -217,4 +217,4 @@ void Wireframe::setWidth(double width)
   settings.setValue("wireframe/lineWidth", interface.lineWidth);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

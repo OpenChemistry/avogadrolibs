@@ -85,7 +85,7 @@ private:
   std::map<std::string, Variant> m_map;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_VARIANTMAP_H

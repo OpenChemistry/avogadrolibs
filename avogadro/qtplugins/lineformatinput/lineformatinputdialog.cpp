@@ -57,4 +57,4 @@ void LineFormatInputDialog::accept()
   QDialog::accept();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

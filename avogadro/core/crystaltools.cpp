@@ -22,7 +22,7 @@ struct WrapAtomsToCellFunctor
 
   void operator()(Vector3& pos) { unitCell.wrapCartesian(pos, pos); }
 };
-}
+} // namespace
 
 bool CrystalTools::wrapAtomsToUnitCell(Molecule& molecule)
 {
@@ -182,7 +182,7 @@ T niggliRound(T v, T dec)
   const T shifted = v * shift;
   return std::floor(shifted + 0.5) / shift;
 }
-}
+} // namespace
 
 bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 {
@@ -430,7 +430,7 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 
     // fix coordinates with COB matrix:
     const Matrix3 invCob(cob.inverse());
-    for (auto & fcoord : fcoords) {
+    for (auto& fcoord : fcoords) {
       fcoord = invCob * fcoord;
     }
 
@@ -592,7 +592,7 @@ struct TransformAtomsFunctor
 
   void operator()(Vector3& pos) { pos = transform * pos; }
 };
-}
+} // namespace
 
 bool CrystalTools::setCellMatrix(Molecule& molecule,
                                  const Matrix3& newCellColMatrix, Options opt)
@@ -622,7 +622,7 @@ struct FractionalCoordinatesFunctor
 
   void operator()(Vector3& pos) { unitCell.toFractional(pos, pos); }
 };
-}
+} // namespace
 
 bool CrystalTools::fractionalCoordinates(const UnitCell& unitCell,
                                          const Array<Vector3>& cart,
@@ -661,7 +661,7 @@ struct SetFractionalCoordinatesFunctor
 
   Vector3 operator()(const Vector3& pos) { return unitCell.toCartesian(pos); }
 };
-}
+} // namespace
 
 bool CrystalTools::setFractionalCoordinates(Molecule& molecule,
                                             const Array<Vector3>& coords)
@@ -681,4 +681,4 @@ bool CrystalTools::setFractionalCoordinates(Molecule& molecule,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

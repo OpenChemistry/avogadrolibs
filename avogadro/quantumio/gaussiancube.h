@@ -48,7 +48,7 @@ private:
   void outputAll();
 }; // End GaussianCube
 
-} // End QuantumIO namespace
-} // End Avogadro namespace
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif

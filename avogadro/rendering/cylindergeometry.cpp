@@ -17,7 +17,7 @@
 namespace {
 #include "cylinders_fs.h"
 #include "cylinders_vs.h"
-}
+} // namespace
 
 #include "avogadrogl.h"
 
@@ -111,9 +111,8 @@ void CylinderGeometry::update()
       // Cylinder
       ColorNormalVertex vert(itCylinder->color, -direction, position1);
       ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
-      const auto tubeStart =
-        static_cast<unsigned int>(cylinderVertices.size());
-      for (auto & radial : radials) {
+      const auto tubeStart = static_cast<unsigned int>(cylinderVertices.size());
+      for (auto& radial : radials) {
         vert.normal = radial;
         vert.vertex = position1 + radial;
         cylinderVertices.push_back(vert);
@@ -164,11 +163,11 @@ void CylinderGeometry::update()
     if (!d->program->link())
       cout << d->program->error() << endl;
 
-/*    d->program->detachShader(d->vertexShader);
-    d->program->detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
-    */
+    /*    d->program->detachShader(d->vertexShader);
+        d->program->detachShader(d->fragmentShader);
+        d->vertexShader.cleanup();
+        d->fragmentShader.cleanup();
+        */
   }
 }
 
@@ -189,23 +188,23 @@ void CylinderGeometry::render(const Camera& camera)
   // Set up our attribute arrays.
   if (!d->program->enableAttributeArray("vertex"))
     cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray("vertex", ColorNormalVertex::vertexOffset(),
-                                    sizeof(ColorNormalVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
+  if (!d->program->useAttributeArray(
+        "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
+        FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program->error() << endl;
   }
   if (!d->program->enableAttributeArray("color"))
     cout << d->program->error() << endl;
   if (!d->program->useAttributeArray("color", ColorNormalVertex::colorOffset(),
-                                    sizeof(ColorNormalVertex), UCharType, 3,
-                                    ShaderProgram::Normalize)) {
+                                     sizeof(ColorNormalVertex), UCharType, 3,
+                                     ShaderProgram::Normalize)) {
     cout << d->program->error() << endl;
   }
   if (!d->program->enableAttributeArray("normal"))
     cout << d->program->error() << endl;
-  if (!d->program->useAttributeArray("normal", ColorNormalVertex::normalOffset(),
-                                    sizeof(ColorNormalVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
+  if (!d->program->useAttributeArray(
+        "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
+        FloatType, 3, ShaderProgram::NoNormalize)) {
     cout << d->program->error() << endl;
   }
 
@@ -213,7 +212,8 @@ void CylinderGeometry::render(const Camera& camera)
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
     cout << d->program->error() << endl;
   }
-  if (!d->program->setUniformValue("projection", camera.projection().matrix())) {
+  if (!d->program->setUniformValue("projection",
+                                   camera.projection().matrix())) {
     cout << d->program->error() << endl;
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
@@ -330,4 +330,4 @@ void CylinderGeometry::clear()
   m_indexMap.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

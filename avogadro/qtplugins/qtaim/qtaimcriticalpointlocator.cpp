@@ -477,15 +477,13 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
 
     bool correctSignature = n.at(0).toBool();
 
     if (correctSignature) {
 
-      QVector3D result(n.at(1).toReal(),
-                       n.at(2).toReal(),
-                       n.at(3).toReal());
+      QVector3D result(n.at(1).toReal(), n.at(2).toReal(), n.at(3).toReal());
 
       m_nuclearCriticalPoints.append(result);
     }
@@ -548,7 +546,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
         inputList.append(input);
       }
     } // end N
-  }   // end M
+  } // end M
 
   m_wfn->saveToBinaryFile(tempFileName);
 
@@ -727,7 +725,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
 
     qint64 counter = 0;
     bool correctSignature = n.at(counter).toBool();
@@ -880,7 +878,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
 
     qint64 counter = 0;
     bool correctSignature = n.at(counter).toBool();
@@ -940,4 +938,4 @@ QString QTAIMCriticalPointLocator::temporaryFileName()
   return tempFileName;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

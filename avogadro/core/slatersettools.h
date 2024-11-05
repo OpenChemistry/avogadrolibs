@@ -80,7 +80,7 @@ private:
   std::vector<double> calculateValues(const Vector3& position) const;
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Core
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_SlaterSetTools_H

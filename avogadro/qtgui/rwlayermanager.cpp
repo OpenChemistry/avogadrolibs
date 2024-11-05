@@ -45,7 +45,6 @@ public:
       auto value = names.second[activeLayer];
       m_settings[names.first] = value;
     }
-
   }
 
   void redo() override
@@ -130,7 +129,8 @@ public:
   RemoveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer)
     : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol),
       m_layer(layer)
-  {}
+  {
+  }
 
   void redo() override
   {
@@ -285,4 +285,4 @@ Array<std::pair<size_t, string>> RWLayerManager::activeMoleculeNames() const
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

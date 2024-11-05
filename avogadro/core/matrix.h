@@ -22,6 +22,6 @@ typedef Eigen::Matrix<float, 3, 3> Matrix3f;
 typedef Eigen::Matrix<float, 4, 4> Matrix4f;
 typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> MatrixXf;
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_MATRIX_H

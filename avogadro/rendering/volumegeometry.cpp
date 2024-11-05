@@ -7,12 +7,8 @@
 
 namespace Avogadro::Rendering {
 
-VolumeGeometry::VolumeGeometry()
-{
-}
+VolumeGeometry::VolumeGeometry() {}
 
-VolumeGeometry::~VolumeGeometry()
-{
-}
+VolumeGeometry::~VolumeGeometry() {}
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

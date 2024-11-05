@@ -9,7 +9,6 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
-
 namespace Avogadro {
 namespace QtPlugins {
 

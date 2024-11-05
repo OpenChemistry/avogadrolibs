@@ -706,10 +706,14 @@ static int rule15gauss_evalError(rule* r, unsigned int fdim, integrand_v f,
   const unsigned int n = 8;
   const double xgk[8] = {
     /* abscissae of the 15-point kronrod rule */
-    0.991455371120812639206854697526329, 0.949107912342758524526189684047851,
-    0.864864423359769072789712788640926, 0.741531185599394439863864773280788,
-    0.586087235467691130294144838258730, 0.405845151377397166906606412076961,
-    0.207784955007898467600689403773245, 0.000000000000000000000000000000000
+    0.991455371120812639206854697526329,
+    0.949107912342758524526189684047851,
+    0.864864423359769072789712788640926,
+    0.741531185599394439863864773280788,
+    0.586087235467691130294144838258730,
+    0.405845151377397166906606412076961,
+    0.207784955007898467600689403773245,
+    0.000000000000000000000000000000000
     /* xgk[1], xgk[3], ... abscissae of the 7-point gauss rule.
        xgk[0], xgk[2], ... to optimally extend the 7-point gauss rule */
   };
@@ -1280,7 +1284,7 @@ QList<QVariant> QTAIMEvaluateProperty(QList<QVariant> variantList)
     ode.setBetaSpheres(betaSpheres);
 
     QVector3D endpoint = ode.integrate(QVector3D(x0, y0, z0));
-// QList<QVector3D> path=ode.path();
+    // QList<QVector3D> path=ode.path();
 
 #define HUGE_REAL_NUMBER 1.e20
     qreal smallestDistance = HUGE_REAL_NUMBER;
@@ -1553,7 +1557,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
     ode.setBetaSpheres(betaSpheres);
 
     QVector3D endpoint = ode.integrate(QVector3D(x0, y0, z0));
-// QList<QVector3D> path=ode.path();
+    // QList<QVector3D> path=ode.path();
 
 #define HUGE_REAL_NUMBER 1.e20
     qreal smallestDistance = HUGE_REAL_NUMBER;
@@ -1591,7 +1595,7 @@ QList<QVariant> QTAIMEvaluatePropertyRTP(QList<QVariant> variantList)
             r0 * r0 * sin(t0) *
             eval.electronDensity(Eigen::Vector3d(x0, y0, z0))
 
-              );
+          );
         } else {
           qDebug() << "mode not defined";
           qreal zero = 0.0;
@@ -2387,4 +2391,4 @@ QString QTAIMCubature::temporaryFileName()
   return tempFileName;
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

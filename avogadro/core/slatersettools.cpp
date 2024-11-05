@@ -10,7 +10,6 @@
 
 #include <iostream>
 
-
 using std::vector;
 
 namespace Avogadro::Core {
@@ -21,9 +20,7 @@ SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
     m_basis = dynamic_cast<SlaterSet*>(m_molecule->basisSet());
 }
 
-SlaterSetTools::~SlaterSetTools()
-{
-}
+SlaterSetTools::~SlaterSetTools() {}
 
 double SlaterSetTools::calculateMolecularOrbital(const Vector3& position,
                                                  int mo) const
@@ -160,4 +157,4 @@ vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
   return values;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Core

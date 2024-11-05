@@ -20,7 +20,8 @@ namespace {
 const int QTTY_COLUMNS = 6;
 }
 
-LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {
+LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0)
+{
   m_plusIcon = QIcon(":/icons/fallback/32x32/plus.png");
   m_dotsIcon = QIcon(":/icons/fallback/32x32/dots.png");
   m_previewIcon = QIcon(":/icons/fallback/32x32/preview.png");
@@ -53,8 +54,7 @@ Qt::ItemFlags LayerModel::flags(const QModelIndex&) const
   return Qt::ItemIsEnabled;
 }
 
-bool LayerModel::setData(const QModelIndex&, const QVariant&,
-                         int)
+bool LayerModel::setData(const QModelIndex&, const QVariant&, int)
 {
   return false;
 }
@@ -82,7 +82,8 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return QString(tr("Layer %1")).arg(layer + 1); // count starts at 0 internally
+          return QString(tr("Layer %1"))
+            .arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
           if (layer == getMoleculeLayer().activeLayer())
@@ -247,4 +248,4 @@ size_t LayerModel::layerCount() const
   return LayerManager::layerCount();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

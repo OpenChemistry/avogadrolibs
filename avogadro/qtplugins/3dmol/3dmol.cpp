@@ -32,9 +32,7 @@ ThreeDMol::ThreeDMol(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
-ThreeDMol::~ThreeDMol()
-{
-}
+ThreeDMol::~ThreeDMol() {}
 
 QString ThreeDMol::description() const
 {
@@ -70,4 +68,4 @@ void ThreeDMol::showDialog()
   m_dialog->show();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

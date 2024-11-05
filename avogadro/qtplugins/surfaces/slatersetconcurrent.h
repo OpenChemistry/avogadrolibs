@@ -17,7 +17,7 @@ class Cube;
 class Molecule;
 class SlaterSet;
 class SlaterSetTools;
-}
+} // namespace Core
 
 namespace QtPlugins {
 
@@ -73,7 +73,7 @@ private:
   static void processDensity(SlaterShell& shell);
   static void processSpinDensity(SlaterShell& shell);
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_SLATERSETCONCURRENT_H

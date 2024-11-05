@@ -18,24 +18,22 @@ using Core::Cube;
 using Core::Mesh;
 
 MeshGenerator::MeshGenerator(QObject* p)
-  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(false), m_cube(nullptr),
-    m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
-    m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
+  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(false),
+    m_cube(nullptr), m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0),
+    m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
 }
 
 MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
                              int passes, bool reverse, QObject* p)
-  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(reverse), m_cube(nullptr),
-    m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0), m_min(0.0, 0.0, 0.0),
-    m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
+  : QThread(p), m_iso(0.0), m_passes(6), m_reverseWinding(reverse),
+    m_cube(nullptr), m_mesh(nullptr), m_stepSize(0.0, 0.0, 0.0),
+    m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
   initialize(cube_, mesh_, iso, passes);
 }
 
-MeshGenerator::~MeshGenerator()
-{
-}
+MeshGenerator::~MeshGenerator() {}
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
                                int passes, bool reverse)
@@ -187,18 +185,15 @@ bool MeshGenerator::marchingCube(const Vector3i& pos)
                              afCubeValue[a2iEdgeConnection[i][1]]);
 
       asEdgeVertex[i] =
-        Vector3f(fPos.x() +
-                   (a2fVertexOffset[a2iEdgeConnection[i][0]][0] +
-                    fOffset * a2fEdgeDirection[i][0]) *
-                     m_stepSize[0],
-                 fPos.y() +
-                   (a2fVertexOffset[a2iEdgeConnection[i][0]][1] +
-                    fOffset * a2fEdgeDirection[i][1]) *
-                     m_stepSize[1],
-                 fPos.z() +
-                   (a2fVertexOffset[a2iEdgeConnection[i][0]][2] +
-                    fOffset * a2fEdgeDirection[i][2]) *
-                     m_stepSize[2]);
+        Vector3f(fPos.x() + (a2fVertexOffset[a2iEdgeConnection[i][0]][0] +
+                             fOffset * a2fEdgeDirection[i][0]) *
+                              m_stepSize[0],
+                 fPos.y() + (a2fVertexOffset[a2iEdgeConnection[i][0]][1] +
+                             fOffset * a2fEdgeDirection[i][1]) *
+                              m_stepSize[1],
+                 fPos.z() + (a2fVertexOffset[a2iEdgeConnection[i][0]][2] +
+                             fOffset * a2fEdgeDirection[i][2]) *
+                              m_stepSize[2]);
 
       /// FIXME Optimize this to only calculate normals when required
       asEdgeNorm[i] = normal(asEdgeVertex[i]);
@@ -610,4 +605,4 @@ const int MeshGenerator::a2iTriangleConnectionTable[256][16] = {
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
 };
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui

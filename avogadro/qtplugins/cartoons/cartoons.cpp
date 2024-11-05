@@ -149,7 +149,8 @@ struct BackboneResidue
     : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
       secondaryStructure(sec)
 
-  {}
+  {
+  }
   Vector3f pos;
   Vector3ub color1;
   Vector3ub color2;
@@ -252,8 +253,7 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
   geometry->addDrawable(cylinders);
 
   Index i = 0;
-  for (auto it = backbone.begin();
-       it != backbone.end(); ++it) {
+  for (auto it = backbone.begin(); it != backbone.end(); ++it) {
     const auto& bone = *it;
     auto color1 = bone.color1;
     auto color2 = bone.color2;
@@ -478,4 +478,4 @@ void Cartoons::showRope(bool show)
   settings.setValue("cartoon/rope", show);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -1202,12 +1202,15 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
         ax0 * b0 * (ay1 + ay0 * by1) * (az2 + 2 * az1 * bz1 + az0 * bz2);
       qreal dg111 =
         b0 * (ax1 + ax0 * bx1) * (ay1 + ay0 * by1) * (az1 + az0 * bz1);
-      qreal dg400 = ay0 * az0 * b0 * (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 +
-                                      4 * ax1 * bx3 + ax0 * bx4);
-      qreal dg040 = ax0 * az0 * b0 * (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 +
-                                      4 * ay1 * by3 + ay0 * by4);
-      qreal dg004 = ax0 * ay0 * b0 * (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 +
-                                      4 * az1 * bz3 + az0 * bz4);
+      qreal dg400 =
+        ay0 * az0 * b0 *
+        (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 + 4 * ax1 * bx3 + ax0 * bx4);
+      qreal dg040 =
+        ax0 * az0 * b0 *
+        (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 + 4 * ay1 * by3 + ay0 * by4);
+      qreal dg004 =
+        ax0 * ay0 * b0 *
+        (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 + 4 * az1 * bz3 + az0 * bz4);
       qreal dg310 = az0 * b0 *
                     (ax3 + 3 * ax2 * bx1 + 3 * ax1 * bx2 + ax0 * bx3) *
                     (ay1 + ay0 * by1);
@@ -1611,12 +1614,15 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
         ax0 * b0 * (ay1 + ay0 * by1) * (az2 + 2 * az1 * bz1 + az0 * bz2);
       qreal dg111 =
         b0 * (ax1 + ax0 * bx1) * (ay1 + ay0 * by1) * (az1 + az0 * bz1);
-      qreal dg400 = ay0 * az0 * b0 * (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 +
-                                      4 * ax1 * bx3 + ax0 * bx4);
-      qreal dg040 = ax0 * az0 * b0 * (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 +
-                                      4 * ay1 * by3 + ay0 * by4);
-      qreal dg004 = ax0 * ay0 * b0 * (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 +
-                                      4 * az1 * bz3 + az0 * bz4);
+      qreal dg400 =
+        ay0 * az0 * b0 *
+        (ax4 + 4 * ax3 * bx1 + 6 * ax2 * bx2 + 4 * ax1 * bx3 + ax0 * bx4);
+      qreal dg040 =
+        ax0 * az0 * b0 *
+        (ay4 + 4 * ay3 * by1 + 6 * ay2 * by2 + 4 * ay1 * by3 + ay0 * by4);
+      qreal dg004 =
+        ax0 * ay0 * b0 *
+        (az4 + 4 * az3 * bz1 + 6 * az2 * bz2 + 4 * az1 * bz3 + az0 * bz4);
       qreal dg310 = az0 * b0 *
                     (ax3 + 3 * ax2 * bx1 + 3 * ax1 * bx2 + ax0 * bx3) *
                     (ay1 + ay0 * by1);
@@ -2194,4 +2200,4 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
   return 0.25 * value;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -43,7 +43,8 @@ public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
 private slots:
-  bool copy(Io::FileFormat *format); // returns bool so cut can reuse implementation.
+  bool copy(
+    Io::FileFormat* format); // returns bool so cut can reuse implementation.
   bool copyCJSON();
   void copySMILES();
   void copyInChI();

@@ -38,7 +38,7 @@ private slots:
   void showDialog();
 
 private:
-  QList<QAction *> m_actions;
+  QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
 };
 
