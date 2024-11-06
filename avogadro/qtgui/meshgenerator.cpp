@@ -62,15 +62,8 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 
   m_progmax = m_dim.x();
   
-  // Similar to setting up sliceSize and grid traversal boundaries in BlockMarchFunctor.cpp:
-  // sliceSize = dims[0] * dims[1];
-
-  // m_cube->lock()->unlock();
   return true;
 }
-
-// TODO: nx ko chhod do m_dim.x() hi rkho aur loop me use kro int use krke
-// doosra cheez...baaki sab theek ho jayega
 
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
@@ -512,7 +505,6 @@ void MeshGenerator::run()
   m_mesh->setStable(false);
   m_mesh->clear();
 
-  // m_verticesear();
 
   FlyingEdgesAlgorithmPass1();
   FlyingEdgesAlgorithmPass2();
@@ -529,7 +521,6 @@ void MeshGenerator::run()
   tris.resize(0);
 
 }
-
 
 
 void MeshGenerator::clear()
@@ -563,11 +554,6 @@ inline float MeshGenerator::offset(float val1, float val2)
     return 0.5;
   return (m_iso - val1) / (val2 - val1);
 }
-
-// This function is similar to interpolating positions in BlockMarchFunctor.cpp:
-// In BlockMarchFunctor.cpp: 
-//  T w = (isoval - val[v1]) / (val[v2] - val[v1]);
-//  Interpolation using lerp() function
 
 unsigned long MeshGenerator::duplicate(const Vector3i&, const Vector3f&)
 {
