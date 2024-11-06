@@ -93,14 +93,14 @@ public:
 
         // trim values
         // set on pass 1
-        size_t xl;
-        size_t xr;
+        int xl;
+        int xr;
 
         // modified on pass 2
         // set on pass 3
-        size_t xstart;
-        size_t ystart;
-        size_t zstart;
+        int xstart;
+        int ystart;
+        int zstart;
     };
 
 
@@ -116,7 +116,7 @@ public:
   const Core::Cube* cube() const { return m_cube; }
 
   inline void calcTrimValues(
-  size_t& xl, size_t& xr, size_t const& j, size_t const& k) const;
+  int& xl, int& xr, int const& j, int const& k) const;
 
 
   void calculateTotalPoints();
@@ -175,7 +175,7 @@ protected:
    */
   bool marchingCube(const Vector3i& pos);
 
-  bool isCutEdge(size_t const& i, size_t const& j, size_t const& k) const;
+  bool isCutEdge(int const& i, int const& j, int const& k) const;
 
   inline std::array<float, 3> interpolateOnCube(
     std::array<std::array<float, 3>, 8> const& pts,
@@ -206,7 +206,7 @@ protected:
   std::vector<gridEdge> gridEdges;
   std::vector<unsigned char> cubeCases;    // size (nx-1)*(ny-1)*(nz-1)
 
-  std::vector<size_t> triCounter;  // size of (ny-1)*(nz-1)
+  std::vector<int> triCounter;  // size of (ny-1)*(nz-1)
   std::vector<unsigned char> edgeCases; 
   Core::Array<Vector3f> points;  //
   Core::Array<Vector3f> normals; // The output

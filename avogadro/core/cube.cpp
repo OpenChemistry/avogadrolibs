@@ -33,17 +33,22 @@ std::vector<float>::const_iterator Cube::getRowIter(size_t j, size_t k) const
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
                      const Vector3i& points)
 {
-  // We can calculate all necessary properties and initialise our data
+  // Calculate the maximum dimension
+  int maxPoints = std::max({points.x(), points.y(), points.z()});
+  Vector3i equalPoints(maxPoints, maxPoints, maxPoints);
+
+  // Recalculate spacing based on equal points
   Vector3 delta = max_ - min_;
-  m_spacing =
-    Vector3(delta.x() / (points.x() - 1), delta.y() / (points.y() - 1),
-            delta.z() / (points.z() - 1));
+  m_spacing = Vector3(delta.x() / (equalPoints.x() - 1),
+                      delta.y() / (equalPoints.y() - 1),
+                      delta.z() / (equalPoints.z() - 1));
   m_min = min_;
   m_max = max_;
-  m_points = points;
+  m_points = equalPoints;
   m_data.resize(m_points.x() * m_points.y() * m_points.z());
   return true;
 }
+
 
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_, float spacing_)
 {

@@ -49,16 +49,6 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   m_passes = passes;
   m_reverseWinding = reverse;
 
-  // In BlockMarchFunctor.cpp:
-  // The volume reader setup happens here with dimensions, origin, and spacing.
-  // dims = volReader.imageData->getDimension();
-  // origin = volReader.imageData->getOrigin();
-  // spacing = volReader.imageData->getSpacing();
-  
-  // if (!m_cube->lock()->tryLock()) {
-  //   qDebug() << "Cannot get a read lock…";
-  //   return false;
-  // }
 
   for (unsigned int i = 0; i < 3; ++i)
     m_stepSize[i] = static_cast<float>(m_cube->spacing()[i]);
@@ -70,7 +60,6 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   triCounter.resize((m_dim.y() - 1) * (m_dim.z() - 1));
 
 
-  qDebug() << "initialized at first";
   m_progmax = m_dim.x();
   
   // Similar to setting up sliceSize and grid traversal boundaries in BlockMarchFunctor.cpp:
@@ -86,12 +75,12 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
   // Loop through z-dimension
-  size_t nx = m_dim.x();
-  size_t ny = m_dim.y();
-  size_t nz = m_dim.z();
+  int nx = m_dim.x();
+  int ny = m_dim.y();
+  int nz = m_dim.z();
 
-  for(size_t k = 0; k != nz; ++k) {
-  for(size_t j = 0; j != ny; ++j)
+  for(int k = 0; k != nz; ++k) {
+  for(int j = 0; j != ny; ++j)
   {
 
     auto curEdgeCases = edgeCases.begin() + (nx - 1) * (k * ny + j);
@@ -114,11 +103,12 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
   }
 }
 
-  for(size_t k = 0; k != nz; ++k){
-    for(size_t j = 0; j != ny; ++j)
+  for(int k = 0; k != nz; ++k){
+    for(int j = 0; j != ny; ++j)
     {
         gridEdge& curGridEdge = gridEdges[k * ny + j];
         curGridEdge.xl = m_dim.x(); 
+        
 
         for(int i = 1; i != m_dim.x(); ++i)
         {
@@ -138,13 +128,13 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass2()
 {
-    size_t nx = m_dim.x();
-    size_t ny = m_dim.y();
-    size_t nz = m_dim.z();
-    for(size_t k = 0; k != nz - 1; ++k){
-       for(size_t j = 0; j != ny - 1; ++j)
+    int nx = m_dim.x();
+    int ny = m_dim.y();
+    int nz = m_dim.z();
+    for(int k = 0; k != nz - 1; ++k){
+       for(int j = 0; j != ny - 1; ++j)
        {
-        size_t xl, xr;
+        int xl, xr;
         calcTrimValues(xl, xr, j, k); // xl, xr set in this function
 
         gridEdge& ge0 = gridEdges[k * ny + j];
@@ -158,7 +148,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
         auto const& ec3 = edgeCases.begin() + (m_dim.x()-1) * ((k+1) * m_dim.y() + j + 1);
 
         // Count the number of triangles along this row of cubes
-        size_t& curTriCounter = *(triCounter.begin() + k * (ny - 1) + j);
+        int& curTriCounter = *(triCounter.begin() + k * (ny - 1) + j);
 
 
         auto curCubeCaseIds = cubeCases.begin() + (m_dim.x() - 1) * (k * (m_dim.y() - 1) + j);
@@ -168,7 +158,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
 
 
 
-        for(size_t i = xl; i != xr; ++i)
+        for(int i = xl; i != xr; ++i)
         {
           bool isXEnd = (i == nx - 2);
 
@@ -226,25 +216,24 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
 void MeshGenerator::FlyingEdgesAlgorithmPass3()
 {
 
-    // qDebug() << "pass 3 started";
-    size_t tmp;
-    size_t triAccum = 0;
-    size_t nx = m_dim.x();
-    size_t ny = m_dim.y();
-    size_t nz = m_dim.z();
-    for(size_t k = 0; k != nz -1; ++k) {
-    for(size_t j = 0; j != ny-1; ++j)
+    int tmp;
+    int triAccum = 0;
+    int nx = m_dim.x();
+    int ny = m_dim.y();
+    int nz = m_dim.z();
+    for(int k = 0; k != nz -1; ++k) {
+    for(int j = 0; j != ny-1; ++j)
     {
-        size_t& curTriCounter = triCounter[k*(ny-1)+j];
+        int& curTriCounter = triCounter[k*(ny-1)+j];
 
         tmp = curTriCounter;
         curTriCounter = triAccum;
         triAccum += tmp;
     }}
 
-    size_t pointAccum = 0;
-    for(size_t k = 0; k != nz; ++k) {
-    for(size_t j = 0; j != ny; ++j)
+    int pointAccum = 0;
+    for(int k = 0; k != nz; ++k) {
+    for(int j = 0; j != ny; ++j)
     {
         gridEdge& curGridEdge = gridEdges[(k * ny) + j];
 
@@ -269,21 +258,21 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass4()
 {
-    size_t nx = m_dim.x();
-    size_t ny = m_dim.y();
-    size_t nz = m_dim.z();
+    int nx = m_dim.x();
+    int ny = m_dim.y();
+    int nz = m_dim.z();
 
- for(size_t k = 0; k != nz -1; ++k) {
-    for(size_t j = 0; j != ny-1; ++j)
+ for(int k = 0; k != nz -1; ++k) {
+    for(int j = 0; j != ny-1; ++j)
     {
         // find adjusted trim values
-        size_t xl, xr;
+        int xl, xr;
         calcTrimValues(xl, xr, j, k); // xl, xr set in this function
 
         if(xl == xr)
             continue;
 
-        size_t triIdx = triCounter[(k*(ny-1)) + j];
+        int triIdx = triCounter[(k*(ny-1)) + j];
         auto curCubeCaseIds = cubeCases.begin() + (m_dim.x()-1)*(k*(m_dim.y()-1) + j);
 
         gridEdge const& ge0 = gridEdges[k* m_dim.y() + j];
@@ -291,22 +280,22 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         gridEdge const& ge2 = gridEdges[(k+1)* m_dim.y() + j];
         gridEdge const& ge3 = gridEdges[(k+1)* m_dim.y() + j + 1];
 
-        size_t x0counter = 0;
-        size_t y0counter = 0;
-        size_t z0counter = 0;
+        int x0counter = 0;
+        int y0counter = 0;
+        int z0counter = 0;
 
-        size_t x1counter = 0;
-        size_t z1counter = 0;
+        int x1counter = 0;
+        int z1counter = 0;
 
-        size_t x2counter = 0;
-        size_t y2counter = 0;
+        int x2counter = 0;
+        int y2counter = 0;
 
-        size_t x3counter = 0;
+        int x3counter = 0;
 
         bool isYEnd = (j == ny-2);
         bool isZEnd = (k == nz-2);
 
-        for(size_t i = xl; i != xr; ++i)
+        for(int i = xl; i != xr; ++i)
         {
             bool isXEnd = (i == nx-2);
 
@@ -324,12 +313,12 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             // Add Points and normals.
             // Calculate global indices for triangles
-            std::array<size_t, 12> globalIdxs;
+            std::array<int, 12> globalIdxs;
 
             if(isCutCase[0])
             {
               // points-> array<vector3f>
-                size_t idx = ge0.xstart + x0counter;
+                int idx = ge0.xstart + x0counter;
                 std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 0);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 0);
 
@@ -341,7 +330,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[3])
             {
-                size_t idx = ge0.ystart + y0counter;
+                int idx = ge0.ystart + y0counter;
                 std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 3);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 3);
                 points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
@@ -352,7 +341,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[8])
             {
-                size_t idx = ge0.zstart + z0counter;
+                int idx = ge0.zstart + z0counter;
                 std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 8);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 8);
                 points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
@@ -363,7 +352,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[1])
             {
-                size_t idx = ge0.ystart + y0counter;
+                int idx = ge0.ystart + y0counter;
                 if(isXEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 1);
@@ -378,7 +367,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[9])
             {
-                size_t idx = ge0.zstart + z0counter;
+                int idx = ge0.zstart + z0counter;
                 if(isXEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 9);
@@ -392,7 +381,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[2])
             {
-                size_t idx = ge1.xstart + x1counter;
+                int idx = ge1.xstart + x1counter;
                 if(isYEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 2);
@@ -406,7 +395,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[10])
             {
-                size_t idx = ge1.zstart + z1counter;
+                int idx = ge1.zstart + z1counter;
 
                 if(isYEnd)
                 {
@@ -422,7 +411,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[4])
             {
-                size_t idx = ge2.xstart + x2counter;
+                int idx = ge2.xstart + x2counter;
                 if(isZEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 4);
@@ -438,7 +427,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[7])
             {
-                size_t idx = ge2.ystart + y2counter;
+                int idx = ge2.ystart + y2counter;
                 if(isZEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 7);
@@ -454,7 +443,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[11])
             {
-                size_t idx = ge1.zstart + z1counter;
+                int idx = ge1.zstart + z1counter;
                 if(isXEnd and isYEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 11);
@@ -469,7 +458,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[5])
             {
-                size_t idx = ge2.ystart + y2counter;
+                int idx = ge2.ystart + y2counter;
                 if(isXEnd and isZEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 5);
@@ -485,7 +474,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
             if(isCutCase[6])
             {
-                size_t idx = ge3.xstart + x3counter;
+                int idx = ge3.xstart + x3counter;
                 if(isYEnd and isZEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 6);
@@ -514,6 +503,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
 void MeshGenerator::run()
 {
+
   if (!m_cube || !m_mesh) {
     qDebug() << "No mesh or cube set - nothing to find isosurface of…";
     return;
@@ -522,32 +512,21 @@ void MeshGenerator::run()
   m_mesh->setStable(false);
   m_mesh->clear();
 
-
   // m_verticesear();
 
   FlyingEdgesAlgorithmPass1();
   FlyingEdgesAlgorithmPass2();
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
-  
-  qDebug() << "size-point" << m_dim.x();
-  // qDebug
-  qDebug() << "size-normals" << m_dim.y();
-  qDebug() << "tris" << m_dim.z(); 
 
   m_mesh->setVertices(points);
   m_mesh->setNormals(normals);
   m_mesh->setTriangles(tris);
   m_mesh->setStable(true);
 
-
   points.resize(0);
   normals.resize(0);
   tris.resize(0);
-
-  // m_normals.resize(0);
-  // m_vertices.resize(0);
-
 
 }
 
@@ -622,14 +601,14 @@ unsigned char MeshGenerator::calcCubeCase(
 }
 
 
-bool MeshGenerator::isCutEdge(size_t const& i, size_t const& j, size_t const& k) const
+bool MeshGenerator::isCutEdge(int const& i, int const& j, int const& k) const
 {
-  size_t nx = m_dim.x();
-  size_t ny = m_dim.y();
-  size_t nz = m_dim.z();
+  int nx = m_dim.x();
+  int ny = m_dim.y();
+  int nz = m_dim.z();
 
   // Assuming edgeCases are all set
-  size_t edgeCaseIdx = k * ((nx - 1) * ny) + (j * (nx - 1)) + i;
+  int edgeCaseIdx = k * ((nx - 1) * ny) + (j * (nx - 1)) + i;
   unsigned char edgeCase = edgeCases[edgeCaseIdx];
 
   if (edgeCase == 1 || edgeCase == 2)
@@ -639,7 +618,7 @@ bool MeshGenerator::isCutEdge(size_t const& i, size_t const& j, size_t const& k)
 
   if (j != ny - 1)
   {
-    size_t edgeCaseIdxY = (k * (nx - 1) * ny) + ((j + 1) * (nx - 1)) + i;
+    int edgeCaseIdxY = (k * (nx - 1) * ny) + ((j + 1) * (nx - 1)) + i;
     unsigned char edgeCaseY = edgeCases[edgeCaseIdxY];
 
     // If the sum is odd, the edge along the y-axis is cut
@@ -651,17 +630,15 @@ bool MeshGenerator::isCutEdge(size_t const& i, size_t const& j, size_t const& k)
 
   if (k != nz - 1)
   {
-    size_t edgeCaseIdxZ = ((k + 1) * (nx - 1) * ny) + (j * (nx - 1)) + i;
+    int edgeCaseIdxZ = ((k + 1) * (nx - 1) * ny) + (j * (nx - 1)) + i;
     unsigned char edgeCaseZ = edgeCases[edgeCaseIdxZ];
 
     // If the sum is odd, the edge along the z-axis is cut
     if ((edgeCase + edgeCaseZ) % 2 == 1)
     {
-      // qDebug() << "true return krega";
       return true;
     }
   }
-  // qDebug() << "false return krega";
   return false;
 }
 
@@ -683,9 +660,9 @@ unsigned char MeshGenerator::calcCaseEdge(bool const& prevEdge, bool const& curr
 }
 
 // 2000
-void MeshGenerator::calcTrimValues(size_t& xl, size_t& xr, size_t const& j, size_t const& k) const
+void MeshGenerator::calcTrimValues(int& xl, int& xr, int const& j, int const& k) const
 {
-  size_t ny = m_dim.y();
+  int ny = m_dim.y();
 
   const gridEdge& ge0 = gridEdges[k * ny + j];
   const gridEdge& ge1 = gridEdges[k * ny + j + 1];

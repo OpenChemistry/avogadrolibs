@@ -72,26 +72,44 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     triangles = mesh->triangles();
 
 
-    size_t index = 0;
-
-
-
     bool hasColors = (mesh->colors().size() != 0);
 
     auto* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
     mesh1->setOpacity(m_opacity);
-
-      mesh1->setColor(m_color1);
+    if (hasColors) {
+      auto colors = mesh->colors();
+      Core::Array<Vector3ub> colorsRGB(colors.size());
+      for (size_t i = 0; i < colors.size(); i++)
+        colorsRGB[i] = Vector3ub(colors[i].red() * 255, colors[i].green() * 255,
+                                 colors[i].blue() * 255);
+      mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
+    } else {
+    mesh1->setColor(m_color1);
+    mesh1->addVertices(mesh->vertices(), mesh->normals());
+    }   
     for (size_t i = 0; i < triangles.size(); ++i) {
       mesh1->addTriangle(triangles[i][0], triangles[i][1], triangles[i][2]);
     }
-      mesh1->addVertices(mesh->vertices(), mesh->normals());
-
       mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
                                           : Rendering::TranslucentPass);
+
+  if (mol.meshCount() >= 2) { // it's a molecular orbital, two parts
+
+      auto* mesh2 = new MeshGeometry;
+      geometry->addDrawable(mesh2);
+      mesh = mol.mesh(1);
+      mesh2->setColor(m_color2);
+      mesh2->setOpacity(m_opacity);
+      mesh2->addVertices(mesh->vertices(), mesh->normals());
+      for (size_t i = 0; i < triangles.size(); ++i) {
+      mesh2->addTriangle(triangles[i][0], triangles[i][1], triangles[i][2]);
+    }
+      mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
+                                            : Rendering::TranslucentPass);
+    }
   }
-}
+  }
 
 
 void Meshes::setOpacity(int opacity)
