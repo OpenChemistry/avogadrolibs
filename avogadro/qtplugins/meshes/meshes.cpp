@@ -68,12 +68,13 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 
     const Mesh* mesh = mol.mesh(0);
 
-    /// @todo Allow use of MeshGeometry without an index array when all vertices
-    /// form explicit triangles.
-    // Create index array:
-    Sequence indexGenerator;
-    Core::Array<unsigned int> indices(mesh->numVertices());
-    std::generate(indices.begin(), indices.end(), indexGenerator);
+    std::vector<std::array<size_t, 3> > triangles;
+    triangles = mesh->triangles();
+
+
+    size_t index = 0;
+
+
 
     bool hasColors = (mesh->colors().size() != 0);
 
@@ -81,41 +82,17 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     geometry->addDrawable(mesh1);
     mesh1->setOpacity(m_opacity);
 
-    if (hasColors) {
-      auto colors = mesh->colors();
-      Core::Array<Vector3ub> colorsRGB(colors.size());
-      for (size_t i = 0; i < colors.size(); i++)
-        colorsRGB[i] = Vector3ub(colors[i].red() * 255, colors[i].green() * 255,
-                                 colors[i].blue() * 255);
-      mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
-    } else { // probably a molecular orbital
       mesh1->setColor(m_color1);
+    for (size_t i = 0; i < triangles.size(); ++i) {
+      mesh1->addTriangle(triangles[i][0], triangles[i][1], triangles[i][2]);
+    }
       mesh1->addVertices(mesh->vertices(), mesh->normals());
-    }
-    mesh1->addTriangles(indices);
-    mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
-                                          : Rendering::TranslucentPass);
 
-    if (mol.meshCount() >= 2) { // it's a molecular orbital, two parts
-      auto* mesh2 = new MeshGeometry;
-      geometry->addDrawable(mesh2);
-      mesh = mol.mesh(1);
-      if (mesh->numVertices() < indices.size()) {
-        indices.resize(mesh->numVertices());
-      } else if (mesh->numVertices() > indices.size()) {
-        indexGenerator.reset();
-        indices.resize(mesh->numVertices());
-        std::generate(indices.begin(), indices.end(), indexGenerator);
-      }
-      mesh2->setColor(m_color2);
-      mesh2->setOpacity(m_opacity);
-      mesh2->addVertices(mesh->vertices(), mesh->normals());
-      mesh2->addTriangles(indices);
-      mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
-                                            : Rendering::TranslucentPass);
-    }
+      mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
+                                          : Rendering::TranslucentPass);
   }
 }
+
 
 void Meshes::setOpacity(int opacity)
 {

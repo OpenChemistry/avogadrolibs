@@ -119,6 +119,8 @@ public:
   size_t& xl, size_t& xr, size_t const& j, size_t const& k) const;
 
 
+  void calculateTotalPoints();
+
   inline unsigned char
   calcCubeCase(unsigned char const& ec0, unsigned char const& ec1,
                unsigned char const& ec2, unsigned char const& ec3) const;
@@ -208,7 +210,7 @@ protected:
   std::vector<unsigned char> edgeCases; 
   Core::Array<Vector3f> points;  //
   Core::Array<Vector3f> normals; // The output
-  Core::Array<Vector3f> tris;     
+  std::vector<std::array<size_t, 3> > tris;     
   int m_progmin;
   int m_progmax;
 

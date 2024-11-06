@@ -62,6 +62,20 @@ const Vector3f* Mesh::vertex(int n) const
   return &(m_vertices[n * 3]);
 }
 
+
+bool Mesh::setTriangles(const std::vector<std::array<size_t, 3> >& values)
+{
+  tris.clear();
+  tris = values;
+  return true;
+}
+
+const std::vector<std::array<size_t, 3> >& Mesh::triangles() const
+{
+  return tris;
+}
+
+
 bool Mesh::setVertices(const Core::Array<Vector3f>& values)
 {
   m_vertices.clear();

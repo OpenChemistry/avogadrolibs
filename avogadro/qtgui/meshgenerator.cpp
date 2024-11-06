@@ -39,6 +39,7 @@ MeshGenerator::~MeshGenerator()
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
                                int passes, bool reverse)
+
 {
   if (!cube_ || !mesh_)
     return false;
@@ -54,10 +55,10 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   // origin = volReader.imageData->getOrigin();
   // spacing = volReader.imageData->getSpacing();
   
-  if (!m_cube->lock()->tryLock()) {
-    qDebug() << "Cannot get a read lock…";
-    return false;
-  }
+  // if (!m_cube->lock()->tryLock()) {
+  //   qDebug() << "Cannot get a read lock…";
+  //   return false;
+  // }
 
   for (unsigned int i = 0; i < 3; ++i)
     m_stepSize[i] = static_cast<float>(m_cube->spacing()[i]);
@@ -75,7 +76,7 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   // Similar to setting up sliceSize and grid traversal boundaries in BlockMarchFunctor.cpp:
   // sliceSize = dims[0] * dims[1];
 
-  m_cube->lock()->unlock();
+  // m_cube->lock()->unlock();
   return true;
 }
 
@@ -90,13 +91,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
   size_t nz = m_dim.z();
 
   for(size_t k = 0; k != nz; ++k) {
-  // Loop through y-dimension    
   for(size_t j = 0; j != ny; ++j)
   {
-  // Calculate the starting position of edgeCases for the current row    
 
     auto curEdgeCases = edgeCases.begin() + (nx - 1) * (k * ny + j);
-  // Get an iterator to the current row of point values
 
     auto curPointValues = m_cube->getRowIter(j, k);
     
@@ -111,13 +109,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
 
       isGE[i % 2] = (curPointValues[i] >= m_iso);
 
-      // calculate edge case and up++date curEdgeCase      
       curEdgeCases[i-1] = calcCaseEdge(isGE[(i+1)%2], isGE[i%2]);
     }
   }
 }
-  // qDebug() << "kafi door aagya";
-
 
   for(size_t k = 0; k != nz; ++k){
     for(size_t j = 0; j != ny; ++j)
@@ -138,14 +133,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
           }  
         }
      }}
-  // qDebug() << "1st ended";
-
 }
 
 
 void MeshGenerator::FlyingEdgesAlgorithmPass2()
 {
-  // qDebug() << "pass 2 started";
     size_t nx = m_dim.x();
     size_t ny = m_dim.y();
     size_t nz = m_dim.z();
@@ -254,7 +246,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
     for(size_t k = 0; k != nz; ++k) {
     for(size_t j = 0; j != ny; ++j)
     {
-        gridEdge& curGridEdge = gridEdges[k * ny + j];
+        gridEdge& curGridEdge = gridEdges[(k * ny) + j];
 
         tmp = curGridEdge.xstart;
         curGridEdge.xstart = pointAccum;
@@ -271,8 +263,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 
     points.resize(pointAccum);
     normals.resize(pointAccum);
-    m_vertices.resize(0);
-    m_normals.resize(0);
+    tris.resize(triAccum);
 
 }
 
@@ -292,7 +283,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         if(xl == xr)
             continue;
 
-        size_t triIdx = triCounter[k*(ny-1) + j];
+        size_t triIdx = triCounter[(k*(ny-1)) + j];
         auto curCubeCaseIds = cubeCases.begin() + (m_dim.x()-1)*(k*(m_dim.y()-1) + j);
 
         gridEdge const& ge0 = gridEdges[k* m_dim.y() + j];
@@ -511,30 +502,13 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             const char* caseTri = caseTriangles[caseId]; // size 16
             for(int idx = 0; caseTri[idx] != -1; idx += 3)
             {
-
-
-                size_t globalIdx = globalIdxs[caseTri[idx]];
-                size_t globalIdx1 = globalIdxs[caseTri[idx + 1]];
-                size_t globalIdx2 = globalIdxs[caseTri[idx + 2]];
-
-
-
-                m_vertices.push_back(points[globalIdx]);
-                m_vertices.push_back(points[globalIdx1]);
-                m_vertices.push_back(points[globalIdx2]);
-
-                m_normals.push_back(normals[globalIdx]);
-                m_normals.push_back(normals[globalIdx1]);
-                m_normals.push_back(normals[globalIdx2]);    
-
-
-
-              
+                tris[triIdx][0] = globalIdxs[caseTri[idx]];
+                tris[triIdx][1] = globalIdxs[caseTri[idx+1]];
+                tris[triIdx][2] = globalIdxs[caseTri[idx+2]];
+                ++triIdx;                           
             }
         }
     }}
-  // qDebug() << "pass 4 ended";
-
 }
 
 
@@ -549,24 +523,30 @@ void MeshGenerator::run()
   m_mesh->clear();
 
 
-  m_vertices.clear();
-  m_normals.clear();
+  // m_verticesear();
 
   FlyingEdgesAlgorithmPass1();
   FlyingEdgesAlgorithmPass2();
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
   
-  qDebug() << "size-point" << m_vertices.size();
-  qDebug() << "size-normals" << m_normals.size();
+  qDebug() << "size-point" << m_dim.x();
+  // qDebug
+  qDebug() << "size-normals" << m_dim.y();
+  qDebug() << "tris" << m_dim.z(); 
 
-
-  m_mesh->setVertices(m_vertices);
-  m_mesh->setNormals(m_normals);
+  m_mesh->setVertices(points);
+  m_mesh->setNormals(normals);
+  m_mesh->setTriangles(tris);
   m_mesh->setStable(true);
 
-  m_normals.resize(0);
-  m_vertices.resize(0);
+
+  points.resize(0);
+  normals.resize(0);
+  tris.resize(0);
+
+  // m_normals.resize(0);
+  // m_vertices.resize(0);
 
 
 }
@@ -649,7 +629,7 @@ bool MeshGenerator::isCutEdge(size_t const& i, size_t const& j, size_t const& k)
   size_t nz = m_dim.z();
 
   // Assuming edgeCases are all set
-  size_t edgeCaseIdx = k * (nx - 1) * ny + j * (nx - 1) + i;
+  size_t edgeCaseIdx = k * ((nx - 1) * ny) + (j * (nx - 1)) + i;
   unsigned char edgeCase = edgeCases[edgeCaseIdx];
 
   if (edgeCase == 1 || edgeCase == 2)
@@ -659,7 +639,7 @@ bool MeshGenerator::isCutEdge(size_t const& i, size_t const& j, size_t const& k)
 
   if (j != ny - 1)
   {
-    size_t edgeCaseIdxY = k * (nx - 1) * ny + (j + 1) * (nx - 1) + i;
+    size_t edgeCaseIdxY = (k * (nx - 1) * ny) + ((j + 1) * (nx - 1)) + i;
     unsigned char edgeCaseY = edgeCases[edgeCaseIdxY];
 
     // If the sum is odd, the edge along the y-axis is cut
@@ -671,7 +651,7 @@ bool MeshGenerator::isCutEdge(size_t const& i, size_t const& j, size_t const& k)
 
   if (k != nz - 1)
   {
-    size_t edgeCaseIdxZ = (k + 1) * (nx - 1) * ny + j * (nx - 1) + i;
+    size_t edgeCaseIdxZ = ((k + 1) * (nx - 1) * ny) + (j * (nx - 1)) + i;
     unsigned char edgeCaseZ = edgeCases[edgeCaseIdxZ];
 
     // If the sum is odd, the edge along the z-axis is cut
@@ -728,15 +708,10 @@ MeshGenerator::interpolateOnCube(
 {
     unsigned char i0 = edgeVertices[edge][0];
     unsigned char i1 = edgeVertices[edge][1];
-    float weight;
 
-    float denom = isovals[i1] - isovals[i0];
-    if (fabs(denom) < 1e-9)
-    weight = 0.5f;
-    else
-    weight = (m_iso - isovals[i0]) / denom;
-  
+    float weight = (m_iso - isovals[i0]) / (isovals[i1] - isovals[i0]);
     return interpolate(pts[i0], pts[i1], weight);
+
 }
 
 inline std::array<float, 3>

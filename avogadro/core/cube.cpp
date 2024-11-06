@@ -206,63 +206,64 @@ std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
     std::array<std::array<float, 2>, 3> x;
     std::array<float, 3> run;
 
-    size_t dataIdx = i + j * m_points.x() + k * m_points.x() * m_points.y();
+    size_t dataIdx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
 
+        // std::cout << m_spacing[0];
     if (i == 0)
     {
         x[0][0] = m_data[dataIdx + 1];
         x[0][1] = m_data[dataIdx];
-        run[0] = m_spacing[0];
+        run[0] = m_spacing.x();
     }
     else if (i == (m_points.x() - 1))
     {
         x[0][0] = m_data[dataIdx];
         x[0][1] = m_data[dataIdx - 1];
-        run[0] = m_spacing[0];
+        run[0] = m_spacing.x();
     }
     else
     {
         x[0][0] = m_data[dataIdx + 1];
         x[0][1] = m_data[dataIdx - 1];
-        run[0] = 2 * m_spacing[0];
+        run[0] = 2 * m_spacing.x();
     }
 
     if (j == 0)
     {
         x[1][0] = m_data[dataIdx + m_points.x()];
         x[1][1] = m_data[dataIdx];
-        run[1] = m_spacing[1];
+        run[1] = m_spacing.y();
     }
     else if (j == (m_points.y() - 1))
     {
         x[1][0] = m_data[dataIdx];
         x[1][1] = m_data[dataIdx - m_points.x()];
-        run[1] = m_spacing[1];
+        run[1] = m_spacing.y();
     }
     else
     {
         x[1][0] = m_data[dataIdx + m_points.x()];
         x[1][1] = m_data[dataIdx - m_points.x()];
-        run[1] = 2 * m_spacing[1];
+        run[1] = 2 * m_spacing.y();
     }
 
     if (k == 0)
     {
-        x[2][0] = m_data[dataIdx + m_points.x() * m_points.y()];
+        x[2][0] = m_data[dataIdx + (m_points.x() * m_points.y())];
         x[2][1] = m_data[dataIdx];
-        run[2] = m_spacing[2];
+        run[2] = m_spacing.z();
     }
     else if (k == (m_points.z() - 1))
     {
         x[2][0] = m_data[dataIdx];
-        x[2][1] = m_data[dataIdx - m_points.x() * m_points.y()];
-        run[2] = m_spacing[2];
+        x[2][1] = m_data[dataIdx - (m_points.x() * m_points.y())];
+        run[2] = m_spacing.z();
     }
     else
     {
-        x[2][0] = m_data[dataIdx + m_points.x() * m_points.y()];
-        x[2][1] = m_data[dataIdx - m_points.x() * m_points.y()];
-        run[2] = 2 * m_spacing[2];
+        x[2][0] = m_data[dataIdx + (m_points.x() * m_points.y())];
+        x[2][1] = m_data[dataIdx - (m_points.x() * m_points.y())];
+        run[2] = 2 * m_spacing.z();
     }
 
     std::array<float, 3> ret;
@@ -295,7 +296,7 @@ std::array<float, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
 {
     std::array<float, 8> vals;
 
-    size_t idx = i + j * m_points.x() + k * m_points.x() * m_points.y();
+    size_t idx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
 
     vals[0] = getData(i, j, k);
     vals[1] = getData(i + 1, j, k);
@@ -313,7 +314,7 @@ std::array<float, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
 inline float
 Cube::getData(size_t i, size_t j, size_t k) const
 {
-    return m_data[k * m_points.x() * m_points.y() + j * m_points.x() + i];
+    return m_data[(k * m_points.x() * m_points.y()) + (j * m_points.x()) + i];
 }
 
 
@@ -321,8 +322,9 @@ std::array<std::array<float, 3>, 8> Cube::getPosCube(size_t i, size_t j, size_t 
 {
   std::array<std::array<float, 3>, 8> pos;
 
-  float xpos = m_min.x() + i * m_spacing.x();
-  float ypos = m_min.y() + j * m_spacing.y();
+  // std::cout<< m_spacing.x();
+  float xpos = m_min.x() + i * m_spacing.y();
+  float ypos = m_min.y() + j * m_spacing.x();
   float zpos = m_min.z() + k * m_spacing.z();
 
   pos[0][0] = xpos;
