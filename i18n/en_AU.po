@@ -6,21 +6,22 @@
 # ovari <ovari123@zoho.com>, 2022.
 # Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 # matterhorn103 <milner94@live.co.uk>, 2023.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2023-11-08 19:34+0000\n"
-"Last-Translator: matterhorn103 <milner94@live.co.uk>\n"
-"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
-"avogadro/avogadrolibs/en_GB/>\n"
-"Language: en_GB\n"
+"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Language-Team: English (Australia) <https://hosted.weblate.org/projects/"
+"avogadro/avogadrolibs/en_AU/>\n"
+"Language: en_AU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1508,10 +1509,8 @@ msgid "Modify Molecule"
 msgstr "Modify Molecule"
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "&Settings"
 msgid "Settings"
-msgstr "&Settings"
+msgstr "Settings"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -2757,7 +2756,7 @@ msgstr "Tools for crystal-specific editing/analysis."
 #, fuzzy
 #| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Colours:"
+msgstr "Colour axes:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3212,10 +3211,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr "Insert DNA / RNA fragments through a dialog."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "Molecule"
+msgstr "Molecule…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3588,38 +3585,28 @@ msgstr "Molecule Properties"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:231
-#, fuzzy
-#| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Export"
+msgstr "Export CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
-#, fuzzy
-#| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN files (*.wfn);;All files (*.*)"
+msgstr "CSV Files (*.csv);;All Files (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
-#, fuzzy
-#| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
-msgstr "Could not open file '%1' for writing."
+msgstr "Could not open the file for writing."
 
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Error reading structure file (%1)."
+msgstr "Error writing to the file."
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
-#| msgid "&Export"
 msgid "Export…"
-msgstr "&Export"
+msgstr "Export…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -3648,10 +3635,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Translate Atoms..."
+msgstr "Translate the scene."
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3706,10 +3691,8 @@ msgid "Configure Force Field…"
 msgstr "Configure Force Field…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Conformer Search"
+msgstr "Conformer Search…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -3780,10 +3763,8 @@ msgid "Optimizing Geometry (Open Babel)"
 msgstr "Optimizing Geometry (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
-#, fuzzy
-#| msgid "Generating MDL…"
 msgid "Generating…"
-msgstr "Generating MDL…"
+msgstr "Generating…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
@@ -3831,28 +3812,20 @@ msgstr ""
 "the original molecule (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molecule invalid. Cannot optimize geometry."
+msgstr "Molecule invalid. Cannot generate conformers."
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Cannot open file with Open Babel."
+msgstr "Cannot generate conformers with Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
-#| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "Perceiving Bonds (Open Babel)"
+msgstr "Generating Conformers (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:711
-#, fuzzy
-#| msgid "Conformer"
 msgid "Generate Conformers"
-msgstr "Conformer"
+msgstr "Generate Conformers"
 
 #: qtplugins/openbabel/openbabel.cpp:720
 msgid "Cannot open file with Open Babel."
@@ -4841,7 +4814,7 @@ msgstr "Space group features for crystals."
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Import Spectra"
+msgstr "Plot Spectra…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4850,13 +4823,11 @@ msgstr "Import Spectra"
 #| msgctxt "colormap"
 #| msgid "Spectral"
 msgid "Spectra"
-msgstr "Spectral"
+msgstr "Spectra"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "Display spectra and vibrational modes."
+msgstr "Display spectra plots."
 
 #: qtplugins/spectra/spectradialog.cpp:201
 #, fuzzy
@@ -4877,10 +4848,8 @@ msgid "NMR"
 msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
-msgstr "electron"
+msgstr "Electronic"
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
@@ -4888,10 +4857,8 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:219
 #: qtplugins/spectra/spectradialog.cpp:410
-#, fuzzy
-#| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "&Density Of States Settings"
+msgstr "Density of States"
 
 #: qtplugins/spectra/spectradialog.cpp:256
 msgid "Select Background Color"
@@ -4913,26 +4880,22 @@ msgstr "Select Imported Spectra Colour"
 #, fuzzy
 #| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "Vibrational Modes"
+msgstr "Vibrational Spectra"
 
 #: qtplugins/spectra/spectradialog.cpp:343
 #: qtplugins/spectra/spectradialog.cpp:357
-#, fuzzy
-#| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Wavenumber (cm<sup>-1</sup>)"
+msgstr "Wavenumbers (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Transition State"
+msgstr "Transmission"
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Import Spectra"
+msgstr "Raman Spectra"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
@@ -4942,43 +4905,32 @@ msgstr "Import Spectra"
 #, fuzzy
 #| msgid "Intensities"
 msgid "Intensity"
-msgstr "Intensities"
+msgstr "Intensity"
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "NMR Spectra"
-msgstr "Spectral"
+msgstr "NMR Spectra"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Shift (ppm)"
 msgid "Chemical Shift (ppm)"
-msgstr "Shift (ppm)"
+msgstr "Chemical Shift (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Electron Density"
+msgstr "Electronic Spectra"
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
-#, fuzzy
-#| msgid " eV"
 msgid "eV"
-msgstr " eV"
+msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "Circular Dichroism Spectra"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:398
-#, fuzzy
-#| msgid " eV"
 msgid "eV)"
-msgstr " eV"
+msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5202,16 +5154,12 @@ msgid "Stop the vibrational animation."
 msgstr "Stop the vibrational animation."
 
 #: qtplugins/vibrations/vibrations.h:33
-#, fuzzy
-#| msgid "Vibration"
 msgid "Vibrations"
-msgstr "Vibration"
+msgstr "Vibrations"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Display vibrational modes."
-msgstr "Display spectra and vibrational modes."
+msgstr "Display vibrational modes."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -5775,10 +5723,8 @@ msgstr "Defaults"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
-#| msgid "Save File"
 msgid "Save File…"
-msgstr "Save File"
+msgstr "Save File…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6876,10 +6822,8 @@ msgstr "Use Form"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
-#| msgid "Generate..."
 msgid "Generate…"
-msgstr "Generate..."
+msgstr "Generate…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6943,10 +6887,8 @@ msgstr "Method"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Number of conformers"
+msgstr "Number of conformers:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -6970,10 +6912,8 @@ msgstr "Genetic algorithm search"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
-#| msgid "Optimization algorithm:"
 msgid "Optimization per conformer:"
-msgstr "Optimization algorithm:"
+msgstr "Optimization per conformer:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -6989,10 +6929,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Children"
 msgid "Children:"
-msgstr "Children"
+msgstr "Children:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7003,10 +6941,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Mutability"
 msgid "Mutability:"
-msgstr "Mutability"
+msgstr "Mutability:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7020,14 +6956,12 @@ msgstr ""
 #, fuzzy
 #| msgid "Convergers"
 msgid "Convergence:"
-msgstr "Convergers"
+msgstr "Convergence:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Scoring method"
 msgid "Scoring method:"
-msgstr "Scoring method"
+msgstr "Scoring method:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -7641,10 +7575,8 @@ msgstr "Apply Colour"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
-#, fuzzy
-#| msgid "Spectra and Vibrations"
 msgid "Spectra Visualization"
-msgstr "Spectra and Vibrations"
+msgstr "Spectra Visualization"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
@@ -7663,17 +7595,15 @@ msgstr "&Close"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#, fuzzy
-#| msgid "Scale &Factor:"
 msgid "Scale Factor:"
-msgstr "Scale &Factor:"
+msgstr "Scale Factor:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #, fuzzy
 #| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Minimum:"
+msgstr "X-Axis Minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:115
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7695,21 +7625,17 @@ msgstr ""
 #, fuzzy
 #| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Minimum:"
+msgstr "Y-Axis Minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Peak width:"
 msgid "Peak Width:"
-msgstr "Peak width:"
+msgstr "Peak Width:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:216
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Threshold:"
 msgid "Peak Threshold:"
-msgstr "Threshold:"
+msgstr "Peak Threshold:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:224
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -7764,21 +7690,17 @@ msgstr "Background:"
 #, fuzzy
 #| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "Export Calculated Spectrum"
+msgstr "Calculated Spectra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Constant Size"
+msgstr "Font Size:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -7818,10 +7740,8 @@ msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "Operations"
+msgstr "&Options…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
@@ -8166,17 +8086,13 @@ msgstr "Ligand:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "Group %1"
+msgstr "Groups"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Group:"
-msgstr "Group %1"
+msgstr "Group:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8208,7 +8124,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogen"
+msgstr "nitro"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
