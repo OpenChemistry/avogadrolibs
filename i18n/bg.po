@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Apostol Penkov <apostol.penkov@gmail.com>, 2020.
 # Salif Mehmed <mail@salif.eu>, 2023.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2023-08-05 21:51+0000\n"
-"Last-Translator: Salif Mehmed <mail@salif.eu>\n"
+"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
 "Language: bg\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1823,11 +1824,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Отказ"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1974,9 +1973,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2908,20 +2906,18 @@ msgid "Configure…"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
 msgid "Freeze Selected Atoms"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
 msgid "Unfreeze Selected Atoms"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
 #| msgid "Calculate Energy"
 msgid "&Calculate"
-msgstr "Изчисляване на енергията"
+msgstr "Изчисляване"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -3129,7 +3125,7 @@ msgstr "&Вмъкване"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Вмъкване"
+msgstr "Вмъкване"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3168,7 +3164,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Вмъкване"
+msgstr "Вмъкване"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3628,20 +3624,16 @@ msgid " °"
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Angle Properties"
 msgid "Angle tolerance:"
-msgstr "Свойства на ъгъла"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Водород"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4623,9 +4615,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
 msgid "Select Atom"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4636,16 +4627,15 @@ msgid "Residues to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:491
-#, fuzzy
 msgid "Select Residue"
-msgstr "&Избиране"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1884
 #, fuzzy
 msgid "Select"
-msgstr "&Избиране"
+msgstr "Избиране"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -4799,7 +4789,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Внасяне на спектър"
+msgstr "спектър"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4810,10 +4800,8 @@ msgid "Spectra"
 msgstr "Спектри"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display standard molecular properties."
 msgid "Display spectra plots."
-msgstr "Показване на стандартни молекулярни свойства"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:201
 #, fuzzy
@@ -4831,10 +4819,8 @@ msgid "NMR"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
@@ -4885,17 +4871,15 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Внасяне на спектър"
+msgstr "спектър"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Intensity"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:369
 #, fuzzy
@@ -4910,10 +4894,8 @@ msgid "Chemical Shift (ppm)"
 msgstr "Химически файлове (*.parm7)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -4946,10 +4928,8 @@ msgid "Electron Density"
 msgstr "Плътност на електроните"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Spin Density"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5125,7 +5105,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:567
 #, fuzzy
 msgid "Insert Ligand"
-msgstr "&Вмъкване"
+msgstr "Вмъкване"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -7793,10 +7773,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Стронций"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8079,10 +8057,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Азот"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
