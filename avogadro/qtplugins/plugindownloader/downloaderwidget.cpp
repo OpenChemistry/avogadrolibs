@@ -356,12 +356,18 @@ void DownloaderWidget::handleRedirect()
       // Something went wrong
       QString errorString = m_reply->errorString();
       m_ui->readmeBrowser->append(
-        tr("Failed to download from %1: status code %2, %3\n").arg(m_reply->url().toString()).arg(statusCode).arg(errorString));
+        tr("Failed to download from %1: status code %2, %3\n")
+          .arg(m_reply->url().toString())
+          .arg(statusCode)
+          .arg(errorString));
     }
   } else {
     QString errorString = m_reply->errorString();
     m_ui->readmeBrowser->append(
-      tr("Failed to download from %1: status code %2, %3\n").arg(m_reply->url().toString()).arg(statusCode).arg(errorString));
+      tr("Failed to download from %1: status code %2, %3\n")
+        .arg(m_reply->url().toString())
+        .arg(statusCode)
+        .arg(errorString));
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
