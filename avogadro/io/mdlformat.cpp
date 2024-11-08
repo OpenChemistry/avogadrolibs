@@ -323,15 +323,15 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     newAtom.setPosition3d(pos);
     // check for formal charge in the atom block
     // CHG=1 for example
-    if (atomData.size() > 7) {
-      string chargeData = atomData[7];
+    if (atomData.size() > 8) {
+      string chargeData = atomData[8];
       if (startsWith(chargeData, "CHG=")) {
         int charge = lexicalCast<int>(chargeData.substr(4), ok);
         if (!ok) {
           appendError("Failed to parse atom charge: " + chargeData);
           return false;
         }
-        mol.setFormalCharge(newAtom.index(), charge);
+        newAtom.setFormalCharge(charge);
       }
     }
   } // end of atom block
