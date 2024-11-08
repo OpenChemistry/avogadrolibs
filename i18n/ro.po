@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-10-16 14:33+0000\n"
+"PO-Revision-Date: 2024-11-06 02:00+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.8-rc\n"
+"X-Generator: Weblate 5.8.2\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -3516,84 +3516,84 @@ msgstr "moleculă necunoscută"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:268
 msgid "Property"
-msgstr ""
+msgstr "Proprietate"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Molecule Name"
-msgstr ""
+msgstr "Numele moleculei"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:277
 msgid "Molecular Mass (g/mol)"
-msgstr ""
+msgstr "Masa moleculară (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:279
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Formula chimică"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:281
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Numărul de atomi"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:283
 msgid "Number of Bonds"
-msgstr ""
+msgstr "Numărul de legături"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:285
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Seturi de coordonate"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:287
 msgid "Number of Residues"
-msgstr ""
+msgstr "Numărul de reziduuri"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:289
 msgid "Number of Chains"
-msgstr ""
+msgstr "Număr de lanțuri"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:291
 msgid "Net Charge"
-msgstr ""
+msgstr "Sarcina netă"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Multiplicitatea spinului net"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "Energia HOMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:297
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "Energia LUMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:299
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "Energia SOMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Energia totală (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Energia punctului zero (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "Entalpia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:309
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "Entropia (kcal/mol-K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:311
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Energia liberă Gibbs (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -4228,11 +4228,11 @@ msgstr "Descriere"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Eroare la descărcarea datelor modulului."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Eroare la analizarea datelor modulului."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:309
 msgid ""

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-11-04 18:00+0000\n"
+"PO-Revision-Date: 2024-11-06 02:00+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -3543,7 +3543,7 @@ msgstr "Número de enlaces"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:285
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Conjuntos de coordenadas"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:287
 msgid "Number of Residues"
