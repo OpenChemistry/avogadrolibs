@@ -187,7 +187,6 @@ void DownloaderWidget::downloadREADME(int row, int col)
   QNetworkRequest request;
   setRawHeaders(&request);
   request.setUrl(url); // Set the url
-
   m_reply = m_NetworkAccessManager->get(request);
   connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
 }
@@ -283,7 +282,6 @@ void DownloaderWidget::downloadNext()
     QNetworkRequest request;
     setRawHeaders(&request);
     request.setUrl(url); // Set the url
-
     m_reply = m_NetworkAccessManager->get(request);
     connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
   }
@@ -332,24 +330,38 @@ bool DownloaderWidget::checkToInstall()
 }
 
 // The download url for Github is always a redirect to the actual zip
+// Using Qt 6 the redirect gets taken care of automatically, but on Qt 5 we
+// have to do it manually
+// m_reply is a QNetworkReply
 void DownloaderWidget::handleRedirect()
 {
+  int statusCode =
+    m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
   if (m_reply->error() == QNetworkReply::NoError) {
-    QVariant statusCode =
-      m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    if (statusCode.toInt() == 302) {
+    if (statusCode == 302) {
+      // Redirected, have to manually redirect
       QVariant possibleRedirectUrl =
         m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-
       QUrl _urlRedirectedTo = possibleRedirectUrl.toUrl();
-
       QNetworkRequest request;
       setRawHeaders(&request);
       request.setUrl(_urlRedirectedTo); // Set the url
       m_reply = m_NetworkAccessManager->get(request);
+      // Now we have the actual zip and can extract it
       connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
+    } else if (statusCode == 200) {
+      // Normal success response
+      unzipPlugin();
+    } else {
+      // Something went wrong
+      QString errorString = m_reply->errorString();
+      m_ui->readmeBrowser->append(
+        tr("Failed to download from %1: status code %2, %3\n").arg(m_reply->url().toString()).arg(statusCode).arg(errorString));
     }
   } else {
+    QString errorString = m_reply->errorString();
+    m_ui->readmeBrowser->append(
+      tr("Failed to download from %1: status code %2, %3\n").arg(m_reply->url().toString()).arg(statusCode).arg(errorString));
     m_reply->deleteLater();
     m_downloadList.removeLast();
     downloadNext();
