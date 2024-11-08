@@ -356,7 +356,9 @@ void DownloaderWidget::handleRedirect()
       // Something went wrong
       QString errorString = m_reply->errorString();
       m_ui->readmeBrowser->append(
-        tr("Failed to download from %1: status code %2, %3\n")
+        tr("Failed to download from %1: status code %2, %3\n",
+           "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 "
+           "is the error message (if any)")
           .arg(m_reply->url().toString())
           .arg(statusCode)
           .arg(errorString));
@@ -364,7 +366,9 @@ void DownloaderWidget::handleRedirect()
   } else {
     QString errorString = m_reply->errorString();
     m_ui->readmeBrowser->append(
-      tr("Failed to download from %1: status code %2, %3\n")
+      tr("Failed to download from %1: status code %2, %3\n",
+         "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 "
+         "is the error message (if any)")
         .arg(m_reply->url().toString())
         .arg(statusCode)
         .arg(errorString));
