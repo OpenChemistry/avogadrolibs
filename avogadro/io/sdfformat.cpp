@@ -28,6 +28,7 @@ std::vector<std::string> SdfFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("sdf");
+  ext.emplace_back("sd3");
   return ext;
 }
 
