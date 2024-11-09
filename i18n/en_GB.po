@@ -7,13 +7,14 @@
 # Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 # matterhorn103 <milner94@live.co.uk>, 2023.
 # Andi Chandler <andi@gowling.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-11-03 13:00+0000\n"
-"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"PO-Revision-Date: 2024-11-10 03:17+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -1401,7 +1402,7 @@ msgstr "Change Atom Formal Charge"
 
 #: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
-msgstr "Change Atom Color"
+msgstr "Change Atom Colour"
 
 #: qtgui/rwmolecule.cpp:257
 msgid "Change Atom Layer"
@@ -1583,7 +1584,7 @@ msgstr "Align to Axis"
 
 #: qtplugins/aligntool/aligntool.cpp:312
 msgid "Center the atom at the origin."
-msgstr "Center the atom at the origin."
+msgstr "Centre the atom at the origin."
 
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -3247,7 +3248,7 @@ msgstr "Colour:"
 
 #: qtplugins/label/label.cpp:153
 msgid "Distance from center:"
-msgstr "Distance from center:"
+msgstr "Distance from centre:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -5095,9 +5096,9 @@ msgid ""
 msgstr ""
 "Template Tool\n"
 "\n"
-"Insert fragments, including metal centers.\n"
-"Select an element and coordination geometry,then click to insert a "
-"fragment.\n"
+"Insert fragments, including metal centres.\n"
+"Select an element and coordination geometry,then click to insert a fragment."
+"\n"
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 
