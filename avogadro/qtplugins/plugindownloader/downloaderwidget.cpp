@@ -94,6 +94,19 @@ void DownloaderWidget::updateRepoData()
     // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
 
+    // quick checks that it's a valid JSON reply
+    // it should be a list, so [ ] characters
+    if (bytes.isEmpty() || bytes[0] != '[' || bytes[bytes.size() - 1] != ']') {
+      QMessageBox::warning(this, tr("Error"),
+                           tr("Error downloading plugin data."));
+      return;
+    }
+    // does it parse as JSON cleanly?
+    if (!json::accept(bytes.data())) {
+      QMessageBox::warning(this, tr("Error"), tr("Error parsing plugin data."));
+      return;
+    }
+
     // parse the json
     m_root = json::parse(bytes.data());
     int numRepos = m_root.size();

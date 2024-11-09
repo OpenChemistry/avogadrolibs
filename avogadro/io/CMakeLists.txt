@@ -9,12 +9,13 @@ avogadro_headers(IO
   fileformatmanager.h
   gromacsformat.h
   mdlformat.h
-  vaspformat.h
+  lammpsformat.h
   pdbformat.h
-  xyzformat.h
+  sdfformat.h
   trrformat.h
   turbomoleformat.h
-  lammpsformat.h
+  vaspformat.h
+  xyzformat.h
 )
 
 target_sources(IO PRIVATE
@@ -25,13 +26,14 @@ target_sources(IO PRIVATE
   fileformat.cpp
   fileformatmanager.cpp
   gromacsformat.cpp
+  lammpsformat.cpp
   mdlformat.cpp
-  vaspformat.cpp
   pdbformat.cpp
-  xyzformat.cpp
+  sdfformat.cpp
   trrformat.cpp
   turbomoleformat.cpp
-  lammpsformat.cpp
+  vaspformat.cpp
+  xyzformat.cpp
 )
 
 if(USE_HDF5)

@@ -12,10 +12,10 @@
 
 #include <avogadro/core/avogadrocore.h>
 
+#include <QRegularExpression>
 #include <QtCore/QJsonObject>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
-#include <QRegExp>
 
 class QJsonDocument;
 class QProcess;
@@ -278,13 +278,13 @@ or "Equilibrium Geometry". |
 ~~~
  *
  * The `patterns` array contains a collection of fixed strings, wildcard
- * expressions, and regular expressions (using the QRegExp syntax flavor, see
- * the QRegExp documentation) that are used to identify strings that should be
- * formatted.
+ * expressions, and regular expressions (using the QRegularExpression syntax
+ * flavor, see the QRegularExpression documentation) that are used to identify
+ * strings that should be formatted.
  * There must be one of the following members present in each pattern object:
- * - `regexp` A QRegExp-style regular expression. If no capture groups ("(...)")
- *   are defined, the entire match is formatted. If one or more capture groups,
- *   only the captured texts will be marked.
+ * - `regexp` A QRegularExpression-style regular expression. If no capture
+ *   groups ("(...)") are defined, the entire match is formatted. If one or more
+ *   capture groups, only the captured texts will be marked.
  * - `wildcard` A wildcard expression
  * - `string` An exact string to match.
  *
@@ -638,7 +638,7 @@ private:
   bool parseRules(const QJsonArray& json,
                   QtGui::GenericHighlighter& highligher) const;
   bool parseFormat(const QJsonObject& json, QTextCharFormat& format) const;
-  bool parsePattern(const QJsonValue& json, QRegExp& pattern) const;
+  bool parsePattern(const QJsonValue& json, QRegularExpression& pattern) const;
 
   // File extension of requested molecule format
   mutable QString m_moleculeExtension;

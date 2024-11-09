@@ -13,7 +13,7 @@
 #include <QtGui/QSyntaxHighlighter>
 #include <QtGui/QTextCharFormat>
 
-#include <QRegExp>
+#include <QRegularExpression>
 
 namespace Avogadro {
 namespace QtGui {
@@ -27,8 +27,8 @@ class AVOGADROQTGUI_EXPORT GenericHighlighter : public QSyntaxHighlighter
   Q_OBJECT
 public:
   /**
-   * @brief The Rule class stores a syntax highlighting rule as a set of QRegExp
-   * patterns and a text format.
+   * @brief The Rule class stores a syntax highlighting rule as a set of
+   * QRegularExpression patterns and a text format.
    */
   class AVOGADROQTGUI_EXPORT Rule
   {
@@ -37,7 +37,7 @@ public:
     ~Rule() {}
 
     /** Add the pattern @a regexp to this Rule. */
-    void addPattern(const QRegExp& regexp);
+    void addPattern(const QRegularExpression& regexp);
 
     /** Set this Rule's text format. */
     void setFormat(const QTextCharFormat& format);
@@ -47,7 +47,7 @@ public:
     void apply(const QString& text, GenericHighlighter& highlighter);
 
   private:
-    QList<QRegExp> m_patterns;
+    QList<QRegularExpression> m_patterns;
     QTextCharFormat m_format;
   };
 
@@ -94,7 +94,7 @@ private:
   QList<Rule> m_rules;
 };
 
-} // namespace QtPlugins
+} // namespace QtGui
 } // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H

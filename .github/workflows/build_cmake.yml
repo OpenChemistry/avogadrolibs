@@ -37,7 +37,7 @@ jobs:
           }
         - {
             name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-20.04,
+            os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",

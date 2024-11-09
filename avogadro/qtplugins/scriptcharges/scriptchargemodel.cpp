@@ -13,6 +13,7 @@
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/pdbformat.h>
+#include <avogadro/io/sdfformat.h>
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
@@ -155,7 +156,7 @@ Core::Array<double> ScriptChargeModel::potentials(
   QJsonObject json;
   json[m_formatString] = QString::fromStdString(intermediate);
   QJsonArray pointsArray;
-  for (const auto & i : points) {
+  for (const auto& i : points) {
     QJsonArray point;
     point << i.x() << i.y() << i.z();
     pointsArray.append(point);
@@ -199,8 +200,10 @@ ScriptChargeModel::Format ScriptChargeModel::stringToFormat(
     return Cjson;
   else if (str == "cml")
     return Cml;
-  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+  else if (str == "mdl" || str == "mol")
     return Mdl;
+  else if (str == "sdf")
+    return Sdf;
   else if (str == "pdb")
     return Pdb;
   else if (str == "xyz")
@@ -220,6 +223,8 @@ Io::FileFormat* ScriptChargeModel::createFileFormat(
       return new Io::MdlFormat;
     case Pdb:
       return new Io::PdbFormat;
+    case Sdf:
+      return new Io::SdfFormat;
     case Xyz:
       return new Io::XyzFormat;
     default:
@@ -357,7 +362,8 @@ void ScriptChargeModel::processElementString(const QString& str)
   QString str2(str);
   str2.replace(',', ' ');
   // then split on whitespace
-  QStringList strList = str2.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
+  QStringList strList =
+    str2.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
   foreach (QString sstr, strList) {
     // these should be numbers or ranges (e.g., 1-84)
     if (sstr.contains('-')) {
@@ -398,7 +404,7 @@ bool ScriptChargeModel::parseElements(const QJsonObject& ob)
 
   } else if (ob["elements"].isArray()) {
     QJsonArray arr = ob["elements"].toArray();
-    for (auto && i : arr) {
+    for (auto&& i : arr) {
       if (i.isString()) {
         processElementString(i.toString());
       } else if (i.isDouble()) {
@@ -411,4 +417,4 @@ bool ScriptChargeModel::parseElements(const QJsonObject& ob)
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
