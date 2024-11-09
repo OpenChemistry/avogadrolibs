@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-10-28 08:17+0000\n"
+"PO-Revision-Date: 2024-11-10 03:17+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hu/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1169,7 +1169,7 @@ msgstr "Töltés"
 
 #: qtgui/jsonwidget.cpp:201 qtgui/jsonwidget.cpp:206
 msgid "Multiplicity"
-msgstr "Sokszínűség"
+msgstr "Többszörösség"
 
 #: qtgui/jsonwidget.cpp:558
 #, qt-format
@@ -3518,84 +3518,84 @@ msgstr "ismeretlen molekula"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:268
 msgid "Property"
-msgstr ""
+msgstr "Tulajdonság"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Molecule Name"
-msgstr ""
+msgstr "Molekulanév"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:277
 msgid "Molecular Mass (g/mol)"
-msgstr ""
+msgstr "Molekulatömeg (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:279
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Kémiai képlet"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:281
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Atomok száma"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:283
 msgid "Number of Bonds"
-msgstr ""
+msgstr "Kötések száma"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:285
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Koordinátakészletek"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:287
 msgid "Number of Residues"
-msgstr ""
+msgstr "Maradékok száma"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:289
 msgid "Number of Chains"
-msgstr ""
+msgstr "Láncok száma"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:291
 msgid "Net Charge"
-msgstr ""
+msgstr "Nettó töltés"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Nettó centrifugálási többszörösség"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO energia (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:297
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO energia (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:299
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO energia (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Összenergia (hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Nullapont energia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "Entalpia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:309
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "Entrópia (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:311
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Gibbs-energia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -4241,11 +4241,11 @@ msgstr "Leírás"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Hiba történt a beépülő modul adatainak letöltése közben."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Hiba történt a beépülő modul adatainak elemzése közben."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:309
 msgid ""
@@ -6179,7 +6179,7 @@ msgstr "Ebben:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
-msgstr "Multiplicitás:"
+msgstr "Többszörösség:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
