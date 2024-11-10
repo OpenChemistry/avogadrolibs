@@ -13,7 +13,7 @@
 #include "vector.h"
 
 #include <vector>
-#include <array>  // Include this for std::array
+#include <array>
 
 namespace Avogadro {
 namespace Core {
@@ -239,7 +239,6 @@ public:
    */
   Mutex* lock() const { return m_lock; }
 
-  // Add declarations for the functions defined in cube.cpp
   /**
    * Compute the gradient at a specific point in the cube.
    * @param i x index
@@ -284,7 +283,6 @@ protected:
   Vector3 m_min, m_max, m_spacing;
   Vector3i m_points;
   float m_minValue, m_maxValue;
-  // Removed conflicting 'data' member variable
   std::string m_name;
   Type m_cubeType;
   Mutex* m_lock;
