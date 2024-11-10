@@ -259,7 +259,8 @@ public:
   std::array<float, 8> getValsCube(int i, int j, int k) const;
 
 
-  std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const;        
+  std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const; 
+       
   /**
    * Get the data value at the specified indices.
    * @param i x index

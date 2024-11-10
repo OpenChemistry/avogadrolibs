@@ -81,6 +81,10 @@ public:
    */
   void run() override;
 
+  /**
+  * It holds the range and starting offsets of isosurface-intersected 
+  * edges along the x, y, and z axes for each grid cell.
+  */
     struct gridEdge
     {
         gridEdge()
@@ -104,10 +108,29 @@ public:
     };
 
 
-
+  /**
+  * Pass 1 for flying edges. Pass1 detects and records 
+  * where the isosurface intersects each row of grid edges 
+  * along the x-axis.
+  */
   void FlyingEdgesAlgorithmPass1();
+
+  /**
+  * Pass2 assigns case identifiers to each grid cell based on 
+  * intersected edges and tallies the number of triangles needed 
+  * for mesh construction.
+  */
   void FlyingEdgesAlgorithmPass2();
+
+  /**
+  * Pass3 computes cumulative offsets for triangles 
+  * and vertices and allocates memory for the mesh structures.
+  */
   void FlyingEdgesAlgorithmPass3();
+
+  /**
+  * Calculates normals, triangles and vertices.    
+  */
   void FlyingEdgesAlgorithmPass4();
 
   /**
@@ -115,12 +138,16 @@ public:
    */
   const Core::Cube* cube() const { return m_cube; }
 
+  /**
+  * Determines the x-range (xl to xr) where isosurface intersections 
+  * occur, optimizing calculations within this range.
+  */
   inline void calcTrimValues(
   int& xl, int& xr, int const& j, int const& k) const;
 
-
-  void calculateTotalPoints();
-
+  /**
+  * Indicates which edges intersects the isosurface.
+  */
   inline unsigned char
   calcCubeCase(unsigned char const& ec0, unsigned char const& ec1,
                unsigned char const& ec2, unsigned char const& ec3) const;
@@ -146,6 +173,7 @@ public:
   int progressMaximum() { return m_progmax; }
 
 signals:
+
   /**
    * The current value of the calculation's progress.
    */
@@ -171,22 +199,32 @@ protected:
   unsigned long duplicate(const Vector3i& c, const Vector3f& pos);
 
   /**
-   * Perform a marching cubes step on a single cube.
-   */
-  bool marchingCube(const Vector3i& pos);
-
+  * isCutEdge checks whether the grid edge at position (i, j, k) is 
+  * intersected by the isosurface based on edge case conditions.
+  * @return Boolean if it's intersected or not.
+  */
   bool isCutEdge(int const& i, int const& j, int const& k) const;
 
+  /**
+  * It computes the 3D intersection point on a cube edge via interpolation.
+  */
   inline std::array<float, 3> interpolateOnCube(
     std::array<std::array<float, 3>, 8> const& pts,
     std::array<float, 8> const& isovals,
     unsigned char const& edge) const;
   
+  /**
+  * It linearly interpolates between two 3D points, a and b, using 
+  * the given weight to determine the intermediate position.
+  */
   inline std::array<float, 3> interpolate(
     std::array<float, 3> const& a,
     std::array<float, 3> const& b,
     float const& weight) const;
 
+  /**
+  * calcCaseEdge determines an edge case code (0–3) based on two boolean edge comparisons.        
+  */
   inline unsigned char calcCaseEdge(bool const& prevEdge, bool const& currEdge) const;   
 
   float m_iso;              /** The value of the isosurface. */
@@ -198,26 +236,18 @@ protected:
   Vector3f m_min;           /** The minimum point in the cube. */
   Vector3i m_dim;           /** The dimensions of the cube. */
 
-  std::array<std::array<float, 3>, 8> cube_t;
-  std::array<float, 8> scalarCube_t;
-
-  Core::Array<Vector3f> m_vertices, m_normals;
-  Core::Array<unsigned int> m_indices;
-  std::vector<gridEdge> gridEdges;
-  std::vector<unsigned char> cubeCases;    // size (nx-1)*(ny-1)*(nz-1)
-
-  std::vector<int> triCounter;  // size of (ny-1)*(nz-1)
-  std::vector<unsigned char> edgeCases; 
-  Core::Array<Vector3f> points;  //
-  Core::Array<Vector3f> normals; // The output
-  Core::Array<Vector3f> tris;     
+  Core::Array<Vector3f> points, normals;  
+  std::vector<gridEdge> gridEdges; // size (m_dim.y() * m_dim.z())
+  std::vector<unsigned char> cubeCases; //size ((m_dim.x() - 1) * (m_dim.y() - 1) * (m_dim.z() - 1))
+  std::vector<int> triCounter;  // size ((m_dim.y() - 1) * (m_dim.z() - 1))
+  std::vector<unsigned char> edgeCases; // size ((m_dim.x() - 1) * (m_dim.y()) * (m_dim.z()))
+  Core::Array<Vector3f> tris; // triangles of a mesh 
   int m_progmin;
   int m_progmax;
 
   /**
-   * These are the tables of constants for the marching cubes and tetrahedra
-   * algorithms. They are taken from the public domain source at
-   * http://local.wasp.uwa.edu.au/~pbourke/geometry/polygonise/
+   * These are the lookup tables for flying edges.
+   * Reference : https://github.com/sandialabs/miniIsosurface/blob/master/flyingEdges/util/MarchingCubesTables.h
    */
   static const unsigned char numTris[256]; 
   static const bool isCut[256][12];  

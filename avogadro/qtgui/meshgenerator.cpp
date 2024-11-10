@@ -68,15 +68,12 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
   // Loop through z-dimension
-  int nx = m_dim.x();
-  int ny = m_dim.y();
-  int nz = m_dim.z();
 
-  for(int k = 0; k != nz; ++k) {
-  for(int j = 0; j != ny; ++j)
+  for(int k = 0; k != m_dim.z(); ++k) {
+  for(int j = 0; j != m_dim.y(); ++j)
   {
 
-    auto curEdgeCases = edgeCases.begin() + (nx - 1) * (k * ny + j);
+    auto curEdgeCases = edgeCases.begin() + (m_dim.x() - 1) * (k * m_dim.y() + j);
 
     auto curPointValues = m_cube->getRowIter(j, k);
     
@@ -96,10 +93,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
   }
 }
 
-  for(int k = 0; k != nz; ++k){
-    for(int j = 0; j != ny; ++j)
+  for(int k = 0; k != m_dim.z(); ++k){
+    for(int j = 0; j != m_dim.y(); ++j)
     {
-        gridEdge& curGridEdge = gridEdges[k * ny + j];
+        gridEdge& curGridEdge = gridEdges[k * m_dim.y() + j];
         curGridEdge.xl = m_dim.x(); 
         
 
@@ -121,19 +118,16 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass2()
 {
-    int nx = m_dim.x();
-    int ny = m_dim.y();
-    int nz = m_dim.z();
-    for(int k = 0; k != nz - 1; ++k){
-       for(int j = 0; j != ny - 1; ++j)
+    for(int k = 0; k != m_dim.z() - 1; ++k){
+       for(int j = 0; j != m_dim.y() - 1; ++j)
        {
         int xl, xr;
         calcTrimValues(xl, xr, j, k); // xl, xr set in this function
 
-        gridEdge& ge0 = gridEdges[k * ny + j];
-        gridEdge& ge1 = gridEdges[k* ny +j + 1];
-        gridEdge& ge2 = gridEdges[(k+1) * ny + j];
-        gridEdge& ge3 = gridEdges[(k+1) * ny + j + 1];
+        gridEdge& ge0 = gridEdges[k * m_dim.y() + j];
+        gridEdge& ge1 = gridEdges[k* m_dim.y() +j + 1];
+        gridEdge& ge2 = gridEdges[(k+1) * m_dim.y() + j];
+        gridEdge& ge3 = gridEdges[(k+1) * m_dim.y() + j + 1];
 
         auto const& ec0 = edgeCases.begin() + (m_dim.x()-1) * (k * m_dim.y() + j);
         auto const& ec1 = edgeCases.begin() + (m_dim.x()-1) * (k * m_dim.y() + j + 1);
@@ -141,19 +135,19 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
         auto const& ec3 = edgeCases.begin() + (m_dim.x()-1) * ((k+1) * m_dim.y() + j + 1);
 
         // Count the number of triangles along this row of cubes
-        int& curTriCounter = *(triCounter.begin() + k * (ny - 1) + j);
+        int& curTriCounter = *(triCounter.begin() + k * (m_dim.y() - 1) + j);
 
 
         auto curCubeCaseIds = cubeCases.begin() + (m_dim.x() - 1) * (k * (m_dim.y() - 1) + j);
 
-        bool isYEnd = (j == ny - 2);
-        bool isZEnd = (k == nz - 2);
+        bool isYEnd = (j == m_dim.y() - 2);
+        bool isZEnd = (k == m_dim.z() - 2);
 
 
 
         for(int i = xl; i != xr; ++i)
         {
-          bool isXEnd = (i == nx - 2);
+          bool isXEnd = (i == m_dim.x() - 2);
 
           unsigned char caseId = calcCubeCase(ec0[i], ec1[i], ec2[i], ec3[i]); // todo cubeCase not decleared
           curCubeCaseIds[i] = caseId;
@@ -210,13 +204,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 {
     int tmp;
     int triAccum = 0;
-    int nx = m_dim.x();
-    int ny = m_dim.y();
-    int nz = m_dim.z();
-    for(int k = 0; k != nz -1; ++k) {
-    for(int j = 0; j != ny-1; ++j)
+    for(int k = 0; k != m_dim.z() -1; ++k) {
+    for(int j = 0; j != m_dim.y()-1; ++j)
     {
-        int& curTriCounter = triCounter[k*(ny-1)+j];
+        int& curTriCounter = triCounter[k*(m_dim.y()-1)+j];
 
         tmp = curTriCounter;
         curTriCounter = triAccum;
@@ -224,10 +215,10 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
     }}
 
     int pointAccum = 0;
-    for(int k = 0; k != nz; ++k) {
-    for(int j = 0; j != ny; ++j)
+    for(int k = 0; k != m_dim.z(); ++k) {
+    for(int j = 0; j != m_dim.y(); ++j)
     {
-        gridEdge& curGridEdge = gridEdges[(k * ny) + j];
+        gridEdge& curGridEdge = gridEdges[(k * m_dim.y()) + j];
 
         tmp = curGridEdge.xstart;
         curGridEdge.xstart = pointAccum;
@@ -250,12 +241,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass4()
 {
-    int nx = m_dim.x();
-    int ny = m_dim.y();
-    int nz = m_dim.z();
 
- for(int k = 0; k != nz -1; ++k) {
-    for(int j = 0; j != ny-1; ++j)
+ for(int k = 0; k != m_dim.z() -1; ++k) {
+    for(int j = 0; j != m_dim.y()-1; ++j)
     {
         // find adjusted trim values
         int xl, xr;
@@ -264,7 +252,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         if(xl == xr)
             continue;
 
-        int triIdx = triCounter[(k*(ny-1)) + j];
+        int triIdx = triCounter[(k*(m_dim.y()-1)) + j];
         auto curCubeCaseIds = cubeCases.begin() + (m_dim.x()-1)*(k*(m_dim.y()-1) + j);
 
         gridEdge const& ge0 = gridEdges[k* m_dim.y() + j];
@@ -284,12 +272,12 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
         int x3counter = 0;
 
-        bool isYEnd = (j == ny-2);
-        bool isZEnd = (k == nz-2);
+        bool isYEnd = (j == m_dim.y()-2);
+        bool isZEnd = (k == m_dim.z()-2);
 
         for(int i = xl; i != xr; ++i)
         {
-            bool isXEnd = (i == nx-2);
+            bool isXEnd = (i == m_dim.x()-2);
 
             unsigned char caseId = curCubeCaseIds[i];
 
@@ -589,12 +577,9 @@ unsigned char MeshGenerator::calcCubeCase(
 
 bool MeshGenerator::isCutEdge(int const& i, int const& j, int const& k) const
 {
-  int nx = m_dim.x();
-  int ny = m_dim.y();
-  int nz = m_dim.z();
 
   // Assuming edgeCases are all set
-  int edgeCaseIdx = k * ((nx - 1) * ny) + (j * (nx - 1)) + i;
+  int edgeCaseIdx = k * ((m_dim.x() - 1) * m_dim.y()) + (j * (m_dim.x() - 1)) + i;
   unsigned char edgeCase = edgeCases[edgeCaseIdx];
 
   if (edgeCase == 1 || edgeCase == 2)
@@ -602,9 +587,9 @@ bool MeshGenerator::isCutEdge(int const& i, int const& j, int const& k) const
     return true;
   }
 
-  if (j != ny - 1)
+  if (j != m_dim.y() - 1)
   {
-    int edgeCaseIdxY = (k * (nx - 1) * ny) + ((j + 1) * (nx - 1)) + i;
+    int edgeCaseIdxY = (k * (m_dim.x() - 1) * m_dim.y()) + ((j + 1) * (m_dim.x() - 1)) + i;
     unsigned char edgeCaseY = edgeCases[edgeCaseIdxY];
 
     // If the sum is odd, the edge along the y-axis is cut
@@ -614,9 +599,9 @@ bool MeshGenerator::isCutEdge(int const& i, int const& j, int const& k) const
     }
   }
 
-  if (k != nz - 1)
+  if (k != m_dim.z() - 1)
   {
-    int edgeCaseIdxZ = ((k + 1) * (nx - 1) * ny) + (j * (nx - 1)) + i;
+    int edgeCaseIdxZ = ((k + 1) * (m_dim.x() - 1) * m_dim.y()) + (j * (m_dim.x() - 1)) + i;
     unsigned char edgeCaseZ = edgeCases[edgeCaseIdxZ];
 
     // If the sum is odd, the edge along the z-axis is cut
@@ -648,12 +633,11 @@ unsigned char MeshGenerator::calcCaseEdge(bool const& prevEdge, bool const& curr
 // 2000
 void MeshGenerator::calcTrimValues(int& xl, int& xr, int const& j, int const& k) const
 {
-  int ny = m_dim.y();
 
-  const gridEdge& ge0 = gridEdges[k * ny + j];
-  const gridEdge& ge1 = gridEdges[k * ny + j + 1];
-  const gridEdge& ge2 = gridEdges[(k + 1) * ny + j];
-  const gridEdge& ge3 = gridEdges[(k + 1) * ny + j + 1];
+  const gridEdge& ge0 = gridEdges[k * m_dim.y() + j];
+  const gridEdge& ge1 = gridEdges[k * m_dim.y() + j + 1];
+  const gridEdge& ge2 = gridEdges[(k + 1) * m_dim.y() + j];
+  const gridEdge& ge3 = gridEdges[(k + 1) * m_dim.y() + j + 1];
 
   xl = std::min({ge0.xl, ge1.xl, ge2.xl, ge3.xl});
   xr = std::max({ge0.xr, ge1.xr, ge2.xr, ge3.xr});
