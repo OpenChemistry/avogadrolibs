@@ -30,5 +30,10 @@ MatrixX DefaultModel::partialCharges(Core::Molecule& mol) const
   return mol.partialCharges(m_identifier);
 }
 
+MatrixX DefaultModel::partialCharges(const Core::Molecule& mol) const
+{
+  return mol.partialCharges(m_identifier);
+}
+
 } // namespace Calc
 } // namespace Avogadro

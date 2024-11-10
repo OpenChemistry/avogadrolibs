@@ -156,9 +156,8 @@ std::string OBCharges::name() const
     return "";
 }
 
-MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
+MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
 {
-  // get the charges from obabel
   MatrixX charges(molecule.atomCount(), 1);
 
   if (m_identifier.empty()) {
@@ -168,10 +167,13 @@ MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
 
   // check to see if we already have them in the molecule
   charges = molecule.partialCharges(m_identifier);
-  // if there's a non-zero charge, then we're done
-  for (unsigned int i = 0; i < charges.rows(); ++i) {
-    if (abs(charges(i, 0)) > 0.00001)
-      return charges;
+  // if the number of charges matches the number of atoms
+  // and there's a non-zero charge, then we're done
+  if (charges.rows() == molecule.atomCount()) {
+    for (unsigned int i = 0; i < charges.rows(); ++i) {
+      if (abs(charges(i, 0)) > 0.00001)
+        return charges;
+    }
   }
 
   // otherwise, we're going to run obprocess to get the charges
@@ -202,6 +204,18 @@ MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
   if (abs(charges(0, 0)) < 0.00001)
     charges(0, 0) = 0.0001;
 
+  // check the size
+  if (output.size() != molecule.atomCount()) {
+    qDebug() << "Charges size mismatch.";
+    return charges;
+  }
+  return charges;
+}
+
+MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
+{
+  MatrixX charges =
+    partialCharges(static_cast<const Core::Molecule&>(molecule));
   // cache the charges and allow them to show up in output
   molecule.setPartialCharges(m_identifier, charges);
   return charges;

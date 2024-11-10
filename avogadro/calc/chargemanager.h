@@ -97,11 +97,28 @@ public:
   std::string nameForModel(const std::string& identifier) const;
 
   /**
+   * This method will calculate atomic partial charges and save them,
+   * if the model is available (i.e., the molecule will change)
    * Note that some models do not have well-defined atomic partial charges
    * @return atomic partial charges for the molecule, or 0.0 if undefined
    */
   MatrixX partialCharges(const std::string& identifier,
                          Core::Molecule& mol) const;
+
+  /**
+   * Calculate the atomic partial charges and leave the molecule unchanged.
+   * Note that some models do not have well-defined atomic partial charges
+   * @return the dipole moment for the molecule, or 0.0 if undefined
+   */
+  MatrixX partialCharges(const std::string& identifier,
+                         const Core::Molecule& mol) const;
+
+  /**
+   * @return the dipole moment for the molecule, or 0.0 if the model is not
+   * available
+   */
+  Vector3 dipoleMoment(const std::string& identifier,
+                       const Core::Molecule& mol) const;
 
   /**
    * @return the potential at the point for the molecule, or 0.0 if the model is

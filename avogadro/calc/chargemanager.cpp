@@ -6,11 +6,19 @@
 #include "chargemanager.h"
 #include "chargemodel.h"
 #include "defaultmodel.h"
-
 #include <algorithm>
 #include <memory>
 
 namespace Avogadro::Calc {
+
+// Helper function to convert a string to lowercase
+// to register all lower-case identifiers
+std::string toLower(const std::string& str)
+{
+  std::string result = str;
+  std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+  return result;
+}
 
 ChargeManager& ChargeManager::instance()
 {
@@ -48,17 +56,20 @@ bool ChargeManager::addModel(ChargeModel* model)
   // If we got here then the format is unique enough to be added.
   size_t index = m_models.size();
   m_models.push_back(model);
-  m_identifiers[model->identifier()] = index;
-  m_identifierToName[model->identifier()] = model->name();
+  std::string lowerId = toLower(model->identifier());
+  m_identifiers[lowerId] = index;
+  m_identifierToName[lowerId] = model->name();
 
   return true;
 }
 
 bool ChargeManager::removeModel(const std::string& identifier)
 {
-  auto ids = m_identifiers[identifier];
-  m_identifiers.erase(identifier);
-  m_identifierToName.erase(identifier);
+  std::string lowerId = toLower(identifier);
+
+  auto ids = m_identifiers[lowerId];
+  m_identifiers.erase(lowerId);
+  m_identifierToName.erase(lowerId);
 
   ChargeModel* model = m_models[ids];
 
@@ -72,7 +83,9 @@ bool ChargeManager::removeModel(const std::string& identifier)
 
 std::string ChargeManager::nameForModel(const std::string& identifier) const
 {
-  auto it = m_identifierToName.find(identifier);
+  std::string lowerId = toLower(identifier);
+
+  auto it = m_identifierToName.find(lowerId);
   if (it == m_identifierToName.end()) {
     return identifier;
   }
@@ -117,21 +130,45 @@ MatrixX ChargeManager::partialCharges(const std::string& identifier,
   // first check if the type is found in the molecule
   // (i.e., read from a file not computed dynamically)
   auto molIdentifiers = molecule.partialChargeTypes();
+  std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(identifier) != molIdentifiers.end()) {
-    return molecule.partialCharges(identifier);
+  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
+    return molecule.partialCharges(lowerId);
   }
 
   // otherwise go through our list
-  if (m_identifiers.find(identifier) == m_identifiers.end()) {
+  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
     MatrixX charges(molecule.atomCount(),
                     1); // we have to return something, so zeros
     return charges;
   }
 
-  const auto id = m_identifiers[identifier];
+  const auto id = m_identifiers[lowerId];
   const ChargeModel* model = m_models[id];
   return model->partialCharges(molecule);
+}
+
+Vector3 ChargeManager::dipoleMoment(const std::string& identifier,
+                                    const Core::Molecule& molecule) const
+{
+  // If the type is found in the molecule
+  // we'll use the DefaultModel to handle the dipole moment
+  auto molIdentifiers = molecule.partialChargeTypes();
+  std::string lowerId = toLower(identifier);
+
+  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
+    DefaultModel model(lowerId); // so it knows which charges to use
+    return model.dipoleMoment(molecule);
+  }
+
+  // otherwise go through our list
+  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
+    return Vector3(0.0, 0.0, 0.0);
+  }
+
+  const auto id = m_identifiers[lowerId];
+  const ChargeModel* model = m_models[id];
+  return model->dipoleMoment(molecule);
 }
 
 double ChargeManager::potential(const std::string& identifier,

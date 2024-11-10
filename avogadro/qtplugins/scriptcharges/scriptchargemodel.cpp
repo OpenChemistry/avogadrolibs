@@ -49,7 +49,7 @@ Calc::ChargeModel* ScriptChargeModel::newInstance() const
   return new ScriptChargeModel(m_interpreter->scriptFilePath());
 }
 
-MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
+MatrixX ScriptChargeModel::partialCharges(const Core::Molecule& mol) const
 {
   MatrixX charges(mol.atomCount(), 1);
 
@@ -108,10 +108,15 @@ MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
     charges(atom, 0) = charge;
     ++atom;
   }
+  return charges;
+}
 
-  // cache the charges
+MatrixX ScriptChargeModel::partialCharges(Core::Molecule& mol) const
+{
+  // just create a copy of the const version
+  MatrixX charges = partialCharges(static_cast<const Core::Molecule&>(mol));
+  // cache them
   mol.setPartialCharges(m_identifier, charges);
-
   return charges;
 }
 

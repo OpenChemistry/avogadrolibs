@@ -8,6 +8,8 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 
+#include <iostream>
+
 namespace Avogadro {
 
 using Core::Array;
@@ -23,7 +25,7 @@ ChargeModel::ChargeModel() : m_dielectric(1.0) {}
 
 ChargeModel::~ChargeModel() {}
 
-Vector3 ChargeModel::dipoleMoment(Molecule& mol)
+Vector3 ChargeModel::dipoleMoment(const Molecule& mol) const
 {
   // default is to get the set of partial atomic charges
   // (some models might do something more sophisticated)
@@ -32,6 +34,10 @@ Vector3 ChargeModel::dipoleMoment(Molecule& mol)
   const Array<Vector3> positions = mol.atomPositions3d();
 
   Vector3 dipole(0.0, 0.0, 0.0);
+  if (charges.rows() != positions.size())
+    std::cout << "Error: charges " << charges.rows() << " != positions "
+              << positions.size() << std::endl;
+
   for (unsigned int i = 0; i < charges.size(); ++i)
     dipole += charges(i, 0) * positions[i];
 
