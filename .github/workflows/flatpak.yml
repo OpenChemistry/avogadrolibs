@@ -1,0 +1,72 @@
+name: Build Flatpak
+
+on: [push, pull_request]
+
+jobs:
+  flatpak:
+    name: "Flatpak"
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
+      options: --privileged
+
+    steps:
+    - name: Checkout Flathub shared-modules
+      uses: actions/checkout@v4
+      with:
+        repository: flathub/shared-modules
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/openchemistry
+        submodules: false
+        
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+        
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v4
+      with:
+        path: avogadrolibs
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
+    
+    - name: Checkout avogadrogenerators
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogenerators
+        path: avogadrogenerators
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: crystals
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: molecules
+
+    - name: Build with flatpak-builder
+      uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      with:
+        bundle: avogadro2.flatpak
+        branch: nightly
+        manifest-path: avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml
+        cache-key: flatpak-builder-${{ github.sha }}
