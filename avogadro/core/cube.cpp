@@ -300,9 +300,7 @@ Cube::getGradCube(int i, int j, int k) const
 std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
 {
     std::array<float, 8> vals;
-
-    int idx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
-
+    
     vals[0] = getData(i, j, k);
     vals[1] = getData(i + 1, j, k);
     vals[2] = getData(i + 1, j + 1, k);
@@ -327,7 +325,6 @@ std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
 {
   std::array<std::array<float, 3>, 8> pos;
 
-  // std::cout<< m_spacing.x();
   float xpos = m_min.x() + (i * m_spacing.x());
   float ypos = m_min.y() + (j * m_spacing.y());
   float zpos = m_min.z() + (k * m_spacing.z());
