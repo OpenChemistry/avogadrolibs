@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-09-12 23:51+0000\n"
 "Last-Translator: simmon <simmon@nplob.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -1425,8 +1425,8 @@ msgid "Update Bond"
 msgstr "결합 업데이트"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "단위 격자 추가"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1727,12 +1727,12 @@ msgid "By Custom Color…"
 msgstr "사용자 정의 색상별…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "원자 색인별"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "거리별"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4571,9 +4571,9 @@ msgstr "중추 원자 선택…"
 msgid "Select Sidechain Atoms…"
 msgstr "곁사슬 원자 선택…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "물 선택…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "물 선택"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4598,10 +4598,6 @@ msgstr "선택(&S)"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "원소 선택"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "물 선택"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8326,6 +8322,18 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "단위 격자 추가"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "원자 색인별"
+
+#~ msgid "By Distance"
+#~ msgstr "거리별"
+
+#~ msgid "Select Water…"
+#~ msgstr "물 선택…"
 
 #~ msgid "&Copy"
 #~ msgstr "복사(&C)"

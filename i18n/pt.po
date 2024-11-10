@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-08 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
@@ -1473,8 +1473,8 @@ msgid "Update Bond"
 msgstr "Atualizar Ligação"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Adicionar Célula Unitária"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1789,14 +1789,12 @@ msgid "By Custom Color…"
 msgstr "Por Cor Personalizada..."
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Número Atômico."
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distância:"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4859,9 +4857,9 @@ msgstr "Número Atômico."
 msgid "Select Sidechain Atoms…"
 msgstr "Número Atômico."
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Número Atômico."
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4893,11 +4891,6 @@ msgstr "&Seleccionar"
 #| msgid "Select by Element..."
 msgid "Select Element"
 msgstr "Seleccionar por elemento..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Número Atômico."
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8803,6 +8796,21 @@ msgstr ""
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo."
 "pt,,,,,avogadro-devel@lists.sourceforge.net,david.rodrigues@gmail.com,,,"
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo.pt"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Adicionar Célula Unitária"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Número Atômico."
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distância:"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Número Atômico."
 
 #, fuzzy
 #~| msgid "Copy"

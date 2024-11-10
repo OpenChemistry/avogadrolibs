@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-08 08:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -1433,8 +1433,8 @@ msgid "Update Bond"
 msgstr "更新键"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "添加晶胞"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1736,12 +1736,12 @@ msgid "By Custom Color…"
 msgstr "自定义颜色…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "原子编号"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "按距离"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4641,9 +4641,10 @@ msgstr "选择骨架原子…"
 msgid "Select Sidechain Atoms…"
 msgstr "选择侧链原子…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "选择水…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+#, fuzzy
+msgid "Select Water"
+msgstr "原子索引"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 #, fuzzy
@@ -4674,11 +4675,6 @@ msgstr "选择(&S)"
 #| msgid "Symmetry Elements"
 msgid "Select Element"
 msgstr "对称元素"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "原子索引"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8413,6 +8409,18 @@ msgstr ""
 "devel@lists.sourceforge.net,chensiqiong@126.com,frankensteinyang@gmail.com,"
 "chaofeng111@gmail.com,allen19920930@gmail.com,skyxxzc@gmail.com,"
 "sihanzheng@gmail.com,cyliang532@gmail.com,zhangtengshuo@gmail.com"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "添加晶胞"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "原子编号"
+
+#~ msgid "By Distance"
+#~ msgstr "按距离"
+
+#~ msgid "Select Water…"
+#~ msgstr "选择水…"
 
 #~ msgid "&Copy"
 #~ msgstr "复制(&C)"

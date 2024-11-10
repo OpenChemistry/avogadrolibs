@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2016-06-10 06:57+0000\n"
 "Last-Translator: Cédric VALMARY (Tot en òc) <cvalmary@yahoo.fr>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
@@ -1388,7 +1388,7 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
+msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
@@ -1702,14 +1702,12 @@ msgid "By Custom Color…"
 msgstr "Color personalizada :"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Numèro de l'atòm"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distància"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4656,9 +4654,9 @@ msgstr "Numèro de l'atòm"
 msgid "Select Sidechain Atoms…"
 msgstr "Numèro de l'atòm"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Numèro de l'atòm"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4690,11 +4688,6 @@ msgstr "&Seleccionar"
 #| msgid "Color by Element"
 msgid "Select Element"
 msgstr "Coloriar segon l'element"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Numèro de l'atòm"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8459,6 +8452,18 @@ msgstr ""
 "cvalmary@yahoo.fr,,,avogadro-devel@lists.sourceforge.net,cvalmary@yahoo.fr,,,"
 "avogadro-devel@lists.sourceforge.net,cvalmary@yahoo.fr,,,avogadro-"
 "devel@lists.sourceforge.net,cvalmary@yahoo.fr"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Numèro de l'atòm"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distància"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Numèro de l'atòm"
 
 #, fuzzy
 #~ msgid "&Copy"

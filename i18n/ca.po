@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2023-03-20 18:38+0000\n"
 "Last-Translator: victor dargallo <victordargallo@disroot.org>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
@@ -1396,9 +1396,8 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Omple la cel·la unitat"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1715,14 +1714,12 @@ msgid "By Custom Color…"
 msgstr "Color personalitzat"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Index d'àtoms"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distància"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4727,9 +4724,9 @@ msgstr "Index d'àtoms"
 msgid "Select Sidechain Atoms…"
 msgstr "Index d'àtoms"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Index d'àtoms"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4761,11 +4758,6 @@ msgstr "&Selecciona"
 #| msgid "Color by Element"
 msgid "Select Element"
 msgstr "Color per element"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Index d'àtoms"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8634,6 +8626,22 @@ msgstr ""
 "planella@ubuntu.com,,,el.libre@gmail.com,,,avogadro-devel@lists.sourceforge."
 "net,,david.planella@ubuntu.com,,,el.libre@gmail.com,,,avogadro-devel@lists."
 "sourceforge.net,,david.planella@gmail.com,,,el.libre@gmail.com"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Omple la cel·la unitat"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Index d'àtoms"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distància"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Index d'àtoms"
 
 #, fuzzy
 #~ msgid "&Copy"

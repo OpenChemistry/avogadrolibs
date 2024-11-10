@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-10 03:17+0000\n"
 "Last-Translator: ovari <ovari123@zoho.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/avogadro/"
@@ -1467,8 +1467,8 @@ msgid "Update Bond"
 msgstr "Kötés frissítése"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Egységsejt hozzáadása"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1770,12 +1770,12 @@ msgid "By Custom Color…"
 msgstr "Egyedi szín szerint…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Atomi index szerint"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "Távolság szerint"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4653,9 +4653,9 @@ msgstr "Gerincatomok kijelölése…"
 msgid "Select Sidechain Atoms…"
 msgstr "Oldalláncatomok kijelölése…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Víz kijelölése…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Víz kijelölése"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4680,10 +4680,6 @@ msgstr "Ki&jelölés"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "Elem kijelölése"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Víz kijelölése"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8431,6 +8427,18 @@ msgstr "Óvári"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "E-mail-címek"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Egységsejt hozzáadása"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Atomi index szerint"
+
+#~ msgid "By Distance"
+#~ msgstr "Távolság szerint"
+
+#~ msgid "Select Water…"
+#~ msgstr "Víz kijelölése…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Másolás"

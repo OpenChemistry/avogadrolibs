@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2016-06-10 06:31+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Estonian <et@li.org>\n"
@@ -1376,7 +1376,7 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
+msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
@@ -1675,14 +1675,12 @@ msgid "By Custom Color…"
 msgstr "Kohandatud värv"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Aatomi number"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Värv kauguse järgi"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4551,9 +4549,9 @@ msgstr "Aatomi number"
 msgid "Select Sidechain Atoms…"
 msgstr "Aatomi number"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Aatomi number"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4581,11 +4579,6 @@ msgstr ""
 #| msgid "Select by Residue..."
 msgid "Select Element"
 msgstr "Vali jäägi järgi..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Aatomi number"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8237,6 +8230,18 @@ msgstr ""
 ",,aennok@gmail.com,,,aennok@gmail.com,avogadro-devel@lists.sourceforge.net,,,"
 "aennok@gmail.com,avogadro-devel@lists.sourceforge.net,,,aennok@gmail.com,"
 "avogadro-devel@lists.sourceforge.net"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Aatomi number"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Värv kauguse järgi"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Aatomi number"
 
 #, fuzzy
 #~ msgid "Molecule Name:"

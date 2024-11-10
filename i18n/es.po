@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-08 08:01+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
@@ -1467,8 +1467,8 @@ msgid "Update Bond"
 msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Añadir Celda Unidad"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1769,12 +1769,12 @@ msgid "By Custom Color…"
 msgstr "Por Color Personalizado…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Por Índice Atómico"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "Por Distancia"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4638,9 +4638,9 @@ msgstr "Seleccionar Átomos del Esqueleto…"
 msgid "Select Sidechain Atoms…"
 msgstr "Seleccionar Átomos de las Cadenas Laterales…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Seleccionar Agua…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Seleccionar Agua"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4665,10 +4665,6 @@ msgstr "&Seleccionar"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "Seleccionar Elemento"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Seleccionar Agua"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8554,6 +8550,18 @@ msgstr ""
 "grovertapia@hotmail.com,,joseb.gutierrez@gmail.com,,,,meilan@adinet.com.uy,"
 "tres.14159@gmail.com,monkey.libre@gmail.com,nzahlut@live.com,,paco@byasl."
 "com,,victorhera@gmail.com,memaljo@yahoo.com,"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Añadir Celda Unidad"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Por Índice Atómico"
+
+#~ msgid "By Distance"
+#~ msgstr "Por Distancia"
+
+#~ msgid "Select Water…"
+#~ msgstr "Seleccionar Agua…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Copiar"

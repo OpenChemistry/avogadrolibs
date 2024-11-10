@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-01-31 21:08+0000\n"
 "Last-Translator: Emir <bitigchi@me.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
@@ -1453,8 +1453,8 @@ msgid "Update Bond"
 msgstr "Bağı Güncelle"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Birim Hücresi Ekle"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1765,12 +1765,12 @@ msgid "By Custom Color…"
 msgstr "Özel Renge Göre…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Atom Dizinine Göre"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "Uzaklığa Göre"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4712,10 +4712,10 @@ msgstr "Atom dizini ile seç…"
 msgid "Select Sidechain Atoms…"
 msgstr "Atom dizini ile seç…"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
 #| msgid "Select by Atom Index…"
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Atom dizini ile seç…"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4747,12 +4747,6 @@ msgstr "&Seç"
 #| msgid "Select by Element…"
 msgid "Select Element"
 msgstr "Element ile seç…"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-#| msgid "Select by Atom Index…"
-msgid "Select Water"
-msgstr "Atom dizini ile seç…"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8554,6 +8548,20 @@ msgstr ""
 "abdurrahmanolgac@bireczaci.com,avogadro-devel@lists.sourceforge.net,,efe."
 "ciftci@linux.org.tr,,,,,kudretemre@hotmail.com,apshalasha@gmail.com,rainman."
 "neu@gmail.com,para4360@gmail.com,,ytopcu@gmail.com,,hhaydarakdag@gmail.com,"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Birim Hücresi Ekle"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Atom Dizinine Göre"
+
+#~ msgid "By Distance"
+#~ msgstr "Uzaklığa Göre"
+
+#, fuzzy
+#~| msgid "Select by Atom Index…"
+#~ msgid "Select Water…"
+#~ msgstr "Atom dizini ile seç…"
 
 #, fuzzy
 #~| msgid "Copy"

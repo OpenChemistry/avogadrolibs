@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2023-07-02 10:48+0000\n"
 "Last-Translator: Ajith <donate.zrqx@proton.me>\n"
 "Language-Team: Kannada <https://hosted.weblate.org/projects/avogadro/"
@@ -1376,7 +1376,7 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
+msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
@@ -1674,11 +1674,11 @@ msgid "By Custom Color…"
 msgstr "ನನ್ನಿಚ್ಛೆಯ ಬಣ್ಣ:"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
+msgid "By Atomic Index…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
+msgid "By Distance…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
@@ -4475,8 +4475,8 @@ msgstr ""
 msgid "Select Sidechain Atoms…"
 msgstr ""
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
 msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4501,10 +4501,6 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
-msgstr ""
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
 msgstr ""
 
 #: qtplugins/select/select.cpp:269

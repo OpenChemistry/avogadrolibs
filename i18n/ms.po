@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2021-04-04 15:26+0000\n"
 "Last-Translator: Kazuki278 <muadz.hakim.7@gmail.com>\n"
 "Language-Team: Malay <https://hosted.weblate.org/projects/avogadro/"
@@ -1393,9 +1393,8 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Tambah Sel &Unit"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1723,14 +1722,12 @@ msgid "By Custom Color…"
 msgstr "Warna Suai"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Indeks Atom"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Jarak"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4815,9 +4812,9 @@ msgstr "Indeks Atom"
 msgid "Select Sidechain Atoms…"
 msgstr "Indeks Atom"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Indeks Atom"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4849,11 +4846,6 @@ msgstr "&Pilih"
 #| msgid "Color by Element"
 msgid "Select Element"
 msgstr "Warna mengikut Unsur"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Indeks Atom"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8698,6 +8690,22 @@ msgid "Your emails"
 msgstr ""
 ",,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-devel@lists."
 "sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Tambah Sel &Unit"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Indeks Atom"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Jarak"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Indeks Atom"
 
 #, fuzzy
 #~ msgid "&Copy"

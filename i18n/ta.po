@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-09 12:00+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -1432,8 +1432,8 @@ msgid "Update Bond"
 msgstr "பத்திரத்தைப் புதுப்பிக்கவும்"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "அலகு கலத்தைச் சேர்க்கவும்"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1734,12 +1734,12 @@ msgid "By Custom Color…"
 msgstr "தனிப்பயன் வண்ணத்தால்…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "அணு குறியீட்டால்"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "தூரம் மூலம்"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4587,9 +4587,9 @@ msgstr "முதுகெலும்பு அணுக்களைத் த�
 msgid "Select Sidechain Atoms…"
 msgstr "சைட்செயின் அணுக்களைத் தேர்ந்தெடுக்கவும்…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "தண்ணீரைத் தேர்ந்தெடுக்கவும்…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "தண்ணீரைத் தேர்ந்தெடுக்கவும்"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4614,10 +4614,6 @@ msgstr "& தேர்ந்தெடுக்கவும்"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "உறுப்பு தேர்ந்தெடுக்கவும்"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "தண்ணீரைத் தேர்ந்தெடுக்கவும்"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8332,3 +8328,15 @@ msgstr "உங்கள் பெயர்கள்"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "உங்கள் மின்னஞ்சல்கள்"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "அலகு கலத்தைச் சேர்க்கவும்"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "அணு குறியீட்டால்"
+
+#~ msgid "By Distance"
+#~ msgstr "தூரம் மூலம்"
+
+#~ msgid "Select Water…"
+#~ msgstr "தண்ணீரைத் தேர்ந்தெடுக்கவும்…"

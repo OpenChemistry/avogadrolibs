@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-10 15:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
@@ -1400,9 +1400,8 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Aggiungi cellula dell'&unità"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1717,14 +1716,12 @@ msgid "By Custom Color…"
 msgstr "Colore personalizzato"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Indici Atomici"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distanza:"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4722,9 +4719,9 @@ msgstr "Indici Atomici"
 msgid "Select Sidechain Atoms…"
 msgstr "Indici Atomici"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Indici Atomici"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4756,11 +4753,6 @@ msgstr "&Seleziona"
 #| msgid "Color by Element"
 msgid "Select Element"
 msgstr "Colore per Elemento"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Indici Atomici"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8632,6 +8624,22 @@ msgstr ""
 "michel_gatti@yahoo.it,aegnor_isilra@hotmail.com,hattory@ubuntu.com,,"
 "primes2h@ubuntu.com,vito.fasano@gmail.com,mcarlo.95@gmail.com,,,"
 "lexluxsox@hotmail.it"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Aggiungi cellula dell'&unità"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Indici Atomici"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distanza:"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Indici Atomici"
 
 #, fuzzy
 #~| msgid "Copy"

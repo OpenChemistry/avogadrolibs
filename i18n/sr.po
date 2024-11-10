@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2021-08-20 01:04+0000\n"
 "Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -1483,8 +1483,8 @@ msgid "Update Bond"
 msgstr "Ispravite Vezu"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Dodajte jedinčnu ćeliju"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1811,13 +1811,12 @@ msgid "By Custom Color…"
 msgstr "Proizvoljna boja"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Pokazatelj atoma"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Udaljenost:"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4967,10 +4966,10 @@ msgstr "Biraj prema Atom indeksu ..."
 msgid "Select Sidechain Atoms…"
 msgstr "Biraj prema Atom indeksu ..."
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
 #| msgid "Select by Atom Index..."
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Biraj prema Atom indeksu ..."
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -5002,12 +5001,6 @@ msgstr "&Izaberi"
 #| msgid "Select by Element..."
 msgid "Select Element"
 msgstr "Biraj po elementu ..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-#| msgid "Select by Atom Index..."
-msgid "Select Water"
-msgstr "Biraj prema Atom indeksu ..."
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8967,6 +8960,21 @@ msgid "Your emails"
 msgstr ""
 "\"miroslavnikolic@rocketmail.com\",\"ivanstar61@gmail.com\","
 "\"nikolamatic225@gmail.com\""
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Dodajte jedinčnu ćeliju"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Pokazatelj atoma"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Udaljenost:"
+
+#, fuzzy
+#~| msgid "Select by Atom Index..."
+#~ msgid "Select Water…"
+#~ msgstr "Biraj prema Atom indeksu ..."
 
 #, fuzzy
 #~| msgid "Copy"

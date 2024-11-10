@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2023-11-03 21:33+0000\n"
 "Last-Translator: Ivanushka <oplata.kes1@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
@@ -1465,9 +1465,8 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Добавить &Элементарную ячейку"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1784,14 +1783,12 @@ msgid "By Custom Color…"
 msgstr "Другой цвет"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Номера атомов"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Расстояние"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4815,9 +4812,9 @@ msgstr "Номера атомов"
 msgid "Select Sidechain Atoms…"
 msgstr "Номера атомов"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Номера атомов"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4849,11 +4846,6 @@ msgstr "&Выделить"
 #| msgid "Color by Element"
 msgid "Select Element"
 msgstr "элементу"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Номера атомов"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8683,6 +8675,22 @@ msgstr ""
 "ru,,,5097@mail.ru,avogadro-devel@lists.sourceforge.net,annulen@yandex.ru,"
 "roman_romul@mail.ru,parukhin@gmail.com,,hippi90ub@gmail.com,madcad@yandex."
 "ru,,yuray@komyakino.ru,dn2010@km.ru"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Добавить &Элементарную ячейку"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Номера атомов"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Расстояние"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Номера атомов"
 
 #, fuzzy
 #~ msgid "&Copy"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-10 03:17+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -1437,8 +1437,8 @@ msgid "Update Bond"
 msgstr "Update Bond"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Add &Unit Cell"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1739,12 +1739,12 @@ msgid "By Custom Color…"
 msgstr "By Custom Colour…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "By Atomic Index"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "By Distance"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4589,9 +4589,9 @@ msgstr "Select Backbone Atoms…"
 msgid "Select Sidechain Atoms…"
 msgstr "Select Sidechain Atoms…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Select Water…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Select Water"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4616,10 +4616,6 @@ msgstr "&Select"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "Select Element"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Select Water"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8397,6 +8393,18 @@ msgstr ""
 "sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph."
 "odell@googlemail.com,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
 "com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Add &Unit Cell"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "By Atomic Index"
+
+#~ msgid "By Distance"
+#~ msgstr "By Distance"
+
+#~ msgid "Select Water…"
+#~ msgstr "Select Water…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Copy"

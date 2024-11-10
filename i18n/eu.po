@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2022-06-22 19:15+0000\n"
 "Last-Translator: Julen Larrucea <code@larrucea.eu>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
@@ -1423,8 +1423,8 @@ msgid "Update Bond"
 msgstr "Lotura Eguneratu"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Gelaxka Unitatea gehitu"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1738,14 +1738,12 @@ msgid "By Custom Color…"
 msgstr "Kolore Egokitua"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Atomo Aurkibideak"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distantzia"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4797,9 +4795,9 @@ msgstr "Atomo Aurkibideak"
 msgid "Select Sidechain Atoms…"
 msgstr "Atomo Aurkibideak"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Atomo Aurkibideak"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4831,11 +4829,6 @@ msgstr "&Hautatu"
 #| msgid "Select by Element..."
 msgid "Select Element"
 msgstr "Elementuz Hautatu..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Atomo Aurkibideak"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8671,6 +8664,21 @@ msgstr ""
 "sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-"
 "devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,"
 "avogadro-devel@lists.sourceforge.net,julenl@gmail.com"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Gelaxka Unitatea gehitu"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Atomo Aurkibideak"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distantzia"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Atomo Aurkibideak"
 
 #, fuzzy
 #~ msgid "&Copy"

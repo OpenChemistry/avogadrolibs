@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2021-09-26 12:57+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
@@ -1467,8 +1467,8 @@ msgid "Update Bond"
 msgstr "Ĝisdatigi Ligon"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Aldoni Unitan Ĉelon"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1777,14 +1777,12 @@ msgid "By Custom Color…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Elekti laŭ Atoma Indico…"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distanco:"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4826,10 +4824,10 @@ msgstr "Elekti laŭ Atoma Indico…"
 msgid "Select Sidechain Atoms…"
 msgstr "Elekti laŭ Atoma Indico…"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
 #| msgid "Select by Atom Index..."
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Elekti laŭ Atoma Indico…"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4861,12 +4859,6 @@ msgstr "Elekti (&S)"
 #| msgid "Select by Element..."
 msgid "Select Element"
 msgstr "Elekti laŭ Elemento…"
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-#| msgid "Select by Atom Index..."
-msgid "Select Water"
-msgstr "Elekti laŭ Atoma Indico…"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8819,6 +8811,22 @@ msgstr "phlostically"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "phlostically@example.com"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Aldoni Unitan Ĉelon"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Elekti laŭ Atoma Indico…"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distanco:"
+
+#, fuzzy
+#~| msgid "Select by Atom Index..."
+#~ msgid "Select Water…"
+#~ msgstr "Elekti laŭ Atoma Indico…"
 
 #, fuzzy
 #~| msgid "Copy"

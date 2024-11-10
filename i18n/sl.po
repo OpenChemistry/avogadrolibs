@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2016-06-10 06:51+0000\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -1395,9 +1395,8 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Dodaj &osnovno celico"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1725,14 +1724,12 @@ msgid "By Custom Color…"
 msgstr "Barva po meri"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Atomski indeksi"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Razdalja"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4811,9 +4808,9 @@ msgstr "Atomski indeksi"
 msgid "Select Sidechain Atoms…"
 msgstr "Atomski indeksi"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Atomski indeksi"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4845,11 +4842,6 @@ msgstr "&Izberi"
 #| msgid "Select by Element..."
 msgid "Select Element"
 msgstr "Izbor po elementu ..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Atomski indeksi"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8656,6 +8648,22 @@ msgid "Your emails"
 msgstr ""
 ",,,mateju@svn.gnome.org,,,,mateju@svn.gnome.org,,,,mateju@svn.gnome.org,,,,"
 "mateju@svn.gnome.org"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Dodaj &osnovno celico"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Atomski indeksi"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Razdalja"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Atomski indeksi"
 
 #, fuzzy
 #~ msgid "&Copy"

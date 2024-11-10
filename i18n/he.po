@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2016-06-10 06:32+0000\n"
 "Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -1376,7 +1376,7 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
+msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
@@ -1675,13 +1675,12 @@ msgid "By Custom Color…"
 msgstr "צבע מותאם אישית:"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
+msgid "By Atomic Index…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "צבע על פי מרחק"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4484,8 +4483,8 @@ msgstr ""
 msgid "Select Sidechain Atoms…"
 msgstr ""
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
 msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4513,10 +4512,6 @@ msgstr ""
 #| msgid "Select Atom Labels Color"
 msgid "Select Element"
 msgstr "בחר צבע לתוויות אטומים"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr ""
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -8146,6 +8141,10 @@ msgstr ""
 "dvolokita@gmail.com,loniedavid@gmail.com,,,,avogadro-devel@lists.sourceforge."
 "net,,dvolokita@gmail.com,loniedavid@gmail.com,,,,avogadro-devel@lists."
 "sourceforge.net,,dvolokita@gmail.com,loniedavid@gmail.com,"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "צבע על פי מרחק"
 
 #, fuzzy
 #~ msgid "YAeHMOP Band Structure"

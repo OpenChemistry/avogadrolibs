@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 02:32+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-11-10 15:10+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
@@ -1383,7 +1383,7 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
+msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
@@ -1689,13 +1689,12 @@ msgid "By Custom Color…"
 msgstr "Потребителски цвят:"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
+msgid "By Atomic Index…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Цвят по разстояние"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -4554,8 +4553,8 @@ msgstr ""
 msgid "Select Sidechain Atoms…"
 msgstr ""
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
 msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4582,10 +4581,6 @@ msgstr "&Избиране"
 #, fuzzy
 msgid "Select Element"
 msgstr "Елемент"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr ""
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8239,6 +8234,10 @@ msgstr ""
 "svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com,,,svetlisashkov@yahoo."
 "com,,,svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com,,,"
 "svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Цвят по разстояние"
 
 #, fuzzy
 #~| msgid "Copy"
