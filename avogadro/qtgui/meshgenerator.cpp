@@ -208,7 +208,6 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass3()
 {
-
     int tmp;
     int triAccum = 0;
     int nx = m_dim.x();
@@ -514,6 +513,7 @@ void MeshGenerator::run()
   m_mesh->setVertices(points);
   m_mesh->setNormals(normals);
   m_mesh->setTriangles(tris);
+  m_mesh->smooth(m_passes);
   m_mesh->setStable(true);
 
   points.resize(0);

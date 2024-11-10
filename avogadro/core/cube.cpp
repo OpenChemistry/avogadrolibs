@@ -24,7 +24,7 @@ Cube::~Cube()
   m_lock = nullptr;
 }
 
-std::vector<float>::const_iterator Cube::getRowIter(size_t j, size_t k) const
+std::vector<float>::const_iterator Cube::getRowIter(int j, int k) const
 {
     return m_data.cbegin() + m_points.x() * (k * m_points.y() + j);
 }
@@ -206,12 +206,12 @@ float Cube::value(int i, int j, int k) const
     return 0.0;
 }
 
-std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
+std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 {
     std::array<std::array<float, 2>, 3> x;
     std::array<float, 3> run;
 
-    size_t dataIdx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
+    int dataIdx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
 
         // std::cout << m_spacing[0];
     if (i == 0)
@@ -281,7 +281,7 @@ std::array<float, 3> Cube::computeGradient(size_t i, size_t j, size_t k) const
 }
 
 std::array<std::array<float, 3>, 8>
-Cube::getGradCube(size_t i, size_t j, size_t k) const
+Cube::getGradCube(int i, int j, int k) const
 {
     std::array<std::array<float, 3>, 8> grad;
 
@@ -297,11 +297,11 @@ Cube::getGradCube(size_t i, size_t j, size_t k) const
     return grad;
 }
 
-std::array<float, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
+std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
 {
     std::array<float, 8> vals;
 
-    size_t idx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
+    int idx = i + (j * m_points.x()) + (k * m_points.x() * m_points.y());
 
     vals[0] = getData(i, j, k);
     vals[1] = getData(i + 1, j, k);
@@ -317,20 +317,20 @@ std::array<float, 8> Cube::getValsCube(size_t i, size_t j, size_t k) const
 
 
 inline float
-Cube::getData(size_t i, size_t j, size_t k) const
+Cube::getData(int i, int j, int k) const
 {
     return m_data[(k * m_points.x() * m_points.y()) + (j * m_points.x()) + i];
 }
 
 
-std::array<std::array<float, 3>, 8> Cube::getPosCube(size_t i, size_t j, size_t k) const
+std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
 {
   std::array<std::array<float, 3>, 8> pos;
 
   // std::cout<< m_spacing.x();
-  float xpos = m_min.x() + i * m_spacing.y();
-  float ypos = m_min.y() + j * m_spacing.x();
-  float zpos = m_min.z() + k * m_spacing.z();
+  float xpos = m_min.x() + (i * m_spacing.x());
+  float ypos = m_min.y() + (j * m_spacing.y());
+  float zpos = m_min.z() + (k * m_spacing.z());
 
   pos[0][0] = xpos;
   pos[0][1] = ypos;

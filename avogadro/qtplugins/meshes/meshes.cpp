@@ -68,7 +68,8 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 
     const Mesh* mesh = mol.mesh(0);
 
-    std::vector<std::array<size_t, 3> > triangles;
+    Core::Array<Vector3f> triangles;
+    
     triangles = mesh->triangles();
 
 

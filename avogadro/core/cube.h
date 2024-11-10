@@ -135,7 +135,7 @@ public:
   /**
    * @return Const iterator to the beginning of a specific row in the cube data.
    */
-  std::vector<float>::const_iterator getRowIter(size_t j, size_t k) const;
+  std::vector<float>::const_iterator getRowIter(int j, int k) const;
 
   /**
    * @return Index of the point closest to the position supplied.
@@ -247,7 +247,7 @@ public:
    * @param k z index
    * @return Gradient vector at the specified point.
    */
-  std::array<float, 3> computeGradient(size_t i, size_t j, size_t k) const;
+  std::array<float, 3> computeGradient(int i, int j, int k) const;
 
   /**
    * Get the values of the eight corners of a cube cell.
@@ -256,10 +256,10 @@ public:
    * @param k z index
    * @return Array of values at the eight corners.
    */
-  std::array<float, 8> getValsCube(size_t i, size_t j, size_t k) const;
+  std::array<float, 8> getValsCube(int i, int j, int k) const;
 
 
-  std::array<std::array<float, 3>, 8> getGradCube(size_t i, size_t j, size_t k) const;        
+  std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const;        
   /**
    * Get the data value at the specified indices.
    * @param i x index
@@ -267,7 +267,7 @@ public:
    * @param k z index
    * @return Value at the specified indices.
    */
-  float getData(size_t i, size_t j, size_t k) const;
+  float getData(int i, int j, int k) const;
 
   /**
    * Get the positions of the eight corners of a cube cell.
@@ -276,7 +276,7 @@ public:
    * @param k z index
    * @return Array of positions at the eight corners.
    */
-std::array<std::array<float, 3>, 8> getPosCube(size_t i, size_t j, size_t k) const;
+std::array<std::array<float, 3>, 8> getPosCube(int i, int j, int k) const;
 
 protected:
   std::vector<float> m_data;
