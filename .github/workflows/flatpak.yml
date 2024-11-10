@@ -11,11 +11,6 @@ jobs:
       options: --privileged
 
     steps:
-    - name: Checkout Flathub shared-modules
-      uses: actions/checkout@v4
-      with:
-        repository: flathub/shared-modules
-
     - name: Checkout openchemistry
       uses: actions/checkout@v4
       with:
@@ -62,6 +57,12 @@ jobs:
       with:
         repository: openchemistry/molecules
         path: molecules
+
+    - name: Checkout Flathub shared-modules
+      uses: actions/checkout@v4
+      with:
+        repository: flathub/shared-modules
+        path: shared-modules
 
     - name: Build with flatpak-builder
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
