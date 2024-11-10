@@ -75,7 +75,7 @@ Select::Select(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(selectSidechainAtoms()));
   m_actions.append(action);
 
-  action = new QAction(tr("Select Water…"), this);
+  action = new QAction(tr("Select Water"), this);
   action->setProperty("menu priority", 850);
   connect(action, SIGNAL(triggered()), SLOT(selectWater()));
   m_actions.append(action);
