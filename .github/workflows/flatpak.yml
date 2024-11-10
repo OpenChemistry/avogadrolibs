@@ -63,11 +63,14 @@ jobs:
       with:
         repository: flathub/shared-modules
         path: shared-modules
+    
+    - name: Move manifest
+      run: mv avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
 
     - name: Build with flatpak-builder
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: avogadro2.flatpak
         branch: nightly
-        manifest-path: avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml
+        manifest-path: org.openchemistry.Avogadro2.yaml
         cache-key: flatpak-builder-${{ github.sha }}
