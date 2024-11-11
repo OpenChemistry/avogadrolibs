@@ -366,7 +366,6 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
         return;
       QTextStream templateStream(&templ);
 
-      CjsonFormat ff;
       if (!ff.readString(templateStream.readAll().toStdString(),
                          templateMolecule))
         return;
