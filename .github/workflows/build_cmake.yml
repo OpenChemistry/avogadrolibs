@@ -336,7 +336,7 @@ jobs:
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Cleanup
