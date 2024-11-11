@@ -16,47 +16,48 @@ jobs:
       with:
         repository: openchemistry/openchemistry
         submodules: false
+        path: src
         
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
-        path: avogadroapp
+        path: src/avogadroapp
         
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        path: avogadrolibs
+        path: src/avogadrolibs
 
     - name: Checkout i18n
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadro-i18n
-        path: avogadro-i18n
+        path: src/avogadro-i18n
     
     - name: Checkout avogadrogenerators
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogenerators
-        path: avogadrogenerators
+        path: src/avogadrogenerators
 
     - name: Checkout crystals
       uses: actions/checkout@v4
       with:
         repository: openchemistry/crystals
-        path: crystals
+        path: src/crystals
 
     - name: Checkout fragments
       uses: actions/checkout@v4
       with:
         repository: openchemistry/fragments
-        path: fragments
+        path: src/fragments
 
     - name: Checkout molecules
       uses: actions/checkout@v4
       with:
         repository: openchemistry/molecules
-        path: molecules
+        path: src/molecules
 
     - name: Checkout Flathub shared-modules
       uses: actions/checkout@v4
@@ -64,8 +65,12 @@ jobs:
         repository: flathub/shared-modules
         path: shared-modules
     
+    - name: Setup tmate session
+      if: failure()
+      uses: mxschmitt/action-tmate@v3
+
     - name: Move manifest
-      run: mv avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
+      run: mv src/avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
 
     - name: Build with flatpak-builder
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
@@ -73,4 +78,14 @@ jobs:
         bundle: avogadro2.flatpak
         branch: nightly
         manifest-path: org.openchemistry.Avogadro2.yaml
+        cache: false
         cache-key: flatpak-builder-${{ github.sha }}
+
+    - name: Cleanup
+      if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+      shell: bash
+      run: |
+        ls -la ./
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        ls -la ./
