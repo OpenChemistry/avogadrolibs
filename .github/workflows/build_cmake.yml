@@ -308,7 +308,7 @@ jobs:
         cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro2*.AppImage avogadroapp # for upload
+        mv Avogadro*.AppImage avogadroapp # for upload
       working-directory: ${{ runner.workspace }}/build
 
     - name: Notarize Mac DMG
