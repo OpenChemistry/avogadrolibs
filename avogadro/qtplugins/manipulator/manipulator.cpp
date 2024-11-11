@@ -50,7 +50,7 @@ Manipulator::Manipulator(QObject* parent_)
   m_activateAction->setToolTip(
     tr("Manipulation Tool\n\n"
        "Left Mouse: \tClick and drag to move atoms\n"
-       "Right Mouse: \tClick and drag to rotate selected atoms.\n"));
+       "Right Mouse: \tClick and drag to rotate atoms.\n"));
   setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
           SLOT(buttonClicked(QAbstractButton*)));
@@ -99,20 +99,27 @@ void Manipulator::buttonClicked(QAbstractButton* button)
     return;
   }
 
+  bool moveSelected = (m_toolWidget->moveComboBox->currentIndex() == 0);
+
   // apply values
   Vector3 delta(m_toolWidget->xTranslateSpinBox->value(),
                 m_toolWidget->yTranslateSpinBox->value(),
                 m_toolWidget->zTranslateSpinBox->value());
 
-  translate(delta);
+  translate(delta, moveSelected);
 
   Vector3 rotation(m_toolWidget->xRotateSpinBox->value(),
                    m_toolWidget->yRotateSpinBox->value(),
                    m_toolWidget->zRotateSpinBox->value());
   Vector3 center(0.0, 0.0, 0.0);
 
-  // Check if we're rotating around the origin or the centroid
+  // Check if we're rotating around the origin, the molecule centroid
+  // or the center of selected atoms
+  // == 0 is the default = origin
   if (m_toolWidget->rotateComboBox->currentIndex() == 1) {
+    // molecule centroid
+    center = m_molecule->molecule().centerOfGeometry();
+  } else if (m_toolWidget->rotateComboBox->currentIndex() == 2) {
     // center of selected atoms
     unsigned long selectedAtomCount = 0;
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -124,16 +131,13 @@ void Manipulator::buttonClicked(QAbstractButton* button)
     }
     if (selectedAtomCount > 0)
       center /= selectedAtomCount;
-
-  } else {
-    center = m_molecule->molecule().centerOfGeometry();
   }
 
   // Settings are in degrees
 #ifndef DEG_TO_RAD
 #define DEG_TO_RAD 0.0174532925
 #endif
-  rotate(rotation * DEG_TO_RAD, center);
+  rotate(rotation * DEG_TO_RAD, center, moveSelected);
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
 }
@@ -280,10 +284,12 @@ QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
   return nullptr;
 }
 
-void Manipulator::translate(Vector3 delta)
+void Manipulator::translate(Vector3 delta, bool moveSelected)
 {
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-    if (!m_molecule->atomSelected(i))
+    if (moveSelected && !m_molecule->atomSelected(i))
+      continue;
+    else if (!moveSelected && m_molecule->atomSelected(i))
       continue;
 
     Vector3 currentPos = m_molecule->atomPosition3d(i);
@@ -291,7 +297,7 @@ void Manipulator::translate(Vector3 delta)
   }
 }
 
-void Manipulator::rotate(Vector3 delta, Vector3 centroid)
+void Manipulator::rotate(Vector3 delta, Vector3 centroid, bool moveSelected)
 {
   // Rotate the selected atoms about the center
   // rotate only selected primitives
@@ -311,7 +317,9 @@ void Manipulator::rotate(Vector3 delta, Vector3 centroid)
   fragmentRotation.translate(-centroid);
 
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-    if (!m_molecule->atomSelected(i))
+    if (moveSelected && !m_molecule->atomSelected(i))
+      continue;
+    else if (!moveSelected && m_molecule->atomSelected(i))
       continue;
 
     Vector3 currentPos = m_molecule->atomPosition3d(i);
