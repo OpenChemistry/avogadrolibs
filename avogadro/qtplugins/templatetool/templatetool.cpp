@@ -548,9 +548,9 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
 
     if (m_molecule->bonds(selectedIndex).size() != 0) {
-      size_t moleculeCenterIndex =
+      moleculeCenterIndex =
         m_molecule->bonds(selectedIndex)[0].getOtherAtom(selectedIndex).index();
-      size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
+      moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
       for (size_t UID : m_toolWidget->selectedUIDs()) {
         size_t index = m_molecule->atomByUniqueId(UID).index();
         Vector3 newPos = m_molecule->atomPosition3d(index);
