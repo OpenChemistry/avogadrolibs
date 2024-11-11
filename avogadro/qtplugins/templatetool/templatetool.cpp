@@ -449,8 +449,10 @@ Matrix3 applyKabsch(std::vector<Vector3> templatePoints,
 void TemplateTool::atomLeftClick(QMouseEvent*)
 {
   size_t selectedIndex = m_clickedObject.index;
+  // if it's a valid selected atom and a hydrogen or dummy atom
   if (m_molecule->atom(selectedIndex).isValid() &&
-      m_molecule->atomicNumber(selectedIndex) == 1) {
+      (m_molecule->atomicNumber(selectedIndex) == 1 ||
+       m_molecule->atomicNumber(selectedIndex) == 0)) {
     m_toolWidget->selectedUIDs().push_back(
       m_molecule->atomUniqueId(selectedIndex));
     if (static_cast<int>(m_toolWidget->selectedUIDs().size()) !=
