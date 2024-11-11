@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-06 02:00+0000\n"
+"PO-Revision-Date: 2024-11-11 19:52+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -1462,7 +1462,7 @@ msgstr "Actualizare legătură"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Adaugă celulă unitate…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -4257,7 +4257,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Descărcarea de la %1 a eșuat: cod de stare %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
