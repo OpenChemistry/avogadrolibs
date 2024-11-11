@@ -287,15 +287,18 @@ jobs:
         OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
 
     - name: AppImage
-      if: matrix.config.os == 'ubuntu-20.04' && matrix.config.build_type == 'Release'
+      if: matrix.config.os == 'ubuntu-22.04' && matrix.config.build_type == 'Release'
       shell: bash
       run: |
         mkdir appdir
         mv prefix appdir/usr
-        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
         chmod a+x *.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
+
+        ./linuxdeploy-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines --plugin qt
         # add the custom AppRun
         rm appdir/AppRun
         cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
