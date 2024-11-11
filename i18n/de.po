@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"PO-Revision-Date: 2024-11-12 01:05+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3325,10 +3325,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:167
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Elementname."
+msgstr "Element & Nummer"
 
 #: qtplugins/label/label.cpp:169
 msgid "Element & ID"
@@ -4961,7 +4959,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Wellennummer (cm⁻¹)"
+msgstr "Wellennummern (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
 msgid "Transmission"
