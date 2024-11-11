@@ -269,36 +269,114 @@ void TemplateTool::reset()
 
 void TemplateTool::emptyLeftClick(QMouseEvent* e)
 {
-  QFile templ(":/templates/centers/" + m_toolWidget->coordinationString() +
-              ".cjson");
-  if (!templ.open(QFile::ReadOnly | QFile::Text))
-    return;
-  QTextStream templateStream(&templ);
-
-  CjsonFormat ff;
-  Molecule templateMolecule;
-  if (!ff.readString(templateStream.readAll().toStdString(), templateMolecule))
+  // Get the coordinates of the clicked position
+  if (m_renderer == nullptr)
     return;
 
   m_toolWidget->selectedUIDs().clear();
-
-  // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
-
-  // Add hydrogens around it following template
+  // center of inserted template
   Vector3 center(0.0f, 0.0f, 0.0f);
-  size_t centerIndex = 0;
-  for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
-    if (templateMolecule.atomicNumber(i) != 1) {
-      center = templateMolecule.atomPosition3d(i);
-      centerIndex = i;
-      templateMolecule.setAtomicNumber(i, m_toolWidget->atomicNumber());
-      templateMolecule.setFormalCharge(i, m_toolWidget->formalCharge());
-      continue;
+
+  CjsonFormat ff;
+  Molecule templateMolecule;
+
+  // before we do anything, check if it's a metal or a ligand
+  // in the dialog
+  int currentTab = m_toolWidget->currentTab();
+  if (currentTab == 0) { // metal center
+    QFile templ(":/templates/centers/" + m_toolWidget->coordinationString() +
+                ".cjson");
+    if (!templ.open(QFile::ReadOnly | QFile::Text))
+      return;
+    QTextStream templateStream(&templ);
+
+    if (!ff.readString(templateStream.readAll().toStdString(),
+                       templateMolecule))
+      return;
+
+    // Add the atom and hydrogens around it following template
+    size_t centerIndex = 0;
+    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+      if (templateMolecule.atomicNumber(i) != 1) {
+        center = templateMolecule.atomPosition3d(i);
+        centerIndex = i;
+        templateMolecule.setAtomicNumber(i, m_toolWidget->atomicNumber());
+        templateMolecule.setFormalCharge(i, m_toolWidget->formalCharge());
+        continue;
+      }
+    }
+    // done with metal center and coordination
+  } else {
+    // ligand
+    // check if it's clipboard first
+    if (m_toolWidget->ligandString() == tr("Clipboard")) {
+      const QMimeData* mimeData(QApplication::clipboard()->mimeData());
+
+      if (!mimeData) {
+        return;
+      }
+
+      // Try to find a reader that can handle the available mime-types.
+      Io::FileFormatManager& mgr = Io::FileFormatManager::instance();
+      QStringList mimeTypes(mimeData->formats());
+      Io::FileFormat* pastedFormat = nullptr;
+      QByteArray pastedData;
+      Io::FileFormat::Operations ops(Io::FileFormat::Read |
+                                     Io::FileFormat::String);
+      foreach (const QString& mimeType, mimeTypes) {
+        if ((pastedFormat =
+               mgr.newFormatFromMimeType(mimeType.toStdString(), ops))) {
+          pastedData = mimeData->data(mimeType);
+          break;
+        }
+      }
+
+      // No mime-type match, default to cjson.
+      if (!pastedFormat && mimeData->hasText()) {
+        pastedFormat = new Io::CjsonFormat;
+        pastedData = mimeData->text().toLatin1();
+      }
+
+      if (pastedFormat == nullptr)
+        return;
+
+      // we have a format, so try to insert the new bits into the molecule
+      bool success = pastedFormat->readString(
+        std::string(pastedData.constData(), pastedData.size()),
+        templateMolecule);
+
+      if (!success)
+        return;
+
+      center = templateMolecule.centerOfGeometry();
+      // done with clipboard ligands
+    } else { // a ligand file
+      QString path;
+      if (m_toolWidget->ligandString().endsWith(".cjson")) {
+        // we already have the full path .. from the insert browser
+        path = m_toolWidget->ligandString();
+      } else {
+        path = ":/templates/ligands/" + m_toolWidget->ligandString() + ".cjson";
+      }
+
+      QFile templ(path);
+      if (!templ.open(QFile::ReadOnly | QFile::Text))
+        return;
+      QTextStream templateStream(&templ);
+
+      CjsonFormat ff;
+      if (!ff.readString(templateStream.readAll().toStdString(),
+                         templateMolecule))
+        return;
+
+      center = templateMolecule.centerOfGeometry();
+      // done with ligand
     }
   }
 
+  // move the template to the clicked position
   for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
     Vector3 pos =
       templateMolecule.atomPosition3d(i) - center + atomPos.cast<double>();
@@ -317,7 +395,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
   // Update the clicked object
   m_clickedObject.type = Rendering::AtomType;
   m_clickedObject.molecule = m_molecule;
-  m_clickedObject.index = firstIndex + centerIndex;
+  m_clickedObject.index = firstIndex;
 
   // Emit changed signal
   m_molecule->emitChanged(changes);
@@ -384,7 +462,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     // - otherwise use the template
     Molecule templateMolecule;
 
-    if (m_toolWidget->ligandString() == "Clipboard") {
+    if (m_toolWidget->ligandString() == tr("Clipboard")) {
       const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
       if (!mimeData) {

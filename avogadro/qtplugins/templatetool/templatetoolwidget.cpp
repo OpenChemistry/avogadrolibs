@@ -156,6 +156,11 @@ QString TemplateToolWidget::coordinationString() const
   return m_centers.at(m_ui->coordinationComboBox->currentIndex());
 }
 
+int TemplateToolWidget::currentTab() const
+{
+  return m_ui->tabWidget->currentIndex();
+}
+
 unsigned char TemplateToolWidget::ligand() const
 {
   return static_cast<unsigned char>(m_ui->ligandComboBox->currentIndex());
