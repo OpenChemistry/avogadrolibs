@@ -24,7 +24,6 @@
 #include <locale>
 #include <map>
 #include <sstream>
-#include <streambuf>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -206,7 +205,7 @@ public:
           // Corrupt 3D position supplied for atom.
           return false;
         }
-      } else if ((attribute = node.attribute("xFract"))) {
+      } else if ((attribute == node.attribute("xFract"))) {
         if (!molecule->unitCell()) {
           error += "No unit cell defined. "
                    "Cannot interpret fractional coordinates.";
@@ -415,14 +414,6 @@ public:
   string filename;
   string error;
 };
-}
-
-CmlFormat::CmlFormat()
-{
-}
-
-CmlFormat::~CmlFormat()
-{
 }
 
 bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
@@ -690,4 +681,4 @@ std::vector<std::string> CmlFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // end Avogadro::Io namespace

@@ -12,8 +12,7 @@ namespace Ui {
 class ApbsOutputDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Dialog indicating a successful run of APBS.
@@ -50,7 +49,7 @@ public:
 private:
   Ui::ApbsOutputDialog* m_ui;
 };
-}
-}
+} // namespace Avogadro::QtPlugins
+
 
 #endif // AVOGADRO_QTPLUGINS_APBS_APBSOUTPUTDIALOG_H

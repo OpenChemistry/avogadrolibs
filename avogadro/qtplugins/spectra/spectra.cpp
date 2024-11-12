@@ -24,15 +24,13 @@ namespace Avogadro::QtPlugins {
 Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr)
 {
-  QAction* action = new QAction(this);
+  auto* action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Plot Spectra…"));
   action->setProperty("menu priority", -900);
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
 }
-
-Spectra::~Spectra() {}
 
 QList<QAction*> Spectra::actions() const
 {

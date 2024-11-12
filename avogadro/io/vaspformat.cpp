@@ -21,7 +21,6 @@ namespace Avogadro::Io {
 using std::getline;
 using std::map;
 using std::string;
-using std::vector;
 
 using Core::Array;
 using Core::Atom;
@@ -31,10 +30,6 @@ using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
-
-PoscarFormat::PoscarFormat() {}
-
-PoscarFormat::~PoscarFormat() {}
 
 bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -55,7 +50,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   // We'll use these throughout
   bool ok;
   string line;
-  vector<string> stringSplit;
+  std::vector<string> stringSplit;
 
   // First line is comment line
   getline(inStream, line);
@@ -101,8 +96,8 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Try a lexical cast here. If it fails, assume we have an atomic symbols list
   lexicalCast<unsigned int>(trimmed(stringSplit.at(0)), ok);
-  vector<string> symbolsList;
-  vector<unsigned char> atomicNumbers;
+  std::vector<string> symbolsList;
+  std::vector<unsigned char> atomicNumbers;
 
   if (!ok) {
     // Assume atomic symbols are here and store them
@@ -133,7 +128,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   stringSplit = split(line, ' ');
-  vector<unsigned int> atomCounts;
+  std::vector<unsigned int> atomCounts;
   for (auto & i : stringSplit) {
     auto atomCount = lexicalCast<unsigned int>(i);
     atomCounts.push_back(atomCount);
@@ -176,7 +171,7 @@ bool PoscarFormat::read(std::istream& inStream, Core::Molecule& mol)
     cart = false;
   }
 
-  vector<Vector3> atoms;
+  std::vector<Vector3> atoms;
   for (unsigned int atomCount : atomCounts) {
     for (size_t j = 0; j < atomCount; ++j) {
       getline(inStream, line);
@@ -321,10 +316,6 @@ std::vector<std::string> PoscarFormat::mimeTypes() const
   return mime;
 }
 
-OutcarFormat::OutcarFormat() {}
-
-OutcarFormat::~OutcarFormat() {}
-
 bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
   std::string buffer, dashedStr, positionStr, latticeStr;
@@ -463,4 +454,4 @@ std::vector<std::string> OutcarFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // end Avogadro::Io namespace

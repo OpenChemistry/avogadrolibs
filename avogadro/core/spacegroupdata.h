@@ -10,8 +10,7 @@
 // For example, [3] accesses data for hall number 3.
 // [0] is a dummy in every case. There are 530 entries in each one.
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 const unsigned short space_group_international_number[] = {
   0,   1,   2,   3,   3,   3,   4,   4,   4,   5,   5,   5,   5,   5,   5,
@@ -3419,7 +3418,6 @@ const char* space_group_transforms[] = {
   "1/2-x,1/2-y,1/2-z z,x,y 1/2+z,1/2+x,1/2+y -y,-z,-x 1/2-y,1/2-z,1/2-x"
 };
 
-} // Core
-} // Avogadro
+} // End Avogadro::Core namespace
 
 #endif // AVOGADRO_CORE_SPACE_GROUP_DATA

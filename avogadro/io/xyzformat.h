@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class XyzFormat xyzformat.h <avogadro/io/xyzformat.h>
@@ -20,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT XyzFormat : public FileFormat
 {
 public:
-  XyzFormat();
-  ~XyzFormat() override;
+  XyzFormat() = default;
+  ~XyzFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -48,7 +47,6 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // end Avogadro::Io namespace
 
 #endif // AVOGADRO_IO_XYZFORMAT_H

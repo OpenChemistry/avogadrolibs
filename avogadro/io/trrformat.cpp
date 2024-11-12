@@ -12,17 +12,14 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <iomanip>
 #include <istream>
 #include <ostream>
-#include <sstream>
 #include <string>
 
 using std::map;
 using std::pair;
 using std::string;
 using std::to_string;
-using std::vector;
 
 namespace Avogadro::Io {
 
@@ -30,9 +27,6 @@ using Core::Array;
 using Core::Atom;
 using Core::Molecule;
 using Core::UnitCell;
-
-#ifndef _WIN32
-#endif
 
 constexpr int GROMACS_MAGIC = 1993;
 constexpr int DIM = 3;
@@ -78,10 +72,6 @@ int isDouble(map<string, int>& header)
   }
   return size == SIZE_DOUBLE;
 }
-
-TrrFormat::TrrFormat() {}
-
-TrrFormat::~TrrFormat() {}
 
 bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -194,7 +184,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
   }
 
-  typedef map<string, unsigned char> AtomTypeMap;
+  using AtomTypeMap = map<string, unsigned char>;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
 

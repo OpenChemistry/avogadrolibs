@@ -31,7 +31,7 @@ class Spectra : public QtGui::ExtensionPlugin
 
 public:
   explicit Spectra(QObject* parent = nullptr);
-  ~Spectra() override;
+  ~Spectra() override = default;
 
   QString name() const override { return tr("Spectra"); }
 

@@ -10,15 +10,13 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
 #include <tuple>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
-typedef std::tuple<Index, Index, Index> Angle;
+using Angle = std::tuple<Index, Index, Index>;
 
 class AVOGADROCORE_EXPORT AngleIterator
 {
@@ -37,7 +35,7 @@ public:
   Angle begin();
 
   Angle end() const {
-    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
+    return std::make_tuple(Avogadro::MaxIndex, Avogadro::MaxIndex, Avogadro::MaxIndex);
   }
 
   Angle operator++();
@@ -47,11 +45,10 @@ public:
   }
 
 private:
-  Angle     m_current;
+  Angle m_current;
   const Molecule* m_mol;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ANGLEITERATOR_H

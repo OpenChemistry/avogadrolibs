@@ -18,8 +18,6 @@ BandDialog::BandDialog(QWidget* aParent, YaehmopSettings& yaehmopSettings)
   m_ui->setupUi(this);
 }
 
-BandDialog::~BandDialog() = default;
-
 int BandDialog::exec()
 {
   // Load the settings then exec

@@ -8,11 +8,7 @@
 #include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
 
-#include <iostream>
-
 namespace Avogadro::Core {
-
-using namespace std;
 
 AngleIterator::AngleIterator(const Molecule* mol)
   : m_current(0, 0, 0), m_mol(mol)
@@ -26,7 +22,7 @@ Angle AngleIterator::begin()
 Angle AngleIterator::operator++()
 {
   if (m_mol == nullptr)
-    return make_tuple(MaxIndex, MaxIndex, MaxIndex);
+    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
 
   Index a, b, c;
   std::tie(a, b, c) = m_current;
@@ -45,7 +41,7 @@ Angle AngleIterator::operator++()
         // we have a valid current angle, try to find a new edge
         for (const auto maybeC : graph.neighbors(b)) {
           if (maybeC != a && maybeC > c) {
-            m_current = make_tuple(a, b, maybeC);
+            m_current = std::make_tuple(a, b, maybeC);
             return m_current;
           }
 
@@ -80,7 +76,7 @@ Angle AngleIterator::operator++()
   } while (valid && b < count);
 
   // can't find anything
-  return make_tuple(MaxIndex, MaxIndex, MaxIndex);
+  return std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
 } // end ++ operator
 
 } // namespace Avogadro

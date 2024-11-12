@@ -8,12 +8,9 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 const unsigned char element_count = 119; //!< from 0 to 118
 
@@ -37,8 +34,8 @@ const unsigned char element_count = 119; //!< from 0 to 118
 class AVOGADROCORE_EXPORT Elements
 {
 public:
-  Elements();
-  ~Elements();
+  Elements() = default;
+  ~Elements() = default;
 
   /** @return the number of elements in the database. */
   static unsigned char elementCount();
@@ -102,7 +99,6 @@ public:
   static unsigned char valenceElectrons(unsigned char atomicNumber);
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ELEMENTS_H

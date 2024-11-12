@@ -6,7 +6,6 @@
 #include "molecule.h"
 
 #include "basisset.h"
-#include "color3f.h"
 #include "cube.h"
 #include "elements.h"
 #include "gaussianset.h"
@@ -19,13 +18,10 @@
 #include "unitcell.h"
 
 #include <algorithm>
-#include <array>
 #include <cassert>
 #include <iostream>
 
 namespace Avogadro::Core {
-
-using std::swap;
 
 Molecule::Molecule()
   : m_basisSet(nullptr), m_unitCell(nullptr),
@@ -568,11 +564,17 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 
 void Molecule::swapBond(Index a, Index b)
 {
+  // Allow ADL for swap
+  using std::swap;
+
   m_graph.swapEdgeIndices(a, b);
   swap(m_bondOrders[a], m_bondOrders[b]);
 }
 void Molecule::swapAtom(Index a, Index b)
 {
+  // Allow ADL for swap
+  using std::swap;
+
   Index max = a > b ? a : b;
   if (m_positions2d.size() >= max)
     swap(m_positions2d[a], m_positions2d[b]);
@@ -697,7 +699,7 @@ Molecule::BondType Molecule::addBond(const AtomType& a, const AtomType& b,
 size_t calcNlogN(size_t n)
 {
   size_t aproxLog = 1;
-  float aux = static_cast<float>(n);
+  auto aux = static_cast<float>(n);
   while (aux > 2.0f) {
     aux /= 2.0f;
     ++aproxLog;

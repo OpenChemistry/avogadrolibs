@@ -11,8 +11,7 @@
 
 class QProgressDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 class ApbsDialog;
 
 /**
@@ -58,7 +57,6 @@ private:
   QString m_pqrFileName;
   QString m_cubeFileName;
 };
-}
-}
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_APBS_APBS_H

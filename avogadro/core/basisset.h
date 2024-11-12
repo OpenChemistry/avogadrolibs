@@ -8,12 +8,9 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -33,12 +30,12 @@ public:
   /**
    * Constructor.
    */
-  BasisSet() {}
+  BasisSet() = default;
 
   /**
    * Destructor.
    */
-  virtual ~BasisSet() {}
+  virtual ~BasisSet() = default;
 
   /**
    * Clone.
@@ -195,7 +192,6 @@ inline unsigned int BasisSet::electronCount(ElectronType type) const
   }
 }
 
-} // End namesapce Core
-} // End namespace Avogadro
+} // End namesapce Avogadro::Core
 
 #endif

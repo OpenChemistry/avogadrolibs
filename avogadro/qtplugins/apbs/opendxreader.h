@@ -25,12 +25,12 @@ public:
   /**
    * Constructor for OpenDxReader.
    */
-  OpenDxReader();
+  OpenDxReader() = default;
 
   /**
    * Destructor for OpenDxReader.
    */
-  ~OpenDxReader();
+  ~OpenDxReader() = default;
 
   /**
    * Reads the file with the given @fileName. Returns false if an error
@@ -50,7 +50,7 @@ public:
   Core::Cube* cube() const;
 
 private:
-  Core::Cube* m_cube;
+  Core::Cube* m_cube = nullptr;
   QString m_errorString;
 };
 }

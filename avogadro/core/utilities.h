@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @brief Split the supplied @p string by the @p delimiter.
@@ -98,7 +97,6 @@ T lexicalCast(const std::string& inputString, bool& ok)
   return value;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // end Avogadro::Core namespace
 
 #endif // AVOGADRO_CORE_UTILITIES_H

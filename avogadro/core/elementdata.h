@@ -1,8 +1,7 @@
 #ifndef AVOGADRO_CORE_ELEMENTS_DATA
 #define AVOGADRO_CORE_ELEMENTS_DATA
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 const char* element_symbols[] = {
   "Xx", "H",  "He", "Li", "Be", "B",  "C",  "N",  "O",  "F",  "Ne", "Na",
@@ -411,7 +410,6 @@ unsigned char element_color[][3] = {
   { 252, 0, 17 },
   { 255, 0, 15 }
 };
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

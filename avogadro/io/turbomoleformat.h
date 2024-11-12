@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class TurbomoleFormat turbomoleformat.h <avogadro/io/turbomoleformat.h>
@@ -20,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT TurbomoleFormat : public FileFormat
 {
 public:
-  TurbomoleFormat();
-  ~TurbomoleFormat() override;
+  TurbomoleFormat() = default;
+  ~TurbomoleFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -48,7 +47,6 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // end Avogadro::Io namespace
 
 #endif // AVOGADRO_IO_TURBOMOLEFORMAT_H

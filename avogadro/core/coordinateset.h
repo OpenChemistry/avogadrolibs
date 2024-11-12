@@ -11,8 +11,7 @@
 #include <typeinfo>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class ArraySet coordinateset.h <avogadro/core/coordinateset.h>
@@ -61,9 +60,9 @@ protected:
   public:
     Holder(const ValueType& value) : m_content(value) {}
 
-    const std::type_info& type() const { return typeid(ValueType); }
+    const std::type_info& type() const override { return typeid(ValueType); }
 
-    PlaceHolder* clone() const { return new Holder(m_content); }
+    PlaceHolder* clone() const override { return new Holder(m_content); }
 
     ValueType m_content;
   };
@@ -86,7 +85,7 @@ class CoordinateSet : public ArraySet
 public:
   CoordinateSet() { m_content = new Holder<T>(T()); }
 
-  ~CoordinateSet() {}
+  ~CoordinateSet() = default;
 
   // Properties
   void resize(Index _size) { m_coordinates.resize(_size); }
@@ -104,7 +103,6 @@ private:
   std::vector<T> m_coordinates;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // end Avogadro::Core namespace
 
 #endif // AVOGADRO_CORE_COORDINATESET_H

@@ -22,8 +22,8 @@ namespace Io {
 class AVOGADROIO_EXPORT CjsonFormat : public FileFormat
 {
 public:
-  CjsonFormat();
-  ~CjsonFormat() override;
+  CjsonFormat() = default;
+  ~CjsonFormat() override = default;
 
   Operations supportedOperations() const override
   {

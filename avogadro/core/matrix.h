@@ -12,15 +12,15 @@
 namespace Avogadro {
 
 /** Typedefs for vector types. */
-typedef Eigen::Matrix<Real, 2, 2> Matrix2;
-typedef Eigen::Matrix<Real, 3, 3> Matrix3;
-typedef Eigen::Matrix<Real, 4, 4> Matrix4;
-typedef Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> MatrixX;
+using Matrix2 = Eigen::Matrix<Real, 2, 2>;
+using Matrix3 = Eigen::Matrix<Real, 3, 3>;
+using Matrix4 = Eigen::Matrix<Real, 4, 4>;
+using MatrixX = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
 
-typedef Eigen::Matrix<float, 2, 2> Matrix2f;
-typedef Eigen::Matrix<float, 3, 3> Matrix3f;
-typedef Eigen::Matrix<float, 4, 4> Matrix4f;
-typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> MatrixXf;
+using Matrix2f = Eigen::Matrix<float, 2, 2>;
+using Matrix3f = Eigen::Matrix<float, 3, 3>;
+using Matrix4f = Eigen::Matrix<float, 4, 4>;
+using MatrixXf = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>;
 
 } // end Avogadro namespace
 

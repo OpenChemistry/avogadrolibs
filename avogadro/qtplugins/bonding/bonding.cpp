@@ -21,7 +21,7 @@ namespace Avogadro::QtPlugins {
 using Core::Array;
 using Core::Elements;
 
-typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
+using NeighborListType = Avogadro::Core::Array<Avogadro::Core::Bond>;
 
 Bonding::Bonding(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
@@ -48,8 +48,6 @@ Bonding::Bonding(QObject* parent_)
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
   connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
 }
-
-Bonding::~Bonding() {}
 
 QList<QAction*> Bonding::actions() const
 {

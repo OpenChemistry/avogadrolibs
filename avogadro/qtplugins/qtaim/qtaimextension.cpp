@@ -5,10 +5,13 @@
 
 #include "qtaimextension.h"
 
+#include "qtaimcriticalpointlocator.h"
+#include "qtaimwavefunctionevaluator.h"
+#include "qtaimcubature.h"
+
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
-
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
@@ -16,17 +19,9 @@
 #include <QPair>
 #include <QString>
 #include <QVector3D>
-
 #include <QThread>
-
-#include "qtaimcriticalpointlocator.h"
-#include "qtaimcubature.h"
-#include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
-
 #include <QTime>
 
-using namespace std;
 using namespace Eigen;
 
 namespace Avogadro::QtPlugins {
@@ -63,10 +58,6 @@ QTAIMExtension::QTAIMExtension(QObject* aParent)
   connect(action, SIGNAL(triggered()), SLOT(triggered()));
 }
 
-QTAIMExtension::~QTAIMExtension()
-{
-}
-
 QList<QAction*> QTAIMExtension::actions() const
 {
   return m_actions;
@@ -88,13 +79,7 @@ void QTAIMExtension::triggered()
   if (!action)
     return;
 
-  bool wavefunctionAlreadyLoaded;
-
-  if (m_molecule->property("QTAIMComment").isValid()) {
-    wavefunctionAlreadyLoaded = true;
-  } else {
-    wavefunctionAlreadyLoaded = false;
-  }
+  bool wavefunctionAlreadyLoaded = m_molecule->property("QTAIMComment").isValid();
 
   int i = action->data().toInt();
 
@@ -102,9 +87,7 @@ void QTAIMExtension::triggered()
   timer.start();
 
   QString fileName;
-  if (wavefunctionAlreadyLoaded) {
-    // do nothing
-  } else {
+  if (!wavefunctionAlreadyLoaded) {
     fileName = QFileDialog::getOpenFileName(
       new QWidget, tr("Open WFN File"), QDir::homePath(),
       tr("WFN files (*.wfn);;All files (*.*)"));
@@ -116,7 +99,7 @@ void QTAIMExtension::triggered()
   }
 
   // Instantiate a Wavefunction
-  bool success;
+  bool success = false;
   QTAIMWavefunction wfn;
   if (wavefunctionAlreadyLoaded) {
     success = wfn.initializeWithMoleculeProperties(m_molecule);
@@ -741,8 +724,6 @@ void QTAIMExtension::triggered()
 
   emit requestActiveTool("Navigator");
   emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
-
-  return;
 }
 
 } // end namespace Avogadro

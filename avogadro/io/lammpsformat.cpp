@@ -12,18 +12,16 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <iomanip>
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <string>
 
-using std::endl;
 using std::getline;
 using std::map;
 using std::string;
 using std::to_string;
-using std::vector;
+
 
 namespace Avogadro::Io {
 
@@ -37,13 +35,6 @@ using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
-
-#ifndef _WIN32
-#endif
-
-LammpsTrajectoryFormat::LammpsTrajectoryFormat() {}
-
-LammpsTrajectoryFormat::~LammpsTrajectoryFormat() {}
 
 bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -85,19 +76,19 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (buffer.find("ITEM: BOX BOUNDS xy xz yz") == 0) {
     // Read x_min, x_max, tiltfactor_xy
     getline(inStream, buffer);
-    vector<string> box_bounds_x(split(buffer, ' '));
+    std::vector<string> box_bounds_x(split(buffer, ' '));
     x_min = lexicalCast<double>(box_bounds_x.at(0));
     x_max = lexicalCast<double>(box_bounds_x.at(1));
     tilt_xy = lexicalCast<double>(box_bounds_x.at(2));
     // Read y_min, y_max, tiltfactor_xz
     getline(inStream, buffer);
-    vector<string> box_bounds_y(split(buffer, ' '));
+    std::vector<string> box_bounds_y(split(buffer, ' '));
     y_min = lexicalCast<double>(box_bounds_y.at(0));
     y_max = lexicalCast<double>(box_bounds_y.at(1));
     tilt_xz = lexicalCast<double>(box_bounds_y.at(2));
     getline(inStream, buffer);
     // Read z_min, z_max, tiltfactor_yz
-    vector<string> box_bounds_z(split(buffer, ' '));
+    std::vector<string> box_bounds_z(split(buffer, ' '));
     z_min = lexicalCast<double>(box_bounds_z.at(0));
     z_max = lexicalCast<double>(box_bounds_z.at(1));
     tilt_yz = lexicalCast<double>(box_bounds_z.at(2));
@@ -114,17 +105,17 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   else if (buffer.find("ITEM: BOX BOUNDS") == 0) {
     // Read x_min, x_max
     getline(inStream, buffer);
-    vector<string> box_bounds_x(split(buffer, ' '));
+    std::vector<string> box_bounds_x(split(buffer, ' '));
     x_min = lexicalCast<double>(box_bounds_x.at(0));
     x_max = lexicalCast<double>(box_bounds_x.at(1));
     // Read y_min, y_max
     getline(inStream, buffer);
-    vector<string> box_bounds_y(split(buffer, ' '));
+    std::vector<string> box_bounds_y(split(buffer, ' '));
     y_min = lexicalCast<double>(box_bounds_y.at(0));
     y_max = lexicalCast<double>(box_bounds_y.at(1));
     // Read z_min, z_max
     getline(inStream, buffer);
-    vector<string> box_bounds_z(split(buffer, ' '));
+    std::vector<string> box_bounds_z(split(buffer, ' '));
     z_min = lexicalCast<double>(box_bounds_z.at(0));
     z_max = lexicalCast<double>(box_bounds_z.at(1));
   }
@@ -138,7 +129,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   // u stands for unwrapped coordinates
   // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
   getline(inStream, buffer);
-  vector<string> labels(split(buffer, ' '));
+  std::vector<string> labels(split(buffer, ' '));
   for (size_t i = 0; i < labels.size(); i++) {
     if (labels[i] == "x" || labels[i] == "xu") {
       x_idx = i;
@@ -168,7 +159,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
-    vector<string> tokens(split(buffer, ' '));
+    std::vector<string> tokens(split(buffer, ' '));
 
     if (tokens.size() < labels.size() - 2) {
       appendError("Not enough tokens in this line: " + buffer);
@@ -275,19 +266,19 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     if (buffer.find("ITEM: BOX BOUNDS xy xz yz") == 0) {
       // Read x_min, x_max, tiltfactor_xy
       getline(inStream, buffer);
-      vector<string> box_bounds_x(split(buffer, ' '));
+      std::vector<string> box_bounds_x(split(buffer, ' '));
       x_min = lexicalCast<double>(box_bounds_x.at(0));
       x_max = lexicalCast<double>(box_bounds_x.at(1));
       tilt_xy = lexicalCast<double>(box_bounds_x.at(2));
       // Read y_min, y_max, tiltfactor_xz
       getline(inStream, buffer);
-      vector<string> box_bounds_y(split(buffer, ' '));
+      std::vector<string> box_bounds_y(split(buffer, ' '));
       y_min = lexicalCast<double>(box_bounds_y.at(0));
       y_max = lexicalCast<double>(box_bounds_y.at(1));
       tilt_xz = lexicalCast<double>(box_bounds_y.at(2));
       getline(inStream, buffer);
       // Read z_min, z_max, tiltfactor_yz
-      vector<string> box_bounds_z(split(buffer, ' '));
+      std::vector<string> box_bounds_z(split(buffer, ' '));
       z_min = lexicalCast<double>(box_bounds_z.at(0));
       z_max = lexicalCast<double>(box_bounds_z.at(1));
       tilt_yz = lexicalCast<double>(box_bounds_z.at(2));
@@ -304,17 +295,17 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     else if (buffer.find("ITEM: BOX BOUNDS") == 0) {
       // Read x_min, x_max
       getline(inStream, buffer);
-      vector<string> box_bounds_x(split(buffer, ' '));
+      std::vector<string> box_bounds_x(split(buffer, ' '));
       x_min = lexicalCast<double>(box_bounds_x.at(0));
       x_max = lexicalCast<double>(box_bounds_x.at(1));
       // Read y_min, y_max
       getline(inStream, buffer);
-      vector<string> box_bounds_y(split(buffer, ' '));
+      std::vector<string> box_bounds_y(split(buffer, ' '));
       y_min = lexicalCast<double>(box_bounds_y.at(0));
       y_max = lexicalCast<double>(box_bounds_y.at(1));
       // Read z_min, z_max
       getline(inStream, buffer);
-      vector<string> box_bounds_z(split(buffer, ' '));
+      std::vector<string> box_bounds_z(split(buffer, ' '));
       z_min = lexicalCast<double>(box_bounds_z.at(0));
       z_max = lexicalCast<double>(box_bounds_z.at(1));
     }
@@ -324,7 +315,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     // u stands for unwrapped coordinates
     // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
     getline(inStream, buffer);
-    labels = vector<string>(split(buffer, ' '));
+    labels = std::vector<string>(split(buffer, ' '));
     for (size_t i = 0; i < labels.size(); ++i) {
       if (labels[i] == "x" || labels[i] == "xu") {
         x_idx = i;
@@ -356,7 +347,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     for (size_t i = 0; i < numAtoms; ++i) {
       getline(inStream, buffer);
-      vector<string> tokens(split(buffer, ' '));
+      std::vector<string> tokens(split(buffer, ' '));
       if (tokens.size() < 5) {
         appendError("Not enough tokens in this line: " + buffer);
         return false;
@@ -403,10 +394,6 @@ std::vector<std::string> LammpsTrajectoryFormat::mimeTypes() const
   mime.emplace_back("text/lammps");
   return mime;
 }
-
-LammpsDataFormat::LammpsDataFormat() {}
-
-LammpsDataFormat::~LammpsDataFormat() {}
 
 bool LammpsDataFormat::read(std::istream&, Core::Molecule&)
 {

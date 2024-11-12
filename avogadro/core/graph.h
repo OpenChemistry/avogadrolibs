@@ -8,15 +8,12 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
 #include "array.h"
 
-#include <cstddef>
 #include <set>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Graph graph.h <avogadro/core/graph.h>
@@ -30,13 +27,13 @@ class AVOGADROCORE_EXPORT Graph
 {
 public:
   /** Creates a new, empty graph. */
-  Graph();
+  Graph() = default;
 
   /** Creates a new graph containing size @p n vertices. */
   explicit Graph(size_t n);
 
   /** Destroys the graph. */
-  ~Graph();
+  ~Graph() = default;
 
   /**
    * Sets the number of vertices in the graph to size @p n.
@@ -224,7 +221,6 @@ private:
   mutable std::set<size_t> m_loneVertices;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_GRAPH_H

@@ -8,11 +8,9 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
 #include "molecule.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class AvoSpglib avospglib.h <avogadro/core/avospglib.h>
@@ -87,7 +85,6 @@ private:
                               bool idealize);
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // end Avogadro::Core namespace
 
 #endif // AVOGADRO_CORE_AVO_SPGLIB_H

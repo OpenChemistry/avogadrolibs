@@ -32,10 +32,6 @@ ThreeDMol::ThreeDMol(QObject* parent_)
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }
 
-ThreeDMol::~ThreeDMol()
-{
-}
-
 QString ThreeDMol::description() const
 {
   return tr("3DMol HTML Block.");
@@ -70,4 +66,4 @@ void ThreeDMol::showDialog()
   m_dialog->show();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -8,8 +8,6 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include "array.h"
 #include "layer.h"
 
@@ -20,8 +18,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -116,7 +113,6 @@ protected:
   static std::map<const Molecule*, std::shared_ptr<MoleculeInfo>> m_molToInfo;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

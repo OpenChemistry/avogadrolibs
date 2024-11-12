@@ -8,8 +8,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Atom;
 class Molecule;
 
@@ -22,7 +21,7 @@ template <typename OutputType>
 class AtomTyper
 {
 public:
-  typedef OutputType ValueType;
+  using ValueType = OutputType;
 
   explicit AtomTyper(const Molecule* mol = nullptr);
   virtual ~AtomTyper();
@@ -80,8 +79,8 @@ protected:
   Array<OutputType> m_types;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
+
 
 #include <avogadro/core/atomtyper-inline.h>
 

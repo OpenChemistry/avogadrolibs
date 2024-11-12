@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class SlaterSet slaterset.h
@@ -42,12 +41,12 @@ public:
   /**
    * Constructor.
    */
-  SlaterSet();
+  SlaterSet() = default;
 
   /**
    * Destructor.
    */
-  ~SlaterSet() override;
+  ~SlaterSet() override = default;
 
   /**
    * Clone.
@@ -141,6 +140,7 @@ public:
   MatrixX& normalizedMatrix() { return m_normalized; }
   MatrixX& densityMatrix() { return m_density; }
 
+  // Does nothing?
   void outputAll();
 
 private:
@@ -154,12 +154,11 @@ private:
   MatrixX m_eigenVectors;
   MatrixX m_density;
   MatrixX m_normalized;
-  bool m_initialized;
+  bool m_initialized = false;
 
   unsigned int factorial(unsigned int n);
 };
 
-} // End Core namespace
-} // End Avogadro namespace
+} // End Avogadro::Core namespace
 
 #endif

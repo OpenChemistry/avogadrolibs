@@ -13,12 +13,9 @@
 #include <map>
 #include <string>
 
-#include "array.h"
-#include "bond.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Atom;
 class Molecule;
@@ -32,7 +29,7 @@ class AVOGADROCORE_EXPORT Residue
 {
 public:
   /** Type for atom name map. */
-  typedef std::map<std::string, Atom> AtomNameMap;
+  using AtomNameMap = std::map<std::string, Atom>;
 
   // using codes from MMTF specification
   // https://github.com/rcsb/mmtf/blob/master/spec.md#secstructlist
@@ -51,7 +48,7 @@ public:
   };
 
   /** Creates a new, empty residue. */
-  Residue();
+  Residue() = default;
   Residue(std::string& name);
   Residue(std::string& name, Index& number);
   Residue(std::string& name, Index& number, char& id);
@@ -60,7 +57,7 @@ public:
 
   Residue& operator=(Residue other);
 
-  virtual ~Residue();
+  virtual ~Residue() = default;
 
   inline std::string residueName() const { return m_residueName; }
 
@@ -145,7 +142,6 @@ protected:
   SecondaryStructure m_secondaryStructure;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_RESIDUE_H

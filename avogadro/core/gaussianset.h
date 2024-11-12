@@ -15,8 +15,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * Enumeration of the SCF type.
@@ -58,7 +57,7 @@ public:
   /**
    * Destructor.
    */
-  ~GaussianSet() override;
+  ~GaussianSet() override = default;
 
   /**
    * Clone.
@@ -366,7 +365,6 @@ private:
   std::string m_functionalName;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif
