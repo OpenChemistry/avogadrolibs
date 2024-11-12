@@ -11,13 +11,14 @@
 # Hıncal Gökhan BAKIR <hgokhanb@gmail.com>, 2023.
 # Hakkı Konu <hakkikonu@gmail.com>, 2023.
 # Emir <bitigchi@me.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-01-31 21:08+0000\n"
-"Last-Translator: Emir <bitigchi@me.com>\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2425,17 +2426,15 @@ msgstr "Z koordinatı."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a' çapraz koordinatı."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:489
 msgid "'b' lattice coordinate."
 msgstr "'b' çapraz koordinatı."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
-#| msgid "'b' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "'b' çapraz koordinatı."
+msgstr "'c' çapraz koordinatı."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3675,7 +3674,7 @@ msgstr "&Dışa Aktar"
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN dosyaları (*.wfn);; Tüm dosyalar (*.*)"
+msgstr "CSV dosyaları (*.csv);; Tüm dosyalar (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -4373,7 +4372,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Sahneyi VRML kullanarak işleyin."
+msgstr "Sahneyi PLY kullanarak işleyin."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
