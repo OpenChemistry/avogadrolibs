@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2021,8 +2021,6 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
 msgstr "選択した原子を結合"
 
@@ -2971,20 +2969,14 @@ msgid "Configure…"
 msgstr "設定…"
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
 msgstr "選択した原子を固定"
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
 msgstr "選択した原子の固定を解除"
 
 #: qtplugins/forcefield/forcefield.cpp:151
-#, fuzzy
-#| msgid "Calculate"
 msgid "&Calculate"
 msgstr "計算 (&C)"
 
@@ -3494,8 +3486,6 @@ msgstr "(問い合せ中)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:103
 #: qtplugins/molecularproperties/molecularmodel.cpp:111
 #: qtplugins/molecularproperties/molecularmodel.cpp:127
-#, fuzzy
-#| msgid "[no molecule]"
 msgid "unknown molecule"
 msgstr "不明な分子"
 
@@ -3621,7 +3611,7 @@ msgstr "CSVをエクスポート"
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "CSVファイル (*.csv);;全てのファイル (*.*)"
+msgstr "CSVファイル (*.csv);;全てのファイル (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3846,7 +3836,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Optimizing Geometry (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "コンフォーマー生成 (Open Babel)"
+msgstr "配座異性体を生成中 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -4396,7 +4386,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 msgid "Atom 1"
-msgstr "原子 1"
+msgstr "原子1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4567,13 +4557,10 @@ msgid "Center"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:39
-#, fuzzy
 msgid "Align View to Axes"
 msgstr "ビューを軸にそろえる"
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
 msgstr "ビューを軸にそろえる。"
 
@@ -4608,8 +4595,9 @@ msgid "Select All"
 msgstr "全て選択"
 
 #: qtplugins/select/select.cpp:37
+#, fuzzy
 msgid "Select None"
-msgstr ""
+msgstr "選択の解除"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 #, fuzzy
@@ -4645,17 +4633,13 @@ msgstr "側鎖の原子を選択…"
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
 msgid "Select Water"
-msgstr "水を選択…"
+msgstr "水を選択"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
 msgstr "選択を拡大"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
 msgstr "選択を縮小"
 
@@ -4685,7 +4669,7 @@ msgstr "バックボーン"
 #: qtplugins/select/select.cpp:308
 #, fuzzy
 msgid "Select Sidechain"
-msgstr "側鎖の原子を選択…"
+msgstr "側鎖を選択"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4697,8 +4681,6 @@ msgid "Atoms to Select:"
 msgstr "選択する原子:"
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
 msgstr "原子を選択"
 
@@ -6969,9 +6951,8 @@ msgstr "遺伝的回転異性体検索"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
 msgid "Optimization per conformer:"
-msgstr "コンフォーマーごとの最適化:"
+msgstr "配座異性体ごとの最適化:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -7641,8 +7622,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
-#, fuzzy
-#| msgid "Spectra and Vibrations"
 msgid "Spectra Visualization"
 msgstr "スペクトルの可視化"
 
@@ -7654,7 +7633,7 @@ msgstr "データのロード(&L)..."
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
 msgid "Export Data"
-msgstr "データをエクスポート"
+msgstr "データのエクスポート"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
