@@ -88,11 +88,20 @@ jobs:
         path: avogadrolibs
 
     - name: Install Qt
+      if: runner.os != 'Windows'
       uses: jurplel/install-qt-action@v3
       with:
         version: ${{ env.QT_VERSION }}
         aqtversion: '==3.1.*'
-        modules: 'qt5compat'
+
+    - name: Install Qt (Windows)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ env.QT_VERSION }}
+        aqtversion: '==3.1.*'
+        host: windows
+        arch: win64_msvc2022_64
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
