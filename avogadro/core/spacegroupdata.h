@@ -3418,6 +3418,6 @@ const char* space_group_transforms[] = {
   "1/2-x,1/2-y,1/2-z z,x,y 1/2+z,1/2+x,1/2+y -y,-z,-x 1/2-y,1/2-z,1/2-x"
 };
 
-} // End Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SPACE_GROUP_DATA

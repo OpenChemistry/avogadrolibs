@@ -103,6 +103,6 @@ private:
   std::vector<T> m_coordinates;
 };
 
-} // end Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_COORDINATESET_H

@@ -255,6 +255,6 @@ inline bool Cube::setValue(unsigned int i, float value_)
     return false;
 }
 
-} // End Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_CUBE_H

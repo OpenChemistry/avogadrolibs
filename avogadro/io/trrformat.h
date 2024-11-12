@@ -44,11 +44,11 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& inStream, Core::Molecule& molecule) override;
-  
+
   // uninplemented
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Avogadro::Io namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_TRRFORMAT_H

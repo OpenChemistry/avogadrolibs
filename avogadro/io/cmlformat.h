@@ -47,6 +47,6 @@ public:
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // end Avogadro::Io namespace
+} // namespace Avogadro::Io
 
 #endif // CMLFORMAT_H

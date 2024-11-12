@@ -146,7 +146,8 @@ bool Mesh::addColors(const Core::Array<Color3f>& values)
 
 bool Mesh::valid() const
 {
-  return (m_vertices.size() == m_normals.size()) && (m_colors.size() == 1 || m_colors.size() == m_vertices.size());
+  return (m_vertices.size() == m_normals.size()) &&
+         (m_colors.size() == 1 || m_colors.size() == m_vertices.size());
 }
 
 bool Mesh::clear()

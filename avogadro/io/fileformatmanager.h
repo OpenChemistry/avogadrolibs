@@ -254,7 +254,8 @@ public:
 
 private:
   using FormatIdVector = std::vector<size_t>;
-  using FormatIdMap = std::map<std::string, FormatIdVector, CaseInsensitiveComparator>;
+  using FormatIdMap =
+    std::map<std::string, FormatIdVector, CaseInsensitiveComparator>;
 
   FileFormatManager();
   ~FileFormatManager();

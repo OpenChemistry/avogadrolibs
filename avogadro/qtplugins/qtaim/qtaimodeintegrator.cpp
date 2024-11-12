@@ -26,9 +26,7 @@ namespace Avogadro::QtPlugins {
 
 QTAIMODEIntegrator::QTAIMODEIntegrator(QTAIMWavefunctionEvaluator& eval,
                                        const qint64 mode)
-: m_eval(&eval)
-, m_mode(mode)
-, m_associatedSphere(0)
+  : m_eval(&eval), m_mode(mode), m_associatedSphere(0)
 {
   m_betaSpheres.empty();
 }

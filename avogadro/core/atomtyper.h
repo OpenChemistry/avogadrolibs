@@ -81,7 +81,6 @@ protected:
 
 } // namespace Avogadro::Core
 
-
 #include <avogadro/core/atomtyper-inline.h>
 
 #endif // AVOGADRO_CORE_ATOMTYPER_H

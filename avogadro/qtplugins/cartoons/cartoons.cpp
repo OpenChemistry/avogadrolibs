@@ -119,8 +119,7 @@ struct LayerCartoon : Core::LayerData
     }
   }
 
-  LayerCartoon() 
-  : widget(nullptr)
+  LayerCartoon() : widget(nullptr)
   {
     QSettings settings;
     showBackbone = settings.value("cartoon/backbone", false).toBool();

@@ -54,7 +54,7 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
 
   mol.setPartialCharges("MMFF94", charges);
 }
-}
+} // namespace
 
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {

@@ -226,6 +226,6 @@ unsigned char BondTemplate<Molecule_T>::order() const
   return m_molecule->bondOrders()[m_index];
 }
 
-} // end Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_BOND_H

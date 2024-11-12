@@ -85,6 +85,6 @@ private:
                               bool idealize);
 };
 
-} // end Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_AVO_SPGLIB_H

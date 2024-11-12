@@ -35,7 +35,8 @@ public:
   Angle begin();
 
   Angle end() const {
-    return std::make_tuple(Avogadro::MaxIndex, Avogadro::MaxIndex, Avogadro::MaxIndex);
+    return std::make_tuple(Avogadro::MaxIndex, Avogadro::MaxIndex,
+                           Avogadro::MaxIndex);
   }
 
   Angle operator++();

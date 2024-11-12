@@ -77,6 +77,6 @@ private:
   std::vector<double> calculateValues(const Vector3& position) const;
 };
 
-} // End Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SlaterSetTools_H

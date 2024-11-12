@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <vector>
 
-
 namespace Avogadro::Core {
 
 using std::size_t;
@@ -420,6 +419,5 @@ inline void swap(Array<T>& lhs, Array<T>& rhs)
 }
 
 } // namespace Avogadro::Core
-
 
 #endif // AVOGADRO_CORE_ARRAY_H

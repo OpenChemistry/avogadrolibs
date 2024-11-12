@@ -17,9 +17,7 @@ using std::vector;
 
 namespace Avogadro::Core {
 
-GaussianSet::GaussianSet() : m_numMOs(0), m_init(false), m_scfType(Rhf)
-{
-}
+GaussianSet::GaussianSet() : m_numMOs(0), m_init(false), m_scfType(Rhf) {}
 
 unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 {

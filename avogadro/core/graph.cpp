@@ -13,8 +13,7 @@
 
 namespace Avogadro::Core {
 
-Graph::Graph(size_t n)
-  : m_adjacencyList(n), m_edgeMap(n), m_vertexToSubgraph(n)
+Graph::Graph(size_t n) : m_adjacencyList(n), m_edgeMap(n), m_vertexToSubgraph(n)
 {
   for (size_t i = 0; i < n; i++) {
     m_vertexToSubgraph[i] = -1;
@@ -291,16 +290,14 @@ void Graph::removeEdge(size_t a, size_t b)
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
-  auto iter =
-    std::find(neighborsA.begin(), neighborsA.end(), b);
+  auto iter = std::find(neighborsA.begin(), neighborsA.end(), b);
 
   if (iter == neighborsA.end())
     return;
 
   swap(*iter, neighborsA.back());
   neighborsA.pop_back();
-  swap(*std::find(neighborsB.begin(), neighborsB.end(), a),
-            neighborsB.back());
+  swap(*std::find(neighborsB.begin(), neighborsB.end(), a), neighborsB.back());
   neighborsB.pop_back();
 
   size_t edgeIndex;
@@ -375,7 +372,7 @@ void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
 {
   // Allow ADL for swap
   using std::swap;
-  
+
   auto& pair = m_edgePairs[edgeIndex];
 
   // Remove references to the deleted edge from both endpoints.

@@ -52,8 +52,8 @@
 #include "qtaimcubature.h"
 
 #include "qtaimcriticalpointlocator.h"
-#include "qtaimmathutilities.h"
 #include "qtaimlsodaintegrator.h"
+#include "qtaimmathutilities.h"
 
 #include <QDataStream>
 #include <QDebug>
@@ -149,7 +149,6 @@
 
     To compile a test program, compile cubature.c with
     -DTEST_INTEGRATOR as described at the end. */
-
 
 using namespace Avogadro::QtPlugins;
 
@@ -278,8 +277,9 @@ static int cut_region(region* R, region* R2)
 
 struct rule_s; /* forward declaration */
 
-using evalError_func = int (*)(struct rule_s *, unsigned int, integrand_v, void *, unsigned int, region *);
-using destroy_func = void (*)(struct rule_s *);
+using evalError_func = int (*)(struct rule_s*, unsigned int, integrand_v, void*,
+                               unsigned int, region*);
+using destroy_func = void (*)(struct rule_s*);
 
 using rule = struct rule_s
 {

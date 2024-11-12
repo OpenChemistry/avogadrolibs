@@ -35,6 +35,6 @@ private:
   std::vector<std::vector<size_t>> m_rings;
 };
 
-} // end Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_RINGPERCEIVER_H

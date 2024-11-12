@@ -85,13 +85,11 @@ protected:
   std::array<float, 3> m_data;
 };
 
-inline Color3f::Color3f(float r, float g, float b)
-: m_data({r,g,b})
-{
-}
+inline Color3f::Color3f(float r, float g, float b) : m_data({ r, g, b }) {}
 
 inline Color3f::Color3f(int r, int g, int b)
-: m_data({static_cast<float>(r) / 255.0f, static_cast<float>(g) / 255.0f, static_cast<float>(b) / 255.0f})
+  : m_data({ static_cast<float>(r) / 255.0f, static_cast<float>(g) / 255.0f,
+             static_cast<float>(b) / 255.0f })
 {
 }
 

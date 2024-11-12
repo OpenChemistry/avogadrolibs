@@ -250,7 +250,8 @@ inline void GaussianSetTools::pointS(unsigned int moIndex, double dr2,
 }
 
 inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, std::vector<double>& values) const
+                                     double dr2,
+                                     std::vector<double>& values) const
 {
   // P type orbitals have three components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -272,7 +273,8 @@ inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
 }
 
 inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, std::vector<double>& values) const
+                                     double dr2,
+                                     std::vector<double>& values) const
 {
   // D type orbitals have six components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -344,7 +346,8 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
     values[baseIndex + i] += componentsD[i] * components[i];
 }
 inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, std::vector<double>& values) const
+                                     double dr2,
+                                     std::vector<double>& values) const
 {
   // F type orbitals have 10 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.

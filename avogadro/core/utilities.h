@@ -97,6 +97,6 @@ T lexicalCast(const std::string& inputString, bool& ok)
   return value;
 }
 
-} // end Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_UTILITIES_H

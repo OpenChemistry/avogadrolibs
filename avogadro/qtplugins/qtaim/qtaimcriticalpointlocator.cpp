@@ -45,7 +45,7 @@ using namespace Eigen;
 namespace Avogadro::QtPlugins {
 
 namespace helper {
-template<qint64 ExpectedSignatureV>
+template <qint64 ExpectedSignatureV>
 QList<QVariant> QTAIMLocateElectronDensityHelper(QList<QVariant> input)
 {
   qint64 counter = 0;
@@ -67,9 +67,10 @@ QList<QVariant> QTAIMLocateElectronDensityHelper(QList<QVariant> input)
   QTAIMWavefunctionEvaluator eval(wfn);
 
   /**
-    The following logic chain was concatenated into a single statement to remove redundant branching, for readability
-    the following table has been included. If any of the logic checks do not meet the expected result,
-    the return value will be `false`, else it will be `true`.
+    The following logic chain was concatenated into a single statement to remove
+    redundant branching, for readability the following table has been included.
+    If any of the logic checks do not meet the expected result, the return value
+    will be `false`, else it will be `true`.
 
     logic chain breakdown:
     | Statement | Expected |
@@ -77,12 +78,14 @@ QList<QVariant> QTAIMLocateElectronDensityHelper(QList<QVariant> input)
     | eval.electronDensity(x0y0z0) < 1.e-1 | false |
     | eval.electronDensity(xyz) > 1.e-1 | true |
     | eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 | true |
-    | QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(xyz)) == ExpectedSignatureV | true |
+    |
+    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(xyz))
+    == ExpectedSignatureV | true |
   */
 
   // Validate initial input to avoid needless costly calculations
-  if (eval.electronDensity(Matrix<qreal, 3, 1>( x0, y0, z0)) < 1.e-1) {
-    return {false};
+  if (eval.electronDensity(Matrix<qreal, 3, 1>(x0, y0, z0)) < 1.e-1) {
+    return { false };
   }
 
   //      QTAIMODEIntegrator
@@ -93,19 +96,19 @@ QList<QVariant> QTAIMLocateElectronDensityHelper(QList<QVariant> input)
   QVector3D result = ode.integrate(x0y0z0);
 
   Matrix<qreal, 3, 1> xyz(result.x(), result.y(), result.z());
-  
+
   // since we are using `&&` operator, lazy evaluation will be used
-  if(eval.electronDensity(xyz) > 1.e-1 && 
-     eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 &&
-     QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(xyz)) == ExpectedSignatureV)
-  {
-    return {true, result.x(), result.y(), result.z()};
+  if (eval.electronDensity(xyz) > 1.e-1 &&
+      eval.gradientOfElectronDensityLaplacian(xyz).norm() < 1.e-3 &&
+      QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+        eval.hessianOfElectronDensityLaplacian(xyz)) == ExpectedSignatureV) {
+    return { true, result.x(), result.y(), result.z() };
   }
 
-  return {false};
+  return { false };
 }
 
-}
+} // namespace helper
 
 QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
 {
@@ -131,12 +134,13 @@ QList<QVariant> QTAIMLocateNuclearCriticalPoint(QList<QVariant> input)
     result = x0y0z0;
   }
 
-  if(QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensity(Matrix<qreal, 3, 1>(result.x(), result.y(), result.z()))) == -3)
-  {
-    return {true, result.x(), result.y(), result.z()};
+  if (QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
+        eval.hessianOfElectronDensity(
+          Matrix<qreal, 3, 1>(result.x(), result.y(), result.z()))) == -3) {
+    return { true, result.x(), result.y(), result.z() };
   }
 
-  return {false};
+  return { false };
 }
 
 QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
@@ -180,11 +184,15 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   if (!(QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(
           eval.hessianOfElectronDensity(xyz)) == -1) ||
       (eval.gradientOfElectronDensity(xyz)).norm() > SMALL_GRADIENT_NORM) {
-        return {false, result.x(), result.y(), result.z()};
+    return { false, result.x(), result.y(), result.z() };
   }
 
-  Matrix<qreal, 3, 3> eigenvectorsOfHessian = QTAIMMathUtilities::eigenvectorsOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensity(xyz));
-  Matrix<qreal, 3, 1> highestEigenvectorOfHessian(eigenvectorsOfHessian(0, 2), eigenvectorsOfHessian(1, 2), eigenvectorsOfHessian(2, 2));
+  Matrix<qreal, 3, 3> eigenvectorsOfHessian =
+    QTAIMMathUtilities::eigenvectorsOfASymmetricThreeByThreeMatrix(
+      eval.hessianOfElectronDensity(xyz));
+  Matrix<qreal, 3, 1> highestEigenvectorOfHessian(eigenvectorsOfHessian(0, 2),
+                                                  eigenvectorsOfHessian(1, 2),
+                                                  eigenvectorsOfHessian(2, 2));
 
   const qreal smallStep = 0.01;
 
@@ -216,19 +224,23 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
   QVector3D backwardEndpoint = backwardODE.integrate(backwardStartingPoint);
   QList<QVector3D> backwardPath = backwardODE.path();
 
-  // Find and store the forward and backward nucleus index for pair connection check
+  // Find and store the forward and backward nucleus index for pair connection
+  // check
   qreal minForwardDistance = HUGE_REAL_NUMBER;
   qreal minBackwardDistance = HUGE_REAL_NUMBER;
   qint64 backwardNucleusIndex = 0;
   qint64 forwardNucleusIndex = 0;
 
   // cache unchanged points
-  const Matrix<qreal, 3, 1> forwardPoint(forwardEndpoint.x(), forwardEndpoint.y(), forwardEndpoint.z());
-  const Matrix<qreal, 3, 1> backwardPoint(backwardEndpoint.x(), backwardEndpoint.y(), backwardEndpoint.z());
+  const Matrix<qreal, 3, 1> forwardPoint(
+    forwardEndpoint.x(), forwardEndpoint.y(), forwardEndpoint.z());
+  const Matrix<qreal, 3, 1> backwardPoint(
+    backwardEndpoint.x(), backwardEndpoint.y(), backwardEndpoint.z());
 
   for (qint64 n = 0; n < wfn.numberOfNuclei(); ++n) {
-    const Matrix<qreal, 3, 1> wavePoint(wfn.xNuclearCoordinate(n), wfn.yNuclearCoordinate(n),
-                          wfn.zNuclearCoordinate(n));
+    const Matrix<qreal, 3, 1> wavePoint(wfn.xNuclearCoordinate(n),
+                                        wfn.yNuclearCoordinate(n),
+                                        wfn.zNuclearCoordinate(n));
 
     qreal fDistance = QTAIMMathUtilities::distance(forwardPoint, wavePoint);
     qreal bDistance = QTAIMMathUtilities::distance(backwardPoint, wavePoint);
@@ -237,8 +249,7 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
       minForwardDistance = fDistance;
       forwardNucleusIndex = n;
     }
-    if(bDistance < minBackwardDistance)
-    {
+    if (bDistance < minBackwardDistance) {
       minBackwardDistance = bDistance;
       backwardNucleusIndex = n;
     }
@@ -259,7 +270,7 @@ QList<QVariant> QTAIMLocateBondCriticalPoint(QList<QVariant> input)
     value.append(eval.laplacianOfElectronDensity(xyz_));
     value.append(QTAIMMathUtilities::ellipticityOfASymmetricThreeByThreeMatrix(
       eval.hessianOfElectronDensity(xyz_)));
-    
+
     value.append(1 + forwardPath.length() + 1 + backwardPath.length() + 1);
     value.append(forwardEndpoint.x());
     for (qint64 i = forwardPath.length() - 1; i >= 0; --i) {
@@ -305,9 +316,10 @@ QList<QVariant> QTAIMLocateElectronDensitySink(QList<QVariant> input)
   /**
     This function acts as a wrapper to consolidate code
     The primary functionality only deviates from other functions in its
-    expected value for 
+    expected value for
 
-    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(**Integrated Point**))
+    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(**Integrated
+    Point**))
 
     which is passed in as a template parameter to the helper function.
 
@@ -321,9 +333,10 @@ QList<QVariant> QTAIMLocateElectronDensitySource(QList<QVariant> input)
   /**
     This function acts as a wrapper to consolidate code
     The primary functionality only deviates from other functions in its
-    expected value for 
+    expected value for
 
-    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(**Integrated Point**))
+    QTAIMMathUtilities::signatureOfASymmetricThreeByThreeMatrix(eval.hessianOfElectronDensityLaplacian(**Integrated
+    Point**))
 
     which is passed in as a template parameter to the helper function.
 

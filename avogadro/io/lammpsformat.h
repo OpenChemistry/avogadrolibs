@@ -84,7 +84,7 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& molecule) override;
 };
 
-} // end Io namespace
- // end Avogadro namespace
+} // namespace Avogadro::Io
+  // end Avogadro namespace
 
 #endif // AVOGADRO_IO_LAMMPSFORMAT_H

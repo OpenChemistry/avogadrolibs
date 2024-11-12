@@ -85,7 +85,8 @@ void SlaterSet::initCalculation()
   m_normalized = m * m_eigenVectors;
 
   if (!(m_overlap * m * m).eval().isIdentity())
-    std::cout << "Identity test FAILED - do you need a newer version of Eigen?\n";
+    std::cout
+      << "Identity test FAILED - do you need a newer version of Eigen?\n";
 
   m_factors.resize(m_zetas.size());
   m_PQNs = m_pqns;
@@ -127,8 +128,8 @@ void SlaterSet::initCalculation()
         m_PQNs[i] -= 3;
         break;
       default:
-        std::cout << "Orbital " << i << " not handled, type " << m_slaterTypes[i]
-             << std::endl;
+        std::cout << "Orbital " << i << " not handled, type "
+                  << m_slaterTypes[i] << std::endl;
     }
   }
   // Convert the exponents into Angstroms

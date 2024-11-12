@@ -454,4 +454,4 @@ std::vector<std::string> OutcarFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro::Io namespace
+} // namespace Avogadro::Io

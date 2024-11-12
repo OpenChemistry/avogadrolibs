@@ -35,7 +35,8 @@ private:
   size_t* m_values;
 };
 
-DistanceMatrix::DistanceMatrix(size_t size) : m_size(size), m_values(new size_t[size * size])
+DistanceMatrix::DistanceMatrix(size_t size)
+  : m_size(size), m_values(new size_t[size * size])
 {
   memset(m_values, 0, size * size * sizeof(size_t));
 }
@@ -74,7 +75,8 @@ private:
 };
 
 // --- Construction and Destruction ---------------------------------------- //
-PidMatrix::PidMatrix(size_t size) : m_size(size), m_values(new std::vector<std::vector<size_t>>[ size * size ])
+PidMatrix::PidMatrix(size_t size)
+  : m_size(size), m_values(new std::vector<std::vector<size_t>>[size * size])
 {
 }
 
@@ -159,7 +161,8 @@ private:
 };
 
 // --- Construction and Destruction ---------------------------------------- //
-RingCandidate::RingCandidate(size_t n, size_t s, size_t e) : m_size(n), m_start(s), m_end(e)
+RingCandidate::RingCandidate(size_t n, size_t s, size_t e)
+  : m_size(n), m_start(s), m_end(e)
 {
 }
 

@@ -59,6 +59,6 @@ protected:
   bool m_writeProperties = false;
 };
 
-} // end Avogadro::Io namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_MDLFORMAT_H

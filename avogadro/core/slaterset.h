@@ -159,6 +159,6 @@ private:
   unsigned int factorial(unsigned int n);
 };
 
-} // End Avogadro::Core namespace
+} // namespace Avogadro::Core
 
 #endif

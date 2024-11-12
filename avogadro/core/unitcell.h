@@ -167,7 +167,8 @@ inline UnitCell::UnitCell(const Vector3& a_, const Vector3& b_,
   computeFractionalMatrix();
 }
 
-inline UnitCell::UnitCell(const Matrix3& cellMatrix_) : m_cellMatrix(cellMatrix_)
+inline UnitCell::UnitCell(const Matrix3& cellMatrix_)
+  : m_cellMatrix(cellMatrix_)
 {
   computeFractionalMatrix();
 }

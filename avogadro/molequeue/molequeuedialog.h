@@ -152,7 +152,7 @@ public slots:
   void done(int r) override;
 
 private:
-  using MetaMethod = QPair<QObject *, const char *>;
+  using MetaMethod = QPair<QObject*, const char*>;
   /**
    * Wait @a timeout milliseconds for @a source to emit @a signal.
    * @param signalList List of QObject* and const char* (signals) to listen for.

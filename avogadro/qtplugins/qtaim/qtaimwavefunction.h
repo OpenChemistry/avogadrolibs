@@ -276,5 +276,4 @@ private:
 
 } // namespace Avogadro::QtPlugins
 
-
 #endif // QTAIMWAVEFUNCTION_H

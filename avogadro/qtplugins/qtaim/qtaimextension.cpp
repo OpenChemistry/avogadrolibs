@@ -6,8 +6,8 @@
 #include "qtaimextension.h"
 
 #include "qtaimcriticalpointlocator.h"
-#include "qtaimwavefunctionevaluator.h"
 #include "qtaimcubature.h"
+#include "qtaimwavefunctionevaluator.h"
 
 #include <avogadro/qtgui/molecule.h>
 
@@ -18,9 +18,9 @@
 #include <QList>
 #include <QPair>
 #include <QString>
-#include <QVector3D>
 #include <QThread>
 #include <QTime>
+#include <QVector3D>
 
 using namespace Eigen;
 
@@ -79,7 +79,8 @@ void QTAIMExtension::triggered()
   if (!action)
     return;
 
-  bool wavefunctionAlreadyLoaded = m_molecule->property("QTAIMComment").isValid();
+  bool wavefunctionAlreadyLoaded =
+    m_molecule->property("QTAIMComment").isValid();
 
   int i = action->data().toInt();
 

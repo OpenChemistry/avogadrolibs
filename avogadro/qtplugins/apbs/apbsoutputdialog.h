@@ -51,5 +51,4 @@ private:
 };
 } // namespace Avogadro::QtPlugins
 
-
 #endif // AVOGADRO_QTPLUGINS_APBS_APBSOUTPUTDIALOG_H

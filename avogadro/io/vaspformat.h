@@ -81,6 +81,6 @@ public:
   bool write(std::ostream& outStream, const Core::Molecule& mol) override;
 };
 
-} // end Avogadro::Io namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_VASPFORMAT_H

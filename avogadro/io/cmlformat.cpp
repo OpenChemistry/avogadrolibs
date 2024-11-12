@@ -681,4 +681,4 @@ std::vector<std::string> CmlFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro::Io namespace
+} // namespace Avogadro::Io

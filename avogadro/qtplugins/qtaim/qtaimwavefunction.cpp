@@ -24,9 +24,7 @@
 
 namespace Avogadro::QtPlugins {
 
-QTAIMWavefunction::QTAIMWavefunction() : m_initializationSuccessful(false)
-{
-}
+QTAIMWavefunction::QTAIMWavefunction() : m_initializationSuccessful(false) {}
 
 bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
 {

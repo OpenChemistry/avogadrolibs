@@ -15,7 +15,6 @@
 
 #include <string>
 
-
 namespace Avogadro::Calc {
 
 /**

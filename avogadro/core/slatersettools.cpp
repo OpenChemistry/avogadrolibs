@@ -73,7 +73,8 @@ inline bool SlaterSetTools::isSmall(double val) const
   return val > -1e-20 && val < 1e-20;
 }
 
-std::vector<double> SlaterSetTools::calculateValues(const Vector3& position) const
+std::vector<double> SlaterSetTools::calculateValues(
+  const Vector3& position) const
 {
   m_basis->initCalculation();
 
@@ -145,4 +146,4 @@ std::vector<double> SlaterSetTools::calculateValues(const Vector3& position) con
   return values;
 }
 
-} // End Avogadro::Core namespace
+} // namespace Avogadro::Core

@@ -350,7 +350,7 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
         fabs(pos[2] - 1.0) < 0.001)
       newAtoms.push_back(Vector3(0.0, 0.0, 0.0));
 
-    for (const auto & atomMat : newAtoms) {
+    for (const auto& atomMat : newAtoms) {
       // The new atoms are in fractional coordinates. Convert to cartesian.
       Vector3 newCandidate = uc->toCartesian(atomMat);
 
@@ -364,8 +364,7 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
 
         Real distance = (mol.atomPosition3d(k) - newCandidate).norm();
 
-        if (distance <= cartTol)
-        {
+        if (distance <= cartTol) {
           atomAlreadyPresent = true;
           break;
         }
