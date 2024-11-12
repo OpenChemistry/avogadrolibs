@@ -69,29 +69,19 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
   // Loop through z-dimension
 
-  for(int k = 0; k != m_dim.z(); ++k) {
-  for(int j = 0; j != m_dim.y(); ++j)
-  {
+      for (int k = 0; k != m_dim.z(); ++k) {
+        for (int j = 0; j != m_dim.y(); ++j) {
 
-    auto curEdgeCases = edgeCases.begin() + (m_dim.x() - 1) * (k * m_dim.y() + j);
+            auto curEdgeCases = edgeCases.begin() + (m_dim.x() - 1) * (k * m_dim.y() + j);
+            std::array<bool, 2> isGE;
+            isGE[0] = (m_cube->getData(0, j, k) >= m_iso);
 
-    auto curPointValues = m_cube->getRowIter(j, k);
-    
-  // Initialize the isGE array to track isosurface crossings
-    std::array<bool, 2> isGE;
-    isGE[0] = (curPointValues[0] >= m_iso); // first element initialization   
-
-  // loop through x-dimension     
-    for(int i = 1; i != m_dim.x(); ++i)
-    {
-      // update isGE for the current point
-
-      isGE[i % 2] = (curPointValues[i] >= m_iso);
-
-      curEdgeCases[i-1] = calcCaseEdge(isGE[(i+1)%2], isGE[i%2]);
+            for (int i = 1; i != m_dim.x(); ++i) {
+                isGE[i % 2] = (m_cube->getData(i, j, k) >= m_iso);
+                curEdgeCases[i - 1] = calcCaseEdge(isGE[(i + 1) % 2], isGE[i % 2]);
+            }
+        }
     }
-  }
-}
 
   for(int k = 0; k != m_dim.z(); ++k){
     for(int j = 0; j != m_dim.y(); ++j)
@@ -471,6 +461,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             const char* caseTri = caseTriangles[caseId]; // size 16
             for(int idx = 0; caseTri[idx] != -1; idx += 3)
             {
+              
                 tris[triIdx][0] = globalIdxs[caseTri[idx]];
                 tris[triIdx][1] = globalIdxs[caseTri[idx+1]];
                 tris[triIdx][2] = globalIdxs[caseTri[idx+2]];
@@ -488,7 +479,6 @@ void MeshGenerator::run()
     qDebug() << "No mesh or cube set - nothing to find isosurface of…";
     return;
   }
-
   m_mesh->setStable(false);
   m_mesh->clear();
 
