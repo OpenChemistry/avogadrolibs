@@ -6,13 +6,14 @@
 # Carles Ferrando Garcia <carles.ferrando@gmail.com>, 2009.
 # Toni Hermoso Pulido <toniher@softcatala.cat>, 2009.
 # victor dargallo <victordargallo@disroot.org>, 2023.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2023-03-20 18:38+0000\n"
-"Last-Translator: victor dargallo <victordargallo@disroot.org>\n"
+"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca/>\n"
 "Language: ca\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1293,14 +1294,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:194
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Suprimeix hidrògens"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:201
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Suprimeix hidrògens"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1847,11 +1846,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Cancel·la"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2094,16 +2091,12 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Centroid"
-msgstr "Afegeix restriccions"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:21
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Center of Mass"
-msgstr "Afegeix restriccions"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
@@ -2111,10 +2104,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Control"
 msgid "Centroid"
-msgstr "Control"
+msgstr ""
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -2210,7 +2201,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:72
 #, fuzzy
 msgid "Scripts"
-msgstr "&Scripts"
+msgstr "Scripts"
 
 #: qtplugins/commandscripts/command.cpp:126
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2394,9 +2385,8 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
 msgid "'c' lattice coordinate."
-msgstr "Coordenades"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3158,7 +3148,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:21
 #, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "Ajusta els hidrògens"
+msgstr "&Ajusta els hidrògens"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
 msgid "Add Hydrogens"
@@ -3180,7 +3170,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:59
 #, fuzzy
 msgid "&Hydrogens"
-msgstr "Hidrògens"
+msgstr "&Hidrògens"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -3748,10 +3738,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hidrogen"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -3862,9 +3850,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
-#, fuzzy
 msgid "Updating molecule…"
-msgstr "No està configurada la molècula"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
@@ -3926,9 +3913,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:761
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "No està configurada la molècula"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
 msgid "Cannot add hydrogens with Open Babel."
@@ -4346,10 +4332,8 @@ msgid "PLY (*.ply);;Text file (*.txt)"
 msgstr ""
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
@@ -4448,9 +4432,8 @@ msgid "Secondary Structure"
 msgstr "Estrcutura:"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Hidrogen"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -4597,9 +4580,8 @@ msgid "Conformer Properties"
 msgstr "Propietats de l'estereoisòmer"
 
 #: qtplugins/propertytables/propertyview.cpp:58
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Propietats de la molècula"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4971,10 +4953,8 @@ msgid "Spectra"
 msgstr "Espectre"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display standard molecular properties."
 msgid "Display spectra plots."
-msgstr "Visualitza les propietats estàndards de la molècula."
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:201
 #, fuzzy
@@ -5040,10 +5020,8 @@ msgid "Wavenumbers (cm⁻¹)"
 msgstr "Nombre d'ona (cm<sup>-1</sup>)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Estat de transició"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
@@ -5112,10 +5090,8 @@ msgid "Electron Density"
 msgstr "Densitat d'electrons"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Intensity"
 msgid "Spin Density"
-msgstr "Intensitat"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5274,10 +5250,8 @@ msgid "%1 %2"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Temperatura"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -5490,10 +5464,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#, fuzzy
-#| msgid "Running Abinit calculation..."
 msgid "Submit Calculation…"
-msgstr "S'està executant el càlcul amb ABINIT..."
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -6359,17 +6331,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "N/A"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "N/A"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6380,10 +6348,8 @@ msgstr "Nucli:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "Alanine"
 msgid "Adenine"
-msgstr "Alanina"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
@@ -6395,10 +6361,8 @@ msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "Tyrosine"
 msgid "Cytosine"
-msgstr "Tirosina"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
@@ -6410,10 +6374,8 @@ msgstr "C"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
-#, fuzzy
-#| msgid "Alanine"
 msgid "Guanine"
-msgstr "Alanina"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
@@ -6433,10 +6395,8 @@ msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Frequencies"
 msgid "Sequence:"
-msgstr "Freqüències"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
@@ -7071,10 +7031,8 @@ msgstr "Eix Z"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Primer pla:"
+msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -7154,10 +7112,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Multiplicity:"
 msgid "Mutability:"
-msgstr "Multiplicitat:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7910,10 +7866,8 @@ msgstr "Exporta l'espectre calculat"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Mida constant"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8059,10 +8013,8 @@ msgstr " K"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "No res"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8073,10 +8025,8 @@ msgstr "Llum"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Estronci"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8296,24 +8246,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Estat de transició"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Estat de transició"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Estat de transició"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8369,10 +8313,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogen"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

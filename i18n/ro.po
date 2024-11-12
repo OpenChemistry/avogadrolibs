@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the Avogadro package.
 # Irina Puscas <irinapuscas82@gmail.com>, 2021.
 # Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-06 02:00+0000\n"
-"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
+"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
 "Language: ro\n"
@@ -1462,7 +1464,7 @@ msgstr "Actualizare legătură"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Adaugă celulă unitate…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1764,11 +1766,11 @@ msgstr "După culoare personalizată…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "După indicele atomic"
 
 #: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance…"
-msgstr ""
+msgstr "După distanță"
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4257,7 +4259,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Descărcarea de la %1 a eșuat: cod de stare %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"PO-Revision-Date: 2024-11-12 01:05+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/vi/>\n"
@@ -1056,9 +1056,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:100
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Không chạy được povray."
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
@@ -1086,7 +1086,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:195
 #, fuzzy
 msgid "Theory"
-msgstr "Lý thuyết:"
+msgstr "Lý thuyết"
 
 #: qtgui/jsonwidget.cpp:195
 msgid "Basis"
@@ -1384,7 +1384,7 @@ msgstr "Thay đổi thứ tự liên kết"
 #: qtgui/rwmolecule.cpp:354
 #, fuzzy
 msgid "Update Bonds"
-msgstr " Bắt các điểm nút liên kết"
+msgstr "Bắt các điểm nút liên kết"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
@@ -2554,7 +2554,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 #, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Động lực học phân tử (300K)"
+msgstr "Động lực học phân tử"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 #, fuzzy
@@ -3611,7 +3611,7 @@ msgstr "Thuộc tính của phân tử"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Xuất ra"
+msgstr "Xuất ra CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -3635,7 +3635,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "&Xuất ra"
+msgstr "Xuất ra"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -3705,10 +3705,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hi-đrô"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4284,9 +4282,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4307,9 +4304,8 @@ msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4386,7 +4382,7 @@ msgstr "Thứ tự liên kết:"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Chiều dài %1"
+msgstr "Chiều dài (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
@@ -4398,15 +4394,14 @@ msgid "Secondary Structure"
 msgstr "Vẽ cấu trúc thứ cấp của prô-tê-in"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Hi-đrô"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Nguyên tử %1"
+msgstr "Nguyên tử 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4416,23 +4411,23 @@ msgstr "Đỉnh"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Nguyên tử"
+msgstr "Nguyên tử 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Góc: %L1 °"
+msgstr "Góc (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Nguyên tử"
+msgstr "Nguyên tử 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Nguyên tử"
+msgstr "Nguyên tử 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4868,7 +4863,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -5200,7 +5195,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetrywidget.cpp:330
 #, fuzzy, qt-format
 msgid "Group %1"
-msgstr "Tên nhóm"
+msgstr "Tên nhóm %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:338
 #, qt-format
@@ -5223,16 +5218,12 @@ msgid ""
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:309
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Chèn pep-tit"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:567
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Chèn pep-tit"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -5286,9 +5277,8 @@ msgid "Display vibrational modes."
 msgstr "Rung động"
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6287,17 +6277,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "Không"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "Không"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7690,7 +7676,7 @@ msgstr "&Tải dữ liệu..."
 #, fuzzy
 #| msgid "&Export"
 msgid "Export Data"
-msgstr "&Xuất ra"
+msgstr "Xuất ra"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
