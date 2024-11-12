@@ -42,7 +42,7 @@ jobs:
             os: macos-latest,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64;x86_64",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
             cpack_flags: "-G DragNDrop",
           }
         - {
