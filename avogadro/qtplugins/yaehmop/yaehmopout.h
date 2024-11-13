@@ -13,11 +13,11 @@
 
 namespace Avogadro::QtPlugins {
 
-using specialKPoint = struct
+typedef struct
 {
   QString label;
   Vector3 coords;
-};
+} specialKPoint;
 
 // Static class for Yaehmop output
 class YaehmopOut
