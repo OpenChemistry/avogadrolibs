@@ -10,6 +10,7 @@
 
 #include "avogadrocore.h"
 
+#include <limits>
 #include <map>
 #include <string>
 
@@ -133,7 +134,7 @@ public:
 
 protected:
   std::string m_residueName;
-  Index m_residueId;
+  Index m_residueId = std::numeric_limits<Index>::max();
   char m_chainId;
   AtomNameMap m_atomNameMap;
   bool m_heterogen;
