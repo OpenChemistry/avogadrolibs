@@ -13,14 +13,12 @@
 
 #include <avogadro/core/vector.h>
 
+#include <avogadro/vtk/chartdialog.h>
+
 #include <memory>
 
 // Forward declarations
 class QByteArray;
-
-namespace VTK {
-class ChartDialog;
-}
 
 namespace Avogadro::QtPlugins {
 
