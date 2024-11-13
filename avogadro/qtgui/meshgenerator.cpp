@@ -97,6 +97,7 @@ void MeshGenerator::run()
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;
   qDebug() << "Marching Cube Timing: " << elapsed.count() << " s";
+  qDebug() << " vertices: " << m_vertices.size();
 
   m_cube->lock()->unlock();
 
