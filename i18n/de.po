@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-12 01:05+0000\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1464,7 +1464,7 @@ msgstr "Elementarzelle bearbeiten"
 #: qtgui/rwmolecule.cpp:484
 #, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "Atome um Zelle &wickeln"
+msgstr "Atome um Zelle wickeln"
 
 #: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
@@ -2767,7 +2767,7 @@ msgstr "Kristall aus der Zwischenablage importieren"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Atome in Elementarzelle &halten"
+msgstr "Atome in Elementarzelle halten"
 
 #: qtplugins/crystal/crystal.cpp:177
 msgid "Rotate the unit cell to the standard orientation."
@@ -3662,7 +3662,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
 msgid "Export…"
-msgstr "&Exportieren …"
+msgstr "Exportieren …"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4316,7 +4316,7 @@ msgstr "Datei speichern"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "PLY (*.wrl);;Textdatei (*.txt)"
+msgstr "PLY (*.ply);;Textdatei (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6949,10 +6949,8 @@ msgstr "Suche durch genetischen Algorithmus"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
-#| msgid "Optimization algorithm:"
 msgid "Optimization per conformer:"
-msgstr "Optimierungsalgorithmus:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)

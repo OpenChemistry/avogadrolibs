@@ -2,13 +2,14 @@
 # Copyright (C) 2006-2020 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # phlostically <phlostically@mailinator.com>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2021-09-26 12:57+0000\n"
-"Last-Translator: phlostically <phlostically@mailinator.com>\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
 "Language: eo\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -2449,10 +2450,8 @@ msgid "'b' lattice coordinate."
 msgstr "Krada koordinato 'b'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "Krada koordinato 'a'."
+msgstr "Krada koordinato 'c'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3723,7 +3722,7 @@ msgstr "&Eksporti"
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN-dosieroj (*.wfn);;Ĉiuj dosieroj (*.*)"
+msgstr "CSV-dosieroj (*.csv);;Ĉiuj dosieroj (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -4447,7 +4446,7 @@ msgstr "Konservi Dosieron"
 #, fuzzy
 #| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Teksta dosiero (*.txt)"
+msgstr "PLY (*.ply);;Teksta dosiero (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -4457,7 +4456,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Bildigi ĉi tiun scenon per VRML."
+msgstr "Bildigi ĉi tiun scenon per PLY."
 
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
@@ -4571,7 +4570,7 @@ msgstr "Atomo"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Angulo"
+msgstr "Angulo (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy

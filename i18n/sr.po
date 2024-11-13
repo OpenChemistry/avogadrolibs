@@ -5,22 +5,23 @@
 # Danial K <danial@proctorio.com>, 2021.
 # Nathan <bonnemainsnathan@gmail.com>, 2021.
 # Nikola Matić <nikolamatic225@gmail.com>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2021-08-20 01:04+0000\n"
-"Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2513,10 +2514,8 @@ msgid "'b' lattice coordinate."
 msgstr "'b' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "'a' koordinata rešetke."
+msgstr "'c' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3834,7 +3833,7 @@ msgstr "&Izvezi"
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN Datoteke (*.wfn);;Sve Datoteke (*.*)"
+msgstr "CSV Datoteke (*.csv);;Sve Datoteke (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -4577,19 +4576,17 @@ msgstr "Sačuvaj Datoteku"
 #, fuzzy
 #| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Tekstualna datoteka (*.txt)"
+msgstr "PLY (*.ply);;Tekstualna datoteka (*.txt)"
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 #, fuzzy
 #| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Renderirajte scenu pomoću VRML -a."
+msgstr "Renderirajte scenu pomoću PLY -a."
 
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
@@ -4706,7 +4703,7 @@ msgstr "Атом"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Угао: %L1 °"
+msgstr "Угао (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy

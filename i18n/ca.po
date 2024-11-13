@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3648,7 +3648,7 @@ msgstr "Exporta"
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "Fitxers WFN (*.wfn);;Tots els fitxers (*.*)"
+msgstr "Fitxers CSV (*.csv);;Tots els fitxers (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3729,9 +3729,8 @@ msgid " °"
 msgstr "°"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
 msgid "Angle tolerance:"
-msgstr "tolerància SCF:"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -4455,7 +4454,7 @@ msgstr "Àtom"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Angle: %L1 °"
+msgstr "Angle (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
