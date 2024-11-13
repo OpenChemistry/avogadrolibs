@@ -6,81 +6,91 @@ jobs:
   flatpak:
     name: "Flatpak"
     runs-on: ubuntu-latest
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
-      options: --privileged
 
     steps:
+    - name: Install dependencies
+      run: sudo apt update -qq && sudo apt install -y -qq flatpak flatpak-builder
+    
+    - name: Configure flatpak
+      run: flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    - name: Configure git
+      run: git config --global protocol.file.allow always
+      # Have to do this because for a while git's handling of submodules was broken
+      # See https://github.com/flatpak/flatpak-builder/issues/495
+
     - name: Checkout openchemistry
       uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: false
-        path: src
+        path: openchemistry
         
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
-        path: src/avogadroapp
+        path: openchemistry/avogadroapp
         
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        path: src/avogadrolibs
+        path: openchemistry/avogadrolibs
 
     - name: Checkout i18n
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadro-i18n
-        path: src/avogadro-i18n
+        path: openchemistry/avogadro-i18n
     
     - name: Checkout avogadrogenerators
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogenerators
-        path: src/avogadrogenerators
+        path: openchemistry/avogadrogenerators
 
     - name: Checkout crystals
       uses: actions/checkout@v4
       with:
         repository: openchemistry/crystals
-        path: src/crystals
+        path: openchemistry/crystals
 
     - name: Checkout fragments
       uses: actions/checkout@v4
       with:
         repository: openchemistry/fragments
-        path: src/fragments
+        path: openchemistry/fragments
 
     - name: Checkout molecules
       uses: actions/checkout@v4
       with:
         repository: openchemistry/molecules
-        path: src/molecules
+        path: openchemistry/molecules
 
     - name: Checkout Flathub shared-modules
       uses: actions/checkout@v4
       with:
         repository: flathub/shared-modules
         path: shared-modules
-    
-    - name: Setup tmate session
+
+    - name: Set up tmate session
       if: failure()
       uses: mxschmitt/action-tmate@v3
 
     - name: Move manifest
-      run: mv src/avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
+      run: mv openchemistry/avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
 
     - name: Build with flatpak-builder
-      uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-      with:
-        bundle: avogadro2.flatpak
-        branch: nightly
-        manifest-path: org.openchemistry.Avogadro2.yaml
-        cache: false
-        cache-key: flatpak-builder-${{ github.sha }}
+      run: flatpak-builder --force-clean --user --install-deps-from=flathub --arch=x86_64 --default-branch=test --repo=repo builddir org.openchemistry.Avogadro2.yaml
 
+    - name: Create bundle
+      run: flatpak build-bundle repo Avogadro2.flatpak org.openchemistry.Avogadro2 test
+
+    - name: Upload bundle
+      uses: actions/upload-artifact@v4
+      with:
+        path: Avogadro2.flatpak
+    
     - name: Cleanup
       if: ${{ always() }} # To ensure this step runs even when earlier steps fail
       shell: bash
