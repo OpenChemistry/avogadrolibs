@@ -5,15 +5,14 @@
 
 #include "yaehmopout.h"
 
+#include <avogadro/core/vector.h>
+
 #include <QDebug>
 #include <QRegularExpression>
 #include <QString>
 #include <QVector>
 
-#include <avogadro/core/vector.h>
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 inline bool printAndReturnFalse(const QString& error)
 {
@@ -134,5 +133,4 @@ bool YaehmopOut::readBandData(const QString& data,
   return true;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
