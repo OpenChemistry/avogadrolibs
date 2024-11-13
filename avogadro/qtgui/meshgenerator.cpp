@@ -497,6 +497,10 @@ void MeshGenerator::run()
   points.resize(0);
   normals.resize(0);
   tris.resize(0);
+  edgeCases.resize(0);
+  cubeCases.resize(0);
+  gridEdges.resize(0);
+  triCounter.resize(0);    
 
 }
 
