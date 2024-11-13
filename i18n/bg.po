@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Apostol Penkov <apostol.penkov@gmail.com>, 2020.
 # Salif Mehmed <mail@salif.eu>, 2023.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2023-08-05 21:51+0000\n"
-"Last-Translator: Salif Mehmed <mail@salif.eu>\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"PO-Revision-Date: 2024-11-10 15:10+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
 "Language: bg\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1284,14 +1285,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:194
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Рендерира водородни връзки"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:201
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Рендерира водородни връзки"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1351,9 +1350,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:257
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Промяна името на схемата"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1385,7 +1383,7 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
+msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
@@ -1541,10 +1539,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:30
-#, fuzzy
-#| msgid "Navigate tool"
 msgid "Align tool"
-msgstr "Навигация"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:33
 msgid "Align molecules to a Cartesian axis"
@@ -1693,13 +1689,12 @@ msgid "By Custom Color…"
 msgstr "Потребителски цвят:"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
+msgid "By Atomic Index…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Цвят по разстояние"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -1823,11 +1818,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Отказ"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1974,9 +1967,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2908,20 +2900,18 @@ msgid "Configure…"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
 msgid "Freeze Selected Atoms"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
 msgid "Unfreeze Selected Atoms"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
 #| msgid "Calculate Energy"
 msgid "&Calculate"
-msgstr "Изчисляване на енергията"
+msgstr "Изчисляване"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -3129,7 +3119,7 @@ msgstr "&Вмъкване"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Вмъкване"
+msgstr "Вмъкване"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3168,7 +3158,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Вмъкване"
+msgstr "Вмъкване"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3397,7 +3387,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:218
 #, fuzzy
 msgid "Angles:"
-msgstr "Ъгъл %1"
+msgstr "Ъгъл"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
@@ -3557,14 +3547,8 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid ""
-#| "Error reading output file '%1':\n"
-#| "%2"
 msgid "Error writing to the file."
 msgstr ""
-"Проблем с четенето на файла с траектория '%1':\n"
-"%2"
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
@@ -3628,20 +3612,16 @@ msgid " °"
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Angle Properties"
 msgid "Angle tolerance:"
-msgstr "Свойства на ъгъла"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Водород"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -3854,7 +3834,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:910
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "&Oптимизиране на геометрията"
+msgstr "Oптимизиране на геометрията"
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Error generating Open Babel data."
@@ -4144,40 +4124,49 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr ""
@@ -4197,9 +4186,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4270,7 +4258,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:426
 #, fuzzy
 msgid "Atom"
-msgstr "Атом %1"
+msgstr "Атом"
 
 #: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/propertytables/propertymodel.cpp:472
@@ -4280,9 +4268,8 @@ msgid "Type"
 msgstr "Вид"
 
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Start Atom"
-msgstr "Анимация"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:437
 #, fuzzy
@@ -4298,7 +4285,7 @@ msgstr "Ред на връзките"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Дължина %1"
+msgstr "Дължина"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
@@ -4309,15 +4296,14 @@ msgid "Secondary Structure"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Водород"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Атом %1"
+msgstr "Атом 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4327,23 +4313,23 @@ msgstr "Връх"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Атом %1"
+msgstr "Атом 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Ъгъл %1"
+msgstr "Ъгъл"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Атом %1"
+msgstr "Атом 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Атом %1"
+msgstr "Атом 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4560,19 +4546,16 @@ msgid "Select by Residue…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "Елемент"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
 msgid "Select Sidechain Atoms…"
-msgstr "Елемент"
+msgstr ""
 
-#: qtplugins/select/select.cpp:78
-#, fuzzy
-msgid "Select Water…"
-msgstr "Елемент"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4599,20 +4582,13 @@ msgstr "&Избиране"
 msgid "Select Element"
 msgstr "Елемент"
 
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Елемент"
-
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "Елемент"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "Елемент"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4623,9 +4599,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
 msgid "Select Atom"
-msgstr "&Избиране"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4636,16 +4611,15 @@ msgid "Residues to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:491
-#, fuzzy
 msgid "Select Residue"
-msgstr "&Избиране"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1884
 #, fuzzy
 msgid "Select"
-msgstr "&Избиране"
+msgstr "Избиране"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -4765,7 +4739,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -4799,7 +4773,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Внасяне на спектър"
+msgstr "спектър"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4810,10 +4784,8 @@ msgid "Spectra"
 msgstr "Спектри"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display standard molecular properties."
 msgid "Display spectra plots."
-msgstr "Показване на стандартни молекулярни свойства"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:201
 #, fuzzy
@@ -4831,10 +4803,8 @@ msgid "NMR"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
@@ -4846,9 +4816,8 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
-#, fuzzy
 msgid "Select Background Color"
-msgstr "Елемент"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:269
 msgid "Select Foreground Color"
@@ -4885,17 +4854,15 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Внасяне на спектър"
+msgstr "спектър"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Intensity"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:369
 #, fuzzy
@@ -4904,16 +4871,12 @@ msgid "NMR Spectra"
 msgstr "Спектри"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Chemical files (*.parm7)"
 msgid "Chemical Shift (ppm)"
-msgstr "Химически файлове (*.parm7)"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -4946,10 +4909,8 @@ msgid "Electron Density"
 msgstr "Плътност на електроните"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Spin Density"
-msgstr "Плътност на електроните"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5021,9 +4982,8 @@ msgid "Calculating electron density"
 msgstr "Изчисляване плътността на електроните"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Изчисляване плътността на електроните"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5037,7 +4997,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
-msgstr "&Изнасяне на изображение"
+msgstr "Изнасяне на изображение"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5125,14 +5085,12 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:567
 #, fuzzy
 msgid "Insert Ligand"
-msgstr "&Вмъкване"
+msgstr "Вмъкване"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
-#| msgid "Navigate tool"
 msgid "Template tool"
-msgstr "Навигация"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5175,9 +5133,8 @@ msgid "Display vibrational modes."
 msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6264,10 +6221,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
 msgctxt "single-strand DNA"
 msgid "Single"
-msgstr "Ъгъл %1"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
@@ -6833,7 +6789,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 #, fuzzy
 msgid "Geometry"
-msgstr "&Oптимизиране на геометрията"
+msgstr "Oптимизиране на геометрията"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -7529,10 +7485,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
-#, fuzzy
-#| msgid "No data"
 msgid "&Load data..."
-msgstr "Липсват данни"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
@@ -7777,7 +7731,7 @@ msgstr ""
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7793,10 +7747,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Стронций"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8043,14 +7995,14 @@ msgstr ""
 #, fuzzy
 #| msgid "Group %1"
 msgid "Groups"
-msgstr "Група %1"
+msgstr "Група"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 #| msgid "Group %1"
 msgid "Group:"
-msgstr "Група %1"
+msgstr "Група"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8079,10 +8031,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Азот"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8284,6 +8234,10 @@ msgstr ""
 "svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com,,,svetlisashkov@yahoo."
 "com,,,svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com,,,"
 "svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com,,,svetlisashkov@yahoo.com"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Цвят по разстояние"
 
 #, fuzzy
 #~| msgid "Copy"

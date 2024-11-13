@@ -43,6 +43,8 @@ public:
   int denticity() const;
   std::vector<size_t>& selectedUIDs();
 
+  int currentTab() const;
+
 private slots:
   void elementChanged(int index);
   void updateElementCombo();

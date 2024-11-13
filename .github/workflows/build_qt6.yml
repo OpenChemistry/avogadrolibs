@@ -7,7 +7,7 @@ name: Qt6 Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.5.3
+  QT_VERSION: 6.8.0
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.15
@@ -39,10 +39,10 @@ jobs:
           }
         - {
             name: "macOS Qt6", artifact: "",
-            os: macos-13,
+            os: macos-latest,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -65,11 +65,7 @@ jobs:
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
-        if uname -p | grep -q "arm" ; then
-           export PATH=/opt/homebrew/bin:$PATH
-        else # not self-hosted runner
-          brew install ninja eigen glew
-        fi
+        brew install ninja eigen glew
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
@@ -92,11 +88,20 @@ jobs:
         path: avogadrolibs
 
     - name: Install Qt
+      if: runner.os != 'Windows'
       uses: jurplel/install-qt-action@v3
       with:
         version: ${{ env.QT_VERSION }}
         aqtversion: '==3.1.*'
-        modules: 'qt5compat'
+
+    - name: Install Qt (Windows)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ env.QT_VERSION }}
+        aqtversion: '==3.1.*'
+        host: windows
+        arch: win64_msvc2022_64
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -135,7 +140,7 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
-    
+
     - name: Upload
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v4

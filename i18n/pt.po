@@ -8,13 +8,14 @@
 # João Tiago Antunes <jtiago.cbr@gmail.com>, 2020.
 # Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
 # Gustavo Sousa Jr <grsousajunior@gmail.com>, 2022.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-03-24 15:20+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1085,7 +1086,7 @@ msgstr "Todos os Ficheiros"
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Todos os formatos suportados (%1);;"
+msgstr "Todos os formatos suportados"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
@@ -1130,7 +1131,7 @@ msgstr "'type' não é uma cadeia para a opção '%1'."
 #: qtgui/jsonwidget.cpp:100
 #, fuzzy, qt-format
 msgid "Could not find option '%1'."
-msgstr "Não é possível executar povray."
+msgstr "Não é possível executar '%1'."
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
@@ -1339,11 +1340,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1..."
+#, qt-format
 msgid "Warning '%1'"
-msgstr "Iniciando %1..."
+msgstr ""
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
@@ -1474,8 +1473,8 @@ msgid "Update Bond"
 msgstr "Atualizar Ligação"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Adicionar Célula Unitária"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1529,16 +1528,12 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Reduzir a Unidade Assimétrica"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Alterar Hibridização do Átomo"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "Mudar Cor do Átomo"
+msgstr ""
 
 #: qtgui/rwmolecule.h:228
 #, fuzzy
@@ -1556,16 +1551,13 @@ msgid "Modify Molecule"
 msgstr "Modificar Molécula"
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "&Settings"
 msgid "Settings"
-msgstr "&Configurações"
+msgstr "Configurações"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Não foi possível gravar o ficheiro %1."
+msgstr ""
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -1654,7 +1646,7 @@ msgstr "Alinhar moléculas com o eixo Cartesiano"
 #, fuzzy
 #| msgid "Run APBS"
 msgid "Run APBS…"
-msgstr "Executar APBS"
+msgstr "Executar APBS…"
 
 #: qtplugins/apbs/apbs.cpp:36
 #, fuzzy
@@ -1797,14 +1789,12 @@ msgid "By Custom Color…"
 msgstr "Por Cor Personalizada..."
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Número Atômico."
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Distância:"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -1931,11 +1921,9 @@ msgstr "Coolwarm"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Cancelar"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2179,16 +2167,12 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Centroid"
-msgstr "Adicionar Restrições"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:21
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Center of Mass"
-msgstr "Adicionar Restrições"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
@@ -2236,10 +2220,8 @@ msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:232
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Minimum Distance:"
 msgid "Maximum distance:"
-msgstr "Distância Mínima:"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:233
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2428,16 +2410,12 @@ msgid "Element symbol."
 msgstr "Símbolo do Elemento."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "Número atômico inválido."
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "Número atômico inválido."
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
@@ -2482,10 +2460,8 @@ msgid "'b' lattice coordinate."
 msgstr "coordenada de rede 'b'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "coordenada de rede 'a'."
+msgstr "coordenada de rede 'c'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -2856,7 +2832,7 @@ msgstr "I&mportar Cristal da Área de Transferência"
 #, fuzzy
 #| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Envolver Átomos na Célula Unitária"
+msgstr "Envolver Átomos na Célula Unitária"
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -3103,7 +3079,7 @@ msgstr "Corrigir átomos seleccionados"
 #, fuzzy
 #| msgid "Calculate"
 msgid "&Calculate"
-msgstr "Calcular"
+msgstr "&Calcular"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -3763,14 +3739,12 @@ msgstr "Propriedades da Molécula"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Exportar"
+msgstr "Exportar CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
-#, fuzzy
-#| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "Ficheiros WFN (*.wfn);;Todos os ficheiros (*.*)"
+msgstr "Ficheiros CSV (*.csv);;Todos os ficheiros (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3863,10 +3837,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hidrogénio"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -3917,7 +3889,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Loading molecule from CML..."
 msgid "Loading molecule from Open Babel…"
-msgstr "Carregando molécula de CML..."
+msgstr "Carregando molécula de Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
@@ -3973,7 +3945,8 @@ msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
-"Ocorreu um erro interno ao gerar uma representação CML da molécula atual."
+"Ocorreu um erro interno ao gerar uma representação Open Babel da molécula "
+"atual."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, fuzzy, qt-format
@@ -3981,7 +3954,7 @@ msgstr ""
 #| msgid "Starting %1..."
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr "Iniciando %1..."
+msgstr "Iniciando %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
 #: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
@@ -4029,10 +4002,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr "Não é possível abrir o ficheiro com o Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
-#| msgid "Optimizing Geometry (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "Otimizando Geometria (Open Babel)"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -4065,13 +4036,13 @@ msgstr "Erro ao criar a cadeia XYZ."
 #, fuzzy, qt-format
 #| msgid "Converting XYZ to CML with %1..."
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr "Convertendo XYZ em CML com %1..."
+msgstr "Convertendo XYZ em Open Babel com %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:761
 #, fuzzy
 #| msgid "Updating molecule from CML..."
 msgid "Updating molecule from Open Babel…"
-msgstr "Atualizando molécula de CML..."
+msgstr "Atualizando molécula de Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
 msgid "Cannot add hydrogens with Open Babel."
@@ -4085,7 +4056,7 @@ msgstr "Adicionando Hidrogênios (Open Babel)"
 #, fuzzy
 #| msgid "Generating Open Babel input..."
 msgid "Generating Open Babel input…"
-msgstr "Criando entrada Open Babel..."
+msgstr "Criando entrada Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Error generating Open Babel input."
@@ -4111,7 +4082,7 @@ msgstr "pH:"
 #, fuzzy
 #| msgid "Generating obabel input..."
 msgid "Generating obabel input…"
-msgstr "Criando entrada obabel..."
+msgstr "Criando entrada obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:905
 msgid "Cannot remove hydrogens with Open Babel."
@@ -4131,7 +4102,7 @@ msgstr "Erro ao criar entrada Open Babel."
 #, fuzzy
 #| msgid "Reading obabel output..."
 msgid "Reading obabel output…"
-msgstr "Lendo saída obabel..."
+msgstr "Lendo saída obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:1005
 msgid ""
@@ -4428,40 +4399,49 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr ""
@@ -4877,9 +4857,9 @@ msgstr "Número Atômico."
 msgid "Select Sidechain Atoms…"
 msgstr "Número Atômico."
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Número Atômico."
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4911,11 +4891,6 @@ msgstr "&Seleccionar"
 #| msgid "Select by Element..."
 msgid "Select Element"
 msgstr "Seleccionar por elemento..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Número Atômico."
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -5216,13 +5191,11 @@ msgstr "Modos Vibracionais"
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Frequência (cm<sup>-1</sup>)"
+msgstr "Frequência (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Estado de Transição"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
@@ -5455,10 +5428,8 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Temperatura"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -6613,17 +6584,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "N/D"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "N/D"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6649,10 +6616,8 @@ msgstr "A:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "Tyrosine"
 msgid "Cytosine"
-msgstr "Tirosina"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
@@ -8159,10 +8124,8 @@ msgstr "Exportar o espectro calculado"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Tamanho Constante"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8301,18 +8264,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
-#, fuzzy
-#| msgid " K"
 msgid " "
-msgstr " K"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgctxt "A cube type of nothing - empty cube"
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "Nada"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8323,10 +8281,8 @@ msgstr "Claro"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Estrôncio"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8461,7 +8417,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Editor de coordenadas"
+msgstr "coordenadas"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -8544,24 +8500,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Estado de Transição"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Estado de Transição"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Estado de Transição"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8590,7 +8540,7 @@ msgstr "Grupo %1"
 #, fuzzy
 #| msgid "Group %1"
 msgid "Group:"
-msgstr "Grupo %1"
+msgstr "Grupo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8619,10 +8569,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Azoto"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8848,6 +8796,21 @@ msgstr ""
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo."
 "pt,,,,,avogadro-devel@lists.sourceforge.net,david.rodrigues@gmail.com,,,"
 "ivoxavier.8@gmail.com,manuel.n.silva@gmail.com,,,,,,danielagostinho@sapo.pt"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Adicionar Célula Unitária"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Número Atômico."
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Distância:"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Número Atômico."
 
 #, fuzzy
 #~| msgid "Copy"

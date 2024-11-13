@@ -82,10 +82,12 @@ jobs:
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
+        sudo add-apt-repository -y universe
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
+        sudo apt install libfuse2
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -287,21 +289,26 @@ jobs:
         OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
 
     - name: AppImage
-      if: matrix.config.os == 'ubuntu-20.04' && matrix.config.build_type == 'Release'
+      if: matrix.config.os == 'ubuntu-22.04' && matrix.config.build_type == 'Release'
       shell: bash
       run: |
         mkdir appdir
         mv prefix appdir/usr
-        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:appdir/usr/lib
+
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
         chmod a+x *.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
+
+        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
         # add the custom AppRun
         rm appdir/AppRun
         cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro2*.AppImage avogadroapp # for upload
+        mv Avogadro*.AppImage avogadroapp # for upload
       working-directory: ${{ runner.workspace }}/build
 
     - name: Notarize Mac DMG
@@ -329,7 +336,7 @@ jobs:
       if: matrix.config.artifact != 0
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Cleanup

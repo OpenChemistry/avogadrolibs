@@ -10,13 +10,14 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-10-16 01:51+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"PO-Revision-Date: 2024-11-12 01:05+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-rc\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1449,8 +1450,8 @@ msgid "Update Bond"
 msgstr "Bindung aktualisieren"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Elementarzelle hinzufügen"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1523,10 +1524,8 @@ msgid "Modify Molecule"
 msgstr "Molekül verändern"
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "&Settings"
 msgid "Settings"
-msgstr "&Einstellungen"
+msgstr "Einstellungen"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1755,12 +1754,12 @@ msgid "By Custom Color…"
 msgstr "Nach benutzerdefinierter Farbe…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Nach Atomindex"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "Nach Distanz"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -2362,16 +2361,12 @@ msgid "Element symbol."
 msgstr "Elementsymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "Ordnungszahl ungültig."
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "Ordnungszahl ungültig."
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 msgid "Atomic index."
@@ -3004,10 +2999,8 @@ msgid "Freeze Selected Atoms"
 msgstr "Ausgewählte Atome einfrieren"
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Bond Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Ausgewählte Atome verbinden"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
@@ -3040,8 +3033,6 @@ msgid "%1 Force Norm = %L2"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:46
-#, fuzzy
-#| msgid "Forcefield Optimization"
 msgid "Forcefield optimization"
 msgstr "Kraftfeld-Optimierung"
 
@@ -3321,9 +3312,8 @@ msgid "None"
 msgstr "Keine"
 
 #: qtplugins/label/label.cpp:164
-#, fuzzy
 msgid "Index"
-msgstr "Indiz"
+msgstr ""
 
 #: qtplugins/label/label.cpp:165
 msgid "Unique ID"
@@ -3335,10 +3325,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:167
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Elementname."
+msgstr "Element & Nummer"
 
 #: qtplugins/label/label.cpp:169
 msgid "Element & ID"
@@ -3629,7 +3617,7 @@ msgstr "Allgemeine Eigenschaften eines Moleküls ansehen."
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
-msgstr "Analytisch"
+msgstr "&Analytisch"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3652,14 +3640,14 @@ msgstr "Molküleigenschaften"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Exportieren"
+msgstr "Exportieren CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN-Dateien (*.wfn);;Alle Dateitypen (*.*)"
+msgstr "CSV-Dateien (*.csv);;Alle Dateitypen (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3668,10 +3656,8 @@ msgstr "Datei kann nicht zum Schreiben geöffnet werden."
 
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Lesen von Strukturdatei (%1) fehlgeschlagen."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
@@ -3834,7 +3820,7 @@ msgstr "Geometrie wird optimiert (Open Babel)"
 #, fuzzy
 #| msgid "Generating MDL…"
 msgid "Generating…"
-msgstr "MDL wird generiert…"
+msgstr "generiert…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
@@ -3892,15 +3878,13 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr "Datei kann mit Open Babel nicht geöffnet werden."
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
-#| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "Bindungen werden erkannt (Open Babel)"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
 msgid "Generate Conformers"
-msgstr "Konformer %1"
+msgstr "Konformer"
 
 #: qtplugins/openbabel/openbabel.cpp:720
 msgid "Cannot open file with Open Babel."
@@ -4260,40 +4244,49 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "%1 wird zu %2 herunterladen\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1 wird zu %2 extrahiert\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 Dateien fertig\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr "Extraktion erfolgreich\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Extraktionsfehler: %1"
@@ -4556,9 +4549,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr "Rendert primitive Strukturen mit Hilfe von QTAIM-Eigenschaften"
 
 #: qtplugins/qtaim/qtaimextension.cpp:46
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Molekülorbital"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
 msgid "Molecular Graph with Lone Pairs…"
@@ -4609,10 +4601,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Ladung:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4658,9 +4648,9 @@ msgstr "Wähle Gerüstatome …"
 msgid "Select Sidechain Atoms…"
 msgstr "Wähle Seitenkettenatome…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Wasser auswählen…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Wasser auswählen"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4686,19 +4676,13 @@ msgstr "Au&swahl"
 msgid "Select Element"
 msgstr "Auswahl nach Element"
 
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Wasser auswählen"
-
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "Atomindizes"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "Atomindizes"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4763,9 +4747,8 @@ msgstr ""
 "Doppelklick: \t Auswahl eines ganzen Fragmentes."
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Atom starten"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -4917,7 +4900,7 @@ msgstr "Spektral"
 #, fuzzy
 #| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "Spektren und Schwingungsmoden anzeigen."
+msgstr "Spektren anzeigen."
 
 #: qtplugins/spectra/spectradialog.cpp:201
 #, fuzzy
@@ -4949,7 +4932,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "&Zustandsdichteneinstellungen"
+msgstr "Zustandsdichteneinstellungen"
 
 #: qtplugins/spectra/spectradialog.cpp:256
 msgid "Select Background Color"
@@ -4968,29 +4951,25 @@ msgid "Select Imported Spectra Color"
 msgstr "Farbe des importierten Spektrums wählen"
 
 #: qtplugins/spectra/spectradialog.cpp:342
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "Schwingungsmodi"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:343
 #: qtplugins/spectra/spectradialog.cpp:357
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Wellennummer (cm<sup>-1</sup>)"
+msgstr "Wellennummern (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Übergangsstatus"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Spektren importieren"
+msgstr "Spektren"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
@@ -5014,10 +4993,8 @@ msgid "Chemical Shift (ppm)"
 msgstr "Shift (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Elektronendichte"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -5083,22 +5060,16 @@ msgid "Render the van der Waals surface."
 msgstr "Van-der-Waals Oberfläche rendern."
 
 #: qtplugins/surfaces/surfaces.cpp:113
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "Molekül als Drahtgittermodell wiedergeben."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:115
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Molekül als Drahtgittermodell wiedergeben."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:117
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "Molekül als Drahtgittermodell wiedergeben."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
 msgid "Render a molecular orbital."
@@ -5109,10 +5080,8 @@ msgid "Render the electron density."
 msgstr "Rendern der Elektronendichte."
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Render the scene using POV-Ray."
 msgid "Render the spin density."
-msgstr "Szene mit POV-Ray rendern."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a cube supplied with the file."
@@ -5124,9 +5093,8 @@ msgid "Calculating electron density"
 msgstr "Berechne Elektronendichte"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Berechne Elektronendichte"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5250,10 +5218,8 @@ msgid "Show the vibrational modes dialog."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Set the vibrational mode."
-msgstr "Spektren und Schwingungsmoden anzeigen."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -5277,7 +5243,7 @@ msgstr "Vibration"
 #, fuzzy
 #| msgid "Display spectra and vibrational modes."
 msgid "Display vibrational modes."
-msgstr "Spektren und Schwingungsmoden anzeigen."
+msgstr "Schwingungsmoden anzeigen."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -5414,10 +5380,8 @@ msgstr "Skript debuggen …"
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#, fuzzy
-#| msgid "Running Abinit calculation..."
 msgid "Submit Calculation…"
-msgstr "Abinit-Berechnung läuft …"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -6118,10 +6082,8 @@ msgstr "Konvergenzkriterien"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Energy and Forces"
 msgid "Energy convergence:"
-msgstr "Energie und Kräfte"
+msgstr ""
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6896,7 +6858,7 @@ msgstr "Benutze Form"
 #, fuzzy
 #| msgid "Generating MDL…"
 msgid "Generate…"
-msgstr "MDL wird generiert…"
+msgstr "generiert…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6948,7 +6910,7 @@ msgstr "Ursprung"
 #, fuzzy
 #| msgid "Optimize Geometry"
 msgid "Geometry"
-msgstr "Geometrie optimieren"
+msgstr "Geometrie"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -7009,7 +6971,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Children"
 msgid "Children:"
-msgstr "Kinder"
+msgstr "Kinder:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7023,7 +6985,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Mutability"
 msgid "Mutability:"
-msgstr "Austauschbarkeit"
+msgstr "Austauschbarkeit:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7034,17 +6996,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Energy and Forces"
 msgid "Convergence:"
-msgstr "Energie und Kräfte"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #, fuzzy
 #| msgid "Scoring method"
 msgid "Scoring method:"
-msgstr "Methode der Auswahl"
+msgstr "Methode der Auswahl:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -7655,7 +7615,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Spectra and Vibrations"
 msgid "Spectra Visualization"
-msgstr "Spektren und Schwingungen"
+msgstr "Spektren"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
@@ -7677,7 +7637,7 @@ msgstr "&Schließen"
 #, fuzzy
 #| msgid "&Scaling Factor:"
 msgid "Scale Factor:"
-msgstr "&Skalierungsfaktor:"
+msgstr "Skalierungsfaktor:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7710,8 +7670,6 @@ msgstr "Minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Peak width:"
 msgid "Peak Width:"
 msgstr "Peakbreite:"
 
@@ -7775,7 +7733,7 @@ msgstr "Hintergrund:"
 #, fuzzy
 #| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "Das berechnete Spektrum exportieren"
+msgstr "berechnete Spektrum"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7784,10 +7742,8 @@ msgstr "Schriftgröße:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8171,10 +8127,8 @@ msgstr "Ligand:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "Gruppe %1"
+msgstr "Gruppen"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8208,10 +8162,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Stickstoff"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8454,6 +8406,18 @@ msgstr ""
 "de,,,,coolx67@gmx.at,,,,,,,,simon@ochsenreither.de,,,aleixosk@gmail.com,,"
 "avogadro-devel@lists.sourceforge.net,,,,,,,,,armin_mohring@web.de,,,,"
 "coolx67@gmx.at,,,,tobannert@gmail.com,,,,simon@ochsenreither.de"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Elementarzelle hinzufügen"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Nach Atomindex"
+
+#~ msgid "By Distance"
+#~ msgstr "Nach Distanz"
+
+#~ msgid "Select Water…"
+#~ msgstr "Wasser auswählen…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Kopieren"

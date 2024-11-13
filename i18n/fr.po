@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
 "PO-Revision-Date: 2024-07-02 20:34+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
@@ -1467,8 +1467,8 @@ msgid "Update Bond"
 msgstr "Mettre à jour la liaison"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Ajouter une maille"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1769,12 +1769,12 @@ msgid "By Custom Color…"
 msgstr "Par couleur personnalisée…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Par indice d'atome"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "Par distance"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4245,7 +4245,7 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4253,34 +4253,43 @@ msgstr ""
 "Ce greffon nécessite certains paquets à installer.\n"
 "Vous voulez les installer ?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr "Toujours"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr "Jamais"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Téléchargement de %1 vers %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extraction de %1 vers %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 fichiers traités\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr "Extraction réussie\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Erreur lors de l'extraction : %1"
@@ -4641,9 +4650,9 @@ msgstr "Sélectionner des atomes du résidu…"
 msgid "Select Sidechain Atoms…"
 msgstr "Sélectionner des atomes de la chaîne latérale…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Sélectionner d'eau…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Sélectionner les molécules d'eau"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4668,10 +4677,6 @@ msgstr "&Sélectionner"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "Sélectionner l'élément"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Sélectionner les molécules d'eau"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8437,6 +8442,18 @@ msgstr ""
 "psycojoker@gmail.com, louis.ricard@polytechnique.edu nizar.kerkeni@gmail."
 "com, jacob.benoit.1@gmail.com, nizarus@nizarus.org, nizarus@nizarus.tn, "
 "pierre.slamich@gmail.com, etc"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Ajouter une maille"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Par indice d'atome"
+
+#~ msgid "By Distance"
+#~ msgstr "Par distance"
+
+#~ msgid "Select Water…"
+#~ msgstr "Sélectionner d'eau…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Copier"

@@ -3,22 +3,23 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 # Emin Macanović <macanovic.emin@gmail.com>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2021-07-12 15:33+0000\n"
-"Last-Translator: Emin Macanović <macanovic.emin@gmail.com>\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1389,9 +1390,8 @@ msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Popuni jedinicu ćelije"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1707,14 +1707,12 @@ msgid "By Custom Color…"
 msgstr "Boja po izboru"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Indikacije atoma"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Rastojanje"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
@@ -3196,7 +3194,7 @@ msgstr "&Ubaci"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Ubaci"
+msgstr "Ubaci"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3239,7 +3237,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Ubaci"
+msgstr "Ubaci"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -4240,40 +4238,49 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr ""
@@ -4684,9 +4691,9 @@ msgstr "Indikacije atoma"
 msgid "Select Sidechain Atoms…"
 msgstr "Indikacije atoma"
 
-#: qtplugins/select/select.cpp:78
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
-msgid "Select Water…"
+msgid "Select Water"
 msgstr "Indikacije atoma"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
@@ -4718,11 +4725,6 @@ msgstr "&Izaberi"
 #| msgid "Select by Residue..."
 msgid "Select Element"
 msgstr "Odabir po ostatku..."
-
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Indikacije atoma"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -6317,17 +6319,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "N/D"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "N/D"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8493,6 +8491,22 @@ msgstr ""
 ",,,,avogadro-devel@lists.sourceforge.net,,,avogadro-devel@lists.sourceforge."
 "net,,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-devel@lists."
 "sourceforge.net,,"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Popuni jedinicu ćelije"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Indikacije atoma"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Rastojanje"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Indikacije atoma"
 
 #, fuzzy
 #~| msgid "Molecule Charge:"

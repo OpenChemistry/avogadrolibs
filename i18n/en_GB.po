@@ -7,13 +7,14 @@
 # Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 # matterhorn103 <milner94@live.co.uk>, 2023.
 # Andi Chandler <andi@gowling.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-11-03 13:00+0000\n"
-"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"PO-Revision-Date: 2024-11-10 03:17+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -1401,7 +1402,7 @@ msgstr "Change Atom Formal Charge"
 
 #: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
-msgstr "Change Atom Color"
+msgstr "Change Atom Colour"
 
 #: qtgui/rwmolecule.cpp:257
 msgid "Change Atom Layer"
@@ -1436,8 +1437,8 @@ msgid "Update Bond"
 msgstr "Update Bond"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Add &Unit Cell"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1583,7 +1584,7 @@ msgstr "Align to Axis"
 
 #: qtplugins/aligntool/aligntool.cpp:312
 msgid "Center the atom at the origin."
-msgstr "Center the atom at the origin."
+msgstr "Centre the atom at the origin."
 
 #: qtplugins/aligntool/aligntool.cpp:315
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1738,12 +1739,12 @@ msgid "By Custom Color…"
 msgstr "By Custom Colour…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "By Atomic Index"
+msgid "By Atomic Index…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "By Distance"
+msgid "By Distance…"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -3247,7 +3248,7 @@ msgstr "Colour:"
 
 #: qtplugins/label/label.cpp:153
 msgid "Distance from center:"
-msgstr "Distance from center:"
+msgstr "Distance from centre:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -4185,7 +4186,7 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4193,34 +4194,43 @@ msgstr ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr "Always"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr "Never"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Downloading %1 to %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extracting %1 to %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "Finished %1 files\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr "Extraction successful\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Error while extracting: %1"
@@ -4579,9 +4589,9 @@ msgstr "Select Backbone Atoms…"
 msgid "Select Sidechain Atoms…"
 msgstr "Select Sidechain Atoms…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Select Water…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Select Water"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4606,10 +4616,6 @@ msgstr "&Select"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "Select Element"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Select Water"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -5095,7 +5101,7 @@ msgid ""
 msgstr ""
 "Template Tool\n"
 "\n"
-"Insert fragments, including metal centers.\n"
+"Insert fragments, including metal centres.\n"
 "Select an element and coordination geometry,then click to insert a "
 "fragment.\n"
 "\n"
@@ -8387,6 +8393,18 @@ msgstr ""
 "sourceforge.net,bburns@aundae.com,cwoollard@gmail.com,,,,joseph."
 "odell@googlemail.com,,,,,avogadro-devel@lists.sourceforge.net,bburns@aundae."
 "com,cwoollard@gmail.com,,,,joseph.odell@googlemail.com"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Add &Unit Cell"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "By Atomic Index"
+
+#~ msgid "By Distance"
+#~ msgstr "By Distance"
+
+#~ msgid "Select Water…"
+#~ msgstr "Select Water…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Copy"

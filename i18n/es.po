@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2024-11-06 02:00+0000\n"
+"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"PO-Revision-Date: 2024-11-11 19:52+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1467,8 +1467,8 @@ msgid "Update Bond"
 msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:392
-msgid "Add Unit Cell"
-msgstr "Añadir Celda Unidad"
+msgid "Add Unit Cell…"
+msgstr "Añadir celda de unidad…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1769,12 +1769,12 @@ msgid "By Custom Color…"
 msgstr "Por Color Personalizado…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
-msgid "By Atomic Index"
-msgstr "Por Índice Atómico"
+msgid "By Atomic Index…"
+msgstr "Por índice atómico…"
 
 #: qtplugins/applycolors/applycolors.cpp:53
-msgid "By Distance"
-msgstr "Por Distancia"
+msgid "By Distance…"
+msgstr "Por distancia…"
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -3559,32 +3559,32 @@ msgstr "Carga neta"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Multiplicidad de espín neto"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "Energía HOMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:297
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "Energía LUMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:299
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "Energía SOMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Energía total (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Energía del punto cero (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgid "Enthalpy (kcal/mol)"
@@ -3596,7 +3596,7 @@ msgstr "Entropía (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:311
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Energía libre de Gibbs (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -4234,7 +4234,7 @@ msgstr "Error al descargar los datos del complemento."
 msgid "Error parsing plugin data."
 msgstr "Error al analizar los datos del complemento."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4242,34 +4242,43 @@ msgstr ""
 "Este plugin requiere la instalación de ciertos paquetes.\n"
 "¿Desea instalarlos?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr "Siempre"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr "Nunca"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr "Falló la descarga desde %1: código de estado %2, %3\n"
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Descargando %1 to %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Extrayendo %1 to %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "Finalizando %1 archivos\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr "Extracción exitosa\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Error extrayendo: %1"
@@ -4629,9 +4638,9 @@ msgstr "Seleccionar Átomos del Esqueleto…"
 msgid "Select Sidechain Atoms…"
 msgstr "Seleccionar Átomos de las Cadenas Laterales…"
 
-#: qtplugins/select/select.cpp:78
-msgid "Select Water…"
-msgstr "Seleccionar Agua…"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr "Seleccionar Agua"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4656,10 +4665,6 @@ msgstr "&Seleccionar"
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
 msgstr "Seleccionar Elemento"
-
-#: qtplugins/select/select.cpp:217
-msgid "Select Water"
-msgstr "Seleccionar Agua"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -8545,6 +8550,18 @@ msgstr ""
 "grovertapia@hotmail.com,,joseb.gutierrez@gmail.com,,,,meilan@adinet.com.uy,"
 "tres.14159@gmail.com,monkey.libre@gmail.com,nzahlut@live.com,,paco@byasl."
 "com,,victorhera@gmail.com,memaljo@yahoo.com,"
+
+#~ msgid "Add Unit Cell"
+#~ msgstr "Añadir Celda Unidad"
+
+#~ msgid "By Atomic Index"
+#~ msgstr "Por Índice Atómico"
+
+#~ msgid "By Distance"
+#~ msgstr "Por Distancia"
+
+#~ msgid "Select Water…"
+#~ msgstr "Seleccionar Agua…"
 
 #~ msgid "&Copy"
 #~ msgstr "&Copiar"
