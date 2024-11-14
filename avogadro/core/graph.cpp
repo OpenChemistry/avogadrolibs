@@ -10,6 +10,7 @@
 #include <cassert>
 #include <set>
 #include <stack>
+#include <utility>
 
 namespace Avogadro::Core {
 
@@ -70,9 +71,6 @@ size_t Graph::addVertex()
 
 void Graph::removeVertex(size_t index)
 {
-  // Allow ADL for swap
-  using std::swap;
-
   assert(index < size());
   // Mark the subgraph as dirty, leave the work for later
   if (m_vertexToSubgraph[index] >= 0)
@@ -82,7 +80,7 @@ void Graph::removeVertex(size_t index)
 
   // Swap with last vertex.
   if (index < size() - 1) {
-    swap(m_adjacencyList[index], m_adjacencyList.back());
+    std::swap(m_adjacencyList[index], m_adjacencyList.back());
     size_t affectedIndex = m_adjacencyList.size() - 1;
     // NOLINTBEGIN(*)
     for (size_t i = 0; i < m_adjacencyList[index].size(); i++) {
@@ -93,7 +91,7 @@ void Graph::removeVertex(size_t index)
       }
     }
     // NOLINTEND(*)
-    swap(m_edgeMap[index], m_edgeMap.back());
+    std::swap(m_edgeMap[index], m_edgeMap.back());
     for (size_t i = 0; i < m_edgeMap[index].size(); i++) {
       size_t edgeIndex = m_edgeMap[index][i];
       if (m_edgePairs[edgeIndex].first == affectedIndex)
@@ -103,7 +101,7 @@ void Graph::removeVertex(size_t index)
     }
     if (m_vertexToSubgraph[index] >= 0)
       m_subgraphToVertices[m_vertexToSubgraph[index]].erase(index);
-    swap(m_vertexToSubgraph[index], m_vertexToSubgraph.back());
+    std::swap(m_vertexToSubgraph[index], m_vertexToSubgraph.back());
     if (m_vertexToSubgraph[index] >= 0) {
       m_subgraphToVertices[m_vertexToSubgraph[index]].erase(affectedIndex);
       m_subgraphToVertices[m_vertexToSubgraph[index]].insert(index);
@@ -144,7 +142,7 @@ void Graph::swapVertexIndices(size_t a, size_t b)
     // NOLINTEND(*)
   }
 
-  swap(m_adjacencyList[a], m_adjacencyList[b]);
+  std::swap(m_adjacencyList[a], m_adjacencyList[b]);
 
   // Update m_edgePairs using info from m_edgeMap
   for (size_t i = 0; i < m_edgeMap[a].size(); i++) {
@@ -168,7 +166,7 @@ void Graph::swapVertexIndices(size_t a, size_t b)
       m_edgePairs[edgeIndex].second = a;
   }
 
-  swap(m_edgeMap[a], m_edgeMap[b]);
+  std::swap(m_edgeMap[a], m_edgeMap[b]);
 }
 
 size_t Graph::vertexCount() const
@@ -178,13 +176,10 @@ size_t Graph::vertexCount() const
 
 size_t Graph::addEdge(size_t a, size_t b)
 {
-  // Allow ADL for swap
-  using std::swap;
-
   assert(a < size());
   assert(b < size());
   if (b < a)
-    swap(a, b);
+    std::swap(a, b);
   std::vector<size_t>& neighborsA = m_adjacencyList[a];
   std::vector<size_t>& neighborsB = m_adjacencyList[b];
 
@@ -281,9 +276,6 @@ std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
 
 void Graph::removeEdge(size_t a, size_t b)
 {
-  // Allow ADL for swap
-  using std::swap;
-
   assert(a < size());
   assert(b < size());
 
@@ -295,9 +287,9 @@ void Graph::removeEdge(size_t a, size_t b)
   if (iter == neighborsA.end())
     return;
 
-  swap(*iter, neighborsA.back());
+  std::swap(*iter, neighborsA.back());
   neighborsA.pop_back();
-  swap(*std::find(neighborsB.begin(), neighborsB.end(), a), neighborsB.back());
+  std::swap(*std::find(neighborsB.begin(), neighborsB.end(), a), neighborsB.back());
   neighborsB.pop_back();
 
   size_t edgeIndex;
@@ -305,7 +297,7 @@ void Graph::removeEdge(size_t a, size_t b)
     edgeIndex = m_edgeMap[a][i];
     const std::pair<size_t, size_t>& pair = m_edgePairs[edgeIndex];
     if (pair.first == b || pair.second == b) {
-      swap(m_edgeMap[a][i], m_edgeMap[a].back());
+      std::swap(m_edgeMap[a][i], m_edgeMap[a].back());
       m_edgeMap[a].pop_back();
       break;
     }
@@ -313,13 +305,13 @@ void Graph::removeEdge(size_t a, size_t b)
 
   for (size_t i = 0; i < m_edgeMap[b].size(); i++) {
     if (m_edgeMap[b][i] == edgeIndex) {
-      swap(m_edgeMap[b][i], m_edgeMap[b].back());
+      std::swap(m_edgeMap[b][i], m_edgeMap[b].back());
       m_edgeMap[b].pop_back();
       break;
     }
   }
 
-  swap(m_edgePairs[edgeIndex], m_edgePairs.back());
+  std::swap(m_edgePairs[edgeIndex], m_edgePairs.back());
   m_edgePairs.pop_back();
 
   size_t affectedIndex = m_edgePairs.size();
@@ -370,18 +362,15 @@ void Graph::removeEdges(size_t index)
 
 void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
 {
-  // Allow ADL for swap
-  using std::swap;
-
   auto& pair = m_edgePairs[edgeIndex];
 
   // Remove references to the deleted edge from both endpoints.
   for (size_t i = 0; i < m_edgeMap[pair.first].size(); i++) {
-    swap(m_edgeMap[pair.first][i], m_edgeMap[pair.first].back());
+    std::swap(m_edgeMap[pair.first][i], m_edgeMap[pair.first].back());
     m_edgeMap[pair.first].pop_back();
   }
   for (size_t i = 0; i < m_edgeMap[pair.second].size(); i++) {
-    swap(m_edgeMap[pair.second][i], m_edgeMap[pair.second].back());
+    std::swap(m_edgeMap[pair.second][i], m_edgeMap[pair.second].back());
     m_edgeMap[pair.second].pop_back();
   }
 
@@ -430,7 +419,7 @@ void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
   *changeTo1[0] = edgeIndex1;
   *changeTo1[1] = edgeIndex1;
 
-  swap(m_edgePairs[edgeIndex1], m_edgePairs[edgeIndex2]);
+  std::swap(m_edgePairs[edgeIndex1], m_edgePairs[edgeIndex2]);
 }
 
 size_t Graph::edgeCount() const
