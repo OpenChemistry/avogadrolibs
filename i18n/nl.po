@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-11 19:52+0000\n"
+"PO-Revision-Date: 2024-11-14 12:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2660,7 +2660,7 @@ msgstr "Voeg toe Unit Cell"
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
 msgid "&Wrap Atoms to Unit Cell"
-msgstr "Wikkel Atomen om Cel"
+msgstr "&Wikkel Atomen om Cel"
 
 #: qtplugins/crystal/crystal.cpp:63
 #, fuzzy
@@ -3294,12 +3294,11 @@ msgstr ""
 #: qtplugins/label/label.cpp:186
 #, fuzzy
 msgid "Atom Label:"
-msgstr "Groep Label:"
+msgstr "Atoomlabel:"
 
 #: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
-#, fuzzy
 msgid "ID"
-msgstr "D"
+msgstr ""
 
 #: qtplugins/label/label.cpp:201
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
