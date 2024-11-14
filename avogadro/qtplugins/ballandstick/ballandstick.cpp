@@ -37,6 +37,7 @@ struct LayerBallAndStick : Core::LayerData
   bool showHydrogens;
   float atomScale;
   float bondRadius;
+  float opacity;
 
   LayerBallAndStick()
   {
@@ -46,6 +47,7 @@ struct LayerBallAndStick : Core::LayerData
     bondRadius = settings.value("ballandstick/bondRadius", 0.1).toDouble();
     multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
     showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
+    opacity = settings.value("ballandstick/opacity", 1.0).toDouble();
   }
 
   ~LayerBallAndStick() override
@@ -57,7 +59,8 @@ struct LayerBallAndStick : Core::LayerData
   std::string serialize() final
   {
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
-           std::to_string(atomScale) + " " + std::to_string(bondRadius);
+           std::to_string(atomScale) + " " + std::to_string(bondRadius) + " " +
+           std::to_string(opacity);
   }
 
   void deserialize(std::string text) final
@@ -72,6 +75,9 @@ struct LayerBallAndStick : Core::LayerData
     atomScale = std::stof(aux);
     ss >> aux;
     bondRadius = std::stof(aux);
+    ss >> aux;
+    if (!aux.empty())
+      opacity = std::stof(aux); // backwards compatibility
   }
 
   void setupWidget(BallAndStick* slot)
@@ -98,6 +104,16 @@ struct LayerBallAndStick : Core::LayerData
       QObject::connect(bondRadiusSlider, &QSlider::valueChanged, slot,
                        &BallAndStick::bondRadiusChanged);
       f->addRow(QObject::tr("Bond scale"), bondRadiusSlider);
+
+      auto* opacitySlider = new QSlider(Qt::Horizontal);
+      opacitySlider->setMinimum(0);
+      opacitySlider->setMaximum(100);
+      opacitySlider->setTickInterval(1);
+      opacitySlider->setValue(static_cast<int>(opacity * 100));
+      QObject::connect(opacitySlider, &QSlider::valueChanged, slot,
+                       &BallAndStick::opacityChanged);
+      f->addRow(QObject::tr("Opacity"), opacitySlider);
+
       v->addLayout(f);
 
       auto* check = new QCheckBox(QObject::tr("Show multiple bonds"));
@@ -134,11 +150,15 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
   auto* spheres = new SphereGeometry;
-  auto selectedSpheres = new SphereGeometry;
-  selectedSpheres->setOpacity(0.42);
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
+  spheres->setOpacity(m_layerManager.getSetting<LayerBallAndStick>().opacity);
+  if (m_layerManager.getSetting<LayerBallAndStick>().opacity < 1.0f)
+    spheres->setRenderPass(Rendering::TranslucentPass);
   geometry->addDrawable(spheres);
+
+  auto selectedSpheres = new SphereGeometry;
+  selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(selectedSpheres);
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
@@ -168,6 +188,9 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   auto* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
+  cylinders->setOpacity(m_layerManager.getSetting<LayerBallAndStick>().opacity);
+  if (m_layerManager.getSetting<LayerBallAndStick>().opacity < 1.0f)
+    cylinders->setRenderPass(Rendering::TranslucentPass);
   geometry->addDrawable(cylinders);
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
@@ -235,6 +258,19 @@ QWidget* BallAndStick::setupWidget()
   auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
   interface.setupWidget(this);
   return interface.widget;
+}
+
+void BallAndStick::opacityChanged(int opacity)
+{
+  m_opacity = static_cast<float>(opacity) / 100.0f;
+  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (m_opacity != interface.opacity) {
+    interface.opacity = m_opacity;
+    emit drawablesChanged();
+  }
+
+  QSettings settings;
+  settings.setValue("ballandstick/opacity", m_opacity);
 }
 
 void BallAndStick::atomRadiusChanged(int value)

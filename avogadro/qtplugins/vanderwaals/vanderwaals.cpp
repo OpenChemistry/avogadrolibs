@@ -11,6 +11,10 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QSettings>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QSlider>
+
 namespace Avogadro::QtPlugins {
 
 using Core::Elements;
@@ -22,6 +26,10 @@ using Rendering::SphereGeometry;
 VanDerWaals::VanDerWaals(QObject* p) : ScenePlugin(p)
 {
   m_layerManager = PluginLayerManager(m_name);
+
+  QSettings settings;
+  // out of 255
+  m_opacity = settings.value("vdw/opacity", 1.0).toFloat();
 }
 
 VanDerWaals::~VanDerWaals() {}
@@ -35,8 +43,13 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
+  spheres->setOpacity(m_opacity);
+  if (m_opacity < 1.0f)
+    spheres->setRenderPass(Rendering::TranslucentPass);
+
   auto selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
+  selectedSpheres->setRenderPass(Rendering::TranslucentPass);
 
   geometry->addDrawable(spheres);
   geometry->addDrawable(selectedSpheres);
@@ -60,4 +73,32 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // namespace Avogadro
+void VanDerWaals::setOpacity(int opacity)
+{
+  m_opacity = opacity / 100.0f;
+  emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("vdw/opacity", m_opacity);
+}
+
+QWidget* VanDerWaals::setupWidget()
+{
+  if (!m_setupWidget) {
+    m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    auto* form = new QFormLayout;
+
+    // Opacity
+    auto* slide = new QSlider(Qt::Horizontal);
+    slide->setRange(0, 100);
+    slide->setTickInterval(1);
+    slide->setValue(round(m_opacity * 100));
+    connect(slide, SIGNAL(valueChanged(int)), SLOT(setOpacity(int)));
+
+    form->addRow(tr("Opacity:"), slide);
+    m_setupWidget->setLayout(form);
+  }
+  return m_setupWidget;
+}
+
+} // namespace Avogadro::QtPlugins

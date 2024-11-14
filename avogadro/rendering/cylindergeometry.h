@@ -17,12 +17,9 @@ struct CylinderColor
 {
   CylinderColor(const Vector3f& pos1, const Vector3f& pos2, float r,
                 const Vector3ub& c, const Vector3ub& c2 = Vector3ub::Zero())
-    : end1(pos1)
-    , end2(pos2)
-    , radius(r)
-    , color(c)
-    , color2(c2)
-  {}
+    : end1(pos1), end2(pos2), radius(r), color(c), color2(c2)
+  {
+  }
 
   Vector3f end1;
   Vector3f end2;
@@ -136,10 +133,21 @@ public:
    */
   size_t size() const { return m_cylinders.size(); }
 
+  /**
+   * Set the opacity of the cylinders in this group.
+   */
+  void setOpacity(float o)
+  {
+    m_opacity = o;
+    if (o < 1.0f)
+      setRenderPass(TranslucentPass);
+  }
+
 private:
   std::vector<CylinderColor> m_cylinders;
   std::vector<size_t> m_indices;
   std::map<size_t, size_t> m_indexMap;
+  float m_opacity = 1.0f;
 
   bool m_dirty;
 
