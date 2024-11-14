@@ -180,21 +180,6 @@ signals:
   void progressValueChanged(int);
 
 protected:
-  /**
-   * Get the normal to the supplied point. This operation is quite expensive
-   * and so should be avoided wherever possible.
-   * @param pos The position of the vertex whose normal is needed.
-   * @return The normal vector for the supplied point.
-   */
-  Vector3f normal(const Vector3f& pos);
-
-  /**
-   * Get the offset, i.e. the approximate point of intersection of the surface
-   * between two points.
-   * @param val1 The position of the vertex whose normal is needed.
-   * @return The normal vector for the supplied point.
-   */
-  float offset(float val1, float val2);
 
   unsigned long duplicate(const Vector3i& c, const Vector3f& pos);
 

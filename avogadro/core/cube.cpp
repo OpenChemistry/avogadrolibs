@@ -7,7 +7,6 @@
 
 #include "molecule.h"
 #include "mutex.h"
-#include <iostream>
 
 namespace Avogadro::Core {
 
@@ -24,12 +23,6 @@ Cube::~Cube()
   m_lock = nullptr;
 }
 
-// std::vector<float>::const_iterator Cube::getRowIter(int j, int k) const
-// {
-//     return m_data.cbegin() + m_points.z() * k * m_points.y() + m_points.z() * j;
-// }
-
-
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
                      const Vector3i& points)
 {
@@ -44,8 +37,6 @@ bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
   m_data.resize(m_points.x() * m_points.y() * m_points.z());
   return true;
 }
-
-
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_, float spacing_)
 {
   Vector3 delta = max_ - min_;
@@ -201,6 +192,7 @@ float Cube::value(int i, int j, int k) const
   else
     return 0.0;
 }
+
 std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 {
     int nx = m_points.x();
@@ -213,46 +205,46 @@ std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 
     // X-direction
     if (i == 0) {
-        x[0][0] = m_data[dataIdx + ny * nz]; // (i+1, j, k)
-        x[0][1] = m_data[dataIdx];           // (i, j, k)
+        x[0][0] = m_data[dataIdx + ny * nz];
+        x[0][1] = m_data[dataIdx];
         run[0] = m_spacing.x();
     } else if (i == (nx - 1)) {
-        x[0][0] = m_data[dataIdx];             // (i, j, k)
-        x[0][1] = m_data[dataIdx - ny * nz];   // (i-1, j, k)
+        x[0][0] = m_data[dataIdx];
+        x[0][1] = m_data[dataIdx - ny * nz];
         run[0] = m_spacing.x();
     } else {
-        x[0][0] = m_data[dataIdx + ny * nz];    // (i+1, j, k)
-        x[0][1] = m_data[dataIdx - ny * nz];    // (i-1, j, k)
+        x[0][0] = m_data[dataIdx + ny * nz];
+        x[0][1] = m_data[dataIdx - ny * nz];
         run[0] = 2 * m_spacing.x();
     }
 
     // Y-direction
     if (j == 0) {
-        x[1][0] = m_data[dataIdx + nz];   // (i, j+1, k)
-        x[1][1] = m_data[dataIdx];        // (i, j, k)
+        x[1][0] = m_data[dataIdx + nz];
+        x[1][1] = m_data[dataIdx];
         run[1] = m_spacing.y();
     } else if (j == (ny - 1)) {
-        x[1][0] = m_data[dataIdx];        // (i, j, k)
-        x[1][1] = m_data[dataIdx - nz];   // (i, j-1, k)
+        x[1][0] = m_data[dataIdx];
+        x[1][1] = m_data[dataIdx - nz];
         run[1] = m_spacing.y();
     } else {
-        x[1][0] = m_data[dataIdx + nz];    // (i, j+1, k)
-        x[1][1] = m_data[dataIdx - nz];    // (i, j-1, k)
+        x[1][0] = m_data[dataIdx + nz];
+        x[1][1] = m_data[dataIdx - nz];
         run[1] = 2 * m_spacing.y();
     }
 
     // Z-direction
     if (k == 0) {
-        x[2][0] = m_data[dataIdx + 1];     // (i, j, k+1)
-        x[2][1] = m_data[dataIdx];         // (i, j, k)
+        x[2][0] = m_data[dataIdx + 1];
+        x[2][1] = m_data[dataIdx];         
         run[2] = m_spacing.z();
     } else if (k == (nz - 1)) {
-        x[2][0] = m_data[dataIdx];         // (i, j, k)
-        x[2][1] = m_data[dataIdx - 1];     // (i, j, k-1)
+        x[2][0] = m_data[dataIdx];        
+        x[2][1] = m_data[dataIdx - 1];     
         run[2] = m_spacing.z();
     } else {
-        x[2][0] = m_data[dataIdx + 1];     // (i, j, k+1)
-        x[2][1] = m_data[dataIdx - 1];     // (i, j, k-1)
+        x[2][0] = m_data[dataIdx + 1];    
+        x[2][1] = m_data[dataIdx - 1];     
         run[2] = 2 * m_spacing.z();
     }
 
@@ -299,7 +291,7 @@ std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
 }
 
 
-inline float Cube::getData(int i, int j, int k) const
+float Cube::getData(int i, int j, int k) const
 {
     int nx = m_points.x();
     int ny = m_points.y();
@@ -310,6 +302,7 @@ inline float Cube::getData(int i, int j, int k) const
 
 std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
 {
+
   std::array<std::array<float, 3>, 8> pos;
 
   float xpos = m_min.x() + (i * m_spacing.x());
@@ -348,7 +341,6 @@ std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
   pos[7][1] = ypos + m_spacing.y();
   pos[7][2] = zpos + m_spacing.z();
 
-  // std::cout << "pos" << " " << pos[0][0] << std::endl;
   return pos;
 }
 

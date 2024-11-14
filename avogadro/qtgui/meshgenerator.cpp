@@ -39,7 +39,6 @@ MeshGenerator::~MeshGenerator()
 
 bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
                                int passes, bool reverse)
-
 {
   if (!cube_ || !mesh_)
     return false;
@@ -59,7 +58,6 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   gridEdges.resize(m_dim.y() * m_dim.z());
   triCounter.resize((m_dim.y() - 1) * (m_dim.z() - 1));
 
-
   m_progmax = m_dim.x();
   
   return true;
@@ -67,8 +65,6 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
-  // Loop through z-dimension
-
       for (int k = 0; k != m_dim.z(); ++k) {
         for (int j = 0; j != m_dim.y(); ++j) {
 
@@ -474,15 +470,15 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
 void MeshGenerator::run()
 {
-
   if (!m_cube || !m_mesh) {
     qDebug() << "No mesh or cube set - nothing to find isosurface of…";
     return;
   }
+
   m_mesh->setStable(false);
   m_mesh->clear();
 
-
+  // flying-edges passes for the creation of normal, vertices and triangles
   FlyingEdgesAlgorithmPass1();
   FlyingEdgesAlgorithmPass2();
   FlyingEdgesAlgorithmPass3();
@@ -494,6 +490,7 @@ void MeshGenerator::run()
   m_mesh->smooth(m_passes);
   m_mesh->setStable(true);
 
+  // clearing the memory
   points.resize(0);
   normals.resize(0);
   tris.resize(0);
@@ -501,7 +498,6 @@ void MeshGenerator::run()
   cubeCases.resize(0);
   gridEdges.resize(0);
   triCounter.resize(0);    
-
 }
 
 
@@ -518,25 +514,6 @@ void MeshGenerator::clear()
   m_progmax = 0;
 }
 
-Vector3f MeshGenerator::normal(const Vector3f& pos)
-{
-  Vector3f norm(m_cube->valuef(pos - Vector3f(0.01f, 0.00f, 0.00f)) -
-                  m_cube->valuef(pos + Vector3f(0.01f, 0.00f, 0.00f)),
-                m_cube->valuef(pos - Vector3f(0.00f, 0.01f, 0.00f)) -
-                  m_cube->valuef(pos + Vector3f(0.00f, 0.01f, 0.00f)),
-                m_cube->valuef(pos - Vector3f(0.00f, 0.00f, 0.01f)) -
-                  m_cube->valuef(pos + Vector3f(0.00f, 0.00f, 0.01f)));
-  norm.normalize();
-  return norm;
-}
-
-inline float MeshGenerator::offset(float val1, float val2)
-{
-  if (val2 - val1 < 1.0e-9f && val1 - val2 < 1.0e-9f)
-    return 0.5;
-  return (m_iso - val1) / (val2 - val1);
-}
-
 unsigned long MeshGenerator::duplicate(const Vector3i&, const Vector3f&)
 {
   // FIXME Not implemented yet.
@@ -547,7 +524,6 @@ unsigned char MeshGenerator::calcCubeCase(
     unsigned char const& ec0, unsigned char const& ec1,
     unsigned char const& ec2, unsigned char const& ec3) const
 {
-
     unsigned char caseId = 0;
     if ((ec0 == 0) || (ec0 == 2)) // Vertex 0 at (i, j, k)
         caseId |= 1;
@@ -571,7 +547,6 @@ unsigned char MeshGenerator::calcCubeCase(
 
 bool MeshGenerator::isCutEdge(int const& i, int const& j, int const& k) const
 {
-
   // Assuming edgeCases are all set
   int edgeCaseIdx = k * ((m_dim.x() - 1) * m_dim.y()) + (j * (m_dim.x() - 1)) + i;
   unsigned char edgeCase = edgeCases[edgeCaseIdx];
@@ -624,7 +599,6 @@ unsigned char MeshGenerator::calcCaseEdge(bool const& prevEdge, bool const& curr
         return 3;
 }
 
-// 2000
 void MeshGenerator::calcTrimValues(int& xl, int& xr, int const& j, int const& k) const
 {
 
