@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-13 09:00+0000\n"
+"PO-Revision-Date: 2024-11-14 12:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Malay <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ms/>\n"
@@ -2140,10 +2140,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Control"
 msgid "Centroid"
-msgstr "Kawalan"
+msgstr ""
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -2611,7 +2609,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 #, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Dinamik Molekul (300K)"
+msgstr "Dinamik Molekul"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 #, fuzzy
@@ -2625,7 +2623,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 #, fuzzy
 msgid "Molecular Mechanics"
-msgstr "Mekanik &Molekul"
+msgstr "Mekanik Molekul"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -3836,10 +3834,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hidrogen"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4420,7 +4416,7 @@ msgstr ""
 #: qtplugins/ply/ply.cpp:29
 #, fuzzy
 msgid "PLY Render…"
-msgstr "Sinar-POV"
+msgstr "Sinar-PLY"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4532,9 +4528,8 @@ msgid "Secondary Structure"
 msgstr "Struktur:"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Hidrogen"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -5037,7 +5032,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -5150,13 +5145,11 @@ msgstr "Getaran"
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Bilangan gelombang (cm<sup>-1</sup>)"
+msgstr "Bilangan gelombang (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Keadaan Peralihan"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
@@ -5387,10 +5380,8 @@ msgid "%1 %2"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Suhu"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -8171,10 +8162,8 @@ msgstr "Cerah"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Strontium"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8393,24 +8382,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Keadaan Peralihan"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Keadaan Peralihan"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Keadaan Peralihan"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
