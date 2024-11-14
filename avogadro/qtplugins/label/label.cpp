@@ -234,11 +234,11 @@ void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
   m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
-    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    if (interface.residueOptions) {
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    if (interface->residueOptions) {
       processResidue(molecule, node, layer);
     }
-    if (interface.atomOptions) {
+    if (interface->atomOptions) {
       processAtom(molecule, node, layer);
     }
   }
@@ -274,13 +274,13 @@ void Label::processResidue(const Core::Molecule& molecule,
       }
     }
 
-    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
-    Vector3ub color = interface.color;
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    Vector3ub color = interface->color;
     std::string text = "";
-    if (interface.residueOptions & LayerLabel::LabelOptions::Index) {
+    if (interface->residueOptions & LayerLabel::LabelOptions::Index) {
       text = std::to_string(residue.residueId());
     }
-    if (interface.residueOptions & LayerLabel::LabelOptions::Name) {
+    if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
       text += (text == "" ? "" : " / ") + name;
     }
     TextLabel3D* residueLabel = createLabel(text, pos, radius, color);
@@ -344,36 +344,36 @@ void Label::processAtom(const Core::Molecule& molecule,
       continue;
     }
 
-    auto& interface = m_layerManager.getSetting<LayerLabel>(layer);
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
     std::string text = "";
 
-    if (interface.atomOptions & LayerLabel::LabelOptions::PartialCharge) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge) {
       QString charge = partialCharge(const_cast<Molecule*>(&molecule), i);
       text += charge.toStdString();
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Custom) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::Custom) {
       text += (text == "" ? "" : " / ") + atom.label();
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Index) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::Index) {
       text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Name) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::Name) {
       text +=
         (text == "" ? "" : " / ") + std::string(Elements::symbol(atomicNumber));
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::Ordinal) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::Ordinal) {
       text += (text == "" ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
     }
-    if (interface.atomOptions & LayerLabel::LabelOptions::UniqueID) {
+    if (interface->atomOptions & LayerLabel::LabelOptions::UniqueID) {
       text += (text == "" ? "" : " / ") + std::to_string(atom.index());
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
-      Vector3ub color = interface.color;
+      Vector3ub color = interface->color;
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
-                     interface.radiusScalar;
+                     interface->radiusScalar;
 
       TextLabel3D* atomLabel = createLabel(text, pos, radius, color);
       geometry->addDrawable(atomLabel);
@@ -383,11 +383,11 @@ void Label::processAtom(const Core::Molecule& molecule,
 
 void Label::setColor(const QColor& color)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
 
-  interface.color[0] = static_cast<unsigned char>(color.red());
-  interface.color[1] = static_cast<unsigned char>(color.green());
-  interface.color[2] = static_cast<unsigned char>(color.blue());
+  interface->color[0] = static_cast<unsigned char>(color.red());
+  interface->color[1] = static_cast<unsigned char>(color.green());
+  interface->color[2] = static_cast<unsigned char>(color.blue());
 
   emit drawablesChanged();
 
@@ -397,39 +397,39 @@ void Label::setColor(const QColor& color)
 
 void Label::atomLabelType(int index)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.atomOptions = char(setupWidget()
-                                 ->findChildren<QComboBox*>("atom")[0]
-                                 ->itemData(index)
-                                 .toInt());
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->atomOptions = char(setupWidget()
+                                  ->findChildren<QComboBox*>("atom")[0]
+                                  ->itemData(index)
+                                  .toInt());
   emit drawablesChanged();
 }
 
 void Label::residueLabelType(int index)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.residueOptions = char(setupWidget()
-                                    ->findChildren<QComboBox*>("residue")[0]
-                                    ->itemData(index)
-                                    .toInt());
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->residueOptions = char(setupWidget()
+                                     ->findChildren<QComboBox*>("residue")[0]
+                                     ->itemData(index)
+                                     .toInt());
   emit drawablesChanged();
 }
 
 void Label::setRadiusScalar(double radius)
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.radiusScalar = float(radius);
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->radiusScalar = float(radius);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusScalar", interface.radiusScalar);
+  settings.setValue("label/radiusScalar", interface->radiusScalar);
 }
 
 QWidget* Label::setupWidget()
 {
-  auto& interface = m_layerManager.getSetting<LayerLabel>();
-  interface.setupWidget(this);
-  return interface.widget;
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
 } // namespace Avogadro::QtPlugins

@@ -10,6 +10,7 @@
 
 #include <avogadro/core/layermanager.h>
 #include <cassert>
+#include <iostream>
 
 namespace Avogadro {
 namespace QtGui {
@@ -79,22 +80,31 @@ public:
   /** @return custom data T derived from LayerData. if @p layer is equal to
    * MaxIndex returns activeLayer */
   template <typename T>
-  T& getSetting(size_t layer = MaxIndex)
+  T* getSetting(size_t layer = MaxIndex)
   {
     auto info = m_molToInfo[m_activeMolecule];
+
     if (layer == MaxIndex) {
       layer = info->layer.activeLayer();
     }
+
+    // std::cout << "name: " << m_name << " layer " << layer << " " <<
+    // info->layer.activeLayer() << std::endl;
+
     assert(layer <= info->layer.maxLayer());
     if (info->settings.find(m_name) == info->settings.end()) {
+      std::cout << " hit the end? " << std::endl;
       info->settings[m_name] = Core::Array<Core::LayerData*>();
     }
 
+    // do we need to create new layers in the array?
     while (info->settings[m_name].size() < layer + 1) {
+      std::cout << " loop " << info->settings[m_name].size() << " " << layer
+                << std::endl;
       info->settings[m_name].push_back(new T());
     }
-    auto result = static_cast<T*>(info->settings[m_name][layer]);
-    return *result;
+    auto* result = static_cast<T*>(info->settings[m_name][layer]);
+    return result;
   }
 
 private:

@@ -21,6 +21,8 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include <iostream>
+
 namespace Avogadro::QtPlugins {
 
 using Core::Elements;
@@ -43,6 +45,8 @@ struct LayerBallAndStick : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
+    std::cout << " new settings " << std::endl;
+
     atomScale = settings.value("ballandstick/atomScale", 0.3).toDouble();
     bondRadius = settings.value("ballandstick/bondRadius", 0.1).toDouble();
     multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
@@ -58,6 +62,8 @@ struct LayerBallAndStick : Core::LayerData
 
   std::string serialize() final
   {
+    std::cout << " serialize " << std::endl;
+
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(atomScale) + " " + std::to_string(bondRadius) + " " +
            std::to_string(opacity);
@@ -65,6 +71,8 @@ struct LayerBallAndStick : Core::LayerData
 
   void deserialize(std::string text) final
   {
+    std::cout << " deserialize " << text << std::endl;
+
     std::stringstream ss(text);
     std::string aux;
     ss >> aux;
@@ -152,11 +160,18 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
   spheres->identifier().type = Rendering::AtomType;
-  spheres->setOpacity(m_layerManager.getSetting<LayerBallAndStick>().opacity);
-  if (m_layerManager.getSetting<LayerBallAndStick>().opacity < 1.0f)
-    spheres->setRenderPass(Rendering::TranslucentPass);
   geometry->addDrawable(spheres);
 
+  // if we have to draw any translucent spheres, we need to add a separate
+  // geometry node for them
+  auto translucentSpheres = new SphereGeometry;
+  translucentSpheres->setRenderPass(Rendering::TranslucentPass);
+  translucentSpheres->identifier().molecule =
+    reinterpret_cast<const void*>(&molecule);
+  translucentSpheres->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(translucentSpheres);
+
+  // for the selected atoms
   auto selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(selectedSpheres);
@@ -167,17 +182,28 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
-    auto& interface = m_layerManager.getSetting<LayerBallAndStick>(
+
+    auto* interface = m_layerManager.getSetting<LayerBallAndStick>(
       m_layerManager.getLayerID(i));
-    if (atomicNumber == 1 && !interface.showHydrogens)
+    if (atomicNumber == 1 && !interface->showHydrogens)
       continue;
 
     Vector3ub color = atom.color();
     auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    float scale = interface.atomScale;
-    spheres->addSphere(atom.position3d().cast<float>(), color, radius * scale,
-                       i);
+    float scale = interface->atomScale;
+    std::cout << " atom " << i << " radius " << radius << " scale " << scale
+              << " opacity " << interface->opacity << std::endl;
+
+    if (interface->opacity < 1.0f) {
+      translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
+                                    radius * scale, i);
+      translucentSpheres->setOpacity(interface->opacity);
+    } else
+      spheres->addSphere(atom.position3d().cast<float>(), color, radius * scale,
+                         i);
+
     if (atom.selected()) {
+      // add the selected indicator
       color = Vector3ub(0, 0, 255);
       radius *= 1.2;
       selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
@@ -188,10 +214,14 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   auto* cylinders = new CylinderGeometry;
   cylinders->identifier().molecule = &molecule;
   cylinders->identifier().type = Rendering::BondType;
-  cylinders->setOpacity(m_layerManager.getSetting<LayerBallAndStick>().opacity);
-  if (m_layerManager.getSetting<LayerBallAndStick>().opacity < 1.0f)
-    cylinders->setRenderPass(Rendering::TranslucentPass);
   geometry->addDrawable(cylinders);
+
+  auto* translucentBonds = new CylinderGeometry;
+  translucentBonds->setRenderPass(Rendering::TranslucentPass);
+  translucentBonds->identifier().molecule = &molecule;
+  translucentBonds->identifier().type = Rendering::BondType;
+  geometry->addDrawable(translucentBonds);
+
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
     if (!m_layerManager.bondEnabled(bond.atom1().index(),
@@ -199,18 +229,18 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
 
-    auto& interface1 = m_layerManager.getSetting<LayerBallAndStick>(
+    auto* interface1 = m_layerManager.getSetting<LayerBallAndStick>(
       m_layerManager.getLayerID(bond.atom1().index()));
-    auto& interface2 = m_layerManager.getSetting<LayerBallAndStick>(
+    auto* interface2 = m_layerManager.getSetting<LayerBallAndStick>(
       m_layerManager.getLayerID(bond.atom2().index()));
 
-    if (!interface1.showHydrogens && !interface2.showHydrogens &&
+    if (!interface1->showHydrogens && !interface2->showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
          bond.atom2().atomicNumber() == 1)) {
       continue;
     }
 
-    float bondRadius = (interface1.bondRadius + interface2.bondRadius) * 0.5f;
+    float bondRadius = (interface1->bondRadius + interface2->bondRadius) * 0.5f;
 
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
     Vector3f pos2 = bond.atom2().position3d().cast<float>();
@@ -220,7 +250,8 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     float bondLength = bondVector.norm();
     bondVector /= bondLength;
 
-    switch (interface1.multiBonds || interface2.multiBonds ? bond.order() : 1) {
+    switch (interface1->multiBonds || interface2->multiBonds ? bond.order()
+                                                             : 1) {
       case 3: {
         Vector3f delta = bondVector.unitOrthogonal();
         // Rotate 45 degrees around the bond vector.
@@ -255,17 +286,20 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
 
 QWidget* BallAndStick::setupWidget()
 {
-  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
-  interface.setupWidget(this);
-  return interface.widget;
+  auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
 void BallAndStick::opacityChanged(int opacity)
 {
   m_opacity = static_cast<float>(opacity) / 100.0f;
-  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
-  if (m_opacity != interface.opacity) {
-    interface.opacity = m_opacity;
+  auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (m_opacity != interface->opacity) {
+    std::cout << " previous opacity " << interface->opacity << " new opacity "
+              << m_opacity << std::endl;
+
+    interface->opacity = m_opacity;
     emit drawablesChanged();
   }
 
@@ -277,9 +311,9 @@ void BallAndStick::atomRadiusChanged(int value)
 {
   m_atomScale = static_cast<float>(value) / 10.0f;
 
-  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
-  if (m_atomScale != interface.atomScale) {
-    interface.atomScale = m_atomScale;
+  auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (m_atomScale != interface->atomScale) {
+    interface->atomScale = m_atomScale;
     emit drawablesChanged();
   }
 
@@ -291,9 +325,9 @@ void BallAndStick::bondRadiusChanged(int value)
 {
   m_bondRadius = static_cast<float>(value) / 10.0f;
 
-  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
-  if (m_bondRadius != interface.bondRadius) {
-    interface.bondRadius = m_bondRadius;
+  auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (m_bondRadius != interface->bondRadius) {
+    interface->bondRadius = m_bondRadius;
     emit drawablesChanged();
   }
 
@@ -303,9 +337,9 @@ void BallAndStick::bondRadiusChanged(int value)
 
 void BallAndStick::multiBonds(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
-  if (show != interface.multiBonds) {
-    interface.multiBonds = show;
+  auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (show != interface->multiBonds) {
+    interface->multiBonds = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -314,9 +348,9 @@ void BallAndStick::multiBonds(bool show)
 
 void BallAndStick::showHydrogens(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerBallAndStick>();
-  if (show != interface.showHydrogens) {
-    interface.showHydrogens = show;
+  auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
+  if (show != interface->showHydrogens) {
+    interface->showHydrogens = show;
     emit drawablesChanged();
   }
   QSettings settings;
