@@ -43,10 +43,12 @@ DistanceMatrix::DistanceMatrix(size_t size)
 }
 
 DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
-  : m_size(other.m_size), m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
+  : m_size(other.m_size),
+    m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
 {
   if (m_values)
-    std::copy(other.m_values, other.m_values+(other.m_size * other.m_size), m_values);
+    std::copy(other.m_values, other.m_values + (other.m_size * other.m_size),
+              m_values);
 }
 
 DistanceMatrix::~DistanceMatrix()
