@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-14 12:00+0000\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -4755,10 +4755,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipuli la kameraon de la vido."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Script Charge Models"
-msgstr "Akva Modelo:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy
@@ -8487,10 +8485,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "&Copy to Clipboard"
 msgid "From Clipboard"
-msgstr "Kopii en Tondujon (&C)"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8502,14 +8498,14 @@ msgstr ""
 #, fuzzy
 #| msgid "Group %1"
 msgid "Groups"
-msgstr "Grupo %1"
+msgstr "Grupoj"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 #| msgid "Group %1"
 msgid "Group:"
-msgstr "Grupo %1"
+msgstr "Grupo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8538,10 +8534,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogeno"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
