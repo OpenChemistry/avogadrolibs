@@ -24,6 +24,7 @@ class DistanceMatrix
 public:
   // construction and destruction
   DistanceMatrix(size_t size);
+  DistanceMatrix(const DistanceMatrix& other);
   ~DistanceMatrix();
 
   // operators
@@ -39,6 +40,13 @@ DistanceMatrix::DistanceMatrix(size_t size)
   : m_size(size), m_values(new size_t[size * size])
 {
   memset(m_values, 0, size * size * sizeof(size_t));
+}
+
+DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
+  : m_size(other.m_size), m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
+{
+  if (m_values)
+    std::copy(other.m_values, other.m_values+(other.m_size * other.m_size), m_values);
 }
 
 DistanceMatrix::~DistanceMatrix()
