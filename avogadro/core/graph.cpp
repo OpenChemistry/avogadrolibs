@@ -289,7 +289,8 @@ void Graph::removeEdge(size_t a, size_t b)
 
   std::swap(*iter, neighborsA.back());
   neighborsA.pop_back();
-  std::swap(*std::find(neighborsB.begin(), neighborsB.end(), a), neighborsB.back());
+  std::swap(*std::find(neighborsB.begin(), neighborsB.end(), a),
+            neighborsB.back());
   neighborsB.pop_back();
 
   size_t edgeIndex;
