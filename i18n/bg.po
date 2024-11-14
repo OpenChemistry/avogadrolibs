@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-10 15:10+0000\n"
+"PO-Revision-Date: 2024-11-14 12:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2512,9 +2512,8 @@ msgid "Energy and Forces"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
-#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Молекулярни свойства"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 #, fuzzy
@@ -2526,9 +2525,8 @@ msgid "Electronic structure methods (DFT)"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
-#, fuzzy
 msgid "Molecular Mechanics"
-msgstr "Молекулярни свойства"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -3167,7 +3165,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
 msgid "Molecule…"
-msgstr "Молекулярни свойства"
+msgstr "Молекулярни"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3499,7 +3497,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "Молекулярни свойства"
+msgstr "&Молекулярни"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4451,9 +4449,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:46
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Молекулярни свойства"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
 msgid "Molecular Graph with Lone Pairs…"
@@ -4900,9 +4897,8 @@ msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
-#, fuzzy
 msgid "Molecular Orbital"
-msgstr "Молекулярни свойства"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
@@ -4959,9 +4955,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Молекулярни свойства"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:121
 #, fuzzy
