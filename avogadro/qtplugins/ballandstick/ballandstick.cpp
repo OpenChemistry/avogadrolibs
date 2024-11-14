@@ -45,13 +45,18 @@ struct LayerBallAndStick : Core::LayerData
   {
     widget = nullptr;
     QSettings settings;
-    std::cout << " new settings " << std::endl;
 
     atomScale = settings.value("ballandstick/atomScale", 0.3).toDouble();
     bondRadius = settings.value("ballandstick/bondRadius", 0.1).toDouble();
     multiBonds = settings.value("ballandstick/multiBonds", true).toBool();
     showHydrogens = settings.value("ballandstick/showHydrogens", true).toBool();
     opacity = settings.value("ballandstick/opacity", 1.0).toDouble();
+  }
+
+  LayerBallAndStick(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
   }
 
   ~LayerBallAndStick() override
@@ -62,8 +67,6 @@ struct LayerBallAndStick : Core::LayerData
 
   std::string serialize() final
   {
-    std::cout << " serialize " << std::endl;
-
     return boolToString(multiBonds) + " " + boolToString(showHydrogens) + " " +
            std::to_string(atomScale) + " " + std::to_string(bondRadius) + " " +
            std::to_string(opacity);
@@ -71,8 +74,6 @@ struct LayerBallAndStick : Core::LayerData
 
   void deserialize(std::string text) final
   {
-    std::cout << " deserialize " << text << std::endl;
-
     std::stringstream ss(text);
     std::string aux;
     ss >> aux;
@@ -87,6 +88,8 @@ struct LayerBallAndStick : Core::LayerData
     if (!aux.empty())
       opacity = std::stof(aux); // backwards compatibility
   }
+
+  LayerData* clone() final { return new LayerBallAndStick(serialize()); }
 
   void setupWidget(BallAndStick* slot)
   {
@@ -191,8 +194,6 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     Vector3ub color = atom.color();
     auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
     float scale = interface->atomScale;
-    std::cout << " atom " << i << " radius " << radius << " scale " << scale
-              << " opacity " << interface->opacity << std::endl;
 
     if (interface->opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
@@ -220,6 +221,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   translucentBonds->setRenderPass(Rendering::TranslucentPass);
   translucentBonds->identifier().molecule = &molecule;
   translucentBonds->identifier().type = Rendering::BondType;
+  float opacity = 1.0f; // for any translucent bonds
   geometry->addDrawable(translucentBonds);
 
   for (Index i = 0; i < molecule.bondCount(); ++i) {
@@ -240,6 +242,13 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
       continue;
     }
 
+    bool doOpaque = true;
+    if (interface1->opacity < 1.0f || interface2->opacity < 1.0f) {
+      opacity = std::min(interface1->opacity, interface2->opacity);
+      translucentBonds->setOpacity(opacity);
+      doOpaque = false;
+    }
+
     float bondRadius = (interface1->bondRadius + interface2->bondRadius) * 0.5f;
 
     Vector3f pos1 = bond.atom1().position3d().cast<float>();
@@ -258,16 +267,28 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
         Eigen::Quaternionf q;
         q = Eigen::AngleAxisf(45.0f * DEG_TO_RAD_F, bondVector);
         delta = q * delta * 2.0f * bondRadius;
-        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.15,
-                               color1, color2, i);
-        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.15,
-                               color1, color2, i);
+        if (doOpaque) {
+          cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.15,
+                                 color1, color2, i);
+          cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.15,
+                                 color1, color2, i);
+        } else {
+          translucentBonds->addCylinder(pos1 + delta, pos2 + delta,
+                                        bondRadius * 1.15, color1, color2, i);
+          translucentBonds->addCylinder(pos1 - delta, pos2 - delta,
+                                        bondRadius * 1.15, color1, color2, i);
+        }
         // This relies upon the single bond case below for the third cylinder.
         [[fallthrough]];
       }
       default:
       case 1:
-        cylinders->addCylinder(pos1, pos2, m_bondRadius, color1, color2, i);
+        if (doOpaque) {
+          cylinders->addCylinder(pos1, pos2, m_bondRadius, color1, color2, i);
+        } else {
+          translucentBonds->addCylinder(pos1, pos2, m_bondRadius, color1,
+                                        color2, i);
+        }
         break;
       case 2: {
         Vector3f delta = bondVector.unitOrthogonal();
@@ -275,10 +296,17 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
         Eigen::Quaternionf q;
         q = Eigen::AngleAxisf(45.0f * DEG_TO_RAD_F, bondVector);
         delta = q * delta * bondRadius;
-        cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.3,
-                               color1, color2, i);
-        cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.3,
-                               color1, color2, i);
+        if (doOpaque) {
+          cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.3,
+                                 color1, color2, i);
+          cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.3,
+                                 color1, color2, i);
+        } else {
+          translucentBonds->addCylinder(pos1 + delta, pos2 + delta,
+                                        bondRadius * 1.3, color1, color2, i);
+          translucentBonds->addCylinder(pos1 - delta, pos2 - delta,
+                                        bondRadius * 1.3, color1, color2, i);
+        }
       }
     }
   }
@@ -296,9 +324,6 @@ void BallAndStick::opacityChanged(int opacity)
   m_opacity = static_cast<float>(opacity) / 100.0f;
   auto* interface = m_layerManager.getSetting<LayerBallAndStick>();
   if (m_opacity != interface->opacity) {
-    std::cout << " previous opacity " << interface->opacity << " new opacity "
-              << m_opacity << std::endl;
-
     interface->opacity = m_opacity;
     emit drawablesChanged();
   }
