@@ -133,11 +133,19 @@ struct LayerCartoon : Core::LayerData
     showSimpleCartoon = settings.value("cartoon/simplecartoon", false).toBool();
   }
 
+  LayerCartoon(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
   ~LayerCartoon() override
   {
     if (widget)
       widget->deleteLater();
   }
+
+  LayerData* clone() final { return new LayerCartoon(serialize()); }
 };
 
 struct BackboneResidue
@@ -149,7 +157,8 @@ struct BackboneResidue
     : pos(p), color1(c1), color2(c2), group(g), residueID(id), selected(sel),
       secondaryStructure(sec)
 
-  {}
+  {
+  }
   Vector3f pos;
   Vector3ub color1;
   Vector3ub color2;
@@ -252,8 +261,7 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
   geometry->addDrawable(cylinders);
 
   Index i = 0;
-  for (auto it = backbone.begin();
-       it != backbone.end(); ++it) {
+  for (auto it = backbone.begin(); it != backbone.end(); ++it) {
     const auto& bone = *it;
     auto color1 = bone.color1;
     auto color2 = bone.color2;
@@ -352,10 +360,11 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
   m_layerManager.load<LayerCartoon>();
   m_group = &node;
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
-    auto& interface = m_layerManager.getSetting<LayerCartoon>(layer);
-    if (interface.showBackbone || interface.showTrace || interface.showTube ||
-        interface.showRibbon || interface.showSimpleCartoon ||
-        interface.showCartoon || interface.showRope) {
+    auto* interface = m_layerManager.getSetting<LayerCartoon>(layer);
+    if (interface->showBackbone || interface->showTrace ||
+        interface->showTube || interface->showRibbon ||
+        interface->showSimpleCartoon || interface->showCartoon ||
+        interface->showRope) {
       map<size_t, AtomsPairList> backbones;
       if (molecule.residues().size() > 0) {
         backbones = getBackboneByResidues(molecule, layer);
@@ -366,26 +375,26 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
       size_t i = 0;
       for (const auto& group : backbones) {
         const auto& backbone = group.second;
-        if (interface.showBackbone) {
+        if (interface->showBackbone) {
           renderBackbone(backbone, molecule, node, 0.1f);
         }
-        if (interface.showTrace) {
+        if (interface->showTrace) {
           renderTube(backbone, molecule, node, -0.15f);
         }
-        if (interface.showTube) {
+        if (interface->showTube) {
           renderTube(backbone, molecule, node, 0.15f);
         }
-        if (interface.showRibbon) {
+        if (interface->showRibbon) {
           renderCartoon(backbone, molecule, node,
                         -1.0f * Cartoon::ELIPSE_RATIO);
         }
-        if (interface.showSimpleCartoon) {
+        if (interface->showSimpleCartoon) {
           renderSimpleCartoon(backbone, molecule, node, 1.0f);
         }
-        if (interface.showCartoon) {
+        if (interface->showCartoon) {
           renderCartoon(backbone, molecule, node, 1.0f);
         }
-        if (interface.showRope) {
+        if (interface->showRope) {
           renderRope(backbone, molecule, node, 1.0f);
         }
         ++i;
@@ -396,16 +405,16 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 
 QWidget* Cartoons::setupWidget()
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  interface.setupWidget(this);
-  return interface.widget;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
 void Cartoons::showBackbone(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showBackbone) {
-    interface.showBackbone = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showBackbone) {
+    interface->showBackbone = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -414,9 +423,9 @@ void Cartoons::showBackbone(bool show)
 
 void Cartoons::showTrace(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showTrace) {
-    interface.showTrace = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showTrace) {
+    interface->showTrace = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -425,9 +434,9 @@ void Cartoons::showTrace(bool show)
 
 void Cartoons::showTube(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showTube) {
-    interface.showTube = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showTube) {
+    interface->showTube = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -436,9 +445,9 @@ void Cartoons::showTube(bool show)
 
 void Cartoons::showRibbon(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showRibbon) {
-    interface.showRibbon = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showRibbon) {
+    interface->showRibbon = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -447,9 +456,9 @@ void Cartoons::showRibbon(bool show)
 
 void Cartoons::showSimpleCartoon(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showSimpleCartoon) {
-    interface.showSimpleCartoon = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showSimpleCartoon) {
+    interface->showSimpleCartoon = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -458,9 +467,9 @@ void Cartoons::showSimpleCartoon(bool show)
 
 void Cartoons::showCartoon(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showCartoon) {
-    interface.showCartoon = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showCartoon) {
+    interface->showCartoon = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -469,13 +478,13 @@ void Cartoons::showCartoon(bool show)
 
 void Cartoons::showRope(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerCartoon>();
-  if (show != interface.showRope) {
-    interface.showRope = show;
+  auto* interface = m_layerManager.getSetting<LayerCartoon>();
+  if (show != interface->showRope) {
+    interface->showRope = show;
     emit drawablesChanged();
   }
   QSettings settings;
   settings.setValue("cartoon/rope", show);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

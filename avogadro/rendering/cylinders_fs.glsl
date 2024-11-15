@@ -1,5 +1,7 @@
 varying vec3 fnormal;
 
+uniform float opacity;
+
 void main()
 {
   vec3 N = normalize(fnormal);
@@ -12,5 +14,5 @@ void main()
   vec4 diffuse = 0.55 * gl_Color;
   vec4 specular = 0.5 * (vec4(1, 1, 1, 1) - gl_Color);
   gl_FragColor = ambient + df * diffuse + pow(sf, 20.0) * specular;
-  gl_FragColor.a = 1.0;
+  gl_FragColor.a = opacity;
 }
