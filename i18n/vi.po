@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-12 01:05+0000\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/vi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -952,7 +952,7 @@ msgstr ""
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "Duyệt tìm..."
+msgstr "Duyệt tìm"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1288,14 +1288,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:194
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Bỏ hi-đrô"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:201
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Bỏ hi-đrô"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1686,7 +1684,7 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:178:156
 #, fuzzy
 msgid "Success"
-msgstr "Thành công!"
+msgstr "Thành công"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1730,7 +1728,7 @@ msgstr "Vẽ cấu trúc thứ cấp của prô-tê-in"
 #: qtplugins/applycolors/applycolors.cpp:84
 #, fuzzy
 msgid "By Amino Acid"
-msgstr "A-xit a-min:"
+msgstr "A-xit a-min"
 
 #: qtplugins/applycolors/applycolors.cpp:89
 msgid "By Shapely Scheme"
@@ -1979,9 +1977,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "Bỏ hi-đrô"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2021,9 +2018,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:77
-#, fuzzy
 msgid "Perceive bond orders."
-msgstr "Bỏ hi-đrô"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:32
 msgid "Bonding"
@@ -2568,7 +2564,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 #, fuzzy
 msgid "Molecular Mechanics"
-msgstr "Cơ học &phân tử"
+msgstr "Cơ học phân tử"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -3146,7 +3142,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:59
 #, fuzzy
 msgid "&Hydrogens"
-msgstr "hi-đrô"
+msgstr "&hi-đrô"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -3178,7 +3174,7 @@ msgstr "&Chèn"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Chèn"
+msgstr "Chèn"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 #, fuzzy
@@ -3186,7 +3182,7 @@ msgstr "&Chèn"
 #| msgid "UV"
 msgctxt "uracil"
 msgid "U"
-msgstr "UV"
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:161
 msgid "Uracil"
@@ -3724,9 +3720,8 @@ msgid "Conformer Search…"
 msgstr "Tìm đồng phân"
 
 #: qtplugins/openbabel/openbabel.cpp:65
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Bỏ hi-đrô"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy

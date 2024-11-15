@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-14 12:00+0000\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -4659,7 +4659,7 @@ msgstr "Поредак везе:"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Величина %1"
+msgstr "Величина (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 #, fuzzy
@@ -4894,10 +4894,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipulišite kamerom za pregled."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Script Charge Models"
-msgstr "Model vode:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy
