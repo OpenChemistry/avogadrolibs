@@ -9,6 +9,10 @@
 #include <array>
 
 namespace Avogadro::Core {
+namespace detail {
+/** Used to represent Maximum RGB value as a float. */
+constexpr float k_MaxRGBColorValue = 255.0f;
+} // namespace detail
 
 /**
  * @class Color3f color3f.h <avogadro/core/color3f.h>
@@ -87,11 +91,14 @@ protected:
 
 inline Color3f::Color3f(float r, float g, float b) : m_data({ r, g, b }) {}
 
+// clang-format off
 inline Color3f::Color3f(int r, int g, int b)
-  : m_data({ static_cast<float>(r) / 255.0f, static_cast<float>(g) / 255.0f,
-             static_cast<float>(b) / 255.0f })
+: m_data({static_cast<float>(r) / detail::k_MaxRGBColorValue,
+          static_cast<float>(g) / detail::k_MaxRGBColorValue,
+          static_cast<float>(b) / detail::k_MaxRGBColorValue})
 {
 }
+// clang-format on
 
 inline void Color3f::set(float r, float g, float b)
 {

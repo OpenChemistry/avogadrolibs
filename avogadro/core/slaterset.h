@@ -140,7 +140,7 @@ public:
   MatrixX& normalizedMatrix() { return m_normalized; }
   MatrixX& densityMatrix() { return m_density; }
 
-  // Does nothing?
+  // Nonfunctional - Included for backwards compatibility
   void outputAll();
 
 private:

@@ -256,7 +256,7 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 */
 #define NIGGLI_DEBUG(step)
 
-  // Allow ADL for swap
+  // Allow Argument Dependent Lookup for swap
   using std::swap;
 
   // Perform iterative reduction:

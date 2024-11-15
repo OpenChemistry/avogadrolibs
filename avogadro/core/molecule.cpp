@@ -564,7 +564,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 
 void Molecule::swapBond(Index a, Index b)
 {
-  // Allow ADL for swap
+  // Allow Argument Dependent Lookup for swap
   using std::swap;
 
   m_graph.swapEdgeIndices(a, b);
@@ -572,7 +572,7 @@ void Molecule::swapBond(Index a, Index b)
 }
 void Molecule::swapAtom(Index a, Index b)
 {
-  // Allow ADL for swap
+  // Allow Argument Dependent Lookup for swap
   using std::swap;
 
   Index max = a > b ? a : b;

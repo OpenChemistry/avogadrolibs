@@ -108,7 +108,7 @@ void Layer::removeLayer(size_t layer)
 
 void Layer::swapLayer(Index a, Index b)
 {
-  // Allow ADL for swap
+  // Allow Argument Dependent Lookup for swap
   using std::swap;
 
   swap(m_atomAndLayers[a], m_atomAndLayers[b]);

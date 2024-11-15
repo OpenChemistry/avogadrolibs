@@ -22,10 +22,25 @@ namespace {
 class DistanceMatrix
 {
 public:
+  // swap function marked friend so it can only be found via Argument Dependent
+  // Lookup (ADL)
+  friend void swap(DistanceMatrix& first, DistanceMatrix& second)
+  {
+    // Enable ADL for the swap
+    using std::swap;
+
+    swap(first.m_size, second.m_size);
+    swap(first.m_values, second.m_values);
+  }
+
   // construction and destruction
   DistanceMatrix(size_t size);
-  DistanceMatrix(const DistanceMatrix& other);
   ~DistanceMatrix();
+
+  DistanceMatrix(const DistanceMatrix& other);
+
+  // intentional pass-by-value to leverage previous copy ctor
+  DistanceMatrix& operator=(DistanceMatrix other);
 
   // operators
   size_t operator()(size_t i, size_t j) const;
@@ -49,6 +64,14 @@ DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
   if (m_values)
     std::copy(other.m_values, other.m_values + (other.m_size * other.m_size),
               m_values);
+}
+
+DistanceMatrix& DistanceMatrix::operator=(DistanceMatrix other)
+{
+  // will use friend swap function via Argument Dependent Lookup
+  swap(*this, other);
+
+  return *this;
 }
 
 DistanceMatrix::~DistanceMatrix()

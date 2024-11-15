@@ -121,7 +121,8 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 
 bool GaussianSetTools::isValid() const
 {
-  return m_molecule && dynamic_cast<GaussianSet*>(m_molecule->basisSet());
+  return (m_molecule != nullptr) &&
+         (dynamic_cast<GaussianSet*>(m_molecule->basisSet()) != nullptr);
 }
 
 inline bool GaussianSetTools::isSmall(double val) const
