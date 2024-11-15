@@ -47,6 +47,14 @@ struct LayerWireframe : Core::LayerData
     lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
   }
 
+  LayerWireframe(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
+  LayerData* clone() final { return new LayerWireframe(*this); }
+
   ~LayerWireframe() override
   {
     if (widget)
@@ -143,11 +151,11 @@ void Wireframe::process(const QtGui::Molecule& molecule,
                                     bond.atom2().index())) {
       continue;
     }
-    auto& interface1 = m_layerManager.getSetting<LayerWireframe>(
+    auto* interface1 = m_layerManager.getSetting<LayerWireframe>(
       m_layerManager.getLayerID(bond.atom1().index()));
-    auto& interface2 = m_layerManager.getSetting<LayerWireframe>(
+    auto* interface2 = m_layerManager.getSetting<LayerWireframe>(
       m_layerManager.getLayerID(bond.atom2().index()));
-    if (!interface1.showHydrogens && !interface2.showHydrogens &&
+    if (!interface1->showHydrogens && !interface2->showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
          bond.atom2().atomicNumber() == 1)) {
       continue;
@@ -162,9 +170,9 @@ void Wireframe::process(const QtGui::Molecule& molecule,
     points.push_back(pos2);
     colors.push_back(color1);
     colors.push_back(color2);
-    float lineWidth = interface1.lineWidth;
+    float lineWidth = interface1->lineWidth;
 
-    if (interface1.multiBonds || interface2.multiBonds)
+    if (interface1->multiBonds || interface2->multiBonds)
       lineWidth *= bond.order();
     lines->addLineStrip(points, colors, lineWidth);
     // add small spheres to allow the selection tool to work
@@ -180,16 +188,16 @@ void Wireframe::process(const QtGui::Molecule& molecule,
 
 QWidget* Wireframe::setupWidget()
 {
-  auto& interface = m_layerManager.getSetting<LayerWireframe>();
-  interface.setupWidget(this);
-  return interface.widget;
+  auto* interface = m_layerManager.getSetting<LayerWireframe>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
 void Wireframe::multiBonds(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerWireframe>();
-  if (show != interface.multiBonds) {
-    interface.multiBonds = show;
+  auto* interface = m_layerManager.getSetting<LayerWireframe>();
+  if (show != interface->multiBonds) {
+    interface->multiBonds = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -198,9 +206,9 @@ void Wireframe::multiBonds(bool show)
 
 void Wireframe::showHydrogens(bool show)
 {
-  auto& interface = m_layerManager.getSetting<LayerWireframe>();
-  if (show != interface.showHydrogens) {
-    interface.showHydrogens = show;
+  auto* interface = m_layerManager.getSetting<LayerWireframe>();
+  if (show != interface->showHydrogens) {
+    interface->showHydrogens = show;
     emit drawablesChanged();
   }
   QSettings settings;
@@ -209,12 +217,12 @@ void Wireframe::showHydrogens(bool show)
 
 void Wireframe::setWidth(double width)
 {
-  auto& interface = m_layerManager.getSetting<LayerWireframe>();
-  interface.lineWidth = float(width);
+  auto* interface = m_layerManager.getSetting<LayerWireframe>();
+  interface->lineWidth = float(width);
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("wireframe/lineWidth", interface.lineWidth);
+  settings.setValue("wireframe/lineWidth", width);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-10 03:17+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-11-14 12:00+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1438,7 +1438,7 @@ msgstr "Update Bond"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Add Unit Cell…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1740,11 +1740,11 @@ msgstr "By Custom Colour…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "By Atomic Index…"
 
 #: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance…"
-msgstr ""
+msgstr "By Distance…"
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -3473,84 +3473,84 @@ msgstr "unknown molecule"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:268
 msgid "Property"
-msgstr ""
+msgstr "Property"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Molecule Name"
-msgstr ""
+msgstr "Molecule Name"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:277
 msgid "Molecular Mass (g/mol)"
-msgstr ""
+msgstr "Molecular Mass (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:279
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Chemical Formula"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:281
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Number of Atoms"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:283
 msgid "Number of Bonds"
-msgstr ""
+msgstr "Number of Bonds"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:285
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Coordinate Sets"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:287
 msgid "Number of Residues"
-msgstr ""
+msgstr "Number of Residues"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:289
 msgid "Number of Chains"
-msgstr ""
+msgstr "Number of Chains"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:291
 msgid "Net Charge"
-msgstr ""
+msgstr "Net Charge"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Net Spin Multiplicity"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO Energy (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:297
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO Energy (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:299
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO Energy (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Total Energy (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Zero Point Energy (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "Enthalpy (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:309
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "Entropy (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:311
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Gibbs Free Energy (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -4180,11 +4180,11 @@ msgstr "Description"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Error downloading plugin data."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Error parsing plugin data."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
@@ -4209,7 +4209,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Failed to download from %1: status code %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format

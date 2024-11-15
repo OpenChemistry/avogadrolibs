@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"PO-Revision-Date: 2024-11-12 01:05+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -3845,7 +3845,7 @@ msgstr "生成构象异构体 (Open Babel)"
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
 msgid "Generate Conformers"
-msgstr "构象异构体%1"
+msgstr "构象异构体"
 
 #: qtplugins/openbabel/openbabel.cpp:720
 msgid "Cannot open file with Open Babel."
@@ -3963,8 +3963,7 @@ msgstr "生成 OpenMM 输入。"
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
-msgstr ""
-"您是否希望更新预览文本，并丢失所有在MOPAC输入卡片预览面板中所做的修改？"
+msgstr "您是否希望更新预览文本，并丢失所有在OpenMM输入卡片预览面板中所做的修改？"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4286,7 +4285,7 @@ msgstr "PLY 渲染…"
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "保存视频文件"
+msgstr "保存文件"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4377,7 +4376,7 @@ msgstr "键级"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "长度%1"
+msgstr "长度 (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
@@ -4389,15 +4388,14 @@ msgid "Secondary Structure"
 msgstr "加载结构文件"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "氢"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "原子 %1"
+msgstr "原子 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4407,23 +4405,23 @@ msgstr "顶点"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "原子"
+msgstr "原子 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "键角: %L1 °"
+msgstr "键角 (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "原子"
+msgstr "原子 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "原子"
+msgstr "原子 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 msgid "Adjust Fragment"
@@ -4527,7 +4525,7 @@ msgstr "构象异构体属性"
 #: qtplugins/propertytables/propertyview.cpp:58
 #, fuzzy
 msgid "Residue Properties"
-msgstr "分子属性"
+msgstr "残基属性"
 
 #: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
 #: qtplugins/qtaim/qtaimextension.h:23
@@ -4642,15 +4640,12 @@ msgid "Select Sidechain Atoms…"
 msgstr "选择侧链原子…"
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
 msgid "Select Water"
-msgstr "原子索引"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "忽略选择"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 #, fuzzy
@@ -4671,20 +4666,16 @@ msgid "&Select"
 msgstr "选择(&S)"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Symmetry Elements"
 msgid "Select Element"
-msgstr "对称元素"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "原子索引"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "原子索引"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4695,10 +4686,8 @@ msgid "Atoms to Select:"
 msgstr "要选择的原子："
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "删除原子"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4750,9 +4739,8 @@ msgid "Selection tool"
 msgstr "选择工具"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
 msgid "New Layer"
-msgstr "删除氢原子"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
@@ -4854,7 +4842,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -4900,7 +4888,7 @@ msgstr "光谱"
 #, fuzzy
 #| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "显示振动模式。"
+msgstr "显示光谱。"
 
 #: qtplugins/spectra/spectradialog.cpp:201
 #, fuzzy
@@ -4933,16 +4921,12 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Background Color"
-msgstr "选择键标签"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:269
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Foreground Color"
-msgstr "选择键标签"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:282
 #, fuzzy
@@ -4999,7 +4983,7 @@ msgstr "位移 (ppm)"
 #, fuzzy
 #| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "电子"
+msgstr "电子光谱"
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -6269,7 +6253,7 @@ msgstr "名称："
 #, fuzzy
 #| msgid "Insert DNA"
 msgid "Insert Nucleic Acids"
-msgstr "插入 DNA"
+msgstr "插入"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
@@ -7778,7 +7762,7 @@ msgstr "字体大小："
 #, fuzzy
 #| msgid "10e-"
 msgid "10"
-msgstr "10e-"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8174,7 +8158,7 @@ msgstr ""
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #, fuzzy
 msgid "Groups"
-msgstr "群组%1"
+msgstr "群组"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)

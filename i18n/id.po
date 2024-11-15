@@ -8,13 +8,14 @@
 # RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>, 2021.
 # Jacque Fresco <aidter@use.startmail.com>, 2021.
 # fikril Ha <fikrilha099@gmail.com>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-09-09 01:09+0000\n"
-"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1312,14 +1313,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:194
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Hapus Hidrogen"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:201
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Hapus Hidrogen"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:210
 msgid "Add Layer"
@@ -1869,11 +1868,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Batalkan"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2414,9 +2411,8 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
 msgid "'c' lattice coordinate."
-msgstr "Koordinat Cartesian"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -2603,7 +2599,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 #, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Dinamika Molekuler (300K)"
+msgstr "Dinamika Molekuler"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 #, fuzzy
@@ -2617,7 +2613,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 #, fuzzy
 msgid "Molecular Mechanics"
-msgstr "&Mekanika Molekuler"
+msgstr "Mekanika Molekuler"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -3188,7 +3184,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:21
 #, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "Atur Hidrogen"
+msgstr "&Atur Hidrogen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
 msgid "Add Hydrogens"
@@ -3210,7 +3206,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:59
 #, fuzzy
 msgid "&Hydrogens"
-msgstr "Hidrogen"
+msgstr "&Hidrogen"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -3661,7 +3657,7 @@ msgstr ""
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
-msgstr "Analitik"
+msgstr "&Analitik"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3683,14 +3679,14 @@ msgstr "Properti Molekul"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Ekspor"
+msgstr "Ekspor CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "Berkas WFN (*.wfn);;Semua berkas (*.*)"
+msgstr "Berkas CSV (*.csv);;Semua berkas (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3779,10 +3775,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hidrogen"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -3871,7 +3865,7 @@ msgstr "&Optimisasi Geometri"
 #, fuzzy
 #| msgid "Generation Temp:"
 msgid "Generating…"
-msgstr "Suhu Generasi:"
+msgstr "Generasi"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
@@ -4360,9 +4354,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr "Unduh plugin dari repositori GitHub."
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4373,19 +4366,17 @@ msgstr "Simpan Berkas"
 #, fuzzy
 #| msgid "POV-Ray (*.pov);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "POV-Ray (*.pov);; Berkas teks (*.txt)"
+msgstr "PLY (*.ply);; Berkas teks (*.txt)"
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 #, fuzzy
 #| msgid "Render the scene using POV-Ray."
 msgid "Render the scene using PLY."
-msgstr "Render adegan menggunakan POV-Ray."
+msgstr "Render adegan menggunakan PLY."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
@@ -4677,10 +4668,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Script Charge Models"
-msgstr "Model Air:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -5051,13 +5040,11 @@ msgstr "mode getar"
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Nomor gelombang (cm<sup>-1</sup>)"
+msgstr "Nomor gelombang (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Keadaan Transisi"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
@@ -5289,10 +5276,8 @@ msgid "%1 %2"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Suhu"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -5393,10 +5378,8 @@ msgid "Render the molecule as a wireframe."
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:91
-#, fuzzy
-#| msgid "Calculated Spectra:"
 msgid "Calculate Band Structure…"
-msgstr "Spektra Perhitungan:"
+msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:112
 msgid "&Yaehmop"
@@ -6379,17 +6362,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "TidakAda"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "TidakAda"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6400,10 +6379,8 @@ msgstr "Nukleus:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "Alanine"
 msgid "Adenine"
-msgstr "Alanin"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
@@ -6415,10 +6392,8 @@ msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "Tyrosine"
 msgid "Cytosine"
-msgstr "Tirosin"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
@@ -6430,10 +6405,8 @@ msgstr "C"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
-#, fuzzy
-#| msgid "Alanine"
 msgid "Guanine"
-msgstr "Alanin"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:72
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_G)
@@ -7022,7 +6995,7 @@ msgstr "Gunakan Bentuk"
 #, fuzzy
 #| msgid "Generation Temp:"
 msgid "Generate…"
-msgstr "Suhu Generasi:"
+msgstr "Generasi"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7063,10 +7036,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Latar Depan:"
+msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -7079,7 +7050,7 @@ msgstr "Titik Asal:"
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 #, fuzzy
 msgid "Geometry"
-msgstr "&Optimisasi Geometri"
+msgstr "Geometri"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -7155,10 +7126,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Multiplicity:"
 msgid "Mutability:"
-msgstr "Pengalian:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7169,17 +7138,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Convergence:"
-msgstr "Toleransi:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Nonbonded method:"
 msgid "Scoring method:"
-msgstr "Metode nonbonded:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -8062,10 +8027,8 @@ msgstr " K"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "Kosong"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8076,10 +8039,8 @@ msgstr "Terang"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Stronsium"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8301,24 +8262,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Keadaan Transisi"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Keadaan Transisi"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Keadaan Transisi"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8375,10 +8330,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogen"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

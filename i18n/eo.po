@@ -2,13 +2,14 @@
 # Copyright (C) 2006-2020 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # phlostically <phlostically@mailinator.com>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2021-09-26 12:57+0000\n"
-"Last-Translator: phlostically <phlostically@mailinator.com>\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
 "Language: eo\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -1908,11 +1909,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Nuligi"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2449,10 +2448,8 @@ msgid "'b' lattice coordinate."
 msgstr "Krada koordinato 'b'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "Krada koordinato 'a'."
+msgstr "Krada koordinato 'c'."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3396,10 +3393,8 @@ msgid "Element"
 msgstr "Elemento"
 
 #: qtplugins/label/label.cpp:167
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Nomo de elemento."
+msgstr ""
 
 #: qtplugins/label/label.cpp:169
 msgid "Element & ID"
@@ -3723,7 +3718,7 @@ msgstr "&Eksporti"
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN-dosieroj (*.wfn);;Ĉiuj dosieroj (*.*)"
+msgstr "CSV-dosieroj (*.csv);;Ĉiuj dosieroj (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3812,10 +3807,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Hidrogeno"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4436,7 +4429,7 @@ msgstr "Elŝuti kromprogramojn el GitHub-deponejoj."
 #, fuzzy
 #| msgid "VRML Render"
 msgid "PLY Render…"
-msgstr "VRML-Bildigo"
+msgstr "PLY-Bildigo"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4447,7 +4440,7 @@ msgstr "Konservi Dosieron"
 #, fuzzy
 #| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Teksta dosiero (*.txt)"
+msgstr "PLY (*.ply);;Teksta dosiero (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -4457,7 +4450,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Bildigi ĉi tiun scenon per VRML."
+msgstr "Bildigi ĉi tiun scenon per PLY."
 
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
@@ -4547,9 +4540,8 @@ msgid "Secondary Structure"
 msgstr "Ŝargi Strukturan Dosieron"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Hidrogeno"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -4571,7 +4563,7 @@ msgstr "Atomo"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Angulo"
+msgstr "Angulo (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
@@ -4763,10 +4755,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipuli la kameraon de la vido."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Script Charge Models"
-msgstr "Akva Modelo:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy
@@ -5114,10 +5104,8 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:219
 #: qtplugins/spectra/spectradialog.cpp:410
-#, fuzzy
-#| msgid "Transition State"
 msgid "Density of States"
-msgstr "Transira Stato"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
 #, fuzzy
@@ -5151,10 +5139,8 @@ msgid "Wavenumbers (cm⁻¹)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Transira Stato"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
@@ -5391,10 +5377,8 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Temperaturo"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -6605,10 +6589,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Frequencies"
 msgid "Sequence:"
-msgstr "Frekvencoj"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
@@ -8263,10 +8245,8 @@ msgstr "Strikta"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Stroncio"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8485,24 +8465,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Transira Stato"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Transira Stato"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Transira Stato"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8511,10 +8485,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "&Copy to Clipboard"
 msgid "From Clipboard"
-msgstr "Kopii en Tondujon (&C)"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8526,14 +8498,14 @@ msgstr ""
 #, fuzzy
 #| msgid "Group %1"
 msgid "Groups"
-msgstr "Grupo %1"
+msgstr "Grupoj"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 #| msgid "Group %1"
 msgid "Group:"
-msgstr "Grupo %1"
+msgstr "Grupo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8562,10 +8534,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogeno"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

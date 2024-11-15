@@ -39,6 +39,8 @@ struct LayerData
 
   virtual ~LayerData() = default;
 
+  virtual LayerData* clone() { return new LayerData(serialize()); };
+
   /** get the saved data */
   std::string getSave() const { return m_save; }
 

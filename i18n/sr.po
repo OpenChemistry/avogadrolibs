@@ -5,22 +5,23 @@
 # Danial K <danial@proctorio.com>, 2021.
 # Nathan <bonnemainsnathan@gmail.com>, 2021.
 # Nikola Matić <nikolamatic225@gmail.com>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2021-08-20 01:04+0000\n"
-"Last-Translator: Nikola Matić <nikolamatic225@gmail.com>\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -1348,11 +1349,9 @@ msgstr ""
 "%6"
 
 #: qtgui/pythonscript.cpp:145
-#, fuzzy, qt-format
-#| msgctxt "arg is an executable file."
-#| msgid "Starting %1..."
+#, qt-format
 msgid "Warning '%1'"
-msgstr "Pokretanje %1 ..."
+msgstr ""
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
@@ -1943,11 +1942,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Otkaži"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2513,10 +2510,8 @@ msgid "'b' lattice coordinate."
 msgstr "'b' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
-#| msgid "'a' lattice coordinate."
 msgid "'c' lattice coordinate."
-msgstr "'a' koordinata rešetke."
+msgstr "'c' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -2711,8 +2706,9 @@ msgid "Energy and Forces"
 msgstr "Energija i sile"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
+#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Molekularna Dinamika (300K)"
+msgstr "Molekularna Dinamika"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 msgid "Geometry Optimization"
@@ -3478,10 +3474,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:167
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Naziv elementa."
+msgstr ""
 
 #: qtplugins/label/label.cpp:169
 msgid "Element & ID"
@@ -3834,7 +3828,7 @@ msgstr "&Izvezi"
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "WFN Datoteke (*.wfn);;Sve Datoteke (*.*)"
+msgstr "CSV Datoteke (*.csv);;Sve Datoteke (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3939,10 +3933,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Vodonik"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4566,7 +4558,7 @@ msgstr "Preuzmite dodatke iz spremišta GitHub."
 #, fuzzy
 #| msgid "VRML Render"
 msgid "PLY Render…"
-msgstr "VRML Render"
+msgstr "PLY Render"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4577,19 +4569,17 @@ msgstr "Sačuvaj Datoteku"
 #, fuzzy
 #| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Tekstualna datoteka (*.txt)"
+msgstr "PLY (*.ply);;Tekstualna datoteka (*.txt)"
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 #, fuzzy
 #| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Renderirajte scenu pomoću VRML -a."
+msgstr "Renderirajte scenu pomoću PLY -a."
 
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
@@ -4669,7 +4659,7 @@ msgstr "Поредак везе:"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Величина %1"
+msgstr "Величина (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 #, fuzzy
@@ -4682,9 +4672,8 @@ msgid "Secondary Structure"
 msgstr "Učitaj strukturu datoteke"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Vodonik"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -4706,7 +4695,7 @@ msgstr "Атом"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Угао: %L1 °"
+msgstr "Угао (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
@@ -4905,10 +4894,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipulišite kamerom za pregled."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Script Charge Models"
-msgstr "Model vode:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy
@@ -5294,13 +5281,11 @@ msgstr "Režimi vibracija"
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Таласни број (cm<sup>-1</sup>)"
+msgstr "Таласни број (cm⁻¹)"
 
 #: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
 msgid "Transmission"
-msgstr "Stanje prelaza"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
@@ -8389,10 +8374,8 @@ msgstr " K"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "Ништа"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8403,10 +8386,8 @@ msgstr "Светло"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Stroncijum"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8628,24 +8609,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Stanje prelaza"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Stanje prelaza"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Stanje prelaza"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8669,14 +8644,14 @@ msgstr ""
 #, fuzzy
 #| msgid "Group %1"
 msgid "Groups"
-msgstr "Grupa %1"
+msgstr "Grupa"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 #| msgid "Group %1"
 msgid "Group:"
-msgstr "Grupa %1"
+msgstr "Grupa:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

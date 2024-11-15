@@ -2,21 +2,23 @@
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2016-06-10 06:32+0000\n"
-"Last-Translator: Avogadro Team <avogadro-devel@lists.sourceforge.net>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -1082,7 +1084,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:195
 #, fuzzy
 msgid "Theory"
-msgstr "Teoria:"
+msgstr "Teoria"
 
 #: qtgui/jsonwidget.cpp:195
 msgid "Basis"
@@ -1698,7 +1700,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:58
 #, fuzzy
 msgid "By Element"
-msgstr "Alkuaine:"
+msgstr "Alkuaine"
 
 #: qtplugins/applycolors/applycolors.cpp:69
 msgid "By Chain"
@@ -1796,11 +1798,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1782
-#, fuzzy
-#| msgid "Neutral"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Neutraali"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1818,11 +1818,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Peruuta"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2053,16 +2051,12 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Centroid"
-msgstr "Lisää rajoituksia"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:21
-#, fuzzy
-#| msgid "Add Constraints"
 msgid "Add Center of Mass"
-msgstr "Lisää rajoituksia"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
@@ -2323,19 +2317,16 @@ msgid "Invalid coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
-#, fuzzy
 msgid "X coordinate."
-msgstr "Kateesiset koordinaatit"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
-#, fuzzy
 msgid "Y coordinate."
-msgstr "Kateesiset koordinaatit"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
-#, fuzzy
 msgid "Z coordinate."
-msgstr "Kateesiset koordinaatit"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
@@ -2346,9 +2337,8 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
 msgid "'c' lattice coordinate."
-msgstr "Kateesiset koordinaatit"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3649,10 +3639,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Vety"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4222,9 +4210,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4245,9 +4232,8 @@ msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4335,9 +4321,8 @@ msgid "Secondary Structure"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Vety"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -4359,7 +4344,7 @@ msgstr "Atomi"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Kulma"
+msgstr "Kulma (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
@@ -4799,7 +4784,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -4830,18 +4815,14 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Neutral"
 msgid "Plot Spectra…"
-msgstr "Neutraali"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1643
-#, fuzzy
-#| msgid "Neutral"
 msgid "Spectra"
-msgstr "Neutraali"
+msgstr ""
 
 #: qtplugins/spectra/spectra.h:38
 msgid "Display spectra plots."
@@ -4860,10 +4841,8 @@ msgid "NMR"
 msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:211
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic"
-msgstr "Elektronitiheys"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:215
 msgid "Circular Dichroism"
@@ -4906,36 +4885,28 @@ msgid "Transmission"
 msgstr "Kiertokulma"
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgid "Neutral"
 msgid "Raman Spectra"
-msgstr "Neutraali"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Intensity"
-msgstr "Elektronitiheys"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgid "Neutral"
 msgid "NMR Spectra"
-msgstr "Neutraali"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:370
 msgid "Chemical Shift (ppm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Elektronitiheys"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -4968,10 +4939,8 @@ msgid "Electron Density"
 msgstr "Elektronitiheys"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Spin Density"
-msgstr "Elektronitiheys"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
@@ -5194,9 +5163,8 @@ msgid "Display vibrational modes."
 msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6246,10 +6214,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Frequencies"
 msgid "Sequence:"
-msgstr "Taajuudet"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
@@ -7832,10 +7798,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Strontium"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8116,10 +8080,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Typpi"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

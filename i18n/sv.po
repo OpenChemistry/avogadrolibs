@@ -2,21 +2,23 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-#
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2016-06-10 06:44+0000\n"
-"Last-Translator: Dostojevskji <darkangel_nr1@hotmail.com>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
+"avogadrolibs/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
-"X-Generator: Launchpad (build 18609)\n"
 
 #: molequeue/batchjob.cpp:70
 #, qt-format
@@ -2502,7 +2504,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 #, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Molekyldynamik (600 K)"
+msgstr "Molekyldynamik"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 #, fuzzy
@@ -2516,7 +2518,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 #, fuzzy
 msgid "Molecular Mechanics"
-msgstr "Molekyldynamik (600 K)"
+msgstr "Molekyldynamik"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -3156,7 +3158,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
 msgid "Molecule…"
-msgstr "Molekyldynamik (300 K)"
+msgstr "Molekyl…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3495,7 +3497,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "Molekyldynamik (300 K)"
+msgstr "&Molekyl…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -3608,19 +3610,16 @@ msgid " °"
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
 msgid "Angle tolerance:"
-msgstr "Molekylegenskaper..."
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Väte"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -4285,7 +4284,7 @@ msgstr "Bindningsordning:"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "&Längdenhet"
+msgstr "Längdenhet (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
@@ -4297,9 +4296,8 @@ msgid "Secondary Structure"
 msgstr "Renderar proteinets sekundära struktur"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Väte"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -4321,7 +4319,7 @@ msgstr "Rita atom"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr " Visa vinklar"
+msgstr "Vinklar (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
@@ -4454,9 +4452,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:46
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Molekyldynamik (300 K)"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:53
 msgid "Molecular Graph with Lone Pairs…"
@@ -4891,9 +4888,8 @@ msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
-#, fuzzy
 msgid "Molecular Orbital"
-msgstr "Molekyldynamik (300 K)"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
@@ -4948,9 +4944,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Molekyldynamik (300 K)"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the electron density."
@@ -7747,10 +7742,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Strontium"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)

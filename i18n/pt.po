@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"PO-Revision-Date: 2024-11-15 16:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -3417,10 +3417,8 @@ msgid "Element"
 msgstr "Elemento"
 
 #: qtplugins/label/label.cpp:167
-#, fuzzy
-#| msgid "Element name."
 msgid "Element & Number"
-msgstr "Nome do Elemento."
+msgstr ""
 
 #: qtplugins/label/label.cpp:169
 msgid "Element & ID"
@@ -4461,9 +4459,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4474,7 +4471,7 @@ msgstr "Gravar Ficheiro"
 #, fuzzy
 #| msgid "VRML (*.wrl);;Text file (*.txt)"
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "VRML (*.wrl);;Texto (*.txt)"
+msgstr "PLY (*.ply);;Texto (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -4484,7 +4481,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Render the scene using VRML."
 msgid "Render the scene using PLY."
-msgstr "Renderizar a cena usando VRML."
+msgstr "Renderizar a cena usando PLY."
 
 #: qtplugins/povray/povray.cpp:29
 #, fuzzy
@@ -4564,7 +4561,7 @@ msgstr "Ordem de Ligação:"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Comprimento %1"
+msgstr "Comprimento (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
@@ -4576,9 +4573,8 @@ msgid "Secondary Structure"
 msgstr "Estrutura:"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Hidrogénio"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
@@ -4600,7 +4596,7 @@ msgstr "Átomo"
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Ângulo: %L1 °"
+msgstr "Ângulo (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
@@ -7352,10 +7348,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Multiplicity:"
 msgid "Mutability:"
-msgstr "Multiplicidade:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -8533,7 +8527,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Group %1"
 msgid "Groups"
-msgstr "Grupo %1"
+msgstr "Grupo"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)

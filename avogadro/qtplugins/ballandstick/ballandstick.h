@@ -45,12 +45,14 @@ public slots:
   void bondRadiusChanged(int value);
   void multiBonds(bool show);
   void showHydrogens(bool show);
+  void opacityChanged(int value);
 
 private:
   Rendering::GroupNode* m_group;
   std::string m_name = "Ball and Stick";
   float m_atomScale = 0.3f;
   float m_bondRadius = 0.1f;
+  float m_opacity = 1.0f;
 };
 
 } // end namespace Avogadro::QtPlugins

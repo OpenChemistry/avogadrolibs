@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-10 03:17+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-11-13 09:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -2021,8 +2021,6 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
 msgstr "選択した原子を結合"
 
@@ -2875,17 +2873,16 @@ msgstr "インポート (&I)"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "PDBから取得"
+msgstr "PDBの取得"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "ファイルPDB分子 ‘%1’ を読めません。"
+msgstr "PDB分子を読めません: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr ""
+msgstr "PDBコード"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2894,15 +2891,15 @@ msgstr "ダウンロードする化学構造"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "不正なPDBコード"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "PDBコードは4文字でなければいけません。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "PDBコードの最初の文字は1-9でなければなりません。"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -2968,26 +2965,18 @@ msgid "Forces"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:113
-#, fuzzy
-#| msgid "Configure Force Field…"
 msgid "Configure…"
-msgstr "力場の設定…"
+msgstr "設定…"
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
 msgstr "選択した原子を固定"
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
 msgstr "選択した原子の固定を解除"
 
 #: qtplugins/forcefield/forcefield.cpp:151
-#, fuzzy
-#| msgid "Calculate"
 msgid "&Calculate"
 msgstr "計算 (&C)"
 
@@ -3019,7 +3008,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Forcefield Optimization"
 msgid "Forcefield optimization"
-msgstr "力場最適化"
+msgstr "力場による最適化"
 
 #: qtplugins/forcefield/forcefield.h:50
 #, fuzzy
@@ -3224,15 +3213,13 @@ msgstr "チミン"
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
-#, fuzzy
-#| msgid "Molecule"
 msgid "Insert Molecule…"
 msgstr "分子を挿入…"
 
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr ""
+msgstr "3D分子を生成中…"
 
 #: qtplugins/insertdna/insertdna.h:33
 msgid "InsertDNA"
@@ -3243,10 +3230,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
-msgstr "分子"
+msgstr "分子…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3501,8 +3486,6 @@ msgstr "(問い合せ中)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:103
 #: qtplugins/molecularproperties/molecularmodel.cpp:111
 #: qtplugins/molecularproperties/molecularmodel.cpp:127
-#, fuzzy
-#| msgid "[no molecule]"
 msgid "unknown molecule"
 msgstr "不明な分子"
 
@@ -3628,7 +3611,7 @@ msgstr "CSVをエクスポート"
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "CSVファイル (*.csv);;全てのファイル (*.*)"
+msgstr "CSVファイル (*.csv);;全てのファイル (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3730,10 +3713,8 @@ msgid "Configure Force Field…"
 msgstr "力場の設定…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "配座異性体検索"
+msgstr "配座異性体検索…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 #, fuzzy
@@ -3855,13 +3836,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Optimizing Geometry (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "コンフォーマー生成 (Open Babel)"
+msgstr "配座異性体を生成中 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
 #| msgid "Conformer"
 msgid "Generate Conformers"
-msgstr "配座異性体"
+msgstr "配座異性体の生成"
 
 #: qtplugins/openbabel/openbabel.cpp:720
 msgid "Cannot open file with Open Babel."
@@ -4405,7 +4386,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 msgid "Atom 1"
-msgstr "原子 1"
+msgstr "原子1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4576,13 +4557,10 @@ msgid "Center"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:39
-#, fuzzy
 msgid "Align View to Axes"
 msgstr "ビューを軸にそろえる"
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
 msgstr "ビューを軸にそろえる。"
 
@@ -4617,8 +4595,9 @@ msgid "Select All"
 msgstr "全て選択"
 
 #: qtplugins/select/select.cpp:37
+#, fuzzy
 msgid "Select None"
-msgstr ""
+msgstr "選択の解除"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 #, fuzzy
@@ -4654,17 +4633,13 @@ msgstr "側鎖の原子を選択…"
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 #, fuzzy
 msgid "Select Water"
-msgstr "水を選択…"
+msgstr "水を選択"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
 msgstr "選択を拡大"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
 msgstr "選択を縮小"
 
@@ -4694,7 +4669,7 @@ msgstr "バックボーン"
 #: qtplugins/select/select.cpp:308
 #, fuzzy
 msgid "Select Sidechain"
-msgstr "側鎖の原子を選択…"
+msgstr "側鎖を選択"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4706,8 +4681,6 @@ msgid "Atoms to Select:"
 msgstr "選択する原子:"
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
 msgstr "原子を選択"
 
@@ -4724,7 +4697,7 @@ msgstr "選択する残基:"
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "残基による選択…"
+msgstr "残基を選択"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -5056,13 +5029,13 @@ msgstr "表面を作成する…"
 #, fuzzy
 #| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "ファン・デル・ワールス表面を描画"
+msgstr "ファンデルワールス表面を描画。"
 
 #: qtplugins/surfaces/surfaces.cpp:113
 #, fuzzy
 #| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "ファン・デル・ワールス分子表面を描画"
+msgstr "ファンデルワールス分子表面を描画。"
 
 #: qtplugins/surfaces/surfaces.cpp:115
 msgid "Render the solvent-accessible molecular surface."
@@ -5167,7 +5140,7 @@ msgstr "∞"
 #: qtplugins/symmetry/symmetrywidget.cpp:330
 #, qt-format
 msgid "Group %1"
-msgstr "グループ %1"
+msgstr "群%1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:338
 #, qt-format
@@ -5199,8 +5172,6 @@ msgstr "リガンドを挿入"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
-#| msgid "Measure tool"
 msgid "Template tool"
 msgstr "テンプレートツール"
 
@@ -5223,10 +5194,8 @@ msgid "Show the vibrational modes dialog."
 msgstr "振動モードのダイアログを表示。"
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Set the vibrational mode."
-msgstr "振動モードを設定"
+msgstr "振動モードを設定。"
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -6943,7 +6912,7 @@ msgstr "原点"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Geometry"
-msgstr "ジオメトリ"
+msgstr "構造"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -6982,9 +6951,8 @@ msgstr "遺伝的回転異性体検索"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
-#, fuzzy
 msgid "Optimization per conformer:"
-msgstr "コンフォーマーごとの最適化:"
+msgstr "配座異性体ごとの最適化:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -6997,12 +6965,10 @@ msgstr "遺伝的アルゴリズムオプション"
 #. i18n: ectx: property (toolTip), widget (QSpinBox, childrenSpinBox)
 #, fuzzy
 msgid "number of children for each parent geometry"
-msgstr "親構造の子の数"
+msgstr "親構造に対する子の数"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Children"
 msgid "Children:"
 msgstr "子:"
 
@@ -7656,20 +7622,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
-#, fuzzy
-#| msgid "Spectra and Vibrations"
 msgid "Spectra Visualization"
 msgstr "スペクトルの可視化"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
 msgid "&Load data..."
-msgstr "データのロード(&L)"
+msgstr "データのロード(&L)..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
 msgid "Export Data"
-msgstr "データをエクスポート"
+msgstr "データのエクスポート"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -7715,8 +7679,6 @@ msgstr "ピーク幅:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:216
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Threshold:"
 msgid "Peak Threshold:"
 msgstr "ピークの閾値:"
 
@@ -7734,8 +7696,9 @@ msgstr "表示"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
+#, fuzzy
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "実験スペクトルの tsv ファイルをインポートしプロットに重ね描き"
+msgstr "実験スペクトルの tsv ファイルをインポートしプロットに重ね描き。"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -8196,17 +8159,13 @@ msgstr "リガンド:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Groups"
-msgstr "グループ"
+msgstr "官能基"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Group %1"
 msgid "Group:"
-msgstr "グループ:"
+msgstr "官能基:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

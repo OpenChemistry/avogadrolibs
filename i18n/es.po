@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-08 08:01+0000\n"
+"PO-Revision-Date: 2024-11-11 19:52+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1468,7 +1468,7 @@ msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Añadir celda de unidad…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1770,11 +1770,11 @@ msgstr "Por Color Personalizado…"
 
 #: qtplugins/applycolors/applycolors.cpp:48
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Por índice atómico…"
 
 #: qtplugins/applycolors/applycolors.cpp:53
 msgid "By Distance…"
-msgstr ""
+msgstr "Por distancia…"
 
 #: qtplugins/applycolors/applycolors.cpp:58
 msgid "By Element"
@@ -4257,7 +4257,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Falló la descarga desde %1: código de estado %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
