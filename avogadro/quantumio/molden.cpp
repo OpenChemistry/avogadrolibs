@@ -97,7 +97,7 @@ void MoldenFile::processLine(std::istream& in)
   // Molden file format uses sections, each starts with a header line of the
   // form [Atoms], and the beginning of a new section denotes the end of the
   // last.
-  if (Core::contains(line, "[Atoms]")) {
+  if (Core::contains(line, "[Atoms]") || Core::contains(line, "[ATOMS]")) {
     if (list.size() > 1 && Core::contains(list[1], "AU"))
       m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
