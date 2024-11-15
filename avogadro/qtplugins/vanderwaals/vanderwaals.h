@@ -41,7 +41,7 @@ public:
   QWidget* setupWidget() override;
   bool hasSetupWidget() const override { return true; }
 
-private slots:
+public slots:
   void setOpacity(int opacity);
 
 private:

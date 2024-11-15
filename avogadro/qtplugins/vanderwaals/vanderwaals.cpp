@@ -23,13 +23,66 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
+struct LayerVdW : Core::LayerData
+{
+  QWidget* widget;
+  float opacity;
+
+  LayerVdW()
+  {
+    widget = nullptr;
+    QSettings settings;
+    opacity = settings.value("vdw/opacity", 1.0).toFloat();
+  }
+
+  LayerVdW(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
+  LayerData* clone() final { return new LayerVdW(*this); }
+
+  ~LayerVdW() override
+  {
+    if (widget)
+      widget->deleteLater();
+  }
+
+  std::string serialize() final { return std::to_string(opacity); }
+  void deserialize(std::string text) final
+  {
+    std::stringstream ss(text);
+    std::string aux;
+    ss >> aux;
+    opacity = std::stof(aux);
+  }
+
+  void setupWidget(VanDerWaals* slot)
+  {
+    if (!widget) {
+      widget = new QWidget(qobject_cast<QWidget*>(slot->parent()));
+      auto* form = new QFormLayout;
+
+      // Opacity
+      auto* slider = new QSlider(Qt::Horizontal);
+      slider->setRange(0, 100);
+      slider->setTickInterval(1);
+      slider->setValue(round(opacity * 100));
+      QObject::connect(slider, &QSlider::valueChanged, slot,
+                       &VanDerWaals::setOpacity);
+
+      form->addRow(QObject::tr("Opacity:"), slider);
+      widget->setLayout(form);
+    }
+  }
+};
+
 VanDerWaals::VanDerWaals(QObject* p) : ScenePlugin(p)
 {
   m_layerManager = PluginLayerManager(m_name);
 
   QSettings settings;
-  // out of 255
-  m_opacity = settings.value("vdw/opacity", 1.0).toFloat();
 }
 
 VanDerWaals::~VanDerWaals() {}
@@ -37,15 +90,19 @@ VanDerWaals::~VanDerWaals() {}
 void VanDerWaals::process(const QtGui::Molecule& molecule,
                           Rendering::GroupNode& node)
 {
+  m_layerManager.load<LayerVdW>();
+
   // Add a sphere node to contain all of the VdW spheres.
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
   auto* spheres = new SphereGeometry;
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
-  spheres->setOpacity(m_opacity);
-  if (m_opacity < 1.0f)
-    spheres->setRenderPass(Rendering::TranslucentPass);
+
+  auto* translucentSpheres = new SphereGeometry;
+  translucentSpheres->setRenderPass(Rendering::TranslucentPass);
+  translucentSpheres->identifier().molecule = &molecule;
+  translucentSpheres->identifier().type = Rendering::AtomType;
 
   auto selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
@@ -53,6 +110,7 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
 
   geometry->addDrawable(spheres);
   geometry->addDrawable(selectedSpheres);
+  geometry->addDrawable(translucentSpheres);
 
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
@@ -63,7 +121,15 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
 
     Vector3ub color = atom.color();
     auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    spheres->addSphere(atom.position3d().cast<float>(), color, radius, i);
+    float opacity = m_layerManager.getSetting<LayerVdW>(i)->opacity;
+    if (opacity < 1.0f) {
+      translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
+                                    radius, i);
+      translucentSpheres->setOpacity(opacity);
+    } else {
+      spheres->addSphere(atom.position3d().cast<float>(), color, radius, i);
+    }
+
     if (atom.selected()) {
       color = Vector3ub(0, 0, 255);
       radius += 0.3f;
@@ -75,8 +141,12 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
 
 void VanDerWaals::setOpacity(int opacity)
 {
-  m_opacity = opacity / 100.0f;
-  emit drawablesChanged();
+  m_opacity = static_cast<float>(opacity) / 100.0f;
+  auto* interface = m_layerManager.getSetting<LayerVdW>();
+  if (m_opacity != interface->opacity) {
+    interface->opacity = m_opacity;
+    emit drawablesChanged();
+  }
 
   QSettings settings;
   settings.setValue("vdw/opacity", m_opacity);
@@ -84,21 +154,9 @@ void VanDerWaals::setOpacity(int opacity)
 
 QWidget* VanDerWaals::setupWidget()
 {
-  if (!m_setupWidget) {
-    m_setupWidget = new QWidget(qobject_cast<QWidget*>(parent()));
-    auto* form = new QFormLayout;
-
-    // Opacity
-    auto* slide = new QSlider(Qt::Horizontal);
-    slide->setRange(0, 100);
-    slide->setTickInterval(1);
-    slide->setValue(round(m_opacity * 100));
-    connect(slide, SIGNAL(valueChanged(int)), SLOT(setOpacity(int)));
-
-    form->addRow(tr("Opacity:"), slide);
-    m_setupWidget->setLayout(form);
-  }
-  return m_setupWidget;
+  auto* interface = m_layerManager.getSetting<LayerVdW>();
+  interface->setupWidget(this);
+  return interface->widget;
 }
 
 } // namespace Avogadro::QtPlugins
