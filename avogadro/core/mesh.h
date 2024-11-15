@@ -143,14 +143,6 @@ public:
   const Core::Array<Vector3f>& normals() const;
 
   /**
-   * @return The number of normals.
-   */
-  // unsigned int numNormals() const
-  // {
-  //   return static_cast<unsigned int>(m_normals.size());
-  // }
-
-  /**
    * @return Pointer to the first normal of the specified triangle.
    */
   const Vector3f* normal(int n) const;
@@ -232,7 +224,7 @@ private:
   Core::Array<Vector3f> m_vertices;
   Core::Array<Vector3f> m_normals;
   Core::Array<Color3f> m_colors;
-  Core::Array<Vector3f> tris;
+  Core::Array<Vector3f> m_triangles;
   std::string m_name;
   bool m_stable;
   float m_isoValue;

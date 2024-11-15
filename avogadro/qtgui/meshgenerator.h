@@ -107,6 +107,16 @@ public:
         int zstart;
     };
 
+ /**
+   * @name Flying Edges
+   * Methods to implement the "flying edges" method for isosurface mesh generation.
+   * Flying edges: A high-performance scalable isocontouring algorithm
+   * Schroeder; Maynard; Geveci; 
+   * 2015 IEEE 5th Symposium on Large Data Analysis and Visualization (LDAV)
+   * [10.1109/LDAV.2015.7348069](https://doi.org/10.1109/LDAV.2015.7348069)
+   * Alternate (non-VTK) implementation at
+   * https://github.com/sandialabs/miniIsosurface/blob/master/flyingEdges/
+   * @{
 
   /**
   * Pass 1 for flying edges. Pass1 detects and records 
@@ -132,6 +142,8 @@ public:
   * Calculates normals, triangles and vertices.    
   */
   void FlyingEdgesAlgorithmPass4();
+
+  // @}
 
   /**
    * @return The Cube being used by the class.
@@ -181,8 +193,6 @@ signals:
 
 protected:
 
-  unsigned long duplicate(const Vector3i& c, const Vector3f& pos);
-
   /**
   * isCutEdge checks whether the grid edge at position (i, j, k) is 
   * intersected by the isosurface based on edge case conditions.
@@ -221,12 +231,12 @@ protected:
   Vector3f m_min;           /** The minimum point in the cube. */
   Vector3i m_dim;           /** The dimensions of the cube. */
 
-  Core::Array<Vector3f> points, normals;  
+  Core::Array<Vector3f> m_normals, m_vertices;
   std::vector<gridEdge> gridEdges; // size (m_dim.y() * m_dim.z())
   std::vector<unsigned char> cubeCases; //size ((m_dim.x() - 1) * (m_dim.y() - 1) * (m_dim.z() - 1))
   std::vector<int> triCounter;  // size ((m_dim.y() - 1) * (m_dim.z() - 1))
   std::vector<unsigned char> edgeCases; // size ((m_dim.x() - 1) * (m_dim.y()) * (m_dim.z()))
-  Core::Array<Vector3f> tris; // triangles of a mesh 
+  Core::Array<Vector3f> m_triangles; // triangles of a mesh 
   int m_progmin;
   int m_progmax;
 
@@ -234,10 +244,10 @@ protected:
    * These are the lookup tables for flying edges.
    * Reference : https://github.com/sandialabs/miniIsosurface/blob/master/flyingEdges/util/MarchingCubesTables.h
    */
-  static const unsigned char numTris[256]; 
-  static const bool isCut[256][12];  
-  static const char caseTriangles[256][16];
-  static const unsigned char edgeVertices[12][2];     
+  static const unsigned char m_numTris[256]; 
+  static const bool m_isCut[256][12];  
+  static const char m_caseTriangles[256][16];
+  static const unsigned char m_edgeVertices[12][2];     
 };
 
 } // End namespace QtGui

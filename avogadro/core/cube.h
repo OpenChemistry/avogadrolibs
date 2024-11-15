@@ -249,7 +249,7 @@ public:
   std::array<float, 3> computeGradient(int i, int j, int k) const;
 
   /**
-   * Get the values of the eight corners of a cube cell.
+   * Get the values of the eight corners of a cube defined by the indices (i, j, k).
    * @param i x index
    * @param j y index
    * @param k z index
@@ -257,7 +257,13 @@ public:
    */
   std::array<float, 8> getValsCube(int i, int j, int k) const;
 
-
+  /**
+  * Get the gradients at the eight corners of the cube defined by the indices (i, j, k).
+  * @param i x index
+  * @param j y index
+  * @param k z index
+  * @return Array of gradients at the eight corners. Each gradient is a 3D vector.
+  */
   std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const; 
        
   /**
@@ -270,7 +276,7 @@ public:
   float getData(int i, int j, int k) const;
 
   /**
-   * Get the positions of the eight corners of a cube cell.
+   * Get the positions of the eight corners of a cube defined by the indices (i, j, k).
    * @param i x index
    * @param j y index
    * @param k z index

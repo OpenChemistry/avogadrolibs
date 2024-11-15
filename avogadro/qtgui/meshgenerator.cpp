@@ -143,9 +143,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
             continue;
           }
 
-        curTriCounter += numTris[caseId]; // not declared
+        curTriCounter += m_numTris[caseId]; // not declared
         
-        const bool* isCutCase = isCut[caseId]; // size 12
+        const bool* isCutCase = m_isCut[caseId]; // size 12
 
         ge0.xstart += isCutCase[0];    
         ge0.ystart += isCutCase[3];
@@ -219,9 +219,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
         pointAccum += tmp;
     }}
 
-    points.resize(pointAccum);
-    normals.resize(pointAccum);
-    tris.resize(triAccum);
+    m_vertices.resize(pointAccum);
+    m_normals.resize(pointAccum);
+    m_triangles.resize(triAccum);
 
 }
 
@@ -272,7 +272,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 continue;
             }
 
-           const bool* isCutCase = isCut[caseId]; // size 12
+           const bool* isCutCase = m_isCut[caseId]; // size 12
             std::array<std::array<float, 3>, 8> pointCube = m_cube->getPosCube(i, j, k);
             std::array<float, 8> isovalCube = m_cube->getValsCube(i, j, k);
             std::array<std::array<float, 3>, 8> gradCube = m_cube->getGradCube(i, j, k);
@@ -288,8 +288,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 0);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 0);
 
-                points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 globalIdxs[0] = idx;
                 ++x0counter;
             }
@@ -299,8 +299,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 int idx = ge0.ystart + y0counter;
                 std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 3);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 3);
-                points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 globalIdxs[3] = idx;
                 ++y0counter;
             }
@@ -310,8 +310,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 int idx = ge0.zstart + z0counter;
                 std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 8);
                 std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 8);
-                points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 globalIdxs[8] = idx;
                 ++z0counter;
             }
@@ -323,8 +323,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 1);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 1);                  
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                     // y0counter counter doesn't need to be incremented
                     // because it won't be used again.
                 }
@@ -338,8 +338,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 9);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 9);                                    
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                     // z0counter doesn't need to in incremented.
                 }
                 globalIdxs[9] = idx;
@@ -352,8 +352,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 2);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 2);                                                      
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[2] = idx;
                 ++x1counter;
@@ -368,8 +368,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 10);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 10);                                                      
                   
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[10] = idx;
                 ++z1counter;
@@ -384,8 +384,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 4);                                                      
 
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[4] = idx;
                 ++x2counter;
@@ -400,8 +400,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 7);                                                      
 
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[7] = idx;
                 ++y2counter;
@@ -416,8 +416,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 11);                                                      
 
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[11] = idx;
             }
@@ -431,8 +431,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 5);                                                      
 
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                     // y2 counter does not need to be incremented.
                 }
                 globalIdxs[5] = idx;
@@ -446,21 +446,21 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 6);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 6);                                                      
 
-                    points[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
-                    normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
+                    m_vertices[idx] = Vector3f(interpolatedPoint[0], interpolatedPoint[1], interpolatedPoint[2]);
+                    m_normals[idx] = Vector3f(interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2]);
                 }
                 globalIdxs[6] = idx;
                 ++x3counter;
             }
 
             // Add triangles
-            const char* caseTri = caseTriangles[caseId]; // size 16
+            const char* caseTri = m_caseTriangles[caseId]; // size 16
             for(int idx = 0; caseTri[idx] != -1; idx += 3)
             {
               
-                tris[triIdx][0] = globalIdxs[caseTri[idx]];
-                tris[triIdx][1] = globalIdxs[caseTri[idx+1]];
-                tris[triIdx][2] = globalIdxs[caseTri[idx+2]];
+                m_triangles[triIdx][0] = globalIdxs[caseTri[idx]];
+                m_triangles[triIdx][1] = globalIdxs[caseTri[idx+1]];
+                m_triangles[triIdx][2] = globalIdxs[caseTri[idx+2]];
                 ++triIdx;                           
             }
         }
@@ -484,16 +484,16 @@ void MeshGenerator::run()
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
 
-  m_mesh->setVertices(points);
-  m_mesh->setNormals(normals);
-  m_mesh->setTriangles(tris);
+  m_mesh->setVertices(m_vertices);
+  m_mesh->setNormals(m_normals);
+  m_mesh->setTriangles(m_triangles);
   m_mesh->smooth(m_passes);
   m_mesh->setStable(true);
 
   // clearing the memory
-  points.resize(0);
-  normals.resize(0);
-  tris.resize(0);
+  m_vertices.resize(0);
+  m_normals.resize(0);
+  m_triangles.resize(0);
   edgeCases.resize(0);
   cubeCases.resize(0);
   gridEdges.resize(0);
@@ -512,12 +512,6 @@ void MeshGenerator::clear()
   m_dim.setZero();
   m_progmin = 0;
   m_progmax = 0;
-}
-
-unsigned long MeshGenerator::duplicate(const Vector3i&, const Vector3f&)
-{
-  // FIXME Not implemented yet.
-  return 0;
 }
 
 unsigned char MeshGenerator::calcCubeCase(
@@ -621,8 +615,8 @@ MeshGenerator::interpolateOnCube(
     std::array<float, 8> const& isovals,
     unsigned char const& edge) const
 {
-    unsigned char i0 = edgeVertices[edge][0];
-    unsigned char i1 = edgeVertices[edge][1];
+    unsigned char i0 = m_edgeVertices[edge][0];
+    unsigned char i1 = m_edgeVertices[edge][1];
 
     float weight = (m_iso - isovals[i0]) / (isovals[i1] - isovals[i0]);
     return interpolate(pts[i0], pts[i1], weight);
@@ -645,7 +639,7 @@ MeshGenerator::interpolate(
 // flying edges tables using: 
 
 
-const unsigned char MeshGenerator::numTris[256] = 
+const unsigned char MeshGenerator::m_numTris[256] = 
     {
         0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 2,
         1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 3,
@@ -665,7 +659,7 @@ const unsigned char MeshGenerator::numTris[256] =
         2, 3, 3, 2, 3, 4, 2, 1, 3, 2, 4, 1, 2, 1, 1, 0
     };
 
-const bool MeshGenerator::isCut[256][12] = 
+const bool MeshGenerator::m_isCut[256][12] = 
 {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0},
@@ -925,7 +919,7 @@ const bool MeshGenerator::isCut[256][12] =
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
-const char MeshGenerator::caseTriangles[256][16]
+const char MeshGenerator::m_caseTriangles[256][16]
     {
         {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
         {0,  3,  8,  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -1185,7 +1179,7 @@ const char MeshGenerator::caseTriangles[256][16]
         {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
     };
 
-const unsigned char MeshGenerator::edgeVertices[12][2] = 
+const unsigned char MeshGenerator::m_edgeVertices[12][2] = 
   { 
         {0,1}, {1,2}, {3,2},
         {0,3}, {4,5}, {5,6},

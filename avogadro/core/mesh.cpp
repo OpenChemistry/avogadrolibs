@@ -23,7 +23,7 @@ Mesh::Mesh(const Mesh& other)
   : m_vertices(other.m_vertices), m_normals(other.m_normals),
     m_colors(other.m_colors), m_name(other.m_name), m_stable(true),
     m_isoValue(other.m_isoValue), m_other(other.m_other), m_cube(other.m_cube),
-    m_lock(new Mutex), tris(other.tris)
+    m_lock(new Mutex), m_triangles(other.m_triangles)
 {
 }
 
@@ -65,14 +65,14 @@ const Vector3f* Mesh::vertex(int n) const
 
 bool Mesh::setTriangles(const Core::Array<Vector3f>& values)
 {
-  tris.clear();
-  tris = values;
+  m_triangles.clear();
+  m_triangles = values;
   return true;
 }
 
 const Core::Array<Vector3f>&Mesh::triangles() const
 {
-  return tris;
+  return m_triangles;
 }
 
 
@@ -187,7 +187,7 @@ Mesh& Mesh::operator=(const Mesh& other)
   m_colors = other.m_colors;
   m_name = other.m_name;
   m_isoValue = other.m_isoValue;
-  tris = other.tris;
+  m_triangles = other.m_triangles;
 
   return *this;
 }
@@ -198,7 +198,7 @@ void Mesh::smooth(int iterationCount) {
 
   // Build vertex adjacency information from triangles (1-ring)
   std::vector<std::vector<size_t>> adjacencyList(m_vertices.size());
-  for (const auto& tri : tris) {
+  for (const auto& tri : m_triangles) {
     size_t i = static_cast<size_t>(tri.x());
     size_t j = static_cast<size_t>(tri.y());
     size_t k = static_cast<size_t>(tri.z());
@@ -241,7 +241,7 @@ void Mesh::smooth(int iterationCount) {
   m_normals.clear();
   m_normals.resize(m_vertices.size(), Vector3f(0.0f, 0.0f, 0.0f));
 
-  for (const auto& tri : tris) {
+  for (const auto& tri : m_triangles) {
     size_t i = static_cast<size_t>(tri.x());
     size_t j = static_cast<size_t>(tri.y());
     size_t k = static_cast<size_t>(tri.z());
