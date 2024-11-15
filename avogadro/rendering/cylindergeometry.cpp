@@ -162,12 +162,6 @@ void CylinderGeometry::update()
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
       cout << d->program->error() << endl;
-
-    /*    d->program->detachShader(d->vertexShader);
-        d->program->detachShader(d->fragmentShader);
-        d->vertexShader.cleanup();
-        d->fragmentShader.cleanup();
-        */
   }
 }
 
