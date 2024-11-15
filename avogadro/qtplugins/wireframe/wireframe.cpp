@@ -47,6 +47,14 @@ struct LayerWireframe : Core::LayerData
     lineWidth = settings.value("wireframe/lineWidth", 1.0).toDouble();
   }
 
+  LayerWireframe(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
+  LayerData* clone() final { return new LayerWireframe(*this); }
+
   ~LayerWireframe() override
   {
     if (widget)

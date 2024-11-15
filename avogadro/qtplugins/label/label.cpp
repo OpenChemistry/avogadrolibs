@@ -97,6 +97,14 @@ struct LayerLabel : Core::LayerData
     color[2] = static_cast<unsigned char>(q_color.blue());
   }
 
+  LayerLabel(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
+  LayerData* clone() final { return new LayerLabel(serialize()); }
+
   ~LayerLabel() override
   {
     if (widget)

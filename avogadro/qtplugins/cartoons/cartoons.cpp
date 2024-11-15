@@ -133,11 +133,19 @@ struct LayerCartoon : Core::LayerData
     showSimpleCartoon = settings.value("cartoon/simplecartoon", false).toBool();
   }
 
+  LayerCartoon(std::string settings)
+  {
+    widget = nullptr;
+    deserialize(settings);
+  }
+
   ~LayerCartoon() override
   {
     if (widget)
       widget->deleteLater();
   }
+
+  LayerData* clone() final { return new LayerCartoon(serialize()); }
 };
 
 struct BackboneResidue
