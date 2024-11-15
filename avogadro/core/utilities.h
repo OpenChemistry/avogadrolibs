@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_CORE_UTILITIES_H
 #define AVOGADRO_CORE_UTILITIES_H
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 #include <vector>
