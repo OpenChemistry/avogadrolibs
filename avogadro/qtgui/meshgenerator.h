@@ -143,7 +143,7 @@ public:
   */
   void FlyingEdgesAlgorithmPass4();
 
-  // @}
+  /**@}*/ 
 
   /**
    * @return The Cube being used by the class.
