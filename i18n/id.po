@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -3705,7 +3705,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "&Ekspor"
+msgstr "Ekspor"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4043,7 +4043,7 @@ msgid ""
 "OpenMM input deck preview pane?"
 msgstr ""
 "Apakah anda akan memperbarui teks pratampilan, semua perubahan pada masukan "
-"progam MOPAC di jendela pratampilan akan terhapus?"
+"progam OpenMM di jendela pratampilan akan terhapus?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4399,10 +4399,8 @@ msgid "Valence"
 msgstr "Valensi"
 
 #: qtplugins/propertytables/propertymodel.cpp:413
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "Formal Charge"
-msgstr "Muatan Parsial"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 #, fuzzy
@@ -5073,10 +5071,8 @@ msgid "Chemical Shift (ppm)"
 msgstr "Shift (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Kepadatan Elektron"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -5176,10 +5172,8 @@ msgid "Render the electron density."
 msgstr "Menghitung Kepadatan Elektron"
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Render the scene using POV-Ray."
 msgid "Render the spin density."
-msgstr "Render adegan menggunakan POV-Ray."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a cube supplied with the file."
@@ -7928,10 +7922,8 @@ msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "Operasi"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
@@ -8126,10 +8118,8 @@ msgstr "Tengah"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "Formal Charge:"
-msgstr "Muatan Parsial"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
