@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/oc/>\n"
@@ -1812,11 +1812,9 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1782
-#, fuzzy
-#| msgid "Neutral"
 msgctxt "colormap"
 msgid "Spectral"
-msgstr "Mejan"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -4276,10 +4274,8 @@ msgid "PLY (*.ply);;Text file (*.txt)"
 msgstr ""
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
@@ -4307,9 +4303,8 @@ msgid "Valence"
 msgstr "Valença"
 
 #: qtplugins/propertytables/propertymodel.cpp:413
-#, fuzzy
 msgid "Formal Charge"
-msgstr "Coloriar segon la carga parciala"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 #, fuzzy
@@ -4876,18 +4871,14 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Neutral"
 msgid "Plot Spectra…"
-msgstr "Mejan"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1643
-#, fuzzy
-#| msgid "Neutral"
 msgid "Spectra"
-msgstr "Mejan"
+msgstr ""
 
 #: qtplugins/spectra/spectra.h:38
 msgid "Display spectra plots."
@@ -4963,10 +4954,8 @@ msgid "Transmission"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:356
-#, fuzzy
-#| msgid "Neutral"
 msgid "Raman Spectra"
-msgstr "Mejan"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
@@ -4979,22 +4968,16 @@ msgid "Intensity"
 msgstr "Fondut d'intensitat"
 
 #: qtplugins/spectra/spectradialog.cpp:369
-#, fuzzy
-#| msgid "Neutral"
 msgid "NMR Spectra"
-msgstr "Mejan"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Chemical files (*.parm7)"
 msgid "Chemical Shift (ppm)"
-msgstr "Fichièrs de quimia (*.parm7)"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Densitat electronica"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -5029,10 +5012,8 @@ msgid "Electron Density"
 msgstr "Densitat electronica"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Intensity"
 msgid "Spin Density"
-msgstr "Fondut d'intensitat"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5102,9 +5083,8 @@ msgid "Calculating electron density"
 msgstr "Calcul de la densitat electronica en cors"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Calcul de la densitat electronica en cors"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5118,7 +5098,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
-msgstr "E&xportar l'imatge"
+msgstr "Exportar l'imatge"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -6261,17 +6241,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "DNA"
-msgstr "N/D"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:32
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "N/A"
 msgid "RNA"
-msgstr "N/D"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6935,10 +6911,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Primièr plan :"
+msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -8013,9 +7987,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "Coloriar segon la carga parciala"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
