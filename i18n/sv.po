@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -4226,9 +4226,8 @@ msgid "Valence"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:413
-#, fuzzy
 msgid "Formal Charge"
-msgstr "Färg efter partiell laddning"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 #, fuzzy
@@ -7827,9 +7826,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "Färg efter partiell laddning"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
