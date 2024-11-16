@@ -23,7 +23,6 @@ using json = nlohmann::json;
 using std::endl;
 using std::getline;
 using std::string;
-using std::vector;
 
 namespace Avogadro::Io {
 
@@ -31,17 +30,12 @@ using Core::Array;
 using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
-using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 
 #ifndef _WIN32
 using std::isalpha;
 #endif
-
-XyzFormat::XyzFormat() {}
-
-XyzFormat::~XyzFormat() {}
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -74,7 +68,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     std::size_t end = buffer.find('\"', start);
     std::string lattice = buffer.substr(start, (end - start));
 
-    vector<string> tokens(split(lattice, ' '));
+    std::vector<string> tokens(split(lattice, ' '));
     if (tokens.size() == 9) {
       Vector3 v1(lexicalCast<double>(tokens[0]), lexicalCast<double>(tokens[1]),
                  lexicalCast<double>(tokens[2]));
@@ -93,7 +87,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   start = buffer.find("Properties=");
   unsigned int chargeColumn = 0;
   unsigned int forceColumn = 0;
-  vector<double> charges;
+  std::vector<double> charges;
   if (start != std::string::npos) {
     start = start + 11; // skip over "Properties="
     unsigned int stop = buffer.find(' ', start);
@@ -101,7 +95,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     // we want to track columns after the position
     // (esp. charge, spin, force, velocity, etc.)
     std::string properties = buffer.substr(start, length);
-    vector<string> tokens(split(properties, ':'));
+    std::vector<string> tokens(split(properties, ':'));
     unsigned int column = 0;
     for (size_t i = 0; i < tokens.size(); i += 3) {
       // we can safely assume species and pos are present
@@ -121,7 +115,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
-    vector<string> tokens;
+    std::vector<string> tokens;
     // check for tabs PR#1512
     if (buffer.find('\t') != std::string::npos)
       tokens = split(buffer, '\t');
@@ -193,7 +187,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
           break; // break this inner loop
         }
 
-        vector<string> tokens(split(buffer, ' '));
+        std::vector<string> tokens(split(buffer, ' '));
         if (tokens.size() < 4) {
           appendError("Not enough tokens in this line: " + buffer);
           return false;

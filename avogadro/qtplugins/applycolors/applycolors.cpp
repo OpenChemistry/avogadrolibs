@@ -9,6 +9,7 @@
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QStringList>

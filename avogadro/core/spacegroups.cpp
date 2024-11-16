@@ -3,26 +3,20 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include <algorithm> // for std::count()
-#include <cassert>
-#include <cctype> // for isdigit()
-#include <iostream>
+#include "spacegroups.h"
 
-#include "array.h"
 #include "crystaltools.h"
 #include "molecule.h"
 #include "spacegroupdata.h"
 #include "unitcell.h"
 #include "utilities.h"
-#include "vector.h"
 
-#include "spacegroups.h"
+#include <algorithm> // for std::count()
+#include <cassert>
+#include <cctype> // for isdigit()
+#include <iostream>
 
 namespace Avogadro::Core {
-
-SpaceGroups::SpaceGroups() {}
-
-SpaceGroups::~SpaceGroups() {}
 
 unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
@@ -356,9 +350,9 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
         fabs(pos[2] - 1.0) < 0.001)
       newAtoms.push_back(Vector3(0.0, 0.0, 0.0));
 
-    for (Index j = 0; j < newAtoms.size(); ++j) {
+    for (const auto& atomMat : newAtoms) {
       // The new atoms are in fractional coordinates. Convert to cartesian.
-      Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
+      Vector3 newCandidate = uc->toCartesian(atomMat);
 
       // If there is already an atom in this location within a
       // certain tolerance, do not add the atom.
@@ -370,8 +364,10 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
 
         Real distance = (mol.atomPosition3d(k) - newCandidate).norm();
 
-        if (distance <= cartTol)
+        if (distance <= cartTol) {
           atomAlreadyPresent = true;
+          break;
+        }
       }
 
       // If there is already an atom present here, just continue

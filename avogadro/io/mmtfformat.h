@@ -22,8 +22,8 @@ namespace Io {
 class AVOGADROIO_EXPORT MMTFFormat : public FileFormat
 {
 public:
-  MMTFFormat();
-  ~MMTFFormat() override;
+  MMTFFormat() = default;
+  ~MMTFFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -51,6 +51,8 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
+
+  // unimplemented
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 

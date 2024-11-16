@@ -8,8 +8,6 @@
 #include "mutex.h"
 #include "neighborperceiver.h"
 
-using std::vector;
-
 namespace Avogadro::Core {
 
 Mesh::Mesh() : m_stable(true), m_other(0), m_cube(0), m_lock(new Mutex)
@@ -121,7 +119,7 @@ const Color3f* Mesh::color(int n) const
 {
   // If there is only one color return that, otherwise colored by vertex.
   if (m_colors.size() == 1)
-    return &(m_colors[0]);
+    return m_colors.data();
   else
     return &(m_colors[n * 3]);
 }
@@ -148,14 +146,8 @@ bool Mesh::addColors(const Core::Array<Color3f>& values)
 
 bool Mesh::valid() const
 {
-  if (m_vertices.size() == m_normals.size()) {
-    if (m_colors.size() == 1 || m_colors.size() == m_vertices.size())
-      return true;
-    else
-      return false;
-  } else {
-    return false;
-  }
+  return (m_vertices.size() == m_normals.size()) &&
+         (m_colors.size() == 1 || m_colors.size() == m_vertices.size());
 }
 
 bool Mesh::clear()
@@ -271,4 +263,4 @@ void Mesh::smooth(int iterationCount)
   }
 }
 
-} // End namespace Avogadro
+} // End namespace Avogadro::Core

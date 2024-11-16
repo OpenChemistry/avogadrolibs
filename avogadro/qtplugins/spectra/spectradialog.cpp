@@ -17,7 +17,6 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/vtk/chartwidget.h>
 
-using namespace std;
 using Avogadro::Core::Molecule;
 
 namespace Avogadro::QtPlugins {

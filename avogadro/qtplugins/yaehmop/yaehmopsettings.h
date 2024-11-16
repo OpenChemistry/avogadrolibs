@@ -8,8 +8,7 @@
 
 #include <QString>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 static const char* YAEHMOP_DEFAULT_SPECIAL_KPOINTS = "GM 0 0 0";
 
@@ -32,6 +31,6 @@ struct YaehmopSettings
   unsigned short numDim;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_YAEHMOPSETTINGS_H

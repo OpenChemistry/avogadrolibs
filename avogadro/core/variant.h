@@ -13,8 +13,7 @@
 
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Variant variant.h <avogadro/core/variant.h>
@@ -146,8 +145,7 @@ private:
   } m_value;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #include "variant-inline.h"
 

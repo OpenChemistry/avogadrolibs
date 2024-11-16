@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render a molecule in the ball and stick style.
@@ -56,7 +55,6 @@ private:
   float m_opacity = 1.0f;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_BALLANDSTICK_H

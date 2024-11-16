@@ -36,8 +36,6 @@ InputGenerator::InputGenerator(QObject* parent_)
 {
 }
 
-InputGenerator::~InputGenerator() {}
-
 bool InputGenerator::debug() const
 {
   return m_interpreter->debug();
@@ -277,7 +275,7 @@ bool InputGenerator::generateInput(const QJsonObject& options_,
     m_errors << tr("Response must be a JSON object at top-level.");
   }
 
-  if (result == false)
+  if (!result)
     m_errors << tr("Script output:\n%1").arg(QString(json));
 
   return result;

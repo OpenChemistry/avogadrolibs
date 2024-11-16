@@ -49,6 +49,12 @@
  *
  */
 
+#include "qtaimcubature.h"
+
+#include "qtaimcriticalpointlocator.h"
+#include "qtaimlsodaintegrator.h"
+#include "qtaimmathutilities.h"
+
 #include <QDataStream>
 #include <QDebug>
 #include <QDir>
@@ -60,14 +66,10 @@
 #include <QVariantList>
 #include <QVector3D>
 
-#include <QDataStream>
-#include <QDir>
-#include <QFile>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QList>
 #include <QProgressDialog>
-#include <QTemporaryFile>
 #include <QVariant>
 #include <QtConcurrent/QtConcurrentMap>
 
@@ -148,8 +150,6 @@
     To compile a test program, compile cubature.c with
     -DTEST_INTEGRATOR as described at the end. */
 
-#include "qtaimcubature.h"
-
 using namespace Avogadro::QtPlugins;
 
 /* error return codes */
@@ -159,10 +159,10 @@ using namespace Avogadro::QtPlugins;
 /***************************************************************************/
 /* Basic datatypes */
 
-typedef struct
+using esterr = struct
 {
   double val, err;
-} esterr;
+};
 
 static double relError(esterr ee)
 {
@@ -179,12 +179,12 @@ static double errMax(unsigned int fdim, const esterr* ee)
   return errmax;
 }
 
-typedef struct
+using hypercube = struct
 {
   unsigned int dim;
   double* data; /* length 2*dim = center followed by half-widths */
   double vol;   /* cache volume = product of widths */
-} hypercube;
+};
 
 static double compute_vol(const hypercube* h)
 {
@@ -234,14 +234,14 @@ static void destroy_hypercube(hypercube* h)
   h->dim = 0;
 }
 
-typedef struct
+using region = struct
 {
   hypercube h;
   unsigned int splitDim;
   unsigned int fdim; /* dimensionality of vector integrand */
   esterr* ee;        /* array of length fdim */
   double errmax;     /* max ee[k].err */
-} region;
+};
 
 static region make_region(const hypercube* h, unsigned int fdim)
 {
@@ -277,12 +277,11 @@ static int cut_region(region* R, region* R2)
 
 struct rule_s; /* forward declaration */
 
-typedef int (*evalError_func)(struct rule_s* r, unsigned int fdim,
-                              integrand_v f, void* fdata, unsigned int nR,
-                              region* R);
-typedef void (*destroy_func)(struct rule_s* r);
+using evalError_func = int (*)(struct rule_s*, unsigned int, integrand_v, void*,
+                               unsigned int, region*);
+using destroy_func = void (*)(struct rule_s*);
 
-typedef struct rule_s
+using rule = struct rule_s
 {
   unsigned int dim, fdim;   /* the dimensionality & number of functions */
   unsigned int num_points;  /* number of evaluation points */
@@ -291,7 +290,7 @@ typedef struct rule_s
   double* vals;             /* num_regions * num_points * fdim */
   evalError_func evalError;
   destroy_func destroy;
-} rule;
+};
 
 static void destroy_rule(rule* r)
 {
@@ -501,7 +500,7 @@ static void evalR0_0fs4d(double* pts, unsigned int dim, double* p,
          J. Numer. Anal. 20 (3), 580-588 (1983).
 */
 
-typedef struct
+using rule75genzmalik = struct
 {
   rule parent;
 
@@ -511,7 +510,7 @@ typedef struct
   /* dimension-dependent constants */
   double weight1, weight3, weight5;
   double weightE1, weightE3;
-} rule75genzmalik;
+};
 
 #define real(x) ((double)(x))
 #define to_int(n) ((int)(n))
@@ -838,16 +837,16 @@ static rule* make_rule15gauss(unsigned int dim, unsigned int fdim)
    Cormen, Leiserson, and Rivest), for use as a priority queue of
    regions to integrate. */
 
-typedef region heap_item;
+using heap_item = region;
 #define KEY(hi) ((hi).errmax)
 
-typedef struct
+using heap = struct
 {
   unsigned int n, nalloc;
   heap_item* items;
   unsigned int fdim;
   esterr* ee; /* array of length fdim of the total integrand & error */
-} heap;
+};
 
 static void heap_resize(heap* h, unsigned int nalloc)
 {
@@ -1131,12 +1130,12 @@ int adapt_integrate_v(unsigned int fdim, integrand_v f, void* fdata,
 }
 
 /* wrapper around non-vectorized integrand */
-typedef struct fv_data_s
+using fv_data = struct fv_data_s
 {
   integrand f;
   void* fdata;
   double* fval1;
-} fv_data;
+};
 static void fv(unsigned int ndim, unsigned int npt, const double* x, void* d_,
                unsigned int fdim, double* fval)
 {

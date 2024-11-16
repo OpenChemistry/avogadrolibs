@@ -10,8 +10,7 @@
 
 #include "atom.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Bond bond.h <avogadro/core/bond.h>
@@ -23,11 +22,11 @@ template <class Molecule_T>
 class BondTemplate
 {
 public:
-  typedef Molecule_T MoleculeType;
-  typedef typename Molecule_T::AtomType AtomType;
+  using MoleculeType = Molecule_T;
+  using AtomType = typename Molecule_T::AtomType;
 
   /** Creates a new, invalid bond object. */
-  BondTemplate();
+  BondTemplate() = default;
 
   /**
    * Creates a bond object representing a bond at index @p i in molecule @p m.
@@ -112,15 +111,9 @@ public:
   /** @} */
 
 private:
-  MoleculeType* m_molecule;
-  Index m_index;
+  MoleculeType* m_molecule = nullptr;
+  Index m_index = MaxIndex;
 };
-
-template <class Molecule_T>
-BondTemplate<Molecule_T>::BondTemplate()
-  : m_molecule(nullptr), m_index(MaxIndex)
-{
-}
 
 template <class Molecule_T>
 BondTemplate<Molecule_T>::BondTemplate(MoleculeType* m, Index i)
@@ -233,7 +226,6 @@ unsigned char BondTemplate<Molecule_T>::order() const
   return m_molecule->bondOrders()[m_index];
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_BOND_H

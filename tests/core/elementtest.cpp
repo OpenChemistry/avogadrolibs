@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/utilities.h>
 

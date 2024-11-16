@@ -33,8 +33,6 @@ Centroid::Centroid(QObject* parent_)
   connect(m_normalAction, SIGNAL(triggered()), SLOT(normal()));
 }
 
-Centroid::~Centroid() {}
-
 QList<QAction*> Centroid::actions() const
 {
   QList<QAction*> result;

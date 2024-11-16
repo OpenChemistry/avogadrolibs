@@ -8,14 +8,11 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include "vector.h"
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class Mutex;
@@ -258,7 +255,6 @@ inline bool Cube::setValue(unsigned int i, float value_)
     return false;
 }
 
-} // End Core namespace
-} // End Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_CUBE_H

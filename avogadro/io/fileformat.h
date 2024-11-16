@@ -58,7 +58,7 @@ public:
 
     All = ReadWrite | MultiMolecule | Stream | String | File
   };
-  typedef int Operations;
+  using Operations = int;
 
   /**
    * @return Operation flags defining the capabilities of this format.

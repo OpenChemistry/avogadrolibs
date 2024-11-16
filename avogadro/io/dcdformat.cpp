@@ -13,10 +13,8 @@
 #include <avogadro/core/vector.h>
 
 #include <cmath>
-#include <iomanip>
 #include <istream>
 #include <ostream>
-#include <sstream>
 #include <string>
 
 using std::map;
@@ -53,10 +51,6 @@ char swap_endian(char endian)
   else
     return '>';
 }
-
-DcdFormat::DcdFormat() {}
-
-DcdFormat::~DcdFormat() {}
 
 bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 {

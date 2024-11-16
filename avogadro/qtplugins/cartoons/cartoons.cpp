@@ -36,7 +36,6 @@ using Rendering::BSplineGeometry;
 using Rendering::Cartoon;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 using std::list;
 using std::map;
@@ -54,7 +53,7 @@ struct LayerCartoon : Core::LayerData
   bool showCartoon;
   bool showRope;
 
-  typedef void (Cartoons::*JumpTable)(bool);
+  using JumpTable = void (Cartoons::*)(bool);
   JumpTable jumpTable[7];
 
   std::string serialize() final
@@ -120,9 +119,8 @@ struct LayerCartoon : Core::LayerData
     }
   }
 
-  LayerCartoon()
+  LayerCartoon() : widget(nullptr)
   {
-    widget = nullptr;
     QSettings settings;
     showBackbone = settings.value("cartoon/backbone", false).toBool();
     showCartoon = settings.value("cartoon/cartoon", true).toBool();
@@ -150,7 +148,7 @@ struct LayerCartoon : Core::LayerData
 
 struct BackboneResidue
 {
-  BackboneResidue() {}
+  BackboneResidue() = default;
   BackboneResidue(const Vector3f p, const Vector3ub& c1, const Vector3ub& c2,
                   const size_t& g, size_t id, bool sel,
                   Residue::SecondaryStructure sec)
@@ -168,14 +166,12 @@ struct BackboneResidue
   Residue::SecondaryStructure secondaryStructure;
 };
 
-typedef list<BackboneResidue> AtomsPairList;
+using AtomsPairList = list<BackboneResidue>;
 
 Cartoons::Cartoons(QObject* parent) : ScenePlugin(parent), m_group(nullptr)
 {
   m_layerManager = PluginLayerManager(m_name);
 }
-
-Cartoons::~Cartoons() {}
 
 void addBackBone(map<size_t, AtomsPairList>& result,
                  map<size_t, BackboneResidue>& previousCA, const Atom& caAtom,

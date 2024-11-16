@@ -22,7 +22,6 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
@@ -35,12 +34,8 @@ using std::string;
 
 namespace Avogadro::Io {
 
-typedef std::pair<size_t, signed int> chargePair;
-
-MdlFormat::MdlFormat() {}
-
-MdlFormat::~MdlFormat() {}
-
+using chargePair = std::pair<size_t, int>;
+namespace {
 void handlePartialCharges(Core::Molecule& mol, std::string data)
 {
   // the string starts with the number of charges
@@ -59,6 +54,7 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
 
   mol.setPartialCharges("MMFF94", charges);
 }
+} // namespace
 
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {

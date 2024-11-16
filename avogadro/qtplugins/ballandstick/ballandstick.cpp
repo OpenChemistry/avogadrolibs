@@ -29,7 +29,6 @@ using Core::Elements;
 using QtGui::PluginLayerManager;
 using Rendering::CylinderGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 using Rendering::SphereGeometry;
 
 struct LayerBallAndStick : Core::LayerData

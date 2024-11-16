@@ -17,7 +17,6 @@
 
 #include <mmtf.hpp>
 
-#include <iomanip>
 #include <iostream>
 
 namespace Avogadro::Io {
@@ -29,11 +28,6 @@ using Core::Array;
 using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
-using Core::Residue;
-
-MMTFFormat::MMTFFormat() = default;
-
-MMTFFormat::~MMTFFormat() = default;
 
 namespace {
 // from latest MMTF code, under the MIT license

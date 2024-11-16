@@ -8,15 +8,12 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include "basisset.h"
 #include "vector.h"
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Cube;
 class GaussianSet;
@@ -33,7 +30,7 @@ class AVOGADROCORE_EXPORT GaussianSetTools
 {
 public:
   explicit GaussianSetTools(Molecule* mol = nullptr);
-  ~GaussianSetTools();
+  ~GaussianSetTools() = default;
 
   /**
    * @brief Set the electron type, must be called once MOs are available
@@ -133,7 +130,6 @@ private:
   const int symToL[13] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_GAUSSIANSETTOOLS_H

@@ -23,10 +23,7 @@
 
 using namespace Eigen;
 
-namespace Avogadro {
-namespace QtPlugins {
-
-class QTAIMWavefunction;
+namespace Avogadro::QtPlugins {
 
 class QTAIMWavefunctionEvaluator
 {
@@ -122,7 +119,6 @@ private:
   static inline qreal ipow(qreal a, qint64 n) { return (qreal)pow(a, (int)n); }
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // QTAIMWAVEFUNCTIONEVALUATOR_H

@@ -27,10 +27,6 @@ MoleQueueQueueListModel::MoleQueueQueueListModel(QObject* parent_)
 {
 }
 
-MoleQueueQueueListModel::~MoleQueueQueueListModel()
-{
-}
-
 void MoleQueueQueueListModel::setQueueList(QList<QString> queueList,
                                            QList<QStringList> programList)
 {
@@ -306,11 +302,9 @@ void MoleQueueQueueListModel::removeProgram(int queueRow, int progRow)
 
 bool MoleQueueQueueListModel::isQueueIndex(const QModelIndex& i) const
 {
-  if (i.isValid() && static_cast<quint32>(i.internalId()) == QueueInternalId &&
-      i.row() < m_queueList.size() && i.column() == 0) {
-    return true;
-  }
-  return false;
+  return i.isValid() &&
+         static_cast<quint32>(i.internalId()) == QueueInternalId &&
+         i.row() < m_queueList.size() && i.column() == 0;
 }
 
 bool MoleQueueQueueListModel::isProgramIndex(const QModelIndex& i) const
@@ -355,4 +349,4 @@ quint32 MoleQueueQueueListModel::nextUid()
   return m_uidCounter;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

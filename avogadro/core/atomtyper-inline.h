@@ -11,8 +11,7 @@
 #include "atom.h"
 #include "molecule.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 template <typename OutputType>
 AtomTyper<OutputType>::AtomTyper(const Molecule* mol) : m_molecule(mol)
@@ -79,7 +78,6 @@ void AtomTyper<OutputType>::initialize()
   m_types.reserve(m_molecule ? m_molecule->atomCount() : 0);
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ATOMTYPER_INLINE_H

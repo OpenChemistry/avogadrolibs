@@ -29,10 +29,6 @@ BatchJob::BatchJob(const QString& scriptFilePath, QObject* par)
   setup();
 }
 
-BatchJob::~BatchJob()
-{
-}
-
 BatchJob::BatchId BatchJob::submitNextJob(const Core::Molecule& mol)
 {
   // Is everything configured?

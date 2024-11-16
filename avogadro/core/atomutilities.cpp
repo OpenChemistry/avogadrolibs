@@ -5,7 +5,6 @@
 
 #include "atomutilities.h"
 
-#include <algorithm>
 #include <cmath>
 #include <vector>
 

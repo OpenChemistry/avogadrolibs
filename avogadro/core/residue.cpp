@@ -10,8 +10,6 @@
 
 namespace Avogadro::Core {
 
-Residue::Residue() {}
-
 Residue::Residue(std::string& name)
   : m_residueName(name), m_chainId('A'), m_heterogen(false), m_color(0,0,0), m_customColorSet(false), m_secondaryStructure(undefined)
 {}
@@ -44,8 +42,6 @@ Residue& Residue::operator=(Residue other)
   m_secondaryStructure = other.m_secondaryStructure;
   return *this;
 }
-
-Residue::~Residue() {}
 
 void Residue::addResidueAtom(const std::string& name, const Atom& atom)
 {
@@ -159,4 +155,4 @@ bool Residue::hasAtomByIndex(Index index) const
   return false;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

@@ -21,8 +21,6 @@ LennardJones::LennardJones()
   }
 }
 
-LennardJones::~LennardJones() {}
-
 void LennardJones::setMolecule(Core::Molecule* mol)
 {
   m_molecule = mol;

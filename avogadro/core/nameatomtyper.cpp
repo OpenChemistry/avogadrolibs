@@ -5,16 +5,11 @@
 
 #include "nameatomtyper.h"
 
-#include "atom.h"
 #include "elements.h"
 
 namespace Avogadro::Core {
 
 NameAtomTyper::NameAtomTyper(const Molecule* mol) : AtomTyper<std::string>(mol)
-{
-}
-
-NameAtomTyper::~NameAtomTyper()
 {
 }
 
