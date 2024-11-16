@@ -26,6 +26,7 @@ namespace QtGui {
  * @class MeshGenerator meshgenerator.h <avogadro/qtgui/meshgenerator.h>
  * @brief Class that can generate Mesh objects from Cube objects.
  * @author Marcus D. Hanwell
+ * @author Perminder Singh
  *
  * This class implements a method of generating an isosurface Mesh from
  * volumetric data using the marching cubes algorithm. In the case of the
@@ -106,6 +107,12 @@ public:
         int ystart;
         int zstart;
     };
+
+ /**
+ * Handles duplicate vertices (Not implemented). Placeholder for future functionality.
+ */
+  unsigned long duplicate(const Vector3i& c, const Vector3f& pos);
+
 
  /**
    * @name Flying Edges

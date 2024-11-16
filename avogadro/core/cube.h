@@ -24,7 +24,10 @@ class Mutex;
 /**
  * @class Cube cube.h <avogadro/core/cube.h>
  * @brief Provide a data structure for regularly spaced 3D grids.
+ * @author Marcus D. Hanwell
+ * @author Perminder Singh
  */
+
 class AVOGADROCORE_EXPORT Cube
 {
 public:
@@ -275,13 +278,18 @@ public:
    */
   float getData(int i, int j, int k) const;
 
-  /**
-   * Get the positions of the eight corners of a cube defined by the indices (i, j, k).
-   * @param i x index
-   * @param j y index
-   * @param k z index
-   * @return Array of positions at the eight corners.
-   */
+/**
+ * Retrieves the positions of the eight corners of a cube at grid indices (i, j, k).
+ *
+ * The indices (i, j, k) are converted to real-space positions (xpos, ypos, zpos), mapping grid indices to physical coordinates.
+ * The method returns a cube that spans one step in each of the x, y, and z directions, with step sizes defined by `m_spacing`.
+ *
+ * @param i X-index.
+ * @param j Y-index.
+ * @param k Z-index.
+ * @return A `std::array` of eight `(x, y, z)` coordinates representing the cube's corners.
+ */
+
 std::array<std::array<float, 3>, 8> getPosCube(int i, int j, int k) const;
 
 protected:

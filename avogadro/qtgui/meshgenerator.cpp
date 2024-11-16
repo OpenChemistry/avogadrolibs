@@ -593,6 +593,12 @@ unsigned char MeshGenerator::calcCaseEdge(bool const& prevEdge, bool const& curr
         return 3;
 }
 
+unsigned long MeshGenerator::duplicate(const Vector3i&, const Vector3f&)
+{
+  // FIXME Not implemented yet.
+  return 0;
+}
+
 void MeshGenerator::calcTrimValues(int& xl, int& xr, int const& j, int const& k) const
 {
 

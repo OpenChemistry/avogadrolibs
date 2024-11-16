@@ -143,6 +143,14 @@ public:
   const Core::Array<Vector3f>& normals() const;
 
   /**
+   * @return The number of normals.
+   */
+  unsigned int numNormals() const
+  {
+    return static_cast<unsigned int>(m_normals.size());
+  }
+
+  /**
    * @return Pointer to the first normal of the specified triangle.
    */
   const Vector3f* normal(int n) const;
