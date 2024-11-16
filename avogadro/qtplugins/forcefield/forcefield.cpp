@@ -241,6 +241,12 @@ void Forcefield::optimize()
   if (m_molecule == nullptr || m_method == nullptr)
     return;
 
+  if (!m_molecule->atomCount()) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("No atoms provided for optimization"));
+    return;
+  }
+
   // merge all coordinate updates into one step for undo
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
@@ -479,7 +485,7 @@ void Forcefield::refreshScripts()
   qDeleteAll(m_scripts);
   m_scripts.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("energy");
   foreach (const QString& filePath, scriptPaths) {
     auto* model = new ScriptEnergy(filePath);

@@ -7,13 +7,12 @@
 #define AVOGADRO_CORE_BASISSET_H
 
 #include "avogadrocoreexport.h"
+#include "core/variant.h"
 
-#include "avogadrocore.h"
-
+#include <array>
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
@@ -33,12 +32,12 @@ public:
   /**
    * Constructor.
    */
-  BasisSet() {}
+  BasisSet() = default;
 
   /**
    * Destructor.
    */
-  virtual ~BasisSet() {}
+  virtual ~BasisSet() = default;
 
   /**
    * Clone.
@@ -141,14 +140,14 @@ protected:
    * For closed shell calculations alpha is doubly occupied and there are no
    * beta electrons.
    */
-  unsigned int m_electrons[2];
+  std::array<unsigned int, 2> m_electrons = {};
 
   /**
    * The Molecule holds the atoms (and possibly bonds) read in from the output
    * file. Most basis sets have orbitals around these atoms, but this is not
    * necessarily the case.
    */
-  Molecule* m_molecule;
+  Molecule* m_molecule = nullptr;
 
   /**
    * The name of the basis set, this is usually a string identifier referencing
@@ -195,7 +194,6 @@ inline unsigned int BasisSet::electronCount(ElectronType type) const
   }
 }
 
-} // End namesapce Core
-} // End namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

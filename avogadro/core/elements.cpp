@@ -114,14 +114,6 @@ public:
 
 } // end anon namespace
 
-Elements::Elements()
-{
-}
-
-Elements::~Elements()
-{
-}
-
 unsigned char Elements::elementCount()
 {
   return element_count;

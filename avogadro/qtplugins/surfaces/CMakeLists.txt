@@ -1,3 +1,7 @@
+if(QT_VERSION EQUAL 6)
+  find_package(Qt6 REQUIRED COMPONENTS OpenGL)
+endif()
+
 set(surfaces_srcs
   gaussiansetconcurrent.cpp
   slatersetconcurrent.cpp
@@ -23,3 +27,9 @@ target_link_libraries(Surfaces
     gif-h
     gwavi
     tinycolormap)
+
+if(QT_VERSION EQUAL 6)
+  target_link_libraries(Surfaces
+    PRIVATE
+      Qt6::OpenGL)
+endif()

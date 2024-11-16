@@ -174,6 +174,25 @@ void SpaceGroup::updateActions()
 
 void SpaceGroup::perceiveSpaceGroup()
 {
+  // only do this if we don't have a Hall number set
+  if (m_molecule == nullptr)
+    return;
+
+  if (m_molecule->hallNumber() != 0) {
+    // Ask if the user wants to overwrite the current space group
+    std::string hallSymbol =
+      Core::SpaceGroups::hallSymbol(m_molecule->hallNumber());
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(nullptr, tr("Perceive Space Group"),
+                                  tr("The space group is already set to: %1.\n"
+                                     "Would you like to overwrite it?")
+                                    .arg(hallSymbol.c_str()),
+                                  QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No)
+      return;
+  }
+
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);

@@ -98,4 +98,4 @@ size_t LayerManager::layerCount()
   return m_molToInfo[m_activeMolecule]->layer.maxLayer() + 1;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

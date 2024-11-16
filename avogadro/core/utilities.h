@@ -6,12 +6,12 @@
 #ifndef AVOGADRO_CORE_UTILITIES_H
 #define AVOGADRO_CORE_UTILITIES_H
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @brief Split the supplied @p string by the @p delimiter.
@@ -40,10 +40,20 @@ inline std::vector<std::string> split(const std::string& string, char delimiter,
  * @param search String that will be searched for.
  * @return True if the string contains search, false otherwise.
  */
-inline bool contains(const std::string& input, const std::string& search)
+inline bool contains(const std::string& input, const std::string& search,
+                     bool caseSensitive = true)
 {
-  size_t found = input.find(search);
-  return found != std::string::npos;
+  if (caseSensitive) {
+    return input.find(search) != std::string::npos;
+  } else {
+    std::string inputLower = input;
+    std::string searchLower = search;
+    std::transform(inputLower.begin(), inputLower.end(), inputLower.begin(),
+                   ::tolower);
+    std::transform(searchLower.begin(), searchLower.end(), searchLower.begin(),
+                   ::tolower);
+    return inputLower.find(searchLower) != std::string::npos;
+  }
 }
 
 /**
@@ -98,7 +108,6 @@ T lexicalCast(const std::string& inputString, bool& ok)
   return value;
 }
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_UTILITIES_H

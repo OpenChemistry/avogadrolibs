@@ -41,10 +41,6 @@ using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
 
-CjsonFormat::CjsonFormat() = default;
-
-CjsonFormat::~CjsonFormat() = default;
-
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
   if (j.count(key) && j.find(key)->is_string()) {
@@ -159,7 +155,16 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  // todo? 2d position
+  // Array of vector3 for forces if available
+  json forces = atoms["forces"];
+  if (isNumericArray(forces) && forces.size() == 3 * atomCount) {
+    for (Index i = 0; i < atomCount; ++i) {
+      auto a = molecule.atom(i);
+      a.setForceVector(
+        Vector3(forces[3 * i], forces[3 * i + 1], forces[3 * i + 2]));
+    }
+  }
+
   // labels
   json labels = atoms["labels"];
   if (labels.is_array() && labels.size() == atomCount) {
@@ -215,7 +220,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json layerJson = atoms["layer"];
     if (isNumericArray(layerJson)) {
       auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-      for (Index i = 0; i < atomCount; ++i) {
+      for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
         while (layerJson[i] > layer.maxLayer()) {
           layer.addLayer();
         }
@@ -242,8 +247,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
 
     // are there bond labels?
     json bondLabels = bonds["labels"];
-    if (bondLabels.is_array() && bondLabels.size() == molecule.bondCount()) {
-      for (unsigned int i = 0; i < molecule.bondCount(); ++i) {
+    if (bondLabels.is_array()) {
+      for (unsigned int i = 0;
+           i < molecule.bondCount() && i < bondLabels.size(); ++i) {
         molecule.setBondLabel(i, bondLabels[i]);
       }
     }
@@ -1056,6 +1062,18 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
         coords2d.push_back(it.y());
       }
       root["atoms"]["coords"]["2d"] = coords2d;
+    }
+
+    // forces if present
+    const auto forceVectors = molecule.forceVectors();
+    if (forceVectors.size() == molecule.atomCount()) {
+      json forces;
+      for (const auto& force : forceVectors) {
+        forces.push_back(force.x());
+        forces.push_back(force.y());
+        forces.push_back(force.z());
+      }
+      root["atoms"]["forces"] = forces;
     }
   }
 

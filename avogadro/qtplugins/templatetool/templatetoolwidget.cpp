@@ -42,7 +42,7 @@ enum LigandType
   Tetradentate = 3,
   Hexadentate = 4,
   Haptic = 5,
-  Clipboard = 7
+  Clipboard = 6
 };
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
@@ -154,6 +154,11 @@ unsigned char TemplateToolWidget::coordination() const
 QString TemplateToolWidget::coordinationString() const
 {
   return m_centers.at(m_ui->coordinationComboBox->currentIndex());
+}
+
+int TemplateToolWidget::currentTab() const
+{
+  return m_ui->tabWidget->currentIndex();
 }
 
 unsigned char TemplateToolWidget::ligand() const

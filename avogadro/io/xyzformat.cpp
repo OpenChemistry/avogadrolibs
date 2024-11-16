@@ -14,8 +14,7 @@
 #include <nlohmann/json.hpp>
 
 #include <iomanip>
-#include <istream>
-#include <ostream>
+#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -24,7 +23,6 @@ using json = nlohmann::json;
 using std::endl;
 using std::getline;
 using std::string;
-using std::vector;
 
 namespace Avogadro::Io {
 
@@ -32,17 +30,12 @@ using Core::Array;
 using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
-using Core::Molecule;
 using Core::split;
 using Core::trimmed;
 
 #ifndef _WIN32
 using std::isalpha;
 #endif
-
-XyzFormat::XyzFormat() {}
-
-XyzFormat::~XyzFormat() {}
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -75,7 +68,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     std::size_t end = buffer.find('\"', start);
     std::string lattice = buffer.substr(start, (end - start));
 
-    vector<string> tokens(split(lattice, ' '));
+    std::vector<string> tokens(split(lattice, ' '));
     if (tokens.size() == 9) {
       Vector3 v1(lexicalCast<double>(tokens[0]), lexicalCast<double>(tokens[1]),
                  lexicalCast<double>(tokens[2]));
@@ -88,11 +81,41 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       mol.setUnitCell(cell);
     }
   }
+  // check to see if there's an extended XYZ Properties= line
+  // e.g. Properties=species:S:1:pos:R:3
+  // https://gitlab.com/ase/ase/-/merge_requests/62
+  start = buffer.find("Properties=");
+  unsigned int chargeColumn = 0;
+  unsigned int forceColumn = 0;
+  std::vector<double> charges;
+  if (start != std::string::npos) {
+    start = start + 11; // skip over "Properties="
+    unsigned int stop = buffer.find(' ', start);
+    unsigned int length = stop - start;
+    // we want to track columns after the position
+    // (esp. charge, spin, force, velocity, etc.)
+    std::string properties = buffer.substr(start, length);
+    std::vector<string> tokens(split(properties, ':'));
+    unsigned int column = 0;
+    for (size_t i = 0; i < tokens.size(); i += 3) {
+      // we can safely assume species and pos are present
+      if (tokens[i] == "charge") {
+        chargeColumn = column;
+      } else if (tokens[i] == "force" || tokens[i] == "forces") {
+        forceColumn = column;
+      } // TODO other properties (velocity, spin, selection, etc.)
+
+      // increment column based on the count of the property
+      if (i + 2 < tokens.size()) {
+        column += lexicalCast<unsigned int>(tokens[i + 2]);
+      }
+    }
+  }
 
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
-    vector<string> tokens;
+    std::vector<string> tokens;
     // check for tabs PR#1512
     if (buffer.find('\t') != std::string::npos)
       tokens = split(buffer, '\t');
@@ -115,6 +138,18 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     Atom newAtom = mol.addAtom(atomicNum);
     newAtom.setPosition3d(pos);
+
+    // check for charge and force columns
+    if (chargeColumn > 0 && chargeColumn < tokens.size()) {
+      charges.push_back(lexicalCast<double>(tokens[chargeColumn]));
+      // we set the charges after all atoms are added
+    }
+    if (forceColumn > 0 && forceColumn < tokens.size()) {
+      Vector3 force(lexicalCast<double>(tokens[forceColumn]),
+                    lexicalCast<double>(tokens[forceColumn + 1]),
+                    lexicalCast<double>(tokens[forceColumn + 2]));
+      newAtom.setForceVector(force);
+    }
   }
 
   // Check that all atoms were handled.
@@ -129,18 +164,30 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Do we have an animation?
   size_t numAtoms2;
-  if (getline(inStream, buffer) && (numAtoms2 = lexicalCast<int>(buffer)) &&
-      numAtoms == numAtoms2) {
+  // check if the next frame has the same number of atoms
+  getline(inStream, buffer); // should be the number of atoms
+  if (buffer.size() == 0 || buffer[0] == '>') {
+    getline(inStream, buffer); // Orca 6 prints ">" separators
+  }
+
+  if ((numAtoms2 = lexicalCast<int>(buffer)) && numAtoms == numAtoms2) {
     getline(inStream, buffer); // Skip the blank
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
     int coordSet = 1;
+    bool done = false;
     while (numAtoms == numAtoms2) {
       Array<Vector3> positions;
       positions.reserve(numAtoms);
 
       for (size_t i = 0; i < numAtoms; ++i) {
         getline(inStream, buffer);
-        vector<string> tokens(split(buffer, ' '));
+        if (inStream.eof()) {
+          numAtoms2 = 0;
+          done = true;
+          break; // break this inner loop
+        }
+
+        std::vector<string> tokens(split(buffer, ' '));
         if (tokens.size() < 4) {
           appendError("Not enough tokens in this line: " + buffer);
           return false;
@@ -151,11 +198,24 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         positions.push_back(pos);
       }
 
-      mol.setCoordinate3d(positions, coordSet++);
+      if (!done)
+        mol.setCoordinate3d(positions, coordSet++);
 
-      if (!getline(inStream, buffer)) {
+      if (getline(inStream, buffer)) {
+        if (inStream.eof()) {
+          numAtoms2 = 0;
+          break; // break this inner loop
+        }
+
+        if (buffer.size() == 0 || buffer[0] == '>')
+          getline(inStream, buffer); // Orca 6 prints ">" separators
+        if (inStream.eof()) {
+          numAtoms2 = 0;
+          break; // break this inner loop
+        }
+
         numAtoms2 = lexicalCast<int>(buffer);
-        if (numAtoms == numAtoms2)
+        if (numAtoms != numAtoms2)
           break;
       }
 
@@ -168,6 +228,16 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (opts.value("perceiveBonds", true)) {
     mol.perceiveBondsSimple();
     mol.perceiveBondOrders();
+  }
+
+  // have to set the charges after creating bonds
+  // (since modifying bonds invalidates the partial charges)
+  if (!charges.empty()) {
+    MatrixX chargesMatrix = MatrixX::Zero(mol.atomCount(), 1);
+    for (size_t i = 0; i < charges.size(); ++i) {
+      chargesMatrix(i, 0) = charges[i];
+    }
+    mol.setPartialCharges("From File", chargesMatrix);
   }
 
   return true;
@@ -227,6 +297,7 @@ std::vector<std::string> XyzFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("xyz");
+  ext.emplace_back("exyz");
   ext.emplace_back("extxyz");
   return ext;
 }

@@ -33,7 +33,7 @@ class AVOGADROCALC_EXPORT DefaultModel : public ChargeModel
 {
 public:
   DefaultModel(const std::string& identifier = "");
-  virtual ~DefaultModel();
+  virtual ~DefaultModel() = default;
 
   /**
    * Create a new instance of the file format class. Ownership passes to the

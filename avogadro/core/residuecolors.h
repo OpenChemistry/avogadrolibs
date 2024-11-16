@@ -1,8 +1,7 @@
 #ifndef AVOGADRO_CORE_RESIDUE_COLORS
 #define AVOGADRO_CORE_RESIDUE_COLORS
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 unsigned char chain_color[][3] = {
   // See, for example http://jmol.sourceforge.net/jscolors/index.en.html
@@ -63,7 +62,6 @@ unsigned char secondary_color[][3] = {
     { 160, 0, 128 },{  255, 255, 255 },{  96, 128, 255 },  {  255, 255, 255 }
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif

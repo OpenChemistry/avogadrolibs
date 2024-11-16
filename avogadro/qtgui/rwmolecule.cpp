@@ -389,7 +389,7 @@ void RWMolecule::addUnitCell()
   m_molecule.setUnitCell(cell);
 
   auto* comm = new AddUnitCellCommand(*this, *m_molecule.unitCell());
-  comm->setText(tr("Add Unit Cell"));
+  comm->setText(tr("Add Unit Cell…"));
   m_undoStack.push(comm);
   emitChanged(Molecule::UnitCell | Molecule::Added);
 }

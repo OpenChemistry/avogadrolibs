@@ -46,8 +46,9 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
-  while (!in.eof())
+  while (!in.eof() && in.good()) {
     processLine(in);
+  }
 
   auto* basis = new GaussianSet;
 
@@ -62,6 +63,24 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
+
+  if (m_frequencies.size() > 0 &&
+      m_frequencies.size() == m_vibDisplacements.size()) {
+    molecule.setVibrationFrequencies(m_frequencies);
+    molecule.setVibrationLx(m_vibDisplacements);
+
+    // if we don't have intensities, set them all to zero
+    if (m_IRintensities.size() != m_frequencies.size()) {
+      m_IRintensities.resize(m_frequencies.size());
+      for (unsigned int i = 0; i < m_frequencies.size(); i++)
+        m_IRintensities[i] = 0.0;
+    }
+    molecule.setVibrationIRIntensities(m_IRintensities);
+
+    if (m_RamanIntensities.size())
+      molecule.setVibrationRamanIntensities(m_RamanIntensities);
+  }
+
   return true;
 }
 
@@ -78,7 +97,7 @@ void MoldenFile::processLine(std::istream& in)
   // Molden file format uses sections, each starts with a header line of the
   // form [Atoms], and the beginning of a new section denotes the end of the
   // last.
-  if (Core::contains(line, "[Atoms]")) {
+  if (Core::contains(line, "[Atoms]") || Core::contains(line, "[ATOMS]")) {
     if (list.size() > 1 && Core::contains(list[1], "AU"))
       m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
@@ -86,12 +105,20 @@ void MoldenFile::processLine(std::istream& in)
     m_mode = GTO;
   } else if (Core::contains(line, "[MO]")) {
     m_mode = MO;
+  } else if (Core::contains(line, "[FREQ]")) {
+    m_mode = Frequencies;
+  } else if (Core::contains(line, "[FR-NORM-COORD]")) {
+    m_mode = VibrationalModes;
+  } else if (Core::contains(line, "[INT]")) {
+    m_mode = Intensities;
   } else if (Core::contains(line, "[")) { // unknown section
     m_mode = Unrecognized;
   } else {
     // We are in a section, and must parse the lines in that section.
     string shell;
     GaussianSet::orbital shellType;
+
+    std::streampos currentPos = in.tellg();
 
     // Parsing a line of data in a section - what mode are we in?
     switch (m_mode) {
@@ -165,7 +192,8 @@ void MoldenFile::processLine(std::istream& in)
         }
 
         // Parse the molecular orbital coefficients.
-        while (!line.empty() && !Core::contains(line, "=")) {
+        while (!line.empty() && !Core::contains(line, "=") &&
+               !Core::contains(line, "[")) {
           list = Core::split(line, ' ');
           if (list.size() < 2)
             break;
@@ -175,6 +203,82 @@ void MoldenFile::processLine(std::istream& in)
           getline(in, line);
           line = Core::trimmed(line);
           list = Core::split(line, ' ');
+        }
+        // go back to previous line
+        in.seekg(currentPos);
+        break;
+
+      case Frequencies:
+        // Parse the frequencies.
+        m_frequencies.clear();
+        while (!line.empty() && !Core::contains(line, "[")) {
+          line = Core::trimmed(line);
+          m_frequencies.push_back(Core::lexicalCast<double>(line));
+          currentPos = in.tellg();
+          getline(in, line);
+        }
+        // go back to previous line
+        in.seekg(currentPos);
+        break;
+
+      case VibrationalModes:
+        // Parse the vibrational modes.
+        // should be "vibration 1" etc.
+        // then the normal mode displacements
+        m_vibDisplacements.clear();
+        // shouldn't be more than the number of frequencies
+        while (!line.empty() && !Core::contains(line, "[")) {
+          if (Core::contains(line, "vibration")) {
+            m_vibDisplacements.push_back(Core::Array<Vector3>());
+            getline(in, line);
+            line = Core::trimmed(line);
+            while (!line.empty() && !Core::contains(line, "[") &&
+                   !Core::contains(line, "vibration")) {
+              list = Core::split(line, ' ');
+              if (list.size() < 3)
+                break;
+
+              m_vibDisplacements.back().push_back(Vector3(
+                Core::lexicalCast<double>(list[0]) * BOHR_TO_ANGSTROM_D,
+                Core::lexicalCast<double>(list[1]) * BOHR_TO_ANGSTROM_D,
+                Core::lexicalCast<double>(list[2]) * BOHR_TO_ANGSTROM_D));
+
+              currentPos = in.tellg();
+              getline(in, line);
+              line = Core::trimmed(line);
+            }
+          } else {
+            // we shouldn't hit this, but better to be safe
+            break;
+          }
+
+          // okay, we're either done reading
+          // or we're at the next vibration
+          if (m_vibDisplacements.size() == m_frequencies.size()) {
+            // reset to make sure we don't miss any other sections
+            // (e.g., intensities)
+            in.seekg(currentPos);
+            break;
+          }
+        }
+        break;
+
+      case Intensities:
+        // could be just IR or two pieces including Raman
+        while (!line.empty() && !Core::contains(line, "[")) {
+          list = Core::split(line, ' ');
+          m_IRintensities.push_back(Core::lexicalCast<double>(list[0]));
+          if (list.size() == 2)
+            m_RamanIntensities.push_back(Core::lexicalCast<double>(list[1]));
+
+          if (m_IRintensities.size() == m_frequencies.size()) {
+            // we're done
+            break;
+          }
+
+          currentPos = in.tellg();
+          getline(in, line);
+          line = Core::trimmed(line);
         }
         break;
       default:

@@ -6,25 +6,21 @@
 #ifndef AVOGADRO_QTPLUGINS_YAEHMOP_H
 #define AVOGADRO_QTPLUGINS_YAEHMOP_H
 
+#include "banddialog.h"
+#include "yaehmopsettings.h"
+
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <avogadro/core/vector.h>
 
-#include <memory>
+#include <avogadro/vtk/chartdialog.h>
 
-#include "yaehmopsettings.h"
+#include <memory>
 
 // Forward declarations
 class QByteArray;
 
-namespace VTK {
-class ChartDialog;
-}
-
-namespace Avogadro {
-namespace QtPlugins {
-
-class BandDialog;
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Perform extended Hückel calculations with yaehmop.
@@ -36,13 +32,13 @@ public:
   explicit Yaehmop(QObject* parent_ = nullptr);
   ~Yaehmop();
 
-  QString name() const { return tr("Yaehmop"); }
-  QString description() const;
-  QList<QAction*> actions() const;
-  QStringList menuPath(QAction*) const;
+  QString name() const override { return tr("Yaehmop"); }
+  QString description() const override;
+  QList<QAction*> actions() const override;
+  QStringList menuPath(QAction*) const override;
 
 public slots:
-  void setMolecule(QtGui::Molecule* mol);
+  void setMolecule(QtGui::Molecule* mol) override;
 
   void moleculeChanged(unsigned int changes);
 
@@ -88,7 +84,6 @@ inline QString Yaehmop::description() const
   return tr("Perform extended Hückel calculations with yaehmop.");
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_YAEHMOPEXTENSION_H

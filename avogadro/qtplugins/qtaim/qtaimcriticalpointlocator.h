@@ -17,17 +17,14 @@
 #ifndef QTAIMCRITICALPOINTLOCATOR_H
 #define QTAIMCRITICALPOINTLOCATOR_H
 
+#include "qtaimwavefunction.h"
+
 #include <QDebug>
 #include <QList>
 #include <QPair>
 #include <QVector3D>
 
-#include "qtaimmathutilities.h"
-#include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
-
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMCriticalPointLocator
 {
@@ -88,7 +85,6 @@ private:
   QString temporaryFileName();
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // QTAIMCRITICALPOINTLOCATOR_H

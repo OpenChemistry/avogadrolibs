@@ -14,20 +14,17 @@
 
 ******************************************************************************/
 
+#include "qtaimwavefunction.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
 
-#include "qtaimwavefunction.h"
-
 namespace Avogadro::QtPlugins {
 
-QTAIMWavefunction::QTAIMWavefunction()
-{
-  m_initializationSuccessful = false;
-}
+QTAIMWavefunction::QTAIMWavefunction() : m_initializationSuccessful(false) {}
 
 bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
 {
@@ -45,8 +42,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
     m_fileDoesNotExist = false;
   }
 
-  bool success;
-  success = file.open(QIODevice::ReadOnly | QIODevice::Text);
+  bool success = file.open(QIODevice::ReadOnly | QIODevice::Text);
 
   if (!(success)) {
     m_initializationSuccessful = false;
@@ -134,7 +130,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
 
   while (fileContentsByLine.first().startsWith("TYPE ASSIGNMENTS")) {
     QString line(fileContentsByLine.first().mid(20, -1));
-    QStringList splitLine(line.split(" ", QString::SkipEmptyParts));
+    QStringList splitLine(line.split(" ", Qt::SkipEmptyParts));
 
     for (qint64 i = 0; i < splitLine.length(); ++i) {
       typeAssignmentsList.append(splitLine.at(i).toLongLong());
@@ -261,7 +257,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
 
   while (fileContentsByLine.first().startsWith("EXPONENTS")) {
     QString line(fileContentsByLine.first().mid(9, -1));
-    QStringList splitLine(line.split(" ", QString::SkipEmptyParts));
+    QStringList splitLine(line.split(" ", Qt::SkipEmptyParts));
 
     for (qint64 i = 0; i < splitLine.length(); ++i) {
       QString str(splitLine.at(i));
@@ -324,7 +320,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
     m_molecularOrbitalEigenvalues[i] = molecularOrbitalEigenvaluesList.at(i);
 
   moCoefficientsStringList =
-    moCoefficientsStringList.join(" ").split(" ", QString::SkipEmptyParts);
+    moCoefficientsStringList.join(" ").split(" ", Qt::SkipEmptyParts);
 
   for (qint64 i = 0; i < moCoefficientsStringList.length(); ++i) {
     QString str(moCoefficientsStringList.at(i));

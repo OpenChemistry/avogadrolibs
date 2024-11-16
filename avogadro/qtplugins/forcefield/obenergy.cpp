@@ -50,6 +50,15 @@ OBEnergy::OBEnergy(const std::string& method)
   QByteArray dataDir =
     QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
   qputenv("BABEL_DATADIR", dataDir);
+#elif defined(__APPLE__)
+  QByteArray dataDir =
+    QString(QCoreApplication::applicationDirPath() + "/../share/openbabel")
+      .toLocal8Bit();
+  qputenv("BABEL_DATADIR", dataDir);
+  QByteArray libDir =
+    QString(QCoreApplication::applicationDirPath() + "/../lib/openbabel")
+      .toLocal8Bit();
+  qputenv("BABEL_LIBDIR", libDir);
 #endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();

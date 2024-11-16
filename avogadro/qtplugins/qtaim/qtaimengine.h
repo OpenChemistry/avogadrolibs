@@ -10,15 +10,14 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMEngine : public QtGui::ScenePlugin
 {
   Q_OBJECT
 public:
   explicit QTAIMEngine(QObject* parent = nullptr);
-  virtual ~QTAIMEngine() override;
+  virtual ~QTAIMEngine() override = default;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
@@ -34,7 +33,6 @@ private:
   bool m_enabled;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif

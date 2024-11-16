@@ -68,15 +68,14 @@
    of length fdim).   The void* parameter is there in case you have
    to pass any additional data through to your function (it corresponds
    to the fdata parameter you pass to adapt_integrate). */
-typedef void (*integrand)(unsigned int ndim, const double* x, void*,
-                          unsigned int fdim, double* fval);
+using integrand = void (*)(unsigned int, const double*, void*, unsigned int,
+                           double*);
 
 /* a vector integrand of a vector of npt points: x[i*ndim + j] is the
    j-th coordinate of the i-th point, and the k-th function evaluation
    for the i-th point is returned in fval[k*npt + i]. */
-typedef void (*integrand_v)(unsigned int ndim, unsigned int npt,
-                            const double* x, void*, unsigned int fdim,
-                            double* fval);
+using integrand_v = void (*)(unsigned int, unsigned int, const double*, void*,
+                             unsigned int, double*);
 
 /* Integrate the function f from xmin[dim] to xmax[dim], with at most
    maxEval function evaluations (0 for no limit), until the given
@@ -100,15 +99,9 @@ int adapt_integrate_v(unsigned int fdim, integrand_v f, void* fdata,
 //}  /* extern "C" */
 //#endif /* __cplusplus */
 
-#include "qtaimcriticalpointlocator.h"
-#include "qtaimlsodaintegrator.h"
-#include "qtaimmathutilities.h"
-#include "qtaimodeintegrator.h"
 #include "qtaimwavefunction.h"
-#include "qtaimwavefunctionevaluator.h"
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class QTAIMCubature
 {
@@ -137,7 +130,6 @@ private:
   QList<QVector3D> m_ncpList;
 };
 
-} /* namespace QtPlugins */
-} /* namespace Avogadro */
+} // namespace Avogadro::QtPlugins
 
 #endif /* QTAIMCUBATURE_H */

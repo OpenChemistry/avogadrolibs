@@ -7,27 +7,18 @@
 
 #include <iostream>
 
-using namespace std;
-
 namespace Avogadro::Io {
 
-CMsgPackFormat::CMsgPackFormat() : CjsonFormat()
+std::vector<std::string> CMsgPackFormat::fileExtensions() const
 {
-  m_json = false;
-}
-
-CMsgPackFormat::~CMsgPackFormat() = default;
-
-vector<std::string> CMsgPackFormat::fileExtensions() const
-{
-  vector<std::string> ext;
+  std::vector<std::string> ext;
   ext.emplace_back("cmpk");
   return ext;
 }
 
-vector<std::string> CMsgPackFormat::mimeTypes() const
+std::vector<std::string> CMsgPackFormat::mimeTypes() const
 {
-  vector<std::string> mime;
+  std::vector<std::string> mime;
   mime.emplace_back("chemical/x-cmpack");
   return mime;
 }

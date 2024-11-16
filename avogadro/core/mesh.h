@@ -8,14 +8,11 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include "array.h"
 #include "color3f.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class Mutex;
@@ -241,7 +238,6 @@ private:
   Mutex* m_lock;
 };
 
-} // End namespace Core
-} // End namespace Avogadro
+} // End namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MESH_H
