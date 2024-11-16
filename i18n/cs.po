@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -3730,7 +3730,7 @@ msgstr "Vlastnosti molekuly"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Exportovat"
+msgstr "Exportovat"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -3756,7 +3756,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "&Exportovat"
+msgstr "Exportovat"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4106,7 +4106,7 @@ msgid ""
 "OpenMM input deck preview pane?"
 msgstr ""
 "Chtěl byste obnovit text náhledu?  Všechny změny provedené v náhledové "
-"tabulce zadávací vrstvy MOPAC budou ztraceny."
+"tabulce zadávací vrstvy OpenMM budou ztraceny."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4434,10 +4434,8 @@ msgid "PLY (*.ply);;Text file (*.txt)"
 msgstr ""
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
@@ -4969,7 +4967,7 @@ msgstr "Tolerance:"
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "Space Group"
-msgstr "Prostorová &skupina"
+msgstr "Prostorová skupina"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -5036,7 +5034,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -5062,7 +5060,7 @@ msgstr "Vybrat prostorovou grupu"
 #: qtplugins/spacegroup/spacegroup.h:24
 #, fuzzy
 msgid "SpaceGroup"
-msgstr "Prostorová &skupina"
+msgstr "Prostorová skupina"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
@@ -5121,7 +5119,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "&Nastavení hustoty stavů"
+msgstr "Hustoty Stavů"
 
 #: qtplugins/spectra/spectradialog.cpp:256
 msgid "Select Background Color"
@@ -5184,10 +5182,8 @@ msgid "Chemical Shift (ppm)"
 msgstr "Posun (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Elektronová hustota"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -5222,10 +5218,8 @@ msgid "Electron Density"
 msgstr "Elektronová hustota"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Intensity"
 msgid "Spin Density"
-msgstr "Intenzita"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5299,9 +5293,8 @@ msgid "Calculating electron density"
 msgstr "Počítá se elektronová hustotu"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Počítá se elektronová hustotu"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -7258,10 +7251,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Convergence:"
-msgstr "Tolerance:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
