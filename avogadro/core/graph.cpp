@@ -357,8 +357,8 @@ void Graph::removeEdges(size_t index)
     m_subgraphDirty[m_vertexToSubgraph[index]] = true;
 
   const std::vector<size_t>& edges = m_edgeMap[index];
-  for (size_t edge : edges)
-    removeEdge(edge);
+  for (size_t i = 0; i < edges.size(); ++i)
+    removeEdge(edges[i]);
 }
 
 void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
