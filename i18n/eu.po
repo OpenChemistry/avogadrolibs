@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -3716,7 +3716,7 @@ msgstr "Propietate Molekularrak"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Esportatu"
+msgstr "Esportatu"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -3734,17 +3734,15 @@ msgstr "Ezin da '%1' artxiboa ireki idazteko."
 
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Errorea (%1) egitura fitxategia irakurtzean."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "&Esportatu"
+msgstr "Esportatu"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4080,7 +4078,7 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
-"Gustatuko litzaizuke aurreko testua eguneratzea, MOPAC sartzeko kubierta "
+"Gustatuko litzaizuke aurreko testua eguneratzea, OpenMM sartzeko kubierta "
 "aurreikusteko panelean egindako aldaketa guztiak ezabatzen?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
@@ -5141,10 +5139,8 @@ msgid "Chemical Shift (ppm)"
 msgstr "Modulazioa (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Elektroien Dentsitatea"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:383
 #: qtplugins/spectra/spectradialog.cpp:411
@@ -5179,10 +5175,8 @@ msgid "Electron Density"
 msgstr "Elektroien Dentsitatea"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Intensity"
 msgid "Spin Density"
-msgstr "Intentsitatea"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5256,9 +5250,8 @@ msgid "Calculating electron density"
 msgstr "Kalkulatzen Elektroien Dentsitatea"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Kalkulatzen Elektroien Dentsitatea"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5272,7 +5265,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
-msgstr "E&sportatu Irudia"
+msgstr "Esportatu Irudia"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -7218,10 +7211,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Convergence:"
-msgstr "Tolerantzia:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
