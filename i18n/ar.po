@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-14 12:00+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -2073,10 +2073,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Control"
 msgid "Centroid"
-msgstr "تحكّم"
+msgstr ""
 
 #: qtplugins/centroid/centroid.h:30
 msgid "Add centroids and center-of-mass."
@@ -4896,10 +4894,8 @@ msgid "NMR Spectra"
 msgstr "طيف"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Chemical files (*.parm7)"
 msgid "Chemical Shift (ppm)"
-msgstr "الملفات الكيميائية (*.parm7)"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:382
 msgid "Electronic Spectra"
