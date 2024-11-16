@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-12 01:05+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:70
@@ -4083,7 +4083,7 @@ msgid ""
 "OpenMM input deck preview pane?"
 msgstr ""
 "Θα θέλατε να ενημερώσετε το κείμενο προεπισκόπησης, χάνοντας όλες τις "
-"αλλαγές που έγιναν στο παράθυρο προεπισκόπησης κάρτας εισόδου MOPAC;"
+"αλλαγές που έγιναν στο παράθυρο προεπισκόπησης κάρτας εισόδου OpenMM;"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
