@@ -167,15 +167,15 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
           ge2.xstart += isCutCase[4];
           ge2.ystart += isCutCase[7];
         }
-        if(isXEnd and isYEnd)
+        if(isXEnd && isYEnd)
         {
           ge1.zstart += isCutCase[11];
         }
-        if(isXEnd and isZEnd)
+        if(isXEnd && isZEnd)
         {
           ge2.ystart += isCutCase[5];
         }
-        if(isYEnd and isZEnd)
+        if(isYEnd && isZEnd)
         {
           ge3.xstart += isCutCase[6];
         }
@@ -410,7 +410,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             if(isCutCase[11])
             {
                 int idx = ge1.zstart + z1counter;
-                if(isXEnd and isYEnd)
+                if(isXEnd && isYEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 11);
 
@@ -425,7 +425,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             if(isCutCase[5])
             {
                 int idx = ge2.ystart + y2counter;
-                if(isXEnd and isZEnd)
+                if(isXEnd && isZEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 5);
 
@@ -441,7 +441,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             if(isCutCase[6])
             {
                 int idx = ge3.xstart + x3counter;
-                if(isYEnd and isZEnd)
+                if(isYEnd && isZEnd)
                 {
                     std::array<float, 3> interpolatedPoint = interpolateOnCube(pointCube, isovalCube, 6);
                     std::array<float, 3> interpolatedNormal = interpolateOnCube(gradCube, isovalCube, 6);                                                      
