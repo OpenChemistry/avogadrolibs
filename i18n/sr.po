@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -3821,7 +3821,7 @@ msgstr "Својства молекула"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Izvezi"
+msgstr "Izvezi"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -3839,17 +3839,15 @@ msgstr "Не могу да отворим датотеку „%1“ за упи�
 
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Greška pri čitanju strukture datoteke (%1)."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "&Izvezi"
+msgstr "Izvezi"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4095,10 +4093,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr "Nije moguće otvoriti datoteku sa Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
-#| msgid "Perceiving Bonds (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
-msgstr "Opazivanje Veza (Open Babel)"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -5419,10 +5415,8 @@ msgid "Render the electron density."
 msgstr "Izračunaj Gustinu Elektrona"
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Render the scene using VRML."
 msgid "Render the spin density."
-msgstr "Renderirajte scenu pomoću VRML -a."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a cube supplied with the file."
@@ -5518,10 +5512,8 @@ msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Temperatura"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -8235,7 +8227,7 @@ msgstr "Stalna Veličina"
 #, fuzzy
 #| msgid "10^"
 msgid "10"
-msgstr "10^"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8275,10 +8267,8 @@ msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
-msgstr "Operacije"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:571
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
