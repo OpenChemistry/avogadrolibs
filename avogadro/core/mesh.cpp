@@ -21,7 +21,7 @@ Mesh::Mesh(const Mesh& other)
   : m_vertices(other.m_vertices), m_normals(other.m_normals),
     m_colors(other.m_colors), m_name(other.m_name), m_stable(true),
     m_isoValue(other.m_isoValue), m_other(other.m_other), m_cube(other.m_cube),
-    m_lock(new Mutex)
+    m_lock(new Mutex), m_triangles(other.m_triangles)
 {
 }
 
@@ -59,6 +59,20 @@ const Vector3f* Mesh::vertex(int n) const
 {
   return &(m_vertices[n * 3]);
 }
+
+
+bool Mesh::setTriangles(const Core::Array<Vector3f>& values)
+{
+  m_triangles.clear();
+  m_triangles = values;
+  return true;
+}
+
+const Core::Array<Vector3f>&Mesh::triangles() const
+{
+  return m_triangles;
+}
+
 
 bool Mesh::setVertices(const Core::Array<Vector3f>& values)
 {
@@ -165,101 +179,78 @@ Mesh& Mesh::operator=(const Mesh& other)
   m_colors = other.m_colors;
   m_name = other.m_name;
   m_isoValue = other.m_isoValue;
+  m_triangles = other.m_triangles;
 
   return *this;
 }
 
-void Mesh::smooth(int iterationCount)
-{
-  if (m_vertices.size() == 0)
-    return;
-  if (iterationCount <= 0)
+void Mesh::smooth(int iterationCount) {
+  if (m_vertices.empty() || iterationCount <= 0)
     return;
 
-  // Map vertices to a plane and pass them to NeighborPerceiver
-  // a line gives less performance, and a volume offers no more benefit
-  Array<Vector3> planarList(m_vertices.size());
-  for (size_t i = 0; i < m_vertices.size(); i++)
-    // Empirical constant to make the distribution more homogeneous
-    planarList[i] = Vector3(
-      double(m_vertices[i](0) + 1.31*m_vertices[i](1)),
-    0.0, m_vertices[i](2));
-  NeighborPerceiver perceiver(planarList, 0.1);
+  // Build vertex adjacency information from triangles (1-ring)
+  std::vector<std::vector<size_t>> adjacencyList(m_vertices.size());
+  for (const auto& tri : m_triangles) {
+    size_t i = static_cast<size_t>(tri.x());
+    size_t j = static_cast<size_t>(tri.y());
+    size_t k = static_cast<size_t>(tri.z());
 
-  // Identify degenerate vertices
-  std::vector<int> indexToVertexID(m_vertices.size(), -1);
-  std::vector<std::vector<size_t>> vertexIDToIndices;
-  Array<size_t> neighbors;
-  for (size_t i = 0; i < m_vertices.size(); i++) {
-    if (indexToVertexID[i] != -1)
-      continue;
-    perceiver.getNeighborsInclusiveInPlace(neighbors, planarList[i]);
-    size_t vertexID = vertexIDToIndices.size();
-    for (size_t n: neighbors) {
-      if ((m_vertices[n] - m_vertices[i]).norm() < 0.0001) {
-        if (vertexID == vertexIDToIndices.size())
-          vertexIDToIndices.emplace_back();
-        indexToVertexID[n] = vertexID;
-        vertexIDToIndices[vertexID].push_back(n);
-      }
-    }
+    adjacencyList[i].push_back(j);
+    adjacencyList[i].push_back(k);
+    adjacencyList[j].push_back(i);
+    adjacencyList[j].push_back(k);
+    adjacencyList[k].push_back(i);
+    adjacencyList[k].push_back(j);
   }
 
-  // Compute 1-ring
-  std::vector<std::vector<size_t>> vertexIDTo1Ring(vertexIDToIndices.size());
-  for (size_t id = 0; id < vertexIDToIndices.size(); id++) {
-    for (size_t v: vertexIDToIndices[id]) {
-      size_t relative = v % 3;
-      size_t triangle = v - relative;
-      std::array<size_t, 2> candidates{{
-        triangle + (relative + 1) % 3,
-        triangle + (relative + 2) % 3
-      }};
-      for (size_t candidate: candidates) {
-        size_t newID = indexToVertexID[candidate];
-        if (std::find(vertexIDToIndices[id].begin(), vertexIDToIndices[id].end(), newID)
-        == vertexIDToIndices[id].end())
-          vertexIDTo1Ring[id].push_back(newID);
-      }
-    }
+  // Remove duplicate neighbors and sort for faster lookups later (if needed)
+  for (auto& neighbors : adjacencyList) {
+    std::sort(neighbors.begin(), neighbors.end());
+    neighbors.erase(std::unique(neighbors.begin(), neighbors.end()), neighbors.end());
   }
+
 
   float weight = 1.0f;
-  for (int iteration = iterationCount; iteration > 0; iteration--) {
-    // Copy vertices by ID into source array
-    std::vector<Vector3f> inputVertices(vertexIDToIndices.size());
-    for (size_t id = 0; id < vertexIDToIndices.size(); id++)
-      inputVertices[id] = m_vertices[vertexIDToIndices[id][0]];
+  for (int iteration = 0; iteration < iterationCount; ++iteration) {
+    Array<Vector3f> newVertices = m_vertices; // Store smoothed vertices
 
-    // Apply Laplacian smoothing
-    for (size_t id = 0; id < inputVertices.size(); id++) {
-      Vector3f output(0.0f, 0.0f, 0.0f);
-      for (size_t neighbor: vertexIDTo1Ring[id])
-        output += inputVertices[neighbor];
-      output += weight * inputVertices[id];
-      output *= 1.0f / (weight + vertexIDTo1Ring[id].size());
-      if (iteration == 1)
-        for (size_t i: vertexIDToIndices[id])
-          m_vertices[i] = output;
-      else
-        m_vertices[vertexIDToIndices[id][0]] = output;
+    for (size_t i = 0; i < m_vertices.size(); ++i) {
+      Vector3f sum(0.0f, 0.0f, 0.0f);
+      size_t neighborCount = adjacencyList[i].size();
+
+      if (neighborCount > 0) { // Prevent division by zero for isolated vertices
+        for (size_t neighbor : adjacencyList[i]) {
+          sum += m_vertices[neighbor];
+        }
+        sum += weight * m_vertices[i];
+        newVertices[i] = sum / (weight + neighborCount);
+      } // Else keep the original vertex position if isolated
     }
+    m_vertices = newVertices; // Update vertices after processing all
   }
 
-  // Recompute normals
-  for (auto & vertexIDToIndice : vertexIDToIndices) {
-    Vector3f normal(0.0f, 0.0f, 0.0f);
-    for (size_t v: vertexIDToIndice) {
-      size_t relative = v % 3;
-      size_t triangle = v - relative;
-      Vector3f &a = m_vertices[v];
-      Vector3f &b = m_vertices[triangle + (relative + 1) % 3];
-      Vector3f &c = m_vertices[triangle + (relative + 2) % 3];
-      Vector3f triangleNormal = (b - a).cross(c - a);
-      normal += triangleNormal.normalized();
-    }
-    for (size_t i: vertexIDToIndice)
-      m_normals[i] = normal.normalized();
+
+  m_normals.clear();
+  m_normals.resize(m_vertices.size(), Vector3f(0.0f, 0.0f, 0.0f));
+
+  for (const auto& tri : m_triangles) {
+    size_t i = static_cast<size_t>(tri.x());
+    size_t j = static_cast<size_t>(tri.y());
+    size_t k = static_cast<size_t>(tri.z());
+
+    Vector3f a = m_vertices[i];
+    Vector3f b = m_vertices[j];
+    Vector3f c = m_vertices[k];
+    Vector3f triangleNormal = (b - a).cross(c - a).normalized();
+
+    m_normals[i] += triangleNormal;
+    m_normals[j] += triangleNormal;
+    m_normals[k] += triangleNormal;
+
+   }
+
+  for (auto& normal : m_normals) {
+    normal.normalize();
   }
 }
 

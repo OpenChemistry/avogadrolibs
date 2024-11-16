@@ -92,8 +92,8 @@ public:
    * the valid index range.
    * @{
    */
-  void addTriangle(unsigned int index1, unsigned int index2,
-                   unsigned int index3);
+  void addTriangle( size_t index1,  size_t index2,
+                    size_t index3);
   void addTriangles(const Core::Array<unsigned int>& indices);
   /** @} */
 

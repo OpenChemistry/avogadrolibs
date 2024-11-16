@@ -119,6 +119,10 @@ public:
    */
   const Vector3f* vertex(int n) const;
 
+  bool setTriangles(const Core::Array<Vector3f>& values);
+  const Core::Array<Vector3f>& triangles() const;
+
+
   /**
    * Clear the vertices vector and assign new values.
    */
@@ -225,6 +229,7 @@ private:
   Core::Array<Vector3f> m_vertices;
   Core::Array<Vector3f> m_normals;
   Core::Array<Color3f> m_colors;
+  Core::Array<Vector3f> m_triangles;
   std::string m_name;
   bool m_stable;
   float m_isoValue;
