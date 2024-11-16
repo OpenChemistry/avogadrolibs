@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-10 20:44+0000\n"
-"PO-Revision-Date: 2024-11-15 16:01+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -3665,7 +3665,7 @@ msgstr "Molekül Özellikleri"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export CSV"
-msgstr "&Dışa Aktar"
+msgstr "Dışa Aktar"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -3681,17 +3681,15 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:191
 #: qtplugins/propertytables/propertyview.cpp:276
-#, fuzzy
-#| msgid "Error reading structure file (%1)."
 msgid "Error writing to the file."
-msgstr "Yapı dosyası okunurken hata oluştu (%1)."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "&Dışa Aktar"
+msgstr "Dışa Aktar"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4993,16 +4991,12 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:256
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Background Color"
-msgstr "Bağ Etiketi Rengi Seç"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:269
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Foreground Color"
-msgstr "Bağ Etiketi Rengi Seç"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:282
 msgid "Select Calculated Spectra Color"
@@ -5034,17 +5028,15 @@ msgstr ""
 #| msgctxt "colormap"
 #| msgid "Spectral"
 msgid "Raman Spectra"
-msgstr "Spektral"
+msgstr "Raman Spektral"
 
 #: qtplugins/spectra/spectradialog.cpp:358
 #: qtplugins/spectra/spectradialog.cpp:371
 #: qtplugins/spectra/spectradialog.cpp:384
 #: qtplugins/spectra/spectradialog.cpp:399
 #: qtplugins/spectra/spectradialog.cpp:412
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Intensity"
-msgstr "Elektron Yoğunluğu"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:369
 #, fuzzy
@@ -5054,10 +5046,8 @@ msgid "NMR Spectra"
 msgstr "Spektral"
 
 #: qtplugins/spectra/spectradialog.cpp:370
-#, fuzzy
-#| msgid "Chemical files (*.parm7)"
 msgid "Chemical Shift (ppm)"
-msgstr "Kimyasal dosyalar (*.parm7)"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:382
 #, fuzzy
@@ -5095,10 +5085,8 @@ msgid "Electron Density"
 msgstr "Elektron Yoğunluğu"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Spin Density"
-msgstr "Elektron Yoğunluğu"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5157,10 +5145,8 @@ msgid "Render the electron density."
 msgstr "Elektron yoğunluğu hesaplanıyor"
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Render the scene using VRML."
 msgid "Render the spin density."
-msgstr "Sahneyi VRML kullanarak işleyin."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:124
 msgid "Render a cube supplied with the file."
@@ -5171,10 +5157,8 @@ msgid "Calculating electron density"
 msgstr "Elektron yoğunluğu hesaplanıyor"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Calculating spin density"
-msgstr "Elektron yoğunluğu hesaplanıyor"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -6351,10 +6335,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "Arginine"
 msgid "Adenine"
-msgstr "Arjinin"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
@@ -6364,10 +6346,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "Tyrosine"
 msgid "Cytosine"
-msgstr "Tirozin"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
@@ -6426,7 +6406,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Other…"
 msgid "Other"
-msgstr "Diğer…"
+msgstr "Diğer"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7726,7 +7706,7 @@ msgstr "Veri yok"
 #, fuzzy
 #| msgid "&Export"
 msgid "Export Data"
-msgstr "&Dışa Aktar"
+msgstr "Dışa Aktar"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
