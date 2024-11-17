@@ -36,6 +36,28 @@ using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
+// helper to serialize a QMultiMap<QString, QString> to a QStringList
+static QStringList serialize(const QMultiMap<QString, QString>& map)
+{
+  QStringList result;
+  for (auto it = map.begin(), itEnd = map.end(); it != itEnd; ++it) {
+    qDebug() << " serialize: " << it.key() << it.value();
+    result << it.key() << it.value();
+  }
+  return result;
+}
+
+// helper to deserialize a QStringList to a QMultiMap<QString, QString>
+static QMultiMap<QString, QString> deserialize(const QStringList& list)
+{
+  QMultiMap<QString, QString> result;
+  for (int i = 0; i < list.size(); i += 2) {
+    qDebug() << " deserialize: " << list[i] << list[i + 1];
+    result.insert(list[i], list[i + 1]);
+  }
+  return result;
+}
+
 OpenBabel::OpenBabel(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_process(new OBProcess(this)),
     m_readFormatsPending(true), m_writeFormatsPending(true),
@@ -84,11 +106,7 @@ OpenBabel::OpenBabel(QObject* p)
   connect(action, SIGNAL(triggered()), SLOT(onRemoveHydrogens()));
   m_actions.push_back(action);
 
-  refreshReadFormats();
-  refreshWriteFormats();
-  refreshForceFields();
-  refreshCharges();
-
+  // check if we need to refresh data or we can use the cache
   QString info = openBabelInfo();
   if (info.isEmpty()) {
     qWarning() << tr("%1 not found! Disabling Open Babel plugin actions.")
@@ -97,6 +115,65 @@ OpenBabel::OpenBabel(QObject* p)
       a->setEnabled(false);
   } else {
     qDebug() << OBProcess().obabelExecutable() << " found: " << info;
+  }
+
+  QSettings settings;
+  // these have no default -- because if they're not set, we'll use the system
+  QString obabelExecutable = settings.value("openbabel/executable").toString();
+  QString obabelInfo = settings.value("openbabel/info").toString();
+  bool useCache = false;
+  if (obabelExecutable.isEmpty() || obabelInfo.isEmpty()) {
+    settings.setValue("openbabel/executable", OBProcess().obabelExecutable());
+    settings.setValue("openbabel/info", info);
+    // no cache
+  } else {
+    if (obabelExecutable == OBProcess().obabelExecutable() &&
+        obabelInfo == info) {
+      useCache = true;
+    } else {
+      // update and refresh the cache
+      settings.setValue("openbabel/executable", OBProcess().obabelExecutable());
+      settings.setValue("openbabel/info", info);
+    }
+  }
+
+  if (useCache) {
+    // we can use the cache
+    qDebug() << "Using Open Babel cache.";
+    QStringList value;
+
+    value = settings.value("openbabel/readFormats").toStringList();
+    if (!value.isEmpty()) {
+      m_readFormats = deserialize(value);
+      m_readFormatsPending = false;
+    } else {
+      refreshReadFormats();
+    }
+
+    value = settings.value("openbabel/writeFormats").toStringList();
+    if (!value.isEmpty()) {
+      m_writeFormats = deserialize(value);
+      m_writeFormatsPending = false;
+    } else {
+      refreshWriteFormats();
+    }
+
+    value = settings.value("openbabel/forceFields").toStringList();
+    if (!value.isEmpty())
+      m_forceFields = deserialize(value);
+    else
+      refreshForceFields();
+
+    value = settings.value("openbabel/charges").toStringList();
+    if (!value.isEmpty())
+      m_charges = deserialize(value);
+    else
+      refreshCharges();
+  } else { // no cache
+    refreshReadFormats();
+    refreshWriteFormats();
+    refreshForceFields();
+    refreshCharges();
   }
 }
 
@@ -270,6 +347,9 @@ void OpenBabel::handleReadFormatUpdate(const QMultiMap<QString, QString>& fmts)
 
     emit fileFormatsReady();
   }
+  // save the cache
+  QSettings settings;
+  settings.setValue("openbabel/readFormats", serialize(m_readFormats));
 }
 
 void OpenBabel::refreshWriteFormats()
@@ -306,6 +386,10 @@ void OpenBabel::handleWriteFormatUpdate(const QMultiMap<QString, QString>& fmts)
       qDebug() << "Setting default format to cjson.";
     }
   }
+
+  // save the cache
+  QSettings settings;
+  settings.setValue("openbabel/writeFormats", serialize(m_writeFormats));
 }
 
 void OpenBabel::refreshForceFields()
@@ -328,6 +412,10 @@ void OpenBabel::handleForceFieldsUpdate(
     proc->deleteLater();
 
   m_forceFields = ffMap;
+
+  // save the cache
+  QSettings settings;
+  settings.setValue("openbabel/forceFields", serialize(m_forceFields));
 }
 
 void OpenBabel::refreshCharges()
@@ -359,6 +447,10 @@ void OpenBabel::handleChargesUpdate(
       Calc::ChargeManager::instance().registerModel(model);
     }
   }
+
+  // save
+  QSettings settings;
+  settings.setValue("openbabel/charges", serialize(m_charges));
 }
 
 void OpenBabel::onConfigureGeometryOptimization()
