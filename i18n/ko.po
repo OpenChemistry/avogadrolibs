@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-10 20:44+0000\n"
+"POT-Creation-Date: 2024-11-17 02:40+0000\n"
 "PO-Revision-Date: 2024-11-11 19:52+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Generator: Weblate 5.8.2\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
-#: molequeue/batchjob.cpp:70
+#: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
 msgstr "일괄 작업 #%L1 (%2)"
@@ -33,7 +33,7 @@ msgstr "일괄 작업 #%L1 (%2)"
 msgid "No message specified."
 msgstr "지정된 메시지가 없습니다."
 
-#: molequeue/inputgenerator.cpp:67 qtgui/interfacescript.cpp:72
+#: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
 msgid ""
 "script --print-options output must be an JSON object at top level. "
@@ -43,27 +43,27 @@ msgstr ""
 "script --print-options 출력은 최상위 수준에서 JSON 객체여야 합니다. 접수: \n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:173 qtgui/interfacescript.cpp:210
+#: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
 msgstr "문자열이 아닌 경고가 반환되었습니다."
 
-#: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:213
+#: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
 msgstr "'경고' 멤버는 배열이 아닙니다."
 
-#: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:366
+#: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr "참조 파일 '%1'이(가) 없습니다."
 
-#: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:368
+#: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr "%1 파일 채우는 중 오류: %2"
 
-#: molequeue/inputgenerator.cpp:202 qtgui/interfacescript.cpp:372
+#: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
@@ -71,7 +71,7 @@ msgstr ""
 "'%1' 파일의 형식이 잘못되었습니다. 문자열 '내용' 또는 '파일경로' 멤버가 누락"
 "되었습니다."
 
-#: molequeue/inputgenerator.cpp:234 qtgui/interfacescript.cpp:405
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
@@ -80,32 +80,32 @@ msgstr ""
 "형식이 잘못된 파일 항목: 파일 이름/내용이 없거나 문자열이 아님: \n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:240 qtgui/interfacescript.cpp:411
+#: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr "인덱스 %1의 잘못된 파일 항목: 객체가 아닙니다."
 
-#: molequeue/inputgenerator.cpp:246 qtgui/interfacescript.cpp:417
+#: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
 msgstr "'파일' 멤버가 배열이 아닙니다."
 
-#: molequeue/inputgenerator.cpp:250 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
 msgstr "'파일' 멤버가 없습니다."
 
-#: molequeue/inputgenerator.cpp:261 qtgui/interfacescript.cpp:432
+#: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr "'주요파일' 멤버가 '파일'의 항목을 참조하지 않습니다."
 
-#: molequeue/inputgenerator.cpp:266 qtgui/interfacescript.cpp:437
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
 msgstr "'주요파일' 멤버는 문자열이어야 합니다."
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:448
+#: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
 msgstr "응답은 최상위 JSON 객체여야 합니다."
 
-#: molequeue/inputgenerator.cpp:281 qtgui/interfacescript.cpp:452
+#: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
 msgid ""
 "Script output:\n"
@@ -114,7 +114,7 @@ msgstr ""
 "스크립트 출력: \n"
 "%1"
 
-#: molequeue/inputgenerator.cpp:324 qtgui/interfacescript.cpp:496
+#: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -127,20 +127,20 @@ msgstr ""
 " \n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:348
+#: molequeue/inputgenerator.cpp:346
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 "분자 표현을 문자열로 저장하는 중 오류 발생: 인식할 수 없는 파일 형식: %1"
 
-#: molequeue/inputgenerator.cpp:356
+#: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "분자 표현을 문자열에 저장하는 동안 오류 발생: %1"
 
-#: molequeue/inputgenerator.cpp:369 qtgui/interfacescript.cpp:563
+#: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -153,7 +153,7 @@ msgstr ""
 " \n"
 "%3"
 
-#: molequeue/inputgenerator.cpp:378 qtgui/interfacescript.cpp:572
+#: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -534,7 +534,7 @@ msgstr "붕소"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1917
+#: qtgui/elementtranslator.cpp:34:1929
 msgid "Carbon"
 msgstr "탄소"
 
@@ -616,13 +616,13 @@ msgstr "망간"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1920
+#: qtgui/elementtranslator.cpp:94:1932
 msgid "Iron"
 msgstr "철"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1923
+#: qtgui/elementtranslator.cpp:97:1935
 msgid "Cobalt"
 msgstr "코발트"
 
@@ -1189,16 +1189,16 @@ msgstr "[분자 없음]"
 msgid "Layer %1"
 msgstr "레이어 %1"
 
-#: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
+#: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "공과 막대 모형"
 
-#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:32
+#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "만화"
 
-#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
+#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "내용물 닫기"
@@ -1243,7 +1243,7 @@ msgstr "대칭 원소"
 msgid "Van der Waals"
 msgstr "판 데르 발스"
 
-#: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:159
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
 msgstr "판 데르 발스 (AO)"
@@ -1325,32 +1325,32 @@ msgstr "쓰기 오류입니다."
 msgid "Unknown error."
 msgstr "알 수 없는 오류입니다."
 
-#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:105
-#: qtgui/rwlayermanager.cpp:131
+#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
+#: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
 msgstr "레이어 수정"
 
-#: qtgui/rwlayermanager.cpp:194
+#: qtgui/rwlayermanager.cpp:196
 msgid "Remove Layer"
 msgstr "레이어 제거"
 
-#: qtgui/rwlayermanager.cpp:201
+#: qtgui/rwlayermanager.cpp:203
 msgid "Remove Layer Info"
 msgstr "레이어 정보 제거"
 
-#: qtgui/rwlayermanager.cpp:210
+#: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
 msgstr "레이어 추가"
 
-#: qtgui/rwlayermanager.cpp:213
+#: qtgui/rwlayermanager.cpp:215
 msgid "Add Layer Info"
 msgstr "레이어 정보 추가"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
+#: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:262:1628
+#: qtplugins/selectiontool/selectiontool.cpp:262:1640
 msgid "Change Layer"
 msgstr "레이어 변경"
 
@@ -1512,11 +1512,11 @@ msgstr "스크립트%1을(를)불러올수없음"
 msgid "Checking for %1 scripts in path %2"
 msgstr "경로 %2에서 %1 스크립트를 확인하는 중"
 
-#: qtplugins/3dmol/3dmol.cpp:41
+#: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
 msgstr "3DMol HTML 블록입니다."
 
-#: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
@@ -1525,7 +1525,7 @@ msgstr "3DMol HTML 블록입니다."
 msgid "&File"
 msgstr "파일(&F)"
 
-#: qtplugins/3dmol/3dmol.cpp:51 qtplugins/ply/ply.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
@@ -1535,11 +1535,11 @@ msgstr "내보내기(&E)"
 msgid "ThreeDMol"
 msgstr "3DMol"
 
-#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:96
+#: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
 msgstr "정렬"
 
-#: qtplugins/aligntool/aligntool.cpp:55
+#: qtplugins/aligntool/aligntool.cpp:51
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1559,43 +1559,43 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:83:1685
+#: qtplugins/aligntool/aligntool.cpp:79:1697
 msgid "Axis:"
 msgstr "축:"
 
-#: qtplugins/aligntool/aligntool.cpp:160
+#: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
 msgstr "원점에 정렬"
 
-#: qtplugins/aligntool/aligntool.cpp:196
+#: qtplugins/aligntool/aligntool.cpp:192
 msgid "Align to Axis"
 msgstr "축에 정렬"
 
-#: qtplugins/aligntool/aligntool.cpp:312
+#: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
 msgstr "원점에 원자를 중심에 두기."
 
-#: qtplugins/aligntool/aligntool.cpp:315
+#: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr "지정된 축에 원자를 정렬하는 분자를 회전."
 
-#: qtplugins/aligntool/aligntool.h:30
+#: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
 msgstr "정렬 도구"
 
-#: qtplugins/aligntool/aligntool.h:33
+#: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
 msgstr "Cartesian 축에 맞추어 분자 정렬"
 
-#: qtplugins/apbs/apbs.cpp:31
+#: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
 msgstr "APBS 실행…"
 
-#: qtplugins/apbs/apbs.cpp:36
+#: qtplugins/apbs/apbs.cpp:37
 msgid "Open Output File…"
 msgstr "WFN 파일 열기…"
 
-#: qtplugins/apbs/apbs.cpp:49 qtplugins/cp2kinput/cp2kinput.cpp:49
+#: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
 #: qtplugins/lammpsinput/lammpsinput.cpp:48
 #: qtplugins/openmminput/openmminput.cpp:46
@@ -1603,49 +1603,49 @@ msgstr "WFN 파일 열기…"
 msgid "&Input"
 msgstr "입력(&I)"
 
-#: qtplugins/apbs/apbs.cpp:49
+#: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
 msgstr "APBS(&A)"
 
-#: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:69
+#: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:70
 #: qtplugins/quantuminput/quantuminput.cpp:88
 msgid "Open Output File"
 msgstr "출력 파일 열기"
 
-#: qtplugins/apbs/apbs.cpp:62
+#: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
 msgstr "OpenDX 파일 (*.dx)"
 
-#: qtplugins/apbs/apbs.cpp:115
+#: qtplugins/apbs/apbs.cpp:116
 msgid "IO Error"
 msgstr "IO 오류"
 
-#: qtplugins/apbs/apbs.cpp:116
+#: qtplugins/apbs/apbs.cpp:117
 #, qt-format
 msgid "Error reading structure file (%1)."
 msgstr "구조 파일 (%1)을(를) 읽는 동안 오류가 발생했습니다."
 
-#: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
+#: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
 msgid "OpenDX Error"
 msgstr "OpenDX 오류"
 
-#: qtplugins/apbs/apbs.cpp:137
+#: qtplugins/apbs/apbs.cpp:138
 #, qt-format
 msgid "Error reading OpenDX file: %1"
 msgstr "OpenDX 파일을 읽는 동안 오류 발생: %1"
 
-#: qtplugins/apbs/apbs.cpp:144
+#: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
 msgstr "OpenDX 파일 읽기 오류: 정육면체를 찾을 수 없음"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:31:96
+#: qtplugins/apbs/apbs.h:30:96
 msgid "APBS"
 msgstr "APBS"
 
-#: qtplugins/apbs/apbs.h:34
+#: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
 msgstr "APBS 유틸리티와 상호 작용합니다."
 
@@ -1722,104 +1722,104 @@ msgstr "성공"
 msgid "Input file written to '%1'"
 msgstr "입력 파일이 '%1'에 기록됨"
 
-#: qtplugins/applycolors/applycolors.cpp:43
-#: qtplugins/applycolors/applycolors.cpp:64
+#: qtplugins/applycolors/applycolors.cpp:44
+#: qtplugins/applycolors/applycolors.cpp:65
 msgid "By Custom Color…"
 msgstr "사용자 정의 색상별…"
 
-#: qtplugins/applycolors/applycolors.cpp:48
+#: qtplugins/applycolors/applycolors.cpp:49
 msgid "By Atomic Index…"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:53
+#: qtplugins/applycolors/applycolors.cpp:54
 msgid "By Distance…"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:58
+#: qtplugins/applycolors/applycolors.cpp:59
 msgid "By Element"
 msgstr "원소별"
 
-#: qtplugins/applycolors/applycolors.cpp:69
+#: qtplugins/applycolors/applycolors.cpp:70
 msgid "By Chain"
 msgstr "사슬별"
 
-#: qtplugins/applycolors/applycolors.cpp:74
+#: qtplugins/applycolors/applycolors.cpp:75
 msgid "By Partial Charge…"
 msgstr "부분 전하로…"
 
-#: qtplugins/applycolors/applycolors.cpp:79
+#: qtplugins/applycolors/applycolors.cpp:80
 msgid "By Secondary Structure"
 msgstr "이차 구조별"
 
-#: qtplugins/applycolors/applycolors.cpp:84
+#: qtplugins/applycolors/applycolors.cpp:85
 msgid "By Amino Acid"
 msgstr "아미노산별"
 
-#: qtplugins/applycolors/applycolors.cpp:89
+#: qtplugins/applycolors/applycolors.cpp:90
 msgid "By Shapely Scheme"
 msgstr "균형잡힌 스키마별"
 
-#: qtplugins/applycolors/applycolors.cpp:104
-#: qtplugins/applycolors/applycolors.cpp:207
-#: qtplugins/applycolors/applycolors.cpp:299
+#: qtplugins/applycolors/applycolors.cpp:105
+#: qtplugins/applycolors/applycolors.cpp:208
+#: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:758
 msgctxt "colormap"
 msgid "Parula"
 msgstr "파룰라"
 
-#: qtplugins/applycolors/applycolors.cpp:106
+#: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
 msgstr "열"
 
-#: qtplugins/applycolors/applycolors.cpp:108
+#: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
 msgstr "뜨거운"
 
-#: qtplugins/applycolors/applycolors.cpp:110
+#: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
 msgstr "회색"
 
-#: qtplugins/applycolors/applycolors.cpp:112
-#: qtplugins/applycolors/applycolors.cpp:207
-#: qtplugins/applycolors/applycolors.cpp:299
+#: qtplugins/applycolors/applycolors.cpp:113
+#: qtplugins/applycolors/applycolors.cpp:208
+#: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
 msgstr "마그마"
 
-#: qtplugins/applycolors/applycolors.cpp:114
-#: qtplugins/applycolors/applycolors.cpp:208
-#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/applycolors/applycolors.cpp:115
+#: qtplugins/applycolors/applycolors.cpp:209
+#: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "불"
 
-#: qtplugins/applycolors/applycolors.cpp:116
-#: qtplugins/applycolors/applycolors.cpp:208
-#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/applycolors/applycolors.cpp:117
+#: qtplugins/applycolors/applycolors.cpp:209
+#: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "플라즈마"
 
-#: qtplugins/applycolors/applycolors.cpp:118
-#: qtplugins/applycolors/applycolors.cpp:209
-#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/applycolors/applycolors.cpp:119
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "비리디스"
 
-#: qtplugins/applycolors/applycolors.cpp:120
-#: qtplugins/applycolors/applycolors.cpp:209
-#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/applycolors/applycolors.cpp:121
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
@@ -1829,10 +1829,10 @@ msgstr "시비디스"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:174
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:122
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1782
+#: qtplugins/applycolors/applycolors.cpp:123
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:303
+#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1794
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "스펙트럼"
@@ -1841,8 +1841,8 @@ msgstr "스펙트럼"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1779
+#: qtplugins/applycolors/applycolors.cpp:125
+#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1791
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "냉온"
@@ -1851,8 +1851,8 @@ msgstr "냉온"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
+#: qtplugins/applycolors/applycolors.cpp:127
+#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
 msgctxt "colormap"
 msgid "Balance"
 msgstr "균형"
@@ -1861,8 +1861,8 @@ msgstr "균형"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1776
+#: qtplugins/applycolors/applycolors.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "파란-어두운 빨강"
@@ -1871,35 +1871,35 @@ msgstr "파란-어두운 빨강"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:179
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1785
+#: qtplugins/applycolors/applycolors.cpp:131
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:303
+#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1797
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "터보"
 
-#: qtplugins/applycolors/applycolors.cpp:138
+#: qtplugins/applycolors/applycolors.cpp:139
 msgid "Apply color schemes to atoms and residues."
 msgstr "원자와 잔류물에 색상 구성표를 적용합니다."
 
-#: qtplugins/applycolors/applycolors.cpp:149
-#: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
+#: qtplugins/applycolors/applycolors.cpp:150
+#: qtplugins/applycolors/applycolors.cpp:152 qtplugins/focus/focus.cpp:42
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:76
 msgid "&View"
 msgstr "보기(&V)"
 
-#: qtplugins/applycolors/applycolors.cpp:149
+#: qtplugins/applycolors/applycolors.cpp:150
 msgid "Color Atoms"
 msgstr "원자 색상"
 
-#: qtplugins/applycolors/applycolors.cpp:151
+#: qtplugins/applycolors/applycolors.cpp:152
 msgid "Color Residues"
 msgstr "잔류물 색상"
 
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:306
 msgid "Select Colormap"
 msgstr "색상지도 선택"
 
@@ -1907,8 +1907,8 @@ msgstr "색상지도 선택"
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1770
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:306:171 rc.cpp:1782
 msgid "Colormap:"
 msgstr "색상지도:"
 
@@ -1916,33 +1916,39 @@ msgstr "색상지도:"
 msgid "ApplyColors"
 msgstr "적용색상"
 
-#: qtplugins/ballandstick/ballandstick.cpp:91
+#: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
 msgstr "원자 스케일"
 
-#: qtplugins/ballandstick/ballandstick.cpp:100
+#: qtplugins/ballandstick/ballandstick.cpp:116
 msgid "Bond scale"
 msgstr "결합 스케일"
 
-#: qtplugins/ballandstick/ballandstick.cpp:103
-#: qtplugins/wireframe/wireframe.cpp:92
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: qtplugins/ballandstick/ballandstick.cpp:125:222
+msgid "Opacity"
+msgstr "불투명도"
+
+#: qtplugins/ballandstick/ballandstick.cpp:129
+#: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds"
 msgstr "여러 결합 표시"
 
-#: qtplugins/ballandstick/ballandstick.cpp:109
-#: qtplugins/wireframe/wireframe.cpp:98
+#: qtplugins/ballandstick/ballandstick.cpp:135
+#: qtplugins/wireframe/wireframe.cpp:106
 msgid "Show hydrogens"
 msgstr "수소 표시"
 
-#: qtplugins/ballandstick/ballandstick.h:33
+#: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "원자를 구체로, 결합을 실린더로 렌더링합니다."
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:121
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgid "Bond-Centric Manipulation"
 msgstr "결합 중심 조작"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:123
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:119
 msgid ""
 "Bond Centric Manipulation Tool\n"
 "\n"
@@ -1966,8 +1972,8 @@ msgstr ""
 "결합내 원자 중 하나를 마우스 왼쪽 버튼으로 클릭과 드래그로 각도 변경 \n"
 "결합내 원자 중 하나를 마우스 오른쪽 버튼으로 클릭과 드래그로 길이 변경"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:784
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:872
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:780
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:868
 #: qtplugins/measuretool/measuretool.cpp:211
 #: qtplugins/measuretool/measuretool.cpp:219
 #: qtplugins/measuretool/measuretool.cpp:220
@@ -1975,7 +1981,7 @@ msgstr ""
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:806
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:802
 #: qtplugins/editor/editor.cpp:268 qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:228
 #: qtplugins/measuretool/measuretool.cpp:230
@@ -2013,7 +2019,7 @@ msgstr "결합 구성…"
 msgid "Bond Selected Atoms"
 msgstr "선택된 원자 결합"
 
-#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
+#: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -2022,67 +2028,67 @@ msgstr "선택된 원자 결합"
 msgid "&Build"
 msgstr "빌드(&B)"
 
-#: qtplugins/bonding/bonding.cpp:63
+#: qtplugins/bonding/bonding.cpp:61
 #: qtplugins/propertytables/propertymodel.cpp:445
 msgid "Bond"
 msgstr "결합"
 
-#: qtplugins/bonding/bonding.cpp:74
+#: qtplugins/bonding/bonding.cpp:72
 msgid "Remove bonds from all or selected atoms."
 msgstr "모든 또는 선택한 원자에서 결합을 제거합니다."
 
-#: qtplugins/bonding/bonding.cpp:76
+#: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
 msgstr "모든 또는 선택한 원자 사이의 결합을 생성합니다."
 
-#: qtplugins/bonding/bonding.cpp:77
+#: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
 msgstr "결합 순서를 이해합니다."
 
-#: qtplugins/bonding/bonding.h:32
+#: qtplugins/bonding/bonding.h:31
 msgid "Bonding"
 msgstr "결합"
 
-#: qtplugins/bonding/bonding.h:36
+#: qtplugins/bonding/bonding.h:35
 msgid "Perform bonding operations."
 msgstr "결합 작업을 수행합니다."
 
-#: qtplugins/cartoons/cartoons.cpp:93
+#: qtplugins/cartoons/cartoons.cpp:92
 msgctxt "protein rendering style"
 msgid "Backbone"
 msgstr "중추"
 
-#: qtplugins/cartoons/cartoons.cpp:94
+#: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Trace"
 msgstr "추척"
 
-#: qtplugins/cartoons/cartoons.cpp:95
+#: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
 msgstr "튜브"
 
-#: qtplugins/cartoons/cartoons.cpp:96
+#: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
 msgid "Ribbon"
 msgstr "리본"
 
-#: qtplugins/cartoons/cartoons.cpp:97
+#: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
 msgstr "단순한 만화"
 
-#: qtplugins/cartoons/cartoons.cpp:98
+#: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "만화"
 
-#: qtplugins/cartoons/cartoons.cpp:99
+#: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Rope"
 msgstr "밧줄"
 
-#: qtplugins/cartoons/cartoons.h:37
+#: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr "생체 분자 리본 / 만화 표시합니다."
 
@@ -2099,11 +2105,11 @@ msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
 msgstr "수직 추가"
 
-#: qtplugins/centroid/centroid.h:26
+#: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
 msgstr "중심"
 
-#: qtplugins/centroid/centroid.h:30
+#: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
 msgstr "중심과 질량 중앙을 추가합니다."
 
@@ -2131,36 +2137,36 @@ msgstr "중심과 질량 중앙을 추가합니다."
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:215
+#: qtplugins/closecontacts/closecontacts.cpp:212
 #: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:406
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/closecontacts/closecontacts.cpp:232
+#: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
 msgid "Maximum distance:"
 msgstr "최대 거리:"
 
-#: qtplugins/closecontacts/closecontacts.cpp:233
+#: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
-#: qtplugins/wireframe/wireframe.cpp:88
+#: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
 msgstr "선의 폭:"
 
-#: qtplugins/closecontacts/closecontacts.h:37
+#: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
 msgstr "원자 사이의 밀접한 접촉을 렌더링합니다."
 
-#: qtplugins/closecontacts/closecontacts.h:55
+#: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
 msgstr "연락처"
 
-#: qtplugins/closecontacts/closecontacts.h:56
+#: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
 msgstr "염다리"
 
-#: qtplugins/closecontacts/closecontacts.h:57
+#: qtplugins/closecontacts/closecontacts.h:56
 msgid "Repulsive"
 msgstr "반발"
 
@@ -2176,7 +2182,7 @@ msgstr "색상 불투명도 지도 편집…"
 #: qtplugins/forcefield/forcefield.cpp:151
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
-#: qtplugins/yaehmop/yaehmop.cpp:112
+#: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
 msgstr "확장(&E)"
 
@@ -2261,13 +2267,13 @@ msgstr "파이썬 환경을 구성합니다."
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:153
 #: qtplugins/editor/editortoolwidget.cpp:129
-#: qtplugins/templatetool/templatetoolwidget.cpp:316
-#: qtplugins/templatetool/templatetoolwidget.cpp:329
-#: qtplugins/templatetool/templatetoolwidget.cpp:337
-#: qtplugins/templatetool/templatetoolwidget.cpp:345
-#: qtplugins/templatetool/templatetoolwidget.cpp:353
-#: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:2055
+#: qtplugins/templatetool/templatetoolwidget.cpp:321
+#: qtplugins/templatetool/templatetoolwidget.cpp:334
+#: qtplugins/templatetool/templatetoolwidget.cpp:342
+#: qtplugins/templatetool/templatetoolwidget.cpp:350
+#: qtplugins/templatetool/templatetoolwidget.cpp:358
+#: qtplugins/templatetool/templatetoolwidget.cpp:366
+#: qtplugins/templatetool/templatetoolwidget.cpp:429:2067
 msgid "Other…"
 msgstr "기타…"
 
@@ -2395,7 +2401,7 @@ msgstr "원자 좌표 편집"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:173:1812 rc.cpp:1842
+#: qtplugins/label/label.cpp:181:1824 rc.cpp:1854
 msgid "Custom"
 msgstr "커스텀"
 
@@ -2549,7 +2555,7 @@ msgstr "CP2K에 대한 입력을 생성합니다."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:97:1172
+#: qtplugins/forcefield/forcefield.cpp:97:1184
 msgid "Energy"
 msgstr "에너지"
 
@@ -2590,7 +2596,7 @@ msgstr "없음"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1352
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1364
 msgid "PME"
 msgstr "PME"
 
@@ -2825,7 +2831,7 @@ msgstr "편집기 도구"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1791 rc.cpp:1809
+#: qtplugins/editor/editortoolwidget.cpp:208:1803 rc.cpp:1821
 msgid "Automatic"
 msgstr "자동"
 
@@ -2960,7 +2966,7 @@ msgstr "&계산"
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
-#: qtplugins/yaehmop/yaehmop.cpp:534
+#: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "아보가드로"
 
@@ -3229,12 +3235,12 @@ msgstr "조각삽입"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "더 큰 분자를 만들기 위해 분자 조각을 삽입합니다."
 
-#: qtplugins/label/label.cpp:143 qtplugins/meshes/meshes.cpp:173
-#: qtplugins/meshes/meshes.cpp:179
+#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
+#: qtplugins/meshes/meshes.cpp:175
 msgid "Color:"
 msgstr "색상:"
 
-#: qtplugins/label/label.cpp:153
+#: qtplugins/label/label.cpp:161
 msgid "Distance from center:"
 msgstr "중심으로부터의 거리:"
 
@@ -3246,55 +3252,55 @@ msgstr "중심으로부터의 거리:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:163 qtplugins/label/label.cpp:192:1361
+#: qtplugins/label/label.cpp:171 qtplugins/label/label.cpp:200:1373
 msgid "None"
 msgstr "없음"
 
-#: qtplugins/label/label.cpp:164
+#: qtplugins/label/label.cpp:172
 msgid "Index"
 msgstr "색인"
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:173
 msgid "Unique ID"
 msgstr "고유 ID"
 
-#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "원소"
 
-#: qtplugins/label/label.cpp:167
+#: qtplugins/label/label.cpp:175
 msgid "Element & Number"
 msgstr "원소 번호"
 
-#: qtplugins/label/label.cpp:169
+#: qtplugins/label/label.cpp:177
 msgid "Element & ID"
 msgstr "성분 & ID"
 
-#: qtplugins/label/label.cpp:171
+#: qtplugins/label/label.cpp:179
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr ""
 
-#: qtplugins/label/label.cpp:186
+#: qtplugins/label/label.cpp:194
 msgid "Atom Label:"
 msgstr "원자 레이블:"
 
-#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:454
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:201
+#: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
 msgstr "이름"
 
-#: qtplugins/label/label.cpp:205
+#: qtplugins/label/label.cpp:213
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:217
+#: qtplugins/label/label.cpp:225
 msgid "Residue Label:"
 msgstr "잔류물 레이블:"
 
@@ -3386,12 +3392,8 @@ msgid ""
 "Manipulation Tool\n"
 "\n"
 "Left Mouse: \tClick and drag to move atoms\n"
-"Right Mouse: \tClick and drag to rotate selected atoms.\n"
+"Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
-"조작 도구 \n"
-" \n"
-"왼쪽 마우스: \t클릭과 드래그로 원자 이동 \n"
-"오른쪽 마무스: \t클릭과 드래그로 선택한 원자 회전합니다.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3440,7 +3442,7 @@ msgstr "측정 도구"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:167:1619
+#: qtplugins/meshes/meshes.cpp:163 qtplugins/vanderwaals/vanderwaals.cpp:75
 msgid "Opacity:"
 msgstr "투명도:"
 
@@ -3550,7 +3552,7 @@ msgstr "분자의 일반적인 특성을 봅니다."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
+#: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
@@ -3944,7 +3946,7 @@ msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1262
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1274
 msgid "input.prmtop"
 msgstr "입력.prmtop"
 
@@ -3974,7 +3976,7 @@ msgstr "위"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
-#: qtplugins/openmminput/openmminputdialog.cpp:1069:1379 rc.cpp:1394
+#: qtplugins/openmminput/openmminputdialog.cpp:1069:1391 rc.cpp:1406
 msgid "True"
 msgstr "참"
 
@@ -4017,7 +4019,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:117:1845
+#: qtplugins/playertool/playertool.cpp:117:1857
 msgid "Frame:"
 msgstr "프레임:"
 
@@ -4034,7 +4036,7 @@ msgstr "역동적인 결합입니까?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:143:1851
+#: qtplugins/playertool/playertool.cpp:143:1863
 msgid "Record Movie…"
 msgstr "동영상 녹화…"
 
@@ -4138,7 +4140,7 @@ msgstr "오류: genXrdPattern 실행 파일을 찾을 수 없습니다!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
-#: qtplugins/yaehmop/yaehmop.cpp:556
+#: qtplugins/yaehmop/yaehmop.cpp:555
 msgid "Error: "
 msgstr "오류: "
 
@@ -4221,7 +4223,7 @@ msgstr "압축해제 중 오류: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1601
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1613
 msgid "Download Plugins…"
 msgstr "플러그인 다운로드…"
 
@@ -4463,36 +4465,36 @@ msgstr "이형태체 정보"
 msgid "Residue Properties"
 msgstr "잔류물 속성"
 
-#: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
-#: qtplugins/qtaim/qtaimextension.h:23
+#: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
+#: qtplugins/qtaim/qtaimextension.h:22
 msgid "QTAIM"
 msgstr "QTAIM"
 
-#: qtplugins/qtaim/qtaimengine.h:30
+#: qtplugins/qtaim/qtaimengine.h:29
 msgid "Renders primitives using QTAIM properties"
 msgstr "QTAIM 속성을 사용하여 기본 렌더링"
 
-#: qtplugins/qtaim/qtaimextension.cpp:46
+#: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
 msgstr "분자 그래프…"
 
-#: qtplugins/qtaim/qtaimextension.cpp:53
+#: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
 msgstr "고립 전자쌍이 있는 분자 그래프…"
 
-#: qtplugins/qtaim/qtaimextension.cpp:60
+#: qtplugins/qtaim/qtaimextension.cpp:55
 msgid "Atomic Charge…"
 msgstr "원자 전하…"
 
-#: qtplugins/qtaim/qtaimextension.cpp:109
+#: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
 msgstr "WFN 파일 열기"
 
-#: qtplugins/qtaim/qtaimextension.cpp:110
+#: qtplugins/qtaim/qtaimextension.cpp:94
 msgid "WFN files (*.wfn);;All files (*.*)"
 msgstr "WFN 파일 (*.wfn);;모든 파일 (*.*)"
 
-#: qtplugins/qtaim/qtaimextension.h:24
+#: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
 msgstr "QTAIM 확장"
 
@@ -4634,7 +4636,7 @@ msgstr "잔여물 선택"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1884
+#: qtplugins/select/select.h:30:1896
 msgid "Select"
 msgstr "선택"
 
@@ -4679,7 +4681,7 @@ msgstr "지각 공간 그룹…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1869
+#: qtplugins/spacegroup/spacegroup.cpp:68:1881
 msgid "Symmetrize"
 msgstr "대칭화"
 
@@ -4768,9 +4770,9 @@ msgstr ""
 "대칭에 실패했습니다. \n"
 "결정체를 확인하고 다른 허용 오차로 다시 시도하세요."
 
-#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:209
-#: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
-#: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
+#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
+#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
 msgid "Avogadro2"
 msgstr "아보가드로2"
 
@@ -4808,7 +4810,7 @@ msgstr "스펙트럼 플롯…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1643
+#: qtplugins/spectra/spectra.h:36:1655
 msgid "Spectra"
 msgstr "스펙트럼"
 
@@ -4816,94 +4818,94 @@ msgstr "스펙트럼"
 msgid "Display spectra plots."
 msgstr "스펙트럼 플롯을 표시합니다."
 
-#: qtplugins/spectra/spectradialog.cpp:201
+#: qtplugins/spectra/spectradialog.cpp:200
 msgid "Infrared"
 msgstr "적외선"
 
-#: qtplugins/spectra/spectradialog.cpp:205
+#: qtplugins/spectra/spectradialog.cpp:204
 msgid "Raman"
 msgstr "라만"
 
-#: qtplugins/spectra/spectradialog.cpp:208
+#: qtplugins/spectra/spectradialog.cpp:207
 msgid "NMR"
 msgstr "NMR"
 
-#: qtplugins/spectra/spectradialog.cpp:211
+#: qtplugins/spectra/spectradialog.cpp:210
 msgid "Electronic"
 msgstr "전자"
 
-#: qtplugins/spectra/spectradialog.cpp:215
+#: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
 msgstr "원편광 이색성"
 
-#: qtplugins/spectra/spectradialog.cpp:219
-#: qtplugins/spectra/spectradialog.cpp:410
+#: qtplugins/spectra/spectradialog.cpp:218
+#: qtplugins/spectra/spectradialog.cpp:409
 msgid "Density of States"
 msgstr "상태 밀도"
 
-#: qtplugins/spectra/spectradialog.cpp:256
+#: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
 msgstr "배경색상 선택"
 
-#: qtplugins/spectra/spectradialog.cpp:269
+#: qtplugins/spectra/spectradialog.cpp:268
 msgid "Select Foreground Color"
 msgstr "전면 색상 선택"
 
-#: qtplugins/spectra/spectradialog.cpp:282
+#: qtplugins/spectra/spectradialog.cpp:281
 msgid "Select Calculated Spectra Color"
 msgstr "계산된 스펙트럼 색상 선택"
 
-#: qtplugins/spectra/spectradialog.cpp:294
+#: qtplugins/spectra/spectradialog.cpp:293
 msgid "Select Imported Spectra Color"
 msgstr "가져온 스펙트럼 색상 선택"
 
-#: qtplugins/spectra/spectradialog.cpp:342
+#: qtplugins/spectra/spectradialog.cpp:341
 msgid "Vibrational Spectra"
 msgstr "진동식 스펙트럼"
 
-#: qtplugins/spectra/spectradialog.cpp:343
-#: qtplugins/spectra/spectradialog.cpp:357
+#: qtplugins/spectra/spectradialog.cpp:342
+#: qtplugins/spectra/spectradialog.cpp:356
 msgid "Wavenumbers (cm⁻¹)"
 msgstr "파수 (cm⁻¹)"
 
-#: qtplugins/spectra/spectradialog.cpp:344
+#: qtplugins/spectra/spectradialog.cpp:343
 msgid "Transmission"
 msgstr "전달"
 
-#: qtplugins/spectra/spectradialog.cpp:356
+#: qtplugins/spectra/spectradialog.cpp:355
 msgid "Raman Spectra"
 msgstr "라만 스펙트럼"
 
-#: qtplugins/spectra/spectradialog.cpp:358
-#: qtplugins/spectra/spectradialog.cpp:371
-#: qtplugins/spectra/spectradialog.cpp:384
-#: qtplugins/spectra/spectradialog.cpp:399
-#: qtplugins/spectra/spectradialog.cpp:412
+#: qtplugins/spectra/spectradialog.cpp:357
+#: qtplugins/spectra/spectradialog.cpp:370
+#: qtplugins/spectra/spectradialog.cpp:383
+#: qtplugins/spectra/spectradialog.cpp:398
+#: qtplugins/spectra/spectradialog.cpp:411
 msgid "Intensity"
 msgstr "강도"
 
-#: qtplugins/spectra/spectradialog.cpp:369
+#: qtplugins/spectra/spectradialog.cpp:368
 msgid "NMR Spectra"
 msgstr "NMR 스펙트럼"
 
-#: qtplugins/spectra/spectradialog.cpp:370
+#: qtplugins/spectra/spectradialog.cpp:369
 msgid "Chemical Shift (ppm)"
 msgstr "화학적 이동 (ppm)"
 
-#: qtplugins/spectra/spectradialog.cpp:382
+#: qtplugins/spectra/spectradialog.cpp:381
 msgid "Electronic Spectra"
 msgstr "전자 스펙트럼"
 
-#: qtplugins/spectra/spectradialog.cpp:383
-#: qtplugins/spectra/spectradialog.cpp:411
+#: qtplugins/spectra/spectradialog.cpp:382
+#: qtplugins/spectra/spectradialog.cpp:410
 msgid "eV"
 msgstr "eV"
 
-#: qtplugins/spectra/spectradialog.cpp:397
+#: qtplugins/spectra/spectradialog.cpp:396
 msgid "Circular Dichroism Spectra"
 msgstr "원편광 이색성 스펙트럼"
 
-#: qtplugins/spectra/spectradialog.cpp:398
+#: qtplugins/spectra/spectradialog.cpp:397
 msgid "eV)"
 msgstr "eV)"
 
@@ -5042,7 +5044,7 @@ msgstr "대칭…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1854
+#: qtplugins/symmetry/symmetry.h:34:1866
 msgid "Symmetry"
 msgstr "대칭"
 
@@ -5089,11 +5091,16 @@ msgstr ""
 "\n"
 "리간드 또는 기능성 그룹을 선택하고 수소 원자를 누르고 이를 부착하세요."
 
-#: qtplugins/templatetool/templatetool.cpp:309
+#: qtplugins/templatetool/templatetool.cpp:314
+#: qtplugins/templatetool/templatetool.cpp:466
+msgid "Clipboard"
+msgstr ""
+
+#: qtplugins/templatetool/templatetool.cpp:386
 msgid "Insert Template"
 msgstr "템플레이트 삽입"
 
-#: qtplugins/templatetool/templatetool.cpp:567
+#: qtplugins/templatetool/templatetool.cpp:661
 msgid "Insert Ligand"
 msgstr "리간드 삽입"
 
@@ -5105,10 +5112,6 @@ msgstr "템플레이트 도구"
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
 msgstr "VdW 구체의 간단한 표시입니다."
-
-#: qtplugins/vanderwaalsao/vanderwaalsao.h:33
-msgid "Simple display of VdW spheres with ambient occlusion."
-msgstr "주변 폐색이 있는 VdW 구체의 간단한 표시입니다."
 
 #: qtplugins/vibrations/vibrations.cpp:27
 msgid "Vibrational Modes…"
@@ -5162,19 +5165,19 @@ msgstr "VRML을 사용하여 장면을 렌더링합니다."
 msgid "Render the molecule as a wireframe."
 msgstr "분자를 와이어프레임으로 렌더링합니다."
 
-#: qtplugins/yaehmop/yaehmop.cpp:91
+#: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
 msgstr "밴드 구조 계산…"
 
-#: qtplugins/yaehmop/yaehmop.cpp:112
+#: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
 msgstr "야에모프(&Y)"
 
-#: qtplugins/yaehmop/yaehmop.cpp:210 qtplugins/yaehmop/yaehmop.cpp:434
+#: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Cannot calculate band structure: no unit cell!"
 msgstr "밴드 구조를 계산할 수 없음: 단위 격자가 없습니다!"
 
-#: qtplugins/yaehmop/yaehmop.cpp:300
+#: qtplugins/yaehmop/yaehmop.cpp:299
 #, qt-format
 msgid ""
 "Yaehmop execution failed with the following error:\n"
@@ -5183,11 +5186,11 @@ msgstr ""
 "다음 오류로 야에모프 실행 실패: \n"
 "%1"
 
-#: qtplugins/yaehmop/yaehmop.cpp:310
+#: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
 msgstr "야에모프에서 출력된 밴드 구조를 읽지 못했습니다!"
 
-#: qtplugins/yaehmop/yaehmop.cpp:322
+#: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
@@ -5195,33 +5198,33 @@ msgstr ""
 "야에모프 출력에서 단 하나의 특수 k 포인트가 발견되었습니다! 2개 이상이 필요합"
 "니다!"
 
-#: qtplugins/yaehmop/yaehmop.cpp:368
+#: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
 msgstr "밴드 %1"
 
-#: qtplugins/yaehmop/yaehmop.cpp:388
+#: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
 msgstr "페르미 준위"
 
-#: qtplugins/yaehmop/yaehmop.cpp:534
+#: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Cannot find Yaehmop"
 msgstr "야에모프를 찾을 수 없음"
 
-#: qtplugins/yaehmop/yaehmop.cpp:545
+#: qtplugins/yaehmop/yaehmop.cpp:544
 #, qt-format
 msgid "Error: %1 failed to start"
 msgstr "오류: %1을(를) 시작하지 못함"
 
-#: qtplugins/yaehmop/yaehmop.cpp:596
+#: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
 msgstr "야에모프 입력"
 
-#: qtplugins/yaehmop/yaehmop.h:39
+#: qtplugins/yaehmop/yaehmop.h:35
 msgid "Yaehmop"
 msgstr "야에모프"
 
-#: qtplugins/yaehmop/yaehmop.h:88
+#: qtplugins/yaehmop/yaehmop.h:84
 msgid "Perform extended Hückel calculations with yaehmop."
 msgstr "야에모프로 확장된 휘켈 계산을 수행합니다."
 
@@ -5547,11 +5550,6 @@ msgstr "표면 렌더링 활성화"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isovalue"
 msgstr "등가값"
-
-#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Opacity"
-msgstr "불투명도"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:29
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -5909,11 +5907,11 @@ msgstr "γ:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, gamma)
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:201
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, beta)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, xRotateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:130
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:163
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, yRotateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:146
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:179
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, zRotateSpinBox)
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:26
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_max2Theta)
@@ -6825,35 +6823,55 @@ msgstr "Y"
 msgid "Translate by:"
 msgstr "번역가:"
 
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-msgid "X-axis"
-msgstr "X 축"
-
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:166
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-msgid "Y-axis"
-msgstr "Y 축"
-
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-msgid "Z-axis"
-msgstr "Z 축"
-
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Rotate around:"
 msgstr "주위 회전:"
 
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:122
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Origin"
 msgstr "근원"
 
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-msgid "Geometry"
-msgstr "기하학"
+msgid "Center of Molecule"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
+#. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
+msgid "Center of Selection"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "X-axis"
+msgstr "X 축"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:199
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+msgid "Y-axis"
+msgstr "Y 축"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:206
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+msgid "Z-axis"
+msgstr "Z 축"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "Move:"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
+#. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
+msgid "Selected Atoms"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
+#. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
+msgid "Everything Else"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -8323,6 +8341,23 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
+
+#~ msgid ""
+#~ "Manipulation Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to move atoms\n"
+#~ "Right Mouse: \tClick and drag to rotate selected atoms.\n"
+#~ msgstr ""
+#~ "조작 도구 \n"
+#~ " \n"
+#~ "왼쪽 마우스: \t클릭과 드래그로 원자 이동 \n"
+#~ "오른쪽 마무스: \t클릭과 드래그로 선택한 원자 회전합니다.\n"
+
+#~ msgid "Simple display of VdW spheres with ambient occlusion."
+#~ msgstr "주변 폐색이 있는 VdW 구체의 간단한 표시입니다."
+
+#~ msgid "Geometry"
+#~ msgstr "기하학"
 
 #~ msgid "Add Unit Cell"
 #~ msgstr "단위 격자 추가"
