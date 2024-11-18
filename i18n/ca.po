@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 03:03+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca/>\n"
@@ -1739,7 +1739,7 @@ msgstr "Carrega parcial"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Representa l'estructura secundària de proteines"
+msgstr "Representa l'estructura secundària"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -2979,13 +2979,11 @@ msgstr "Configura el camp de força…"
 #, fuzzy
 #| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Importa Àtoms Seleccionats"
+msgstr "Fixa els àtoms seleccionats"
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Fixa els àtoms seleccionats"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
@@ -3333,9 +3331,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:175
-#, fuzzy
 msgid "Element & Number"
-msgstr "Nom d'element"
+msgstr ""
 
 #: qtplugins/label/label.cpp:177
 msgid "Element & ID"
@@ -3613,7 +3610,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "Orbital molecular"
+msgstr "&Molecular"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4390,7 +4387,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:462
 #, fuzzy
 msgid "Color"
-msgstr "color:"
+msgstr "Color"
 
 #: qtplugins/propertytables/propertymodel.cpp:426
 msgid "Atom"
@@ -4415,7 +4412,7 @@ msgstr "Àtom final"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "Ordre d'enllaç:"
+msgstr "Ordre d'enllaç"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
@@ -4431,7 +4428,7 @@ msgstr "Cadenes NH"
 #: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Estrcutura:"
+msgstr "Estrcutura"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
@@ -4441,7 +4438,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Àtom %1"
+msgstr "Àtom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4451,7 +4448,7 @@ msgstr "Vèrtex"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Àtom"
+msgstr "Àtom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4462,12 +4459,12 @@ msgstr "Angle (°)"
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Àtom"
+msgstr "Àtom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Àtom"
+msgstr "Àtom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4595,9 +4592,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr "Genera primitives utilitzant propietats QTAIM"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Orbital molecular"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
@@ -4762,10 +4758,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Suprimeix l'àtom"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4804,9 +4798,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Àtom inicial"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -4991,7 +4984,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "Paràmetres de la &Densitat dels estats"
+msgstr "Densitat dels estats"
 
 #: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
@@ -5029,7 +5022,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Importa espectre"
+msgstr "espectre"
 
 #: qtplugins/spectra/spectradialog.cpp:357
 #: qtplugins/spectra/spectradialog.cpp:370
@@ -5242,7 +5235,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetrywidget.cpp:330
 #, fuzzy, qt-format
 msgid "Group %1"
-msgstr "Nom del grup"
+msgstr "Grup %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:338
 #, qt-format
@@ -5273,13 +5266,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Insereix un pèptid"
+msgstr "Insereix"
 
 #: qtplugins/templatetool/templatetool.cpp:661
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Insereix un pèptid"
+msgstr "Insereix"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -5329,9 +5322,8 @@ msgid "Display vibrational modes."
 msgstr "Vibracions"
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -7888,7 +7880,7 @@ msgstr ""
 #, fuzzy
 #| msgid "10e-"
 msgid "10"
-msgstr "10e-"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8290,13 +8282,13 @@ msgstr ""
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #, fuzzy
 msgid "Groups"
-msgstr "Nom del grup"
+msgstr "Grups"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Group:"
-msgstr "Nom del grup"
+msgstr "Grup:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
