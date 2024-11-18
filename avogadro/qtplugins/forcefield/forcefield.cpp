@@ -195,11 +195,10 @@ void Forcefield::showDialog()
 
 void Forcefield::setMolecule(QtGui::Molecule* mol)
 {
-  if (m_molecule == mol)
+  if (mol == nullptr || m_molecule == mol)
     return;
 
   m_molecule = mol;
-
   setupMethod();
 }
 
