@@ -90,6 +90,7 @@ private:
   std::vector<double> m_betaMOcoeffs;
   MatrixX m_density;     /// Total density matrix
   MatrixX m_spinDensity; /// Spin density matrix
+  Vector3 m_dipoleMoment;
   Core::ScfType m_scftype;
 
   Core::Array<double> m_frequencies;
