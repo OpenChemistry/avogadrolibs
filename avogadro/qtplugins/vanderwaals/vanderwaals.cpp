@@ -121,7 +121,9 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
 
     Vector3ub color = atom.color();
     auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    float opacity = m_layerManager.getSetting<LayerVdW>(i)->opacity;
+    auto* interface =
+      m_layerManager.getSetting<LayerVdW>(m_layerManager.getLayerID(i));
+    float opacity = interface->opacity;
     if (opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
                                     radius, i);
