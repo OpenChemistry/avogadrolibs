@@ -9,10 +9,13 @@ jobs:
 
     steps:
     - name: Install dependencies
-      run: sudo apt update -qq && sudo apt install -y -qq flatpak flatpak-builder
+      run: sudo apt update -qq && sudo apt install -y -qq flatpak
     
     - name: Configure flatpak
       run: flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    - name: Install flatpak-builder
+      run: flatpak --user install --or-update --noninteractive flathub org.flatpak.Builder
 
     - name: Configure git
       run: git config --global protocol.file.allow always
@@ -81,7 +84,7 @@ jobs:
       run: mv openchemistry/avogadroapp/flatpak/org.openchemistry.Avogadro2.yaml ./
 
     - name: Build with flatpak-builder
-      run: flatpak-builder --force-clean --user --install-deps-from=flathub --arch=x86_64 --default-branch=test --repo=repo builddir org.openchemistry.Avogadro2.yaml
+      run: dbus-run-session flatpak run org.flatpak.Builder --force-clean --user --install-deps-from=flathub --arch=x86_64 --default-branch=test --repo=repo builddir org.openchemistry.Avogadro2.yaml
 
     - name: Create bundle
       run: flatpak build-bundle repo Avogadro2.flatpak org.openchemistry.Avogadro2 test
