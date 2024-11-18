@@ -68,6 +68,13 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
+  // set the total charge
+  molecule.setData("totalCharge", m_charge);
+  // set the spin multiplicity
+  molecule.setData("totalSpinMultiplicity", m_spin);
+  // dipole moment
+  molecule.setData("dipoleMoment", m_dipoleMoment);
+
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -108,6 +115,11 @@ void GaussianFchk::processLine(std::istream& in)
     m_charge = Core::lexicalCast<signed char>(list[1]);
   } else if (key == "Multiplicity" && list.size() > 1) {
     m_spin = Core::lexicalCast<char>(list[1]);
+  } else if (key == "Dipole Moment" && list.size() > 2) {
+    vector<double> dipole = readArrayD(in, Core::lexicalCast<int>(list[2]));
+    m_dipoleMoment = Vector3(dipole[0], dipole[1], dipole[2]);
+    // convert from au
+    m_dipoleMoment *= 2.541746;
   } else if (key == "Number of electrons" && list.size() > 1) {
     m_electrons = Core::lexicalCast<int>(list[1]);
   } else if (key == "Number of alpha electrons" && list.size() > 1) {
