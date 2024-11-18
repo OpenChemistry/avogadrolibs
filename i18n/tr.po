@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 09:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -3853,7 +3853,7 @@ msgstr "Geometriyi &Optimize Et"
 #, fuzzy
 #| msgid "Generating MDL…"
 msgid "Generating…"
-msgstr "MDL oluşturuluyor…"
+msgstr "oluşturuluyor…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 #, fuzzy
@@ -3945,10 +3945,9 @@ msgid "Error generating XYZ string."
 msgstr "XYZ dizgesi oluşturulurken hata oluştu."
 
 #: qtplugins/openbabel/openbabel.cpp:751
-#, fuzzy, qt-format
-#| msgid "Generating Open Babel input…"
+#, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr "Open Babel girdisi oluşturuluyor…"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:761
 #, fuzzy
@@ -4395,9 +4394,8 @@ msgid "Valence"
 msgstr "Değerlik"
 
 #: qtplugins/propertytables/propertymodel.cpp:413
-#, fuzzy
 msgid "Formal Charge"
-msgstr "Kısmi Yük"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:415
 msgid "Partial Charge"
@@ -4432,9 +4430,8 @@ msgid "Type"
 msgstr "Tip"
 
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Start Atom"
-msgstr "Animasyon"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:437
 #, fuzzy
@@ -4467,7 +4464,7 @@ msgstr "Heterojen"
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Atom %1"
+msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4477,7 +4474,7 @@ msgstr "Köşe"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Atom %1"
+msgstr "Atom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4487,12 +4484,12 @@ msgstr "Açı (°)"
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Atom %1"
+msgstr "Atom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Atom %1"
+msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4982,10 +4979,8 @@ msgid "NMR"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:210
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic"
-msgstr "Elektron Yoğunluğu"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
@@ -5056,10 +5051,8 @@ msgid "Chemical Shift (ppm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:381
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Electronic Spectra"
-msgstr "Elektron Yoğunluğu"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:382
 #: qtplugins/spectra/spectradialog.cpp:410
@@ -5267,13 +5260,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Peptit Ekle"
+msgstr "Ekle"
 
 #: qtplugins/templatetool/templatetool.cpp:661
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Peptit Ekle"
+msgstr "Ekle"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -6945,7 +6938,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Generating MDL…"
 msgid "Generate…"
-msgstr "MDL oluşturuluyor…"
+msgstr "oluşturuluyor…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
