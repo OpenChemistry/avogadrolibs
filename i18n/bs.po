@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-18 09:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -1084,9 +1084,8 @@ msgid "Calculation Type"
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:195
-#, fuzzy
 msgid "Theory"
-msgstr "Teorija:"
+msgstr "Teorija"
 
 #: qtgui/jsonwidget.cpp:195
 msgid "Basis"
@@ -1383,7 +1382,7 @@ msgstr "Promijeni smijer veze"
 #: qtgui/rwmolecule.cpp:354
 #, fuzzy
 msgid "Update Bonds"
-msgstr " Miči na veze"
+msgstr "Miči na veze"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
@@ -1737,7 +1736,7 @@ msgstr "sekundarnu strukturu"
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
 msgid "By Amino Acid"
-msgstr "Amino kiseline:"
+msgstr "Amino kiseline"
 
 #: qtplugins/applycolors/applycolors.cpp:90
 msgid "By Shapely Scheme"
@@ -2141,7 +2140,7 @@ msgstr ""
 #: qtplugins/noncovalent/noncovalent.cpp:369
 #, fuzzy
 msgid "Maximum distance:"
-msgstr "Rastojanje"
+msgstr "Rastojanje:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2276,14 +2275,12 @@ msgid "Other…"
 msgstr "Ostalo"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Tip koordinate:"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Tip koordinate:"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -3703,7 +3700,7 @@ msgstr ""
 #, fuzzy
 #| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 #, fuzzy

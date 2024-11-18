@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 09:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -1720,7 +1720,7 @@ msgstr "部份電荷…"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "呈現蛋白質的二級結構"
+msgstr "二級結構"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -2948,10 +2948,8 @@ msgid "Freeze Selected Atoms"
 msgstr "固定所選的原子"
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "固定所選的原子"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
@@ -4356,7 +4354,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "結構"
+msgstr "二級結構"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
