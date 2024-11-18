@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 03:03+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/et/>\n"
@@ -1702,7 +1702,7 @@ msgstr "Osalaeng"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Esitab proteiini sekundaarset struktuuri"
+msgstr "sekundaarset struktuuri"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -2892,13 +2892,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Impordi valitud aatomid"
+msgstr "valitud aatomid"
 
 #: qtplugins/forcefield/forcefield.cpp:132
 #, fuzzy
 #| msgid "Import Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Impordi valitud aatomid"
+msgstr "valitud aatomid"
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
@@ -4246,7 +4246,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:426
 #, fuzzy
 msgid "Atom"
-msgstr "Aatom %1"
+msgstr "Aatom"
 
 #: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/propertytables/propertymodel.cpp:472
@@ -4283,7 +4283,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Struktuur:"
+msgstr "Struktuur"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
@@ -4293,7 +4293,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Aatom %1"
+msgstr "Aatom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4303,7 +4303,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Aatom %1"
+msgstr "Aatom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4314,12 +4314,12 @@ msgstr "Nurk (°)"
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Aatom %1"
+msgstr "Aatom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Aatom %1"
+msgstr "Aatom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -8033,10 +8033,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Lämmastik"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

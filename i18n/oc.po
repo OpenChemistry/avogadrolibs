@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 03:03+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/oc/>\n"
@@ -1471,7 +1471,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&UV Settings"
 msgid "Settings"
-msgstr "&Paramètres UV"
+msgstr "Paramètres"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1529,16 +1529,12 @@ msgid "Axis:"
 msgstr "Axes :"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Paramètres d'alinhament"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Paramètres d'alinhament"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -1996,10 +1992,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Bond Selected Atoms"
-msgstr "Suprimir un atòm"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2947,16 +2941,12 @@ msgid "Configure…"
 msgstr "Configurar lo camp de fòrça..."
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Freeze Selected Atoms"
-msgstr "Suprimir un atòm"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Unfreeze Selected Atoms"
-msgstr "Suprimir un atòm"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
@@ -3572,7 +3562,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "Orbitala moleculara"
+msgstr "&moleculara"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4358,7 +4348,7 @@ msgstr "Atòm d'arribada"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "Òrdre de ligason :"
+msgstr "Òrdre de ligason"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
@@ -4373,7 +4363,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Estructura :"
+msgstr "Estructura"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
@@ -4383,7 +4373,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Atòm %1"
+msgstr "Atòm 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4393,7 +4383,7 @@ msgstr "Vertèx"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Atòm"
+msgstr "Atòm 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4404,12 +4394,12 @@ msgstr "Angle (°)"
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Atòm"
+msgstr "Atòm 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Atòm"
+msgstr "Atòm 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4535,9 +4525,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Orbitala moleculara"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
@@ -4577,10 +4566,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Paramètres d'alinhament"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4702,10 +4689,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Suprimir un atòm"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"

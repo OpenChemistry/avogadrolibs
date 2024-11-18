@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-14 12:00+0000\n"
+"PO-Revision-Date: 2024-11-18 03:03+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
@@ -3952,7 +3952,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Animation..."
 msgid "Animation Tool"
-msgstr "Анимация..."
+msgstr "Анимация"
 
 #: qtplugins/playertool/playertool.cpp:73
 msgid "Play"
@@ -4289,7 +4289,7 @@ msgstr "Ред на връзките"
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Дължина"
+msgstr "Дължина (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 msgid "Chain"
@@ -4640,9 +4640,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Анимация"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -8018,7 +8017,7 @@ msgstr "Група"
 #, fuzzy
 #| msgid "Group %1"
 msgid "Group:"
-msgstr "Група"
+msgstr "Групи:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
