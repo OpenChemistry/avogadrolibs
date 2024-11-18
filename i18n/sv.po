@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-18 09:32+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1968,9 +1968,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr "Animering..."
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2895,14 +2894,12 @@ msgid "Configure…"
 msgstr "Kraftfält:"
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
 msgid "Freeze Selected Atoms"
-msgstr "Animering..."
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
 msgid "Unfreeze Selected Atoms"
-msgstr "Animering..."
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 msgid "&Calculate"
@@ -4271,9 +4268,8 @@ msgid "Type"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Start Atom"
-msgstr "Animering..."
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:437
 #, fuzzy
@@ -4588,17 +4584,17 @@ msgstr ""
 #: qtplugins/select/select.cpp:180
 #, fuzzy
 msgid "Select Element"
-msgstr "Gundämne:"
+msgstr "Gundämne"
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
 msgid "Select Backbone"
-msgstr "Gundämne:"
+msgstr "Gundämne"
 
 #: qtplugins/select/select.cpp:308
 #, fuzzy
 msgid "Select Sidechain"
-msgstr "Gundämne:"
+msgstr "Gundämne"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4609,9 +4605,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
 msgid "Select Atom"
-msgstr "Animering..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4647,9 +4642,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Animering..."
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -8039,10 +8033,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Kväve"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
