@@ -86,7 +86,6 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       electronicData(i, 1) = m_electronicIntensities[i];
     }
     molecule.setSpectra("Electronic", electronicData);
-    std::cout << "UV/Vis data found." << electronicData.rows() << std::endl;
     if (m_electronicRotations.size() == m_electronicTransitions.size()) {
       MatrixX electronicRotations(m_electronicTransitions.size(), 2);
       for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
@@ -94,9 +93,17 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
         electronicRotations(i, 1) = m_electronicRotations[i];
       }
       molecule.setSpectra("CircularDichroism", electronicRotations);
-      std::cout << "CircularDichroism data found." << electronicRotations.rows()
-                << std::endl;
     }
+  }
+
+  if (m_nmrShifts.size() > 0) {
+    MatrixX nmrData(m_nmrShifts.size(), 2);
+    // nmr_shifts has an entry for every atom even if not computed
+    for (size_t i = 0; i < m_nmrShifts.size(); ++i) {
+      nmrData(i, 0) = m_nmrShifts[i];
+      nmrData(i, 1) = 1.0;
+    }
+    molecule.setSpectra("NMR", nmrData);
   }
 
   // guess bonds and bond orders
@@ -281,6 +288,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     getline(in, key); // skip blank line
     getline(in, key); // skip column titles
     getline(in, key); // skip ------------
+  } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
+    m_currentMode = NMR;
+    for (int i = 0; i < 4; ++i) {
+      getline(in, key); // skip header
+    }
   } else {
 
     vector<vector<double>> columns;
@@ -617,6 +629,32 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+      }
+      case NMR: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        // default to filling m_nmrShifts with zeros
+        m_nmrShifts.resize(m_atomNums.size(), 0.0);
+        while (!key.empty()) {
+          // should have 4 columns
+          if (list.size() != 4) {
+            break;
+          }
+
+          // e.g.  1  C  0.0000  0.0000  0.0000  0.0000
+          int atomIndex = Core::lexicalCast<int>(list[0]);
+          double shift = Core::lexicalCast<double>(list[2]);
+          // ignore the anisotropy for now
+          m_nmrShifts[atomIndex] = shift;
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        m_currentMode = NotParsing;
+        break;
       }
       case GTO: {
         //            // should start at the first newGTO

@@ -128,6 +128,8 @@ private:
   Core::Array<double> m_electronicTransitions; // in eV
   Core::Array<double> m_electronicIntensities;
   Core::Array<double> m_electronicRotations; // for CD
+
+  Core::Array<double> m_nmrShifts; // for NMR (in ppm)
 };
 
 } // namespace QuantumIO
