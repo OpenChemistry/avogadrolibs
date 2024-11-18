@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 03:03+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -1732,7 +1732,7 @@ msgstr "djelomični naboj"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Renderira sekundarnu strukturu proteina"
+msgstr "sekundarnu strukturu"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -3312,9 +3312,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:175
-#, fuzzy
 msgid "Element & Number"
-msgstr "Ime elementa"
+msgstr ""
 
 #: qtplugins/label/label.cpp:177
 msgid "Element & ID"
@@ -3589,7 +3588,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "Molekulrna kružna putanja"
+msgstr "&Molekulrna"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4363,12 +4362,12 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:462
 #, fuzzy
 msgid "Color"
-msgstr "Boje:"
+msgstr "Boje"
 
 #: qtplugins/propertytables/propertymodel.cpp:426
 #, fuzzy
 msgid "Atom"
-msgstr "Atom %1"
+msgstr "Atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/propertytables/propertymodel.cpp:472
@@ -4378,9 +4377,8 @@ msgid "Type"
 msgstr "Tip"
 
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Start Atom"
-msgstr "Počni &animaciju"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:437
 #, fuzzy
@@ -4390,7 +4388,7 @@ msgstr "Zaustavi atom"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "Vrsta veze:"
+msgstr "Vrsta veze"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
@@ -4405,7 +4403,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:458
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Struktura:"
+msgstr "Struktura"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
@@ -4415,7 +4413,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Atom %1"
+msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4425,7 +4423,7 @@ msgstr "Tjeme"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Atom %1"
+msgstr "Atom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
@@ -4436,12 +4434,12 @@ msgstr "Ugao (°)"
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Atom %1"
+msgstr "Atom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Atom %1"
+msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4736,10 +4734,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Ukloni atom"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4778,9 +4774,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Počni &animaciju"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -4927,10 +4922,8 @@ msgid "Spectra"
 msgstr "Spektri"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display standard molecular properties."
 msgid "Display spectra plots."
-msgstr "Prikaži standardne molekularne postavke."
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:200
 #, fuzzy
@@ -4959,10 +4952,8 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:218
 #: qtplugins/spectra/spectradialog.cpp:409
-#, fuzzy
-#| msgid "Transition State"
 msgid "Density of States"
-msgstr "Prelazno stanje"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:255
 #, fuzzy
@@ -5247,13 +5238,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Ubaci Peptid"
+msgstr "Ubaci"
 
 #: qtplugins/templatetool/templatetool.cpp:661
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Ubaci Peptid"
+msgstr "Ubaci"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -5303,9 +5294,8 @@ msgid "Display vibrational modes."
 msgstr "Analize vibracija"
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV‑Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6953,10 +6943,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "Boja ispisa:"
+msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:122
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -7832,7 +7820,7 @@ msgstr "Vrsta slova:"
 #, fuzzy
 #| msgid "10e-"
 msgid "10"
-msgstr "10e-"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8265,10 +8253,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Azot"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8299,7 +8285,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Počni &animaciju"
+msgstr "Počni animaciju"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
