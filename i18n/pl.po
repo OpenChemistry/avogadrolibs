@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-18 03:03+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pl/>\n"
@@ -3203,7 +3203,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:32
 #, fuzzy
 msgid "Molecule…"
-msgstr "Właściwości molekularne"
+msgstr "molekularne"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3543,7 +3543,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 #, fuzzy
 msgid "&Molecular…"
-msgstr "Właściwości molekularne"
+msgstr "&Molekularne"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -3571,7 +3571,7 @@ msgstr "Właściwości molekularne"
 #: qtplugins/propertytables/propertyview.cpp:61
 #, fuzzy
 msgid "Molecule Properties"
-msgstr "Właściwości molekuły..."
+msgstr "Właściwości molekuły"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:231
@@ -3681,9 +3681,8 @@ msgid "Configure Force Field…"
 msgstr "Pole sił:"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
 msgid "Conformer Search…"
-msgstr "Właściwości atomu"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
 #, fuzzy
@@ -4306,12 +4305,12 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:462
 #, fuzzy
 msgid "Color"
-msgstr "Kolory:"
+msgstr "Kolory"
 
 #: qtplugins/propertytables/propertymodel.cpp:426
 #, fuzzy
 msgid "Atom"
-msgstr "Atom %1"
+msgstr "Atom"
 
 #: qtplugins/propertytables/propertymodel.cpp:433
 #: qtplugins/propertytables/propertymodel.cpp:472
@@ -4321,9 +4320,8 @@ msgid "Type"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Start Atom"
-msgstr "Rozpocznij &animację"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:437
 #, fuzzy
@@ -4333,7 +4331,7 @@ msgstr "Atom końcowy"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "Kolejność wiązań:"
+msgstr "Kolejność wiązań"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
@@ -4357,7 +4355,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Atom %1"
+msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4367,29 +4365,29 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Atom %1"
+msgstr "Atom 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Kąt"
+msgstr "Kąt (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Atom %1"
+msgstr "Atom 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Atom %1"
+msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
 #| msgid "Adjust Hydrogens"
 msgid "Adjust Fragment"
-msgstr "Dopasuj wodory"
+msgstr "Dopasuj"
 
 #: qtplugins/propertytables/propertymodel.cpp:813
 #, fuzzy
@@ -4490,9 +4488,8 @@ msgid "Torsion Properties"
 msgstr "Właściowści wiązań"
 
 #: qtplugins/propertytables/propertyview.cpp:55
-#, fuzzy
 msgid "Conformer Properties"
-msgstr "Właściwości atomu"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:58
 #, fuzzy
@@ -4509,9 +4506,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Właściwości molekularne"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
@@ -4670,10 +4666,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Usuń atom"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4712,9 +4706,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Rozpocznij &animację"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -4966,9 +4959,8 @@ msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
-#, fuzzy
 msgid "Molecular Orbital"
-msgstr "Właściwości molekularne"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
@@ -5025,9 +5017,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Właściwości molekularne"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the electron density."
@@ -5153,13 +5144,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Wstaw peptydy"
+msgstr "Wstaw"
 
 #: qtplugins/templatetool/templatetool.cpp:661
 #, fuzzy
 #| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Wstaw peptydy"
+msgstr "Wstaw"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -5209,9 +5200,8 @@ msgid "Display vibrational modes."
 msgstr "Analiza wibracyjna"
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6898,9 +6888,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
-#, fuzzy
 msgid "Conformer Search"
-msgstr "Właściwości atomu"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -8114,13 +8103,13 @@ msgstr ""
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #, fuzzy
 msgid "Groups"
-msgstr "Nazwa grupy"
+msgstr "Grupy"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Group:"
-msgstr "Nazwa grupy"
+msgstr "Grupa:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8149,10 +8138,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Azot"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8183,13 +8170,13 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Rozpocznij &animację"
+msgstr "Rozpocznij animację"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 #, fuzzy
 msgid "Stop Animation"
-msgstr "Zatrzymaj &animację"
+msgstr "Zatrzymaj animację"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
