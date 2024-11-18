@@ -124,7 +124,9 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
     }
     Vector3ub color = atom.color();
 
-    opacity = m_layerManager.getSetting<LayerLicorice>(i)->opacity;
+    auto* interface =
+      m_layerManager.getSetting<LayerLicorice>(m_layerManager.getLayerID(i));
+    opacity = interface->opacity;
     if (opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
                                     radius, i);
