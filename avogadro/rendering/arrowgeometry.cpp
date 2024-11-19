@@ -41,16 +41,16 @@ public:
   ShaderProgram program;
 };
 
-ArrowGeometry::ArrowGeometry() : m_dirty(false), d(new Private)
+ArrowGeometry::ArrowGeometry()
+  : m_dirty(false), d(new Private), m_color(0, 255, 0)
 {
-  m_color = Vector3ub(0, 255, 0);
 }
 
 ArrowGeometry::ArrowGeometry(const ArrowGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices),
-    m_lineStarts(other.m_lineStarts), m_dirty(true), d(new Private)
+    m_lineStarts(other.m_lineStarts), m_color(other.m_color), m_dirty(true),
+    d(new Private)
 {
-  m_color = other.m_color;
 }
 
 ArrowGeometry::~ArrowGeometry()
