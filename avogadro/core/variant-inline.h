@@ -420,6 +420,15 @@ inline MatrixX Variant::toMatrix() const
   return value<MatrixX>();
 }
 
+inline Vector3 Variant::toVector3() const
+{
+  MatrixX m = toMatrix();
+  if (m.rows() == 3 && m.cols() == 1)
+    return Vector3(m(0), m(1), m(2));
+  else
+    return Vector3(0.0, 0.0, 0.0);
+}
+
 inline const MatrixX& Variant::toMatrixRef() const
 {
   return value<const MatrixX&>();
