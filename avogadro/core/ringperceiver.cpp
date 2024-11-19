@@ -22,9 +22,25 @@ namespace {
 class DistanceMatrix
 {
 public:
+  // swap function marked friend so it can only be found via Argument Dependent
+  // Lookup (ADL)
+  friend void swap(DistanceMatrix& first, DistanceMatrix& second)
+  {
+    // Enable ADL for the swap
+    using std::swap;
+
+    swap(first.m_size, second.m_size);
+    swap(first.m_values, second.m_values);
+  }
+
   // construction and destruction
   DistanceMatrix(size_t size);
   ~DistanceMatrix();
+
+  DistanceMatrix(const DistanceMatrix& other);
+
+  // intentional pass-by-value to leverage previous copy ctor
+  DistanceMatrix& operator=(DistanceMatrix other);
 
   // operators
   size_t operator()(size_t i, size_t j) const;
@@ -36,10 +52,26 @@ private:
 };
 
 DistanceMatrix::DistanceMatrix(size_t size)
+  : m_size(size), m_values(new size_t[size * size])
 {
-  m_size = size;
-  m_values = new size_t[size * size];
   memset(m_values, 0, size * size * sizeof(size_t));
+}
+
+DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
+  : m_size(other.m_size),
+    m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
+{
+  if (m_values)
+    std::copy(other.m_values, other.m_values + (other.m_size * other.m_size),
+              m_values);
+}
+
+DistanceMatrix& DistanceMatrix::operator=(DistanceMatrix other)
+{
+  // will use friend swap function via Argument Dependent Lookup
+  swap(*this, other);
+
+  return *this;
 }
 
 DistanceMatrix::~DistanceMatrix()
@@ -77,9 +109,8 @@ private:
 
 // --- Construction and Destruction ---------------------------------------- //
 PidMatrix::PidMatrix(size_t size)
+  : m_size(size), m_values(new std::vector<std::vector<size_t>>[size * size])
 {
-  m_size = size;
-  m_values = new std::vector<std::vector<size_t>>[ size * size ];
 }
 
 PidMatrix::~PidMatrix()
@@ -164,10 +195,8 @@ private:
 
 // --- Construction and Destruction ---------------------------------------- //
 RingCandidate::RingCandidate(size_t n, size_t s, size_t e)
+  : m_size(n), m_start(s), m_end(e)
 {
-  m_size = n;
-  m_start = s;
-  m_end = e;
 }
 
 // --- Properties ---------------------------------------------------------- //
@@ -197,8 +226,8 @@ class Sssr
 {
 public:
   // construction and destruction
-  Sssr();
-  ~Sssr();
+  Sssr() = default;
+  ~Sssr() = default;
 
   // properties
   size_t size() const;
@@ -213,15 +242,6 @@ public:
 private:
   std::vector<std::vector<size_t>> m_rings;
 };
-
-// --- Construction and Destruction ---------------------------------------- //
-Sssr::Sssr()
-{
-}
-
-Sssr::~Sssr()
-{
-}
 
 // --- Properties ---------------------------------------------------------- //
 size_t Sssr::size() const
@@ -460,10 +480,6 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
 
 RingPerceiver::RingPerceiver(const Molecule* m)
   : m_ringsPerceived(false), m_molecule(m)
-{
-}
-
-RingPerceiver::~RingPerceiver()
 {
 }
 

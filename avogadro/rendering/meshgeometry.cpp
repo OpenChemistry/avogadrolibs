@@ -267,14 +267,15 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
   return static_cast<unsigned int>(result);
 }
 
-void MeshGeometry::addTriangle(unsigned int index1, unsigned int index2,
-                               unsigned int index3)
+void MeshGeometry::addTriangle( size_t index1,  size_t index2,
+                                size_t index3)
 {
   m_indices.push_back(index1);
   m_indices.push_back(index2);
   m_indices.push_back(index3);
   m_dirty = true;
 }
+
 
 void MeshGeometry::addTriangles(const Core::Array<unsigned int>& indiceArray)
 {

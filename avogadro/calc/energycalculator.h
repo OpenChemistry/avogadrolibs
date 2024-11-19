@@ -24,8 +24,8 @@ namespace Calc {
 class AVOGADROCALC_EXPORT EnergyCalculator : public cppoptlib::Problem<Real>
 {
 public:
-  EnergyCalculator() {}
-  ~EnergyCalculator() {}
+  EnergyCalculator() = default;
+  ~EnergyCalculator() = default;
 
   /**
    * Create a new instance of the model. Ownership passes to the

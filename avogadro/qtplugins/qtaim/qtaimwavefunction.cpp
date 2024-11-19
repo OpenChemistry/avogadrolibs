@@ -14,20 +14,17 @@
 
 ******************************************************************************/
 
+#include "qtaimwavefunction.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
 
-#include "qtaimwavefunction.h"
-
 namespace Avogadro::QtPlugins {
 
-QTAIMWavefunction::QTAIMWavefunction()
-{
-  m_initializationSuccessful = false;
-}
+QTAIMWavefunction::QTAIMWavefunction() : m_initializationSuccessful(false) {}
 
 bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
 {
@@ -45,8 +42,7 @@ bool QTAIMWavefunction::initializeWithWFNFile(const QString& fileName)
     m_fileDoesNotExist = false;
   }
 
-  bool success;
-  success = file.open(QIODevice::ReadOnly | QIODevice::Text);
+  bool success = file.open(QIODevice::ReadOnly | QIODevice::Text);
 
   if (!(success)) {
     m_initializationSuccessful = false;

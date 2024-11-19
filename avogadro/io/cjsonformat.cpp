@@ -41,10 +41,6 @@ using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
 
-CjsonFormat::CjsonFormat() = default;
-
-CjsonFormat::~CjsonFormat() = default;
-
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
   if (j.count(key) && j.find(key)->is_string()) {

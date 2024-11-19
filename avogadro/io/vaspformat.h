@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class PoscarFormat vaspformat.h <avogadro/io/vaspformat.h>
@@ -20,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT PoscarFormat : public FileFormat
 {
 public:
-  PoscarFormat();
-  ~PoscarFormat() override;
+  PoscarFormat() = default;
+  ~PoscarFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -51,8 +50,8 @@ public:
 class AVOGADROIO_EXPORT OutcarFormat : public FileFormat
 {
 public:
-  OutcarFormat();
-  ~OutcarFormat() override;
+  OutcarFormat() = default;
+  ~OutcarFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -77,10 +76,11 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& inStream, Core::Molecule& mol) override;
+
+  // unimplemented
   bool write(std::ostream& outStream, const Core::Molecule& mol) override;
 };
 
-} // end Io namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_VASPFORMAT_H

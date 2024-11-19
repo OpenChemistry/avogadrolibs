@@ -16,33 +16,23 @@
 #include <iomanip>
 #include <istream>
 #include <ostream>
-#include <sstream>
 #include <string>
 
 using json = nlohmann::json;
 
-using std::endl;
 using std::getline;
 using std::string;
-using std::vector;
 
 namespace Avogadro::Io {
 
-using Core::Array;
 using Core::Atom;
 using Core::Elements;
 using Core::lexicalCast;
-using Core::Molecule;
 using Core::split;
-using Core::trimmed;
 
 #ifndef _WIN32
 using std::isalpha;
 #endif
-
-TurbomoleFormat::TurbomoleFormat() {}
-
-TurbomoleFormat::~TurbomoleFormat() {}
 
 bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
@@ -85,7 +75,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
       while (buffer.find("$") == std::string::npos) {
         // parse atoms until we see another '$' section
         // e.g. 0.0000      0.000000     -0.73578      o
-        vector<string> tokens(split(buffer, ' '));
+        std::vector<string> tokens(split(buffer, ' '));
 
         if (tokens.size() < 4) {
           appendError("Not enough tokens in this line: " + buffer);
@@ -109,7 +99,6 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
         // next line
         getline(inStream, buffer);
-        continue;
       }
     } else if (buffer.find("$cell") != std::string::npos) {
       hasCell = true;
@@ -118,7 +107,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         cellConversion = 1.0; // leave as Angstrom
 
       getline(inStream, buffer);
-      vector<string> tokens(split(buffer, ' '));
+      std::vector<string> tokens(split(buffer, ' '));
       if (tokens.size() < 6) {
         appendError("Not enough tokens in this line: " + buffer);
         return false;
@@ -138,7 +127,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
       for (int line = 0; line < 3; ++line) {
         getline(inStream, buffer);
-        vector<string> tokens(split(buffer, ' '));
+        std::vector<string> tokens(split(buffer, ' '));
         if (tokens.size() < 3)
           break;
 

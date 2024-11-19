@@ -14,11 +14,8 @@
 #include <avogadro/core/vector.h>
 
 #include <string>
-#include <vector>
 
-namespace Avogadro {
-
-namespace Calc {
+namespace Avogadro::Calc {
 
 /**
  * @class ChargeModel chargemodel.h <avogadro/calc/chargemodel.h>
@@ -41,8 +38,8 @@ namespace Calc {
 class AVOGADROCALC_EXPORT ChargeModel
 {
 public:
-  ChargeModel();
-  virtual ~ChargeModel();
+  ChargeModel() = default;
+  virtual ~ChargeModel() = default;
 
   /**
    * Create a new instance of the model. Ownership passes to the
@@ -73,7 +70,7 @@ public:
    * Set the dielectric constant for the model.
    * @param dielectric constant.
    */
-  virtual void setDielectric(double dielectric) { m_dielectric = dielectric; };
+  virtual void setDielectric(float dielectric) { m_dielectric = dielectric; };
 
   /**
    * @return The dielectric constant.
@@ -125,10 +122,9 @@ protected:
 private:
   mutable std::string m_error;
 
-  float m_dielectric;
+  float m_dielectric = 1.0f;
 };
 
-} // namespace Calc
-} // namespace Avogadro
+} // namespace Avogadro::Calc
 
 #endif // AVOGADRO_CALC_CHARGEMODEL_H

@@ -14,8 +14,7 @@
 // for gtest unit testing access
 class MoleQueueQueueListModelTestBridge;
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 class MoleQueueManager;
 
 /**
@@ -44,7 +43,7 @@ class AVOGADROMOLEQUEUE_EXPORT MoleQueueQueueListModel
 {
   Q_OBJECT
 public:
-  ~MoleQueueQueueListModel() override;
+  ~MoleQueueQueueListModel() override = default;
 
   /**
    * @return A list of the available queues.
@@ -138,7 +137,6 @@ private:
   quint32 m_uidCounter;
 };
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue
 
 #endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEQUEUELISTMODEL_H

@@ -34,16 +34,12 @@
 #include <QtWidgets/QPushButton>
 
 using Avogadro::Core::Elements;
-using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::TextProperties;
 
 namespace Avogadro::QtPlugins {
-
-using QtGui::Molecule;
-using QtGui::RWAtom;
 
 AlignTool::AlignTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
@@ -80,34 +76,34 @@ QWidget* AlignTool::toolWidget() const
   if (!m_toolWidget) {
     m_toolWidget = new QWidget;
 
-    QLabel* labelAxis = new QLabel(tr("Axis:"), m_toolWidget);
+    auto* labelAxis = new QLabel(tr("Axis:"), m_toolWidget);
     labelAxis->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     labelAxis->setMaximumHeight(15);
 
     // Combo box to select desired aixs to align to
-    QComboBox* comboAxis = new QComboBox(m_toolWidget);
+    auto* comboAxis = new QComboBox(m_toolWidget);
     comboAxis->addItem("x");
     comboAxis->addItem("y");
     comboAxis->addItem("z");
     comboAxis->setCurrentIndex(m_axis);
 
     // Button to actually perform actions
-    QPushButton* buttonAlign = new QPushButton(m_toolWidget);
+    auto* buttonAlign = new QPushButton(m_toolWidget);
     buttonAlign->setText(tr("Align"));
     connect(buttonAlign, SIGNAL(clicked()), this, SLOT(align()));
 
-    QGridLayout* gridLayout = new QGridLayout();
+    auto* gridLayout = new QGridLayout();
     gridLayout->addWidget(labelAxis, 0, 0, 1, 1, Qt::AlignRight);
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    auto* hLayout = new QHBoxLayout;
     hLayout->addWidget(comboAxis);
     hLayout->addStretch(1);
     gridLayout->addLayout(hLayout, 0, 1);
 
-    QHBoxLayout* hLayout3 = new QHBoxLayout();
+    auto* hLayout3 = new QHBoxLayout();
     hLayout3->addStretch(1);
     hLayout3->addWidget(buttonAlign);
     hLayout3->addStretch(1);
-    QVBoxLayout* layout = new QVBoxLayout();
+    auto* layout = new QVBoxLayout();
     layout->addLayout(gridLayout);
     layout->addLayout(hLayout3);
     layout->addStretch(1);

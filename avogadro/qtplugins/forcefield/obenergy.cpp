@@ -50,15 +50,40 @@ OBEnergy::OBEnergy(const std::string& method)
   QByteArray dataDir =
     QString(QCoreApplication::applicationDirPath() + "/data").toLocal8Bit();
   qputenv("BABEL_DATADIR", dataDir);
-#elif defined(__APPLE__)
-  QByteArray dataDir =
-    QString(QCoreApplication::applicationDirPath() + "/../share/openbabel")
-      .toLocal8Bit();
-  qputenv("BABEL_DATADIR", dataDir);
-  QByteArray libDir =
-    QString(QCoreApplication::applicationDirPath() + "/../lib/openbabel")
-      .toLocal8Bit();
-  qputenv("BABEL_LIBDIR", libDir);
+#else
+  // check if BABEL_DATADIR is set in the environment
+  QStringList filters;
+  filters << "3.*"
+          << "2.*";
+  if (qgetenv("BABEL_DATADIR").isEmpty()) {
+    QDir dir(QCoreApplication::applicationDirPath() + "/../share/openbabel");
+    QStringList dirs = dir.entryList(filters);
+    if (dirs.size() == 1) {
+      // versioned data directory
+      QString dataDir = QCoreApplication::applicationDirPath() +
+                        "/../share/openbabel/" + dirs[0];
+      qputenv("BABEL_DATADIR", dataDir.toLocal8Bit());
+    } else {
+      qDebug() << "Error, Open Babel data directory not found.";
+    }
+  }
+
+  // Check if BABEL_LIBDIR is set
+  if (qgetenv("BABEL_LIBDIR").isEmpty()) {
+    QDir dir(QCoreApplication::applicationDirPath() + "/../lib/openbabel");
+    QStringList dirs = dir.entryList(filters);
+    if (dirs.size() == 0) {
+      QString libDir =
+        QCoreApplication::applicationDirPath() + "/../lib/openbabel/";
+      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
+    } else if (dirs.size() == 1) {
+      QString libDir =
+        QCoreApplication::applicationDirPath() + "/../lib/openbabel/" + dirs[0];
+      qputenv("BABEL_LIBDIR", libDir.toLocal8Bit());
+    } else {
+      qDebug() << "Error, Open Babel plugins directory not found.";
+    }
+  }
 #endif
   // Ensure the plugins are loaded
   OBPlugin::LoadAllPlugins();

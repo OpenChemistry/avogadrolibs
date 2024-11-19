@@ -14,7 +14,6 @@
 
 #include <QDebug>
 
-using namespace std;
 using namespace Avogadro;
 using namespace Avogadro::Rendering;
 
@@ -22,10 +21,6 @@ namespace Avogadro::QtPlugins {
 
 QTAIMEngine::QTAIMEngine(QObject* aParent)
   : QtGui::ScenePlugin(aParent), m_enabled(false)
-{
-}
-
-QTAIMEngine::~QTAIMEngine()
 {
 }
 

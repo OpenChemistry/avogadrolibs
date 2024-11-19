@@ -13,8 +13,7 @@
 #include "matrix.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class UnitCell unitcell.h <avogadro/core/unitcell.h>
@@ -28,7 +27,7 @@ public:
   UnitCell(const Vector3& a, const Vector3& b, const Vector3& c);
   explicit UnitCell(const Matrix3& cellMatrix);
   UnitCell(const UnitCell& other);
-  ~UnitCell();
+  ~UnitCell() = default;
   UnitCell& operator=(UnitCell other);
   friend void swap(UnitCell& lhs, UnitCell& rhs);
 
@@ -169,18 +168,14 @@ inline UnitCell::UnitCell(const Vector3& a_, const Vector3& b_,
 }
 
 inline UnitCell::UnitCell(const Matrix3& cellMatrix_)
+  : m_cellMatrix(cellMatrix_)
 {
-  m_cellMatrix = cellMatrix_;
   computeFractionalMatrix();
 }
 
 inline UnitCell::UnitCell(const UnitCell& other)
   : m_cellMatrix(other.m_cellMatrix),
     m_fractionalMatrix(other.m_fractionalMatrix)
-{
-}
-
-inline UnitCell::~UnitCell()
 {
 }
 
@@ -345,7 +340,6 @@ inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
   return minimumImage(v1 - v2).norm();
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_UNITCELL_H

@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class PdbFormat pdbformat.h <avogadro/io/pdbformat.h>
@@ -20,8 +19,8 @@ namespace Io {
 class AVOGADROIO_EXPORT PdbFormat : public FileFormat
 {
 public:
-  PdbFormat();
-  ~PdbFormat() override;
+  PdbFormat() = default;
+  ~PdbFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -56,7 +55,6 @@ public:
   void perceiveSubstitutedCations(Core::Molecule& molecule);
 };
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_PDBFORMAT_H

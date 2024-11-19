@@ -78,6 +78,34 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
+  if (m_electronicTransitions.size() > 0 &&
+      m_electronicTransitions.size() == m_electronicIntensities.size()) {
+    MatrixX electronicData(m_electronicTransitions.size(), 2);
+    for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
+      electronicData(i, 0) = m_electronicTransitions[i];
+      electronicData(i, 1) = m_electronicIntensities[i];
+    }
+    molecule.setSpectra("Electronic", electronicData);
+    if (m_electronicRotations.size() == m_electronicTransitions.size()) {
+      MatrixX electronicRotations(m_electronicTransitions.size(), 2);
+      for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
+        electronicRotations(i, 0) = m_electronicTransitions[i];
+        electronicRotations(i, 1) = m_electronicRotations[i];
+      }
+      molecule.setSpectra("CircularDichroism", electronicRotations);
+    }
+  }
+
+  if (m_nmrShifts.size() > 0) {
+    MatrixX nmrData(m_nmrShifts.size(), 2);
+    // nmr_shifts has an entry for every atom even if not computed
+    for (size_t i = 0; i < m_nmrShifts.size(); ++i) {
+      nmrData(i, 0) = m_nmrShifts[i];
+      nmrData(i, 1) = 1.0;
+    }
+    molecule.setSpectra("NMR", nmrData);
+  }
+
   // guess bonds and bond orders
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -101,6 +129,10 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
+
+  molecule.setData("totalCharge", m_charge);
+  molecule.setData("totalSpinMultiplicity", m_spin);
+  molecule.setData("dipoleMoment", m_dipoleMoment);
 
   return true;
 }
@@ -157,6 +189,14 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         getline(in, key);
       }
     }
+  } else if (Core::contains(key, "Total Charge")) {
+    list = Core::split(key, ' ');
+    if (list.size() > 4)
+      m_charge = Core::lexicalCast<int>(list[4]);
+  } else if (Core::contains(key, "Multiplicity")) {
+    list = Core::split(key, ' ');
+    if (list.size() > 3)
+      m_spin = Core::lexicalCast<int>(list[3]);
   } else if (Core::contains(key, "TOTAL NUMBER OF BASIS SET")) {
     m_currentMode = NotParsing; // no longer reading GTOs
   } else if (Core::contains(key, "NUMBER OF CARTESIAN GAUSSIAN BASIS")) {
@@ -164,9 +204,30 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   } else if (Core::contains(key, "Number of Electrons")) {
     list = Core::split(key, ' ');
     m_electrons = Core::lexicalCast<int>(list[5]);
+  } else if (Core::contains(key, "Total Dipole Moment")) {
+    list = Core::split(key, ' ');
+    m_dipoleMoment = Eigen::Vector3d(Core::lexicalCast<double>(list[4]),
+                                     Core::lexicalCast<double>(list[5]),
+                                     Core::lexicalCast<double>(list[6]));
+    // convert from atomic units to Debye
+    // e.g. https://en.wikipedia.org/wiki/Debye
+    m_dipoleMoment *= 2.54174628;
   } else if (Core::contains(key, "Mayer bond orders")) {
     m_currentMode = BondOrders;
     // starts at the next line
+  } else if (Core::contains(
+               key,
+               "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS")) {
+    m_currentMode = Electronic;
+    for (int i = 0; i < 4; ++i) {
+      getline(in, key); // skip header
+    }
+    // starts at the next line
+  } else if (Core::contains(key, "CD SPECTRUM")) {
+    m_currentMode = ECD;
+    for (int i = 0; i < 4; ++i) {
+      getline(in, key); // skip header
+    }
   } else if (Core::contains(key, "ORBITAL ENERGIES")) {
     m_currentMode = OrbitalEnergies;
     getline(in, key); // skip ------------
@@ -227,6 +288,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     getline(in, key); // skip blank line
     getline(in, key); // skip column titles
     getline(in, key); // skip ------------
+  } else if (Core::contains(key, "CHEMICAL SHIELDING SUMMARY (ppm)")) {
+    m_currentMode = NMR;
+    for (int i = 0; i < 4; ++i) {
+      getline(in, key); // skip header
+    }
   } else {
 
     vector<vector<double>> columns;
@@ -500,6 +566,87 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           // index, frequency, activity, depolarization
           double activity = Core::lexicalCast<double>(list[2]);
           m_RamanIntensities.push_back(activity);
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        m_currentMode = NotParsing;
+        break;
+      }
+      case Electronic: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        double wavenumbers;
+        while (!key.empty()) {
+          // should have 8 columns
+          if (list.size() != 8) {
+            getline(in, key);
+            key = Core::trimmed(key);
+            list = Core::split(key, ' ');
+            continue; // skip any spin-forbidden transitions
+          }
+
+          wavenumbers = Core::lexicalCast<double>(list[1]);
+          // convert to eV
+          m_electronicTransitions.push_back(wavenumbers / 8065.544);
+          m_electronicIntensities.push_back(Core::lexicalCast<double>(list[3]));
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+          if (list.size() < 2)
+            break; // hit the blank line
+        }
+        m_currentMode = NotParsing;
+      }
+      case ECD: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+
+        double wavenumbers;
+        while (!key.empty()) {
+          // should have 7 columns
+          if (list.size() != 7) {
+            getline(in, key);
+            key = Core::trimmed(key);
+            list = Core::split(key, ' ');
+            continue; // skip any spin-forbidden transitions
+          }
+
+          wavenumbers = Core::lexicalCast<double>(list[1]);
+          // convert to eV
+          m_electronicTransitions.push_back(wavenumbers / 8065.544);
+          m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+          if (list.size() < 2)
+            break; // hit the blank line
+        }
+        m_currentMode = NotParsing;
+      }
+      case NMR: {
+        if (key.empty())
+          break;
+        list = Core::split(key, ' ');
+        // default to filling m_nmrShifts with zeros
+        m_nmrShifts.resize(m_atomNums.size(), 0.0);
+        while (!key.empty()) {
+          // should have 4 columns
+          if (list.size() != 4) {
+            break;
+          }
+
+          // e.g.  1  C  0.0000  0.0000  0.0000  0.0000
+          int atomIndex = Core::lexicalCast<int>(list[0]);
+          double shift = Core::lexicalCast<double>(list[2]);
+          // ignore the anisotropy for now
+          m_nmrShifts[atomIndex] = shift;
 
           getline(in, key);
           key = Core::trimmed(key);

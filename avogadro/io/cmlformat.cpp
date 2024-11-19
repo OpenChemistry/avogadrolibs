@@ -24,7 +24,6 @@
 #include <locale>
 #include <map>
 #include <sstream>
-#include <streambuf>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -174,78 +173,93 @@ public:
     Atom atom;
     while (node) {
       // Step through all of the atom attributes and store them.
-      xml_attribute attribute = node.attribute("elementType");
-      if (attribute) {
-        unsigned char atomicNumber =
-          Elements::atomicNumberFromSymbol(attribute.value());
-        atom = molecule->addAtom(atomicNumber);
-      } else {
-        // There is no element data, this atom node is corrupt.
-        error += "Warning, corrupt element node found.";
-        return false;
+      {
+        /* Element Attribute Check */
+        xml_attribute elementAtt = node.attribute("elementType");
+        if (elementAtt) {
+          unsigned char atomicNumber =
+            Elements::atomicNumberFromSymbol(elementAtt.value());
+          atom = molecule->addAtom(atomicNumber);
+        } else {
+          // There is no element data, this atom node is corrupt.
+          error += "Warning, corrupt element node found.";
+          return false;
+        }
       }
 
-      attribute = node.attribute("id");
-      if (attribute)
-        atomIds[std::string(attribute.value())] = atom.index();
-      else // Atom nodes must have IDs - bail.
-        return false;
+      {
+        /* ID Attribute Check */
+        xml_attribute idAtt = node.attribute("id");
+        if (idAtt)
+          atomIds[std::string(idAtt.value())] = atom.index();
+        else // Atom nodes must have IDs - bail.
+          return false;
+      }
 
       // Check for 3D geometry.
-      attribute = node.attribute("x3");
-      if (attribute) {
-        xml_attribute y3 = node.attribute("y3");
-        xml_attribute z3 = node.attribute("z3");
-        if (y3 && z3) {
-          // It looks like we have a valid 3D position.
-          Vector3 position(lexicalCast<double>(attribute.value()),
-                           lexicalCast<double>(y3.value()),
-                           lexicalCast<double>(z3.value()));
-          atom.setPosition3d(position);
-        } else {
-          // Corrupt 3D position supplied for atom.
-          return false;
-        }
-      } else if ((attribute = node.attribute("xFract"))) {
-        if (!molecule->unitCell()) {
-          error += "No unit cell defined. "
-                   "Cannot interpret fractional coordinates.";
-          return false;
-        }
-        xml_attribute& xF = attribute;
-        xml_attribute yF = node.attribute("yFract");
-        xml_attribute zF = node.attribute("zFract");
-        if (yF && zF) {
-          Vector3 coord(static_cast<Real>(xF.as_float()),
-                        static_cast<Real>(yF.as_float()),
-                        static_cast<Real>(zF.as_float()));
-          molecule->unitCell()->toCartesian(coord, coord);
-          atom.setPosition3d(coord);
-        } else {
-          error += "Missing y or z fractional coordinate on atom.";
-          return false;
+      {
+        /* XYZ3 and Fract Attribute Check */
+        xml_attribute x3Att = node.attribute("x3");
+        xml_attribute xFractAtt = node.attribute("xFract");
+        if (x3Att) {
+          xml_attribute y3 = node.attribute("y3");
+          xml_attribute z3 = node.attribute("z3");
+          if (y3 && z3) {
+            // It looks like we have a valid 3D position.
+            Vector3 position(lexicalCast<double>(x3Att.value()),
+                             lexicalCast<double>(y3.value()),
+                             lexicalCast<double>(z3.value()));
+            atom.setPosition3d(position);
+          } else {
+            // Corrupt 3D position supplied for atom.
+            return false;
+          }
+        } else if (xFractAtt) {
+          if (!molecule->unitCell()) {
+            error += "No unit cell defined. "
+                     "Cannot interpret fractional coordinates.";
+            return false;
+          }
+          xml_attribute yF = node.attribute("yFract");
+          xml_attribute zF = node.attribute("zFract");
+          if (yF && zF) {
+            Vector3 coord(static_cast<Real>(xFractAtt.as_float()),
+                          static_cast<Real>(yF.as_float()),
+                          static_cast<Real>(zF.as_float()));
+            molecule->unitCell()->toCartesian(coord, coord);
+            atom.setPosition3d(coord);
+          } else {
+            error += "Missing y or z fractional coordinate on atom.";
+            return false;
+          }
         }
       }
 
       // Check for 2D geometry.
-      attribute = node.attribute("x2");
-      if (attribute) {
-        xml_attribute y2 = node.attribute("y2");
-        if (y2) {
-          Vector2 position(lexicalCast<double>(attribute.value()),
-                           lexicalCast<double>(y2.value()));
-          atom.setPosition2d(position);
-        } else {
-          // Corrupt 2D position supplied for atom.
-          return false;
+      {
+        /* XY2 Attribute Check */
+        xml_attribute x2Att = node.attribute("x2");
+        if (x2Att) {
+          xml_attribute y2 = node.attribute("y2");
+          if (y2) {
+            Vector2 position(lexicalCast<double>(x2Att.value()),
+                             lexicalCast<double>(y2.value()));
+            atom.setPosition2d(position);
+          } else {
+            // Corrupt 2D position supplied for atom.
+            return false;
+          }
         }
       }
 
       // Check formal charge.
-      attribute = node.attribute("formalCharge");
-      if (attribute) {
-        auto formalCharge = lexicalCast<signed int>(attribute.value());
-        atom.setFormalCharge(formalCharge);
+      {
+        /* Formal Charge Attribute Check */
+        xml_attribute formalChargeAtt = node.attribute("formalCharge");
+        if (formalChargeAtt) {
+          auto formalCharge = lexicalCast<signed int>(formalChargeAtt.value());
+          atom.setFormalCharge(formalCharge);
+        }
       }
 
       // Move on to the next atom node (if there is one).
@@ -415,14 +429,6 @@ public:
   string filename;
   string error;
 };
-}
-
-CmlFormat::CmlFormat()
-{
-}
-
-CmlFormat::~CmlFormat()
-{
 }
 
 bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
@@ -690,4 +696,4 @@ std::vector<std::string> CmlFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Io

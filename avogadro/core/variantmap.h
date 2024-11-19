@@ -14,8 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class VariantMap variantmap.h <avogadro/core/variantmap.h>
@@ -26,14 +25,14 @@ namespace Core {
 class AVOGADROCORE_EXPORT VariantMap
 {
 public:
-  typedef std::map<std::string, Variant>::iterator iterator;
-  typedef std::map<std::string, Variant>::const_iterator const_iterator;
+  using iterator = std::map<std::string, Variant>::iterator;
+  using const_iterator = std::map<std::string, Variant>::const_iterator;
 
   /** Creates a new variant map object. */
-  VariantMap();
+  VariantMap() = default;
 
   /** Destroys the variant map. */
-  ~VariantMap();
+  ~VariantMap() = default;
 
   /** Returns the size of the variant map. */
   size_t size() const;
@@ -85,7 +84,6 @@ private:
   std::map<std::string, Variant> m_map;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_VARIANTMAP_H

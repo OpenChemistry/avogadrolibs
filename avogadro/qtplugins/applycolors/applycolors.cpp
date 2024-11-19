@@ -9,6 +9,7 @@
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/core/residuecolors.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QStringList>
@@ -45,12 +46,12 @@ ApplyColors::ApplyColors(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(openColorDialog()));
   m_actions.append(action);
 
-  action = new QAction(tr("By Atomic Index"), this);
+  action = new QAction(tr("By Atomic Index…"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(applyIndexColors()));
   m_actions.append(action);
 
-  action = new QAction(tr("By Distance"), this);
+  action = new QAction(tr("By Distance…"), this);
   action->setData(atomColors);
   connect(action, SIGNAL(triggered()), SLOT(applyDistanceColors()));
   m_actions.append(action);

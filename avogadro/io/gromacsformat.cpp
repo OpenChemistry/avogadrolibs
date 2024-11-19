@@ -18,7 +18,6 @@
 #include <iostream>
 
 #include <string>
-#include <utility>
 
 namespace Avogadro::Io {
 
@@ -30,15 +29,6 @@ using Core::Residue;
 using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
-
-using std::getline;
-using std::map;
-using std::string;
-using std::vector;
-
-GromacsFormat::GromacsFormat() {}
-
-GromacsFormat::~GromacsFormat() {}
 
 std::vector<std::string> GromacsFormat::fileExtensions() const
 {
@@ -52,18 +42,21 @@ std::vector<std::string> GromacsFormat::mimeTypes() const
 
 bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 {
+  // Allow ADL ofr string
+  using std::string;
+
   string buffer;
   string value;
   Residue* r = nullptr;
   size_t currentResidueId = 0;
 
   // Title
-  getline(in, buffer);
+  std::getline(in, buffer);
   if (!buffer.empty())
     molecule.setData("name", trimmed(buffer));
 
   // Atom count
-  getline(in, buffer);
+  std::getline(in, buffer);
   buffer = trimmed(buffer);
   bool ok;
   auto numAtoms = lexicalCast<size_t>(buffer, ok);
@@ -73,12 +66,12 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   }
 
   // read atom info:
-  typedef map<string, unsigned char> AtomTypeMap;
+  using AtomTypeMap = std::map<string, unsigned char>;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
   Vector3 pos;
   while (numAtoms-- > 0) {
-    getline(in, buffer);
+    std::getline(in, buffer);
     // Figure out the distance between decimal points, implement support for
     // variable precision as specified:
     // "any number of decimal places, the format will then be n+5 positions with
@@ -192,8 +185,8 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // v1(x) v2(y) v3(z) [v1(y) v1(z) v2(x) v2(z) v3(x) v3(y)]
   // The last six values may be omitted, set all non-specified values to 0.
   // v1(y) == v1(z) == v2(z) == 0 always.
-  getline(in, buffer);
-  vector<string> tokens(split(buffer, ' ', true));
+  std::getline(in, buffer);
+  std::vector<string> tokens(split(buffer, ' ', true));
   if (tokens.size() > 0) {
     if (tokens.size() != 3 && tokens.size() != 9) {
       appendError("Invalid box specification -- need either 3 or 9 values: '" +

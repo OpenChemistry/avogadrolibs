@@ -4,13 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2014.
 # Michalis <michalisntovas@yahoo.gr>, 2021.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-03 15:34+0000\n"
-"PO-Revision-Date: 2021-02-13 01:19+0000\n"
-"Last-Translator: Michalis <michalisntovas@yahoo.gr>\n"
+"POT-Creation-Date: 2024-11-17 02:40+0000\n"
+"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
 "Language: el\n"
@@ -18,10 +19,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 5.9-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
-#: molequeue/batchjob.cpp:70
+#: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 msgid "No message specified."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:67 qtgui/interfacescript.cpp:72
+#: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
 msgid ""
 "script --print-options output must be an JSON object at top level. "
@@ -38,72 +39,72 @@ msgid ""
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:173 qtgui/interfacescript.cpp:210
+#: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:176 qtgui/interfacescript.cpp:213
+#: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:366
+#: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:198 qtgui/interfacescript.cpp:368
+#: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:202 qtgui/interfacescript.cpp:372
+#: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:234 qtgui/interfacescript.cpp:405
+#: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
 #, qt-format
 msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:240 qtgui/interfacescript.cpp:411
+#: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:246 qtgui/interfacescript.cpp:417
+#: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:250 qtgui/interfacescript.cpp:421
+#: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:261 qtgui/interfacescript.cpp:432
+#: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:266 qtgui/interfacescript.cpp:437
+#: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:277 qtgui/interfacescript.cpp:448
+#: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:281 qtgui/interfacescript.cpp:452
+#: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
 msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:324 qtgui/interfacescript.cpp:496
+#: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
 msgid ""
 "Parse error at offset %L1: '%2'\n"
@@ -112,19 +113,19 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:348
+#: molequeue/inputgenerator.cpp:346
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:356
+#: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:369 qtgui/interfacescript.cpp:563
+#: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
 msgid ""
 "Error generating cjson object: Parse error at offset %1: %2\n"
@@ -133,7 +134,7 @@ msgid ""
 "%3"
 msgstr ""
 
-#: molequeue/inputgenerator.cpp:378 qtgui/interfacescript.cpp:572
+#: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
 msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
@@ -492,7 +493,7 @@ msgstr "Βόριο"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1917
+#: qtgui/elementtranslator.cpp:34:1929
 msgid "Carbon"
 msgstr "Άνθρακας"
 
@@ -574,13 +575,13 @@ msgstr "Μαγγάνιο"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1920
+#: qtgui/elementtranslator.cpp:94:1932
 msgid "Iron"
 msgstr "Σίδηρος"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1923
+#: qtgui/elementtranslator.cpp:97:1935
 msgid "Cobalt"
 msgstr "Κοβάλτιο"
 
@@ -951,7 +952,7 @@ msgstr "Ογκανέσσιο"
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "Περιήγηση..."
+msgstr "Περιήγηση"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1056,9 +1057,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:100
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Αδυναμία εκτέλεσης povray."
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:154
 #, qt-format
@@ -1086,7 +1087,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:195
 #, fuzzy
 msgid "Theory"
-msgstr "Θεωρία:"
+msgstr "Θεωρία"
 
 #: qtgui/jsonwidget.cpp:195
 msgid "Basis"
@@ -1147,17 +1148,17 @@ msgstr "Δεν έχει οριστεί μόριο"
 msgid "Layer %1"
 msgstr ""
 
-#: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:29
+#: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "Σφαίρα και ράβδος"
 
-#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:32
+#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:31
 #, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Καρτούν"
 
-#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:32
+#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr ""
@@ -1207,7 +1208,7 @@ msgstr ""
 msgid "Van der Waals"
 msgstr "Βαν ντερ Βάαλς"
 
-#: qtgui/layermodel.cpp:159 qtplugins/vanderwaalsao/vanderwaalsao.h:29
+#: qtgui/layermodel.cpp:159
 #, fuzzy
 msgctxt "ambient occlusion"
 msgid "Van der Waals (AO)"
@@ -1285,34 +1286,34 @@ msgstr ""
 msgid "Unknown error."
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:105
-#: qtgui/rwlayermanager.cpp:131
+#: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
+#: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:194
+#: qtgui/rwlayermanager.cpp:196
 #, fuzzy
 msgid "Remove Layer"
 msgstr "Αφαίρεση Υδρογόνων"
 
-#: qtgui/rwlayermanager.cpp:201
+#: qtgui/rwlayermanager.cpp:203
 #, fuzzy
 msgid "Remove Layer Info"
 msgstr "Αφαίρεση Υδρογόνων"
 
-#: qtgui/rwlayermanager.cpp:210
+#: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
 msgstr ""
 
-#: qtgui/rwlayermanager.cpp:213
+#: qtgui/rwlayermanager.cpp:215
 msgid "Add Layer Info"
 msgstr ""
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: qtgui/rwlayermanager.cpp:220 qtgui/rwlayermanager.cpp:223
+#: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:262:1628
+#: qtplugins/selectiontool/selectiontool.cpp:262:1640
 #, fuzzy
 msgid "Change Layer"
 msgstr "Τροποποίηση σειράς δεσμών"
@@ -1387,16 +1388,15 @@ msgstr "Τροποποίηση σειράς δεσμών"
 #: qtgui/rwmolecule.cpp:354
 #, fuzzy
 msgid "Update Bonds"
-msgstr " Προσαρμογή στους δεσμούς"
+msgstr "Προσαρμογή στους δεσμούς"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:392
-#, fuzzy
-msgid "Add Unit Cell"
-msgstr "Προσθήκη &μοναδιαίας κυψελίδας"
+msgid "Add Unit Cell…"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
@@ -1410,7 +1410,7 @@ msgstr ""
 #: qtgui/rwmolecule.cpp:484
 #, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "Ανα&δίπλωση ατόμων στο κελί"
+msgstr "Αναδίπλωση ατόμων στο κελί"
 
 #: qtgui/rwmolecule.cpp:507
 #, fuzzy
@@ -1470,10 +1470,8 @@ msgid "Change Atom Label"
 msgstr "Τροποποίηση σειράς δεσμών"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "Παράβλεψη επιλογής"
+msgstr ""
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1483,7 +1481,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Settings"
 msgid "Settings"
-msgstr "&Ρυθμίσεις"
+msgstr "Ρυθμίσεις"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1495,11 +1493,11 @@ msgstr ""
 msgid "Checking for %1 scripts in path %2"
 msgstr ""
 
-#: qtplugins/3dmol/3dmol.cpp:41
+#: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
 msgstr ""
 
-#: qtplugins/3dmol/3dmol.cpp:51 qtplugins/fetchpdb/fetchpdb.cpp:41
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
@@ -1508,22 +1506,22 @@ msgstr ""
 msgid "&File"
 msgstr "&Αρχείο"
 
-#: qtplugins/3dmol/3dmol.cpp:51 qtplugins/ply/ply.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 #, fuzzy
 msgid "&Export"
-msgstr "Εξαγωγή"
+msgstr "&Εξαγωγή"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
 msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:53 qtplugins/aligntool/aligntool.cpp:96
+#: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
 msgstr "Στοίχιση"
 
-#: qtplugins/aligntool/aligntool.cpp:55
+#: qtplugins/aligntool/aligntool.cpp:51
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1543,52 +1541,46 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:83:1685
+#: qtplugins/aligntool/aligntool.cpp:79:1697
 msgid "Axis:"
 msgstr "Άξονας:"
 
-#: qtplugins/aligntool/aligntool.cpp:160
-#, fuzzy
-#| msgid "Align Settings"
+#: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr "Στοίχιση ρυθμίσεων"
+msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:196
-#, fuzzy
-#| msgid "Align Settings"
+#: qtplugins/aligntool/aligntool.cpp:192
 msgid "Align to Axis"
-msgstr "Στοίχιση ρυθμίσεων"
+msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:312
-#, fuzzy
-#| msgid "selected atom to origin"
+#: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
-msgstr "επιλεγμένο άτομο στο αρχικό"
+msgstr ""
 
-#: qtplugins/aligntool/aligntool.cpp:315
+#: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
-#: qtplugins/aligntool/aligntool.h:30
+#: qtplugins/aligntool/aligntool.h:29
 #, fuzzy
 #| msgid "Align"
 msgid "Align tool"
 msgstr "Στοίχιση"
 
-#: qtplugins/aligntool/aligntool.h:33
+#: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
 msgstr "Στοίχιση μορίων σε έναν καρτεσιανό άξονα"
 
-#: qtplugins/apbs/apbs.cpp:31
+#: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:36
+#: qtplugins/apbs/apbs.cpp:37
 #, fuzzy
 msgid "Open Output File…"
-msgstr "Άνοιγμα αρχείου WFN"
+msgstr "Άνοιγμα αρχείου"
 
-#: qtplugins/apbs/apbs.cpp:49 qtplugins/cp2kinput/cp2kinput.cpp:49
+#: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
 #: qtplugins/lammpsinput/lammpsinput.cpp:48
 #: qtplugins/openmminput/openmminput.cpp:46
@@ -1596,50 +1588,50 @@ msgstr "Άνοιγμα αρχείου WFN"
 msgid "&Input"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:49
+#: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:61 qtplugins/cp2kinput/cp2kinput.cpp:69
+#: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:70
 #: qtplugins/quantuminput/quantuminput.cpp:88
 msgid "Open Output File"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:62
+#: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:115
+#: qtplugins/apbs/apbs.cpp:116
 #, fuzzy
 msgid "IO Error"
 msgstr "Σφάλμα"
 
-#: qtplugins/apbs/apbs.cpp:116
+#: qtplugins/apbs/apbs.cpp:117
 #, qt-format
 msgid "Error reading structure file (%1)."
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
+#: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
 msgid "OpenDX Error"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:137
+#: qtplugins/apbs/apbs.cpp:138
 #, qt-format
 msgid "Error reading OpenDX file: %1"
 msgstr ""
 
-#: qtplugins/apbs/apbs.cpp:144
+#: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
 msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
-#: qtplugins/apbs/apbs.h:31:96
+#: qtplugins/apbs/apbs.h:30:96
 msgid "APBS"
 msgstr ""
 
-#: qtplugins/apbs/apbs.h:34
+#: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
 msgstr ""
 
@@ -1710,120 +1702,118 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:178:156
 #, fuzzy
 msgid "Success"
-msgstr "Επιτυχία!"
+msgstr "Επιτυχία"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:43
-#: qtplugins/applycolors/applycolors.cpp:64
+#: qtplugins/applycolors/applycolors.cpp:44
+#: qtplugins/applycolors/applycolors.cpp:65
 #, fuzzy
 msgid "By Custom Color…"
 msgstr "Προσαρμοσμένο χρώμα"
 
-#: qtplugins/applycolors/applycolors.cpp:48
-#, fuzzy
-msgid "By Atomic Index"
-msgstr "Δείκτες ατόμου"
+#: qtplugins/applycolors/applycolors.cpp:49
+msgid "By Atomic Index…"
+msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:53
-#, fuzzy
-msgid "By Distance"
-msgstr "Απόσταση"
+#: qtplugins/applycolors/applycolors.cpp:54
+msgid "By Distance…"
+msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:58
+#: qtplugins/applycolors/applycolors.cpp:59
 #, fuzzy
 msgid "By Element"
 msgstr "Στοιχείο"
 
-#: qtplugins/applycolors/applycolors.cpp:69
+#: qtplugins/applycolors/applycolors.cpp:70
 #, fuzzy
 msgid "By Chain"
 msgstr "Αλυσίδες NH"
 
-#: qtplugins/applycolors/applycolors.cpp:74
+#: qtplugins/applycolors/applycolors.cpp:75
 #, fuzzy
 #| msgid "Partial Charge"
 msgid "By Partial Charge…"
 msgstr "Μερικό φορτίου"
 
-#: qtplugins/applycolors/applycolors.cpp:79
+#: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
 msgstr "Εμφάνιση δευτεροταγούς δομής της πρωτεΐνης"
 
-#: qtplugins/applycolors/applycolors.cpp:84
+#: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
 msgid "By Amino Acid"
-msgstr "Αμινοξέα:"
+msgstr "Αμινοξέα"
 
-#: qtplugins/applycolors/applycolors.cpp:89
+#: qtplugins/applycolors/applycolors.cpp:90
 msgid "By Shapely Scheme"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:104
-#: qtplugins/applycolors/applycolors.cpp:207
-#: qtplugins/applycolors/applycolors.cpp:299
+#: qtplugins/applycolors/applycolors.cpp:105
+#: qtplugins/applycolors/applycolors.cpp:208
+#: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:758
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:106
+#: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:108
+#: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:110
+#: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:112
-#: qtplugins/applycolors/applycolors.cpp:207
-#: qtplugins/applycolors/applycolors.cpp:299
+#: qtplugins/applycolors/applycolors.cpp:113
+#: qtplugins/applycolors/applycolors.cpp:208
+#: qtplugins/applycolors/applycolors.cpp:300
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:114
-#: qtplugins/applycolors/applycolors.cpp:208
-#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/applycolors/applycolors.cpp:115
+#: qtplugins/applycolors/applycolors.cpp:209
+#: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:116
-#: qtplugins/applycolors/applycolors.cpp:208
-#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/applycolors/applycolors.cpp:117
+#: qtplugins/applycolors/applycolors.cpp:209
+#: qtplugins/applycolors/applycolors.cpp:301
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:118
-#: qtplugins/applycolors/applycolors.cpp:209
-#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/applycolors/applycolors.cpp:119
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:120
-#: qtplugins/applycolors/applycolors.cpp:209
-#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/applycolors/applycolors.cpp:121
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:302
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
@@ -1833,10 +1823,10 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:174
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:122
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1782
+#: qtplugins/applycolors/applycolors.cpp:123
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:303
+#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1794
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1847,8 +1837,8 @@ msgstr "Φάσματα"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:124
-#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1779
+#: qtplugins/applycolors/applycolors.cpp:125
+#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1791
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1857,20 +1847,18 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:126
-#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1773
-#, fuzzy
-#| msgid "Cancel"
+#: qtplugins/applycolors/applycolors.cpp:127
+#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
 msgctxt "colormap"
 msgid "Balance"
-msgstr "Άκυρο"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1776
+#: qtplugins/applycolors/applycolors.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1879,37 +1867,37 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:179
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
-#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1785
+#: qtplugins/applycolors/applycolors.cpp:131
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:303
+#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1797
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:138
+#: qtplugins/applycolors/applycolors.cpp:139
 msgid "Apply color schemes to atoms and residues."
 msgstr ""
 
-#: qtplugins/applycolors/applycolors.cpp:149
-#: qtplugins/applycolors/applycolors.cpp:151 qtplugins/focus/focus.cpp:42
+#: qtplugins/applycolors/applycolors.cpp:150
+#: qtplugins/applycolors/applycolors.cpp:152 qtplugins/focus/focus.cpp:42
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:76
 msgid "&View"
 msgstr "Π&ροβολή"
 
-#: qtplugins/applycolors/applycolors.cpp:149
+#: qtplugins/applycolors/applycolors.cpp:150
 #, fuzzy
 msgid "Color Atoms"
 msgstr "Χρώματα"
 
-#: qtplugins/applycolors/applycolors.cpp:151
+#: qtplugins/applycolors/applycolors.cpp:152
 #, fuzzy
 msgid "Color Residues"
 msgstr "Χρώμα κατά υπόλοιπο"
 
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:306
 #, fuzzy
 #| msgid "Selected Colors"
 msgid "Select Colormap"
@@ -1919,8 +1907,8 @@ msgstr "Επιλεγμένα χρώματα"
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:305:171 rc.cpp:1770
+#: qtplugins/applycolors/applycolors.cpp:214
+#: qtplugins/applycolors/applycolors.cpp:306:171 rc.cpp:1782
 #, fuzzy
 #| msgid "Color:"
 msgid "Colormap:"
@@ -1931,38 +1919,44 @@ msgstr "Χρώμα:"
 msgid "ApplyColors"
 msgstr "Χρώματα"
 
-#: qtplugins/ballandstick/ballandstick.cpp:91
+#: qtplugins/ballandstick/ballandstick.cpp:107
 #, fuzzy
 msgid "Atom scale"
 msgstr "Τεχνοτροπία ατόμου"
 
-#: qtplugins/ballandstick/ballandstick.cpp:100
+#: qtplugins/ballandstick/ballandstick.cpp:116
 #, fuzzy
 msgid "Bond scale"
 msgstr "Γωνία δεσμού"
 
-#: qtplugins/ballandstick/ballandstick.cpp:103
-#: qtplugins/wireframe/wireframe.cpp:92
+#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: qtplugins/ballandstick/ballandstick.cpp:125:222
+msgid "Opacity"
+msgstr ""
+
+#: qtplugins/ballandstick/ballandstick.cpp:129
+#: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
 msgid "Show multiple bonds"
 msgstr "Εμφάνιση πολλαπλών δεσμών"
 
-#: qtplugins/ballandstick/ballandstick.cpp:109
-#: qtplugins/wireframe/wireframe.cpp:98
+#: qtplugins/ballandstick/ballandstick.cpp:135
+#: qtplugins/wireframe/wireframe.cpp:106
 #, fuzzy
 msgid "Show hydrogens"
 msgstr "Υδρογόνα"
 
-#: qtplugins/ballandstick/ballandstick.h:33
+#: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:121
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 #, fuzzy
 msgid "Bond-Centric Manipulation"
 msgstr "Δεσμοκεντρικός χειρισμός"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:123
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:119
 #, fuzzy
 #| msgid ""
 #| "Bond Centric Manipulation Tool\n"
@@ -1998,8 +1992,8 @@ msgstr ""
 "Αριστερό πάτημα & σύρσιμο ενός ατόμου στον δεσμό για αλλαγή γωνίας\n"
 "Δεξί πάτημα & σύρσιμο ενός ατόμου στον δεσμό για αλλαγή μήκους"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:784
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:872
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:780
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:868
 #: qtplugins/measuretool/measuretool.cpp:211
 #: qtplugins/measuretool/measuretool.cpp:219
 #: qtplugins/measuretool/measuretool.cpp:220
@@ -2007,7 +2001,7 @@ msgstr ""
 msgid "%L1°"
 msgstr ""
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:806
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:802
 #: qtplugins/editor/editor.cpp:268 qtplugins/measuretool/measuretool.cpp:227
 #: qtplugins/measuretool/measuretool.cpp:228
 #: qtplugins/measuretool/measuretool.cpp:230
@@ -2043,12 +2037,10 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Ορισμός επιλεγμένων ατόμων"
+msgstr ""
 
-#: qtplugins/bonding/bonding.cpp:63 qtplugins/centroid/centroid.cpp:46
+#: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -2057,73 +2049,73 @@ msgstr "Ορισμός επιλεγμένων ατόμων"
 msgid "&Build"
 msgstr "&Κατασκευή"
 
-#: qtplugins/bonding/bonding.cpp:63
+#: qtplugins/bonding/bonding.cpp:61
 #: qtplugins/propertytables/propertymodel.cpp:445
 #, fuzzy
 msgid "Bond"
 msgstr "Δεσμός"
 
-#: qtplugins/bonding/bonding.cpp:74
+#: qtplugins/bonding/bonding.cpp:72
 msgid "Remove bonds from all or selected atoms."
 msgstr ""
 
-#: qtplugins/bonding/bonding.cpp:76
+#: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
 msgstr ""
 
-#: qtplugins/bonding/bonding.cpp:77
+#: qtplugins/bonding/bonding.cpp:75
 #, fuzzy
 msgid "Perceive bond orders."
 msgstr "Να κατανοηθούν οι δεσμοί;"
 
-#: qtplugins/bonding/bonding.h:32
+#: qtplugins/bonding/bonding.h:31
 msgid "Bonding"
 msgstr ""
 
-#: qtplugins/bonding/bonding.h:36
+#: qtplugins/bonding/bonding.h:35
 msgid "Perform bonding operations."
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.cpp:93
+#: qtplugins/cartoons/cartoons.cpp:92
 #, fuzzy
 msgctxt "protein rendering style"
 msgid "Backbone"
 msgstr "Σκελετός"
 
-#: qtplugins/cartoons/cartoons.cpp:94
+#: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Trace"
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.cpp:95
+#: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.cpp:96
+#: qtplugins/cartoons/cartoons.cpp:95
 #, fuzzy
 msgctxt "protein rendering style"
 msgid "Ribbon"
 msgstr "Ταινία"
 
-#: qtplugins/cartoons/cartoons.cpp:97
+#: qtplugins/cartoons/cartoons.cpp:96
 #, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
 msgstr "Καρτούν"
 
-#: qtplugins/cartoons/cartoons.cpp:98
+#: qtplugins/cartoons/cartoons.cpp:97
 #, fuzzy
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "Καρτούν"
 
-#: qtplugins/cartoons/cartoons.cpp:99
+#: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Rope"
 msgstr ""
 
-#: qtplugins/cartoons/cartoons.h:37
+#: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
@@ -2142,13 +2134,11 @@ msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
 msgstr ""
 
-#: qtplugins/centroid/centroid.h:26
-#, fuzzy
-#| msgid "Control"
+#: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
-msgstr "Έλεγχος"
+msgstr ""
 
-#: qtplugins/centroid/centroid.h:30
+#: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
 msgstr ""
 
@@ -2176,40 +2166,38 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:215
+#: qtplugins/closecontacts/closecontacts.cpp:212
 #: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:406
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/closecontacts/closecontacts.cpp:232
+#: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Maximum Force"
 msgid "Maximum distance:"
-msgstr "Μέγιστη δύναμη"
+msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.cpp:233
+#: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
-#: qtplugins/wireframe/wireframe.cpp:88
+#: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:37
+#: qtplugins/closecontacts/closecontacts.h:36
 #, fuzzy
 #| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
 msgstr "Αποδίδει αναγκαστικά τις μετατοπίσεις στα άτομα"
 
-#: qtplugins/closecontacts/closecontacts.h:55
+#: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:56
+#: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
 msgstr ""
 
-#: qtplugins/closecontacts/closecontacts.h:57
+#: qtplugins/closecontacts/closecontacts.h:56
 msgid "Repulsive"
 msgstr ""
 
@@ -2225,10 +2213,10 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:151
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
-#: qtplugins/yaehmop/yaehmop.cpp:112
+#: qtplugins/yaehmop/yaehmop.cpp:111
 #, fuzzy
 msgid "&Extensions"
-msgstr "Επεκτάσεις"
+msgstr "&Επεκτάσεις"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
@@ -2308,13 +2296,13 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:153
 #: qtplugins/editor/editortoolwidget.cpp:129
-#: qtplugins/templatetool/templatetoolwidget.cpp:316
-#: qtplugins/templatetool/templatetoolwidget.cpp:329
-#: qtplugins/templatetool/templatetoolwidget.cpp:337
-#: qtplugins/templatetool/templatetoolwidget.cpp:345
-#: qtplugins/templatetool/templatetoolwidget.cpp:353
-#: qtplugins/templatetool/templatetoolwidget.cpp:361
-#: qtplugins/templatetool/templatetoolwidget.cpp:424:2055
+#: qtplugins/templatetool/templatetoolwidget.cpp:321
+#: qtplugins/templatetool/templatetoolwidget.cpp:334
+#: qtplugins/templatetool/templatetoolwidget.cpp:342
+#: qtplugins/templatetool/templatetoolwidget.cpp:350
+#: qtplugins/templatetool/templatetoolwidget.cpp:358
+#: qtplugins/templatetool/templatetoolwidget.cpp:366
+#: qtplugins/templatetool/templatetoolwidget.cpp:429:2067
 #, fuzzy
 #| msgid "Other"
 msgid "Other…"
@@ -2426,9 +2414,8 @@ msgid "'b' lattice coordinate."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
-#, fuzzy
 msgid "'c' lattice coordinate."
-msgstr "Συντεταγμένες"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -2451,7 +2438,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:173:1812 rc.cpp:1842
+#: qtplugins/label/label.cpp:181:1824 rc.cpp:1854
 msgid "Custom"
 msgstr "Προσαρμοσμένο"
 
@@ -2505,7 +2492,7 @@ msgstr "Αντιγραφή Όλων"
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 #, fuzzy
 msgid "SMILES"
-msgstr "SMILES..."
+msgstr "SMILES"
 
 #: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
@@ -2604,7 +2591,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:97:1172
+#: qtplugins/forcefield/forcefield.cpp:97:1184
 msgid "Energy"
 msgstr "Ενέργεια"
 
@@ -2615,7 +2602,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 #, fuzzy
 msgid "Molecular Dynamics"
-msgstr "Μοριακή δυναμική (300K)"
+msgstr "Μοριακή δυναμική"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 #, fuzzy
@@ -2629,7 +2616,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 #, fuzzy
 msgid "Molecular Mechanics"
-msgstr "&Μοριακή μηχανική"
+msgstr "Μοριακή μηχανική"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -2648,7 +2635,7 @@ msgstr "ΚΑΝΕΝΑ"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1352
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1364
 msgid "PME"
 msgstr ""
 
@@ -2729,7 +2716,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:40
 #, fuzzy
 msgid "Import Crystal from Clipboard…"
-msgstr "Ει&σαγωγή κρυστάλλου από το πρόχειρο..."
+msgstr "Εισαγωγή κρυστάλλου από το πρόχειρο…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
@@ -2738,7 +2725,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:52
 #, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Προσθήκη &μοναδιαίας κυψελίδας"
+msgstr "Προσθήκη μοναδιαίας κυψελίδας"
 
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
@@ -2810,7 +2797,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
 msgid "Crystal"
-msgstr "Κρύσταλλος..."
+msgstr "Κρύσταλλος"
 
 #: qtplugins/crystal/crystal.h:69
 msgid "Tools for crystal-specific editing/analysis."
@@ -2909,7 +2896,7 @@ msgstr ""
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1791 rc.cpp:1809
+#: qtplugins/editor/editortoolwidget.cpp:208:1803 rc.cpp:1821
 msgid "Automatic"
 msgstr ""
 
@@ -2935,7 +2922,7 @@ msgstr "Εισαγωγή"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "Λήψη από PDB..."
+msgstr "Λήψη από PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, fuzzy, qt-format
@@ -2990,7 +2977,7 @@ msgstr "Το συγκεκριμένο μόριο δεν μπόρεσε να βρ
 #: qtplugins/fetchpdb/fetchpdb.h:35
 #, fuzzy
 msgid "Fetch from PDB"
-msgstr "Λήψη από PDB..."
+msgstr "Λήψη από PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -3023,7 +3010,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:559
 #, fuzzy
 msgid "Optimize Geometry"
-msgstr "&Βελτιστοποίηση Γεωμετρίας"
+msgstr "Βελτιστοποίηση Γεωμετρίας"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
@@ -3058,7 +3045,7 @@ msgstr "Υπολογισμός"
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
-#: qtplugins/yaehmop/yaehmop.cpp:534
+#: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "Avogadro"
 
@@ -3352,12 +3339,12 @@ msgstr "Εισαγωγή τμήματος"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Εισαγωγή μοριακών τμημάτων για κατασκευή μεγαλύτερων μορίων"
 
-#: qtplugins/label/label.cpp:143 qtplugins/meshes/meshes.cpp:173
-#: qtplugins/meshes/meshes.cpp:179
+#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
+#: qtplugins/meshes/meshes.cpp:175
 msgid "Color:"
 msgstr "Χρώμα:"
 
-#: qtplugins/label/label.cpp:153
+#: qtplugins/label/label.cpp:161
 #, fuzzy
 msgid "Distance from center:"
 msgstr "Απόσταση"
@@ -3370,58 +3357,57 @@ msgstr "Απόσταση"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:163 qtplugins/label/label.cpp:192:1361
+#: qtplugins/label/label.cpp:171 qtplugins/label/label.cpp:200:1373
 msgid "None"
 msgstr "Κανένα"
 
-#: qtplugins/label/label.cpp:164
+#: qtplugins/label/label.cpp:172
 msgid "Index"
 msgstr ""
 
-#: qtplugins/label/label.cpp:165
+#: qtplugins/label/label.cpp:173
 msgid "Unique ID"
 msgstr "Μοναδικό αναγνωριστικό"
 
-#: qtplugins/label/label.cpp:166 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Στοιχείο"
 
-#: qtplugins/label/label.cpp:167
-#, fuzzy
+#: qtplugins/label/label.cpp:175
 msgid "Element & Number"
-msgstr "Όνομα στοιχείου"
+msgstr ""
 
-#: qtplugins/label/label.cpp:169
+#: qtplugins/label/label.cpp:177
 msgid "Element & ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:171
+#: qtplugins/label/label.cpp:179
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr ""
 
-#: qtplugins/label/label.cpp:186
+#: qtplugins/label/label.cpp:194
 #, fuzzy
 msgid "Atom Label:"
 msgstr "Ετικέτες ατόμου"
 
-#: qtplugins/label/label.cpp:197 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:454
 #, fuzzy
 msgid "ID"
 msgstr "ΚΑ"
 
-#: qtplugins/label/label.cpp:201
+#: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:452
 msgid "Name"
 msgstr ""
 
-#: qtplugins/label/label.cpp:205
+#: qtplugins/label/label.cpp:213
 msgid " & "
 msgstr ""
 
-#: qtplugins/label/label.cpp:217
+#: qtplugins/label/label.cpp:225
 #, fuzzy
 msgid "Residue Label:"
 msgstr "Όνομα υπολοίπου"
@@ -3514,27 +3500,12 @@ msgid "Manipulate"
 msgstr "Χειρισμός"
 
 #: qtplugins/manipulator/manipulator.cpp:51
-#, fuzzy
-#| msgid ""
-#| "Manipulation Tool (F10)\n"
-#| "\n"
-#| "Left Mouse: \tClick and drag to move atoms\n"
-#| "Middle Mouse: Click and drag to move atoms further away or closer\n"
-#| "Right Mouse: \tClick and drag to rotate selected atoms.\n"
-#| "Double-Click: \tReset the view."
 msgid ""
 "Manipulation Tool\n"
 "\n"
 "Left Mouse: \tClick and drag to move atoms\n"
-"Right Mouse: \tClick and drag to rotate selected atoms.\n"
+"Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
-"Εργαλείο χειρισμού (F10)\n"
-"\n"
-"Αριστερό πλήκτρο: Πάτημα και σύρσιμο για τη μετακίνηση ατόμων\n"
-"Μεσαίο πλήκτρο: Πάτημα και σύρσιμο για τη μετακίνηση ατόμων σε μεγαλύτερη ή "
-"μικρότερη εγγύτητα\n"
-"Δεξί πλήκτρο: Πάτημα και σύρσιμο για την περιστροφή των επιλεγμένων ατόμων.\n"
-"Διπλό πάτημα: Επαναφορά της προβολής."
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3592,7 +3563,7 @@ msgstr "Μέτρηση"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:167:1619
+#: qtplugins/meshes/meshes.cpp:163 qtplugins/vanderwaals/vanderwaals.cpp:75
 msgid "Opacity:"
 msgstr "Αδιαφάνεια:"
 
@@ -3697,7 +3668,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecular Graph..."
 msgid "&Molecular…"
-msgstr "Μοριακό γράφημα..."
+msgstr "Μοριακό…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -3705,7 +3676,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
-#: qtplugins/qtaim/qtaimextension.cpp:77 qtplugins/spectra/spectra.cpp:45
+#: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
@@ -3731,14 +3702,14 @@ msgstr "Ιδιότητες μορίου"
 #: qtplugins/propertytables/propertyview.cpp:231
 #, fuzzy
 msgid "Export CSV"
-msgstr "Εξαγωγή"
+msgstr "Εξαγωγή CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "Αρχεία WFN (*.wfn);;Όλα τα αρχεία (*.*)"
+msgstr "Αρχεία CSV (*.csv);;Όλα τα αρχεία (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:244
@@ -3756,7 +3727,7 @@ msgstr ""
 #: qtplugins/propertytables/propertyview.cpp:288
 #, fuzzy
 msgid "Export…"
-msgstr "Εξαγωγή"
+msgstr "Εξαγωγή…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -3794,10 +3765,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Μετακίνηση ατόμων..."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3831,20 +3800,16 @@ msgid " °"
 msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "SCF tolerance type:"
 msgid "Angle tolerance:"
-msgstr "Τύπος ανοχής SCF:"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "Υδρογόνο"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -3927,7 +3892,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Βελτιστοποίηση Γεωμετρίας"
+msgstr "Βελτιστοποίηση Γεωμετρίας"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3983,9 +3948,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "&Βελτιστοποίηση Γεωμετρίας"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -4110,7 +4074,7 @@ msgid ""
 "OpenMM input deck preview pane?"
 msgstr ""
 "Θα θέλατε να ενημερώσετε το κείμενο προεπισκόπησης, χάνοντας όλες τις "
-"αλλαγές που έγιναν στο παράθυρο προεπισκόπησης κάρτας εισόδου MOPAC;"
+"αλλαγές που έγιναν στο παράθυρο προεπισκόπησης κάρτας εισόδου OpenMM;"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4130,7 +4094,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1262
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1274
 msgid "input.prmtop"
 msgstr ""
 
@@ -4160,14 +4124,14 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
-#: qtplugins/openmminput/openmminputdialog.cpp:1069:1379 rc.cpp:1394
+#: qtplugins/openmminput/openmminputdialog.cpp:1069:1391 rc.cpp:1406
 msgid "True"
 msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
 msgid "Reference Axes"
-msgstr "Ανα&φορά:"
+msgstr "Ανα&φορά"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4206,7 +4170,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:117:1845
+#: qtplugins/playertool/playertool.cpp:117:1857
 #, fuzzy
 msgid "Frame:"
 msgstr "Παράμετροι:"
@@ -4225,7 +4189,7 @@ msgstr "Δυναμικοί δεσμοί"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:143:1851
+#: qtplugins/playertool/playertool.cpp:143:1863
 msgid "Record Movie…"
 msgstr ""
 
@@ -4330,7 +4294,7 @@ msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
-#: qtplugins/yaehmop/yaehmop.cpp:556
+#: qtplugins/yaehmop/yaehmop.cpp:555
 msgid "Error: "
 msgstr ""
 
@@ -4362,47 +4326,56 @@ msgstr ""
 msgid "Error parsing plugin data."
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:309
+#: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:317
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Always"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:318
+#: qtplugins/plugindownloader/downloaderwidget.cpp:316
 msgid "Never"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:379
+#: qtplugins/plugindownloader/downloaderwidget.cpp:359
+#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#, qt-format
+msgctxt ""
+"After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
+"error message (if any)"
+msgid "Failed to download from %1: status code %2, %3\n"
+msgstr ""
+
+#: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:392
+#: qtplugins/plugindownloader/downloaderwidget.cpp:414
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:395
+#: qtplugins/plugindownloader/downloaderwidget.cpp:417
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:399
+#: qtplugins/plugindownloader/downloaderwidget.cpp:421
 msgid "Extraction successful\n"
 msgstr ""
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:475
+#: qtplugins/plugindownloader/downloaderwidget.cpp:497
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr ""
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1601
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1613
 msgid "Download Plugins…"
 msgstr ""
 
@@ -4415,9 +4388,8 @@ msgid "Download plugins from GitHub repositories."
 msgstr ""
 
 #: qtplugins/ply/ply.cpp:29
-#, fuzzy
 msgid "PLY Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4430,19 +4402,16 @@ msgid "PLY (*.ply);;Text file (*.txt)"
 msgstr ""
 
 #: qtplugins/ply/ply.h:25
-#, fuzzy
-#| msgid "B2PLYP"
 msgid "PLY"
-msgstr "B2PLYP"
+msgstr ""
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4510,13 +4479,13 @@ msgstr "Τέλος ατόμου"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "Σειρά δεσμού:"
+msgstr "Σειρά δεσμού"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr "Μήκος %1"
+msgstr "Μήκος (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:456
 #, fuzzy
@@ -4529,15 +4498,14 @@ msgid "Secondary Structure"
 msgstr "Δομή"
 
 #: qtplugins/propertytables/propertymodel.cpp:460
-#, fuzzy
 msgid "Heterogen"
-msgstr "Υδρογόνο"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:474
 #: qtplugins/propertytables/propertymodel.cpp:491
 #, fuzzy
 msgid "Atom 1"
-msgstr "Άτομο %1"
+msgstr "Άτομο 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:476
 msgid "Vertex"
@@ -4547,23 +4515,23 @@ msgstr "Κορυφή"
 #: qtplugins/propertytables/propertymodel.cpp:495
 #, fuzzy
 msgid "Atom 3"
-msgstr "Άτομο"
+msgstr "Άτομο 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:480
 #: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Angle (°)"
-msgstr "Γωνία: %L1 °"
+msgstr "Γωνία (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:493
 #, fuzzy
 msgid "Atom 2"
-msgstr "Άτομο"
+msgstr "Άτομο 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:497
 #, fuzzy
 msgid "Atom 4"
-msgstr "Άτομο"
+msgstr "Άτομο 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
 #, fuzzy
@@ -4682,42 +4650,42 @@ msgstr "Ιδιότητες διαμορφομερούς"
 msgid "Residue Properties"
 msgstr "Ιδιότητες μορίου"
 
-#: qtplugins/qtaim/qtaimengine.h:26 qtplugins/qtaim/qtaimextension.cpp:77
-#: qtplugins/qtaim/qtaimextension.h:23
+#: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
+#: qtplugins/qtaim/qtaimextension.h:22
 msgid "QTAIM"
 msgstr "QTAIM"
 
-#: qtplugins/qtaim/qtaimengine.h:30
+#: qtplugins/qtaim/qtaimengine.h:29
 msgid "Renders primitives using QTAIM properties"
 msgstr "Αποδίδει τα κύρια τμήματα χρησιμοποιώντας ιδιότητες QTAIM"
 
-#: qtplugins/qtaim/qtaimextension.cpp:46
+#: qtplugins/qtaim/qtaimextension.cpp:41
 #, fuzzy
 #| msgid "Molecular Graph..."
 msgid "Molecular Graph…"
 msgstr "Μοριακό γράφημα..."
 
-#: qtplugins/qtaim/qtaimextension.cpp:53
+#: qtplugins/qtaim/qtaimextension.cpp:48
 #, fuzzy
 #| msgid "Molecular Graph with Lone Pairs..."
 msgid "Molecular Graph with Lone Pairs…"
 msgstr "Μοριακό γράφημα με μονήρη ζεύγη..."
 
-#: qtplugins/qtaim/qtaimextension.cpp:60
+#: qtplugins/qtaim/qtaimextension.cpp:55
 #, fuzzy
 #| msgid "Atomic Charge..."
 msgid "Atomic Charge…"
 msgstr "Ατομικό φορτίο..."
 
-#: qtplugins/qtaim/qtaimextension.cpp:109
+#: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
 msgstr "Άνοιγμα αρχείου WFN"
 
-#: qtplugins/qtaim/qtaimextension.cpp:110
+#: qtplugins/qtaim/qtaimextension.cpp:94
 msgid "WFN files (*.wfn);;All files (*.*)"
 msgstr "Αρχεία WFN (*.wfn);;Όλα τα αρχεία (*.*)"
 
-#: qtplugins/qtaim/qtaimextension.h:24
+#: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
 msgstr "Επέκταση QTAIM"
 
@@ -4738,10 +4706,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Στοίχιση ρυθμίσεων"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4800,25 +4766,20 @@ msgid "Select by Residue…"
 msgstr "Επιλογή κατά υπόλοιπο..."
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "Δείκτες ατόμου"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
 msgid "Select Sidechain Atoms…"
-msgstr "Δείκτες ατόμου"
+msgstr ""
 
-#: qtplugins/select/select.cpp:78
-#, fuzzy
-msgid "Select Water…"
-msgstr "Δείκτες ατόμου"
+#: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
+msgid "Select Water"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Παράβλεψη επιλογής"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 #, fuzzy
@@ -4844,20 +4805,13 @@ msgstr "&Επιλογή"
 msgid "Select Element"
 msgstr "Χρώμα κατά στοιχείο"
 
-#: qtplugins/select/select.cpp:217
-#, fuzzy
-msgid "Select Water"
-msgstr "Δείκτες ατόμου"
-
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "Δείκτες ατόμου"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "Δείκτες ατόμου"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4868,10 +4822,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Διαγραφή ατόμου"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4889,10 +4841,10 @@ msgstr "Επιλογή κατά υπόλοιπο..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1884
+#: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "&Επιλογή"
+msgstr "Επιλογή"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -4938,10 +4890,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
-#| msgid "New Label:"
 msgid "New Layer"
-msgstr "Νέα ετικέτα:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
@@ -4950,7 +4900,7 @@ msgstr "Κατανόηση ομάδας χώρου"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1869
+#: qtplugins/spacegroup/spacegroup.cpp:68:1881
 msgid "Symmetrize"
 msgstr ""
 
@@ -4966,9 +4916,8 @@ msgid "Reduce to Asymmetric Unit"
 msgstr "Αναγωγή σε ασύμμετρη μονάδα"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
-#, fuzzy
 msgid "Set Tolerance…"
-msgstr "Ανοχή SCF:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
@@ -5035,12 +4984,12 @@ msgid ""
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:209
-#: qtplugins/yaehmop/yaehmop.cpp:299 qtplugins/yaehmop/yaehmop.cpp:311
-#: qtplugins/yaehmop/yaehmop.cpp:324 qtplugins/yaehmop/yaehmop.cpp:433
+#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
+#: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro"
+msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -5080,135 +5029,129 @@ msgstr "Εισαγωγή φασμάτων"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1643
+#: qtplugins/spectra/spectra.h:36:1655
 #, fuzzy
 #| msgid "Spectra"
 msgid "Spectra"
 msgstr "Φάσματα"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display as &row vectors"
 msgid "Display spectra plots."
-msgstr "Εμφάνιση ως διανύσματα &γραμμής"
+msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:201
+#: qtplugins/spectra/spectradialog.cpp:200
 #, fuzzy
 #| msgctxt "Infrared spectra option"
 #| msgid "Infrared"
 msgid "Infrared"
 msgstr "Υπέρυθρο"
 
-#: qtplugins/spectra/spectradialog.cpp:205
+#: qtplugins/spectra/spectradialog.cpp:204
 #, fuzzy
 #| msgctxt "Raman spectrum"
 #| msgid "Raman"
 msgid "Raman"
 msgstr "Ράμαν"
 
-#: qtplugins/spectra/spectradialog.cpp:208
+#: qtplugins/spectra/spectradialog.cpp:207
 msgid "NMR"
 msgstr "NMR"
 
-#: qtplugins/spectra/spectradialog.cpp:211
+#: qtplugins/spectra/spectradialog.cpp:210
 #, fuzzy
 #| msgid "electron"
 msgid "Electronic"
 msgstr "Ηλεκτρόνιο"
 
-#: qtplugins/spectra/spectradialog.cpp:215
+#: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:219
-#: qtplugins/spectra/spectradialog.cpp:410
+#: qtplugins/spectra/spectradialog.cpp:218
+#: qtplugins/spectra/spectradialog.cpp:409
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "&Πυκνότητα ρυθμίσεων καταστάσεων"
+msgstr "Πυκνότητα καταστάσεων"
 
-#: qtplugins/spectra/spectradialog.cpp:256
+#: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
 msgstr "Επιλογή χρώματος παρασκηνίου"
 
-#: qtplugins/spectra/spectradialog.cpp:269
+#: qtplugins/spectra/spectradialog.cpp:268
 msgid "Select Foreground Color"
 msgstr "Επιλογή χρώματος προσκηνίου"
 
-#: qtplugins/spectra/spectradialog.cpp:282
+#: qtplugins/spectra/spectradialog.cpp:281
 msgid "Select Calculated Spectra Color"
 msgstr "Επιλογή υπολογιζόμενου χρώματος φασμάτων"
 
-#: qtplugins/spectra/spectradialog.cpp:294
+#: qtplugins/spectra/spectradialog.cpp:293
 msgid "Select Imported Spectra Color"
 msgstr "Επιλογή εισαγόμενου χρώματος φασμάτων"
 
-#: qtplugins/spectra/spectradialog.cpp:342
+#: qtplugins/spectra/spectradialog.cpp:341
 #, fuzzy
 msgid "Vibrational Spectra"
 msgstr "Δονήσεις"
 
-#: qtplugins/spectra/spectradialog.cpp:343
-#: qtplugins/spectra/spectradialog.cpp:357
+#: qtplugins/spectra/spectradialog.cpp:342
+#: qtplugins/spectra/spectradialog.cpp:356
 #, fuzzy
 #| msgid "Wavenumber (cm<sup>-1</sup>)"
 msgid "Wavenumbers (cm⁻¹)"
-msgstr "Κυματαριθμός (cm<sup>−1</sup>)"
+msgstr "Κυματαριθμός (cm⁻¹)"
 
-#: qtplugins/spectra/spectradialog.cpp:344
-#, fuzzy
-#| msgid "Transition State"
+#: qtplugins/spectra/spectradialog.cpp:343
 msgid "Transmission"
-msgstr "Κατάσταση μετάπτωσης"
+msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:356
+#: qtplugins/spectra/spectradialog.cpp:355
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Εισαγωγή φασμάτων"
+msgstr "Ράμαν φασμάτων"
 
-#: qtplugins/spectra/spectradialog.cpp:358
-#: qtplugins/spectra/spectradialog.cpp:371
-#: qtplugins/spectra/spectradialog.cpp:384
-#: qtplugins/spectra/spectradialog.cpp:399
-#: qtplugins/spectra/spectradialog.cpp:412
+#: qtplugins/spectra/spectradialog.cpp:357
+#: qtplugins/spectra/spectradialog.cpp:370
+#: qtplugins/spectra/spectradialog.cpp:383
+#: qtplugins/spectra/spectradialog.cpp:398
+#: qtplugins/spectra/spectradialog.cpp:411
 #, fuzzy
 #| msgid "Intensities"
 msgid "Intensity"
 msgstr "Εντάσεις"
 
-#: qtplugins/spectra/spectradialog.cpp:369
+#: qtplugins/spectra/spectradialog.cpp:368
 #, fuzzy
 #| msgid "Spectra"
 msgid "NMR Spectra"
 msgstr "Φάσματα"
 
-#: qtplugins/spectra/spectradialog.cpp:370
+#: qtplugins/spectra/spectradialog.cpp:369
 #, fuzzy
 #| msgid "Shift (ppm)"
 msgid "Chemical Shift (ppm)"
 msgstr "Μετατόπιση (ppm)"
 
-#: qtplugins/spectra/spectradialog.cpp:382
-#, fuzzy
-#| msgid "Electron Density"
+#: qtplugins/spectra/spectradialog.cpp:381
 msgid "Electronic Spectra"
-msgstr "Ηλεκτρονική πυκνότητα"
+msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:383
-#: qtplugins/spectra/spectradialog.cpp:411
+#: qtplugins/spectra/spectradialog.cpp:382
+#: qtplugins/spectra/spectradialog.cpp:410
 #, fuzzy
 msgid "eV"
 msgstr "eV"
 
-#: qtplugins/spectra/spectradialog.cpp:397
+#: qtplugins/spectra/spectradialog.cpp:396
 msgid "Circular Dichroism Spectra"
 msgstr ""
 
-#: qtplugins/spectra/spectradialog.cpp:398
+#: qtplugins/spectra/spectradialog.cpp:397
 #, fuzzy
 msgid "eV)"
-msgstr "eV"
+msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5228,10 +5171,8 @@ msgid "Electron Density"
 msgstr "Ηλεκτρονική πυκνότητα"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Intensity"
 msgid "Spin Density"
-msgstr "Ένταση"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5305,9 +5246,8 @@ msgid "Calculating electron density"
 msgstr "Υπολογίζεται η ηλεκτρονική πυκνότητα"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Υπολογίζεται η ηλεκτρονική πυκνότητα"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5321,7 +5261,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
-msgstr "Ε&ξαγωγή εικόνας"
+msgstr "Εξαγωγή εικόνας"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5363,7 +5303,7 @@ msgstr "Συμμετρία"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1854
+#: qtplugins/symmetry/symmetry.h:34:1866
 msgid "Symmetry"
 msgstr "Συμμετρία"
 
@@ -5382,7 +5322,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetrywidget.cpp:330
 #, fuzzy, qt-format
 msgid "Group %1"
-msgstr "Όνομα ομάδας"
+msgstr "Ομάδας %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:338
 #, qt-format
@@ -5390,10 +5330,8 @@ msgid "%1 %2"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:81
-#, fuzzy
-#| msgid "Temperature"
 msgid "Template"
-msgstr "Θερμοκρασία"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:83
 msgid ""
@@ -5406,17 +5344,18 @@ msgid ""
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:309
-#, fuzzy
-#| msgid "Insert Peptide"
-msgid "Insert Template"
-msgstr "Εισαγωγή Πεπτιδίου"
+#: qtplugins/templatetool/templatetool.cpp:314
+#: qtplugins/templatetool/templatetool.cpp:466
+msgid "Clipboard"
+msgstr ""
 
-#: qtplugins/templatetool/templatetool.cpp:567
-#, fuzzy
-#| msgid "Insert Peptide"
+#: qtplugins/templatetool/templatetool.cpp:386
+msgid "Insert Template"
+msgstr ""
+
+#: qtplugins/templatetool/templatetool.cpp:661
 msgid "Insert Ligand"
-msgstr "Εισαγωγή Πεπτιδίου"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -5426,10 +5365,6 @@ msgstr "Μέτρηση"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr ""
-
-#: qtplugins/vanderwaalsao/vanderwaalsao.h:33
-msgid "Simple display of VdW spheres with ambient occlusion."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:27
@@ -5472,9 +5407,8 @@ msgid "Display vibrational modes."
 msgstr "Ορισμός κλασματικών συντεταγμένων"
 
 #: qtplugins/vrml/vrml.cpp:29
-#, fuzzy
 msgid "VRML Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -5492,65 +5426,63 @@ msgstr ""
 msgid "Render the molecule as a wireframe."
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:91
-#, fuzzy
-#| msgid "Calculated Spectra:"
+#: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
-msgstr "Υπολογισμένα φάσματα:"
+msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:112
+#: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:210 qtplugins/yaehmop/yaehmop.cpp:434
+#: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Cannot calculate band structure: no unit cell!"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:300
+#: qtplugins/yaehmop/yaehmop.cpp:299
 #, qt-format
 msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:310
+#: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:322
+#: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:368
+#: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:388
+#: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:534
+#: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Cannot find Yaehmop"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.cpp:545
+#: qtplugins/yaehmop/yaehmop.cpp:544
 #, fuzzy, qt-format
 #| msgid "G03 failed to start."
 msgid "Error: %1 failed to start"
-msgstr "Το G03 απέτυχε να ξεκινήσει."
+msgstr "Το %1 απέτυχε να ξεκινήσει"
 
-#: qtplugins/yaehmop/yaehmop.cpp:596
+#: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.h:39
+#: qtplugins/yaehmop/yaehmop.h:35
 msgid "Yaehmop"
 msgstr ""
 
-#: qtplugins/yaehmop/yaehmop.h:88
+#: qtplugins/yaehmop/yaehmop.h:84
 msgid "Perform extended Hückel calculations with yaehmop."
 msgstr ""
 
@@ -5608,16 +5540,14 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#, fuzzy
-#| msgid "Running Abinit calculation..."
 msgid "Submit Calculation…"
-msgstr "Εκτελείται υπολογισμός Abinit..."
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save Input…"
-msgstr "&Αποθήκευση εικόνας..."
+msgstr "Αποθήκευση εικόνας…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5831,7 +5761,7 @@ msgstr "Δομή"
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
 #, fuzzy
 msgid "Load Cube File"
-msgstr "Φόρτωση αρχείου..."
+msgstr "Φόρτωση αρχείου"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
@@ -5880,11 +5810,6 @@ msgstr ""
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isovalue"
-msgstr ""
-
-#. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-msgid "Opacity"
 msgstr ""
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:29
@@ -6223,11 +6148,11 @@ msgstr "γ:"
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, gamma)
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:201
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, beta)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:147
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, xRotateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:130
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:163
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, yRotateSpinBox)
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:146
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:179
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, zRotateSpinBox)
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:26
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7162,35 +7087,55 @@ msgstr "Υ"
 msgid "Translate by:"
 msgstr "Μετατόπιση κατά:"
 
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:159
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-msgid "X-axis"
-msgstr "Άξονας Χ"
-
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:166
-#. i18n: ectx: property (text), widget (QLabel, label_7)
-msgid "Y-axis"
-msgstr "Άξονας Υ"
-
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:173
-#. i18n: ectx: property (text), widget (QLabel, label_8)
-msgid "Z-axis"
-msgstr "Άξονας Ζ"
-
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:180
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Rotate around:"
 msgstr "Περιστροφή γύρω από:"
 
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:188
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:122
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Origin"
 msgstr "Αρχικό"
 
-#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:193
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-msgid "Geometry"
-msgstr "Γεωμετρία"
+msgid "Center of Molecule"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
+#. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
+msgid "Center of Selection"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+msgid "X-axis"
+msgstr "Άξονας Χ"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:199
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+msgid "Y-axis"
+msgstr "Άξονας Υ"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:206
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+msgid "Z-axis"
+msgstr "Άξονας Ζ"
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+msgid "Move:"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
+#. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
+msgid "Selected Atoms"
+msgstr ""
+
+#. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
+#. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
+msgid "Everything Else"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -7460,7 +7405,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 #, fuzzy
 msgid "Reference"
-msgstr "Ανα&φορά:"
+msgstr "Αναφορά:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -7841,7 +7786,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Wavelength:"
-msgstr "Μήκος κύματος (nm)"
+msgstr "Μήκος κύματος"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
@@ -7917,7 +7862,7 @@ msgstr "&Κλείσιμο"
 #, fuzzy
 #| msgid "Frequency Scale Factor:"
 msgid "Scale Factor:"
-msgstr "Συντελεστής κλίμακας συχνότητας:"
+msgstr "Συντελεστής κλίμακας:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8015,21 +7960,19 @@ msgstr "Φόντο:"
 #, fuzzy
 #| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "Εξαγωγή υπολογιζόμενου φάσματος"
+msgstr "υπολογιζόμενου φάσματος"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Σταθερό μέγεθος"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 #, fuzzy
 #| msgid "10e-"
 msgid "10"
-msgstr "10e-"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8157,21 +8100,19 @@ msgstr "Πολύ υψηλή"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Isosurface Value:"
-msgstr "Τιμή &ισοεπιφάνειας:"
+msgstr "Τιμή ισοεπιφάνειας:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
 #, fuzzy
 #| msgid " K"
 msgid " "
-msgstr " K"
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "Κανένα"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8182,10 +8123,8 @@ msgstr "Φωτεινό"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Strontium"
 msgid "Strong"
-msgstr "Στρόντιο"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
@@ -8315,9 +8254,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Επεξεργαστής καρτεσιανών συντεταγμένων"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -8404,24 +8342,18 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
-msgstr "Κατάσταση μετάπτωσης"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
-msgstr "Κατάσταση μετάπτωσης"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
-msgstr "Κατάσταση μετάπτωσης"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8432,7 +8364,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 #, fuzzy
 msgid "From Clipboard"
-msgstr "Ει&σαγωγή κρυστάλλου από το πρόχειρο..."
+msgstr "Εισαγωγή κρυστάλλου από το πρόχειρο..."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8443,13 +8375,13 @@ msgstr ""
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #, fuzzy
 msgid "Groups"
-msgstr "Όνομα ομάδας"
+msgstr "Ομάδες"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Group:"
-msgstr "Όνομα ομάδας"
+msgstr "Ομάδα:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8478,10 +8410,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Άζωτο"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8512,13 +8442,13 @@ msgstr "Εύρος:"
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Έναρξη &κίνησης"
+msgstr "Έναρξη κίνησης"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 #, fuzzy
 msgid "Stop Animation"
-msgstr "Διακοπή &κίνησης"
+msgstr "Διακοπή κίνησης"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
@@ -8538,7 +8468,7 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
 #, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -8679,10 +8609,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Number of Bonds:"
 msgid "Number of Dimensions:"
-msgstr "Αριθμός δεσμών:"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
@@ -8718,6 +8646,48 @@ msgstr ""
 "a.brzns@gmail.com,,elkosmas@gmail.com,,athmakrigiannis@gmail.com,,,"
 "angelosarn@hotmail.com,a.brzns@gmail.com,,elkosmas@gmail.com,,"
 "athmakrigiannis@gmail.com"
+
+#, fuzzy
+#~| msgid ""
+#~| "Manipulation Tool (F10)\n"
+#~| "\n"
+#~| "Left Mouse: \tClick and drag to move atoms\n"
+#~| "Middle Mouse: Click and drag to move atoms further away or closer\n"
+#~| "Right Mouse: \tClick and drag to rotate selected atoms.\n"
+#~| "Double-Click: \tReset the view."
+#~ msgid ""
+#~ "Manipulation Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to move atoms\n"
+#~ "Right Mouse: \tClick and drag to rotate selected atoms.\n"
+#~ msgstr ""
+#~ "Εργαλείο χειρισμού (F10)\n"
+#~ "\n"
+#~ "Αριστερό πλήκτρο: Πάτημα και σύρσιμο για τη μετακίνηση ατόμων\n"
+#~ "Μεσαίο πλήκτρο: Πάτημα και σύρσιμο για τη μετακίνηση ατόμων σε μεγαλύτερη "
+#~ "ή μικρότερη εγγύτητα\n"
+#~ "Δεξί πλήκτρο: Πάτημα και σύρσιμο για την περιστροφή των επιλεγμένων "
+#~ "ατόμων.\n"
+#~ "Διπλό πάτημα: Επαναφορά της προβολής."
+
+#~ msgid "Geometry"
+#~ msgstr "Γεωμετρία"
+
+#, fuzzy
+#~ msgid "Add Unit Cell"
+#~ msgstr "Προσθήκη &μοναδιαίας κυψελίδας"
+
+#, fuzzy
+#~ msgid "By Atomic Index"
+#~ msgstr "Δείκτες ατόμου"
+
+#, fuzzy
+#~ msgid "By Distance"
+#~ msgstr "Απόσταση"
+
+#, fuzzy
+#~ msgid "Select Water…"
+#~ msgstr "Δείκτες ατόμου"
 
 #, fuzzy
 #~ msgid "&Copy"

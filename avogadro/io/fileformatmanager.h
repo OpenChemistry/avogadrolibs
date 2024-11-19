@@ -253,9 +253,9 @@ public:
   std::string error() const;
 
 private:
-  typedef std::vector<size_t> FormatIdVector;
-  typedef std::map<std::string, FormatIdVector, CaseInsensitiveComparator>
-    FormatIdMap;
+  using FormatIdVector = std::vector<size_t>;
+  using FormatIdMap =
+    std::map<std::string, FormatIdVector, CaseInsensitiveComparator>;
 
   FileFormatManager();
   ~FileFormatManager();

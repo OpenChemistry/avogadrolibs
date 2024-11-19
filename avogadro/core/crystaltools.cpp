@@ -256,6 +256,9 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 */
 #define NIGGLI_DEBUG(step)
 
+  // Allow Argument Dependent Lookup for swap
+  using std::swap;
+
   // Perform iterative reduction:
   unsigned int iter;
   for (iter = 0; iter < maxIterations; ++iter) {
@@ -264,8 +267,8 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
         (fuzzyEqual(A, B, tol) &&
          fuzzyGreaterThan(std::fabs(xi), std::fabs(eta), tol))) {
       cob *= C1;
-      std::swap(A, B);
-      std::swap(xi, eta);
+      swap(A, B);
+      swap(xi, eta);
       NIGGLI_DEBUG(1);
     }
 
@@ -274,8 +277,8 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
         (fuzzyEqual(B, C, tol) &&
          fuzzyGreaterThan(std::fabs(eta), std::fabs(zeta), tol))) {
       cob *= C2;
-      std::swap(B, C);
-      std::swap(eta, zeta);
+      swap(B, C);
+      swap(eta, zeta);
       NIGGLI_DEBUG(2);
       continue;
     }

@@ -16,10 +16,6 @@ MoleQueueManager::MoleQueueManager(QObject* parent_)
           SLOT(updateQueueModel(QJsonObject)));
 }
 
-MoleQueueManager::~MoleQueueManager()
-{
-}
-
 MoleQueueManager& MoleQueueManager::instance()
 {
   return m_instance ? *m_instance : *(m_instance = new MoleQueueManager());

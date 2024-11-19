@@ -8,8 +8,7 @@
 
 #include "fileformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class MdlFormat mdlformat.h <avogadro/io/mdlformat.h>
@@ -22,8 +21,8 @@ namespace Io {
 class AVOGADROIO_EXPORT MdlFormat : public FileFormat
 {
 public:
-  MdlFormat();
-  ~MdlFormat() override;
+  MdlFormat() = default;
+  ~MdlFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -52,13 +51,14 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
+  bool readV3000(std::istream& in, Core::Molecule& molecule);
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
+  bool writeV3000(std::ostream& out, const Core::Molecule& molecule);
 
 protected:
   bool m_writeProperties = false;
 };
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_MDLFORMAT_H

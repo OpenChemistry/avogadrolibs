@@ -23,8 +23,7 @@
 #include <map>
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class BasisSet;
 class Cube;
 class Mesh;
@@ -44,16 +43,16 @@ class AVOGADROCORE_EXPORT Molecule
 {
 public:
   /** Typedef for Atom class. */
-  typedef Atom AtomType;
+  using AtomType = Atom;
 
   /** Typedef for Bond class. */
-  typedef Bond BondType;
+  using BondType = Bond;
   /** Type for custom element map. */
-  typedef std::map<unsigned char, std::string> CustomElementMap;
+  using CustomElementMap = std::map<unsigned char, std::string>;
 
   /** Type for element masks (e.g., does this molecule contain certain elements)
    */
-  typedef std::bitset<element_count> ElementMask;
+  using ElementMask = std::bitset<element_count>;
 
   /** Creates a new, empty molecule. */
   Molecule();
@@ -861,14 +860,14 @@ private:
 class AVOGADROCORE_EXPORT Atom : public AtomTemplate<Molecule>
 {
 public:
-  Atom() : AtomTemplate<Molecule>() {}
+  Atom() = default;
   Atom(Molecule* m, Index i) : AtomTemplate<Molecule>(m, i) {}
 };
 
 class AVOGADROCORE_EXPORT Bond : public BondTemplate<Molecule>
 {
 public:
-  Bond() : BondTemplate<Molecule>() {}
+  Bond() = default;
   Bond(Molecule* m, Index i) : BondTemplate<Molecule>(m, i) {}
 };
 
@@ -1178,7 +1177,6 @@ inline unsigned char Molecule::atomicNumber(Index atomId) const
                                          : InvalidElement;
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MOLECULE_H

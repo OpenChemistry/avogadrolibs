@@ -10,15 +10,13 @@
 
 #include "avogadrocore.h"
 
-#include <vector>
 #include <tuple>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 
-typedef std::tuple<Index, Index, Index, Index> Dihedral;
+using Dihedral = std::tuple<Index, Index, Index, Index>;
 
 class AVOGADROCORE_EXPORT DihedralIterator
 {
@@ -28,7 +26,7 @@ public:
    */
   DihedralIterator(const Molecule *mol);
 
-  ~DihedralIterator() {}
+  ~DihedralIterator() = default;
 
   Dihedral* operator*() {
     return &m_current;
@@ -47,11 +45,10 @@ public:
   }
 
 private:
-  Dihedral     m_current;
+  Dihedral m_current;
   const Molecule* m_mol;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_DIHEDRALITERATOR_H

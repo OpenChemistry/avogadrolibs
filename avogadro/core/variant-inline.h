@@ -10,8 +10,7 @@
 
 #include <sstream>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 inline Variant::Variant() : m_type(Null) {}
 
@@ -465,7 +464,6 @@ inline T Variant::lexical_cast(const std::string& str)
   return value;
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_VARIANT_INLINE_H

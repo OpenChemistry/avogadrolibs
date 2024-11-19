@@ -8,14 +8,11 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocore.h"
-
 #include "array.h"
 #include "color3f.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 class Molecule;
 class Mutex;
@@ -121,6 +118,10 @@ public:
    * @return Pointer to the first vertex of the specified triangle.
    */
   const Vector3f* vertex(int n) const;
+
+  bool setTriangles(const Core::Array<Vector3f>& values);
+  const Core::Array<Vector3f>& triangles() const;
+
 
   /**
    * Clear the vertices vector and assign new values.
@@ -228,6 +229,7 @@ private:
   Core::Array<Vector3f> m_vertices;
   Core::Array<Vector3f> m_normals;
   Core::Array<Color3f> m_colors;
+  Core::Array<Vector3f> m_triangles;
   std::string m_name;
   bool m_stable;
   float m_isoValue;
@@ -236,7 +238,6 @@ private:
   Mutex* m_lock;
 };
 
-} // End namespace Core
-} // End namespace Avogadro
+} // End namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_MESH_H

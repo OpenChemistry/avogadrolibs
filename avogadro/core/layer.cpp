@@ -8,10 +8,6 @@
 
 namespace Avogadro::Core {
 
-using std::swap;
-
-Layer::Layer() : m_activeLayer(0), m_maxLayer(0) {}
-
 void Layer::addAtom(size_t layer)
 {
   addAtom(layer, m_atomAndLayers.size());
@@ -112,6 +108,9 @@ void Layer::removeLayer(size_t layer)
 
 void Layer::swapLayer(Index a, Index b)
 {
+  // Allow Argument Dependent Lookup for swap
+  using std::swap;
+
   swap(m_atomAndLayers[a], m_atomAndLayers[b]);
 }
 

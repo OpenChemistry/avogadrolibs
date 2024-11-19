@@ -9,8 +9,7 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Detect and render close contacts between atoms.
@@ -22,7 +21,7 @@ class CloseContacts : public QtGui::ScenePlugin
 
 public:
   explicit CloseContacts(QObject* parent = nullptr);
-  ~CloseContacts() override;
+  ~CloseContacts() override = default;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
@@ -61,7 +60,6 @@ private:
   std::array<float, 3> m_lineWidths;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CLOSECONTACTS_H

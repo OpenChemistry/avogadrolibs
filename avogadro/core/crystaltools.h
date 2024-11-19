@@ -13,8 +13,7 @@
 #include "matrix.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Molecule;
 class UnitCell;
 
@@ -37,7 +36,7 @@ public:
     /** Transform atoms along with the unit cell. */
     TransformAtoms = 0x1
   };
-  typedef int Options;
+  using Options = int;
 
   /**
    * Adjust the atomic positions in @a molecule so that the fractional (lattice)
@@ -151,7 +150,6 @@ private:
   ~CrystalTools(); // not implemented
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_CRYSTALTOOLS_H

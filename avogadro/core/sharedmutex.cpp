@@ -56,4 +56,4 @@ void SharedMutex::unlockForWrite()
   d->lock.unlock();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

@@ -13,8 +13,8 @@
 #include <QtGui/QColor>
 
 class QColorDialog;
-namespace Avogadro {
-namespace QtPlugins {
+
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The ApplyColors class is an extension to modify apply custom colors.
@@ -60,7 +60,6 @@ private:
 
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_APPLYCOLORS_H

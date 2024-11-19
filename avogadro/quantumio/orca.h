@@ -62,6 +62,8 @@ private:
   std::vector<int> m_atomNums;
   std::vector<Eigen::Vector3d> m_atomPos;
 
+  Eigen::Vector3d m_dipoleMoment;
+
   std::vector<std::vector<int>> m_bondOrders;
 
   std::vector<int> shellFunctions;
@@ -84,6 +86,7 @@ private:
     IR,
     Raman,
     Electronic,
+    ECD, // electronic circular dichroism
     NMR,
     BondOrders,
     NotParsing,
@@ -98,6 +101,8 @@ private:
   bool m_readBeta;
 
   int m_homo;
+  int m_charge;
+  int m_spin;
 
   int m_currentAtom;
   unsigned int m_numBasisFunctions;
@@ -119,6 +124,12 @@ private:
   Core::Array<double> m_IRintensities;
   Core::Array<double> m_RamanIntensities;
   Core::Array<Core::Array<Vector3>> m_vibDisplacements;
+
+  Core::Array<double> m_electronicTransitions; // in eV
+  Core::Array<double> m_electronicIntensities;
+  Core::Array<double> m_electronicRotations; // for CD
+
+  Core::Array<double> m_nmrShifts; // for NMR (in ppm)
 };
 
 } // namespace QuantumIO

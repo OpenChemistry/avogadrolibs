@@ -21,10 +21,6 @@ namespace Calc {
 constexpr double M_PI = 3.14159265358979323846;
 #endif
 
-ChargeModel::ChargeModel() : m_dielectric(1.0) {}
-
-ChargeModel::~ChargeModel() {}
-
 Vector3 ChargeModel::dipoleMoment(const Molecule& mol) const
 {
   // default is to get the set of partial atomic charges

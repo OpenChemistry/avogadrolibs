@@ -116,7 +116,7 @@ public:
   std::string error() const;
 
 private:
-  typedef std::map<std::string, size_t> ModelIdMap;
+  using ModelIdMap = std::map<std::string, size_t>;
 
   EnergyManager();
   ~EnergyManager();

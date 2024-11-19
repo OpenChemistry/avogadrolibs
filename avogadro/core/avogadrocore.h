@@ -31,11 +31,11 @@
 namespace Avogadro {
 
 /** Typedef for a real number. */
-typedef double Real;
+using Real = double;
 
 /** Typedef for indices and sizes. */
-typedef size_t Index;
-constexpr Index MaxIndex = std::numeric_limits<Index>::max();
+using Index = size_t;
+inline constexpr Index MaxIndex = std::numeric_limits<Index>::max();
 
 /** Used to represent an invalid atomic number. */
 constexpr unsigned char InvalidElement = 255;
@@ -53,7 +53,7 @@ constexpr unsigned char CustomElementMax = 254;
 /**
  * Count of atomic number values that are used to represent custom,
  * non-elemental particles. */
-constexpr unsigned char CustomElementCount =
+inline constexpr unsigned char CustomElementCount =
   CustomElementMax - CustomElementMin + 1;
 
 /**

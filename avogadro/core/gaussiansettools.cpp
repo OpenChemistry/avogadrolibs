@@ -9,10 +9,6 @@
 #include "gaussianset.h"
 #include "molecule.h"
 
-#include <iostream>
-
-using std::vector;
-
 namespace Avogadro::Core {
 
 GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
@@ -23,8 +19,6 @@ GaussianSetTools::GaussianSetTools(Molecule* mol) : m_molecule(mol)
     calculateCutoffs();
   }
 }
-
-GaussianSetTools::~GaussianSetTools() {}
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
@@ -41,7 +35,7 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
   if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
     return 0.0;
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   const MatrixX& matrix = m_basis->moMatrix(m_type);
   int matrixSize(static_cast<int>(matrix.rows()));
@@ -78,7 +72,7 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
     return 0.0;
   }
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   // Now calculate the value of the density at this point in space
   double rho(0.0);
@@ -110,7 +104,7 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
     return 0.0;
   }
 
-  vector<double> values(calculateValues(position));
+  std::vector<double> values(calculateValues(position));
 
   // Now calculate the value of the density at this point in space
   double rho(0.0);
@@ -127,10 +121,8 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 
 bool GaussianSetTools::isValid() const
 {
-  if (m_molecule && dynamic_cast<GaussianSet*>(m_molecule->basisSet()))
-    return true;
-  else
-    return false;
+  return (m_molecule != nullptr) &&
+         (dynamic_cast<GaussianSet*>(m_molecule->basisSet()) != nullptr);
 }
 
 inline bool GaussianSetTools::isSmall(double val) const
@@ -181,7 +173,7 @@ inline void GaussianSetTools::calculateCutoffs()
   }
 }
 
-inline vector<double> GaussianSetTools::calculateValues(
+inline std::vector<double> GaussianSetTools::calculateValues(
   const Vector3& position) const
 {
   m_basis->initCalculation();
@@ -189,8 +181,8 @@ inline vector<double> GaussianSetTools::calculateValues(
   size_t basisSize = m_basis->symmetry().size();
   const std::vector<int>& basis = m_basis->symmetry();
   const std::vector<unsigned int>& atomIndices = m_basis->atomIndices();
-  vector<Vector3> deltas;
-  vector<double> dr2;
+  std::vector<Vector3> deltas;
+  std::vector<double> dr2;
   deltas.reserve(atomsSize);
   dr2.reserve(atomsSize);
 
@@ -206,7 +198,7 @@ inline vector<double> GaussianSetTools::calculateValues(
 
   // Allocate space for the values to be calculated.
   size_t matrixSize = m_basis->moMatrix().rows();
-  vector<double> values;
+  std::vector<double> values;
   values.resize(matrixSize, 0.0);
 
   // Now calculate the values at this point in space
@@ -245,7 +237,7 @@ inline vector<double> GaussianSetTools::calculateValues(
 }
 
 inline void GaussianSetTools::pointS(unsigned int moIndex, double dr2,
-                                     vector<double>& values) const
+                                     std::vector<double>& values) const
 {
   // S type orbitals - the simplest of the calculations with one component
   double tmp = 0.0;
@@ -259,7 +251,8 @@ inline void GaussianSetTools::pointS(unsigned int moIndex, double dr2,
 }
 
 inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2,
+                                     std::vector<double>& values) const
 {
   // P type orbitals have three components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -281,7 +274,8 @@ inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
 }
 
 inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2,
+                                     std::vector<double>& values) const
 {
   // D type orbitals have six components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -289,8 +283,8 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
 
   double components[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
+  std::vector<double>& gtoA = m_basis->gtoA();
+  std::vector<double>& gtoCN = m_basis->gtoCN();
 
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
@@ -315,15 +309,15 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointD5(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      vector<double>& values) const
+                                      std::vector<double>& values) const
 {
   // D type orbitals have five components and each component has a different
   // MO weighting. Many things can be cached to save time.
   unsigned int baseIndex = m_basis->moIndices()[moIndex];
   double components[5] = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
+  std::vector<double>& gtoA = m_basis->gtoA();
+  std::vector<double>& gtoCN = m_basis->gtoCN();
 
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
@@ -353,7 +347,8 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
     values[baseIndex + i] += componentsD[i] * components[i];
 }
 inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
-                                     double dr2, vector<double>& values) const
+                                     double dr2,
+                                     std::vector<double>& values) const
 {
   // F type orbitals have 10 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -361,8 +356,8 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
 
   double components[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
+  std::vector<double>& gtoA = m_basis->gtoA();
+  std::vector<double>& gtoCN = m_basis->gtoCN();
 
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
@@ -397,7 +392,7 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
 
 inline void GaussianSetTools::pointF7(unsigned int moIndex,
                                       const Vector3& delta, double dr2,
-                                      vector<double>& values) const
+                                      std::vector<double>& values) const
 {
   // F type orbitals have 7 components and each component has a different
   // independent MO weighting. Many things can be cached to save time though.
@@ -405,8 +400,8 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
 
   double components[7] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-  vector<double>& gtoA = m_basis->gtoA();
-  vector<double>& gtoCN = m_basis->gtoCN();
+  std::vector<double>& gtoA = m_basis->gtoA();
+  std::vector<double>& gtoCN = m_basis->gtoCN();
 
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];

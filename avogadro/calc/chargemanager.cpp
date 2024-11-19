@@ -6,8 +6,6 @@
 #include "chargemanager.h"
 #include "chargemodel.h"
 #include "defaultmodel.h"
-#include <algorithm>
-#include <memory>
 
 namespace Avogadro::Calc {
 
@@ -113,7 +111,7 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
   std::set<std::string> identifiers = molecule.partialChargeTypes();
 
   // check our models for compatibility
-  for (auto m_model : m_models) {
+  for (auto* m_model : m_models) {
     // We check that every element in the molecule
     // is handled by the model
     auto mask = m_model->elements() & molecule.elements();
