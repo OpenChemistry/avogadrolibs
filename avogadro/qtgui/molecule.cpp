@@ -13,17 +13,16 @@ namespace Avogadro::QtGui {
 using std::swap;
 
 Molecule::Molecule(QObject* p)
-  : QObject(p), Core::Molecule(),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(p), Core::Molecule(), m_undoMolecule(new RWMolecule(*this, this))
 {
-  m_undoMolecule->setInteractive(true);
+  m_undoMolecule->setInteractive(false);
 }
 
 Molecule::Molecule(const Molecule& other)
   : QObject(), Core::Molecule(other),
     m_undoMolecule(new RWMolecule(*this, this))
 {
-  m_undoMolecule->setInteractive(true);
+  m_undoMolecule->setInteractive(false);
   // Now assign the unique ids
   for (Index i = 0; i < atomCount(); i++)
     m_atomUniqueIds.push_back(i);
@@ -204,8 +203,8 @@ void Molecule::swapAtom(Index a, Index b)
   Core::Molecule::swapAtom(a, b);
 }
 
-Molecule::BondType Molecule::addBond(Index a, Index b,
-                                     unsigned char order, Index uniqueId)
+Molecule::BondType Molecule::addBond(Index a, Index b, unsigned char order,
+                                     Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_bondUniqueIds.size()) ||
       m_bondUniqueIds[uniqueId] != MaxIndex) {
@@ -290,6 +289,11 @@ void Molecule::emitChanged(unsigned int change)
     emit changed(change);
 }
 
+void Molecule::emitUpdate() const
+{
+  emit update();
+}
+
 Index Molecule::findAtomUniqueId(Index index) const
 {
   for (Index i = 0; i < static_cast<Index>(m_atomUniqueIds.size()); ++i)
@@ -311,4 +315,12 @@ RWMolecule* Molecule::undoMolecule()
   return m_undoMolecule;
 }
 
-} // namespace Avogadro
+bool Molecule::isInteractive() const
+{
+  if (m_undoMolecule == nullptr)
+    return false;
+
+  return m_undoMolecule->isInteractive();
+}
+
+} // namespace Avogadro::QtGui

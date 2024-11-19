@@ -39,17 +39,13 @@ public:
   }
 
   QWidget* setupWidget() override;
-  bool hasSetupWidget() const override { return false; }
-
-public slots:
-  void updateDipole();
-  void updateFinished();
+  bool hasSetupWidget() const override { return true; }
 
 private:
   std::string m_name = "Dipole Moment";
   std::string m_type = "MMFF94";
+  std::vector<std::string> m_types;
   Vector3 m_dipoleVector;
-  bool m_updateRequested = false;
   bool m_customDipole = false; // Custom dipole moment set
 };
 
