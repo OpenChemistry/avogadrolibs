@@ -11,13 +11,14 @@
 # Marco Marchiò <marcomarchi89@hotmail.com>, 2023.
 # nicola zanna <zanna.nicola1@gmail.com>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Giggino Bibitaro <pietr007@hotmail.it>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-11-20 18:04+0000\n"
+"Last-Translator: Giggino Bibitaro <pietr007@hotmail.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -72,7 +73,7 @@ msgstr "Errore nel popolamento del file %1: %2"
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
-msgstr ""
+msgstr "File '%1' non completo. Manca la stringa 'contents' o 'filePath'."
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
 #, qt-format
@@ -8395,9 +8396,8 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_maxY)
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:123
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
-#, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " .eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
