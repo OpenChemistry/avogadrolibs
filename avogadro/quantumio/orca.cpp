@@ -132,10 +132,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
 
   molecule.setData("totalCharge", m_charge);
   molecule.setData("totalSpinMultiplicity", m_spin);
-  // at the moment, Variant doesn't want to take Vector3d
-  Core::Variant dipole(m_dipoleMoment.x(), m_dipoleMoment.y(),
-                       m_dipoleMoment.z());
-  molecule.setData("dipoleMoment", dipole);
+  molecule.setData("dipoleMoment", m_dipoleMoment);
 
   return true;
 }

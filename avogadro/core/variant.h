@@ -47,13 +47,13 @@ public:
 
   /** Creates a variant to store @p value. */
   template <typename T>
-  Variant(const T value);
-
-  /** Creates a variant to store a 3D vector */
-  Variant(double x, double y, double z);
+  Variant(T value);
 
   /** Creates a new copy of @p variant. */
   inline Variant(const Variant& variant);
+
+  /** Creates a variant to store a 3D vector */
+  Variant(double x, double y, double z);
 
   /** Destroys the variant object. */
   inline ~Variant();
@@ -66,7 +66,7 @@ public:
 
   /** Sets the value of the variant to @p value. */
   template <typename T>
-  bool setValue(const T value);
+  bool setValue(T value);
 
   /** Sets the value of the variant to a 3D vector */
   bool setValue(double x, double y, double z);
@@ -99,10 +99,10 @@ public:
   /** @return the value of the variant as an \c unsigned \c int. */
   inline unsigned int toUInt() const;
 
-  /** @return the value of the variant as a \c long. */
+  /**  @return the value of the variant as a \c long. */
   inline long toLong() const;
 
-  /** @return the value of the variant as an \c unsigned \c long. */
+  /**  @return the value of the variant as an \c unsigned \c long. */
   inline unsigned long toULong() const;
 
   /** @return the value of the variant as a \c float. */

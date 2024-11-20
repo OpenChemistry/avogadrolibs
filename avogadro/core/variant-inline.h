@@ -8,7 +8,6 @@
 
 #include "variant.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace Avogadro::Core {
@@ -22,7 +21,7 @@ inline Variant::Variant(double x, double y, double z) : m_type(Vector)
 }
 
 template <typename T>
-inline Variant::Variant(const T v) : m_type(Null)
+inline Variant::Variant(T v) : m_type(Null)
 {
   setValue(v);
 }
@@ -38,14 +37,6 @@ inline Variant::Variant(const MatrixXf& v) : m_type(Matrix)
 {
   MatrixX* m = new MatrixX(v.rows(), v.cols());
   *m = v.cast<double>();
-  m_value.matrix = m;
-}
-
-template <>
-inline Variant::Variant(const MatrixX& v) : m_type(Matrix)
-{
-  MatrixX* m = new MatrixX(v.rows(), v.cols());
-  *m = v;
   m_value.matrix = m;
 }
 
@@ -101,7 +92,7 @@ inline bool Variant::setValue(double x, double y, double z)
 }
 
 template <typename T>
-inline bool Variant::setValue(const T v)
+inline bool Variant::setValue(T v)
 {
   AVO_UNUSED(v);
 
@@ -121,7 +112,7 @@ inline bool Variant::setValue(const T v)
 }
 
 template <>
-inline bool Variant::setValue(const bool v)
+inline bool Variant::setValue(bool v)
 {
   clear();
 
@@ -132,7 +123,7 @@ inline bool Variant::setValue(const bool v)
 }
 
 template <>
-inline bool Variant::setValue(const char v)
+inline bool Variant::setValue(char v)
 {
   clear();
 
@@ -143,7 +134,7 @@ inline bool Variant::setValue(const char v)
 }
 
 template <>
-inline bool Variant::setValue(const short v)
+inline bool Variant::setValue(short v)
 {
   clear();
 
@@ -154,7 +145,7 @@ inline bool Variant::setValue(const short v)
 }
 
 template <>
-inline bool Variant::setValue(const int v)
+inline bool Variant::setValue(int v)
 {
   clear();
 
@@ -165,7 +156,7 @@ inline bool Variant::setValue(const int v)
 }
 
 template <>
-inline bool Variant::setValue(const long v)
+inline bool Variant::setValue(long v)
 {
   clear();
 
@@ -176,7 +167,7 @@ inline bool Variant::setValue(const long v)
 }
 
 template <>
-inline bool Variant::setValue(const float v)
+inline bool Variant::setValue(float v)
 {
   clear();
 
@@ -187,7 +178,7 @@ inline bool Variant::setValue(const float v)
 }
 
 template <>
-inline bool Variant::setValue(const double v)
+inline bool Variant::setValue(double v)
 {
   clear();
 
@@ -198,7 +189,7 @@ inline bool Variant::setValue(const double v)
 }
 
 template <>
-inline bool Variant::setValue(const std::string string)
+inline bool Variant::setValue(std::string string)
 {
   clear();
 
@@ -226,7 +217,7 @@ inline bool Variant::setValue(void* pointer)
 }
 
 template <>
-inline bool Variant::setValue(const MatrixX& matrix)
+inline bool Variant::setValue(MatrixX matrix)
 {
   clear();
 
@@ -237,19 +228,7 @@ inline bool Variant::setValue(const MatrixX& matrix)
 }
 
 template <>
-inline bool Variant::setValue(const MatrixXf& matrix)
-{
-  clear();
-
-  m_type = Matrix;
-  m_value.matrix = new MatrixX(matrix.rows(), matrix.cols());
-  *m_value.matrix = matrix.cast<double>();
-
-  return true;
-}
-
-template <>
-inline bool Variant::setValue(const Vector3& vector)
+inline bool Variant::setValue(Vector3 vector)
 {
   clear();
 
@@ -260,7 +239,7 @@ inline bool Variant::setValue(const Vector3& vector)
 }
 
 template <>
-inline bool Variant::setValue(const Vector3f& vector)
+inline bool Variant::setValue(Vector3f vector)
 {
   clear();
 
@@ -425,6 +404,15 @@ inline Vector3 Variant::value() const
   return Vector3();
 }
 
+template <>
+inline const Vector3& Variant::value() const
+{
+  if (m_type == Vector)
+    return *m_value.vector;
+
+  return Vector3::Zero();
+}
+
 inline void Variant::clear()
 {
   if (m_type == String) {
@@ -513,14 +501,14 @@ inline MatrixX Variant::toMatrix() const
   return value<MatrixX>();
 }
 
-inline Vector3 Variant::toVector3() const
-{
-  return value<Vector3>();
-}
-
 inline const MatrixX& Variant::toMatrixRef() const
 {
   return value<const MatrixX&>();
+}
+
+inline Vector3 Variant::toVector3() const
+{
+  return value<Vector3>();
 }
 
 // --- Operators ----------------------------------------------------------- //
