@@ -32,6 +32,10 @@ using Avogadro::Core::GaussianSet;
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 
+// CODATA 2022
+// https://physics.nist.gov/cgi-bin/cuu/Value?hrev
+#define AU_TO_EV 27.211386245981
+
 MolecularModel::MolecularModel(QObject* parent)
   : QAbstractTableModel(parent), m_molecule(nullptr)
 {
@@ -240,7 +244,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     return QVariant::fromValue(m_molecule->residueCount());
   else if (key == " 9totalCharge")
     return QVariant::fromValue(m_molecule->totalCharge());
-  else if (key == " 10totalSpinMultiplicity")
+  else if (key == " 9totalSpinMultiplicity")
     return QVariant::fromValue(m_molecule->totalSpinMultiplicity());
 
   return QString::fromStdString(it->second.toString());
@@ -290,7 +294,7 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Number of Chains");
     else if (it->first == " 9totalCharge")
       return tr("Net Charge");
-    else if (it->first == " 10totalSpinMultiplicity")
+    else if (it->first == " 9totalSpinMultiplicity")
       return tr("Net Spin Multiplicity");
     else if (it->first == "dipoleMoment")
       return tr("Dipole Moment (Debye)");
@@ -390,16 +394,33 @@ void MolecularModel::updateTable(unsigned int flags)
   if (m_molecule->totalCharge() != 0)
     m_propertiesCache.setValue(" 9totalCharge", m_molecule->totalCharge());
   if (m_molecule->totalSpinMultiplicity() != 1)
-    m_propertiesCache.setValue(" 10totalSpinMultiplicity",
+    m_propertiesCache.setValue(" 9totalSpinMultiplicity",
                                m_molecule->totalSpinMultiplicity());
   if (m_molecule->hasData("dipoleMoment")) {
     auto dipole = m_molecule->data("dipoleMoment").toVector3();
-    m_propertiesCache.setValue("dipoleMoment", dipole.norm());
+    QString moment = QString::number(dipole.norm(), 'f', 3);
+    m_propertiesCache.setValue("dipoleMoment", moment.toStdString());
   }
 
   // TODO check for homo, lumo, or somo energies
-  // m_propertiesCache.setValue("homoEnergy", energy);
-  // m_propertiesCache.setValue("lumoEnergy", energy);
+  const auto* basis = m_molecule->basisSet();
+  const GaussianSet* gaussianSet = dynamic_cast<const GaussianSet*>(basis);
+  if (gaussianSet != nullptr && gaussianSet->scfType() == Core::Rhf) {
+    unsigned int homo = gaussianSet->homo();
+    unsigned int lumo = gaussianSet->lumo();
+    const auto moEnergies = gaussianSet->moEnergy();
+    if (moEnergies.size() > homo) {
+      m_propertiesCache.setValue("homoEnergy", moEnergies[homo] * AU_TO_EV);
+    }
+    // look for the lumo if there's a degenerate HOMO
+    const double threshold = 0.01 / AU_TO_EV; // 0.01 eV minimal separation
+    while (moEnergies.size() > lumo &&
+           std::abs(moEnergies[lumo] - moEnergies[homo]) < threshold) {
+      lumo += 1;
+    }
+    if (moEnergies.size() > lumo)
+      m_propertiesCache.setValue("lumoEnergy", moEnergies[lumo] * AU_TO_EV);
+  }
   // m_propertiesCache.setValue("somoEnergy", energy);
 
   // ignore potentially duplicate properties
