@@ -71,8 +71,8 @@ private:
   int m_electronsBeta;
   int m_normalModes;
   int m_numAtoms;
-  unsigned char m_spin;
-  signed char m_charge;
+  int m_spin;
+  int m_charge;
   unsigned int m_numBasisFunctions;
   std::vector<int> m_aNums;
   std::vector<double> m_aPos;
