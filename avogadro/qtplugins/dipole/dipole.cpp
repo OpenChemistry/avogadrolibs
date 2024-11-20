@@ -47,9 +47,13 @@ void Dipole::process(const QtGui::Molecule& molecule,
 
   // check if the molecule has the dipole set
   if (!m_customDipole) {
-    if (!molecule.isInteractive()) {
-      m_dipoleVector =
-        Calc::ChargeManager::instance().dipoleMoment(m_type, molecule);
+    if (molecule.hasData("dipoleMoment")) {
+      m_dipoleVector = molecule.data("dipoleMoment").toVector3();
+    } else {
+      if (!molecule.isInteractive()) {
+        m_dipoleVector =
+          Calc::ChargeManager::instance().dipoleMoment(m_type, molecule);
+      }
     }
   }
 

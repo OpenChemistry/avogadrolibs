@@ -73,7 +73,10 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
   // set the spin multiplicity
   molecule.setData("totalSpinMultiplicity", m_spin);
   // dipole moment
-  molecule.setData("dipoleMoment", m_dipoleMoment);
+  // TODO: This should be a Vector3d
+  Core::Variant dipole(m_dipoleMoment.x(), m_dipoleMoment.y(),
+                       m_dipoleMoment.z());
+  molecule.setData("dipoleMoment", dipole);
 
   // Do simple bond perception.
   molecule.perceiveBondsSimple();

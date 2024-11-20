@@ -38,6 +38,7 @@ public:
     Double,
     Pointer,
     String,
+    Vector,
     Matrix
   };
 
@@ -46,7 +47,10 @@ public:
 
   /** Creates a variant to store @p value. */
   template <typename T>
-  Variant(T value);
+  Variant(const T value);
+
+  /** Creates a variant to store a 3D vector */
+  Variant(double x, double y, double z);
 
   /** Creates a new copy of @p variant. */
   inline Variant(const Variant& variant);
@@ -62,7 +66,10 @@ public:
 
   /** Sets the value of the variant to @p value. */
   template <typename T>
-  bool setValue(T value);
+  bool setValue(const T value);
+
+  /** Sets the value of the variant to a 3D vector */
+  bool setValue(double x, double y, double z);
 
   /** @return the value of the variant in the type given by \c T. */
   template <typename T>
@@ -145,6 +152,7 @@ private:
     double _double;
     void* pointer;
     std::string* string;
+    Vector3* vector;
     MatrixX* matrix;
   } m_value;
 };

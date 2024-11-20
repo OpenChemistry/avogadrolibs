@@ -570,9 +570,11 @@ void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
   }
 
   // Start process
+#ifndef NDEBUG
   qDebug() << "OBProcess::executeObabel: "
               "Running"
            << m_obabelExecutable << options.join(" ");
+#endif
   m_process->start(m_obabelExecutable, options);
   if (!obabelStdin.isNull()) {
     m_process->write(obabelStdin);

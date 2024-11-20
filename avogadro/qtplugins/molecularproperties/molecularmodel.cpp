@@ -241,6 +241,10 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     return QVariant::fromValue(m_molecule->totalCharge());
   else if (key == " 10totalSpinMultiplicity")
     return QVariant::fromValue(m_molecule->totalSpinMultiplicity());
+  else if (key == "dipoleMoment") {
+    auto dipole = m_molecule->data("dipoleMoment").toVector3();
+    return QString::fromValue(dipole.norm());
+  }
 
   return QString::fromStdString(it->second.toString());
 }
@@ -291,6 +295,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Net Charge");
     else if (it->first == " 10totalSpinMultiplicity")
       return tr("Net Spin Multiplicity");
+    else if (it->first == "dipoleMoment")
+      return tr("Dipole Moment (Debye)");
     else if (it->first == "homoEnergy")
       return tr("HOMO Energy (eV)", "highest occupied molecular orbital");
     else if (it->first == "lumoEnergy")
