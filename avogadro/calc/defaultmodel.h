@@ -76,6 +76,8 @@ public:
    */
   virtual MatrixX partialCharges(Core::Molecule& mol) const override;
 
+  virtual MatrixX partialCharges(const Core::Molecule& mol) const override;
+
 protected:
   std::string m_identifier;
   Core::Molecule::ElementMask m_elements;

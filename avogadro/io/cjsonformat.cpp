@@ -609,15 +609,22 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       if (properties.find("totalCharge") != properties.end()) {
         molecule.setData("totalCharge",
                          static_cast<int>(properties["totalCharge"]));
-      }
-      if (properties.find("totalSpinMultiplicity") != properties.end()) {
+      } else if (properties.find("totalSpinMultiplicity") != properties.end()) {
         molecule.setData("totalSpinMultiplicity",
                          static_cast<int>(properties["totalSpinMultiplicity"]));
+      } else if (properties.find("dipoleMoment") != properties.end()) {
+        // read the numeric array
+        json dipole = properties["dipoleMoment"];
+        if (isNumericArray(dipole) && dipole.size() == 3) {
+          Core::Variant dipoleMoment(dipole[0], dipole[1], dipole[2]);
+          molecule.setData("dipoleMoment", dipoleMoment);
+        }
       }
       // iterate through everything else
       for (auto& element : properties.items()) {
         if (element.key() == "totalCharge" ||
-            element.key() == "totalSpinMultiplicity") {
+            element.key() == "totalSpinMultiplicity" ||
+            element.key() == "dipoleMoment") {
           continue;
         }
         if (element.value().type() == json::value_t::array) {

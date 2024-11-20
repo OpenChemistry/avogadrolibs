@@ -79,6 +79,17 @@ public:
 
   virtual MatrixX partialCharges(Core::Molecule& mol) const = 0;
 
+  virtual MatrixX partialCharges(const Core::Molecule& mol) const = 0;
+
+  /**
+   * @brief Calculate the dipole moment of the molecule.
+   *
+   * Defaults to using the partial charges and atomic positions
+   * to calculate the net dipole moment.
+   * @return The dipole moment vector of the molecule
+   */
+  virtual Vector3 dipoleMoment(const Core::Molecule& mol) const;
+
   /**
    * @brief Calculate the electrostatic potential at a particular point in
    * space.

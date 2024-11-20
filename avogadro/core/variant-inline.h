@@ -8,11 +8,18 @@
 
 #include "variant.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace Avogadro::Core {
 
 inline Variant::Variant() : m_type(Null) {}
+
+inline Variant::Variant(double x, double y, double z) : m_type(Vector)
+{
+  Vector3* v = new Vector3(x, y, z);
+  m_value.vector = v;
+}
 
 template <typename T>
 inline Variant::Variant(T v) : m_type(Null)
@@ -34,12 +41,28 @@ inline Variant::Variant(const MatrixXf& v) : m_type(Matrix)
   m_value.matrix = m;
 }
 
+template <>
+inline Variant::Variant(const Vector3& v) : m_type(Vector)
+{
+  Vector3* _v = new Vector3(v);
+  m_value.vector = _v;
+}
+
+template <>
+inline Variant::Variant(const Vector3f& v) : m_type(Vector)
+{
+  Vector3* _v = new Vector3(v.x(), v.y(), v.z());
+  m_value.vector = _v;
+}
+
 inline Variant::Variant(const Variant& variant) : m_type(variant.type())
 {
   if (m_type == String)
     m_value.string = new std::string(variant.toString());
   else if (m_type == Matrix)
     m_value.matrix = new MatrixX(*variant.m_value.matrix);
+  else if (m_type == Vector)
+    m_value.vector = new Vector3(*variant.m_value.vector);
   else if (m_type != Null)
     m_value = variant.m_value;
 }
@@ -59,10 +82,30 @@ inline bool Variant::isNull() const
   return m_type == Null;
 }
 
+inline bool Variant::setValue(double x, double y, double z)
+{
+  clear();
+
+  m_type = Vector;
+  m_value.vector = new Vector3(x, y, z);
+
+  return true;
+}
+
 template <typename T>
 inline bool Variant::setValue(T v)
 {
   AVO_UNUSED(v);
+
+#ifndef NDEBUG
+#if defined(_MSC_VER)
+  std::cerr << " Variant::setValue() not implemented for " << __FUNCSIG__
+            << std::endl;
+#else
+  std::cerr << " Variant::setValue() not implemented for "
+            << __PRETTY_FUNCTION__ << std::endl;
+#endif
+#endif
 
   clear();
 
@@ -181,6 +224,28 @@ inline bool Variant::setValue(MatrixX matrix)
 
   m_type = Matrix;
   m_value.matrix = new MatrixX(matrix);
+
+  return true;
+}
+
+template <>
+inline bool Variant::setValue(Vector3 vector)
+{
+  clear();
+
+  m_type = Vector;
+  m_value.vector = new Vector3(vector);
+
+  return true;
+}
+
+template <>
+inline bool Variant::setValue(Vector3f vector)
+{
+  clear();
+
+  m_type = Vector;
+  m_value.vector = new Vector3(vector.x(), vector.y(), vector.z());
 
   return true;
 }
@@ -331,6 +396,24 @@ inline const MatrixX& Variant::value() const
   return nullMatrix;
 }
 
+template <>
+inline Vector3 Variant::value() const
+{
+  if (m_type == Vector)
+    return *m_value.vector;
+
+  return Vector3();
+}
+
+template <>
+inline const Vector3& Variant::value() const
+{
+  if (m_type == Vector)
+    return *m_value.vector;
+
+  return Vector3::Zero();
+}
+
 inline void Variant::clear()
 {
   if (m_type == String) {
@@ -422,6 +505,11 @@ inline MatrixX Variant::toMatrix() const
 inline const MatrixX& Variant::toMatrixRef() const
 {
   return value<const MatrixX&>();
+}
+
+inline Vector3 Variant::toVector3() const
+{
+  return value<Vector3>();
 }
 
 // --- Operators ----------------------------------------------------------- //

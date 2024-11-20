@@ -53,7 +53,8 @@ void MolecularModel::setMolecule(QtGui::Molecule* molecule)
   }
 
   // make sure we know if the molecule changed
-  connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateTable(uint)));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &MolecularModel::updateTable);
   updateTable(QtGui::Molecule::Added);
 }
 
@@ -291,6 +292,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Net Charge");
     else if (it->first == " 10totalSpinMultiplicity")
       return tr("Net Spin Multiplicity");
+    else if (it->first == "dipoleMoment")
+      return tr("Dipole Moment (Debye)");
     else if (it->first == "homoEnergy")
       return tr("HOMO Energy (eV)", "highest occupied molecular orbital");
     else if (it->first == "lumoEnergy")
@@ -389,6 +392,10 @@ void MolecularModel::updateTable(unsigned int flags)
   if (m_molecule->totalSpinMultiplicity() != 1)
     m_propertiesCache.setValue(" 10totalSpinMultiplicity",
                                m_molecule->totalSpinMultiplicity());
+  if (m_molecule->hasData("dipoleMoment")) {
+    auto dipole = m_molecule->data("dipoleMoment").toVector3();
+    m_propertiesCache.setValue("dipoleMoment", dipole.norm());
+  }
 
   // TODO check for homo, lumo, or somo energies
   // m_propertiesCache.setValue("homoEnergy", energy);

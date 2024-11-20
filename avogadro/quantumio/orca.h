@@ -62,7 +62,7 @@ private:
   std::vector<int> m_atomNums;
   std::vector<Eigen::Vector3d> m_atomPos;
 
-  Eigen::Vector3d m_dipoleMoment;
+  Vector3 m_dipoleMoment;
 
   std::vector<std::vector<int>> m_bondOrders;
 
