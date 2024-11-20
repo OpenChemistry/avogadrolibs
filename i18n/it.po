@@ -12,13 +12,14 @@
 # nicola zanna <zanna.nicola1@gmail.com>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 # Giggino Bibitaro <pietr007@hotmail.it>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
 "PO-Revision-Date: 2024-11-20 18:04+0000\n"
-"Last-Translator: Giggino Bibitaro <pietr007@hotmail.it>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -1712,9 +1713,8 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:44
 #: qtplugins/applycolors/applycolors.cpp:65
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "Colore personalizzato"
+msgstr "Per colore personalizzato.."
 
 #: qtplugins/applycolors/applycolors.cpp:49
 msgid "By Atomic Index…"
