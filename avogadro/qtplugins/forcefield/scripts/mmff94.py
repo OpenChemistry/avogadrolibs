@@ -6,6 +6,12 @@ import json
 import sys
 
 try:
+    import msgpack
+    msgpack_available = True
+except ImportError:
+    msgpack_available = False
+
+try:
     from openbabel import pybel
     import numpy as np
 
@@ -30,6 +36,8 @@ def getMetaData():
         "ion": False,
         "radical": False,
     }
+    if (msgpack_available):
+        metaData["msgpack"] = True
     return metaData
 
 
@@ -48,23 +56,42 @@ def run(filename):
     num_atoms = len(mol.atoms)
     while True:
         # read new coordinates from stdin
-        for i in range(num_atoms):
-            coordinates = np.fromstring(input(), sep=" ")
-            atom = mol.atoms[i]
-            atom.OBAtom.SetVector(coordinates[0], coordinates[1], coordinates[2])
+        if (msgpack_available):
+            # unpack the coordinates
+            data = msgpack.unpackb(sys.stdin.buffer.read())
+            np_coords = np.array(data["coordinates"], dtype=float).reshape(-1, 3)
+            for i in range(num_atoms):
+                atom = mol.atoms[i]
+                atom.OBAtom.SetVector(np_coords[i][0], np_coords[i][1], np_coords[i][2])
+        else:
+            for i in range(num_atoms):
+                coordinates = np.fromstring(input(), sep=" ")
+                atom = mol.atoms[i]
+                atom.OBAtom.SetVector(coordinates[0], coordinates[1], coordinates[2])
 
         # update the molecule geometry for the next energy
         ff.SetCoordinates(mol.OBMol)
 
         # first print the energy of these coordinates
         energy = ff.Energy(True)  # in kJ/mol
-        print("AvogadroEnergy:", energy)  # in kJ/mol
+        if (msgpack_available):
+            response = {"energy": energy}
+        else:
+            print("AvogadroEnergy:", energy)  # in kJ/mol
 
         # now print the gradient on each atom
-        print("AvogadroGradient:")
-        for atom in mol.atoms:
-            grad = ff.GetGradient(atom.OBAtom)
-            print(-1.0*grad.GetX(), -1.0*grad.GetY(), -1.0*grad.GetZ())
+        if (msgpack_available):
+            gradient = []
+            for atom in mol.atoms:
+                grad = ff.GetGradient(atom.OBAtom)
+                gradient.append([-1.0*grad.GetX(), -1.0*grad.GetY(), -1.0*grad.GetZ()])
+            response["gradient"] = gradient
+            print(msgpack.packb(response))
+        else:
+            print("AvogadroGradient:")
+            for atom in mol.atoms:
+                grad = ff.GetGradient(atom.OBAtom)
+                print(-1.0*grad.GetX(), -1.0*grad.GetY(), -1.0*grad.GetZ())
 
 
 

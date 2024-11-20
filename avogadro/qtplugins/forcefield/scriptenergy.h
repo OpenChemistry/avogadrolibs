@@ -94,6 +94,7 @@ private:
   bool m_ions;
   bool m_radicals;
   bool m_unitCells;
+  bool m_msgPack = false;
 
   std::string m_identifier;
   std::string m_name;

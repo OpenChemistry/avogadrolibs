@@ -6,6 +6,12 @@ import json
 import sys
 
 try:
+    import msgpack
+    msgpack_available = True
+except ImportError:
+    msgpack_available = False
+
+try:
     import torch
     import torchani
     import numpy as np
@@ -34,6 +40,8 @@ def getMetaData():
         "ion": False,
         "radical": False,
     }
+    if (msgpack_available):
+        metaData["msgpack"] = True
     return metaData
 
 
@@ -54,19 +62,35 @@ def run(filename):
     num_atoms = len(atoms)
     while True:
         # read new coordinates from stdin
-        for i in range(num_atoms):
-            np_coords[i] = np.fromstring(input(), sep=" ")
+        if (msgpack_available):
+            # unpack the coordinates
+            data = msgpack.unpackb(sys.stdin.buffer.read())
+            np_coords = np.array(data["coordinates"], dtype=float).reshape(-1, 3)
+        else:
+            for i in range(num_atoms):
+                np_coords[i] = np.fromstring(input(), sep=" ")
         coordinates = torch.tensor([np_coords], requires_grad=True, device=device)
 
         # first print the energy of these coordinates
         energy = model((species, coordinates)).energies
-        print("AvogadroEnergy:", energy)  # in Hartree
+        if (msgpack_available):
+            response = { "energy": energy }
+        else:
+            print("AvogadroEnergy:", energy)  # in Hartree
 
         # now print the gradient on each atom
-        print("AvogadroGradient:")
         derivative = torch.autograd.grad(energy.sum(), coordinates)[0]
-        for i in range(num_atoms):
-            print(derivative[0][i][0].item(), derivative[0][i][1].item(), derivative[0][i][2].item())
+
+        if (msgpack_available):
+            gradient = []
+            for i in range(num_atoms):
+                gradient.append([derivative[0][i][0].item(), derivative[0][i][1].item(), derivative[0][i][2].item()])
+            response["gradient"] = gradient
+            print(msgpack.packb(response))
+        else:
+            print("AvogadroGradient:")
+            for i in range(num_atoms):
+                print(derivative[0][i][0].item(), derivative[0][i][1].item(), derivative[0][i][2].item())
 
 
 if __name__ == "__main__":

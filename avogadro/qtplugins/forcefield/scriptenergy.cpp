@@ -27,6 +27,10 @@
 #include <qjsonobject.h>
 #include <qjsonvalue.h>
 
+// nlohmann json for msgpack
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 namespace Avogadro::QtPlugins {
 
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
@@ -56,6 +60,11 @@ Calc::EnergyCalculator* ScriptEnergy::newInstance() const
 void ScriptEnergy::setMolecule(Core::Molecule* mol)
 {
   m_molecule = mol;
+
+  qDebug() << " ScriptEnergy::setMolecule() " << mol->formula().c_str()
+           << " method: " << m_identifier.c_str()
+           << " script: " << m_interpreter->scriptFilePath() << " msgPack "
+           << m_msgPack;
 
   // should check if the molecule is valid for this script
   // .. this should never happen, but let's be defensive
@@ -116,23 +125,41 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
 
   // write the new coordinates and read the energy
   QByteArray input;
-  for (Index i = 0; i < x.size(); i += 3) {
-    // write as x y z (space separated)
-    input += QString::number(x[i]).toUtf8() + " " +
-             QString::number(x[i + 1]).toUtf8() + " " +
-             QString::number(x[i + 2]).toUtf8() + "\n";
+  if (m_msgPack) {
+    json j;
+    j["coordinates"] = json::array();
+    for (Index i = 0; i < x.size(); ++i) {
+      j["coordinates"].push_back(x[i]);
+    }
+    auto msgPack = json::to_msgpack(j);
+    input = QByteArray::fromRawData(
+      reinterpret_cast<const char*>(msgPack.data()), msgPack.size());
+  } else {
+    for (Index i = 0; i < x.size(); i += 3) {
+      // write as x y z (space separated)
+      input += QString::number(x[i]).toUtf8() + " " +
+               QString::number(x[i + 1]).toUtf8() + " " +
+               QString::number(x[i + 2]).toUtf8() + "\n";
+    }
   }
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
-  // go through lines in result until we see "AvogadroEnergy: "
-  QStringList lines = QString(result).remove('\r').split('\n');
   double energy = 0.0;
-  for (auto line : lines) {
-    if (line.startsWith("AvogadroEnergy:")) {
-      QStringList items = line.split(" ", Qt::SkipEmptyParts);
-      if (items.size() > 1) {
-        energy = items[1].toDouble();
-        break;
+  if (m_msgPack) {
+    json j = json::from_msgpack(result.toStdString());
+    if (j.find("energy") != j.end()) {
+      return j["energy"];
+    }
+  } else {
+    // go through lines in result until we see "AvogadroEnergy: "
+    QStringList lines = QString(result).remove('\r').split('\n');
+    for (auto line : lines) {
+      if (line.startsWith("AvogadroEnergy:")) {
+        QStringList items = line.split(" ", Qt::SkipEmptyParts);
+        if (items.size() > 1) {
+          energy = items[1].toDouble();
+          break;
+        }
       }
     }
   }
@@ -150,36 +177,56 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // Get the gradient from the script
   // write the new coordinates and read the energy
   QByteArray input;
-  for (Index i = 0; i < x.size(); i += 3) {
-    // write as x y z (space separated)
-    input += QString::number(x[i]).toUtf8() + " " +
-             QString::number(x[i + 1]).toUtf8() + " " +
-             QString::number(x[i + 2]).toUtf8() + "\n";
+  if (m_msgPack) {
+    json j;
+    j["coordinates"] = json::array();
+    for (Index i = 0; i < x.size(); ++i) {
+      j["coordinates"].push_back(x[i]);
+    }
+    auto msgPack = json::to_msgpack(j);
+    input = QByteArray::fromRawData(
+      reinterpret_cast<const char*>(msgPack.data()), msgPack.size());
+  } else {
+    for (Index i = 0; i < x.size(); i += 3) {
+      // write as x y z (space separated)
+      input += QString::number(x[i]).toUtf8() + " " +
+               QString::number(x[i + 1]).toUtf8() + " " +
+               QString::number(x[i + 2]).toUtf8() + "\n";
+    }
   }
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
-  // parse the result
-  // first split on newlines
-  QStringList lines = QString(result).remove('\r').split('\n');
-  unsigned int i = 0;
-  bool readingGrad = false;
-  for (auto line : lines) {
-    if (line.startsWith("AvogadroGradient:")) {
-      readingGrad = true;
-      continue; // next line
+  if (m_msgPack) {
+    json j = json::from_msgpack(result.toStdString());
+    if (j.find("gradient") != j.end()) {
+      for (Index i = 0; i < x.size(); ++i) {
+        grad[i] = j["gradient"][i];
+      }
     }
-
-    if (readingGrad) {
-      QStringList items = line.split(" ", Qt::SkipEmptyParts);
-      if (items.size() == 3) {
-        grad[i] = items[0].toDouble();
-        grad[i + 1] = items[1].toDouble();
-        grad[i + 2] = items[2].toDouble();
-        i += 3;
+  } else {
+    // parse the result
+    // first split on newlines
+    QStringList lines = QString(result).remove('\r').split('\n');
+    unsigned int i = 0;
+    bool readingGrad = false;
+    for (auto line : lines) {
+      if (line.startsWith("AvogadroGradient:")) {
+        readingGrad = true;
+        continue; // next line
       }
 
-      if (i > x.size())
-        break;
+      if (readingGrad) {
+        QStringList items = line.split(" ", Qt::SkipEmptyParts);
+        if (items.size() == 3) {
+          grad[i] = items[0].toDouble();
+          grad[i + 1] = items[1].toDouble();
+          grad[i + 2] = items[2].toDouble();
+          i += 3;
+        }
+
+        if (i > x.size())
+          break;
+      }
     }
   }
 
@@ -229,6 +276,7 @@ void ScriptEnergy::resetMetaData()
   m_valid = false;
   m_gradients = false;
   m_ions = false;
+  m_msgPack = false;
   m_radicals = false;
   m_unitCells = false;
   m_inputFormat = NotUsed;
@@ -350,6 +398,14 @@ void ScriptEnergy::readMetaData()
     return; // not valid
   }
   m_radicals = metaData["radical"].toBool();
+
+  // msgpack is optional
+  // defaults to not used
+  if (metaData["msgpack"].isBool()) {
+    m_msgPack = metaData["msgpack"].toBool();
+  } else if (metaData["msgPack"].isBool()) {
+    m_msgPack = metaData["msgPack"].toBool();
+  }
 
   // get the element mask
   // (if it doesn't exist, the default is no elements anyway)

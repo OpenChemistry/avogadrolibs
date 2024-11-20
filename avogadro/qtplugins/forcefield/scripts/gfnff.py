@@ -7,6 +7,12 @@ import sys
 import os
 
 try:
+    import msgpack
+    msgpack_available = True
+except ImportError:
+    msgpack_available = False
+
+try:
     import numpy as np
     from xtb.libxtb import VERBOSITY_MUTED
     from xtb.interface import Calculator, Param, Environment
@@ -74,6 +80,8 @@ def getMetaData():
         "ion": True,
         "radical": False,
     }
+    if (msgpack_available):
+        metaData["msgpack"] = True
     return metaData
 
 
@@ -105,7 +113,7 @@ def run(filename):
     #  and then just ignore it
     f = io.BytesIO()
     with stdout_redirector(f):
-        calc = Calculator(Param.GFNFF, atoms, coordinates, 
+        calc = Calculator(Param.GFNFF, atoms, coordinates,
                         charge=charge, uhf=spin)
         calc.set_verbosity(VERBOSITY_MUTED)
         res = calc.singlepoint()
@@ -113,25 +121,41 @@ def run(filename):
     # we loop forever - Avogadro will kill our process when done
     while True:
         # read new coordinates from stdin
-        for i in range(len(atoms)):
-            coordinates[i] = np.fromstring(input(), sep=' ')
-        # .. convert from Angstrom to Bohr
-        coordinates /= 0.52917721067
+        if (msgpack_available):
+            # unpack the coordinates
+            data = msgpack.unpackb(sys.stdin.buffer.read())
+            np_coords = np.array(data["coordinates"], dtype=float).reshape(-1, 3)
+            # .. we need to convert from Angstrom to Bohr
+            np_coords /= 0.52917721067
+            coordinates = np_coords
+        else:
+            for i in range(len(atoms)):
+                coordinates[i] = np.fromstring(input(), sep=' ')
+            # .. convert from Angstrom to Bohr
+            coordinates /= 0.52917721067
 
         # update the calculator and run a new calculation
         calc.update(coordinates)
         calc.singlepoint(res)
 
-        print("AvogadroEnergy:", res.get_energy())  # in Hartree
+        if (msgpack_available):
+            response = {"energy": res.get_energy()}
+        else:
+            print("AvogadroEnergy:", res.get_energy())  # in Hartree
         # times 2625.5 kJ/mol
 
         # now print the gradient
         # .. we don't want the "[]" in the output
-        print("AvogadroGradient:")
-        grad = res.get_gradient() * 4961.475  # convert units
-        output = np.array2string(grad)
-        output = output.replace("[", "").replace("]", "")
-        print(output)
+        if (msgpack_available):
+            grad = res.get_gradient() * 4961.475
+            response["gradient"] = grad.tolist()
+            print(msgpack.packb(response))
+        else:
+            print("AvogadroGradient:")
+            grad = res.get_gradient() * 4961.475  # convert units
+            output = np.array2string(grad)
+            output = output.replace("[", "").replace("]", "")
+            print(output)
 
 
 if __name__ == "__main__":
