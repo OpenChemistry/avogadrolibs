@@ -8,6 +8,7 @@
 
 #include "variant.h"
 
+#include <iostream>
 #include <sstream>
 
 namespace Avogadro::Core {
