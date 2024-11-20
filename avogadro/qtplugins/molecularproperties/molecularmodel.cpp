@@ -53,7 +53,8 @@ void MolecularModel::setMolecule(QtGui::Molecule* molecule)
   }
 
   // make sure we know if the molecule changed
-  connect(m_molecule, SIGNAL(changed(uint)), SLOT(updateTable(uint)));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &MolecularModel::updateTable);
   updateTable(QtGui::Molecule::Added);
 }
 
@@ -241,10 +242,6 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     return QVariant::fromValue(m_molecule->totalCharge());
   else if (key == " 10totalSpinMultiplicity")
     return QVariant::fromValue(m_molecule->totalSpinMultiplicity());
-  else if (key == "dipoleMoment") {
-    auto dipole = m_molecule->data("dipoleMoment").toVector3();
-    return QString::fromValue(dipole.norm());
-  }
 
   return QString::fromStdString(it->second.toString());
 }
@@ -395,6 +392,10 @@ void MolecularModel::updateTable(unsigned int flags)
   if (m_molecule->totalSpinMultiplicity() != 1)
     m_propertiesCache.setValue(" 10totalSpinMultiplicity",
                                m_molecule->totalSpinMultiplicity());
+  if (m_molecule->hasData("dipoleMoment")) {
+    auto dipole = m_molecule->data("dipoleMoment").toVector3();
+    m_propertiesCache.setValue("dipoleMoment", dipole.norm());
+  }
 
   // TODO check for homo, lumo, or somo energies
   // m_propertiesCache.setValue("homoEnergy", energy);
