@@ -50,7 +50,10 @@ void Dipole::process(const QtGui::Molecule& molecule,
     if (molecule.hasData("dipoleMoment")) {
       m_dipoleVector = molecule.data("dipoleMoment").toVector3();
     } else {
-      if (!molecule.isInteractive()) {
+      if (!molecule.isInteractive() && m_updateNeeded) {
+        m_updateNeeded = false;
+        // 500ms delay to allow the molecule to be updated
+        QTimer::singleShot(500, this, &Dipole::updateFinished);
         m_dipoleVector =
           Calc::ChargeManager::instance().dipoleMoment(m_type, molecule);
       }
@@ -58,6 +61,11 @@ void Dipole::process(const QtGui::Molecule& molecule,
   }
 
   arrow->addSingleArrow(m_dipoleVector.cast<float>(), origin);
+}
+
+void Dipole::updateFinished()
+{
+  m_updateNeeded = true;
 }
 
 QWidget* Dipole::setupWidget()

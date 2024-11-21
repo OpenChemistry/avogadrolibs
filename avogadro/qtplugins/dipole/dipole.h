@@ -41,12 +41,16 @@ public:
   QWidget* setupWidget() override;
   bool hasSetupWidget() const override { return false; }
 
+public slots:
+  void updateFinished();
+
 private:
   std::string m_name = "Dipole Moment";
   std::string m_type = "MMFF94";
   std::vector<std::string> m_types;
   Vector3 m_dipoleVector;
   bool m_customDipole = false; // Custom dipole moment set
+  bool m_updateNeeded = true;
 };
 
 } // end namespace QtPlugins
