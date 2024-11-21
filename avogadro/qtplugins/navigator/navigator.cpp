@@ -38,7 +38,7 @@ Navigator::Navigator(QObject* parent_)
 {
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setToolTip(
-    tr("Navigation Tool\n\n"
+    tr("Navigation Tool \tCtrl+1\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
        "Right Mouse: \tClick and drag to move the view.\n"));

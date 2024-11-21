@@ -48,7 +48,7 @@ Manipulator::Manipulator(QObject* parent_)
 {
   m_activateAction->setText(tr("Manipulate"));
   m_activateAction->setToolTip(
-    tr("Manipulation Tool\n\n"
+    tr("Manipulation Tool \tCtrl+6\n\n"
        "Left Mouse: \tClick and drag to move atoms\n"
        "Right Mouse: \tClick and drag to rotate atoms.\n"));
   setIcon();

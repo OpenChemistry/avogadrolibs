@@ -80,7 +80,7 @@ TemplateTool::TemplateTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Template"));
   m_activateAction->setToolTip(
-    tr("Template Tool\n\n"
+    tr("Template Tool \tCtrl+3\n\n"
        "Insert fragments, including metal centers.\n"
        "Select an element and coordination geometry,"
        "then click to insert a fragment.\n\n"

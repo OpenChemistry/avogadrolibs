@@ -45,7 +45,7 @@ PlayerTool::PlayerTool(QObject* parent_)
     m_toolWidget(nullptr), m_frameIdx(nullptr), m_slider(nullptr)
 {
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setToolTip(tr("Animation Tool"));
+  m_activateAction->setToolTip(tr("Animation Tool \tCtrl+9"));
   setIcon();
 }
 

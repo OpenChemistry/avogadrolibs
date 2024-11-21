@@ -70,7 +70,7 @@ Editor::Editor(QObject* parent_)
 {
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setToolTip(
-    tr("Draw Tool\n\n"
+    tr("Draw Tool \tCtrl+2\n\n"
        "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
        "Right Mouse: \tDelete Atom"));
   setIcon();

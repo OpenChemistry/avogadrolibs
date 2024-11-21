@@ -116,7 +116,7 @@ BondCentricTool::BondCentricTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Bond-Centric Manipulation"));
   m_activateAction->setToolTip(
-    tr("Bond Centric Manipulation Tool\n\n"
+    tr("Bond Centric Manipulation Tool \tCtrl+7\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
        "Right Mouse: \tClick and drag to move the view.\n"

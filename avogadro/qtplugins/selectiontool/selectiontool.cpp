@@ -49,7 +49,7 @@ SelectionTool::SelectionTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setToolTip(
-    tr("Selection Tool\n\n"
+    tr("Selection Tool \tCtrl+5\n\n"
        "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
        "\tDrag to select a range of atoms\n"
        "Right Mouse: \tClick outside the molecule to clear selection\n"

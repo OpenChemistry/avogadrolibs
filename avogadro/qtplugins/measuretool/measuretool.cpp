@@ -53,7 +53,7 @@ MeasureTool::MeasureTool(QObject* parent_)
 {
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setToolTip(
-    tr("Measure Tool\n\n"
+    tr("Measure Tool \tCtrl+8\n\n"
        "Left Mouse: \tSelect up to four Atoms.\n"
        "\tDistances are measured between 1-2 and 2-3\n"
        "\tAngle is measured between 1-3 using 2 as the common point\n"
