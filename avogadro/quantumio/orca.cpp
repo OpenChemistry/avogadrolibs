@@ -106,6 +106,18 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     molecule.setSpectra("NMR", nmrData);
   }
 
+  molecule.setCoordinate3d(molecule.atomPositions3d(), 0);
+  if (m_coordSets.size() > 1) {
+    for (unsigned int i = 1; i < m_coordSets.size(); i++) {
+      Array<Vector3> positions;
+      positions.reserve(molecule.atomCount());
+      for (size_t j = 0; j < molecule.atomCount(); ++j) {
+        positions.push_back(m_atomPos[j] * BOHR_TO_ANGSTROM);
+      }
+      molecule.setCoordinate3d(positions, i);
+    }
+  }
+
   // guess bonds and bond orders
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -152,6 +164,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   if (Core::contains(key, "CARTESIAN COORDINATES (A.U.)")) {
     m_coordFactor = 1.; // leave the coords in BOHR ....
     m_currentMode = Atoms;
+    // if there are any current coordinates, push them back
+    if (m_atomPos.size() > 0) {
+      m_coordSets.push_back(m_atomPos);
+    }
     m_atomPos.clear();
     m_atomNums.clear();
     m_atomLabel.clear();
