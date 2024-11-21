@@ -64,8 +64,10 @@ void InputGeneratorWidget::setMolecule(QtGui::Molecule* mol)
     m_molecule->disconnect(this);
 
   m_molecule = mol;
-
   if (mol) {
+    // make sure to call the base class method
+    QtGui::JsonWidget::setMolecule(mol);
+
     connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
     connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
   }
@@ -119,6 +121,13 @@ void InputGeneratorWidget::setBatchMode(bool m)
 void InputGeneratorWidget::showEvent(QShowEvent* e)
 {
   QWidget::showEvent(e);
+
+  if (m_molecule != nullptr) {
+    int charge = static_cast<int>(m_molecule->totalCharge());
+    int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
+    setOption("Charge", charge);
+    setOption("Multiplicity", multiplicity);
+  }
 
   // Update the preview text if an update was requested while hidden. Use a
   // single shot to allow the dialog to show before popping up any warnings.
@@ -649,4 +658,4 @@ void InputGeneratorWidget::updateOptions()
   setOptionDefaults();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue
