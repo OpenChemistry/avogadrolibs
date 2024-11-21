@@ -338,7 +338,6 @@ Qt::ItemFlags MolecularModel::flags(const QModelIndex& index) const
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 
   int row = index.row();
-  int col = index.column();
 
   if (row == 0) // name
     return editable;
@@ -363,7 +362,6 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
     return false;
 
   int row = index.row();
-  int col = index.column();
 
   if (row == 0) { // name should always be the first row
     m_name = value.toString();
