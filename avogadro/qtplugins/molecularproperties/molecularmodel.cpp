@@ -381,7 +381,7 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
     return true;
   } else if (key == " 9totalSpinMultiplicity") {
     int spin = value.toInt();
-    if (spin < 0)
+    if (spin < 1)
       return false;
 
     m_molecule->setData("totalSpinMultiplicity", value.toInt());
