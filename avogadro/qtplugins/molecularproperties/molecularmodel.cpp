@@ -243,9 +243,10 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   else if (key == " 7residues")
     return QVariant::fromValue(m_molecule->residueCount());
   else if (key == " 9totalCharge")
-    return QVariant::fromValue(m_molecule->totalCharge());
+    return QVariant::fromValue(static_cast<int>(m_molecule->totalCharge()));
   else if (key == " 9totalSpinMultiplicity")
-    return QVariant::fromValue(m_molecule->totalSpinMultiplicity());
+    return QVariant::fromValue(
+      static_cast<int>(m_molecule->totalSpinMultiplicity()));
 
   return QString::fromStdString(it->second.toString());
 }
@@ -336,6 +337,19 @@ Qt::ItemFlags MolecularModel::flags(const QModelIndex& index) const
   // for the types and columns that can be edited
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 
+  int row = index.row();
+  int col = index.column();
+
+  if (row == 0) // name
+    return editable;
+
+  const auto map = m_propertiesCache;
+  auto it = map.begin();
+  std::advance(it, row);
+  auto key = it->first;
+  if (key == " 9totalCharge" || key == " 9totalSpinMultiplicity")
+    return editable;
+
   return QAbstractItemModel::flags(index);
 }
 
@@ -348,7 +362,35 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
   if (role != Qt::EditRole)
     return false;
 
-  // TODO allow editing name, total charge, total spin multiplicity
+  int row = index.row();
+  int col = index.column();
+
+  if (row == 0) { // name should always be the first row
+    m_name = value.toString();
+    m_autoName = false;
+    m_molecule->setData("name", m_name.toStdString());
+    emit dataChanged(index, index);
+    return true;
+  }
+
+  const auto map = m_propertiesCache;
+  auto it = map.begin();
+  std::advance(it, row);
+  auto key = it->first;
+  if (key == " 9totalCharge") {
+    m_molecule->setData("totalCharge", value.toInt());
+    emit dataChanged(index, index);
+    return true;
+  } else if (key == " 9totalSpinMultiplicity") {
+    int spin = value.toInt();
+    if (spin < 0)
+      return false;
+
+    m_molecule->setData("totalSpinMultiplicity", value.toInt());
+    emit dataChanged(index, index);
+    return true;
+  }
+
   return false;
 }
 
@@ -391,11 +433,11 @@ void MolecularModel::updateTable(unsigned int flags)
     m_propertiesCache.setValue(" 8chains", chainCount);
   }
 
-  if (m_molecule->totalCharge() != 0)
-    m_propertiesCache.setValue(" 9totalCharge", m_molecule->totalCharge());
-  if (m_molecule->totalSpinMultiplicity() != 1)
-    m_propertiesCache.setValue(" 9totalSpinMultiplicity",
-                               m_molecule->totalSpinMultiplicity());
+  m_propertiesCache.setValue(" 9totalCharge",
+                             static_cast<int>(m_molecule->totalCharge()));
+  m_propertiesCache.setValue(
+    " 9totalSpinMultiplicity",
+    static_cast<int>(m_molecule->totalSpinMultiplicity()));
   if (m_molecule->hasData("dipoleMoment")) {
     auto dipole = m_molecule->data("dipoleMoment").toVector3();
     QString moment = QString::number(dipole.norm(), 'f', 3);

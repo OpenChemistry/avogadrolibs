@@ -174,6 +174,7 @@ void MolecularView::openExportDialogBox()
 
   // Write the data rows
   for (int row = 0; row < model()->rowCount(); ++row) {
+    stream << model()->headerData(row, Qt::Vertical).toString() << ",";
     for (int col = 0; col < model()->columnCount(); ++col) {
       stream << model()->index(row, col).data().toString();
       if (col < model()->columnCount() - 1) {
