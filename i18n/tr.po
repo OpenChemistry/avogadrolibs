@@ -12,13 +12,14 @@
 # Hakkı Konu <hakkikonu@gmail.com>, 2023.
 # Emir <bitigchi@me.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Onur Kalkan <onurkalkanmv@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-11-22 01:11+0000\n"
+"Last-Translator: Onur Kalkan <onurkalkanmv@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -1455,7 +1456,7 @@ msgstr "Bağı Güncelle"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Birim Hücre Ekle…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1511,38 +1512,29 @@ msgid "Change Atom Positions"
 msgstr "Atom Konumlarını Değiştirme"
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
-#| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "Atom Rengini Değiştir"
+msgstr "Atom Konumunu Değiştir"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "Atom Katmanını Değiştir"
+msgstr "Atom Etiketini Değiştir"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "Seçilenleri İhmal Et"
+msgstr "Seçilenleri Değiştir"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
 msgstr "Molekülü Değiştir"
 
 #: qtgui/scenepluginmodel.cpp:92
-#, fuzzy
-#| msgid "Stop waiting"
 msgid "Settings"
-msgstr "Beklemeyi durdur"
+msgstr "Ayarlar"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Dosya kaydedilemiyor %1."
+msgstr "Betik yüklenemiyor %1"
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -1569,8 +1561,9 @@ msgid "&Export"
 msgstr "&Dışa Aktar"
 
 #: qtplugins/3dmol/3dmol.h:42
+#, fuzzy
 msgid "ThreeDMol"
-msgstr ""
+msgstr "3DMol"
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -1766,12 +1759,13 @@ msgid "By Custom Color…"
 msgstr "Özel Renge Göre…"
 
 #: qtplugins/applycolors/applycolors.cpp:49
+#, fuzzy
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Atom İndeksine Göre…"
 
 #: qtplugins/applycolors/applycolors.cpp:54
 msgid "By Distance…"
-msgstr ""
+msgstr "Mesafeye göre…"
 
 #: qtplugins/applycolors/applycolors.cpp:59
 msgid "By Element"
@@ -1938,10 +1932,8 @@ msgstr "Kalıntıları Renklendir"
 
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:306
-#, fuzzy
-#| msgid "Select All"
 msgid "Select Colormap"
-msgstr "Tümünü Seç"
+msgstr "Renk Haritasını Seç"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1949,10 +1941,8 @@ msgstr "Tümünü Seç"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:214
 #: qtplugins/applycolors/applycolors.cpp:306:171 rc.cpp:1782
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Renk:"
+msgstr "Renk Haritası:"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -1970,7 +1960,7 @@ msgstr "Bağ ölçeği"
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/ballandstick/ballandstick.cpp:125:222
 msgid "Opacity"
-msgstr ""
+msgstr "Opaklık"
 
 #: qtplugins/ballandstick/ballandstick.cpp:129
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -2063,10 +2053,8 @@ msgid "Configure Bonding…"
 msgstr "Bağ Oluşturmayı Yapılandır…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Seçilen Atomları Düzelt"
+msgstr "Seçilen Atomları Bağla"
 
 #: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2144,10 +2132,8 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr "Biyomolekül şeritlerinin / karikatürlerinin gösterimi."
 
 #: qtplugins/centroid/centroid.cpp:20
-#, fuzzy
-#| msgid "Add constraint"
 msgid "Add Centroid"
-msgstr "Kısıtlama ekle"
+msgstr "Ağırlık Merkezi Ekle"
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Center of Mass"
@@ -2159,10 +2145,8 @@ msgid "Add Perpendicular"
 msgstr "Dikme Ekle"
 
 #: qtplugins/centroid/centroid.h:24
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "Ortala"
+msgstr "Ağırlık Merkezi"
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
@@ -2199,35 +2183,31 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Distance:"
 msgid "Maximum distance:"
-msgstr "Mesafe:"
+msgstr "Azami mesafe:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
-msgstr ""
+msgstr "Çizgi genişliği:"
 
 #: qtplugins/closecontacts/closecontacts.h:36
-#, fuzzy
-#| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
-msgstr "Atomlar üzerindeki kuvvet yerdeğişimlerini kaplar"
+msgstr "Atomlar arasındaki yakın temasları görüntüle."
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
-msgstr ""
+msgstr "Temas"
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
-msgstr ""
+msgstr "Tuz Köprüsü"
 
 #: qtplugins/closecontacts/closecontacts.h:56
 msgid "Repulsive"
-msgstr ""
+msgstr "İtici"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
@@ -2246,8 +2226,9 @@ msgid "&Extensions"
 msgstr "&Eklentiler"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
+#, fuzzy
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "Renk Opaklığı Haritasi"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
@@ -2304,16 +2285,18 @@ msgstr "Harici komut dosyası komutlarını çalıştırın"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python Ayarları…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Python İndir"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Birçok Avogadro özelliği için Python kullanılır. Python'u indirmek ister "
+"misiniz?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -2321,7 +2304,7 @@ msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Python ortamlarını ayarlayın."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2384,22 +2367,16 @@ msgid "Element symbol."
 msgstr "Element simgesi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atom label."
-msgstr "Geçersiz atom numarası."
+msgstr "Geçersiz atom etiketi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
-#| msgid "Invalid atomic number."
 msgid "Invalid atomic index."
-msgstr "Geçersiz atom numarası."
+msgstr "Geçersiz atom indeksi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
-#, fuzzy
-#| msgid "By Atomic Index"
 msgid "Atomic index."
-msgstr "Atom Dizinine Göre"
+msgstr "Atom indeksi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2477,7 +2454,7 @@ msgstr "XYZ biçimi (simgeler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:640
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "XYZ formatı (isimler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "XYZ format (atomic numbers)"
@@ -2497,11 +2474,11 @@ msgstr "Çapraz koordinatlar (atom numaraları)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:646
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS formatı (semboller)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:647
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS formatı (isimler)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:648
 msgid "Turbomole format"
@@ -2538,10 +2515,8 @@ msgid "Clear"
 msgstr "Temizle"
 
 #: qtplugins/copypaste/copypaste.cpp:35
-#, fuzzy
-#| msgid "Paste"
 msgid "&Paste"
-msgstr "Yapıştır"
+msgstr "&Yapıştır"
 
 #: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
@@ -2551,7 +2526,7 @@ msgstr "&Düzen"
 #, fuzzy
 #| msgid "Copy"
 msgid "Copy As"
-msgstr "Kopyala"
+msgstr "(...) Olarak Kopyala"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2662,7 +2637,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
 msgid "NONE"
-msgstr ""
+msgstr "HİÇBİRİ"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -2676,7 +2651,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMİK"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
@@ -2795,16 +2770,12 @@ msgid "Import Crystal from Clipboard"
 msgstr "Kristali Panodan İçe Aktar"
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
-#| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Atomları Birim Hücreye Sar"
+msgstr "Atomları birim hücreye sar."
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
-msgstr "Standart Yerleşime Döndür"
+msgstr "Birim hücreyi standart oryantasyona döndür."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
@@ -2830,11 +2801,11 @@ msgstr "Renk:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
-msgstr ""
+msgstr "Çizgi rengi:"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Birim hücre sınırlarını görüntüle."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
@@ -2851,7 +2822,7 @@ msgstr "Birim hücre yok."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Özel Elementleri Yeniden Düzenle…"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
@@ -2859,7 +2830,7 @@ msgstr "Geçerli moleküldeki özel öğe türlerini değiştirin."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
-msgstr ""
+msgstr "Özel Elementler"
 
 #: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:118
 msgid "Draw"
@@ -2938,7 +2909,7 @@ msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB Kodu"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
@@ -2947,15 +2918,15 @@ msgstr "İndirilecek kimyasal yapı."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Geçersiz PDB Kodu"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "PDB kodu tam olarak 4 karakterden oluşmalı."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "PDB kodunun ilk karakteri 1'den 9'a kadar bir rakam olmalı."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -2996,15 +2967,15 @@ msgstr "Seçim"
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
-msgstr ""
+msgstr "Odaklamayı Bırak"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Odakla"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Görüntüyü belirli özelliklere odakla."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
@@ -3018,7 +2989,7 @@ msgstr "Geometriyi İyileştir"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
-msgstr ""
+msgstr "Kuvvetler"
 
 #: qtplugins/forcefield/forcefield.cpp:113
 #, fuzzy
@@ -3056,7 +3027,7 @@ msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:246
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "Optimizasyon için atom ihtiyacı karşılanmadı"
 
 #: qtplugins/forcefield/forcefield.cpp:374
 #, fuzzy, qt-format
@@ -3148,7 +3119,7 @@ msgstr "Frekanslar"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:299
 msgid "Core Potential"
-msgstr ""
+msgstr "Çekirdek Potansiyeli"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:314
 msgid "Gas"
@@ -3172,7 +3143,7 @@ msgstr "Üçlü"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:353
 msgid "Dication"
-msgstr ""
+msgstr "Dikte"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:356
 msgid "Cation"
@@ -3188,7 +3159,7 @@ msgstr "Anyon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:365
 msgid "Dianion"
-msgstr ""
+msgstr "Dianyon"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:650
 msgid "Save GAMESS input file"
@@ -3196,7 +3167,7 @@ msgstr "GAMESS girdi dosyasını kaydet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:700
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "GAMESS Hesaplaması Gönder"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
@@ -3232,15 +3203,15 @@ msgstr ""
 
 #: qtplugins/importpqr/importpqr.h:34
 msgid "Import From PQR"
-msgstr ""
+msgstr "PQR'den İçeri Aktar"
 
 #: qtplugins/importpqr/importpqr.h:38
 msgid "Download a molecule from PQR."
-msgstr ""
+msgstr "PQR'den molekül indir."
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
-msgstr ""
+msgstr "DNA|RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -3257,22 +3228,22 @@ msgstr "&Ekle"
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:161
 msgid "Uracil"
-msgstr ""
+msgstr "Urasil"
 
 #: qtplugins/insertdna/insertdna.cpp:167
 msgctxt "thymine"
 msgid "T"
-msgstr ""
+msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
 #: qtplugins/insertdna/insertdna.cpp:168:637
 msgid "Thymine"
-msgstr ""
+msgstr "Timin"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
@@ -3353,11 +3324,11 @@ msgstr "Hiçbiri"
 
 #: qtplugins/label/label.cpp:172
 msgid "Index"
-msgstr ""
+msgstr "İndeks"
 
 #: qtplugins/label/label.cpp:173
 msgid "Unique ID"
-msgstr ""
+msgstr "Eşsiz Kimlik"
 
 #: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:409
 #: qtplugins/symmetry/operationstablemodel.cpp:63
@@ -3773,10 +3744,8 @@ msgid "Configure Force Field…"
 msgstr "Kuvvet Alanını Yapılandır…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer Search..."
 msgid "Conformer Search…"
-msgstr "Uyumlu Arama..."
+msgstr "Uyumlu Arama…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -4641,10 +4610,8 @@ msgid "Align View to Axes"
 msgstr "Görünümü Eksene Hizala"
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align view to axes."
-msgstr "Görünümü Eksene Hizala"
+msgstr "Görünümü eksene hizala."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -5112,10 +5079,8 @@ msgid "Create Surfaces…"
 msgstr "Yüzeyleri oluştur…"
 
 #: qtplugins/surfaces/surfaces.cpp:111
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Atomları Van der Waals Küreleri olarak kaplar"
+msgstr "Van der Waals yüzeyini görüntüle."
 
 #: qtplugins/surfaces/surfaces.cpp:113
 #, fuzzy
@@ -5132,16 +5097,12 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
-#, fuzzy
-#| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "Molekül Yörüngesi"
+msgstr "Molekül yörüngesini görüntüle."
 
 #: qtplugins/surfaces/surfaces.cpp:121
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "Elektron yoğunluğu hesaplanıyor"
+msgstr "Elektron yoğunluğunu görüntüle."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the spin density."
@@ -5288,10 +5249,8 @@ msgid "Show the vibrational modes dialog."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Vibrational Modes…"
 msgid "Set the vibrational mode."
-msgstr "Titreşim Modları…"
+msgstr "Titreşim modunu ayarla."
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -5312,10 +5271,8 @@ msgid "Vibrations"
 msgstr "Titreşim Modları…"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Vibrational Modes…"
 msgid "Display vibrational modes."
-msgstr "Titreşim Modları…"
+msgstr "Titreşim modlarını göster."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -5380,10 +5337,9 @@ msgid "Cannot find Yaehmop"
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:544
-#, fuzzy, qt-format
-#| msgid "Script failed to start."
+#, qt-format
 msgid "Error: %1 failed to start"
-msgstr "Betik başlatılamadı."
+msgstr "Hata: %1 başlatılamadı"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -7012,10 +6968,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
-#, fuzzy
-#| msgid "Conformer Search..."
 msgid "Conformer Search"
-msgstr "Uyumlu Arama..."
+msgstr "Uyumlu Arama"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -7800,10 +7754,8 @@ msgstr "&İçe Aktar"
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
 #. i18n: file: qtplugins/spectra/spectradialog.ui:388
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
-#, fuzzy
-#| msgid "Select All"
 msgid "Set Color..."
-msgstr "Tümünü Seç"
+msgstr "Rengi Ayarla..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:288
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7814,10 +7766,8 @@ msgstr "Eğri İçe Aktar"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
-#, fuzzy
-#| msgid "&Export"
 msgid "&Export..."
-msgstr "&Dışa Aktar"
+msgstr "&Dışa Aktar..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:362
 #. i18n: ectx: property (text), widget (QLabel, label_2)
