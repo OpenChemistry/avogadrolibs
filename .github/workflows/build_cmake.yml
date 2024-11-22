@@ -283,6 +283,7 @@ jobs:
         [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
+      continue-on-error: true
       env:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
@@ -328,16 +329,29 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
       continue-on-error: true
 
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
-
     - name: Upload
       if: matrix.config.artifact != 0
+      id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
+
+    - name: Sign Windows artifact
+      if: matrix.config.os == 'windows-latest'
+      uses: signpath/github-action-submit-signing-request@v1
+      with:
+        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+        organization-id: 'Avogadro Project [OSS]'
+        project-slug: 'avogadrolibs'
+        signing-policy-slug: 'test-signing'
+        github-artifact-id: '${{ steps.upload-artifact.outputs.artifact-id }}'
+        wait-for-completion: true
+        output-artifact-directory: '${{ runner.workspace }}/build/avogadroapp'
+
+    - name: Setup tmate session
+      if: matrix.config.os == 'windows-latest'
+      uses: mxschmitt/action-tmate@v3
 
     - name: Cleanup
       if: ${{ always() }} # To ensure this step runs even when earlier steps fail
