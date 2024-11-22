@@ -338,7 +338,7 @@ jobs:
         name: ${{ matrix.config.artifact }}
 
     - name: Sign Windows artifact
-      if: matrix.config.os == 'windows-latest'
+      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
       uses: signpath/github-action-submit-signing-request@v1
       with:
         api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
@@ -348,6 +348,12 @@ jobs:
         github-artifact-id: '${{ steps.upload-artifact.outputs.artifact-id }}'
         wait-for-completion: true
         output-artifact-directory: '${{ runner.workspace }}/build/avogadroapp'
+
+    - name: Notarize Mac DMG
+      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
+      run: |
+        ls -la ./
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: Setup tmate session
       if: matrix.config.os == 'windows-latest'
