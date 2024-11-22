@@ -40,6 +40,15 @@ JsonWidget::~JsonWidget() {}
 
 void JsonWidget::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr) {
+    // update charge and multiplicity if needed
+    int charge = static_cast<int>(m_molecule->totalCharge());
+    int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
+
+    setOption("Charge", charge);
+    setOption("Multiplicity", multiplicity);
+  }
+
   if (mol == m_molecule)
     return;
 
@@ -816,8 +825,11 @@ QJsonObject JsonWidget::collectOptions() const
 
 void JsonWidget::applyOptions(const QJsonObject& opts)
 {
-  foreach (const QString& label, opts.keys())
+  foreach (const QString& label, opts.keys()) {
     setOption(label, opts[label]);
+
+    qDebug() << "Setting option" << label << "to" << opts[label];
+  }
 }
 
 QString JsonWidget::generateJobTitle() const
