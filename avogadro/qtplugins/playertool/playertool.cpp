@@ -42,7 +42,10 @@ using QtGui::Molecule;
 PlayerTool::PlayerTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
-    m_toolWidget(nullptr), m_frameIdx(nullptr), m_slider(nullptr)
+    m_toolWidget(nullptr), m_frameIdx(nullptr), m_firstFrameIdx(nullptr),
+    m_lastFrameIdx(nullptr), m_slider(nullptr), m_dynamicBonding(nullptr),
+    m_glWidget(nullptr), m_timer(this), m_animationFPS(nullptr),
+    playButton(nullptr), stopButton(nullptr)
 {
   QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));

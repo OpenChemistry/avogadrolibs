@@ -69,6 +69,8 @@ private:
   QTimer m_timer;
   mutable QSpinBox* m_animationFPS;
   mutable QSpinBox* m_frameIdx;
+  mutable QSpinBox* m_firstFrameIdx;
+  mutable QSpinBox* m_lastFrameIdx;
   mutable QCheckBox* m_dynamicBonding;
   mutable QOpenGLWidget* m_glWidget;
   mutable QSlider* m_slider;
