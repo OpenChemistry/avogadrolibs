@@ -105,6 +105,7 @@ private:
   int m_homo;
   int m_charge;
   int m_spin;
+  double m_totalEnergy;
 
   int m_currentAtom;
   unsigned int m_numBasisFunctions;

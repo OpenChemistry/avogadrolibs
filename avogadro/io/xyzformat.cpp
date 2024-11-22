@@ -37,7 +37,7 @@ using Core::trimmed;
 using std::isalpha;
 #endif
 
-bool findEnergy(std::string buffer, double energyValue)
+bool findEnergy(const std::string& buffer, double& energyValue)
 {
   // Check for energy in the comment line
   // orca uses  E -680.044112849966 (with spaces)
@@ -45,7 +45,6 @@ bool findEnergy(std::string buffer, double energyValue)
   // Open Babel uses Energy: -680.044112849966
   std::size_t energyStart = buffer.find("energy:");
   std::size_t offset = 7;
-  std::vector<double> energies;
   if (energyStart == std::string::npos) {
     energyStart = buffer.find("Energy:");
   }
@@ -53,6 +52,7 @@ bool findEnergy(std::string buffer, double energyValue)
     energyStart = buffer.find(" E ");
     offset = 3;
   }
+
   if (energyStart != std::string::npos) {
     // find the next whitespace or end of the string
     std::size_t energyEnd = buffer.find_first_of(" \t", energyStart + offset);
@@ -62,7 +62,7 @@ bool findEnergy(std::string buffer, double energyValue)
     energyValue = lexicalCast<double>(energy);
     return true;
   }
-  return false; // didn't find an energy
+  return false;
 }
 
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)

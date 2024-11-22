@@ -106,15 +106,16 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     molecule.setSpectra("NMR", nmrData);
   }
 
+  // this should be the final coordinate set (e.g. the optimized geometry)
   molecule.setCoordinate3d(molecule.atomPositions3d(), 0);
   if (m_coordSets.size() > 1) {
-    for (unsigned int i = 1; i < m_coordSets.size(); i++) {
+    for (unsigned int i = 0; i < m_coordSets.size(); i++) {
       Array<Vector3> positions;
       positions.reserve(molecule.atomCount());
       for (size_t j = 0; j < molecule.atomCount(); ++j) {
-        positions.push_back(m_atomPos[j] * BOHR_TO_ANGSTROM);
+        positions.push_back(m_coordSets[i][j] * BOHR_TO_ANGSTROM);
       }
-      molecule.setCoordinate3d(positions, i);
+      molecule.setCoordinate3d(positions, i + 1);
     }
   }
 
@@ -145,6 +146,9 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   molecule.setData("totalCharge", m_charge);
   molecule.setData("totalSpinMultiplicity", m_spin);
   molecule.setData("dipoleMoment", m_dipoleMoment);
+  molecule.setData("totalEnergy", m_totalEnergy);
+  if (m_energies.size() > 1)
+    molecule.setData("energies", m_energies);
 
   return true;
 }
@@ -213,6 +217,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     list = Core::split(key, ' ');
     if (list.size() > 3)
       m_spin = Core::lexicalCast<int>(list[3]);
+  } else if (Core::contains(key, "FINAL SINGLE POINT ENERGY")) {
+    list = Core::split(key, ' ');
+    if (list.size() > 4)
+      m_totalEnergy = Core::lexicalCast<double>(list[4]);
+    m_energies.push_back(m_totalEnergy);
   } else if (Core::contains(key, "TOTAL NUMBER OF BASIS SET")) {
     m_currentMode = NotParsing; // no longer reading GTOs
   } else if (Core::contains(key, "NUMBER OF CARTESIAN GAUSSIAN BASIS")) {
