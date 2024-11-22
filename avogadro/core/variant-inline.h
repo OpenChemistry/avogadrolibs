@@ -411,7 +411,8 @@ inline const Vector3& Variant::value() const
   if (m_type == Vector)
     return *m_value.vector;
 
-  return Vector3::Zero();
+  static Vector3 nullVector(0, 0, 0);
+  return nullVector;
 }
 
 inline void Variant::clear()
@@ -422,6 +423,9 @@ inline void Variant::clear()
   } else if (m_type == Matrix) {
     delete m_value.matrix;
     m_value.matrix = 0;
+  } else if (m_type == Vector) {
+    delete m_value.vector;
+    m_value.vector = 0;
   }
 
   m_type = Null;
@@ -527,6 +531,8 @@ inline Variant& Variant::operator=(const Variant& variant)
       m_value.string = new std::string(variant.toString());
     else if (m_type == Matrix)
       m_value.matrix = new MatrixX(*variant.m_value.matrix);
+    else if (m_type == Vector)
+      m_value.vector = new Vector3(*variant.m_value.vector);
     else if (m_type != Null)
       m_value = variant.m_value;
   }
