@@ -356,7 +356,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build/avogadroapp
 
     - name: Setup tmate session
-      if: matrix.config.os == 'windows-latest'
+      if: failure()
       uses: mxschmitt/action-tmate@v3
 
     - name: Cleanup
