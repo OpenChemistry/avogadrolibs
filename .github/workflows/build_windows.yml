@@ -98,8 +98,6 @@ jobs:
 
     - name: Install ccache
       uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        create-symlink: true
 
     - name: Grab cache files
       uses: actions/cache@v4
