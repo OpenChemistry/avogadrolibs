@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/oc/>\n"
@@ -1501,7 +1501,7 @@ msgstr "&Fichièr"
 #: qtplugins/vrml/vrml.cpp:46
 #, fuzzy
 msgid "&Export"
-msgstr "Exportar"
+msgstr "&Exportar"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -2170,7 +2170,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:111
 #, fuzzy
 msgid "&Extensions"
-msgstr "Extensions"
+msgstr "&Extensions"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
@@ -2184,7 +2184,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:72
 #, fuzzy
 msgid "Scripts"
-msgstr "E&scripts"
+msgstr "Escripts"
 
 #: qtplugins/commandscripts/command.cpp:126
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2263,14 +2263,12 @@ msgid "Other…"
 msgstr "Divèrs"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
-#, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Editor cartesian"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
-msgstr "Editor cartesian"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -2838,7 +2836,7 @@ msgstr "Triple"
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 #, fuzzy
 msgid "&Import"
-msgstr "Importar"
+msgstr "&Importar"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
@@ -2952,7 +2950,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Calculate"
 msgid "&Calculate"
-msgstr "Calcular"
+msgstr "&Calcular"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -3029,7 +3027,7 @@ msgstr ""
 #, fuzzy
 #| msgid "GAMESS"
 msgid "&GAMESS…"
-msgstr "GAMESS"
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 #, fuzzy
@@ -3165,7 +3163,7 @@ msgstr "&Inserir"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Inserir"
+msgstr "Inserir"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 #, fuzzy
@@ -3211,7 +3209,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Inserir"
+msgstr "Inserir"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -4000,7 +3998,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
 msgid "Reference Axes"
-msgstr "&Referéncia :"
+msgstr "Referéncia"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4263,7 +4261,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "Enregistrar lo fichièr vidèo"
+msgstr "Enregistrar lo fichièr"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4579,10 +4577,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Carga :"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4711,7 +4707,7 @@ msgstr "Seleccionar per residú..."
 #: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "&Seleccionar"
+msgstr "Seleccionar"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -5373,9 +5369,8 @@ msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save Input…"
-msgstr "&Enregistrar l'imatge..."
+msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5769,7 +5764,7 @@ msgstr "Valors per defaut"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Enregistrar lo fichièr vidèo"
+msgstr "Enregistrar lo fichièr"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7196,7 +7191,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 #, fuzzy
 msgid "Reference"
-msgstr "&Referéncia :"
+msgstr "Referéncia"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -7895,10 +7890,8 @@ msgstr " K"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "Pas res"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8039,9 +8032,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Editor cartesian"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -8195,10 +8187,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "Nitrogèn"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -8229,13 +8219,13 @@ msgstr "Amplitud :"
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Començar &l'animacion"
+msgstr "Començar l'animacion"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 #, fuzzy
 msgid "Stop Animation"
-msgstr "Arrestar &l'animacion"
+msgstr "Arrestar l'animacion"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
