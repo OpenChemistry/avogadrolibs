@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -1565,7 +1565,7 @@ msgstr "Modifikuj Molekul"
 #, fuzzy
 #| msgid "&Settings"
 msgid "Settings"
-msgstr "&Подешавања"
+msgstr "Подешавања"
 
 #: qtgui/scriptloader.cpp:41
 #, fuzzy, qt-format
@@ -1582,7 +1582,7 @@ msgstr ""
 #, fuzzy
 #| msgid "ThreeDMol HTML Block."
 msgid "3DMol HTML Block."
-msgstr "ThreeDMol HTML Blok."
+msgstr "3DMol HTML Block."
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:43
@@ -3875,10 +3875,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Преведи атоме..."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4016,7 +4014,7 @@ msgstr "&Prilagodi Geometriju (Open Babel)"
 #, fuzzy
 #| msgid "Generating MDL..."
 msgid "Generating…"
-msgstr "Generiranje MDL -a ..."
+msgstr "Generiranje …"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 #, fuzzy
@@ -4928,22 +4926,16 @@ msgid "Select by Residue…"
 msgstr "Odaberite prema ostatku ..."
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Backbone Atoms…"
-msgstr "Biraj prema Atom indeksu ..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Sidechain Atoms…"
-msgstr "Biraj prema Atom indeksu ..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Water"
-msgstr "Biraj prema Atom indeksu ..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 #, fuzzy
@@ -4976,16 +4968,12 @@ msgid "Select Element"
 msgstr "Biraj po elementu ..."
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Backbone"
-msgstr "Biraj prema Atom indeksu ..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Sidechain"
-msgstr "Biraj prema Atom indeksu ..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -5626,7 +5614,9 @@ msgstr "Ne može se izračunati struktura pojasa: nema jedinične ćelije!"
 msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
-msgstr "Izvršavanje Yaehmop-a nije uspelo sa sledećom greškom:\n"
+msgstr ""
+"Izvršavanje Yaehmop-a nije uspelo sa sledećom greškom:\n"
+"%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
@@ -5657,7 +5647,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "G03 failed to start."
 msgid "Error: %1 failed to start"
-msgstr "Г03 није успео да се покрене."
+msgstr "%1 није успео да се покрене"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -8115,7 +8105,7 @@ msgstr "&Затвори"
 #, fuzzy
 #| msgid "Scale &Factor:"
 msgid "Scale Factor:"
-msgstr "Чинилац &сразмере:"
+msgstr "Чинилац сразмере:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8358,7 +8348,7 @@ msgstr "Vrednost &Isopovršine:"
 #, fuzzy
 #| msgid " K"
 msgid " "
-msgstr " K"
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8507,10 +8497,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Uređivač Dekartovog Koordinatnog sistema"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -8620,7 +8608,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Copy to Clipboard"
 msgid "From Clipboard"
-msgstr "&Kopiraj u međuspremnik"
+msgstr "iz međuspremnik"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8900,10 +8888,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Num Dimensions:"
 msgid "Number of Dimensions:"
-msgstr "Broj dimenzija:"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
