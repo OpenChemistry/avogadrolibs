@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -2810,7 +2810,7 @@ msgstr "Importi Kristalon el Tondujo"
 #, fuzzy
 #| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Faldi Atomojn en Unitan Ĉelon (&W)"
+msgstr "Faldi Atomojn en Unitan Ĉelon"
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -5477,7 +5477,9 @@ msgstr "Malsukcesis kalkuli bendostrukturon: mankas unita ĉelo!"
 msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
-msgstr "Yaehmop kolapsis pro la jena eraro:\n"
+msgstr ""
+"Yaehmop kolapsis pro la jena eraro:\n"
+"%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
@@ -5508,7 +5510,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "Script failed to start."
 msgid "Error: %1 failed to start"
-msgstr "Malsukcesis lanĉo de programeto."
+msgstr "Malsukcesis lanĉo %1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -7968,7 +7970,7 @@ msgstr "Fermi"
 #, fuzzy
 #| msgid "&Scaling Factor:"
 msgid "Scale Factor:"
-msgstr "&Skala Faktoro:"
+msgstr "Skala Faktoro:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
