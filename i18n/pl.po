@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pl/>\n"
@@ -1500,7 +1500,7 @@ msgstr "&Plik"
 #: qtplugins/vrml/vrml.cpp:46
 #, fuzzy
 msgid "&Export"
-msgstr "Eksportuj"
+msgstr "&Eksportuj"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -2181,7 +2181,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:72
 #, fuzzy
 msgid "Scripts"
-msgstr "&Skrypty"
+msgstr "Skrypty"
 
 #: qtplugins/commandscripts/command.cpp:126
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -3023,7 +3023,7 @@ msgstr "&GAMESS"
 #: qtplugins/gamessinput/gamessinput.h:34
 #, fuzzy
 msgid "GAMESS input"
-msgstr "&GAMESS"
+msgstr "GAMESS"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
@@ -3155,7 +3155,7 @@ msgstr "&Wstaw"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Wstaw"
+msgstr "Wstaw"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3194,7 +3194,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Wstaw"
+msgstr "Wstaw"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3577,7 +3577,7 @@ msgstr "Właściwości molekuły"
 #: qtplugins/propertytables/propertyview.cpp:231
 #, fuzzy
 msgid "Export CSV"
-msgstr "Eksportuj"
+msgstr "Eksportuj CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -4244,7 +4244,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "Zapisz plik wideo"
+msgstr "Zapisz plik"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4688,7 +4688,7 @@ msgstr "Usuń zaznaczenie"
 #: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "&Zaznacz"
+msgstr "Zaznacz"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -5054,7 +5054,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
-msgstr "E&ksportuj obraz"
+msgstr "Eksportuj obraz"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5728,7 +5728,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Zapisz plik wideo"
+msgstr "Zapisz plik"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7687,7 +7687,7 @@ msgstr "Importuj trajektorię"
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
 #, fuzzy
 msgid "&Export..."
-msgstr "Eksportuj"
+msgstr "&Eksportuj"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:362
 #. i18n: ectx: property (text), widget (QLabel, label_2)
