@@ -61,6 +61,8 @@ private:
 
   std::vector<int> m_atomNums;
   std::vector<Eigen::Vector3d> m_atomPos;
+  std::vector<std::vector<Eigen::Vector3d>> m_coordSets;
+  std::vector<double> m_energies;
 
   Vector3 m_dipoleMoment;
 
@@ -103,6 +105,7 @@ private:
   int m_homo;
   int m_charge;
   int m_spin;
+  double m_totalEnergy;
 
   int m_currentAtom;
   unsigned int m_numBasisFunctions;

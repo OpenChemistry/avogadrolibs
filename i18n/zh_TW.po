@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-19 01:26+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -2436,7 +2436,7 @@ msgstr "Turbomole 輸入"
 #: qtplugins/propertytables/propertyview.cpp:283:277
 #, fuzzy
 msgid "Copy"
-msgstr "全部複製"
+msgstr "複製"
 
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2473,7 +2473,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:81
 #, fuzzy
 msgid "Copy As"
-msgstr "全部複製"
+msgstr "複製"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2699,7 +2699,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "&Crystal"
-msgstr "結晶"
+msgstr "結晶 (&C)"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
@@ -2955,7 +2955,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Calculate"
 msgid "&Calculate"
-msgstr "計算"
+msgstr "計算 (&C)"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -4314,7 +4314,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:462
 #, fuzzy
 msgid "Color"
-msgstr "顏色:"
+msgstr "顏色"
 
 #: qtplugins/propertytables/propertymodel.cpp:426
 msgid "Atom"
@@ -4339,7 +4339,7 @@ msgstr "終止原子"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "鍵的級數:"
+msgstr "鍵的級數"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy

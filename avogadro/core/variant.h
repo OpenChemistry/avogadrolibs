@@ -71,6 +71,9 @@ public:
   /** Sets the value of the variant to a 3D vector */
   bool setValue(double x, double y, double z);
 
+  /** Sets the value of the variant to a vector<double> */
+  bool setValue(const std::vector<double>& v);
+
   /** @return the value of the variant in the type given by \c T. */
   template <typename T>
   T value() const;
@@ -125,6 +128,9 @@ public:
 
   /** @return the value of the variant as a Vector3 */
   inline Vector3 toVector3() const;
+
+  /** @return the value as a vector<double> */
+  inline std::vector<double> toList() const;
 
   /**
    * @return a reference to the value of the variant as a MatrixX.

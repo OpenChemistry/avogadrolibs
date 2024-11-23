@@ -55,6 +55,15 @@ inline Variant::Variant(const Vector3f& v) : m_type(Vector)
   m_value.vector = _v;
 }
 
+template <>
+inline Variant::Variant(const std::vector<double>& v) : m_type(Matrix)
+{
+  MatrixX* m = new MatrixX(v.size(), 1);
+  for (size_t i = 0; i < v.size(); ++i)
+    m->coeffRef(i, 0) = v[i];
+  m_value.matrix = m;
+}
+
 inline Variant::Variant(const Variant& variant) : m_type(variant.type())
 {
   if (m_type == String)
@@ -88,6 +97,18 @@ inline bool Variant::setValue(double x, double y, double z)
 
   m_type = Vector;
   m_value.vector = new Vector3(x, y, z);
+
+  return true;
+}
+
+inline bool Variant::setValue(const std::vector<double>& v)
+{
+  clear();
+
+  m_type = Matrix;
+  m_value.matrix = new MatrixX(v.size(), 1);
+  for (size_t i = 0; i < v.size(); ++i)
+    m_value.matrix->coeffRef(i, 0) = v[i];
 
   return true;
 }
@@ -415,6 +436,19 @@ inline const Vector3& Variant::value() const
   return nullVector;
 }
 
+template <>
+inline std::vector<double> Variant::value() const
+{
+  if (m_type == Matrix && m_value.matrix->cols() == 1) {
+    std::vector<double> list(m_value.matrix->rows());
+    for (int i = 0; i < m_value.matrix->rows(); ++i)
+      list[i] = m_value.matrix->coeff(i, 0);
+    return list;
+  }
+
+  return std::vector<double>();
+}
+
 inline void Variant::clear()
 {
   if (m_type == String) {
@@ -514,6 +548,11 @@ inline const MatrixX& Variant::toMatrixRef() const
 inline Vector3 Variant::toVector3() const
 {
   return value<Vector3>();
+}
+
+inline std::vector<double> Variant::toList() const
+{
+  return value<std::vector<double>>();
 }
 
 // --- Operators ----------------------------------------------------------- //
