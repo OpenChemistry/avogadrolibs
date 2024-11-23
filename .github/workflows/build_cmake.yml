@@ -52,15 +52,6 @@ jobs:
             cpack_flags: "-G DragNDrop",
           }
         - {
-            name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: windows-latest,
-            cc: "cl", cxx: "cl",
-            build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
-            build_flags: "-j 2",
-            cpack_flags: "-G NSIS",
-          }
-        - {
             name: "Ubuntu Address Sanitizer", artifact: "",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
