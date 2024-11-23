@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
@@ -1488,7 +1488,7 @@ msgstr "&Arkiv"
 #: qtplugins/vrml/vrml.cpp:46
 #, fuzzy
 msgid "&Export"
-msgstr "Exportera"
+msgstr "&Exportera"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -2401,7 +2401,7 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 #, fuzzy
 msgid "SMILES"
-msgstr "SMILES..."
+msgstr "SMILES"
 
 #: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
@@ -2794,7 +2794,7 @@ msgstr "Trippel"
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 #, fuzzy
 msgid "&Import"
-msgstr "Importera"
+msgstr "&Importera"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 msgid "Fetch PDB"
@@ -2882,7 +2882,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:559
 #, fuzzy
 msgid "Optimize Geometry"
-msgstr "&Optimera geometri"
+msgstr "Optimera geometri"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
@@ -2977,7 +2977,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:34
 #, fuzzy
 msgid "&GAMESS…"
-msgstr "SMILES..."
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
@@ -3113,7 +3113,7 @@ msgstr "&Infoga"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Infoga"
+msgstr "Infoga"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3152,7 +3152,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Infoga"
+msgstr "Infoga"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3704,7 +3704,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Optimera geometri"
+msgstr "Optimera geometri"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3757,9 +3757,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "&Optimera geometri"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 msgid "Generate Conformers"
@@ -7575,7 +7574,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 #, fuzzy
 msgid "&Import..."
-msgstr "Importera"
+msgstr "&Importera"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:268
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -7597,7 +7596,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
 #, fuzzy
 msgid "&Export..."
-msgstr "Exportera"
+msgstr "&Exportera"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:362
 #. i18n: ectx: property (text), widget (QLabel, label_2)
