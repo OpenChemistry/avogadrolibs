@@ -36,12 +36,13 @@ Navigator::Navigator(QObject* parent_)
     m_renderer(nullptr), m_pressedButtons(Qt::NoButton),
     m_currentAction(Nothing)
 {
+  QString shortcut = tr("Ctrl+1", "control-key 1");
   m_activateAction->setText(tr("Navigate"));
   m_activateAction->setToolTip(
-    tr("Navigation Tool \tCtrl+1\n\n"
+    tr("Navigation Tool \t(%1)\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
-       "Right Mouse: \tClick and drag to move the view.\n"));
+       "Right Mouse: \tClick and drag to move the view.\n").arg(shortcut));
   setIcon();
   QSettings settings;
   m_zoomDirection = settings.value("navigator/zoom", 1).toInt();

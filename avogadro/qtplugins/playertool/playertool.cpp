@@ -44,8 +44,9 @@ PlayerTool::PlayerTool(QObject* parent_)
     m_molecule(nullptr), m_renderer(nullptr), m_currentFrame(0),
     m_toolWidget(nullptr), m_frameIdx(nullptr), m_slider(nullptr)
 {
+  QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));
-  m_activateAction->setToolTip(tr("Animation Tool \tCtrl+9"));
+  m_activateAction->setToolTip(tr("Animation Tool \t(%1)").arg(shortcut));
   setIcon();
 }
 
