@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
@@ -2893,7 +2893,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:559
 #, fuzzy
 msgid "Optimize Geometry"
-msgstr "&Oптимизиране на геометрията"
+msgstr "Oптимизиране на геометрията"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
@@ -3705,7 +3705,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Oптимизиране на геометрията"
+msgstr "Oптимизиране на геометрията"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3758,9 +3758,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "&Oптимизиране на геометрията"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 msgid "Generate Conformers"
@@ -3800,9 +3799,8 @@ msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:818 qtplugins/openbabel/openbabel.cpp:868
-#, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "&Oптимизиране на геометрията"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:819
 msgid "Generating Open Babel input…"
@@ -3836,9 +3834,8 @@ msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:910
-#, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Oптимизиране на геометрията"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Error generating Open Babel data."
@@ -4197,7 +4194,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "Запазване на видео файл"
+msgstr "Запазване на файл"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -5660,7 +5657,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Запазване на видео файл"
+msgstr "Запазване на файл"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
