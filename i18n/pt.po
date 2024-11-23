@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -2780,7 +2780,7 @@ msgstr "Enviar cálculo CP2K"
 #, fuzzy
 #| msgid "Import Crystal from Clipboard"
 msgid "Import Crystal from Clipboard…"
-msgstr "I&mportar Cristal da Área de Transferência"
+msgstr "Importar Cristal da Área de Transferência"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
@@ -3791,10 +3791,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Traduzir Átomos..."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4199,7 +4197,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
 msgid "Reference Axes"
-msgstr "&Referência:"
+msgstr "Referência"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4991,7 +4989,7 @@ msgstr "Tolerância"
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "Space Group"
-msgstr "Espaço&grupo"
+msgstr "Espaçogrupo"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -5570,7 +5568,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "Script failed to start."
 msgid "Error: %1 failed to start"
-msgstr "Script falhou ao iniciar."
+msgstr "%1 falhou ao iniciar"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -8016,7 +8014,7 @@ msgstr "Fe&char"
 #, fuzzy
 #| msgid "&Scaling Factor:"
 msgid "Scale Factor:"
-msgstr "Fator de E&scala:"
+msgstr "Fator de Escala:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8040,10 +8038,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "&Y Axis Units:"
 msgid "Y-Axis Minimum:"
-msgstr "Unidades Eixo &Y"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -8061,8 +8057,9 @@ msgstr "Limiar de Acoplagem: "
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:224
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
+#, fuzzy
 msgid "&Appearance"
-msgstr "%Aspecto"
+msgstr "&Aspecto"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QCheckBox, cb_import)
