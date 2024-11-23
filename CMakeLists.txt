@@ -40,6 +40,14 @@ if(MSVC)
   # Ensure __cplusplus is correct, otherwise it defaults to 199711L which isn't true
   # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+
+  message(STATUS "Setting MSVC debug information format to 'Embedded'")
+  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+
+  set(CMAKE_VS_GLOBALS
+    "UseMultiToolTask=true"
+    "DebugInformationFormat=OldStyle"
+  )
 endif()
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
