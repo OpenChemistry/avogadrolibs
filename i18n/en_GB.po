@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-22 16:51+0000\n"
-"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -1442,7 +1442,7 @@ msgstr "Add Unit Cell…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
-msgstr "Remove &Unit Cell"
+msgstr "Remove Unit Cell"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
@@ -1450,7 +1450,7 @@ msgstr "Edit Unit Cell"
 
 #: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
-msgstr "&Wrap Atoms to Cell"
+msgstr "Wrap Atoms to Cell"
 
 #: qtgui/rwmolecule.cpp:507
 msgid "Scale Cell Volume"
@@ -2208,7 +2208,7 @@ msgstr "Edit colour opacity maps, primarily for volume rendering."
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:72
 msgid "Scripts"
-msgstr "&Scripts"
+msgstr "Scripts"
 
 #: qtplugins/commandscripts/command.cpp:126
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2688,7 +2688,7 @@ msgstr "Submit CP2K Calculation"
 
 #: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
-msgstr "I&mport Crystal from Clipboard…"
+msgstr "Import Crystal from Clipboard…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
@@ -2734,7 +2734,7 @@ msgstr "Add &Unit Cell"
 
 #: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
-msgstr "I&mport Crystal from Clipboard"
+msgstr "Import Crystal from Clipboard"
 
 #: qtplugins/crystal/crystal.cpp:175
 msgid "Wrap atoms into the unit cell."
@@ -2950,7 +2950,7 @@ msgstr "Render the force field visualizations for the atoms of the molecule."
 #: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
-msgstr "&Optimize Geometry"
+msgstr "Optimize Geometry"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
@@ -4659,7 +4659,7 @@ msgstr "Select Residue"
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1896
 msgid "Select"
-msgstr "&Select"
+msgstr "Select"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -7843,7 +7843,7 @@ msgstr "Very High"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:299
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isosurface Value:"
-msgstr "&Isosurface Value:"
+msgstr "Isosurface Value:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
@@ -8172,12 +8172,12 @@ msgstr "Amplitude:"
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 msgid "Start Animation"
-msgstr "Start &Animation"
+msgstr "Start Animation"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 msgid "Stop Animation"
-msgstr "Stop &Animation"
+msgstr "Stop Animation"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
