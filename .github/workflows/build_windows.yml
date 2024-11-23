@@ -1,0 +1,167 @@
+name: CMake Build Matrix
+# Many thanks to Cristian Adam for examples
+# e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
+# https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
+
+# This workflow will build and sign on Windows
+# .. since SignPath requires only a Windows build in the action
+# .. to successfully sign
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  QT_VERSION: 5.15.2
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            build_type: "Release",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
+            build_flags: "-j 2",
+            cpack_flags: "-G NSIS",
+          }
+
+    steps:
+
+    - name: Install Dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: choco install ninja ccache
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: molecules
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: crystals
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: avogadro-i18n
+
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v4
+      with:
+        path: avogadrolibs
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure MSVC Command Prompt
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Install ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        create-symlink: true
+
+    - name: Grab cache files
+      uses: actions/cache@v4
+      if: runner.os != 'Windows'
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ matrix.config.name }}-downloads
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Create Windows Package
+      if: matrix.config.os == 'windows-latest'
+      shell: bash
+      run: |
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
+        cpack ${{ matrix.config.cpack_flags }}
+      working-directory: ${{ runner.workspace }}/build/avogadroapp
+      continue-on-error: true
+      env:
+        OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
+
+    - name: Upload
+      if: matrix.config.artifact != 0
+      id: upload-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
+        name: ${{ matrix.config.artifact }}
+
+    - name: Sign Windows artifact
+      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
+      uses: signpath/github-action-submit-signing-request@v1
+      with:
+        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+        organization-id: '${{ secrets.SIGNPATH_ORG_ID }}'
+        project-slug: 'avogadrolibs'
+        signing-policy-slug: 'test-signing'
+        github-artifact-id: '${{ steps.upload-artifact.outputs.artifact-id }}'
+        wait-for-completion: true
+        output-artifact-directory: '${{ runner.workspace }}/build/avogadroapp'
+
+    - name: Setup tmate session
+      if: failure()
+      uses: mxschmitt/action-tmate@v3
+
+    - name: Cleanup
+      if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+      shell: bash
+      run: |
+        ls -la ./
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        ls -la ./
