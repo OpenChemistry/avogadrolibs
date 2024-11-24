@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-14 12:00+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hi/>\n"
@@ -3573,10 +3573,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -7919,10 +7917,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "नाइट्रोजन"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
