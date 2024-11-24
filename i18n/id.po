@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -2312,12 +2312,12 @@ msgstr "Lainnya"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Penyunting Koordinat Cartesian"
+msgstr "Penyunting Koordinat"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
 msgid "Coordinate editor"
-msgstr "Penyunting Koordinat Cartesian"
+msgstr "Penyunting Koordinat"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -4579,9 +4579,7 @@ msgstr "Properti Residu…"
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Jendela untuk menampilkan properti atom, ikatan, angle dan torsi. Termasuk "
-"penyunting koordinat cartesian."
+msgstr "Jendela untuk menampilkan properti atom, ikatan, angle dan torsi."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -5021,7 +5019,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "Pengaturan Ke&mampatan States"
+msgstr "Pengaturan Kemampatan States"
 
 #: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
@@ -8187,9 +8185,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Penyunting Koordinat Cartesian"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
