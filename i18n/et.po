@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-24 14:22+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/et/>\n"
@@ -3598,10 +3598,8 @@ msgid " °"
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Angle Properties"
 msgid "Angle tolerance:"
-msgstr "Nurkade omadused"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -4524,10 +4522,8 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select by Element…"
-msgstr "Vali jäägi järgi..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:58
 #, fuzzy
@@ -4576,10 +4572,8 @@ msgid "&Select"
 msgstr ""
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Select by Residue..."
 msgid "Select Element"
-msgstr "Vali jäägi järgi..."
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -6805,10 +6799,8 @@ msgstr "Sidemete omadused"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
-#, fuzzy
-#| msgid "Methionine"
 msgid "Method"
-msgstr "Metioniin"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
