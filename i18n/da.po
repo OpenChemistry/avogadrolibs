@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/da/>\n"
@@ -1434,9 +1434,8 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Supercelle"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
@@ -2718,7 +2717,7 @@ msgstr "Importer krystal fra udklipsholder..."
 #: qtplugins/crystal/crystal.cpp:175
 #, fuzzy
 msgid "Wrap atoms into the unit cell."
-msgstr "Fold atomer til celle"
+msgstr "Fold atomer til celle."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -3702,7 +3701,7 @@ msgstr ""
 #, fuzzy
 #| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
