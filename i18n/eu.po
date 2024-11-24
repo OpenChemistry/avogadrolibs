@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 04:15+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -1477,10 +1477,8 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Gelaxka Unitate Asimetrikora Murriztu"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Aldatu Atomoaren Hibridazioa"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
@@ -1489,10 +1487,8 @@ msgid "Change Atom Position"
 msgstr "Aldatu Atomoaren Kolorea"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "Aldatu Atomoaren Geruza"
+msgstr ""
 
 #: qtgui/rwmolecule.h:234
 #, fuzzy
@@ -1565,16 +1561,12 @@ msgid "Axis:"
 msgstr "Ardatza:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Lerrokatu Ezarpenak"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Lerrokatu Ezarpenak"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -2176,10 +2168,8 @@ msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Maximum Force"
 msgid "Maximum distance:"
-msgstr "Indar Maximoa"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2780,7 +2770,7 @@ msgstr "Kristala Inportatu"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Atomoak gelaxka unitatean mantendu"
+msgstr "Atomoak gelaxka unitatean mantendu"
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -2930,10 +2920,9 @@ msgid "Fetch PDB"
 msgstr "Erakutsi PDB-tik..."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Ezinezkoa izan da %1 molekula fitxategia irakurtzea."
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
@@ -4705,10 +4694,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Lerrokatu Ezarpenak"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4723,7 +4710,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Karga:"
+msgstr "Karga"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
