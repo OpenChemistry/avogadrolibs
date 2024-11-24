@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca/>\n"
@@ -1436,9 +1436,8 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Super cel·la"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
@@ -1535,16 +1534,12 @@ msgid "Axis:"
 msgstr "Eix:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Configuració de l'alineació"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Configuració de l'alineació"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -1737,7 +1732,7 @@ msgstr "Carrega parcial"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Representa l'estructura secundària"
+msgstr "l'estructura secundària"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -2291,7 +2286,7 @@ msgstr "Editor de &coordenades"
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
 msgid "Coordinate editor"
-msgstr "Editor de coordenades cartesianes"
+msgstr "Editor de coordenades"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -2716,7 +2711,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Super cel·la"
+msgstr "&Super cel·la"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -4555,9 +4550,7 @@ msgstr "Propietats de la molècula"
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Finestra per mostrar l'àtom, enllaços, angles i propietats de torsió. Això "
-"inclou un editor de coordenades cartesianes."
+msgstr "Finestra per mostrar l'àtom, enllaços, angles i propietats de torsió."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -8155,9 +8148,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Editor de coordenades cartesianes"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
