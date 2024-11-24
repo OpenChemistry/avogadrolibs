@@ -147,18 +147,12 @@ jobs:
         wait-for-completion: true
         output-artifact-directory: '../build/'
 
-    - name: Look for signed artifact
-      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
-      run: |
-        ls -la ${{ runner.workspace }}/build/
-      shell: bash
-
     - name: Upload
       if: matrix.config.artifact != 0
       id: upload-signed-artifact
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/Win64*.*
+        path: ${{ runner.workspace }}/build/Avogadro2*.*
         name: 'Win64-signed.exe'
 
     - name: Setup tmate session
