@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-17 02:40+0000\n"
+"POT-Creation-Date: 2024-11-24 02:41+0000\n"
 "PO-Revision-Date: 2024-11-11 19:52+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -171,7 +171,7 @@ msgstr "입력 생성기 (오류)"
 msgid "%1 Input Generator"
 msgstr "%1 입력 생성기"
 
-#: molequeue/inputgeneratorwidget.cpp:114
+#: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
 msgstr "계속"
 
@@ -189,17 +189,17 @@ msgstr "계속"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:114 qtgui/containerwidget.cpp:35
+#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
 msgid "Close"
 msgstr "닫기"
 
-#: molequeue/inputgeneratorwidget.cpp:155 qtgui/elementtranslator.cpp:374
+#: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:374
 #: qtplugins/configurepython/configurepythondialog.cpp:141
 #: qtplugins/configurepython/configurepythondialog.cpp:144
 msgid "Unknown"
 msgstr "알 수 없음"
 
-#: molequeue/inputgeneratorwidget.cpp:156
+#: molequeue/inputgeneratorwidget.cpp:165
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid ""
@@ -223,29 +223,29 @@ msgstr[0] ""
 " \n"
 "새로운 기하학 또는 작업 옵션을 반영하도록 변경 사항을 덮어쓰겠습니까?"
 
-#: molequeue/inputgeneratorwidget.cpp:162
+#: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
 msgstr "수정된 입력 파일을 덮어쓰겠습니까?"
 
-#: molequeue/inputgeneratorwidget.cpp:188
+#: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
 msgstr "입력 생성 중 발생한 문제:"
 
-#: molequeue/inputgeneratorwidget.cpp:277
+#: molequeue/inputgeneratorwidget.cpp:286
 msgid "No input files to save!"
 msgstr "저장할 입력 파일이 없습니다!"
 
-#: molequeue/inputgeneratorwidget.cpp:285
-#: molequeue/inputgeneratorwidget.cpp:593 molequeue/molequeuewidget.cpp:69
+#: molequeue/inputgeneratorwidget.cpp:294
+#: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:985
 #: qtplugins/gamessinput/gamessinputdialog.cpp:679
 msgid "Cannot connect to MoleQueue"
 msgstr "몰큐에 연결할 수 없음"
 
-#: molequeue/inputgeneratorwidget.cpp:286
-#: molequeue/inputgeneratorwidget.cpp:594 molequeue/molequeuewidget.cpp:70
+#: molequeue/inputgeneratorwidget.cpp:295
+#: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:986
 #: qtplugins/gamessinput/gamessinputdialog.cpp:680
 msgid ""
@@ -253,50 +253,50 @@ msgid ""
 "again."
 msgstr "몰큐 서버에 연결할 수 없습니다. 실행 중인지 확인하고 다시 시도하세요."
 
-#: molequeue/inputgeneratorwidget.cpp:317
+#: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
 msgid "Submit %1 Calculation"
 msgstr "%1 계산 제출"
 
-#: molequeue/inputgeneratorwidget.cpp:333
+#: molequeue/inputgeneratorwidget.cpp:342
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
 #: qtplugins/gamessinput/gamessinputdialog.cpp:716
 msgid "Job Failed"
 msgstr "작업 실패"
 
-#: molequeue/inputgeneratorwidget.cpp:334
+#: molequeue/inputgeneratorwidget.cpp:343
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1023
 #: qtplugins/gamessinput/gamessinputdialog.cpp:717
 msgid "The job did not complete successfully."
 msgstr "작업이 성공적으로 완료되지 않았습니다."
 
-#: molequeue/inputgeneratorwidget.cpp:351 qtgui/interfacewidget.cpp:55
+#: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
 msgstr "스크립트 경고 반환:\n"
 
-#: molequeue/inputgeneratorwidget.cpp:368
+#: molequeue/inputgeneratorwidget.cpp:377
 msgid "Hide &Warnings"
 msgstr "경고 숨기기(&W)"
 
-#: molequeue/inputgeneratorwidget.cpp:374
+#: molequeue/inputgeneratorwidget.cpp:383
 msgid "Show &Warnings"
 msgstr "경고 표시(&W)"
 
-#: molequeue/inputgeneratorwidget.cpp:391 qtgui/interfacewidget.cpp:71
+#: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
 msgstr "오류 발생:"
 
-#: molequeue/inputgeneratorwidget.cpp:442
+#: molequeue/inputgeneratorwidget.cpp:451
 msgid "Select output filename"
 msgstr "출력 파일이름 선택"
 
-#: molequeue/inputgeneratorwidget.cpp:454
+#: molequeue/inputgeneratorwidget.cpp:463
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr "내부 오류: 파일이름 '%1'에 대한 텍스트 위젯을 찾을 수 없음"
 
-#: molequeue/inputgeneratorwidget.cpp:470
-#: molequeue/inputgeneratorwidget.cpp:581
+#: molequeue/inputgeneratorwidget.cpp:479
+#: molequeue/inputgeneratorwidget.cpp:590
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:975
 #: qtplugins/gamessinput/gamessinputdialog.cpp:669
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:324
@@ -308,8 +308,8 @@ msgstr "내부 오류: 파일이름 '%1'에 대한 텍스트 위젯을 찾을 �
 msgid "Output Error"
 msgstr "출력 오류"
 
-#: molequeue/inputgeneratorwidget.cpp:471
-#: molequeue/inputgeneratorwidget.cpp:582
+#: molequeue/inputgeneratorwidget.cpp:480
+#: molequeue/inputgeneratorwidget.cpp:591
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:976
 #: qtplugins/gamessinput/gamessinputdialog.cpp:670
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:355
@@ -320,27 +320,27 @@ msgstr "출력 오류"
 msgid "Failed to write to file %1."
 msgstr "%1 파일에 쓰지 못했습니다."
 
-#: molequeue/inputgeneratorwidget.cpp:482
+#: molequeue/inputgeneratorwidget.cpp:491
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
 msgstr "출력 디렉토리 선택"
 
-#: molequeue/inputgeneratorwidget.cpp:499
+#: molequeue/inputgeneratorwidget.cpp:508
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
 msgstr "%1: 디렉토리가 존재하지 않습니다!"
 
-#: molequeue/inputgeneratorwidget.cpp:505
+#: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
 msgstr "%1: 디렉토리를 읽을 수 없습니다!"
 
-#: molequeue/inputgeneratorwidget.cpp:515
+#: molequeue/inputgeneratorwidget.cpp:524
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:287
 #: qtplugins/openmminput/openmminputdialog.cpp:370
@@ -349,7 +349,7 @@ msgstr "%1: 디렉토리를 읽을 수 없습니다!"
 msgid "%1: File will be overwritten."
 msgstr "%1: 파일을 덮어씁니다."
 
-#: molequeue/inputgeneratorwidget.cpp:520
+#: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:294
 #: qtplugins/openmminput/openmminputdialog.cpp:377
@@ -358,13 +358,13 @@ msgstr "%1: 파일을 덮어씁니다."
 msgid "%1: File is not writable."
 msgstr "%1: 파일에 쓸 수 없습니다."
 
-#: molequeue/inputgeneratorwidget.cpp:533
+#: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr "알 수 없는 오류로 인해 입력 파일을 쓸 수 없습니다."
 
-#: molequeue/inputgeneratorwidget.cpp:537
+#: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
 #: qtplugins/openmminput/openmminputdialog.cpp:408
 #, qt-format
@@ -377,7 +377,7 @@ msgstr ""
 " \n"
 "%1"
 
-#: molequeue/inputgeneratorwidget.cpp:546
+#: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
 #: qtplugins/openmminput/openmminputdialog.cpp:417
 #, qt-format
@@ -398,7 +398,7 @@ msgstr ""
 " \n"
 "%2"
 
-#: molequeue/inputgeneratorwidget.cpp:557
+#: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
 #: qtplugins/openmminput/openmminputdialog.cpp:428
 #, qt-format
@@ -415,13 +415,13 @@ msgstr ""
 " \n"
 "계속하겠습니까?"
 
-#: molequeue/inputgeneratorwidget.cpp:561
+#: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
 msgstr "입력 파일 쓰기"
 
-#: molequeue/inputgeneratorwidget.cpp:608
+#: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
 msgstr "구성 작업"
 
@@ -1081,91 +1081,91 @@ msgstr "분자 표현을 문자열에 쓰는 중 오류 발생: 인식할 수 �
 msgid "Error writing molecule representation to string: %1"
 msgstr "분자 표현을 문자열에 쓰는 중 오류: %1"
 
-#: qtgui/jsonwidget.cpp:55
+#: qtgui/jsonwidget.cpp:64
 msgid "'userOptions' missing."
 msgstr "'userOptions'가 없습니다."
 
-#: qtgui/jsonwidget.cpp:86
+#: qtgui/jsonwidget.cpp:95
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "옵션 '%1'은(는) 객체를 참조하지 않습니다."
 
-#: qtgui/jsonwidget.cpp:93
+#: qtgui/jsonwidget.cpp:102
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'type'은 옵션 '%1'에 대한 문자열이 아닙니다."
 
-#: qtgui/jsonwidget.cpp:100
+#: qtgui/jsonwidget.cpp:109
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "옵션 '%1'을(를) 찾을 수 없습니다."
 
-#: qtgui/jsonwidget.cpp:154
+#: qtgui/jsonwidget.cpp:163
 #, qt-format
 msgid "Tab %1"
 msgstr "탭 %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:177:691
+#: qtgui/jsonwidget.cpp:186:691
 msgid "Title"
 msgstr "제목"
 
-#: qtgui/jsonwidget.cpp:181
+#: qtgui/jsonwidget.cpp:190
 msgid "Filename Base"
 msgstr "파일이름 기준"
 
-#: qtgui/jsonwidget.cpp:186
+#: qtgui/jsonwidget.cpp:195
 msgid "Processor Cores"
 msgstr "프로세서 코어"
 
-#: qtgui/jsonwidget.cpp:191
+#: qtgui/jsonwidget.cpp:200
 msgid "Calculation Type"
 msgstr "계산 유형"
 
-#: qtgui/jsonwidget.cpp:195
+#: qtgui/jsonwidget.cpp:204
 msgid "Theory"
 msgstr "이론"
 
-#: qtgui/jsonwidget.cpp:195
+#: qtgui/jsonwidget.cpp:204
 msgid "Basis"
 msgstr "기초"
 
-#: qtgui/jsonwidget.cpp:200 qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:209 qtgui/jsonwidget.cpp:213
 msgid "Charge"
 msgstr "전하"
 
-#: qtgui/jsonwidget.cpp:201 qtgui/jsonwidget.cpp:206
+#: qtgui/jsonwidget.cpp:210 qtgui/jsonwidget.cpp:215
 msgid "Multiplicity"
 msgstr "다중도"
 
-#: qtgui/jsonwidget.cpp:558
+#: qtgui/jsonwidget.cpp:567
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "오류: 값은 키 '%1'에 대한 객체여야 합니다."
 
-#: qtgui/jsonwidget.cpp:591
+#: qtgui/jsonwidget.cpp:600
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "옵션 '%2'에 대해 인식할 수 없는 옵션 유형 '%1'입니다."
 
-#: qtgui/jsonwidget.cpp:600 qtgui/jsonwidget.cpp:635 qtgui/jsonwidget.cpp:656
-#: qtgui/jsonwidget.cpp:678 qtgui/jsonwidget.cpp:699 qtgui/jsonwidget.cpp:721
-#: qtgui/jsonwidget.cpp:742
+#: qtgui/jsonwidget.cpp:609 qtgui/jsonwidget.cpp:644 qtgui/jsonwidget.cpp:665
+#: qtgui/jsonwidget.cpp:687 qtgui/jsonwidget.cpp:708 qtgui/jsonwidget.cpp:730
+#: qtgui/jsonwidget.cpp:751
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 위젯 유형입니"
 "다."
 
-#: qtgui/jsonwidget.cpp:607 qtgui/jsonwidget.cpp:642 qtgui/jsonwidget.cpp:663
-#: qtgui/jsonwidget.cpp:685 qtgui/jsonwidget.cpp:706 qtgui/jsonwidget.cpp:728
-#: qtgui/jsonwidget.cpp:749
+#: qtgui/jsonwidget.cpp:616 qtgui/jsonwidget.cpp:651 qtgui/jsonwidget.cpp:672
+#: qtgui/jsonwidget.cpp:694 qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:737
+#: qtgui/jsonwidget.cpp:758
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 기본값:"
 
-#: qtgui/jsonwidget.cpp:621
+#: qtgui/jsonwidget.cpp:630
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1174,12 +1174,12 @@ msgstr ""
 "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 값에서 유효한 콤보 항"
 "목 인덱스를 찾을 수 없습니다:"
 
-#: qtgui/jsonwidget.cpp:810
+#: qtgui/jsonwidget.cpp:819
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "옵션 '%1'에 대한 collectOptions 처리되지 않은 위젯입니다."
 
-#: qtgui/jsonwidget.cpp:852 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:864 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
 msgid "[no molecule]"
 msgstr "[분자 없음]"
@@ -1189,66 +1189,65 @@ msgstr "[분자 없음]"
 msgid "Layer %1"
 msgstr "레이어 %1"
 
-#: qtgui/layermodel.cpp:135 qtplugins/ballandstick/ballandstick.h:28
+#: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "공과 막대 모형"
 
-#: qtgui/layermodel.cpp:137 qtplugins/cartoons/cartoons.h:31
+#: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "만화"
 
-#: qtgui/layermodel.cpp:139 qtplugins/closecontacts/closecontacts.h:31
+#: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "내용물 닫기"
 
-#: qtgui/layermodel.cpp:141 qtplugins/crystal/crystalscene.h:31
+#: qtgui/layermodel.cpp:142 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
 msgstr "결정체 격자"
 
-#: qtgui/layermodel.cpp:143 qtplugins/force/force.h:28
+#: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
+msgid "Dipole Moment"
+msgstr "쌍극자 모멘트"
+
+#: qtgui/layermodel.cpp:146 qtplugins/force/force.h:28
 msgid "Force"
 msgstr "힘"
 
-#: qtgui/layermodel.cpp:145 qtplugins/label/label.h:25
+#: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
 msgid "Labels"
 msgstr "레이블"
 
-#: qtgui/layermodel.cpp:147 qtplugins/licorice/licorice.h:29
+#: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "감초"
 
-#: qtgui/layermodel.cpp:149 qtplugins/meshes/meshes.h:29
+#: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
 msgid "Meshes"
 msgstr "메쉬"
 
-#: qtgui/layermodel.cpp:151 qtplugins/noncovalent/noncovalent.h:30
+#: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
 msgstr "비공유"
 
-#: qtgui/layermodel.cpp:153
+#: qtgui/layermodel.cpp:156
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
 
-#: qtgui/layermodel.cpp:155 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:158 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr "대칭 원소"
 
-#: qtgui/layermodel.cpp:157 qtplugins/surfaces/surfacedialog.cpp:25
+#: qtgui/layermodel.cpp:160 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "판 데르 발스"
 
-#: qtgui/layermodel.cpp:159
-msgctxt "ambient occlusion"
-msgid "Van der Waals (AO)"
-msgstr "판 데르 발스 (AO)"
-
-#: qtgui/layermodel.cpp:161 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:162 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "와이어프레임"
 
@@ -1672,7 +1671,7 @@ msgstr "PQR 파일 (*.pqr)"
 #: qtplugins/insertfragment/insertfragment.cpp:107
 #: qtplugins/lammpsinput/lammpsinput.cpp:64
 #: qtplugins/molecularproperties/molecularview.cpp:158
-#: qtplugins/molecularproperties/molecularview.cpp:191
+#: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/openbabel/openbabel.cpp:208 qtplugins/openbabel/openbabel.cpp:217
 #: qtplugins/openbabel/openbabel.cpp:227 qtplugins/openbabel/openbabel.cpp:369
 #: qtplugins/openbabel/openbabel.cpp:397 qtplugins/openbabel/openbabel.cpp:422
@@ -2444,7 +2443,7 @@ msgstr "터보몰 형식"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
-#: qtplugins/molecularproperties/molecularview.cpp:198
+#: qtplugins/molecularproperties/molecularview.cpp:199
 #: qtplugins/propertytables/propertyview.cpp:283:277
 msgid "Copy"
 msgstr "복사"
@@ -2785,6 +2784,10 @@ msgstr "현재 분자에서 사용자 정의 원소 유형을 조작합니다."
 msgid "Custom Elements"
 msgstr "사용자 정의 원소"
 
+#: qtplugins/dipole/dipole.h:33
+msgid "Render the dipole moment of the molecule."
+msgstr ""
+
 #: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:118
 msgid "Draw"
 msgstr "그리기"
@@ -2935,7 +2938,7 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "분자의 원자에 대한 역장 시각화를 렌더링합니다."
 
 #: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:339 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:338 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "기하학 최적화"
@@ -2960,9 +2963,9 @@ msgstr "선택된 원자 멈춤 해제"
 msgid "&Calculate"
 msgstr "&계산"
 
-#: qtplugins/forcefield/forcefield.cpp:245
-#: qtplugins/forcefield/forcefield.cpp:375
-#: qtplugins/forcefield/forcefield.cpp:421
+#: qtplugins/forcefield/forcefield.cpp:244
+#: qtplugins/forcefield/forcefield.cpp:374
+#: qtplugins/forcefield/forcefield.cpp:420
 #: qtplugins/playertool/playertool.cpp:347
 #: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -2970,16 +2973,16 @@ msgstr "&계산"
 msgid "Avogadro"
 msgstr "아보가드로"
 
-#: qtplugins/forcefield/forcefield.cpp:246
+#: qtplugins/forcefield/forcefield.cpp:245
 msgid "No atoms provided for optimization"
 msgstr "최적화를 위해 제공되는 원자 없음"
 
-#: qtplugins/forcefield/forcefield.cpp:374
+#: qtplugins/forcefield/forcefield.cpp:373
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 에너지 = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:420
+#: qtplugins/forcefield/forcefield.cpp:419
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 강도 기준 = %L2"
@@ -2998,15 +3001,15 @@ msgstr "스크립트를 포함한 역장 최소화"
 msgid "Autodetect (%1)"
 msgstr "자동 감지 (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:76 qtplugins/forcefield/obmmenergy.cpp:33
+#: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
 msgstr "범용 역 장"
 
-#: qtplugins/forcefield/obenergy.cpp:81 qtplugins/forcefield/obmmenergy.cpp:38
+#: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
 msgstr "일반화된 호박색 역 장"
 
-#: qtplugins/forcefield/obenergy.cpp:95 qtplugins/forcefield/obmmenergy.cpp:52
+#: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
 msgstr "Merck 분자 역 장 94"
 
@@ -3350,7 +3353,14 @@ msgstr ""
 "미리보기 텍스트를 업데이트하고 Lamps 입력 데크 미리보기 창에서 변경한 사항을 "
 "모두 잃게 하겠습니까?"
 
-#: qtplugins/licorice/licorice.h:33
+#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
+#. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
+#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:163
+#: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
+msgid "Opacity:"
+msgstr "투명도:"
+
+#: qtplugins/licorice/licorice.h:36
 msgid "Render atoms as licorice / sticks."
 msgstr "감초 / 스틱으로 원자를 렌더링합니다."
 
@@ -3440,105 +3450,103 @@ msgstr "각도:"
 msgid "Measure tool"
 msgstr "측정 도구"
 
-#. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
-#. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/meshes/meshes.cpp:163 qtplugins/vanderwaals/vanderwaals.cpp:75
-msgid "Opacity:"
-msgstr "투명도:"
-
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
 msgstr "다각형 메쉬를 렌더링합니다."
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:72
+#: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
 msgid "(pending)"
 msgstr "(보류 중)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:103
-#: qtplugins/molecularproperties/molecularmodel.cpp:111
-#: qtplugins/molecularproperties/molecularmodel.cpp:127
+#: qtplugins/molecularproperties/molecularmodel.cpp:108
+#: qtplugins/molecularproperties/molecularmodel.cpp:116
+#: qtplugins/molecularproperties/molecularmodel.cpp:132
 msgid "unknown molecule"
 msgstr "알 수 없는 분자"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:268
+#: qtplugins/molecularproperties/molecularmodel.cpp:274
 msgid "Property"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:275
+#: qtplugins/molecularproperties/molecularmodel.cpp:281
 msgid "Molecule Name"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:277
+#: qtplugins/molecularproperties/molecularmodel.cpp:283
 msgid "Molecular Mass (g/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:279
+#: qtplugins/molecularproperties/molecularmodel.cpp:285
 msgid "Chemical Formula"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:281
+#: qtplugins/molecularproperties/molecularmodel.cpp:287
 msgid "Number of Atoms"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:283
+#: qtplugins/molecularproperties/molecularmodel.cpp:289
 msgid "Number of Bonds"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:285
+#: qtplugins/molecularproperties/molecularmodel.cpp:291
 msgid "Coordinate Sets"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:287
+#: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgid "Number of Residues"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:289
+#: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgid "Number of Chains"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:291
+#: qtplugins/molecularproperties/molecularmodel.cpp:297
 msgid "Net Charge"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/molecularproperties/molecularmodel.cpp:299
 msgid "Net Spin Multiplicity"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:295
+#: qtplugins/molecularproperties/molecularmodel.cpp:301
+msgid "Dipole Moment (Debye)"
+msgstr ""
+
+#: qtplugins/molecularproperties/molecularmodel.cpp:303
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:297
+#: qtplugins/molecularproperties/molecularmodel.cpp:305
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:299
+#: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:301
+#: qtplugins/molecularproperties/molecularmodel.cpp:309
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:304
+#: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:307
+#: qtplugins/molecularproperties/molecularmodel.cpp:315
 msgid "Enthalpy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:309
+#: qtplugins/molecularproperties/molecularmodel.cpp:317
 msgid "Entropy (kcal/mol•K)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:311
+#: qtplugins/molecularproperties/molecularmodel.cpp:319
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr ""
 
@@ -3588,12 +3596,12 @@ msgstr "CSV 파일 (*.csv);;모든 파일 (*)"
 msgid "Could not open the file for writing."
 msgstr "쓰기 위한 파일을 열 수 없습니다."
 
-#: qtplugins/molecularproperties/molecularview.cpp:191
+#: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:276
 msgid "Error writing to the file."
 msgstr "파일에 오류 쓰기."
 
-#: qtplugins/molecularproperties/molecularview.cpp:203
+#: qtplugins/molecularproperties/molecularview.cpp:204
 #: qtplugins/propertytables/propertyview.cpp:288
 msgid "Export…"
 msgstr "내보내기…"
@@ -8342,6 +8350,10 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
 
+#~ msgctxt "ambient occlusion"
+#~ msgid "Van der Waals (AO)"
+#~ msgstr "판 데르 발스 (AO)"
+
 #~ msgid ""
 #~ "Manipulation Tool\n"
 #~ "\n"
@@ -9737,9 +9749,6 @@ msgstr "loniedavid@gmail.com, an6207@gmail.com, simmon@nplob.com"
 
 #~ msgid "Dipole:"
 #~ msgstr "쌍극자:"
-
-#~ msgid "Dipole Moment"
-#~ msgstr "쌍극자 모멘트"
 
 #~ msgid "Width:"
 #~ msgstr "폭:"
