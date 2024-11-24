@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 04:15+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -2770,10 +2770,8 @@ msgid "Import Crystal from Clipboard"
 msgstr "Εισαγωγή κρυστάλλου από το πρόχειρο..."
 
 #: qtplugins/crystal/crystal.cpp:175
-#, fuzzy
-#| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Διατήρηση των ατόμων στην μοναδιαία κυψελίδα"
+msgstr "Διατήρηση των ατόμων στην μοναδιαία κυψελίδα"
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -2923,10 +2921,9 @@ msgid "Fetch PDB"
 msgstr "Λήψη από PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Αδύνατη η ανάγνωση μοριακού αρχείου %1."
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
@@ -4720,7 +4717,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Φορτίο:"
+msgstr "Φορτίο"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
