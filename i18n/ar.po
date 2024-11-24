@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -1820,11 +1820,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "colormap"
 msgid "Balance"
-msgstr "إلغي"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -3646,10 +3644,8 @@ msgid "Render a few non-covalent interactions."
 msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:54
-#, fuzzy
-#| msgid "Hydrogen"
 msgid "Halogen"
-msgstr "هيدروجين"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
@@ -7807,11 +7803,8 @@ msgstr " ("
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgctxt "A cube type of nothing - empty cube"
-#| msgid "Nothing"
 msgid "Smoothing:"
-msgstr "لا شيء"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:363
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
@@ -8104,10 +8097,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#, fuzzy
-#| msgid "Nitrogen"
 msgid "nitro"
-msgstr "نيتروجين"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
