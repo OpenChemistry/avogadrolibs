@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2772,7 +2772,7 @@ msgstr "Kristall aus der Zwischenablage importieren"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Atome in Elementarzelle halten"
+msgstr "Atome in Elementarzelle halten."
 
 #: qtplugins/crystal/crystal.cpp:177
 msgid "Rotate the unit cell to the standard orientation."
@@ -3879,7 +3879,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molekül ungültig. Geometrie kann nicht optimiert werden."
+msgstr "Molekül ungültig."
 
 #: qtplugins/openbabel/openbabel.cpp:586
 #, fuzzy
@@ -4979,7 +4979,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Spektren"
+msgstr "Raman-Spektren"
 
 #: qtplugins/spectra/spectradialog.cpp:357
 #: qtplugins/spectra/spectradialog.cpp:370
