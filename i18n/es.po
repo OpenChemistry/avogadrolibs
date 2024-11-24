@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -2835,7 +2835,7 @@ msgstr "Elementos Personalizados"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Representar el momento dipolar de la molécula."
 
 #: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:118
 msgid "Draw"
@@ -3572,7 +3572,7 @@ msgstr "Multiplicidad de espín neto"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "Momento dipolar (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:303
 msgctxt "highest occupied molecular orbital"
