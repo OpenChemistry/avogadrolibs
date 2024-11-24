@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 14:22+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -2304,12 +2304,12 @@ msgstr "Bestelakoa"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Koordenatu kartesiarrak editatu"
+msgstr "Koordenatu editatu"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
 msgid "Coordinate editor"
-msgstr "Koordenatu kartesiarrak editatu"
+msgstr "Koordenatu editatu"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -5057,7 +5057,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "&Estatuen Dentsitatearen Ezarpenak"
+msgstr "Estatuen Dentsitatearen Ezarpenak"
 
 #: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
@@ -8236,9 +8236,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Koordenatu kartesiarrak editatu"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
