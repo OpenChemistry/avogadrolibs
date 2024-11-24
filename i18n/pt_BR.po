@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -8386,10 +8386,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Editor de coordenadas"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
