@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:01+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/vi/>\n"
@@ -4950,7 +4950,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "Đặt &mật độ trạng thái (DOS)"
+msgstr "Đặt mật độ trạng thái (DOS)"
 
 #: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
