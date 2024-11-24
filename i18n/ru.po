@@ -6,7 +6,7 @@
 # Yuri Kozlov <yuray@komyakino.ru>, 2011.
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # koffevar <egor.kafisov@gmail.com>, 2020.
-# Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022, 2023.
+# Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022, 2023, 2024.
 # Alex Brohovsky <san4ito94@gmail.com>, 2021.
 # МАН69К <weblate@mah69k.net>, 2022.
 # Kateryna Golovanvoa <kasya8888@gmail.com>, 2022.
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
 "PO-Revision-Date: 2024-11-25 20:00+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -2345,7 +2345,6 @@ msgid "Atomic &Coordinate Editor…"
 msgstr "Редактор координат"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
-#, fuzzy
 msgid "Coordinate editor"
 msgstr "Редактор координат"
 
