@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -2320,12 +2320,12 @@ msgstr "jiné"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Editor pro kartézské souřadnice"
+msgstr "Editor pro souřadnice"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
 msgid "Coordinate editor"
-msgstr "Editor pro kartézské souřadnice"
+msgstr "Editor pro souřadnice"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -2754,7 +2754,7 @@ msgstr "Změnit velikost buňky k &objemu..."
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Superbuňka"
+msgstr "&Superbuňka"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2784,7 +2784,7 @@ msgstr "Zavést krystal ze schránky"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Zachovat atomy v jednotkové buňce"
+msgstr "Zachovat atomy v jednotkové buňce."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -3784,10 +3784,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Přesunout atomy..."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4728,10 +4726,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Nastavení zarovnání"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -5068,10 +5064,8 @@ msgid "Spectra"
 msgstr "Spektra"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display as &row vectors"
 msgid "Display spectra plots."
-msgstr "Zobrazit jako vektory &řádku"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:200
 #, fuzzy
@@ -5439,10 +5433,8 @@ msgid "Vibrations"
 msgstr "Vibrace"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Set Fractional Coordinates"
 msgid "Display vibrational modes."
-msgstr "Nastavit zlomkové souřadnice"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -7996,10 +7988,8 @@ msgstr "Exportovat vypočítané spektrum"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Stálá velikost"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8288,9 +8278,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Editor pro kartézské souřadnice"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
