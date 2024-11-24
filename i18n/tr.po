@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-22 01:11+0000\n"
-"Last-Translator: Onur Kalkan <onurkalkanmv@gmail.com>\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
 "Language: tr\n"
@@ -3013,7 +3013,7 @@ msgstr "Seçilen Atomları Düzelt"
 #, fuzzy
 #| msgid "Calculate Energy"
 msgid "&Calculate"
-msgstr "Enerjiyi Hesapla"
+msgstr "Hesapla"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -3223,7 +3223,7 @@ msgstr "&Ekle"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "&Ekle"
+msgstr "Ekle"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgctxt "uracil"
@@ -3262,7 +3262,7 @@ msgstr "3D molekül üretiliyor…"
 #, fuzzy
 #| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "&Ekle"
+msgstr "Ekle"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3816,7 +3816,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "Geometriyi &Optimize Et"
+msgstr "Geometriyi Optimize Et"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 #, fuzzy
@@ -3884,9 +3884,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr "Open Babel ile dosya açılamıyor."
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "Geometriyi &Optimize Et"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -4903,7 +4902,7 @@ msgstr "Uzay Grubu Seç"
 #: qtplugins/spacegroup/spacegroup.h:24
 #, fuzzy
 msgid "SpaceGroup"
-msgstr "Uzay&grubu"
+msgstr "Uzaygrubu"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
@@ -4925,10 +4924,8 @@ msgid "Spectra"
 msgstr "Spektral"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display as &row vectors"
 msgid "Display spectra plots."
-msgstr "Göster &satır vektörleri olarak"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:200
 #, fuzzy
@@ -7663,10 +7660,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
-#, fuzzy
-#| msgid "No data"
 msgid "&Load data..."
-msgstr "Veri yok"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 04:15+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -1477,10 +1477,8 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Gelaxka Unitate Asimetrikora Murriztu"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Aldatu Atomoaren Hibridazioa"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
@@ -1489,10 +1487,8 @@ msgid "Change Atom Position"
 msgstr "Aldatu Atomoaren Kolorea"
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "Aldatu Atomoaren Geruza"
+msgstr ""
 
 #: qtgui/rwmolecule.h:234
 #, fuzzy
@@ -1508,7 +1504,7 @@ msgstr "Molekula Aldatu"
 #, fuzzy
 #| msgid "&Settings"
 msgid "Settings"
-msgstr "Ezar&penak"
+msgstr "Ezarpenak"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -1565,16 +1561,12 @@ msgid "Axis:"
 msgstr "Ardatza:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Lerrokatu Ezarpenak"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Lerrokatu Ezarpenak"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -2176,10 +2168,8 @@ msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Maximum Force"
 msgid "Maximum distance:"
-msgstr "Indar Maximoa"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2235,7 +2225,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:72
 #, fuzzy
 msgid "Scripts"
-msgstr "&Script-ak"
+msgstr "Script-ak"
 
 #: qtplugins/commandscripts/command.cpp:126
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2730,7 +2720,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:52
 #, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Gelaxka &Unitatea gehitu"
+msgstr "Gelaxka Unitatea gehitu"
 
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
@@ -2750,7 +2740,7 @@ msgstr "Gelaxka &Bolumenera Eskalatu..."
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Super Gelatxoa"
+msgstr "&Super Gelatxoa"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2780,7 +2770,7 @@ msgstr "Kristala Inportatu"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Atomoak gelaxka unitatean mantendu"
+msgstr "Atomoak gelaxka unitatean mantendu"
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -2922,7 +2912,7 @@ msgstr "Hirukoitza"
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 #, fuzzy
 msgid "&Import"
-msgstr "Inportatu"
+msgstr "&Inportatu"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
@@ -2930,10 +2920,9 @@ msgid "Fetch PDB"
 msgstr "Erakutsi PDB-tik..."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Ezinezkoa izan da %1 molekula fitxategia irakurtzea."
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
@@ -3228,7 +3217,7 @@ msgstr ""
 #: qtplugins/hydrogens/hydrogens.cpp:59
 #, fuzzy
 msgid "&Hydrogens"
-msgstr "Hidrogenoak"
+msgstr "&Hidrogenoak"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -3690,7 +3679,7 @@ msgstr ""
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
-msgstr "Analitika"
+msgstr "&Analitika"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3762,10 +3751,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "Atomoak &Transladatu..."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3892,7 +3879,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Geometria Optimizatu"
+msgstr "Geometria Optimizatu"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3948,9 +3935,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "&Geometria Optimizatu"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -4132,7 +4118,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
 msgid "Reference Axes"
-msgstr "&Erreferentzia:"
+msgstr "Erreferentzia"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4396,7 +4382,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "Gorde Bideo-Artxiboa"
+msgstr "Gorde Artxiboa"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4708,10 +4694,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Lerrokatu Ezarpenak"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4726,7 +4710,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Karga:"
+msgstr "Karga"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4855,7 +4839,7 @@ msgstr "Hondakinez Hautatu..."
 #: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "&Hautatu"
+msgstr "Hautatu"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -4918,7 +4902,7 @@ msgstr "Tolerantzia:"
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "Space Group"
-msgstr "Espazio&taldea"
+msgstr "Espaziotaldea"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -5011,7 +4995,7 @@ msgstr "Espazio taldea aukeratu"
 #: qtplugins/spacegroup/spacegroup.h:24
 #, fuzzy
 msgid "SpaceGroup"
-msgstr "Espazio&taldea"
+msgstr "Espaziotaldea"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
@@ -5032,10 +5016,8 @@ msgid "Spectra"
 msgstr "Espektrua"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display as &row vectors"
 msgid "Display spectra plots."
-msgstr "&Lerro bektoreak erakutsi"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:200
 #, fuzzy
@@ -5472,7 +5454,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "G03 failed to start."
 msgid "Error: %1 failed to start"
-msgstr "G03 huts egin du hasieran."
+msgstr "%1 huts egin du hasieran"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -5946,7 +5928,7 @@ msgstr "Lehenespenak"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Gorde Bideo-Artxiboa"
+msgstr "Gorde Artxiboa"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7402,7 +7384,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 #, fuzzy
 msgid "Reference"
-msgstr "&Erreferentzia:"
+msgstr "Erreferentzia"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -7859,7 +7841,7 @@ msgstr "&Itxi"
 #, fuzzy
 #| msgid "Scale &Factor:"
 msgid "Scale Factor:"
-msgstr "Eskalatze &Faktorea"
+msgstr "Eskalatze Faktorea"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8099,7 +8081,7 @@ msgstr "Oso Altua"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Isosurface Value:"
-msgstr "&Isoazaleraren Valioa:"
+msgstr "Isoazaleraren Valioa:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
@@ -8362,9 +8344,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
 msgid "From Clipboard"
-msgstr "Kristala Inportatu"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8442,13 +8423,13 @@ msgstr "Anplitudea:"
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Hasi &Animazioa"
+msgstr "Hasi Animazioa"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 #, fuzzy
 msgid "Stop Animation"
-msgstr "Gelditu &Animazioa"
+msgstr "Gelditu Animazioa"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)

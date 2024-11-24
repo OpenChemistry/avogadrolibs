@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Albanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sq/>\n"
@@ -1478,9 +1478,8 @@ msgstr "&Skedari"
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
-#, fuzzy
 msgid "&Export"
-msgstr "Importo"
+msgstr ""
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -3482,9 +3481,8 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:231
-#, fuzzy
 msgid "Export CSV"
-msgstr "Importo"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:232
@@ -3503,9 +3501,8 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:203
 #: qtplugins/propertytables/propertyview.cpp:288
-#, fuzzy
 msgid "Export…"
-msgstr "Importo"
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:39
 msgid "Navigate"
@@ -4879,9 +4876,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:863
-#, fuzzy
 msgid "Export Movie"
-msgstr "Importo"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -7385,9 +7381,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
 msgid "Export Data"
-msgstr "Importo"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -7455,7 +7450,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 #, fuzzy
 msgid "&Import..."
-msgstr "Importo"
+msgstr "&Importo"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:268
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -7475,9 +7470,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
-#, fuzzy
 msgid "&Export..."
-msgstr "Importo"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:362
 #. i18n: ectx: property (text), widget (QLabel, label_2)

@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-20 18:04+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -1408,7 +1408,7 @@ msgstr ""
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Rimuovi cellula dell'&unità"
+msgstr "Rimuovi cellula dell'unità"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
@@ -1417,7 +1417,7 @@ msgstr ""
 #: qtgui/rwmolecule.cpp:484
 #, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "&Lega gli atomi alla cellula"
+msgstr "Lega gli atomi alla cellula"
 
 #: qtgui/rwmolecule.cpp:507
 #, fuzzy
@@ -1493,10 +1493,9 @@ msgid "Settings"
 msgstr "Impostazioni"
 
 #: qtgui/scriptloader.cpp:41
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Impossibile salvare il file %1."
+msgstr ""
 
 #: qtgui/scriptloader.cpp:68
 #, qt-format
@@ -2716,7 +2715,7 @@ msgstr "&Lega gli atomi alla cellula"
 #: qtplugins/crystal/crystal.cpp:63
 #, fuzzy
 msgid "Rotate to Standard &Orientation"
-msgstr "Ruota nell'orientamento standard"
+msgstr "Ruota nell'&orientamento standard"
 
 #: qtplugins/crystal/crystal.cpp:69
 #, fuzzy
@@ -2727,7 +2726,7 @@ msgstr "Scala Cella &Volume"
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Super Cella"
+msgstr "&Super Cella"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3005,7 +3004,7 @@ msgstr "Fissa gli atomi selezionati"
 #, fuzzy
 #| msgid "Calculate"
 msgid "&Calculate"
-msgstr "Calcola"
+msgstr "&Calcola"
 
 #: qtplugins/forcefield/forcefield.cpp:245
 #: qtplugins/forcefield/forcefield.cpp:375
@@ -3638,7 +3637,7 @@ msgstr ""
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
-msgstr "Analitico"
+msgstr "&Analitico"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -4346,7 +4345,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "Salva File Video"
+msgstr "Salva File"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4800,7 +4799,7 @@ msgstr "Seleziona per residuo..."
 #: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "&Seleziona"
+msgstr "Seleziona"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -4863,7 +4862,7 @@ msgstr "Imposta tolleranza"
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "Space Group"
-msgstr "&Gruppo di spazio"
+msgstr "Gruppo di spazio"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -4952,7 +4951,7 @@ msgstr "Imposta il gruppo di spazio"
 #: qtplugins/spacegroup/spacegroup.h:24
 #, fuzzy
 msgid "SpaceGroup"
-msgstr "&Gruppo di spazio"
+msgstr "Gruppo di spazio"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
@@ -5205,7 +5204,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
 msgid "Export Movie"
-msgstr "E&sporta Immagine"
+msgstr "Esporta Immagine"
 
 #: qtplugins/surfaces/surfaces.cpp:864
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5421,7 +5420,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "G03 failed to start."
 msgid "Error: %1 failed to start"
-msgstr "L'esecuzione di G03 è fallita."
+msgstr "L'esecuzione di %1 è fallita"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -5498,7 +5497,7 @@ msgstr "Invia calcolo..."
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save Input…"
-msgstr "&Salva immagine..."
+msgstr "Salva immagine…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5893,7 +5892,7 @@ msgstr "Valori predefiniti"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Salva File Video"
+msgstr "Salva File"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7007,7 +7006,7 @@ msgstr "Y"
 #, fuzzy
 #| msgid "&Translate "
 msgid "Translate by:"
-msgstr "&Trasforma "
+msgstr "Trasforma"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7331,7 +7330,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 #, fuzzy
 msgid "Reference"
-msgstr "&Riferimento:"
+msgstr "Riferimento"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -7789,7 +7788,7 @@ msgstr "&Chiudi"
 #, fuzzy
 #| msgid "&Scaling Factor:"
 msgid "Scale Factor:"
-msgstr "&Fattore di scala:"
+msgstr "Fattore di scala:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8024,7 +8023,7 @@ msgstr "Molto alto"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Isosurface Value:"
-msgstr "Valore dell'&isosuperficie:"
+msgstr "Valore dell'isosuperficie:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
@@ -8292,7 +8291,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Crystal from Clipboard"
 msgid "From Clipboard"
-msgstr "Importa il Cristallo dagli appunti"
+msgstr "dagli appunti"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8372,13 +8371,13 @@ msgstr "Ampiezza:"
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Avvia &Animazione"
+msgstr "Avvia Animazione"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 #, fuzzy
 msgid "Stop Animation"
-msgstr "Ferma &Animazione"
+msgstr "Ferma Animazione"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)

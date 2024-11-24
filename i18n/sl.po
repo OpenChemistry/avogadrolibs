@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-17 02:40+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-24 01:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -1404,7 +1404,7 @@ msgstr ""
 #: qtgui/rwmolecule.cpp:404
 #, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Odstrani osnovno &celico"
+msgstr "Odstrani osnovno celico"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
@@ -1413,7 +1413,7 @@ msgstr ""
 #: qtgui/rwmolecule.cpp:484
 #, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "&Združi atome v celico"
+msgstr "Združi atome v celico"
 
 #: qtgui/rwmolecule.cpp:507
 #, fuzzy
@@ -1486,7 +1486,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Settings"
 msgid "Settings"
-msgstr "&Nastavitve"
+msgstr "Nastavitve"
 
 #: qtgui/scriptloader.cpp:41
 #, qt-format
@@ -2244,7 +2244,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:72
 #, fuzzy
 msgid "Scripts"
-msgstr "&Skripti"
+msgstr "Skripti"
 
 #: qtplugins/commandscripts/command.cpp:126
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2730,7 +2730,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:40
 #, fuzzy
 msgid "Import Crystal from Clipboard…"
-msgstr "&Uvozi krstalno mrežo iz odložišča ..."
+msgstr "Uvozi krstalno mrežo iz odložišča …"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
@@ -2739,7 +2739,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:52
 #, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Dodaj &osnovno celico"
+msgstr "Dodaj osnovno celico"
 
 #: qtplugins/crystal/crystal.cpp:57
 #, fuzzy
@@ -2749,7 +2749,7 @@ msgstr "&Združi atome v celico"
 #: qtplugins/crystal/crystal.cpp:63
 #, fuzzy
 msgid "Rotate to Standard &Orientation"
-msgstr "Zavrti na običajno usmerjenost"
+msgstr "Zavrti na &običajno usmerjenost"
 
 #: qtplugins/crystal/crystal.cpp:69
 #, fuzzy
@@ -2759,7 +2759,7 @@ msgstr "Prolagajanje celice na &prostornino ..."
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Supercelica"
+msgstr "&Supercelica"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -2770,7 +2770,7 @@ msgstr "Zmanjšaj celico (&Nigglijev algoritem)"
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "&Crystal"
-msgstr "Kristal ..."
+msgstr "Kristal"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
@@ -2783,7 +2783,7 @@ msgstr "Dodaj &osnovno celico"
 #: qtplugins/crystal/crystal.cpp:168
 #, fuzzy
 msgid "Import Crystal from Clipboard"
-msgstr "&Uvozi krstalno mrežo iz odložišča ..."
+msgstr "Uvozi krstalno mrežo iz odložišča"
 
 #: qtplugins/crystal/crystal.cpp:175
 #, fuzzy
@@ -2810,7 +2810,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
 msgid "Crystal"
-msgstr "Kristal ..."
+msgstr "Kristal"
 
 #: qtplugins/crystal/crystal.h:69
 msgid "Tools for crystal-specific editing/analysis."
@@ -3023,7 +3023,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:559
 #, fuzzy
 msgid "Optimize Geometry"
-msgstr "&Prilagodi geometrijo"
+msgstr "Prilagodi geometrijo"
 
 #: qtplugins/forcefield/forcefield.cpp:105
 msgid "Forces"
@@ -3695,7 +3695,7 @@ msgstr ""
 #: qtplugins/vibrations/vibrations.cpp:42
 #, fuzzy
 msgid "&Analysis"
-msgstr "Analitično"
+msgstr "&Analitično"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:78
@@ -3779,10 +3779,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:63
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "&Preslikovanje atomov ..."
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:104
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3910,7 +3908,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "&Prilagodi geometrijo"
+msgstr "Prilagodi geometrijo"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3965,9 +3963,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "&Prilagodi geometrijo"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:711
 #, fuzzy
@@ -4148,7 +4145,7 @@ msgstr ""
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 #, fuzzy
 msgid "Reference Axes"
-msgstr "&Sklic:"
+msgstr "Sklic"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4412,7 +4409,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "Shrani datoteko posnetka"
+msgstr "Shrani datoteko"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4866,7 +4863,7 @@ msgstr "Izbor po ostanku ..."
 #: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "&Izberi"
+msgstr "Izberi"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -5067,10 +5064,8 @@ msgid "Spectra"
 msgstr "Spektri"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display as &row vectors"
 msgid "Display spectra plots."
-msgstr "Izriši kot &vrstične vektorje"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:200
 #, fuzzy
@@ -5511,7 +5506,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "G03 failed to start."
 msgid "Error: %1 failed to start"
-msgstr "Zagon programnika G03 je spodletel."
+msgstr "Zagon programnika %1 je spodletel"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -5588,7 +5583,7 @@ msgstr "Izračun:"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save Input…"
-msgstr "&Shrani sliko ..."
+msgstr "Shrani sliko …"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5983,7 +5978,7 @@ msgstr "Privzeto"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Shrani datoteko posnetka"
+msgstr "Shrani datoteko"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7411,7 +7406,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 #, fuzzy
 msgid "Reference"
-msgstr "&Sklic:"
+msgstr "Sklic"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -7868,7 +7863,7 @@ msgstr "&Zapri"
 #, fuzzy
 #| msgid "Scale &Factor:"
 msgid "Scale Factor:"
-msgstr "Faktor &merila:"
+msgstr "Faktor merila:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -8110,14 +8105,14 @@ msgstr "Zelo visoka"
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #, fuzzy
 msgid "Isosurface Value:"
-msgstr "Vrednost &izo-površine:"
+msgstr "Vrednost izo-površine:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
 #, fuzzy
 #| msgid " K"
 msgid " "
-msgstr " K"
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8375,7 +8370,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 #, fuzzy
 msgid "From Clipboard"
-msgstr "&Uvozi krstalno mrežo iz odložišča ..."
+msgstr "iz odložišča"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
@@ -8453,13 +8448,13 @@ msgstr "Amplituda:"
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
 #, fuzzy
 msgid "Start Animation"
-msgstr "Začni &animacijo"
+msgstr "Začni animacijo"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:103
 #. i18n: ectx: property (text), widget (QPushButton, stopButton)
 #, fuzzy
 msgid "Stop Animation"
-msgstr "Zaustavi &animacijo"
+msgstr "Zaustavi animacijo"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
