@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-18 03:03+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -1527,16 +1527,12 @@ msgid "Axis:"
 msgstr "Eix:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Configuració de l'alineació"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Configuració de l'alineació"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
@@ -4606,10 +4602,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Configuració de l'alineació"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
