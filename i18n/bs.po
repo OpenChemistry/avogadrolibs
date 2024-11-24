@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -1430,9 +1430,8 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Super ćelija"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
@@ -1529,16 +1528,12 @@ msgid "Axis:"
 msgstr "Osa:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Postavke poravnanja"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Postavke poravnanja"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -2699,7 +2694,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "Super ćelija"
+msgstr "&Super ćelija"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -4570,9 +4565,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Molekulrna kružna putanja"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
@@ -4612,10 +4606,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Postavke poravnanja"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4630,7 +4622,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Naboj:"
+msgstr "Naboj"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -7958,7 +7950,7 @@ msgstr "Vrijednost zasićenja izopovršine"
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
