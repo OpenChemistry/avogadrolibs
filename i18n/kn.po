@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Kannada <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/kn/>\n"
@@ -7639,7 +7639,7 @@ msgstr ""
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)

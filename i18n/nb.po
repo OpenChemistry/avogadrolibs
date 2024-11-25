@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/nb_NO/>\n"
@@ -4582,7 +4582,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Ladning:"
+msgstr "Ladning"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."

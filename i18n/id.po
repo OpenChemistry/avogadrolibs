@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -1558,16 +1558,12 @@ msgid "Axis:"
 msgstr "Sumbu:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Pengaturan pelurusan"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Pengaturan pelurusan"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -2776,7 +2772,7 @@ msgstr "Impor Kristal dari Clipboard..."
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Pertahankan atom-atom dalam satuan sel"
+msgstr "Pertahankan atom-atom dalam satuan sel."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -3657,7 +3653,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecular Graph…"
 msgid "&Molecular…"
-msgstr "Grafik Molekuler…"
+msgstr "&Molekuler…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4661,10 +4657,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Pengaturan pelurusan"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4784,10 +4778,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Delete Atom"
 msgid "Select Atom"
-msgstr "Hapus Atom"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -5272,7 +5264,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetrywidget.cpp:330
 #, fuzzy, qt-format
 msgid "Group %1"
-msgstr "Nama Grup"
+msgstr "Grup %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:338
 #, qt-format
@@ -7894,17 +7886,15 @@ msgstr "Ekspor Spektrum Hasil Perhitungan"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Ukuran Konstan"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 #, fuzzy
 #| msgid "10e-"
 msgid "10"
-msgstr "10e-"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:411
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8037,7 +8027,7 @@ msgstr "Nilai PermukaanISO:"
 #, fuzzy
 #| msgid " K"
 msgid " "
-msgstr " K"
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8306,13 +8296,13 @@ msgstr ""
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #, fuzzy
 msgid "Groups"
-msgstr "Nama Grup"
+msgstr "Grup"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Group:"
-msgstr "Nama Grup"
+msgstr "Grup:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eu/>\n"
@@ -2768,7 +2768,7 @@ msgstr "Kristala Inportatu"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Atomoak gelaxka unitatean mantendu"
+msgstr "Atomoak gelaxka unitatean mantendu."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -5036,7 +5036,7 @@ msgstr "Infragorria"
 #| msgctxt "Raman spectrum"
 #| msgid "Raman"
 msgid "Raman"
-msgstr "Raman Espektrua"
+msgstr "Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:207
 msgid "NMR"
@@ -5095,7 +5095,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Inportatu Espektrua"
+msgstr "Raman Espektrua"
 
 #: qtplugins/spectra/spectradialog.cpp:357
 #: qtplugins/spectra/spectradialog.cpp:370
@@ -7944,10 +7944,8 @@ msgstr "Esportatu Kalkulatutako Espektrua"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Tamainu Konstantea"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8089,7 +8087,7 @@ msgstr "Isoazaleraren Valioa:"
 #, fuzzy
 #| msgid " K"
 msgid " "
-msgstr " K"
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)

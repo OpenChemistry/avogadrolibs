@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.1.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Galician <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/gl/>\n"
@@ -1729,7 +1729,7 @@ msgstr "Carga parcial"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Debuxa a estrutura secundaria das proteínas"
+msgstr "estrutura secundaria"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy

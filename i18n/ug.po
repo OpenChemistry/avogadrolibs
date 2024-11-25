@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Uyghur <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ug/>\n"
@@ -1967,9 +1967,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr "تاللا(&S)"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -2901,14 +2900,12 @@ msgid "Configure…"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:125
-#, fuzzy
 msgid "Freeze Selected Atoms"
-msgstr "تاللا(&S)"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:132
-#, fuzzy
 msgid "Unfreeze Selected Atoms"
-msgstr "تاللا(&S)"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:151
 #, fuzzy
@@ -4279,9 +4276,8 @@ msgid "Type"
 msgstr "تىپى"
 
 #: qtplugins/propertytables/propertymodel.cpp:435
-#, fuzzy
 msgid "Start Atom"
-msgstr "جانلاندۇرۇم"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:437
 msgid "End Atom"
@@ -4616,9 +4612,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
 msgid "Select Atom"
-msgstr "تاللا(&S)"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4639,7 +4634,7 @@ msgstr "تاللانما"
 #: qtplugins/select/select.h:30:1896
 #, fuzzy
 msgid "Select"
-msgstr "تاللا(&S)"
+msgstr "تاللا"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgid "Selection"
@@ -4657,9 +4652,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:246
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "جانلاندۇرۇم"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -7521,10 +7515,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
-#, fuzzy
-#| msgid "No data"
 msgid "&Load data..."
-msgstr "سانلىق ئاساس يوق"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
@@ -7775,7 +7767,7 @@ msgstr ""
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)

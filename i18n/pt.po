@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -1608,10 +1608,8 @@ msgid "Axis:"
 msgstr "Eixo:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Definições de alinhamento"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
 #, fuzzy
@@ -2835,7 +2833,7 @@ msgstr "I&mportar Cristal da Área de Transferência"
 #, fuzzy
 #| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Envolver Átomos na Célula Unitária"
+msgstr "Envolver Átomos na Célula Unitária."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -3715,7 +3713,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecule"
 msgid "&Molecular…"
-msgstr "Molécula"
+msgstr "&Molécula"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4805,7 +4803,7 @@ msgstr "Manipular câmara de visualização."
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Carga:"
+msgstr "Carga"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy

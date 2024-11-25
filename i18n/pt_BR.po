@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -1618,10 +1618,8 @@ msgid "Axis:"
 msgstr "Eixo:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Configurações de Alinhamento"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
 #, fuzzy
@@ -1820,7 +1818,7 @@ msgstr "Carga Parcial"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Renderiza estrutura secundária da proteína"
+msgstr "Por estrutura secundária"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -2844,7 +2842,7 @@ msgstr "I&mportar Cristal da Área de Transferência"
 #, fuzzy
 #| msgid "&Wrap Atoms to Unit Cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "Envolver Átomos na Célula Unitária"
+msgstr "Envolver Átomos na Célula Unitária."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -8094,10 +8092,8 @@ msgstr "Exportar espectro Calculado"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Tamanho Constante"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8237,7 +8233,7 @@ msgstr "Valor da Isosuperfície:"
 #, fuzzy
 #| msgid " K"
 msgid " "
-msgstr " K"
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)

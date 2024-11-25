@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -1629,10 +1629,8 @@ msgid "Axis:"
 msgstr "Оса:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Подешавања поравнања"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
 #, fuzzy
@@ -2882,7 +2880,7 @@ msgstr "Uvezite kristal iz međuspremnika"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Задржи атоме у јединичној ћелији"
+msgstr "Задржи атоме у јединичној ћелији."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -8211,10 +8209,8 @@ msgstr "Израчунати спектар:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Stalna Veličina"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)

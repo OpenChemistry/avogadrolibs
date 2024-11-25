@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 04:15+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
@@ -3527,9 +3527,8 @@ msgid "Gibbs Free Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
-#, fuzzy
 msgid "&Molecular…"
-msgstr "Lasketaan elektronitiheyttä"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4485,9 +4484,8 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "Lasketaan elektronitiheyttä"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
@@ -4934,9 +4932,8 @@ msgid "Solvent Excluded"
 msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
-#, fuzzy
 msgid "Molecular Orbital"
-msgstr "Lasketaan elektronitiheyttä"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
@@ -4989,9 +4986,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Lasketaan elektronitiheyttä"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:121
 #, fuzzy
@@ -5012,9 +5008,8 @@ msgid "Calculating electron density"
 msgstr "Lasketaan elektronitiheyttä"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "Lasketaan elektronitiheyttä"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -7796,7 +7791,7 @@ msgstr ""
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)

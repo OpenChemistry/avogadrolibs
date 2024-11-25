@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -3274,7 +3274,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecular Graph…"
 msgid "Molecule…"
-msgstr "Molekül Grafiği…"
+msgstr "Molekül…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3615,7 +3615,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecular Graph…"
 msgid "&Molecular…"
-msgstr "Molekül Grafiği…"
+msgstr "&Molekül…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -4738,10 +4738,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Select All"
 msgid "Select Atom"
-msgstr "Tümünü Seç"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -7919,7 +7917,7 @@ msgstr ""
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8068,10 +8066,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
-#| msgid "Coordinate editor"
 msgid "Coordination:"
-msgstr "Koordinat düzenleyicisi"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -8177,7 +8173,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Import Crystal from Clipboard"
 msgid "From Clipboard"
-msgstr "Kristali Panodan İçe Aktar"
+msgstr "Panodan"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)

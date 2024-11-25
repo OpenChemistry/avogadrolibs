@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -1549,16 +1549,12 @@ msgid "Axis:"
 msgstr "Os:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align at Origin"
-msgstr "Nastavitve poravnave"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align to Axis"
-msgstr "Nastavitve poravnave"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 #, fuzzy
@@ -1750,7 +1746,7 @@ msgstr "Delni naboj"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Izriše sekundarno strukturo proteina"
+msgstr "sekundarno strukturo"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -2323,12 +2319,12 @@ msgstr "Drugo"
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Urejevalnik kartezijskh koordinat"
+msgstr "Urejevalnik koordinat"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
 msgid "Coordinate editor"
-msgstr "Urejevalnik kartezijskh koordinat"
+msgstr "Urejevalnik koordinat"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
@@ -2787,7 +2783,7 @@ msgstr "Uvozi krstalno mrežo iz odložišča"
 #, fuzzy
 #| msgid "&Keep atoms in unit cell"
 msgid "Wrap atoms into the unit cell."
-msgstr "&Združi atome v osnovno celico"
+msgstr "Združi atome v osnovno celico."
 
 #: qtplugins/crystal/crystal.cpp:177
 #, fuzzy
@@ -4723,10 +4719,8 @@ msgid "Align View to Axes"
 msgstr ""
 
 #: qtplugins/resetview/resetview.cpp:52
-#, fuzzy
-#| msgid "Align Settings"
 msgid "Align view to axes."
-msgstr "Nastavitve poravnave"
+msgstr ""
 
 #: qtplugins/resetview/resetview.h:26
 #, fuzzy
@@ -4741,7 +4735,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Naboj:"
+msgstr "Naboj"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -7974,10 +7968,8 @@ msgstr "Izvoz izračunanih podatkov spektra"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Constant Size"
 msgid "Font Size:"
-msgstr "Konstantna velikost"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:406
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -8266,9 +8258,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Urejevalnik kartezijskh koordinat"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-19 01:26+0000\n"
+"PO-Revision-Date: 2024-11-25 20:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -1291,12 +1291,12 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:196
 #, fuzzy
 msgid "Remove Layer"
-msgstr "移除氫"
+msgstr "移除"
 
 #: qtgui/rwlayermanager.cpp:203
 #, fuzzy
 msgid "Remove Layer Info"
-msgstr "移除氫"
+msgstr "移除"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1313,7 +1313,7 @@ msgstr ""
 #: qtplugins/selectiontool/selectiontool.cpp:262:1640
 #, fuzzy
 msgid "Change Layer"
-msgstr "改變鍵級"
+msgstr "改變"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1358,7 +1358,7 @@ msgstr ""
 #: qtgui/rwmolecule.cpp:257
 #, fuzzy
 msgid "Change Atom Layer"
-msgstr "改變鍵級"
+msgstr "改變"
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1448,17 +1448,17 @@ msgstr ""
 #: qtgui/rwmolecule.h:214
 #, fuzzy
 msgid "Change Atom Positions"
-msgstr "改變鍵級"
+msgstr "改變原子位置"
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
 msgid "Change Atom Position"
-msgstr "改變鍵級"
+msgstr "改變原子位置"
 
 #: qtgui/rwmolecule.h:228
 #, fuzzy
 msgid "Change Atom Label"
-msgstr "改變鍵級"
+msgstr "改變"
 
 #: qtgui/rwmolecule.h:234
 msgid "Change Selection"
@@ -4403,7 +4403,7 @@ msgstr "原子 4"
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "插入片斷"
+msgstr "片斷"
 
 #: qtplugins/propertytables/propertymodel.cpp:813
 #, fuzzy
@@ -4574,7 +4574,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "電荷:"
+msgstr "電荷"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4653,7 +4653,7 @@ msgstr "選取"
 #, fuzzy
 #| msgid "Color by Element"
 msgid "Select Element"
-msgstr "依元素標示顏色"
+msgstr "所選元素"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -5053,7 +5053,7 @@ msgstr "分子軌域"
 #: qtplugins/surfaces/surfaces.cpp:121
 #, fuzzy
 msgid "Render the electron density."
-msgstr "計算電子密度"
+msgstr "電子密度"
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the spin density."
