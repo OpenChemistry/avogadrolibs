@@ -60,14 +60,6 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  // add the partial charges
-  if (m_partialCharges.size() > 0) {
-    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
-         ++it) {
-      molecule.setPartialCharges(it->first, it->second);
-    }
-  }
-
   if (m_frequencies.size() > 0 &&
       m_frequencies.size() == m_vibDisplacements.size() &&
       m_frequencies.size() == m_IRintensities.size()) {
@@ -142,6 +134,17 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
+
+  // we have to do a few things *after* any modifications to bonds / atoms
+  // because those automatically clear partial charges and data
+
+  // add the partial charges
+  if (m_partialCharges.size() > 0) {
+    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
+         ++it) {
+      molecule.setPartialCharges(it->first, it->second);
+    }
+  }
 
   molecule.setData("totalCharge", m_charge);
   molecule.setData("totalSpinMultiplicity", m_spin);
