@@ -83,6 +83,7 @@ private:
     MO,
     OrbitalEnergies,
     Charges,
+    HirshfeldCharges,
     Frequencies,
     VibrationalModes,
     IR,
