@@ -135,8 +135,8 @@ jobs:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
 
-    - name: Sign Windows artifact
-      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
+    - name: Sign Windows release
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
       uses: signpath/github-action-submit-signing-request@v1
       with:
         api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
