@@ -28,10 +28,11 @@ LabelEditor::LabelEditor(QObject* parent_)
     m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
     m_selected(false), m_text("")
 {
+  QString shortcut = tr("Ctrl+4", "control-key 4");
   m_activateAction->setText(tr("Edit Labels"));
   m_activateAction->setToolTip(
-    tr("Atom Label Tool\n\n"
-       "Left Mouse: \tClick on Atoms to add Custom Labels"));
+    tr("Atom Label Tool \t(%1)\n\n"
+       "Left Mouse: \tClick on Atoms to add Custom Labels").arg(shortcut));
   setIcon();
 }
 
