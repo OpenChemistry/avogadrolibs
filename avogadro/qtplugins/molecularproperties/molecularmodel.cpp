@@ -197,6 +197,16 @@ QString formatFormula(Molecule* molecule)
   return formula;
 }
 
+QString formatPointGroup(std::string pointgroup)
+{
+  // first character is in capital
+  // then everything else is in subscript using <sub>...</sub>
+  QString formatted = QString::fromStdString(pointgroup);
+  QString output = formatted.at(0).toUpper();
+  output += QString("<sub>%1</sub>").arg(formatted.mid(1));
+  return output;
+}
+
 // Qt calls this for multiple "roles" across row / columns in the index
 //   we also combine multiple types into this class, so lots of special cases
 QVariant MolecularModel::data(const QModelIndex& index, int role) const
@@ -247,6 +257,8 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   else if (key == " 9totalSpinMultiplicity")
     return QVariant::fromValue(
       static_cast<int>(m_molecule->totalSpinMultiplicity()));
+  else if (key == "pointgroup")
+    return formatPointGroup(it->second.toString());
 
   return QString::fromStdString(it->second.toString());
 }
@@ -317,6 +329,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Entropy (kcal/mol•K)");
     else if (it->first == "gibbs")
       return tr("Gibbs Free Energy (kcal/mol)");
+    else if (it->first == "pointgroup")
+      return tr("Point Group", "point group symmetry");
     else if (it != map.end())
       return QString::fromStdString(it->first);
 
