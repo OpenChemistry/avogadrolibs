@@ -60,14 +60,6 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  // add the partial charges
-  if (m_partialCharges.size() > 0) {
-    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
-         ++it) {
-      molecule.setPartialCharges(it->first, it->second);
-    }
-  }
-
   if (m_frequencies.size() > 0 &&
       m_frequencies.size() == m_vibDisplacements.size() &&
       m_frequencies.size() == m_IRintensities.size()) {
@@ -142,6 +134,17 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
   load(basis);
+
+  // we have to do a few things *after* any modifications to bonds / atoms
+  // because those automatically clear partial charges and data
+
+  // add the partial charges
+  if (m_partialCharges.size() > 0) {
+    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
+         ++it) {
+      molecule.setPartialCharges(it->first, it->second);
+    }
+  }
 
   molecule.setData("totalCharge", m_charge);
   molecule.setData("totalSpinMultiplicity", m_spin);
@@ -273,6 +276,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   } else if (Core::contains(key, "MOLECULAR ORBITALS")) {
     m_currentMode = MO;
     getline(in, key); //------------
+  } else if (Core::contains(key, "HIRSHFELD ANALYSIS")) {
+    m_currentMode = HirshfeldCharges;
+    for (unsigned int i = 0; i < 6; ++i) {
+      getline(in, key); // skip header
+    }
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
     m_currentMode = Charges;
     // figure out what type of charges we have
@@ -349,6 +357,34 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
+        m_currentMode = NotParsing;
+        break;
+      }
+      case HirshfeldCharges: {
+        // should start at the first atom
+        if (key.empty())
+          break;
+
+        Eigen::MatrixXd charges(m_atomNums.size(), 1);
+        charges.setZero();
+
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          if (list.size() != 4) {
+            break;
+          }
+          // e.g. index atom charge spin
+          // e.g. 0 O   -0.714286   0.000
+          int atomIndex = Core::lexicalCast<int>(list[0]);
+          double charge = Core::lexicalCast<double>(list[2]);
+          charges(atomIndex, 0) = charge;
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        m_partialCharges["Hirshfeld"] = charges;
         m_currentMode = NotParsing;
         break;
       }
