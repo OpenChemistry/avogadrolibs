@@ -278,7 +278,15 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     getline(in, key); //------------
   } else if (Core::contains(key, "HIRSHFELD ANALYSIS")) {
     m_currentMode = HirshfeldCharges;
+    m_chargeType = "Hirshfeld";
     for (unsigned int i = 0; i < 6; ++i) {
+      getline(in, key); // skip header
+    }
+  } else if (Core::contains(key, "MBIS ANALYSIS")) {
+    // MBIS analysis is similar to Hirshfeld, but with different headers
+    m_currentMode = HirshfeldCharges;
+    m_chargeType = "MBIS";
+    for (unsigned int i = 0; i < 9; ++i) {
       getline(in, key); // skip header
     }
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
@@ -287,6 +295,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     list = Core::split(key, ' ');
     if (list.size() > 2) {
       m_chargeType = Core::trimmed(list[0]); // e.g. MULLIKEN or LOEWDIN
+    }
+    // lowercase everything except the first letter
+    for (unsigned int i = 1; i < m_chargeType.size(); ++i) {
+      m_chargeType[i] = tolower(m_chargeType[i]);
     }
     getline(in, key); // skip ------------
   } else if (Core::contains(key, "VIBRATIONAL FREQUENCIES")) {
@@ -370,7 +382,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
         list = Core::split(key, ' ');
         while (!key.empty()) {
-          if (list.size() != 4) {
+          if (list.size() < 4) {
             break;
           }
           // e.g. index atom charge spin
@@ -384,7 +396,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           list = Core::split(key, ' ');
         }
 
-        m_partialCharges["Hirshfeld"] = charges;
+        m_partialCharges[m_chargeType] = charges;
         m_currentMode = NotParsing;
         break;
       }
