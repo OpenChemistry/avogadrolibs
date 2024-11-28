@@ -452,12 +452,54 @@ void GaussianSet::initCalculation()
           m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.25) * norm); //-3
         }
       } break;
-      case G:
-        skip = 15;
-        break;
-      case G9:
-        skip = 9;
-        break;
+      case G: {
+        // 16 * (2.0/pi)^0.75
+        double norm = 11.403287525679843;
+        double norm1 = norm / sqrt(7.0);
+        double norm2 = norm / sqrt(35.0 / 3.0);
+        double norm3 = norm / sqrt(35.0);
+        m_moIndices[i] = indexMO;
+        indexMO += 15;
+        m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
+        for (unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          // molden order
+          // xxxx yyyy zzzz xxxy xxxz yyyx yyyz zzzx zzzy,
+          // xxyy xxzz yyzz xxyz yyxz zzxy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // xxxx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // yyyy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm);  // zzzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // xxxy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // xxxz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // yyyx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // yyyz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // zzzx
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm1); // zzzy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm2); // xxyy
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm2); // xxzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm2); // yyzz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm3); // xxyz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm3); // yyxz
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm3); // zzxy
+        }
+      } break;
+      case G9: {
+        // 16 * (2.0/pi)^0.75
+        double norm = 11.403287525679843;
+        m_moIndices[i] = indexMO;
+        indexMO += 9;
+        m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
+        for (unsigned j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); // 0
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+1
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-1
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+2
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-2
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+3
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-3
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //+4
+          m_gtoCN.push_back(m_gtoC[j] * pow(m_gtoA[j], 2.75) * norm); //-4
+        }
+      } break;
       case H:
         skip = 21;
         break;
