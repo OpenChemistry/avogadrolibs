@@ -271,11 +271,11 @@ inline void GaussianSetTools::pointP(unsigned int moIndex, const Vector3& delta,
 
   // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
-    double tmpGTO = exp(-m_basis->gtoA()[i] * dr2);
+    tmpGTO = exp(-m_basis->gtoA()[i] * dr2);
     for (unsigned int j = 0; j < 3; ++j) {
-      // m_values[baseIndex + i] = m_basis->gtoCN()[cIndex++] * tmpGTO;
       components[j] += m_basis->gtoCN()[cIndex++] * tmpGTO;
     }
   }
@@ -298,10 +298,11 @@ inline void GaussianSetTools::pointD(unsigned int moIndex, const Vector3& delta,
 
   // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -331,10 +332,11 @@ inline void GaussianSetTools::pointD5(unsigned int moIndex,
 
   // Now iterate through the D type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -371,10 +373,11 @@ inline void GaussianSetTools::pointF(unsigned int moIndex, const Vector3& delta,
 
   // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -415,10 +418,11 @@ inline void GaussianSetTools::pointF7(unsigned int moIndex,
 
   // Now iterate through the F type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -481,10 +485,11 @@ inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
 
   // Now iterate through the G type GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
@@ -496,7 +501,7 @@ inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
   const double zzzz = delta.z() * delta.z() * delta.z() * delta.z();
   const double xxxy = delta.x() * delta.x() * delta.x() * delta.y();
   const double xxxz = delta.x() * delta.x() * delta.x() * delta.z();
-  const double xyyy = delta.x() * delta.y() * delta.y() * delta.y();
+  const double yyyx = delta.y() * delta.y() * delta.y() * delta.x();
   const double yyyz = delta.y() * delta.y() * delta.y() * delta.z();
   const double zzzx = delta.z() * delta.z() * delta.z() * delta.x();
   const double zzzy = delta.z() * delta.z() * delta.z() * delta.y();
@@ -504,8 +509,8 @@ inline void GaussianSetTools::pointG(unsigned int moIndex, const Vector3& delta,
   const double xxzz = delta.x() * delta.x() * delta.z() * delta.z();
   const double yyzz = delta.y() * delta.y() * delta.z() * delta.z();
   const double xxyz = delta.x() * delta.x() * delta.y() * delta.z();
-  const double xyyz = delta.x() * delta.y() * delta.y() * delta.z();
-  const double xyzz = delta.x() * delta.y() * delta.z() * delta.z();
+  const double yyxz = delta.y() * delta.y() * delta.x() * delta.z();
+  const double zzxy = delta.z() * delta.z() * delta.x() * delta.y();
 
   // molden order
   // https://www.theochem.ru.nl/molden/molden_format.html
@@ -535,10 +540,11 @@ inline void GaussianSetTools::pointG9(unsigned int moIndex,
 
   // Now iterate through the GTOs and sum their contributions
   unsigned int cIndex = m_basis->cIndices()[moIndex];
+  double tmpGTO = 0.0;
   for (unsigned int i = m_basis->gtoIndices()[moIndex];
        i < m_basis->gtoIndices()[moIndex + 1]; ++i) {
     // Calculate the common factor
-    double tmpGTO = exp(-gtoA[i] * dr2);
+    tmpGTO = exp(-gtoA[i] * dr2);
     for (double& component : components)
       component += gtoCN[cIndex++] * tmpGTO;
   }
