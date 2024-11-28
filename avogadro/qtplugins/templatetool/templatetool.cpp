@@ -86,7 +86,8 @@ TemplateTool::TemplateTool(QObject* parent_)
        "Select an element and coordination geometry,"
        "then click to insert a fragment.\n\n"
        "Select a ligand or functional group and click"
-       "on a hydrogen atom to attach it.").arg(shortcut));
+       "on a hydrogen atom to attach it.")
+      .arg(shortcut));
   setIcon();
   reset();
 }
@@ -352,6 +353,14 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
         return;
 
       center = templateMolecule.centerOfGeometry();
+      // change the dummy atom(s) to hydrogen
+      for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+        if (templateMolecule.atomicNumber(i) == 0) {
+          templateMolecule.setAtomicNumber(i, 1);
+          templateMolecule.setFormalCharge(i, 0);
+        }
+      }
+
       // done with clipboard ligands
     } else { // a ligand file
       QString path;
@@ -372,6 +381,14 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
         return;
 
       center = templateMolecule.centerOfGeometry();
+      // change the dummy atom(s) to hydrogen
+      for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+        if (templateMolecule.atomicNumber(i) == 0) {
+          templateMolecule.setAtomicNumber(i, 1);
+          templateMolecule.setFormalCharge(i, 0);
+        }
+      }
+
       // done with ligand
     }
   }
