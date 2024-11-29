@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -956,7 +956,7 @@ msgstr "Oganesson"
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "Prohledávat..."
+msgstr "Prohledávat"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1061,9 +1061,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:109
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Nelze spustit povray."
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:163
 #, qt-format
@@ -1314,9 +1314,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Změnit druh vazby"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1359,9 +1358,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:257
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Změnit druh vazby"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1388,7 +1386,7 @@ msgstr "Změnit druh vazby"
 #: qtgui/rwmolecule.cpp:354
 #, fuzzy
 msgid "Update Bonds"
-msgstr " Zapadnout do vazeb"
+msgstr "Zapadnout do vazeb"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
@@ -1455,25 +1453,20 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Redukovat na Asymetrickou jednotku"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Změnit druh vazby"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Změnit druh vazby"
+msgstr ""
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Změnit druh vazby"
+msgstr ""
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "Nevšímat si výběru"
+msgstr ""
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1705,7 +1698,7 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:178:156
 #, fuzzy
 msgid "Success"
-msgstr "Úspěch!"
+msgstr "Úspěch"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1745,12 +1738,12 @@ msgstr "Částečný náboj"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Vykresluje druhotnou proteinovou strukturu"
+msgstr "druhotnou strukturu"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
 msgid "By Amino Acid"
-msgstr "Aminokyseliny:"
+msgstr "Aminokyseliny"
 
 #: qtplugins/applycolors/applycolors.cpp:90
 msgid "By Shapely Scheme"
@@ -1923,9 +1916,8 @@ msgid "ApplyColors"
 msgstr "Barvy"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
-#, fuzzy
 msgid "Atom scale"
-msgstr "Styl atomu"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
 #, fuzzy
@@ -2031,7 +2023,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:29
 #, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "Rozpoznat vazby?"
+msgstr "Rozpoznat vazby"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2073,7 +2065,7 @@ msgstr ""
 #: qtplugins/bonding/bonding.cpp:75
 #, fuzzy
 msgid "Perceive bond orders."
-msgstr "Rozpoznat vazby?"
+msgstr "Rozpoznat vazby."
 
 #: qtplugins/bonding/bonding.h:31
 msgid "Bonding"
@@ -2180,10 +2172,8 @@ msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Maximum Force"
 msgid "Maximum distance:"
-msgstr "Největší síla"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2193,10 +2183,8 @@ msgid "Line width:"
 msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:36
-#, fuzzy
-#| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
-msgstr "Vykresluje posunutí síly u atomů"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
@@ -2352,7 +2340,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
 #, fuzzy
 msgid "Element name."
-msgstr "Název prvku"
+msgstr "Název prvku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
@@ -2367,19 +2355,18 @@ msgid "Element symbol."
 msgstr "Symbol prvku"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
-#, fuzzy
 msgid "Invalid atom label."
-msgstr "Atomové indexy"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 #, fuzzy
 msgid "Invalid atomic index."
-msgstr "Atomové indexy"
+msgstr "Atomové indexy."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
 msgid "Atomic index."
-msgstr "Atomové indexy"
+msgstr "Atomové indexy."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2402,17 +2389,17 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 #, fuzzy
 msgid "X coordinate."
-msgstr "Souřadnice"
+msgstr "X Souřadnice."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
 #, fuzzy
 msgid "Y coordinate."
-msgstr "Souřadnice"
+msgstr "Y Souřadnice."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
 #, fuzzy
 msgid "Z coordinate."
-msgstr "Souřadnice"
+msgstr "Z Souřadnice."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
@@ -2501,7 +2488,7 @@ msgstr "Kopírovat vše"
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 #, fuzzy
 msgid "SMILES"
-msgstr "SMILES..."
+msgstr "SMILES"
 
 #: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
@@ -2765,7 +2752,7 @@ msgstr "Zmenšit buňku (&titěrná)"
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
 msgid "&Crystal"
-msgstr "Krystal..."
+msgstr "Krystal"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
@@ -2806,7 +2793,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
 msgid "Crystal"
-msgstr "Krystal..."
+msgstr "Krystal"
 
 #: qtplugins/crystal/crystal.h:69
 msgid "Tools for crystal-specific editing/analysis."
@@ -2819,9 +2806,8 @@ msgid "Color axes:"
 msgstr "Barvy:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
-#, fuzzy
 msgid "Line color:"
-msgstr "Barvy amino-"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
@@ -2893,7 +2879,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:226
 #, fuzzy
 msgid "Distance:"
-msgstr "Vzdálenost"
+msgstr "Vzdálenost:"
 
 #: qtplugins/editor/editor.cpp:266
 #, qt-format
@@ -2934,7 +2920,7 @@ msgstr "&Import"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "Natáhnout z PDB..."
+msgstr "Natáhnout z PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, fuzzy, qt-format
@@ -2989,7 +2975,7 @@ msgstr "Zadanou molekulu nelze najít: %1"
 #: qtplugins/fetchpdb/fetchpdb.h:35
 #, fuzzy
 msgid "Fetch from PDB"
-msgstr "Natáhnout z PDB..."
+msgstr "Natáhnout z PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -3031,7 +3017,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:113
 #, fuzzy
 msgid "Configure…"
-msgstr "Nastavit silové pole..."
+msgstr "Nastavit…"
 
 #: qtplugins/forcefield/forcefield.cpp:125
 #, fuzzy
@@ -3296,7 +3282,7 @@ msgstr "Thymin"
 #, fuzzy
 #| msgid "Molecule"
 msgid "Insert Molecule…"
-msgstr "Molekula"
+msgstr "Vložit Molekula"
 
 #: qtplugins/insertdna/insertdna.cpp:202
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
@@ -3385,9 +3371,8 @@ msgid "Element"
 msgstr "Prvek"
 
 #: qtplugins/label/label.cpp:175
-#, fuzzy
 msgid "Element & Number"
-msgstr "Název prvku"
+msgstr ""
 
 #: qtplugins/label/label.cpp:177
 msgid "Element & ID"
@@ -3401,12 +3386,11 @@ msgstr ""
 #: qtplugins/label/label.cpp:194
 #, fuzzy
 msgid "Atom Label:"
-msgstr "Značky atomů"
+msgstr "Značky atomů:"
 
 #: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:454
-#, fuzzy
 msgid "ID"
-msgstr "D"
+msgstr ""
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
@@ -3419,9 +3403,8 @@ msgid " & "
 msgstr ""
 
 #: qtplugins/label/label.cpp:225
-#, fuzzy
 msgid "Residue Label:"
-msgstr "Název zbytku"
+msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3941,9 +3924,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
-#, fuzzy
 msgid "Updating molecule…"
-msgstr "Žádný soubor molekul"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
@@ -4002,9 +3984,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:761
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "Žádný soubor molekul"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
 msgid "Cannot add hydrogens with Open Babel."
@@ -4037,7 +4018,7 @@ msgstr "Přidat vodíkové atomy pro pH"
 #: qtplugins/openbabel/openbabel.cpp:862
 #, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
@@ -4192,7 +4173,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:117:1857
 #, fuzzy
 msgid "Frame:"
-msgstr "Snímky"
+msgstr "Snímky:"
 
 #: qtplugins/playertool/playertool.cpp:124
 #: qtplugins/playertool/playertool.cpp:415
@@ -4499,7 +4480,7 @@ msgstr "Koncový atom"
 #: qtplugins/propertytables/propertymodel.cpp:439
 #, fuzzy
 msgid "Bond Order"
-msgstr "Druh vazby:"
+msgstr "Druh vazby"
 
 #: qtplugins/propertytables/propertymodel.cpp:441
 #, fuzzy
@@ -4513,9 +4494,8 @@ msgid "Chain"
 msgstr "řetězce NH"
 
 #: qtplugins/propertytables/propertymodel.cpp:458
-#, fuzzy
 msgid "Secondary Structure"
-msgstr "Nahrát soubor"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:460
 msgid "Heterogen"
@@ -4557,7 +4537,7 @@ msgstr "Atom 4"
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Vložit fragment"
+msgstr "Upravit fragment"
 
 #: qtplugins/propertytables/propertymodel.cpp:813
 #, fuzzy
@@ -4786,25 +4766,20 @@ msgid "Select by Residue…"
 msgstr "Výběr podle zbytku..."
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "Atomové indexy"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
 msgid "Select Sidechain Atoms…"
-msgstr "Atomové indexy"
+msgstr ""
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
 msgid "Select Water"
-msgstr "Atomové indexy"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Nevšímat si výběru"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 #, fuzzy
@@ -4831,14 +4806,12 @@ msgid "Select Element"
 msgstr "Výběr podle prvku"
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "Atomové indexy"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "Atomové indexy"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4915,10 +4888,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
-#| msgid "New Label:"
 msgid "New Layer"
-msgstr "Nový štítek:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
@@ -4945,7 +4916,7 @@ msgstr "Redukovat na Asymetrickou jednotku"
 #: qtplugins/spacegroup/spacegroup.cpp:84
 #, fuzzy
 msgid "Set Tolerance…"
-msgstr "Tolerance:"
+msgstr "Tolerance"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
@@ -5179,7 +5150,7 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:397
 #, fuzzy
 msgid "eV)"
-msgstr "eV"
+msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5409,10 +5380,8 @@ msgid "Show the vibrational modes dialog."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Set Fractional Coordinates"
 msgid "Set the vibrational mode."
-msgstr "Nastavit zlomkové souřadnice"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -5573,7 +5542,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Calculation:"
 msgid "Submit Calculation…"
-msgstr "Výpočet:"
+msgstr "Výpočet"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -7176,7 +7145,7 @@ msgstr "Metoda"
 #, fuzzy
 #| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Počet konformačních izomerů"
+msgstr "Počet konformačních izomerů:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7220,7 +7189,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Children"
 msgid "Children:"
-msgstr "Potomci"
+msgstr "Potomci:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7234,7 +7203,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Mutability"
 msgid "Mutability:"
-msgstr "Proměnitelnost"
+msgstr "Proměnitelnost:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7253,7 +7222,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Scoring method"
 msgid "Scoring method:"
-msgstr "Způsob bodování"
+msgstr "Způsob bodování:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -7512,7 +7481,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 #, fuzzy
 msgid "Constraints:"
-msgstr "Omezení"
+msgstr "Omezení:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -7810,7 +7779,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Wavelength:"
-msgstr "Vlnová délka (nm)"
+msgstr "Vlnová délka:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
@@ -8492,7 +8461,7 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_fermi)
 #, fuzzy
 msgid " eV"
-msgstr "eV"
+msgstr " eV"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:52
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_plotFermi)
@@ -8636,7 +8605,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Number of Bonds:"
 msgid "Number of Dimensions:"
-msgstr "Počet vazeb:"
+msgstr "Počet rozměrů:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
