@@ -1,11 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  Adapted from Avogadro 1.x with the following authors' permission:
-  Copyright 2007 Donald Ephraim Curtis
-  Copyright 2008 Marcus D. Hanwell
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "measuretool.h"
@@ -59,7 +54,8 @@ MeasureTool::MeasureTool(QObject* parent_)
        "\tDistances are measured between 1-2 and 2-3\n"
        "\tAngle is measured between 1-3 using 2 as the common point\n"
        "\tDihedral is measured between 1-2-3-4\n"
-       "Right Mouse: \tReset the measurements.").arg(shortcut));
+       "Right Mouse: \tReset the measurements.")
+      .arg(shortcut));
   setIcon();
 }
 

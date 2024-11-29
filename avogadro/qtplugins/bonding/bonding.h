@@ -1,7 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_BONDING_H
