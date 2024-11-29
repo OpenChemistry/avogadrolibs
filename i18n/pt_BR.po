@@ -8,13 +8,14 @@
 # "Kirito ._." <kiritokunn18@gmail.com>, 2024.
 # Iago Emanuel <iagoemanuel@live.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Khemis <khemis@bol.com.br>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-11-27 23:00+0000\n"
+"Last-Translator: Khemis <khemis@bol.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1139,7 +1140,7 @@ msgstr "'type' não é uma string para a opção '%1'."
 #: qtgui/jsonwidget.cpp:109
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr ""
+msgstr "Não foi possível encontrar a opção '%1'."
 
 #: qtgui/jsonwidget.cpp:163
 #, qt-format
@@ -1256,9 +1257,8 @@ msgid "Force"
 msgstr "Força"
 
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Rótulo"
+msgstr "Rótulos"
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 #, fuzzy
@@ -1273,10 +1273,8 @@ msgid "Meshes"
 msgstr "Malhas"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Covalente"
+msgstr "Não-Covalente"
 
 #: qtgui/layermodel.cpp:156
 #, fuzzy
@@ -1349,7 +1347,7 @@ msgstr ""
 #: qtgui/pythonscript.cpp:145
 #, qt-format
 msgid "Warning '%1'"
-msgstr ""
+msgstr "Alerta '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
@@ -1382,11 +1380,11 @@ msgstr "Modificar Camadas"
 
 #: qtgui/rwlayermanager.cpp:196
 msgid "Remove Layer"
-msgstr ""
+msgstr "Remover Camadas"
 
 #: qtgui/rwlayermanager.cpp:203
 msgid "Remove Layer Info"
-msgstr ""
+msgstr "Remover Info da Camada"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1401,9 +1399,8 @@ msgstr "Adicionar camada de informação"
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Trocar Tipo de Ligação"
+msgstr "Trocar Camada"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1534,21 +1531,19 @@ msgstr "Reduzir para Unidade Assimétrica"
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
-msgstr ""
+msgstr "Mudar Posições dos Átomos"
 
 #: qtgui/rwmolecule.h:224
 msgid "Change Atom Position"
-msgstr ""
+msgstr "Mudar Posição do Átomo"
 
 #: qtgui/rwmolecule.h:228
 msgid "Change Atom Label"
-msgstr ""
+msgstr "Mudar Rótulo do Átomo"
 
 #: qtgui/rwmolecule.h:234
-#, fuzzy
-#| msgid "Change selections"
 msgid "Change Selection"
-msgstr "Mudar seleções"
+msgstr "Mudar Seleção"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1610,6 +1605,13 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
+"Alinhar Moléculas \n"
+"\n"
+"Botão Esquerdo do Mouse: \tSelecionar até dois átomos. \n"
+"\tO primeiro átomo se centraliza na origem. \n"
+"\tO segundo átomo está alinhado com o eixo selecionado. \n"
+"Botão Direito do Mouse: \tMudar o alinhamento. \n"
+"Duplo clique: \tCentralizar o átomo na origem."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1619,21 +1621,19 @@ msgstr "Eixo:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr ""
+msgstr "Alinhar na Origem"
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "Alinhar Visão aos Eixos"
+msgstr "Alinhar ao Eixo"
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
-msgstr ""
+msgstr "Centralizar o átomo na origem."
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "Girar a molécula para alinhar o átomo com o eixo especificado."
 
 #: qtplugins/aligntool/aligntool.h:29
 #, fuzzy
@@ -1663,7 +1663,7 @@ msgstr "Abrir Arquivo de Saída"
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:64
 msgid "&Input"
-msgstr ""
+msgstr "&Entrada"
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
@@ -1771,7 +1771,7 @@ msgstr "Salvar Arquivo de Entrada APBS"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "Entrada APBS (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -1793,37 +1793,31 @@ msgstr "Por Cor Personalizada..."
 
 #: qtplugins/applycolors/applycolors.cpp:49
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Por Índice Atômico…"
 
 #: qtplugins/applycolors/applycolors.cpp:54
 msgid "By Distance…"
-msgstr ""
+msgstr "Por Distância…"
 
 #: qtplugins/applycolors/applycolors.cpp:59
-#, fuzzy
 msgid "By Element"
-msgstr "Elemento"
+msgstr "Por Elemento"
 
 #: qtplugins/applycolors/applycolors.cpp:70
-#, fuzzy
 msgid "By Chain"
-msgstr "Cadeias NH"
+msgstr "Pela Cadeia"
 
 #: qtplugins/applycolors/applycolors.cpp:75
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Carga Parcial"
+msgstr "Pela Carga Parcial…"
 
 #: qtplugins/applycolors/applycolors.cpp:80
-#, fuzzy
 msgid "By Secondary Structure"
-msgstr "Por estrutura secundária"
+msgstr "Por Estrutura Secundária"
 
 #: qtplugins/applycolors/applycolors.cpp:85
-#, fuzzy
 msgid "By Amino Acid"
-msgstr "Aminoácidos:"
+msgstr "Por Aminoácidos:"
 
 #: qtplugins/applycolors/applycolors.cpp:90
 msgid "By Shapely Scheme"
@@ -1927,7 +1921,7 @@ msgstr "Coolwarm"
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
 msgctxt "colormap"
 msgid "Balance"
-msgstr ""
+msgstr "Equilibrar"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1949,7 +1943,7 @@ msgstr "Azul-VermelhoEscuro"
 #: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1797
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:139
 msgid "Apply color schemes to atoms and residues."

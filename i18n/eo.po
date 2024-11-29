@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -1075,13 +1075,13 @@ msgstr "Troviĝis pluro da %1 kiu povas %2 ĉi tiun dosierformon. Kiun uzi?"
 #, fuzzy
 #| msgid "All files (*);;"
 msgid "All files"
-msgstr "Ĉiuj dosieroj (*);;"
+msgstr "Ĉiuj dosieroj"
 
 #: qtgui/fileformatdialog.cpp:282
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Ĉiuj subtenataj dosierformoj (%1);;"
+msgstr "Ĉiuj subtenataj dosierformoj"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-18 09:32+0000\n"
+"PO-Revision-Date: 2024-11-25 21:38+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -1241,7 +1241,7 @@ msgstr "Rețea cristalină"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
-msgstr ""
+msgstr "Moment dipolar"
 
 #: qtgui/layermodel.cpp:146 qtplugins/force/force.h:28
 msgid "Force"
@@ -2835,7 +2835,7 @@ msgstr "Elemente personalizate"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Redă momentul dipolar al moleculei."
 
 #: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:118
 msgid "Draw"
@@ -3571,7 +3571,7 @@ msgstr "Multiplicitatea spinului net"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "Moment dipolar (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:303
 msgctxt "highest occupied molecular orbital"

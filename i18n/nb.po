@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/nb_NO/>\n"
@@ -3885,7 +3885,7 @@ msgstr "Juster hydrogener"
 #: qtplugins/openbabel/openbabel.cpp:862
 #, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
@@ -7559,7 +7559,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 msgid "Wavelength:"
-msgstr "Bølgelengde (nm)"
+msgstr "Bølgelengde:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)

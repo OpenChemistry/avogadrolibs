@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/da/>\n"
@@ -146,7 +146,7 @@ msgstr ""
 #: molequeue/inputgeneratordialog.cpp:43
 #, fuzzy, qt-format
 msgid "%1 Input Generator"
-msgstr "Input Generator"
+msgstr "%1 Input Generator"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
@@ -950,7 +950,7 @@ msgstr "Oganesson"
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "Gennemse..."
+msgstr "Gennemse"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1285,14 +1285,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:196
-#, fuzzy
 msgid "Remove Layer"
-msgstr "Fjern brintatomer"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:203
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Fjern brintatomer"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1307,9 +1305,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Ændr bindingsorden"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1352,9 +1349,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:257
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Ændr bindingsorden"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1446,19 +1442,16 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Ændr bindingsorden"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Ændr bindingsorden"
+msgstr ""
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Ændr bindingsorden"
+msgstr ""
 
 #: qtgui/rwmolecule.h:234
 msgid "Change Selection"
@@ -1717,7 +1710,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Color by Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Farv efter delvis ladning"
+msgstr "efter delvis ladning"
 
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
@@ -1979,9 +1972,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "Fjern brintatomer"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2021,9 +2013,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
 msgid "Perceive bond orders."
-msgstr "Fjern brintatomer"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:31
 msgid "Bonding"
@@ -2264,7 +2255,7 @@ msgstr "Andet..."
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
 msgid "Atomic &Coordinate Editor…"
-msgstr "Kartesisk koordinat-editor"
+msgstr "koordinat-editor"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 #, fuzzy
@@ -2296,7 +2287,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
 #, fuzzy
 msgid "Element name."
-msgstr "Elementnavn"
+msgstr "Elementnavn."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
@@ -2306,9 +2297,8 @@ msgstr "Ugyldigt filnavn"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
-#, fuzzy
 msgid "Element symbol."
-msgstr "Elementnavn"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
@@ -3303,9 +3293,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:175
-#, fuzzy
 msgid "Element & Number"
-msgstr "Elementnavn"
+msgstr ""
 
 #: qtplugins/label/label.cpp:177
 msgid "Element & ID"
@@ -3612,7 +3601,7 @@ msgstr "Molekylære egenskaber"
 #: qtplugins/propertytables/propertyview.cpp:61
 #, fuzzy
 msgid "Molecule Properties"
-msgstr "Molekyle egenskaber..."
+msgstr "Molekyle egenskaber"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:231
@@ -3731,9 +3720,8 @@ msgid "Conformer Search…"
 msgstr "Søg efter konformationer"
 
 #: qtplugins/openbabel/openbabel.cpp:65
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Fjern brintatomer"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
@@ -3824,9 +3812,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
-#, fuzzy
 msgid "Updating molecule…"
-msgstr "Intet molekylesæt"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
@@ -3884,9 +3871,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:761
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "Intet molekylesæt"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
 msgid "Cannot add hydrogens with Open Babel."
@@ -3919,7 +3905,7 @@ msgstr "Til hydrogen til pH"
 #: qtplugins/openbabel/openbabel.cpp:862
 #, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
@@ -4433,10 +4419,8 @@ msgid "Atom 4"
 msgstr "Atom 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:687
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Indsæt fragment"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:813
 msgctxt "pi helix"
@@ -4504,9 +4488,8 @@ msgid "Torsion Properties…"
 msgstr "Drejningsegenskaber"
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Bindings Egenskaber"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:67
 #, fuzzy
@@ -4542,9 +4525,8 @@ msgid "Conformer Properties"
 msgstr "Konformationsegenskaber"
 
 #: qtplugins/propertytables/propertyview.cpp:58
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Bindings Egenskaber"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -4641,7 +4623,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select by Element…"
-msgstr "Vælg efter rest..."
+msgstr "Vælg efter Element…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -5209,9 +5191,8 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "Mål"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -6337,7 +6318,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Other..."
 msgid "Other"
-msgstr "Andet..."
+msgstr "Andet"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)

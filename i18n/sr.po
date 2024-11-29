@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -1093,7 +1093,7 @@ msgstr "Све датотеке"
 #, fuzzy
 #| msgid "All supported formats (%1);;"
 msgid "All supported formats"
-msgstr "Svi podržani formati (%1) ;;"
+msgstr "Svi podržani formati"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
@@ -8028,8 +8028,9 @@ msgstr "Širina vrha:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Wavelength:"
-msgstr "Talasna Dužina (nm):"
+msgstr "Talasna Dužina:"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:97
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_wavelength)
