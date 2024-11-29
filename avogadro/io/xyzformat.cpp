@@ -326,12 +326,12 @@ bool XyzFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     }
 
     outStream << std::setw(3) << std::left
-              << Elements::symbol(atom.atomicNumber()) << " " << std::setw(10)
-              << std::right << std::fixed << std::setprecision(5)
-              << atom.position3d().x() << " " << std::setw(10) << std::right
-              << std::fixed << std::setprecision(5) << atom.position3d().y()
-              << " " << std::setw(10) << std::right << std::fixed
-              << std::setprecision(5) << atom.position3d().z() << "\n";
+              << Elements::symbol(atom.atomicNumber()) << " " << std::setw(15)
+              << std::right << std::fixed << std::setprecision(10)
+              << atom.position3d().x() << " " << std::setw(15) << std::right
+              << std::fixed << std::setprecision(10) << atom.position3d().y()
+              << " " << std::setw(15) << std::right << std::fixed
+              << std::setprecision(10) << atom.position3d().z() << "\n";
   }
 
   return true;
