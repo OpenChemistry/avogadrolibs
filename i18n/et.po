@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/et/>\n"
@@ -3816,7 +3816,7 @@ msgstr "Lisa pH jaoks vesinikke"
 #: qtplugins/openbabel/openbabel.cpp:862
 #, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
