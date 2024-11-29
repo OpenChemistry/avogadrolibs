@@ -1,6 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "dashedlinegeometry.h"
@@ -22,7 +22,7 @@
 namespace {
 #include "dashedline_fs.h"
 #include "dashedline_vs.h"
-}
+} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -46,8 +46,7 @@ public:
 };
 
 DashedLineGeometry::DashedLineGeometry()
-  : m_lineWidth(1.0), m_lineCount(0),
-    m_color(255, 0, 0), m_opacity(255),
+  : m_lineWidth(1.0), m_lineCount(0), m_color(255, 0, 0), m_opacity(255),
     m_dirty(false), d(new Private)
 {
 }
@@ -159,8 +158,9 @@ void DashedLineGeometry::clear()
   m_dirty = true;
 }
 
-size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       const Vector4ub &rgba, int dashCount)
+size_t DashedLineGeometry::addDashedLine(const Vector3f& start,
+                                         const Vector3f& end,
+                                         const Vector4ub& rgba, int dashCount)
 {
   const int vertexCount = 2 * dashCount;
   Vector3f delta = (end - start) / (vertexCount - 1);
@@ -176,17 +176,18 @@ size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &
   return m_lineCount - 1;
 }
 
-size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       const Vector3ub &rgb, int dashCount)
+size_t DashedLineGeometry::addDashedLine(const Vector3f& start,
+                                         const Vector3f& end,
+                                         const Vector3ub& rgb, int dashCount)
 {
   Vector4ub rgba = Vector4ub(rgb(0), rgb(1), rgb(2), m_opacity);
   return addDashedLine(start, end, rgba, dashCount);
 }
 
-size_t DashedLineGeometry::addDashedLine(const Vector3f &start, const Vector3f &end,
-                                       int dashCount)
+size_t DashedLineGeometry::addDashedLine(const Vector3f& start,
+                                         const Vector3f& end, int dashCount)
 {
   return addDashedLine(start, end, m_color, dashCount);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
