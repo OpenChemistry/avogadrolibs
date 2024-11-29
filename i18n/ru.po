@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-11-24 02:41+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
-"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
+"PO-Revision-Date: 2024-11-29 18:38+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -1377,9 +1377,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:262:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Изменить порядок связи"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1424,9 +1423,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:257
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Изменить порядок связи"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1514,20 +1512,16 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
-#| msgid "Change selections"
 msgid "Change Atom Positions"
-msgstr "Изменить выбор"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Изменить порядок связи"
+msgstr ""
 
 #: qtgui/rwmolecule.h:228
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Изменить порядок связи"
+msgstr ""
 
 #: qtgui/rwmolecule.h:234
 #, fuzzy
@@ -1794,7 +1788,7 @@ msgstr "Частичный заряд"
 #: qtplugins/applycolors/applycolors.cpp:80
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Отображает вторичную структуру белков"
+msgstr "вторичную структуру"
 
 #: qtplugins/applycolors/applycolors.cpp:85
 #, fuzzy
@@ -4027,7 +4021,7 @@ msgstr "Добавить протоны при pH"
 #: qtplugins/openbabel/openbabel.cpp:862
 #, fuzzy
 msgid "pH:"
-msgstr "pH"
+msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
 msgid "Generating obabel input…"
