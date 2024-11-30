@@ -32,6 +32,10 @@ using Avogadro::Core::GaussianSet;
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 
+// CODATA 2022
+// https://physics.nist.gov/cgi-bin/cuu/Value?hrev
+#define AU_TO_EV 27.211386245981
+
 MolecularModel::MolecularModel(QObject* parent)
   : QAbstractTableModel(parent), m_molecule(nullptr)
 {
@@ -193,6 +197,16 @@ QString formatFormula(Molecule* molecule)
   return formula;
 }
 
+QString formatPointGroup(std::string pointgroup)
+{
+  // first character is in capital
+  // then everything else is in subscript using <sub>...</sub>
+  QString formatted = QString::fromStdString(pointgroup);
+  QString output = formatted.at(0).toUpper();
+  output += QString("<sub>%1</sub>").arg(formatted.mid(1));
+  return output;
+}
+
 // Qt calls this for multiple "roles" across row / columns in the index
 //   we also combine multiple types into this class, so lots of special cases
 QVariant MolecularModel::data(const QModelIndex& index, int role) const
@@ -239,9 +253,12 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
   else if (key == " 7residues")
     return QVariant::fromValue(m_molecule->residueCount());
   else if (key == " 9totalCharge")
-    return QVariant::fromValue(m_molecule->totalCharge());
-  else if (key == " 10totalSpinMultiplicity")
-    return QVariant::fromValue(m_molecule->totalSpinMultiplicity());
+    return QVariant::fromValue(static_cast<int>(m_molecule->totalCharge()));
+  else if (key == " 9totalSpinMultiplicity")
+    return QVariant::fromValue(
+      static_cast<int>(m_molecule->totalSpinMultiplicity()));
+  else if (key == "pointgroup")
+    return formatPointGroup(it->second.toString());
 
   return QString::fromStdString(it->second.toString());
 }
@@ -290,7 +307,7 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Number of Chains");
     else if (it->first == " 9totalCharge")
       return tr("Net Charge");
-    else if (it->first == " 10totalSpinMultiplicity")
+    else if (it->first == " 9totalSpinMultiplicity")
       return tr("Net Spin Multiplicity");
     else if (it->first == "dipoleMoment")
       return tr("Dipole Moment (Debye)");
@@ -312,6 +329,8 @@ QVariant MolecularModel::headerData(int section, Qt::Orientation orientation,
       return tr("Entropy (kcal/mol•K)");
     else if (it->first == "gibbs")
       return tr("Gibbs Free Energy (kcal/mol)");
+    else if (it->first == "pointgroup")
+      return tr("Point Group", "point group symmetry");
     else if (it != map.end())
       return QString::fromStdString(it->first);
 
@@ -332,6 +351,18 @@ Qt::ItemFlags MolecularModel::flags(const QModelIndex& index) const
   // for the types and columns that can be edited
   auto editable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 
+  int row = index.row();
+
+  if (row == 0) // name
+    return editable;
+
+  const auto map = m_propertiesCache;
+  auto it = map.begin();
+  std::advance(it, row);
+  auto key = it->first;
+  if (key == " 9totalCharge" || key == " 9totalSpinMultiplicity")
+    return editable;
+
   return QAbstractItemModel::flags(index);
 }
 
@@ -344,7 +375,34 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
   if (role != Qt::EditRole)
     return false;
 
-  // TODO allow editing name, total charge, total spin multiplicity
+  int row = index.row();
+
+  if (row == 0) { // name should always be the first row
+    m_name = value.toString();
+    m_autoName = false;
+    m_molecule->setData("name", m_name.toStdString());
+    emit dataChanged(index, index);
+    return true;
+  }
+
+  const auto map = m_propertiesCache;
+  auto it = map.begin();
+  std::advance(it, row);
+  auto key = it->first;
+  if (key == " 9totalCharge") {
+    m_molecule->setData("totalCharge", value.toInt());
+    emit dataChanged(index, index);
+    return true;
+  } else if (key == " 9totalSpinMultiplicity") {
+    int spin = value.toInt();
+    if (spin < 1)
+      return false;
+
+    m_molecule->setData("totalSpinMultiplicity", value.toInt());
+    emit dataChanged(index, index);
+    return true;
+  }
+
   return false;
 }
 
@@ -387,19 +445,36 @@ void MolecularModel::updateTable(unsigned int flags)
     m_propertiesCache.setValue(" 8chains", chainCount);
   }
 
-  if (m_molecule->totalCharge() != 0)
-    m_propertiesCache.setValue(" 9totalCharge", m_molecule->totalCharge());
-  if (m_molecule->totalSpinMultiplicity() != 1)
-    m_propertiesCache.setValue(" 10totalSpinMultiplicity",
-                               m_molecule->totalSpinMultiplicity());
+  m_propertiesCache.setValue(" 9totalCharge",
+                             static_cast<int>(m_molecule->totalCharge()));
+  m_propertiesCache.setValue(
+    " 9totalSpinMultiplicity",
+    static_cast<int>(m_molecule->totalSpinMultiplicity()));
   if (m_molecule->hasData("dipoleMoment")) {
     auto dipole = m_molecule->data("dipoleMoment").toVector3();
-    m_propertiesCache.setValue("dipoleMoment", dipole.norm());
+    QString moment = QString::number(dipole.norm(), 'f', 3);
+    m_propertiesCache.setValue("dipoleMoment", moment.toStdString());
   }
 
   // TODO check for homo, lumo, or somo energies
-  // m_propertiesCache.setValue("homoEnergy", energy);
-  // m_propertiesCache.setValue("lumoEnergy", energy);
+  const auto* basis = m_molecule->basisSet();
+  const GaussianSet* gaussianSet = dynamic_cast<const GaussianSet*>(basis);
+  if (gaussianSet != nullptr && gaussianSet->scfType() == Core::Rhf) {
+    unsigned int homo = gaussianSet->homo();
+    unsigned int lumo = gaussianSet->lumo();
+    const auto moEnergies = gaussianSet->moEnergy();
+    if (moEnergies.size() > homo) {
+      m_propertiesCache.setValue("homoEnergy", moEnergies[homo] * AU_TO_EV);
+    }
+    // look for the lumo if there's a degenerate HOMO
+    const double threshold = 0.01 / AU_TO_EV; // 0.01 eV minimal separation
+    while (moEnergies.size() > lumo &&
+           std::abs(moEnergies[lumo] - moEnergies[homo]) < threshold) {
+      lumo += 1;
+    }
+    if (moEnergies.size() > lumo)
+      m_propertiesCache.setValue("lumoEnergy", moEnergies[lumo] * AU_TO_EV);
+  }
   // m_propertiesCache.setValue("somoEnergy", energy);
 
   // ignore potentially duplicate properties

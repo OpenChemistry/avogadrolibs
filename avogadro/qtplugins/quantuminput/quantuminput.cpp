@@ -154,7 +154,7 @@ void QuantumInput::updateActions()
     // Include the full path if there are multiple generators with the same
     // name.
     QString label = programName;
-    if (!label.endsWith("…") && !label.endsWith("…"))
+    if (!label.endsWith("…") && !label.endsWith("..."))
       label.append("…");
 
     if (scripts.size() == 1) {

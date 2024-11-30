@@ -115,9 +115,9 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (key == "Number of atoms" && list.size() > 1) {
     m_numAtoms = Core::lexicalCast<int>(list[1]);
   } else if (key == "Charge" && list.size() > 1) {
-    m_charge = Core::lexicalCast<signed char>(list[1]);
+    m_charge = Core::lexicalCast<int>(list[1]);
   } else if (key == "Multiplicity" && list.size() > 1) {
-    m_spin = Core::lexicalCast<char>(list[1]);
+    m_spin = Core::lexicalCast<int>(list[1]);
   } else if (key == "Dipole Moment" && list.size() > 2) {
     vector<double> dipole = readArrayD(in, Core::lexicalCast<int>(list[2]));
     m_dipoleMoment = Vector3(dipole[0], dipole[1], dipole[2]);

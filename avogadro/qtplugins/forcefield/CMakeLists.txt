@@ -61,5 +61,6 @@ if (NOT BUILD_GPL_PLUGINS)
   )
 endif()
 
-install(PROGRAMS ${forcefields}
-DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/energy/")
+# Don't install the scripts - we'll use these as plugins
+# install(PROGRAMS ${forcefields}
+# DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/energy/")

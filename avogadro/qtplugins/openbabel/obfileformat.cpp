@@ -240,7 +240,9 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
     }
   }
 
+#ifndef NDEBUG
   qDebug() << " writing to " << m_defaultFormat.c_str();
+#endif
 
   // Generate CML or CJSON to give to OpenBabel
   std::string outputString;

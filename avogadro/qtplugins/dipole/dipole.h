@@ -39,7 +39,7 @@ public:
   }
 
   QWidget* setupWidget() override;
-  bool hasSetupWidget() const override { return true; }
+  bool hasSetupWidget() const override { return false; }
 
 private:
   std::string m_name = "Dipole Moment";

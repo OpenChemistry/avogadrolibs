@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "iotests.h"
@@ -28,11 +17,11 @@
 #include <sstream>
 #include <string>
 
+using Avogadro::Vector3;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::XyzFormat;
-using Avogadro::Vector3;
 
 // methane.xyz uses atomic symbols to identify atoms
 TEST(XyzTest, readAtomicSymbols)
@@ -119,19 +108,25 @@ TEST(XyzTest, write)
   std::string output;
   EXPECT_EQ(xyz.writeString(output, molecule), true);
 
-  // The output should be an exact match with the sample file.
-  std::istringstream outputStream(output);
-  std::ifstream refStream(AVOGADRO_DATA "/data/methane.xyz");
-  char outputChar = '\0';
-  char refChar = '\0';
-  outputStream >> std::noskipws;
-  refStream >> std::noskipws;
-  bool checkedSomething = false;
-  while ((outputStream >> outputChar) && (refStream >> refChar)) {
-    ASSERT_EQ(refChar, outputChar);
-    checkedSomething = true;
-  }
-  EXPECT_TRUE(checkedSomething);
+  // this part is more of a roundtrip test
+  Molecule readMolecule;
+  xyz.readString(output, readMolecule);
+
+  // make sure we've got the same thing
+  EXPECT_EQ(readMolecule.atomCount(), 5);
+
+  // Bond perception will result in 4 bonds
+  EXPECT_EQ(readMolecule.bondCount(), 4);
+
+  EXPECT_EQ(readMolecule.atom(0).atomicNumber(), 6);
+  EXPECT_EQ(readMolecule.atom(1).atomicNumber(), 1);
+  EXPECT_EQ(readMolecule.atom(2).atomicNumber(), 1);
+  EXPECT_EQ(readMolecule.atom(3).atomicNumber(), 1);
+  EXPECT_EQ(readMolecule.atom(4).atomicNumber(), 1);
+
+  EXPECT_EQ(readMolecule.atom(4).position3d().x(), -0.51336);
+  EXPECT_EQ(readMolecule.atom(4).position3d().y(), 0.889165);
+  EXPECT_EQ(readMolecule.atom(4).position3d().z(), -0.36300);
 }
 
 TEST(XyzTest, modes)

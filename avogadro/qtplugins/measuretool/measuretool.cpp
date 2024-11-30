@@ -1,11 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  Adapted from Avogadro 1.x with the following authors' permission:
-  Copyright 2007 Donald Ephraim Curtis
-  Copyright 2008 Marcus D. Hanwell
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include "measuretool.h"
@@ -51,14 +46,16 @@ MeasureTool::MeasureTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_rwMolecule(nullptr), m_renderer(nullptr)
 {
+  QString shortcut = tr("Ctrl+8", "control-key 8");
   m_activateAction->setText(tr("Measure"));
   m_activateAction->setToolTip(
-    tr("Measure Tool\n\n"
+    tr("Measure Tool \t(%1)\n\n"
        "Left Mouse: \tSelect up to four Atoms.\n"
        "\tDistances are measured between 1-2 and 2-3\n"
        "\tAngle is measured between 1-3 using 2 as the common point\n"
        "\tDihedral is measured between 1-2-3-4\n"
-       "Right Mouse: \tReset the measurements."));
+       "Right Mouse: \tReset the measurements.")
+      .arg(shortcut));
   setIcon();
 }
 

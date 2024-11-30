@@ -124,6 +124,10 @@ private:
               std::vector<double>& values) const;
   void pointF7(unsigned int index, const Vector3& delta, double dr2,
                std::vector<double>& values) const;
+  void pointG(unsigned int index, const Vector3& delta, double dr2,
+              std::vector<double>& values) const;
+  void pointG9(unsigned int index, const Vector3& delta, double dr2,
+               std::vector<double>& values) const;
 
   // map from symmetry to angular momentum
   // S, SP, P, D, D5, F, F7, G, G9, etc.

@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2014 Albert DeFusco University of Pittsburgh
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/quantumio/gamessus.h>
@@ -28,15 +17,15 @@
 #include <sstream>
 #include <string>
 
-using Avogadro::Io::FileFormatManager;
 using Avogadro::Core::Cube;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::GaussianSetTools;
+using Avogadro::Core::Molecule;
+using Avogadro::Io::FileFormatManager;
 using std::cin;
 using std::cout;
 using std::endl;
-using std::string;
 using std::ostringstream;
+using std::string;
 
 using Eigen::Vector3d;
 using Eigen::Vector3i;

@@ -37,6 +37,34 @@ using Core::trimmed;
 using std::isalpha;
 #endif
 
+bool findEnergy(const std::string& buffer, double& energyValue)
+{
+  // Check for energy in the comment line
+  // orca uses  E -680.044112849966 (with spaces)
+  // xtb uses energy: -680.044112849966
+  // Open Babel uses Energy: -680.044112849966
+  std::size_t energyStart = buffer.find("energy:");
+  std::size_t offset = 7;
+  if (energyStart == std::string::npos) {
+    energyStart = buffer.find("Energy:");
+  }
+  if (energyStart == std::string::npos) {
+    energyStart = buffer.find(" E ");
+    offset = 3;
+  }
+
+  if (energyStart != std::string::npos) {
+    // find the next whitespace or end of the string
+    std::size_t energyEnd = buffer.find_first_of(" \t", energyStart + offset);
+    if (energyEnd == std::string::npos)
+      energyEnd = buffer.size();
+    std::string energy = buffer.substr(energyStart + offset, energyEnd);
+    energyValue = lexicalCast<double>(energy);
+    return true;
+  }
+  return false;
+}
+
 bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
   json opts;
@@ -53,9 +81,16 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   string buffer;
   getline(inStream, buffer); // Finish the first line
-  getline(inStream, buffer);
+  getline(inStream, buffer); // comment or name or energy
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
+
+  double energy = 0.0;
+  std::vector<double> energies;
+  if (findEnergy(buffer, energy)) {
+    mol.setData("totalEnergy", energy);
+    energies.push_back(energy);
+  }
 
   // check for Lattice= in an extended XYZ from ASE and company
   // e.g. Lattice="H11 H21 H31 H12 H22 H32 H13 H23 H33"
@@ -171,7 +206,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   if ((numAtoms2 = lexicalCast<int>(buffer)) && numAtoms == numAtoms2) {
-    getline(inStream, buffer); // Skip the blank
+    getline(inStream, buffer); // comment line
+    // check for properties in the comment line
+    if (findEnergy(buffer, energy)) {
+      energies.push_back(energy);
+    }
+
     mol.setCoordinate3d(mol.atomPositions3d(), 0);
     int coordSet = 1;
     bool done = false;
@@ -240,6 +280,10 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.setPartialCharges("From File", chargesMatrix);
   }
 
+  if (energies.size() > 1) {
+    mol.setData("energies", energies);
+  }
+
   return true;
 }
 
@@ -282,12 +326,12 @@ bool XyzFormat::write(std::ostream& outStream, const Core::Molecule& mol)
     }
 
     outStream << std::setw(3) << std::left
-              << Elements::symbol(atom.atomicNumber()) << " " << std::setw(10)
-              << std::right << std::fixed << std::setprecision(5)
-              << atom.position3d().x() << " " << std::setw(10) << std::right
-              << std::fixed << std::setprecision(5) << atom.position3d().y()
-              << " " << std::setw(10) << std::right << std::fixed
-              << std::setprecision(5) << atom.position3d().z() << "\n";
+              << Elements::symbol(atom.atomicNumber()) << " " << std::setw(15)
+              << std::right << std::fixed << std::setprecision(10)
+              << atom.position3d().x() << " " << std::setw(15) << std::right
+              << std::fixed << std::setprecision(10) << atom.position3d().y()
+              << " " << std::setw(15) << std::right << std::fixed
+              << std::setprecision(10) << atom.position3d().z() << "\n";
   }
 
   return true;

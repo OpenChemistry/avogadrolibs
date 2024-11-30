@@ -68,11 +68,12 @@ Editor::Editor(QObject* parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
     m_fixValenceLater(false), m_layerManager("Editor")
 {
+  QString shortcut = tr("Ctrl+2", "control-key 2");
   m_activateAction->setText(tr("Draw"));
   m_activateAction->setToolTip(
-    tr("Draw Tool\n\n"
+    tr("Draw Tool \t(%1)\n\n"
        "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
-       "Right Mouse: \tDelete Atom"));
+       "Right Mouse: \tDelete Atom").arg(shortcut));
   setIcon();
   reset();
 }

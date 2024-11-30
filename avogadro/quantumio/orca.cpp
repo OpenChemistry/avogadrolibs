@@ -60,14 +60,6 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
-  // add the partial charges
-  if (m_partialCharges.size() > 0) {
-    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
-         ++it) {
-      molecule.setPartialCharges(it->first, it->second);
-    }
-  }
-
   if (m_frequencies.size() > 0 &&
       m_frequencies.size() == m_vibDisplacements.size() &&
       m_frequencies.size() == m_IRintensities.size()) {
@@ -106,6 +98,19 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     molecule.setSpectra("NMR", nmrData);
   }
 
+  // this should be the final coordinate set (e.g. the optimized geometry)
+  molecule.setCoordinate3d(molecule.atomPositions3d(), 0);
+  if (m_coordSets.size() > 1) {
+    for (unsigned int i = 0; i < m_coordSets.size(); i++) {
+      Array<Vector3> positions;
+      positions.reserve(molecule.atomCount());
+      for (size_t j = 0; j < molecule.atomCount(); ++j) {
+        positions.push_back(m_coordSets[i][j] * BOHR_TO_ANGSTROM);
+      }
+      molecule.setCoordinate3d(positions, i + 1);
+    }
+  }
+
   // guess bonds and bond orders
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -130,9 +135,23 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   basis->setMolecule(&molecule);
   load(basis);
 
+  // we have to do a few things *after* any modifications to bonds / atoms
+  // because those automatically clear partial charges and data
+
+  // add the partial charges
+  if (m_partialCharges.size() > 0) {
+    for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
+         ++it) {
+      molecule.setPartialCharges(it->first, it->second);
+    }
+  }
+
   molecule.setData("totalCharge", m_charge);
   molecule.setData("totalSpinMultiplicity", m_spin);
   molecule.setData("dipoleMoment", m_dipoleMoment);
+  molecule.setData("totalEnergy", m_totalEnergy);
+  if (m_energies.size() > 1)
+    molecule.setData("energies", m_energies);
 
   return true;
 }
@@ -152,6 +171,10 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   if (Core::contains(key, "CARTESIAN COORDINATES (A.U.)")) {
     m_coordFactor = 1.; // leave the coords in BOHR ....
     m_currentMode = Atoms;
+    // if there are any current coordinates, push them back
+    if (m_atomPos.size() > 0) {
+      m_coordSets.push_back(m_atomPos);
+    }
     m_atomPos.clear();
     m_atomNums.clear();
     m_atomLabel.clear();
@@ -197,6 +220,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     list = Core::split(key, ' ');
     if (list.size() > 3)
       m_spin = Core::lexicalCast<int>(list[3]);
+  } else if (Core::contains(key, "FINAL SINGLE POINT ENERGY")) {
+    list = Core::split(key, ' ');
+    if (list.size() > 4)
+      m_totalEnergy = Core::lexicalCast<double>(list[4]);
+    m_energies.push_back(m_totalEnergy);
   } else if (Core::contains(key, "TOTAL NUMBER OF BASIS SET")) {
     m_currentMode = NotParsing; // no longer reading GTOs
   } else if (Core::contains(key, "NUMBER OF CARTESIAN GAUSSIAN BASIS")) {
@@ -248,12 +276,34 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   } else if (Core::contains(key, "MOLECULAR ORBITALS")) {
     m_currentMode = MO;
     getline(in, key); //------------
+  } else if (Core::contains(key, "HIRSHFELD ANALYSIS")) {
+    m_currentMode = HirshfeldCharges;
+    m_chargeType = "Hirshfeld";
+    for (unsigned int i = 0; i < 6; ++i) {
+      getline(in, key); // skip header
+    }
+  } else if (Core::contains(key, "MBIS ANALYSIS")) {
+    // MBIS analysis is similar to Hirshfeld, but with different headers
+    m_currentMode = HirshfeldCharges;
+    m_chargeType = "MBIS";
+    for (unsigned int i = 0; i < 9; ++i) {
+      getline(in, key); // skip header
+    }
+  } else if (Core::contains(key, "CHELPG Charges")) {
+    // similar to standard charges
+    m_currentMode = Charges;
+    m_chargeType = "CHELPG";
+    getline(in, key); // skip ------------
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
     m_currentMode = Charges;
     // figure out what type of charges we have
     list = Core::split(key, ' ');
     if (list.size() > 2) {
       m_chargeType = Core::trimmed(list[0]); // e.g. MULLIKEN or LOEWDIN
+    }
+    // lowercase everything except the first letter
+    for (unsigned int i = 1; i < m_chargeType.size(); ++i) {
+      m_chargeType[i] = tolower(m_chargeType[i]);
     }
     getline(in, key); // skip ------------
   } else if (Core::contains(key, "VIBRATIONAL FREQUENCIES")) {
@@ -324,6 +374,34 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           key = Core::trimmed(key);
           list = Core::split(key, ' ');
         }
+        m_currentMode = NotParsing;
+        break;
+      }
+      case HirshfeldCharges: {
+        // should start at the first atom
+        if (key.empty())
+          break;
+
+        Eigen::MatrixXd charges(m_atomNums.size(), 1);
+        charges.setZero();
+
+        list = Core::split(key, ' ');
+        while (!key.empty()) {
+          if (list.size() < 4) {
+            break;
+          }
+          // e.g. index atom charge spin
+          // e.g. 0 O   -0.714286   0.000
+          int atomIndex = Core::lexicalCast<int>(list[0]);
+          double charge = Core::lexicalCast<double>(list[2]);
+          charges(atomIndex, 0) = charge;
+
+          getline(in, key);
+          key = Core::trimmed(key);
+          list = Core::split(key, ' ');
+        }
+
+        m_partialCharges[m_chargeType] = charges;
         m_currentMode = NotParsing;
         break;
       }

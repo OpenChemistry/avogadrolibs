@@ -301,6 +301,7 @@ void SymmetryWidget::setCenterOfMass(double cm[3])
 void SymmetryWidget::setPointGroupSymbol(QString pg)
 {
   m_ui->pointGroupLabel->setText(pg);
+  m_molecule->setData("pointgroup", pg.toStdString());
 }
 
 void SymmetryWidget::setSymmetryOperations(
