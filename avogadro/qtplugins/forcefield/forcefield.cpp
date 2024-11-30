@@ -14,6 +14,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 
 #include <QAction>
 #include <QtWidgets/QMessageBox>
@@ -65,24 +66,6 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
-  // prefer to use Python interface scripts if available
-  refreshScripts();
-
-  // add the openbabel calculators in case they don't exist
-#ifdef BUILD_GPL_PLUGINS
-  // These directly use Open Babel and are fast
-  qDebug() << " registering GPL plugins";
-  Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
-  Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
-#else
-  // These call obmm and can be slower
-  qDebug() << " registering obmm plugins";
-  Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
-#endif
-
   QAction* action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Optimize Geometry"));
@@ -133,6 +116,9 @@ Forcefield::Forcefield(QObject* parent_)
   action->setData(unfreezeAction);
   connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
   m_actions.push_back(action);
+
+  // single-shot timer to allow the GUI to start up
+  QTimer::singleShot(500, this, SLOT(deferredStart()));
 }
 
 Forcefield::~Forcefield() {}
@@ -140,6 +126,28 @@ Forcefield::~Forcefield() {}
 QList<QAction*> Forcefield::actions() const
 {
   return m_actions;
+}
+
+void Forcefield::deferredStart()
+{
+
+  // prefer to use Python interface scripts if available
+  refreshScripts();
+
+  // add the openbabel calculators in case they don't exist
+#ifdef BUILD_GPL_PLUGINS
+  // These directly use Open Babel and are fast
+  qDebug() << " registering GPL plugins";
+  Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
+  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
+  Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
+#else
+  // These call obmm and can be slower
+  qDebug() << " registering obmm plugins";
+  Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
+  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
+  Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
+#endif
 }
 
 QStringList Forcefield::menuPath(QAction* action) const

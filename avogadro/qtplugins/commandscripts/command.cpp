@@ -65,6 +65,17 @@ QStringList Command::menuPath(QAction* action) const
     return path;
   }
 
+  // cache the menu paths
+  QSettings settings;
+  QFileInfo info(scriptFileName); // check if the script matches the hash
+  QString hash =
+    settings.value("scripts/" + scriptFileName + "/hash").toString();
+  if (hash == QString::number(info.size()) + info.lastModified().toString()) {
+    path = settings.value("scripts/" + scriptFileName + "/menu").toStringList();
+    if (!path.isEmpty())
+      return path;
+  }
+
   // otherwise, we have a script name, so ask it
   InterfaceScript gen(scriptFileName);
   path = gen.menuPath().split('|');
@@ -93,12 +104,15 @@ QStringList Command::menuPath(QAction* action) const
   // add it back to the path
   path << lastPart;
 
+  // cache the path
+  settings.setValue("scripts/" + scriptFileName + "/menu", path);
+
   if (priority != 0) {
     action->setProperty("menu priority", priority);
   }
 
   // try to translate each part of the path
-  // not ideal, but menus should already be in the translation file
+  // not ideal, but most menus should already be in the translation file
   QStringList translatedPath;
   foreach (QString part, path)
     translatedPath << tr(part.toUtf8());
