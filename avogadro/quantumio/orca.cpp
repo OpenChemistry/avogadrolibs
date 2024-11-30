@@ -289,6 +289,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
     for (unsigned int i = 0; i < 9; ++i) {
       getline(in, key); // skip header
     }
+  } else if (Core::contains(key, "CHELPG Charges")) {
+    // similar to standard charges
+    m_currentMode = Charges;
+    m_chargeType = "CHELPG";
+    getline(in, key); // skip ------------
   } else if (Core::contains(key, "ATOMIC CHARGES")) {
     m_currentMode = Charges;
     // figure out what type of charges we have
