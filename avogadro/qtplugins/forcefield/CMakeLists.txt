@@ -44,14 +44,6 @@ if (BUILD_GPL_PLUGINS AND OpenBabel3_LIBRARY)
   target_link_libraries(Forcefield PRIVATE OpenBabel3)
 endif()
 
-# Bundled forcefield scripts
-set(forcefields
-  scripts/ani2x.py
-  scripts/gfn1.py
-  scripts/gfn2.py
-  scripts/gfnff.py
-)
-
 if (NOT BUILD_GPL_PLUGINS)
   # install the OB / Pybel forcefield scripts
   list(APPEND forcefields
@@ -61,6 +53,4 @@ if (NOT BUILD_GPL_PLUGINS)
   )
 endif()
 
-# Don't install the scripts - we'll use these as plugins
-# install(PROGRAMS ${forcefields}
-# DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/energy/")
+# Don't install any scripts - we'll use these as plugins
