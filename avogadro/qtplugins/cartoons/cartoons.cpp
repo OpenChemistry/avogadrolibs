@@ -202,7 +202,7 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
 {
   const auto& graph = molecule.graph();
   map<size_t, AtomsPairList> result;
-  map<size_t, BackboneResidue> previousCA;
+  map<size_t, BackboneResidue> previousAtom;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
       Atom caAtom = residue.getAtomByName("CA");
@@ -212,8 +212,18 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
           m_layerManager.atomEnabled(layer, oAtom.index())) {
         // get the group ID and check if it's initialized in the map
         size_t group = graph.getConnectedID(caAtom.index());
-        addBackBone(result, previousCA, caAtom, residue.color(), group,
+        addBackBone(result, previousAtom, caAtom, residue.color(), group,
                     residue.secondaryStructure());
+      } else { // maybe DNA
+        Atom c3Atom = residue.getAtomByName("C3'");
+        Atom o3Atom = residue.getAtomByName("O3'");
+        if (c3Atom.isValid() && o3Atom.isValid() &&
+            m_layerManager.atomEnabled(layer, c3Atom.index()) &&
+            m_layerManager.atomEnabled(layer, o3Atom.index())) {
+          size_t group = graph.getConnectedID(c3Atom.index());
+          addBackBone(result, previousAtom, c3Atom, residue.color(), group,
+                      residue.secondaryStructure());
+        }
       }
     }
   }
