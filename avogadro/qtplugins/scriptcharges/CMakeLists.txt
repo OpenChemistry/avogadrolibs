@@ -14,11 +14,4 @@ avogadro_plugin(ScriptCharges
 
 target_link_libraries(ScriptCharges PRIVATE Avogadro::Calc )
 
-# Bundled format scripts:
-set(charge_scripts
-  chargeScripts/xtb.py
-  chargeScripts/antechamber.py
-)
-
-install(PROGRAMS ${charge_scripts}
-  DESTINATION "${INSTALL_LIBRARY_DIR}/avogadro2/scripts/charges/")
+# charge scripts are now download only
