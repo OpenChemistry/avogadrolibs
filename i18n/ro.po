@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-11-24 02:41+0000\n"
+"POT-Creation-Date: 2024-12-01 02:55+0000\n"
 "PO-Revision-Date: 2024-11-25 21:38+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -1385,7 +1385,7 @@ msgstr "Adăugare informații despre strat"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:262:1640
+#: qtplugins/selectiontool/selectiontool.cpp:263:1640
 msgid "Change Layer"
 msgstr "Schimbare strat"
 
@@ -1394,7 +1394,7 @@ msgid "Add Atom"
 msgstr "Adăugare atom"
 
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
-#: qtplugins/editor/editor.cpp:131
+#: qtplugins/editor/editor.cpp:132
 msgid "Remove Atom"
 msgstr "Eliminare atom"
 
@@ -1537,12 +1537,12 @@ msgstr "Modifică molecula"
 msgid "Settings"
 msgstr "Configurări"
 
-#: qtgui/scriptloader.cpp:41
+#: qtgui/scriptloader.cpp:33
 #, qt-format
 msgid "Cannot load script %1"
 msgstr "Nu se poate încărca scriptul %1"
 
-#: qtgui/scriptloader.cpp:68
+#: qtgui/scriptloader.cpp:69
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
 msgstr "Se verifică dacă există scripturi %1 în ruta %2"
@@ -1701,7 +1701,7 @@ msgid "PQR Files (*.pqr)"
 msgstr "Fișiere PQR (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
-#: qtplugins/commandscripts/command.cpp:125
+#: qtplugins/commandscripts/command.cpp:139
 #: qtplugins/cp2kinput/cp2kinput.cpp:85
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
@@ -1757,104 +1757,104 @@ msgstr "Succes"
 msgid "Input file written to '%1'"
 msgstr "Fișier de intrare scris la „%1”"
 
-#: qtplugins/applycolors/applycolors.cpp:44
-#: qtplugins/applycolors/applycolors.cpp:65
+#: qtplugins/applycolors/applycolors.cpp:46
+#: qtplugins/applycolors/applycolors.cpp:67
 msgid "By Custom Color…"
 msgstr "După culoare personalizată…"
 
-#: qtplugins/applycolors/applycolors.cpp:49
+#: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
 msgstr "După indicele atomic"
 
-#: qtplugins/applycolors/applycolors.cpp:54
+#: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
 msgstr "După distanță"
 
-#: qtplugins/applycolors/applycolors.cpp:59
+#: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
 msgstr "După element"
 
-#: qtplugins/applycolors/applycolors.cpp:70
+#: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
 msgstr "După lanț"
 
-#: qtplugins/applycolors/applycolors.cpp:75
+#: qtplugins/applycolors/applycolors.cpp:77
 msgid "By Partial Charge…"
 msgstr "După sarcina parțială…"
 
-#: qtplugins/applycolors/applycolors.cpp:80
+#: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
 msgstr "După structura secundară"
 
-#: qtplugins/applycolors/applycolors.cpp:85
+#: qtplugins/applycolors/applycolors.cpp:87
 msgid "By Amino Acid"
 msgstr "După aminoacid"
 
-#: qtplugins/applycolors/applycolors.cpp:90
+#: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
 msgstr "După schema de culori"
 
-#: qtplugins/applycolors/applycolors.cpp:105
-#: qtplugins/applycolors/applycolors.cpp:208
-#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/applycolors/applycolors.cpp:107
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:308
 #: qtplugins/surfaces/surfaces.cpp:758
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
-#: qtplugins/applycolors/applycolors.cpp:107
+#: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Heat"
 
-#: qtplugins/applycolors/applycolors.cpp:109
+#: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Hot"
 
-#: qtplugins/applycolors/applycolors.cpp:111
+#: qtplugins/applycolors/applycolors.cpp:113
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Gri"
 
-#: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/applycolors/applycolors.cpp:208
-#: qtplugins/applycolors/applycolors.cpp:300
+#: qtplugins/applycolors/applycolors.cpp:115
+#: qtplugins/applycolors/applycolors.cpp:210
+#: qtplugins/applycolors/applycolors.cpp:308
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
 
-#: qtplugins/applycolors/applycolors.cpp:115
-#: qtplugins/applycolors/applycolors.cpp:209
-#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/applycolors/applycolors.cpp:117
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:309
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Inferno"
 
-#: qtplugins/applycolors/applycolors.cpp:117
-#: qtplugins/applycolors/applycolors.cpp:209
-#: qtplugins/applycolors/applycolors.cpp:301
+#: qtplugins/applycolors/applycolors.cpp:119
+#: qtplugins/applycolors/applycolors.cpp:211
+#: qtplugins/applycolors/applycolors.cpp:309
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plasma"
 
-#: qtplugins/applycolors/applycolors.cpp:119
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
+#: qtplugins/applycolors/applycolors.cpp:121
+#: qtplugins/applycolors/applycolors.cpp:212
+#: qtplugins/applycolors/applycolors.cpp:310
 #: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
 
-#: qtplugins/applycolors/applycolors.cpp:121
-#: qtplugins/applycolors/applycolors.cpp:210
-#: qtplugins/applycolors/applycolors.cpp:302
+#: qtplugins/applycolors/applycolors.cpp:123
+#: qtplugins/applycolors/applycolors.cpp:212
+#: qtplugins/applycolors/applycolors.cpp:310
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
@@ -1864,9 +1864,9 @@ msgstr "Cividis"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:174
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:123
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:303
+#: qtplugins/applycolors/applycolors.cpp:125
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:311
 #: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1794
 msgctxt "colormap"
 msgid "Spectral"
@@ -1876,7 +1876,7 @@ msgstr "Spectral"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:125
+#: qtplugins/applycolors/applycolors.cpp:127
 #: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1791
 msgctxt "colormap"
 msgid "Coolwarm"
@@ -1886,7 +1886,7 @@ msgstr "Coolwarm"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:127
+#: qtplugins/applycolors/applycolors.cpp:129
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
 msgctxt "colormap"
 msgid "Balance"
@@ -1896,7 +1896,7 @@ msgstr "Balance"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:129
+#: qtplugins/applycolors/applycolors.cpp:131
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
 msgctxt "colormap"
 msgid "Blue-DarkRed"
@@ -1906,35 +1906,35 @@ msgstr "Blue-DarkRed"
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:179
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
-#: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:303
+#: qtplugins/applycolors/applycolors.cpp:133
+#: qtplugins/applycolors/applycolors.cpp:213
+#: qtplugins/applycolors/applycolors.cpp:311
 #: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1797
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
 
-#: qtplugins/applycolors/applycolors.cpp:139
+#: qtplugins/applycolors/applycolors.cpp:141
 msgid "Apply color schemes to atoms and residues."
 msgstr "Aplicați scheme de culori pentru atomi și reziduuri."
 
-#: qtplugins/applycolors/applycolors.cpp:150
-#: qtplugins/applycolors/applycolors.cpp:152 qtplugins/focus/focus.cpp:42
+#: qtplugins/applycolors/applycolors.cpp:152
+#: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:76
 msgid "&View"
 msgstr "&Vizualizare"
 
-#: qtplugins/applycolors/applycolors.cpp:150
+#: qtplugins/applycolors/applycolors.cpp:152
 msgid "Color Atoms"
 msgstr "Atomi colorați"
 
-#: qtplugins/applycolors/applycolors.cpp:152
+#: qtplugins/applycolors/applycolors.cpp:154
 msgid "Color Residues"
 msgstr "Reziduuri colorate"
 
-#: qtplugins/applycolors/applycolors.cpp:214
-#: qtplugins/applycolors/applycolors.cpp:306
+#: qtplugins/applycolors/applycolors.cpp:216
+#: qtplugins/applycolors/applycolors.cpp:314
 msgid "Select Colormap"
 msgstr "Selectați schema de culori"
 
@@ -1942,8 +1942,8 @@ msgstr "Selectați schema de culori"
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: qtplugins/applycolors/applycolors.cpp:214
-#: qtplugins/applycolors/applycolors.cpp:306:171 rc.cpp:1782
+#: qtplugins/applycolors/applycolors.cpp:216
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1782
 msgid "Colormap:"
 msgstr "Schema de culori:"
 
@@ -1980,12 +1980,18 @@ msgid "Render atoms as spheres and bonds as cylinders."
 msgstr "Reprezintă atomii ca sfere și legăturile ca cilindri."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
+msgctxt "control-key 7"
+msgid "Ctrl+7"
+msgstr ""
+
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
 msgstr "Manipulare centrată pe legături"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:119
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:120
+#, qt-format
 msgid ""
-"Bond Centric Manipulation Tool\n"
+"Bond Centric Manipulation Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tClick and drag to rotate the view.\n"
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
@@ -1996,36 +2002,20 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
-"Instrument de manipulare centrat pe legături\n"
-"\n"
-"Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a roti "
-"vizualizarea.\n"
-"Butonul din mijloc al mouse-ului: \tFaceți clic și trageți pentru a mări sau "
-"micșora imaginea.\n"
-"Butonul drept al mouse-ului: \tFaceți clic și trageți pentru a muta "
-"vizualizarea.\n"
-"Faceți dublu clic: \tRestabiliți vizualizarea.\n"
-"\n"
-"Faceți clic cu butonul stâng și trageți pe o legătură pentru a stabili "
-"planul de manipulare:\n"
-"Faceți clic cu butonul stâng și trageți unul dintre atomii din legătură "
-"pentru a modifica unghiul\n"
-"Faceți clic cu butonul din dreapta și trageți unul dintre atomii din "
-"legătură pentru a modifica lungimea"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:780
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:868
-#: qtplugins/measuretool/measuretool.cpp:211
-#: qtplugins/measuretool/measuretool.cpp:219
-#: qtplugins/measuretool/measuretool.cpp:220
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:781
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:869
+#: qtplugins/measuretool/measuretool.cpp:208
+#: qtplugins/measuretool/measuretool.cpp:216
+#: qtplugins/measuretool/measuretool.cpp:217
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:802
-#: qtplugins/editor/editor.cpp:268 qtplugins/measuretool/measuretool.cpp:227
-#: qtplugins/measuretool/measuretool.cpp:228
-#: qtplugins/measuretool/measuretool.cpp:230
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:803
+#: qtplugins/editor/editor.cpp:269 qtplugins/measuretool/measuretool.cpp:224
+#: qtplugins/measuretool/measuretool.cpp:225
+#: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
@@ -2087,11 +2077,11 @@ msgstr "Creează legături între toți atomii sau între atomi selectați."
 msgid "Perceive bond orders."
 msgstr "Percepe ordinea legăturilor."
 
-#: qtplugins/bonding/bonding.h:31
+#: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
 msgstr "Legarea"
 
-#: qtplugins/bonding/bonding.h:35
+#: qtplugins/bonding/bonding.h:34
 msgid "Perform bonding operations."
 msgstr "Efectuează operațiile de legare."
 
@@ -2218,10 +2208,10 @@ msgstr "Editează paleta de opacitate a culorilor…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
-#: qtplugins/commandscripts/command.cpp:72
+#: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:99
-#: qtplugins/forcefield/forcefield.cpp:149
-#: qtplugins/forcefield/forcefield.cpp:151
+#: qtplugins/forcefield/forcefield.cpp:157
+#: qtplugins/forcefield/forcefield.cpp:159
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2239,11 +2229,11 @@ msgstr ""
 "reprezentarea volumelor."
 
 #: qtplugins/commandscripts/command.cpp:64
-#: qtplugins/commandscripts/command.cpp:72
+#: qtplugins/commandscripts/command.cpp:83
 msgid "Scripts"
 msgstr "Scripturi"
 
-#: qtplugins/commandscripts/command.cpp:126
+#: qtplugins/commandscripts/command.cpp:140
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
 #: qtplugins/gamessinput/gamessinput.cpp:87
 #: qtplugins/lammpsinput/lammpsinput.cpp:65
@@ -2257,16 +2247,16 @@ msgstr ""
 "Eroare la citirea fișierului de ieșire „%1”:\n"
 "%2"
 
-#: qtplugins/commandscripts/command.cpp:215
+#: qtplugins/commandscripts/command.cpp:229
 #, qt-format
 msgid "Processing %1"
 msgstr "Se procesează %1"
 
-#: qtplugins/commandscripts/command.cpp:270
+#: qtplugins/commandscripts/command.cpp:284
 msgid "Set path to Python interpreter:"
 msgstr "Stabilește ruta către interpretul python:"
 
-#: qtplugins/commandscripts/command.cpp:272
+#: qtplugins/commandscripts/command.cpp:286
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
@@ -2603,7 +2593,7 @@ msgstr "Generează date de intrare pentru CP2K."
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:97:1184
+#: qtplugins/forcefield/forcefield.cpp:80:1184
 msgid "Energy"
 msgstr "Energie"
 
@@ -2837,41 +2827,42 @@ msgstr "Elemente personalizate"
 msgid "Render the dipole moment of the molecule."
 msgstr "Redă momentul dipolar al moleculei."
 
-#: qtplugins/editor/editor.cpp:71 qtplugins/editor/editor.cpp:118
+#: qtplugins/editor/editor.cpp:71
+msgctxt "control-key 2"
+msgid "Ctrl+2"
+msgstr ""
+
+#: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
 msgstr "Desenare"
 
-#: qtplugins/editor/editor.cpp:73
+#: qtplugins/editor/editor.cpp:74
+#, qt-format
 msgid ""
-"Draw Tool\n"
+"Draw Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
-"Instrument de desenare\n"
-"\n"
-"Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a crea atomi și "
-"legături\n"
-"Butonul drept al mouse-ului: \tȘterge atomul"
 
-#: qtplugins/editor/editor.cpp:112
+#: qtplugins/editor/editor.cpp:113
 msgid "Draw Atom"
 msgstr "Desenează atom"
 
-#: qtplugins/editor/editor.cpp:122
+#: qtplugins/editor/editor.cpp:123
 msgid "Change Bond Type"
 msgstr "Schimbă tipul legăturii"
 
-#: qtplugins/editor/editor.cpp:135
+#: qtplugins/editor/editor.cpp:136
 msgid "Remove Bond"
 msgstr "Elimină legătura"
 
-#: qtplugins/editor/editor.cpp:263 qtplugins/measuretool/measuretool.cpp:201
-#: qtplugins/measuretool/measuretool.cpp:226
+#: qtplugins/editor/editor.cpp:264 qtplugins/measuretool/measuretool.cpp:198
+#: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
 msgstr "Distanța:"
 
-#: qtplugins/editor/editor.cpp:266
+#: qtplugins/editor/editor.cpp:267
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -2989,52 +2980,52 @@ msgstr "Focalizează vizualizarea pe anumite caracteristici."
 msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Realizează vizualizările câmpului de forțe pentru atomii moleculei."
 
-#: qtplugins/forcefield/forcefield.cpp:88
-#: qtplugins/forcefield/forcefield.cpp:338 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:71
+#: qtplugins/forcefield/forcefield.cpp:346 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Optimizează geometria"
 
-#: qtplugins/forcefield/forcefield.cpp:105
+#: qtplugins/forcefield/forcefield.cpp:88
 msgid "Forces"
 msgstr "Forțe"
 
-#: qtplugins/forcefield/forcefield.cpp:113
+#: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
 msgstr "Configurează…"
 
-#: qtplugins/forcefield/forcefield.cpp:125
+#: qtplugins/forcefield/forcefield.cpp:108
 msgid "Freeze Selected Atoms"
 msgstr "Îngheață atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:132
+#: qtplugins/forcefield/forcefield.cpp:115
 msgid "Unfreeze Selected Atoms"
 msgstr "Dezgheață atomii selectați"
 
-#: qtplugins/forcefield/forcefield.cpp:151
+#: qtplugins/forcefield/forcefield.cpp:159
 msgid "&Calculate"
 msgstr "&Calculează"
 
-#: qtplugins/forcefield/forcefield.cpp:244
-#: qtplugins/forcefield/forcefield.cpp:374
-#: qtplugins/forcefield/forcefield.cpp:420
-#: qtplugins/playertool/playertool.cpp:347
-#: qtplugins/playertool/playertool.cpp:379 qtplugins/surfaces/surfaces.cpp:912
+#: qtplugins/forcefield/forcefield.cpp:252
+#: qtplugins/forcefield/forcefield.cpp:382
+#: qtplugins/forcefield/forcefield.cpp:428
+#: qtplugins/playertool/playertool.cpp:348
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:245
+#: qtplugins/forcefield/forcefield.cpp:253
 msgid "No atoms provided for optimization"
 msgstr "Nu au fost furnizați atomi pentru optimizare"
 
-#: qtplugins/forcefield/forcefield.cpp:373
+#: qtplugins/forcefield/forcefield.cpp:381
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energie = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:419
+#: qtplugins/forcefield/forcefield.cpp:427
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Normă de forță = %L2"
@@ -3218,35 +3209,35 @@ msgstr "&Inserează"
 msgid "Insert DNA/RNA…"
 msgstr "Inserează DNA/RNA…"
 
-#: qtplugins/insertdna/insertdna.cpp:160
+#: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
 msgid "U"
 msgstr "U"
 
-#: qtplugins/insertdna/insertdna.cpp:161
+#: qtplugins/insertdna/insertdna.cpp:160
 msgid "Uracil"
 msgstr "Uracil"
 
-#: qtplugins/insertdna/insertdna.cpp:167
+#: qtplugins/insertdna/insertdna.cpp:166
 msgctxt "thymine"
 msgid "T"
 msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:168:637
+#: qtplugins/insertdna/insertdna.cpp:167:637
 msgid "Thymine"
 msgstr "Timină"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
-#: qtplugins/insertdna/insertdna.cpp:201
+#: qtplugins/insertdna/insertdna.cpp:200
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
 msgid "Insert Molecule…"
 msgstr "Inserare moleculă…"
 
-#: qtplugins/insertdna/insertdna.cpp:202
+#: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
 msgstr "Se generează molecula în 3D…"
@@ -3364,21 +3355,23 @@ msgid "Display labels on ball and stick style."
 msgstr "Afișează etichetele în stilul de bilă și bastonaș."
 
 #: qtplugins/label/labeleditor.cpp:31
+msgctxt "control-key 4"
+msgid "Ctrl+4"
+msgstr ""
+
+#: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
 msgstr "Editare etichete"
 
-#: qtplugins/label/labeleditor.cpp:33
+#: qtplugins/label/labeleditor.cpp:34
+#, qt-format
 msgid ""
-"Atom Label Tool\n"
+"Atom Label Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
-"Instrument de etichetare a atomilor\n"
-"\n"
-"Butonul stâng al mouse-ului: \tFaceți clic pe atomi pentru a adăuga etichete "
-"personalizate"
 
-#: qtplugins/label/labeleditor.cpp:77
+#: qtplugins/label/labeleditor.cpp:78
 msgid "Create Label"
 msgstr "Creează etichetă"
 
@@ -3449,34 +3442,41 @@ msgstr ""
 "casete de dialog."
 
 #: qtplugins/manipulator/manipulator.cpp:49
+msgctxt "control-key 6"
+msgid "Ctrl+6"
+msgstr ""
+
+#: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
 msgstr "Manipulare"
 
-#: qtplugins/manipulator/manipulator.cpp:51
+#: qtplugins/manipulator/manipulator.cpp:52
+#, qt-format
 msgid ""
-"Manipulation Tool\n"
+"Manipulation Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
-"Instrument de manipulare\n"
-"\n"
-"Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a muta atomii\n"
-"Butonul drept al mouse-ului: \t Faceți clic și trageți pentru a roti "
-"atomii.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
 msgstr "Instrument de manipulare"
 
-#: qtplugins/measuretool/measuretool.cpp:54
+#: qtplugins/measuretool/measuretool.cpp:49
+msgctxt "control-key 8"
+msgid "Ctrl+8"
+msgstr ""
+
+#: qtplugins/measuretool/measuretool.cpp:50
 msgid "Measure"
 msgstr "Măsurare"
 
-#: qtplugins/measuretool/measuretool.cpp:56
+#: qtplugins/measuretool/measuretool.cpp:52
+#, qt-format
 msgid ""
-"Measure Tool\n"
+"Measure Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tSelect up to four Atoms.\n"
 "\tDistances are measured between 1-2 and 2-3\n"
@@ -3484,24 +3484,17 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
-"Instrument de măsurare\n"
-"\n"
-"Butonul stâng al mouse-ului: \tSelectează până la patru atomi.\n"
-"\tDistanțele sunt măsurate între 1-2 și 2-3\n"
-"\tUnghiul este măsurat între 1-3 folosind 2 ca punct comun\n"
-"\tDiedrul este măsurat între 1-2-3-4\n"
-"Butonul drept al mouse-ului: \tReinițializează măsurătorile."
 
-#: qtplugins/measuretool/measuretool.cpp:199
-#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:196
+#: qtplugins/measuretool/measuretool.cpp:207
 msgid "Dihedral:"
 msgstr "Diedru:"
 
-#: qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/measuretool/measuretool.cpp:197
 msgid "Angle:"
 msgstr "Unghi:"
 
-#: qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/measuretool/measuretool.cpp:215
 msgid "Angles:"
 msgstr "Unghiuri:"
 
@@ -3525,90 +3518,95 @@ msgstr "(în așteptare)"
 msgid "unknown molecule"
 msgstr "moleculă necunoscută"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:274
+#: qtplugins/molecularproperties/molecularmodel.cpp:286
 msgid "Property"
 msgstr "Proprietate"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:281
+#: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgid "Molecule Name"
 msgstr "Numele moleculei"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:283
+#: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgid "Molecular Mass (g/mol)"
 msgstr "Masa moleculară (g/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:285
+#: qtplugins/molecularproperties/molecularmodel.cpp:297
 msgid "Chemical Formula"
 msgstr "Formula chimică"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:287
+#: qtplugins/molecularproperties/molecularmodel.cpp:299
 msgid "Number of Atoms"
 msgstr "Numărul de atomi"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:289
+#: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgid "Number of Bonds"
 msgstr "Numărul de legături"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:291
+#: qtplugins/molecularproperties/molecularmodel.cpp:303
 msgid "Coordinate Sets"
 msgstr "Seturi de coordonate"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/molecularproperties/molecularmodel.cpp:305
 msgid "Number of Residues"
 msgstr "Numărul de reziduuri"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:295
+#: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgid "Number of Chains"
 msgstr "Număr de lanțuri"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:297
+#: qtplugins/molecularproperties/molecularmodel.cpp:309
 msgid "Net Charge"
 msgstr "Sarcina netă"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:299
+#: qtplugins/molecularproperties/molecularmodel.cpp:311
 msgid "Net Spin Multiplicity"
 msgstr "Multiplicitatea spinului net"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:301
+#: qtplugins/molecularproperties/molecularmodel.cpp:313
 msgid "Dipole Moment (Debye)"
 msgstr "Moment dipolar (Debye)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:303
+#: qtplugins/molecularproperties/molecularmodel.cpp:315
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr "Energia HOMO (eV)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:305
+#: qtplugins/molecularproperties/molecularmodel.cpp:317
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr "Energia LUMO (eV)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:307
+#: qtplugins/molecularproperties/molecularmodel.cpp:319
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr "Energia SOMO (eV)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:309
+#: qtplugins/molecularproperties/molecularmodel.cpp:321
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr "Energia totală (Hartree)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:312
+#: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr "Energia punctului zero (kcal/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:315
+#: qtplugins/molecularproperties/molecularmodel.cpp:327
 msgid "Enthalpy (kcal/mol)"
 msgstr "Entalpia (kcal/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:317
+#: qtplugins/molecularproperties/molecularmodel.cpp:329
 msgid "Entropy (kcal/mol•K)"
 msgstr "Entropia (kcal/mol-K)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:319
+#: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr "Energia liberă Gibbs (kcal/mol)"
+
+#: qtplugins/molecularproperties/molecularmodel.cpp:333
+msgctxt "point group symmetry"
+msgid "Point Group"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -3667,43 +3665,41 @@ msgid "Export…"
 msgstr "Exportare…"
 
 #: qtplugins/navigator/navigator.cpp:39
+msgctxt "control-key 1"
+msgid "Ctrl+1"
+msgstr ""
+
+#: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
 msgstr "Navigare"
 
-#: qtplugins/navigator/navigator.cpp:41
+#: qtplugins/navigator/navigator.cpp:42
+#, qt-format
 msgid ""
-"Navigation Tool\n"
+"Navigation Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tClick and drag to rotate the view.\n"
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
-"Instrument de navigare\n"
-"\n"
-"Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a roti "
-"vizualizarea.\n"
-"Butonul din mijloc al mouse-ului: \tFaceți clic și trageți pentru a mări sau "
-"micșora imaginea.\n"
-"Butonul drept al mouse-ului: \tFaceți clic și trageți pentru a muta "
-"vizualizarea.\n"
 
-#: qtplugins/navigator/navigator.cpp:61
+#: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr "Rotește scena de-a lungul axelor x, y sau z."
 
-#: qtplugins/navigator/navigator.cpp:62
+#: qtplugins/navigator/navigator.cpp:63
 msgid "Zoom the scene."
 msgstr "Mărește scena."
 
-#: qtplugins/navigator/navigator.cpp:63
+#: qtplugins/navigator/navigator.cpp:64
 msgid "Translate the scene."
 msgstr "Convertește scena."
 
-#: qtplugins/navigator/navigator.cpp:104
+#: qtplugins/navigator/navigator.cpp:105
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Inversează direcția de mărire/micșorare la derulare"
 
-#: qtplugins/navigator/navigator.cpp:106
+#: qtplugins/navigator/navigator.cpp:107
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
@@ -4069,88 +4065,94 @@ msgid "Render reference axes in the corner of the display."
 msgstr "Afișează axele de referință în colțul ecranului."
 
 #: qtplugins/playertool/playertool.cpp:47
+msgctxt "control-key 9"
+msgid "Ctrl+9"
+msgstr ""
+
+#: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
 msgstr "Dispozitiv redare"
 
-#: qtplugins/playertool/playertool.cpp:48
-msgid "Animation Tool"
-msgstr "Instrument de animație"
+#: qtplugins/playertool/playertool.cpp:49
+#, qt-format
+msgid "Animation Tool \t(%1)"
+msgstr ""
 
-#: qtplugins/playertool/playertool.cpp:73
+#: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
 msgstr "Redare"
 
-#: qtplugins/playertool/playertool.cpp:76
+#: qtplugins/playertool/playertool.cpp:77
 msgid "Stop"
 msgstr "Stop"
 
-#: qtplugins/playertool/playertool.cpp:87
+#: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
 msgstr "Frecvența cadrelor:"
 
-#: qtplugins/playertool/playertool.cpp:93
+#: qtplugins/playertool/playertool.cpp:94
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:117:1857
+#: qtplugins/playertool/playertool.cpp:118:1857
 msgid "Frame:"
 msgstr "Cadrul:"
 
-#: qtplugins/playertool/playertool.cpp:124
-#: qtplugins/playertool/playertool.cpp:415
+#: qtplugins/playertool/playertool.cpp:125
+#: qtplugins/playertool/playertool.cpp:416
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
 msgstr " din %0"
 
-#: qtplugins/playertool/playertool.cpp:135
+#: qtplugins/playertool/playertool.cpp:136
 msgid "Dynamic bonding?"
 msgstr "Legături dinamice?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:143:1863
+#: qtplugins/playertool/playertool.cpp:144:1863
 msgid "Record Movie…"
 msgstr "Înregistrare videoclip…"
 
-#: qtplugins/playertool/playertool.cpp:247
-#: qtplugins/playertool/playertool.cpp:352
+#: qtplugins/playertool/playertool.cpp:248
+#: qtplugins/playertool/playertool.cpp:353
 msgid "Movie (*.mp4)"
 msgstr "Videoclip (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:249
+#: qtplugins/playertool/playertool.cpp:250
 msgid "Export Bitmap Graphics"
 msgstr "Exportă ca imagine bitmap"
 
-#: qtplugins/playertool/playertool.cpp:250
+#: qtplugins/playertool/playertool.cpp:251
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Videoclip (*.mp4);;Videoclip (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:264 qtplugins/surfaces/surfaces.cpp:884
+#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:884
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:270
+#: qtplugins/playertool/playertool.cpp:271
 msgid "GIF FPS support warning"
 msgstr "Avertisment privind suportul pentru FPS GIF"
 
-#: qtplugins/playertool/playertool.cpp:271
+#: qtplugins/playertool/playertool.cpp:272
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 "Formatul de fișier GIF nu acceptă frecvențe ale cadrelor mai mari de 100 FPS."
 
-#: qtplugins/playertool/playertool.cpp:316
+#: qtplugins/playertool/playertool.cpp:317
 msgid "Movie (*.avi)"
 msgstr "Videoclip (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:348 qtplugins/surfaces/surfaces.cpp:957
+#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:957
 msgid "Error: cannot add frame to video."
 msgstr "Eroare: nu se poate adăuga un cadru la video."
 
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:969
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Nu se poate salva fișierul %1."
@@ -4720,12 +4722,18 @@ msgid "Select"
 msgstr "Selectează"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
+msgctxt "control-key 5"
+msgid "Ctrl+5"
+msgstr ""
+
+#: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
 msgstr "Selecție"
 
-#: qtplugins/selectiontool/selectiontool.cpp:52
+#: qtplugins/selectiontool/selectiontool.cpp:53
+#, qt-format
 msgid ""
-"Selection Tool\n"
+"Selection Tool \t(%1)\n"
 "\n"
 "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
 "\tDrag to select a range of atoms\n"
@@ -4733,18 +4741,8 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
-"Instrument de selecție\n"
-"\n"
-"Butonul stâng al mouse-ului: \tFaceți clic pentru a selecta atomi, reziduuri "
-"sau fragmente individuale\n"
-"\tTrageți pentru a selecta un interval de atomi\n"
-"Butonul drept al mouse-ului: \tFaceți clic în afara moleculei pentru a "
-"șterge selecția\n"
-"Utilizați Ctrl pentru a comuta selecția și Shift pentru a adăuga la "
-"selecție.\n"
-"Dublu clic cu butonul stâng: \tSelectează un fragment întreg."
 
-#: qtplugins/selectiontool/selectiontool.cpp:246
+#: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
 msgstr "Colorează atomii"
 
@@ -5145,23 +5143,29 @@ msgstr "Redarea elementelor de simetrie."
 msgid "∞"
 msgstr "∞"
 
-#: qtplugins/symmetry/symmetrywidget.cpp:330
+#: qtplugins/symmetry/symmetrywidget.cpp:331
 #, qt-format
 msgid "Group %1"
 msgstr "Grup %1"
 
-#: qtplugins/symmetry/symmetrywidget.cpp:338
+#: qtplugins/symmetry/symmetrywidget.cpp:339
 #, qt-format
 msgid "%1 %2"
 msgstr "%1 %2"
 
 #: qtplugins/templatetool/templatetool.cpp:81
+msgctxt "control-key 3"
+msgid "Ctrl+3"
+msgstr ""
+
+#: qtplugins/templatetool/templatetool.cpp:82
 msgid "Template"
 msgstr "Șablon"
 
-#: qtplugins/templatetool/templatetool.cpp:83
+#: qtplugins/templatetool/templatetool.cpp:84
+#, qt-format
 msgid ""
-"Template Tool\n"
+"Template Tool \t(%1)\n"
 "\n"
 "Insert fragments, including metal centers.\n"
 "Select an element and coordination geometry,then click to insert a "
@@ -5169,25 +5173,17 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
-"Instrument de șablon\n"
-"\n"
-"Introduceți fragmente, inclusiv centre metalice.\n"
-"Selectați un element și o geometrie de coordonare, apoi faceți clic pentru a "
-"introduce un fragment.\n"
-"\n"
-"Selectați un ligand sau un grup funcțional și faceți clic pe un atom de "
-"hidrogen pentru a-l atașa."
 
-#: qtplugins/templatetool/templatetool.cpp:314
-#: qtplugins/templatetool/templatetool.cpp:466
+#: qtplugins/templatetool/templatetool.cpp:316
+#: qtplugins/templatetool/templatetool.cpp:484
 msgid "Clipboard"
 msgstr "Clipboard"
 
-#: qtplugins/templatetool/templatetool.cpp:386
+#: qtplugins/templatetool/templatetool.cpp:404
 msgid "Insert Template"
 msgstr "Inserare șablon"
 
-#: qtplugins/templatetool/templatetool.cpp:661
+#: qtplugins/templatetool/templatetool.cpp:679
 msgid "Insert Ligand"
 msgstr "Inserare ligand"
 
@@ -8453,6 +8449,145 @@ msgstr "Remus-Gabriel Chelu"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "remusgabriel.chelu@disroot.org"
+
+#~ msgid ""
+#~ "Bond Centric Manipulation Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to rotate the view.\n"
+#~ "Middle Mouse: \tClick and drag to zoom in or out.\n"
+#~ "Right Mouse: \tClick and drag to move the view.\n"
+#~ "Double-Click: \tReset the view.\n"
+#~ "\n"
+#~ "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+#~ "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+#~ "Right Click & Drag one of the Atoms in the Bond to change the length"
+#~ msgstr ""
+#~ "Instrument de manipulare centrat pe legături\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a roti "
+#~ "vizualizarea.\n"
+#~ "Butonul din mijloc al mouse-ului: \tFaceți clic și trageți pentru a mări "
+#~ "sau micșora imaginea.\n"
+#~ "Butonul drept al mouse-ului: \tFaceți clic și trageți pentru a muta "
+#~ "vizualizarea.\n"
+#~ "Faceți dublu clic: \tRestabiliți vizualizarea.\n"
+#~ "\n"
+#~ "Faceți clic cu butonul stâng și trageți pe o legătură pentru a stabili "
+#~ "planul de manipulare:\n"
+#~ "Faceți clic cu butonul stâng și trageți unul dintre atomii din legătură "
+#~ "pentru a modifica unghiul\n"
+#~ "Faceți clic cu butonul din dreapta și trageți unul dintre atomii din "
+#~ "legătură pentru a modifica lungimea"
+
+#~ msgid ""
+#~ "Draw Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+#~ "Right Mouse: \tDelete Atom"
+#~ msgstr ""
+#~ "Instrument de desenare\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a crea atomi "
+#~ "și legături\n"
+#~ "Butonul drept al mouse-ului: \tȘterge atomul"
+
+#~ msgid ""
+#~ "Atom Label Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick on Atoms to add Custom Labels"
+#~ msgstr ""
+#~ "Instrument de etichetare a atomilor\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tFaceți clic pe atomi pentru a adăuga "
+#~ "etichete personalizate"
+
+#~ msgid ""
+#~ "Manipulation Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to move atoms\n"
+#~ "Right Mouse: \tClick and drag to rotate atoms.\n"
+#~ msgstr ""
+#~ "Instrument de manipulare\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a muta "
+#~ "atomii\n"
+#~ "Butonul drept al mouse-ului: \t Faceți clic și trageți pentru a roti "
+#~ "atomii.\n"
+
+#~ msgid ""
+#~ "Measure Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tSelect up to four Atoms.\n"
+#~ "\tDistances are measured between 1-2 and 2-3\n"
+#~ "\tAngle is measured between 1-3 using 2 as the common point\n"
+#~ "\tDihedral is measured between 1-2-3-4\n"
+#~ "Right Mouse: \tReset the measurements."
+#~ msgstr ""
+#~ "Instrument de măsurare\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tSelectează până la patru atomi.\n"
+#~ "\tDistanțele sunt măsurate între 1-2 și 2-3\n"
+#~ "\tUnghiul este măsurat între 1-3 folosind 2 ca punct comun\n"
+#~ "\tDiedrul este măsurat între 1-2-3-4\n"
+#~ "Butonul drept al mouse-ului: \tReinițializează măsurătorile."
+
+#~ msgid ""
+#~ "Navigation Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick and drag to rotate the view.\n"
+#~ "Middle Mouse: \tClick and drag to zoom in or out.\n"
+#~ "Right Mouse: \tClick and drag to move the view.\n"
+#~ msgstr ""
+#~ "Instrument de navigare\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tFaceți clic și trageți pentru a roti "
+#~ "vizualizarea.\n"
+#~ "Butonul din mijloc al mouse-ului: \tFaceți clic și trageți pentru a mări "
+#~ "sau micșora imaginea.\n"
+#~ "Butonul drept al mouse-ului: \tFaceți clic și trageți pentru a muta "
+#~ "vizualizarea.\n"
+
+#~ msgid "Animation Tool"
+#~ msgstr "Instrument de animație"
+
+#~ msgid ""
+#~ "Selection Tool\n"
+#~ "\n"
+#~ "Left Mouse: \tClick to pick individual atoms, residues, or fragments\n"
+#~ "\tDrag to select a range of atoms\n"
+#~ "Right Mouse: \tClick outside the molecule to clear selection\n"
+#~ "Use Ctrl to toggle the selection and shift to add to the selection.\n"
+#~ "Double-Click: \tSelect an entire fragment."
+#~ msgstr ""
+#~ "Instrument de selecție\n"
+#~ "\n"
+#~ "Butonul stâng al mouse-ului: \tFaceți clic pentru a selecta atomi, "
+#~ "reziduuri sau fragmente individuale\n"
+#~ "\tTrageți pentru a selecta un interval de atomi\n"
+#~ "Butonul drept al mouse-ului: \tFaceți clic în afara moleculei pentru a "
+#~ "șterge selecția\n"
+#~ "Utilizați Ctrl pentru a comuta selecția și Shift pentru a adăuga la "
+#~ "selecție.\n"
+#~ "Dublu clic cu butonul stâng: \tSelectează un fragment întreg."
+
+#~ msgid ""
+#~ "Template Tool\n"
+#~ "\n"
+#~ "Insert fragments, including metal centers.\n"
+#~ "Select an element and coordination geometry,then click to insert a "
+#~ "fragment.\n"
+#~ "\n"
+#~ "Select a ligand or functional group and clickon a hydrogen atom to attach "
+#~ "it."
+#~ msgstr ""
+#~ "Instrument de șablon\n"
+#~ "\n"
+#~ "Introduceți fragmente, inclusiv centre metalice.\n"
+#~ "Selectați un element și o geometrie de coordonare, apoi faceți clic "
+#~ "pentru a introduce un fragment.\n"
+#~ "\n"
+#~ "Selectați un ligand sau un grup funcțional și faceți clic pe un atom de "
+#~ "hidrogen pentru a-l atașa."
 
 #~ msgctxt "ambient occlusion"
 #~ msgid "Van der Waals (AO)"
