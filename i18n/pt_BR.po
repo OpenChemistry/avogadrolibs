@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021, 2022.
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
-# Alexandre R Soares <ntegti@zipmail.com.br>, 2021.
+# Alexandre R Soares <ntegti@zipmail.com.br>, 2021, 2024.
 # "Kirito ._." <kiritokunn18@gmail.com>, 2024.
 # Iago Emanuel <iagoemanuel@live.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-27 23:00+0000\n"
-"Last-Translator: Khemis <khemis@bol.com.br>\n"
+"PO-Revision-Date: 2024-12-03 19:00+0000\n"
+"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -2928,6 +2928,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Ferramenta Desenhar (%1)\n"
+"\n"
+"Botão esquerdo do mouse: Clique e arraste para criar átomos e ligações\n"
+"Botão direito do mouse: Exclua átomo"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Draw Atom"
@@ -3828,10 +3832,15 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"Ferramenta de Navegação (%1)\n"
+"\n"
+"Mouse Esquerdo: Clique e arraste para girar a visualização.\n"
+"Mouse do Meio: Clique e arraste para ampliar ou reduzir.\n"
+"Mouse Direito: Clique e arraste para mover a visualização.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Girar a cena ao longo dos eixos x, y ou z."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Zoom the scene."
@@ -3839,7 +3848,7 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:64
 msgid "Translate the scene."
-msgstr ""
+msgstr "Transladar a cena."
 
 #: qtplugins/navigator/navigator.cpp:105
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3868,34 +3877,28 @@ msgid "Interact with online databases, query structures etc."
 msgstr "Interagir com bancos de dados online, estruturas de consulta, etc."
 
 #: qtplugins/noncovalent/noncovalent.cpp:340
-#, fuzzy
-#| msgid "°"
 msgid " °"
-msgstr "°"
+msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Angle tolerance:"
-msgstr "Tolerância:"
+msgstr "Ângulo de tolerância:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Renderizar algumas interações não covalentes."
 
 #: qtplugins/noncovalent/noncovalent.h:54
 msgid "Halogen"
-msgstr ""
+msgstr "Halogênio"
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
-msgstr ""
+msgstr "Calcogênio"
 
 #: qtplugins/openbabel/openbabel.cpp:53
-#, fuzzy
-#| msgid "Configure Force Field..."
 msgid "Configure Force Field…"
-msgstr "Configurar Campo de Força..."
+msgstr "Configurar Campo de Força…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 #, fuzzy
