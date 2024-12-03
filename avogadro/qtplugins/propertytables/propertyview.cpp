@@ -5,6 +5,7 @@
 
 #include "propertyview.h"
 
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
@@ -137,6 +138,19 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
         m_molecule->undoMolecule()->setAtomSelected(std::get<2>(torsion), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<3>(torsion), true);
       }
+    } else if (m_type == PropertyType::ResidueType) {
+      // select all the atoms in the residue
+      if (m_model != nullptr) {
+        const auto residue = m_molecule->residue(rowNum);
+        auto atoms = residue.residueAtoms();
+        for (Index i = 0; i < atoms.size(); ++i) {
+          const auto atom = atoms[i];
+          m_molecule->undoMolecule()->setAtomSelected(atom.index(), true);
+        }
+      }
+    } else if (m_type == PropertyType::ConformerType) {
+      // selecting a row means switching to that conformer
+      m_molecule->setCoordinate3d(rowNum);
     }
   } // end loop through selected
 

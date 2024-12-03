@@ -58,6 +58,14 @@ PropertyTables::PropertyTables(QObject* parent_)
   action->setEnabled(false); // changed by molecule
   connect(action, SIGNAL(triggered()), SLOT(showDialog()));
   m_actions.append(action);
+
+  action = new QAction(this);
+  action->setText(tr("Conformer Properties…"));
+  action->setData(PropertyType::ConformerType);
+  action->setProperty("menu priority", 830);
+  action->setEnabled(false); // changed by molecule
+  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  m_actions.append(action);
 }
 
 PropertyTables::~PropertyTables() {}
@@ -86,11 +94,14 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 
   // check if there are residues
-  if (m_molecule->residueCount() > 0) {
-    for (const auto& action : m_actions) {
-      if (action->data().toInt() == PropertyType::ResidueType)
-        action->setEnabled(true);
-    }
+  bool haveResidues = (m_molecule->residueCount() > 0);
+  // technically coordinate sets
+  bool haveConformers = (m_molecule->coordinate3dCount() > 1);
+  for (const auto& action : m_actions) {
+    if (action->data().toInt() == PropertyType::ResidueType)
+      action->setEnabled(haveResidues);
+    else if (action->data().toInt() == PropertyType::ConformerType)
+      action->setEnabled(haveConformers);
   }
 }
 
@@ -102,6 +113,10 @@ void PropertyTables::showDialog()
 
   if (action->data().toInt() == PropertyType::ResidueType &&
       m_molecule->residueCount() == 0)
+    return;
+
+  if (action->data().toInt() == PropertyType::ConformerType &&
+      m_molecule->coordinate3dCount() < 2)
     return;
 
   auto* dialog = new QDialog(qobject_cast<QWidget*>(parent()));
@@ -149,4 +164,4 @@ void PropertyTables::showDialog()
   dialog->show();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
