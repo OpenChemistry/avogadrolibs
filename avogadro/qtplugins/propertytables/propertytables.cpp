@@ -145,6 +145,7 @@ void PropertyTables::showDialog()
   view->setSourceModel(model);
 
   view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  view->horizontalHeader()->setStretchLastSection(true);
   view->resizeColumnsToContents();
   layout->addWidget(view);
   dialog->setWindowTitle(view->windowTitle());
