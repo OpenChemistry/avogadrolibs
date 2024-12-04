@@ -423,9 +423,14 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case ConformerDataEnergy: {
         double energy = 0.0;
         if (m_molecule->hasData("energies")) {
-          auto energies = m_molecule->data("energies").toList();
+          std::vector<double> energies = m_molecule->data("energies").toList();
+          // calculate the minimum
+          double minEnergy = std::numeric_limits<double>::max();
+          for (double e : energies) {
+            minEnergy = std::min(minEnergy, e);
+          }
           if (row < static_cast<int>(energies.size()))
-            energy = energies[row];
+            energy = energies[row] - minEnergy;
         }
         return QString("%L1").arg(energy, 0, 'f', 4);
       }
@@ -558,7 +563,7 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("RMSD (Å)", "root mean squared displacement in Angstrom");
         case ConformerDataEnergy:
           // should only hit this if we have energies anyway
-          return hasEnergies ? tr("Energy") : tr("Property");
+          return hasEnergies ? tr("Energy (kcal/mol)") : tr("Property");
       }
     } else // row headers
       return QString("%L1").arg(section + 1);

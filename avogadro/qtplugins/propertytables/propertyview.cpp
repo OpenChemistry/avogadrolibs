@@ -75,7 +75,10 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   // You can select everything (e.g., to copy, select all, etc.)
   setCornerButtonEnabled(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
-  setSelectionMode(QAbstractItemView::ExtendedSelection);
+  if (type == ConformerType)
+    setSelectionMode(QAbstractItemView::SingleSelection);
+  else
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
   // Alternating row colors
   setAlternatingRowColors(true);
   // Allow sorting the table

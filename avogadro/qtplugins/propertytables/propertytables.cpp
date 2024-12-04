@@ -93,7 +93,18 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  // check if there are residues
+  updateActions();
+
+  // update if the molecule changes
+  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+}
+
+void PropertyTables::updateActions()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  // check if we enable / disable the residue and conformer actions
   bool haveResidues = (m_molecule->residueCount() > 0);
   // technically coordinate sets
   bool haveConformers = (m_molecule->coordinate3dCount() > 1);
