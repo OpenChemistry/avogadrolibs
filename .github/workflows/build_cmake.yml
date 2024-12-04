@@ -106,12 +106,6 @@ jobs:
         repository: openchemistry/openchemistry
         submodules: recursive
 
-    - name: Checkout avogadroapp
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
     - name: Checkout molecules
       uses: actions/checkout@v4
       with:
@@ -136,10 +130,18 @@ jobs:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+        fetch-depth: 0
+
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
         path: avogadrolibs
+        fetch-depth: 0
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
