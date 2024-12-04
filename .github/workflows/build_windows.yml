@@ -7,7 +7,7 @@ name: CMake Windows Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, workflow_dispatch]
 
 env:
   QT_VERSION: 5.15.2
@@ -31,7 +31,7 @@ jobs:
             cc: "cl", cxx: "cl",
             build_type: "Release",
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
-            build_flags: "-j 2",
+            build_flags: "",
             cpack_flags: "-G NSIS",
           }
 
