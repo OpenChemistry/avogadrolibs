@@ -53,7 +53,7 @@ jobs:
           }
         - {
             name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: windows-latest,
+            os: windows-2019,
             cc: "cl", cxx: "cl",
             build_type: "Release",
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
@@ -271,7 +271,7 @@ jobs:
         fi # password exists
 
     - name: Create Mac and Windows Packages
-      if: matrix.config.os == 'windows-latest' || runner.os == 'macOS'
+      if: runner.os == 'Windows' || runner.os == 'macOS'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
