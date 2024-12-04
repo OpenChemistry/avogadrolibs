@@ -706,9 +706,18 @@ void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
     return;
   }
 
-  //@todo .. multiple coordinate sets
   m_molecule->undoMolecule()->setAtomPositions3d(mol.atomPositions3d(),
                                                  tr("Generate Conformers"));
+
+  // copy the coordinate sets
+  m_molecule->clearCoordinate3d();
+  for (size_t i = 0; i < mol.coordinate3dCount(); ++i)
+    m_molecule->setCoordinate3d(mol.coordinate3d(i), i);
+
+  // energy data too
+  // TODO: check if other properties are needed
+  m_molecule->setData("energies", mol.data("energies"));
+
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Modified);
   m_progress->reset();
 }

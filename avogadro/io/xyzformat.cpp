@@ -260,6 +260,10 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       }
 
       std::getline(inStream, buffer); // Skip the blank
+      // check for energies
+      if (findEnergy(buffer, energy)) {
+        energies.push_back(energy);
+      }
       positions.clear();
     }
   }
@@ -280,9 +284,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.setPartialCharges("From File", chargesMatrix);
   }
 
-  if (energies.size() > 1) {
+  if (energies.size() > 1)
     mol.setData("energies", energies);
-  }
 
   return true;
 }

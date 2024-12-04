@@ -5,6 +5,7 @@
 
 #include "propertyview.h"
 
+#include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QAction>
@@ -74,7 +75,10 @@ PropertyView::PropertyView(PropertyType type, QWidget* parent)
   // You can select everything (e.g., to copy, select all, etc.)
   setCornerButtonEnabled(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
-  setSelectionMode(QAbstractItemView::ExtendedSelection);
+  if (type == ConformerType)
+    setSelectionMode(QAbstractItemView::SingleSelection);
+  else
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
   // Alternating row colors
   setAlternatingRowColors(true);
   // Allow sorting the table
@@ -137,6 +141,19 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
         m_molecule->undoMolecule()->setAtomSelected(std::get<2>(torsion), true);
         m_molecule->undoMolecule()->setAtomSelected(std::get<3>(torsion), true);
       }
+    } else if (m_type == PropertyType::ResidueType) {
+      // select all the atoms in the residue
+      if (m_model != nullptr) {
+        const auto residue = m_molecule->residue(rowNum);
+        auto atoms = residue.residueAtoms();
+        for (Index i = 0; i < atoms.size(); ++i) {
+          const auto atom = atoms[i];
+          m_molecule->undoMolecule()->setAtomSelected(atom.index(), true);
+        }
+      }
+    } else if (m_type == PropertyType::ConformerType) {
+      // selecting a row means switching to that conformer
+      m_molecule->setCoordinate3d(rowNum);
     }
   } // end loop through selected
 

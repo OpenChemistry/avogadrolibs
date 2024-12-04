@@ -6,6 +6,7 @@
 #include "propertymodel.h"
 
 #include <avogadro/calc/chargemanager.h>
+#include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
 #include <avogadro/core/elements.h>
@@ -25,6 +26,7 @@
 
 namespace Avogadro {
 
+using Avogadro::Core::Array;
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 using QtGui::RWAtom;
@@ -45,8 +47,23 @@ const int AngleColumns = 5;
 const int TorsionColumns = 6;
 // name, number, chain, secondary structure, heterogen, color
 const int ResidueColumns = 6;
-// number, energy, ??
-const int ConformerColumns = 2;
+// number, rmsd, energy or more depending on available properties
+const int ConformerColumns = 1;
+
+// compute the RMSD between the two sets of coordinates
+inline double calcRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
+{
+  // if they're not the same length, it's an error
+  if (v1.size() != v2.size())
+    return numeric_limits<double>::quiet_NaN();
+
+  double sum = 0.0;
+  for (size_t i = 0; i < v1.size(); ++i) {
+    Vector3 diff = v1[i] - v2[i];
+    sum += diff.squaredNorm();
+  }
+  return sqrt(sum / v1.size());
+}
 
 inline double distance(Vector3 v1, Vector3 v2)
 {
@@ -119,8 +136,12 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
       return TorsionColumns;
     case ResidueType:
       return ResidueColumns;
-    case ConformerType:
-      return ConformerColumns;
+    case ConformerType: {
+      if (m_molecule->hasData("energies"))
+        return ConformerColumns + 1;
+      else
+        return ConformerColumns;
+    }
     default:
       return 0;
   }
@@ -204,6 +225,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     } else if (m_type == ResidueType) {
       return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
+    } else if (m_type == ConformerType) {
+      return toVariant(Qt::AlignRight |
+                       Qt::AlignVCenter); // RMSD or other properties
     }
   }
 
@@ -226,9 +250,6 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   if (role != Qt::UserRole && role != Qt::DisplayRole && role != Qt::EditRole)
     return QVariant();
-
-  //  if (!m_validCache)
-  //    updateCache();
 
   if (m_type == AtomType) {
     auto column = static_cast<AtomColumn>(index.column());
@@ -288,7 +309,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case BondDataOrder:
         return bond.order();
       default: // length, rounded to 4 decimals
-        return QString("%L1").arg(
+        return QString("%L1 Å").arg(
           distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
     }
   } else if (m_type == ResidueType) {
@@ -342,7 +363,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return QString("%L1").arg(calcAngle(a1, a2, a3), 0, 'f', 3);
+        return QString("%L1 °").arg(calcAngle(a1, a2, a3), 0, 'f', 3);
       default:
         return QVariant();
     }
@@ -378,9 +399,41 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case TorsionDataAtom4:
         return QVariant::fromValue(std::get<3>(torsion) + 1);
       case TorsionDataValue:
-        return QString("%L1").arg(calcDihedral(a1, a2, a3, a4), 0, 'f', 3);
+        return QString("%L1 °").arg(calcDihedral(a1, a2, a3, a4), 0, 'f', 3);
       default:
         return QVariant();
+    }
+  } else if (m_type == ConformerType) {
+    auto column = static_cast<ConformerColumn>(index.column());
+    if (row >= static_cast<int>(m_molecule->coordinate3dCount()) ||
+        column > ConformerColumns) {
+      return QVariant(); // invalid index
+    }
+
+    switch (column) {
+      case ConformerDataRMSD: { // rmsd
+        double rmsd = 0.0;
+        if (row > 0) {
+          rmsd = calcRMSD(m_molecule->coordinate3d(row),
+                          m_molecule->coordinate3d(0));
+        }
+
+        return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
+      }
+      case ConformerDataEnergy: {
+        double energy = 0.0;
+        if (m_molecule->hasData("energies")) {
+          std::vector<double> energies = m_molecule->data("energies").toList();
+          // calculate the minimum
+          double minEnergy = std::numeric_limits<double>::max();
+          for (double e : energies) {
+            minEnergy = std::min(minEnergy, e);
+          }
+          if (row < static_cast<int>(energies.size()))
+            energy = energies[row] - minEnergy;
+        }
+        return QString("%L1").arg(energy, 0, 'f', 4);
+      }
     }
   }
 
@@ -497,6 +550,20 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Atom 4");
         case TorsionDataValue:
           return tr("Angle (°)");
+      }
+    } else // row headers
+      return QString("%L1").arg(section + 1);
+  } else if (m_type == ConformerType) {
+    // check if we have energies
+    bool hasEnergies = (m_molecule->hasData("energies"));
+    if (orientation == Qt::Horizontal) {
+      unsigned int column = static_cast<ConformerColumn>(section);
+      switch (column) {
+        case ConformerDataRMSD:
+          return tr("RMSD (Å)", "root mean squared displacement in Angstrom");
+        case ConformerDataEnergy:
+          // should only hit this if we have energies anyway
+          return hasEnergies ? tr("Energy (kcal/mol)") : tr("Property");
       }
     } else // row headers
       return QString("%L1").arg(section + 1);
