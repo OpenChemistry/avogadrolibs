@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-12-05 11:00+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1987,7 +1987,7 @@ msgstr "Representar átomos como esferas y enlaces como cilindros."
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -2007,6 +2007,20 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Herramienta de manipulación Bond Centric (%1)\n"
+"\n"
+"Botón izquierdo del ratón: \tHaga clic y arrastre para rotar la vista.\n"
+"Botón central del ratón: \tHaga clic y arrastre para acercar o alejar la "
+"vista.\n"
+"Botón derecho ratón: \tHaga clic y arrastre para mover la vista.\n"
+"Doble clic: \tReinicia la vista.\n"
+"\n"
+"Haga clic y arrastre con el botón izquierdo en un enlace para establecer el "
+"plano de manipulación:\n"
+"Haga clic con el botón izquierdo\n"
+"y arrastre uno de los átomos del enlace para cambiar el ángulo Haga clic con "
+"el botón derecho y arrastre uno de los átomos del enlace para cambiar la "
+"longitud"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:781
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:869
@@ -2834,7 +2848,7 @@ msgstr "Representar el momento dipolar de la molécula."
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
@@ -2848,6 +2862,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Herramienta Dibujar (%1)\n"
+"\n"
+"Botón izquierdo ratón: \tClic y Arrastrar para crear Átomos y Enlace\n"
+"Botón derecho ratón: \tBorrar Átomo"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Draw Atom"
@@ -3364,7 +3382,7 @@ msgstr "Mostrar etiquetas en el estilo «bolas y palos»."
 #: qtplugins/label/labeleditor.cpp:31
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
@@ -3377,6 +3395,10 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"Herramienta de etiquetas de átomos (%1)\n"
+"\n"
+"Botón izquierdo del ratón: \tHaga clic en los átomos para añadir etiquetas "
+"personalizadas"
 
 #: qtplugins/label/labeleditor.cpp:78
 msgid "Create Label"
@@ -3450,7 +3472,7 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3464,6 +3486,11 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
+"Herramienta de manipulación (%1)\n"
+"\n"
+"Botón izquierdo ratón: \tClic y arrastrar\n"
+"para mover átomos\n"
+"Botón derecho ratón: \tClic y arrastrar para rotar átomos.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3473,7 +3500,7 @@ msgstr "Herramienta de Manipulación"
 #: qtplugins/measuretool/measuretool.cpp:49
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:50
 msgid "Measure"
@@ -3490,6 +3517,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"Herramienta de medición (%1)\n"
+"\n"
+"Botón izquierdo ratón: Seleccione hasta cuatro átomos.\n"
+"\tLas distancias se miden entre 1-2 y 2-3\n"
+"\tEl ángulo se mide entre 1-3 usando 2 como punto común\n"
+"\tDihedral se mide entre 1-2-3-4\n"
+"Botón derecho ratón: Reiniciar las mediciones."
 
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
@@ -3612,7 +3646,7 @@ msgstr "Energía libre de Gibbs (kcal/mol)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:333
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "Grupo de puntos"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -3673,7 +3707,7 @@ msgstr "Exportar…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
@@ -3688,6 +3722,12 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"Herramienta de navegación (%1)\n"
+"\n"
+"Botón izquierdo ratón: \tHaga clic y arrastre para girar la vista.\n"
+"Botón central del ratón:\tHaga clic y arrastre para acercar o alejar la "
+"vista.\n"
+"Botón derecho del ratón: \tHaga clic y arrastre para mover la vista.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4074,7 +4114,7 @@ msgstr "Representar ejes de referencia en la esquina de la pantalla."
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
@@ -4083,7 +4123,7 @@ msgstr "Reproductor"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "Herramienta de animación (%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4730,7 +4770,7 @@ msgstr "Seleccionar"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -4747,6 +4787,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"Herramienta de selección (%1)\n"
+"\n"
+"Botón izquierdo ratón: Haga clic para seleccionar átomos individuales, "
+"residuos o fragmentos\n"
+"\tArrastrar para seleccionar un rango de átomos\n"
+"Botón derecho ratón: Haga clic fuera de la molécula para borrar la "
+"selección\n"
+"Utilice Ctrl para alternar la selección y Mayús para añadir a la selección.\n"
+"Doble click:  Seleccione un fragmento completo."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
@@ -5162,7 +5211,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:81
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:82
 msgid "Template"
@@ -5179,6 +5228,14 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
+"Herramienta Plantilla (%1)\n"
+"\n"
+"Insertar fragmentos, incluyendo centros metálicos.\n"
+"Seleccione un elemento y una geometría de coordinación y haga clic para "
+"insertar un fragmento.\n"
+"\n"
+"Seleccione un ligando o grupo funcional y haga clic en un átomo de hidrógeno "
+"para unirlo."
 
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
