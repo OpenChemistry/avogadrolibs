@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-09 12:00+0000\n"
+"PO-Revision-Date: 2024-12-05 15:38+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr "தொகுதி வேலை #%எல் 1 (%2)"
+msgstr "தொகுதி வேலை #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
@@ -117,7 +117,7 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"ஆஃப்செட் %எல் 1 இல் பாகுபடுத்தல் பிழை: ' %2'\n"
+"ஆஃப்செட் %L1 இல் பாகுபடுத்தல் பிழை: '%2'\n"
 " ரா சோன்:\n"
 "\n"
 " %3"
@@ -213,19 +213,17 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-"பின்வரும் கோப்பு (கள்) மாற்றியமைக்கப்பட்டுள்ளன:\n"
+"பின்வரும் கோப்பு மாற்றியமைக்கப்பட்டுள்ளன:\n"
 "\n"
 " %1\n"
 "\n"
-" புதிய வடிவியல் அல்லது வேலை விருப்பங்களை பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
-"விரும்புகிறீர்களா?"
+" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத விரும்புகிறீர்களா?"
 msgstr[1] ""
-"பின்வரும் கோப்பு (கள்) மாற்றியமைக்கப்பட்டுள்ளன:\n"
+"பின்வரும் கோப்புகள் மாற்றியமைக்கப்பட்டுள்ளன:\n"
 "\n"
 " %1\n"
 "\n"
-" புதிய வடிவியல் அல்லது வேலை விருப்பங்களை பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
-"விரும்புகிறீர்களா?"
+" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத விரும்புகிறீர்களா?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -801,7 +799,7 @@ msgstr "துலங்கியம், வடமம்"
 
 #: qtgui/elementtranslator.cpp:226
 msgid "Ytterbium"
-msgstr "Ytterbium"
+msgstr "எட்ர்பியம்"
 
 #: qtgui/elementtranslator.cpp:229
 msgid "Lutetium"
@@ -1215,7 +1213,7 @@ msgstr "படிக லட்டு"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
-msgstr ""
+msgstr "இருமுனைத் திருப்பம்"
 
 #: qtgui/layermodel.cpp:146 qtplugins/force/force.h:28
 msgid "Force"
@@ -1432,7 +1430,7 @@ msgstr "பத்திரத்தைப் புதுப்பிக்க�
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "அலகு கலத்தைச் சேர்க்கவும்…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1734,11 +1732,11 @@ msgstr "தனிப்பயன் வண்ணத்தால்…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "அணு குறியீட்டால்…"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "தூரம்…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
@@ -1952,7 +1950,7 @@ msgstr "அணுக்களை கோளங்களாகவும் பி�
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -1972,6 +1970,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"பத்திர மைய கையாளுதல் கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: காட்சியை சுழற்ற சொடுக்கு செய்து இழுக்கவும்.\n"
+" நடுத்தர சுட்டி: சொடுக்கு செய்து பெரிதாக்கவும் அல்லது வெளியே இழுக்கவும்.\n"
+" வலது சுட்டி: காட்சியை நகர்த்த சொடுக்கு செய்து இழுக்கவும்.\n"
+" இருமுறை சொடுக்கு செய்யவும்: பார்வையை மீட்டமைக்கவும்.\n"
+"\n"
+" கையாளுதல் விமானத்தை அமைக்க ஒரு பத்திரத்தில் இடது சொடுக்கு & இழுக்கவும்:\n"
+" கோணத்தை மாற்ற பிணைப்பில் உள்ள அணுக்களில் ஒன்றை இடது சொடுக்கு செய்து இழுக்கவும்\n"
+" வலது சொடுக்கு செய்து நீளத்தை மாற்ற பிணைப்பில் உள்ள அணுக்களில் ஒன்றை இழுக்கவும்"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:781
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:869
@@ -2791,12 +2799,12 @@ msgstr "தனிப்பயன் கூறுகள்"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "மூலக்கூறின் இருமுனை தருணத்தை வழங்கவும்."
 
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
@@ -2810,6 +2818,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"டிரா கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: அணுக்கள் மற்றும் பிணைப்பை உருவாக்க சொடுக்கு செய்து இழுக்கவும்\n"
+" வலது சுட்டி: அணுவை நீக்கு"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Draw Atom"
@@ -2831,7 +2843,7 @@ msgstr "தூரம்:"
 #: qtplugins/editor/editor.cpp:267
 #, qt-format
 msgid "%1 %L2"
-msgstr "1 %இல்லை"
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -3321,7 +3333,7 @@ msgstr "பந்து மற்றும் குச்சி பாணிய
 #: qtplugins/label/labeleditor.cpp:31
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
@@ -3334,6 +3346,9 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"ஆட்டம் சிட்டை கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: தனிப்பயன் லேபிள்களைச் சேர்க்க அணுக்களைக் சொடுக்கு செய்க"
 
 #: qtplugins/label/labeleditor.cpp:78
 msgid "Create Label"
@@ -3406,7 +3421,7 @@ msgstr "உள்ளீட்டு உரையாடல் மூலம் ஒ
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3420,6 +3435,10 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
+"கையாளுதல் கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: சொடுக்கு செய்து அணுகுகளை நகர்த்த இழுக்கவும்\n"
+" வலது சுட்டி: அணுக்களைச் சுழற்ற சொடுக்கு செய்து இழுக்கவும்.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3429,7 +3448,7 @@ msgstr "கருவி கையாளுதல்"
 #: qtplugins/measuretool/measuretool.cpp:49
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:50
 msgid "Measure"
@@ -3446,6 +3465,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"அளவீட்டு கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: நான்கு அணுக்கள் வரை தேர்ந்தெடுக்கவும்.\n"
+" 1-2 முதல் 2-3 வரை தூரங்கள் அளவிடப்படுகின்றன\n"
+" பொதுவான புள்ளியாக 2 ஐப் பயன்படுத்தி 1-3 க்கு இடையில் கோணம் அளவிடப்படுகிறது\n"
+" டிஎட்ரல் 1-2-3-4 க்கு இடையில் அளவிடப்படுகிறது\n"
+" வலது சுட்டி: அளவீடுகளை மீட்டமைக்கவும்."
 
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
@@ -3526,7 +3552,7 @@ msgstr "நிகர சுழல் பெருக்கம்"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:313
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "இருமுனை கணம் (டெபி)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:315
 msgctxt "highest occupied molecular orbital"
@@ -3568,7 +3594,7 @@ msgstr "கிப்ச் இலவச ஆற்றல் (கிலோகல�
 #: qtplugins/molecularproperties/molecularmodel.cpp:333
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "புள்ளி குழு"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -3629,7 +3655,7 @@ msgstr "ஏற்றுமதி…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
@@ -3644,6 +3670,11 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"வழிசெலுத்தல் கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: காட்சியை சுழற்ற சொடுக்கு செய்து இழுக்கவும்.\n"
+" நடுத்தர சுட்டி: சொடுக்கு செய்து பெரிதாக்கவும் அல்லது வெளியே இழுக்கவும்.\n"
+" வலது சுட்டி: காட்சியை நகர்த்த சொடுக்கு செய்து இழுக்கவும்.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4027,7 +4058,7 @@ msgstr "காட்சியின் மூலையில் குறிப�
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
@@ -4036,7 +4067,7 @@ msgstr "வீரர்"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "அனிமேசன் கருவி (%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4234,7 +4265,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "%1 இலிருந்து பதிவிறக்கம் செய்யத் தவறிவிட்டது: நிலை குறியீடு %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
@@ -4684,7 +4715,7 @@ msgstr "தேர்ந்தெடு"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -4701,6 +4732,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"தேர்வு கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: தனிப்பட்ட அணுக்கள், எச்சங்கள் அல்லது துண்டுகளை எடுக்க சொடுக்கு செய்க\n"
+" அணுக்களின் வரம்பைத் தேர்ந்தெடுக்க இழுக்கவும்\n"
+" வலது சுட்டி: தேர்வை அழிக்க மூலக்கூறுக்கு வெளியே சொடுக்கு செய்க\n"
+" தேர்வில் சேர்க்கவும் மாற்றவும் கட்டுப்பாடு ஐப் பயன்படுத்தவும்.\n"
+" இருமுறை சொடுக்கு செய்யவும்: முழு துண்டுகளையும் தேர்ந்தெடுக்கவும்."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
@@ -5113,7 +5151,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:81
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:82
 msgid "Template"
@@ -5130,11 +5168,17 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
+"வார்ப்புரு கருவி (%1)\n"
+"\n"
+" உலோக மையங்கள் உட்பட துண்டுகளைச் செருகவும்.\n"
+" ஒரு உறுப்பு மற்றும் ஒருங்கிணைப்பு வடிவவியலைத் தேர்ந்தெடுத்து, பின்னர் ஒரு பகுதியைச் செருக சொடுக்கு செய்க.\n"
+"\n"
+" ஒரு தசைநார் அல்லது செயல்பாட்டுக் குழுவைத் தேர்ந்தெடுத்து அதை இணைக்க ஒரு ஐட்ரசன் அணுவை சொடுக்கு செய்யவும்."
 
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
 msgid "Clipboard"
-msgstr ""
+msgstr "இடைநிலைப் பலகை"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 msgid "Insert Template"
@@ -6873,12 +6917,12 @@ msgstr "தோற்றம்"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Molecule"
-msgstr ""
+msgstr "மூலக்கூறின் நடுவண்"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Selection"
-msgstr ""
+msgstr "தேர்வு நடுவண்"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6898,17 +6942,17 @@ msgstr "Z- அச்சு"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Move:"
-msgstr ""
+msgstr "நகர்த்து:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Everything Else"
-msgstr ""
+msgstr "மற்ற அனைத்தும்"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
