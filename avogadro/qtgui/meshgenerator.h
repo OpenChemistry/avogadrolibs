@@ -252,7 +252,7 @@ protected:
    */
   static const unsigned char m_numTris[256];
   static const bool m_isCut[256][12];
-  static const char m_caseTriangles[256][16];
+  static const signed char m_caseTriangles[256][16];
   static const unsigned char m_edgeVertices[12][2];
 };
 

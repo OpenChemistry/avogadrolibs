@@ -454,7 +454,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
             }
 
             // Add triangles
-            const char* caseTri = m_caseTriangles[caseId]; // size 16
+            const signed char* caseTri = m_caseTriangles[caseId]; // size 16
             for(int idx = 0; caseTri[idx] != -1; idx += 3)
             {
               
