@@ -2,13 +2,15 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # தமிழ்நேரம் <anishprabu.t@gmail.com>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-09 12:00+0000\n"
-"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"PO-Revision-Date: 2024-12-05 15:55+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
 "Language: ta\n"
@@ -16,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.9-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr "தொகுதி வேலை #%எல் 1 (%2)"
+msgstr "தொகுதி வேலை #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
@@ -117,7 +119,7 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
-"ஆஃப்செட் %எல் 1 இல் பாகுபடுத்தல் பிழை: ' %2'\n"
+"ஆஃப்செட் %L1 இல் பாகுபடுத்தல் பிழை: '%2'\n"
 " ரா சோன்:\n"
 "\n"
 " %3"
@@ -213,19 +215,17 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-"பின்வரும் கோப்பு (கள்) மாற்றியமைக்கப்பட்டுள்ளன:\n"
+"பின்வரும் கோப்பு மாற்றியமைக்கப்பட்டுள்ளன:\n"
 "\n"
 " %1\n"
 "\n"
-" புதிய வடிவியல் அல்லது வேலை விருப்பங்களை பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
-"விரும்புகிறீர்களா?"
+" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத விரும்புகிறீர்களா?"
 msgstr[1] ""
-"பின்வரும் கோப்பு (கள்) மாற்றியமைக்கப்பட்டுள்ளன:\n"
+"பின்வரும் கோப்புகள் மாற்றியமைக்கப்பட்டுள்ளன:\n"
 "\n"
 " %1\n"
 "\n"
-" புதிய வடிவியல் அல்லது வேலை விருப்பங்களை பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
-"விரும்புகிறீர்களா?"
+" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத விரும்புகிறீர்களா?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -801,7 +801,7 @@ msgstr "துலங்கியம், வடமம்"
 
 #: qtgui/elementtranslator.cpp:226
 msgid "Ytterbium"
-msgstr "Ytterbium"
+msgstr "எட்ர்பியம்"
 
 #: qtgui/elementtranslator.cpp:229
 msgid "Lutetium"
@@ -1215,7 +1215,7 @@ msgstr "படிக லட்டு"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
-msgstr ""
+msgstr "இருமுனைத் திருப்பம்"
 
 #: qtgui/layermodel.cpp:146 qtplugins/force/force.h:28
 msgid "Force"
@@ -1432,7 +1432,7 @@ msgstr "பத்திரத்தைப் புதுப்பிக்க�
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "அலகு கலத்தைச் சேர்க்கவும்…"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1734,11 +1734,11 @@ msgstr "தனிப்பயன் வண்ணத்தால்…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "அணு குறியீட்டால்…"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "தூரம்…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
@@ -1952,7 +1952,7 @@ msgstr "அணுக்களை கோளங்களாகவும் பி�
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -1972,6 +1972,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"பத்திர மைய கையாளுதல் கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: காட்சியை சுழற்ற சொடுக்கு செய்து இழுக்கவும்.\n"
+" நடுத்தர சுட்டி: சொடுக்கு செய்து பெரிதாக்கவும் அல்லது வெளியே இழுக்கவும்.\n"
+" வலது சுட்டி: காட்சியை நகர்த்த சொடுக்கு செய்து இழுக்கவும்.\n"
+" இருமுறை சொடுக்கு செய்யவும்: பார்வையை மீட்டமைக்கவும்.\n"
+"\n"
+" கையாளுதல் விமானத்தை அமைக்க ஒரு பத்திரத்தில் இடது சொடுக்கு & இழுக்கவும்:\n"
+" கோணத்தை மாற்ற பிணைப்பில் உள்ள அணுக்களில் ஒன்றை இடது சொடுக்கு செய்து இழுக்கவும்\n"
+" வலது சொடுக்கு செய்து நீளத்தை மாற்ற பிணைப்பில் உள்ள அணுக்களில் ஒன்றை இழுக்கவும்"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:781
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:869
@@ -1988,7 +1998,7 @@ msgstr "%L1 °"
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr "%எல் 1 முதல்"
+msgstr "%L1  Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
@@ -2791,12 +2801,12 @@ msgstr "தனிப்பயன் கூறுகள்"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "மூலக்கூறின் இருமுனை தருணத்தை வழங்கவும்."
 
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
@@ -2810,6 +2820,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"டிரா கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: அணுக்கள் மற்றும் பிணைப்பை உருவாக்க சொடுக்கு செய்து இழுக்கவும்\n"
+" வலது சுட்டி: அணுவை நீக்கு"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Draw Atom"
@@ -2831,7 +2845,7 @@ msgstr "தூரம்:"
 #: qtplugins/editor/editor.cpp:267
 #, qt-format
 msgid "%1 %L2"
-msgstr "1 %இல்லை"
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -3093,7 +3107,7 @@ msgstr "மும்மடங்கு"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:353
 msgid "Dication"
-msgstr "Dication"
+msgstr "வாய்சொல்"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:356
 msgid "Cation"
@@ -3321,7 +3335,7 @@ msgstr "பந்து மற்றும் குச்சி பாணிய
 #: qtplugins/label/labeleditor.cpp:31
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
@@ -3334,6 +3348,9 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"ஆட்டம் சிட்டை கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: தனிப்பயன் லேபிள்களைச் சேர்க்க அணுக்களைக் சொடுக்கு செய்க"
 
 #: qtplugins/label/labeleditor.cpp:78
 msgid "Create Label"
@@ -3406,7 +3423,7 @@ msgstr "உள்ளீட்டு உரையாடல் மூலம் ஒ
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3420,6 +3437,10 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
+"கையாளுதல் கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: சொடுக்கு செய்து அணுகுகளை நகர்த்த இழுக்கவும்\n"
+" வலது சுட்டி: அணுக்களைச் சுழற்ற சொடுக்கு செய்து இழுக்கவும்.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3429,7 +3450,7 @@ msgstr "கருவி கையாளுதல்"
 #: qtplugins/measuretool/measuretool.cpp:49
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:50
 msgid "Measure"
@@ -3446,6 +3467,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"அளவீட்டு கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: நான்கு அணுக்கள் வரை தேர்ந்தெடுக்கவும்.\n"
+" 1-2 முதல் 2-3 வரை தூரங்கள் அளவிடப்படுகின்றன\n"
+" பொதுவான புள்ளியாக 2 ஐப் பயன்படுத்தி 1-3 க்கு இடையில் கோணம் அளவிடப்படுகிறது\n"
+" டிஎட்ரல் 1-2-3-4 க்கு இடையில் அளவிடப்படுகிறது\n"
+" வலது சுட்டி: அளவீடுகளை மீட்டமைக்கவும்."
 
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
@@ -3526,7 +3554,7 @@ msgstr "நிகர சுழல் பெருக்கம்"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:313
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "இருமுனை கணம் (டெபி)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:315
 msgctxt "highest occupied molecular orbital"
@@ -3568,7 +3596,7 @@ msgstr "கிப்ச் இலவச ஆற்றல் (கிலோகல�
 #: qtplugins/molecularproperties/molecularmodel.cpp:333
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "புள்ளி குழு"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -3629,7 +3657,7 @@ msgstr "ஏற்றுமதி…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
@@ -3644,6 +3672,11 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"வழிசெலுத்தல் கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: காட்சியை சுழற்ற சொடுக்கு செய்து இழுக்கவும்.\n"
+" நடுத்தர சுட்டி: சொடுக்கு செய்து பெரிதாக்கவும் அல்லது வெளியே இழுக்கவும்.\n"
+" வலது சுட்டி: காட்சியை நகர்த்த சொடுக்கு செய்து இழுக்கவும்.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
@@ -3966,7 +3999,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
 msgid "inpcrd"
-msgstr "inpcrd"
+msgstr "இன்ச்ர்டு"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
@@ -3995,7 +4028,7 @@ msgstr "பி.டி.பி."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr "prmtop"
+msgstr "பிர்ம்டாப்"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
@@ -4027,7 +4060,7 @@ msgstr "காட்சியின் மூலையில் குறிப�
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
@@ -4036,7 +4069,7 @@ msgstr "வீரர்"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "அனிமேசன் கருவி (%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4234,7 +4267,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "%1 இலிருந்து பதிவிறக்கம் செய்யத் தவறிவிட்டது: நிலை குறியீடு %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
@@ -4684,7 +4717,7 @@ msgstr "தேர்ந்தெடு"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -4701,6 +4734,13 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"தேர்வு கருவி (%1)\n"
+"\n"
+" இடது சுட்டி: தனிப்பட்ட அணுக்கள், எச்சங்கள் அல்லது துண்டுகளை எடுக்க சொடுக்கு செய்க\n"
+" அணுக்களின் வரம்பைத் தேர்ந்தெடுக்க இழுக்கவும்\n"
+" வலது சுட்டி: தேர்வை அழிக்க மூலக்கூறுக்கு வெளியே சொடுக்கு செய்க\n"
+" தேர்வில் சேர்க்கவும் மாற்றவும் கட்டுப்பாடு ஐப் பயன்படுத்தவும்.\n"
+" இருமுறை சொடுக்கு செய்யவும்: முழு துண்டுகளையும் தேர்ந்தெடுக்கவும்."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
@@ -4973,7 +5013,7 @@ msgstr "சுழல் அடர்த்தி"
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr "மோ %எல் 1"
+msgstr "மோ %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:187
 msgctxt "Highest occupied molecular orbital"
@@ -5036,7 +5076,7 @@ msgstr "சுழல் அடர்த்தியைக் கணக்கி�
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr "மூலக்கூறு சுற்றுப்பாதை %எல் 1 கணக்கிடுதல்"
+msgstr "மூலக்கூறு சுற்றுப்பாதை %L1 கணக்கிடுதல்"
 
 #: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
 msgid "Movie AVI (*.avi)"
@@ -5113,7 +5153,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:81
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:82
 msgid "Template"
@@ -5130,11 +5170,17 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
+"வார்ப்புரு கருவி (%1)\n"
+"\n"
+" உலோக மையங்கள் உட்பட துண்டுகளைச் செருகவும்.\n"
+" ஒரு உறுப்பு மற்றும் ஒருங்கிணைப்பு வடிவவியலைத் தேர்ந்தெடுத்து, பின்னர் ஒரு பகுதியைச் செருக சொடுக்கு செய்க.\n"
+"\n"
+" ஒரு தசைநார் அல்லது செயல்பாட்டுக் குழுவைத் தேர்ந்தெடுத்து அதை இணைக்க ஒரு ஐட்ரசன் அணுவை சொடுக்கு செய்யவும்."
 
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
 msgid "Clipboard"
-msgstr ""
+msgstr "இடைநிலைப் பலகை"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 msgid "Insert Template"
@@ -5262,7 +5308,7 @@ msgstr "யேஅ்மோப் உள்ளீடு"
 
 #: qtplugins/yaehmop/yaehmop.h:35
 msgid "Yaehmop"
-msgstr "Yaehmop"
+msgstr "யாமோப்"
 
 #: qtplugins/yaehmop/yaehmop.h:84
 msgid "Perform extended Hückel calculations with yaehmop."
@@ -5361,9 +5407,8 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
-"<html> <head/> <body> <p> வேலை முடிந்ததும் தொலைநிலை வேலை கோப்புகளை நீக்கு. "
-"முடிவுகள் முதலில் உள்ளக மோலெக்யூ வேலை தற்காலிக சேமிப்பில் நகலெடுக்கப்படும். </P> </"
-"body> </html>"
+"<html><head/><body><p> வேலை முடிந்ததும் தொலைநிலை வேலை கோப்புகளை நீக்கு. முடிவுகள் முதலில் உள்ளக மோலெக்யூ வேலை "
+"தற்காலிக சேமிப்பில் நகலெடுக்கப்படும்.</p></body> </html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5591,7 +5636,7 @@ msgstr "மேற்பரப்பு வழங்குதல் இயக்�
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Isovalue"
-msgstr "Isovalue"
+msgstr "ஐச்ஒமதிப்பு"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:29
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -5684,25 +5729,23 @@ msgid ""
 "optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> வடிவமைப்பின் விவரக்குறிப்பு. ஒவ்வொரு எழுத்தும் ஒரு "
-"அணுவுக்கு எழுத ஒரு மதிப்பைக் குறிக்கிறது: </p> <p> <span சூல் தண்டு = \"font -"
-"Weight: 600;\">#</span> - அணு குறியீடு (1, 2, ..., numatoms) < br/> <span சூல் "
-"தண்டு = \"font-Weight: 600;\"> சட் </span>-அணு எண் (எ.கா. கார்பனுக்கு \"6\") <br/"
-"> <span சூல் தண்டு = \"font-weight: 600;\"> g </span> - கேமச் -பாணி அணு எண் (எ."
-"கா. கார்பனுக்கு \"6.0\") <br/> <span சூல் தண்டு = \"font -weight: 600;\"> n </"
-"span> - உறுப்பு பெயர் (எ.கா. \"கார்பன்\" br/> <span சூல் தண்டு = \"font-Weight: "
-"600;\"> S </span>-உறுப்பு அடையாளம் (எ.கா. கார்பனுக்கு \"சி\" </span> - அணு சிட்டை "
-"(எ.கா., இரண்டாவது கார்பன் அணுவுக்கு \"சி 2\", முதல் ஐட்ரசனுக்கான \"எச் 1\") <br/> "
-"<ச்பான் பாணி = \"எழுத்துரு -எடை: 600;\"> ஃச் </ச்பான்> - ஃச் நிலை ஒருங்கிணைப்பு <br/> "
-"<span சூல் தண்டு = \"font -Weight: 600;\"> ஒய் </span> -y நிலை ஒருங்கிணைப்பு <br/"
-"> <span சூல் தண்டு = \"font -Weight: 600;\"> சட் </span> - சட் நிலை ஒருங்கிணைப்பு "
-"<br/> <span சூல் தண்டு = \"font-weight: 600;\"> a </span>-'a' லட்டு ஒருங்கிணைப்பு "
-"(படிகங்கள் மட்டும்) <br/> <span சூல் தண்டு = \"font-weight: 600; . br/> <span சூல் "
-"தண்டு = \"font-Weight: 600;\"> _ </span>-சீரமைப்புக்கு பயனுள்ள ஒரு நேரடி இடம் "
-"(\"\") <br/> <span சூல் தண்டு = \"font-weight: 600;\"> 0 </span> - ஒரு நேரடி 0 "
-"(\"0\"), தேர்வுமுறை கொடிகளுக்கு பயனுள்ளதாக இருக்கும் <br/> <span சூல் தண்டு = "
-"\"font -weight: 600;\"> 1 </span> - ஒரு நேரடி 1 (\"1\") , தேர்வுமுறை "
-"கொடிகளுக்கு பயனுள்ளதாக இருக்கும் <br/> </p> </body> </html>"
+"<html> <head/> <body> <p> வடிவமைப்பின் விவரக்குறிப்பு. ஒவ்வொரு எழுத்தும் ஒரு அணுவுக்கு எழுத ஒரு மதிப்பைக் "
+"குறிக்கிறது: </p> <p> <span சூல் தண்டு = \"font -Weight: 600;\">#</span> - அணுக் குறியீடு ("
+"1, 2, ..., numatoms) < br/> <span சூல் தண்டு = \"font-Weight: 600;\"> சட் "
+"</span>-அணு எண் (எ.கா. கார்பனுக்கு \"6\") <br/> <span சூல் தண்டு = \"font-weight: 600;\""
+"> g </span> - கேமச் -பாணி அணு எண் (எ.கா. கார்பனுக்கு \"6.0\") <br/> <span சூல் தண்டு = \"font"
+" -weight: 600;\"> n </span> - உறுப்புப் பெயர் (எ.கா. \"கார்பன்\" br/> <span சூல் தண்டு = "
+"\"font-Weight: 600;\"> S </span>-உறுப்பு அடையாளம் (எ.கா. கார்பனுக்கு \"சி\" </span> - அணு "
+"சிட்டை (எ.கா., இரண்டாவது கார்பன் அணுவுக்கு \"சி 2\", முதல் ஐட்ரசனுக்கான \"எச் 1\") <br/> <ச்பான் பாணி = "
+"\"எழுத்துரு -எடை: 600;\"> ஃச் </ச்பான்> - ஃச் நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font "
+"-Weight: 600;\"> ஒய் </span> -y நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font "
+"-Weight: 600;\"> சட் </span> - சட் நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font"
+"-weight: 600;\"> a </span>-'a' லட்டு ஒருங்கிணைப்பு (படிகங்கள் மட்டும்) <br/> <span சூல் தண்டு "
+"= \"font-weight: 600; . br/> <span சூல் தண்டு = \"font-Weight: 600;\"> _ "
+"</span>-சீரமைப்புக்கு பயனுள்ள ஒரு நேரடி இடம் (\"\") <br/> <span சூல் தண்டு = \"font-weight: "
+"600;\"> 0 </span> - ஒரு நேரடி 0 (\"0\"), தேர்வுமுறை கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> "
+"<span சூல் தண்டு = \"font -weight: 600;\"> 1 </span> - ஒரு நேரடி 1 (\"1\"), தேர்வுமுறை "
+"கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> </p> </body> </html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6352,14 +6395,18 @@ msgid ""
 "#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
 "html>"
 msgstr ""
-"<\n"
-" <html> <head> <meta பெயர் = \"qrichtext\" content = \"1\" /> <style வகை = "
-"\"text /css\">\n"
-" பி, லி {வெள்ளை-இடம்: முன் மடக்கு; }\n"
-" </style> </head> <body சூல் தண்டு = \"font-family: 'SANS SERIF'; எழுத்துரு "
-"அளவு: 10pt; எழுத்துரு-எடை: 400; எழுத்துரு-பாணி: இயல்பானது;\">\n"
-" <p சூல் தண்டு = \"margin-top: 0px; விளிம்பு-கீழ்: 0px; விளிம்பு-இடது: 0px; "
-"விளிம்பு-வலது: 0px; . உஉகுமொ </phan> </a> </p> </body> </html>"
+"<<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"பி, லி { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6413,7 +6460,7 @@ msgstr "Spc"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:140
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "SPC/E"
-msgstr "SPC/E."
+msgstr "எச்பிசி/இ"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:177
 #. i18n: ectx: property (toolTip), widget (QLabel, label_atomstyle)
@@ -6440,14 +6487,18 @@ msgid ""
 "color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
 "p></body></html>"
 msgstr ""
-"<\n"
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
 " <html> <head> <meta பெயர் = \"qrichtext\" content = \"1\" /> <style வகை = "
 "\"text /css\">\n"
-" பி, லி {வெள்ளை-இடம்: முன் மடக்கு; }\n"
-" </style> </head> <body சூல் தண்டு = \"font-family: 'SANS SERIF'; எழுத்துரு "
-"அளவு: 10pt; எழுத்துரு-எடை: 400; எழுத்துரு-பாணி: இயல்பானது;\">\n"
-" <p சூல் தண்டு = \"margin-top: 0px; விளிம்பு-கீழ்: 0px; விளிம்பு-இடது: 0px; "
-"விளிம்பு-வலது: 0px; . உஉகுமொ </phan> </a> </p> </body> </html>"
+" பி, லி { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -6858,7 +6909,7 @@ msgstr "ஒய்"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr "வழங்கியவர்:"
+msgstr "இவர்களால் மொழிபெயர்க்கப்பட்டது"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6873,12 +6924,12 @@ msgstr "தோற்றம்"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Molecule"
-msgstr ""
+msgstr "மூலக்கூறின் நடுவண்"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Selection"
-msgstr ""
+msgstr "தேர்வு நடுவண்"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -6898,17 +6949,17 @@ msgstr "Z- அச்சு"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Move:"
-msgstr ""
+msgstr "நகர்த்து:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Everything Else"
-msgstr ""
+msgstr "மற்ற அனைத்தும்"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -7518,14 +7569,16 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> அடிவாரத்தில் (டிகிரிகளில்) உச்சத்தை விரிவுபடுத்துதல்."
+"<html> <head/> <body> <p> அடிவாரத்தில் (டிகிரிகளில்) உச்சத்தை விரிவுபடுத்துதல்.</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
 msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
-msgstr "<html> <head/> <body> <p> டிகிரிகளில் அதிகபட்ச 2 தீட்டா மதிப்பு"
+msgstr ""
+"<html> <head/> <body> <p> டிகிரிகளில் அதிகபட்ச 2 தீட்டா மதிப்பு.</p><p><p>இயல்புநிலை: 162."
+"00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -7533,7 +7586,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> டிகிரிகளில் அடிவாரத்தில் சிகரங்களை விரிவுபடுத்துதல்."
+"<html> <head/> <body> <p> டிகிரிகளில் அடிவாரத்தில் சிகரங்களை விரிவுபடுத்துதல்.</p><p>இயல்புநிலை: 0."
+"52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7564,7 +7618,9 @@ msgstr ""
 msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
-msgstr "<html> <head/> <body> <p> 2 தீட்டாவின் எண்ணிக்கை உருவாக்க வேண்டும்"
+msgstr ""
+"<html> <head/> <body> <p> 2 தீட்டாவின் எண்ணிக்கை உருவாக்க வேண்டும்.</p><p>இயல்புநிலை: "
+"1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7803,7 +7859,7 @@ msgstr "பீட்டா"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr "வழங்கியவர்:"
+msgstr "வண்ணம்தீட்டியவர்:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -8084,7 +8140,7 @@ msgstr "ட்ரைடெனேட்"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Tetradentate"
-msgstr "Tetradentate"
+msgstr "டிராடேன்டாடே"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8212,13 +8268,12 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
-"<html> <head/> <body> <p> இந்த பெட்டியை சரிபார்க்கும் முன் ஃபெர்மி நிலை அறியப்பட "
-"வேண்டும். மாநிலங்களின் கணக்கீட்டின் அடர்த்தியைச் செய்வதன் மூலமும் தரவைக் காண்பிப்பதன் மூலமும் "
-"நீங்கள் ஃபெர்மி அளவைக் கண்டறியலாம் (இது தரவின் உச்சியில் இருக்கும்). கூடுதலாக, "
-"மாநிலங்களின் கணக்கீட்டின் அடர்த்தி செய்யப்பட்டால், இங்குள்ள ஃபெர்மி நிலை மாநிலக் கணக்கீட்டின் "
-"அடர்த்தியின் போது கண்டறியப்பட்டவற்றிற்கு தானாகவே அமைக்கப்படும். </P> <p> இந்த பெட்டி "
-"சரிபார்க்கப்பட்டால், சரியான ஃபெர்மி நிலை உறுதிப்படுத்திக் கொள்ளுங்கள் வலதுபுறத்தில் உள்ள "
-"ச்பின் பாக்சில் அமைக்கப்பட்டுள்ளது. </p> <p> இயல்புநிலை: ஆஃப் </p> </body> </html>"
+"<html> <head/> <body> <p> இந்தப் பெட்டியைச் சரிபார்க்கும் முன் ஃபெர்மி நிலை அறியப்பட வேண்டும். மாநிலங்களின் "
+"கணக்கீட்டின் அடர்த்தியைச் செய்வதன் மூலமும் தரவைக் காண்பிப்பதன் மூலமும் நீங்கள் ஃபெர்மி அளவைக் கண்டறியலாம் (இது தரவின் "
+"உச்சியில் இருக்கும்). கூடுதலாக, மாநிலங்களின் கணக்கீட்டின் அடர்த்தி செய்யப்பட்டால், இங்குள்ள ஃபெர்மி நிலை மாநிலக் "
+"கணக்கீட்டின் அடர்த்தியின்போது கண்டறியப்பட்டவற்றிற்கு தானாகவே அமைக்கப்படும். </P> <p> இந்தப் பெட்டி சரிபார்க்கப்பட்டால்"
+", சரியான ஃபெர்மி நிலை உறுதிப்படுத்திக் கொள்ளுங்கள் வலது புறத்தில் உள்ள ச்பின் பாக்சில் அமைக்கப்பட்டுள்ளது. </p> <p> "
+"இயல்புநிலை: ஆஃப் </p> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -8232,8 +8287,8 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
-"<Html> <head/> <body> <p> பூச்சியம் ஃபெர்மி என்பதற்காக ஆற்றல்களை சரிசெய்யவும்? நாங்கள் "
-"ஃபெர்மி அளவை சூழ்ச்சி செய்தால் மட்டுமே கிடைக்கும்."
+"<html><head/> <body> <p> பூச்சியம் ஃபெர்மி என்பதற்காக ஆற்றல்களைச் சரிசெய்யவும்? நாங்கள் ஃபெர்மி அளவை "
+"சூழ்ச்சி செய்தால் மட்டுமே கிடைக்கும்.</p><p><br/></p><p>இயல்புநிலை:அணை</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -8275,17 +8330,15 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> சிறப்பு கே-புள்ளிகளை உள்ளிடவும்: </p> <p> l 0.5 0.5 "
-"0.5 </p> <p> g 0.0 0.0 0.0 </p> <p> ஃச் 0.5 0.0 0.5 </p> <p> அதாவது, & lt; "
-"அடையாளம் & gt; & lt; ஃச் & gt; & lt; ஒய் & gt; & lt; சட் & gt; ஃச், ஒய் மற்றும் சட் "
-"ஆகியவை பகுதியளவு பரச்பர விண்வெளி ஆயத்தொகுப்புகளாகும். இந்த கே-பாயிண்ட்களை நீங்கள் "
-"வைக்கும் வரிசையில் வரைபடத்தில் இணைக்கும் கோடுகள் வரையப்படும். உங்கள் கலத்தின் நோக்குநிலை "
-"இந்த பரச்பர விண்வெளி புள்ளிகளின் இருப்பிடங்களில் தாக்கத்தை ஏற்படுத்தக்கூடும் என்பதை நினைவில் "
-"கொள்க. </P> <p> என்றால் படிகத்தின் விண்வெளி குழு உணரப்பட்டது அல்லது அமைக்கப்பட்டுள்ளது, "
-"சிறப்பு கே புள்ளிகள் தானாகவே அந்த விண்வெளி குழுவிற்கான பழமையான செல் உயர் சமச்சீர் "
-"புள்ளிகளுடன் நிரப்பப்படும். லட்டியைப் பொறுத்து ஒரு சில விண்வெளி குழுக்கள் வெவ்வேறு உயர் "
-"சமச்சீர் புள்ளிகள் உள்ளன (a & gt; b அல்லது a & lt; b) - இது தானாகவே கணக்கில் "
-"எடுத்துக்கொள்ளப்படுகிறது. </P> </body> </html>"
+"<html> <head/> <body> <p> சிறப்பு கே-புள்ளிகளை உள்ளிடவும்: </p> <p> l 0.5 0.5 0.5 </p> "
+"<p> g 0.0 0.0 0.0 </p> <p> ஃச் 0.5 0.0 0.5 </p> <p> அதாவது, & lt; அடையாளம் & gt; & "
+"lt; ஃச் & gt; & lt; ஒய் & gt; & lt; சட் & gt; ஃச், ஒய் மற்றும் சட் ஆகியவை பகுதியளவு பரச்பர "
+"விண்வெளி ஆயத்தொகுப்புகளாகும். இந்த கே-பாயிண்ட்களை நீங்கள் வைக்கும் வரிசையில் வரைபடத்தில் இணைக்கும் கோடுகள் வரையப்படும். "
+"உங்கள் கலத்தின் நோக்குநிலை இந்தப் பரச்பர விண்வெளி புள்ளிகளின் இருப்பிடங்களில் தாக்கத்தை ஏற்படுத்தக்கூடும் என்பதை நினைவில் "
+"கொள்க. </P> <p> என்றால் படிகத்தின் விண்வெளி குழு உணரப்பட்டது அல்லது அமைக்கப்பட்டுள்ளது, சிறப்பு கேப்புள்ளிகள் "
+"தானாகவே அந்த விண்வெளி குழுவிற்கான பழமையான செல் உயர் சமச்சீர் புள்ளிகளுடன் நிரப்பப்படும். லட்டியைப் பொறுத்து ஒரு சில "
+"விண்வெளி குழுக்கள் வெவ்வேறு உயர் சமச்சீர் புள்ளிகள் உள்ளன (a & gt; b அல்லது a & lt; b) - இது தானாகவே "
+"கணக்கில் எடுத்துக்கொள்ளப்படுகிறது. </P> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -8301,14 +8354,16 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
-"<\n"
-" <html> <head> <meta பெயர் = \"qrichtext\" content = \"1\" /> <style வகை = "
-"\"text /css\">\n"
-" பி, லி {வெள்ளை-இடம்: முன் மடக்கு; }\n"
-" </style> </head> <body சூல் தண்டு = \"font-family: '. AppleSystemuifont'; "
-"எழுத்துரு அளவு: 13pt; எழுத்துரு-எடை: 400; எழுத்துரு பாணி: இயல்பானது;\">\n"
-" <p சூல் தண்டு = \"விளிம்பு-மேல்: 0px; விளிம்பு-கீழ்: 0px; விளிம்பு-இடது: 0px; "
-"விளிம்பு-வலது: 0px; \"எழுத்துரு-குடும்பம்: 'உபுண்டு'; எழுத்துரு-அளவு: 11pt;\""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+" <html> <head> <meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
+" பி, லி { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
+"size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu'; font-size:11pt;\">சிஎம் 0.0 0.0 0.0</span></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
@@ -8317,9 +8372,9 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> சிறப்பு K- புள்ளிகளை இணைக்கும் K- புள்ளிகளின் எண்ணிக்கையை "
-"உள்ளிடவும். இந்த கே-பாயிண்டுகளில் அதிகமானவை வரைபடத்தை மென்மையாக்கும், ஆனால் கணக்கீடு "
-"அதிக நேரம் ஆகலாம். </P> <p> இயல்புநிலை: 40 </p> </body> </html>"
+"<html> <head/> <body> <p> சிறப்பு K- புள்ளிகளை இணைக்கும் K- புள்ளிகளின் எண்ணிக்கையை உள்ளிடவும். இந்த "
+"கே-பாயிண்டுகளில் அதிகமானவை வரைபடத்தை மென்மையாக்கும், ஆனால் கணக்கீடு அதிக நேரம் ஆகலாம்.</p><p> இயல்புநிலை: 40 </"
+"p> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -8347,10 +8402,10 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
-"<Html> <head/> <body> <p> அவ்வப்போது பரிமாணங்களின் எண்ணிக்கை. </p> <b> <br/> </p> "
-"<p> இது 1 ஆக அமைக்கப்பட்டால், பொருள் அவ்வப்போது மட்டுமே படிகத்தின் ஒரு திசையனுடன். /p> "
-"<p> <br/> </p> <p> இது 3 ஆக அமைக்கப்பட்டால், படிகத்தின் A, B மற்றும் C திசையன்களுடன் "
-"பொருள் அவ்வப்போது இருக்கும். </p> <p> < br/> </p> </body> </html>"
+"<html><head/> <body> <p> அவ்வப்போது பரிமாணங்களின் எண்ணிக்கை. </p> <p><br/> </p> <p> இது 1 "
+"ஆக அமைக்கப்பட்டால், பொருள் அவ்வப்போது மட்டுமே படிகத்தின் ஒரு திசையனுடன்.</p><p> <br/> </p> <p> இது 3 "
+"ஆக அமைக்கப்பட்டால், படிகத்தின் A, B மற்றும் C திசையன்களுடன் பொருள் அவ்வப்போது இருக்கும். </p> <p> <br/> </"
+"p> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)

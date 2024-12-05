@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-29 18:38+0000\n"
+"PO-Revision-Date: 2024-12-05 11:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
@@ -4892,10 +4892,8 @@ msgid "Select Imported Spectra Color"
 msgstr "Внасяне на спектър"
 
 #: qtplugins/spectra/spectradialog.cpp:341
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Vibrational Spectra"
-msgstr "Внасяне на спектър"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:342
 #: qtplugins/spectra/spectradialog.cpp:356
