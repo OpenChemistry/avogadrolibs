@@ -52,6 +52,15 @@ jobs:
             cpack_flags: "-G DragNDrop",
           }
         - {
+            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            os: windows-2019,
+            cc: "cl", cxx: "cl",
+            build_type: "Release",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
+            build_flags: "-j 2",
+            cpack_flags: "-G NSIS",
+          }
+        - {
             name: "Ubuntu Address Sanitizer", artifact: "",
             os: ubuntu-20.04,
             cc: "gcc", cxx: "g++",
@@ -97,12 +106,6 @@ jobs:
         repository: openchemistry/openchemistry
         submodules: recursive
 
-    - name: Checkout avogadroapp
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
     - name: Checkout molecules
       uses: actions/checkout@v4
       with:
@@ -127,10 +130,18 @@ jobs:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+        fetch-depth: 0
+
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
         path: avogadrolibs
+        fetch-depth: 0
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -262,7 +273,7 @@ jobs:
         fi # password exists
 
     - name: Create Mac and Windows Packages
-      if: matrix.config.os == 'windows-latest' || runner.os == 'macOS'
+      if: runner.os == 'Windows' || runner.os == 'macOS'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
@@ -271,7 +282,7 @@ jobs:
         if [ -z "${OPENSSL_ROOT_DIR}" ]; then
           unset OPENSSL_ROOT_DIR
         fi
-        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
       continue-on-error: true
@@ -327,28 +338,6 @@ jobs:
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
-
-    - name: Sign Windows artifact
-      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
-      uses: signpath/github-action-submit-signing-request@v1
-      with:
-        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
-        organization-id: '${{ secrets.SIGNPATH_ORG_ID }}'
-        project-slug: 'avogadrolibs'
-        signing-policy-slug: 'test-signing'
-        github-artifact-id: '${{ steps.upload-artifact.outputs.artifact-id }}'
-        wait-for-completion: true
-        output-artifact-directory: '${{ runner.workspace }}/build/avogadroapp'
-
-    - name: Notarize Mac DMG
-      if: matrix.config.os == 'windows-latest' && github.ref == 'refs/heads/master'
-      run: |
-        ls -la ./
-      working-directory: ${{ runner.workspace }}/build/avogadroapp
-
-    - name: Setup tmate session
-      if: failure()
-      uses: mxschmitt/action-tmate@v3
 
     - name: Cleanup
       if: ${{ always() }} # To ensure this step runs even when earlier steps fail
