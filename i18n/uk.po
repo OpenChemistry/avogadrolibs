@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-29 18:38+0000\n"
+"PO-Revision-Date: 2024-12-05 11:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -1580,7 +1580,7 @@ msgstr ""
 #: qtplugins/apbs/apbs.cpp:37
 #, fuzzy
 msgid "Open Output File…"
-msgstr "Відкриття файла WFN"
+msgstr "Відкриття файла"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
