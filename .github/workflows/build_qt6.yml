@@ -7,10 +7,10 @@ name: Qt6 Build Matrix
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  QT_VERSION: 6.8.0
+  QT_VERSION: 6.8.1
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 10.15
+  MACOS_TARGET: 12
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DQT_VERSION=6
 
 jobs:
@@ -88,20 +88,9 @@ jobs:
         path: avogadrolibs
 
     - name: Install Qt
-      if: runner.os != 'Windows'
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{ env.QT_VERSION }}
-        aqtversion: '==3.1.*'
-
-    - name: Install Qt (Windows)
-      if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: ${{ env.QT_VERSION }}
-        aqtversion: '==3.1.*'
-        host: windows
-        arch: win64_msvc2022_64
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
