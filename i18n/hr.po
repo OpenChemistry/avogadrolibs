@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-12-06 15:56+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-06 15:59+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1548,21 +1547,21 @@ msgstr "Otvori datoteku rezultata …"
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:64
 msgid "&Input"
-msgstr "Unos"
+msgstr "&Unos"
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:70
 #: qtplugins/quantuminput/quantuminput.cpp:88
 msgid "Open Output File"
-msgstr ""
+msgstr "Otvori datoteku rezultata"
 
 #: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX datotela (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:116
 msgid "IO Error"
@@ -1575,12 +1574,12 @@ msgstr ""
 
 #: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX greška"
 
 #: qtplugins/apbs/apbs.cpp:138
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Greška pri čitanju OpenDX datoteke: %1"
 
 #: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
@@ -1590,11 +1589,11 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:30:96
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Interagiraj s APBS uslužnim programima."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
