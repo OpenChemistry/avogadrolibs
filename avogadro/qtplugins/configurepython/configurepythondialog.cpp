@@ -8,10 +8,14 @@
 
 #include "ui_configurepythondialog.h"
 
+#include <avogadro/qtgui/utilities.h>
+
 #include <QDebug>
 #include <QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QSettings>
+
+using Avogadro::QtGui::Utilities::findExecutablePaths;
 
 namespace Avogadro::QtPlugins {
 
@@ -33,8 +37,23 @@ ConfigurePythonDialog::ConfigurePythonDialog(QWidget* aParent)
   QString condaPath =
     settings.value("interpreters/condaPath", "conda").toString();
   // check if conda is executable
-  if (!QFileInfo(condaPath).isExecutable())
-    return;
+  if (!QFileInfo(condaPath).isExecutable()) {
+    // see if we can find any related executables in the path
+    QStringList names;
+    names << "micromamba"
+          << "mamba"
+          << "conda";
+#ifdef Q_OS_WIN
+    names << "micromamba.exe"
+          << "mamba.exe"
+          << "conda.exe";
+#endif
+    QStringList paths = findExecutablePaths(names);
+    if (!paths.isEmpty()) {
+      condaPath = paths.first();
+    } else
+      return; // nothing more to do
+  }
 
   // set the path to conda
   settings.setValue("interpreters/condaPath", condaPath);
@@ -85,8 +104,23 @@ void ConfigurePythonDialog::setupCondaEnvironment()
   QString condaPath =
     settings.value("interpreters/condaPath", "conda").toString();
   // check if conda is executable
-  if (!QFileInfo(condaPath).isExecutable())
-    return;
+  if (!QFileInfo(condaPath).isExecutable()) {
+    // see if we can find any related executables in the path
+    QStringList names;
+    names << "micromamba"
+          << "mamba"
+          << "conda";
+#ifdef Q_OS_WIN
+    names << "micromamba.exe"
+          << "mamba.exe"
+          << "conda.exe";
+#endif
+    QStringList paths = findExecutablePaths(names);
+    if (!paths.isEmpty()) {
+      condaPath = paths.first();
+    } else
+      return; // nothing more to do
+  }
 
   QStringList arguments;
   arguments << "create"
@@ -122,9 +156,22 @@ void ConfigurePythonDialog::setOptions(const QStringList& options)
 {
   m_ui->environmentCombo->clear();
 
+  // check the current choice from QSettings
+  QSettings settings;
+  QString currentInterpreter =
+    settings.value("interpreters/python", QString()).toString();
+  QString currentConda =
+    settings.value("interpreters/condaEnvironment", QString()).toString();
+  int index = -1;
+
   // add all conda environments
   foreach (const QString& environment, m_condaEnvironments) {
+    if (environment.isEmpty())
+      continue; // shouldn't happen, but just in case
+
     m_ui->environmentCombo->addItem(QString("%1 (conda)").arg(environment));
+    if (environment == currentConda)
+      index = m_ui->environmentCombo->count() - 1;
   }
 
   // get the Python version from each interpreter
@@ -136,7 +183,7 @@ void ConfigurePythonDialog::setOptions(const QStringList& options)
     if (process.waitForFinished()) {
       QString output = process.readAllStandardOutput();
       if (output.startsWith("Python")) {
-        versions << output.split(" ").at(1);
+        versions << output.split(" ").at(1).simplified();
       } else {
         versions << tr("Unknown");
       }
@@ -148,9 +195,16 @@ void ConfigurePythonDialog::setOptions(const QStringList& options)
   for (int i = 0; i < options.size(); ++i) {
     m_ui->environmentCombo->addItem(
       QString("%1 (%2)").arg(options.at(i)).arg(versions.at(i)));
+    // if the conda environment isn't the current, check the python interpreter
+    if (options.at(i) == currentInterpreter && index == -1)
+      index = m_ui->environmentCombo->count() - 1;
   }
 
   m_ui->environmentCombo->addItem(tr("Other…"));
+  // set the current choice
+  if (index >= 0)
+    m_ui->environmentCombo->setCurrentIndex(index);
+
   m_ui->browseWidget->hide();
 }
 
