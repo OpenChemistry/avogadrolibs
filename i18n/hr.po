@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-12-06 15:59+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-07 04:21+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1598,19 +1597,19 @@ msgstr "Interagiraj s APBS uslužnim programima."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
-msgstr "Otvori PDF datoteku"
+msgstr "Otvori PDB datoteku"
 
 #: qtplugins/apbs/apbsdialog.cpp:80
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDB datoteke (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:90
 msgid "Open PQR File"
-msgstr ""
+msgstr "Otvori PQR datoteku"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQR datoteke (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/commandscripts/command.cpp:139
@@ -1644,19 +1643,19 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Greška pri pokretanju APBS-a: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "Navedi PDB datoteku"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Spremi APBS datoteku unosa"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "APBS unos (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -1667,7 +1666,7 @@ msgstr ""
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Datoteka unosa zapisana u '%1'"
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
@@ -1712,19 +1711,19 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:758
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:760
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Vrućina"
 
 #: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Vruće"
 
 #: qtplugins/applycolors/applycolors.cpp:113
 #: qtplugins/surfaces/surfaces.cpp:764
@@ -1738,7 +1737,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1746,7 +1745,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1754,7 +1753,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plazma"
 
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1762,7 +1761,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1770,7 +1769,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1782,7 +1781,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1794
 msgctxt "colormap"
 msgid "Spectral"
-msgstr ""
+msgstr "Spektralno"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1792,7 +1791,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1791
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Hladno-toplo"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1802,7 +1801,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
 msgctxt "colormap"
 msgid "Balance"
-msgstr ""
+msgstr "Uravnoteženo"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1812,7 +1811,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Plava-tamnocrvena"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1824,11 +1823,11 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1797
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:141
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Primijeni sheme boja na atome i ostatke."
 
 #: qtplugins/applycolors/applycolors.cpp:152
 #: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
