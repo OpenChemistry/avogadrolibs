@@ -34,6 +34,26 @@ Dipole::~Dipole() {}
 void Dipole::process(const QtGui::Molecule& molecule,
                      Rendering::GroupNode& node)
 {
+  // check if the molecule is empty
+  // (single atoms don't have a dipole moment)
+  if (molecule.atomCount() < 0)
+    return;
+
+  // check if the molecule has the dipole set
+  if (!m_customDipole) {
+    if (molecule.hasData("dipoleMoment")) {
+      m_dipoleVector = molecule.data("dipoleMoment").toVector3();
+    } else {
+      // connect to molecule changes
+      connect(&molecule, &QtGui::Molecule::update, this, &Dipole::updateDipole);
+      connect(&molecule, SIGNAL(changed(unsigned int)), SLOT(updateDipole()));
+    }
+  } else {
+    // custom dipole moment set
+    m_dipoleVector = m_customDipoleVector;
+  }
+
+  // okay if we have all that, set up the arrow
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
@@ -44,28 +64,33 @@ void Dipole::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(arrow);
 
   Vector3f origin = Vector3f::Zero();
-
-  // check if the molecule has the dipole set
-  if (!m_customDipole) {
-    if (molecule.hasData("dipoleMoment")) {
-      m_dipoleVector = molecule.data("dipoleMoment").toVector3();
-    } else {
-      if (!molecule.isInteractive() && m_updateNeeded) {
-        m_updateNeeded = false;
-        // 500ms delay to allow the molecule to be updated
-        QTimer::singleShot(500, this, &Dipole::updateFinished);
-        m_dipoleVector =
-          Calc::ChargeManager::instance().dipoleMoment(m_type, molecule);
-      }
-    }
-  }
-
   arrow->addSingleArrow(m_dipoleVector.cast<float>(), origin);
 }
 
 void Dipole::updateFinished()
 {
   m_updateNeeded = true;
+  emit drawablesChanged();
+}
+
+void Dipole::updateDipole()
+{
+  QtGui::Molecule* molecule = qobject_cast<QtGui::Molecule*>(sender());
+  if (molecule == nullptr || molecule->isInteractive())
+    return;
+
+  // if the molecule has a dipole moment set, use it
+  if (molecule->hasData("dipoleMoment"))
+    return;
+
+  // otherwise, calculate it
+  if (m_updateNeeded) {
+    m_updateNeeded = false;
+    m_dipoleVector =
+      Calc::ChargeManager::instance().dipoleMoment(m_type, *molecule);
+    // single-shot
+    QTimer::singleShot(0, this, SLOT(updateFinished()));
+  }
 }
 
 QWidget* Dipole::setupWidget()
