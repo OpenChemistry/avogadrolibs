@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
 "PO-Revision-Date: 2024-12-07 04:21+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1638,7 +1639,7 @@ msgstr "PQR datoteke (*.pqr)"
 #: qtplugins/propertytables/propertyview.cpp:276
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
@@ -1661,7 +1662,7 @@ msgstr "APBS unos (*.in)"
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:178:156
 msgid "Success"
-msgstr ""
+msgstr "Uspjeh"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
@@ -1729,7 +1730,7 @@ msgstr "Vruće"
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Siva"
 
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
