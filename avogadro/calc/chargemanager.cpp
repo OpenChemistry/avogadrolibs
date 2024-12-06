@@ -164,6 +164,10 @@ Vector3 ChargeManager::dipoleMoment(const std::string& identifier,
     return Vector3(0.0, 0.0, 0.0);
   }
 
+  if (molecule.atomCount() < 2) {
+    return Vector3(0.0, 0.0, 0.0);
+  }
+
   const auto id = m_identifiers[lowerId];
   const ChargeModel* model = m_models[id];
   return model->dipoleMoment(molecule);
