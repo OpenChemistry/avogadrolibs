@@ -47,6 +47,12 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
   foreach (QtGui::ToolPlugin* tool, m_tools)
     tool->setMolecule(m_molecule);
+
+  if (m_molecule) {
+    // update properties like dipole rendering
+    QTimer::singleShot(500, m_molecule, &QtGui::Molecule::update);
+  }
+
   connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateScene()));
 }
 
