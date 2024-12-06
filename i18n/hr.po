@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-17 02:51+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-12-06 15:56+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1486,7 +1486,7 @@ msgstr "&Izvezi"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -1507,41 +1507,39 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: qtplugins/aligntool/aligntool.cpp:79:1697
 msgid "Axis:"
-msgstr ""
+msgstr "Os:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr ""
+msgstr "Poravnaj pri izvoru"
 
 #: qtplugins/aligntool/aligntool.cpp:192
 msgid "Align to Axis"
-msgstr ""
+msgstr "Poravnaj na os"
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
-msgstr ""
+msgstr "Centriraj atom pri izvoru."
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Navigate tool"
 msgid "Align tool"
-msgstr "Alat za kretanje"
+msgstr "Alat za poravnanje"
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
-msgstr ""
+msgstr "Poravnaj molekule na Kartezijevu os"
 
 #: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
-msgstr ""
+msgstr "Pokreni APBS …"
 
 #: qtplugins/apbs/apbs.cpp:37
 msgid "Open Output File…"
-msgstr ""
+msgstr "Otvori datoteku rezultata …"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
