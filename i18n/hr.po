@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
 "PO-Revision-Date: 2024-12-06 15:56+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1453,7 +1454,7 @@ msgstr "Modificiraj molekulu"
 
 #: qtgui/scenepluginmodel.cpp:92
 msgid "Settings"
-msgstr ""
+msgstr "Postavke"
 
 #: qtgui/scriptloader.cpp:33
 #, qt-format
@@ -1476,7 +1477,7 @@ msgstr ""
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&File"
-msgstr ""
+msgstr "&Datoteka"
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
@@ -1490,7 +1491,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
-msgstr ""
+msgstr "Poravnaj"
 
 #: qtplugins/aligntool/aligntool.cpp:51
 msgid ""
@@ -1547,7 +1548,7 @@ msgstr "Otvori datoteku rezultata …"
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:64
 msgid "&Input"
-msgstr ""
+msgstr "Unos"
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
@@ -7507,10 +7508,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
-#, fuzzy
-#| msgid "&Import"
 msgid "&Import..."
-msgstr "&Uvezi"
+msgstr "&Uvezi …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:268
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -7530,10 +7529,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
-#, fuzzy
-#| msgid "&Export"
 msgid "&Export..."
-msgstr "&Izvezi"
+msgstr "&Izvezi …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:362
 #. i18n: ectx: property (text), widget (QLabel, label_2)
