@@ -36,6 +36,9 @@ namespace Avogadro::Io {
 
 using chargePair = std::pair<size_t, int>;
 namespace {
+
+// Helper function to handle partial charge property blocks
+// e.g. PUBCHEM_MMFF94_PARTIAL_CHARGES
 void handlePartialCharges(Core::Molecule& mol, std::string data)
 {
   // the string starts with the number of charges
@@ -59,6 +62,7 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
+  int spinMultiplicity = 1; // check for RAD lines
 
   // The first line is the molecule name.
   getline(in, buffer);
@@ -124,6 +128,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
       // In case there's no CHG property
+      if (charge == 4) // doublet radical
+        spinMultiplicity += 1;
+
       charge = (charge > 4) ? ((charge <= 7) ? 4 - charge : 0)
                             : ((charge < 4) ? charge : 0);
       if (charge)
@@ -191,6 +198,49 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         if (charge)
           chargeList.emplace_back(index, charge);
       }
+    } else if (prefix == "M  RAD") {
+      // radical center
+      spinMultiplicity = 1; // reset and count
+      size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      for (size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        if (!ok) {
+          appendError("Error parsing radical atom index:" +
+                      buffer.substr(10 + 8 * i, 3));
+          return false;
+        }
+        auto radical(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        if (!ok) {
+          appendError("Error parsing radical type:" +
+                      buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        // we don't set radical centers, just count them
+        // for the total spin multiplicity
+        if (radical == 2) // doublet
+          spinMultiplicity += 1;
+        else if (radical == 3) // triplet
+          spinMultiplicity += 2;
+      }
+    } else if (prefix == "M  ISO") {
+      // isotope
+      size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      for (size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        if (!ok) {
+          appendError("Error parsing isotope atom index:" +
+                      buffer.substr(10 + 8 * i, 3));
+          return false;
+        }
+        auto isotope(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        if (!ok) {
+          appendError("Error parsing isotope type:" +
+                      buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        // TODO: Implement isotope setting
+        // mol.atom(index).setIsotope(isotope);
+      }
     }
   }
 
@@ -205,6 +255,10 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     signed int charge = i.second;
     mol.setFormalCharge(index, charge);
   }
+
+  // Set the total spin multiplicity
+  if (spinMultiplicity > 1)
+    mol.setData("totalSpinMultiplicity", spinMultiplicity);
 
   // Check that all atoms were handled.
   if (mol.atomCount() != static_cast<size_t>(numAtoms) ||
@@ -253,6 +307,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
+  int spinMultiplicity = 1; // check for RAD lines
   // we should have M  V30 BEGIN CTAB
   getline(in, buffer);
   if (trimmed(buffer) != "M  V30 BEGIN CTAB") {
@@ -320,15 +375,40 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     // check for formal charge in the atom block
     // CHG=1 for example
     if (atomData.size() > 8) {
-      string chargeData = atomData[8];
-      if (startsWith(chargeData, "CHG=")) {
-        int charge = lexicalCast<int>(chargeData.substr(4), ok);
-        if (!ok) {
-          appendError("Failed to parse atom charge: " + chargeData);
-          return false;
+      // loop through the key=value pairs
+      for (size_t j = 8; j < atomData.size(); ++j) {
+        string key = atomData[j];
+        if (startsWith(key, "CHG=")) {
+          int charge = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse atom charge: " + key);
+            return false;
+          }
+          newAtom.setFormalCharge(charge);
+        } else if (startsWith(key, "RAD=")) {
+          // radical center
+          int radical = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse radical type: " + key);
+            return false;
+          }
+          // we don't set radical centers, just count them
+          // for the total spin multiplicity
+          if (radical == 2) // doublet
+            spinMultiplicity += 1;
+          else if (radical == 3) // triplet
+            spinMultiplicity += 2;
+        } else if (startsWith(key, "ISO=")) {
+          // isotope
+          int isotope = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse isotope type: " + key);
+            return false;
+          }
+          // TODO: handle isotopes
+          // mol.atom(i).setIsotope(isotope);
         }
-        newAtom.setFormalCharge(charge);
-      }
+      } // end of key-value loop
     }
   } // end of atom block
   getline(in, buffer);
@@ -390,6 +470,10 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       mol.setData(key, value);
     }
   }
+
+  // if we have a spin multiplicity, set it
+  if (spinMultiplicity > 1)
+    mol.setData("totalSpinMultiplicity", spinMultiplicity);
 
   return true;
 }
