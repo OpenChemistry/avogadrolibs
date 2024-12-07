@@ -787,7 +787,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       properties[element.first] = element.second.toInt();
     else if (element.second.type() == Variant::Bool)
       properties[element.first] = element.second.toBool();
-    else if (element.second.type() == Variant::Vector3) {
+    else if (element.second.type() == Variant::Vector) {
       // e.g. dipole moment
       Vector3 v = element.second.toVector3();
       json vector;
@@ -795,479 +795,478 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       vector.push_back(v.y());
       vector.push_back(v.z());
       properties[element.first] = vector;
-      else if (element.second.type() == Variant::Matrix)
-      {
-        MatrixX m = element.second.toMatrix();
-        json matrix;
-        for (int i = 0; i < m.rows(); ++i) {
-          json row;
-          for (int j = 0; j < m.cols(); ++j) {
-            row.push_back(m(i, j));
-          }
-          matrix.push_back(row);
+    } else if (element.second.type() == Variant::Matrix) {
+      MatrixX m = element.second.toMatrix();
+      json matrix;
+      for (int i = 0; i < m.rows(); ++i) {
+        json row;
+        for (int j = 0; j < m.cols(); ++j) {
+          row.push_back(m(i, j));
         }
-        properties[element.first] = matrix;
+        matrix.push_back(row);
+      }
+      properties[element.first] = matrix;
+    }
+  }
+  root["properties"] = properties;
+
+  if (molecule.unitCell()) {
+    json unitCell;
+    unitCell["a"] = molecule.unitCell()->a();
+    unitCell["b"] = molecule.unitCell()->b();
+    unitCell["c"] = molecule.unitCell()->c();
+    unitCell["alpha"] = molecule.unitCell()->alpha() * RAD_TO_DEG;
+    unitCell["beta"] = molecule.unitCell()->beta() * RAD_TO_DEG;
+    unitCell["gamma"] = molecule.unitCell()->gamma() * RAD_TO_DEG;
+
+    json vectors;
+    vectors.push_back(molecule.unitCell()->aVector().x());
+    vectors.push_back(molecule.unitCell()->aVector().y());
+    vectors.push_back(molecule.unitCell()->aVector().z());
+
+    vectors.push_back(molecule.unitCell()->bVector().x());
+    vectors.push_back(molecule.unitCell()->bVector().y());
+    vectors.push_back(molecule.unitCell()->bVector().z());
+
+    vectors.push_back(molecule.unitCell()->cVector().x());
+    vectors.push_back(molecule.unitCell()->cVector().y());
+    vectors.push_back(molecule.unitCell()->cVector().z());
+    unitCell["cellVectors"] = vectors;
+
+    // write the Hall number and space group
+    unitCell["hallNumber"] = molecule.hallNumber();
+    unitCell["spaceGroup"] =
+      Core::SpaceGroups::international(molecule.hallNumber());
+
+    root["unitCell"] = unitCell;
+  }
+
+  // check for spectra data
+  // vibrations are separate
+  if (molecule.spectraTypes().size() != 0) {
+    json spectra, electronic, nmr;
+    bool hasElectronic = false;
+    for (const auto& type : molecule.spectraTypes()) {
+      if (type == "Electronic") {
+        hasElectronic = true;
+        electronic["energies"] = eigenColToJson(molecule.spectra(type), 0);
+        electronic["intensities"] = eigenColToJson(molecule.spectra(type), 1);
+      } else if (type == "CircularDichroism") {
+        electronic["rotation"] = eigenColToJson(molecule.spectra(type), 1);
+      } else if (type == "NMR") {
+        json data;
+        data["shifts"] = eigenColToJson(molecule.spectra(type), 0);
+        spectra["nmr"] = data;
       }
     }
-    root["properties"] = properties;
+    if (hasElectronic) {
+      spectra["electronic"] = electronic;
+    }
+    root["spectra"] = spectra;
+  }
 
-    if (molecule.unitCell()) {
-      json unitCell;
-      unitCell["a"] = molecule.unitCell()->a();
-      unitCell["b"] = molecule.unitCell()->b();
-      unitCell["c"] = molecule.unitCell()->c();
-      unitCell["alpha"] = molecule.unitCell()->alpha() * RAD_TO_DEG;
-      unitCell["beta"] = molecule.unitCell()->beta() * RAD_TO_DEG;
-      unitCell["gamma"] = molecule.unitCell()->gamma() * RAD_TO_DEG;
+  // Create a basis set/MO matrix we can round trip.
+  if (molecule.basisSet() &&
+      dynamic_cast<const GaussianSet*>(molecule.basisSet())) {
+    json basis;
+    auto gaussian = dynamic_cast<const GaussianSet*>(molecule.basisSet());
 
-      json vectors;
-      vectors.push_back(molecule.unitCell()->aVector().x());
-      vectors.push_back(molecule.unitCell()->aVector().y());
-      vectors.push_back(molecule.unitCell()->aVector().z());
+    // Map the shell types from enumeration to integer values.
+    auto symmetry = gaussian->symmetry();
+    json shellTypes;
+    for (int i : symmetry) {
+      switch (i) {
+        case GaussianSet::S:
+          shellTypes.push_back(0);
+          break;
+        case GaussianSet::P:
+          shellTypes.push_back(1);
+          break;
+        case GaussianSet::D:
+          shellTypes.push_back(2);
+          break;
+        case GaussianSet::D5:
+          shellTypes.push_back(-2);
+          break;
+        default:
+          // Something bad, put in a silly number...
+          shellTypes.push_back(426942);
+      }
+    }
+    basis["shellTypes"] = shellTypes;
 
-      vectors.push_back(molecule.unitCell()->bVector().x());
-      vectors.push_back(molecule.unitCell()->bVector().y());
-      vectors.push_back(molecule.unitCell()->bVector().z());
+    // This bit is slightly tricky, map from our index to primitives per
+    // shell.
+    if (gaussian->gtoIndices().size() && gaussian->atomIndices().size()) {
+      auto gtoIndices = gaussian->gtoIndices();
+      auto gtoA = gaussian->gtoA();
+      json primitivesPerShell;
+      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
+        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
+      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      basis["primitivesPerShell"] = primitivesPerShell;
 
-      vectors.push_back(molecule.unitCell()->cVector().x());
-      vectors.push_back(molecule.unitCell()->cVector().y());
-      vectors.push_back(molecule.unitCell()->cVector().z());
-      unitCell["cellVectors"] = vectors;
+      auto atomIndices = gaussian->atomIndices();
+      json shellToAtomMap;
+      for (unsigned int& atomIndice : atomIndices)
+        shellToAtomMap.push_back(atomIndice);
+      basis["shellToAtomMap"] = shellToAtomMap;
 
-      // write the Hall number and space group
-      unitCell["hallNumber"] = molecule.hallNumber();
-      unitCell["spaceGroup"] =
-        Core::SpaceGroups::international(molecule.hallNumber());
+      auto gtoC = gaussian->gtoC();
+      json exponents;
+      json coefficients;
+      for (size_t i = 0; i < gtoA.size(); ++i) {
+        exponents.push_back(gtoA[i]);
+        coefficients.push_back(gtoC[i]);
+      }
+      basis["exponents"] = exponents;
+      basis["coefficients"] = coefficients;
 
-      root["unitCell"] = unitCell;
+      // Write out the basis set if a valid one exists.
+      root["basisSet"] = basis;
     }
 
-    // check for spectra data
-    // vibrations are separate
-    if (molecule.spectraTypes().size() != 0) {
-      json spectra, electronic, nmr;
-      bool hasElectronic = false;
-      for (const auto& type : molecule.spectraTypes()) {
-        if (type == "Electronic") {
-          hasElectronic = true;
-          electronic["energies"] = eigenColToJson(molecule.spectra(type), 0);
-          electronic["intensities"] = eigenColToJson(molecule.spectra(type), 1);
-        } else if (type == "CircularDichroism") {
-          electronic["rotation"] = eigenColToJson(molecule.spectra(type), 1);
-        } else if (type == "NMR") {
-          json data;
-          data["shifts"] = eigenColToJson(molecule.spectra(type), 0);
-          spectra["nmr"] = data;
-        }
-      }
-      if (hasElectronic) {
-        spectra["electronic"] = electronic;
-      }
-      root["spectra"] = spectra;
-    }
+    // Now get the MO matrix, potentially other things. Need to get a handle
+    // on when we have just one (paired), or two (alpha and beta) to write.
+    auto moMatrix = gaussian->moMatrix();
+    auto betaMatrix = gaussian->moMatrix(BasisSet::Beta);
+    json moCoefficients;
+    for (int j = 0; j < moMatrix.cols(); ++j)
+      for (int i = 0; i < moMatrix.rows(); ++i)
+        moCoefficients.push_back(moMatrix(i, j));
 
-    // Create a basis set/MO matrix we can round trip.
-    if (molecule.basisSet() &&
-        dynamic_cast<const GaussianSet*>(molecule.basisSet())) {
-      json basis;
-      auto gaussian = dynamic_cast<const GaussianSet*>(molecule.basisSet());
-
-      // Map the shell types from enumeration to integer values.
-      auto symmetry = gaussian->symmetry();
-      json shellTypes;
-      for (int i : symmetry) {
-        switch (i) {
-          case GaussianSet::S:
-            shellTypes.push_back(0);
-            break;
-          case GaussianSet::P:
-            shellTypes.push_back(1);
-            break;
-          case GaussianSet::D:
-            shellTypes.push_back(2);
-            break;
-          case GaussianSet::D5:
-            shellTypes.push_back(-2);
-            break;
-          default:
-            // Something bad, put in a silly number...
-            shellTypes.push_back(426942);
-        }
-      }
-      basis["shellTypes"] = shellTypes;
-
-      // This bit is slightly tricky, map from our index to primitives per
-      // shell.
-      if (gaussian->gtoIndices().size() && gaussian->atomIndices().size()) {
-        auto gtoIndices = gaussian->gtoIndices();
-        auto gtoA = gaussian->gtoA();
-        json primitivesPerShell;
-        for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-          primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-        primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
-        basis["primitivesPerShell"] = primitivesPerShell;
-
-        auto atomIndices = gaussian->atomIndices();
-        json shellToAtomMap;
-        for (unsigned int& atomIndice : atomIndices)
-          shellToAtomMap.push_back(atomIndice);
-        basis["shellToAtomMap"] = shellToAtomMap;
-
-        auto gtoC = gaussian->gtoC();
-        json exponents;
-        json coefficients;
-        for (size_t i = 0; i < gtoA.size(); ++i) {
-          exponents.push_back(gtoA[i]);
-          coefficients.push_back(gtoC[i]);
-        }
-        basis["exponents"] = exponents;
-        basis["coefficients"] = coefficients;
-
-        // Write out the basis set if a valid one exists.
-        root["basisSet"] = basis;
-      }
-
-      // Now get the MO matrix, potentially other things. Need to get a handle
-      // on when we have just one (paired), or two (alpha and beta) to write.
-      auto moMatrix = gaussian->moMatrix();
-      auto betaMatrix = gaussian->moMatrix(BasisSet::Beta);
-      json moCoefficients;
+    if (betaMatrix.cols() > 0 && betaMatrix.rows() > 0) {
+      json moBeta;
       for (int j = 0; j < moMatrix.cols(); ++j)
         for (int i = 0; i < moMatrix.rows(); ++i)
-          moCoefficients.push_back(moMatrix(i, j));
+          moBeta.push_back(moMatrix(i, j));
 
-      if (betaMatrix.cols() > 0 && betaMatrix.rows() > 0) {
-        json moBeta;
-        for (int j = 0; j < moMatrix.cols(); ++j)
-          for (int i = 0; i < moMatrix.rows(); ++i)
-            moBeta.push_back(moMatrix(i, j));
-
-        root["orbitals"]["alphaCoefficients"] = moCoefficients;
-        root["orbitals"]["betaCoefficients"] = moBeta;
-      } else {
-        root["orbitals"]["moCoefficients"] = moCoefficients;
-      }
-
-      // Some energy, occupation, and number data potentially.
-      auto energies = gaussian->moEnergy();
-      if (energies.size() > 0) {
-        json energyData;
-        for (double& energie : energies) {
-          energyData.push_back(energie);
-        }
-
-        auto betaEnergies = gaussian->moEnergy(BasisSet::Beta);
-        if (betaEnergies.size() > 0) {
-          json betaEnergyData;
-          for (double& energie : betaEnergies) {
-            betaEnergyData.push_back(energie);
-          }
-          root["orbitals"]["alphaEnergies"] = energyData;
-          root["orbitals"]["betaEnergies"] = betaEnergyData;
-        } else
-          root["orbitals"]["energies"] = energyData;
-      }
-      auto occ = gaussian->moOccupancy();
-      if (occ.size() > 0) {
-        json occData;
-        for (unsigned char& it : occ)
-          occData.push_back(static_cast<int>(it));
-
-        auto betaOcc = gaussian->moOccupancy(BasisSet::Beta);
-        if (betaOcc.size() > 0) {
-          json betaOccData;
-          for (unsigned char& it : betaOcc)
-            betaOccData.push_back(static_cast<int>(it));
-          root["orbitals"]["alphaOccupations"] = occData;
-          root["orbitals"]["betaOccupations"] = betaOccData;
-        } else
-          root["orbitals"]["occupations"] = occData;
-      }
-      auto num = gaussian->moNumber();
-      if (num.size() > 0) {
-        json numData;
-        for (unsigned int& it : num)
-          numData.push_back(it);
-        root["orbitals"]["numbers"] = numData;
-      }
-
-      root["orbitals"]["electronCount"] = gaussian->electronCount();
+      root["orbitals"]["alphaCoefficients"] = moCoefficients;
+      root["orbitals"]["betaCoefficients"] = moBeta;
+    } else {
+      root["orbitals"]["moCoefficients"] = moCoefficients;
     }
 
-    // Write out any cubes that are present in the molecule.
-    if (molecule.cubeCount() > 0) {
-      const Cube* cube = molecule.cube(0);
-      json cubeData;
-      for (float it : *cube->data()) {
-        cubeData.push_back(it);
+    // Some energy, occupation, and number data potentially.
+    auto energies = gaussian->moEnergy();
+    if (energies.size() > 0) {
+      json energyData;
+      for (double& energie : energies) {
+        energyData.push_back(energie);
       }
-      // Get the origin, max, spacing, and dimensions to place in the object.
-      json cubeObj;
-      json cubeMin;
-      cubeMin.push_back(cube->min().x());
-      cubeMin.push_back(cube->min().y());
-      cubeMin.push_back(cube->min().z());
-      cubeObj["origin"] = cubeMin;
-      json cubeSpacing;
-      cubeSpacing.push_back(cube->spacing().x());
-      cubeSpacing.push_back(cube->spacing().y());
-      cubeSpacing.push_back(cube->spacing().z());
-      cubeObj["spacing"] = cubeSpacing;
-      json cubeDims;
-      cubeDims.push_back(cube->dimensions().x());
-      cubeDims.push_back(cube->dimensions().y());
-      cubeDims.push_back(cube->dimensions().z());
-      cubeObj["dimensions"] = cubeDims;
-      cubeObj["scalars"] = cubeData;
-      root["cube"] = cubeObj;
+
+      auto betaEnergies = gaussian->moEnergy(BasisSet::Beta);
+      if (betaEnergies.size() > 0) {
+        json betaEnergyData;
+        for (double& energie : betaEnergies) {
+          betaEnergyData.push_back(energie);
+        }
+        root["orbitals"]["alphaEnergies"] = energyData;
+        root["orbitals"]["betaEnergies"] = betaEnergyData;
+      } else
+        root["orbitals"]["energies"] = energyData;
+    }
+    auto occ = gaussian->moOccupancy();
+    if (occ.size() > 0) {
+      json occData;
+      for (unsigned char& it : occ)
+        occData.push_back(static_cast<int>(it));
+
+      auto betaOcc = gaussian->moOccupancy(BasisSet::Beta);
+      if (betaOcc.size() > 0) {
+        json betaOccData;
+        for (unsigned char& it : betaOcc)
+          betaOccData.push_back(static_cast<int>(it));
+        root["orbitals"]["alphaOccupations"] = occData;
+        root["orbitals"]["betaOccupations"] = betaOccData;
+      } else
+        root["orbitals"]["occupations"] = occData;
+    }
+    auto num = gaussian->moNumber();
+    if (num.size() > 0) {
+      json numData;
+      for (unsigned int& it : num)
+        numData.push_back(it);
+      root["orbitals"]["numbers"] = numData;
     }
 
-    // Create and populate the atom arrays.
-    if (molecule.atomCount()) {
-      json elements;
-      json selected;
-      json colors;
+    root["orbitals"]["electronCount"] = gaussian->electronCount();
+  }
 
-      Vector3ub color;
-      bool hasCustomColors = molecule.colors().size() == molecule.atomCount();
-      for (Index i = 0; i < molecule.atomCount(); ++i) {
-        elements.push_back(molecule.atom(i).atomicNumber());
-        selected.push_back(molecule.atomSelected(i));
+  // Write out any cubes that are present in the molecule.
+  if (molecule.cubeCount() > 0) {
+    const Cube* cube = molecule.cube(0);
+    json cubeData;
+    for (float it : *cube->data()) {
+      cubeData.push_back(it);
+    }
+    // Get the origin, max, spacing, and dimensions to place in the object.
+    json cubeObj;
+    json cubeMin;
+    cubeMin.push_back(cube->min().x());
+    cubeMin.push_back(cube->min().y());
+    cubeMin.push_back(cube->min().z());
+    cubeObj["origin"] = cubeMin;
+    json cubeSpacing;
+    cubeSpacing.push_back(cube->spacing().x());
+    cubeSpacing.push_back(cube->spacing().y());
+    cubeSpacing.push_back(cube->spacing().z());
+    cubeObj["spacing"] = cubeSpacing;
+    json cubeDims;
+    cubeDims.push_back(cube->dimensions().x());
+    cubeDims.push_back(cube->dimensions().y());
+    cubeDims.push_back(cube->dimensions().z());
+    cubeObj["dimensions"] = cubeDims;
+    cubeObj["scalars"] = cubeData;
+    root["cube"] = cubeObj;
+  }
 
-        color = molecule.color(i);
-        colors.push_back(color.x());
-        colors.push_back(color.y());
-        colors.push_back(color.z());
-      }
-      root["atoms"]["elements"]["number"] = elements;
-      if (!molecule.isSelectionEmpty())
-        root["atoms"]["selected"] = selected;
-      if (hasCustomColors)
-        root["atoms"]["colors"] = colors;
+  // Create and populate the atom arrays.
+  if (molecule.atomCount()) {
+    json elements;
+    json selected;
+    json colors;
 
-      // check for partial charges
-      auto partialCharges = molecule.partialChargeTypes();
-      if (!partialCharges.empty()) {
-        // add them to the atoms object
-        for (const auto& type : partialCharges) {
-          MatrixX chargesMatrix = molecule.partialCharges(type);
-          json charges;
-          for (Index i = 0; i < molecule.atomCount(); ++i) {
-            charges.push_back(chargesMatrix(i, 0));
-          }
-          root["atoms"]["partialCharges"][type] = charges;
+    Vector3ub color;
+    bool hasCustomColors = molecule.colors().size() == molecule.atomCount();
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
+      elements.push_back(molecule.atom(i).atomicNumber());
+      selected.push_back(molecule.atomSelected(i));
+
+      color = molecule.color(i);
+      colors.push_back(color.x());
+      colors.push_back(color.y());
+      colors.push_back(color.z());
+    }
+    root["atoms"]["elements"]["number"] = elements;
+    if (!molecule.isSelectionEmpty())
+      root["atoms"]["selected"] = selected;
+    if (hasCustomColors)
+      root["atoms"]["colors"] = colors;
+
+    // check for partial charges
+    auto partialCharges = molecule.partialChargeTypes();
+    if (!partialCharges.empty()) {
+      // add them to the atoms object
+      for (const auto& type : partialCharges) {
+        MatrixX chargesMatrix = molecule.partialCharges(type);
+        json charges;
+        for (Index i = 0; i < molecule.atomCount(); ++i) {
+          charges.push_back(chargesMatrix(i, 0));
         }
-      }
-
-      // 3d positions:
-      if (molecule.atomPositions3d().size() == molecule.atomCount()) {
-        // everything gets real-space Cartesians
-        json coords3d;
-        for (const auto& it : molecule.atomPositions3d()) {
-          coords3d.push_back(it.x());
-          coords3d.push_back(it.y());
-          coords3d.push_back(it.z());
-        }
-        root["atoms"]["coords"]["3d"] = coords3d;
-
-        // if the unit cell exists, also write fractional coords
-        if (molecule.unitCell()) {
-          json coordsFractional;
-          Array<Vector3> fcoords;
-          CrystalTools::fractionalCoordinates(
-            *molecule.unitCell(), molecule.atomPositions3d(), fcoords);
-          for (auto& fcoord : fcoords) {
-            coordsFractional.push_back(fcoord.x());
-            coordsFractional.push_back(fcoord.y());
-            coordsFractional.push_back(fcoord.z());
-          }
-          root["atoms"]["coords"]["3dFractional"] = coordsFractional;
-        }
-      }
-
-      // 2d positions:
-      if (molecule.atomPositions2d().size() == molecule.atomCount()) {
-        json coords2d;
-        for (const auto& it : molecule.atomPositions2d()) {
-          coords2d.push_back(it.x());
-          coords2d.push_back(it.y());
-        }
-        root["atoms"]["coords"]["2d"] = coords2d;
-      }
-
-      // forces if present
-      const auto forceVectors = molecule.forceVectors();
-      if (forceVectors.size() == molecule.atomCount()) {
-        json forces;
-        for (const auto& force : forceVectors) {
-          forces.push_back(force.x());
-          forces.push_back(force.y());
-          forces.push_back(force.z());
-        }
-        root["atoms"]["forces"] = forces;
+        root["atoms"]["partialCharges"][type] = charges;
       }
     }
 
-    // check for atom labels
-    Array atomLabels = molecule.atomLabels();
-    if (atomLabels.size() == molecule.atomCount()) {
+    // 3d positions:
+    if (molecule.atomPositions3d().size() == molecule.atomCount()) {
+      // everything gets real-space Cartesians
+      json coords3d;
+      for (const auto& it : molecule.atomPositions3d()) {
+        coords3d.push_back(it.x());
+        coords3d.push_back(it.y());
+        coords3d.push_back(it.z());
+      }
+      root["atoms"]["coords"]["3d"] = coords3d;
+
+      // if the unit cell exists, also write fractional coords
+      if (molecule.unitCell()) {
+        json coordsFractional;
+        Array<Vector3> fcoords;
+        CrystalTools::fractionalCoordinates(
+          *molecule.unitCell(), molecule.atomPositions3d(), fcoords);
+        for (auto& fcoord : fcoords) {
+          coordsFractional.push_back(fcoord.x());
+          coordsFractional.push_back(fcoord.y());
+          coordsFractional.push_back(fcoord.z());
+        }
+        root["atoms"]["coords"]["3dFractional"] = coordsFractional;
+      }
+    }
+
+    // 2d positions:
+    if (molecule.atomPositions2d().size() == molecule.atomCount()) {
+      json coords2d;
+      for (const auto& it : molecule.atomPositions2d()) {
+        coords2d.push_back(it.x());
+        coords2d.push_back(it.y());
+      }
+      root["atoms"]["coords"]["2d"] = coords2d;
+    }
+
+    // forces if present
+    const auto forceVectors = molecule.forceVectors();
+    if (forceVectors.size() == molecule.atomCount()) {
+      json forces;
+      for (const auto& force : forceVectors) {
+        forces.push_back(force.x());
+        forces.push_back(force.y());
+        forces.push_back(force.z());
+      }
+      root["atoms"]["forces"] = forces;
+    }
+  }
+
+  // check for atom labels
+  Array atomLabels = molecule.atomLabels();
+  if (atomLabels.size() == molecule.atomCount()) {
+    json labels;
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
+      labels.push_back(atomLabels[i]);
+    }
+    root["atoms"]["labels"] = labels;
+  }
+
+  // formal charges
+  json formalCharges;
+  for (size_t i = 0; i < molecule.atomCount(); ++i) {
+    formalCharges.push_back(molecule.formalCharge(i));
+  }
+  root["atoms"]["formalCharges"] = formalCharges;
+
+  auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
+  if (layer.atomCount()) {
+    json atomLayer;
+    for (Index i = 0; i < layer.atomCount(); ++i) {
+      atomLayer.push_back(layer.getLayerID(i));
+    }
+    root["atoms"]["layer"] = atomLayer;
+  }
+
+  // Create and populate the bond arrays.
+  if (molecule.bondCount()) {
+    json connections;
+    json order;
+    for (Index i = 0; i < molecule.bondCount(); ++i) {
+      Bond bond = molecule.bond(i);
+      connections.push_back(bond.atom1().index());
+      connections.push_back(bond.atom2().index());
+      order.push_back(bond.order());
+    }
+    root["bonds"]["connections"]["index"] = connections;
+    root["bonds"]["order"] = order;
+
+    // check if there are bond labels
+    Array bondLabels = molecule.bondLabels();
+    if (bondLabels.size() == molecule.bondCount()) {
       json labels;
-      for (Index i = 0; i < molecule.atomCount(); ++i) {
-        labels.push_back(atomLabels[i]);
-      }
-      root["atoms"]["labels"] = labels;
-    }
-
-    // formal charges
-    json formalCharges;
-    for (size_t i = 0; i < molecule.atomCount(); ++i) {
-      formalCharges.push_back(molecule.formalCharge(i));
-    }
-    root["atoms"]["formalCharges"] = formalCharges;
-
-    auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-    if (layer.atomCount()) {
-      json atomLayer;
-      for (Index i = 0; i < layer.atomCount(); ++i) {
-        atomLayer.push_back(layer.getLayerID(i));
-      }
-      root["atoms"]["layer"] = atomLayer;
-    }
-
-    // Create and populate the bond arrays.
-    if (molecule.bondCount()) {
-      json connections;
-      json order;
       for (Index i = 0; i < molecule.bondCount(); ++i) {
-        Bond bond = molecule.bond(i);
-        connections.push_back(bond.atom1().index());
-        connections.push_back(bond.atom2().index());
-        order.push_back(bond.order());
+        labels.push_back(bondLabels[i]);
       }
-      root["bonds"]["connections"]["index"] = connections;
-      root["bonds"]["order"] = order;
-
-      // check if there are bond labels
-      Array bondLabels = molecule.bondLabels();
-      if (bondLabels.size() == molecule.bondCount()) {
-        json labels;
-        for (Index i = 0; i < molecule.bondCount(); ++i) {
-          labels.push_back(bondLabels[i]);
-        }
-        root["bonds"]["labels"] = labels;
-      }
+      root["bonds"]["labels"] = labels;
     }
-
-    // Create and populate any residue arrays
-    if (molecule.residues().size() > 0) {
-      json residues; // array of objects
-      for (auto residue : molecule.residues()) {
-        json entry;
-        entry["name"] = residue.residueName();
-        entry["id"] = residue.residueId();
-        entry["chainId"] = residue.chainId();
-        entry["secStruct"] = residue.secondaryStructure();
-        if (residue.isHeterogen())
-          entry["hetero"] = true;
-
-        json color;
-        color.push_back(residue.color()[0]);
-        color.push_back(residue.color()[1]);
-        color.push_back(residue.color()[2]);
-        entry["color"] = color;
-
-        json atoms;
-        for (const auto& item : residue.atomNameMap()) {
-          // dictionary between names and atom Id
-          atoms[item.first] = item.second.index();
-        }
-        entry["atoms"] = atoms;
-        residues.push_back(entry);
-      }
-      root["residues"] = residues;
-    }
-
-    // If there is vibrational data write this out too.
-    if (molecule.vibrationFrequencies().size() > 0) {
-      // A few sanity checks before we begin.
-      assert(molecule.vibrationFrequencies().size() ==
-             molecule.vibrationIRIntensities().size());
-      json modes;
-      json freqs;
-      json inten;
-      json raman;
-      json eigenVectors;
-      for (size_t i = 0; i < molecule.vibrationFrequencies().size(); ++i) {
-        modes.push_back(static_cast<unsigned int>(i) + 1);
-        freqs.push_back(molecule.vibrationFrequencies()[i]);
-        inten.push_back(molecule.vibrationIRIntensities()[i]);
-        if (molecule.vibrationRamanIntensities().size() > i)
-          raman.push_back(molecule.vibrationRamanIntensities()[i]);
-        Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
-        json eigenVector;
-        for (auto pos : atomDisplacements) {
-          eigenVector.push_back(pos[0]);
-          eigenVector.push_back(pos[1]);
-          eigenVector.push_back(pos[2]);
-        }
-        eigenVectors.push_back(eigenVector);
-      }
-      root["vibrations"]["modes"] = modes;
-      root["vibrations"]["frequencies"] = freqs;
-      root["vibrations"]["intensities"] = inten;
-      if (molecule.vibrationRamanIntensities().size() > 0)
-        root["vibrations"]["ramanIntensities"] = raman;
-      root["vibrations"]["eigenVectors"] = eigenVectors;
-    }
-
-    auto names = LayerManager::getMoleculeInfo(&molecule);
-    json visible;
-    for (const bool v : names->visible) {
-      visible.push_back(v);
-    }
-    root["layer"]["visible"] = visible;
-    json locked;
-    for (const bool l : names->locked) {
-      locked.push_back(l);
-    }
-    root["layer"]["locked"] = locked;
-    for (const auto& enables : names->enable) {
-      json enable;
-      for (const bool e : enables.second) {
-        enable.push_back(e);
-      }
-      root["layer"]["enable"][enables.first] = enable;
-    }
-
-    for (const auto& settings : names->settings) {
-      json setting;
-      for (const auto& e : settings.second) {
-        setting.push_back(e->serialize());
-      }
-      root["layer"]["settings"][settings.first] = setting;
-    }
-
-    if (isJson)
-      file << std::setw(2) << root;
-    else { // write msgpack
-      json::to_msgpack(root, file);
-    }
-
-    return true;
   }
 
-  vector<std::string> CjsonFormat::fileExtensions() const
-  {
-    vector<std::string> ext;
-    ext.emplace_back("cjson");
-    return ext;
+  // Create and populate any residue arrays
+  if (molecule.residues().size() > 0) {
+    json residues; // array of objects
+    for (auto residue : molecule.residues()) {
+      json entry;
+      entry["name"] = residue.residueName();
+      entry["id"] = residue.residueId();
+      entry["chainId"] = residue.chainId();
+      entry["secStruct"] = residue.secondaryStructure();
+      if (residue.isHeterogen())
+        entry["hetero"] = true;
+
+      json color;
+      color.push_back(residue.color()[0]);
+      color.push_back(residue.color()[1]);
+      color.push_back(residue.color()[2]);
+      entry["color"] = color;
+
+      json atoms;
+      for (const auto& item : residue.atomNameMap()) {
+        // dictionary between names and atom Id
+        atoms[item.first] = item.second.index();
+      }
+      entry["atoms"] = atoms;
+      residues.push_back(entry);
+    }
+    root["residues"] = residues;
   }
 
-  vector<std::string> CjsonFormat::mimeTypes() const
-  {
-    vector<std::string> mime;
-    mime.emplace_back("chemical/x-cjson");
-    return mime;
+  // If there is vibrational data write this out too.
+  if (molecule.vibrationFrequencies().size() > 0) {
+    // A few sanity checks before we begin.
+    assert(molecule.vibrationFrequencies().size() ==
+           molecule.vibrationIRIntensities().size());
+    json modes;
+    json freqs;
+    json inten;
+    json raman;
+    json eigenVectors;
+    for (size_t i = 0; i < molecule.vibrationFrequencies().size(); ++i) {
+      modes.push_back(static_cast<unsigned int>(i) + 1);
+      freqs.push_back(molecule.vibrationFrequencies()[i]);
+      inten.push_back(molecule.vibrationIRIntensities()[i]);
+      if (molecule.vibrationRamanIntensities().size() > i)
+        raman.push_back(molecule.vibrationRamanIntensities()[i]);
+      Core::Array<Vector3> atomDisplacements = molecule.vibrationLx(i);
+      json eigenVector;
+      for (auto pos : atomDisplacements) {
+        eigenVector.push_back(pos[0]);
+        eigenVector.push_back(pos[1]);
+        eigenVector.push_back(pos[2]);
+      }
+      eigenVectors.push_back(eigenVector);
+    }
+    root["vibrations"]["modes"] = modes;
+    root["vibrations"]["frequencies"] = freqs;
+    root["vibrations"]["intensities"] = inten;
+    if (molecule.vibrationRamanIntensities().size() > 0)
+      root["vibrations"]["ramanIntensities"] = raman;
+    root["vibrations"]["eigenVectors"] = eigenVectors;
   }
+
+  auto names = LayerManager::getMoleculeInfo(&molecule);
+  json visible;
+  for (const bool v : names->visible) {
+    visible.push_back(v);
+  }
+  root["layer"]["visible"] = visible;
+  json locked;
+  for (const bool l : names->locked) {
+    locked.push_back(l);
+  }
+  root["layer"]["locked"] = locked;
+  for (const auto& enables : names->enable) {
+    json enable;
+    for (const bool e : enables.second) {
+      enable.push_back(e);
+    }
+    root["layer"]["enable"][enables.first] = enable;
+  }
+
+  for (const auto& settings : names->settings) {
+    json setting;
+    for (const auto& e : settings.second) {
+      setting.push_back(e->serialize());
+    }
+    root["layer"]["settings"][settings.first] = setting;
+  }
+
+  if (isJson)
+    file << std::setw(2) << root;
+  else { // write msgpack
+    json::to_msgpack(root, file);
+  }
+
+  return true;
+}
+
+vector<std::string> CjsonFormat::fileExtensions() const
+{
+  vector<std::string> ext;
+  ext.emplace_back("cjson");
+  return ext;
+}
+
+vector<std::string> CjsonFormat::mimeTypes() const
+{
+  vector<std::string> mime;
+  mime.emplace_back("chemical/x-cjson");
+  return mime;
+}
 
 } // namespace Avogadro::Io
