@@ -8,9 +8,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-12-05 15:55+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-06 15:56+0000\n"
+"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
 "Language: ta\n"
@@ -1998,7 +1997,7 @@ msgstr "%L1 °"
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr "%L1  Å"
+msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
@@ -5730,22 +5729,21 @@ msgid ""
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
 "<html> <head/> <body> <p> வடிவமைப்பின் விவரக்குறிப்பு. ஒவ்வொரு எழுத்தும் ஒரு அணுவுக்கு எழுத ஒரு மதிப்பைக் "
-"குறிக்கிறது: </p> <p> <span சூல் தண்டு = \"font -Weight: 600;\">#</span> - அணுக் குறியீடு ("
-"1, 2, ..., numatoms) < br/> <span சூல் தண்டு = \"font-Weight: 600;\"> சட் "
-"</span>-அணு எண் (எ.கா. கார்பனுக்கு \"6\") <br/> <span சூல் தண்டு = \"font-weight: 600;\""
-"> g </span> - கேமச் -பாணி அணு எண் (எ.கா. கார்பனுக்கு \"6.0\") <br/> <span சூல் தண்டு = \"font"
-" -weight: 600;\"> n </span> - உறுப்புப் பெயர் (எ.கா. \"கார்பன்\" br/> <span சூல் தண்டு = "
-"\"font-Weight: 600;\"> S </span>-உறுப்பு அடையாளம் (எ.கா. கார்பனுக்கு \"சி\" </span> - அணு "
-"சிட்டை (எ.கா., இரண்டாவது கார்பன் அணுவுக்கு \"சி 2\", முதல் ஐட்ரசனுக்கான \"எச் 1\") <br/> <ச்பான் பாணி = "
-"\"எழுத்துரு -எடை: 600;\"> ஃச் </ச்பான்> - ஃச் நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font "
-"-Weight: 600;\"> ஒய் </span> -y நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font "
-"-Weight: 600;\"> சட் </span> - சட் நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font"
-"-weight: 600;\"> a </span>-'a' லட்டு ஒருங்கிணைப்பு (படிகங்கள் மட்டும்) <br/> <span சூல் தண்டு "
-"= \"font-weight: 600; . br/> <span சூல் தண்டு = \"font-Weight: 600;\"> _ "
-"</span>-சீரமைப்புக்கு பயனுள்ள ஒரு நேரடி இடம் (\"\") <br/> <span சூல் தண்டு = \"font-weight: "
-"600;\"> 0 </span> - ஒரு நேரடி 0 (\"0\"), தேர்வுமுறை கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> "
-"<span சூல் தண்டு = \"font -weight: 600;\"> 1 </span> - ஒரு நேரடி 1 (\"1\"), தேர்வுமுறை "
-"கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> </p> </body> </html>"
+"குறிக்கிறது: </p> <p><span style=\" font-weight:600;\"> - அணுக் குறியீடு (1, 2, ..., "
+"numatoms) <br/><span style=\" font-weight:600;\"> -அணு எண் (எ.கா. கார்பனுக்கு \"6\") "
+"<br/><span style=\" font-weight:600;\">வி</span> - விளையாட்டு-பாணி அணு எண் (எ.கா. கார்பனுக்கு"
+" \"6.0\") <br/> <span சூல் தண்டு = \"font -weight: 600;\"> n </span> - உறுப்புப் பெயர் "
+"(எ.கா. \"கார்பன்\" br/> <span சூல் தண்டு = \"font-Weight: 600;\"> S </span>-உறுப்பு "
+"அடையாளம் (எ.கா. கார்பனுக்கு \"சி\" </span> - அணு சிட்டை (எ.கா., இரண்டாவது கார்பன் அணுவுக்கு \"சி 2\", "
+"முதல் ஐட்ரசனுக்கான \"எச் 1\") <br/> <ச்பான் பாணி = \"எழுத்துரு -எடை: 600;\"> ஃச் </ச்பான்> - ஃச் நிலை"
+" ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font -Weight: 600;\"> ஒய் </span> -y நிலை "
+"ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font -Weight: 600;\"> சட் </span> - சட் நிலை "
+"ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font-weight: 600;\"> a </span>-'a' லட்டு ஒருங்கிணைப்பு"
+" (படிகங்கள் மட்டும்) <br/> <span சூல் தண்டு = \"font-weight: 600; . br/> <span சூல் தண்டு "
+"= \"font-Weight: 600;\"> _ </span>-சீரமைப்புக்கு பயனுள்ள ஒரு நேரடி இடம் (\"\") <br/> "
+"<span சூல் தண்டு = \"font-weight: 600;\"> 0 </span> - ஒரு நேரடி 0 (\"0\"), தேர்வுமுறை "
+"கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> <span சூல் தண்டு = \"font -weight: 600;\"> 1 </span> "
+"- ஒரு நேரடி 1 (\"1\"), தேர்வுமுறை கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> </p> </body> </html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6909,7 +6907,7 @@ msgstr "ஒய்"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr "இவர்களால் மொழிபெயர்க்கப்பட்டது"
+msgstr "இவர்களால் மொழிபெயர்க்கப்பட்டது:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7577,7 +7575,7 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> டிகிரிகளில் அதிகபட்ச 2 தீட்டா மதிப்பு.</p><p><p>இயல்புநிலை: 162."
+"<html> <head/> <body> <p> டிகிரிகளில் அதிகபட்ச 2 தீட்டா மதிப்பு.</p><p>இயல்புநிலை: 162."
 "00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
@@ -7906,7 +7904,7 @@ msgstr "ஐசோசர்ஃபேச் மதிப்பு:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
 msgid " "
-msgstr ""
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -8335,10 +8333,10 @@ msgstr ""
 "lt; ஃச் & gt; & lt; ஒய் & gt; & lt; சட் & gt; ஃச், ஒய் மற்றும் சட் ஆகியவை பகுதியளவு பரச்பர "
 "விண்வெளி ஆயத்தொகுப்புகளாகும். இந்த கே-பாயிண்ட்களை நீங்கள் வைக்கும் வரிசையில் வரைபடத்தில் இணைக்கும் கோடுகள் வரையப்படும். "
 "உங்கள் கலத்தின் நோக்குநிலை இந்தப் பரச்பர விண்வெளி புள்ளிகளின் இருப்பிடங்களில் தாக்கத்தை ஏற்படுத்தக்கூடும் என்பதை நினைவில் "
-"கொள்க. </P> <p> என்றால் படிகத்தின் விண்வெளி குழு உணரப்பட்டது அல்லது அமைக்கப்பட்டுள்ளது, சிறப்பு கேப்புள்ளிகள் "
+"கொள்க. </p> <p> என்றால் படிகத்தின் விண்வெளி குழு உணரப்பட்டது அல்லது அமைக்கப்பட்டுள்ளது, சிறப்பு கேப்புள்ளிகள் "
 "தானாகவே அந்த விண்வெளி குழுவிற்கான பழமையான செல் உயர் சமச்சீர் புள்ளிகளுடன் நிரப்பப்படும். லட்டியைப் பொறுத்து ஒரு சில "
 "விண்வெளி குழுக்கள் வெவ்வேறு உயர் சமச்சீர் புள்ளிகள் உள்ளன (a & gt; b அல்லது a & lt; b) - இது தானாகவே "
-"கணக்கில் எடுத்துக்கொள்ளப்படுகிறது. </P> </body> </html>"
+"கணக்கில் எடுத்துக்கொள்ளப்படுகிறது. </p></body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)

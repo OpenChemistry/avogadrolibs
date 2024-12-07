@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-24 19:35+0000\n"
+"PO-Revision-Date: 2024-12-07 04:20+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3885,10 +3885,8 @@ msgid "Molecule invalid. Cannot generate conformers."
 msgstr "Molekül ungültig."
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Datei kann mit Open Babel nicht geöffnet werden."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
@@ -4929,7 +4927,7 @@ msgstr "NMR"
 #, fuzzy
 #| msgid "electron"
 msgid "Electronic"
-msgstr "Elektron"
+msgstr "Elektronisch"
 
 #: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
@@ -5034,10 +5032,8 @@ msgid "Electron Density"
 msgstr "Elektronendichte"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Density"
 msgid "Spin Density"
-msgstr "Dichte"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
@@ -7670,7 +7666,7 @@ msgstr "Skalierungsfaktor:"
 #, fuzzy
 #| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Minimum:"
+msgstr "X-Achse Minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:115
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7692,7 +7688,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Minimum:"
+msgstr "Y-Achse Minimum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)

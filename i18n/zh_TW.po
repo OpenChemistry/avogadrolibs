@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-01 02:55+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
+"PO-Revision-Date: 2024-12-07 04:20+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -953,7 +953,7 @@ msgstr ""
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "瀏覽..."
+msgstr "瀏覽"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -4867,7 +4867,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
 #, fuzzy
 msgid "Avogadro2"
-msgstr "Avogadro 亞佛加厥"
+msgstr "Avogadro2 亞佛加厥2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
@@ -4998,7 +4998,7 @@ msgstr "強度"
 #, fuzzy
 #| msgid "Spectra"
 msgid "NMR Spectra"
-msgstr "光譜"
+msgstr "NMR光譜"
 
 #: qtplugins/spectra/spectradialog.cpp:369
 #, fuzzy
