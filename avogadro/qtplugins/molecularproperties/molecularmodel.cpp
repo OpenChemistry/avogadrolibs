@@ -194,6 +194,13 @@ QString formatFormula(Molecule* molecule)
   else if (charge > 0)
     formula += QString("<sup>+%1</sup>").arg(charge);
 
+  // add doublet or triplet for spin multiplicity as radical dot
+  int spinMultiplicity = molecule->totalSpinMultiplicity();
+  if (spinMultiplicity == 2)
+    formula += "<sup>•</sup>";
+  else if (spinMultiplicity == 3)
+    formula += "<sup>••</sup>";
+
   return formula;
 }
 
