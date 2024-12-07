@@ -23,6 +23,9 @@ constexpr double M_PI = 3.14159265358979323846;
 
 Vector3 ChargeModel::dipoleMoment(const Molecule& mol) const
 {
+  if (mol.atomCount() < 2)
+    return Vector3(0.0, 0.0, 0.0);
+
   // default is to get the set of partial atomic charges
   // (some models might do something more sophisticated)
   const MatrixX charges = partialCharges(mol);

@@ -117,6 +117,11 @@ public slots:
   void updateScene();
 
   /**
+   * Request update of molecule properties (e.g., dipole moment)
+   */
+  void updateMolecule();
+
+  /**
    * Clear the contents of the scene.
    */
   void clearScene();
@@ -201,7 +206,7 @@ private:
   QTimer* m_renderTimer;
 };
 
-} // End QtOpenGL namespace
-} // End Avogadro namespace
+} // namespace QtOpenGL
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTOPENGL_GLWIDGET_H
