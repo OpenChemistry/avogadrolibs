@@ -677,6 +677,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // inputParameters are calculation metadata
+  if (jsonRoot.find("inputParameters") != jsonRoot.end()) {
+    json inputParameters = jsonRoot["inputParameters"];
+    // add this as a string to the molecule data
+    molecule.setData("inputParameters", inputParameters.dump());
+  }
+
   // Partial charges are optional, but if present should be loaded.
   json partialCharges = atoms["partialCharges"];
   if (partialCharges.is_object()) {
@@ -763,6 +770,13 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     if (element.first == "name" || element.first == "inchi")
       continue;
 
+    // check for "inputParameters" and handle it separately
+    if (element.first == "inputParameters") {
+      json inputParameters = json::parse(element.second.toString());
+      root["inputParameters"] = inputParameters;
+      continue;
+    }
+
     if (element.second.type() == Variant::String)
       properties[element.first] = element.second.toString().c_str();
     else if (element.second.type() == Variant::Double)
@@ -773,7 +787,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       properties[element.first] = element.second.toInt();
     else if (element.second.type() == Variant::Bool)
       properties[element.first] = element.second.toBool();
-    else if (element.second.type() == Variant::Matrix) {
+    else if (element.second.type() == Variant::Vector) {
+      // e.g. dipole moment
+      Vector3 v = element.second.toVector3();
+      json vector;
+      vector.push_back(v.x());
+      vector.push_back(v.y());
+      vector.push_back(v.z());
+      properties[element.first] = vector;
+    } else if (element.second.type() == Variant::Matrix) {
       MatrixX m = element.second.toMatrix();
       json matrix;
       for (int i = 0; i < m.rows(); ++i) {
@@ -820,6 +842,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
   }
 
   // check for spectra data
+  // vibrations are separate
   if (molecule.spectraTypes().size() != 0) {
     json spectra, electronic, nmr;
     bool hasElectronic = false;

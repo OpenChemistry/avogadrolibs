@@ -47,6 +47,28 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
 
     setOption("Charge", charge);
     setOption("Multiplicity", multiplicity);
+
+    // check the molecule for "inputParameters" from CJSON
+    // e.g.
+    // https://github.com/OpenChemistry/chemicaljson/blob/main/chemicaljson.py#L130
+    if (m_molecule->hasData("inputParameters")) {
+      QByteArray data(m_molecule->data("inputParameters").toString().c_str());
+      QJsonDocument doc = QJsonDocument::fromJson(data);
+      if (!doc.isNull() && doc.isObject()) {
+        QJsonObject inputParameters = doc.object();
+        // check for a few known keys
+        if (inputParameters.contains("processors"))
+          setOption("Processor Cores", inputParameters["processors"].toInt());
+        else if (inputParameters.contains("memory"))
+          setOption("Memory", inputParameters["memory"].toInt());
+        else if (inputParameters.contains("basis"))
+          setOption("Basis", inputParameters["basis"].toString());
+        else if (inputParameters.contains("functional"))
+          setOption("Theory", inputParameters["functional"].toString());
+        else if (inputParameters.contains("task"))
+          setOption("Calculation Type", inputParameters["task"].toString());
+      }
+    }
   }
 
   if (mol == m_molecule)
