@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-01 02:55+0000\n"
+"POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-06 15:56+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -191,8 +191,8 @@ msgid "Close"
 msgstr "மூடு"
 
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:374
-#: qtplugins/configurepython/configurepythondialog.cpp:141
-#: qtplugins/configurepython/configurepythondialog.cpp:144
+#: qtplugins/configurepython/configurepythondialog.cpp:188
+#: qtplugins/configurepython/configurepythondialog.cpp:191
 msgid "Unknown"
 msgstr "தெரியவில்லை"
 
@@ -218,13 +218,15 @@ msgstr[0] ""
 "\n"
 " %1\n"
 "\n"
-" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத விரும்புகிறீர்களா?"
+" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
+"விரும்புகிறீர்களா?"
 msgstr[1] ""
 "பின்வரும் கோப்புகள் மாற்றியமைக்கப்பட்டுள்ளன:\n"
 "\n"
 " %1\n"
 "\n"
-" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத விரும்புகிறீர்களா?"
+" புதிய வடிவியல் அல்லது வேலை விருப்பங்களைப் பிரதிபலிக்க உங்கள் மாற்றங்களை மேலெழுத "
+"விரும்புகிறீர்களா?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -1088,89 +1090,89 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr "சரம் மூலக்கூறு பிரதிநிதித்துவத்தை எழுதுவது பிழை: %1"
 
-#: qtgui/jsonwidget.cpp:64
+#: qtgui/jsonwidget.cpp:86
 msgid "'userOptions' missing."
 msgstr "'பயனர் ஆப்சன்' காணவில்லை."
 
-#: qtgui/jsonwidget.cpp:95
+#: qtgui/jsonwidget.cpp:117
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "விருப்பம் '%1' ஒரு பொருளைக் குறிக்கவில்லை."
 
-#: qtgui/jsonwidget.cpp:102
+#: qtgui/jsonwidget.cpp:124
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'வகை' என்பது '%1' என்ற விருப்பத்திற்கான சரம் அல்ல."
 
-#: qtgui/jsonwidget.cpp:109
+#: qtgui/jsonwidget.cpp:131
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "'%1' என்ற விருப்பத்தைக் கண்டுபிடிக்க முடியவில்லை."
 
-#: qtgui/jsonwidget.cpp:163
+#: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
 msgstr "தாவல் %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:186:691
+#: qtgui/jsonwidget.cpp:208:691
 msgid "Title"
 msgstr "தலைப்பு"
 
-#: qtgui/jsonwidget.cpp:190
+#: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
 msgstr "கோப்பு பெயர் அடிப்படை"
 
-#: qtgui/jsonwidget.cpp:195
+#: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
 msgstr "செயலி கோர்கள்"
 
-#: qtgui/jsonwidget.cpp:200
+#: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
 msgstr "கணக்கீட்டு வகை"
 
-#: qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:226
 msgid "Theory"
 msgstr "கோட்பாடு"
 
-#: qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:226
 msgid "Basis"
 msgstr "அடுக்களம்"
 
-#: qtgui/jsonwidget.cpp:209 qtgui/jsonwidget.cpp:213
+#: qtgui/jsonwidget.cpp:231 qtgui/jsonwidget.cpp:235
 msgid "Charge"
 msgstr "மின்னூட்டு"
 
-#: qtgui/jsonwidget.cpp:210 qtgui/jsonwidget.cpp:215
+#: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:237
 msgid "Multiplicity"
 msgstr "பெருக்கல்"
 
-#: qtgui/jsonwidget.cpp:567
+#: qtgui/jsonwidget.cpp:589
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "பிழை: மதிப்பு முக்கிய '%1' க்கு பொருளாக இருக்க வேண்டும்."
 
-#: qtgui/jsonwidget.cpp:600
+#: qtgui/jsonwidget.cpp:622
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "அங்கீகரிக்கப்படாத விருப்பம் '%2' விருப்பத்திற்கு '%1' வகை."
 
-#: qtgui/jsonwidget.cpp:609 qtgui/jsonwidget.cpp:644 qtgui/jsonwidget.cpp:665
-#: qtgui/jsonwidget.cpp:687 qtgui/jsonwidget.cpp:708 qtgui/jsonwidget.cpp:730
-#: qtgui/jsonwidget.cpp:751
+#: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
+#: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
+#: qtgui/jsonwidget.cpp:773
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மோசமான விட்செட் வகை."
 
-#: qtgui/jsonwidget.cpp:616 qtgui/jsonwidget.cpp:651 qtgui/jsonwidget.cpp:672
-#: qtgui/jsonwidget.cpp:694 qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:737
-#: qtgui/jsonwidget.cpp:758
+#: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
+#: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
+#: qtgui/jsonwidget.cpp:780
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மோசமான இயல்புநிலை மதிப்பு:"
 
-#: qtgui/jsonwidget.cpp:630
+#: qtgui/jsonwidget.cpp:652
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1179,12 +1181,12 @@ msgstr ""
 "'%1' விருப்பத்திற்கு இயல்புநிலையை அமைத்தல். மதிப்பிலிருந்து செல்லுபடியாகும் காம்போ "
 "நுழைவு குறியீட்டைக் கண்டுபிடிக்க முடியவில்லை:"
 
-#: qtgui/jsonwidget.cpp:819
+#: qtgui/jsonwidget.cpp:841
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "'%1' என்ற விருப்பத்திற்கான சேகரிப்புகளில் சேர்க்கப்படாத விட்செட்."
 
-#: qtgui/jsonwidget.cpp:864 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
 msgid "[no molecule]"
 msgstr "[மூலக்கூறு இல்லை]"
@@ -1684,16 +1686,16 @@ msgstr "PQR கோப்புகள் (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
 #: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
 #: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
-#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:725
-#: qtplugins/openbabel/openbabel.cpp:739 qtplugins/openbabel/openbabel.cpp:768
-#: qtplugins/openbabel/openbabel.cpp:780 qtplugins/openbabel/openbabel.cpp:826
-#: qtplugins/openbabel/openbabel.cpp:876 qtplugins/openbabel/openbabel.cpp:918
-#: qtplugins/openbabel/openbabel.cpp:950
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
+#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
+#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
+#: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
-#: qtplugins/propertytables/propertyview.cpp:243
-#: qtplugins/propertytables/propertyview.cpp:276
+#: qtplugins/propertytables/propertyview.cpp:260
+#: qtplugins/propertytables/propertyview.cpp:293
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "பிழை"
@@ -2040,7 +2042,7 @@ msgid "&Build"
 msgstr "& உருவாக்க"
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:445
+#: qtplugins/propertytables/propertymodel.cpp:498
 msgid "Bond"
 msgstr "கடனீடு"
 
@@ -2278,7 +2280,7 @@ msgstr "பைதான் சூழல்களை உள்ளமைக்க�
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#: qtplugins/configurepython/configurepythondialog.cpp:153
+#: qtplugins/configurepython/configurepythondialog.cpp:203
 #: qtplugins/editor/editortoolwidget.cpp:129
 #: qtplugins/templatetool/templatetoolwidget.cpp:321
 #: qtplugins/templatetool/templatetoolwidget.cpp:334
@@ -2458,7 +2460,7 @@ msgstr "டர்போமோல் வடிவம்"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:283:277
+#: qtplugins/propertytables/propertyview.cpp:300:277
 msgid "Copy"
 msgstr "நகலெடு"
 
@@ -3287,7 +3289,7 @@ msgstr "குறியெண்"
 msgid "Unique ID"
 msgstr "தனித்துவமான ஐடி"
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "தனிமம்"
@@ -3309,13 +3311,13 @@ msgstr "பகுதி கட்டணம்"
 msgid "Atom Label:"
 msgstr "அணு லேபிள்:"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
 msgid "ID"
 msgstr "ஐடி"
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:452
+#: qtplugins/propertytables/propertymodel.cpp:505
 msgid "Name"
 msgstr "பெயர்"
 
@@ -3507,92 +3509,93 @@ msgstr "(நிலுவையில் உள்ளது)"
 msgid "unknown molecule"
 msgstr "அறியப்படாத மூலக்கூறு"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:286
+#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Property"
 msgstr "சொத்து"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
 msgstr "மூலக்கூறு பெயர்"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:295
+#: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
 msgstr "மூலக்கூறு நிறை (g/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:297
+#: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
 msgstr "வேதியியல் தேற்றம்"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:299
+#: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
 msgstr "அணுக்களின் எண்ணிக்கை"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:301
+#: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
 msgstr "பத்திரங்களின் எண்ணிக்கை"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:303
+#: qtplugins/molecularproperties/molecularmodel.cpp:310
 msgid "Coordinate Sets"
 msgstr "ஒருங்கிணைப்பு தொகுப்புகள்"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:305
+#: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
 msgstr "எச்சங்களின் எண்ணிக்கை"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:307
+#: qtplugins/molecularproperties/molecularmodel.cpp:314
 msgid "Number of Chains"
 msgstr "சங்கிலிகளின் எண்ணிக்கை"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:309
+#: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
 msgstr "நிகர கட்டணம்"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:311
+#: qtplugins/molecularproperties/molecularmodel.cpp:318
 msgid "Net Spin Multiplicity"
 msgstr "நிகர சுழல் பெருக்கம்"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:313
+#: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
 msgstr "இருமுனை கணம் (டெபி)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:315
+#: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr "ஓமோ எனர்சி (ஈ.வி)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:317
+#: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr "லுமோ எனர்சி (ஈ.வி)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:319
+#: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr "சோமோ ஆற்றல் (ஈ.வி)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:321
+#: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr "மொத்த ஆற்றல் (ஆர்ட்ரீ)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:324
+#: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr "சுழிய புள்ளி ஆற்றல் (கிலோகலோரி/மோல்)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:327
+#: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
 msgstr "என்டல்பி (கிலோகலோரி/மோல்)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:329
+#: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
 msgstr "என்ட்ரோபி (கிலோகலோரி/மோல் • கே)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:331
+#: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr "கிப்ச் இலவச ஆற்றல் (கிலோகலோரி/மோல்)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:333
+#: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
 msgstr "புள்ளி குழு"
@@ -3606,7 +3609,7 @@ msgid "View general properties of a molecule."
 msgstr "ஒரு மூலக்கூறின் பொதுவான பண்புகளைக் காண்க."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
-#: qtplugins/propertytables/propertytables.cpp:78
+#: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
@@ -3614,7 +3617,7 @@ msgid "&Analysis"
 msgstr "& பகுப்பாய்வு"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
-#: qtplugins/propertytables/propertytables.cpp:78
+#: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/symmetry/symmetry.cpp:82
 msgid "&Properties"
 msgstr "& பண்புகள்"
@@ -3624,32 +3627,32 @@ msgid "Molecular Properties"
 msgstr "மூலக்கூறு பண்புகள்"
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
-#: qtplugins/propertytables/propertyview.cpp:61
+#: qtplugins/propertytables/propertyview.cpp:62
 msgid "Molecule Properties"
 msgstr "மூலக்கூறு பண்புகள்"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:231
+#: qtplugins/propertytables/propertyview.cpp:248
 msgid "Export CSV"
 msgstr "காபிம ஏற்றுமதி"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:232
+#: qtplugins/propertytables/propertyview.cpp:249
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "காபிம கோப்புகள் (*.csv) ;; அனைத்து கோப்புகளும் (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:244
+#: qtplugins/propertytables/propertyview.cpp:261
 msgid "Could not open the file for writing."
 msgstr "எழுதுவதற்கு கோப்பைத் திறக்க முடியவில்லை."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:276
+#: qtplugins/propertytables/propertyview.cpp:293
 msgid "Error writing to the file."
 msgstr "கோப்பில் எழுதுவதில் பிழை."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:288
+#: qtplugins/propertytables/propertyview.cpp:305
 msgid "Export…"
 msgstr "ஏற்றுமதி…"
 
@@ -3847,12 +3850,12 @@ msgid "Updating molecule…"
 msgstr "மூலக்கூறைப் புதுப்பித்தல்…"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
+#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
 msgstr "திறந்த பாபல் வெளியீட்டை விளக்குவதில் பிழை."
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
-#: qtplugins/openbabel/openbabel.cpp:781
+#: qtplugins/openbabel/openbabel.cpp:790
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -3873,90 +3876,90 @@ msgstr "திறந்த பாபலுடன் கன்ஃபார்ம�
 msgid "Generating Conformers (Open Babel)"
 msgstr "கன்ஃபார்மர்களை உருவாக்குதல் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
 msgstr "கன்ஃபார்மர்களை உருவாக்குங்கள்"
 
-#: qtplugins/openbabel/openbabel.cpp:720
+#: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
 msgstr "திறந்த பாபலுடன் கோப்பைத் திறக்க முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:726
+#: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "தவறான மூலக்கூறு: பிணைப்புகளை உணர முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:732
+#: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "பிணைப்புகளை உணரும் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:733
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
 msgstr "XYZ பிரதிநிதித்துவத்தை உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:740
+#: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
 msgstr "XYZ சரம் உருவாக்கும் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:751
+#: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "%1 உடன் பாபலை திறக்க XYZ ஐ மாற்றுவது…"
 
-#: qtplugins/openbabel/openbabel.cpp:761
+#: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
 msgstr "திறந்த பாபலில் இருந்து மூலக்கூறைப் புதுப்பித்தல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
+#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "திறந்த பாபலுடன் ஐட்ரசன்களைச் சேர்க்க முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:818 qtplugins/openbabel/openbabel.cpp:868
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "ஐட்ரசன்களைச் சேர்ப்பது (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:819
+#: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
 msgstr "திறந்த பாபல் உள்ளீட்டை உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
+#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
 msgstr "திறந்த பாபல் உள்ளீட்டை உருவாக்கும் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:840 qtplugins/openbabel/openbabel.cpp:890
-#: qtplugins/openbabel/openbabel.cpp:932
+#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
+#: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
 msgstr "இயங்கும் %1…"
 
-#: qtplugins/openbabel/openbabel.cpp:862
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
 msgstr "PH க்கு ஐட்ரசன்களைச் சேர்க்கவும்"
 
-#: qtplugins/openbabel/openbabel.cpp:862
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "pH:"
 msgstr "ph:"
 
-#: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
+#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
 msgstr "ஒபாபல் உள்ளீட்டை உருவாக்குதல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:905
+#: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "திறந்த பாபல் மூலம் ஐட்ரசன்களை அகற்ற முடியாது."
 
-#: qtplugins/openbabel/openbabel.cpp:910
+#: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "ஐட்ரசன்களை அகற்றுதல் (திறந்த பாபல்)"
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
 msgstr "திறந்த பாபல் தரவை உருவாக்கும் பிழை."
 
-#: qtplugins/openbabel/openbabel.cpp:942
+#: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
 msgstr "OBABEL வெளியீட்டைப் படித்தல்…"
 
-#: qtplugins/openbabel/openbabel.cpp:1005
+#: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4343,142 +4346,151 @@ msgstr "போவ்ரே"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-RAY ஐப் பயன்படுத்தி காட்சியை வழங்கவும்."
 
-#: qtplugins/propertytables/propertymodel.cpp:411
+#: qtplugins/propertytables/propertymodel.cpp:464
 msgid "Valence"
 msgstr "இணைதிறன்"
 
-#: qtplugins/propertytables/propertymodel.cpp:413
+#: qtplugins/propertytables/propertymodel.cpp:466
 msgid "Formal Charge"
 msgstr "முறையான கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:415
+#: qtplugins/propertytables/propertymodel.cpp:468
 msgid "Partial Charge"
 msgstr "பகுதி கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:417
+#: qtplugins/propertytables/propertymodel.cpp:470
 msgid "X (Å)"
 msgstr "ஃச் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:419
+#: qtplugins/propertytables/propertymodel.cpp:472
 msgid "Y (Å)"
 msgstr "ஒய் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:421
+#: qtplugins/propertytables/propertymodel.cpp:474
 msgid "Z (Å)"
 msgstr "சட் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:423
-#: qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/propertytables/propertymodel.cpp:476
+#: qtplugins/propertytables/propertymodel.cpp:515
 msgid "Color"
 msgstr "நிறம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:426
+#: qtplugins/propertytables/propertymodel.cpp:479
 msgid "Atom"
 msgstr "அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:433
-#: qtplugins/propertytables/propertymodel.cpp:472
-#: qtplugins/propertytables/propertymodel.cpp:489
+#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:525
+#: qtplugins/propertytables/propertymodel.cpp:542
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "வகை"
 
-#: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:488
 msgid "Start Atom"
 msgstr "அணுவைத் தொடங்கவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:437
+#: qtplugins/propertytables/propertymodel.cpp:490
 msgid "End Atom"
 msgstr "இறுதி அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:439
+#: qtplugins/propertytables/propertymodel.cpp:492
 msgid "Bond Order"
 msgstr "பாண்ட் ஆணை"
 
-#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:494
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "நீளம் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:456
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Chain"
 msgstr "சங்கிலி"
 
-#: qtplugins/propertytables/propertymodel.cpp:458
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "Secondary Structure"
 msgstr "இரண்டாம் நிலை அமைப்பு"
 
-#: qtplugins/propertytables/propertymodel.cpp:460
+#: qtplugins/propertytables/propertymodel.cpp:513
 msgid "Heterogen"
 msgstr "பன்முகத்தன்மை வாய்ந்த"
 
-#: qtplugins/propertytables/propertymodel.cpp:474
-#: qtplugins/propertytables/propertymodel.cpp:491
+#: qtplugins/propertytables/propertymodel.cpp:527
+#: qtplugins/propertytables/propertymodel.cpp:544
 msgid "Atom 1"
 msgstr "அணு 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
+#: qtplugins/propertytables/propertymodel.cpp:529
 msgid "Vertex"
 msgstr "வெர்டெக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:478
-#: qtplugins/propertytables/propertymodel.cpp:495
+#: qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/propertytables/propertymodel.cpp:548
 msgid "Atom 3"
 msgstr "அணு 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:480
-#: qtplugins/propertytables/propertymodel.cpp:499
+#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:552
 msgid "Angle (°)"
 msgstr "(°) கோணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:493
+#: qtplugins/propertytables/propertymodel.cpp:546
 msgid "Atom 2"
 msgstr "அணு 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:497
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Atom 4"
 msgstr "அணு 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:687
+#: qtplugins/propertytables/propertymodel.cpp:563
+msgctxt "root mean squared displacement in Angstrom"
+msgid "RMSD (Å)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:566
+msgid "Energy (kcal/mol)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:754
 msgid "Adjust Fragment"
 msgstr "துண்டு சரிசெய்யவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:813
+#: qtplugins/propertytables/propertymodel.cpp:880
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:815
+#: qtplugins/propertytables/propertymodel.cpp:882
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "வளைவு"
 
-#: qtplugins/propertytables/propertymodel.cpp:817
+#: qtplugins/propertytables/propertymodel.cpp:884
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:819
+#: qtplugins/propertytables/propertymodel.cpp:886
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β தாள்"
 
-#: qtplugins/propertytables/propertymodel.cpp:821
+#: qtplugins/propertytables/propertymodel.cpp:888
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:823
+#: qtplugins/propertytables/propertymodel.cpp:890
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "பி பாலம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:825
+#: qtplugins/propertytables/propertymodel.cpp:892
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "திருப்பம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:827
+#: qtplugins/propertytables/propertymodel.cpp:894
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "சுருள்"
@@ -4503,7 +4515,11 @@ msgstr "முறுக்கு பண்புகள்…"
 msgid "Residue Properties…"
 msgstr "எச்ச பண்புகள்…"
 
-#: qtplugins/propertytables/propertytables.cpp:67
+#: qtplugins/propertytables/propertytables.cpp:63
+msgid "Conformer Properties…"
+msgstr ""
+
+#: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
@@ -4514,27 +4530,27 @@ msgstr ""
 msgid "PropertyTables"
 msgstr "சொத்து டேபிள்ச்"
 
-#: qtplugins/propertytables/propertyview.cpp:43
+#: qtplugins/propertytables/propertyview.cpp:44
 msgid "Atom Properties"
 msgstr "அணு பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:46
+#: qtplugins/propertytables/propertyview.cpp:47
 msgid "Bond Properties"
 msgstr "பிணைப்பு பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:49
+#: qtplugins/propertytables/propertyview.cpp:50
 msgid "Angle Properties"
 msgstr "கோண பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:52
+#: qtplugins/propertytables/propertyview.cpp:53
 msgid "Torsion Properties"
 msgstr "முறுக்கு பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:55
+#: qtplugins/propertytables/propertyview.cpp:56
 msgid "Conformer Properties"
 msgstr "கன்ஃபார்மர் பண்புகள்"
 
-#: qtplugins/propertytables/propertyview.cpp:58
+#: qtplugins/propertytables/propertyview.cpp:59
 msgid "Residue Properties"
 msgstr "எச்ச பண்புகள்"
 
@@ -5172,9 +5188,11 @@ msgstr ""
 "வார்ப்புரு கருவி (%1)\n"
 "\n"
 " உலோக மையங்கள் உட்பட துண்டுகளைச் செருகவும்.\n"
-" ஒரு உறுப்பு மற்றும் ஒருங்கிணைப்பு வடிவவியலைத் தேர்ந்தெடுத்து, பின்னர் ஒரு பகுதியைச் செருக சொடுக்கு செய்க.\n"
+" ஒரு உறுப்பு மற்றும் ஒருங்கிணைப்பு வடிவவியலைத் தேர்ந்தெடுத்து, பின்னர் ஒரு பகுதியைச் "
+"செருக சொடுக்கு செய்க.\n"
 "\n"
-" ஒரு தசைநார் அல்லது செயல்பாட்டுக் குழுவைத் தேர்ந்தெடுத்து அதை இணைக்க ஒரு ஐட்ரசன் அணுவை சொடுக்கு செய்யவும்."
+" ஒரு தசைநார் அல்லது செயல்பாட்டுக் குழுவைத் தேர்ந்தெடுத்து அதை இணைக்க ஒரு ஐட்ரசன் அணுவை "
+"சொடுக்கு செய்யவும்."
 
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
@@ -5406,8 +5424,8 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p> வேலை முடிந்ததும் தொலைநிலை வேலை கோப்புகளை நீக்கு. முடிவுகள் முதலில் உள்ளக மோலெக்யூ வேலை "
-"தற்காலிக சேமிப்பில் நகலெடுக்கப்படும்.</p></body> </html>"
+"<html><head/><body><p> வேலை முடிந்ததும் தொலைநிலை வேலை கோப்புகளை நீக்கு. முடிவுகள் "
+"முதலில் உள்ளக மோலெக்யூ வேலை தற்காலிக சேமிப்பில் நகலெடுக்கப்படும்.</p></body> </html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5728,22 +5746,25 @@ msgid ""
 "optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> வடிவமைப்பின் விவரக்குறிப்பு. ஒவ்வொரு எழுத்தும் ஒரு அணுவுக்கு எழுத ஒரு மதிப்பைக் "
-"குறிக்கிறது: </p> <p><span style=\" font-weight:600;\"> - அணுக் குறியீடு (1, 2, ..., "
-"numatoms) <br/><span style=\" font-weight:600;\"> -அணு எண் (எ.கா. கார்பனுக்கு \"6\") "
-"<br/><span style=\" font-weight:600;\">வி</span> - விளையாட்டு-பாணி அணு எண் (எ.கா. கார்பனுக்கு"
-" \"6.0\") <br/> <span சூல் தண்டு = \"font -weight: 600;\"> n </span> - உறுப்புப் பெயர் "
-"(எ.கா. \"கார்பன்\" br/> <span சூல் தண்டு = \"font-Weight: 600;\"> S </span>-உறுப்பு "
-"அடையாளம் (எ.கா. கார்பனுக்கு \"சி\" </span> - அணு சிட்டை (எ.கா., இரண்டாவது கார்பன் அணுவுக்கு \"சி 2\", "
-"முதல் ஐட்ரசனுக்கான \"எச் 1\") <br/> <ச்பான் பாணி = \"எழுத்துரு -எடை: 600;\"> ஃச் </ச்பான்> - ஃச் நிலை"
-" ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font -Weight: 600;\"> ஒய் </span> -y நிலை "
-"ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font -Weight: 600;\"> சட் </span> - சட் நிலை "
-"ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font-weight: 600;\"> a </span>-'a' லட்டு ஒருங்கிணைப்பு"
-" (படிகங்கள் மட்டும்) <br/> <span சூல் தண்டு = \"font-weight: 600; . br/> <span சூல் தண்டு "
-"= \"font-Weight: 600;\"> _ </span>-சீரமைப்புக்கு பயனுள்ள ஒரு நேரடி இடம் (\"\") <br/> "
-"<span சூல் தண்டு = \"font-weight: 600;\"> 0 </span> - ஒரு நேரடி 0 (\"0\"), தேர்வுமுறை "
-"கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> <span சூல் தண்டு = \"font -weight: 600;\"> 1 </span> "
-"- ஒரு நேரடி 1 (\"1\"), தேர்வுமுறை கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> </p> </body> </html>"
+"<html> <head/> <body> <p> வடிவமைப்பின் விவரக்குறிப்பு. ஒவ்வொரு எழுத்தும் ஒரு "
+"அணுவுக்கு எழுத ஒரு மதிப்பைக் குறிக்கிறது: </p> <p><span style=\" font-weight:600;"
+"\"> - அணுக் குறியீடு (1, 2, ..., numatoms) <br/><span style=\" font-weight:600;"
+"\"> -அணு எண் (எ.கா. கார்பனுக்கு \"6\") <br/><span style=\" font-weight:600;"
+"\">வி</span> - விளையாட்டு-பாணி அணு எண் (எ.கா. கார்பனுக்கு \"6.0\") <br/> <span "
+"சூல் தண்டு = \"font -weight: 600;\"> n </span> - உறுப்புப் பெயர் (எ.கா. \"கார்பன்\" "
+"br/> <span சூல் தண்டு = \"font-Weight: 600;\"> S </span>-உறுப்பு அடையாளம் (எ.கா. "
+"கார்பனுக்கு \"சி\" </span> - அணு சிட்டை (எ.கா., இரண்டாவது கார்பன் அணுவுக்கு \"சி "
+"2\", முதல் ஐட்ரசனுக்கான \"எச் 1\") <br/> <ச்பான் பாணி = \"எழுத்துரு -எடை: 600;\"> "
+"ஃச் </ச்பான்> - ஃச் நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font -Weight: 600;"
+"\"> ஒய் </span> -y நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font -Weight: "
+"600;\"> சட் </span> - சட் நிலை ஒருங்கிணைப்பு <br/> <span சூல் தண்டு = \"font-"
+"weight: 600;\"> a </span>-'a' லட்டு ஒருங்கிணைப்பு (படிகங்கள் மட்டும்) <br/> <span "
+"சூல் தண்டு = \"font-weight: 600; . br/> <span சூல் தண்டு = \"font-Weight: 600;"
+"\"> _ </span>-சீரமைப்புக்கு பயனுள்ள ஒரு நேரடி இடம் (\"\") <br/> <span சூல் தண்டு = "
+"\"font-weight: 600;\"> 0 </span> - ஒரு நேரடி 0 (\"0\"), தேர்வுமுறை "
+"கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/> <span சூல் தண்டு = \"font -weight: 600;\"> "
+"1 </span> - ஒரு நேரடி 1 (\"1\"), தேர்வுமுறை கொடிகளுக்குப் பயனுள்ளதாக இருக்கும் <br/"
+"> </p> </body> </html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -6395,16 +6416,16 @@ msgid ""
 msgstr ""
 "<<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "பி, லி { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6495,8 +6516,8 @@ msgstr ""
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -7567,7 +7588,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> அடிவாரத்தில் (டிகிரிகளில்) உச்சத்தை விரிவுபடுத்துதல்.</p></body></html>"
+"<html> <head/> <body> <p> அடிவாரத்தில் (டிகிரிகளில்) உச்சத்தை விரிவுபடுத்துதல்.</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7575,8 +7597,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> டிகிரிகளில் அதிகபட்ச 2 தீட்டா மதிப்பு.</p><p>இயல்புநிலை: 162."
-"00°</p></body></html>"
+"<html> <head/> <body> <p> டிகிரிகளில் அதிகபட்ச 2 தீட்டா மதிப்பு.</p><p>இயல்புநிலை: "
+"162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -7584,8 +7606,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> டிகிரிகளில் அடிவாரத்தில் சிகரங்களை விரிவுபடுத்துதல்.</p><p>இயல்புநிலை: 0."
-"52958°</p></body></html>"
+"<html> <head/> <body> <p> டிகிரிகளில் அடிவாரத்தில் சிகரங்களை விரிவுபடுத்துதல்.</"
+"p><p>இயல்புநிலை: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8266,12 +8288,13 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
-"<html> <head/> <body> <p> இந்தப் பெட்டியைச் சரிபார்க்கும் முன் ஃபெர்மி நிலை அறியப்பட வேண்டும். மாநிலங்களின் "
-"கணக்கீட்டின் அடர்த்தியைச் செய்வதன் மூலமும் தரவைக் காண்பிப்பதன் மூலமும் நீங்கள் ஃபெர்மி அளவைக் கண்டறியலாம் (இது தரவின் "
-"உச்சியில் இருக்கும்). கூடுதலாக, மாநிலங்களின் கணக்கீட்டின் அடர்த்தி செய்யப்பட்டால், இங்குள்ள ஃபெர்மி நிலை மாநிலக் "
-"கணக்கீட்டின் அடர்த்தியின்போது கண்டறியப்பட்டவற்றிற்கு தானாகவே அமைக்கப்படும். </P> <p> இந்தப் பெட்டி சரிபார்க்கப்பட்டால்"
-", சரியான ஃபெர்மி நிலை உறுதிப்படுத்திக் கொள்ளுங்கள் வலது புறத்தில் உள்ள ச்பின் பாக்சில் அமைக்கப்பட்டுள்ளது. </p> <p> "
-"இயல்புநிலை: ஆஃப் </p> </body> </html>"
+"<html> <head/> <body> <p> இந்தப் பெட்டியைச் சரிபார்க்கும் முன் ஃபெர்மி நிலை அறியப்பட "
+"வேண்டும். மாநிலங்களின் கணக்கீட்டின் அடர்த்தியைச் செய்வதன் மூலமும் தரவைக் காண்பிப்பதன் மூலமும் "
+"நீங்கள் ஃபெர்மி அளவைக் கண்டறியலாம் (இது தரவின் உச்சியில் இருக்கும்). கூடுதலாக, "
+"மாநிலங்களின் கணக்கீட்டின் அடர்த்தி செய்யப்பட்டால், இங்குள்ள ஃபெர்மி நிலை மாநிலக் கணக்கீட்டின் "
+"அடர்த்தியின்போது கண்டறியப்பட்டவற்றிற்கு தானாகவே அமைக்கப்படும். </P> <p> இந்தப் பெட்டி "
+"சரிபார்க்கப்பட்டால், சரியான ஃபெர்மி நிலை உறுதிப்படுத்திக் கொள்ளுங்கள் வலது புறத்தில் உள்ள "
+"ச்பின் பாக்சில் அமைக்கப்பட்டுள்ளது. </p> <p> இயல்புநிலை: ஆஃப் </p> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -8285,8 +8308,9 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
-"<html><head/> <body> <p> பூச்சியம் ஃபெர்மி என்பதற்காக ஆற்றல்களைச் சரிசெய்யவும்? நாங்கள் ஃபெர்மி அளவை "
-"சூழ்ச்சி செய்தால் மட்டுமே கிடைக்கும்.</p><p><br/></p><p>இயல்புநிலை:அணை</p></body></html>"
+"<html><head/> <body> <p> பூச்சியம் ஃபெர்மி என்பதற்காக ஆற்றல்களைச் சரிசெய்யவும்? நாங்கள் "
+"ஃபெர்மி அளவை சூழ்ச்சி செய்தால் மட்டுமே கிடைக்கும்.</p><p><br/></p><p>இயல்புநிலை:அணை</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -8328,14 +8352,16 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> சிறப்பு கே-புள்ளிகளை உள்ளிடவும்: </p> <p> l 0.5 0.5 0.5 </p> "
-"<p> g 0.0 0.0 0.0 </p> <p> ஃச் 0.5 0.0 0.5 </p> <p> அதாவது, & lt; அடையாளம் & gt; & "
-"lt; ஃச் & gt; & lt; ஒய் & gt; & lt; சட் & gt; ஃச், ஒய் மற்றும் சட் ஆகியவை பகுதியளவு பரச்பர "
-"விண்வெளி ஆயத்தொகுப்புகளாகும். இந்த கே-பாயிண்ட்களை நீங்கள் வைக்கும் வரிசையில் வரைபடத்தில் இணைக்கும் கோடுகள் வரையப்படும். "
-"உங்கள் கலத்தின் நோக்குநிலை இந்தப் பரச்பர விண்வெளி புள்ளிகளின் இருப்பிடங்களில் தாக்கத்தை ஏற்படுத்தக்கூடும் என்பதை நினைவில் "
-"கொள்க. </p> <p> என்றால் படிகத்தின் விண்வெளி குழு உணரப்பட்டது அல்லது அமைக்கப்பட்டுள்ளது, சிறப்பு கேப்புள்ளிகள் "
-"தானாகவே அந்த விண்வெளி குழுவிற்கான பழமையான செல் உயர் சமச்சீர் புள்ளிகளுடன் நிரப்பப்படும். லட்டியைப் பொறுத்து ஒரு சில "
-"விண்வெளி குழுக்கள் வெவ்வேறு உயர் சமச்சீர் புள்ளிகள் உள்ளன (a & gt; b அல்லது a & lt; b) - இது தானாகவே "
+"<html> <head/> <body> <p> சிறப்பு கே-புள்ளிகளை உள்ளிடவும்: </p> <p> l 0.5 0.5 "
+"0.5 </p> <p> g 0.0 0.0 0.0 </p> <p> ஃச் 0.5 0.0 0.5 </p> <p> அதாவது, & lt; "
+"அடையாளம் & gt; & lt; ஃச் & gt; & lt; ஒய் & gt; & lt; சட் & gt; ஃச், ஒய் மற்றும் சட் "
+"ஆகியவை பகுதியளவு பரச்பர விண்வெளி ஆயத்தொகுப்புகளாகும். இந்த கே-பாயிண்ட்களை நீங்கள் "
+"வைக்கும் வரிசையில் வரைபடத்தில் இணைக்கும் கோடுகள் வரையப்படும். உங்கள் கலத்தின் நோக்குநிலை "
+"இந்தப் பரச்பர விண்வெளி புள்ளிகளின் இருப்பிடங்களில் தாக்கத்தை ஏற்படுத்தக்கூடும் என்பதை "
+"நினைவில் கொள்க. </p> <p> என்றால் படிகத்தின் விண்வெளி குழு உணரப்பட்டது அல்லது "
+"அமைக்கப்பட்டுள்ளது, சிறப்பு கேப்புள்ளிகள் தானாகவே அந்த விண்வெளி குழுவிற்கான பழமையான செல் "
+"உயர் சமச்சீர் புள்ளிகளுடன் நிரப்பப்படும். லட்டியைப் பொறுத்து ஒரு சில விண்வெளி குழுக்கள் "
+"வெவ்வேறு உயர் சமச்சீர் புள்ளிகள் உள்ளன (a & gt; b அல்லது a & lt; b) - இது தானாகவே "
 "கணக்கில் எடுத்துக்கொள்ளப்படுகிறது. </p></body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
@@ -8370,9 +8396,9 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
-"<html> <head/> <body> <p> சிறப்பு K- புள்ளிகளை இணைக்கும் K- புள்ளிகளின் எண்ணிக்கையை உள்ளிடவும். இந்த "
-"கே-பாயிண்டுகளில் அதிகமானவை வரைபடத்தை மென்மையாக்கும், ஆனால் கணக்கீடு அதிக நேரம் ஆகலாம்.</p><p> இயல்புநிலை: 40 </"
-"p> </body> </html>"
+"<html> <head/> <body> <p> சிறப்பு K- புள்ளிகளை இணைக்கும் K- புள்ளிகளின் எண்ணிக்கையை "
+"உள்ளிடவும். இந்த கே-பாயிண்டுகளில் அதிகமானவை வரைபடத்தை மென்மையாக்கும், ஆனால் கணக்கீடு "
+"அதிக நேரம் ஆகலாம்.</p><p> இயல்புநிலை: 40 </p> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
@@ -8400,10 +8426,10 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
-"<html><head/> <body> <p> அவ்வப்போது பரிமாணங்களின் எண்ணிக்கை. </p> <p><br/> </p> <p> இது 1 "
-"ஆக அமைக்கப்பட்டால், பொருள் அவ்வப்போது மட்டுமே படிகத்தின் ஒரு திசையனுடன்.</p><p> <br/> </p> <p> இது 3 "
-"ஆக அமைக்கப்பட்டால், படிகத்தின் A, B மற்றும் C திசையன்களுடன் பொருள் அவ்வப்போது இருக்கும். </p> <p> <br/> </"
-"p> </body> </html>"
+"<html><head/> <body> <p> அவ்வப்போது பரிமாணங்களின் எண்ணிக்கை. </p> <p><br/> </p> "
+"<p> இது 1 ஆக அமைக்கப்பட்டால், பொருள் அவ்வப்போது மட்டுமே படிகத்தின் ஒரு திசையனுடன்.</"
+"p><p> <br/> </p> <p> இது 3 ஆக அமைக்கப்பட்டால், படிகத்தின் A, B மற்றும் C திசையன்களுடன் "
+"பொருள் அவ்வப்போது இருக்கும். </p> <p> <br/> </p> </body> </html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)

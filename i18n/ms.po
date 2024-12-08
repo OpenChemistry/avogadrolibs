@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-01 02:55+0000\n"
+"POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-05 11:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Malay <https://hosted.weblate.org/projects/avogadro/"
@@ -173,8 +173,8 @@ msgid "Close"
 msgstr "Tutup"
 
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:374
-#: qtplugins/configurepython/configurepythondialog.cpp:141
-#: qtplugins/configurepython/configurepythondialog.cpp:144
+#: qtplugins/configurepython/configurepythondialog.cpp:188
+#: qtplugins/configurepython/configurepythondialog.cpp:191
 msgid "Unknown"
 msgstr "Tidak Diketahui"
 
@@ -1042,102 +1042,102 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:64
+#: qtgui/jsonwidget.cpp:86
 msgid "'userOptions' missing."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:95
+#: qtgui/jsonwidget.cpp:117
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:102
+#: qtgui/jsonwidget.cpp:124
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:109
+#: qtgui/jsonwidget.cpp:131
 #, fuzzy, qt-format
 msgid "Could not find option '%1'."
 msgstr "Tidak dapat jalankan povray."
 
-#: qtgui/jsonwidget.cpp:163
+#: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
 msgstr ""
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:186:691
+#: qtgui/jsonwidget.cpp:208:691
 msgid "Title"
 msgstr "Tajuk"
 
-#: qtgui/jsonwidget.cpp:190
+#: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:195
+#: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:200
+#: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:226
 #, fuzzy
 msgid "Theory"
 msgstr "Teori"
 
-#: qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:226
 msgid "Basis"
 msgstr "Asas"
 
-#: qtgui/jsonwidget.cpp:209 qtgui/jsonwidget.cpp:213
+#: qtgui/jsonwidget.cpp:231 qtgui/jsonwidget.cpp:235
 msgid "Charge"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:210 qtgui/jsonwidget.cpp:215
+#: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:237
 msgid "Multiplicity"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:567
+#: qtgui/jsonwidget.cpp:589
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:600
+#: qtgui/jsonwidget.cpp:622
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:609 qtgui/jsonwidget.cpp:644 qtgui/jsonwidget.cpp:665
-#: qtgui/jsonwidget.cpp:687 qtgui/jsonwidget.cpp:708 qtgui/jsonwidget.cpp:730
-#: qtgui/jsonwidget.cpp:751
+#: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
+#: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
+#: qtgui/jsonwidget.cpp:773
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:616 qtgui/jsonwidget.cpp:651 qtgui/jsonwidget.cpp:672
-#: qtgui/jsonwidget.cpp:694 qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:737
-#: qtgui/jsonwidget.cpp:758
+#: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
+#: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
+#: qtgui/jsonwidget.cpp:780
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:630
+#: qtgui/jsonwidget.cpp:652
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:819
+#: qtgui/jsonwidget.cpp:841
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr ""
 
-#: qtgui/jsonwidget.cpp:864 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
 #, fuzzy
 msgid "[no molecule]"
@@ -1665,16 +1665,16 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
 #: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
 #: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
-#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:725
-#: qtplugins/openbabel/openbabel.cpp:739 qtplugins/openbabel/openbabel.cpp:768
-#: qtplugins/openbabel/openbabel.cpp:780 qtplugins/openbabel/openbabel.cpp:826
-#: qtplugins/openbabel/openbabel.cpp:876 qtplugins/openbabel/openbabel.cpp:918
-#: qtplugins/openbabel/openbabel.cpp:950
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
+#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
+#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
+#: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
-#: qtplugins/propertytables/propertyview.cpp:243
-#: qtplugins/propertytables/propertyview.cpp:276
+#: qtplugins/propertytables/propertyview.cpp:260
+#: qtplugins/propertytables/propertyview.cpp:293
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Ralat"
@@ -2035,7 +2035,7 @@ msgid "&Build"
 msgstr "&Bina"
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:445
+#: qtplugins/propertytables/propertymodel.cpp:498
 #, fuzzy
 msgid "Bond"
 msgstr "Ikatan"
@@ -2281,7 +2281,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#: qtplugins/configurepython/configurepythondialog.cpp:153
+#: qtplugins/configurepython/configurepythondialog.cpp:203
 #: qtplugins/editor/editortoolwidget.cpp:129
 #: qtplugins/templatetool/templatetoolwidget.cpp:321
 #: qtplugins/templatetool/templatetoolwidget.cpp:334
@@ -2470,7 +2470,7 @@ msgstr "Input Turbomole"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:283:277
+#: qtplugins/propertytables/propertyview.cpp:300:277
 #, fuzzy
 msgid "Copy"
 msgstr "Salin Semua"
@@ -3354,7 +3354,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr "ID unik"
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Unsur"
@@ -3378,14 +3378,14 @@ msgstr ""
 msgid "Atom Label:"
 msgstr "Label Atom"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
 #, fuzzy
 msgid "ID"
 msgstr "D"
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:452
+#: qtplugins/propertytables/propertymodel.cpp:505
 msgid "Name"
 msgstr ""
 
@@ -3574,92 +3574,93 @@ msgstr "(tertangguh)"
 msgid "unknown molecule"
 msgstr "Tiada molekul ditetapkan"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:286
+#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Property"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:295
+#: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:297
+#: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:299
+#: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:301
+#: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:303
+#: qtplugins/molecularproperties/molecularmodel.cpp:310
 msgid "Coordinate Sets"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:305
+#: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:307
+#: qtplugins/molecularproperties/molecularmodel.cpp:314
 msgid "Number of Chains"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:309
+#: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:311
+#: qtplugins/molecularproperties/molecularmodel.cpp:318
 msgid "Net Spin Multiplicity"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:313
+#: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:315
+#: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:317
+#: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:319
+#: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:321
+#: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:324
+#: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:327
+#: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:329
+#: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:331
+#: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:333
+#: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
 msgstr ""
@@ -3675,7 +3676,7 @@ msgid "View general properties of a molecule."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
-#: qtplugins/propertytables/propertytables.cpp:78
+#: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
@@ -3684,7 +3685,7 @@ msgid "&Analysis"
 msgstr "&Analitik"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
-#: qtplugins/propertytables/propertytables.cpp:78
+#: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/symmetry/symmetry.cpp:82
 msgid "&Properties"
 msgstr "Si&fat"
@@ -3694,37 +3695,37 @@ msgid "Molecular Properties"
 msgstr "Sifat Molekul"
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
-#: qtplugins/propertytables/propertyview.cpp:61
+#: qtplugins/propertytables/propertyview.cpp:62
 msgid "Molecule Properties"
 msgstr "Sifat Molekul"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:231
+#: qtplugins/propertytables/propertyview.cpp:248
 #, fuzzy
 msgid "Export CSV"
 msgstr "Eksport"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:232
+#: qtplugins/propertytables/propertyview.cpp:249
 #, fuzzy
 #| msgid "WFN files (*.wfn);;All files (*.*)"
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Fail CSV (*.csv);;Semua fail (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:244
+#: qtplugins/propertytables/propertyview.cpp:261
 #, fuzzy
 #| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
 msgstr "Tidak dapat buka fail '%1' untuk penulisan."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:276
+#: qtplugins/propertytables/propertyview.cpp:293
 msgid "Error writing to the file."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:288
+#: qtplugins/propertytables/propertyview.cpp:305
 #, fuzzy
 msgid "Export…"
 msgstr "Eksport"
@@ -3919,12 +3920,12 @@ msgid "Updating molecule…"
 msgstr "Tiada molekul ditetapkan"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
+#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
-#: qtplugins/openbabel/openbabel.cpp:781
+#: qtplugins/openbabel/openbabel.cpp:790
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -3944,97 +3945,97 @@ msgstr ""
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:710
 #, fuzzy
 #| msgid "Conformer"
 msgid "Generate Conformers"
 msgstr "Konformer"
 
-#: qtplugins/openbabel/openbabel.cpp:720
+#: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:726
+#: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:732
+#: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:733
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:740
+#: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:751
+#: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:761
+#: qtplugins/openbabel/openbabel.cpp:770
 #, fuzzy
 msgid "Updating molecule from Open Babel…"
 msgstr "Tiada molekul ditetapkan"
 
-#: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
+#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:818 qtplugins/openbabel/openbabel.cpp:868
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 #, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "Tambah Hidrogen"
 
-#: qtplugins/openbabel/openbabel.cpp:819
+#: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
+#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:840 qtplugins/openbabel/openbabel.cpp:890
-#: qtplugins/openbabel/openbabel.cpp:932
+#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
+#: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:862
+#: qtplugins/openbabel/openbabel.cpp:871
 #, fuzzy
 msgid "Add hydrogens for pH"
 msgstr "Tambah Hidrogen untuk pH"
 
-#: qtplugins/openbabel/openbabel.cpp:862
+#: qtplugins/openbabel/openbabel.cpp:871
 #, fuzzy
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
+#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:905
+#: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:910
+#: qtplugins/openbabel/openbabel.cpp:919
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "Buang Hidrogen"
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:942
+#: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
 msgstr ""
 
-#: qtplugins/openbabel/openbabel.cpp:1005
+#: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4424,160 +4425,169 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:411
+#: qtplugins/propertytables/propertymodel.cpp:464
 msgid "Valence"
 msgstr "Valens"
 
-#: qtplugins/propertytables/propertymodel.cpp:413
+#: qtplugins/propertytables/propertymodel.cpp:466
 #, fuzzy
 msgid "Formal Charge"
 msgstr "Cas formal"
 
-#: qtplugins/propertytables/propertymodel.cpp:415
+#: qtplugins/propertytables/propertymodel.cpp:468
 msgid "Partial Charge"
 msgstr "Cas Separa"
 
-#: qtplugins/propertytables/propertymodel.cpp:417
+#: qtplugins/propertytables/propertymodel.cpp:470
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:419
+#: qtplugins/propertytables/propertymodel.cpp:472
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:421
+#: qtplugins/propertytables/propertymodel.cpp:474
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:423
-#: qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/propertytables/propertymodel.cpp:476
+#: qtplugins/propertytables/propertymodel.cpp:515
 #, fuzzy
 msgid "Color"
 msgstr "Warna"
 
-#: qtplugins/propertytables/propertymodel.cpp:426
+#: qtplugins/propertytables/propertymodel.cpp:479
 msgid "Atom"
 msgstr "Atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:433
-#: qtplugins/propertytables/propertymodel.cpp:472
-#: qtplugins/propertytables/propertymodel.cpp:489
+#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:525
+#: qtplugins/propertytables/propertymodel.cpp:542
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "Jenis"
 
-#: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:488
 msgid "Start Atom"
 msgstr "Atom Mula"
 
-#: qtplugins/propertytables/propertymodel.cpp:437
+#: qtplugins/propertytables/propertymodel.cpp:490
 #, fuzzy
 msgid "End Atom"
 msgstr "Atom Hujung"
 
-#: qtplugins/propertytables/propertymodel.cpp:439
+#: qtplugins/propertytables/propertymodel.cpp:492
 #, fuzzy
 msgid "Bond Order"
 msgstr "Tertib Ikatan"
 
-#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:494
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Panjang (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:456
+#: qtplugins/propertytables/propertymodel.cpp:509
 #, fuzzy
 msgid "Chain"
 msgstr "Rantaian NH"
 
-#: qtplugins/propertytables/propertymodel.cpp:458
+#: qtplugins/propertytables/propertymodel.cpp:511
 #, fuzzy
 msgid "Secondary Structure"
 msgstr "Struktur"
 
-#: qtplugins/propertytables/propertymodel.cpp:460
+#: qtplugins/propertytables/propertymodel.cpp:513
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:474
-#: qtplugins/propertytables/propertymodel.cpp:491
+#: qtplugins/propertytables/propertymodel.cpp:527
+#: qtplugins/propertytables/propertymodel.cpp:544
 #, fuzzy
 msgid "Atom 1"
 msgstr "Atom 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
+#: qtplugins/propertytables/propertymodel.cpp:529
 msgid "Vertex"
 msgstr "Puncak"
 
-#: qtplugins/propertytables/propertymodel.cpp:478
-#: qtplugins/propertytables/propertymodel.cpp:495
+#: qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/propertytables/propertymodel.cpp:548
 #, fuzzy
 msgid "Atom 3"
 msgstr "Atom 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:480
-#: qtplugins/propertytables/propertymodel.cpp:499
+#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:552
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Sudut (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:493
+#: qtplugins/propertytables/propertymodel.cpp:546
 #, fuzzy
 msgid "Atom 2"
 msgstr "Atom 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:497
+#: qtplugins/propertytables/propertymodel.cpp:550
 #, fuzzy
 msgid "Atom 4"
 msgstr "Atom 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:687
+#: qtplugins/propertytables/propertymodel.cpp:563
+msgctxt "root mean squared displacement in Angstrom"
+msgid "RMSD (Å)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:566
+msgid "Energy (kcal/mol)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:754
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Adjust Fragment"
 msgstr "Sisip Cebisan"
 
-#: qtplugins/propertytables/propertymodel.cpp:813
+#: qtplugins/propertytables/propertymodel.cpp:880
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "Heliks"
 
-#: qtplugins/propertytables/propertymodel.cpp:815
+#: qtplugins/propertytables/propertymodel.cpp:882
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:817
+#: qtplugins/propertytables/propertymodel.cpp:884
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "Heliks"
 
-#: qtplugins/propertytables/propertymodel.cpp:819
+#: qtplugins/propertytables/propertymodel.cpp:886
 #, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "Lembaran"
 
-#: qtplugins/propertytables/propertymodel.cpp:821
+#: qtplugins/propertytables/propertymodel.cpp:888
 #, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "Heliks 3-10"
 
-#: qtplugins/propertytables/propertymodel.cpp:823
+#: qtplugins/propertytables/propertymodel.cpp:890
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:825
+#: qtplugins/propertytables/propertymodel.cpp:892
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:827
+#: qtplugins/propertytables/propertymodel.cpp:894
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -4611,7 +4621,11 @@ msgstr "Sifat Kilasan"
 msgid "Residue Properties…"
 msgstr "Sifat Molekul"
 
-#: qtplugins/propertytables/propertytables.cpp:67
+#: qtplugins/propertytables/propertytables.cpp:63
+msgid "Conformer Properties…"
+msgstr ""
+
+#: qtplugins/propertytables/propertytables.cpp:75
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
@@ -4622,27 +4636,27 @@ msgstr "Tetingkap untuk memaparkan sifat atom, ikatan, sudut dan kilasan."
 msgid "PropertyTables"
 msgstr "Sifat"
 
-#: qtplugins/propertytables/propertyview.cpp:43
+#: qtplugins/propertytables/propertyview.cpp:44
 msgid "Atom Properties"
 msgstr "Sifat Atom"
 
-#: qtplugins/propertytables/propertyview.cpp:46
+#: qtplugins/propertytables/propertyview.cpp:47
 msgid "Bond Properties"
 msgstr "Sifat Ikatan"
 
-#: qtplugins/propertytables/propertyview.cpp:49
+#: qtplugins/propertytables/propertyview.cpp:50
 msgid "Angle Properties"
 msgstr "Sifat Sudut"
 
-#: qtplugins/propertytables/propertyview.cpp:52
+#: qtplugins/propertytables/propertyview.cpp:53
 msgid "Torsion Properties"
 msgstr "Sifat Kilasan"
 
-#: qtplugins/propertytables/propertyview.cpp:55
+#: qtplugins/propertytables/propertyview.cpp:56
 msgid "Conformer Properties"
 msgstr "Sifat Konformer"
 
-#: qtplugins/propertytables/propertyview.cpp:58
+#: qtplugins/propertytables/propertyview.cpp:59
 #, fuzzy
 msgid "Residue Properties"
 msgstr "Sifat Molekul"
