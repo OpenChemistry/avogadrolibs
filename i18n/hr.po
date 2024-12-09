@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 22:40+0000\n"
+"PO-Revision-Date: 2024-12-09 22:58+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -1881,7 +1881,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/ballandstick/ballandstick.cpp:125:222
 msgid "Opacity"
-msgstr ""
+msgstr "Neprozirnost:"
 
 #: qtplugins/ballandstick/ballandstick.cpp:129
 #: qtplugins/wireframe/wireframe.cpp:100
@@ -1904,7 +1904,7 @@ msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
-msgstr ""
+msgstr "Manipulacija veza"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format
@@ -2008,11 +2008,11 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
-msgstr ""
+msgstr "Vezivanje"
 
 #: qtplugins/bonding/bonding.h:34
 msgid "Perform bonding operations."
-msgstr ""
+msgstr "Izvrši operacije vezivanja."
 
 #: qtplugins/cartoons/cartoons.cpp:92
 msgctxt "protein rendering style"
@@ -2022,36 +2022,36 @@ msgstr ""
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "Trag"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "Cijev"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
 msgid "Ribbon"
-msgstr ""
+msgstr "Traka"
 
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr ""
+msgstr "Jednostavni crtež"
 
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr ""
+msgstr "Crtež"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "Uže"
 
 #: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Prikaz vrpci / crteža biomolekula."
 
 #: qtplugins/centroid/centroid.cpp:20
 msgid "Add Centroid"
@@ -2072,7 +2072,7 @@ msgstr "Težište"
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Dodaj težišta i središte mase."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
