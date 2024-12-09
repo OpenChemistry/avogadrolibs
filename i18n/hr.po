@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-07 04:21+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-09 11:22+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1839,11 +1838,11 @@ msgstr "&Prikaz"
 
 #: qtplugins/applycolors/applycolors.cpp:152
 msgid "Color Atoms"
-msgstr ""
+msgstr "Boja atoma"
 
 #: qtplugins/applycolors/applycolors.cpp:154
 msgid "Color Residues"
-msgstr ""
+msgstr "Boja ostataka"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
@@ -3190,7 +3189,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:173
 msgid "Unique ID"
-msgstr ""
+msgstr "Jedinstveni ID"
 
 #: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
 #: qtplugins/symmetry/operationstablemodel.cpp:63
@@ -3212,7 +3211,7 @@ msgstr ""
 
 #: qtplugins/label/label.cpp:194
 msgid "Atom Label:"
-msgstr "Etiketa atoma:"
+msgstr "Oznaka atoma:"
 
 #: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
 msgid "ID"
@@ -3230,7 +3229,7 @@ msgstr " i "
 
 #: qtplugins/label/label.cpp:225
 msgid "Residue Label:"
-msgstr ""
+msgstr "Oznaka ostatka:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -6017,7 +6016,7 @@ msgstr "ime"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:56
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "tag"
-msgstr ""
+msgstr "oznaka"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
@@ -7834,7 +7833,7 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
 msgid "Coordination:"
-msgstr ""
+msgstr "Koordinacija:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
