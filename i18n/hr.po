@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-09 13:20+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2114,7 +2113,7 @@ msgstr ""
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
-msgstr ""
+msgstr "Debljina linije:"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
@@ -6739,12 +6738,12 @@ msgstr ""
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7582,7 +7581,7 @@ msgstr "&Uvezi …"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:388
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
 msgid "Set Color..."
-msgstr ""
+msgstr "Postavi boju …"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:288
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7643,12 +7642,12 @@ msgstr "Debljina linije:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:510
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:515
 #. i18n: ectx: property (text), widget (QTableWidget, dataTable)
 msgid "y"
-msgstr ""
+msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
