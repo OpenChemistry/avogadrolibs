@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 16:48+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-09 19:47+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2202,11 +2201,11 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python postavke …"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Instaliraj Python"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
@@ -2215,11 +2214,11 @@ msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "Konfiguriraj Python"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Konfiguriraj Python okruženja."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2233,11 +2232,11 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:366
 #: qtplugins/templatetool/templatetoolwidget.cpp:429:2067
 msgid "Other…"
-msgstr "Drugo"
+msgstr "Drugo …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
-msgstr ""
+msgstr "Uređivač atomskih &koordinata …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -2256,28 +2255,30 @@ msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
+"Tekstualni dokument je promijenjen. Želiš li odbaciti promjene i vratiti se "
+"na trenutačnu molekulu?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:356
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Premalo unosa na liniji."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:372
 msgid "Invalid element name."
-msgstr ""
+msgstr "Neispravno ime elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
 msgid "Element name."
-msgstr ""
+msgstr "Ime elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "Neispravan simbol elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
 msgid "Element symbol."
-msgstr ""
+msgstr "Simbol elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
@@ -2285,19 +2286,19 @@ msgstr "Neispravna oznaka atoma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
-msgstr ""
+msgstr "Neispravan indeks atoma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 msgid "Atomic index."
-msgstr ""
+msgstr "Indeks atoma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Neispravan atomski broj."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:434
 msgid "Atomic number."
-msgstr ""
+msgstr "Atomski broj."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:443
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:454
@@ -2306,35 +2307,35 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:487
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:498
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Neispravna koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 msgid "X coordinate."
-msgstr ""
+msgstr "X koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
 msgid "Y coordinate."
-msgstr ""
+msgstr "Y koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
 msgid "Z coordinate."
-msgstr ""
+msgstr "Z koordinata."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:489
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'b' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
 msgid "'c' lattice coordinate."
-msgstr ""
+msgstr "'c' koordinata rešetke."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Greška pri primjeni geometrije"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:585
 msgid ""
@@ -2346,7 +2347,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Uredi atomske koordinate"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:254
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -2359,39 +2360,39 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "XYZ format (simboli)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:640
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "XYZ format (imena)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "XYZ format (atomic numbers)"
-msgstr ""
+msgstr "XYZ format (atomski brojevi)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Koordinate rešetke (simboli)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Koordinate rešetke (imena)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:644
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Koordinate rešetke (atomski brojevi)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:646
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS format (simboli)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:647
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS format (imena)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:648
 msgid "Turbomole format"
-msgstr ""
+msgstr "Turbomole format"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
