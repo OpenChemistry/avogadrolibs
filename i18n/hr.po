@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 19:47+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-09 19:59+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -6041,7 +6040,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "In:"
-msgstr ""
+msgstr "U:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6081,17 +6080,17 @@ msgstr "oznaka"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "synonym"
-msgstr ""
+msgstr "sinonim"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "formula"
-msgstr ""
+msgstr "formula"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, searchTypeBox)
 msgid "inchi"
-msgstr ""
+msgstr "inchi"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:85
 #. i18n: ectx: property (text), widget (QLabel, label)
