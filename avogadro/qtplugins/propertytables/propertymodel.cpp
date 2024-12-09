@@ -148,22 +148,19 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
   return 0;
 }
 
-QString partialCharge(Molecule* molecule, int atom)
+QString partialChargeType(Molecule* molecule)
 {
-  // TODO: we need to track type and/or calling the charge calculator
-  float charge = 0.0;
+  QString type;
+
   std::set<std::string> types = molecule->partialChargeTypes();
   if (types.size() > 0) {
-    auto first = types.cbegin();
-    MatrixX charges = molecule->partialCharges((*first));
-    charge = charges(atom, 0);
+    type = QString(types.cbegin()->c_str());
   } else {
     // find something
     const auto options =
       Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
     if (options.size() > 0) {
       // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
-      std::string type;
       if (options.find("GFN2") != options.end())
         type = "GFN2";
       else if (options.find("am1bcc") != options.end())
@@ -173,13 +170,49 @@ QString partialCharge(Molecule* molecule, int atom)
       else if (options.find("gasteiger") != options.end())
         type = "gasteiger";
       else
-        type = *options.begin();
-
-      MatrixX charges =
-        Calc::ChargeManager::instance().partialCharges(type, *molecule);
-      charge = charges(atom, 0);
+        type = *options.begin()->c_str();
     }
   }
+
+  return type;
+}
+
+QString formatChargeType(QString type)
+{
+  if (type == "gfn2")
+    return "GFN2";
+  else if (type == "am1bcc")
+    return "AM1BCC";
+  else if (type == "mmff94")
+    return "MMFF94";
+  else if (type == "gasteiger")
+    return "Gasteiger";
+  else if (type.startsWith("eem"))
+    return "EEM";
+  else if (type == "qeq")
+    return "QEq";
+  else if (type.toLower() == "mulliken")
+    return "Mulliken";
+  else if (type.toLower() == "lowdin")
+    return "Lowdin";
+  else if (type.toLower() == "chelpg")
+    return "CHELPG";
+  else if (type.toLower() == "hirshfeld")
+    return "Hirshfeld";
+  else
+    return type;
+}
+
+QString partialCharge(Molecule* molecule, int atom)
+{
+  // TODO: we need to track type and/or calling the charge calculator
+  float charge = 0.0;
+  std::string type = partialChargeType(molecule).toStdString();
+
+  MatrixX charges =
+    Calc::ChargeManager::instance().partialCharges(type, *molecule);
+  charge = charges(atom, 0);
+
   return QString("%L1").arg(charge, 0, 'f', 3);
 }
 
@@ -464,8 +497,12 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Valence");
         case AtomDataFormalCharge:
           return tr("Formal Charge");
-        case AtomDataPartialCharge:
-          return tr("Partial Charge");
+        case AtomDataPartialCharge: {
+          QString charge =
+            tr("%1 Partial Charge", "e.g. MMFF94 Partial Charge or "
+                                    "Gasteiger Partial Charge");
+          return charge.arg(formatChargeType(partialChargeType(m_molecule)));
+        }
         case AtomDataX:
           return tr("X (Å)");
         case AtomDataY:
