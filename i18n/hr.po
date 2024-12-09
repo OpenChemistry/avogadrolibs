@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-09 16:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2433,15 +2432,15 @@ msgstr "&Uredi"
 
 #: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
-msgstr ""
+msgstr "Kopiraj kao"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Greška pri odrezivanju molekule"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Greška pri generiranju podataka međuspremnika."
 
 #: qtplugins/copypaste/copypaste.cpp:152
 #, qt-format
@@ -2450,6 +2449,8 @@ msgid ""
 "Output format: %1\n"
 "%2"
 msgstr ""
+"Format rezultata: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
 #, qt-format
@@ -2457,18 +2458,20 @@ msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
+"Greška čitača:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
 msgid "Error Pasting Molecule"
-msgstr ""
+msgstr "Greška pri ljepljenju molekule"
 
 #: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "Nije moguće zalijepiti molekulu: Međuspremnik je prazan!"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Greška pri čitanju podataka međuspremnika."
 
 #: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
@@ -2477,14 +2480,16 @@ msgid ""
 "Detected format: %1\n"
 "%2"
 msgstr ""
+"Otkriveni format: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
-msgstr "Kopiranje i umetanje"
+msgstr "Kopiraj i zalijepi"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Interakcija sa međuspremnikom."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
@@ -7766,7 +7771,7 @@ msgstr "Izračunaj"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:28
 #. i18n: ectx: property (text), widget (QLabel, pointGroupLabel)
 msgid "C<sub>1"
-msgstr ""
+msgstr "C<sub>1"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:42
 #. i18n: ectx: attribute (title), widget (QWidget, esTab)
