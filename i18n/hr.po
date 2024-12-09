@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 13:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-09 13:51+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2102,7 +2101,7 @@ msgstr ""
 #: qtplugins/closecontacts/closecontacts.cpp:212
 #: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:406
 msgid " Å"
-msgstr ""
+msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
@@ -2118,7 +2117,7 @@ msgstr "Debljina linije:"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr ""
+msgstr "Iscrtaj bliske kontakte između atoma."
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
@@ -6749,12 +6748,12 @@ msgstr "Y"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr ""
+msgstr "Translatiraj za:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Rotate around:"
-msgstr ""
+msgstr "Okreni oko:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:122
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -7500,14 +7499,12 @@ msgstr "&Učitaj podatke …"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:45
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
 msgid "Export Data"
-msgstr "Izvoz podataka"
+msgstr "Izvezi podatke"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
-#, fuzzy
-#| msgid "Close"
 msgid "&Close"
-msgstr "Zatvori"
+msgstr "&Zatvori"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
@@ -7517,12 +7514,12 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "X-Axis Minimum:"
-msgstr ""
+msgstr "Minimum osi X:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:115
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "X-Axis Maximum:"
-msgstr ""
+msgstr "Maksimum osi X:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -7532,12 +7529,12 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Y-Axis Maximum:"
-msgstr ""
+msgstr "Maksimum osi Y:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Y-Axis Minimum:"
-msgstr ""
+msgstr "Minimum osi Y:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:189
 #. i18n: ectx: property (text), widget (QLabel, label_13)
