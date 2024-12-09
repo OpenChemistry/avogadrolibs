@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 11:25+0000\n"
+"PO-Revision-Date: 2024-12-09 11:28+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -3185,7 +3185,7 @@ msgstr "Ništa"
 
 #: qtplugins/label/label.cpp:172
 msgid "Index"
-msgstr "Kazalo"
+msgstr "Indeks"
 
 #: qtplugins/label/label.cpp:173
 msgid "Unique ID"
@@ -3207,7 +3207,7 @@ msgstr "Element i ID"
 #: qtplugins/label/label.cpp:179
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Djelomični naboj"
 
 #: qtplugins/label/label.cpp:194
 msgid "Atom Label:"
