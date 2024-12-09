@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 11:22+0000\n"
+"PO-Revision-Date: 2024-12-09 11:25+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -3186,7 +3186,7 @@ msgstr "Bez"
 
 #: qtplugins/label/label.cpp:172
 msgid "Index"
-msgstr ""
+msgstr "Kazalo"
 
 #: qtplugins/label/label.cpp:173
 msgid "Unique ID"
