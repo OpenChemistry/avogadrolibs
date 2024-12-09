@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 14:42+0000\n"
+"PO-Revision-Date: 2024-12-09 15:47+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -6378,7 +6378,7 @@ msgstr "Elipsoid"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "full"
-msgstr ""
+msgstr "potpuno"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6449,7 +6449,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:918
 #. i18n: ectx: property (text), widget (QCheckBox, temperatureCheck)
 msgid "Temperature"
-msgstr ""
+msgstr "Temperatura"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:347
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
