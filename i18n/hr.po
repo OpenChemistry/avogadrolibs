@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 15:47+0000\n"
+"PO-Revision-Date: 2024-12-09 15:55+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -7359,27 +7359,27 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:888
 #. i18n: ectx: property (text), widget (QCheckBox, potentialEnergyCheck)
 msgid "Potential Energy"
-msgstr ""
+msgstr "Potencijalna energija"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:898
 #. i18n: ectx: property (text), widget (QCheckBox, kineticEnergyCheck)
 msgid "Kinetic Energy"
-msgstr ""
+msgstr "Kinetička energija"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:908
 #. i18n: ectx: property (text), widget (QCheckBox, totalEnergyCheck)
 msgid "Total Energy"
-msgstr ""
+msgstr "Ukupna energija"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:928
 #. i18n: ectx: property (text), widget (QCheckBox, volumeCheck)
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
 msgid "Density"
-msgstr ""
+msgstr "Gustoća"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
