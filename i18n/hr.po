@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 19:59+0000\n"
+"PO-Revision-Date: 2024-12-09 20:07+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -5956,26 +5956,26 @@ msgstr "Redoslijed veza:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::OBForceFieldDialog)
 msgid "Geometry Optimization Parameters"
-msgstr ""
+msgstr "Parametri optimizacije geometrije"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:207
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 msgid "Convergence Criteria"
-msgstr ""
+msgstr "Kriteriji konvergencije"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Energy convergence:"
-msgstr ""
+msgstr "Energetska konvergencija:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Step limit:"
-msgstr ""
+msgstr "Ograničenje koraka:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:59
 #. i18n: ectx: property (suffix), widget (QSpinBox, energyConv)
@@ -6009,14 +6009,14 @@ msgstr ""
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Gradient convergence:"
-msgstr ""
+msgstr "Gradijentna konvergencija:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:126
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:39
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "Optimization Method"
-msgstr ""
+msgstr "Metoda optimizacije"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6050,17 +6050,17 @@ msgstr "Višestrukost:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr "sa:"
+msgstr "Sa:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
-msgstr ""
+msgstr "Naboj:"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 msgid "Import From PQR…"
-msgstr ""
+msgstr "Uvezi iz PQR-a …"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
