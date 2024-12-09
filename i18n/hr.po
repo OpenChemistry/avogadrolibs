@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 11:28+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-09 13:03+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1503,6 +1502,13 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
+"Poravnaj molekule\n"
+"\n"
+"Lijeva tipka miša: Odaberi do dva atoma.\n"
+"\tPrvi atom je centriran pri ishodištu.\n"
+"\tDrugi atom je poravnat na odabranu os.\n"
+"Desna tipka miša: Poništi poravnanje.\n"
+"Dvostruki klik: Centriraj atom pri ishodištu."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:281
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1914,6 +1920,19 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Alat za manipulaciju veza \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tKlikni i povuci za okretanje prikaza.\n"
+"Srednja tipka miša: \tKlikni i povuci za povećanje ili smanjenje prikaza.\n"
+"Desna tipka miša: \tKlikni i povuci za pomicanje prikaza.\n"
+"Dvostruki klik: \tResetiraj prikaz.\n"
+"\n"
+"Klikni lijevom tipkom miša i povuci na vezu za postavljanje ravnine "
+"manipulacije:\n"
+"Klikni lijevom tipkom miša i povuci jedan od atoma u vezi za mijenjanje "
+"kuta\n"
+"Klikni desnom tipkom miša i povuci jedan od atoma u vezi zs mijenjanje "
+"duljine"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:781
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:869
@@ -1951,15 +1970,15 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Ukloni veze"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
-msgstr ""
+msgstr "Konfiguriraj povezivanje …"
 
 #: qtplugins/bonding/bonding.cpp:32
 msgid "Bond Selected Atoms"
-msgstr ""
+msgstr "Poveži odabrane atome"
 
 #: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
@@ -1977,7 +1996,7 @@ msgstr "Veza"
 
 #: qtplugins/bonding/bonding.cpp:72
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Ukloni veze svih ili odabranih atoma."
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
@@ -3239,7 +3258,7 @@ msgstr ""
 #: qtplugins/label/labeleditor.cpp:31
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr "Ctrl+"
+msgstr "Ctrl+4"
 
 #: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
@@ -3252,6 +3271,9 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"Alat za oznake atoma \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tKlikni na atome za dodavanje prilagođenih oznaka"
 
 #: qtplugins/label/labeleditor.cpp:78
 msgid "Create Label"
@@ -3336,6 +3358,10 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
+"Alat za manipulaciju \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tKlikni i povuci za pomicanje atoma\n"
+"Desna tipka miša: \tKlikni i povuci za oretanje atoma.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3362,6 +3388,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"Alat za mjerenje \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tOdaberi do četiri atoma.\n"
+"\tUdaljenosti se mjere između 1-2 i 2-3\n"
+"\tKut se mjeri između 1-3 koristeći 2 kao zajedničku točku\n"
+"\tDiedar se mjeri između 1-2-3-4\n"
+"Desna tipka miša: \tResetiraj mjerenja."
 
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
@@ -3561,6 +3594,11 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"Alat za navigaciju \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tKlikni i povuci za okretanje prikaza.\n"
+"Srednja tipka miša: \tKlikni i povuci za povećanje ili smanjenje prikaza.\n"
+"Desna tipka miša: \tKlikni i povuci za pomicanje prikaza.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4610,6 +4648,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"Alat za biranje \t(%1)\n"
+"\n"
+"Lijeva tipka miša: \tKlikni za biranje pojedinačnih atoma, ostataka ili "
+"fragmenata\n"
+"\tPovuci za biranje niza atoma\n"
+"Desna tipka miša: \tKlikni izvan molekule za poništavanje odabira\n"
+"Koristi tipku Ctrl za mijenjanje odabira i tipku shift za dodavanje odabiru."
+"\n"
+"Dvostruki klik: \tOdaberi cijeli fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
