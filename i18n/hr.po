@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-09 15:47+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -6373,7 +6372,7 @@ msgstr "dipol"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "ellipsoid"
-msgstr "Elipsoid"
+msgstr "elipsoid"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6383,7 +6382,7 @@ msgstr "potpuno"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:251
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "line"
-msgstr ""
+msgstr "linija"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6393,7 +6392,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "molecular"
-msgstr ""
+msgstr "molekularno"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:266
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -6420,12 +6419,12 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:299
 #. i18n: ectx: property (toolTip), widget (QLineEdit, readDataLine)
 msgid "Specify the name to be used for the coordinate file."
-msgstr ""
+msgstr "Odredi ime koje će se koristiti za datoteku koordinata."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:292
 #. i18n: ectx: property (text), widget (QLabel, label_readdata)
 msgid "Coordinate Data File"
-msgstr ""
+msgstr "Datoteka podataka koordinata"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
@@ -6497,12 +6496,12 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:847
 #. i18n: ectx: property (toolTip), widget (QComboBox, dimensionCombo)
 msgid "Number of dimensions in the system."
-msgstr ""
+msgstr "Broj dimenzija u sustavu."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:436
 #. i18n: ectx: property (text), widget (QLabel, label_dimension)
 msgid "Dimensions"
-msgstr ""
+msgstr "Dimenzije"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
@@ -6576,37 +6575,37 @@ msgstr "Promijeni stil X granice."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
 msgid "Select boundary Styles in X, Y and Z directions."
-msgstr ""
+msgstr "Odaberi stilove granica u smjerovima X, Y i Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_boundary)
 msgid "Boundary"
-msgstr ""
+msgstr "Granica"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:589
 #. i18n: ectx: property (toolTip), widget (QLabel, label_5)
 msgid "Number of replicants in X, Y and Z directions."
-msgstr ""
+msgstr "Broj replikacija u smjerovima X, Y i Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:592
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Replicate"
-msgstr ""
+msgstr "Replikacija"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:612
 #. i18n: ectx: property (toolTip), widget (QSpinBox, xReplicateSpin)
 msgid "Replicate the X direction."
-msgstr ""
+msgstr "Replikacija u smjeru X."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:622
 #. i18n: ectx: property (toolTip), widget (QSpinBox, yReplicateSpin)
 msgid "Replicate the Y direction."
-msgstr ""
+msgstr "Replikacija u smjeru Y."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:632
 #. i18n: ectx: property (toolTip), widget (QSpinBox, zReplicateSpin)
 msgid "Replicate the Z direction."
-msgstr ""
+msgstr "Replikacija u smjeru Z."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:649
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
