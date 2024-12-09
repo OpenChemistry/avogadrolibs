@@ -6051,7 +6051,7 @@ msgstr "Višekratnost"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
-msgstr ""
+msgstr "sa:"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
 #. i18n: ectx: property (text), widget (QLabel, label_6)
