@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-09 13:14+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1988,7 +1987,7 @@ msgstr "Poveži odabrane atome"
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
 msgid "&Build"
-msgstr "Izgradnja"
+msgstr "&Izgradi"
 
 #: qtplugins/bonding/bonding.cpp:61
 #: qtplugins/propertytables/propertymodel.cpp:498
@@ -2001,7 +2000,7 @@ msgstr "Ukloni veze svih ili odabranih atoma."
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Stvori veze između svih ili odabranih atoma."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
@@ -7664,6 +7663,11 @@ msgid ""
 "Middle click + drag: Zoom to region\n"
 "Scroll wheel: Zoom to cursor"
 msgstr ""
+"Kontrole:\n"
+"Dvostruki lijevi klik: Obnovi zadane granice osi\n"
+"Desni klik + povlačenje: Pomiči dijagram\n"
+"Srednji klik + povlačenje: Zumiraj na regiju\n"
+"Kotačić za pomicanje: Zumiraj na kursor"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
