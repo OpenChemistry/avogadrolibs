@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-01 02:55+0000\n"
+"POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-11-24 19:35+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/avogadro/"
@@ -194,8 +194,8 @@ msgid "Close"
 msgstr "닫기"
 
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:374
-#: qtplugins/configurepython/configurepythondialog.cpp:141
-#: qtplugins/configurepython/configurepythondialog.cpp:144
+#: qtplugins/configurepython/configurepythondialog.cpp:188
+#: qtplugins/configurepython/configurepythondialog.cpp:191
 msgid "Unknown"
 msgstr "알 수 없음"
 
@@ -1081,91 +1081,91 @@ msgstr "분자 표현을 문자열에 쓰는 중 오류 발생: 인식할 수 �
 msgid "Error writing molecule representation to string: %1"
 msgstr "분자 표현을 문자열에 쓰는 중 오류: %1"
 
-#: qtgui/jsonwidget.cpp:64
+#: qtgui/jsonwidget.cpp:86
 msgid "'userOptions' missing."
 msgstr "'userOptions'가 없습니다."
 
-#: qtgui/jsonwidget.cpp:95
+#: qtgui/jsonwidget.cpp:117
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "옵션 '%1'은(는) 객체를 참조하지 않습니다."
 
-#: qtgui/jsonwidget.cpp:102
+#: qtgui/jsonwidget.cpp:124
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'type'은 옵션 '%1'에 대한 문자열이 아닙니다."
 
-#: qtgui/jsonwidget.cpp:109
+#: qtgui/jsonwidget.cpp:131
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "옵션 '%1'을(를) 찾을 수 없습니다."
 
-#: qtgui/jsonwidget.cpp:163
+#: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
 msgstr "탭 %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:186:691
+#: qtgui/jsonwidget.cpp:208:691
 msgid "Title"
 msgstr "제목"
 
-#: qtgui/jsonwidget.cpp:190
+#: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
 msgstr "파일이름 기준"
 
-#: qtgui/jsonwidget.cpp:195
+#: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
 msgstr "프로세서 코어"
 
-#: qtgui/jsonwidget.cpp:200
+#: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
 msgstr "계산 유형"
 
-#: qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:226
 msgid "Theory"
 msgstr "이론"
 
-#: qtgui/jsonwidget.cpp:204
+#: qtgui/jsonwidget.cpp:226
 msgid "Basis"
 msgstr "기초"
 
-#: qtgui/jsonwidget.cpp:209 qtgui/jsonwidget.cpp:213
+#: qtgui/jsonwidget.cpp:231 qtgui/jsonwidget.cpp:235
 msgid "Charge"
 msgstr "전하"
 
-#: qtgui/jsonwidget.cpp:210 qtgui/jsonwidget.cpp:215
+#: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:237
 msgid "Multiplicity"
 msgstr "다중도"
 
-#: qtgui/jsonwidget.cpp:567
+#: qtgui/jsonwidget.cpp:589
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "오류: 값은 키 '%1'에 대한 객체여야 합니다."
 
-#: qtgui/jsonwidget.cpp:600
+#: qtgui/jsonwidget.cpp:622
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "옵션 '%2'에 대해 인식할 수 없는 옵션 유형 '%1'입니다."
 
-#: qtgui/jsonwidget.cpp:609 qtgui/jsonwidget.cpp:644 qtgui/jsonwidget.cpp:665
-#: qtgui/jsonwidget.cpp:687 qtgui/jsonwidget.cpp:708 qtgui/jsonwidget.cpp:730
-#: qtgui/jsonwidget.cpp:751
+#: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
+#: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
+#: qtgui/jsonwidget.cpp:773
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 위젯 유형입니"
 "다."
 
-#: qtgui/jsonwidget.cpp:616 qtgui/jsonwidget.cpp:651 qtgui/jsonwidget.cpp:672
-#: qtgui/jsonwidget.cpp:694 qtgui/jsonwidget.cpp:715 qtgui/jsonwidget.cpp:737
-#: qtgui/jsonwidget.cpp:758
+#: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
+#: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
+#: qtgui/jsonwidget.cpp:780
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 잘못된 기본값:"
 
-#: qtgui/jsonwidget.cpp:630
+#: qtgui/jsonwidget.cpp:652
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1174,12 +1174,12 @@ msgstr ""
 "옵션 '%1'의 기본값을 설정하는 동안 오류가 발생했습니다. 값에서 유효한 콤보 항"
 "목 인덱스를 찾을 수 없습니다:"
 
-#: qtgui/jsonwidget.cpp:819
+#: qtgui/jsonwidget.cpp:841
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "옵션 '%1'에 대한 collectOptions 처리되지 않은 위젯입니다."
 
-#: qtgui/jsonwidget.cpp:864 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
+#: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
 msgid "[no molecule]"
 msgstr "[분자 없음]"
@@ -1679,16 +1679,16 @@ msgstr "PQR 파일 (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:535 qtplugins/openbabel/openbabel.cpp:548
 #: qtplugins/openbabel/openbabel.cpp:567 qtplugins/openbabel/openbabel.cpp:576
 #: qtplugins/openbabel/openbabel.cpp:636 qtplugins/openbabel/openbabel.cpp:686
-#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:725
-#: qtplugins/openbabel/openbabel.cpp:739 qtplugins/openbabel/openbabel.cpp:768
-#: qtplugins/openbabel/openbabel.cpp:780 qtplugins/openbabel/openbabel.cpp:826
-#: qtplugins/openbabel/openbabel.cpp:876 qtplugins/openbabel/openbabel.cpp:918
-#: qtplugins/openbabel/openbabel.cpp:950
+#: qtplugins/openbabel/openbabel.cpp:699 qtplugins/openbabel/openbabel.cpp:734
+#: qtplugins/openbabel/openbabel.cpp:748 qtplugins/openbabel/openbabel.cpp:777
+#: qtplugins/openbabel/openbabel.cpp:789 qtplugins/openbabel/openbabel.cpp:835
+#: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
+#: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
-#: qtplugins/propertytables/propertyview.cpp:243
-#: qtplugins/propertytables/propertyview.cpp:276
+#: qtplugins/propertytables/propertyview.cpp:260
+#: qtplugins/propertytables/propertyview.cpp:293
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "오류"
@@ -2024,7 +2024,7 @@ msgid "&Build"
 msgstr "빌드(&B)"
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:445
+#: qtplugins/propertytables/propertymodel.cpp:498
 msgid "Bond"
 msgstr "결합"
 
@@ -2260,7 +2260,7 @@ msgstr "파이썬 환경을 구성합니다."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
-#: qtplugins/configurepython/configurepythondialog.cpp:153
+#: qtplugins/configurepython/configurepythondialog.cpp:203
 #: qtplugins/editor/editortoolwidget.cpp:129
 #: qtplugins/templatetool/templatetoolwidget.cpp:321
 #: qtplugins/templatetool/templatetoolwidget.cpp:334
@@ -2440,7 +2440,7 @@ msgstr "터보몰 형식"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:283:277
+#: qtplugins/propertytables/propertyview.cpp:300:277
 msgid "Copy"
 msgstr "복사"
 
@@ -3265,7 +3265,7 @@ msgstr "색인"
 msgid "Unique ID"
 msgstr "고유 ID"
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:409
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "원소"
@@ -3287,13 +3287,13 @@ msgstr ""
 msgid "Atom Label:"
 msgstr "원자 레이블:"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:454
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:452
+#: qtplugins/propertytables/propertymodel.cpp:505
 msgid "Name"
 msgstr "이름"
 
@@ -3471,92 +3471,93 @@ msgstr "(보류 중)"
 msgid "unknown molecule"
 msgstr "알 수 없는 분자"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:286
+#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Property"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:293
+#: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:295
+#: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:297
+#: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:299
+#: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:301
+#: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:303
+#: qtplugins/molecularproperties/molecularmodel.cpp:310
 msgid "Coordinate Sets"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:305
+#: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:307
+#: qtplugins/molecularproperties/molecularmodel.cpp:314
 msgid "Number of Chains"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:309
+#: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:311
+#: qtplugins/molecularproperties/molecularmodel.cpp:318
 msgid "Net Spin Multiplicity"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:313
+#: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:315
+#: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:317
+#: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:319
+#: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:321
+#: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:324
+#: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:327
+#: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:329
+#: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:331
+#: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:333
+#: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
 msgstr ""
@@ -3570,7 +3571,7 @@ msgid "View general properties of a molecule."
 msgstr "분자의 일반적인 특성을 봅니다."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
-#: qtplugins/propertytables/propertytables.cpp:78
+#: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
 #: qtplugins/vibrations/vibrations.cpp:42
@@ -3578,7 +3579,7 @@ msgid "&Analysis"
 msgstr "분석(&A)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
-#: qtplugins/propertytables/propertytables.cpp:78
+#: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/symmetry/symmetry.cpp:82
 msgid "&Properties"
 msgstr "속성(&P)"
@@ -3588,32 +3589,32 @@ msgid "Molecular Properties"
 msgstr "분자 속성"
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
-#: qtplugins/propertytables/propertyview.cpp:61
+#: qtplugins/propertytables/propertyview.cpp:62
 msgid "Molecule Properties"
 msgstr "분자 정보"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:231
+#: qtplugins/propertytables/propertyview.cpp:248
 msgid "Export CSV"
 msgstr "CSV 내보내기"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:232
+#: qtplugins/propertytables/propertyview.cpp:249
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "CSV 파일 (*.csv);;모든 파일 (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:244
+#: qtplugins/propertytables/propertyview.cpp:261
 msgid "Could not open the file for writing."
 msgstr "쓰기 위한 파일을 열 수 없습니다."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:276
+#: qtplugins/propertytables/propertyview.cpp:293
 msgid "Error writing to the file."
 msgstr "파일에 오류 쓰기."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:288
+#: qtplugins/propertytables/propertyview.cpp:305
 msgid "Export…"
 msgstr "내보내기…"
 
@@ -3804,12 +3805,12 @@ msgid "Updating molecule…"
 msgstr "분자 업데이트 중…"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
-#: qtplugins/openbabel/openbabel.cpp:769 qtplugins/openbabel/openbabel.cpp:951
+#: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
 msgstr "바벨 열기 출력을 해석하는 동안 오류가 발생했습니다."
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
-#: qtplugins/openbabel/openbabel.cpp:781
+#: qtplugins/openbabel/openbabel.cpp:790
 #, qt-format
 msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
@@ -3829,90 +3830,90 @@ msgstr "오픈 바벨과 함께 이형태체를 생성 할 수 없습니다."
 msgid "Generating Conformers (Open Babel)"
 msgstr "이형태체 생성 중 (오픈 바벨)"
 
-#: qtplugins/openbabel/openbabel.cpp:711
+#: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
 msgstr "이형태체 생성"
 
-#: qtplugins/openbabel/openbabel.cpp:720
+#: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
 msgstr "바벨 열기로 파일을 열 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:726
+#: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
 msgstr "잘못된 분자: 결합을 인식할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:732
+#: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
 msgstr "결합 인식 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:733
+#: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
 msgstr "XYZ 표현 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:740
+#: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
 msgstr "XYZ 문자열을 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:751
+#: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
 msgstr "%1을(를) 사용하여 XYZ를 바벨 열기로 변환 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:761
+#: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
 msgstr "바벨 열기에서 분자 업데이트 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:813 qtplugins/openbabel/openbabel.cpp:855
+#: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
 msgstr "바벨 열기로 수소를 추가할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:818 qtplugins/openbabel/openbabel.cpp:868
+#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
 msgstr "수소 추가 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:819
+#: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
 msgstr "바벨 열기 입력 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
+#: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
 msgstr "바벨 열기 입력을 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:840 qtplugins/openbabel/openbabel.cpp:890
-#: qtplugins/openbabel/openbabel.cpp:932
+#: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
+#: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
 msgstr "%1 실행 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:862
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
 msgstr "pH에 대한 수소 추가"
 
-#: qtplugins/openbabel/openbabel.cpp:862
+#: qtplugins/openbabel/openbabel.cpp:871
 msgid "pH:"
 msgstr "pH:"
 
-#: qtplugins/openbabel/openbabel.cpp:869 qtplugins/openbabel/openbabel.cpp:911
+#: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
 msgstr "obabel 입력 생성 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:905
+#: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
 msgstr "바벨 열기로 수소를 제거할 수 없습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:910
+#: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
 msgstr "수소 제거 (바벨 열기)"
 
-#: qtplugins/openbabel/openbabel.cpp:919
+#: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
 msgstr "바벨 열기를 생성하는 동안 오류가 발생했습니다."
 
-#: qtplugins/openbabel/openbabel.cpp:942
+#: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
 msgstr "obabel 출력을 읽는 중…"
 
-#: qtplugins/openbabel/openbabel.cpp:1005
+#: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
@@ -4298,142 +4299,151 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-Ray를 사용하여 장면을 렌더링합니다."
 
-#: qtplugins/propertytables/propertymodel.cpp:411
+#: qtplugins/propertytables/propertymodel.cpp:464
 msgid "Valence"
 msgstr "원자가"
 
-#: qtplugins/propertytables/propertymodel.cpp:413
+#: qtplugins/propertytables/propertymodel.cpp:466
 msgid "Formal Charge"
 msgstr "형식 전하"
 
-#: qtplugins/propertytables/propertymodel.cpp:415
+#: qtplugins/propertytables/propertymodel.cpp:468
 msgid "Partial Charge"
 msgstr "부분 전하"
 
-#: qtplugins/propertytables/propertymodel.cpp:417
+#: qtplugins/propertytables/propertymodel.cpp:470
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:419
+#: qtplugins/propertytables/propertymodel.cpp:472
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:421
+#: qtplugins/propertytables/propertymodel.cpp:474
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:423
-#: qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/propertytables/propertymodel.cpp:476
+#: qtplugins/propertytables/propertymodel.cpp:515
 msgid "Color"
 msgstr "색상"
 
-#: qtplugins/propertytables/propertymodel.cpp:426
+#: qtplugins/propertytables/propertymodel.cpp:479
 msgid "Atom"
 msgstr "원자"
 
-#: qtplugins/propertytables/propertymodel.cpp:433
-#: qtplugins/propertytables/propertymodel.cpp:472
-#: qtplugins/propertytables/propertymodel.cpp:489
+#: qtplugins/propertytables/propertymodel.cpp:486
+#: qtplugins/propertytables/propertymodel.cpp:525
+#: qtplugins/propertytables/propertymodel.cpp:542
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "형식"
 
-#: qtplugins/propertytables/propertymodel.cpp:435
+#: qtplugins/propertytables/propertymodel.cpp:488
 msgid "Start Atom"
 msgstr "원자 시작"
 
-#: qtplugins/propertytables/propertymodel.cpp:437
+#: qtplugins/propertytables/propertymodel.cpp:490
 msgid "End Atom"
 msgstr "원자 끝"
 
-#: qtplugins/propertytables/propertymodel.cpp:439
+#: qtplugins/propertytables/propertymodel.cpp:492
 msgid "Bond Order"
 msgstr "결합 차수"
 
-#: qtplugins/propertytables/propertymodel.cpp:441
+#: qtplugins/propertytables/propertymodel.cpp:494
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "길이 (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:456
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Chain"
 msgstr "사슬"
 
-#: qtplugins/propertytables/propertymodel.cpp:458
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "Secondary Structure"
 msgstr "2차 구조"
 
-#: qtplugins/propertytables/propertymodel.cpp:460
+#: qtplugins/propertytables/propertymodel.cpp:513
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:474
-#: qtplugins/propertytables/propertymodel.cpp:491
+#: qtplugins/propertytables/propertymodel.cpp:527
+#: qtplugins/propertytables/propertymodel.cpp:544
 msgid "Atom 1"
 msgstr "원자 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
+#: qtplugins/propertytables/propertymodel.cpp:529
 msgid "Vertex"
 msgstr "꼭지점"
 
-#: qtplugins/propertytables/propertymodel.cpp:478
-#: qtplugins/propertytables/propertymodel.cpp:495
+#: qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/propertytables/propertymodel.cpp:548
 msgid "Atom 3"
 msgstr "원자 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:480
-#: qtplugins/propertytables/propertymodel.cpp:499
+#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:552
 msgid "Angle (°)"
 msgstr "각도 (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:493
+#: qtplugins/propertytables/propertymodel.cpp:546
 msgid "Atom 2"
 msgstr "원자 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:497
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Atom 4"
 msgstr "원자 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:687
+#: qtplugins/propertytables/propertymodel.cpp:563
+msgctxt "root mean squared displacement in Angstrom"
+msgid "RMSD (Å)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:566
+msgid "Energy (kcal/mol)"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:754
 msgid "Adjust Fragment"
 msgstr "조각 조정"
 
-#: qtplugins/propertytables/propertymodel.cpp:813
+#: qtplugins/propertytables/propertymodel.cpp:880
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π 나선"
 
-#: qtplugins/propertytables/propertymodel.cpp:815
+#: qtplugins/propertytables/propertymodel.cpp:882
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "절곡"
 
-#: qtplugins/propertytables/propertymodel.cpp:817
+#: qtplugins/propertytables/propertymodel.cpp:884
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α 나선"
 
-#: qtplugins/propertytables/propertymodel.cpp:819
+#: qtplugins/propertytables/propertymodel.cpp:886
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β 시트"
 
-#: qtplugins/propertytables/propertymodel.cpp:821
+#: qtplugins/propertytables/propertymodel.cpp:888
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 나선"
 
-#: qtplugins/propertytables/propertymodel.cpp:823
+#: qtplugins/propertytables/propertymodel.cpp:890
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β 브릿지"
 
-#: qtplugins/propertytables/propertymodel.cpp:825
+#: qtplugins/propertytables/propertymodel.cpp:892
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "회전"
 
-#: qtplugins/propertytables/propertymodel.cpp:827
+#: qtplugins/propertytables/propertymodel.cpp:894
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "코일"
@@ -4458,7 +4468,11 @@ msgstr "비틀림 속성…"
 msgid "Residue Properties…"
 msgstr "잔류물 속성…"
 
-#: qtplugins/propertytables/propertytables.cpp:67
+#: qtplugins/propertytables/propertytables.cpp:63
+msgid "Conformer Properties…"
+msgstr ""
+
+#: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr "원자, 결합, 각도 및 비틀림 속성을 표시하고 편집하기 위한 표입니다."
@@ -4467,27 +4481,27 @@ msgstr "원자, 결합, 각도 및 비틀림 속성을 표시하고 편집하기
 msgid "PropertyTables"
 msgstr "속성표"
 
-#: qtplugins/propertytables/propertyview.cpp:43
+#: qtplugins/propertytables/propertyview.cpp:44
 msgid "Atom Properties"
 msgstr "원자 정보"
 
-#: qtplugins/propertytables/propertyview.cpp:46
+#: qtplugins/propertytables/propertyview.cpp:47
 msgid "Bond Properties"
 msgstr "결합 정보"
 
-#: qtplugins/propertytables/propertyview.cpp:49
+#: qtplugins/propertytables/propertyview.cpp:50
 msgid "Angle Properties"
 msgstr "각도 속성"
 
-#: qtplugins/propertytables/propertyview.cpp:52
+#: qtplugins/propertytables/propertyview.cpp:53
 msgid "Torsion Properties"
 msgstr "비틀림 정보"
 
-#: qtplugins/propertytables/propertyview.cpp:55
+#: qtplugins/propertytables/propertyview.cpp:56
 msgid "Conformer Properties"
 msgstr "이형태체 정보"
 
-#: qtplugins/propertytables/propertyview.cpp:58
+#: qtplugins/propertytables/propertyview.cpp:59
 msgid "Residue Properties"
 msgstr "잔류물 속성"
 
