@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 16:07+0000\n"
+"PO-Revision-Date: 2024-12-09 16:18+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -2480,7 +2480,7 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
-msgstr ""
+msgstr "Kopiranje i umetanje"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
@@ -2503,7 +2503,7 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
 #: qtplugins/forcefield/forcefield.cpp:80:1184
 msgid "Energy"
-msgstr ""
+msgstr "Energija"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
@@ -5632,7 +5632,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:149
 #. i18n: ectx: property (text), widget (QPushButton, apply)
 msgid "Apply"
-msgstr ""
+msgstr "Primijeni"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Cp2kInputDialog)
