@@ -66,52 +66,60 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
     auto* geometry = new GeometryNode;
     node.addChild(geometry);
 
+    // Handle the first mesh
     const Mesh* mesh = mol.mesh(0);
-
-    Core::Array<Vector3f> triangles;
-    
-    triangles = mesh->triangles();
-
+    Core::Array<Vector3f> triangles = mesh->triangles();
 
     bool hasColors = (mesh->colors().size() != 0);
 
     auto* mesh1 = new MeshGeometry;
     geometry->addDrawable(mesh1);
     mesh1->setOpacity(m_opacity);
+
     if (hasColors) {
       auto colors = mesh->colors();
       Core::Array<Vector3ub> colorsRGB(colors.size());
       for (size_t i = 0; i < colors.size(); i++)
-        colorsRGB[i] = Vector3ub(colors[i].red() * 255, colors[i].green() * 255,
-                                 colors[i].blue() * 255);
+        colorsRGB[i] = Vector3ub(static_cast<unsigned char>(colors[i].red() * 255),
+                                 static_cast<unsigned char>(colors[i].green() * 255),
+                                 static_cast<unsigned char>(colors[i].blue() * 255));
       mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
     } else {
-    mesh1->setColor(m_color1);
-    mesh1->addVertices(mesh->vertices(), mesh->normals());
+      mesh1->setColor(m_color1);
+      mesh1->addVertices(mesh->vertices(), mesh->normals());
     }   
+
+    // Add the triangles for the first mesh
     for (size_t i = 0; i < triangles.size(); ++i) {
       mesh1->addTriangle(triangles[i][0], triangles[i][1], triangles[i][2]);
     }
-      mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
-                                          : Rendering::TranslucentPass);
 
-  if (mol.meshCount() >= 2) { // it's a molecular orbital, two parts
+    mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass : Rendering::TranslucentPass);
 
+    // Handle the second mesh if present
+    if (mol.meshCount() >= 2) { 
       auto* mesh2 = new MeshGeometry;
       geometry->addDrawable(mesh2);
+
       mesh = mol.mesh(1);
+
+      // Retrieve the second mesh’s triangles
+      Core::Array<Vector3f> triangles2 = mesh->triangles();
+
       mesh2->setColor(m_color2);
       mesh2->setOpacity(m_opacity);
       mesh2->addVertices(mesh->vertices(), mesh->normals());
-      for (size_t i = 0; i < triangles.size(); ++i) {
-      mesh2->addTriangle(triangles[i][0], triangles[i][1], triangles[i][2]);
-    }
+
+      // Add the correct triangles for the second mesh
+      for (size_t i = 0; i < triangles2.size(); ++i) {
+        mesh2->addTriangle(triangles2[i][0], triangles2[i][1], triangles2[i][2]);
+      }
+
       mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
                                             : Rendering::TranslucentPass);
     }
   }
-  }
-
+}
 
 void Meshes::setOpacity(int opacity)
 {
