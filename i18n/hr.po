@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 15:50+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1049,7 +1050,7 @@ msgstr "Sve datoteke"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr ""
+msgstr "Svi podržavajući formati"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
