@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 14:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 14:32+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -278,16 +277,16 @@ msgstr "Prikaži &upozorenja"
 
 #: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr "Dogodila se greška."
+msgstr "Dogodila se greška:"
 
 #: molequeue/inputgeneratorwidget.cpp:451
 msgid "Select output filename"
-msgstr ""
+msgstr "Odaberi ime datoteke rezultata"
 
 #: molequeue/inputgeneratorwidget.cpp:463
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Interna greška: nije pronađen tekstualni widget za ime datoteke „%1”"
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #: molequeue/inputgeneratorwidget.cpp:590
@@ -300,7 +299,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Greška u rezultatu"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -312,13 +311,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Neuspjelo pisanje u datoteku %1."
 
 #: molequeue/inputgeneratorwidget.cpp:491
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Odaberi direktorij rezultata"
 
 #: molequeue/inputgeneratorwidget.cpp:508
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
