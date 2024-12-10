@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 13:33+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 14:26+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -196,8 +195,26 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Sljedeće datoteke su promijenjene:\n"
+"\n"
+"%1\n"
+"\n"
+"Želiš li prepisati promjene kako bi se odrazila nova geometrija ili opcije "
+"posla?"
 msgstr[1] ""
+"Sljedeće datoteke su promijenjene:\n"
+"\n"
+"%1\n"
+"\n"
+"Želiš li prepisati promjene kako bi se odrazila nova geometrija ili opcije "
+"posla?"
 msgstr[2] ""
+"Sljedeće datoteke su promijenjene:\n"
+"\n"
+"%1\n"
+"\n"
+"Želiš li prepisati promjene kako bi se odrazila nova geometrija ili opcije "
+"posla?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -238,25 +255,25 @@ msgstr ""
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
 #: qtplugins/gamessinput/gamessinputdialog.cpp:716
 msgid "Job Failed"
-msgstr ""
+msgstr "Posao neuspio"
 
 #: molequeue/inputgeneratorwidget.cpp:343
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1023
 #: qtplugins/gamessinput/gamessinputdialog.cpp:717
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Posao nije uspješno završen."
 
 #: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Skripta vraća upozorenja:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:377
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Sakrij &upozorenja"
 
 #: molequeue/inputgeneratorwidget.cpp:383
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Prikaži &upozorenja"
 
 #: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
@@ -2922,7 +2939,7 @@ msgstr "Odmrzni odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:159
 msgid "&Calculate"
-msgstr "Izračunaj"
+msgstr "&Izračunaj"
 
 #: qtplugins/forcefield/forcefield.cpp:252
 #: qtplugins/forcefield/forcefield.cpp:382
@@ -2936,12 +2953,12 @@ msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:253
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "Nema atoma za optimizaciju"
 
 #: qtplugins/forcefield/forcefield.cpp:381
 #, qt-format
 msgid "%1 Energy = %L2"
-msgstr ""
+msgstr "%1 energija = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:427
 #, qt-format
