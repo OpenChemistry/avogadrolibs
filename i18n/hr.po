@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:30+0000\n"
+"PO-Revision-Date: 2024-12-10 12:37+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -2774,7 +2774,7 @@ msgstr "Promijeni vrstu veze"
 
 #: qtplugins/editor/editor.cpp:136
 msgid "Remove Bond"
-msgstr "Ukloni veze"
+msgstr "Ukloni vezu"
 
 #: qtplugins/editor/editor.cpp:264 qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:223
@@ -2784,11 +2784,11 @@ msgstr ""
 #: qtplugins/editor/editor.cpp:267
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
-msgstr ""
+msgstr "Alat za uređivanje"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:217
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -2800,7 +2800,7 @@ msgstr ""
 
 #: qtplugins/editor/editortoolwidget.cpp:209
 msgid "Single"
-msgstr ""
+msgstr "Jednostruko"
 
 #: qtplugins/editor/editortoolwidget.cpp:210
 msgid "Double"
@@ -6230,7 +6230,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
 msgctxt "single-strand DNA"
 msgid "Single"
-msgstr ""
+msgstr "Jednostruko"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
@@ -7100,7 +7100,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "single"
-msgstr ""
+msgstr "jednostruko"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
