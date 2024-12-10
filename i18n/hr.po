@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 15:09+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 15:43+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -477,7 +476,7 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr "Interna greška"
+msgstr "Interna greška."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
@@ -497,55 +496,55 @@ msgstr "U BackgroundFileFormat nije postavljeno nijedno ime datoteke!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Razdijeli vodoravno"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "Razdijeli okomito"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:19 qtplugins/noncovalent/noncovalent.h:53
 msgid "Hydrogen"
-msgstr ""
+msgstr "Vodik"
 
 #: qtgui/elementtranslator.cpp:22
 msgid "Helium"
-msgstr ""
+msgstr "Helij"
 
 #: qtgui/elementtranslator.cpp:25
 msgid "Lithium"
-msgstr ""
+msgstr "Litij"
 
 #: qtgui/elementtranslator.cpp:28
 msgid "Beryllium"
-msgstr ""
+msgstr "Berilij"
 
 #: qtgui/elementtranslator.cpp:31
 msgid "Boron"
-msgstr ""
+msgstr "Bor"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:34:1929
 msgid "Carbon"
-msgstr ""
+msgstr "Ugljik"
 
 #: qtgui/elementtranslator.cpp:37
 msgid "Nitrogen"
-msgstr ""
+msgstr "Dušik"
 
 #: qtgui/elementtranslator.cpp:40
 msgid "Oxygen"
-msgstr ""
+msgstr "Kisik"
 
 #: qtgui/elementtranslator.cpp:43
 msgid "Fluorine"
-msgstr ""
+msgstr "Fluor"
 
 #: qtgui/elementtranslator.cpp:46
 msgid "Neon"
-msgstr ""
+msgstr "Neon"
 
 #: qtgui/elementtranslator.cpp:49
 msgid "Sodium"
@@ -553,7 +552,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:52
 msgid "Magnesium"
-msgstr ""
+msgstr "Magnezij"
 
 #: qtgui/elementtranslator.cpp:55
 msgid "Aluminum"
@@ -561,15 +560,15 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:58
 msgid "Silicon"
-msgstr ""
+msgstr "Silicij"
 
 #: qtgui/elementtranslator.cpp:61
 msgid "Phosphorus"
-msgstr ""
+msgstr "Fosfor"
 
 #: qtgui/elementtranslator.cpp:64
 msgid "Sulfur"
-msgstr ""
+msgstr "Sumpor"
 
 #: qtgui/elementtranslator.cpp:67
 msgid "Chlorine"
@@ -577,51 +576,51 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:70
 msgid "Argon"
-msgstr ""
+msgstr "Argon"
 
 #: qtgui/elementtranslator.cpp:73
 msgid "Potassium"
-msgstr ""
+msgstr "Kalij"
 
 #: qtgui/elementtranslator.cpp:76
 msgid "Calcium"
-msgstr ""
+msgstr "Kalcij"
 
 #: qtgui/elementtranslator.cpp:79
 msgid "Scandium"
-msgstr ""
+msgstr "Skandij"
 
 #: qtgui/elementtranslator.cpp:82
 msgid "Titanium"
-msgstr ""
+msgstr "Titan"
 
 #: qtgui/elementtranslator.cpp:85
 msgid "Vanadium"
-msgstr ""
+msgstr "Vanadij"
 
 #: qtgui/elementtranslator.cpp:88
 msgid "Chromium"
-msgstr ""
+msgstr "Krom"
 
 #: qtgui/elementtranslator.cpp:91
 msgid "Manganese"
-msgstr ""
+msgstr "Mangan"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:94:1932
 msgid "Iron"
-msgstr ""
+msgstr "Željezo"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:97:1935
 msgid "Cobalt"
-msgstr ""
+msgstr "Kobalt"
 
 #: qtgui/elementtranslator.cpp:100
 msgid "Nickel"
-msgstr ""
+msgstr "Nikal"
 
 #: qtgui/elementtranslator.cpp:103
 msgid "Copper"
@@ -633,191 +632,191 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:109
 msgid "Gallium"
-msgstr ""
+msgstr "Galij"
 
 #: qtgui/elementtranslator.cpp:112
 msgid "Germanium"
-msgstr ""
+msgstr "Germanij"
 
 #: qtgui/elementtranslator.cpp:115
 msgid "Arsenic"
-msgstr ""
+msgstr "Arsen"
 
 #: qtgui/elementtranslator.cpp:118
 msgid "Selenium"
-msgstr ""
+msgstr "Selen"
 
 #: qtgui/elementtranslator.cpp:121
 msgid "Bromine"
-msgstr ""
+msgstr "Brom"
 
 #: qtgui/elementtranslator.cpp:124
 msgid "Krypton"
-msgstr ""
+msgstr "Kripton"
 
 #: qtgui/elementtranslator.cpp:127
 msgid "Rubidium"
-msgstr ""
+msgstr "Rubidij"
 
 #: qtgui/elementtranslator.cpp:130
 msgid "Strontium"
-msgstr ""
+msgstr "Stroncij"
 
 #: qtgui/elementtranslator.cpp:133
 msgid "Yttrium"
-msgstr ""
+msgstr "Itrij"
 
 #: qtgui/elementtranslator.cpp:136
 msgid "Zirconium"
-msgstr ""
+msgstr "Cirkonij"
 
 #: qtgui/elementtranslator.cpp:139
 msgid "Niobium"
-msgstr ""
+msgstr "Niobij"
 
 #: qtgui/elementtranslator.cpp:142
 msgid "Molybdenum"
-msgstr ""
+msgstr "Molibden"
 
 #: qtgui/elementtranslator.cpp:145
 msgid "Technetium"
-msgstr ""
+msgstr "Tehnecij"
 
 #: qtgui/elementtranslator.cpp:148
 msgid "Ruthenium"
-msgstr ""
+msgstr "Rutenij"
 
 #: qtgui/elementtranslator.cpp:151
 msgid "Rhodium"
-msgstr ""
+msgstr "Rodij"
 
 #: qtgui/elementtranslator.cpp:154
 msgid "Palladium"
-msgstr ""
+msgstr "Paladij"
 
 #: qtgui/elementtranslator.cpp:157
 msgid "Silver"
-msgstr ""
+msgstr "Srebro"
 
 #: qtgui/elementtranslator.cpp:160
 msgid "Cadmium"
-msgstr ""
+msgstr "Kadmij"
 
 #: qtgui/elementtranslator.cpp:163
 msgid "Indium"
-msgstr ""
+msgstr "Indij"
 
 #: qtgui/elementtranslator.cpp:166
 msgid "Tin"
-msgstr ""
+msgstr "Kositar"
 
 #: qtgui/elementtranslator.cpp:169
 msgid "Antimony"
-msgstr ""
+msgstr "Antimon"
 
 #: qtgui/elementtranslator.cpp:172
 msgid "Tellurium"
-msgstr ""
+msgstr "Telur"
 
 #: qtgui/elementtranslator.cpp:175
 msgid "Iodine"
-msgstr ""
+msgstr "Jod"
 
 #: qtgui/elementtranslator.cpp:178
 msgid "Xenon"
-msgstr ""
+msgstr "Ksenon"
 
 #: qtgui/elementtranslator.cpp:181
 msgid "Cesium"
-msgstr ""
+msgstr "Cezij"
 
 #: qtgui/elementtranslator.cpp:184
 msgid "Barium"
-msgstr ""
+msgstr "Barij"
 
 #: qtgui/elementtranslator.cpp:187
 msgid "Lanthanum"
-msgstr ""
+msgstr "Lantan"
 
 #: qtgui/elementtranslator.cpp:190
 msgid "Cerium"
-msgstr ""
+msgstr "Cerij"
 
 #: qtgui/elementtranslator.cpp:193
 msgid "Praseodymium"
-msgstr ""
+msgstr "Praseodimij"
 
 #: qtgui/elementtranslator.cpp:196
 msgid "Neodymium"
-msgstr ""
+msgstr "Neodimij"
 
 #: qtgui/elementtranslator.cpp:199
 msgid "Promethium"
-msgstr ""
+msgstr "Prometij"
 
 #: qtgui/elementtranslator.cpp:202
 msgid "Samarium"
-msgstr ""
+msgstr "Samarij"
 
 #: qtgui/elementtranslator.cpp:205
 msgid "Europium"
-msgstr ""
+msgstr "Europij"
 
 #: qtgui/elementtranslator.cpp:208
 msgid "Gadolinium"
-msgstr ""
+msgstr "Gadolinij"
 
 #: qtgui/elementtranslator.cpp:211
 msgid "Terbium"
-msgstr ""
+msgstr "Terbij"
 
 #: qtgui/elementtranslator.cpp:214
 msgid "Dysprosium"
-msgstr ""
+msgstr "Disprozij"
 
 #: qtgui/elementtranslator.cpp:217
 msgid "Holmium"
-msgstr ""
+msgstr "Holmij"
 
 #: qtgui/elementtranslator.cpp:220
 msgid "Erbium"
-msgstr ""
+msgstr "Erbij"
 
 #: qtgui/elementtranslator.cpp:223
 msgid "Thulium"
-msgstr ""
+msgstr "Tulij"
 
 #: qtgui/elementtranslator.cpp:226
 msgid "Ytterbium"
-msgstr ""
+msgstr "Iterbij"
 
 #: qtgui/elementtranslator.cpp:229
 msgid "Lutetium"
-msgstr ""
+msgstr "Lutecij"
 
 #: qtgui/elementtranslator.cpp:232
 msgid "Hafnium"
-msgstr ""
+msgstr "Hafnij"
 
 #: qtgui/elementtranslator.cpp:235
 msgid "Tantalum"
-msgstr ""
+msgstr "Tantal"
 
 #: qtgui/elementtranslator.cpp:238
 msgid "Tungsten"
-msgstr ""
+msgstr "Volfram"
 
 #: qtgui/elementtranslator.cpp:241
 msgid "Rhenium"
-msgstr ""
+msgstr "Renij"
 
 #: qtgui/elementtranslator.cpp:244
 msgid "Osmium"
-msgstr ""
+msgstr "Osmij"
 
 #: qtgui/elementtranslator.cpp:247
 msgid "Iridium"
-msgstr ""
+msgstr "Iridij"
 
 #: qtgui/elementtranslator.cpp:250
 msgid "Platinum"
@@ -833,31 +832,31 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:259
 msgid "Thallium"
-msgstr ""
+msgstr "Talij"
 
 #: qtgui/elementtranslator.cpp:262
 msgid "Lead"
-msgstr ""
+msgstr "Olovo"
 
 #: qtgui/elementtranslator.cpp:265
 msgid "Bismuth"
-msgstr ""
+msgstr "Bizmut"
 
 #: qtgui/elementtranslator.cpp:268
 msgid "Polonium"
-msgstr ""
+msgstr "Polonij"
 
 #: qtgui/elementtranslator.cpp:271
 msgid "Astatine"
-msgstr ""
+msgstr "Astat"
 
 #: qtgui/elementtranslator.cpp:274
 msgid "Radon"
-msgstr ""
+msgstr "Radon"
 
 #: qtgui/elementtranslator.cpp:277
 msgid "Francium"
-msgstr ""
+msgstr "Francij"
 
 #: qtgui/elementtranslator.cpp:280
 msgid "Radium"
@@ -865,15 +864,15 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:283
 msgid "Actinium"
-msgstr ""
+msgstr "Aktinij"
 
 #: qtgui/elementtranslator.cpp:286
 msgid "Thorium"
-msgstr ""
+msgstr "Torij"
 
 #: qtgui/elementtranslator.cpp:289
 msgid "Protactinium"
-msgstr ""
+msgstr "Protaktinij"
 
 #: qtgui/elementtranslator.cpp:292
 msgid "Uranium"
@@ -881,7 +880,7 @@ msgstr ""
 
 #: qtgui/elementtranslator.cpp:295
 msgid "Neptunium"
-msgstr ""
+msgstr "Neptunij"
 
 #: qtgui/elementtranslator.cpp:298
 msgid "Plutonium"
