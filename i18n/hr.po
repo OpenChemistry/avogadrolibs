@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 14:32+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -324,7 +325,7 @@ msgstr "Odaberi direktorij rezultata"
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "Direktorij ne postoji"
 
 #: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
