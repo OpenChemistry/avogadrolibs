@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 15:43+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 15:48+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -877,7 +876,7 @@ msgstr "Protaktinij"
 
 #: qtgui/elementtranslator.cpp:292
 msgid "Uranium"
-msgstr "Uran"
+msgstr "Uranij"
 
 #: qtgui/elementtranslator.cpp:295
 msgid "Neptunium"
@@ -885,103 +884,103 @@ msgstr "Neptunij"
 
 #: qtgui/elementtranslator.cpp:298
 msgid "Plutonium"
-msgstr ""
+msgstr "Plutonij"
 
 #: qtgui/elementtranslator.cpp:301
 msgid "Americium"
-msgstr ""
+msgstr "Americij"
 
 #: qtgui/elementtranslator.cpp:304
 msgid "Curium"
-msgstr ""
+msgstr "Kirij"
 
 #: qtgui/elementtranslator.cpp:307
 msgid "Berkelium"
-msgstr ""
+msgstr "Berkelij"
 
 #: qtgui/elementtranslator.cpp:310
 msgid "Californium"
-msgstr ""
+msgstr "Kalifornij"
 
 #: qtgui/elementtranslator.cpp:313
 msgid "Einsteinium"
-msgstr ""
+msgstr "Ajnštajnij"
 
 #: qtgui/elementtranslator.cpp:316
 msgid "Fermium"
-msgstr ""
+msgstr "Fermij"
 
 #: qtgui/elementtranslator.cpp:319
 msgid "Mendelevium"
-msgstr ""
+msgstr "Mendelevij"
 
 #: qtgui/elementtranslator.cpp:322
 msgid "Nobelium"
-msgstr ""
+msgstr "Nobelij"
 
 #: qtgui/elementtranslator.cpp:325
 msgid "Lawrencium"
-msgstr ""
+msgstr "Lorensij"
 
 #: qtgui/elementtranslator.cpp:328
 msgid "Rutherfordium"
-msgstr ""
+msgstr "Raderfordij"
 
 #: qtgui/elementtranslator.cpp:331
 msgid "Dubnium"
-msgstr ""
+msgstr "Dubnij"
 
 #: qtgui/elementtranslator.cpp:334
 msgid "Seaborgium"
-msgstr ""
+msgstr "Siborgij"
 
 #: qtgui/elementtranslator.cpp:337
 msgid "Bohrium"
-msgstr ""
+msgstr "Borij"
 
 #: qtgui/elementtranslator.cpp:340
 msgid "Hassium"
-msgstr ""
+msgstr "Hasij"
 
 #: qtgui/elementtranslator.cpp:343
 msgid "Meitnerium"
-msgstr ""
+msgstr "Majtnerij"
 
 #: qtgui/elementtranslator.cpp:346
 msgid "Darmstadtium"
-msgstr ""
+msgstr "Darmštatij"
 
 #: qtgui/elementtranslator.cpp:349
 msgid "Roentgenium"
-msgstr ""
+msgstr "Roentgenij"
 
 #: qtgui/elementtranslator.cpp:352
 msgid "Copernicium"
-msgstr ""
+msgstr "Kopernicij"
 
 #: qtgui/elementtranslator.cpp:355
 msgid "Nihonium"
-msgstr ""
+msgstr "Nihonij"
 
 #: qtgui/elementtranslator.cpp:358
 msgid "Flerovium"
-msgstr ""
+msgstr "Flerovij"
 
 #: qtgui/elementtranslator.cpp:361
 msgid "Moscovium"
-msgstr ""
+msgstr "Moskovij"
 
 #: qtgui/elementtranslator.cpp:364
 msgid "Livermorium"
-msgstr ""
+msgstr "Livermorij"
 
 #: qtgui/elementtranslator.cpp:367
 msgid "Tennessine"
-msgstr ""
+msgstr "Tenesin"
 
 #: qtgui/elementtranslator.cpp:370
 msgid "Oganesson"
-msgstr ""
+msgstr "Oganeson"
 
 #: qtgui/filebrowsewidget.cpp:23
 msgid "Browse"
