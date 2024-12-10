@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 12:37+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2779,7 +2780,7 @@ msgstr "Ukloni vezu"
 #: qtplugins/editor/editor.cpp:264 qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
-msgstr ""
+msgstr "Udaljenost:"
 
 #: qtplugins/editor/editor.cpp:267
 #, qt-format
@@ -2796,7 +2797,7 @@ msgstr "Alat za uređivanje"
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/editor/editortoolwidget.cpp:208:1803 rc.cpp:1821
 msgid "Automatic"
-msgstr ""
+msgstr "Automatski"
 
 #: qtplugins/editor/editortoolwidget.cpp:209
 msgid "Single"
@@ -6236,7 +6237,7 @@ msgstr "Jednostruko"
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
 msgctxt "double-strand DNA"
 msgid "Double"
-msgstr ""
+msgstr "Dvostruko"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
