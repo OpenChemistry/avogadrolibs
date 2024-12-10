@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:45+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 13:32+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -410,7 +409,7 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Dohvaćanje podataka o završenom poslu …"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -2819,7 +2818,7 @@ msgstr "&Uvezi"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 msgid "Fetch PDB"
-msgstr ""
+msgstr "Dohvati PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -2868,45 +2867,45 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "Navedena molekula nije pronađena: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
-msgstr ""
+msgstr "Dohvati iz PDB-a"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "Preuzmi PDB modele iz „Protein Data Bank” baze podataka"
 
 #: qtplugins/focus/focus.cpp:22
 msgid "Focus Selection"
-msgstr ""
+msgstr "Fokusiraj odabir"
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
-msgstr ""
+msgstr "Defokusiraj"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Fokusiraj"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Fokusiraj pogled na određene funkcije."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "Iscrtaj vizualizacije polja sile za atome molekule."
 
 #: qtplugins/forcefield/forcefield.cpp:71
 #: qtplugins/forcefield/forcefield.cpp:346 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "Optimiraj geometriju"
 
 #: qtplugins/forcefield/forcefield.cpp:88
 msgid "Forces"
-msgstr ""
+msgstr "Snage"
 
 #: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
@@ -6242,7 +6241,7 @@ msgstr "Dvostruko"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
 msgid "LAMMPS Input"
-msgstr "LAMMPS Unos"
+msgstr "LAMMPS unos"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:37
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -7096,7 +7095,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:199
 #. i18n: ectx: property (text), widget (QLabel, label_precision)
 msgid "Precision:"
-msgstr "Točnost"
+msgstr "Točnost:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
