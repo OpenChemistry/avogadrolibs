@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 15:43+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -548,7 +549,7 @@ msgstr "Neon"
 
 #: qtgui/elementtranslator.cpp:49
 msgid "Sodium"
-msgstr ""
+msgstr "Natrij"
 
 #: qtgui/elementtranslator.cpp:52
 msgid "Magnesium"
@@ -556,7 +557,7 @@ msgstr "Magnezij"
 
 #: qtgui/elementtranslator.cpp:55
 msgid "Aluminum"
-msgstr ""
+msgstr "Aluminij"
 
 #: qtgui/elementtranslator.cpp:58
 msgid "Silicon"
@@ -572,7 +573,7 @@ msgstr "Sumpor"
 
 #: qtgui/elementtranslator.cpp:67
 msgid "Chlorine"
-msgstr ""
+msgstr "Klor"
 
 #: qtgui/elementtranslator.cpp:70
 msgid "Argon"
@@ -624,11 +625,11 @@ msgstr "Nikal"
 
 #: qtgui/elementtranslator.cpp:103
 msgid "Copper"
-msgstr ""
+msgstr "Bakar"
 
 #: qtgui/elementtranslator.cpp:106
 msgid "Zinc"
-msgstr ""
+msgstr "Cink"
 
 #: qtgui/elementtranslator.cpp:109
 msgid "Gallium"
@@ -820,15 +821,15 @@ msgstr "Iridij"
 
 #: qtgui/elementtranslator.cpp:250
 msgid "Platinum"
-msgstr ""
+msgstr "Platina"
 
 #: qtgui/elementtranslator.cpp:253
 msgid "Gold"
-msgstr ""
+msgstr "Zlato"
 
 #: qtgui/elementtranslator.cpp:256
 msgid "Mercury"
-msgstr ""
+msgstr "Živa"
 
 #: qtgui/elementtranslator.cpp:259
 msgid "Thallium"
@@ -860,7 +861,7 @@ msgstr "Francij"
 
 #: qtgui/elementtranslator.cpp:280
 msgid "Radium"
-msgstr ""
+msgstr "Radij"
 
 #: qtgui/elementtranslator.cpp:283
 msgid "Actinium"
@@ -876,7 +877,7 @@ msgstr "Protaktinij"
 
 #: qtgui/elementtranslator.cpp:292
 msgid "Uranium"
-msgstr ""
+msgstr "Uran"
 
 #: qtgui/elementtranslator.cpp:295
 msgid "Neptunium"
