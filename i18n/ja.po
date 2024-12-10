@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-05 15:38+0000\n"
+"PO-Revision-Date: 2024-12-10 12:07+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -4462,11 +4462,11 @@ msgstr "原子4"
 #: qtplugins/propertytables/propertymodel.cpp:563
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "エネルギー (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:754
 msgid "Adjust Fragment"
