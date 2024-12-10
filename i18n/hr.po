@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 16:53+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -143,12 +142,12 @@ msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Generator unosa (greška)"
 
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "%1 generator ulaza"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
@@ -1050,7 +1049,7 @@ msgstr "Sve datoteke"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr "Svi podržavajući formati"
+msgstr "Svi podržani formati"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
@@ -1060,7 +1059,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 poruka"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -7114,17 +7113,17 @@ msgstr "Referenca"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "OpenCL"
-msgstr ""
+msgstr "OpenCL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CUDA"
-msgstr ""
+msgstr "CUDA"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:199
 #. i18n: ectx: property (text), widget (QLabel, label_precision)
