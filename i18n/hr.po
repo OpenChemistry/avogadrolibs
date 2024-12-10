@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:28+0000\n"
+"PO-Revision-Date: 2024-12-10 12:30+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -2750,7 +2750,7 @@ msgstr "Ctrl+"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
-msgstr ""
+msgstr "Crtaj"
 
 #: qtplugins/editor/editor.cpp:74
 #, qt-format
@@ -2771,7 +2771,7 @@ msgstr "Promijeni vrstu veze"
 
 #: qtplugins/editor/editor.cpp:136
 msgid "Remove Bond"
-msgstr ""
+msgstr "Ukloni veze"
 
 #: qtplugins/editor/editor.cpp:264 qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:223
