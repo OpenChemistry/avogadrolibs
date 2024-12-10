@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:28+0000\n"
+"PO-Revision-Date: 2024-12-10 12:30+0000\n"
 "Last-Translator: \"C.Y.A.N\" <bd3alz@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -345,7 +345,7 @@ msgstr "%1: Directory tidak dapat dibaca!"
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: File akan di overwritten."
 
 #: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
