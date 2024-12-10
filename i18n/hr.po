@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-09 22:58+0000\n"
+"PO-Revision-Date: 2024-12-10 12:07+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -1356,15 +1356,15 @@ msgstr "Dodaj vezu"
 
 #: qtgui/rwmolecule.cpp:299
 msgid "Removed Bond"
-msgstr ""
+msgstr "Uklonjene veze"
 
 #: qtgui/rwmolecule.cpp:306
 msgid "Clear Bonds"
-msgstr ""
+msgstr "Izbriši veze"
 
 #: qtgui/rwmolecule.cpp:320
 msgid "Set Bond Orders"
-msgstr ""
+msgstr "Postavi redoslijed veza"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
@@ -1372,11 +1372,11 @@ msgstr "Promijeni redoslijed veza"
 
 #: qtgui/rwmolecule.cpp:354
 msgid "Update Bonds"
-msgstr ""
+msgstr "Aktualiziraj veze"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
-msgstr ""
+msgstr "Aktualiziraj vezu"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
@@ -1404,11 +1404,11 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Niggli redukcija"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
-msgstr ""
+msgstr "Okreni u standardnu orijentaciju"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
@@ -1881,26 +1881,26 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/ballandstick/ballandstick.cpp:125:222
 msgid "Opacity"
-msgstr "Neprozirnost:"
+msgstr "Neprozirnost"
 
 #: qtplugins/ballandstick/ballandstick.cpp:129
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds"
-msgstr ""
+msgstr "Prikaži višestruke veze"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 msgid "Show hydrogens"
-msgstr ""
+msgstr "Prikaži vodike"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Iscrtaj atome kao sfere i veze kao valjke."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -1941,7 +1941,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:217
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:803
 #: qtplugins/editor/editor.cpp:269 qtplugins/measuretool/measuretool.cpp:224
@@ -1949,16 +1949,18 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr ""
+msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
-msgstr ""
+msgstr "Alat za manipulaciju veza."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Alat koji se koristi za uređivanje geometrije molekula mijenjanjem duljina "
+"veza i kutova."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
@@ -2643,7 +2645,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:63
 msgid "Rotate to Standard &Orientation"
-msgstr ""
+msgstr "&Okreni u standardnu orijentaciju"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
@@ -2655,41 +2657,41 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
-msgstr ""
+msgstr "Reduciraj ćeliju (&Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:48 qtplugins/plotxrd/plotxrd.cpp:53
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "&Crystal"
-msgstr ""
+msgstr "&Kristal"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr ""
+msgstr "&Ukloni jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr ""
+msgstr "&Dodaj jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
-msgstr ""
+msgstr "Uvezi kristal iz međuspremnika"
 
 #: qtplugins/crystal/crystal.cpp:175
 msgid "Wrap atoms into the unit cell."
-msgstr ""
+msgstr "Omotaj atome u jediničnu ćeliju."
 
 #: qtplugins/crystal/crystal.cpp:177
 msgid "Rotate the unit cell to the standard orientation."
-msgstr ""
+msgstr "Okreni jediničnu ćeliju u standardnu orijentaciju."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Niggli reduciranje kristala"
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "The unit cell is already reduced."
-msgstr ""
+msgstr "Jedinična ćelija je već reducirana."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
