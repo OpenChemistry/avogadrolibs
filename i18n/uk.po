@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-05 11:00+0000\n"
+"PO-Revision-Date: 2024-12-10 12:07+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -3380,9 +3380,8 @@ msgid "Atom Label:"
 msgstr "Мітки атомів"
 
 #: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
-#, fuzzy
 msgid "ID"
-msgstr "D"
+msgstr ""
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
