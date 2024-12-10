@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 14:32+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 15:09+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -325,14 +324,14 @@ msgstr "Odaberi direktorij rezultata"
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr "Direktorij ne postoji"
+msgstr "%1: Direktorij ne postoji!"
 
 #: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Direktorij se ne može čitati!"
 
 #: molequeue/inputgeneratorwidget.cpp:524
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -341,7 +340,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Datoteka će se prepisati."
 
 #: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -350,13 +349,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Datoteka se ne može promijeniti."
 
 #: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Datoteke unosa se ne mogu promijeniti zbog nepoznate greške."
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -367,6 +366,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Datoteke unosa se ne mogu promijeniti:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -381,6 +383,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Datoteke unosa se ne mogu promijeniti:\n"
+"\n"
+"%1\n"
+"\n"
+"Upozorenja:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -393,20 +402,25 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Upozorenje:\n"
+"\n"
+"%1\n"
+"\n"
+"Želiš li nastaviti?"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Piši datoteke unosa"
 
 #: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
-msgstr ""
+msgstr "Konfiguriraj posao"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Slanje posla aplikaciji MoleQueue …"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -420,11 +434,11 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Čeka se završetak posla %1 „%2” …"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Prestani čekati"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -446,11 +460,11 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueue je odbio posao: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Nije odabran nijedan program."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
