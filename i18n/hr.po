@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 13:32+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-10 13:33+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2910,15 +2909,15 @@ msgstr "Snage"
 
 #: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
-msgstr "Konfiguriraj"
+msgstr "Konfiguriraj …"
 
 #: qtplugins/forcefield/forcefield.cpp:108
 msgid "Freeze Selected Atoms"
-msgstr ""
+msgstr "Zamrzni odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:115
 msgid "Unfreeze Selected Atoms"
-msgstr ""
+msgstr "Odmrzni odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:159
 msgid "&Calculate"
