@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 12:30+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2746,7 +2745,7 @@ msgstr "Iscrtaj dipolni moment molekule."
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr "Ctrl+"
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
@@ -2760,10 +2759,14 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Alat za crtanje (%1)\n"
+"\n"
+"Lijeva tipka miša: Klikni i povuci za stvaranje atoma i veza\n"
+"Desna tipka miša: Izbriši atom"
 
 #: qtplugins/editor/editor.cpp:113
 msgid "Draw Atom"
-msgstr ""
+msgstr "Crtaj atom"
 
 #: qtplugins/editor/editor.cpp:123
 msgid "Change Bond Type"
