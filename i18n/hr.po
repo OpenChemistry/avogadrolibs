@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-10 13:33+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2921,7 +2922,7 @@ msgstr "Odmrzni odabrane atome"
 
 #: qtplugins/forcefield/forcefield.cpp:159
 msgid "&Calculate"
-msgstr ""
+msgstr "Izračunaj"
 
 #: qtplugins/forcefield/forcefield.cpp:252
 #: qtplugins/forcefield/forcefield.cpp:382
