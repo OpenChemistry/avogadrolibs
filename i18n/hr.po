@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 14:32+0000\n"
+"PO-Revision-Date: 2024-12-10 17:12+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -143,16 +143,16 @@ msgstr ""
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Generator unosa (greška)"
 
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "%1 generator ulaza"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
-msgstr ""
+msgstr "Nastavi"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:130
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -176,7 +176,7 @@ msgstr "Zatvori"
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
 msgid "Unknown"
-msgstr ""
+msgstr "Nepoznato"
 
 #: molequeue/inputgeneratorwidget.cpp:165
 #, qt-format, qt-plural-format
@@ -325,14 +325,14 @@ msgstr "Odaberi direktorij rezultata"
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr "Direktorij ne postoji"
+msgstr "%1: Direktorij ne postoji!"
 
 #: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Direktorij se ne može čitati!"
 
 #: molequeue/inputgeneratorwidget.cpp:524
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -341,7 +341,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Datoteka će se prepisati."
 
 #: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -350,13 +350,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Datoteka se ne može promijeniti."
 
 #: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Datoteke unosa se ne mogu promijeniti zbog nepoznate greške."
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -367,6 +367,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Datoteke unosa se ne mogu promijeniti:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -381,6 +384,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Datoteke unosa se ne mogu promijeniti:\n"
+"\n"
+"%1\n"
+"\n"
+"Upozorenja:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -393,20 +403,25 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Upozorenje:\n"
+"\n"
+"%1\n"
+"\n"
+"Želiš li nastaviti?"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Piši datoteke unosa"
 
 #: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
-msgstr ""
+msgstr "Konfiguriraj posao"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Slanje posla aplikaciji MoleQueue …"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -420,11 +435,11 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Čeka se završetak posla %1 „%2” …"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Prestani čekati"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -446,11 +461,11 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueue je odbio posao: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Nije odabran nijedan program."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -462,7 +477,7 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Interna greška."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
@@ -482,503 +497,503 @@ msgstr "U BackgroundFileFormat nije postavljeno nijedno ime datoteke!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Razdijeli vodoravno"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "Razdijeli okomito"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:19 qtplugins/noncovalent/noncovalent.h:53
 msgid "Hydrogen"
-msgstr ""
+msgstr "Vodik"
 
 #: qtgui/elementtranslator.cpp:22
 msgid "Helium"
-msgstr ""
+msgstr "Helij"
 
 #: qtgui/elementtranslator.cpp:25
 msgid "Lithium"
-msgstr ""
+msgstr "Litij"
 
 #: qtgui/elementtranslator.cpp:28
 msgid "Beryllium"
-msgstr ""
+msgstr "Berilij"
 
 #: qtgui/elementtranslator.cpp:31
 msgid "Boron"
-msgstr ""
+msgstr "Bor"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:34:1929
 msgid "Carbon"
-msgstr ""
+msgstr "Ugljik"
 
 #: qtgui/elementtranslator.cpp:37
 msgid "Nitrogen"
-msgstr ""
+msgstr "Dušik"
 
 #: qtgui/elementtranslator.cpp:40
 msgid "Oxygen"
-msgstr ""
+msgstr "Kisik"
 
 #: qtgui/elementtranslator.cpp:43
 msgid "Fluorine"
-msgstr ""
+msgstr "Fluor"
 
 #: qtgui/elementtranslator.cpp:46
 msgid "Neon"
-msgstr ""
+msgstr "Neon"
 
 #: qtgui/elementtranslator.cpp:49
 msgid "Sodium"
-msgstr ""
+msgstr "Natrij"
 
 #: qtgui/elementtranslator.cpp:52
 msgid "Magnesium"
-msgstr ""
+msgstr "Magnezij"
 
 #: qtgui/elementtranslator.cpp:55
 msgid "Aluminum"
-msgstr ""
+msgstr "Aluminij"
 
 #: qtgui/elementtranslator.cpp:58
 msgid "Silicon"
-msgstr ""
+msgstr "Silicij"
 
 #: qtgui/elementtranslator.cpp:61
 msgid "Phosphorus"
-msgstr ""
+msgstr "Fosfor"
 
 #: qtgui/elementtranslator.cpp:64
 msgid "Sulfur"
-msgstr ""
+msgstr "Sumpor"
 
 #: qtgui/elementtranslator.cpp:67
 msgid "Chlorine"
-msgstr ""
+msgstr "Klor"
 
 #: qtgui/elementtranslator.cpp:70
 msgid "Argon"
-msgstr ""
+msgstr "Argon"
 
 #: qtgui/elementtranslator.cpp:73
 msgid "Potassium"
-msgstr ""
+msgstr "Kalij"
 
 #: qtgui/elementtranslator.cpp:76
 msgid "Calcium"
-msgstr ""
+msgstr "Kalcij"
 
 #: qtgui/elementtranslator.cpp:79
 msgid "Scandium"
-msgstr ""
+msgstr "Skandij"
 
 #: qtgui/elementtranslator.cpp:82
 msgid "Titanium"
-msgstr ""
+msgstr "Titan"
 
 #: qtgui/elementtranslator.cpp:85
 msgid "Vanadium"
-msgstr ""
+msgstr "Vanadij"
 
 #: qtgui/elementtranslator.cpp:88
 msgid "Chromium"
-msgstr ""
+msgstr "Krom"
 
 #: qtgui/elementtranslator.cpp:91
 msgid "Manganese"
-msgstr ""
+msgstr "Mangan"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:94:1932
 msgid "Iron"
-msgstr ""
+msgstr "Željezo"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
 #: qtgui/elementtranslator.cpp:97:1935
 msgid "Cobalt"
-msgstr ""
+msgstr "Kobalt"
 
 #: qtgui/elementtranslator.cpp:100
 msgid "Nickel"
-msgstr ""
+msgstr "Nikal"
 
 #: qtgui/elementtranslator.cpp:103
 msgid "Copper"
-msgstr ""
+msgstr "Bakar"
 
 #: qtgui/elementtranslator.cpp:106
 msgid "Zinc"
-msgstr ""
+msgstr "Cink"
 
 #: qtgui/elementtranslator.cpp:109
 msgid "Gallium"
-msgstr ""
+msgstr "Galij"
 
 #: qtgui/elementtranslator.cpp:112
 msgid "Germanium"
-msgstr ""
+msgstr "Germanij"
 
 #: qtgui/elementtranslator.cpp:115
 msgid "Arsenic"
-msgstr ""
+msgstr "Arsen"
 
 #: qtgui/elementtranslator.cpp:118
 msgid "Selenium"
-msgstr ""
+msgstr "Selen"
 
 #: qtgui/elementtranslator.cpp:121
 msgid "Bromine"
-msgstr ""
+msgstr "Brom"
 
 #: qtgui/elementtranslator.cpp:124
 msgid "Krypton"
-msgstr ""
+msgstr "Kripton"
 
 #: qtgui/elementtranslator.cpp:127
 msgid "Rubidium"
-msgstr ""
+msgstr "Rubidij"
 
 #: qtgui/elementtranslator.cpp:130
 msgid "Strontium"
-msgstr ""
+msgstr "Stroncij"
 
 #: qtgui/elementtranslator.cpp:133
 msgid "Yttrium"
-msgstr ""
+msgstr "Itrij"
 
 #: qtgui/elementtranslator.cpp:136
 msgid "Zirconium"
-msgstr ""
+msgstr "Cirkonij"
 
 #: qtgui/elementtranslator.cpp:139
 msgid "Niobium"
-msgstr ""
+msgstr "Niobij"
 
 #: qtgui/elementtranslator.cpp:142
 msgid "Molybdenum"
-msgstr ""
+msgstr "Molibden"
 
 #: qtgui/elementtranslator.cpp:145
 msgid "Technetium"
-msgstr ""
+msgstr "Tehnecij"
 
 #: qtgui/elementtranslator.cpp:148
 msgid "Ruthenium"
-msgstr ""
+msgstr "Rutenij"
 
 #: qtgui/elementtranslator.cpp:151
 msgid "Rhodium"
-msgstr ""
+msgstr "Rodij"
 
 #: qtgui/elementtranslator.cpp:154
 msgid "Palladium"
-msgstr ""
+msgstr "Paladij"
 
 #: qtgui/elementtranslator.cpp:157
 msgid "Silver"
-msgstr ""
+msgstr "Srebro"
 
 #: qtgui/elementtranslator.cpp:160
 msgid "Cadmium"
-msgstr ""
+msgstr "Kadmij"
 
 #: qtgui/elementtranslator.cpp:163
 msgid "Indium"
-msgstr ""
+msgstr "Indij"
 
 #: qtgui/elementtranslator.cpp:166
 msgid "Tin"
-msgstr ""
+msgstr "Kositar"
 
 #: qtgui/elementtranslator.cpp:169
 msgid "Antimony"
-msgstr ""
+msgstr "Antimon"
 
 #: qtgui/elementtranslator.cpp:172
 msgid "Tellurium"
-msgstr ""
+msgstr "Telur"
 
 #: qtgui/elementtranslator.cpp:175
 msgid "Iodine"
-msgstr ""
+msgstr "Jod"
 
 #: qtgui/elementtranslator.cpp:178
 msgid "Xenon"
-msgstr ""
+msgstr "Ksenon"
 
 #: qtgui/elementtranslator.cpp:181
 msgid "Cesium"
-msgstr ""
+msgstr "Cezij"
 
 #: qtgui/elementtranslator.cpp:184
 msgid "Barium"
-msgstr ""
+msgstr "Barij"
 
 #: qtgui/elementtranslator.cpp:187
 msgid "Lanthanum"
-msgstr ""
+msgstr "Lantan"
 
 #: qtgui/elementtranslator.cpp:190
 msgid "Cerium"
-msgstr ""
+msgstr "Cerij"
 
 #: qtgui/elementtranslator.cpp:193
 msgid "Praseodymium"
-msgstr ""
+msgstr "Praseodimij"
 
 #: qtgui/elementtranslator.cpp:196
 msgid "Neodymium"
-msgstr ""
+msgstr "Neodimij"
 
 #: qtgui/elementtranslator.cpp:199
 msgid "Promethium"
-msgstr ""
+msgstr "Prometij"
 
 #: qtgui/elementtranslator.cpp:202
 msgid "Samarium"
-msgstr ""
+msgstr "Samarij"
 
 #: qtgui/elementtranslator.cpp:205
 msgid "Europium"
-msgstr ""
+msgstr "Europij"
 
 #: qtgui/elementtranslator.cpp:208
 msgid "Gadolinium"
-msgstr ""
+msgstr "Gadolinij"
 
 #: qtgui/elementtranslator.cpp:211
 msgid "Terbium"
-msgstr ""
+msgstr "Terbij"
 
 #: qtgui/elementtranslator.cpp:214
 msgid "Dysprosium"
-msgstr ""
+msgstr "Disprozij"
 
 #: qtgui/elementtranslator.cpp:217
 msgid "Holmium"
-msgstr ""
+msgstr "Holmij"
 
 #: qtgui/elementtranslator.cpp:220
 msgid "Erbium"
-msgstr ""
+msgstr "Erbij"
 
 #: qtgui/elementtranslator.cpp:223
 msgid "Thulium"
-msgstr ""
+msgstr "Tulij"
 
 #: qtgui/elementtranslator.cpp:226
 msgid "Ytterbium"
-msgstr ""
+msgstr "Iterbij"
 
 #: qtgui/elementtranslator.cpp:229
 msgid "Lutetium"
-msgstr ""
+msgstr "Lutecij"
 
 #: qtgui/elementtranslator.cpp:232
 msgid "Hafnium"
-msgstr ""
+msgstr "Hafnij"
 
 #: qtgui/elementtranslator.cpp:235
 msgid "Tantalum"
-msgstr ""
+msgstr "Tantal"
 
 #: qtgui/elementtranslator.cpp:238
 msgid "Tungsten"
-msgstr ""
+msgstr "Volfram"
 
 #: qtgui/elementtranslator.cpp:241
 msgid "Rhenium"
-msgstr ""
+msgstr "Renij"
 
 #: qtgui/elementtranslator.cpp:244
 msgid "Osmium"
-msgstr ""
+msgstr "Osmij"
 
 #: qtgui/elementtranslator.cpp:247
 msgid "Iridium"
-msgstr ""
+msgstr "Iridij"
 
 #: qtgui/elementtranslator.cpp:250
 msgid "Platinum"
-msgstr ""
+msgstr "Platina"
 
 #: qtgui/elementtranslator.cpp:253
 msgid "Gold"
-msgstr ""
+msgstr "Zlato"
 
 #: qtgui/elementtranslator.cpp:256
 msgid "Mercury"
-msgstr ""
+msgstr "Živa"
 
 #: qtgui/elementtranslator.cpp:259
 msgid "Thallium"
-msgstr ""
+msgstr "Talij"
 
 #: qtgui/elementtranslator.cpp:262
 msgid "Lead"
-msgstr ""
+msgstr "Olovo"
 
 #: qtgui/elementtranslator.cpp:265
 msgid "Bismuth"
-msgstr ""
+msgstr "Bizmut"
 
 #: qtgui/elementtranslator.cpp:268
 msgid "Polonium"
-msgstr ""
+msgstr "Polonij"
 
 #: qtgui/elementtranslator.cpp:271
 msgid "Astatine"
-msgstr ""
+msgstr "Astat"
 
 #: qtgui/elementtranslator.cpp:274
 msgid "Radon"
-msgstr ""
+msgstr "Radon"
 
 #: qtgui/elementtranslator.cpp:277
 msgid "Francium"
-msgstr ""
+msgstr "Francij"
 
 #: qtgui/elementtranslator.cpp:280
 msgid "Radium"
-msgstr ""
+msgstr "Radij"
 
 #: qtgui/elementtranslator.cpp:283
 msgid "Actinium"
-msgstr ""
+msgstr "Aktinij"
 
 #: qtgui/elementtranslator.cpp:286
 msgid "Thorium"
-msgstr ""
+msgstr "Torij"
 
 #: qtgui/elementtranslator.cpp:289
 msgid "Protactinium"
-msgstr ""
+msgstr "Protaktinij"
 
 #: qtgui/elementtranslator.cpp:292
 msgid "Uranium"
-msgstr ""
+msgstr "Uranij"
 
 #: qtgui/elementtranslator.cpp:295
 msgid "Neptunium"
-msgstr ""
+msgstr "Neptunij"
 
 #: qtgui/elementtranslator.cpp:298
 msgid "Plutonium"
-msgstr ""
+msgstr "Plutonij"
 
 #: qtgui/elementtranslator.cpp:301
 msgid "Americium"
-msgstr ""
+msgstr "Americij"
 
 #: qtgui/elementtranslator.cpp:304
 msgid "Curium"
-msgstr ""
+msgstr "Kirij"
 
 #: qtgui/elementtranslator.cpp:307
 msgid "Berkelium"
-msgstr ""
+msgstr "Berkelij"
 
 #: qtgui/elementtranslator.cpp:310
 msgid "Californium"
-msgstr ""
+msgstr "Kalifornij"
 
 #: qtgui/elementtranslator.cpp:313
 msgid "Einsteinium"
-msgstr ""
+msgstr "Ajnštajnij"
 
 #: qtgui/elementtranslator.cpp:316
 msgid "Fermium"
-msgstr ""
+msgstr "Fermij"
 
 #: qtgui/elementtranslator.cpp:319
 msgid "Mendelevium"
-msgstr ""
+msgstr "Mendelevij"
 
 #: qtgui/elementtranslator.cpp:322
 msgid "Nobelium"
-msgstr ""
+msgstr "Nobelij"
 
 #: qtgui/elementtranslator.cpp:325
 msgid "Lawrencium"
-msgstr ""
+msgstr "Lorensij"
 
 #: qtgui/elementtranslator.cpp:328
 msgid "Rutherfordium"
-msgstr ""
+msgstr "Raderfordij"
 
 #: qtgui/elementtranslator.cpp:331
 msgid "Dubnium"
-msgstr ""
+msgstr "Dubnij"
 
 #: qtgui/elementtranslator.cpp:334
 msgid "Seaborgium"
-msgstr ""
+msgstr "Siborgij"
 
 #: qtgui/elementtranslator.cpp:337
 msgid "Bohrium"
-msgstr ""
+msgstr "Borij"
 
 #: qtgui/elementtranslator.cpp:340
 msgid "Hassium"
-msgstr ""
+msgstr "Hasij"
 
 #: qtgui/elementtranslator.cpp:343
 msgid "Meitnerium"
-msgstr ""
+msgstr "Majtnerij"
 
 #: qtgui/elementtranslator.cpp:346
 msgid "Darmstadtium"
-msgstr ""
+msgstr "Darmštatij"
 
 #: qtgui/elementtranslator.cpp:349
 msgid "Roentgenium"
-msgstr ""
+msgstr "Roentgenij"
 
 #: qtgui/elementtranslator.cpp:352
 msgid "Copernicium"
-msgstr ""
+msgstr "Kopernicij"
 
 #: qtgui/elementtranslator.cpp:355
 msgid "Nihonium"
-msgstr ""
+msgstr "Nihonij"
 
 #: qtgui/elementtranslator.cpp:358
 msgid "Flerovium"
-msgstr ""
+msgstr "Flerovij"
 
 #: qtgui/elementtranslator.cpp:361
 msgid "Moscovium"
-msgstr ""
+msgstr "Moskovij"
 
 #: qtgui/elementtranslator.cpp:364
 msgid "Livermorium"
-msgstr ""
+msgstr "Livermorij"
 
 #: qtgui/elementtranslator.cpp:367
 msgid "Tennessine"
-msgstr ""
+msgstr "Tenesin"
 
 #: qtgui/elementtranslator.cpp:370
 msgid "Oganesson"
-msgstr ""
+msgstr "Oganeson"
 
 #: qtgui/filebrowsewidget.cpp:23
 msgid "Browse"
-msgstr ""
+msgstr "Pregledaj"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
-msgstr ""
+msgstr "Odaberi datoteku:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr ""
+msgstr "Odaberi izvršnu datoteku:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1035,7 +1050,7 @@ msgstr "Sve datoteke"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr ""
+msgstr "Svi podržani formati"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
@@ -1045,7 +1060,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 poruka"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
@@ -2539,19 +2554,19 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
-msgstr ""
+msgstr "Molekularna dinamika"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 msgid "Geometry Optimization"
-msgstr ""
+msgstr "Optimizacija geometrije"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Metode elektronske strukture (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
-msgstr ""
+msgstr "Molekularna mehanika"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -2559,7 +2574,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -2572,15 +2587,15 @@ msgstr "NIŠTA"
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1364
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMSKI"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
@@ -2588,7 +2603,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
 msgid "DENSITIES"
-msgstr ""
+msgstr "GUSTOĆE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
@@ -2596,11 +2611,11 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "RANDOM"
-msgstr ""
+msgstr "NASUMICE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
 msgid "RESTART"
@@ -2620,7 +2635,7 @@ msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
 msgid "DIIS"
-msgstr ""
+msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
 msgid "Steepest descent"
@@ -2632,31 +2647,33 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Datoteka unosa je promijenjena. Želiš li prepisati promjene kako bi se "
+"odrazila nova geometrija ili opcije posla?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:418
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "Prepisati promijenjenu datoteku unosa?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:957
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "Spremi CP2K datoteku unosa"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1006
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "Pošalji CP2K izračun"
 
 #: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
-msgstr ""
+msgstr "Uvezi kristal iz međuspremnika …"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Uključi/Isključi jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
-msgstr ""
+msgstr "Uredi jediničnu ćeliju …"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -2672,7 +2689,7 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr ""
+msgstr "Izgradi &superćeliju …"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -6388,7 +6405,7 @@ msgstr "kut"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:216
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "atomic"
-msgstr ""
+msgstr "atomski"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:221
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -7034,82 +7051,82 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER96"
-msgstr ""
+msgstr "AMBER96"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:104
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb"
-msgstr ""
+msgstr "AMBER99sb"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-ildn"
-msgstr ""
+msgstr "AMBER99sb-ildn"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-nmr"
-msgstr ""
+msgstr "AMBER99sb-nmr"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER03"
-msgstr ""
+msgstr "AMBER03"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:124
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER10"
-msgstr ""
+msgstr "AMBER10"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, label_waterModel)
 msgid "Water Model:"
-msgstr ""
+msgstr "Model vode:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP3P"
-msgstr ""
+msgstr "TIP3P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:150
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP4P-Ew"
-msgstr ""
+msgstr "TIP4P-Ew"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:155
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP5P"
-msgstr ""
+msgstr "TIP5P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "Implicit Solvent (OBC)"
-msgstr ""
+msgstr "Implicitno otapalo (OBC)"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:168
 #. i18n: ectx: property (text), widget (QLabel, label_platform)
 msgid "Platform:"
-msgstr ""
+msgstr "Platforma:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "Reference"
-msgstr ""
+msgstr "Referenca"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "OpenCL"
-msgstr ""
+msgstr "OpenCL"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:186
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "CUDA"
-msgstr ""
+msgstr "CUDA"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:199
 #. i18n: ectx: property (text), widget (QLabel, label_precision)
@@ -7124,7 +7141,7 @@ msgstr "jednostruko"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
 msgid "mixed"
-msgstr ""
+msgstr "promiješano"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, precisionCombo)
@@ -7134,12 +7151,12 @@ msgstr "dvostruko"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:225
 #. i18n: ectx: property (text), widget (QLabel, label_deviceIndex)
 msgid "Device Index:"
-msgstr ""
+msgstr "Indeks uređaja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_openCLIndex)
 msgid "OpenCL Platform Index:"
-msgstr ""
+msgstr "Indeks OpenCL platforme:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:275
 #. i18n: ectx: property (text), widget (QLabel, label_nonbondedMethod)
@@ -7164,17 +7181,17 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:298
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 msgid "Ewald"
-msgstr ""
+msgstr "Ewald"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:311
 #. i18n: ectx: property (text), widget (QLabel, label_ewaldTolerance)
 msgid "Ewald Tolerance:"
-msgstr ""
+msgstr "Ewald tolerancija:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 msgid "Constraints:"
-msgstr ""
+msgstr "Ograničenja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -7194,7 +7211,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:368
 #. i18n: ectx: property (text), widget (QLabel, label_constraintTolerance)
 msgid "Constraint Tolerance:"
-msgstr ""
+msgstr "Tolerancija ograničenja:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:394
 #. i18n: ectx: property (text), widget (QLabel, label_rigidWater)
@@ -7218,7 +7235,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:437
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, nonBondedCutoffSpin)
 msgid " nm"
-msgstr ""
+msgstr " nm"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:444
 #. i18n: ectx: property (text), widget (QLabel, label_randomInitVel)
@@ -7235,7 +7252,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:625
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, temperatureSpin)
 msgid " K"
-msgstr ""
+msgstr " K"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:498
 #. i18n: ectx: property (text), widget (QLabel, label_integrator)
@@ -7275,12 +7292,12 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:553
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, stepSpin)
 msgid " fs"
-msgstr ""
+msgstr " fs"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:560
 #. i18n: ectx: property (text), widget (QLabel, label_errorTol)
 msgid "Error tolerance:"
-msgstr ""
+msgstr "Tolerancija grešaka:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:586
 #. i18n: ectx: property (text), widget (QLabel, label_collisionRate)
@@ -7290,12 +7307,12 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:602
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, collisionRateSpin)
 msgid "/ps"
-msgstr ""
+msgstr "/ps"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
 msgid "Temperature:"
-msgstr ""
+msgstr "Temperatura"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
