@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-11 20:15+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-11 20:32+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1712,27 +1711,27 @@ msgstr "Datoteka unosa zapisana u '%1'"
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
 msgid "By Custom Color…"
-msgstr ""
+msgstr "Prema prilagođenoj boji …"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Prema indeksu atoma …"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "Prema udaljenosti …"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
-msgstr ""
+msgstr "Prema elementu"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
-msgstr ""
+msgstr "Prema lancu"
 
 #: qtplugins/applycolors/applycolors.cpp:77
 msgid "By Partial Charge…"
-msgstr ""
+msgstr "Prema djelomičnom naboju …"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
@@ -4851,7 +4850,7 @@ msgstr ""
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1655
 msgid "Spectra"
-msgstr "Spektralno"
+msgstr "Spektri"
 
 #: qtplugins/spectra/spectra.h:38
 msgid "Display spectra plots."
@@ -4892,15 +4891,15 @@ msgstr "Odaberi prednju boju"
 
 #: qtplugins/spectra/spectradialog.cpp:281
 msgid "Select Calculated Spectra Color"
-msgstr ""
+msgstr "Odaberi boju izračunatih spektara"
 
 #: qtplugins/spectra/spectradialog.cpp:293
 msgid "Select Imported Spectra Color"
-msgstr ""
+msgstr "Odaberi boju uvezenih spektara"
 
 #: qtplugins/spectra/spectradialog.cpp:341
 msgid "Vibrational Spectra"
-msgstr ""
+msgstr "Spektri vibracija"
 
 #: qtplugins/spectra/spectradialog.cpp:342
 #: qtplugins/spectra/spectradialog.cpp:356
@@ -4913,7 +4912,7 @@ msgstr "Transmisija"
 
 #: qtplugins/spectra/spectradialog.cpp:355
 msgid "Raman Spectra"
-msgstr ""
+msgstr "Raman spektri"
 
 #: qtplugins/spectra/spectradialog.cpp:357
 #: qtplugins/spectra/spectradialog.cpp:370
@@ -4925,7 +4924,7 @@ msgstr "Intenzitet"
 
 #: qtplugins/spectra/spectradialog.cpp:368
 msgid "NMR Spectra"
-msgstr ""
+msgstr "NMR spektri"
 
 #: qtplugins/spectra/spectradialog.cpp:369
 msgid "Chemical Shift (ppm)"
@@ -4933,7 +4932,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:381
 msgid "Electronic Spectra"
-msgstr ""
+msgstr "Elektronski spektri"
 
 #: qtplugins/spectra/spectradialog.cpp:382
 #: qtplugins/spectra/spectradialog.cpp:410
@@ -4942,7 +4941,7 @@ msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:396
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "Spektri kružnog dikromizma"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "eV)"
@@ -6898,7 +6897,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
 msgid "Genetic Algorithm Options"
-msgstr ""
+msgstr "Opcije genetskog algoritma"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:102
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -6934,12 +6933,12 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Convergence:"
-msgstr ""
+msgstr "Konvergencija:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Scoring method:"
-msgstr ""
+msgstr "Metoda bodovanja:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -6953,7 +6952,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:191
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7556,7 +7555,7 @@ msgstr "Primijeni boju"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
 msgid "Spectra Visualization"
-msgstr ""
+msgstr "Vizualizacija spektara"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:38
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
@@ -7649,7 +7648,7 @@ msgstr "Postavi boju …"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:288
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Imported Spectra:"
-msgstr ""
+msgstr "Uvezeni spektri:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
@@ -7664,7 +7663,7 @@ msgstr "Pozadina:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:375
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Calculated Spectra:"
-msgstr ""
+msgstr "Izračunati spektri:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)
