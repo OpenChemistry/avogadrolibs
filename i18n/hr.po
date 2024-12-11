@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-11 20:32+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1735,7 +1736,7 @@ msgstr "Prema djelomičnom naboju …"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
-msgstr ""
+msgstr "Sekundardna struktura"
 
 #: qtplugins/applycolors/applycolors.cpp:87
 msgid "By Amino Acid"
