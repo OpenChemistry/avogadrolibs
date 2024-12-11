@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-11 17:08+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -5175,7 +5176,7 @@ msgstr ""
 
 #: qtplugins/vibrations/vibrations.h:33
 msgid "Vibrations"
-msgstr ""
+msgstr "Vibriranje"
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Display vibrational modes."
