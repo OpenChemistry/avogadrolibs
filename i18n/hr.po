@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-11 15:12+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-11 17:08+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3531,17 +3530,17 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO energija (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO energija (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO energija (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
@@ -3652,15 +3651,15 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Okreni prikaz duž x, y ili z osi."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Zumiraj prikaz."
 
 #: qtplugins/navigator/navigator.cpp:64
 msgid "Translate the scene."
-msgstr ""
+msgstr "Translatiraj prikaz."
 
 #: qtplugins/navigator/navigator.cpp:105
 msgid "Reverse Direction of Zoom on Scroll"
@@ -4282,7 +4281,7 @@ msgstr ""
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
-msgstr ""
+msgstr "Koristi PLY za iscrtavanje prikaza."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
@@ -4298,7 +4297,7 @@ msgstr ""
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Koristi POV-Ray za iscrtavanje prikaza."
 
 #: qtplugins/propertytables/propertymodel.cpp:464
 msgid "Valence"
@@ -4907,7 +4906,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:343
 msgid "Transmission"
-msgstr "Transmission"
+msgstr "Transmisija"
 
 #: qtplugins/spectra/spectradialog.cpp:355
 msgid "Raman Spectra"
@@ -4948,19 +4947,19 @@ msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
-msgstr ""
+msgstr "Otapalo dostupno"
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Excluded"
-msgstr ""
+msgstr "Otapalo isključeno"
 
 #: qtplugins/surfaces/surfacedialog.cpp:163
 msgid "Molecular Orbital"
-msgstr ""
+msgstr "Molekulska orbitala"
 
 #: qtplugins/surfaces/surfacedialog.cpp:166
 msgid "Electron Density"
-msgstr ""
+msgstr "Gustoća elektrona"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
 msgid "Spin Density"
@@ -4970,17 +4969,17 @@ msgstr ""
 #, qt-format
 msgctxt "Molecular orbital"
 msgid "MO %L1"
-msgstr ""
+msgstr "MO %L1"
 
 #: qtplugins/surfaces/surfacedialog.cpp:187
 msgctxt "Highest occupied molecular orbital"
 msgid "(HOMO)"
-msgstr ""
+msgstr "(HOMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:189
 msgctxt "Lowest unoccupied molecular orbital"
 msgid "(LUMO)"
-msgstr ""
+msgstr "(LUMO)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:204
 msgid "From File"
@@ -4992,27 +4991,27 @@ msgstr "Stvori površine …"
 
 #: qtplugins/surfaces/surfaces.cpp:111
 msgid "Render the van der Waals surface."
-msgstr ""
+msgstr "Iscrtaj van der Waals površinu."
 
 #: qtplugins/surfaces/surfaces.cpp:113
 msgid "Render the van der Waals molecular surface."
-msgstr ""
+msgstr "Iscrtaj van der Waals molekulsku površinu."
 
 #: qtplugins/surfaces/surfaces.cpp:115
 msgid "Render the solvent-accessible molecular surface."
-msgstr ""
+msgstr "Iscrtaj molekulsku površinu dostupnog otapala."
 
 #: qtplugins/surfaces/surfaces.cpp:117
 msgid "Render the solvent-excluded molecular surface."
-msgstr ""
+msgstr "Iscrtaj molekulsku površinu isključenog otapala."
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
 msgid "Render a molecular orbital."
-msgstr ""
+msgstr "Iscrtaj molekulsku orbitalu."
 
 #: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the electron density."
-msgstr ""
+msgstr "Iscrtaj gustoću elektrona."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the spin density."
@@ -5024,7 +5023,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:586
 msgid "Calculating electron density"
-msgstr ""
+msgstr "Izračunavanje gustoće elektrona"
 
 #: qtplugins/surfaces/surfaces.cpp:595
 msgid "Calculating spin density"
@@ -5033,7 +5032,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
 msgid "Calculating molecular orbital %L1"
-msgstr ""
+msgstr "Izračunavanje molekulske orbitale %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
 msgid "Movie AVI (*.avi)"
@@ -5053,7 +5052,7 @@ msgstr "Površine"
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "Čitaj i iscrtaj površine."
 
 #: qtplugins/svg/svg.cpp:30
 msgid "&SVG…"
@@ -5069,7 +5068,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Iscrtaj prikaz u SVG datoteku."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Class"
@@ -5196,7 +5195,7 @@ msgstr "VRML"
 
 #: qtplugins/vrml/vrml.h:29
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Koristi VRML za iscrtavanje prikaza."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
