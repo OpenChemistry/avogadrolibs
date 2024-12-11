@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-04 09:53+0000\n"
+"PO-Revision-Date: 2024-12-12 10:44+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -4495,11 +4495,11 @@ msgstr "Atom 4"
 #: qtplugins/propertytables/propertymodel.cpp:563
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Energie (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:754
 msgid "Adjust Fragment"
@@ -4567,7 +4567,7 @@ msgstr "Proprietățile reziduului…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "Proprietăți conformer…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
