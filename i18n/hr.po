@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 17:12+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-11 15:12+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1414,15 +1413,15 @@ msgstr "Aktualiziraj vezu"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Dodaj jediničnu ćeliju …"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
-msgstr ""
+msgstr "Ukloni jediničnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Uredi jediničnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:484
 msgid "Wrap Atoms to Cell"
@@ -1434,7 +1433,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:527
 msgid "Build Super Cell"
-msgstr ""
+msgstr "Izgradi super ćeliju"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
@@ -1446,7 +1445,7 @@ msgstr "Okreni u standardnu orijentaciju"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
-msgstr ""
+msgstr "Reduciraj na primitivnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:259
@@ -1459,11 +1458,11 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
-msgstr ""
+msgstr "Ispuni jediničnu ćeliju"
 
 #: qtgui/rwmolecule.cpp:687
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr ""
+msgstr "Reduciraj ćeliju na asimetričnu jedinicu"
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
@@ -2246,7 +2245,7 @@ msgstr "Instaliraj Python"
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
-msgstr ""
+msgstr "Python se koristi za mnoge Avogadro funkcije. Želiš li preuzeti Python?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -2859,28 +2858,28 @@ msgstr "Dohvati PDB"
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr ""
+msgstr "Neuspjelo čitanje PDB molekule: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB kod"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
-msgstr ""
+msgstr "Kemijska struktura za preuzimanje."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Neispravan PDB kod"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "PDB kod mora sadržati točno 4 znaka."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "Prvi znak PDB koda mora biti znamenka 1 do 9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
@@ -4857,15 +4856,15 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:200
 msgid "Infrared"
-msgstr ""
+msgstr "Infracrveno"
 
 #: qtplugins/spectra/spectradialog.cpp:204
 msgid "Raman"
-msgstr ""
+msgstr "Raman"
 
 #: qtplugins/spectra/spectradialog.cpp:207
 msgid "NMR"
-msgstr ""
+msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:210
 msgid "Electronic"
@@ -4873,12 +4872,12 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "Cirkularni dikroizam"
 
 #: qtplugins/spectra/spectradialog.cpp:218
 #: qtplugins/spectra/spectradialog.cpp:409
 msgid "Density of States"
-msgstr ""
+msgstr "Gustoća stanja"
 
 #: qtplugins/spectra/spectradialog.cpp:255
 msgid "Select Background Color"
@@ -7312,7 +7311,7 @@ msgstr "/ps"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:609
 #. i18n: ectx: property (text), widget (QLabel, label_temperature)
 msgid "Temperature:"
-msgstr "Temperatura"
+msgstr "Temperatura:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:632
 #. i18n: ectx: property (text), widget (QLabel, label_barostat)
@@ -7322,17 +7321,17 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:645
 #. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
 msgid "Monte Carlo"
-msgstr ""
+msgstr "Monte Carlo"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:653
 #. i18n: ectx: property (text), widget (QLabel, label_pressure)
 msgid "Pressure:"
-msgstr ""
+msgstr "Tlak:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:669
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, pressureSpin)
 msgid " atm"
-msgstr ""
+msgstr " atm"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:676
 #. i18n: ectx: property (text), widget (QLabel, label_barostatInterval)
@@ -7437,22 +7436,22 @@ msgstr "Gustoća"
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "Opcije PDF grafikona"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Maximum Radius:"
-msgstr ""
+msgstr "Maksimalni radijus:"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:49
 #. i18n: ectx: property (text), widget (QLabel, label2)
 msgid "Step (dr):"
-msgstr ""
+msgstr "Korak (dr):"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr ""
+msgstr "Opcije teoretskog XRD uzorka"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
@@ -7517,12 +7516,12 @@ msgstr "Preuzmi odabrano"
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
 msgid "Critical Point Radius:"
-msgstr ""
+msgstr "Radijus kritične točke:"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, bondRadiusLabel)
 msgid "Bond Path Radius:"
-msgstr ""
+msgstr "Radijus staze veze:"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:130
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_radius)
