@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-11 15:12+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4868,7 +4869,7 @@ msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:210
 msgid "Electronic"
-msgstr ""
+msgstr "Elektronski"
 
 #: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
@@ -4906,7 +4907,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:343
 msgid "Transmission"
-msgstr ""
+msgstr "Transmission"
 
 #: qtplugins/spectra/spectradialog.cpp:355
 msgid "Raman Spectra"
