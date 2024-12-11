@@ -667,11 +667,18 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           // std::cout << " property: " << element.key() << " = " << matrix
           //           << " size " << matrix.rows() << 'x' << matrix.cols()
           //          << std::endl;
+        } else if (element.value().type() == json::value_t::number_float) {
+          molecule.setData(element.key(), element.value().get<double>());
+        } else if (element.value().type() == json::value_t::number_integer) {
+          molecule.setData(element.key(), element.value().get<int>());
+        } else if (element.value().type() == json::value_t::boolean) {
+          molecule.setData(element.key(), element.value().get<bool>());
+        } else if (element.value().type() == json::value_t::string) {
+          molecule.setData(element.key(), element.value().get<std::string>());
         } else {
-          molecule.setData(element.key(), element.value());
-          // std::cout << " property: " << element.key() << " = "
-          //          << element.value() << " type "
-          //          << element.value().type_name() << std::endl;
+          std::cout << " cannot store property: " << element.key() << " = "
+                    << element.value() << " type "
+                    << element.value().type_name() << std::endl;
         }
       }
     }
