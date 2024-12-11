@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-11 20:32+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-12 10:44+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1736,15 +1735,15 @@ msgstr "Prema djelomičnom naboju …"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
-msgstr "Sekundardna struktura"
+msgstr "Prema sekundardnoj strukturi"
 
 #: qtplugins/applycolors/applycolors.cpp:87
 msgid "By Amino Acid"
-msgstr ""
+msgstr "Prema aminokiselini"
 
 #: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "Prema Shapely shemi"
 
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
