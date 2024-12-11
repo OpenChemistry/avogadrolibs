@@ -51,7 +51,8 @@ Manipulator::Manipulator(QObject* parent_)
   m_activateAction->setToolTip(
     tr("Manipulation Tool \t(%1)\n\n"
        "Left Mouse: \tClick and drag to move atoms\n"
-       "Right Mouse: \tClick and drag to rotate atoms.\n").arg(shortcut));
+       "Right Mouse: \tClick and drag to rotate atoms.\n")
+      .arg(shortcut));
   setIcon();
   connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
           SLOT(buttonClicked(QAbstractButton*)));
@@ -235,10 +236,17 @@ QUndoCommand* Manipulator::mouseReleaseEvent(QMouseEvent* e)
 
 QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
 {
+  // if we're dragging through empty space, just return and ignore
+  // (e.g., fall back to the navigate tool)
+  const Core::Molecule* mol = &m_molecule->molecule();
+  if (mol->isSelectionEmpty() && m_object.type == Rendering::InvalidType) {
+    e->ignore();
+    return nullptr;
+  }
+
   updatePressedButtons(e, false);
   e->ignore();
 
-  const Core::Molecule* mol = &m_molecule->molecule();
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
 
   if (mol->isSelectionEmpty() && m_object.type == Rendering::AtomType &&
