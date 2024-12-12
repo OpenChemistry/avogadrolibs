@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-12 12:23+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3061,11 +3062,11 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:314
 msgid "Gas"
-msgstr ""
+msgstr "Plin"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:317
 msgid "Water"
-msgstr ""
+msgstr "Voda"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:332
 msgid "Singlet"
@@ -3089,7 +3090,7 @@ msgstr "Kation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:359
 msgid "Neutral"
-msgstr ""
+msgstr "Neutralno"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:362
 msgid "Anion"
