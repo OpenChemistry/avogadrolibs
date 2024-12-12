@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 15:25+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-12 16:07+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2100,7 +2099,7 @@ msgstr "Dodaj središte mase"
 #: qtplugins/centroid/centroid.cpp:23
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Dodaj okomicu"
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -2169,7 +2168,7 @@ msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
-msgstr ""
+msgstr "Uredi kartu neprozirnosti boja …"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2185,11 +2184,11 @@ msgstr "&Proširenja"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "Karta neprozirnosti boja"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
-msgstr ""
+msgstr "Uredi karte neprozirnosti boja, prvenstveno za iscrtavanje volumena."
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
@@ -6989,7 +6988,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Newton's Method"
-msgstr ""
+msgstr "Newtonova metoda"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
@@ -8052,7 +8051,7 @@ msgstr "Heksadentatni"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Haptic"
-msgstr ""
+msgstr "Haptični"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8072,57 +8071,57 @@ msgstr "Grupe"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Group:"
-msgstr "Grupe"
+msgstr "Grupa:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
-msgstr ""
+msgstr "amid"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:476
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
-msgstr ""
+msgstr "karboksilat"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:481
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
-msgstr ""
+msgstr "ester"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
-msgstr ""
+msgstr "etilen"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "acetilen"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "nitro"
-msgstr ""
+msgstr "nitro"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
-msgstr ""
+msgstr "fenil"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:506
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
-msgstr ""
+msgstr "fosfat"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:511
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr ""
+msgstr "sulfonat"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, VibrationDialog)
 msgid "Vibrational Modes"
-msgstr ""
+msgstr "Modusi vibracija"
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:56
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8142,12 +8141,12 @@ msgstr "Zaustavi animaciju"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
-msgstr ""
+msgstr "Yaehmop veza"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
 msgid "Min y: "
-msgstr "Min y: "
+msgstr "Min. y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:36
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_minY)
@@ -8202,7 +8201,7 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
 msgid "Max y: "
-msgstr ""
+msgstr "Maks. y: "
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_fermi)
@@ -8276,12 +8275,12 @@ msgstr ""
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Number of Dimensions:"
-msgstr ""
+msgstr "Broj dimenzija:"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
 msgid "Display Yaehmop Input?"
-msgstr ""
+msgstr "Prikazati Yaehmop unos?"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
