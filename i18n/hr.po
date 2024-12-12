@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 13:16+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-12 13:50+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4308,11 +4307,11 @@ msgstr "Koristi POV-Ray za iscrtavanje prikaza."
 
 #: qtplugins/propertytables/propertymodel.cpp:464
 msgid "Valence"
-msgstr ""
+msgstr "Valencija"
 
 #: qtplugins/propertytables/propertymodel.cpp:466
 msgid "Formal Charge"
-msgstr ""
+msgstr "Formalni naboj"
 
 #: qtplugins/propertytables/propertymodel.cpp:468
 msgid "Partial Charge"
@@ -4348,11 +4347,11 @@ msgstr "Vrsta"
 
 #: qtplugins/propertytables/propertymodel.cpp:488
 msgid "Start Atom"
-msgstr ""
+msgstr "Početak atoma"
 
 #: qtplugins/propertytables/propertymodel.cpp:490
 msgid "End Atom"
-msgstr ""
+msgstr "Kraj atoma"
 
 #: qtplugins/propertytables/propertymodel.cpp:492
 msgid "Bond Order"
@@ -4361,7 +4360,7 @@ msgstr "Redoslijed veza"
 #: qtplugins/propertytables/propertymodel.cpp:494
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr ""
+msgstr "Duljina (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Chain"
@@ -4382,7 +4381,7 @@ msgstr "Atom 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:529
 msgid "Vertex"
-msgstr ""
+msgstr "Vrh"
 
 #: qtplugins/propertytables/propertymodel.cpp:531
 #: qtplugins/propertytables/propertymodel.cpp:548
@@ -4405,11 +4404,11 @@ msgstr "Atom 4"
 #: qtplugins/propertytables/propertymodel.cpp:563
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Energija (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:754
 msgid "Adjust Fragment"
@@ -4418,7 +4417,7 @@ msgstr "Prilagodi fragment"
 #: qtplugins/propertytables/propertymodel.cpp:880
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr ""
+msgstr "π spirala"
 
 #: qtplugins/propertytables/propertymodel.cpp:882
 msgctxt "protein bend secondary structure"
@@ -4428,7 +4427,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:884
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr ""
+msgstr "α spirala"
 
 #: qtplugins/propertytables/propertymodel.cpp:886
 msgctxt "beta sheet"
@@ -4438,7 +4437,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:888
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr ""
+msgstr "3-10 spirala"
 
 #: qtplugins/propertytables/propertymodel.cpp:890
 msgctxt "beta bridge"
@@ -4448,7 +4447,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:892
 msgctxt "protein turn secondary structure"
 msgid "Turn"
-msgstr ""
+msgstr "Okretaj"
 
 #: qtplugins/propertytables/propertymodel.cpp:894
 msgctxt "protein coil secondary structure"
@@ -6227,14 +6226,14 @@ msgstr "T"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:104
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Sequence:"
-msgstr "Sekvencer"
+msgstr "Sekvencija:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:120
 #. i18n: ectx: property (toolTip), widget (QComboBox, bpCombo)
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:150
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, bpTurnsSpin)
 msgid "the number of base pairs per helix turn"
-msgstr ""
+msgstr "broj parova baza po okretaju spirale"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -6261,7 +6260,7 @@ msgstr "Drugo"
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Bases Per Turn:"
-msgstr ""
+msgstr "Broj baza po okretaju:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_2)
