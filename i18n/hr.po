@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 14:29+0000\n"
+"PO-Revision-Date: 2024-12-12 14:31+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -7859,22 +7859,22 @@ msgstr "Operacije"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:115
 #. i18n: ectx: property (text), widget (QLabel, operationsLabel)
 msgid "Symmetry elements:"
-msgstr "Elementi simetrije"
+msgstr "Elementi simetrije:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:145
 #. i18n: ectx: attribute (title), widget (QWidget, subgroupsTab)
 msgid "Subgroups"
-msgstr ""
+msgstr "Podgrupe"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:151
 #. i18n: ectx: property (text), widget (QLabel, subgroupsLabel)
 msgid "Subgroups:"
-msgstr ""
+msgstr "Podgrupe:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:214
 #. i18n: ectx: property (text), widget (QLabel, toleranceLabel)
 msgid "Tolerance:"
-msgstr ""
+msgstr "Tolerancija:"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:225
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
