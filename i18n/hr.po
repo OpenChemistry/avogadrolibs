@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-12 22:20+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -250,7 +249,7 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Pošalji %1 izračun"
 
 #: molequeue/inputgeneratorwidget.cpp:342
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
@@ -455,7 +454,7 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Greška pri slanju posla"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
@@ -1113,7 +1112,7 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
-msgstr "Vrsta kalulacije"
+msgstr "Vrsta izračuna"
 
 #: qtgui/jsonwidget.cpp:226
 msgid "Theory"
@@ -3108,7 +3107,7 @@ msgstr "Spremi GAMESS datoteku unosa"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:700
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Pošalji GAMESS izračun"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
@@ -5269,7 +5268,7 @@ msgstr "Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.h:84
 msgid "Perform extended Hückel calculations with yaehmop."
-msgstr ""
+msgstr "Izvrši proširene Hückelove izračune s yaehmopom."
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -5298,7 +5297,7 @@ msgstr "Obrazac"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:26
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 msgid "Calculation Settings"
-msgstr ""
+msgstr "Postavke izračuna"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
@@ -5326,7 +5325,7 @@ msgstr ""
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
-msgstr ""
+msgstr "Pošalji izračun …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -6330,7 +6329,7 @@ msgstr "Jedinice"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "lj"
-msgstr ""
+msgstr "lj"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:116
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
