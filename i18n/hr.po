@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 12:23+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-12 12:31+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3082,7 +3081,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:353
 msgid "Dication"
-msgstr ""
+msgstr "Dikation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:356
 msgid "Cation"
@@ -3090,19 +3089,19 @@ msgstr "Kation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:359
 msgid "Neutral"
-msgstr "Neutralno"
+msgstr "Neutralni"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:362
 msgid "Anion"
-msgstr ""
+msgstr "Anion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:365
 msgid "Dianion"
-msgstr ""
+msgstr "Dianion"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:650
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Spremi GAMESS datoteku unosa"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:700
 msgid "Submit GAMESS Calculation"
