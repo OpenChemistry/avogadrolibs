@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 13:02+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-12 13:05+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3232,7 +3231,7 @@ msgstr "Umetni fragment"
 
 #: qtplugins/insertfragment/insertfragment.h:60
 msgid "Insert molecular fragments for building larger molecules."
-msgstr ""
+msgstr "Umetni molekularne fragmente za izgradnju većih molekula."
 
 #: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
 #: qtplugins/meshes/meshes.cpp:175
@@ -6194,7 +6193,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
 msgctxt "adenine (A)"
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
@@ -6239,19 +6238,19 @@ msgstr ""
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 msgid "B"
-msgstr ""
+msgstr "B"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:93
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
