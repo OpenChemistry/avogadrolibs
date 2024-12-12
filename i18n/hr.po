@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 22:20+0000\n"
+"PO-Revision-Date: 2024-12-13 07:45+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -6339,24 +6339,24 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:121
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "metal"
-msgstr "Metal"
+msgstr "metal"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:126
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "si"
-msgstr ""
+msgstr "si"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:131
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 msgid "cgs"
-msgstr ""
+msgstr "cgs"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:136
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:236
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "electron"
-msgstr ""
+msgstr "elektron"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
@@ -6366,14 +6366,14 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 msgid "SPC"
-msgstr ""
+msgstr "SPC"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:162
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:140
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "SPC/E"
-msgstr ""
+msgstr "SPC/E"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:177
 #. i18n: ectx: property (toolTip), widget (QLabel, label_atomstyle)
@@ -6400,6 +6400,18 @@ msgid ""
 "color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
 "p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -6577,7 +6589,7 @@ msgstr "Promijeni stil Z granice."
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:533
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "p"
-msgstr ""
+msgstr "p"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:458
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -6586,7 +6598,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:538
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:463
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -6595,7 +6607,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:543
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "f"
-msgstr ""
+msgstr "f"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:468
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -6604,7 +6616,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:548
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:473
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -6613,7 +6625,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:553
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "fs"
-msgstr ""
+msgstr "fs"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:478
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -6622,7 +6634,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:558
 #. i18n: ectx: property (text), item, widget (QComboBox, xBoundaryCombo)
 msgid "fm"
-msgstr ""
+msgstr "fm"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
@@ -6694,22 +6706,22 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:718
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Initial Velocities"
-msgstr ""
+msgstr "Početne brzine"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:725
 #. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
 msgid "Select the distribution of initial atom velocities."
-msgstr ""
+msgstr "Odaberi distribuciju početnih brzina atoma."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:729
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "gaussian"
-msgstr ""
+msgstr "gausova"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:734
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
 msgid "uniform"
-msgstr ""
+msgstr "jednolika"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:742
 #. i18n: ectx: property (toolTip), widget (QLabel, label_9)
