@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-12 10:44+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-12 12:23+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1203,7 +1202,7 @@ msgstr "Kristalna rešetka"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
-msgstr ""
+msgstr "Dipolni moment"
 
 #: qtgui/layermodel.cpp:146 qtplugins/force/force.h:28
 msgid "Force"
@@ -1225,7 +1224,7 @@ msgstr "Mreže"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Nekovalent"
 
 #: qtgui/layermodel.cpp:156
 msgctxt "quantum theory of atoms in molecules"
@@ -1888,7 +1887,7 @@ msgstr "Boja ostataka"
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
 msgid "Select Colormap"
-msgstr "Odaberi boju"
+msgstr "Odaberi paletu boja"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1897,11 +1896,11 @@ msgstr "Odaberi boju"
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1782
 msgid "Colormap:"
-msgstr ""
+msgstr "Paleta boja:"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
-msgstr ""
+msgstr "Primijeni boje"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -1998,11 +1997,11 @@ msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Poveži atome"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
-msgstr ""
+msgstr "Prepoznaj redoslijed veza"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2040,7 +2039,7 @@ msgstr "Stvori veze između svih ili odabranih atoma."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
-msgstr ""
+msgstr "Prepoznaj redoslijed veza."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2550,7 +2549,7 @@ msgstr "Energija"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
-msgstr ""
+msgstr "Energija i sile"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
@@ -2941,7 +2940,7 @@ msgstr "Optimiraj geometriju"
 
 #: qtplugins/forcefield/forcefield.cpp:88
 msgid "Forces"
-msgstr "Snage"
+msgstr "Sile"
 
 #: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
@@ -2985,11 +2984,11 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:46
 msgid "Forcefield optimization"
-msgstr ""
+msgstr "Optimizacija polja sile"
 
 #: qtplugins/forcefield/forcefield.h:50
 msgid "Forcefield minimization, including scripts"
-msgstr ""
+msgstr "Minimiziranje polja sile, uključujući skripta"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
@@ -2999,25 +2998,25 @@ msgstr "Automatsko otkrivanje (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
-msgstr ""
+msgstr "Univerzalno polje sile"
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "Generalizirano Amber polje sile"
 
 #: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "Merck molekularno polje sile 94"
 
 #: qtplugins/forcefield/scriptenergy.cpp:249
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "Greška pri dohvaćanju metapodataka za skriptu energije: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:259
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "Greška pri analiziranju metapodataka za skriptu energije: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:267
 #, qt-format
@@ -3025,6 +3024,8 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"Greška pri analiziranju metapodataka za skriptu energije: %1\n"
+"Rezultat nije JSON objekt.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
@@ -3036,23 +3037,23 @@ msgstr "GAMESS unos"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Generiraj unos za GAMESS."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:221
 msgid "Single Point"
-msgstr ""
+msgstr "Jedna točka"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:224
 msgid "Equilibrium Geometry"
-msgstr ""
+msgstr "Geometrija ravnoteže"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:227
 msgid "Transition State"
-msgstr ""
+msgstr "Stanje tranzicije"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:230
 msgid "Frequencies"
-msgstr ""
+msgstr "Frekvencije"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:299
 msgid "Core Potential"
@@ -3084,7 +3085,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:356
 msgid "Cation"
-msgstr ""
+msgstr "Kation"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:359
 msgid "Neutral"
@@ -3767,6 +3768,8 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
+"Došlo je do greške pri preuzimanju liste podržanih polja sile. (koristeći "
+"„%1”)."
 
 #: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
@@ -5456,7 +5459,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force Field:"
-msgstr ""
+msgstr "Polje sile:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -6067,7 +6070,7 @@ msgstr "Metoda optimizacije"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Force field:"
-msgstr ""
+msgstr "Polje sile:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:142
 #. i18n: ectx: property (text), widget (QCheckBox, useRecommended)
@@ -7050,7 +7053,7 @@ msgstr "Topologija unosa:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
 msgid "Forcefield:"
-msgstr "Polje snage:"
+msgstr "Polje sile:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
