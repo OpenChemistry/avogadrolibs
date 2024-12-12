@@ -21,20 +21,6 @@
 
 namespace Avogadro::QtPlugins {
 
-const QMap<unsigned, QString> Spectra::NMR = {
-  1, "¹H",
-  3, "⁷Li",
-  4, "¹¹Be",
-  6, "¹³C",
-  7, "¹⁵N",
-  8, "¹⁷O",
-  9, "¹⁹F",
-  14, "²⁹Si",
-  15, "³¹P",
-  // add any other common nuclei here
-  // otherwise we map from the element symbol
-}
-
 Spectra::Spectra(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr)
 {

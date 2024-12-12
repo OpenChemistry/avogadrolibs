@@ -45,6 +45,11 @@ public:
   void readSettings();
 
   void setSpectra(const std::map<std::string, MatrixX>& spectra);
+  void setElements(const std::vector<unsigned char>& elements)
+  {
+    m_elements = elements;
+    updateElementCombo();
+  }
 
   VTK::ChartWidget* chartWidget();
 
@@ -57,14 +62,17 @@ private slots:
   void changeLineWidth();
   void changeSpectra();
 
+  void updateElementCombo();
   void updatePlot();
 
   void toggleOptions();
 
 private:
   std::map<std::string, MatrixX> m_spectra;
+  std::vector<unsigned char> m_elements; // for NMR
+  MatrixX m_currentSpectra;
 
-  QString m_currentSpectra;
+  QString m_currentSpectraType;
   Ui::SpectraDialog* m_ui;
 };
 

@@ -55,6 +55,14 @@ SpectraDialog::SpectraDialog(QWidget* parent)
   : QDialog(parent), m_ui(new Ui::SpectraDialog)
 {
   m_ui->setupUi(this);
+
+  // hide the units for now
+  m_ui->unitsLabel->hide();
+  m_ui->unitsCombo->hide();
+
+  // only for NMR
+  m_ui->elementCombo->hide();
+
   m_ui->dataTable->horizontalHeader()->setSectionResizeMode(
     QHeaderView::Stretch);
 
@@ -98,6 +106,65 @@ SpectraDialog::~SpectraDialog()
   writeSettings();
 }
 
+void SpectraDialog::updateElementCombo()
+{
+  // update the element combo box
+  disconnect(m_ui->elementCombo, SIGNAL(currentIndexChanged(int)), this,
+             SLOT(changeSpectra()));
+  m_ui->elementCombo->clear();
+
+  // add the unique elements, with the element number as the data
+  for (auto& element : m_elements) {
+    // check to see if it's already in the combo box
+    bool found = false;
+    for (int i = 0; i < m_ui->elementCombo->count(); ++i) {
+      if (m_ui->elementCombo->itemData(i).toInt() == element) {
+        found = true;
+        break;
+      }
+    }
+    if (found)
+      continue;
+
+    switch (element) {
+      case 1:
+        m_ui->elementCombo->addItem("¹H", element);
+        break;
+      case 3:
+        m_ui->elementCombo->addItem("⁷Li", element);
+        break;
+      case 5:
+        m_ui->elementCombo->addItem("¹¹B", element);
+        break;
+      case 6:
+        m_ui->elementCombo->addItem("¹³C", element);
+        break;
+      case 7:
+        m_ui->elementCombo->addItem("¹⁵N", element);
+        break;
+      case 8:
+        m_ui->elementCombo->addItem("¹⁷O", element);
+        break;
+      case 9:
+        m_ui->elementCombo->addItem("¹⁹F", element);
+        break;
+      case 14:
+        m_ui->elementCombo->addItem("²⁹Si", element);
+        break;
+      case 15:
+        m_ui->elementCombo->addItem("³¹P", element);
+        break;
+      default:
+        m_ui->elementCombo->addItem(QString::number(element), element);
+        break;
+    }
+  }
+
+  // connect the element combo box
+  connect(m_ui->elementCombo, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(changeSpectra()));
+}
+
 void SpectraDialog::changeSpectra()
 {
   // TODO: change the scale and offset based on defaults and settings
@@ -106,6 +173,8 @@ void SpectraDialog::changeSpectra()
   // what type of spectra are we plotting?
   SpectraType type =
     static_cast<SpectraType>(m_ui->combo_spectra->currentData().toInt());
+
+  m_ui->elementCombo->hide();
 
   switch (type) {
     case SpectraType::Infrared:
@@ -126,9 +195,8 @@ void SpectraDialog::changeSpectra()
       m_ui->scaleSpinBox->setValue(1.0);
       m_ui->offsetSpinBox->setValue(0.0);
       // todo: these should be per element
-      m_ui->xAxisMinimum->setValue(0.0);
-      m_ui->xAxisMaximum->setValue(200.0);
       m_ui->peakWidth->setValue(0.1);
+      m_ui->elementCombo->show();
       break;
     case SpectraType::Electronic:
       m_ui->scaleSpinBox->setValue(1.0);
@@ -141,6 +209,7 @@ void SpectraDialog::changeSpectra()
     case SpectraType::CircularDichroism:
       m_ui->scaleSpinBox->setValue(1.0);
       m_ui->offsetSpinBox->setValue(0.0);
+      // default to eV
       m_ui->xAxisMinimum->setValue(5.0);
       m_ui->xAxisMaximum->setValue(1.0);
       m_ui->peakWidth->setValue(0.1);
@@ -154,8 +223,84 @@ void SpectraDialog::changeSpectra()
       break;
   }
 
-  MatrixX& spectra =
-    m_spectra[m_ui->combo_spectra->currentText().toStdString()];
+  // a bunch of special work depending on the NMR element
+  if (type == SpectraType::NMR) {
+    // get the element
+    int element = m_ui->elementCombo->currentData().toInt();
+
+    qDebug() << " NMR element: " << element;
+
+    // tweak the default axis range
+    // based on https://imserc.northwestern.edu/guide/eNMR/chem/NMRnuclei.html
+    switch (element) {
+      case 1: // 1H
+        m_ui->xAxisMinimum->setValue(12.0);
+        m_ui->xAxisMaximum->setValue(0.0);
+        break;
+      case 3: // 7Li
+        m_ui->xAxisMinimum->setValue(-16.0);
+        m_ui->xAxisMaximum->setValue(11.0);
+        break;
+      case 5: // 11B
+        m_ui->xAxisMinimum->setValue(100.0);
+        m_ui->xAxisMaximum->setValue(-120.0);
+        break;
+      case 6: // 13C
+        m_ui->xAxisMinimum->setValue(200.0);
+        m_ui->xAxisMaximum->setValue(0.0);
+        break;
+      case 7: // 15N
+        m_ui->xAxisMinimum->setValue(800.0);
+        m_ui->xAxisMaximum->setValue(0.0);
+        break;
+      case 8: // 17O
+        m_ui->xAxisMinimum->setValue(1600.0);
+        m_ui->xAxisMaximum->setValue(-50.0);
+        break;
+      case 9: // 19F
+        m_ui->xAxisMinimum->setValue(60.0);
+        m_ui->xAxisMaximum->setValue(-300.0);
+        break;
+      case 14: // 29Si
+        m_ui->xAxisMinimum->setValue(50.0);
+        m_ui->xAxisMaximum->setValue(-200.0);
+        break;
+      case 15: // 31P
+        m_ui->xAxisMinimum->setValue(250.0);
+        m_ui->xAxisMaximum->setValue(-250.0);
+        break;
+      default:
+        m_ui->xAxisMinimum->setValue(100.0);
+        m_ui->xAxisMaximum->setValue(-100.0);
+        break;
+    }
+
+    // the default NMR data has all the atoms in it,
+    // so we need to loop through m_elements to filter
+    MatrixX nmr = m_spectra["NMR"];
+
+    qDebug() << " NMR size: " << nmr.rows() << "x" << nmr.cols();
+    qDebug() << " m_elements size: " << m_elements.size();
+
+    std::vector<double> nmrPeaks;
+    for (int i = 0; i < m_elements.size(); ++i) {
+      if (m_elements[i] == element) {
+        nmrPeaks[i] = nmr(i, 0);
+      }
+    }
+    MatrixX newNMR(nmrPeaks.size(), 2);
+    for (int i = 0; i < nmrPeaks.size(); ++i) {
+      newNMR(i, 0) = nmrPeaks[i];
+      newNMR(i, 1) = 1.0;
+    }
+
+    m_currentSpectra = newNMR;
+  } else {
+    m_currentSpectra =
+      m_spectra[m_ui->combo_spectra->currentText().toStdString()];
+  }
+
+  MatrixX& spectra = m_currentSpectra;
   float maxIntensity = 1.0;
   // update the data table
   m_ui->dataTable->setRowCount(spectra.rows());
