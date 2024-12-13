@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-13 16:16+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-13 16:55+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1095,13 +1094,13 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "Kartica %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
 #: qtgui/jsonwidget.cpp:208:691
 msgid "Title"
-msgstr ""
+msgstr "Naslov"
 
 #: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
@@ -1109,7 +1108,7 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
-msgstr ""
+msgstr "Jezgre procesora"
 
 #: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
@@ -2899,7 +2898,7 @@ msgstr "Mrežno preuzimanje nije uspjelo"
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Istek mrežne veze ili jedna druga greška."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
@@ -3072,15 +3071,15 @@ msgstr "Voda"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:332
 msgid "Singlet"
-msgstr ""
+msgstr "Singlet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:335
 msgid "Doublet"
-msgstr ""
+msgstr "Dublet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:338
 msgid "Triplet"
-msgstr ""
+msgstr "Triplet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:353
 msgid "Dication"
@@ -3368,11 +3367,11 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
-msgstr ""
+msgstr "SMILES …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
-msgstr ""
+msgstr "InChI …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
@@ -3398,7 +3397,7 @@ msgstr ""
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3425,7 +3424,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:49
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:50
 msgid "Measure"
@@ -6808,7 +6807,7 @@ msgstr "Generiraj …"
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Descriptor:"
-msgstr ""
+msgstr "Deskriptor:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6937,7 +6936,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr ""
+msgstr "frekvencija mutacije (niža = češće mutacije)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6949,7 +6948,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:164
 #. i18n: ectx: property (toolTip), widget (QSpinBox, convergenceSpinBox)
 msgid "number of identical generations before convergence is reached"
-msgstr ""
+msgstr "broj identičnih generacija prije nego što se postigne konvergencija"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_4)
