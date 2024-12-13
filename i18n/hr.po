@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-13 16:55+0000\n"
+"PO-Revision-Date: 2024-12-13 20:07+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -5083,7 +5083,7 @@ msgstr "Iscrtaj prikaz u SVG datoteku."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Class"
-msgstr ""
+msgstr "klasa"
 
 #: qtplugins/symmetry/symmetry.cpp:41
 msgid "Symmetry…"
