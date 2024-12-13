@@ -5341,7 +5341,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:50
 #. i18n: ectx: property (text), widget (QToolButton, refreshProgramsButton)
 msgid "Refresh"
-msgstr ""
+msgstr "Osvježi"
 
 #. i18n: file: molequeue/molequeuewidget.ui:85
 #. i18n: ectx: property (toolTip), widget (QLabel, label_7)
@@ -5405,7 +5405,7 @@ msgstr ""
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
 msgid "Insert Fragment…"
-msgstr ""
+msgstr "Umetni fragment"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
