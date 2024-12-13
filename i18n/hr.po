@@ -5529,7 +5529,7 @@ msgstr "Pokreni APBS …"
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr ""
+msgstr "Uspjeh!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
@@ -5544,7 +5544,7 @@ msgstr ""
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
 msgid "Partial Charges"
-msgstr ""
+msgstr "Djelomični naboj"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
