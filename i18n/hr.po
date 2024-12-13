@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-13 07:45+0000\n"
+"PO-Revision-Date: 2024-12-13 16:15+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.9-rc\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -6728,57 +6728,57 @@ msgstr "jednolika"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:752
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
 msgid "Set the initial atom velocities to match this temperature."
-msgstr ""
+msgstr "Postavi početne brzine atoma da odgovaraju ovoj temperaturi."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:768
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
 msgid "Remove system linear momentum from initial velocities."
-msgstr ""
+msgstr "Ukloni linearni moment sustava iz početnih brzina."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:771
 #. i18n: ectx: property (text), widget (QCheckBox, zeroMOMCheck)
 msgid "Zero Linear Momentum"
-msgstr ""
+msgstr "Bez linearnog momenta"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:781
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroLCheck)
 msgid "Remove system angular momentum from initial velocities."
-msgstr ""
+msgstr "Ukloni kutni moment sustava iz početnih brzina."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:784
 #. i18n: ectx: property (text), widget (QCheckBox, zeroLCheck)
 msgid "Zero Angular Momentum"
-msgstr ""
+msgstr "Bez kutnog momenta"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:807
 #. i18n: ectx: property (toolTip), widget (QLabel, label_10)
 msgid "Control the thermodynamic output during the simulation."
-msgstr ""
+msgstr "Upravljaj termodinamičkim rezultatom tijekom simulacije."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:810
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Output"
-msgstr ""
+msgstr "Rezultat"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:817
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Output Interval"
-msgstr ""
+msgstr "Interval rezultata"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:854
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "2d"
-msgstr ""
+msgstr "2d"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:859
 #. i18n: ectx: property (text), item, widget (QComboBox, dimensionCombo)
 msgid "3d"
-msgstr ""
+msgstr "3d"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:867
 #. i18n: ectx: property (toolTip), widget (QComboBox, thermoStyleCombo)
 msgid "Thermodynamic output style."
-msgstr ""
+msgstr "Stil termodinamičkog rezultata."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:871
 #. i18n: ectx: property (text), item, widget (QComboBox, thermoStyleCombo)
@@ -6795,7 +6795,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:992
 #. i18n: ectx: property (text), widget (QPushButton, enableFormButton)
 msgid "Use Form"
-msgstr ""
+msgstr "Koristi obrazac"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:948
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
