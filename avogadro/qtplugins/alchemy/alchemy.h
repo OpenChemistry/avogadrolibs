@@ -1,11 +1,10 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_BONDING_H
-#define AVOGADRO_QTPLUGINS_BONDING_H
+#ifndef AVOGADRO_QTPLUGINS_ALCHEMY_H
+#define AVOGADRO_QTPLUGINS_ALCHEMY_H
 
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
@@ -55,4 +54,4 @@ private:
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_BONDING_H
+#endif // AVOGADRO_QTPLUGINS_ALCHEMY_H

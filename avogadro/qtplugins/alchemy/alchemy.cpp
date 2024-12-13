@@ -8,8 +8,8 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
 #include <QtCore/QSettings>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QInputDialog>
 
