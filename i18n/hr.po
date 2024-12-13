@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-13 23:54+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -7907,12 +7908,12 @@ msgstr "Normalno"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:235
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Loose"
-msgstr ""
+msgstr "Široko"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:240
 #. i18n: ectx: property (text), item, widget (QComboBox, toleranceCombo)
 msgid "Very Loose"
-msgstr ""
+msgstr "Jako široko"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:248
 #. i18n: ectx: property (text), widget (QPushButton, detectSymmetryButton)
