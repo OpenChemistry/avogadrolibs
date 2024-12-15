@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-16 11:14+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2475,7 +2474,7 @@ msgstr "Izreži"
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:34:286
 msgid "Clear"
-msgstr "Očisti"
+msgstr "Izbriši"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -5236,7 +5235,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
-msgstr ""
+msgstr "Izračunaj strukturu vrpce …"
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -5244,7 +5243,7 @@ msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "Nije moguće izračunati strukturu vrpce: nema jedinične ćelije!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:299
 #, qt-format
@@ -5252,10 +5251,12 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
+"Izvršavanje Yaehmopa nije uspjelo sa sljedećom greškom:\n"
+"%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr ""
+msgstr "Neuspjelo čitanje rezultata strukture vrpce od Yaehmopa!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
@@ -5266,20 +5267,20 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
-msgstr ""
+msgstr "Vrpca %1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
-msgstr ""
+msgstr "Fermi razina"
 
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Cannot find Yaehmop"
-msgstr ""
+msgstr "Yaehmop se ne može pronaći"
 
 #: qtplugins/yaehmop/yaehmop.cpp:544
 #, qt-format
 msgid "Error: %1 failed to start"
-msgstr ""
+msgstr "Greška: %1 se nije uspio pokrenuti"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -5325,7 +5326,7 @@ msgstr "Postavke izračuna"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
 msgid "Placeholder text…"
-msgstr ""
+msgstr "Tekst rezerviranog polja …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
@@ -5339,7 +5340,7 @@ msgstr "Resetiraj"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug Script…"
-msgstr ""
+msgstr "Ispravljanje grešaka skripta …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -5353,7 +5354,7 @@ msgstr "Pošalji izračun …"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save Input…"
-msgstr ""
+msgstr "Spremi unos …"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5371,11 +5372,13 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Broj rezerviranih jezgri procesora za ovaj "
+"posao.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Processor cores:"
-msgstr ""
+msgstr "Jezgre procesora:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -5384,11 +5387,14 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Izbriši eksterne radne datoteke po završetku posla. "
+"Rezultati će se i dalje najprije kopirati u lokalnu MoleQueue predmemoriju "
+"poslova.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Delete remote files when finished:"
-msgstr ""
+msgstr "Izbriši eksterne datoteke nakon završetka:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:145
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -5400,7 +5406,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Sakrij posao u MoleQueue:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -5412,17 +5418,17 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Show progress notifications:"
-msgstr ""
+msgstr "Prikaži obavijesti o napretku:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Otvori rezultat nakon završetka:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
-msgstr ""
+msgstr "Preimenuj elemente"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
@@ -5437,7 +5443,7 @@ msgstr "Filtar:"
 #. i18n: file: qtgui/insertfragmentdialog.ui:29
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
-msgstr ""
+msgstr "Upiši ime ili dio imena za prikaz samo podudarajućih datoteka."
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
@@ -5449,7 +5455,7 @@ msgstr "Umetni"
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
-msgstr ""
+msgstr "3DMol HTML isječak"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
@@ -5632,6 +5638,8 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Odaberi Python verziju koja se koristi za pokretanje skripta.\n"
+"Avogadro se mora ponovo pokrenuti kako bi sve promjene stupile na snagu."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5906,7 +5914,7 @@ msgstr "C ponavljanje:"
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "Uređivač jedinične ćelije"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7032,7 +7040,7 @@ msgstr "Newtonova metoda"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "Ograniči nevezane interakcije"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7799,12 +7807,12 @@ msgstr "beta"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr ""
+msgstr "Boja prema:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 msgid "Electrostatic Potential"
-msgstr ""
+msgstr "Elektrostatički potencijal"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:202
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8180,7 +8188,7 @@ msgstr "Zaustavi animaciju"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
-msgstr "Yaehmop veza"
+msgstr "Yaehmop vrpca"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
