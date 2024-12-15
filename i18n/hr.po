@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-15 18:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-15 20:26+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3588,11 +3587,11 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
-msgstr "&Molekula …"
+msgstr "&Molekularno …"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
-msgstr ""
+msgstr "Pogedaj opća svojstva molekule."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -3610,7 +3609,7 @@ msgstr "&Svojstva"
 
 #: qtplugins/molecularproperties/molecularproperties.h:30
 msgid "Molecular Properties"
-msgstr "Svojstva molekula"
+msgstr "Molekularna svojstva"
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
 #: qtplugins/propertytables/propertyview.cpp:62
@@ -3635,21 +3634,21 @@ msgstr "Neuspjelo otvaranje datoteke za pisanje."
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
 msgid "Error writing to the file."
-msgstr ""
+msgstr "Greška pri pisanju u datoteku."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
 #: qtplugins/propertytables/propertyview.cpp:305
 msgid "Export…"
-msgstr "Izvezi …"
+msgstr "Izvoz …"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
-msgstr ""
+msgstr "Navigacija"
 
 #: qtplugins/navigator/navigator.cpp:42
 #, qt-format
@@ -3680,17 +3679,20 @@ msgstr "Translatiraj prikaz."
 
 #: qtplugins/navigator/navigator.cpp:105
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Obrni smjer zumiranja pri povlačenju"
 
 #: qtplugins/navigator/navigator.cpp:107
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
 msgstr ""
+"Standardno:\tPovuci prema dolje za smanjivanje, povuci prema gore za "
+"zumiranje\n"
+"Obrnuto:\tPovuci prema gore za smanjivanje, povuci prema dolje za zumiranje"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
-msgstr "Alat za kretanje"
+msgstr "Alat za navigaciju"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
@@ -3702,7 +3704,7 @@ msgstr "Mrežne baze podataka"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
-msgstr ""
+msgstr "Interagiraj s mrežnim bazama podataka, pretraži strukture itd."
 
 #: qtplugins/noncovalent/noncovalent.cpp:340
 msgid " °"
@@ -3710,7 +3712,7 @@ msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
-msgstr ""
+msgstr "Kutna tolerancija:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -3734,7 +3736,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
-msgstr ""
+msgstr "Spoznaj veze"
 
 #: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add Hydrogens for pH…"
@@ -3747,34 +3749,36 @@ msgstr "Ukloni vodike"
 #: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "%1 nije pronađen! Radnje Open Babel dodatka se deaktiviraju."
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:119
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Formati Open Babel datoteka nisu spremni za dodavanje."
 
 #: qtplugins/openbabel/openbabel.cpp:203
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "Učitavanje molekule iz Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Došlo je do interne greške: OpenBabel::readMolecule je pozvan, ali nijedan "
+"obabel rezultat nije dostupan za analiziranje!"
 
 #: qtplugins/openbabel/openbabel.cpp:218
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Došlo je do greške pri pokretanju programa Open Babel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:228
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Greška pri analiziranju openbabel rezultata."
 
 #: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
 #: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
@@ -5454,24 +5458,24 @@ msgstr "Ctrl+C"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Structure Input File"
-msgstr ""
+msgstr "Datoteka unosa strukture"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
 msgid "Generate Input From PDB"
-msgstr ""
+msgstr "Generiraj unos iz PDB-a"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
 msgid "PDB File:"
-msgstr ""
+msgstr "PDB Datoteka:"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:50
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "..."
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5481,12 +5485,12 @@ msgstr "Polje sile:"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:75
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "AMBER"
-msgstr ""
+msgstr "AMBER"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:80
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "CHARMM"
-msgstr ""
+msgstr "CHARMM"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:85
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -5496,17 +5500,17 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:90
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "TYL06"
-msgstr ""
+msgstr "TYL06"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:95
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "PEOEPB"
-msgstr ""
+msgstr "PEOEPB"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:100
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "SWANSON"
-msgstr ""
+msgstr "SWANSON"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:114
 #. i18n: ectx: property (text), widget (QPushButton, runPdb2PqrButton)
@@ -5526,12 +5530,12 @@ msgstr "PQR datoteka:"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:156
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 msgid "APBS Input File"
-msgstr ""
+msgstr "Datoteka APBS unosa"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:170
 #. i18n: ectx: property (text), widget (QPushButton, saveInputFileButton)
 msgid "Save Input File"
-msgstr ""
+msgstr "Spremi datoteku unosa"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:177
 #. i18n: ectx: property (text), widget (QPushButton, runApbsButton)
@@ -5546,12 +5550,12 @@ msgstr "Uspjeh!"
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
 msgid "Load Structure File"
-msgstr ""
+msgstr "Učitaj datoteku strukture"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
 msgid "Load Cube File"
-msgstr ""
+msgstr "Učitaj datoteku kocke"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
@@ -5561,7 +5565,7 @@ msgstr "Djelomični naboji"
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
 msgid "Charge Model:"
-msgstr ""
+msgstr "Model naboja:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5576,7 +5580,7 @@ msgstr "Minimalna udaljenost:"
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
 msgid "Volume Rendering"
-msgstr ""
+msgstr "Iscrtavanje volumena"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5586,12 +5590,12 @@ msgstr "Kocka"
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Enable volume rendering"
-msgstr ""
+msgstr "Aktiviraj iscrtavanje volumena"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "Aktiviraj iscrtavanje površine"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5722,7 +5726,7 @@ msgstr "Resetiraj sve"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
-msgstr "Zadane postavke"
+msgstr "Standardne postavke"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -5736,7 +5740,7 @@ msgstr "Spremi datoteku …"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:34
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
 msgid "&Basic Setup"
-msgstr ""
+msgstr "&Osnovna postava"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -5754,7 +5758,7 @@ msgstr "Naslov:"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Filename Base:"
-msgstr ""
+msgstr "Osnova imena datoteke:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -5865,7 +5869,8 @@ msgstr ""
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
-msgstr "Datotečni sufiks za Open Babel konverziju (zadano – Avogadro::POSCAR):"
+msgstr ""
+"Datotečni sufiks za Open Babel konverziju (standardno – Avogadro::POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
