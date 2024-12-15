@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-08 02:48+0000\n"
 "PO-Revision-Date: 2024-12-15 15:16+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3513,7 +3514,7 @@ msgstr "Kemijska formula:"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Broj atoma:"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
