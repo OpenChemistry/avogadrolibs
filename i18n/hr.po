@@ -3510,7 +3510,7 @@ msgstr "Molekulska masa (g/mol):"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Kemijska formula:"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
