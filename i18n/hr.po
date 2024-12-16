@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-16 11:33+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-16 12:30+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -3798,25 +3797,27 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekula je neispravna. Nije moguće optimirati geometriju."
 
 #: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Nije moguće optimirati geometriju s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
-msgstr ""
+msgstr "Optimiranje geometrije (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
-msgstr ""
+msgstr "Generiranje …"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Došlo je do interne greške tijekom generiranja Open Babel prikaza trenutačne "
+"molekule."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
@@ -3838,12 +3839,12 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
-msgstr ""
+msgstr "Aktualiziranje molekule …"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Greška u interpretaciji Open Babel rezultata."
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
@@ -3857,23 +3858,23 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr ""
+msgstr "Molekula je neispravna. Nije moguće generirati konformere."
 
 #: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
-msgstr ""
+msgstr "Nije moguće generirati konformere s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
-msgstr ""
+msgstr "Generiranje konformera (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
-msgstr ""
+msgstr "Generiraj konformere"
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Nije moguće otvoriti datoteku s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3885,7 +3886,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Generiranje XYZ prikaza …"
 
 #: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
@@ -4344,7 +4345,7 @@ msgstr "Formalni naboj"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr "Prema djelomičnom naboju …"
+msgstr "%1 djelomični naboj"
 
 #: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
@@ -4501,7 +4502,7 @@ msgstr "Svojstva torzije …"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
-msgstr ""
+msgstr "Svojstva ostatka …"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4783,11 +4784,11 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
-msgstr ""
+msgstr "Prostorna grupa"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
+msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
@@ -4799,6 +4800,8 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"Prostorna grupa je već postavljena na: %1.\n"
+"Želiš li je prepisati?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
@@ -4809,6 +4812,8 @@ msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Percepcija prostorne grupe nije uspjela.\n"
+"Želiš li pokušati ponovo s jednom drugom tolerancijom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
@@ -4865,15 +4870,15 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
-msgstr ""
+msgstr "Odaberi prostornu grupu"
 
 #: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
-msgstr ""
+msgstr "Prostorna grupa"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Funkcije prostorne grupe za kristale."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
@@ -6355,6 +6360,18 @@ msgid ""
 "#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
 "html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
