@@ -10,9 +10,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-16 12:30+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-16 13:16+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -232,11 +231,11 @@ msgstr "Korvataanko muokatut syöttötiedostot?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Ongelmia tapahtui syötteen luomisen aikana:"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 msgid "No input files to save!"
-msgstr ""
+msgstr "Ei tallennettavia syöttötiedostoja!"
 
 #: molequeue/inputgeneratorwidget.cpp:294
 #: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
@@ -257,31 +256,31 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Lähetä %1:n laskelma"
 
 #: molequeue/inputgeneratorwidget.cpp:342
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
 #: qtplugins/gamessinput/gamessinputdialog.cpp:716
 msgid "Job Failed"
-msgstr ""
+msgstr "Työ epäonnistui"
 
 #: molequeue/inputgeneratorwidget.cpp:343
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1023
 #: qtplugins/gamessinput/gamessinputdialog.cpp:717
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Työtä ei saatu päätökseen onnistuneesti."
 
 #: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Komentosarja palauttaa varoituksia:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:377
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Piilota &varoitukset"
 
 #: molequeue/inputgeneratorwidget.cpp:383
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Näytä &varoitukset"
 
 #: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
@@ -289,12 +288,12 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:451
 msgid "Select output filename"
-msgstr ""
+msgstr "Valitse tulosteen tiedostonimi"
 
 #: molequeue/inputgeneratorwidget.cpp:463
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Sisäinen virhe: ei löytynyt teksti-vekotinta tiedostonimelle '%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #: molequeue/inputgeneratorwidget.cpp:590
@@ -307,7 +306,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Tulosteen virhe"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -319,27 +318,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Tiedostoon %1 kirjoittaminen epäonnistui."
 
 #: molequeue/inputgeneratorwidget.cpp:491
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Valitse lähtöhakemisto"
 
 #: molequeue/inputgeneratorwidget.cpp:508
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Hakemistoa ei ole olemassa!"
 
 #: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Hakemistoa ei voi lukea!"
 
 #: molequeue/inputgeneratorwidget.cpp:524
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -348,7 +347,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Tiedosto korvataan."
 
 #: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -357,13 +356,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Tiedosto ei ole kirjoituskelpoinen."
 
 #: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Syöttötiedostoihin ei voida kirjoittaa tuntemattoman virheen takia."
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -374,6 +373,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Syöttötiedostoihin ei voida kirjoittaa:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -388,6 +390,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Syöttötiedostoihin ei voida kirjoittaa:\n"
+"\n"
+"%1\n"
+"\n"
+"Varoitukset:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -400,34 +409,39 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Varoitus:\n"
+"\n"
+"%1\n"
+"\n"
+"Haluatko jatkaa?"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Kirjoita syöttötiedostot"
 
 #: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
-msgstr ""
+msgstr "Määritä työ"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Lähetetään työtä MoleQueuelle…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Työn lähetyksen aikakatkaisu"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadro aikakatkaistiin odottaessaan vastausta MoleQueuelta."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Odotetaan työn %1 “%2” valmistumista…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
@@ -435,15 +449,15 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Haetaan suoritetun työn tietoja…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Työnhaun aikakatkaisu"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
-msgstr ""
+msgstr "Avogadro aikakatkaistiin odottaessaan valmiita työtietoja MoleQueuelta."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
