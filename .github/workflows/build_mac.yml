@@ -70,13 +70,13 @@ jobs:
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
+        repository: openchemistry/avogadroapp
         path: openchemistry/avogadroapp
         fetch-depth: 0
         
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        repository: openchemistry/avogadrolibs
         path: openchemistry/avogadrolibs
         fetch-depth: 0
 
