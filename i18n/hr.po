@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-16 12:30+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4805,7 +4806,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
-msgstr ""
+msgstr "Neuspjeh!"
 
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
