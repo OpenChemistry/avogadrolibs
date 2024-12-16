@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-16 13:16+0000\n"
+"PO-Revision-Date: 2024-12-16 13:26+0000\n"
 "Last-Translator: Максим Горпиніч <mgorpinic2005@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -1078,59 +1078,58 @@ msgstr ""
 "Знайдено кілька %1, які можуть %2 цей формат. Який слід використовувати?"
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
 msgstr "Всі файли"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr ""
+msgstr "Усі підтримувані формати"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
-msgstr ""
+msgstr "Помилка читання представлення молекули: Нерозпізнаний формат файлу: %1"
 
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 повідомлення"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Помилка запису представлення молекули в рядок: нерозпізнаний формат файлу: %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "Помилка запису представлення молекули в рядок: %1"
 
 #: qtgui/jsonwidget.cpp:86
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "Відсутній 'userOptions'."
 
 #: qtgui/jsonwidget.cpp:117
 #, qt-format
 msgid "Option '%1' does not refer to an object."
-msgstr ""
+msgstr "Параметр \"%1\" не посилається на об'єкт."
 
 #: qtgui/jsonwidget.cpp:124
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr ""
+msgstr "'type' не є рядком для параметра '%1'."
 
 #: qtgui/jsonwidget.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Не вдалося запустити povray."
+msgstr "Не вдалося знайти параметр \"%1\"."
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "вкладка %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1140,18 +1139,17 @@ msgstr "Назва"
 
 #: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
-msgstr ""
+msgstr "База імен файлів"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
-msgstr ""
+msgstr "Ядра процесора"
 
 #: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
-msgstr ""
+msgstr "Тип розрахунку"
 
 #: qtgui/jsonwidget.cpp:226
-#, fuzzy
 msgid "Theory"
 msgstr "Теорія"
 
@@ -1170,12 +1168,12 @@ msgstr "Кратність"
 #: qtgui/jsonwidget.cpp:589
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr ""
+msgstr "Помилка: значення має бути об’єктом для ключа «%1»."
 
 #: qtgui/jsonwidget.cpp:622
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Нерозпізнаний тип опції \"%1\" для опції \"%2\"."
 
 #: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
 #: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
@@ -1183,6 +1181,7 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Помилка налаштування параметра \"%1\" за умовчанням. Поганий тип віджета."
 
 #: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
 #: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
@@ -1190,6 +1189,8 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Помилка налаштування параметра \"%1\" за умовчанням. Неправильне значення за "
+"умовчанням:"
 
 #: qtgui/jsonwidget.cpp:652
 #, qt-format
@@ -1197,41 +1198,41 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Помилка налаштування параметра \"%1\" за умовчанням. Не вдалося знайти "
+"дійсний індекс комбінованого запису зі значення:"
 
 #: qtgui/jsonwidget.cpp:841
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Необроблений віджет у collectOptions для опції «%1»."
 
 #: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Не вказано молекули"
+msgstr "[жодної молекули]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Шар %1"
 
 #: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "Кульки і стрижні"
 
 #: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Макет"
+msgstr "мультфільми"
 
 #: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Закрити Контакти"
 
 #: qtgui/layermodel.cpp:142 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Кристалічна решітка"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
@@ -1242,36 +1243,31 @@ msgid "Force"
 msgstr "Сила"
 
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Мітка"
+msgstr "етикетки"
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Солодка"
 
 #: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
 msgid "Meshes"
-msgstr ""
+msgstr "Сітки"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Ковалентний"
+msgstr "Нековалентний"
 
 #: qtgui/layermodel.cpp:156
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:158 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Елементи симетрії"
 
 #: qtgui/layermodel.cpp:160 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1288,7 +1284,7 @@ msgstr "Без назви"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
-msgstr ""
+msgstr "Створіть новий перегляд"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1298,6 +1294,8 @@ msgstr "Періодична таблиця"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Помилка під час виконання сценарію \"%1 %2\": минув час очікування запуску "
+"(%3)."
 
 #: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
@@ -1305,11 +1303,14 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Помилка під час виконання сценарію \"%1 %2\": не вдалося записати в "
+"стандартний вхід (len=%3, записав %4 байти, помилка QProcess: %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Помилка виконання сценарію \"%1 %2\": минув час очікування завершення (%3)."
 
 #: qtgui/pythonscript.cpp:136
 #, qt-format
@@ -1319,65 +1320,69 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Помилка виконання сценарію \"%1 %2\": ненормальний статус виходу %3 (%4: %5)"
+"\n"
+"\n"
+"Вихід:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:145
 #, qt-format
 msgid "Warning '%1'"
-msgstr ""
+msgstr "УВАГА '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
-msgstr ""
+msgstr "Не вдалося запустити сценарій."
 
 #: qtgui/pythonscript.cpp:270
 msgid "Script crashed."
-msgstr ""
+msgstr "Збій сценарію."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr ""
+msgstr "Сценарій минув."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
-msgstr ""
+msgstr "Помилка читання."
 
 #: qtgui/pythonscript.cpp:279
 msgid "Write error."
-msgstr ""
+msgstr "Помилка запису."
 
 #: qtgui/pythonscript.cpp:283
 msgid "Unknown error."
-msgstr ""
+msgstr "Невідома помилка."
 
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
-msgstr ""
+msgstr "Змінити шари"
 
 #: qtgui/rwlayermanager.cpp:196
 msgid "Remove Layer"
-msgstr ""
+msgstr "Видалити шар"
 
 #: qtgui/rwlayermanager.cpp:203
 msgid "Remove Layer Info"
-msgstr ""
+msgstr "Видалити інформацію про шар"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
-msgstr ""
+msgstr "Додати шар"
 
 #: qtgui/rwlayermanager.cpp:215
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Додати інформацію про шар"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:263:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Змінити порядок зв’язку"
+msgstr "Змінити шар"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1390,7 +1395,7 @@ msgstr "Вилучити атом"
 
 #: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Очистити атоми"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1399,9 +1404,8 @@ msgid "Adjust Hydrogens"
 msgstr "Вирівняти атоми водню"
 
 #: qtgui/rwmolecule.cpp:143
-#, fuzzy
 msgid "Change Elements"
-msgstr "Змінити елемент"
+msgstr "Зміна елементів"
 
 #: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
@@ -1409,20 +1413,19 @@ msgstr "Змінити елемент"
 
 #: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Гібридизація змінного атома"
 
 #: qtgui/rwmolecule.cpp:233
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Змінити офіційне звинувачення Atom"
 
 #: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
-msgstr ""
+msgstr "Змінити колір атома"
 
 #: qtgui/rwmolecule.cpp:257
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Змінити порядок зв’язку"
+msgstr "Змінити шар Atom"
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1430,71 +1433,63 @@ msgstr "Додати зв’язок"
 
 #: qtgui/rwmolecule.cpp:299
 msgid "Removed Bond"
-msgstr ""
+msgstr "Видалено Бонда"
 
 #: qtgui/rwmolecule.cpp:306
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Вилучити зв’язок"
+msgstr "Очистити облігації"
 
 #: qtgui/rwmolecule.cpp:320
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Порядок зв’язку"
+msgstr "Встановіть замовлення на облігації"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
 msgstr "Змінити порядок зв’язку"
 
 #: qtgui/rwmolecule.cpp:354
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Прилипання до зв’язків"
+msgstr "Оновити облігації"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
-msgstr ""
+msgstr "Оновити Бонд"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Додати елементарну комірку…"
 
 #: qtgui/rwmolecule.cpp:404
-#, fuzzy
 msgid "Remove Unit Cell"
 msgstr "Вилучити елементарну комірку"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Редагувати елементарну комірку"
 
 #: qtgui/rwmolecule.cpp:484
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "Згорнути атоми до комірки"
+msgstr "Оберніть атоми в клітинку"
 
 #: qtgui/rwmolecule.cpp:507
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Масштабування об’єму елементарної комірки"
+msgstr "Масштаб об'єму комірки"
 
 #: qtgui/rwmolecule.cpp:527
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Надкомірки"
+msgstr "Створіть Super Cell"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Скорочення Niggli"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
 msgstr "Обернути до стандартної орієнтації"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Звести до базової комірки"
+msgstr "Зменшити до примітиву"
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:259
@@ -1502,23 +1497,20 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Симетризувати"
+msgstr "Симетризуйте клітинку"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
 msgstr "Заповнити елементарну комірку"
 
 #: qtgui/rwmolecule.cpp:687
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Спростити до асиметричного модуля"
+msgstr "Зменшити клітинку до асиметричної одиниці"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Змінити порядок зв’язку"
+msgstr "Зміна позицій атомів"
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
