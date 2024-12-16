@@ -23,7 +23,7 @@ jobs:
         config:
         - {
             name: "macOS Intel", artifact: "macOS-x86_64.dmg",
-            os: macos-latest,
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='x86_64'",
@@ -51,14 +51,13 @@ jobs:
 
     steps:
 
-    - name: Install Dependencies (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        if uname -p | grep -q "arm" ; then
-           export PATH=/opt/homebrew/bin:$PATH
-        else # not self-hosted runner
-          brew install ninja eigen glew
-        fi
+    - name: Install Dependencies
+      if: matrix.config.name != 'macOS Apple Silicon'
+      run: brew install ninja eigen glew
+    
+    - name: Set PATH (self-hosted)
+      if: matrix.config.name == 'macOS Apple Silicon'
+      run: export PATH=/opt/homebrew/bin:$PATH
 
     - name: Checkout openchemistry
       uses: actions/checkout@v4
@@ -110,7 +109,7 @@ jobs:
     
     - name: Install Qt
       # Only if not self-hosted
-      if: runner.name != 'macOS Apple Silicon'
+      if: matrix.config.name != 'macOS Apple Silicon'
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{ env.QT_VERSION }}
@@ -130,7 +129,6 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Fix Mac plugins
-      if: runner.os == 'macOS'
       working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
       run: |
         for plugin in *.so; do
@@ -163,7 +161,6 @@ jobs:
 
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
-      if: runner.os == 'macOS'
       working-directory: ${{ runner.workspace }}/build
       env:
         BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -212,7 +209,6 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
 
     - name: Notarize Mac DMG
-      if: runner.os == 'macOS'
       run: |
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
