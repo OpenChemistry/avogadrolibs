@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Ricky Tigg <ricky.tigg@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-12-16 12:30+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -17,17 +18,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.9-rc\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Batch Job #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
-msgstr ""
+msgstr "Ei määritettyä viestiä."
 
 #: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
@@ -40,28 +41,30 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Ei-merkkijono varoitus palautettu."
 
 #: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' -jäsen ei ole matriisi."
 
 #: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Viitetiedostoa '%1' ei ole olemassa."
 
 #: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Virhe täytettäessä tiedostoa %1: %2"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Tiedosto '%1' huonosti muotoiltu. Puuttuvat merkkijonon \"contents\" tai "
+"\"filePath\" jäsenet."
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
 #, qt-format
@@ -69,19 +72,22 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Väärin muotoiltu tiedosto: tiedoston nimi/sisältö puuttuu tai ei "
+"merkkijonoja:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Väärin muotoiltu tiedostomerkintä indeksissä %1: Ei objekti."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "\"files\" -jäsen ei ole matriisi."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "\"files\" -jäsen puuttuu."
 
 #: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -89,11 +95,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' -jäsenen on oltava merkkijono."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Vastauksen on oltava ylätason JSON-objekti."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
@@ -101,6 +107,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Komentosarjan tuloste:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -116,12 +124,14 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Virhe tallennettaessa molekyyliesitystä merkkijonoon: Tuntematon "
+"tiedostomuoto: %1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "Virhe tallennettaessa molekyyliesitystä merkkijonoon: %1"
 
 #: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -131,6 +141,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Virhe luotaessa cjson-objektia: Jäsennysvirhe siirtymässä %1: %2\n"
+"Raaka JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -138,15 +152,17 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Virhegeneraattorin cjson-objekti: Jäsennetty JSON ei ole objekti:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Syöttögeneraattori (virhe)"
 
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "%1 Syöttögeneraattori"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
@@ -194,13 +210,23 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Seuraavaa tiedostoa on muokattu:\n"
+"\n"
+"%1\n"
+"\n"
+"Haluatko korvata muutokset vastaamaan uutta geometriaa tai työvaihtoehtoja?"
 msgstr[1] ""
+"Seuraavia tiedostoja on muokattu:\n"
+"\n"
+"%1\n"
+"\n"
+"Haluatko korvata muutokset vastaamaan uutta geometriaa tai työvaihtoehtoja?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Korvataanko muokatut syöttötiedostot?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
