@@ -69,13 +69,11 @@ jobs:
       with:
         repository: openchemistry/avogadroapp
         path: openchemistry/avogadroapp
-        fetch-depth: 0
         
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
         path: openchemistry/avogadrolibs
-        fetch-depth: 0
 
     - name: Checkout i18n
       uses: actions/checkout@v4
