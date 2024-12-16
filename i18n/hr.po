@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-16 12:30+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-16 13:16+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4806,7 +4805,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
-msgstr "Neuspjeh!"
+msgstr "Neuspjeh"
 
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
@@ -4828,6 +4827,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Tolerancija je trenutačno postavljena na: %1.\n"
+"Nastaviti s ovom tolerancijom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
@@ -4855,7 +4856,7 @@ msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Odberi toleranciju u Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
