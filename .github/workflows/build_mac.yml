@@ -31,10 +31,10 @@ jobs:
           }
         - {
             name: "macOS Apple Silicon", artifact: "macOS-arm64.dmg",
-            os: [self-hosted, macOS],
+            os: macos-latest,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt@5/5.15.5_1/lib/cmake/Qt5",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64'",
             cpack_flags: "-G DragNDrop",
           }
         - {
@@ -52,12 +52,7 @@ jobs:
     steps:
 
     - name: Install Dependencies
-      if: matrix.config.name != 'macOS Apple Silicon'
       run: brew install ninja eigen glew
-    
-    - name: Set PATH (self-hosted)
-      if: matrix.config.name == 'macOS Apple Silicon'
-      run: export PATH=/opt/homebrew/bin:$PATH
 
     - name: Checkout openchemistry
       uses: actions/checkout@v4
@@ -108,8 +103,6 @@ jobs:
         path: openchemistry/molecules
     
     - name: Install Qt
-      # Only if not self-hosted
-      if: matrix.config.name != 'macOS Apple Silicon'
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{ env.QT_VERSION }}
