@@ -5,13 +5,14 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 # Ricky Tigg <ricky.tigg@gmail.com>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-16 13:16+0000\n"
-"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -284,7 +285,7 @@ msgstr "Näytä &varoitukset"
 
 #: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Virhe on tapahtunut:"
 
 #: molequeue/inputgeneratorwidget.cpp:451
 msgid "Select output filename"
@@ -445,7 +446,7 @@ msgstr "Odotetaan työn %1 “%2” valmistumista…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Lopeta odottaminen"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -461,7 +462,7 @@ msgstr "Avogadro aikakatkaistiin odottaessaan valmiita työtietoja MoleQueuelta.
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Virheet työn lähettämisessä"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
