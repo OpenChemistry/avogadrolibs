@@ -1,12 +1,13 @@
-name: CMake Self-Hosted
+name: macOS Build Matrix
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request]
 
 env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
+  MACOS_TARGET: 12
+  QT_VERSION: 5.15.2
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,12 +22,31 @@ jobs:
       matrix:
         config:
         - {
-            name: "macOS ARM", artifact: "macOS-arm64.dmg",
+            name: "macOS Intel", artifact: "macOS-x86_64.dmg",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='x86_64'",
+            cpack_flags: "-G DragNDrop",
+          }
+        - {
+            name: "macOS Apple Silicon", artifact: "macOS-arm64.dmg",
             os: [self-hosted, macOS],
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt@5/5.15.5_1/lib/cmake/Qt5",
             cpack_flags: "-G DragNDrop",
+          }
+        - {
+            name: "macOS Qt6", artifact: "",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
+            cpack_flags: "-G DragNDrop",
+            env: {
+              QT_VERSION: 6.8.1,
+            }
           }
 
     steps:
@@ -45,41 +65,57 @@ jobs:
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
-
+        path: openchemistry
+      
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
-    - name: Checkout molecules
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/molecules
-        path: molecules
-
-    - name: Checkout fragments
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/fragments
-        path: fragments
-
-    - name: Checkout crystals
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/crystals
-        path: crystals
-
+        path: openchemistry/avogadroapp
+        fetch-depth: 0
+        
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        path: avogadrolibs
+        repository: openchemistry/avogadrolibs
+        path: openchemistry/avogadrolibs
+        fetch-depth: 0
 
     - name: Checkout i18n
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadro-i18n
-        path: avogadro-i18n
+        path: openchemistry/avogadro-i18n
+    
+    - name: Checkout avogadrogenerators
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogenerators
+        path: openchemistry/avogadrogenerators
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: openchemistry/crystals
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: openchemistry/fragments
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: openchemistry/molecules
+    
+    - name: Install Qt
+      # Only if not self-hosted
+      if: runner.name != 'macOS Apple Silicon'
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{ env.QT_VERSION }}
 
     - name: Configure
       run: |

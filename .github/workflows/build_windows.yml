@@ -1,4 +1,4 @@
-name: CMake Windows Build
+name: Windows Build Matrix
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
@@ -7,11 +7,11 @@ name: CMake Windows Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, workflow_dispatch]
+on: [push, pull_request]
 
 env:
   QT_VERSION: 5.15.2
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,13 +26,25 @@ jobs:
       matrix:
         config:
         - {
-            name: "Windows Latest MSVC", artifact: "Win64.exe",
+            name: "Windows", artifact: "windows-x86_64.exe",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
+            cmake_flags: "",
             build_flags: "",
             cpack_flags: "-G NSIS",
+          }
+        - {
+            name: "Windows Qt6", artifact: "",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            build_type: "Release",
+            cmake_flags: "",
+            build_flags: "",
+            cpack_flags: "-G NSIS",
+            env: {
+              QT_VERSION: 6.8.1,
+            }
           }
 
     steps:
@@ -46,44 +58,53 @@ jobs:
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
-
+        path: openchemistry
+          
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
-    - name: Checkout molecules
+        path: openchemistry/avogadroapp
+        fetch-depth: 0
+        
+    - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        repository: openchemistry/molecules
-        path: molecules
-
-    - name: Checkout fragments
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/fragments
-        path: fragments
-
-    - name: Checkout crystals
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/crystals
-        path: crystals
+        repository: openchemistry/avogadrolibs
+        path: openchemistry/avogadrolibs
+        fetch-depth: 0
 
     - name: Checkout i18n
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadro-i18n
-        path: avogadro-i18n
-
-    - name: Checkout avogadrolibs
+        path: openchemistry/avogadro-i18n
+    
+    - name: Checkout avogadrogenerators
       uses: actions/checkout@v4
       with:
-        path: avogadrolibs
+        repository: openchemistry/avogenerators
+        path: openchemistry/avogadrogenerators
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: openchemistry/crystals
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: openchemistry/fragments
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: openchemistry/molecules
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         aqtversion: '==3.1.*'
         cache: true

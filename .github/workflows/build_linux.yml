@@ -1,17 +1,17 @@
-name: Qt6 Build Matrix
+name: Linux Build Matrix
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
-
 
 on: [push, pull_request, workflow_dispatch]
 
 env:
   QT_VERSION: 6.8.1
-  # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
-  # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DQT_VERSION=6
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -22,88 +22,101 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Qt6", artifact: "",
+            name: "Ubuntu", artifact: "ubuntu-x86_64.tar.gz",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
-            cpack: "",
           }
         - {
-            name: "Ubuntu Qt6 AppImage", artifact: "",
+            name: "AppImage", artifact: "Avogadro2.AppImage",
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
-            cpack: "",
           }
         - {
-            name: "macOS Qt6", artifact: "",
-            os: macos-latest,
-            cc: "clang", cxx: "clang++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
-            cpack_flags: "-G DragNDrop",
+            name: "Ubuntu Address Sanitizer", artifact: "",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "asan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
           }
         - {
-            name: "Windows Qt6", artifact: "",
-            os: windows-latest,
-            cc: "cl", cxx: "cl",
-            build_type: "Release",
-            cmake_flags: "",
-            build_flags: "-j 2",
-            cpack_flags: "-G NSIS",
+            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "ubsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
           }
 
     steps:
 
-    - name: Install Dependencies (Linux)
-      if: runner.os == 'Linux'
+    - name: Install Dependencies
       run: |
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
-    - name: Install Dependencies (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew install ninja eigen glew
-    - name: Install Dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: choco install ninja
 
     - name: Checkout openchemistry
       uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
-
+        path: openchemistry
+          
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
-        path: avogadroapp
-
+        path: openchemistry/avogadroapp
+        fetch-depth: 0
+        
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        path: avogadrolibs
+        path: openchemistry/avogadrolibs
+        fetch-depth: 0
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: openchemistry/avogadro-i18n
+    
+    - name: Checkout avogadrogenerators
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogenerators
+        path: openchemistry/avogadrogenerators
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: openchemistry/crystals
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: openchemistry/fragments
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: openchemistry/molecules
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{ env.QT_VERSION }}
 
-    - name: Configure MSVC Command Prompt
-      if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
-
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
-        echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
