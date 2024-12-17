@@ -8,13 +8,15 @@
 # Artem <artem@molotov.work>, 2022.
 # Yarema Kertytsky <y.kertytsky@gmail.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Максим Горпиніч <mgorpinic2005@gmail.com>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"POT-Creation-Date: 2024-12-15 02:48+0000\n"
+"PO-Revision-Date: 2024-12-16 13:26+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
 "Language: uk\n"
@@ -23,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.9-rc\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -33,7 +35,7 @@ msgstr "Пакетне завдання #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
-msgstr ""
+msgstr "Повідомлення не вказано."
 
 #: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
@@ -42,32 +44,37 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"вихід сценарію --print-options має бути об’єктом JSON верхнього рівня. "
+"Отримано:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Повернуто нерядкове попередження."
 
 #: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "член 'warnings' не є масивом."
 
 #: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Довідковий файл \"%1\" не існує."
 
 #: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Помилка заповнення файлу %1: %2"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Файл \"%1\" неправильно сформований. Відсутній елемент рядка 'contents' або "
+"'filePath'."
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
 #, qt-format
@@ -75,31 +82,34 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Неправильно сформований запис файлу: ім’я файлу/вміст відсутні або відсутні "
+"рядки:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Неправильний запис файлу з індексом %1: це не об’єкт."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "член 'files' не є масивом."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "член 'files' відсутній."
 
 #: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "Член 'mainFile' не посилається на запис у 'files'."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "Член 'mainFile' має бути рядком."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Відповідь має бути об’єктом JSON верхнього рівня."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
@@ -107,6 +117,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Вивід сценарію:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -116,18 +128,24 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Помилка аналізу зі зміщенням %L1: \"%2\"\n"
+"Необроблений JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:346
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Помилка збереження представлення молекули в рядку: нерозпізнаний формат "
+"файлу: %1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "Помилка збереження представлення молекули в рядку: %1"
 
 #: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -137,6 +155,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Помилка створення об’єкта cjson: помилка аналізу зі зміщенням %1: %2\n"
+"Необроблений JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -144,15 +166,17 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Об’єкт cjson генератора помилок: аналізований JSON не є об’єктом:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Генератор вхідних даних (помилка)"
 
 #: molequeue/inputgeneratordialog.cpp:43
-#, fuzzy, qt-format
+#, qt-format
 msgid "%1 Input Generator"
-msgstr "Засіб створення вхідних даних…"
+msgstr "%1 Генератор вхідних даних"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
@@ -200,28 +224,47 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Наступні файл були змінені:\n"
+"\n"
+"%1\n"
+"\n"
+"Чи бажаєте ви перезаписати свої зміни, щоб відобразити нову геометрію чи "
+"параметри роботи?"
 msgstr[1] ""
+"Наступні файли були змінені:\n"
+"\n"
+"%1\n"
+"\n"
+"Чи бажаєте ви перезаписати свої зміни, щоб відобразити нову геометрію чи "
+"параметри роботи?"
+msgstr[2] ""
+"Наступні файлів були змінені:\n"
+"\n"
+"%1\n"
+"\n"
+"Чи бажаєте ви перезаписати свої зміни, щоб відобразити нову геометрію чи "
+"параметри роботи?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Перезаписати змінені вхідні файли?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Під час створення вхідних даних виникли проблеми:"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 msgid "No input files to save!"
-msgstr ""
+msgstr "Немає вхідних файлів для збереження!"
 
 #: molequeue/inputgeneratorwidget.cpp:294
 #: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:985
 #: qtplugins/gamessinput/gamessinputdialog.cpp:679
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Не вдається підключитися до MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:295
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
@@ -231,48 +274,51 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Неможливо підключитися до сервера MoleQueue. Переконайтеся, що він працює, і "
+"повторіть спробу."
 
 #: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Надіслати обчислення %1"
 
 #: molequeue/inputgeneratorwidget.cpp:342
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
 #: qtplugins/gamessinput/gamessinputdialog.cpp:716
 msgid "Job Failed"
-msgstr ""
+msgstr "Робота не виконана"
 
 #: molequeue/inputgeneratorwidget.cpp:343
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1023
 #: qtplugins/gamessinput/gamessinputdialog.cpp:717
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Робота не виконана успішно."
 
 #: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Сценарій повертає попередження:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:377
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Сховати &попередження"
 
 #: molequeue/inputgeneratorwidget.cpp:383
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Показати &попередження"
 
 #: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Сталася помилка:"
 
 #: molequeue/inputgeneratorwidget.cpp:451
 msgid "Select output filename"
-msgstr ""
+msgstr "Виберіть назву вихідного файлу"
 
 #: molequeue/inputgeneratorwidget.cpp:463
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Внутрішня помилка: не вдалося знайти текстовий віджет для імені файлу \"%1\""
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #: molequeue/inputgeneratorwidget.cpp:590
@@ -285,7 +331,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Помилка виведення"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -297,27 +343,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Не вдалося записати файл %1."
 
 #: molequeue/inputgeneratorwidget.cpp:491
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Виберіть вихідний каталог"
 
 #: molequeue/inputgeneratorwidget.cpp:508
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Каталог не існує!"
 
 #: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Каталог не читається!"
 
 #: molequeue/inputgeneratorwidget.cpp:524
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -326,7 +372,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Файл буде перезаписано."
 
 #: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -335,13 +381,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Файл не доступний для запису."
 
 #: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Вхідні файли неможливо записати через невідому помилку."
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -352,6 +398,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Вхідні файли не можна записати:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -366,6 +415,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Вхідні файли не можна записати:\n"
+"\n"
+"%1\n"
+"\n"
+"Попередження:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -378,80 +434,86 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"УВАГА:\n"
+"\n"
+"%1\n"
+"\n"
+"Бажаєте продовжити?"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Записати вхідні файли"
 
 #: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
-msgstr ""
+msgstr "Налаштувати завдання"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Надсилання завдання до MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Тайм-аут подання завдання"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Авогадро вичерпав час очікування відповіді від MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Очікування завершення завдання %1 «%2»…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Припиніть чекати"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Отримання інформації про виконану роботу…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Час очікування отримання завдання"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Авогадро вичерпав час очікування на деталі завершеної роботи від MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Помилка надсилання завдання"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Завдання відхилено MoleQueue: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Програма не вибрана."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "Будь ласка, виберіть цільову програму зі списку «Черга та програма»."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Клієнту не вдалося надіслати завдання до MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Внутрішня помилка."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Неможливо вирішити вибір програми. Це помилка."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
@@ -467,11 +529,11 @@ msgstr "Назви файлу не встановлено у BackgroundFileForma
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Розділ по горизонталі"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "Спліт по вертикалі"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -954,121 +1016,121 @@ msgid "Oganesson"
 msgstr "Оганесон"
 
 #: qtgui/filebrowsewidget.cpp:23
-#, fuzzy
 msgid "Browse"
-msgstr "Навігація…"
+msgstr "переглядати"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
-msgstr ""
+msgstr "Виберіть файл:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr ""
+msgstr "Виберіть виконуваний файл:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "Неможливо знайти відповідний засіб читання файлів для вибраного файлу."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
+"Розширення файлу відсутнє, тому формат неможливо визначити. Хочете додати?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "Не вдається знайти відповідний записувач файлів для вибраного формату."
 
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "обробники"
 
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "ручка"
 
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "читачі"
 
 #: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "читати"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "письменники"
 
 #: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "писати"
 
 #: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
+"Знайдено кілька %1, які можуть %2 цей формат. Який слід використовувати?"
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
 msgstr "Всі файли"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr ""
+msgstr "Усі підтримувані формати"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
-msgstr ""
+msgstr "Помилка читання представлення молекули: Нерозпізнаний формат файлу: %1"
 
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 повідомлення"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Помилка запису представлення молекули в рядок: нерозпізнаний формат файлу: %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "Помилка запису представлення молекули в рядок: %1"
 
 #: qtgui/jsonwidget.cpp:86
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "Відсутній 'userOptions'."
 
 #: qtgui/jsonwidget.cpp:117
 #, qt-format
 msgid "Option '%1' does not refer to an object."
-msgstr ""
+msgstr "Параметр \"%1\" не посилається на об'єкт."
 
 #: qtgui/jsonwidget.cpp:124
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr ""
+msgstr "'type' не є рядком для параметра '%1'."
 
 #: qtgui/jsonwidget.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Не вдалося запустити povray."
+msgstr "Не вдалося знайти параметр \"%1\"."
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "вкладка %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
@@ -1078,18 +1140,17 @@ msgstr "Назва"
 
 #: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
-msgstr ""
+msgstr "База імен файлів"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
-msgstr ""
+msgstr "Ядра процесора"
 
 #: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
-msgstr ""
+msgstr "Тип розрахунку"
 
 #: qtgui/jsonwidget.cpp:226
-#, fuzzy
 msgid "Theory"
 msgstr "Теорія"
 
@@ -1108,12 +1169,12 @@ msgstr "Кратність"
 #: qtgui/jsonwidget.cpp:589
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr ""
+msgstr "Помилка: значення має бути об’єктом для ключа «%1»."
 
 #: qtgui/jsonwidget.cpp:622
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Нерозпізнаний тип опції \"%1\" для опції \"%2\"."
 
 #: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
 #: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
@@ -1121,6 +1182,7 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Помилка налаштування параметра \"%1\" за умовчанням. Поганий тип віджета."
 
 #: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
 #: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
@@ -1128,6 +1190,8 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
+"Помилка налаштування параметра \"%1\" за умовчанням. Неправильне значення за "
+"умовчанням:"
 
 #: qtgui/jsonwidget.cpp:652
 #, qt-format
@@ -1135,41 +1199,41 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Помилка налаштування параметра \"%1\" за умовчанням. Не вдалося знайти "
+"дійсний індекс комбінованого запису зі значення:"
 
 #: qtgui/jsonwidget.cpp:841
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Необроблений віджет у collectOptions для опції «%1»."
 
 #: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
-#, fuzzy
 msgid "[no molecule]"
-msgstr "Не вказано молекули"
+msgstr "[жодної молекули]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Шар %1"
 
 #: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "Кульки і стрижні"
 
 #: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Макет"
+msgstr "мультфільми"
 
 #: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Закрити Контакти"
 
 #: qtgui/layermodel.cpp:142 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Кристалічна решітка"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
@@ -1180,36 +1244,31 @@ msgid "Force"
 msgstr "Сила"
 
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Мітка"
+msgstr "етикетки"
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Солодка"
 
 #: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/surfaces.cpp:838
 msgid "Meshes"
-msgstr ""
+msgstr "Сітки"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Ковалентний"
+msgstr "Нековалентний"
 
 #: qtgui/layermodel.cpp:156
-#, fuzzy
-#| msgid "QTAIM"
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
 
 #: qtgui/layermodel.cpp:158 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Елементи симетрії"
 
 #: qtgui/layermodel.cpp:160 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
@@ -1226,7 +1285,7 @@ msgstr "Без назви"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
-msgstr ""
+msgstr "Створіть новий перегляд"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1236,6 +1295,8 @@ msgstr "Періодична таблиця"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Помилка під час виконання сценарію \"%1 %2\": минув час очікування запуску "
+"(%3)."
 
 #: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
@@ -1243,11 +1304,14 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Помилка під час виконання сценарію \"%1 %2\": не вдалося записати в "
+"стандартний вхід (len=%3, записав %4 байти, помилка QProcess: %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Помилка виконання сценарію \"%1 %2\": минув час очікування завершення (%3)."
 
 #: qtgui/pythonscript.cpp:136
 #, qt-format
@@ -1257,65 +1321,69 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Помилка виконання сценарію \"%1 %2\": ненормальний статус виходу %3 (%4: %5)"
+"\n"
+"\n"
+"Вихід:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:145
 #, qt-format
 msgid "Warning '%1'"
-msgstr ""
+msgstr "УВАГА '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
-msgstr ""
+msgstr "Не вдалося запустити сценарій."
 
 #: qtgui/pythonscript.cpp:270
 msgid "Script crashed."
-msgstr ""
+msgstr "Збій сценарію."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr ""
+msgstr "Сценарій минув."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
-msgstr ""
+msgstr "Помилка читання."
 
 #: qtgui/pythonscript.cpp:279
 msgid "Write error."
-msgstr ""
+msgstr "Помилка запису."
 
 #: qtgui/pythonscript.cpp:283
 msgid "Unknown error."
-msgstr ""
+msgstr "Невідома помилка."
 
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
-msgstr ""
+msgstr "Змінити шари"
 
 #: qtgui/rwlayermanager.cpp:196
 msgid "Remove Layer"
-msgstr ""
+msgstr "Видалити шар"
 
 #: qtgui/rwlayermanager.cpp:203
 msgid "Remove Layer Info"
-msgstr ""
+msgstr "Видалити інформацію про шар"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
-msgstr ""
+msgstr "Додати шар"
 
 #: qtgui/rwlayermanager.cpp:215
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Додати інформацію про шар"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:263:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Змінити порядок зв’язку"
+msgstr "Змінити шар"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1328,7 +1396,7 @@ msgstr "Вилучити атом"
 
 #: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
-msgstr ""
+msgstr "Очистити атоми"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -1337,9 +1405,8 @@ msgid "Adjust Hydrogens"
 msgstr "Вирівняти атоми водню"
 
 #: qtgui/rwmolecule.cpp:143
-#, fuzzy
 msgid "Change Elements"
-msgstr "Змінити елемент"
+msgstr "Зміна елементів"
 
 #: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
@@ -1347,20 +1414,19 @@ msgstr "Змінити елемент"
 
 #: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Гібридизація змінного атома"
 
 #: qtgui/rwmolecule.cpp:233
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Змінити офіційне звинувачення Atom"
 
 #: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
-msgstr ""
+msgstr "Змінити колір атома"
 
 #: qtgui/rwmolecule.cpp:257
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Змінити порядок зв’язку"
+msgstr "Змінити шар Atom"
 
 #: qtgui/rwmolecule.cpp:273
 msgid "Add Bond"
@@ -1368,95 +1434,84 @@ msgstr "Додати зв’язок"
 
 #: qtgui/rwmolecule.cpp:299
 msgid "Removed Bond"
-msgstr ""
+msgstr "Видалено Бонда"
 
 #: qtgui/rwmolecule.cpp:306
-#, fuzzy
 msgid "Clear Bonds"
-msgstr "Вилучити зв’язок"
+msgstr "Очистити облігації"
 
 #: qtgui/rwmolecule.cpp:320
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Порядок зв’язку"
+msgstr "Встановіть замовлення на облігації"
 
 #: qtgui/rwmolecule.cpp:332
 msgid "Change Bond Order"
 msgstr "Змінити порядок зв’язку"
 
 #: qtgui/rwmolecule.cpp:354
-#, fuzzy
 msgid "Update Bonds"
-msgstr " Прилипання до зв’язків"
+msgstr "Оновити облігації"
 
 #: qtgui/rwmolecule.cpp:373
 msgid "Update Bond"
-msgstr ""
+msgstr "Оновити Бонд"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Додати елементарну комірку…"
 
 #: qtgui/rwmolecule.cpp:404
-#, fuzzy
 msgid "Remove Unit Cell"
 msgstr "Вилучити елементарну комірку"
 
 #: qtgui/rwmolecule.cpp:468
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Редагувати елементарну комірку"
 
 #: qtgui/rwmolecule.cpp:484
-#, fuzzy
 msgid "Wrap Atoms to Cell"
-msgstr "Згорнути атоми до комірки"
+msgstr "Оберніть атоми в клітинку"
 
 #: qtgui/rwmolecule.cpp:507
-#, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Масштабування об’єму елементарної комірки"
+msgstr "Масштаб об'єму комірки"
 
 #: qtgui/rwmolecule.cpp:527
-#, fuzzy
 msgid "Build Super Cell"
-msgstr "Надкомірки"
+msgstr "Створіть Super Cell"
 
 #: qtgui/rwmolecule.cpp:551
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Скорочення Niggli"
 
 #: qtgui/rwmolecule.cpp:573
 msgid "Rotate to Standard Orientation"
 msgstr "Обернути до стандартної орієнтації"
 
 #: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "Звести до базової комірки"
+msgstr "Зменшити до примітиву"
 
 #: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:259
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Консультація Клітка"
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Симетризувати"
+msgstr "Симетризуйте клітинку"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
 msgstr "Заповнити елементарну комірку"
 
 #: qtgui/rwmolecule.cpp:687
-#, fuzzy
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr "Спростити до асиметричного модуля"
+msgstr "Зменшити клітинку до асиметричної одиниці"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Змінити порядок зв’язку"
+msgstr "Зміна позицій атомів"
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
@@ -2038,7 +2093,7 @@ msgid "&Build"
 msgstr "&Збирання"
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:498
+#: qtplugins/propertytables/propertymodel.cpp:535
 #, fuzzy
 msgid "Bond"
 msgstr "Зв’язок"
@@ -3325,8 +3380,8 @@ msgstr "Вставити фрагмент"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Вставити фрагменти молекул для побудови більших молекул"
 
-#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
-#: qtplugins/meshes/meshes.cpp:175
+#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:177
+#: qtplugins/meshes/meshes.cpp:183
 msgid "Color:"
 msgstr "Колір:"
 
@@ -3355,7 +3410,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr "Унікальний ідентифікатор"
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:495
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Елемент"
@@ -3379,13 +3434,13 @@ msgstr ""
 msgid "Atom Label:"
 msgstr "Мітки атомів"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:544
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:505
+#: qtplugins/propertytables/propertymodel.cpp:542
 msgid "Name"
 msgstr ""
 
@@ -3421,7 +3476,7 @@ msgid ""
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:78
+#: qtplugins/label/labeleditor.cpp:81
 #, fuzzy
 msgid "Create Label"
 msgstr "Створення поверхні"
@@ -3454,7 +3509,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:163
+#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
 msgid "Opacity:"
 msgstr "Непрозорість:"
@@ -3575,7 +3630,7 @@ msgid "unknown molecule"
 msgstr "Не вказано молекули"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Property"
 msgstr ""
 
@@ -4425,169 +4480,171 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:464
+#: qtplugins/propertytables/propertymodel.cpp:497
 msgid "Valence"
 msgstr "Валентність"
 
-#: qtplugins/propertytables/propertymodel.cpp:466
+#: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Formal Charge"
 msgstr "Формальний заряд"
 
-#: qtplugins/propertytables/propertymodel.cpp:468
-msgid "Partial Charge"
-msgstr "Частковий заряд"
+#: qtplugins/propertytables/propertymodel.cpp:502
+#, qt-format
+msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
+msgid "%1 Partial Charge"
+msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:470
+#: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:472
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:474
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
-#: qtplugins/propertytables/propertymodel.cpp:515
+#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:552
 #, fuzzy
 msgid "Color"
 msgstr "Колір"
 
-#: qtplugins/propertytables/propertymodel.cpp:479
+#: qtplugins/propertytables/propertymodel.cpp:516
 msgid "Atom"
 msgstr "Атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
-#: qtplugins/propertytables/propertymodel.cpp:525
-#: qtplugins/propertytables/propertymodel.cpp:542
+#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:562
+#: qtplugins/propertytables/propertymodel.cpp:579
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "Тип"
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:525
 msgid "Start Atom"
 msgstr "Початковий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:527
 #, fuzzy
 msgid "End Atom"
 msgstr "Кінцевий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:529
 #, fuzzy
 msgid "Bond Order"
 msgstr "Порядок зв’язку"
 
-#: qtplugins/propertytables/propertymodel.cpp:494
+#: qtplugins/propertytables/propertymodel.cpp:531
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Довжина (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:509
+#: qtplugins/propertytables/propertymodel.cpp:546
 #, fuzzy
 msgid "Chain"
 msgstr "Ланцюжків НГ"
 
-#: qtplugins/propertytables/propertymodel.cpp:511
+#: qtplugins/propertytables/propertymodel.cpp:548
 #, fuzzy
 msgid "Secondary Structure"
 msgstr "Завантажити файл"
 
-#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:527
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:564
+#: qtplugins/propertytables/propertymodel.cpp:581
 #, fuzzy
 msgid "Atom 1"
 msgstr "Атом 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:529
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Vertex"
 msgstr "Вершина"
 
-#: qtplugins/propertytables/propertymodel.cpp:531
-#: qtplugins/propertytables/propertymodel.cpp:548
+#: qtplugins/propertytables/propertymodel.cpp:568
+#: qtplugins/propertytables/propertymodel.cpp:585
 #, fuzzy
 msgid "Atom 3"
 msgstr "Атом 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:533
-#: qtplugins/propertytables/propertymodel.cpp:552
+#: qtplugins/propertytables/propertymodel.cpp:570
+#: qtplugins/propertytables/propertymodel.cpp:589
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Кут (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:546
+#: qtplugins/propertytables/propertymodel.cpp:583
 #, fuzzy
 msgid "Atom 2"
 msgstr "Атом 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:550
+#: qtplugins/propertytables/propertymodel.cpp:587
 #, fuzzy
 msgid "Atom 4"
 msgstr "Атом 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:600
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:754
+#: qtplugins/propertytables/propertymodel.cpp:791
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Adjust Fragment"
 msgstr "Вставити фрагмент"
 
-#: qtplugins/propertytables/propertymodel.cpp:880
+#: qtplugins/propertytables/propertymodel.cpp:917
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:882
+#: qtplugins/propertytables/propertymodel.cpp:919
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:884
+#: qtplugins/propertytables/propertymodel.cpp:921
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:886
+#: qtplugins/propertytables/propertymodel.cpp:923
 #, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "Лист"
 
-#: qtplugins/propertytables/propertymodel.cpp:888
+#: qtplugins/propertytables/propertymodel.cpp:925
 #, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10-спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:890
+#: qtplugins/propertytables/propertymodel.cpp:927
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:892
+#: qtplugins/propertytables/propertymodel.cpp:929
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:894
+#: qtplugins/propertytables/propertymodel.cpp:931
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -8656,6 +8713,9 @@ msgstr ""
 "yurchor@gmail.com,skrypnychuk@gmail.com,,,yurchor@gmail.com,"
 "skrypnychuk@gmail.com,,,,yurchor@gmail.com,skrypnychuk@gmail.com,,,,,"
 "yurchor@gmail.com,skrypnychuk@gmail.com,"
+
+#~ msgid "Partial Charge"
+#~ msgstr "Частковий заряд"
 
 #, fuzzy
 #~| msgid ""

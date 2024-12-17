@@ -8,9 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-15 20:26+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"POT-Creation-Date: 2024-12-15 02:48+0000\n"
+"PO-Revision-Date: 2024-12-16 13:26+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -120,12 +121,14 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Greška pri spremanju prikaza molekula u znakovni niz: Neprepoznat format "
+"datoteke: %1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "Greška pri spremanju prikaza molekula u znakovni niz: %1"
 
 #: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -223,7 +226,7 @@ msgstr[2] ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Prepisati promijenjenu datoteku unosa?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
@@ -1250,7 +1253,7 @@ msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:162 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
-msgstr ""
+msgstr "Žičani model"
 
 #: qtgui/moleculemodel.cpp:92
 msgid "Untitled"
@@ -2033,7 +2036,7 @@ msgid "&Build"
 msgstr "&Izgradi"
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:498
+#: qtplugins/propertytables/propertymodel.cpp:535
 msgid "Bond"
 msgstr "Veza"
 
@@ -2231,6 +2234,8 @@ msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Odaberi Python verziju koja se koristi za pokretanje eksternih skripta.\n"
+"Avogadro se mora ponovo pokrenuti kako bi sve promjene stupile na snagu."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
@@ -2255,7 +2260,8 @@ msgstr "Instaliraj Python"
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
-msgstr "Python se koristi za mnoge Avogadro funkcije. Želiš li preuzeti Python?"
+msgstr ""
+"Python se koristi za mnoge Avogadro funkcije. Želiš li preuzeti Python?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -2471,7 +2477,7 @@ msgstr "Izreži"
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:34:286
 msgid "Clear"
-msgstr "Očisti"
+msgstr "Izbriši"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -3247,8 +3253,8 @@ msgstr "Umetni fragment"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Umetni molekularne fragmente za izgradnju većih molekula."
 
-#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
-#: qtplugins/meshes/meshes.cpp:175
+#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:177
+#: qtplugins/meshes/meshes.cpp:183
 msgid "Color:"
 msgstr "Boja:"
 
@@ -3276,7 +3282,7 @@ msgstr "Indeks"
 msgid "Unique ID"
 msgstr "Jedinstveni ID"
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:495
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Element"
@@ -3298,13 +3304,13 @@ msgstr "Djelomični naboj"
 msgid "Atom Label:"
 msgstr "Oznaka atoma:"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:544
 msgid "ID"
 msgstr "ID"
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:505
+#: qtplugins/propertytables/propertymodel.cpp:542
 msgid "Name"
 msgstr "Ime"
 
@@ -3340,7 +3346,7 @@ msgstr ""
 "\n"
 "Lijeva tipka miša: \tKlikni na atome za dodavanje prilagođenih oznaka"
 
-#: qtplugins/label/labeleditor.cpp:78
+#: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
 msgstr "Stvori oznaku"
 
@@ -3368,7 +3374,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:163
+#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
 msgid "Opacity:"
 msgstr "Neprozirnost:"
@@ -3495,7 +3501,7 @@ msgid "unknown molecule"
 msgstr "nepoznata molekula"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Property"
 msgstr "Svojstvo"
 
@@ -3792,25 +3798,27 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekula je neispravna. Nije moguće optimirati geometriju."
 
 #: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Nije moguće optimirati geometriju s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
-msgstr ""
+msgstr "Optimiranje geometrije (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
-msgstr ""
+msgstr "Generiranje …"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Došlo je do interne greške tijekom generiranja Open Babel prikaza trenutačne "
+"molekule."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
@@ -3832,12 +3840,12 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
-msgstr ""
+msgstr "Aktualiziranje molekule …"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Greška u interpretaciji Open Babel rezultata."
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
@@ -3851,23 +3859,23 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr ""
+msgstr "Molekula je neispravna. Nije moguće generirati konformere."
 
 #: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
-msgstr ""
+msgstr "Nije moguće generirati konformere s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
-msgstr ""
+msgstr "Generiranje konformera (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
-msgstr ""
+msgstr "Generiraj konformere"
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Nije moguće otvoriti datoteku s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
@@ -3879,7 +3887,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Generiranje XYZ prikaza …"
 
 #: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
@@ -3892,7 +3900,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
-msgstr ""
+msgstr "Aktualiziranje molekule iz Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
@@ -4326,151 +4334,153 @@ msgstr "POVRay"
 msgid "Render the scene using POV-Ray."
 msgstr "Koristi POV-Ray za iscrtavanje prikaza."
 
-#: qtplugins/propertytables/propertymodel.cpp:464
+#: qtplugins/propertytables/propertymodel.cpp:497
 msgid "Valence"
 msgstr "Valencija"
 
-#: qtplugins/propertytables/propertymodel.cpp:466
+#: qtplugins/propertytables/propertymodel.cpp:499
 msgid "Formal Charge"
 msgstr "Formalni naboj"
 
-#: qtplugins/propertytables/propertymodel.cpp:468
-msgid "Partial Charge"
-msgstr "Djelomični naboj"
+#: qtplugins/propertytables/propertymodel.cpp:502
+#, qt-format
+msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
+msgid "%1 Partial Charge"
+msgstr "%1 djelomični naboj"
 
-#: qtplugins/propertytables/propertymodel.cpp:470
+#: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:472
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:474
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
-#: qtplugins/propertytables/propertymodel.cpp:515
+#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:552
 msgid "Color"
 msgstr "Boja"
 
-#: qtplugins/propertytables/propertymodel.cpp:479
+#: qtplugins/propertytables/propertymodel.cpp:516
 msgid "Atom"
 msgstr "Atom"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
-#: qtplugins/propertytables/propertymodel.cpp:525
-#: qtplugins/propertytables/propertymodel.cpp:542
+#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:562
+#: qtplugins/propertytables/propertymodel.cpp:579
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "Vrsta"
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:525
 msgid "Start Atom"
 msgstr "Početak atoma"
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:527
 msgid "End Atom"
 msgstr "Kraj atoma"
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:529
 msgid "Bond Order"
 msgstr "Redoslijed veza"
 
-#: qtplugins/propertytables/propertymodel.cpp:494
+#: qtplugins/propertytables/propertymodel.cpp:531
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Duljina (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:509
+#: qtplugins/propertytables/propertymodel.cpp:546
 msgid "Chain"
 msgstr "Lanac"
 
-#: qtplugins/propertytables/propertymodel.cpp:511
+#: qtplugins/propertytables/propertymodel.cpp:548
 msgid "Secondary Structure"
 msgstr "Sekundardna struktura"
 
-#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Heterogen"
 msgstr "Heterogen"
 
-#: qtplugins/propertytables/propertymodel.cpp:527
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:564
+#: qtplugins/propertytables/propertymodel.cpp:581
 msgid "Atom 1"
 msgstr "Atom 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:529
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Vertex"
 msgstr "Vrh"
 
-#: qtplugins/propertytables/propertymodel.cpp:531
-#: qtplugins/propertytables/propertymodel.cpp:548
+#: qtplugins/propertytables/propertymodel.cpp:568
+#: qtplugins/propertytables/propertymodel.cpp:585
 msgid "Atom 3"
 msgstr "Atom 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:533
-#: qtplugins/propertytables/propertymodel.cpp:552
+#: qtplugins/propertytables/propertymodel.cpp:570
+#: qtplugins/propertytables/propertymodel.cpp:589
 msgid "Angle (°)"
 msgstr "Kut (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:546
+#: qtplugins/propertytables/propertymodel.cpp:583
 msgid "Atom 2"
 msgstr "Atom 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:550
+#: qtplugins/propertytables/propertymodel.cpp:587
 msgid "Atom 4"
 msgstr "Atom 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:600
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
 msgstr "Energija (kcal/mol)"
 
-#: qtplugins/propertytables/propertymodel.cpp:754
+#: qtplugins/propertytables/propertymodel.cpp:791
 msgid "Adjust Fragment"
 msgstr "Prilagodi fragment"
 
-#: qtplugins/propertytables/propertymodel.cpp:880
+#: qtplugins/propertytables/propertymodel.cpp:917
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π spirala"
 
-#: qtplugins/propertytables/propertymodel.cpp:882
+#: qtplugins/propertytables/propertymodel.cpp:919
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:884
+#: qtplugins/propertytables/propertymodel.cpp:921
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α spirala"
 
-#: qtplugins/propertytables/propertymodel.cpp:886
+#: qtplugins/propertytables/propertymodel.cpp:923
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:888
+#: qtplugins/propertytables/propertymodel.cpp:925
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 spirala"
 
-#: qtplugins/propertytables/propertymodel.cpp:890
+#: qtplugins/propertytables/propertymodel.cpp:927
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:892
+#: qtplugins/propertytables/propertymodel.cpp:929
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Okretaj"
 
-#: qtplugins/propertytables/propertymodel.cpp:894
+#: qtplugins/propertytables/propertymodel.cpp:931
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -4493,7 +4503,7 @@ msgstr "Svojstva torzije …"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
-msgstr ""
+msgstr "Svojstva ostatka …"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4733,8 +4743,8 @@ msgstr ""
 "fragmenata\n"
 "\tPovuci za biranje niza atoma\n"
 "Desna tipka miša: \tKlikni izvan molekule za poništavanje odabira\n"
-"Koristi tipku Ctrl za mijenjanje odabira i tipku shift za dodavanje odabiru."
-"\n"
+"Koristi tipku Ctrl za mijenjanje odabira i tipku shift za dodavanje "
+"odabiru.\n"
 "Dvostruki klik: \tOdaberi cijeli fragment."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
@@ -4767,7 +4777,7 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
-msgstr ""
+msgstr "Reduciraj ćeliju na asimetričnu jedinicu"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
@@ -4775,11 +4785,11 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
-msgstr ""
+msgstr "Prostorna grupa"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
+msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
@@ -4791,16 +4801,20 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"Prostorna grupa je već postavljena na: %1.\n"
+"Želiš li je prepisati?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
-msgstr ""
+msgstr "Neuspjeh"
 
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Percepcija prostorne grupe nije uspjela.\n"
+"Želiš li pokušati ponovo s jednom drugom tolerancijom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
@@ -4814,6 +4828,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Tolerancija je trenutačno postavljena na: %1.\n"
+"Nastaviti s ovom tolerancijom?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
@@ -4841,7 +4857,7 @@ msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Odberi toleranciju u Å:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
@@ -4857,15 +4873,15 @@ msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
-msgstr ""
+msgstr "Odaberi prostornu grupu"
 
 #: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
-msgstr ""
+msgstr "Prostorna grupa"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Funkcije prostorne grupe za kristale."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
@@ -5230,7 +5246,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
-msgstr ""
+msgstr "Izračunaj strukturu vrpce …"
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -5238,7 +5254,7 @@ msgstr "&Yaehmop"
 
 #: qtplugins/yaehmop/yaehmop.cpp:209 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Cannot calculate band structure: no unit cell!"
-msgstr ""
+msgstr "Nije moguće izračunati strukturu vrpce: nema jedinične ćelije!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:299
 #, qt-format
@@ -5246,10 +5262,12 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
+"Izvršavanje Yaehmopa nije uspjelo sa sljedećom greškom:\n"
+"%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
 msgid "Failed to read band structure output from Yaehmop!"
-msgstr ""
+msgstr "Neuspjelo čitanje rezultata strukture vrpce od Yaehmopa!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:321
 msgid ""
@@ -5260,20 +5278,20 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
-msgstr ""
+msgstr "Vrpca %1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
-msgstr ""
+msgstr "Fermi razina"
 
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Cannot find Yaehmop"
-msgstr ""
+msgstr "Yaehmop se ne može pronaći"
 
 #: qtplugins/yaehmop/yaehmop.cpp:544
 #, qt-format
 msgid "Error: %1 failed to start"
-msgstr ""
+msgstr "Greška: %1 se nije uspio pokrenuti"
 
 #: qtplugins/yaehmop/yaehmop.cpp:595
 msgid "Yaehmop Input"
@@ -5319,7 +5337,7 @@ msgstr "Postavke izračuna"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
 msgid "Placeholder text…"
-msgstr ""
+msgstr "Tekst rezerviranog polja …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
@@ -5333,7 +5351,7 @@ msgstr "Resetiraj"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug Script…"
-msgstr ""
+msgstr "Ispravljanje grešaka skripta …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -5347,7 +5365,7 @@ msgstr "Pošalji izračun …"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save Input…"
-msgstr ""
+msgstr "Spremi unos …"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5365,11 +5383,13 @@ msgid ""
 "<html><head/><body><p>Number of processor cores to reserve for this job.</"
 "p></body></html>"
 msgstr ""
+"<html><head/><body><p>Broj rezerviranih jezgri procesora za ovaj "
+"posao.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:88
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "Processor cores:"
-msgstr ""
+msgstr "Jezgre procesora:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:125
 #. i18n: ectx: property (toolTip), widget (QLabel, label)
@@ -5378,11 +5398,14 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Izbriši eksterne radne datoteke po završetku posla. "
+"Rezultati će se i dalje najprije kopirati u lokalnu MoleQueue predmemoriju "
+"poslova.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Delete remote files when finished:"
-msgstr ""
+msgstr "Izbriši eksterne datoteke nakon završetka:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:145
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -5394,7 +5417,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Hide job in MoleQueue:"
-msgstr ""
+msgstr "Sakrij posao u MoleQueue:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:158
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -5406,17 +5429,17 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Show progress notifications:"
-msgstr ""
+msgstr "Prikaži obavijesti o napretku:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, openOutputLabel)
 msgid "Open output when finished:"
-msgstr ""
+msgstr "Otvori rezultat nakon završetka:"
 
 #. i18n: file: qtgui/customelementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::CustomElementDialog)
 msgid "Rename Elements"
-msgstr ""
+msgstr "Preimenuj elemente"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
@@ -5431,7 +5454,7 @@ msgstr "Filtar:"
 #. i18n: file: qtgui/insertfragmentdialog.ui:29
 #. i18n: ectx: property (toolTip), widget (QLineEdit, filterLineEdit)
 msgid "Type a name or part of a name to show only matching files."
-msgstr ""
+msgstr "Upiši ime ili dio imena za prikaz samo podudarajućih datoteka."
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, insertFragmentButton)
@@ -5443,7 +5466,7 @@ msgstr "Umetni"
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:17
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ThreeDMolDialog)
 msgid "3DMol HTML Snippet"
-msgstr ""
+msgstr "3DMol HTML isječak"
 
 #. i18n: file: qtplugins/3dmol/3dmoldialog.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, copyButton)
@@ -5626,6 +5649,8 @@ msgid ""
 "Select the Python version used to run scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Odaberi Python verziju koja se koristi za pokretanje skripta.\n"
+"Avogadro se mora ponovo pokrenuti kako bi sve promjene stupile na snagu."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5900,7 +5925,7 @@ msgstr "C ponavljanje:"
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
 msgid "Unit Cell Editor"
-msgstr ""
+msgstr "Uređivač jedinične ćelije"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6338,6 +6363,18 @@ msgid ""
 "#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
 "html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+"REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
+"weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
+"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
+"html</span></a></p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6420,16 +6457,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -7026,7 +7063,7 @@ msgstr "Newtonova metoda"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:114
 #. i18n: ectx: property (title), widget (QGroupBox, enableCutoffs)
 msgid "Limit Non-Bonded Interactions"
-msgstr ""
+msgstr "Ograniči nevezane interakcije"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:126
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7502,8 +7539,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>Širenje vrha pri bazi (u "
-"stupnjevima).</p></body></html>"
+"<html><head/><body><p>Širenje vrha pri bazi (u stupnjevima).</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7511,8 +7548,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Maksimalna 2theta vrijednost u "
-"stupnjevima.</p><p>Standardno: 162,00°</p></body></html>"
+"<html><head/><body><p>Maksimalna 2theta vrijednost u stupnjevima.</"
+"p><p>Standardno: 162,00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -7544,8 +7581,8 @@ msgid ""
 "<html><head/><body><p>The wavelength of the x-ray in Angstroms. </"
 "p><p>Default: 1.50560 Å</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Valna duljina x-zraka u Angstromima. </p><p>Standardno:"
-" 1,50560 Å</p></body></html>"
+"<html><head/><body><p>Valna duljina x-zraka u Angstromima. </"
+"p><p>Standardno: 1,50560 Å</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:122
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numDataPoints)
@@ -7793,12 +7830,12 @@ msgstr "beta"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr ""
+msgstr "Boja prema:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 msgid "Electrostatic Potential"
-msgstr ""
+msgstr "Elektrostatički potencijal"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:202
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8174,7 +8211,7 @@ msgstr "Zaustavi animaciju"
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::BandDialog)
 msgid "Yaehmop Band"
-msgstr "Yaehmop veza"
+msgstr "Yaehmop vrpca"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
@@ -8273,8 +8310,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\">\n"
@@ -8333,6 +8370,9 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "avogadro-devel@lists.sourceforge.net, trebelnik2@gmail.com, mail@milotype.de"
+
+#~ msgid "Partial Charge"
+#~ msgstr "Djelomični naboj"
 
 #~ msgid "Animation Tool"
 #~ msgstr "Alat za reprodukciju"

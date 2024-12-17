@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-08 02:48+0000\n"
+"POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-03 19:00+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -2107,7 +2107,7 @@ msgid "&Build"
 msgstr "&Construir"
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:498
+#: qtplugins/propertytables/propertymodel.cpp:535
 #, fuzzy
 msgid "Bond"
 msgstr "Ligar"
@@ -3404,8 +3404,8 @@ msgstr "InsertFragment"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Insere fragmentos moleculares para construir moléculas maiores."
 
-#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
-#: qtplugins/meshes/meshes.cpp:175
+#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:177
+#: qtplugins/meshes/meshes.cpp:183
 #, fuzzy
 msgid "Color:"
 msgstr "Cores:"
@@ -3435,7 +3435,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:495
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Elemento"
@@ -3458,13 +3458,13 @@ msgstr ""
 msgid "Atom Label:"
 msgstr "Rótulo do Grupo"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:544
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:505
+#: qtplugins/propertytables/propertymodel.cpp:542
 msgid "Name"
 msgstr ""
 
@@ -3499,7 +3499,7 @@ msgid ""
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:78
+#: qtplugins/label/labeleditor.cpp:81
 #, fuzzy
 msgid "Create Label"
 msgstr "Criar Superfícies"
@@ -3532,7 +3532,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:163
+#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
 msgid "Opacity:"
 msgstr "Opacidade:"
@@ -3658,7 +3658,7 @@ msgid "unknown molecule"
 msgstr "[sem molécula]"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Property"
 msgstr ""
 
@@ -4556,169 +4556,171 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr "Renderizar a cena usando o POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:464
+#: qtplugins/propertytables/propertymodel.cpp:497
 msgid "Valence"
 msgstr "Valência"
 
-#: qtplugins/propertytables/propertymodel.cpp:466
+#: qtplugins/propertytables/propertymodel.cpp:499
 #, fuzzy
 msgid "Formal Charge"
 msgstr "Carga formal"
 
-#: qtplugins/propertytables/propertymodel.cpp:468
-msgid "Partial Charge"
-msgstr "Carga Parcial"
+#: qtplugins/propertytables/propertymodel.cpp:502
+#, qt-format
+msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
+msgid "%1 Partial Charge"
+msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:470
+#: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:472
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:474
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
-#: qtplugins/propertytables/propertymodel.cpp:515
+#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:552
 #, fuzzy
 msgid "Color"
 msgstr "Cores"
 
-#: qtplugins/propertytables/propertymodel.cpp:479
+#: qtplugins/propertytables/propertymodel.cpp:516
 msgid "Atom"
 msgstr "Átomo"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
-#: qtplugins/propertytables/propertymodel.cpp:525
-#: qtplugins/propertytables/propertymodel.cpp:542
+#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:562
+#: qtplugins/propertytables/propertymodel.cpp:579
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "Tipo"
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:525
 #, fuzzy
 msgid "Start Atom"
 msgstr "Iniciar Animação"
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:527
 #, fuzzy
 msgid "End Atom"
 msgstr "Ligar Átomos"
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:529
 #, fuzzy
 msgid "Bond Order"
 msgstr "Ordem da Ligação"
 
-#: qtplugins/propertytables/propertymodel.cpp:494
+#: qtplugins/propertytables/propertymodel.cpp:531
 #, fuzzy
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Comprimento (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:509
+#: qtplugins/propertytables/propertymodel.cpp:546
 #, fuzzy
 msgid "Chain"
 msgstr "Cadeias NH"
 
-#: qtplugins/propertytables/propertymodel.cpp:511
+#: qtplugins/propertytables/propertymodel.cpp:548
 #, fuzzy
 msgid "Secondary Structure"
 msgstr "Carregar Arquivo de Estrutura"
 
-#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:527
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:564
+#: qtplugins/propertytables/propertymodel.cpp:581
 #, fuzzy
 msgid "Atom 1"
 msgstr "Átomo 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:529
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Vertex"
 msgstr "Vértice"
 
-#: qtplugins/propertytables/propertymodel.cpp:531
-#: qtplugins/propertytables/propertymodel.cpp:548
+#: qtplugins/propertytables/propertymodel.cpp:568
+#: qtplugins/propertytables/propertymodel.cpp:585
 #, fuzzy
 msgid "Atom 3"
 msgstr "Átomo 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:533
-#: qtplugins/propertytables/propertymodel.cpp:552
+#: qtplugins/propertytables/propertymodel.cpp:570
+#: qtplugins/propertytables/propertymodel.cpp:589
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Ângulo (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:546
+#: qtplugins/propertytables/propertymodel.cpp:583
 #, fuzzy
 msgid "Atom 2"
 msgstr "Átomo 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:550
+#: qtplugins/propertytables/propertymodel.cpp:587
 #, fuzzy
 msgid "Atom 4"
 msgstr "Átomo 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:600
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:754
+#: qtplugins/propertytables/propertymodel.cpp:791
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Adjust Fragment"
 msgstr "Inserir Fragmento"
 
-#: qtplugins/propertytables/propertymodel.cpp:880
+#: qtplugins/propertytables/propertymodel.cpp:917
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "Hélice"
 
-#: qtplugins/propertytables/propertymodel.cpp:882
+#: qtplugins/propertytables/propertymodel.cpp:919
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:884
+#: qtplugins/propertytables/propertymodel.cpp:921
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "Hélice"
 
-#: qtplugins/propertytables/propertymodel.cpp:886
+#: qtplugins/propertytables/propertymodel.cpp:923
 #, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "Folha"
 
-#: qtplugins/propertytables/propertymodel.cpp:888
+#: qtplugins/propertytables/propertymodel.cpp:925
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:890
+#: qtplugins/propertytables/propertymodel.cpp:927
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:892
+#: qtplugins/propertytables/propertymodel.cpp:929
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:894
+#: qtplugins/propertytables/propertymodel.cpp:931
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -8794,6 +8796,9 @@ msgstr "Seus nomes"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Seus e-mails"
+
+#~ msgid "Partial Charge"
+#~ msgstr "Carga Parcial"
 
 #, fuzzy
 #~| msgid "Animation"

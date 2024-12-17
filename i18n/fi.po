@@ -3,13 +3,16 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Ricky Tigg <ricky.tigg@gmail.com>, 2024.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-08 02:48+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"POT-Creation-Date: 2024-12-15 02:48+0000\n"
+"PO-Revision-Date: 2024-12-16 13:26+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -17,17 +20,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.9-rc\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr ""
+msgstr "Batch Job #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
-msgstr ""
+msgstr "Ei määritettyä viestiä."
 
 #: molequeue/inputgenerator.cpp:65 qtgui/interfacescript.cpp:72
 #, qt-format
@@ -40,28 +43,30 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
 msgid "Non-string warning returned."
-msgstr ""
+msgstr "Ei-merkkijono varoitus palautettu."
 
 #: molequeue/inputgenerator.cpp:174 qtgui/interfacescript.cpp:213
 #: qtgui/interfacescript.cpp:346
 msgid "'warnings' member is not an array."
-msgstr ""
+msgstr "'warnings' -jäsen ei ole matriisi."
 
 #: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Viitetiedostoa '%1' ei ole olemassa."
 
 #: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Virhe täytettäessä tiedostoa %1: %2"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
 #, qt-format
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
+"Tiedosto '%1' huonosti muotoiltu. Puuttuvat merkkijonon \"contents\" tai "
+"\"filePath\" jäsenet."
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
 #, qt-format
@@ -69,19 +74,22 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Väärin muotoiltu tiedosto: tiedoston nimi/sisältö puuttuu tai ei "
+"merkkijonoja:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Väärin muotoiltu tiedostomerkintä indeksissä %1: Ei objekti."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr ""
+msgstr "\"files\" -jäsen ei ole matriisi."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
-msgstr ""
+msgstr "\"files\" -jäsen puuttuu."
 
 #: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
@@ -89,11 +97,11 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
-msgstr ""
+msgstr "'mainFile' -jäsenen on oltava merkkijono."
 
 #: molequeue/inputgenerator.cpp:275 qtgui/interfacescript.cpp:448
 msgid "Response must be a JSON object at top-level."
-msgstr ""
+msgstr "Vastauksen on oltava ylätason JSON-objekti."
 
 #: molequeue/inputgenerator.cpp:279 qtgui/interfacescript.cpp:452
 #, qt-format
@@ -101,6 +109,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Komentosarjan tuloste:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -116,12 +126,14 @@ msgstr ""
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Virhe tallennettaessa molekyyliesitystä merkkijonoon: Tuntematon "
+"tiedostomuoto: %1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
-msgstr ""
+msgstr "Virhe tallennettaessa molekyyliesitystä merkkijonoon: %1"
 
 #: molequeue/inputgenerator.cpp:367 qtgui/interfacescript.cpp:563
 #, qt-format
@@ -131,6 +143,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Virhe luotaessa cjson-objektia: Jäsennysvirhe siirtymässä %1: %2\n"
+"Raaka JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -138,19 +154,21 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Virhegeneraattorin cjson-objekti: Jäsennetty JSON ei ole objekti:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
-msgstr ""
+msgstr "Syöttögeneraattori (virhe)"
 
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "%1 Syöttögeneraattori"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
-msgstr ""
+msgstr "Jatka"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:130
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -194,21 +212,31 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Seuraavaa tiedostoa on muokattu:\n"
+"\n"
+"%1\n"
+"\n"
+"Haluatko korvata muutokset vastaamaan uutta geometriaa tai työvaihtoehtoja?"
 msgstr[1] ""
+"Seuraavia tiedostoja on muokattu:\n"
+"\n"
+"%1\n"
+"\n"
+"Haluatko korvata muutokset vastaamaan uutta geometriaa tai työvaihtoehtoja?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Korvataanko muokatut syöttötiedostot?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Ongelmia tapahtui syötteen luomisen aikana:"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 msgid "No input files to save!"
-msgstr ""
+msgstr "Ei tallennettavia syöttötiedostoja!"
 
 #: molequeue/inputgeneratorwidget.cpp:294
 #: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
@@ -229,44 +257,44 @@ msgstr ""
 #: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr ""
+msgstr "Lähetä %1:n laskelma"
 
 #: molequeue/inputgeneratorwidget.cpp:342
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
 #: qtplugins/gamessinput/gamessinputdialog.cpp:716
 msgid "Job Failed"
-msgstr ""
+msgstr "Työ epäonnistui"
 
 #: molequeue/inputgeneratorwidget.cpp:343
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1023
 #: qtplugins/gamessinput/gamessinputdialog.cpp:717
 msgid "The job did not complete successfully."
-msgstr ""
+msgstr "Työtä ei saatu päätökseen onnistuneesti."
 
 #: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Komentosarja palauttaa varoituksia:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:377
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Piilota &varoitukset"
 
 #: molequeue/inputgeneratorwidget.cpp:383
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Näytä &varoitukset"
 
 #: molequeue/inputgeneratorwidget.cpp:400 qtgui/interfacewidget.cpp:71
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Virhe on tapahtunut:"
 
 #: molequeue/inputgeneratorwidget.cpp:451
 msgid "Select output filename"
-msgstr ""
+msgstr "Valitse tulosteen tiedostonimi"
 
 #: molequeue/inputgeneratorwidget.cpp:463
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
-msgstr ""
+msgstr "Sisäinen virhe: ei löytynyt teksti-vekotinta tiedostonimelle '%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #: molequeue/inputgeneratorwidget.cpp:590
@@ -279,7 +307,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:452
 #: qtplugins/openmminput/openmminputdialog.cpp:466
 msgid "Output Error"
-msgstr ""
+msgstr "Tulosteen virhe"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
@@ -291,27 +319,27 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Tiedostoon %1 kirjoittaminen epäonnistui."
 
 #: molequeue/inputgeneratorwidget.cpp:491
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Valitse lähtöhakemisto"
 
 #: molequeue/inputgeneratorwidget.cpp:508
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: Hakemistoa ei ole olemassa!"
 
 #: molequeue/inputgeneratorwidget.cpp:514
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: Hakemistoa ei voi lukea!"
 
 #: molequeue/inputgeneratorwidget.cpp:524
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -320,7 +348,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:385
 #, qt-format
 msgid "%1: File will be overwritten."
-msgstr ""
+msgstr "%1: Tiedosto korvataan."
 
 #: molequeue/inputgeneratorwidget.cpp:529
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:279
@@ -329,13 +357,13 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: Tiedosto ei ole kirjoituskelpoinen."
 
 #: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "Syöttötiedostoihin ei voida kirjoittaa tuntemattoman virheen takia."
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -346,6 +374,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"Syöttötiedostoihin ei voida kirjoittaa:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -360,6 +391,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"Syöttötiedostoihin ei voida kirjoittaa:\n"
+"\n"
+"%1\n"
+"\n"
+"Varoitukset:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -372,64 +410,69 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Varoitus:\n"
+"\n"
+"%1\n"
+"\n"
+"Haluatko jatkaa?"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Kirjoita syöttötiedostot"
 
 #: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
-msgstr ""
+msgstr "Määritä työ"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Lähetetään työtä MoleQueuelle…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Työn lähetyksen aikakatkaisu"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadro aikakatkaistiin odottaessaan vastausta MoleQueuelta."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Odotetaan työn %1 “%2” valmistumista…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Lopeta odottaminen"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Haetaan suoritetun työn tietoja…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Työnhaun aikakatkaisu"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
-msgstr ""
+msgstr "Avogadro aikakatkaistiin odottaessaan valmiita työtietoja MoleQueuelta."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Virhe lähetettäessä työtä"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "MoleQueue on hylännyt työn: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Ei valittua ohjelmaa."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
@@ -1995,7 +2038,7 @@ msgid "&Build"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:498
+#: qtplugins/propertytables/propertymodel.cpp:535
 #, fuzzy
 msgid "Bond"
 msgstr "Sidos"
@@ -3228,8 +3271,8 @@ msgstr ""
 msgid "Insert molecular fragments for building larger molecules."
 msgstr ""
 
-#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:169
-#: qtplugins/meshes/meshes.cpp:175
+#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:177
+#: qtplugins/meshes/meshes.cpp:183
 #, fuzzy
 msgid "Color:"
 msgstr "Väri:"
@@ -3259,7 +3302,7 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:462
+#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:495
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr ""
@@ -3282,13 +3325,13 @@ msgstr ""
 msgid "Atom Label:"
 msgstr ""
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:544
 msgid "ID"
 msgstr ""
 
 #: qtplugins/label/label.cpp:209
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:505
+#: qtplugins/propertytables/propertymodel.cpp:542
 msgid "Name"
 msgstr ""
 
@@ -3322,7 +3365,7 @@ msgid ""
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
 
-#: qtplugins/label/labeleditor.cpp:78
+#: qtplugins/label/labeleditor.cpp:81
 #, fuzzy
 msgid "Create Label"
 msgstr "Luo pintoja..."
@@ -3351,7 +3394,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:163
+#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
 msgid "Opacity:"
 msgstr ""
@@ -3471,7 +3514,7 @@ msgid "unknown molecule"
 msgstr "Molekyyli"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Property"
 msgstr ""
 
@@ -4304,161 +4347,161 @@ msgstr ""
 msgid "Render the scene using POV-Ray."
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:464
+#: qtplugins/propertytables/propertymodel.cpp:497
 msgid "Valence"
 msgstr "Valenssi"
 
-#: qtplugins/propertytables/propertymodel.cpp:466
+#: qtplugins/propertytables/propertymodel.cpp:499
 msgid "Formal Charge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:468
-#, fuzzy
-#| msgid "Partial Charge"
-msgid "Partial Charge"
-msgstr "Osittaisvaraus"
+#: qtplugins/propertytables/propertymodel.cpp:502
+#, qt-format
+msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
+msgid "%1 Partial Charge"
+msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:470
+#: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:472
+#: qtplugins/propertytables/propertymodel.cpp:509
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:474
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:476
-#: qtplugins/propertytables/propertymodel.cpp:515
+#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:552
 #, fuzzy
 msgid "Color"
 msgstr "Väri"
 
-#: qtplugins/propertytables/propertymodel.cpp:479
+#: qtplugins/propertytables/propertymodel.cpp:516
 msgid "Atom"
 msgstr "Atomi"
 
-#: qtplugins/propertytables/propertymodel.cpp:486
-#: qtplugins/propertytables/propertymodel.cpp:525
-#: qtplugins/propertytables/propertymodel.cpp:542
+#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:562
+#: qtplugins/propertytables/propertymodel.cpp:579
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:488
+#: qtplugins/propertytables/propertymodel.cpp:525
 msgid "Start Atom"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:490
+#: qtplugins/propertytables/propertymodel.cpp:527
 #, fuzzy
 msgid "End Atom"
 msgstr "Näytä atomit"
 
-#: qtplugins/propertytables/propertymodel.cpp:492
+#: qtplugins/propertytables/propertymodel.cpp:529
 #, fuzzy
 msgid "Bond Order"
 msgstr "Sidoskertaluku:"
 
-#: qtplugins/propertytables/propertymodel.cpp:494
+#: qtplugins/propertytables/propertymodel.cpp:531
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:509
+#: qtplugins/propertytables/propertymodel.cpp:546
 msgid "Chain"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:511
+#: qtplugins/propertytables/propertymodel.cpp:548
 msgid "Secondary Structure"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Heterogen"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:527
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:564
+#: qtplugins/propertytables/propertymodel.cpp:581
 #, fuzzy
 msgid "Atom 1"
 msgstr "Atomi 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:529
+#: qtplugins/propertytables/propertymodel.cpp:566
 msgid "Vertex"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:531
-#: qtplugins/propertytables/propertymodel.cpp:548
+#: qtplugins/propertytables/propertymodel.cpp:568
+#: qtplugins/propertytables/propertymodel.cpp:585
 #, fuzzy
 msgid "Atom 3"
 msgstr "Atomi 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:533
-#: qtplugins/propertytables/propertymodel.cpp:552
+#: qtplugins/propertytables/propertymodel.cpp:570
+#: qtplugins/propertytables/propertymodel.cpp:589
 #, fuzzy
 msgid "Angle (°)"
 msgstr "Kulma (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:546
+#: qtplugins/propertytables/propertymodel.cpp:583
 #, fuzzy
 msgid "Atom 2"
 msgstr "Atomi 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:550
+#: qtplugins/propertytables/propertymodel.cpp:587
 #, fuzzy
 msgid "Atom 4"
 msgstr "Atomi 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:563
+#: qtplugins/propertytables/propertymodel.cpp:600
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:754
+#: qtplugins/propertytables/propertymodel.cpp:791
 msgid "Adjust Fragment"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:880
+#: qtplugins/propertytables/propertymodel.cpp:917
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:882
+#: qtplugins/propertytables/propertymodel.cpp:919
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:884
+#: qtplugins/propertytables/propertymodel.cpp:921
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:886
+#: qtplugins/propertytables/propertymodel.cpp:923
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:888
+#: qtplugins/propertytables/propertymodel.cpp:925
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:890
+#: qtplugins/propertytables/propertymodel.cpp:927
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:892
+#: qtplugins/propertytables/propertymodel.cpp:929
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr ""
 
-#: qtplugins/propertytables/propertymodel.cpp:894
+#: qtplugins/propertytables/propertymodel.cpp:931
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr ""
@@ -8364,6 +8407,11 @@ msgstr ""
 "net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-devel@lists."
 "sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-"
 "devel@lists.sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,"
+
+#, fuzzy
+#~| msgid "Partial Charge"
+#~ msgid "Partial Charge"
+#~ msgstr "Osittaisvaraus"
 
 #, fuzzy
 #~| msgid "Animation..."
