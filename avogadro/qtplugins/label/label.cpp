@@ -5,6 +5,7 @@
 
 #include "label.h"
 
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 
@@ -71,10 +72,12 @@ struct LayerLabel : Core::LayerData
     Custom = 4,
     Ordinal = 8,
     UniqueID = 16,
-    PartialCharge = 32
+    PartialCharge = 32,
+    Length = 64 // for bonds obviously
   };
   unsigned short atomOptions;
   unsigned short residueOptions;
+  unsigned short bondOptions;
 
   QWidget* widget;
   float radiusScalar;
@@ -88,6 +91,8 @@ struct LayerLabel : Core::LayerData
       settings.value("label/atomoptions", LabelOptions::Name).toInt();
     residueOptions =
       settings.value("label/residueoptions", LabelOptions::None).toInt();
+    bondOptions =
+      settings.value("label/bondoptions", LabelOptions::None).toInt();
     radiusScalar = settings.value("label/radiusscalar", 0.5).toDouble();
 
     auto q_color =
@@ -115,7 +120,8 @@ struct LayerLabel : Core::LayerData
   {
     std::stringstream output;
     output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
-           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2];
+           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2]
+           << " " << bondOptions;
     return output.str();
   }
 
@@ -135,6 +141,9 @@ struct LayerLabel : Core::LayerData
     color[1] = std::stoi(aux);
     ss >> aux;
     color[2] = std::stoi(aux);
+    ss >> aux;
+    if (!aux.empty())
+      bondOptions = std::stoi(aux); // backwards compatibility
   }
 
   void setupWidget(Label* slot)
@@ -193,6 +202,20 @@ struct LayerLabel : Core::LayerData
 
       form->addRow(QObject::tr("Atom Label:"), atom);
 
+      // bond label
+      auto* bond = new QComboBox;
+      bond->setObjectName("bond");
+
+      // set up the various bond options
+      bond->addItem(QObject::tr("None"), int(LabelOptions::None));
+      bond->addItem(QObject::tr("Length"), int(LabelOptions::Length));
+      bond->addItem(QObject::tr("Index"), int(LabelOptions::Index));
+      bond->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
+
+      QObject::connect(bond, SIGNAL(currentIndexChanged(int)), slot,
+                       SLOT(bondLabelType(int)));
+      form->addRow(QObject::tr("Bond Label:"), bond);
+
       auto* residue = new QComboBox;
       residue->setObjectName("residue");
       for (char i = 0x00; i < std::pow(2, 2); ++i) {
@@ -248,6 +271,9 @@ void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
     }
     if (interface->atomOptions) {
       processAtom(molecule, node, layer);
+    }
+    if (interface->bondOptions) {
+      processBond(molecule, node, layer);
     }
   }
 }
@@ -389,6 +415,60 @@ void Label::processAtom(const Core::Molecule& molecule,
   }
 }
 
+void Label::processBond(const Core::Molecule& molecule,
+                        Rendering::GroupNode& node, size_t layer)
+{
+  auto* geometry = new GeometryNode;
+  node.addChild(geometry);
+  std::map<unsigned char, size_t> bondCount;
+  for (Index i = 0; i < molecule.bondCount(); ++i) {
+    Core::Bond bond = molecule.bond(i);
+
+    // check if the bond is enabled in this layer
+    if (!m_layerManager.bondEnabled(bond.atom1().index(),
+                                    bond.atom2().index())) {
+      continue;
+    }
+
+    // get the options for this bond
+    Core::Atom atom1 = bond.atom1();
+    Core::Atom atom2 = bond.atom2();
+    auto* interface1 = m_layerManager.getSetting<LayerLabel>(
+      m_layerManager.getLayerID(atom1.index()));
+    auto* interface2 = m_layerManager.getSetting<LayerLabel>(
+      m_layerManager.getLayerID(atom2.index()));
+
+    // get the union of the options
+    char options = interface1->bondOptions | interface2->bondOptions;
+    Vector3ub color = interface1->color;
+    unsigned char atomicNumber1 = atom1.atomicNumber();
+    unsigned char atomicNumber2 = atom2.atomicNumber();
+    float radiusVDW1 = static_cast<float>(Elements::radiusVDW(atomicNumber1));
+    float radiusVDW2 = static_cast<float>(Elements::radiusVDW(atomicNumber2));
+    float radius = (radiusVDW1 + radiusVDW2) * interface1->radiusScalar / 2.0f;
+
+    std::stringstream text;
+    // hopefully not all at once
+    if (options & LayerLabel::LabelOptions::Index) {
+      text << bond.index();
+    }
+    if (options & LayerLabel::LabelOptions::Custom) {
+      text << bond.label();
+    }
+    if (options & LayerLabel::LabelOptions::Length) {
+      text << std::fixed << std::setprecision(2) << bond.length();
+    }
+
+    // position will be between the two atoms
+    Vector3f pos =
+      (atom1.position3d().cast<float>() + atom2.position3d().cast<float>()) /
+      2.0f;
+
+    TextLabel3D* bondLabel = createLabel(text.str(), pos, radius, color);
+    geometry->addDrawable(bondLabel);
+  }
+}
+
 void Label::setColor(const QColor& color)
 {
   auto* interface = m_layerManager.getSetting<LayerLabel>();
@@ -408,6 +488,16 @@ void Label::atomLabelType(int index)
   auto* interface = m_layerManager.getSetting<LayerLabel>();
   interface->atomOptions = char(setupWidget()
                                   ->findChildren<QComboBox*>("atom")[0]
+                                  ->itemData(index)
+                                  .toInt());
+  emit drawablesChanged();
+}
+
+void Label::bondLabelType(int index)
+{
+  auto* interface = m_layerManager.getSetting<LayerLabel>();
+  interface->bondOptions = char(setupWidget()
+                                  ->findChildren<QComboBox*>("bond")[0]
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
