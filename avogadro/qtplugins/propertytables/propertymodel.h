@@ -112,6 +112,7 @@ private:
     AtomDataX,
     AtomDataY,
     AtomDataZ,
+    AtomDataLabel,
     AtomDataColor,
     AtomDataCharge,
     AtomDataCustom,
@@ -124,7 +125,8 @@ private:
     BondDataAtom1,
     BondDataAtom2,
     BondDataOrder,
-    BondDataLength
+    BondDataLength,
+    BondDataLabel
   };
 
   // Angle Data

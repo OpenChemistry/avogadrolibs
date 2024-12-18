@@ -173,7 +173,22 @@ bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3>& pos,
 bool RWMolecule::setAtomLabel(Index atomId, const std::string& label,
                               const QString& undoText)
 {
+  if (atomId >= atomCount())
+    return false;
+
   auto* comm = new ModifyAtomLabelCommand(*this, atomId, label);
+  comm->setText(undoText);
+  m_undoStack.push(comm);
+  return true;
+}
+
+bool RWMolecule::setBondLabel(Index bondId, const std::string& label,
+                              const QString& undoText)
+{
+  if (bondId >= bondCount())
+    return false;
+
+  auto* comm = new ModifyBondLabelCommand(*this, bondId, label);
   comm->setText(undoText);
   m_undoStack.push(comm);
   return true;
