@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-18 23:01+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2946,7 +2945,7 @@ msgstr "Fokusiraj"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr "Fokusiraj pogled na određene funkcije."
+msgstr "Fokusiraj prikaz na određene funkcije."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
@@ -4591,11 +4590,11 @@ msgstr "Centriraj"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr "Poravnaj pogled na osi"
+msgstr "Poravnaj prikaz prema osima"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr "Poravnaj pogled na osi."
+msgstr "Poravnaj prikaz prema osima."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4603,7 +4602,7 @@ msgstr "Resetiraj prikaz"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Manipuliraj kamerom za prikaz."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 msgid "Script Charge Models"
@@ -4783,7 +4782,7 @@ msgstr "Reduciraj na asimetričnu jedinicu"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Postavi toleranciju …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
