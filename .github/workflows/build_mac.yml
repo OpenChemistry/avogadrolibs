@@ -1,12 +1,13 @@
-name: CMake Self-Hosted
+name: macOS Build Matrix
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request]
 
 env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
-  MACOS_TARGET: 10.12
-  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DUSE_3DCONNEXION=ON
+  MACOS_TARGET: 12
+  QT_VERSION: 5.15.2
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,72 +22,97 @@ jobs:
       matrix:
         config:
         - {
-            name: "macOS ARM", artifact: "macOS-arm64.dmg",
-            os: [self-hosted, macOS],
+            name: "macOS Intel", artifact: "macOS-x86_64.dmg",
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt@5/5.15.5_1/lib/cmake/Qt5",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='x86_64'",
             cpack_flags: "-G DragNDrop",
+          }
+        - {
+            name: "macOS Apple Silicon", artifact: "macOS-arm64.dmg",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64'",
+            cpack_flags: "-G DragNDrop",
+          }
+        - {
+            name: "macOS Qt6", artifact: "",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64'",
+            cpack_flags: "-G DragNDrop",
+            env: {
+              QT_VERSION: 6.8.1,
+            }
           }
 
     steps:
 
-    - name: Install Dependencies (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        if uname -p | grep -q "arm" ; then
-           export PATH=/opt/homebrew/bin:$PATH
-        else # not self-hosted runner
-          brew install ninja eigen glew
-        fi
+    - name: Install Dependencies
+      run: brew install ninja eigen glew
 
     - name: Checkout openchemistry
       uses: actions/checkout@v4
       with:
         repository: openchemistry/openchemistry
         submodules: recursive
-
+        path: openchemistry
+      
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
-        path: avogadroapp
-
-    - name: Checkout molecules
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/molecules
-        path: molecules
-
-    - name: Checkout fragments
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/fragments
-        path: fragments
-
-    - name: Checkout crystals
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/crystals
-        path: crystals
-
+        path: openchemistry/avogadroapp
+        
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
-        path: avogadrolibs
+        path: openchemistry/avogadrolibs
 
     - name: Checkout i18n
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadro-i18n
-        path: avogadro-i18n
+        path: openchemistry/avogadro-i18n
+    
+    - name: Checkout avogadrogenerators
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogenerators
+        path: openchemistry/avogadrogenerators
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: openchemistry/crystals
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: openchemistry/fragments
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: openchemistry/molecules
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{ env.QT_VERSION }}
 
     - name: Configure
       run: |
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
@@ -96,7 +122,6 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Fix Mac plugins
-      if: runner.os == 'macOS'
       working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
       run: |
         for plugin in *.so; do
@@ -129,7 +154,6 @@ jobs:
 
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
-      if: runner.os == 'macOS'
       working-directory: ${{ runner.workspace }}/build
       env:
         BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -178,7 +202,6 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
 
     - name: Notarize Mac DMG
-      if: runner.os == 'macOS'
       run: |
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
