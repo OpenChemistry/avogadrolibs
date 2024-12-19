@@ -48,6 +48,9 @@ public:
 
   VTK::ChartWidget* chartWidget();
 
+  void disconnectOptions();
+  void connectOptions();
+
 private slots:
   void changeBackgroundColor();
   void changeForegroundColor();
