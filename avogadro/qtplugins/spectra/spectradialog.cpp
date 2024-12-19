@@ -529,7 +529,8 @@ void SpectraDialog::updatePlot()
       transitions = fromMatrix(m_spectra["Electronic"].col(0));
       intensities = fromMatrix(m_spectra["Electronic"].col(1));
       windowName = tr("Electronic Spectra");
-      xTitle = tr("eV");
+      QString xWave = tr("Wavelength (nm)");
+      xTitle = tr("Energy (eV)");
       yTitle = tr("Intensity");
       // save settings
       settings.setValue("spectra/electronicXMin", m_ui->xAxisMinimum->value());
@@ -548,7 +549,7 @@ void SpectraDialog::updatePlot()
       else // grab it from the CD data
         intensities = fromMatrix(m_spectra["CircularDichroism"].col(1));
       windowName = tr("Circular Dichroism Spectra");
-      xTitle = tr("eV)");
+      xTitle = tr("Energy (eV)");
       yTitle = tr("Intensity");
       // save settings
       settings.setValue("spectra/CDXMin", m_ui->xAxisMinimum->value());
@@ -561,7 +562,7 @@ void SpectraDialog::updatePlot()
       transitions = fromMatrix(m_spectra["DensityOfStates"].col(0));
       intensities = fromMatrix(m_spectra["DensityOfStates"].col(1));
       windowName = tr("Density of States");
-      xTitle = tr("eV");
+      xTitle = tr("Energy (eV)");
       yTitle = tr("Intensity");
       // save settings
       settings.setValue("spectra/dosXMin", m_ui->xAxisMinimum->value());
