@@ -492,12 +492,9 @@ void Forcefield::refreshScripts()
   qDeleteAll(m_scripts);
   m_scripts.clear();
 
-  qDebug() << " refresh scripts";
-
   QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("energy");
   foreach (const QString& filePath, scriptPaths) {
-    qDebug() << "Loading script: " << filePath;
     auto* model = new ScriptEnergy(filePath);
     if (model->isValid())
       m_scripts.push_back(model);
