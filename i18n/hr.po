@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-18 23:01+0000\n"
+"PO-Revision-Date: 2024-12-19 11:23+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -1464,7 +1464,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
-msgstr ""
+msgstr "Simetriziraj ćeliju"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
@@ -4769,11 +4769,11 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1881
 msgid "Symmetrize"
-msgstr ""
+msgstr "Simetriziraj"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
-msgstr "Ispuni jediničnu ćeliju"
+msgstr "Ispuni jediničnu ćeliju …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
@@ -5136,11 +5136,11 @@ msgstr "Simetrija"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
-msgstr ""
+msgstr "Pruži funkcionalnost simetrije."
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Iscrtaj elemente simetrije."
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
 msgid "∞"
