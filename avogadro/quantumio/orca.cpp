@@ -60,6 +60,23 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     return false;
   }
 
+  // this should be the final coordinate set (e.g. the optimized geometry)
+  molecule.setCoordinate3d(molecule.atomPositions3d(), 0);
+  if (m_coordSets.size() > 1) {
+    for (unsigned int i = 0; i < m_coordSets.size(); i++) {
+      Array<Vector3> positions;
+      positions.reserve(molecule.atomCount());
+      for (size_t j = 0; j < molecule.atomCount(); ++j) {
+        positions.push_back(m_coordSets[i][j] * BOHR_TO_ANGSTROM);
+      }
+      molecule.setCoordinate3d(positions, i + 1);
+    }
+  }
+
+  // guess bonds and bond orders
+  molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
+
   if (m_frequencies.size() > 0 &&
       m_frequencies.size() == m_vibDisplacements.size() &&
       m_frequencies.size() == m_IRintensities.size()) {
@@ -97,23 +114,6 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     }
     molecule.setSpectra("NMR", nmrData);
   }
-
-  // this should be the final coordinate set (e.g. the optimized geometry)
-  molecule.setCoordinate3d(molecule.atomPositions3d(), 0);
-  if (m_coordSets.size() > 1) {
-    for (unsigned int i = 0; i < m_coordSets.size(); i++) {
-      Array<Vector3> positions;
-      positions.reserve(molecule.atomCount());
-      for (size_t j = 0; j < molecule.atomCount(); ++j) {
-        positions.push_back(m_coordSets[i][j] * BOHR_TO_ANGSTROM);
-      }
-      molecule.setCoordinate3d(positions, i + 1);
-    }
-  }
-
-  // guess bonds and bond orders
-  molecule.perceiveBondsSimple();
-  molecule.perceiveBondOrders();
 
   // check bonds from calculated bond orders
   if (m_bondOrders.size() > 0) {
@@ -251,7 +251,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
       getline(in, key); // skip header
     }
     // starts at the next line
-  } else if (Core::contains(key, "CD SPECTRUM")) {
+  } else if (Core::contains(key, "CD SPECTRUM") &&
+             !Core::contains(key, "TRANSITION VELOCITY DIPOLE")) {
     m_currentMode = ECD;
     for (int i = 0; i < 4; ++i) {
       getline(in, key); // skip header
@@ -697,7 +698,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
           wavenumbers = Core::lexicalCast<double>(list[1]);
           // convert to eV
-          m_electronicTransitions.push_back(wavenumbers / 8065.544);
+          // m_electronicTransitions.push_back(wavenumbers / 8065.544);
           m_electronicRotations.push_back(Core::lexicalCast<double>(list[3]));
 
           getline(in, key);
