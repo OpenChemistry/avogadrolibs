@@ -37,10 +37,10 @@ using std::vector;
 
 using SecondaryStructure = Avogadro::Core::Residue::SecondaryStructure;
 
-// element, valence, formal charge, partial charge, x, y, z, color
-const int AtomColumns = 8;
-// type, atom 1, atom 2, bond order, length
-const int BondColumns = 5;
+// element, valence, formal charge, partial charge, x, y, z, label, color
+const int AtomColumns = 9;
+// type, atom 1, atom 2, bond order, length, label
+const int BondColumns = 6;
 // type, atom 1, atom 2, atom 3, angle
 const int AngleColumns = 5;
 // type, atom 1, atom 2, atom 3, atom 4, dihedral
@@ -313,6 +313,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AtomDataZ:
         return QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f',
                                   4);
+      case AtomDataLabel:
+        return m_molecule->atomLabel(row).c_str();
       case AtomDataColor:
       default:
         return QVariant(); // nothing to show
@@ -341,6 +343,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         return QVariant::fromValue(atom2.index() + 1);
       case BondDataOrder:
         return bond.order();
+      case BondDataLabel:
+        return m_molecule->bondLabel(row).c_str();
       default: // length, rounded to 4 decimals
         return QString("%L1 Å").arg(
           distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
@@ -509,6 +513,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("Y (Å)");
         case AtomDataZ:
           return tr("Z (Å)");
+        case AtomDataLabel:
+          return tr("Label");
         case AtomDataColor:
           return tr("Color");
       }
@@ -527,6 +533,8 @@ QVariant PropertyModel::headerData(int section, Qt::Orientation orientation,
           return tr("End Atom");
         case BondDataOrder:
           return tr("Bond Order");
+        case BondDataLabel:
+          return tr("Label");
         default: // A bond length
           return tr("Length (Å)", "in Angstrom");
       }
@@ -620,11 +628,13 @@ Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
   if (m_type == AtomType) {
     if (index.column() == AtomDataElement ||
         index.column() == AtomDataFormalCharge || index.column() == AtomDataX ||
-        index.column() == AtomDataY || index.column() == AtomDataZ)
+        index.column() == AtomDataY || index.column() == AtomDataZ ||
+        index.column() == AtomDataLabel)
       return editable;
     // TODO: Color
   } else if (m_type == BondType) {
-    if (index.column() == BondDataOrder || index.column() == BondDataLength)
+    if (index.column() == BondDataOrder || index.column() == BondDataLength ||
+        index.column() == BondDataLabel)
       return editable;
   } else if (m_type == ResidueType) {
     // TODO: Color
@@ -693,6 +703,9 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       case AtomDataZ:
         v[2] = value.toDouble();
         break;
+      case AtomDataLabel:
+        undoMolecule->setAtomLabel(index.row(), value.toString().toStdString());
+        break;
       default:
         return false;
     }
@@ -709,6 +722,9 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         break;
       case BondDataLength:
         setBondLength(index.row(), value.toDouble());
+        break;
+      case BondDataLabel:
+        undoMolecule->setBondLabel(index.row(), value.toString().toStdString());
         break;
       default:
         return false;

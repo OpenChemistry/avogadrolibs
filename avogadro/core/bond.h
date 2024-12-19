@@ -110,6 +110,16 @@ public:
   unsigned char order() const;
   /** @} */
 
+  /**
+   * The length of the bond or 0.0 if the bond is invalid.
+   */
+  Real length() const;
+
+  /**
+   * A label for the bond (if any)
+   */
+  std::string label() const;
+
 private:
   MoleculeType* m_molecule = nullptr;
   Index m_index = MaxIndex;
@@ -197,8 +207,8 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(Index index)
-  const
+typename BondTemplate<Molecule_T>::AtomType
+BondTemplate<Molecule_T>::getOtherAtom(Index index) const
 {
   if (atom1().index() == index)
     return atom2();
@@ -207,9 +217,9 @@ typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAt
 }
 
 template <class Molecule_T>
-typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::getOtherAtom(
-    BondTemplate<Molecule_T>::AtomType atom
-) const
+typename BondTemplate<Molecule_T>::AtomType
+BondTemplate<Molecule_T>::getOtherAtom(
+  BondTemplate<Molecule_T>::AtomType atom) const
 {
   return getOtherAtom(atom.index());
 }
@@ -224,6 +234,21 @@ template <class Molecule_T>
 unsigned char BondTemplate<Molecule_T>::order() const
 {
   return m_molecule->bondOrders()[m_index];
+}
+
+template <class Molecule_T>
+Real BondTemplate<Molecule_T>::length() const
+{
+  if (!isValid())
+    return 0.0;
+
+  return (atom1().position3d() - atom2().position3d()).norm();
+}
+
+template <class Molecule_T>
+std::string BondTemplate<Molecule_T>::label() const
+{
+  return m_molecule->bondLabel(m_index);
 }
 
 } // namespace Avogadro::Core
