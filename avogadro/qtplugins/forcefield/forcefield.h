@@ -76,8 +76,6 @@ private slots:
   void freezeSelected();
   void unfreezeSelected();
 
-  void deferredStart();
-
 private:
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;

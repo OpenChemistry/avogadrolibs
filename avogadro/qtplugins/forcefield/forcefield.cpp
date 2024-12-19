@@ -117,19 +117,7 @@ Forcefield::Forcefield(QObject* parent_)
   connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
   m_actions.push_back(action);
 
-  // single-shot timer to allow the GUI to start up
-  QTimer::singleShot(500, this, SLOT(deferredStart()));
-}
-
-Forcefield::~Forcefield() {}
-
-QList<QAction*> Forcefield::actions() const
-{
-  return m_actions;
-}
-
-void Forcefield::deferredStart()
-{
+  // initialize the calculators
 
   // prefer to use Python interface scripts if available
   refreshScripts();
@@ -148,6 +136,13 @@ void Forcefield::deferredStart()
   Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
 #endif
+}
+
+Forcefield::~Forcefield() {}
+
+QList<QAction*> Forcefield::actions() const
+{
+  return m_actions;
 }
 
 QStringList Forcefield::menuPath(QAction* action) const
