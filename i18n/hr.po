@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-16 13:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-19 20:17+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -20,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-rc\n"
+"X-Generator: Weblate 5.9.2-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -226,7 +225,7 @@ msgstr[2] ""
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr "Prepisati promijenjenu datoteku unosa?"
+msgstr "Prepisati promijenjene datoteke unosa?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
@@ -1465,7 +1464,7 @@ msgstr ""
 
 #: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
-msgstr ""
+msgstr "Simetriziraj ćeliju"
 
 #: qtgui/rwmolecule.cpp:667
 msgid "Fill Unit Cell"
@@ -2020,7 +2019,7 @@ msgstr "Ukloni veze"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
-msgstr "Konfiguriraj povezivanje …"
+msgstr "Konfiguriraj vezivanje …"
 
 #: qtplugins/bonding/bonding.cpp:32
 msgid "Bond Selected Atoms"
@@ -2223,11 +2222,11 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:229
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Obrađuje se %1"
 
 #: qtplugins/commandscripts/command.cpp:284
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Postavi putanju do Python interpretera:"
 
 #: qtplugins/commandscripts/command.cpp:286
 msgid ""
@@ -2946,7 +2945,7 @@ msgstr "Fokusiraj"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr "Fokusiraj pogled na određene funkcije."
+msgstr "Fokusiraj prikaz na određene funkcije."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
@@ -3891,12 +3890,12 @@ msgstr "Generiranje XYZ prikaza …"
 
 #: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Greška pri generiranju XYZ niza."
 
 #: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr ""
+msgstr "Konvertiranje XYZ-a u Open Babel s %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
@@ -3904,25 +3903,25 @@ msgstr "Aktualiziranje molekule iz Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Nije moguće dodati vodike s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
-msgstr ""
+msgstr "Dodavanje vodika (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Generiranje Open Babel unosa …"
 
 #: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Greška pri generiranju Open Babel unosa."
 
 #: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
 #: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
-msgstr ""
+msgstr "Izvodi se %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
@@ -3934,37 +3933,39 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Generiranje obabel unosa …"
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Nije moguće ukloniti vodike s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
-msgstr ""
+msgstr "Uklanjanje vodika (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Greška pri generiranju Open Babel podataka."
 
 #: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Čitanje obabel rezultata …"
 
 #: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel se već pokreće. Pričekaj da druga operacija završi i pokušaj "
+"ponovo."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Interagiraj s OpenBabel uslužnim programima."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
@@ -4019,11 +4020,11 @@ msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "top"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -4077,7 +4078,7 @@ msgstr "Broj sličica:"
 #: qtplugins/playertool/playertool.cpp:94
 msgctxt "frames per second"
 msgid " FPS"
-msgstr " broj sličica u sekundi"
+msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
@@ -4094,7 +4095,7 @@ msgstr " od %0"
 
 #: qtplugins/playertool/playertool.cpp:136
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "Dinamičko vezivanje?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
@@ -4507,16 +4508,16 @@ msgstr "Svojstva ostatka …"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "Svojstva konformera …"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
+msgstr "Tablice za prikaz i uređivanje svojstva atoma, veze, kuta i torzije."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
-msgstr ""
+msgstr "Tablice svojstva"
 
 #: qtplugins/propertytables/propertyview.cpp:44
 msgid "Atom Properties"
@@ -4536,11 +4537,11 @@ msgstr "Svojstva torzije"
 
 #: qtplugins/propertytables/propertyview.cpp:56
 msgid "Conformer Properties"
-msgstr ""
+msgstr "Svojstva konformera"
 
 #: qtplugins/propertytables/propertyview.cpp:59
 msgid "Residue Properties"
-msgstr ""
+msgstr "Svojstva ostatka"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -4549,7 +4550,7 @@ msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:29
 msgid "Renders primitives using QTAIM properties"
-msgstr ""
+msgstr "Iscrtava primitivne ćelije koristeći QTAIM svojstva"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
@@ -4573,7 +4574,7 @@ msgstr "WFN datoteke (*.wfn);;Sve datoteke (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
-msgstr ""
+msgstr "QTAIM proširenje"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
@@ -4589,11 +4590,11 @@ msgstr "Centriraj"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr "Poravnaj pogled na osi"
+msgstr "Poravnaj prikaz prema osima"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr "Poravnaj pogled na osi."
+msgstr "Poravnaj prikaz prema osima."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4601,23 +4602,23 @@ msgstr "Resetiraj prikaz"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Manipuliraj kamerom za prikaz."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 msgid "Script Charge Models"
-msgstr ""
+msgstr "Skripta modela naboja"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
-msgstr ""
+msgstr "Učitaj elektrostatičke modele iz eksternih skripta."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skripta datotečnih formata"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
-msgstr ""
+msgstr "Učitaj čitač/pisač datoteka iz eksternih skripta."
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
@@ -4768,20 +4769,20 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1881
 msgid "Symmetrize"
-msgstr ""
+msgstr "Simetriziraj"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
-msgstr ""
+msgstr "Ispuni jediničnu ćeliju …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
-msgstr "Reduciraj ćeliju na asimetričnu jedinicu"
+msgstr "Reduciraj na asimetričnu jedinicu"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Postavi toleranciju …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
@@ -4818,7 +4819,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Redukcija na primitivnu ćeliju"
 
 #: qtplugins/spacegroup/spacegroup.cpp:235
 #: qtplugins/spacegroup/spacegroup.cpp:260
@@ -4836,18 +4837,24 @@ msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Redukcija na primitivnu ćeliju nije uspjela.\n"
+"Provjeri kristal i pokušaj ponovo s jednom drugom tolerancijom."
 
 #: qtplugins/spacegroup/spacegroup.cpp:273
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Konvencionalizacija ćelije nije uspjela.\n"
+"Provjeri kristal i pokušaj ponovo s jednom drugom tolerancijom."
 
 #: qtplugins/spacegroup/spacegroup.cpp:297
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Simetrizacija nije uspjela.\n"
+"Provjeri kristal i pokušaj ponovo s jednom drugom tolerancijom."
 
 #: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
@@ -4865,7 +4872,7 @@ msgstr "Međunarodno"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
-msgstr ""
+msgstr "Hall"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
@@ -5129,11 +5136,11 @@ msgstr "Simetrija"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
-msgstr ""
+msgstr "Pruži funkcionalnost simetrije."
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Iscrtaj elemente simetrije."
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
 msgid "∞"
@@ -7651,7 +7658,7 @@ msgstr "&Zatvori"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Scale Factor:"
-msgstr ""
+msgstr "Faktor skaliranja:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:108
 #. i18n: ectx: property (text), widget (QLabel, label_7)

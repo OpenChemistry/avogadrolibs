@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-03 19:00+0000\n"
+"PO-Revision-Date: 2024-12-18 11:44+0000\n"
 "Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.9.2-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4569,7 +4569,7 @@ msgstr "Carga formal"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "Carga Parcial %1"
 
 #: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
@@ -4633,7 +4633,7 @@ msgstr "Carregar Arquivo de Estrutura"
 
 #: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Heterogen"
-msgstr ""
+msgstr "Heterogênea"
 
 #: qtplugins/propertytables/propertymodel.cpp:564
 #: qtplugins/propertytables/propertymodel.cpp:581
@@ -4668,25 +4668,23 @@ msgid "Atom 4"
 msgstr "Átomo 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:600
+#, fuzzy
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Energia (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:791
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Inserir Fragmento"
+msgstr "Ajustar Fragmento"
 
 #: qtplugins/propertytables/propertymodel.cpp:917
-#, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "Hélice"
+msgstr "π-Hélice"
 
 #: qtplugins/propertytables/propertymodel.cpp:919
 msgctxt "protein bend secondary structure"
@@ -4694,16 +4692,14 @@ msgid "Bend"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:921
-#, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "Hélice"
+msgstr "α-Hélice"
 
 #: qtplugins/propertytables/propertymodel.cpp:923
-#, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "Folha"
+msgstr "Folha-beta"
 
 #: qtplugins/propertytables/propertymodel.cpp:925
 msgctxt "3-10 helix"
