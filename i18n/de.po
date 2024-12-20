@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-07 04:20+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-12-20 21:21+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -73,7 +73,7 @@ msgstr "Fehler beim Füllen der Datei %1: %2"
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
-"Datei '%1' ist schlecht formatiert. Fehlende String-Mitglieder 'contents' "
+"Datei '%1' ist schlecht formatiert. Fehlende Stringmitglieder 'contents' "
 "oder 'filePath'."
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
@@ -1023,7 +1023,7 @@ msgstr "Datei auswählen:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr "Ausführbares Programm auswählen:"
+msgstr "Ausführbare Datei auswählen:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1104,7 +1104,7 @@ msgstr "%1 Nachricht"
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Das Schreiben von Moleküldarstellung als ein String ist fehlgeschlagen: "
+"Das Schreiben der Moleküldarstellung als ein String ist fehlgeschlagen: "
 "Unbekanntes Dateiformat: %1"
 
 #: qtgui/interfacescript.cpp:546
@@ -1334,7 +1334,7 @@ msgstr "Das Skript ist abgestürzt."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr "Die Ausführung des Skriptes wurde abgebrochen (timeout)."
+msgstr "Die Laufzeit des Skriptes ist abgelaufen (timeout)."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
@@ -1406,11 +1406,11 @@ msgstr "Element ändern"
 
 #: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
-msgstr "Hybridisierung ändern"
+msgstr "Atomhybridisierung ändern"
 
 #: qtgui/rwmolecule.cpp:233
 msgid "Change Atom Formal Charge"
-msgstr "Formalladung ändern"
+msgstr "Atomare Formalladung ändern"
 
 #: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
@@ -1425,6 +1425,7 @@ msgid "Add Bond"
 msgstr "Bindung hinzufügen"
 
 #: qtgui/rwmolecule.cpp:299
+#, fuzzy
 msgid "Removed Bond"
 msgstr "Bindung entfernt"
 
@@ -1450,7 +1451,7 @@ msgstr "Bindung aktualisieren"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Elementarzelle hinzufügen …"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1512,7 +1513,7 @@ msgstr "Atomposition ändern"
 
 #: qtgui/rwmolecule.h:228
 msgid "Change Atom Label"
-msgstr "Atombezeichnung ändern"
+msgstr "Atombeschriftung ändern"
 
 #: qtgui/rwmolecule.h:234
 msgid "Change Selection"
@@ -1597,7 +1598,7 @@ msgstr "An der Achse ausrichten"
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
-msgstr "Ausgewähltes Atom am Ursprung zentrieren."
+msgstr "Atom am Ursprung zentrieren."
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1662,7 +1663,7 @@ msgstr "Fehler beim Lesen von OpenDX-Datei: %1"
 
 #: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
-msgstr "Lesen von OpenDX-Datei fehlgeschlagen: kein Cube gefunden"
+msgstr "Fehler beim Lesen der OpenDX-Datei: kein Cube gefunden"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -1758,7 +1759,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "Nach Entfernung…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
@@ -1888,6 +1889,7 @@ msgstr "Balance"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
+#, fuzzy
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blau-Dunkelrot"
@@ -1934,6 +1936,7 @@ msgstr "Farbschema auswählen"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1782
+#, fuzzy
 msgid "Colormap:"
 msgstr "Farbschema:"
 
@@ -1967,14 +1970,15 @@ msgstr "Wasserstoffatome anzeigen"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr "Atome als Kugeln und Bindungen als Zylinder rendern."
+msgstr "Atome als Kugeln und Bindungen als Zylinder wiedergeben."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Strg+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
+#, fuzzy
 msgid "Bond-Centric Manipulation"
 msgstr "Bindungsorientierte Manipulation"
 
@@ -2034,7 +2038,6 @@ msgid "Remove Bonds"
 msgstr "Bindungen entfernen"
 
 #: qtplugins/bonding/bonding.cpp:31
-#, fuzzy
 msgid "Configure Bonding…"
 msgstr "Bindung einrichten…"
 
@@ -2062,7 +2065,7 @@ msgstr "Entfernen von Bindungen aller oder von ausgewählten Atomen."
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
-msgstr "Alle oder nur ausgewählte Atome verbinden."
+msgstr "Bindungen zwischen allen oder ausgewählten Atome erstellen."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
@@ -2082,10 +2085,9 @@ msgid "Backbone"
 msgstr "Rückgrat"
 
 #: qtplugins/cartoons/cartoons.cpp:93
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr "Verfolgung"
+msgstr "Spur"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
@@ -2181,7 +2183,7 @@ msgstr "Linienbreite:"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr "Nahe Kontakte zwischen Atomen rendern."
+msgstr "Nahe Kontakte zwischen Atomen wiedergeben."
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
@@ -2254,7 +2256,7 @@ msgid ""
 msgstr ""
 "Wähle den Python-Interpreter aus, der zum Ausführen externer Skripte "
 "verwendet werden soll.\n"
-"Die Änderung wird erst nach einem Neustart von Avogadro wirksam."
+"Die Änderung wird erst mit einem Neustart von Avogadro wirksam."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
@@ -2280,6 +2282,8 @@ msgstr ""
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Python wird für viele Avogadro Features verwendet. Möchten Sie Python "
+"herunterladen?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -2342,7 +2346,7 @@ msgstr "Elementname."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 msgid "Invalid element symbol."
-msgstr "Elementsymbol ungültig."
+msgstr "Ungültiges Elementsymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
@@ -2351,7 +2355,7 @@ msgstr "Elementsymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
-msgstr ""
+msgstr "Ungültige Atombeschriftung."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
@@ -2376,7 +2380,7 @@ msgstr "Ordungszahl."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:487
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:498
 msgid "Invalid coordinate."
-msgstr "Koordinate ungültig."
+msgstr "Ungültige Koordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 msgid "X coordinate."
@@ -2538,6 +2542,7 @@ msgstr ""
 "%1"
 
 #: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
+#, fuzzy
 msgid "Error Pasting Molecule"
 msgstr "Einfügen von Molekül fehlgeschlagen"
 
@@ -2618,6 +2623,7 @@ msgstr "EWALD"
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
+#, fuzzy
 msgid "NONE"
 msgstr "Keine"
 
@@ -2819,7 +2825,7 @@ msgstr "Benutzerdefinierte Elemente"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Rendern Sie das Dipolmoment des Moleküls."
 
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
@@ -7768,10 +7774,8 @@ msgstr "Hintergrund:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:375
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "berechnete Spektrum"
+msgstr "Berechnete Spektren:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:395
 #. i18n: ectx: property (text), widget (QLabel, label)

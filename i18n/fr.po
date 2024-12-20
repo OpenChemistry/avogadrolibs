@@ -12,9 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 18:28+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 20:35+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -22,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.9.2-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3538,7 +3537,7 @@ msgstr "Nom de la molécule"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
-msgstr "Masse moléculaire (g/mol) :"
+msgstr "Masse moléculaire (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
@@ -3546,11 +3545,11 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Nombre d'atomes"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
-msgstr ""
+msgstr "Nombre de liaisons"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:310
 msgid "Coordinate Sets"
@@ -3558,11 +3557,11 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
-msgstr ""
+msgstr "Nombre de résidus"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:314
 msgid "Number of Chains"
-msgstr ""
+msgstr "Nombre de chaînes"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
@@ -3574,7 +3573,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "moment dipolaire (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
@@ -3603,20 +3602,20 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "enthalpie (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "entropie (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "enthalpie libre de Gibbs (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "groupe ponctuel de symétrie"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -3677,7 +3676,7 @@ msgstr "Exporter…"
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
@@ -4081,7 +4080,7 @@ msgstr "Afficher les axes de référence au coin de l'écran."
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
@@ -4090,7 +4089,7 @@ msgstr "Lecteur"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "Outil d'animation\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
@@ -4380,7 +4379,7 @@ msgstr "Charge formelle"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "%1 Charge partielle"
 
 #: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
@@ -4469,11 +4468,11 @@ msgstr "Atome 4"
 #: qtplugins/propertytables/propertymodel.cpp:600
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Énergie (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:791
 msgid "Adjust Fragment"
@@ -4541,7 +4540,7 @@ msgstr "Propriétés des résidus…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "Propriétés des conformères …"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
@@ -4757,7 +4756,7 @@ msgstr "Sélectionner"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -5189,7 +5188,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:81
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:82
 msgid "Template"
@@ -5210,7 +5209,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
 msgid "Clipboard"
-msgstr ""
+msgstr "Presse-papier"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 msgid "Insert Template"
@@ -7000,7 +6999,7 @@ msgstr ""
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "Atomes sélectionnés"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
