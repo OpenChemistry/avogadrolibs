@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 19:42+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3557,11 +3557,11 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
-msgstr ""
+msgstr "Nombre de résidus"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:314
 msgid "Number of Chains"
-msgstr ""
+msgstr "Nombre de chaînes"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
