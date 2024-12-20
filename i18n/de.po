@@ -16,9 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 20:35+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 21:08+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1452,7 +1451,7 @@ msgstr "Bindung aktualisieren"
 
 #: qtgui/rwmolecule.cpp:392
 msgid "Add Unit Cell…"
-msgstr "Elementarzelle hinzufügen"
+msgstr "Elementarzelle hinzufügen …"
 
 #: qtgui/rwmolecule.cpp:404
 msgid "Remove Unit Cell"
@@ -1514,7 +1513,7 @@ msgstr "Atomposition ändern"
 
 #: qtgui/rwmolecule.h:228
 msgid "Change Atom Label"
-msgstr "Atombezeichnung ändern"
+msgstr "Atombeschriftung ändern"
 
 #: qtgui/rwmolecule.h:234
 msgid "Change Selection"
@@ -1599,7 +1598,7 @@ msgstr "An der Achse ausrichten"
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
-msgstr "Ausgewähltes Atom am Ursprung zentrieren."
+msgstr "Atom am Ursprung zentrieren."
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1664,7 +1663,7 @@ msgstr "Fehler beim Lesen von OpenDX-Datei: %1"
 
 #: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
-msgstr "Lesen von OpenDX-Datei fehlgeschlagen: kein Cube gefunden"
+msgstr "Fehler beim Lesen der OpenDX-Datei: kein Cube gefunden"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -1760,7 +1759,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "Nach Entfernung…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
@@ -1890,6 +1889,7 @@ msgstr "Balance"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
 #: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
+#, fuzzy
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blau-Dunkelrot"
@@ -1936,6 +1936,7 @@ msgstr "Farbschema auswählen"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1782
+#, fuzzy
 msgid "Colormap:"
 msgstr "Farbschema:"
 
@@ -1969,7 +1970,7 @@ msgstr "Wasserstoffatome anzeigen"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr "Atome als Kugeln und Bindungen als Zylinder rendern."
+msgstr "Atome als Kugeln und Bindungen als Zylinder wiedergeben."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
@@ -1977,6 +1978,7 @@ msgid "Ctrl+7"
 msgstr ""
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
+#, fuzzy
 msgid "Bond-Centric Manipulation"
 msgstr "Bindungsorientierte Manipulation"
 
@@ -2036,7 +2038,6 @@ msgid "Remove Bonds"
 msgstr "Bindungen entfernen"
 
 #: qtplugins/bonding/bonding.cpp:31
-#, fuzzy
 msgid "Configure Bonding…"
 msgstr "Bindung einrichten…"
 
@@ -2064,7 +2065,7 @@ msgstr "Entfernen von Bindungen aller oder von ausgewählten Atomen."
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
-msgstr "Alle oder nur ausgewählte Atome verbinden."
+msgstr "Bindungen zwischen allen oder ausgewählten Atome erstellen."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
@@ -2084,10 +2085,9 @@ msgid "Backbone"
 msgstr "Rückgrat"
 
 #: qtplugins/cartoons/cartoons.cpp:93
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr "Verfolgung"
+msgstr "Spur"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
@@ -2183,7 +2183,7 @@ msgstr "Linienbreite:"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr "Nahe Kontakte zwischen Atomen rendern."
+msgstr "Nahe Kontakte zwischen Atomen wiedergeben."
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
@@ -2256,7 +2256,7 @@ msgid ""
 msgstr ""
 "Wähle den Python-Interpreter aus, der zum Ausführen externer Skripte "
 "verwendet werden soll.\n"
-"Die Änderung wird erst nach einem Neustart von Avogadro wirksam."
+"Die Änderung wird erst mit einem Neustart von Avogadro wirksam."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
@@ -2344,7 +2344,7 @@ msgstr "Elementname."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 msgid "Invalid element symbol."
-msgstr "Elementsymbol ungültig."
+msgstr "Ungültiges Elementsymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
