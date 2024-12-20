@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:35+0000\n"
+"PO-Revision-Date: 2024-12-20 22:37+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -4272,11 +4272,11 @@ msgstr "Beschreibung"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Fehler beim Herunterladen von Plugin-Daten."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:106
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Fehler Parsing Plugin-Daten."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:307
 msgid ""
