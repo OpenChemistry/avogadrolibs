@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-07 04:20+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-12-20 20:35+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -73,7 +73,7 @@ msgstr "Fehler beim Füllen der Datei %1: %2"
 msgid ""
 "File '%1' poorly formed. Missing string 'contents' or 'filePath' members."
 msgstr ""
-"Datei '%1' ist schlecht formatiert. Fehlende String-Mitglieder 'contents' "
+"Datei '%1' ist schlecht formatiert. Fehlende Stringmitglieder 'contents' "
 "oder 'filePath'."
 
 #: molequeue/inputgenerator.cpp:232 qtgui/interfacescript.cpp:405
@@ -1023,7 +1023,7 @@ msgstr "Datei auswählen:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr "Ausführbares Programm auswählen:"
+msgstr "Ausführbare Datei auswählen:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
@@ -1104,7 +1104,7 @@ msgstr "%1 Nachricht"
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
-"Das Schreiben von Moleküldarstellung als ein String ist fehlgeschlagen: "
+"Das Schreiben der Moleküldarstellung als ein String ist fehlgeschlagen: "
 "Unbekanntes Dateiformat: %1"
 
 #: qtgui/interfacescript.cpp:546
@@ -1334,7 +1334,7 @@ msgstr "Das Skript ist abgestürzt."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr "Die Ausführung des Skriptes wurde abgebrochen (timeout)."
+msgstr "Die Laufzeit des Skriptes ist abgelaufen (timeout)."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
@@ -1406,11 +1406,11 @@ msgstr "Element ändern"
 
 #: qtgui/rwmolecule.cpp:221
 msgid "Change Atom Hybridization"
-msgstr "Hybridisierung ändern"
+msgstr "Atomhybridisierung ändern"
 
 #: qtgui/rwmolecule.cpp:233
 msgid "Change Atom Formal Charge"
-msgstr "Formalladung ändern"
+msgstr "Atomare Formalladung ändern"
 
 #: qtgui/rwmolecule.cpp:245
 msgid "Change Atom Color"
@@ -1425,6 +1425,7 @@ msgid "Add Bond"
 msgstr "Bindung hinzufügen"
 
 #: qtgui/rwmolecule.cpp:299
+#, fuzzy
 msgid "Removed Bond"
 msgstr "Bindung entfernt"
 
