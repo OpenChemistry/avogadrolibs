@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 22:34+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4237,11 +4237,11 @@ msgstr "Die Konvertierung des Moleküls in das CIF-Format ist gescheitert."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "Die von genXrdPattern gelesenen Daten scheinen beschädigt zu sein!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:230
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Fehler: konnte nicht finden genXrdPattern ausführbar!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
