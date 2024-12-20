@@ -3545,7 +3545,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
-msgstr "Nombre d'atomes :"
+msgstr "Nombre d'atomes"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
