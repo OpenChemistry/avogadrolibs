@@ -16,9 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:49+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 22:55+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4558,7 +4557,7 @@ msgstr "Resteneigenschaften…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr "Konformereneigenschaften"
+msgstr "Konformereneigenschaften …"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
@@ -4592,6 +4591,7 @@ msgid "Conformer Properties"
 msgstr "Konformereneigenschaften"
 
 #: qtplugins/propertytables/propertyview.cpp:59
+#, fuzzy
 msgid "Residue Properties"
 msgstr "Resteneigenschaften"
 
@@ -4601,6 +4601,7 @@ msgid "QTAIM"
 msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:29
+#, fuzzy
 msgid "Renders primitives using QTAIM properties"
 msgstr "Rendert primitive Strukturen mit Hilfe von QTAIM-Eigenschaften"
 
@@ -4613,6 +4614,7 @@ msgid "Molecular Graph with Lone Pairs…"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
+#, fuzzy
 msgid "Atomic Charge…"
 msgstr "Atomladung…"
 
@@ -4637,6 +4639,7 @@ msgid "Generate input for quantum codes."
 msgstr "Eingabe für quantenchemische Methoden erstellen."
 
 #: qtplugins/resetview/resetview.cpp:38
+#, fuzzy
 msgid "Center"
 msgstr "Mitte"
 
@@ -4665,6 +4668,7 @@ msgid "Load electrostatic models from external scripts."
 msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
+#, fuzzy
 msgid "Script File Formats"
 msgstr "Skriptendateiformate"
 
