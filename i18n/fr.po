@@ -12,8 +12,9 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 18:26+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2024-12-20 18:27+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -2836,7 +2837,7 @@ msgstr "Rends le moment dipole de la molécule."
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
 msgid "Draw"
@@ -3333,7 +3334,7 @@ msgstr "Élément & ID"
 #: qtplugins/label/label.cpp:179
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Charge partielle"
 
 #: qtplugins/label/label.cpp:194
 msgid "Atom Label:"
@@ -3529,11 +3530,11 @@ msgstr "molécule inconnue"
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Property"
-msgstr ""
+msgstr "Propriété"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
-msgstr ""
+msgstr "Nom de la molécule :"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
