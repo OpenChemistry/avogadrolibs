@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 18:26+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1773,7 +1773,7 @@ msgstr "Par indice d'atome …"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr "Par distance"
+msgstr "Par distance …"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
