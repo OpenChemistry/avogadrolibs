@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 23:50+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5712,7 +5712,7 @@ msgid ""
 msgstr ""
 "Wählen Sie die Python-Version aus, die für die Ausführung von Skripten "
 "verwendet wird.\n"
-"Avogadro muss für Änderungen neu gestartet werden."
+"Damit die Änderungen wirksam werden, muss Avogadro muss neu gestartet werden."
 
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:36
 #. i18n: ectx: property (text), widget (QLabel, label)
