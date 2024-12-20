@@ -122,7 +122,9 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
              QString::number(x[i + 1]).toUtf8() + " " +
              QString::number(x[i + 2]).toUtf8() + "\n";
   }
+  // qDebug() << " wrote coords ";
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
+  // qDebug() << " got result " << result;
 
   // go through lines in result until we see "AvogadroEnergy: "
   QStringList lines = QString(result).remove('\r').split('\n');
@@ -325,7 +327,7 @@ void ScriptEnergy::readMetaData()
   m_inputFormat = inputFormatTmp;
 
   // check ions, radicals, unit cells
-  /*
+  /* e.g.,
         "unitCell": False,
         "gradients": True,
         "ion": False,
