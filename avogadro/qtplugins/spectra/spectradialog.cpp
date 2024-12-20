@@ -37,6 +37,7 @@ float scaleAndBlur(float x, float peak, float intensity, float scale = 1.0,
 
   // x is the absolute position, but we need to scale the peak position
   float scaled_peak = (peak - shift) / scale;
+
   float delta = x - scaled_peak;
   float exponent = -(delta * delta) / (2 * sigma * sigma);
   float gaussian = exp(exponent);
@@ -136,8 +137,13 @@ void SpectraDialog::updateElementCombo()
              SLOT(changeSpectra()));
   m_ui->elementCombo->clear();
 
+  // go through the elements in atomic number order
+  // make a copy of the vector
+  std::vector<unsigned char> elements = m_elements;
+  std::sort(elements.begin(), elements.end());
+
   // add the unique elements, with the element number as the data
-  for (auto& element : m_elements) {
+  for (auto& element : elements) {
     // check to see if it's already in the combo box
     bool found = false;
     for (int i = 0; i < m_ui->elementCombo->count(); ++i) {
@@ -186,6 +192,7 @@ void SpectraDialog::updateElementCombo()
   // connect the element combo box
   connect(m_ui->elementCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(changeSpectra()));
+  changeSpectra(); // default to 1H
 }
 
 void SpectraDialog::changeSpectra()
@@ -661,6 +668,11 @@ void SpectraDialog::updatePlot()
   // now compose the plot data
   float scale = m_ui->scaleSpinBox->value();
   float offset = m_ui->offsetSpinBox->value();
+  // NMR offsets should be inverted
+  if (type == SpectraType::NMR) {
+    scale = -scale;
+  }
+
   float fwhm = m_ui->peakWidth->value();
 
   float xMin = m_ui->xAxisMinimum->value();
@@ -672,6 +684,8 @@ void SpectraDialog::updatePlot()
   float xScale = 1.0;
   if (type == SpectraType::Electronic || type == SpectraType::CircularDichroism)
     xScale = 1.0f / 0.05f;
+  else if (type == SpectraType::NMR)
+    xScale = 1.0f / 0.01f;
 
   float stickWidth = fwhm / (xScale * 30.0);
 
