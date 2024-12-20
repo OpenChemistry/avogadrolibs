@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 21:31+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3091,9 +3091,8 @@ msgid "Generate input for GAMESS."
 msgstr "Eingabedatei für GAMESS vorbereiten."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:221
-#, fuzzy
 msgid "Single Point"
-msgstr "Einzelpunktsenergie"
+msgstr "Einzelpunkt"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:224
 msgid "Equilibrium Geometry"
@@ -3178,7 +3177,7 @@ msgstr "&entferne alle Wasserstoffatome"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
-msgstr ""
+msgstr "Wasserstoff aus dem aktuellen Molekül hinzufügen/entfernen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:59
 #, fuzzy
