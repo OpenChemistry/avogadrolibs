@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 21:08+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 21:21+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2355,7 +2355,7 @@ msgstr "Elementsymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
-msgstr "Ungültiges Atomlabel."
+msgstr "Ungültige Atombeschriftung."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
@@ -2380,7 +2380,7 @@ msgstr "Ordungszahl."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:487
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:498
 msgid "Invalid coordinate."
-msgstr "Koordinate ungültig."
+msgstr "Ungültige Koordinate."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 msgid "X coordinate."
@@ -2542,6 +2542,7 @@ msgstr ""
 "%1"
 
 #: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
+#, fuzzy
 msgid "Error Pasting Molecule"
 msgstr "Einfügen von Molekül fehlgeschlagen"
 
@@ -2622,6 +2623,7 @@ msgstr "EWALD"
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
+#, fuzzy
 msgid "NONE"
 msgstr "Keine"
 
