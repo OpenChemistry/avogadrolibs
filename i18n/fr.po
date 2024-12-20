@@ -1769,7 +1769,7 @@ msgstr "Par couleur personnalisée…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr "Par indice d'atome"
+msgstr "Par indice d'atome …"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
