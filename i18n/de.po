@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 23:23+0000\n"
+"PO-Revision-Date: 2024-12-20 23:26+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -5041,7 +5041,7 @@ msgstr "eV)"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
-msgstr "Lösungsmittel verfügbar"
+msgstr "Lösungsmittel-zugänglich"
 
 #: qtplugins/surfaces/surfacedialog.cpp:28
 msgid "Solvent Excluded"
@@ -5057,7 +5057,7 @@ msgstr "Elektronendichte"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
 msgid "Spin Density"
-msgstr ""
+msgstr "Spindichte"
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
@@ -5085,7 +5085,7 @@ msgstr "Oberflächen erzeugen…"
 
 #: qtplugins/surfaces/surfaces.cpp:111
 msgid "Render the van der Waals surface."
-msgstr "Van-der-Waals Oberfläche rendern."
+msgstr "van-der-Waals Oberfläche rendern."
 
 #: qtplugins/surfaces/surfaces.cpp:113
 msgid "Render the van der Waals molecular surface."
