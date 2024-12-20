@@ -17,7 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 21:41+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3334,7 +3335,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:179
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Partialladung"
 
 #: qtplugins/label/label.cpp:194
 msgid "Atom Label:"
@@ -3532,11 +3533,11 @@ msgstr "unbekanntes Molekül"
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Property"
-msgstr ""
+msgstr "Eigenschaft"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
-msgstr ""
+msgstr "Molekülname:"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
