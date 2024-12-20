@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 19:42+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 19:48+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3573,7 +3573,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "moment dipolaire (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
@@ -3602,20 +3602,20 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "enthalpie (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "entropie (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "enthalpie libre de Gibbs (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "groupe ponctuel de symétrie"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
