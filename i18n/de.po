@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 22:21+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3898,7 +3898,7 @@ msgstr "Ungültiges Molekül. Konformere können nicht erzeugt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Konformer mit Open Babel nicht erzeugen."
+msgstr "Konformere können nicht mit Open Babel erzeugt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
@@ -3940,7 +3940,7 @@ msgstr "Aktualisierung des Moleküls von Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
-msgstr "Wasserstoffatome konnten mit Open Babel nicht hinzugefügt werden."
+msgstr "Wasserstoffatome können mit Open Babel nicht hinzugefügt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
@@ -3975,7 +3975,7 @@ msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr "Open Babel kann keine Wasserstoffatome entfernen."
+msgstr "Mit Open Babel können keine Wasserstoffatome entfernt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
@@ -4016,6 +4016,7 @@ msgid "Generate input for OpenMM."
 msgstr ""
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
+#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
