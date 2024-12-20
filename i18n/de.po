@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 21:08+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1975,7 +1975,7 @@ msgstr "Atome als Kugeln und Bindungen als Zylinder wiedergeben."
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Strg+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 #, fuzzy
@@ -2282,6 +2282,8 @@ msgstr ""
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Python wird für viele Avogadro Features verwendet. Möchten Sie Python "
+"herunterladen?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
@@ -2353,7 +2355,7 @@ msgstr "Elementsymbol."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
-msgstr ""
+msgstr "Ungültiges Atomlabel."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
