@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:21+0000\n"
+"PO-Revision-Date: 2024-12-20 22:27+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -4100,15 +4100,16 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr "Animationstool (%1)"
+msgstr "Animationswerkzeug\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
+#, fuzzy
 msgid "Play"
 msgstr "Spielen"
 
 #: qtplugins/playertool/playertool.cpp:77
 msgid "Stop"
-msgstr "Stop"
+msgstr "Stopp"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
@@ -4122,6 +4123,7 @@ msgstr " FPS"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:118:1857
+#, fuzzy
 msgid "Frame:"
 msgstr "Frame:"
 
@@ -4190,7 +4192,7 @@ msgstr "Trajektorien abspielen"
 
 #: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
-msgstr ""
+msgstr "pair distribution function zeichnen…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
