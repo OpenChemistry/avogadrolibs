@@ -17,8 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 23:23+0000\n"
-"Last-Translator: matterhorn103 "
-"<83813148+matterhorn103@users.noreply.github.com>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5025,7 +5024,7 @@ msgstr "chemische Verschiebung (ppm)"
 
 #: qtplugins/spectra/spectradialog.cpp:381
 msgid "Electronic Spectra"
-msgstr "Elektronisches Spektren"
+msgstr "Elektronische Spektren"
 
 #: qtplugins/spectra/spectradialog.cpp:382
 #: qtplugins/spectra/spectradialog.cpp:410
@@ -5034,7 +5033,7 @@ msgstr "eV"
 
 #: qtplugins/spectra/spectradialog.cpp:396
 msgid "Circular Dichroism Spectra"
-msgstr ""
+msgstr "CD-Spektren"
 
 #: qtplugins/spectra/spectradialog.cpp:397
 msgid "eV)"
