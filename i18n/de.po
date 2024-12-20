@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 23:04+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4777,7 +4777,7 @@ msgstr "Auswahl"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Strg+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -4816,7 +4816,7 @@ msgstr "Raumgruppe bestimmen…"
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1881
 msgid "Symmetrize"
-msgstr ""
+msgstr "Symmetrie"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
