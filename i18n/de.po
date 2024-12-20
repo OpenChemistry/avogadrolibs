@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 21:51+0000\n"
+"PO-Revision-Date: 2024-12-20 21:55+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3609,16 +3609,16 @@ msgstr "Enthalpie (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
-msgstr "Entropie (Kcal/Mol•K)"
+msgstr "Entropie (kcal/Mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Freie Gibbs Energie (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "Punktgruppe"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
@@ -3644,7 +3644,6 @@ msgid "&Properties"
 msgstr "&Eigenschaften"
 
 #: qtplugins/molecularproperties/molecularproperties.h:30
-#, fuzzy
 msgid "Molecular Properties"
 msgstr "Molekulareigenschaften"
 
