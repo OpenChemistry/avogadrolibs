@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 23:26+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 23:44+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5093,7 +5093,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:115
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Rendern der lösungsmittel zugänglichen molekularen Oberfläche."
+msgstr "Rendern der Lösungsmittel-zugänglichen molekularen Oberfläche."
 
 #: qtplugins/surfaces/surfaces.cpp:117
 msgid "Render the solvent-excluded molecular surface."
@@ -5101,7 +5101,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
 msgid "Render a molecular orbital."
-msgstr "Molekülorbital rendern."
+msgstr "Ein Molekülorbital rendern."
 
 #: qtplugins/surfaces/surfaces.cpp:121
 msgid "Render the electron density."
@@ -5134,6 +5134,7 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:863
+#, fuzzy
 msgid "Export Movie"
 msgstr "Exportiere Video"
 
@@ -5171,7 +5172,7 @@ msgstr "Klasse"
 
 #: qtplugins/symmetry/symmetry.cpp:41
 msgid "Symmetry…"
-msgstr "Symmetrie…"
+msgstr "Symmetrie …"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
@@ -5207,6 +5208,7 @@ msgid "Ctrl+3"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:82
+#, fuzzy
 msgid "Template"
 msgstr "Template"
 
@@ -5228,6 +5230,7 @@ msgid "Clipboard"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:404
+#, fuzzy
 msgid "Insert Template"
 msgstr "Templat einfügen"
 
@@ -5237,16 +5240,17 @@ msgstr "Liganden einfügen"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
+#, fuzzy
 msgid "Template tool"
 msgstr "Templatwerkzeug"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
-msgstr "Einfache Darstellung von VdW-Sphären."
+msgstr "Einfache Darstellung von vdW-Sphären."
 
 #: qtplugins/vibrations/vibrations.cpp:27
 msgid "Vibrational Modes…"
-msgstr "Schwingungsmoden…"
+msgstr "Schwingungsmoden …"
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
@@ -5269,10 +5273,8 @@ msgid "Stop the vibrational animation."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.h:33
-#, fuzzy
-#| msgid "Vibration"
 msgid "Vibrations"
-msgstr "Vibration"
+msgstr "Schwingungen"
 
 #: qtplugins/vibrations/vibrations.h:37
 #, fuzzy
@@ -5302,7 +5304,7 @@ msgstr "Molekül als Drahtgittermodell wiedergeben."
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
-msgstr "Bandstruktur berechnen…"
+msgstr "Bandstruktur berechnen …"
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -5338,7 +5340,7 @@ msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
-msgstr "Fermi-Energie"
+msgstr "Fermi-Niveau"
 
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Cannot find Yaehmop"
@@ -5382,6 +5384,7 @@ msgstr "Dialog"
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::TemplateToolWidget)
+#, fuzzy
 msgid "Form"
 msgstr "Form"
 
@@ -5393,7 +5396,7 @@ msgstr "Berechnungseinstellungen"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:69
 #. i18n: ectx: property (text), widget (QPushButton, warningTextButton)
 msgid "Placeholder text…"
-msgstr "Platzhaltertext…"
+msgstr "Platzhaltertext …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
@@ -5407,7 +5410,7 @@ msgstr "Zurücksetzen"
 #. i18n: file: molequeue/inputgeneratorwidget.ui:93
 #. i18n: ectx: property (text), widget (QCheckBox, debugCheckBox)
 msgid "Debug Script…"
-msgstr "Skript debuggen …"
+msgstr "Skript debuggen …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -5416,12 +5419,12 @@ msgstr "Skript debuggen …"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
-msgstr ""
+msgstr "Berechnung absenden …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save Input…"
-msgstr "Eingabe speichern …"
+msgstr "Eingabe speichern …"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5458,7 +5461,7 @@ msgstr ""
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Delete remote files when finished:"
-msgstr "Nach Abschluss Remotedatein löschen:"
+msgstr "Nach Abschluss remote-Dateien löschen:"
 
 #. i18n: file: molequeue/molequeuewidget.ui:145
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
@@ -5497,7 +5500,7 @@ msgstr "Elemente umbenennen"
 #. i18n: file: qtgui/insertfragmentdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtGui::InsertFragmentDialog)
 msgid "Insert Fragment…"
-msgstr "Fragment einfügen…"
+msgstr "Fragment einfügen …"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
