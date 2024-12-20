@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 21:45+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 21:51+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3568,30 +3568,30 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
-msgstr "Nettoentgelt"
+msgstr "Nettoladung"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:318
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Netto Spinmultiplizität"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "Dipolmoment (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO-Energie (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO-Energie (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO-Energie (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
@@ -3601,7 +3601,7 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Nullpunktsenergie (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
