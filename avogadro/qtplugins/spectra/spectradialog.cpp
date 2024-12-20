@@ -44,6 +44,19 @@ float scaleAndBlur(float x, float peak, float intensity, float scale = 1.0,
   return intensity * gaussian;
 }
 
+float closestTo(float x, float peak, float intensity, float scale = 1.0,
+                float shift = 0.0, float xScale = 1.0)
+{
+  // return peak intensity if x is closer to the peak than another point
+  // scaled by scale and shifted by shift
+  float scaled_peak = (peak - shift) / scale;
+  float delta = x - scaled_peak;
+  // xScale is the reciprocal of the space between points
+  // (i.e., used to generate many points in the loop)
+  float peak_to_peak = 1.0 / xScale;
+  return (fabs(delta) < peak_to_peak / 2.0) ? intensity : 0.0;
+}
+
 std::vector<double> fromMatrix(const MatrixX& matrix)
 {
   std::vector<double> result;
@@ -687,8 +700,7 @@ void SpectraDialog::updatePlot()
   else if (type == SpectraType::NMR)
     xScale = 1.0f / 0.01f;
 
-  float stickWidth = fwhm / (xScale * 30.0);
-
+  // TODO: process an experimental spectrum via interpolation
   for (unsigned int x = round(start * xScale); x < round(end * xScale); ++x) {
     float xValue = static_cast<float>(x) / xScale;
     xData.push_back(xValue);
@@ -701,8 +713,7 @@ void SpectraDialog::updatePlot()
       float peak = m_intensities[index];
 
       float intensity = scaleAndBlur(xValue, freq, peak, scale, offset, fwhm);
-      // todo: find the closest point to the peak
-      float stick = scaleAndBlur(xValue, freq, peak, scale, offset, stickWidth);
+      float stick = closestTo(xValue, freq, peak, scale, offset, xScale);
 
       yData.back() += intensity;
       yStick.back() += stick;
