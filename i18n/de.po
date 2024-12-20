@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:12+0000\n"
+"PO-Revision-Date: 2024-12-20 22:21+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -4029,7 +4029,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
@@ -4043,11 +4043,11 @@ msgstr ""
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1274
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
@@ -4058,7 +4058,7 @@ msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
@@ -4090,7 +4090,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Strg+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
@@ -4099,7 +4099,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "Animationstool (%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
