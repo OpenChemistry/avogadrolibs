@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 18:27+0000\n"
+"PO-Revision-Date: 2024-12-20 18:28+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -3533,7 +3533,7 @@ msgstr "Propriété"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
-msgstr "Nom de la molécule :"
+msgstr "Nom de la molécule"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
