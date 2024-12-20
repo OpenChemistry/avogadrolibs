@@ -106,6 +106,10 @@ void Spectra::openDialog()
   }
 
   gatherSpectra();
+  // update the elements
+  auto elements = m_molecule->atomicNumbers();
+  std::vector<unsigned char> atomicNumbers(elements.begin(), elements.end());
+  m_dialog->setElements(atomicNumbers);
   m_dialog->show();
 }
 
