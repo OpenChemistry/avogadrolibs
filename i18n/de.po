@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:07+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2024-12-20 22:10+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3893,10 +3893,8 @@ msgstr ""
 "Molekül (%2) überein."
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molekül ungültig."
+msgstr "Molecule ungültig. Kann nicht Konformer erzeugen."
 
 #: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
