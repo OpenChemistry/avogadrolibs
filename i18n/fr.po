@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 19:48+0000\n"
+"PO-Revision-Date: 2024-12-20 19:50+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
@@ -4379,7 +4379,7 @@ msgstr "Charge formelle"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "%1 Charge partielle"
 
 #: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
@@ -4468,11 +4468,11 @@ msgstr "Atome 4"
 #: qtplugins/propertytables/propertymodel.cpp:600
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Énergie (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:791
 msgid "Adjust Fragment"
