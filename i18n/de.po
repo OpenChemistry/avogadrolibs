@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:46+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 22:49+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4486,7 +4486,7 @@ msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:603
 msgid "Energy (kcal/mol)"
-msgstr "Energie (Kcal/mol)"
+msgstr "Energie (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:791
 msgid "Adjust Fragment"
@@ -4498,9 +4498,10 @@ msgid "π Helix"
 msgstr "π-Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:919
+#, fuzzy
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr "Biegen"
+msgstr "Biegung"
 
 #: qtplugins/propertytables/propertymodel.cpp:921
 msgctxt "alpha helix"
@@ -4550,6 +4551,7 @@ msgid "Torsion Properties…"
 msgstr "Torsionseigenschaften…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
+#, fuzzy
 msgid "Residue Properties…"
 msgstr "Resteneigenschaften…"
 
