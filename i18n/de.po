@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 23:05+0000\n"
+"PO-Revision-Date: 2024-12-20 23:17+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -4841,7 +4841,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr "Raumgruppe bestimmen…"
+msgstr "Raumgruppe bestimmen"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -4939,11 +4939,8 @@ msgstr "Spektren zeichnen …"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1655
-#, fuzzy
-#| msgctxt "colormap"
-#| msgid "Spectral"
 msgid "Spectra"
-msgstr "Spektral"
+msgstr "Spektren"
 
 #: qtplugins/spectra/spectra.h:38
 #, fuzzy
@@ -4952,9 +4949,6 @@ msgid "Display spectra plots."
 msgstr "Spektren anzeigen."
 
 #: qtplugins/spectra/spectradialog.cpp:200
-#, fuzzy
-#| msgctxt "Infrared spectra option"
-#| msgid "Infrared"
 msgid "Infrared"
 msgstr "Infrarot"
 
@@ -4967,19 +4961,15 @@ msgid "NMR"
 msgstr "NMR"
 
 #: qtplugins/spectra/spectradialog.cpp:210
-#, fuzzy
-#| msgid "electron"
 msgid "Electronic"
 msgstr "Elektronisch"
 
 #: qtplugins/spectra/spectradialog.cpp:214
 msgid "Circular Dichroism"
-msgstr ""
+msgstr "Circulardichroismus"
 
 #: qtplugins/spectra/spectradialog.cpp:218
 #: qtplugins/spectra/spectradialog.cpp:409
-#, fuzzy
-#| msgid "&Density Of States Settings"
 msgid "Density of States"
 msgstr "Zustandsdichte"
 
