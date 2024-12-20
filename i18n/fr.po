@@ -13,8 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 20:35+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4757,7 +4756,7 @@ msgstr "Sélectionner"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -5189,7 +5188,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:81
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Ctrl+3"
 
 #: qtplugins/templatetool/templatetool.cpp:82
 msgid "Template"
@@ -7000,7 +6999,7 @@ msgstr ""
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "Atomes sélectionnés"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
