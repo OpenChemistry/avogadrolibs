@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 21:31+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 21:41+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3177,7 +3177,7 @@ msgstr "&entferne alle Wasserstoffatome"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
-msgstr "Wasserstoff aus dem aktuellen Molekül hinzufügen/entfernen."
+msgstr "Wasserstoffatome dem aktuellen Molekül hinzufügen/entfernen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:59
 #, fuzzy
@@ -3323,6 +3323,7 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:175
+#, fuzzy
 msgid "Element & Number"
 msgstr "Element & Nummer"
 
@@ -3412,6 +3413,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
+#, fuzzy
 msgid "Opacity:"
 msgstr "Intransparenz:"
 
@@ -3430,6 +3432,7 @@ msgstr "InChI …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
+#, fuzzy
 msgid "No descriptors found!"
 msgstr "Keine Deskriptoren gefunden!"
 
@@ -3455,7 +3458,6 @@ msgid "Ctrl+6"
 msgstr ""
 
 #: qtplugins/manipulator/manipulator.cpp:50
-#, fuzzy
 msgid "Manipulate"
 msgstr "Bearbeiten"
 
