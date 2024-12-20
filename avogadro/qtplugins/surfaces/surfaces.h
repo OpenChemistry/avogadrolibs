@@ -152,4 +152,4 @@ private:
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
+#endif // AVOGADRO_QTPLUGINS_SURFACES_H

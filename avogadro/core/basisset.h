@@ -134,6 +134,20 @@ public:
    */
   virtual bool isValid() = 0;
 
+  /**
+   * @return the orbital symmetry labels (if they exist) for the MOs
+   */
+  std::vector<std::string> symmetryLabels() const { return m_symmetryLabels; }
+
+  /**
+   * Set the orbital symmetry labels (a1, t2g, etc.) for the molecular
+   * orbitals
+   */
+  void setSymmetryLabels(const std::vector<std::string>& labels)
+  {
+    m_symmetryLabels = labels;
+  }
+
 protected:
   /**
    * Total number of electrons, 0 is alpha electrons and 1 is beta electrons.
@@ -159,6 +173,11 @@ protected:
    * The name of the theory used for the calculation.
    */
   std::string m_theoryName;
+
+  /**
+   * The orbital symmetry labels (if they exist) for the MOs
+   */
+  std::vector<std::string> m_symmetryLabels;
 };
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
