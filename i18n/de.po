@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:27+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 22:34+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4208,9 +4208,10 @@ msgstr ""
 
 #: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr "Generieren und eine Paarverteilungsfunktionskurve erstellen."
+msgstr "Einen Graphen einer Paarverteilungsfunktion berechnen und zeichnen."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
+#, fuzzy
 msgid "Plot RMSD curve…"
 msgstr "Zeichne RMSD Diagramm…"
 
@@ -4228,11 +4229,11 @@ msgstr "Zeichne theoretisches XRD Diffraktogramm…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "Fehler beim Berechnen eines XRD-Musters"
 
 #: qtplugins/plotxrd/plotxrd.cpp:157
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "Die Konvertierung des Moleküls in das CIF-Format ist gescheitert."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
