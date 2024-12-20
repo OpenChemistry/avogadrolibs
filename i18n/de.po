@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 23:44+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5122,7 +5122,7 @@ msgstr "Berechne Elektronendichte"
 
 #: qtplugins/surfaces/surfaces.cpp:595
 msgid "Calculating spin density"
-msgstr ""
+msgstr "Berechnung der Spindichte"
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5131,7 +5131,7 @@ msgstr "Molekularorbital %L1 wird berechnet"
 
 #: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
 msgid "Movie AVI (*.avi)"
-msgstr ""
+msgstr "Film AVI (*.avi)"
 
 #: qtplugins/surfaces/surfaces.cpp:863
 #, fuzzy
@@ -5186,7 +5186,7 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Render Symmetrieelemente."
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
 msgid "∞"
@@ -5205,7 +5205,7 @@ msgstr "%1 %2"
 #: qtplugins/templatetool/templatetool.cpp:81
 msgctxt "control-key 3"
 msgid "Ctrl+3"
-msgstr ""
+msgstr "Strg+3"
 
 #: qtplugins/templatetool/templatetool.cpp:82
 #, fuzzy
@@ -5332,11 +5332,13 @@ msgid ""
 "Only one special k point was found in Yaehmop output! Two or more are "
 "required!"
 msgstr ""
+"Nur ein besonderer k-Punkt wurde in Yaehmop-Ausgang gefunden! Zwei oder mehr "
+"sind erforderlich!"
 
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
-msgstr ""
+msgstr "Band %1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
@@ -5481,6 +5483,8 @@ msgid ""
 "<html><head/><body><p>Show a system popup notification when the job's status "
 "changes.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Eine System-Popup-Benachrichtigung anzeigen, wenn sich "
+"der Status des Jobs ändert.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:161
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -5600,7 +5604,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:123
 #. i18n: ectx: property (text), widget (QRadioButton, loadFromPqrButton)
 msgid "Load Existing PQR File"
-msgstr ""
+msgstr "Vorhandene PQR laden Datei"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:132
 #. i18n: ectx: property (text), widget (QLabel, pqrFileLabel)
