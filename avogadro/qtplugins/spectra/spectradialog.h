@@ -73,7 +73,9 @@ private slots:
 private:
   std::map<std::string, MatrixX> m_spectra;
   std::vector<unsigned char> m_elements; // for NMR
-  MatrixX m_currentSpectra;
+  // current spectra data
+  std::vector<double> m_transitions;
+  std::vector<double> m_intensities;
 
   QString m_currentSpectraType;
   Ui::SpectraDialog* m_ui;
