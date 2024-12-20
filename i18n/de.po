@@ -17,8 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 23:05+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4817,20 +4816,20 @@ msgstr "Raumgruppe bestimmen…"
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1881
 msgid "Symmetrize"
-msgstr "Symmetrie"
+msgstr "Symmetrisieren"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
-msgstr "Elementarzelle ausfüllen…"
+msgstr "Elementarzelle füllen…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
-msgstr "Zu asymmetrischer Einheit reduzieren"
+msgstr "Auf asymmetrische Einheit reduzieren"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
-msgstr "Toleranz setzen…"
+msgstr "Toleranz setzen …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
