@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 19:50+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -4089,7 +4089,7 @@ msgstr "Lecteur"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr "Outil d'animation (%1)"
+msgstr "Outil d'animation\t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
