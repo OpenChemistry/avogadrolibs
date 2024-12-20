@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-20 22:03+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3674,7 +3674,7 @@ msgstr "Datei kann nicht zum Schreiben geöffnet werden."
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
 msgid "Error writing to the file."
-msgstr "Fehler beim Schreiben an die Datei."
+msgstr "Fehler beim Schreiben in die Datei."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
 #: qtplugins/propertytables/propertyview.cpp:305
@@ -3701,6 +3701,7 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:62
+#, fuzzy
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr "Drehen Sie die Szene entlang der x-, y- oder z-Achse."
 
@@ -3713,6 +3714,7 @@ msgid "Translate the scene."
 msgstr "Darstellung verschieben."
 
 #: qtplugins/navigator/navigator.cpp:105
+#, fuzzy
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Richtung von Zoomen beim Scrollen umkehren"
 
@@ -3736,7 +3738,7 @@ msgstr "chemischer Name"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr "Netzwerk Datenbanken"
+msgstr "Netzwerk-Datenbanken"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
@@ -3751,6 +3753,7 @@ msgid "Angle tolerance:"
 msgstr "Winkeltoleranz:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
+#, fuzzy
 msgid "Render a few non-covalent interactions."
 msgstr "Einige nicht-kovalente Wechselwirkungen rendern."
 
