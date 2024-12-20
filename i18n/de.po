@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:44+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 22:46+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4391,7 +4391,7 @@ msgstr "Formalladung"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr "%1 Teilladung"
+msgstr "%1 Partialladung"
 
 #: qtplugins/propertytables/propertymodel.cpp:507
 msgid "X (Å)"
@@ -4422,6 +4422,7 @@ msgid "Type"
 msgstr "Typ"
 
 #: qtplugins/propertytables/propertymodel.cpp:525
+#, fuzzy
 msgid "Start Atom"
 msgstr "Atom starten"
 
