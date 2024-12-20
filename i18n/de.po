@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 21:55+0000\n"
+"PO-Revision-Date: 2024-12-20 22:03+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3793,7 +3793,7 @@ msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:119
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Die Open Babel-Dateiformate sind nicht bereit, hinzugefügt werden."
 
 #: qtplugins/openbabel/openbabel.cpp:203
 msgid "Loading molecule from Open Babel…"
