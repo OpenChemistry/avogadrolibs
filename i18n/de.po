@@ -16,9 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 22:39+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-20 22:44+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -4302,29 +4301,30 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr "Nicht zum Download von %1: Statuscode %2, %3\n"
+msgstr "Gescheiterter Download von %1: Statuscode %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
-#, qt-format
+#, fuzzy, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "%1 wird zu %2 herunterladen\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:414
-#, qt-format
+#, fuzzy, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "%1 wird zu %2 extrahiert\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:417
-#, qt-format
+#, fuzzy, qt-format
 msgid "Finished %1 files\n"
 msgstr "%1 Dateien fertig\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:421
+#, fuzzy
 msgid "Extraction successful\n"
 msgstr "Extraktion erfolgreich\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:497
-#, qt-format
+#, fuzzy, qt-format
 msgid "Error while extracting: %1"
 msgstr "Extraktionsfehler: %1"
 
@@ -4365,7 +4365,7 @@ msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
-msgstr "POV-Ray Renderer …"
+msgstr "POV-Ray Renderer …"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
