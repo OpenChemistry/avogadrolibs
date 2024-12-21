@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 18:22+0000\n"
+"PO-Revision-Date: 2024-12-21 14:45+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9.2-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -54,12 +54,12 @@ msgstr ""
 #: molequeue/inputgenerator.cpp:194 qtgui/interfacescript.cpp:366
 #, qt-format
 msgid "Reference file '%1' does not exist."
-msgstr ""
+msgstr "Referentna datoteka '%1' ne postoji."
 
 #: molequeue/inputgenerator.cpp:196 qtgui/interfacescript.cpp:368
 #, qt-format
 msgid "Error populating file %1: %2"
-msgstr ""
+msgstr "Greška pri popunjavanju datoteke %1: %2"
 
 #: molequeue/inputgenerator.cpp:200 qtgui/interfacescript.cpp:372
 #, qt-format
@@ -73,11 +73,14 @@ msgid ""
 "Malformed file entry: filename/contents missing or not strings:\n"
 "%1"
 msgstr ""
+"Neispravan unos datoteke: ime datoteke/sadržaj nedostaju ili nisu znakovni "
+"nizovi:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:238 qtgui/interfacescript.cpp:411
 #, qt-format
 msgid "Malformed file entry at index %1: Not an object."
-msgstr ""
+msgstr "Neispravan unos datoteke pri indeksu %1: Nije objekt."
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
@@ -105,6 +108,8 @@ msgid ""
 "Script output:\n"
 "%1"
 msgstr ""
+"Rezultat skripta:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:322 qtgui/interfacescript.cpp:496
 #, qt-format
@@ -229,11 +234,11 @@ msgstr "Prepisati promijenjene datoteke unosa?"
 
 #: molequeue/inputgeneratorwidget.cpp:197
 msgid "Problems occurred during input generation:"
-msgstr ""
+msgstr "Došlo je do problema tijekom generiranja unosa:"
 
 #: molequeue/inputgeneratorwidget.cpp:286
 msgid "No input files to save!"
-msgstr ""
+msgstr "Nema datoteka unosa za spremanje!"
 
 #: molequeue/inputgeneratorwidget.cpp:294
 #: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
@@ -4556,15 +4561,15 @@ msgstr "Iscrtava primitivne ćelije koristeći QTAIM svojstva"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
-msgstr ""
+msgstr "Molekulski graf …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Molekulski graf sa slobodnim parovima …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 msgid "Atomic Charge…"
-msgstr ""
+msgstr "Atomski naboj …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
@@ -4580,11 +4585,11 @@ msgstr "QTAIM proširenje"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
-msgstr ""
+msgstr "Kvantni unos"
 
 #: qtplugins/quantuminput/quantuminput.h:46
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Generiraj unos za kvantne kodove."
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Center"
@@ -4604,7 +4609,7 @@ msgstr "Resetiraj prikaz"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr "Manipuliraj kamerom za prikaz."
+msgstr "Upravljaj kamerom prikaza."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 msgid "Script Charge Models"
@@ -4648,11 +4653,11 @@ msgstr "Odaberi prema ostatku …"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
-msgstr ""
+msgstr "Odaberi atome glavnog lanca …"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
-msgstr ""
+msgstr "Odaberi atome bočnog lanca …"
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 msgid "Select Water"
