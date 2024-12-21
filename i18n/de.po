@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-20 23:50+0000\n"
+"PO-Revision-Date: 2024-12-21 00:08+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -5779,7 +5779,7 @@ msgstr ""
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
 msgid "Help…"
-msgstr "Hilfe.."
+msgstr "Hilfe …"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
@@ -6104,7 +6104,7 @@ msgstr "Element:"
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr "Anzahl der Bindungen:"
+msgstr "Bindungsordnung:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -6215,7 +6215,7 @@ msgstr "Ladung:"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, PQRWidget)
 msgid "Import From PQR…"
-msgstr "Von PQR importieren …"
+msgstr "Von PQR importieren …"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -6274,6 +6274,7 @@ msgstr "Nukleinsäuren einfügen"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#, fuzzy
 msgid "DNA/RNA Builder"
 msgstr "DNA/RNA-Erzeuger"
 
@@ -6467,7 +6468,7 @@ msgstr "Elektron"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_waterPotential)
 msgid "Water Potential"
-msgstr "Wasser Potential"
+msgstr "Wasser-Potential"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:157
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
@@ -6554,6 +6555,7 @@ msgstr "Zeile"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
+#, fuzzy
 msgid "meso"
 msgstr "Mesomerie"
 
@@ -6580,7 +6582,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:281
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "wavepacket"
-msgstr ""
+msgstr "Wellenpaket"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:289
 #. i18n: ectx: property (toolTip), widget (QLabel, label_readdata)
@@ -6623,12 +6625,12 @@ msgstr "Temperatur"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:357
 #. i18n: ectx: property (toolTip), widget (QSpinBox, nhChainSpin)
 msgid "Select the number of Nosé-Hoover chains in the NVT ensemble."
-msgstr "Wählen Sie die Anzahl Nosé-Hoover-Ketten des NVT Ensembles."
+msgstr "Wählen Sie die Anzahl Nosé-Hoover-Ketten des NVT-Ensembles."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:350
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "NH Chains"
-msgstr "NH Ketten"
+msgstr "NH-Ketten"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:393
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
