@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-21 00:08+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2024-12-21 00:34+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -6935,7 +6935,7 @@ msgstr "Ursprung"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Molecule"
-msgstr "Zentrum von Molecule"
+msgstr "Zentrum des Moleküls"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -6984,21 +6984,25 @@ msgstr "Methode"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
+#, fuzzy
 msgid "Number of conformers:"
 msgstr "Anzahl der Konformeren:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
+#, fuzzy
 msgid "Systematic rotor search"
 msgstr "Systematische Drehpunkt-Suche"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:47
 #. i18n: ectx: property (text), widget (QRadioButton, randomRadio)
+#, fuzzy
 msgid "Random rotor search"
 msgstr "Zufällige Drehpunkt-Suche"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:54
 #. i18n: ectx: property (text), widget (QRadioButton, weightedRadio)
+#, fuzzy
 msgid "Weighted rotor search"
 msgstr "Gewichtete Drehpunkt-Suche"
 
@@ -7088,8 +7092,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
+#, fuzzy
 msgid "Steepest Descent"
-msgstr "Tiefster Abstieg"
+msgstr "steilster Abstieg"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
@@ -7349,6 +7354,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, initVelCombo)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:813
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
+#, fuzzy
 msgid "False"
 msgstr "Falsch"
 
@@ -7517,7 +7523,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:848
 #. i18n: ectx: property (text), widget (QCheckBox, stepIndexCheck)
 msgid "Step Index"
-msgstr "Schrittindiz"
+msgstr "Schrittindex"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -7640,11 +7646,13 @@ msgstr "Max 2*theta:"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:20
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
+#, fuzzy
 msgid "Download Selected"
 msgstr "Ausgewählte herunterladen"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
+#, fuzzy
 msgid "Critical Point Radius:"
 msgstr "Radius des kritischen Punkts:"
 
@@ -7929,6 +7937,7 @@ msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
+#, fuzzy
 msgid "Smoothing:"
 msgstr "Glätten:"
 
