@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
 "PO-Revision-Date: 2024-12-21 00:34+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -6940,7 +6940,7 @@ msgstr "Zentrum des Moleküls"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Selection"
-msgstr ""
+msgstr "Zentrum der Auswahl"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, label_6)
