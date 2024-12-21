@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-15 02:48+0000\n"
-"PO-Revision-Date: 2024-12-21 14:45+0000\n"
+"PO-Revision-Date: 2024-12-22 15:33+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -2036,8 +2036,9 @@ msgid "Remove bonds from all or selected atoms."
 msgstr "すべて、あるいは選択した原子から結合を削除する。"
 
 #: qtplugins/bonding/bonding.cpp:74
+#, fuzzy
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "すべて、または選択した原子の間に結合を作成。"
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
@@ -2264,7 +2265,7 @@ msgstr ""
 #: qtplugins/configurepython/configurepython.h:29
 #, fuzzy
 msgid "Configure Python environments."
-msgstr "Python環境の設定."
+msgstr "Python環境の設定。"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2329,9 +2330,8 @@ msgid "Element symbol."
 msgstr "元素記号"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
-#, fuzzy
 msgid "Invalid atom label."
-msgstr "不正な原子ラベル"
+msgstr "不正な原子ラベル。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 #, fuzzy
@@ -2729,12 +2729,11 @@ msgid "Import Crystal from Clipboard"
 msgstr "クリップボードから結晶構造を読み込む"
 
 #: qtplugins/crystal/crystal.cpp:175
+#, fuzzy
 msgid "Wrap atoms into the unit cell."
-msgstr ""
+msgstr "原子をユニットセルにラップ。"
 
 #: qtplugins/crystal/crystal.cpp:177
-#, fuzzy
-#| msgid "Rotate to Standard Orientation"
 msgid "Rotate the unit cell to the standard orientation."
 msgstr "ユニットセルを標準配向に回転。"
 
@@ -2990,8 +2989,9 @@ msgid "Avogadro"
 msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:253
+#, fuzzy
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "最適化する原子がありません"
 
 #: qtplugins/forcefield/forcefield.cpp:381
 #, qt-format
@@ -3537,8 +3537,9 @@ msgid "Number of Residues"
 msgstr "残基数"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:314
+#, fuzzy
 msgid "Number of Chains"
-msgstr ""
+msgstr "チェインの数"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:316
 #, fuzzy
@@ -3641,8 +3642,6 @@ msgstr "CSVファイル (*.csv);;全てのファイル (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:261
-#, fuzzy
-#| msgid "Could not open file '%1' for writing."
 msgid "Could not open the file for writing."
 msgstr "ファイルを書き込みモードで開けません。"
 
@@ -3676,16 +3675,15 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:62
+#, fuzzy
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "しーんをx、y、またはz軸にそって回転"
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Zoom the scene."
 msgstr "シーンをズーム"
 
 #: qtplugins/navigator/navigator.cpp:64
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
 msgstr "シーンを平行移動。"
 
@@ -3759,9 +3757,9 @@ msgid "Remove Hydrogens"
 msgstr "水素を取り除く"
 
 #: qtplugins/openbabel/openbabel.cpp:94
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "%1が見つかりません！Open Babelプラグインアクションを無効にしています。"
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "&Open Babel"
@@ -3811,8 +3809,9 @@ msgid "Optimizing Geometry (Open Babel)"
 msgstr "構造最適化 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
+#, fuzzy
 msgid "Generating…"
-msgstr ""
+msgstr "生成中…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
@@ -3853,18 +3852,14 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
 msgid "Molecule invalid. Cannot generate conformers."
 msgstr "不正な分子。配座異性体を生成できません。"
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Open Babelで配座異性体を生成できません"
+msgstr "Open Babelで配座異性体を生成できません。"
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
-#| msgid "Optimizing Geometry (Open Babel)"
 msgid "Generating Conformers (Open Babel)"
 msgstr "配座異性体を生成中 (Open Babel)"
 
@@ -4246,7 +4241,6 @@ msgid "Description"
 msgstr "記述"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:101
-#, fuzzy
 msgid "Error downloading plugin data."
 msgstr "プラグインデータのダウンロードでエラー"
 
@@ -4280,7 +4274,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "%1からのダウンロードに失敗: 終了コード%2、%3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:401
 #, qt-format
@@ -4843,7 +4837,7 @@ msgid "Perceive Space Group"
 msgstr "空間群を検出"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
@@ -5081,14 +5075,10 @@ msgid "Create Surfaces…"
 msgstr "表面を作成する…"
 
 #: qtplugins/surfaces/surfaces.cpp:111
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
 msgstr "ファンデルワールス表面を描画。"
 
 #: qtplugins/surfaces/surfaces.cpp:113
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
 msgstr "ファンデルワールス分子表面を描画。"
 
@@ -6920,8 +6910,9 @@ msgstr "フォームを使用"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
+#, fuzzy
 msgid "Generate…"
-msgstr ""
+msgstr "生成…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7058,14 +7049,11 @@ msgstr "子:"
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:138
 #. i18n: ectx: property (toolTip), widget (QSpinBox, mutabilitySpinBox)
-#, fuzzy
 msgid "mutation frequency (lower = more frequent mutations)"
-msgstr "変異頻度 (低いほど高頻度)"
+msgstr "変異頻度 (低いほど高頻度で変異)"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Mutability"
 msgid "Mutability:"
 msgstr "突然変異性:"
 
@@ -7085,8 +7073,6 @@ msgstr "収束性:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Scoring method"
 msgid "Scoring method:"
 msgstr "スコアリング法:"
 
@@ -7780,7 +7766,7 @@ msgstr "表示"
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 #, fuzzy
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "実験スペクトルの tsv ファイルをインポートしプロットに重ね描き。"
+msgstr "実験スペクトルのtsvファイルをインポートしてプロットに重ね描きする。"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:252
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -7866,8 +7852,6 @@ msgstr "y"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:529
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
-#, fuzzy
-#| msgid "Operations"
 msgid "&Options…"
 msgstr "オプション (&O)…"
 
