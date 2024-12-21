@@ -94,9 +94,8 @@ void DownloaderWidget::updateRepoData()
     // Reading the data from the response
     QByteArray bytes = m_reply->readAll();
 
-    // quick checks that it's a valid JSON reply
-    // it should be a list, so [ ] characters
-    if (bytes.isEmpty() || bytes[0] != '[' || bytes[bytes.size() - 1] != ']') {
+    // quick check that it's not empty
+    if (bytes.isEmpty()) {
       QMessageBox::warning(this, tr("Error"),
                            tr("Error downloading plugin data."));
       return;
