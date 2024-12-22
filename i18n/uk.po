@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-15 02:48+0000\n"
+"POT-Creation-Date: 2024-12-22 02:35+0000\n"
 "PO-Revision-Date: 2024-12-17 14:00+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
@@ -561,7 +561,7 @@ msgstr "Бор"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1929
+#: qtgui/elementtranslator.cpp:34:1932
 msgid "Carbon"
 msgstr "Карбон"
 
@@ -643,13 +643,13 @@ msgstr "Манган"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1932
+#: qtgui/elementtranslator.cpp:94:1935
 msgid "Iron"
 msgstr "Ферум"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1935
+#: qtgui/elementtranslator.cpp:97:1938
 msgid "Cobalt"
 msgstr "Кобальт"
 
@@ -1323,8 +1323,8 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Помилка виконання сценарію \"%1 %2\": ненормальний статус виходу %3 (%4: %5)"
-"\n"
+"Помилка виконання сценарію \"%1 %2\": ненормальний статус виходу %3 (%4: "
+"%5)\n"
 "\n"
 "Вихід:\n"
 "%6"
@@ -1406,7 +1406,7 @@ msgstr "Очистити атоми"
 msgid "Adjust Hydrogens"
 msgstr "Вирівняти атоми водню"
 
-#: qtgui/rwmolecule.cpp:143
+#: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
 msgstr "Зміна елементів"
 
@@ -1414,100 +1414,100 @@ msgstr "Зміна елементів"
 msgid "Change Element"
 msgstr "Змінити елемент"
 
-#: qtgui/rwmolecule.cpp:221
+#: qtgui/rwmolecule.cpp:236
 msgid "Change Atom Hybridization"
 msgstr "Гібридизація змінного атома"
 
-#: qtgui/rwmolecule.cpp:233
+#: qtgui/rwmolecule.cpp:248
 msgid "Change Atom Formal Charge"
 msgstr "Змінити офіційне звинувачення Atom"
 
-#: qtgui/rwmolecule.cpp:245
+#: qtgui/rwmolecule.cpp:260
 msgid "Change Atom Color"
 msgstr "Змінити колір атома"
 
-#: qtgui/rwmolecule.cpp:257
+#: qtgui/rwmolecule.cpp:272
 msgid "Change Atom Layer"
 msgstr "Змінити шар Atom"
 
-#: qtgui/rwmolecule.cpp:273
+#: qtgui/rwmolecule.cpp:288
 msgid "Add Bond"
 msgstr "Додати зв’язок"
 
-#: qtgui/rwmolecule.cpp:299
+#: qtgui/rwmolecule.cpp:314
 msgid "Removed Bond"
 msgstr "Видалено Бонда"
 
-#: qtgui/rwmolecule.cpp:306
+#: qtgui/rwmolecule.cpp:321
 msgid "Clear Bonds"
 msgstr "Очистити облігації"
 
-#: qtgui/rwmolecule.cpp:320
+#: qtgui/rwmolecule.cpp:335
 msgid "Set Bond Orders"
 msgstr "Встановіть замовлення на облігації"
 
-#: qtgui/rwmolecule.cpp:332
+#: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
 msgstr "Змінити порядок зв’язку"
 
-#: qtgui/rwmolecule.cpp:354
+#: qtgui/rwmolecule.cpp:369
 msgid "Update Bonds"
 msgstr "Оновити облігації"
 
-#: qtgui/rwmolecule.cpp:373
+#: qtgui/rwmolecule.cpp:388
 msgid "Update Bond"
 msgstr "Оновити Бонд"
 
-#: qtgui/rwmolecule.cpp:392
+#: qtgui/rwmolecule.cpp:407
 msgid "Add Unit Cell…"
 msgstr "Додати елементарну комірку…"
 
-#: qtgui/rwmolecule.cpp:404
+#: qtgui/rwmolecule.cpp:419
 msgid "Remove Unit Cell"
 msgstr "Вилучити елементарну комірку"
 
-#: qtgui/rwmolecule.cpp:468
+#: qtgui/rwmolecule.cpp:483
 msgid "Edit Unit Cell"
 msgstr "Редагувати елементарну комірку"
 
-#: qtgui/rwmolecule.cpp:484
+#: qtgui/rwmolecule.cpp:499
 msgid "Wrap Atoms to Cell"
 msgstr "Оберніть атоми в клітинку"
 
-#: qtgui/rwmolecule.cpp:507
+#: qtgui/rwmolecule.cpp:522
 msgid "Scale Cell Volume"
 msgstr "Масштаб об'єму комірки"
 
-#: qtgui/rwmolecule.cpp:527
+#: qtgui/rwmolecule.cpp:542
 msgid "Build Super Cell"
 msgstr "Створіть Super Cell"
 
-#: qtgui/rwmolecule.cpp:551
+#: qtgui/rwmolecule.cpp:566
 msgid "Niggli Reduction"
 msgstr "Скорочення Niggli"
 
-#: qtgui/rwmolecule.cpp:573
+#: qtgui/rwmolecule.cpp:588
 msgid "Rotate to Standard Orientation"
 msgstr "Обернути до стандартної орієнтації"
 
-#: qtgui/rwmolecule.cpp:598 qtplugins/spacegroup/spacegroup.cpp:56
+#: qtgui/rwmolecule.cpp:613 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
 msgstr "Зменшити до примітиву"
 
-#: qtgui/rwmolecule.cpp:623 qtplugins/spacegroup/spacegroup.cpp:62
+#: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:259
 msgid "Conventionalize Cell"
 msgstr "Консультація Клітка"
 
-#: qtgui/rwmolecule.cpp:648 qtplugins/spacegroup/spacegroup.cpp:284
+#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
 msgstr "Симетризуйте клітинку"
 
-#: qtgui/rwmolecule.cpp:667
+#: qtgui/rwmolecule.cpp:682
 msgid "Fill Unit Cell"
 msgstr "Заповнити елементарну комірку"
 
-#: qtgui/rwmolecule.cpp:687
+#: qtgui/rwmolecule.cpp:702
 msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Зменшити клітинку до асиметричної одиниці"
 
@@ -1519,11 +1519,15 @@ msgstr "Зміна позицій атомів"
 msgid "Change Atom Position"
 msgstr "Змінити положення атома"
 
-#: qtgui/rwmolecule.h:228
+#: qtgui/rwmolecule.h:242
 msgid "Change Atom Label"
 msgstr "Змінити мітку Atom"
 
-#: qtgui/rwmolecule.h:234
+#: qtgui/rwmolecule.h:260
+msgid "Change Bond Label"
+msgstr ""
+
+#: qtgui/rwmolecule.h:266
 msgid "Change Selection"
 msgstr "Змінити вибір"
 
@@ -1568,6 +1572,36 @@ msgstr "&Експорт"
 msgid "ThreeDMol"
 msgstr "ТриDMol"
 
+#: qtplugins/alchemy/alchemy.cpp:25
+msgid "Change Elements…"
+msgstr ""
+
+#: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
+#: qtplugins/centroid/centroid.cpp:44
+#: qtplugins/coordinateeditor/coordinateeditor.cpp:34
+#: qtplugins/customelements/customelements.cpp:42
+#: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
+#: qtplugins/insertfragment/insertfragment.cpp:60
+#: qtplugins/lineformatinput/lineformatinput.cpp:61
+msgid "&Build"
+msgstr "&Збирання"
+
+#. i18n: file: qtplugins/editor/editortoolwidget.ui:23
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
+#. i18n: ectx: property (text), widget (QLabel, elementLabel)
+#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1926
+msgid "Element:"
+msgstr "Елемент:"
+
+#: qtplugins/alchemy/alchemy.h:31
+msgid "Alchemy"
+msgstr ""
+
+#: qtplugins/alchemy/alchemy.h:35
+msgid "Change elements of atoms."
+msgstr ""
+
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
 msgstr "Вирівняти"
@@ -1590,9 +1624,9 @@ msgstr ""
 "Права кнопка миші: \tскасувати вирівнювання.\n"
 "Подвійне клацання: \tцентрувати атом за початком координат."
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:281
+#. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:79:1697
+#: qtplugins/aligntool/aligntool.cpp:79:1691
 msgid "Axis:"
 msgstr "Вісь:"
 
@@ -1719,8 +1753,8 @@ msgstr "Файли PQR (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:885 qtplugins/openbabel/openbabel.cpp:927
 #: qtplugins/openbabel/openbabel.cpp:959
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/plugindownloader/downloaderwidget.cpp:100
-#: qtplugins/plugindownloader/downloaderwidget.cpp:106
+#: qtplugins/plugindownloader/downloaderwidget.cpp:99
+#: qtplugins/plugindownloader/downloaderwidget.cpp:105
 #: qtplugins/propertytables/propertyview.cpp:260
 #: qtplugins/propertytables/propertyview.cpp:293
 #: qtplugins/quantuminput/quantuminput.cpp:104
@@ -1865,7 +1899,7 @@ msgstr "cividis"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1794
+#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1797
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Спектральний"
@@ -1875,7 +1909,7 @@ msgstr "Спектральний"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1791
+#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1794
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Прохолодний"
@@ -1885,7 +1919,7 @@ msgstr "Прохолодний"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1785
+#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1788
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Баланс"
@@ -1895,7 +1929,7 @@ msgstr "Баланс"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1788
+#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1791
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Синьо-темно-червоний"
@@ -1907,7 +1941,7 @@ msgstr "Синьо-темно-червоний"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1797
+#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1800
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Турбо"
@@ -1941,7 +1975,7 @@ msgstr "Виберіть Colormap"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1782
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1785
 msgid "Colormap:"
 msgstr "Кольорова карта:"
 
@@ -2062,17 +2096,8 @@ msgstr "Налаштувати приєднання…"
 msgid "Bond Selected Atoms"
 msgstr "З’єднайте вибрані атоми"
 
-#: qtplugins/bonding/bonding.cpp:61 qtplugins/centroid/centroid.cpp:44
-#: qtplugins/coordinateeditor/coordinateeditor.cpp:34
-#: qtplugins/customelements/customelements.cpp:42
-#: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
-#: qtplugins/insertfragment/insertfragment.cpp:60
-#: qtplugins/lineformatinput/lineformatinput.cpp:61
-msgid "&Build"
-msgstr "&Збирання"
-
 #: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:535
+#: qtplugins/propertytables/propertymodel.cpp:543
 msgid "Bond"
 msgstr "Зв’язок"
 
@@ -2221,8 +2246,8 @@ msgstr "Редагувати карту непрозорості кольорі�
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
 #: qtplugins/configurepython/configurepython.cpp:99
-#: qtplugins/forcefield/forcefield.cpp:157
-#: qtplugins/forcefield/forcefield.cpp:159
+#: qtplugins/forcefield/forcefield.cpp:152
+#: qtplugins/forcefield/forcefield.cpp:154
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2319,7 +2344,7 @@ msgstr "Налаштувати середовища Python."
 #: qtplugins/templatetool/templatetoolwidget.cpp:350
 #: qtplugins/templatetool/templatetoolwidget.cpp:358
 #: qtplugins/templatetool/templatetoolwidget.cpp:366
-#: qtplugins/templatetool/templatetoolwidget.cpp:429:2067
+#: qtplugins/templatetool/templatetoolwidget.cpp:429:2070
 msgid "Other…"
 msgstr "інше…"
 
@@ -2448,7 +2473,7 @@ msgstr "Редагувати атомні координати"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:181:1824 rc.cpp:1854
+#: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1827
 msgid "Custom"
 msgstr "Нетипова"
 
@@ -2890,7 +2915,7 @@ msgstr "Інструмент редактора"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1803 rc.cpp:1821
+#: qtplugins/editor/editortoolwidget.cpp:208:1806 rc.cpp:1824
 msgid "Automatic"
 msgstr "Автоматично"
 
@@ -2994,7 +3019,7 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Візуалізуйте силове поле для атомів молекули."
 
 #: qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:346 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:341 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Оптимізації геометрії"
@@ -3015,13 +3040,13 @@ msgstr "Заморозити вибрані атоми"
 msgid "Unfreeze Selected Atoms"
 msgstr "Розморозити вибрані атоми"
 
-#: qtplugins/forcefield/forcefield.cpp:159
+#: qtplugins/forcefield/forcefield.cpp:154
 msgid "&Calculate"
 msgstr "&Обчислити"
 
-#: qtplugins/forcefield/forcefield.cpp:252
-#: qtplugins/forcefield/forcefield.cpp:382
-#: qtplugins/forcefield/forcefield.cpp:428
+#: qtplugins/forcefield/forcefield.cpp:247
+#: qtplugins/forcefield/forcefield.cpp:377
+#: qtplugins/forcefield/forcefield.cpp:423
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:912
 #: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
@@ -3029,16 +3054,16 @@ msgstr "&Обчислити"
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:253
+#: qtplugins/forcefield/forcefield.cpp:248
 msgid "No atoms provided for optimization"
 msgstr "Немає атомів для оптимізації"
 
-#: qtplugins/forcefield/forcefield.cpp:381
+#: qtplugins/forcefield/forcefield.cpp:376
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Енергія = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:427
+#: qtplugins/forcefield/forcefield.cpp:422
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Норма сили = %L2"
@@ -3069,17 +3094,17 @@ msgstr "Узагальнене силове поле Амбра"
 msgid "Merck Molecular Force Field 94"
 msgstr "Молекулярне силове поле Merck 94"
 
-#: qtplugins/forcefield/scriptenergy.cpp:249
+#: qtplugins/forcefield/scriptenergy.cpp:251
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
 msgstr "Помилка отримання метаданих для енергетичного сценарію: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:259
+#: qtplugins/forcefield/scriptenergy.cpp:261
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
 msgstr "Помилка аналізу метаданих для енергетичного сценарію: %1"
 
-#: qtplugins/forcefield/scriptenergy.cpp:267
+#: qtplugins/forcefield/scriptenergy.cpp:269
 #, qt-format
 msgid ""
 "Error parsing metadata for energy script: %1\n"
@@ -3294,12 +3319,12 @@ msgstr "Вставити Фрагмент"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Вставте молекулярні фрагменти для створення більших молекул."
 
-#: qtplugins/label/label.cpp:151 qtplugins/meshes/meshes.cpp:177
+#: qtplugins/label/label.cpp:160 qtplugins/meshes/meshes.cpp:177
 #: qtplugins/meshes/meshes.cpp:183
 msgid "Color:"
 msgstr "Колір:"
 
-#: qtplugins/label/label.cpp:161
+#: qtplugins/label/label.cpp:170
 msgid "Distance from center:"
 msgstr "Відстань від центру:"
 
@@ -3311,55 +3336,64 @@ msgstr "Відстань від центру:"
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:171 qtplugins/label/label.cpp:200:1373
+#: qtplugins/label/label.cpp:180 qtplugins/label/label.cpp:210
+#: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1779
 msgid "None"
 msgstr "Немає"
 
-#: qtplugins/label/label.cpp:172
+#: qtplugins/label/label.cpp:181 qtplugins/label/label.cpp:212
 msgid "Index"
 msgstr "Індекс"
 
-#: qtplugins/label/label.cpp:173
+#: qtplugins/label/label.cpp:182
 msgid "Unique ID"
 msgstr "Унікальний ідентифікатор"
 
-#: qtplugins/label/label.cpp:174 qtplugins/propertytables/propertymodel.cpp:495
+#: qtplugins/label/label.cpp:183 qtplugins/propertytables/propertymodel.cpp:499
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
 msgstr "Елемент"
 
-#: qtplugins/label/label.cpp:175
+#: qtplugins/label/label.cpp:184
 msgid "Element & Number"
 msgstr "Елемент і число"
 
-#: qtplugins/label/label.cpp:177
+#: qtplugins/label/label.cpp:186
 msgid "Element & ID"
 msgstr "Елемент і ID"
 
-#: qtplugins/label/label.cpp:179
+#: qtplugins/label/label.cpp:188
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr "Часткова зарядка"
 
-#: qtplugins/label/label.cpp:194
+#: qtplugins/label/label.cpp:203
 msgid "Atom Label:"
 msgstr "Мітка Atom:"
 
-#: qtplugins/label/label.cpp:205 qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/label/label.cpp:211
+msgid "Length"
+msgstr ""
+
+#: qtplugins/label/label.cpp:217
+msgid "Bond Label:"
+msgstr ""
+
+#: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:209
+#: qtplugins/label/label.cpp:232
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:542
+#: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Name"
 msgstr "Ім'я"
 
-#: qtplugins/label/label.cpp:213
+#: qtplugins/label/label.cpp:236
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:225
+#: qtplugins/label/label.cpp:248
 msgid "Residue Label:"
 msgstr "Мітка залишків:"
 
@@ -3545,7 +3579,7 @@ msgid "unknown molecule"
 msgstr "невідома молекула"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
-#: qtplugins/propertytables/propertymodel.cpp:603
+#: qtplugins/propertytables/propertymodel.cpp:611
 msgid "Property"
 msgstr "Власність"
 
@@ -4129,7 +4163,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1857
+#: qtplugins/playertool/playertool.cpp:118:1860
 msgid "Frame:"
 msgstr "Кадр:"
 
@@ -4146,7 +4180,7 @@ msgstr "Динамічне склеювання?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1863
+#: qtplugins/playertool/playertool.cpp:144:1866
 msgid "Record Movie…"
 msgstr "Записати фільм…"
 
@@ -4274,15 +4308,15 @@ msgstr "Версія"
 msgid "Description"
 msgstr "опис"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:101
+#: qtplugins/plugindownloader/downloaderwidget.cpp:100
 msgid "Error downloading plugin data."
 msgstr "Помилка завантаження даних плагіна."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:106
+#: qtplugins/plugindownloader/downloaderwidget.cpp:105
 msgid "Error parsing plugin data."
 msgstr "Помилка аналізу даних плагіна."
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:307
+#: qtplugins/plugindownloader/downloaderwidget.cpp:306
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
@@ -4290,16 +4324,16 @@ msgstr ""
 "Цей плагін вимагає встановлення певних пакетів.\n"
 "Ви хочете їх встановити?"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:315
+#: qtplugins/plugindownloader/downloaderwidget.cpp:314
 msgid "Always"
 msgstr "Завжди"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:316
+#: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Never"
 msgstr "Ніколи"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:359
-#: qtplugins/plugindownloader/downloaderwidget.cpp:369
+#: qtplugins/plugindownloader/downloaderwidget.cpp:358
+#: qtplugins/plugindownloader/downloaderwidget.cpp:368
 #, qt-format
 msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
@@ -4307,26 +4341,26 @@ msgctxt ""
 msgid "Failed to download from %1: status code %2, %3\n"
 msgstr "Не вдалося завантажити з %1: код стану %2, %3\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:401
+#: qtplugins/plugindownloader/downloaderwidget.cpp:400
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Завантаження %1 до %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:414
+#: qtplugins/plugindownloader/downloaderwidget.cpp:413
 #, qt-format
 msgid "Extracting %1 to %2\n"
 msgstr "Видобування %1 до %2\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:417
+#: qtplugins/plugindownloader/downloaderwidget.cpp:416
 #, qt-format
 msgid "Finished %1 files\n"
 msgstr "Завершено %1 файлів\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:421
+#: qtplugins/plugindownloader/downloaderwidget.cpp:420
 msgid "Extraction successful\n"
 msgstr "Видобуток успішний\n"
 
-#: qtplugins/plugindownloader/downloaderwidget.cpp:497
+#: qtplugins/plugindownloader/downloaderwidget.cpp:496
 #, qt-format
 msgid "Error while extracting: %1"
 msgstr "Помилка під час видобування: %1"
@@ -4382,153 +4416,158 @@ msgstr "POV Ray"
 msgid "Render the scene using POV-Ray."
 msgstr "Візуалізуйте сцену за допомогою POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:497
+#: qtplugins/propertytables/propertymodel.cpp:501
 msgid "Valence"
 msgstr "Валентність"
 
-#: qtplugins/propertytables/propertymodel.cpp:499
+#: qtplugins/propertytables/propertymodel.cpp:503
 msgid "Formal Charge"
 msgstr "Офіційне звинувачення"
 
-#: qtplugins/propertytables/propertymodel.cpp:502
+#: qtplugins/propertytables/propertymodel.cpp:506
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 Часткова зарядка"
 
-#: qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/propertytables/propertymodel.cpp:511
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:509
+#: qtplugins/propertytables/propertymodel.cpp:513
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:511
+#: qtplugins/propertytables/propertymodel.cpp:515
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:513
-#: qtplugins/propertytables/propertymodel.cpp:552
+#: qtplugins/propertytables/propertymodel.cpp:517
+#: qtplugins/propertytables/propertymodel.cpp:537
+msgid "Label"
+msgstr ""
+
+#: qtplugins/propertytables/propertymodel.cpp:519
+#: qtplugins/propertytables/propertymodel.cpp:560
 msgid "Color"
 msgstr "колір"
 
-#: qtplugins/propertytables/propertymodel.cpp:516
+#: qtplugins/propertytables/propertymodel.cpp:522
 msgid "Atom"
 msgstr "Атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:523
-#: qtplugins/propertytables/propertymodel.cpp:562
-#: qtplugins/propertytables/propertymodel.cpp:579
+#: qtplugins/propertytables/propertymodel.cpp:529
+#: qtplugins/propertytables/propertymodel.cpp:570
+#: qtplugins/propertytables/propertymodel.cpp:587
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
 msgstr "Тип"
 
-#: qtplugins/propertytables/propertymodel.cpp:525
+#: qtplugins/propertytables/propertymodel.cpp:531
 msgid "Start Atom"
 msgstr "Початковий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:527
+#: qtplugins/propertytables/propertymodel.cpp:533
 msgid "End Atom"
 msgstr "Кінцевий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:529
+#: qtplugins/propertytables/propertymodel.cpp:535
 msgid "Bond Order"
 msgstr "Порядок облігацій"
 
-#: qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/propertytables/propertymodel.cpp:539
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Довжина (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:546
+#: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Chain"
 msgstr "ланцюг"
 
-#: qtplugins/propertytables/propertymodel.cpp:548
+#: qtplugins/propertytables/propertymodel.cpp:556
 msgid "Secondary Structure"
 msgstr "Вторинна структура"
 
-#: qtplugins/propertytables/propertymodel.cpp:550
+#: qtplugins/propertytables/propertymodel.cpp:558
 msgid "Heterogen"
 msgstr "Гетероген"
 
-#: qtplugins/propertytables/propertymodel.cpp:564
-#: qtplugins/propertytables/propertymodel.cpp:581
+#: qtplugins/propertytables/propertymodel.cpp:572
+#: qtplugins/propertytables/propertymodel.cpp:589
 msgid "Atom 1"
 msgstr "атом 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:566
+#: qtplugins/propertytables/propertymodel.cpp:574
 msgid "Vertex"
 msgstr "Вершина"
 
-#: qtplugins/propertytables/propertymodel.cpp:568
-#: qtplugins/propertytables/propertymodel.cpp:585
+#: qtplugins/propertytables/propertymodel.cpp:576
+#: qtplugins/propertytables/propertymodel.cpp:593
 msgid "Atom 3"
 msgstr "атом 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:570
-#: qtplugins/propertytables/propertymodel.cpp:589
+#: qtplugins/propertytables/propertymodel.cpp:578
+#: qtplugins/propertytables/propertymodel.cpp:597
 msgid "Angle (°)"
 msgstr "Кут (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:583
+#: qtplugins/propertytables/propertymodel.cpp:591
 msgid "Atom 2"
 msgstr "атом 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:587
+#: qtplugins/propertytables/propertymodel.cpp:595
 msgid "Atom 4"
 msgstr "атом 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:600
+#: qtplugins/propertytables/propertymodel.cpp:608
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:603
+#: qtplugins/propertytables/propertymodel.cpp:611
 msgid "Energy (kcal/mol)"
 msgstr "Енергія (ккал/моль)"
 
-#: qtplugins/propertytables/propertymodel.cpp:791
+#: qtplugins/propertytables/propertymodel.cpp:807
 msgid "Adjust Fragment"
 msgstr "Налаштувати фрагмент"
 
-#: qtplugins/propertytables/propertymodel.cpp:917
+#: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:919
+#: qtplugins/propertytables/propertymodel.cpp:935
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Вигин"
 
-#: qtplugins/propertytables/propertymodel.cpp:921
+#: qtplugins/propertytables/propertymodel.cpp:937
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:923
+#: qtplugins/propertytables/propertymodel.cpp:939
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β Аркуш"
 
-#: qtplugins/propertytables/propertymodel.cpp:925
+#: qtplugins/propertytables/propertymodel.cpp:941
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:927
+#: qtplugins/propertytables/propertymodel.cpp:943
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β Міст"
 
-#: qtplugins/propertytables/propertymodel.cpp:929
+#: qtplugins/propertytables/propertymodel.cpp:945
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "поворот"
 
-#: qtplugins/propertytables/propertymodel.cpp:931
+#: qtplugins/propertytables/propertymodel.cpp:947
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Котушка"
@@ -4763,7 +4802,7 @@ msgstr "Виберіть Залишок"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1896
+#: qtplugins/select/select.h:30:1899
 msgid "Select"
 msgstr "Виберіть"
 
@@ -4815,7 +4854,7 @@ msgstr "Сприйняти Космічну Групу…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1881
+#: qtplugins/spacegroup/spacegroup.cpp:68:1884
 msgid "Symmetrize"
 msgstr "Симетризувати"
 
@@ -4942,9 +4981,9 @@ msgstr "Особливості просторової групи для крис
 msgid "Plot Spectra…"
 msgstr "Ділянка спектрів…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:75
+#. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1655
+#: qtplugins/spectra/spectra.h:36:1646
 msgid "Spectra"
 msgstr "спектри"
 
@@ -4952,96 +4991,102 @@ msgstr "спектри"
 msgid "Display spectra plots."
 msgstr "Відображення графіків спектрів."
 
-#: qtplugins/spectra/spectradialog.cpp:200
+#: qtplugins/spectra/spectradialog.cpp:436
 msgid "Infrared"
 msgstr "Інфрачервоний"
 
-#: qtplugins/spectra/spectradialog.cpp:204
+#: qtplugins/spectra/spectradialog.cpp:440
 msgid "Raman"
 msgstr "Раман"
 
-#: qtplugins/spectra/spectradialog.cpp:207
+#: qtplugins/spectra/spectradialog.cpp:443
 msgid "NMR"
 msgstr "ЯМР"
 
-#: qtplugins/spectra/spectradialog.cpp:210
+#: qtplugins/spectra/spectradialog.cpp:446
 msgid "Electronic"
 msgstr "електронні"
 
-#: qtplugins/spectra/spectradialog.cpp:214
+#: qtplugins/spectra/spectradialog.cpp:450
 msgid "Circular Dichroism"
 msgstr "Круговий дихроїзм"
 
-#: qtplugins/spectra/spectradialog.cpp:218
-#: qtplugins/spectra/spectradialog.cpp:409
+#: qtplugins/spectra/spectradialog.cpp:454
+#: qtplugins/spectra/spectradialog.cpp:653
 msgid "Density of States"
 msgstr "Щільність станів"
 
-#: qtplugins/spectra/spectradialog.cpp:255
+#: qtplugins/spectra/spectradialog.cpp:496
 msgid "Select Background Color"
 msgstr "Вибір кольору тла"
 
-#: qtplugins/spectra/spectradialog.cpp:268
+#: qtplugins/spectra/spectradialog.cpp:509
 msgid "Select Foreground Color"
 msgstr "Вибір кольору тексту"
 
-#: qtplugins/spectra/spectradialog.cpp:281
+#: qtplugins/spectra/spectradialog.cpp:522
 msgid "Select Calculated Spectra Color"
 msgstr "Вибір кольору обчислених спектрів"
 
-#: qtplugins/spectra/spectradialog.cpp:293
+#: qtplugins/spectra/spectradialog.cpp:534
 msgid "Select Imported Spectra Color"
 msgstr "Вибір кольору імпортованих спектрів"
 
-#: qtplugins/spectra/spectradialog.cpp:341
+#: qtplugins/spectra/spectradialog.cpp:580
+msgid "Wavelength (nm)"
+msgstr ""
+
+#: qtplugins/spectra/spectradialog.cpp:586
 msgid "Vibrational Spectra"
 msgstr "Коливальні спектри"
 
-#: qtplugins/spectra/spectradialog.cpp:342
-#: qtplugins/spectra/spectradialog.cpp:356
+#: qtplugins/spectra/spectradialog.cpp:587
+#: qtplugins/spectra/spectradialog.cpp:601
 msgid "Wavenumbers (cm⁻¹)"
 msgstr "Хвильові числа (см⁻¹)"
 
-#: qtplugins/spectra/spectradialog.cpp:343
+#: qtplugins/spectra/spectradialog.cpp:588
 msgid "Transmission"
 msgstr "Спосіб передавання"
 
-#: qtplugins/spectra/spectradialog.cpp:355
+#: qtplugins/spectra/spectradialog.cpp:600
 msgid "Raman Spectra"
 msgstr "Раманівські спектри"
 
-#: qtplugins/spectra/spectradialog.cpp:357
-#: qtplugins/spectra/spectradialog.cpp:370
-#: qtplugins/spectra/spectradialog.cpp:383
-#: qtplugins/spectra/spectradialog.cpp:398
-#: qtplugins/spectra/spectradialog.cpp:411
+#: qtplugins/spectra/spectradialog.cpp:602
+#: qtplugins/spectra/spectradialog.cpp:615
+#: qtplugins/spectra/spectradialog.cpp:629
+#: qtplugins/spectra/spectradialog.cpp:642
 msgid "Intensity"
 msgstr "Інтенсивність"
 
-#: qtplugins/spectra/spectradialog.cpp:368
+#: qtplugins/spectra/spectradialog.cpp:613
 msgid "NMR Spectra"
 msgstr "Спектри ЯМР"
 
-#: qtplugins/spectra/spectradialog.cpp:369
+#: qtplugins/spectra/spectradialog.cpp:614
 msgid "Chemical Shift (ppm)"
 msgstr "Хімічний зсув (ppm)"
 
-#: qtplugins/spectra/spectradialog.cpp:381
+#: qtplugins/spectra/spectradialog.cpp:627
 msgid "Electronic Spectra"
 msgstr "Електронні спектри"
 
-#: qtplugins/spectra/spectradialog.cpp:382
-#: qtplugins/spectra/spectradialog.cpp:410
-msgid "eV"
-msgstr "еВ"
+#: qtplugins/spectra/spectradialog.cpp:628
+#: qtplugins/spectra/spectradialog.cpp:641
+#: qtplugins/spectra/spectradialog.cpp:654
+msgid "Energy (eV)"
+msgstr "Енергія (еВ)"
 
-#: qtplugins/spectra/spectradialog.cpp:396
+#: qtplugins/spectra/spectradialog.cpp:640
 msgid "Circular Dichroism Spectra"
 msgstr "Спектри кругового дихроїзму"
 
-#: qtplugins/spectra/spectradialog.cpp:397
-msgid "eV)"
-msgstr "еВ)"
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
+#. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
+#: qtplugins/spectra/spectradialog.cpp:655:1544
+msgid "Density"
+msgstr "Щільність"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5178,7 +5223,7 @@ msgstr "Симетрія…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1866
+#: qtplugins/symmetry/symmetry.h:34:1869
 msgid "Symmetry"
 msgstr "Симетрія"
 
@@ -5479,8 +5524,8 @@ msgid ""
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Поставте прапорець, щоб за умовчанням це завдання не "
-"відображалося в графічному інтерфейсі користувача "
-"MoleQueue.</p></body></html>"
+"відображалося в графічному інтерфейсі користувача MoleQueue.</p></body></"
+"html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5789,24 +5834,25 @@ msgstr ""
 "<html><head/><body><p>Специфікація формату. Кожен символ позначає значення, "
 "яке потрібно записати для кожного атома:</p><p><span style=\" font-"
 "weight:600;\">#</span> – індекс атома (1, 2, ..., кількість атомів)<br/"
-"><span style=\" font-weight:600;\">Z</span> – атомний номер (наприклад, \"6\""
-" для вуглецю)<br/><span style=\" font-weight:600;\">G </span> - Атомний "
+"><span style=\" font-weight:600;\">Z</span> – атомний номер (наприклад, "
+"\"6\" для вуглецю)<br/><span style=\" font-weight:600;\">G </span> - Атомний "
 "номер у стилі GAMESS (наприклад, \"6.0\" для вуглецю)<br/><span style=\" "
 "font-weight:600;\">N</span> - Назва елемента (наприклад, \"Вуглець\")<br/"
-"><span style=\" font-weight:600;\">S</span> – символ елемента (наприклад, \"C"
-"\" для вуглецю)<br/><span style=\" font-weight:700;\">L</span> - Мітка атома "
-"(наприклад, \"C2\" для другого атома вуглецю, \"H1\" для першого атома водню)"
-" <br/><span style=\" font-weight:600;\">x</span> - координата положення X<br/"
-"><span style=\" font-weight:600;\">y</span> - координата положення Y<br/"
-"><span style=\" font-weight:600;\">z</span> - координата положення Z<br/"
-"><span style=\" font-weight:600;\">a</span> - 'a' координата решітки (лише "
-"кристали)<br/><span style=\" font-weight:600;\">b</span> - ' b' координата "
-"решітки (лише кристали)<br/><span style=\" font-weight:600;\">c</span> - "
-"координата решітки 'c' (лише кристали)<br/><span style=\" font-weight:600;\""
-">_</span> – літеральний пробіл (\" \"), корисний для вирівнювання<br/><span "
-"style=\" font-weight:600;\">0</span> - Літерал 0 (\"0\"), корисний для "
-"прапорців оптимізації<br/><span style=\" font-weight:600;\">1</span> - "
-"Літерал 1 (\"1\"), корисний для оптимізації прапори<br/></p></body></html>"
+"><span style=\" font-weight:600;\">S</span> – символ елемента (наприклад, "
+"\"C\" для вуглецю)<br/><span style=\" font-weight:700;\">L</span> - Мітка "
+"атома (наприклад, \"C2\" для другого атома вуглецю, \"H1\" для першого атома "
+"водню) <br/><span style=\" font-weight:600;\">x</span> - координата "
+"положення X<br/><span style=\" font-weight:600;\">y</span> - координата "
+"положення Y<br/><span style=\" font-weight:600;\">z</span> - координата "
+"положення Z<br/><span style=\" font-weight:600;\">a</span> - 'a' координата "
+"решітки (лише кристали)<br/><span style=\" font-weight:600;\">b</span> - ' "
+"b' координата решітки (лише кристали)<br/><span style=\" font-weight:600;"
+"\">c</span> - координата решітки 'c' (лише кристали)<br/><span style=\" font-"
+"weight:600;\">_</span> – літеральний пробіл (\" \"), корисний для "
+"вирівнювання<br/><span style=\" font-weight:600;\">0</span> - Літерал 0 "
+"(\"0\"), корисний для прапорців оптимізації<br/><span style=\" font-"
+"weight:600;\">1</span> - Літерал 1 (\"1\"), корисний для оптимізації "
+"прапори<br/></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -5989,8 +6035,8 @@ msgstr "ОТ Т МІНІМІЗЕР"
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "File extension for Open Babel conversion (default - Avogadro::POSCAR):"
 msgstr ""
-"Розширення файлу для перетворення Open Babel (за замовчуванням - "
-"Avogadro::POSCAR):"
+"Розширення файлу для перетворення Open Babel (за замовчуванням - Avogadro::"
+"POSCAR):"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::SupercellDialog)
@@ -6127,13 +6173,6 @@ msgstr "Поточний обсяг:"
 #. i18n: ectx: property (text), widget (QLabel, currentVolume)
 msgid "TextLabel"
 msgstr "Текстова мітка"
-
-#. i18n: file: qtplugins/editor/editortoolwidget.ui:23
-#. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
-#. i18n: ectx: property (text), widget (QLabel, elementLabel)
-msgid "Element:"
-msgstr "Елемент:"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6460,16 +6499,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\"> \n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href= \"http://lammps."
-"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/units."
-"html</span></a></p></body></html>"
+"sandia.gov/doc/units.html\"><span style=\" text-decoration: underline; color:"
+"#0057ae;\">http://lammps.sandia.gov/doc/units.html</span></a></p></body></"
+"html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
@@ -6552,16 +6591,16 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:10pt; font-"
 "weight:400; font-style:normal;\"> \n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><a href= \"http://lammps."
 "sandia.gov/doc/atom_style.html\"><span style=\" text-decoration: underline; "
-"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style."
-"html</span></a></p></body></html>"
+"color:#0057ae;\">http://lammps.sandia.gov/doc/atom_style.html</span></a></"
+"p></body></html>"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:187
 #. i18n: ectx: property (text), widget (QLabel, label_atomstyle)
@@ -7605,11 +7644,6 @@ msgstr "Загальна енергія"
 msgid "Volume"
 msgstr "Обсяг"
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
-#. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-msgid "Density"
-msgstr "Щільність"
-
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
@@ -7636,8 +7670,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>Розширення піку біля основи (у "
-"градусах).</p></body></html>"
+"<html><head/><body><p>Розширення піку біля основи (у градусах).</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -7730,168 +7764,168 @@ msgstr "Застосувати колір"
 msgid "Spectra Visualization"
 msgstr "Візуалізація спектрів"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:38
-#. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
-msgid "&Load data..."
-msgstr "З&авантажити дані…"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:45
-#. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-msgid "Export Data"
-msgstr "Експортувати дані"
-
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
-#. i18n: ectx: property (text), widget (QPushButton, pushButton)
-msgid "&Close"
-msgstr "За&крити"
-
-#. i18n: file: qtplugins/spectra/spectradialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 msgid "Scale Factor:"
 msgstr "Коефіцієнт масштабу:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:108
+#. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "X-Axis Minimum:"
 msgstr "X-Мінімум осі:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:115
+#. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "X-Axis Maximum:"
 msgstr "X-Максимум осі:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:132
+#. i18n: file: qtplugins/spectra/spectradialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "Offset:"
 msgstr "Зсув:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:139
+#. i18n: file: qtplugins/spectra/spectradialog.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Y-Axis Maximum:"
 msgstr "Y-Максимум осі:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:156
+#. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "Y-Axis Minimum:"
 msgstr "Y-Мінімум осі:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:189
+#. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "Peak Width:"
 msgstr "Ширина Піку:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:216
+#. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
 msgid "Peak Threshold:"
 msgstr "Піковий поріг:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:224
+#. i18n: file: qtplugins/spectra/spectradialog.ui:190
+#. i18n: ectx: property (text), widget (QLabel, unitsLabel)
+msgid "Units:"
+msgstr ""
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
 msgid "&Appearance"
 msgstr "&Вигляд"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:233
+#. i18n: file: qtplugins/spectra/spectradialog.ui:214
 #. i18n: ectx: property (text), widget (QCheckBox, cb_import)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:304
+#. i18n: file: qtplugins/spectra/spectradialog.ui:285
 #. i18n: ectx: property (text), widget (QCheckBox, cb_calculate)
 msgid "Show"
 msgstr "Показувати"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:249
+#. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
 msgstr ""
 "Імпорт експериментальних спектрів у форматі значень, відокремлених "
 "табуляторами, для накладання на графік."
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:252
+#. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 msgid "&Import..."
 msgstr "&Імпортувати…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:268
+#. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:320
+#. i18n: file: qtplugins/spectra/spectradialog.ui:301
 #. i18n: ectx: property (text), widget (QPushButton, push_colorForeground)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:349
+#. i18n: file: qtplugins/spectra/spectradialog.ui:330
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
-#. i18n: file: qtplugins/spectra/spectradialog.ui:388
+#. i18n: file: qtplugins/spectra/spectradialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
 msgid "Set Color..."
 msgstr "Встановити колір…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:288
+#. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Imported Spectra:"
 msgstr "Імпортовані спектри:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:336
+#. i18n: file: qtplugins/spectra/spectradialog.ui:317
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
 msgid "&Export..."
 msgstr "&Експортувати…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:362
+#. i18n: file: qtplugins/spectra/spectradialog.ui:343
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Background:"
 msgstr "Тло:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:375
+#. i18n: file: qtplugins/spectra/spectradialog.ui:356
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Calculated Spectra:"
 msgstr "Розраховані спектри:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:395
+#. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Font Size:"
 msgstr "Розмір шрифту:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:406
+#. i18n: file: qtplugins/spectra/spectradialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "10"
 msgstr "10"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:411
+#. i18n: file: qtplugins/spectra/spectradialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "12"
 msgstr "12"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:416
+#. i18n: file: qtplugins/spectra/spectradialog.ui:397
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "14"
 msgstr "14"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:421
+#. i18n: file: qtplugins/spectra/spectradialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "16"
 msgstr "16"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:426
+#. i18n: file: qtplugins/spectra/spectradialog.ui:407
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
 msgid "18"
 msgstr "18"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:437
+#. i18n: file: qtplugins/spectra/spectradialog.ui:418
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgctxt "Size in pixels of the line drawing the spectra"
 msgid "Line Width:"
 msgstr "Ширина Лінії:"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:510
-#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
-msgid "x"
-msgstr "x"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:458
+#. i18n: ectx: property (text), widget (QPushButton, push_exportData)
+msgid "Export Data"
+msgstr "Експортувати дані"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:515
-#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
-msgid "y"
-msgstr "y"
+#. i18n: file: qtplugins/spectra/spectradialog.ui:471
+#. i18n: ectx: property (text), widget (QPushButton, pushButton)
+msgid "&Close"
+msgstr "За&крити"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:529
+#. i18n: file: qtplugins/spectra/spectradialog.ui:484
 #. i18n: ectx: property (text), widget (QPushButton, push_options)
 msgid "&Options…"
 msgstr "&Опції…"
 
-#. i18n: file: qtplugins/spectra/spectradialog.ui:571
+#. i18n: file: qtplugins/spectra/spectradialog.ui:534
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "x"
+msgstr "x"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:539
+#. i18n: ectx: property (text), widget (QTableWidget, dataTable)
+msgid "y"
+msgstr "y"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:572
 #. i18n: ectx: property (toolTip), widget (Avogadro::VTK::ChartWidget, plot)
 msgid ""
 "Controls:\n"
@@ -7905,6 +7939,11 @@ msgstr ""
 "Клацання правою + перетягування: пересування креслення\n"
 "Клацання середньою + перетягування: збільшення ділянки\n"
 "Коліщатко гортання: зміна масштабу ділянки навколо вказівника"
+
+#. i18n: file: qtplugins/spectra/spectradialog.ui:588
+#. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
+msgid "&Load data..."
+msgstr "З&авантажити дані…"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
@@ -8404,16 +8443,16 @@ msgid ""
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
 "<html><head/><body><p>Введіть такі спеціальні k-точки:</p><p>L 0,5 0,5 0,5</"
-"p><p>G 0,0 0,0 0,0</p><p>X 0,5 0,0 0,5</p><p>Тобто , &lt;символ&gt; &lt;x&gt;"
-" &lt;y&gt; &lt;z&gt; де x, y і z є дробові зворотні просторові координати. "
-"Буде намальовано лінії, які з’єднуватимуть ці k-точки на графіку в тому "
-"порядку, у якому ви їх розмістили. Зауважте, що орієнтація вашої комірки "
-"може мати вплив на розташування цих взаємних просторових точок.</p><p>Якщо "
-"просторову групу кристала було сприйнято або встановлено, спеціальні k точки "
-"будуть автоматично заповнені точки високої симетрії примітивної комірки для "
-"цієї просторової групи. Існує кілька просторових груп з різними високими "
-"точками симетрії залежно від решітки (наприклад, якщо a &gt; b або &lt; б) - "
-"що враховується автоматично.</p></body></html>"
+"p><p>G 0,0 0,0 0,0</p><p>X 0,5 0,0 0,5</p><p>Тобто , &lt;символ&gt; &lt;"
+"x&gt; &lt;y&gt; &lt;z&gt; де x, y і z є дробові зворотні просторові "
+"координати. Буде намальовано лінії, які з’єднуватимуть ці k-точки на графіку "
+"в тому порядку, у якому ви їх розмістили. Зауважте, що орієнтація вашої "
+"комірки може мати вплив на розташування цих взаємних просторових точок.</"
+"p><p>Якщо просторову групу кристала було сприйнято або встановлено, "
+"спеціальні k точки будуть автоматично заповнені точки високої симетрії "
+"примітивної комірки для цієї просторової групи. Існує кілька просторових "
+"груп з різними високими точками симетрії залежно від решітки (наприклад, "
+"якщо a &gt; b або &lt; б) - що враховується автоматично.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -8431,8 +8470,8 @@ msgid ""
 msgstr ""
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
 "REC-html40/strict.dtd\"> \n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
-"> \n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+"css\"> \n"
 "p, li { white-space: pre-wrap; } \n"
 "</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
 "size:13pt; font-weight:400; font-style:normal;\"> \n"
@@ -8509,6 +8548,12 @@ msgstr ""
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Ваші електронні листи"
+
+#~ msgid "eV"
+#~ msgstr "еВ"
+
+#~ msgid "eV)"
+#~ msgstr "еВ)"
 
 #~ msgid "Partial Charge"
 #~ msgstr "Частковий заряд"
@@ -8749,9 +8794,6 @@ msgstr "Ваші електронні листи"
 #, fuzzy
 #~ msgid "Filename"
 #~ msgstr "Назва файла:"
-
-#~ msgid "Energy (eV)"
-#~ msgstr "Енергія (еВ)"
 
 #, fuzzy
 #~ msgid "YAeHMOP Band Structure"
