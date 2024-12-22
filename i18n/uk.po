@@ -16,9 +16,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-17 14:00+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-23 16:00+0000\n"
+"Last-Translator: Максим Горпиніч <mgorpinic2005@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
 "Language: uk\n"
@@ -27,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1525,7 +1524,7 @@ msgstr "Змінити мітку Atom"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Змінити етикетку облігацій"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1574,7 +1573,7 @@ msgstr "ТриDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Змінити елементи…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:44
@@ -1596,11 +1595,11 @@ msgstr "Елемент:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Алхімія"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Зміна елементів атомів."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -2518,9 +2517,8 @@ msgstr "Турбомольний формат"
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
 #: qtplugins/propertytables/propertyview.cpp:300:277
-#, fuzzy
 msgid "Copy"
-msgstr "Копіювати все"
+msgstr "Копіювати"
 
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2541,9 +2539,8 @@ msgstr "Вирізати"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
 #: qtplugins/copypaste/copypaste.cpp:34:286
-#, fuzzy
 msgid "Clear"
-msgstr "Вилучити все"
+msgstr "Очистити"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -3373,11 +3370,11 @@ msgstr "Мітка Atom:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "Довжина"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
-msgstr ""
+msgstr "Мітка облігації:"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
@@ -4445,7 +4442,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "Мітка"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
@@ -5034,7 +5031,7 @@ msgstr "Вибір кольору імпортованих спектрів"
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "Довжина хвилі (нм)"
 
 #: qtplugins/spectra/spectradialog.cpp:586
 msgid "Vibrational Spectra"
@@ -7807,7 +7804,7 @@ msgstr "Піковий поріг:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "одиниці:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
