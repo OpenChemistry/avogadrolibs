@@ -329,8 +329,8 @@ void SpectraDialog::changeSpectra()
       case 5: // 11B
         m_ui->xAxisMinimum->setValue(settings.value("xmin", 100.0).toDouble());
         m_ui->xAxisMaximum->setValue(settings.value("xmax", -120.0).toDouble());
-        // TODO: offset
-        m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+        m_ui->offsetSpinBox->setValue(
+          settings.value("offset", 109.774).toDouble());
         break;
       case 6: // 13C
         m_ui->xAxisMinimum->setValue(settings.value("xmin", 200.0).toDouble());
@@ -347,8 +347,8 @@ void SpectraDialog::changeSpectra()
       case 8: // 17O
         m_ui->xAxisMinimum->setValue(settings.value("xmin", 1600.0).toDouble());
         m_ui->xAxisMaximum->setValue(settings.value("xmax", -50.0).toDouble());
-        // TODO: offset
-        m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+        m_ui->offsetSpinBox->setValue(
+          settings.value("offset", 347.782).toDouble());
         break;
       case 9: // 19F
         m_ui->xAxisMinimum->setValue(settings.value("xmin", 60.0).toDouble());
@@ -365,8 +365,8 @@ void SpectraDialog::changeSpectra()
       case 15: // 31P
         m_ui->xAxisMinimum->setValue(settings.value("xmin", 250.0).toDouble());
         m_ui->xAxisMaximum->setValue(settings.value("xmax", -250.0).toDouble());
-        // TODO: offset
-        m_ui->offsetSpinBox->setValue(settings.value("offset", 0.0).toDouble());
+        m_ui->offsetSpinBox->setValue(
+          settings.value("offset", 392.841).toDouble());
         break;
       default:
         m_ui->xAxisMinimum->setValue(settings.value("xmax", 100.0).toDouble());
