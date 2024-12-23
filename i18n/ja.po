@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-22 15:33+0000\n"
+"PO-Revision-Date: 2024-12-23 16:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1534,8 +1534,9 @@ msgid "Element:"
 msgstr "元素:"
 
 #: qtplugins/alchemy/alchemy.h:31
+#, fuzzy
 msgid "Alchemy"
-msgstr ""
+msgstr "Alchemy"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
@@ -3345,7 +3346,7 @@ msgstr "原子のラベル:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "長さ"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
@@ -4419,7 +4420,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "ラベル"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
@@ -5019,7 +5020,7 @@ msgstr "インポートされたスペクトルの色を選択"
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "波長 (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:586
 msgid "Vibrational Spectra"
@@ -7771,7 +7772,7 @@ msgstr "ピークの閾値:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "単位:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
