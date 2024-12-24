@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
+"PO-Revision-Date: 2024-12-24 01:16+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/oc/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -7853,7 +7853,7 @@ msgstr "Poliça :"
 #, fuzzy
 #| msgid "10e-"
 msgid "10"
-msgstr "10e-"
+msgstr "10"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:392
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)

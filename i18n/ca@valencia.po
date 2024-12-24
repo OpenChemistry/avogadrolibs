@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-05 11:00+0000\n"
+"PO-Revision-Date: 2024-12-24 01:16+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1755,7 +1755,7 @@ msgstr "Carrega parcial"
 #: qtplugins/applycolors/applycolors.cpp:82
 #, fuzzy
 msgid "By Secondary Structure"
-msgstr "Representa l'estructura secundària"
+msgstr "l'estructura secundària"
 
 #: qtplugins/applycolors/applycolors.cpp:87
 #, fuzzy
@@ -4482,7 +4482,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:556
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Estrcutura"
+msgstr "Estrcutura Secundària"
 
 #: qtplugins/propertytables/propertymodel.cpp:558
 msgid "Heterogen"

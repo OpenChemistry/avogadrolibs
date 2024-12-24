@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
+"PO-Revision-Date: 2024-12-24 01:16+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4907,10 +4907,8 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "استيراد الأطياف"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -4953,10 +4951,8 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:496
-#, fuzzy
-#| msgid "Select Foreground Color"
 msgid "Select Background Color"
-msgstr "حدد اللون الأمامي"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:509
 msgid "Select Foreground Color"
@@ -7907,7 +7903,7 @@ msgstr ""
 #, fuzzy
 #| msgid " ("
 msgid " "
-msgstr " ("
+msgstr " "
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:348
 #. i18n: ectx: property (text), widget (QLabel, label_6)
