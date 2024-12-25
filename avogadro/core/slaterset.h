@@ -116,7 +116,7 @@ public:
   /**
    * @return The number of molecular orbitals in the BasisSet.
    */
-  unsigned int molecularOrbitalCount(ElectronType type = Paired) override;
+  unsigned int molecularOrbitalCount(ElectronType type = Paired) const override;
 
   /**
    * @return True of the basis set is valid, false otherwise.

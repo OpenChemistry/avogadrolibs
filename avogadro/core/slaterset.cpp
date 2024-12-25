@@ -61,14 +61,12 @@ bool SlaterSet::addDensityMatrix(const Eigen::MatrixXd& d)
   return true;
 }
 
-unsigned int SlaterSet::molecularOrbitalCount(ElectronType)
+unsigned int SlaterSet::molecularOrbitalCount(ElectronType) const
 {
   return static_cast<unsigned int>(m_overlap.cols());
 }
 
-void SlaterSet::outputAll()
-{
-}
+void SlaterSet::outputAll() {}
 
 void SlaterSet::initCalculation()
 {
@@ -133,7 +131,7 @@ void SlaterSet::initCalculation()
     }
   }
   // Convert the exponents into Angstroms
-  for (double & m_zeta : m_zetas)
+  for (double& m_zeta : m_zetas)
     m_zeta = m_zeta / BOHR_TO_ANGSTROM_D;
 
   m_initialized = true;

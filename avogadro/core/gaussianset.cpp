@@ -154,24 +154,6 @@ bool GaussianSet::setActiveSetStep(int index)
   return true;
 }
 
-void GaussianSet::setMolecularOrbitalEnergy(const vector<double>& energies,
-                                            ElectronType type)
-{
-  if (type == Beta)
-    m_moEnergy[1] = energies;
-  else
-    m_moEnergy[0] = energies;
-}
-
-void GaussianSet::setMolecularOrbitalOccupancy(const vector<unsigned char>& occ,
-                                               ElectronType type)
-{
-  if (type == Beta)
-    m_moOccupancy[1] = occ;
-  else
-    m_moOccupancy[0] = occ;
-}
-
 void GaussianSet::setMolecularOrbitalNumber(const vector<unsigned int>& nums,
                                             ElectronType type)
 {
@@ -195,7 +177,7 @@ bool GaussianSet::setSpinDensityMatrix(const MatrixX& m)
   return true;
 }
 
-unsigned int GaussianSet::molecularOrbitalCount(ElectronType type)
+unsigned int GaussianSet::molecularOrbitalCount(ElectronType type) const
 {
   size_t index(0);
   if (type == Beta)
