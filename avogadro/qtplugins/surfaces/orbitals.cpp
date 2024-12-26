@@ -114,6 +114,7 @@ void Orbitals::loadOrbitals()
   }
 
   m_dialog->fillTable(m_basis);
+  m_dialog->show();
 }
 
 void Orbitals::moleculeChanged(unsigned int changes)
@@ -425,6 +426,8 @@ void Orbitals::renderOrbital(unsigned int row)
   if (row == 0)
     return;
 
+  // table rows are indexed from 1
+  // orbitals are indexed from 0
   unsigned int orbital = row - 1;
 
 #ifndef NDEBUG

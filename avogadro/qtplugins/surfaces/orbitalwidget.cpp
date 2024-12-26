@@ -31,8 +31,8 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
   ui.table->horizontalHeader()->setSectionResizeMode(
     QHeaderView::ResizeToContents);
   ui.table->horizontalHeader()->setStretchLastSection(true);
-  ui.table->setItemDelegateForColumn(OrbitalTableModel::C_Status,
-                                     new ProgressBarDelegate(this));
+  // ui.table->setItemDelegateForColumn(OrbitalTableModel::C_Status,
+  //                                     new ProgressBarDelegate(this));
   ui.table->setItemDelegateForColumn(OrbitalTableModel::C_Symmetry,
                                      new RichTextDelegate(this));
   // TODO: Support orbital symmetry labels
