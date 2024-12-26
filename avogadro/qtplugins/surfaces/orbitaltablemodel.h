@@ -11,6 +11,10 @@
 #include <QSortFilterProxyModel>
 #include <QStyledItemDelegate>
 
+namespace Avogadro::Core {
+class BasisSet;
+}
+
 namespace Avogadro::QtPlugins {
 
 struct calcInfo;
@@ -116,7 +120,7 @@ public:
   QModelIndex HOMO() const;
   QModelIndex LUMO() const;
 
-  bool setOrbital(const Orbital& Orbital);
+  bool setOrbitals(const Core::BasisSet* basis);
   bool clearOrbitals();
 
   // Stages are used for multi-step processes, e.g. cube, posmesh, negmesh, etc
@@ -129,7 +133,7 @@ public:
   void setProgressToZero(int orbital);
 
 private:
-  QList<Orbital> m_orbitals;
+  QList<Orbital*> m_orbitals;
 };
 } // namespace Avogadro::QtPlugins
 

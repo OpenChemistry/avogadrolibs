@@ -3,8 +3,6 @@ if(QT_VERSION EQUAL 6)
 endif()
 
 set(surfaces_srcs
-  gaussiansetconcurrent.cpp
-  slatersetconcurrent.cpp
   surfacedialog.cpp
   surfaces.cpp
 )

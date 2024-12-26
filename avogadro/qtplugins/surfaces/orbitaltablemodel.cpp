@@ -6,6 +6,11 @@
 #include "orbitaltablemodel.h"
 #include "orbitalwidget.h"
 
+#include <avogadro/core/basisset.h>
+#include <avogadro/core/gaussianset.h>
+
+#include <QDebug>
+
 namespace Avogadro::QtPlugins {
 
 OrbitalTableModel::OrbitalTableModel(QWidget* parent)
@@ -39,28 +44,29 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
     }
   }
 
-  const Orbital orb = m_orbitals.at(index.row());
+  const Orbital* orb = m_orbitals.at(index.row());
   QString symbol; // use subscripts
   int subscriptStart;
 
   switch (Column(index.column())) {
     case C_Description:
-      return orb.description;
+      return orb->description;
     case C_Energy:
-      return QString("%L1").arg(orb.energy, 0, 'f', 3);
+      return QString("%L1").arg(orb->energy, 0, 'f', 3);
     case C_Status: {
       // Check for divide by zero
-      if (orb.max == orb.min)
+      if (orb->max == orb->min)
         return 0;
-      int percent = 100 * (orb.current - orb.min) / float(orb.max - orb.min);
+      int percent =
+        100 * (orb->current - orb->min) / float(orb->max - orb->min);
       // Adjust for stages
-      int stages = (orb.totalStages == 0) ? 1 : orb.totalStages;
+      int stages = (orb->totalStages == 0) ? 1 : orb->totalStages;
       percent /= float(stages);
-      percent += (orb.stage - 1) * (100.0 / float(stages));
+      percent += (orb->stage - 1) * (100.0 / float(stages));
       return percent;
     }
     case C_Symmetry:
-      symbol = orb.symmetry;
+      symbol = orb->symmetry;
       if (symbol.length() > 1) {
         subscriptStart = 1;
         if (symbol[0] == '?')
@@ -104,7 +110,7 @@ QVariant OrbitalTableModel::headerData(int section, Qt::Orientation orientation,
 QModelIndex OrbitalTableModel::HOMO() const
 {
   for (int i = 0; i < m_orbitals.size(); i++) {
-    if (m_orbitals.at(i).description == tr("HOMO", "Highest Occupied MO"))
+    if (m_orbitals.at(i)->description == tr("HOMO", "Highest Occupied MO"))
       return index(i, 0);
   }
   return QModelIndex();
@@ -113,54 +119,111 @@ QModelIndex OrbitalTableModel::HOMO() const
 QModelIndex OrbitalTableModel::LUMO() const
 {
   for (int i = 0; i < m_orbitals.size(); i++) {
-    if (m_orbitals.at(i).description == tr("LUMO", "Lowest Unoccupied MO"))
+    if (m_orbitals.at(i)->description == tr("LUMO", "Lowest Unoccupied MO"))
       return index(i, 0);
   }
   return QModelIndex();
 }
 
-bool OrbitalTableModel::setOrbital(const Orbital& orbital)
+// predicate for sorting below
+bool orbitalIndexLessThan(const Orbital* o1, const Orbital* o2)
 {
-  int index = orbital.index;
+  return (o1->index < o2->index);
+}
 
-  if (index + 1 > m_orbitals.size()) {
-    // Construct empty orbital:
-    Orbital orb;
-    orb.energy = 0;
-    orb.index = -1;
-    orb.description = "";
-    orb.symmetry = "";
-    orb.queueEntry = 0;
-    orb.min = 0;
-    orb.max = 0;
-    orb.current = 0;
-    orb.stage = 0;
-    orb.totalStages = 0;
+bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
+{
+  clearOrbitals();
 
-    beginInsertRows(QModelIndex(), m_orbitals.size(), index);
-    for (int i = 0; i <= index - m_orbitals.size() + 1; i++) {
-      m_orbitals.append(orb);
+  // assemble the orbital information
+  // TODO: Alpha / Beta orbitals
+  unsigned int homo = basis->homo();
+  unsigned int lumo = basis->lumo();
+  unsigned int count = homo - 1;
+  bool leqHOMO = true; // orbital <= homo
+
+  // energies and symmetries
+  // TODO: handle both alpha and beta (separate columns?)
+  // TODO: move moEnergies to the BasisSet class
+  QList<QVariant> alphaEnergies;
+  auto* gaussianBasis = dynamic_cast<const Core::GaussianSet*>(basis);
+  if (gaussianBasis != nullptr) {
+    auto moEnergies = gaussianBasis->moEnergy();
+    alphaEnergies.reserve(moEnergies.size());
+    for (double energy : moEnergies) {
+      alphaEnergies.push_back(energy);
     }
-    endInsertRows();
   }
 
-  m_orbitals.replace(index, orbital);
+  // not sure if any import supports symmetry labels yet
+  const auto labels = basis->symmetryLabels();
+  QStringList alphaSymmetries;
+  alphaSymmetries.reserve(labels.size());
+  for (const std::string label : labels) {
+    alphaSymmetries.push_back(QString::fromStdString(label));
+  }
 
+  for (int i = 0; i < basis->molecularOrbitalCount(); i++) {
+    QString num = "";
+    if (i + 1 != homo && i + 1 != lumo) {
+      num = (leqHOMO) ? "-" : "+";
+      num += QString::number(count);
+    }
+
+    QString desc = QString("%1")
+                     // (HOMO|LUMO)(+|-)[0-9]+
+                     .arg((leqHOMO) ? tr("HOMO", "Highest Occupied MO") + num
+                                    : tr("LUMO", "Lowest Unoccupied MO") + num);
+    // qDebug() << desc;
+
+    Orbital* orb = new Orbital;
+    // Get the energy from the molecule property list, if available
+    if (alphaEnergies.size() > i)
+      orb->energy = alphaEnergies[i].toDouble();
+    else
+      orb->energy = 0.0;
+    // symmetries (if available)
+    if (alphaSymmetries.size() > i)
+      orb->symmetry = alphaSymmetries[i];
+    orb->index = i;
+    orb->description = desc;
+    orb->queueEntry = 0;
+    orb->min = 0;
+    orb->max = 0;
+    orb->current = 0;
+
+    m_orbitals.append(orb);
+    if (i + 1 < homo)
+      count--;
+    else if (i + 1 == homo)
+      leqHOMO = false;
+    else if (i + 1 >= lumo)
+      count++;
+  }
+  // sort the orbital list (not sure if this is necessary)
+  qSort(m_orbitals.begin(), m_orbitals.end(), orbitalIndexLessThan);
+
+  // add the rows for all the new orbitals
+  beginInsertRows(QModelIndex(), 0, m_orbitals.size() - 1);
+  endInsertRows();
   return true;
 }
 
 bool OrbitalTableModel::clearOrbitals()
 {
-  beginRemoveRows(QModelIndex(), 0, m_orbitals.size() - 1);
-  m_orbitals.clear();
-  endRemoveRows();
+  if (m_orbitals.size() > 0) {
+    beginRemoveRows(QModelIndex(), 0, m_orbitals.size() - 1);
+    m_orbitals.clear();
+    endRemoveRows();
+  }
+
   return true;
 }
 
 void OrbitalTableModel::setOrbitalProgressRange(int orbital, int min, int max,
                                                 int stage, int totalStages)
 {
-  Orbital* orb = &m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital - 1];
   orb->min = min;
   orb->current = min;
   orb->max = max;
@@ -173,7 +236,7 @@ void OrbitalTableModel::setOrbitalProgressRange(int orbital, int min, int max,
 
 void OrbitalTableModel::incrementStage(int orbital, int newmin, int newmax)
 {
-  Orbital* orb = &m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital - 1];
   orb->stage++;
   orb->min = newmin;
   orb->current = newmin;
@@ -185,7 +248,7 @@ void OrbitalTableModel::incrementStage(int orbital, int newmin, int newmax)
 
 void OrbitalTableModel::setOrbitalProgressValue(int orbital, int currentValue)
 {
-  Orbital* orb = &m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital - 1];
   orb->current = currentValue;
   // Update display
   QModelIndex status = index(orbital - 1, C_Status, QModelIndex());
@@ -194,7 +257,7 @@ void OrbitalTableModel::setOrbitalProgressValue(int orbital, int currentValue)
 
 void OrbitalTableModel::finishProgress(int orbital)
 {
-  Orbital* orb = &m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital - 1];
   orb->stage = 1;
   orb->totalStages = 1;
   orb->min = 0;
@@ -208,7 +271,7 @@ void OrbitalTableModel::finishProgress(int orbital)
 
 void OrbitalTableModel::resetProgress(int orbital)
 {
-  Orbital* orb = &m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital - 1];
   orb->stage = 1;
   orb->totalStages = 1;
   orb->min = 0;
@@ -222,7 +285,7 @@ void OrbitalTableModel::resetProgress(int orbital)
 
 void OrbitalTableModel::setProgressToZero(int orbital)
 {
-  Orbital* orb = &m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital - 1];
   orb->stage = 1;
   orb->totalStages = 1;
   orb->min = 0;

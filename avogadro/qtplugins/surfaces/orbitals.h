@@ -18,7 +18,9 @@ namespace Avogadro {
 
 namespace QtGui {
 class MeshGenerator;
-}
+class GaussianSetConcurrent;
+class SlaterSetConcurrent;
+} // namespace QtGui
 
 namespace Core {
 class BasisSet;
@@ -32,9 +34,6 @@ namespace QtPlugins {
  * @brief The Orbital plugin shows a window with a list of orbitals and
  *  .. renders selected orbitals
  */
-
-class GaussianSetConcurrent;
-class SlaterSetConcurrent;
 class OrbitalSettingsDialog;
 class OrbitalWidget;
 
@@ -147,13 +146,13 @@ private:
   Core::BasisSet* m_basis = nullptr;
 
   QList<calcInfo> m_queue;
+  int m_currentRunningCalculation = -1;
 
-  GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
-  SlaterSetConcurrent* m_slaterConcurrent = nullptr;
+  QtGui::GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
+  QtGui::SlaterSetConcurrent* m_slaterConcurrent = nullptr;
 
   QFutureWatcher<void> m_displayMeshWatcher;
-  QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
-  QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
+  QtGui::MeshGenerator* m_meshGenerator = nullptr;
 
   float m_isoValue = 0.01;
   int m_smoothingPasses = 1;

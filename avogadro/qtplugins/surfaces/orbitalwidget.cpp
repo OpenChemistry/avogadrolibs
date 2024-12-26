@@ -23,23 +23,29 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
 {
   ui.setupUi(this);
 
+  setWindowTitle(tr("Molecular Orbitals"));
+
   m_sortedTableModel->setSourceModel(m_tableModel);
 
   ui.table->setModel(m_sortedTableModel);
   ui.table->horizontalHeader()->setSectionResizeMode(
     QHeaderView::ResizeToContents);
+  ui.table->horizontalHeader()->setStretchLastSection(true);
   ui.table->setItemDelegateForColumn(OrbitalTableModel::C_Status,
                                      new ProgressBarDelegate(this));
   ui.table->setItemDelegateForColumn(OrbitalTableModel::C_Symmetry,
                                      new RichTextDelegate(this));
   // TODO: Support orbital symmetry labels
   ui.table->hideColumn(OrbitalTableModel::C_Symmetry);
+  ui.table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   connect(
     ui.table->selectionModel(),
     SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
     this, SLOT(tableClicked(const QItemSelection&)));
   connect(ui.push_render, SIGNAL(clicked()), this, SLOT(renderClicked()));
+  // TODO: Implement configure dialog
+  ui.push_configure->setVisible(false);
   connect(ui.push_configure, SIGNAL(clicked()), this, SLOT(configureClicked()));
   readSettings();
 }
@@ -96,21 +102,14 @@ void OrbitalWidget::configureClicked()
   */
 }
 
-// predicate for sorting below
-bool orbitalIndexLessThan(const Orbital& o1, const Orbital& o2)
+void OrbitalWidget::fillTable(Core::BasisSet* basis)
 {
-  return (o1.index < o2.index);
-}
-
-void OrbitalWidget::fillTable(QList<Orbital> list)
-{
-  // Sort list by orbital
-  qSort(list.begin(), list.end(), orbitalIndexLessThan);
+  if (basis == nullptr || m_tableModel == nullptr) {
+    return;
+  }
 
   // Populate the model
-  for (int i = 0; i < list.size(); i++) {
-    m_tableModel->setOrbital(list.at(i));
-  }
+  m_tableModel->setOrbitals(basis);
 
   ui.table->horizontalHeader()->sectionResizeMode(
     QHeaderView::ResizeToContents);
@@ -121,7 +120,7 @@ void OrbitalWidget::fillTable(QList<Orbital> list)
   // // Find HOMO and scroll to it
   QModelIndex homo = m_tableModel->HOMO();
   homo = m_sortedTableModel->mapFromSource(homo);
-  qDebug() << "HOMO at: " << homo.row();
+  // qDebug() << "HOMO at: " << homo.row();
   ui.table->scrollTo(homo, QAbstractItemView::PositionAtCenter);
 }
 

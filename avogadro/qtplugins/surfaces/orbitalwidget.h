@@ -11,6 +11,10 @@
 #include "orbitaltablemodel.h"
 #include "ui_orbitalwidget.h"
 
+namespace Avogadro::Core {
+class BasisSet;
+}
+
 namespace Avogadro::QtPlugins {
 
 class OrbitalSettingsDialog;
@@ -51,7 +55,8 @@ public slots:
   void readSettings();
   void writeSettings();
   void reject();
-  void fillTable(QList<Orbital> list);
+
+  void fillTable(Core::BasisSet* basis);
   void setQuality(OrbitalQuality q);
   void selectOrbital(unsigned int orbital);
   void setDefaults(OrbitalWidget::OrbitalQuality quality, double isovalue,
