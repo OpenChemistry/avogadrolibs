@@ -35,7 +35,8 @@ public:
   };
 
   //! Constructor
-  explicit OrbitalWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  explicit OrbitalWidget(QWidget* parent = nullptr,
+                         Qt::WindowFlags f = Qt::Widget);
   //! Deconstructor
   virtual ~OrbitalWidget();
 

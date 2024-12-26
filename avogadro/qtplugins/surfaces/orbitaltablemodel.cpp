@@ -32,15 +32,21 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
       !index.isValid())
     return QVariant();
 
+  // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
+  auto toVariant = [&](auto flags) {
+    return static_cast<Qt::Alignment::Int>(flags);
+  };
+
   if (role == Qt::TextAlignmentRole) {
     switch (Column(index.column())) {
       case C_Energy:
-        return Qt::AlignRight + Qt::AlignVCenter; // numeric alignment
-      case C_Status: // everything else can be centered
+        return toVariant(Qt::AlignRight |
+                         Qt::AlignVCenter); // numeric alignment
+      case C_Status:                        // everything else can be centered
       case C_Description:
       case C_Symmetry:
       default:
-        return Qt::AlignHCenter + Qt::AlignVCenter;
+        return toVariant(Qt::AlignHCenter | Qt::AlignVCenter);
     }
   }
 
@@ -203,7 +209,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       count++;
   }
   // sort the orbital list (not sure if this is necessary)
-  qSort(m_orbitals.begin(), m_orbitals.end(), orbitalIndexLessThan);
+  std::sort(m_orbitals.begin(), m_orbitals.end(), orbitalIndexLessThan);
 
   // add the rows for all the new orbitals
   beginInsertRows(QModelIndex(), 0, m_orbitals.size() - 1);

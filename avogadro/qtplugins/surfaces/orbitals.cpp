@@ -258,7 +258,7 @@ void Orbitals::checkQueue()
   }
 
   QList<int> priorities = hash.keys();
-  qSort(priorities);
+  std::sort(priorities.begin(), priorities.end());
   startCalculation(hash.value(priorities.first()));
 }
 
