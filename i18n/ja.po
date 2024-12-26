@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-24 01:16+0000\n"
+"PO-Revision-Date: 2024-12-25 15:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -5601,7 +5601,7 @@ msgstr "APBSを実行"
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Success!"
-msgstr "成功しました!"
+msgstr "成功しました！"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
@@ -7508,13 +7508,11 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
-#, fuzzy
 msgid "Time"
 msgstr "時間"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
-#, fuzzy
 msgid "Speed"
 msgstr "速さ"
 
@@ -7586,7 +7584,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
 msgid "Number of points:"
 msgstr "点の数:"
 
@@ -7717,9 +7714,8 @@ msgstr "表示"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:230
 #. i18n: ectx: property (toolTip), widget (QPushButton, push_import)
-#, fuzzy
 msgid "Imports a tsv of experimental spectra to overlay on the plot."
-msgstr "実験スペクトルのtsvファイルをインポートしてプロットに重ね描きする。"
+msgstr "実験スペクトルのtsvをインポートしてプロットに重ね描きする。"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
@@ -7946,7 +7942,6 @@ msgstr "分子"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, esLabel)
-#, fuzzy
 msgid "Symmetrically equivalent atoms:"
 msgstr "対称性により等価な原子:"
 
@@ -8071,63 +8066,51 @@ msgstr "6: 八面体"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:192
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
-#| msgid "Linear"
 msgid "1: Linear"
-msgstr "1: 直線"
+msgstr "1: 直線形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:197
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
-#| msgid "Linear"
 msgid "2: Linear"
-msgstr "2: 直線"
+msgstr "2: 直線形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:202
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "3: Trigonal Planar"
 msgstr "3: 平面三角形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:207
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "4: Tetrahedral"
-msgstr "4: 四面体"
+msgstr "4: 四面体形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:212
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "4: Square Planar"
 msgstr "4: 平面四角形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:217
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "5: Trigonal Bipyramidal"
 msgstr "5: 三方両錐形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:222
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "5: Square Pyramidal"
 msgstr "5: 四角錐形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "6: Trigonal Prism"
 msgstr "6: 三角柱形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "7: Pentagonal Bipyramidal"
 msgstr "7: 五方両錐形"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:242
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
-#, fuzzy
 msgid "8: Square Antiprism"
 msgstr "8: 反四角柱形"
 
@@ -8145,34 +8128,26 @@ msgstr "タイプ:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
 msgid "Monodentate"
 msgstr "単座"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:336
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
 msgid "Bidentate"
-msgstr "双座"
+msgstr "二座"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tridentate"
 msgstr "三座"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Tetradentate"
 msgstr "四座"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
-#| msgid "Transition State"
 msgid "Hexadentate"
 msgstr "六座"
 
@@ -8183,7 +8158,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
-#, fuzzy
 msgid "From Clipboard"
 msgstr "クリップボードから"
 
@@ -8274,7 +8248,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:33
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_minY)
-#, fuzzy
 msgid "Min y: "
 msgstr "yの最小値: "
 
@@ -8332,7 +8305,6 @@ msgstr "特殊なk点"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:98
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, spin_maxY)
-#, fuzzy
 msgid "Max y: "
 msgstr "yの最大値: "
 

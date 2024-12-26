@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-16 13:26+0000\n"
-"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
+"PO-Revision-Date: 2024-12-25 15:00+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
 "Language: fi\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-rc\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -994,7 +994,7 @@ msgstr "Oganesson"
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "Selaa..."
+msgstr "Selaa"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1246,7 +1246,7 @@ msgstr ""
 #: qtplugins/vanderwaals/vanderwaals.h:29
 #, fuzzy
 msgid "Van der Waals"
-msgstr "Van der Waals -pallot"
+msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:162 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1327,12 +1327,11 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:196
 #, fuzzy
 msgid "Remove Layer"
-msgstr "Poista vetyjä"
+msgstr "Poista kerros"
 
 #: qtgui/rwlayermanager.cpp:203
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1347,9 +1346,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:263:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Vaihda sidosten järjestystä"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1392,9 +1390,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:272
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Vaihda sidosten järjestystä"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:288
 msgid "Add Bond"
@@ -1412,7 +1409,7 @@ msgstr "Poista sidos"
 #: qtgui/rwmolecule.cpp:335
 #, fuzzy
 msgid "Set Bond Orders"
-msgstr "Sidoskertaluku:"
+msgstr "Sidoskertaluku"
 
 #: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
@@ -1432,9 +1429,8 @@ msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:419
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Täytä yksikkökoppi"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:483
 msgid "Edit Unit Cell"
@@ -1482,19 +1478,16 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr ""
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Vaihda sidosten järjestystä"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Vaihda sidosten järjestystä"
+msgstr ""
 
 #: qtgui/rwmolecule.h:242
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Vaihda sidosten järjestystä"
+msgstr ""
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
@@ -1982,9 +1975,8 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
-#, fuzzy
 msgid "Show hydrogens"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2045,9 +2037,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2078,9 +2069,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
 msgid "Perceive bond orders."
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2311,7 +2301,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Other..."
 msgid "Other…"
-msgstr "Muu..."
+msgstr "Muu…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
@@ -2715,9 +2705,8 @@ msgid "Toggle Unit Cell"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:52
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "Täytä yksikkökoppi"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -2857,7 +2846,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:223
 #, fuzzy
 msgid "Distance:"
-msgstr "Etäisyys"
+msgstr "Etäisyys:"
 
 #: qtplugins/editor/editor.cpp:267
 #, qt-format
@@ -3783,14 +3772,12 @@ msgid "Configure Force Field…"
 msgstr "Aseta voimakenttä"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
 msgid "Conformer Search…"
-msgstr "Atomiominaisuudet..."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
@@ -3851,9 +3838,8 @@ msgid "Cannot optimize geometry with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:466
-#, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3907,9 +3893,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
@@ -3989,7 +3974,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:919
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Poista vetyjä"
+msgstr "Poista vetyjä (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
@@ -4442,7 +4427,7 @@ msgstr "Näytä atomit"
 #: qtplugins/propertytables/propertymodel.cpp:535
 #, fuzzy
 msgid "Bond Order"
-msgstr "Sidoskertaluku:"
+msgstr "Sidoskertaluku"
 
 #: qtplugins/propertytables/propertymodel.cpp:539
 msgctxt "in Angstrom"
@@ -4588,7 +4573,7 @@ msgstr "Ominaisuudet"
 #: qtplugins/propertytables/propertyview.cpp:44
 #, fuzzy
 msgid "Atom Properties"
-msgstr "Atomiominaisuudet..."
+msgstr "Atomiominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:47
 #, fuzzy
@@ -4606,9 +4591,8 @@ msgid "Torsion Properties"
 msgstr "Kiertokulmaominaisuudet..."
 
 #: qtplugins/propertytables/propertyview.cpp:56
-#, fuzzy
 msgid "Conformer Properties"
-msgstr "Atomiominaisuudet..."
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:59
 #, fuzzy
@@ -4839,9 +4823,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
 msgid "New Layer"
-msgstr "Poista vetyjä"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
@@ -4857,7 +4840,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Täytä yksikkökoppi"
+msgstr "Täytä yksikkökoppi…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
@@ -6325,7 +6308,7 @@ msgstr ""
 #| msgid "A:"
 msgctxt "adenine (A)"
 msgid "A"
-msgstr "A:"
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
@@ -6338,7 +6321,7 @@ msgstr ""
 #| msgid "C:"
 msgctxt "cytosine (C)"
 msgid "C"
-msgstr "C:"
+msgstr "C"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
@@ -6374,14 +6357,14 @@ msgstr ""
 #, fuzzy
 #| msgid "A:"
 msgid "A"
-msgstr "A:"
+msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
 #, fuzzy
 #| msgid "B:"
 msgid "B"
-msgstr "B:"
+msgstr "B"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -6395,7 +6378,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Other..."
 msgid "Other"
-msgstr "Muu..."
+msgstr "Muu"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6962,7 +6945,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Origin:"
 msgid "Origin"
-msgstr "Origo:"
+msgstr "Origo"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -7006,9 +6989,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
-#, fuzzy
 msgid "Conformer Search"
-msgstr "Atomiominaisuudet..."
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -7792,7 +7774,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Calculate Energy"
 msgid "Calculated Spectra:"
-msgstr "Laske energia"
+msgstr "Laskettu spektri:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8093,7 +8075,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
 #, fuzzy
 msgid "Coordination:"
-msgstr "Koordinaattityyppi"
+msgstr "Koordinaatio:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
