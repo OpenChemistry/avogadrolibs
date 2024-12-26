@@ -75,7 +75,7 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
 
   // Stuff we manage that will not be valid any longer
   m_queue.clear();
-  // m_currentRunningCalculation = -1;
+  m_currentRunningCalculation = -1;
 
   if (m_basis) {
     delete m_basis;
@@ -105,6 +105,12 @@ void Orbitals::loadOrbitals()
 
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
+    connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
+            SLOT(renderOrbital(unsigned int)));
+    connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
+            SLOT(calculateOrbitalFromWidget(unsigned int, double)));
+    connect(m_dialog, SIGNAL(calculateAll()), this,
+            SLOT(precalculateOrbitals()));
   }
 
   m_dialog->fillTable(m_basis);
@@ -129,20 +135,22 @@ void Orbitals::openDialog()
 {
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
+    connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
+            SLOT(renderOrbital(unsigned int)));
+    connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
+            SLOT(calculateOrbitalFromWidget(unsigned int, double)));
+    connect(m_dialog, SIGNAL(calculateAll()), this,
+            SLOT(precalculateOrbitals()));
   }
 
-  connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
-          SLOT(renderOrbital(unsigned int)));
-  connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
-          SLOT(calculateOrbitalFromWidget(unsigned int, double)));
-  connect(m_dialog, SIGNAL(calculateAll()), this, SLOT(precalculateOrbitals()));
-
   m_dialog->show();
+  m_dialog->raise();
 }
 
 void Orbitals::calculateOrbitalFromWidget(unsigned int orbital,
                                           double resolution)
 {
+  m_updateMesh = true;
   addCalculationToQueue(orbital, resolution, m_dialog->isovalue(), 0);
   checkQueue();
 }
@@ -151,6 +159,8 @@ void Orbitals::precalculateOrbitals()
 {
   if (m_basis == nullptr)
     return;
+
+  m_updateMesh = false;
 
   // Determine HOMO
   unsigned int homo = m_basis->homo();
@@ -183,7 +193,7 @@ void Orbitals::precalculateOrbitals()
     qDebug() << " precalculate " << i << " priority " << priority;
 #endif
     addCalculationToQueue(
-      i + 1, // orbital
+      i, // orbital
       OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
       m_dialog->isovalue(), priority);
 
@@ -334,7 +344,11 @@ void Orbitals::calculateCubeDone()
 
   auto* watcher = &m_gaussianConcurrent->watcher();
   watcher->disconnect(this);
-  calculationComplete();
+
+  if (m_updateMesh) {
+    calculatePosMesh();
+  } else
+    calculationComplete();
 }
 
 void Orbitals::calculatePosMesh()
@@ -384,6 +398,8 @@ void Orbitals::calculateNegMeshDone()
 {
   disconnect(m_meshGenerator, 0, this, 0);
 
+  calculationComplete();
+
   // ask for a repaint
   m_molecule->emitChanged(QtGui::Molecule::Added);
 }
@@ -404,9 +420,16 @@ void Orbitals::calculationComplete()
   checkQueue();
 }
 
-void Orbitals::renderOrbital(unsigned int orbital)
+void Orbitals::renderOrbital(unsigned int row)
 {
+  if (row == 0)
+    return;
+
+  unsigned int orbital = row - 1;
+
+#ifndef NDEBUG
   qDebug() << "Rendering orbital " << orbital;
+#endif
 
   // Find the most recent calc matching the selected orbital:
   calcInfo calc;
@@ -419,15 +442,17 @@ void Orbitals::renderOrbital(unsigned int orbital)
   }
 
   // calculate the meshes
-  m_currentRunningCalculation = index;
-  if (index == -1) {
-    qDebug() << "Orbital not found, or still calculating. Cannot render.";
-    return;
-  }
-
-  // clear previous meshes from the molecule
   m_molecule->clearMeshes();
-  calculatePosMesh(); // will eventually call negMesh too
+  if (index == -1) {
+    // need to calculate the cube first
+    calculateOrbitalFromWidget(orbital, OrbitalWidget::OrbitalQualityToDouble(
+                                          m_dialog->defaultQuality()));
+  } else {
+    // just need to update the meshes
+    m_currentRunningCalculation = index;
+    m_runningMutex->tryLock();
+    calculatePosMesh(); // will eventually call negMesh too
+  }
 
   // add the orbital to the renderer
   QStringList displayTypes;

@@ -95,10 +95,10 @@ QVariant OrbitalTableModel::headerData(int section, Qt::Orientation orientation,
         return tr("Orbital");
       case C_Energy:
         return tr("Energy (eV)");
-      case C_Status:
-        return tr("Status");
       case C_Symmetry:
         return tr("Symmetry");
+      case C_Status:
+        return tr("Status");
       default:
       case COUNT:
         return QVariant();
@@ -174,7 +174,6 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
                      // (HOMO|LUMO)(+|-)[0-9]+
                      .arg((leqHOMO) ? tr("HOMO", "Highest Occupied MO") + num
                                     : tr("LUMO", "Lowest Unoccupied MO") + num);
-    // qDebug() << desc;
 
     Orbital* orb = new Orbital;
     // Get the energy from the molecule property list, if available
@@ -223,41 +222,41 @@ bool OrbitalTableModel::clearOrbitals()
 void OrbitalTableModel::setOrbitalProgressRange(int orbital, int min, int max,
                                                 int stage, int totalStages)
 {
-  Orbital* orb = m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital];
   orb->min = min;
   orb->current = min;
   orb->max = max;
   orb->stage = stage;
   orb->totalStages = totalStages;
   // Update display
-  QModelIndex status = index(orbital - 1, int(C_Status), QModelIndex());
+  QModelIndex status = index(orbital, int(C_Status), QModelIndex());
   emit dataChanged(status, status);
 }
 
 void OrbitalTableModel::incrementStage(int orbital, int newmin, int newmax)
 {
-  Orbital* orb = m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital];
   orb->stage++;
   orb->min = newmin;
   orb->current = newmin;
   orb->max = newmax;
   // Update display
-  QModelIndex status = index(orbital - 1, C_Status, QModelIndex());
+  QModelIndex status = index(orbital, C_Status, QModelIndex());
   emit dataChanged(status, status);
 }
 
 void OrbitalTableModel::setOrbitalProgressValue(int orbital, int currentValue)
 {
-  Orbital* orb = m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital];
   orb->current = currentValue;
   // Update display
-  QModelIndex status = index(orbital - 1, C_Status, QModelIndex());
+  QModelIndex status = index(orbital, C_Status, QModelIndex());
   emit dataChanged(status, status);
 }
 
 void OrbitalTableModel::finishProgress(int orbital)
 {
-  Orbital* orb = m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital];
   orb->stage = 1;
   orb->totalStages = 1;
   orb->min = 0;
@@ -265,13 +264,13 @@ void OrbitalTableModel::finishProgress(int orbital)
   orb->max = 1;
 
   // Update display
-  QModelIndex status = index(orbital - 1, C_Status, QModelIndex());
+  QModelIndex status = index(orbital, C_Status, QModelIndex());
   emit dataChanged(status, status);
 }
 
 void OrbitalTableModel::resetProgress(int orbital)
 {
-  Orbital* orb = m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital];
   orb->stage = 1;
   orb->totalStages = 1;
   orb->min = 0;
@@ -279,13 +278,13 @@ void OrbitalTableModel::resetProgress(int orbital)
   orb->max = 0;
 
   // Update display
-  QModelIndex status = index(orbital - 1, C_Status, QModelIndex());
+  QModelIndex status = index(orbital, C_Status, QModelIndex());
   emit dataChanged(status, status);
 }
 
 void OrbitalTableModel::setProgressToZero(int orbital)
 {
-  Orbital* orb = m_orbitals[orbital - 1];
+  Orbital* orb = m_orbitals[orbital];
   orb->stage = 1;
   orb->totalStages = 1;
   orb->min = 0;
@@ -293,7 +292,7 @@ void OrbitalTableModel::setProgressToZero(int orbital)
   orb->max = 1;
 
   // Update display
-  QModelIndex status = index(orbital - 1, C_Status, QModelIndex());
+  QModelIndex status = index(orbital, C_Status, QModelIndex());
   emit dataChanged(status, status);
 }
 

@@ -157,6 +157,7 @@ private:
   float m_isoValue = 0.01;
   int m_smoothingPasses = 1;
   int m_meshesLeft = 0;
+  bool m_updateMesh = false;
 
   OrbitalWidget* m_dialog = nullptr;
   // OrbitalSettingsDialog* m_orbitalSettingsDialog = nullptr;
