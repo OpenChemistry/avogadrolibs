@@ -63,6 +63,9 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
       int stages = (orb->totalStages == 0) ? 1 : orb->totalStages;
       percent /= float(stages);
       percent += (orb->stage - 1) * (100.0 / float(stages));
+      // clamp to 100%
+      if (percent > 100)
+        percent = 100;
       return QString("%L1 %").arg(percent);
     }
     case C_Symmetry:

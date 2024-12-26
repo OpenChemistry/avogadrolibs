@@ -291,6 +291,9 @@ void Orbitals::startCalculation(unsigned int queueIndex)
 
 void Orbitals::calculateCube()
 {
+  if (m_currentRunningCalculation == -1)
+    return;
+
   calcInfo* info = &m_queue[m_currentRunningCalculation];
 
   info->state = Running;
@@ -341,8 +344,6 @@ void Orbitals::calculateCube()
 
 void Orbitals::calculateCubeDone()
 {
-  calcInfo* info = &m_queue[m_currentRunningCalculation];
-
   auto* watcher = &m_gaussianConcurrent->watcher();
   watcher->disconnect(this);
 
@@ -354,6 +355,9 @@ void Orbitals::calculateCubeDone()
 
 void Orbitals::calculatePosMesh()
 {
+  if (m_currentRunningCalculation == -1)
+    return;
+
   calcInfo* info = &m_queue[m_currentRunningCalculation];
 
   info->state = Running;
@@ -377,6 +381,9 @@ void Orbitals::calculatePosMeshDone()
 
 void Orbitals::calculateNegMesh()
 {
+  if (m_currentRunningCalculation == -1)
+    return;
+
   calcInfo* info = &m_queue[m_currentRunningCalculation];
 
   info->state = Running;
@@ -407,6 +414,9 @@ void Orbitals::calculateNegMeshDone()
 
 void Orbitals::calculationComplete()
 {
+  if (m_currentRunningCalculation == -1)
+    return;
+
   calcInfo* info = &m_queue[m_currentRunningCalculation];
 
   m_dialog->calculationComplete(info->orbital);
@@ -465,6 +475,9 @@ void Orbitals::renderOrbital(unsigned int row)
 
 void Orbitals::updateProgress(int current)
 {
+  if (m_currentRunningCalculation == -1)
+    return;
+
   calcInfo* info = &m_queue[m_currentRunningCalculation];
   int orbital = info->orbital;
   m_dialog->updateProgress(orbital, current);
