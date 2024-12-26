@@ -138,16 +138,20 @@ public:
   /**
    * @return the orbital symmetry labels (if they exist) for the MOs
    */
-  std::vector<std::string> symmetryLabels() const { return m_symmetryLabels; }
+  std::vector<std::string> symmetryLabels(ElectronType type = Paired) const
+  {
+    if (type == Paired || type == Alpha)
+      return m_symmetryLabels[0];
+    else
+      return m_symmetryLabels[1];
+  }
 
   /**
    * Set the orbital symmetry labels (a1, t2g, etc.) for the molecular
    * orbitals
    */
-  void setSymmetryLabels(const std::vector<std::string>& labels)
-  {
-    m_symmetryLabels = labels;
-  }
+  void setSymmetryLabels(const std::vector<std::string>& labels,
+                         ElectronType type = Paired);
 
   /**
    * @brief Set the molecular orbital energies, expected in Hartrees.
@@ -226,7 +230,7 @@ protected:
   /**
    * The orbital symmetry labels (if they exist) for the MOs
    */
-  std::vector<std::string> m_symmetryLabels;
+  std::vector<std::string> m_symmetryLabels[2];
 
   /**
    * @brief This block stores energies for the molecular orbitals (same
@@ -271,6 +275,15 @@ inline unsigned int BasisSet::electronCount(ElectronType type) const
       // Shouldn't hit this condition.
       return 0;
   }
+}
+
+inline void BasisSet::setSymmetryLabels(const std::vector<std::string>& labels,
+                                        ElectronType type)
+{
+  if (type == Paired || type == Alpha)
+    m_symmetryLabels[0] = labels;
+  else
+    m_symmetryLabels[1] = labels;
 }
 
 inline void BasisSet::setMolecularOrbitalEnergy(
