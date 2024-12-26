@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-22 02:35+0000\n"
-"PO-Revision-Date: 2024-12-06 15:56+0000\n"
+"PO-Revision-Date: 2024-12-26 19:19+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ta/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1498,7 +1498,7 @@ msgstr "ஆட்டம் லேபிளை மாற்றவும்"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "பத்திர லேபிளை மாற்றவும்"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1547,7 +1547,7 @@ msgstr "Threedmol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "கூறுகளை மாற்றவும்…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:44
@@ -1569,11 +1569,11 @@ msgstr "உறுப்பு:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "ரசவாதம்"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "அணுக்களின் கூறுகளை மாற்றவும்."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -2033,7 +2033,7 @@ msgstr "%L1 °"
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr "%L1 Å"
+msgstr "%எல் 1 முதல்"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
@@ -2871,7 +2871,7 @@ msgstr "தூரம்:"
 #: qtplugins/editor/editor.cpp:267
 #, qt-format
 msgid "%1 %L2"
-msgstr "%1 %L2"
+msgstr "1 %இல்லை"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
@@ -3339,11 +3339,11 @@ msgstr "அணு லேபிள்:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "நீளம்"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
-msgstr ""
+msgstr "பிணைப்பு லேபிள்:"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
@@ -3780,7 +3780,7 @@ msgstr "படை புலத்தை உள்ளமைக்கவும்�
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Conformer Search…"
-msgstr "Conformer தேடல்…"
+msgstr "இணங்குபவர் தேடல்…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -3908,11 +3908,11 @@ msgstr "திறந்த பாபலுடன் கன்ஃபார்ம�
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
-msgstr "கன்ஃபார்மர்களை உருவாக்குதல் (திறந்த பாபல்)"
+msgstr "இணங்குபவர்களை உருவாக்குதல் (திறந்த பாபல்)"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
-msgstr "கன்ஃபார்மர்களை உருவாக்குங்கள்"
+msgstr "இணங்குபவர்களை உருவாக்குங்கள்"
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4392,7 +4392,7 @@ msgstr "முறையான கட்டணம்"
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "%1 பகுதி கட்டணம்"
 
 #: qtplugins/propertytables/propertymodel.cpp:511
 msgid "X (Å)"
@@ -4409,7 +4409,7 @@ msgstr "சட் (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "சிட்டை"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
@@ -4486,11 +4486,11 @@ msgstr "அணு 4"
 #: qtplugins/propertytables/propertymodel.cpp:608
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "Rmsd (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:611
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "ஆற்றல் (கிலோகலோரி/மோல்)"
 
 #: qtplugins/propertytables/propertymodel.cpp:807
 msgid "Adjust Fragment"
@@ -4558,7 +4558,7 @@ msgstr "எச்ச பண்புகள்…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "கன்ஃபார்மர் பண்புகள்…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
@@ -4589,7 +4589,7 @@ msgstr "முறுக்கு பண்புகள்"
 
 #: qtplugins/propertytables/propertyview.cpp:56
 msgid "Conformer Properties"
-msgstr "கன்ஃபார்மர் பண்புகள்"
+msgstr "இணங்குபவர் பண்புகள்"
 
 #: qtplugins/propertytables/propertyview.cpp:59
 msgid "Residue Properties"
@@ -4997,7 +4997,7 @@ msgstr "இறக்குமதி செய்யப்பட்ட ச்ப�
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "அலைநீளம் (என்.எம்)"
 
 #: qtplugins/spectra/spectradialog.cpp:586
 msgid "Vibrational Spectra"
@@ -5039,7 +5039,7 @@ msgstr "மின்னணு நிறமாலை"
 #: qtplugins/spectra/spectradialog.cpp:641
 #: qtplugins/spectra/spectradialog.cpp:654
 msgid "Energy (eV)"
-msgstr ""
+msgstr "ஆற்றல் (ev)"
 
 #: qtplugins/spectra/spectradialog.cpp:640
 msgid "Circular Dichroism Spectra"
@@ -7023,7 +7023,7 @@ msgstr "மற்ற அனைத்தும்"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
 msgid "Conformer Search"
-msgstr "Conformer தேடல்"
+msgstr "இணங்குபவர் தேடல்"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -7760,7 +7760,7 @@ msgstr "உச்ச வாசல்:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "அலகுகள்:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
