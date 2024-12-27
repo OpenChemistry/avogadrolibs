@@ -128,6 +128,7 @@ private slots:
   void calculateNegMesh();
   void calculateNegMeshDone();
   void calculationComplete();
+  void meshComplete();
 
   /**
    * Draw the indicated orbital on the GLWidget
@@ -147,6 +148,7 @@ private:
 
   QList<calcInfo> m_queue;
   int m_currentRunningCalculation = -1;
+  int m_currentMeshCalculation = -1;
 
   QtGui::GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
   QtGui::SlaterSetConcurrent* m_slaterConcurrent = nullptr;

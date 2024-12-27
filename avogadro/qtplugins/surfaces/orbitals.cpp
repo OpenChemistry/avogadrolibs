@@ -152,7 +152,21 @@ void Orbitals::calculateOrbitalFromWidget(unsigned int orbital,
                                           double resolution)
 {
   m_updateMesh = true;
-  addCalculationToQueue(orbital, resolution, m_dialog->isovalue(), 0);
+
+  // check if the orbital is already in the queue
+  bool found = false;
+  for (int i = 0; i < m_queue.size(); i++) {
+    if (m_queue[i].orbital == orbital && m_queue[i].resolution == resolution) {
+      // change the priority to the highest
+      m_queue[i].priority = 0;
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    addCalculationToQueue(orbital, resolution, m_dialog->isovalue(), 0);
+  }
   checkQueue();
 }
 
@@ -238,7 +252,7 @@ void Orbitals::checkQueue()
   for (int i = 0; i < m_queue.size(); i++) {
     state = m_queue.at(i).state;
 
-    // If there is already a running job, return.
+    // If there is already a running cube, return.
     if (state == Running) {
       return;
     }
@@ -348,19 +362,18 @@ void Orbitals::calculateCubeDone()
   watcher->disconnect(this);
 
   if (m_updateMesh) {
+    m_currentMeshCalculation = m_currentRunningCalculation;
     calculatePosMesh();
-  } else
-    calculationComplete();
+  }
+  calculationComplete();
 }
 
 void Orbitals::calculatePosMesh()
 {
-  if (m_currentRunningCalculation == -1)
+  if (m_currentMeshCalculation == -1)
     return;
 
-  calcInfo* info = &m_queue[m_currentRunningCalculation];
-
-  info->state = Running;
+  calcInfo* info = &m_queue[m_currentMeshCalculation];
 
   auto posMesh = m_molecule->addMesh();
   auto cube = info->cube;
@@ -381,12 +394,10 @@ void Orbitals::calculatePosMeshDone()
 
 void Orbitals::calculateNegMesh()
 {
-  if (m_currentRunningCalculation == -1)
+  if (m_currentMeshCalculation == -1)
     return;
 
-  calcInfo* info = &m_queue[m_currentRunningCalculation];
-
-  info->state = Running;
+  calcInfo* info = &m_queue[m_currentMeshCalculation];
 
   auto negMesh = m_molecule->addMesh();
   auto cube = info->cube;
@@ -406,10 +417,18 @@ void Orbitals::calculateNegMeshDone()
 {
   disconnect(m_meshGenerator, 0, this, 0);
 
-  calculationComplete();
+  meshComplete();
 
   // ask for a repaint
   m_molecule->emitChanged(QtGui::Molecule::Added);
+}
+
+void Orbitals::meshComplete()
+{
+  if (m_currentMeshCalculation == -1)
+    return;
+
+  m_currentMeshCalculation = -1;
 }
 
 void Orbitals::calculationComplete()
@@ -462,8 +481,7 @@ void Orbitals::renderOrbital(unsigned int row)
                                           m_dialog->defaultQuality()));
   } else {
     // just need to update the meshes
-    m_currentRunningCalculation = index;
-    m_runningMutex->tryLock();
+    m_currentMeshCalculation = index;
     calculatePosMesh(); // will eventually call negMesh too
   }
 
