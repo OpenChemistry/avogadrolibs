@@ -22,7 +22,9 @@ namespace Avogadro {
 
 namespace QtGui {
 class MeshGenerator;
-}
+class GaussianSetConcurrent;
+class SlaterSetConcurrent;
+} // namespace QtGui
 
 namespace Core {
 class BasisSet;
@@ -37,8 +39,6 @@ namespace QtPlugins {
  * menu entries to calculate surfaces, including QM ones.
  */
 
-class GaussianSetConcurrent;
-class SlaterSetConcurrent;
 class SurfaceDialog;
 
 class Surfaces : public QtGui::ExtensionPlugin
@@ -119,8 +119,8 @@ private:
   QtGui::Molecule* m_molecule = nullptr;
   Core::BasisSet* m_basis = nullptr;
 
-  GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
-  SlaterSetConcurrent* m_slaterConcurrent = nullptr;
+  QtGui::GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
+  QtGui::SlaterSetConcurrent* m_slaterConcurrent = nullptr;
 
   Core::Cube* m_cube = nullptr;
   std::vector<Core::Cube*> m_cubes;
@@ -152,4 +152,4 @@ private:
 } // namespace QtPlugins
 } // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H
+#endif // AVOGADRO_QTPLUGINS_SURFACES_H

@@ -14,7 +14,7 @@
 
 #include <QtConcurrent/QtConcurrentMap>
 
-namespace Avogadro::QtPlugins {
+namespace Avogadro::QtGui {
 
 using Core::BasisSet;
 using Core::Cube;
@@ -147,4 +147,4 @@ void GaussianSetConcurrent::processSpinDensity(GaussianShell& shell)
   Vector3 pos = shell.tCube->position(shell.pos);
   shell.tCube->setValue(shell.pos, shell.tools->calculateSpinDensity(pos));
 }
-} // namespace Avogadro::QtPlugins
+} // namespace Avogadro::QtGui

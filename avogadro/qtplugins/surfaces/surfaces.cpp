@@ -6,9 +6,6 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
-#include "gaussiansetconcurrent.h"
-#include "slatersetconcurrent.h"
-
 // Header only, but duplicate symbols if included globally...
 namespace {
 #include <gif.h>
@@ -25,9 +22,11 @@ namespace {
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/neighborperceiver.h>
+#include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwlayermanager.h>
+#include <avogadro/qtgui/slatersetconcurrent.h>
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -68,7 +67,9 @@ using Core::Array;
 using Core::Cube;
 using Core::GaussianSet;
 using Core::NeighborPerceiver;
+using QtGui::GaussianSetConcurrent;
 using QtGui::Molecule;
+using QtGui::SlaterSetConcurrent;
 
 class Surfaces::PIMPL
 {

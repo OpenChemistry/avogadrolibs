@@ -3,8 +3,10 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef GAUSSIANSETCONCURRENT_H
-#define GAUSSIANSETCONCURRENT_H
+#ifndef AVOGADRO_QTGUI_GAUSSIANSETCONCURRENT_H
+#define AVOGADRO_QTGUI_GAUSSIANSETCONCURRENT_H
+
+#include "avogadroqtguiexport.h"
 
 #include <QtCore/QFuture>
 #include <QtCore/QFutureWatcher>
@@ -17,9 +19,9 @@ class Cube;
 class Molecule;
 class GaussianSet;
 class GaussianSetTools;
-}
+} // namespace Core
 
-namespace QtPlugins {
+namespace QtGui {
 
 struct GaussianShell;
 
@@ -29,7 +31,7 @@ struct GaussianShell;
  * @author Marcus D. Hanwell
  */
 
-class GaussianSetConcurrent : public QObject
+class AVOGADROQTGUI_EXPORT GaussianSetConcurrent : public QObject
 {
   Q_OBJECT
 
@@ -74,7 +76,7 @@ private:
   static void processDensity(GaussianShell& shell);
   static void processSpinDensity(GaussianShell& shell);
 };
-}
-}
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // GAUSSIANSETCONCURRENT_H

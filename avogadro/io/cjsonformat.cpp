@@ -417,6 +417,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           numArray.push_back(static_cast<unsigned int>(number));
         basis->setMolecularOrbitalNumber(numArray);
       }
+      json symmetryLabels = orbitals["symmetries"];
+      if (symmetryLabels.is_array()) {
+        std::vector<std::string> symArray;
+        for (auto& sym : symmetryLabels)
+          symArray.push_back(sym);
+        basis->setSymmetryLabels(symArray);
+      }
       json moCoefficients = orbitals["moCoefficients"];
       json moCoefficientsA = orbitals["alphaCoefficients"];
       json moCoefficientsB = orbitals["betaCoefficients"];

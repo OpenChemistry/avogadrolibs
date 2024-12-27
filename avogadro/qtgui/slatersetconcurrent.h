@@ -3,8 +3,10 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#ifndef AVOGADRO_QTPLUGINS_SLATERSETCONCURRENT_H
-#define AVOGADRO_QTPLUGINS_SLATERSETCONCURRENT_H
+#ifndef AVOGADRO_QTGUI_SLATERSETCONCURRENT_H
+#define AVOGADRO_QTGUI_SLATERSETCONCURRENT_H
+
+#include "avogadroqtguiexport.h"
 
 #include <QtCore/QFuture>
 #include <QtCore/QFutureWatcher>
@@ -17,9 +19,9 @@ class Cube;
 class Molecule;
 class SlaterSet;
 class SlaterSetTools;
-}
+} // namespace Core
 
-namespace QtPlugins {
+namespace QtGui {
 
 struct SlaterShell;
 
@@ -29,7 +31,7 @@ struct SlaterShell;
  * @author Marcus D. Hanwell
  */
 
-class SlaterSetConcurrent : public QObject
+class AVOGADROQTGUI_EXPORT SlaterSetConcurrent : public QObject
 {
   Q_OBJECT
 
@@ -73,7 +75,7 @@ private:
   static void processDensity(SlaterShell& shell);
   static void processSpinDensity(SlaterShell& shell);
 };
-}
-}
+} // namespace QtGui
+} // namespace Avogadro
 
-#endif // AVOGADRO_QTPLUGINS_SLATERSETCONCURRENT_H
+#endif // AVOGADRO_QTGUI_SLATERSETCONCURRENT_H
