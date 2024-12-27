@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-27 02:52+0000\n"
-"PO-Revision-Date: 2024-12-23 16:00+0000\n"
+"PO-Revision-Date: 2024-12-27 15:54+0000\n"
 "Last-Translator: Максим Горпиніч <mgorpinic2005@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -5088,15 +5088,15 @@ msgstr "Щільність"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Молекулярні орбіталі…"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
-msgstr ""
+msgstr "Орбітальне вікно"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Відображення орбітальних списків."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:104
 msgid "Orbital"
@@ -5127,7 +5127,7 @@ msgstr "НЗМО"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "Молекулярні орбіталі"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -8027,12 +8027,12 @@ msgstr "Дуже висока"
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
 msgid "Render"
-msgstr ""
+msgstr "Рендер"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
 msgid "Configure"
-msgstr ""
+msgstr "Налаштувати"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
