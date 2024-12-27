@@ -137,6 +137,14 @@ OBEnergy::OBEnergy(const std::string& method)
 
 OBEnergy::~OBEnergy() {}
 
+bool OBEnergy::acceptsRadicals() const
+{
+  if (m_identifier == "UFF")
+    return true;
+
+  return false;
+}
+
 Calc::EnergyCalculator* OBEnergy::newInstance() const
 {
   return new OBEnergy(m_name);

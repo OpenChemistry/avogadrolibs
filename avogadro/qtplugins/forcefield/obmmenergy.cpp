@@ -73,6 +73,15 @@ OBMMEnergy::~OBMMEnergy()
   delete m_process;
 }
 
+bool OBMMEnergy::acceptsRadicals() const
+{
+  // UFF will figure something out
+  if (m_identifier == "UFF")
+    return true;
+
+  return false;
+}
+
 QByteArray OBMMEnergy::writeAndRead(const QByteArray& input)
 {
   if (m_process == nullptr)
