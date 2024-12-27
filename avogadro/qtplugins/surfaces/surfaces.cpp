@@ -560,7 +560,6 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {
     m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-    m_progressDialog->setCancelButtonText(nullptr);
     m_progressDialog->setWindowModality(Qt::NonModal);
     connectSlots = true;
   }
@@ -629,6 +628,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
               SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
               SLOT(setRange(int, int)));
       connect(m_gaussianConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
+      connect(m_progressDialog, SIGNAL(canceled()),
+              &m_gaussianConcurrent->watcher(), SLOT(cancel()));
     }
   } else {
     // slaters
@@ -643,6 +644,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     connect(&m_slaterConcurrent->watcher(),
             SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
             SLOT(setRange(int, int)));
+    connect(m_progressDialog, SIGNAL(canceled()),
+            &m_slaterConcurrent->watcher(), SLOT(cancel()));
     connect(m_slaterConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
   }
 }
