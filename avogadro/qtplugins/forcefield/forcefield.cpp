@@ -297,17 +297,30 @@ void Forcefield::optimize()
   qDebug() << " maxSteps" << m_maxSteps << " steps "
            << m_maxSteps / crit.iterations;
 
+  QProgressDialog progress(tr("Optimize Geometry"), "Cancel", 0,
+                           m_maxSteps / crit.iterations);
+  progress.setWindowModality(Qt::WindowModal);
+  progress.setMinimumDuration(0);
+  progress.setAutoClose(true);
+  progress.show();
+
   Real currentEnergy = 0.0;
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
     solver.minimize(*m_method, positions);
+    // update the progress dialog
+    progress.setValue(i);
 
     qApp->processEvents(QEventLoop::AllEvents, 500);
 
     currentEnergy = m_method->value(positions);
+    progress.setLabelText(
+      tr("Energy: %L1", "force field energy").arg(currentEnergy, 0, 'f', 3));
     // get the current gradient for force visualization
     m_method->gradient(positions, gradient);
+#ifndef NDEBUG
     qDebug() << " optimize " << i << currentEnergy
              << " gradNorm: " << gradient.norm();
+#endif
 
     // update coordinates
     bool isFinite = std::isfinite(currentEnergy);
@@ -352,6 +365,9 @@ void Forcefield::optimize()
 
       energy = currentEnergy;
     }
+
+    if (progress.wasCanceled())
+      break;
   }
 
   m_molecule->undoMolecule()->setInteractive(isInteractive);
