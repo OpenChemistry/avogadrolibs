@@ -107,27 +107,14 @@ public:
     ElectronType type = Paired) const = 0;
 
   /**
-   * Check if the given MO number is the HOMO or not.
-   * @param n The MO number.
-   * @return True if the given MO number is the HOMO.
-   */
-  bool homo(unsigned int n) { return n == homo(); }
-
-  /**
    * @return The molecular orbital number corresponding to the HOMO orbital.
    */
-  unsigned int homo() const { return m_electrons[0] / 2; }
+  unsigned int homo(ElectronType type = Paired) const { return lumo(type) - 1; }
 
-  /**
-   * Check if the given MO number is the LUMO or not.
-   * @param n The MO number.
-   * @return True if the given MO number is the LUMO.
-   */
-  bool lumo(unsigned int n) { return n == lumo(); }
   /**
    * @return The molecular orbital number corresponding to the LUMO orbital.
    */
-  unsigned int lumo() const { return m_electrons[0] / 2 + 1; }
+  unsigned int lumo(ElectronType type = Paired) const;
 
   /**
    * @return True of the basis set is valid, false otherwise.
@@ -243,6 +230,30 @@ protected:
    */
   std::vector<unsigned char> m_moOccupancy[2];
 };
+
+inline unsigned int BasisSet::lumo(ElectronType type) const
+{
+  if (type == Beta) {
+    // check if we have occupancy data
+    if (m_moOccupancy[1].size() > 0) {
+      for (unsigned int i = 0; i < m_moOccupancy[1].size(); ++i) {
+        if (m_moOccupancy[1][i] == 0)
+          return i;
+      }
+    }
+  } else {
+    // alpha or paired
+    // check if we have occupancy data - more accurate
+    if (m_moOccupancy[0].size() > 0) {
+      for (unsigned int i = 0; i < m_moOccupancy[0].size(); ++i) {
+        if (m_moOccupancy[0][i] == 0)
+          return i;
+      }
+    }
+  }
+  // fall back to electron count
+  return m_electrons[0] / 2 + 1;
+}
 
 inline void BasisSet::setElectronCount(unsigned int n, ElectronType type)
 {
