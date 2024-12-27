@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-22 02:35+0000\n"
+"POT-Creation-Date: 2024-12-27 02:52+0000\n"
 "PO-Revision-Date: 2024-12-26 19:19+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -540,7 +540,7 @@ msgstr "கார்மம்"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1932
+#: qtgui/elementtranslator.cpp:34:1959
 msgid "Carbon"
 msgstr "கரிமம்"
 
@@ -622,13 +622,13 @@ msgstr "மங்கனம்"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1935
+#: qtgui/elementtranslator.cpp:94:1962
 msgid "Iron"
 msgstr "இரும்பு"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1938
+#: qtgui/elementtranslator.cpp:97:1965
 msgid "Cobalt"
 msgstr "மென்வெள்ளி"
 
@@ -1232,7 +1232,7 @@ msgid "Licorice"
 msgstr "லைகோரைச்"
 
 #: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
-#: qtplugins/surfaces/surfaces.cpp:838
+#: qtplugins/surfaces/orbitals.cpp:490 qtplugins/surfaces/surfaces.cpp:839
 msgid "Meshes"
 msgstr "மெச்கள்"
 
@@ -1563,7 +1563,7 @@ msgstr "& உருவாக்க"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1926
+#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1953
 msgid "Element:"
 msgstr "உறுப்பு:"
 
@@ -1802,25 +1802,25 @@ msgstr "செப்பிளி திட்டத்தால்"
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:758
+#: qtplugins/surfaces/surfaces.cpp:759
 msgctxt "colormap"
 msgid "Parula"
 msgstr "பேசுங்கள்"
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:760
+#: qtplugins/surfaces/surfaces.cpp:761
 msgctxt "colormap"
 msgid "Heat"
 msgstr "வெப்பம்"
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:762
+#: qtplugins/surfaces/surfaces.cpp:763
 msgctxt "colormap"
 msgid "Hot"
 msgstr "சூடான"
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:764
+#: qtplugins/surfaces/surfaces.cpp:765
 msgctxt "colormap"
 msgid "Gray"
 msgstr "சாம்பல்"
@@ -1828,7 +1828,7 @@ msgstr "சாம்பல்"
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:766
+#: qtplugins/surfaces/surfaces.cpp:767
 msgctxt "colormap"
 msgid "Magma"
 msgstr "கற்குழம்பு"
@@ -1836,7 +1836,7 @@ msgstr "கற்குழம்பு"
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:768
+#: qtplugins/surfaces/surfaces.cpp:769
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "இன்ஃபெர்னோ"
@@ -1844,7 +1844,7 @@ msgstr "இன்ஃபெர்னோ"
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:770
+#: qtplugins/surfaces/surfaces.cpp:771
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "மின்மம்"
@@ -1852,7 +1852,7 @@ msgstr "மின்மம்"
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:772
+#: qtplugins/surfaces/surfaces.cpp:773
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "விரிடிச்"
@@ -1860,7 +1860,7 @@ msgstr "விரிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:774
+#: qtplugins/surfaces/surfaces.cpp:775
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "சிடிச்"
@@ -1872,7 +1872,7 @@ msgstr "சிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1797
+#: qtplugins/surfaces/surfaces.cpp:777:183 rc.cpp:1824
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "நிறமாலை"
@@ -1882,7 +1882,7 @@ msgstr "நிறமாலை"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1794
+#: qtplugins/surfaces/surfaces.cpp:779:180 rc.cpp:1821
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "கூல்வார்ம்"
@@ -1892,7 +1892,7 @@ msgstr "கூல்வார்ம்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1788
+#: qtplugins/surfaces/surfaces.cpp:781:174 rc.cpp:1815
 msgctxt "colormap"
 msgid "Balance"
 msgstr "இருப்பு"
@@ -1902,7 +1902,7 @@ msgstr "இருப்பு"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1791
+#: qtplugins/surfaces/surfaces.cpp:783:177 rc.cpp:1818
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "நீலம்-இருண்ட"
@@ -1914,7 +1914,7 @@ msgstr "நீலம்-இருண்ட"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1800
+#: qtplugins/surfaces/surfaces.cpp:785:186 rc.cpp:1827
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "டர்போ"
@@ -1948,7 +1948,7 @@ msgstr "COLORMAP ஐத் தேர்ந்தெடுக்கவும்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1785
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
 msgid "Colormap:"
 msgstr "COLORMAP:"
 
@@ -2313,7 +2313,7 @@ msgstr "பைதான் சூழல்களை உள்ளமைக்க�
 #: qtplugins/templatetool/templatetoolwidget.cpp:350
 #: qtplugins/templatetool/templatetoolwidget.cpp:358
 #: qtplugins/templatetool/templatetoolwidget.cpp:366
-#: qtplugins/templatetool/templatetoolwidget.cpp:429:2070
+#: qtplugins/templatetool/templatetoolwidget.cpp:429:2097
 msgid "Other…"
 msgstr "மற்றொன்று…"
 
@@ -2441,7 +2441,7 @@ msgstr "அணு ஒருங்கிணைப்புகளைத் தி�
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1827
+#: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1854
 msgid "Custom"
 msgstr "தனிப்பயன்"
 
@@ -2881,7 +2881,7 @@ msgstr "ஆசிரியர் கருவி"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1806 rc.cpp:1824
+#: qtplugins/editor/editortoolwidget.cpp:208:1833 rc.cpp:1851
 msgid "Automatic"
 msgstr "தானியங்கி"
 
@@ -3014,8 +3014,8 @@ msgstr "& கணக்கிடுங்கள்"
 #: qtplugins/forcefield/forcefield.cpp:377
 #: qtplugins/forcefield/forcefield.cpp:423
 #: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:912
-#: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:913
+#: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "அவோகாட்ரோ"
@@ -3303,7 +3303,7 @@ msgstr "மையத்திலிருந்து தூரம்:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/label/label.cpp:180 qtplugins/label/label.cpp:210
-#: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1779
+#: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1806
 msgid "None"
 msgstr "எதுவுமில்லை"
 
@@ -3645,8 +3645,8 @@ msgstr "ஒரு மூலக்கூறின் பொதுவான பண
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
-#: qtplugins/vibrations/vibrations.cpp:42
+#: qtplugins/surfaces/orbitals.cpp:49 qtplugins/surfaces/surfaces.cpp:263
+#: qtplugins/symmetry/symmetry.cpp:82 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
 msgstr "& பகுப்பாய்வு"
 
@@ -4126,7 +4126,7 @@ msgstr " Fps"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1860
+#: qtplugins/playertool/playertool.cpp:118:1887
 msgid "Frame:"
 msgstr "சட்டகம்:"
 
@@ -4143,7 +4143,7 @@ msgstr "மாறும் பிணைப்பு?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1866
+#: qtplugins/playertool/playertool.cpp:144:1893
 msgid "Record Movie…"
 msgstr "பதிவு திரைப்படம்…"
 
@@ -4160,7 +4160,7 @@ msgstr "பிட்மேப் கிராபிக்ச் ஏற்று�
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "திரைப்படம் (*.mp4) ;; திரைப்படம் (*.avi) ;; gif (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:884
+#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:885
 msgid "GIF (*.gif)"
 msgstr "Gif (*.gif)"
 
@@ -4176,11 +4176,11 @@ msgstr "GIF கோப்பு வடிவம் 100 FPS க்கு மேல
 msgid "Movie (*.avi)"
 msgstr "திரைப்படம் (*.வி)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:957
+#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:958
 msgid "Error: cannot add frame to video."
 msgstr "பிழை: வீடியோவில் சட்டத்தை சேர்க்க முடியாது."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:970
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "கோப்பு %1 ஐ சேமிக்க முடியாது."
@@ -4766,7 +4766,7 @@ msgstr "எச்சத்தைத் தேர்ந்தெடுக்க�
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1899
+#: qtplugins/select/select.h:30:1926
 msgid "Select"
 msgstr "தேர்ந்தெடு"
 
@@ -4817,7 +4817,7 @@ msgstr "விண்வெளி குழுவை உணருங்கள்�
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1884
+#: qtplugins/spacegroup/spacegroup.cpp:68:1911
 msgid "Symmetrize"
 msgstr "சமச்சீர்"
 
@@ -5038,6 +5038,7 @@ msgstr "மின்னணு நிறமாலை"
 #: qtplugins/spectra/spectradialog.cpp:628
 #: qtplugins/spectra/spectradialog.cpp:641
 #: qtplugins/spectra/spectradialog.cpp:654
+#: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Energy (eV)"
 msgstr "ஆற்றல் (ev)"
 
@@ -5050,6 +5051,49 @@ msgstr "வட்ட டைக்ரோயிசம் ச்பெக்ட்�
 #: qtplugins/spectra/spectradialog.cpp:655:1544
 msgid "Density"
 msgstr "அடர்த்தி"
+
+#: qtplugins/surfaces/orbitals.cpp:35
+msgid "Molecular Orbitals…"
+msgstr ""
+
+#: qtplugins/surfaces/orbitals.h:48
+msgid "Orbital Window"
+msgstr ""
+
+#: qtplugins/surfaces/orbitals.h:49
+msgid "Display orbital lists."
+msgstr ""
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:104
+msgid "Orbital"
+msgstr ""
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
+#: qtplugins/surfaces/orbitaltablemodel.cpp:108
+#: qtplugins/symmetry/symmetry.h:34:1896
+msgid "Symmetry"
+msgstr "சமச்சீர்"
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:110
+msgid "Status"
+msgstr ""
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:122
+#: qtplugins/surfaces/orbitaltablemodel.cpp:184
+msgctxt "Highest Occupied MO"
+msgid "HOMO"
+msgstr ""
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:131
+#: qtplugins/surfaces/orbitaltablemodel.cpp:185
+msgctxt "Lowest Unoccupied MO"
+msgid "LUMO"
+msgstr ""
+
+#: qtplugins/surfaces/orbitalwidget.cpp:26
+msgid "Molecular Orbitals"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5091,64 +5135,64 @@ msgstr "(லுமோ)"
 msgid "From File"
 msgstr "கோப்பிலிருந்து"
 
-#: qtplugins/surfaces/surfaces.cpp:83
+#: qtplugins/surfaces/surfaces.cpp:84
 msgid "Create Surfaces…"
 msgstr "மேற்பரப்புகளை உருவாக்கவும்…"
 
-#: qtplugins/surfaces/surfaces.cpp:111
+#: qtplugins/surfaces/surfaces.cpp:112
 msgid "Render the van der Waals surface."
 msgstr "வான் டெர் வால்ச் மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:113
+#: qtplugins/surfaces/surfaces.cpp:114
 msgid "Render the van der Waals molecular surface."
 msgstr "வான் டெர் வால்ச் மூலக்கூறு மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:115
+#: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the solvent-accessible molecular surface."
 msgstr "கரைப்பான்-அணுகக்கூடிய மூலக்கூறு மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:117
+#: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the solvent-excluded molecular surface."
 msgstr "கரைப்பான்-விலக்கப்பட்ட மூலக்கூறு மேற்பரப்பை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
+#: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 msgid "Render a molecular orbital."
 msgstr "ஒரு மூலக்கூறு சுற்றுப்பாதையை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:121
+#: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the electron density."
 msgstr "எலக்ட்ரான் அடர்த்தியை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
 msgstr "சுழல் அடர்த்தியை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125
 msgid "Render a cube supplied with the file."
 msgstr "கோப்புடன் வழங்கப்பட்ட ஒரு கனசதுரத்தை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:586
+#: qtplugins/surfaces/surfaces.cpp:587
 msgid "Calculating electron density"
 msgstr "எலக்ட்ரான் அடர்த்தியைக் கணக்கிடுகிறது"
 
-#: qtplugins/surfaces/surfaces.cpp:595
+#: qtplugins/surfaces/surfaces.cpp:596
 msgid "Calculating spin density"
 msgstr "சுழல் அடர்த்தியைக் கணக்கிடுகிறது"
 
-#: qtplugins/surfaces/surfaces.cpp:604
+#: qtplugins/surfaces/surfaces.cpp:605
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "மூலக்கூறு சுற்றுப்பாதை %L1 கணக்கிடுதல்"
 
-#: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
+#: qtplugins/surfaces/surfaces.cpp:862 qtplugins/surfaces/surfaces.cpp:890
 msgid "Movie AVI (*.avi)"
 msgstr "மூவி அவி (*.வி)"
 
-#: qtplugins/surfaces/surfaces.cpp:863
+#: qtplugins/surfaces/surfaces.cpp:864
 msgid "Export Movie"
 msgstr "ஏற்றுமதி திரைப்படம்"
 
-#: qtplugins/surfaces/surfaces.cpp:864
+#: qtplugins/surfaces/surfaces.cpp:865
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "திரைப்பட MP4 (*.mp4) ;; திரைப்படங்கள் அவி (*.avi) ;; gif (*.gif)"
 
@@ -5183,12 +5227,6 @@ msgstr "வகுப்பு"
 #: qtplugins/symmetry/symmetry.cpp:41
 msgid "Symmetry…"
 msgstr "சமச்சீர்…"
-
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1869
-msgid "Symmetry"
-msgstr "சமச்சீர்"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -5397,6 +5435,8 @@ msgstr "உரையாடல்"
 #. i18n: ectx: property (windowTitle), widget (QWidget, ManipulateWidget)
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, OrbitalWidget)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::TemplateToolWidget)
 msgid "Form"
@@ -7896,6 +7936,58 @@ msgstr ""
 msgid "&Load data..."
 msgstr "& தரவை ஏற்றவும் ..."
 
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Quality: "
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:76
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:224
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very Low"
+msgstr "மிகக் குறைவு"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:81
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:229
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Low"
+msgstr "குறைந்த"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:86
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:234
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:380
+#. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
+msgid "Medium"
+msgstr "சராசரி"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:91
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:239
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "High"
+msgstr "உயர்ந்த"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:96
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:244
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very High"
+msgstr "மிக உயர்ந்த"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
+#. i18n: ectx: property (text), widget (QPushButton, push_render)
+msgid "Render"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
+#. i18n: ectx: property (text), widget (QPushButton, push_configure)
+msgid "Configure"
+msgstr ""
+
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
 msgid "Create Surfaces"
@@ -7930,33 +8022,6 @@ msgstr "மின்னியல் ஆற்றல்"
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
 msgstr "தீர்மானம்:"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:224
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Very Low"
-msgstr "மிகக் குறைவு"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:229
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Low"
-msgstr "குறைந்த"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:234
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:380
-#. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-msgid "Medium"
-msgstr "சராசரி"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:239
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "High"
-msgstr "உயர்ந்த"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:244
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Very High"
-msgstr "மிக உயர்ந்த"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:299
 #. i18n: ectx: property (text), widget (QLabel, label_2)
