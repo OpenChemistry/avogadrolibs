@@ -44,6 +44,7 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
     SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
     this, SLOT(tableClicked(const QItemSelection&)));
   connect(ui.push_render, SIGNAL(clicked()), this, SLOT(renderClicked()));
+
   // TODO: Implement configure dialog
   ui.push_configure->setVisible(false);
   connect(ui.push_configure, SIGNAL(clicked()), this, SLOT(configureClicked()));
@@ -171,7 +172,7 @@ void OrbitalWidget::renderClicked()
   QModelIndex first = selection.first();
   first = m_sortedTableModel->mapToSource(first);
 
-  int orbital = first.row() + 1;
+  int orbital = first.row(); // renderRequested handles the +1
   emit renderRequested(orbital, quality);
 }
 
