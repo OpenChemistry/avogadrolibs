@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-27 02:52+0000\n"
-"PO-Revision-Date: 2024-12-28 19:28+0000\n"
+"PO-Revision-Date: 2024-12-29 02:47+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -5110,19 +5110,19 @@ msgstr "Densitate"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Orbitale moleculare…"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
-msgstr ""
+msgstr "Fereastra orbitală"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Afișează listele orbitale."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:104
 msgid "Orbital"
-msgstr ""
+msgstr "Orbital"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
@@ -5133,23 +5133,23 @@ msgstr "Simetrie"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:110
 msgid "Status"
-msgstr ""
+msgstr "Stare"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:122
 #: qtplugins/surfaces/orbitaltablemodel.cpp:184
 msgctxt "Highest Occupied MO"
 msgid "HOMO"
-msgstr ""
+msgstr "HOMO (orbitalul molecular ocupat cu cea mai mare energie)"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:131
 #: qtplugins/surfaces/orbitaltablemodel.cpp:185
 msgctxt "Lowest Unoccupied MO"
 msgid "LUMO"
-msgstr ""
+msgstr "LUMO (orbitalul molecular neocupat cu cea mai mică energie)"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "Orbitale moleculare"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -8010,7 +8010,7 @@ msgstr "Î&ncărcare date..."
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Quality: "
-msgstr ""
+msgstr "Calitate: "
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
@@ -8052,12 +8052,12 @@ msgstr "Foarte înaltă"
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
 msgid "Render"
-msgstr ""
+msgstr "Redare"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
 msgid "Configure"
-msgstr ""
+msgstr "Configurează"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
