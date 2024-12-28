@@ -20,7 +20,7 @@ namespace Avogadro::Core {
 
 unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
-  unsigned short hall = 0; // can't find anything
+  unsigned short hall = 0;               // can't find anything
   const unsigned short hall_count = 531; // 530 but first one is empty
   // some files use " instead of = for the space group symbol
   std::string sg = spaceGroup;
@@ -275,6 +275,9 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
     for (Index j = 1; j < newAtoms.size(); ++j) {
       // The new atoms are in fractional coordinates. Convert to cartesian.
       Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
+      // if we are wrapping to the cell, we need to wrap the new atom
+      if (wrapToCell)
+        newCandidate = uc->wrapCartesian(newCandidate);
 
       // If there is already an atom in this location within a
       // certain tolerance, do not add the atom.
@@ -298,8 +301,8 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
     }
   }
 
-  if (wrapToCell)
-    CrystalTools::wrapAtomsToUnitCell(mol);
+  // if (wrapToCell)
+  //   CrystalTools::wrapAtomsToUnitCell(mol);
 
   // Now we need to generate any copies on the unit boundary
   // We need to loop through all the atoms again

@@ -22,7 +22,7 @@ struct WrapAtomsToCellFunctor
 
   void operator()(Vector3& pos) { unitCell.wrapCartesian(pos, pos); }
 };
-}
+} // namespace
 
 bool CrystalTools::wrapAtomsToUnitCell(Molecule& molecule)
 {
@@ -182,7 +182,7 @@ T niggliRound(T v, T dec)
   const T shifted = v * shift;
   return std::floor(shifted + 0.5) / shift;
 }
-}
+} // namespace
 
 bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 {
@@ -433,7 +433,7 @@ bool CrystalTools::niggliReduce(Molecule& molecule, Options opts)
 
     // fix coordinates with COB matrix:
     const Matrix3 invCob(cob.inverse());
-    for (auto & fcoord : fcoords) {
+    for (auto& fcoord : fcoords) {
       fcoord = invCob * fcoord;
     }
 
@@ -558,6 +558,10 @@ bool CrystalTools::buildSupercell(Molecule& molecule, unsigned int a,
   Vector3 newB = oldB * b;
   Vector3 newC = oldC * c;
 
+  // archive the old bond pairs and orders
+  Array<std::pair<Index, Index>> bondPairs = molecule.bondPairs();
+  Array<unsigned char> bondOrders = molecule.bondOrders();
+
   // Add in the atoms to the new subcells of the supercell
   Index numAtoms = molecule.atomCount();
   Array<Vector3> atoms = molecule.atomPositions3d();
@@ -578,6 +582,17 @@ bool CrystalTools::buildSupercell(Molecule& molecule, unsigned int a,
     }
   }
 
+  // now we need to add the bonds
+  unsigned copies = molecule.atomCount() / numAtoms;
+  // we loop through the original bonds to add copies
+  for (Index i = 0; i < bondPairs.size(); ++i) {
+    std::pair<Index, Index> bond = bondPairs.at(i);
+    for (unsigned j = 0; j < copies; ++j) {
+      molecule.addBond(bond.first + j * numAtoms, bond.second + j * numAtoms,
+                       bondOrders.at(i));
+    }
+  }
+
   // Now set the unit cell
   molecule.unitCell()->setAVector(newA);
   molecule.unitCell()->setBVector(newB);
@@ -595,7 +610,7 @@ struct TransformAtomsFunctor
 
   void operator()(Vector3& pos) { pos = transform * pos; }
 };
-}
+} // namespace
 
 bool CrystalTools::setCellMatrix(Molecule& molecule,
                                  const Matrix3& newCellColMatrix, Options opt)
@@ -625,7 +640,7 @@ struct FractionalCoordinatesFunctor
 
   void operator()(Vector3& pos) { unitCell.toFractional(pos, pos); }
 };
-}
+} // namespace
 
 bool CrystalTools::fractionalCoordinates(const UnitCell& unitCell,
                                          const Array<Vector3>& cart,
@@ -664,7 +679,7 @@ struct SetFractionalCoordinatesFunctor
 
   Vector3 operator()(const Vector3& pos) { return unitCell.toCartesian(pos); }
 };
-}
+} // namespace
 
 bool CrystalTools::setFractionalCoordinates(Molecule& molecule,
                                             const Array<Vector3>& coords)
@@ -684,4 +699,4 @@ bool CrystalTools::setFractionalCoordinates(Molecule& molecule,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Core
