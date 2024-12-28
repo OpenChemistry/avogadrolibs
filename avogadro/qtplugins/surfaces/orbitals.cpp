@@ -36,7 +36,21 @@ Orbitals::Orbitals(QObject* p)
   connect(m_action, SIGNAL(triggered()), SLOT(openDialog()));
 }
 
-Orbitals::~Orbitals() {}
+Orbitals::~Orbitals()
+{
+  // cancel the current running calculation
+  if (m_gaussianConcurrent) {
+    qDebug() << "Cancelling current calculation";
+    auto* watcher = &m_gaussianConcurrent->watcher();
+    if (watcher != nullptr && watcher->isRunning())
+      watcher->cancel();
+  }
+  delete m_runningMutex;
+
+  if (m_dialog)
+    m_dialog->deleteLater();
+  // molecule and basis are freed elsewhere
+}
 
 QList<QAction*> Orbitals::actions() const
 {
@@ -61,6 +75,10 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
   // check if it has basis set data
   bool hasOrbitals = (m_molecule->basisSet() != nullptr);
+  // sanity check if there are actually mo coefficients
+  auto* basis = dynamic_cast<Core::GaussianSet*>(m_molecule->basisSet());
+  if (basis == nullptr || basis->moMatrix().size() == 0)
+    hasOrbitals = false;
 
   if (hasOrbitals)
     m_action->setEnabled(true);
@@ -76,6 +94,7 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
   // Stuff we manage that will not be valid any longer
   m_queue.clear();
   m_currentRunningCalculation = -1;
+  m_currentMeshCalculation = -1;
 
   if (m_basis) {
     delete m_basis;
@@ -84,7 +103,7 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
 
   loadBasis();
 
-  if (!m_basis || m_basis->electronCount() == 0)
+  if (!m_basis || m_basis->electronCount() == 0 || !hasOrbitals)
     return; // no electrons, no orbitals
 
   loadOrbitals();
@@ -101,6 +120,10 @@ void Orbitals::loadBasis()
 void Orbitals::loadOrbitals()
 {
   if (m_basis == nullptr || m_molecule == nullptr)
+    return;
+
+  auto* basis = dynamic_cast<Core::GaussianSet*>(m_molecule->basisSet());
+  if (basis == nullptr || basis->moMatrix().size() == 0)
     return;
 
   if (!m_dialog) {
@@ -124,6 +147,11 @@ void Orbitals::moleculeChanged(unsigned int changes)
 
   bool isEnabled = m_action->isEnabled();
   bool hasOrbitals = (m_molecule->basisSet() != nullptr);
+
+  // sanity check if there are actually mo coefficients
+  auto* basis = dynamic_cast<Core::GaussianSet*>(m_molecule->basisSet());
+  if (basis == nullptr || basis->moMatrix().size() == 0)
+    hasOrbitals = false;
 
   if (isEnabled != hasOrbitals) {
     m_action->setEnabled(hasOrbitals);
@@ -323,7 +351,9 @@ void Orbitals::calculateCube()
                << "\tOrbital " << cI->orbital << "\n"
                << "\tResolution " << cI->resolution;
 #endif
+      m_currentMeshCalculation = m_currentRunningCalculation;
       calculatePosMesh();
+      calculationComplete();
       return;
     }
   }
@@ -466,10 +496,15 @@ void Orbitals::renderOrbital(unsigned int row)
   // Find the most recent calc matching the selected orbital:
   calcInfo calc;
   int index = -1;
+  // in the event of ties, pick the best resolution
+  double resolution = OrbitalWidget::OrbitalQualityToDouble(0);
   for (int i = 0; i < m_queue.size(); i++) {
     calc = m_queue[i];
     if (calc.orbital == orbital && calc.state == Completed) {
-      index = i;
+      if (calc.resolution <= resolution) {
+        resolution = calc.resolution;
+        index = i;
+      }
     }
   }
 

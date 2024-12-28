@@ -61,18 +61,20 @@ QVariant OrbitalTableModel::data(const QModelIndex& index, int role) const
       return QString("%L1").arg(orb->energy, 0, 'f', 3);
     case C_Status: {
       // Check for divide by zero
+      int percent;
       if (orb->max == orb->min)
-        return 0;
-      int percent =
-        100 * (orb->current - orb->min) / float(orb->max - orb->min);
-      // Adjust for stages
-      int stages = (orb->totalStages == 0) ? 1 : orb->totalStages;
-      percent /= float(stages);
-      percent += (orb->stage - 1) * (100.0 / float(stages));
-      // clamp to 100%
-      if (percent > 100)
-        percent = 100;
-      return QString("%L1 %").arg(percent);
+        percent = 0;
+      else {
+        percent = 100 * (orb->current - orb->min) / float(orb->max - orb->min);
+        // Adjust for stages
+        int stages = (orb->totalStages == 0) ? 1 : orb->totalStages;
+        percent /= float(stages);
+        percent += (orb->stage - 1) * (100.0 / float(stages));
+        // clamp to 100%
+        if (percent > 100)
+          percent = 100;
+      }
+      return QString("%L1%").arg(percent);
     }
     case C_Symmetry:
       symbol = orb->symmetry;
