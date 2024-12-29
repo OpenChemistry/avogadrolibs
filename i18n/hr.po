@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2024-12-29 11:45+0000\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -4424,7 +4425,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "Oznaka"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
