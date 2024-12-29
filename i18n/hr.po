@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-29 11:33+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-29 11:36+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -1557,7 +1556,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr "Promijeni elemente"
+msgstr "Promijeni elemente …"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1579,11 +1578,11 @@ msgstr "Element:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alkemija"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Promijeni elemente atoma."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -2740,7 +2739,7 @@ msgstr "Uredi jediničnu ćeliju …"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
-msgstr ""
+msgstr "O&motaj atome na jediničnu ćeliju"
 
 #: qtplugins/crystal/crystal.cpp:63
 msgid "Rotate to Standard &Orientation"
