@@ -24,7 +24,7 @@
 
 namespace Avogadro::QtPlugins {
 
-const double cubePadding = 2.5;
+const double cubePadding = 5.0;
 const int smoothingPasses = 1;
 
 Orbitals::Orbitals(QObject* p)

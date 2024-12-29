@@ -486,22 +486,23 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         m_currentMode = NotParsing;
       }
       case OrbitalEnergies: {
+        if (key.empty())
+          break;
+
         // should start at the first orbital
         if (!m_readBeta)
           m_orbitalEnergy.clear();
         else
           m_betaOrbitalEnergy.clear();
 
-        if (key.empty())
-          break;
         list = Core::split(key, ' ');
         while (!key.empty()) {
           if (list.size() != 4) {
             break;
           }
 
-          // energy in Hartree
-          double energy = Core::lexicalCast<double>(list[2]);
+          // energy in Hartree in 3rd column in eV in 4th column
+          double energy = Core::lexicalCast<double>(list[3]);
           if (!m_readBeta)
             m_orbitalEnergy.push_back(energy);
           else
@@ -834,42 +835,54 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
       }
       case MO: {
 
-        m_MOcoeffs.clear(); // if the orbitals were punched multiple times
+        m_MOcoeffs.clear();      // if the orbitals were punched multiple times
+        m_orbitalEnergy.clear(); // we can get the energies here
         std::vector<std::string> orcaOrbitals;
 
         while (!Core::trimmed(key).empty()) {
           // currently reading the sequence number
           getline(in, key); // energies
-          getline(in, key); // symmetries
+          list = Core::split(key, ' ');
+          // convert these all to double and add to m_orbitalEnergy
+          for (unsigned int i = 0; i < list.size(); i++) {
+            // convert from Hartree to eV
+            m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
+                                      27.2114);
+          }
+
+          getline(in, key); // occupations
           getline(in, key); // skip -----------
           getline(in, key); // now we've got coefficients
 
-          regex rx("[.][0-9]{6}[0-9-]");
+          // coefficients are optionally a -, one or two digits, a decimal
+          // point, and then 6 digits or just one or two digits a decimal point
+          // and then 6 digits we can use a regex to split the line
+          regex rx("[-]?[0-9]{1,2}[.][0-9]{6}");
+
           auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
           auto key_end = std::sregex_iterator();
+          list.clear();
           for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-            key += i->str() + " ";
+            list.push_back(i->str());
           }
 
-          list = Core::split(key, ' ');
-
-          numColumns = list.size() - 2;
+          numColumns = list.size();
           columns.resize(numColumns);
-          while (list.size() > 2) {
+          while (list.size() > 0) {
             orcaOrbitals.push_back(list[1]);
             for (unsigned int i = 0; i < numColumns; ++i) {
-              columns[i].push_back(Core::lexicalCast<double>(list[i + 2]));
+              columns[i].push_back(Core::lexicalCast<double>(list[i]));
             }
 
             getline(in, key);
             key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
             key_end = std::sregex_iterator();
+            list.clear();
             for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-              key += i->str() + " ";
+              list.push_back(i->str());
             }
 
-            list = Core::split(key, ' ');
-            if (list.size() != numColumns + 2)
+            if (list.size() != numColumns)
               break;
 
           } // ok, we've finished one batch of MO coeffs
@@ -914,12 +927,20 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         m_numBasisFunctions = numRows;
         if (m_openShell) {
           // TODO: parse both alpha and beta orbitals
-
           m_BetaMOcoeffs.clear(); // if the orbitals were punched multiple times
+          m_betaOrbitalEnergy.clear(); // we can get the energies here
           getline(in, key);
           while (!Core::trimmed(key).empty()) {
             // currently reading the sequence number
             getline(in, key); // energies
+            list = Core::split(key, ' ');
+            // convert these all to double and add to m_orbitalEnergy
+            for (unsigned int i = 0; i < list.size(); i++) {
+              // convert from Hartree to eV
+              m_orbitalEnergy.push_back(Core::lexicalCast<double>(list[i]) *
+                                        27.2114);
+            }
+
             getline(in, key); // symmetries
             getline(in, key); // skip -----------
             getline(in, key); // now we've got coefficients
