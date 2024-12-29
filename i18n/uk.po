@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-27 15:54+0000\n"
+"PO-Revision-Date: 2024-12-29 11:33+0000\n"
 "Last-Translator: Максим Горпиніч <mgorpinic2005@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -3060,7 +3060,7 @@ msgstr "Немає атомів для оптимізації"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Енергія: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
