@@ -291,6 +291,14 @@ inline Vector3 UnitCell::wrapFractional(const Vector3& f) const
     ++result[1];
   if (result[2] < static_cast<Real>(0.0))
     ++result[2];
+  // set anything at 1.0 to 0.0
+  if (result[0] >= static_cast<Real>(0.999999))
+    result[0] = static_cast<Real>(0.0);
+  if (result[1] == static_cast<Real>(0.999999))
+    result[1] = static_cast<Real>(0.0);
+  if (result[2] == static_cast<Real>(0.999999))
+    result[2] = static_cast<Real>(0.0);
+
   return result;
 }
 
@@ -305,6 +313,14 @@ inline void UnitCell::wrapFractional(const Vector3& f, Vector3& wrapped) const
     ++wrapped[1];
   if (wrapped[2] < static_cast<Real>(0.0))
     ++wrapped[2];
+
+  // set anything at 1.0 to 0.0
+  if (wrapped[0] >= static_cast<Real>(0.999999))
+    wrapped[0] = static_cast<Real>(0.0);
+  if (wrapped[1] >= static_cast<Real>(0.999999))
+    wrapped[1] = static_cast<Real>(0.0);
+  if (wrapped[2] >= static_cast<Real>(0.999999))
+    wrapped[2] = static_cast<Real>(0.0);
 }
 
 inline Vector3 UnitCell::wrapCartesian(const Vector3& cart) const

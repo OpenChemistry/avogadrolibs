@@ -126,7 +126,7 @@ public:
    */
   static void fillUnitCell(Molecule& mol, unsigned short hallNumber,
                            double cartTol = 1e-5, bool wrapToCell = true,
-                           bool allCopies = true);
+                           bool allCopies = false);
 
   /**
    * Reduce a cell to its asymmetric unit.
