@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-29 11:47+0000\n"
+"PO-Revision-Date: 2024-12-29 11:49+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -7783,7 +7783,7 @@ msgstr "Prag vrha:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "Jedinice:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -7922,7 +7922,7 @@ msgstr "&Učitaj podatke …"
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Quality: "
-msgstr ""
+msgstr "Kvaliteta: "
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
@@ -7964,12 +7964,12 @@ msgstr "Vrlo visoka"
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
 msgid "Render"
-msgstr ""
+msgstr "Iscrtaj"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguriraj"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
