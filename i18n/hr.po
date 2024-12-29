@@ -9,9 +9,8 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-29 11:36+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2024-12-29 11:45+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
 "Language: hr\n"
@@ -2748,7 +2747,7 @@ msgstr "&Okreni u standardnu orijentaciju"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr "Skaliraj volumen ćelije"
+msgstr "Skaliraj volumen ćelije …"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
@@ -3358,7 +3357,7 @@ msgstr "Oznaka atoma:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "Duljina"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
