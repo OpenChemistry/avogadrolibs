@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-22 02:35+0000\n"
+"POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2024-12-10 12:07+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
@@ -565,7 +565,7 @@ msgstr "Bor"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1932
+#: qtgui/elementtranslator.cpp:34:1959
 msgid "Carbon"
 msgstr "Ugljenik"
 
@@ -647,13 +647,13 @@ msgstr "Mangan"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1935
+#: qtgui/elementtranslator.cpp:94:1962
 msgid "Iron"
 msgstr "Gvožđe"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1938
+#: qtgui/elementtranslator.cpp:97:1965
 msgid "Cobalt"
 msgstr "Kobalt"
 
@@ -1266,7 +1266,7 @@ msgid "Licorice"
 msgstr "Likoriš"
 
 #: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
-#: qtplugins/surfaces/surfaces.cpp:838
+#: qtplugins/surfaces/orbitals.cpp:525 qtplugins/surfaces/surfaces.cpp:842
 msgid "Meshes"
 msgstr "Mreže"
 
@@ -1411,7 +1411,7 @@ msgid "Add Atom"
 msgstr "Dodaj Atom"
 
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
-#: qtplugins/editor/editor.cpp:132
+#: qtplugins/editor/editor.cpp:133
 msgid "Remove Atom"
 msgstr "Ukloni Atom"
 
@@ -1586,7 +1586,7 @@ msgid "3DMol HTML Block."
 msgstr "3DMol HTML Block."
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
-#: qtplugins/importpqr/importpqr.cpp:43
+#: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
@@ -1609,7 +1609,7 @@ msgid "Change Elements…"
 msgstr ""
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
-#: qtplugins/centroid/centroid.cpp:44
+#: qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -1622,7 +1622,7 @@ msgstr "&Izgradi"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1926
+#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1953
 msgid "Element:"
 msgstr "Element:"
 
@@ -1878,25 +1878,25 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:758
+#: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Parula"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:760
+#: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Heat"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:762
+#: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Hot"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:764
+#: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Gray"
 msgstr ""
@@ -1904,7 +1904,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:766
+#: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Magma"
 msgstr ""
@@ -1912,7 +1912,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:768
+#: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Inferno"
 msgstr ""
@@ -1920,7 +1920,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:770
+#: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Plasma"
 msgstr ""
@@ -1928,7 +1928,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:772
+#: qtplugins/surfaces/surfaces.cpp:776
 msgctxt "colormap"
 msgid "Viridis"
 msgstr ""
@@ -1936,7 +1936,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:774
+#: qtplugins/surfaces/surfaces.cpp:778
 msgctxt "colormap"
 msgid "Cividis"
 msgstr ""
@@ -1948,7 +1948,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:776:183 rc.cpp:1797
+#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1824
 #, fuzzy
 #| msgid "Spectra"
 msgctxt "colormap"
@@ -1960,7 +1960,7 @@ msgstr "Спектар"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:778:180 rc.cpp:1794
+#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1821
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr ""
@@ -1970,7 +1970,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:780:174 rc.cpp:1788
+#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1815
 msgctxt "colormap"
 msgid "Balance"
 msgstr ""
@@ -1980,7 +1980,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:782:177 rc.cpp:1791
+#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1818
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr ""
@@ -1992,7 +1992,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:784:186 rc.cpp:1800
+#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1827
 msgctxt "colormap"
 msgid "Turbo"
 msgstr ""
@@ -2029,7 +2029,7 @@ msgstr "Изабране боје"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1785
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
 #, fuzzy
 #| msgid "Color:"
 msgid "Colormap:"
@@ -2106,7 +2106,7 @@ msgid "%L1°"
 msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:803
-#: qtplugins/editor/editor.cpp:269 qtplugins/measuretool/measuretool.cpp:224
+#: qtplugins/editor/editor.cpp:270 qtplugins/measuretool/measuretool.cpp:224
 #: qtplugins/measuretool/measuretool.cpp:225
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
@@ -2218,17 +2218,17 @@ msgstr ""
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
-#: qtplugins/centroid/centroid.cpp:20
+#: qtplugins/centroid/centroid.cpp:21
 #, fuzzy
 #| msgid "Add Center of Mass"
 msgid "Add Centroid"
 msgstr "Додај средиште масе"
 
-#: qtplugins/centroid/centroid.cpp:21
+#: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
 msgstr "Додај средиште масе"
 
-#: qtplugins/centroid/centroid.cpp:23
+#: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
 msgstr ""
@@ -2410,7 +2410,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:350
 #: qtplugins/templatetool/templatetoolwidget.cpp:358
 #: qtplugins/templatetool/templatetoolwidget.cpp:366
-#: qtplugins/templatetool/templatetoolwidget.cpp:429:2070
+#: qtplugins/templatetool/templatetoolwidget.cpp:429:2097
 #, fuzzy
 #| msgid "Other"
 msgid "Other…"
@@ -2548,7 +2548,7 @@ msgstr "Uređivanje atomskih koordinata"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1827
+#: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1854
 msgid "Custom"
 msgstr "Proizvoljno"
 
@@ -2964,7 +2964,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
+#: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:120
 msgid "Draw"
 msgstr "Iscrtaj"
 
@@ -2977,24 +2977,24 @@ msgid ""
 "Right Mouse: \tDelete Atom"
 msgstr ""
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:114
 msgid "Draw Atom"
 msgstr "Nacrtaj Atom"
 
-#: qtplugins/editor/editor.cpp:123
+#: qtplugins/editor/editor.cpp:124
 msgid "Change Bond Type"
 msgstr "Promenite tip veze"
 
-#: qtplugins/editor/editor.cpp:136
+#: qtplugins/editor/editor.cpp:137
 msgid "Remove Bond"
 msgstr "Uklonite vezu"
 
-#: qtplugins/editor/editor.cpp:264 qtplugins/measuretool/measuretool.cpp:198
+#: qtplugins/editor/editor.cpp:265 qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
 msgstr "Udaljenost:"
 
-#: qtplugins/editor/editor.cpp:267
+#: qtplugins/editor/editor.cpp:268
 #, fuzzy, qt-format
 msgid "%1 %L2"
 msgstr "%1 %2"
@@ -3007,7 +3007,7 @@ msgstr "Alat za uređivanje"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1806 rc.cpp:1824
+#: qtplugins/editor/editortoolwidget.cpp:208:1833 rc.cpp:1851
 msgid "Automatic"
 msgstr "Automatski"
 
@@ -3023,7 +3023,7 @@ msgstr "Dvostruko"
 msgid "Triple"
 msgstr "Trostruko"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:43
+#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 msgid "&Import"
@@ -3116,7 +3116,8 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Omogućite vizuelizaciju polja sila za atome molekula."
 
 #: qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:341 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:300
+#: qtplugins/forcefield/forcefield.cpp:354 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "&Prilagodi Geometriju"
@@ -3148,11 +3149,11 @@ msgid "&Calculate"
 msgstr "Izračunaj"
 
 #: qtplugins/forcefield/forcefield.cpp:247
-#: qtplugins/forcefield/forcefield.cpp:377
-#: qtplugins/forcefield/forcefield.cpp:423
+#: qtplugins/forcefield/forcefield.cpp:393
+#: qtplugins/forcefield/forcefield.cpp:439
 #: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:912
-#: qtplugins/surfaces/surfaces.cpp:956 qtplugins/surfaces/surfaces.cpp:968
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:916
+#: qtplugins/surfaces/surfaces.cpp:960 qtplugins/surfaces/surfaces.cpp:972
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "Avogadro"
@@ -3161,13 +3162,19 @@ msgstr "Avogadro"
 msgid "No atoms provided for optimization"
 msgstr ""
 
-#: qtplugins/forcefield/forcefield.cpp:376
+#: qtplugins/forcefield/forcefield.cpp:317
+#, qt-format
+msgctxt "force field energy"
+msgid "Energy: %L1"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:392
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
 msgstr "Енергија = %L1 %2"
 
-#: qtplugins/forcefield/forcefield.cpp:422
+#: qtplugins/forcefield/forcefield.cpp:438
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr ""
@@ -3331,17 +3338,17 @@ msgstr "&Vodonici"
 msgid "Hydrogens"
 msgstr "Vodonici"
 
-#: qtplugins/importpqr/importpqr.cpp:24
+#: qtplugins/importpqr/importpqr.cpp:25
 #, fuzzy
 #| msgid "Search"
 msgid "&Search PQR…"
 msgstr "Pretraga"
 
-#: qtplugins/importpqr/importpqr.h:34
+#: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
 msgstr "Uvezi iz PQR -a"
 
-#: qtplugins/importpqr/importpqr.h:38
+#: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
 msgstr "Preuzmite molekul iz PQR -a."
 
@@ -3464,7 +3471,7 @@ msgstr "Tolerancija udaljenosti:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/label/label.cpp:180 qtplugins/label/label.cpp:210
-#: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1779
+#: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1806
 msgid "None"
 msgstr "Ništa"
 
@@ -3812,8 +3819,8 @@ msgstr "Pogledajte opšta svojstva molekula."
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/surfaces.cpp:262 qtplugins/symmetry/symmetry.cpp:82
-#: qtplugins/vibrations/vibrations.cpp:42
+#: qtplugins/surfaces/orbitals.cpp:63 qtplugins/surfaces/surfaces.cpp:263
+#: qtplugins/symmetry/symmetry.cpp:82 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
 msgstr "&Analitički"
 
@@ -4336,7 +4343,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1860
+#: qtplugins/playertool/playertool.cpp:118:1887
 msgid "Frame:"
 msgstr "Kadrovi:"
 
@@ -4353,7 +4360,7 @@ msgstr "Dinamičke veze?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1866
+#: qtplugins/playertool/playertool.cpp:144:1893
 #, fuzzy
 #| msgid "Record Movie..."
 msgid "Record Movie…"
@@ -4372,7 +4379,7 @@ msgstr "Izvezi Bitmap Grafiku"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Film (*.mp4);;Film (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:884
+#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:888
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
@@ -4388,11 +4395,11 @@ msgstr "GIF format datoteke ne podržava brzine kadrova veće od 100 FPS."
 msgid "Movie (*.avi)"
 msgstr "Film (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:957
+#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:961
 msgid "Error: cannot add frame to video."
 msgstr "Greška: nije moguće dodati okvir u video zapis."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:973
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Ne mogu da sačuvam datoteku „%1“."
@@ -5045,7 +5052,7 @@ msgstr "Odaberite prema ostatku ..."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1899
+#: qtplugins/select/select.h:30:1926
 msgid "Select"
 msgstr "&Izaberi"
 
@@ -5094,7 +5101,7 @@ msgstr "Spoznaj Prostornu Grupu"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1884
+#: qtplugins/spacegroup/spacegroup.cpp:68:1911
 msgid "Symmetrize"
 msgstr "Simetrizuj"
 
@@ -5343,6 +5350,7 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:628
 #: qtplugins/spectra/spectradialog.cpp:641
 #: qtplugins/spectra/spectradialog.cpp:654
+#: qtplugins/surfaces/orbitaltablemodel.cpp:108
 msgid "Energy (eV)"
 msgstr "Енергија (eV)"
 
@@ -5355,6 +5363,49 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:655:1544
 msgid "Density"
 msgstr "Gustina"
+
+#: qtplugins/surfaces/orbitals.cpp:35
+msgid "Molecular Orbitals…"
+msgstr ""
+
+#: qtplugins/surfaces/orbitals.h:48
+msgid "Orbital Window"
+msgstr ""
+
+#: qtplugins/surfaces/orbitals.h:49
+msgid "Display orbital lists."
+msgstr ""
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:106
+msgid "Orbital"
+msgstr "Орбита"
+
+#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
+#: qtplugins/surfaces/orbitaltablemodel.cpp:110
+#: qtplugins/symmetry/symmetry.h:34:1896
+msgid "Symmetry"
+msgstr "Simetrija"
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:112
+msgid "Status"
+msgstr "Стање"
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:124
+#: qtplugins/surfaces/orbitaltablemodel.cpp:186
+msgctxt "Highest Occupied MO"
+msgid "HOMO"
+msgstr "НвЗМО"
+
+#: qtplugins/surfaces/orbitaltablemodel.cpp:133
+#: qtplugins/surfaces/orbitaltablemodel.cpp:187
+msgctxt "Lowest Unoccupied MO"
+msgid "LUMO"
+msgstr "НнСМО"
+
+#: qtplugins/surfaces/orbitalwidget.cpp:26
+msgid "Molecular Orbitals"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5398,53 +5449,53 @@ msgstr "(LUMO)"
 msgid "From File"
 msgstr "Iz Datoteke"
 
-#: qtplugins/surfaces/surfaces.cpp:83
+#: qtplugins/surfaces/surfaces.cpp:84
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
 msgstr "Napravi Površine"
 
-#: qtplugins/surfaces/surfaces.cpp:111
+#: qtplugins/surfaces/surfaces.cpp:112
 #, fuzzy
 #| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
 msgstr "Исцртајте атоме као Вен дер Валсове сфере"
 
-#: qtplugins/surfaces/surfaces.cpp:113
+#: qtplugins/surfaces/surfaces.cpp:114
 #, fuzzy
 #| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
 msgstr "Predstavi molekul kao žičani okvir."
 
-#: qtplugins/surfaces/surfaces.cpp:115
+#: qtplugins/surfaces/surfaces.cpp:116
 #, fuzzy
 #| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
 msgstr "Predstavi molekul kao žičani okvir."
 
-#: qtplugins/surfaces/surfaces.cpp:117
+#: qtplugins/surfaces/surfaces.cpp:118
 #, fuzzy
 #| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
 msgstr "Predstavi molekul kao žičani okvir."
 
-#: qtplugins/surfaces/surfaces.cpp:118 qtplugins/surfaces/surfaces.cpp:119
+#: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 #| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
 msgstr "Molekularna Orbita"
 
-#: qtplugins/surfaces/surfaces.cpp:121
+#: qtplugins/surfaces/surfaces.cpp:122
 #, fuzzy
 #| msgid "Calculating electron density"
 msgid "Render the electron density."
 msgstr "Izračunaj Gustinu Elektrona"
 
-#: qtplugins/surfaces/surfaces.cpp:122
+#: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
 msgstr ""
 
-#: qtplugins/surfaces/surfaces.cpp:124
+#: qtplugins/surfaces/surfaces.cpp:125
 msgid "Render a cube supplied with the file."
 msgstr ""
 
@@ -5463,15 +5514,15 @@ msgstr "Izračunaj Gustinu Elektrona"
 msgid "Calculating molecular orbital %L1"
 msgstr "Izračunavanje molekulske orbite %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:861 qtplugins/surfaces/surfaces.cpp:889
+#: qtplugins/surfaces/surfaces.cpp:865 qtplugins/surfaces/surfaces.cpp:893
 msgid "Movie AVI (*.avi)"
 msgstr "Film AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:863
+#: qtplugins/surfaces/surfaces.cpp:867
 msgid "Export Movie"
 msgstr "Izvezi Film"
 
-#: qtplugins/surfaces/surfaces.cpp:864
+#: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Film MP4 (*.mp4);;Film AVI (*.avi);;GIF (*.gif)"
 
@@ -5507,12 +5558,6 @@ msgstr "Klasa"
 #, fuzzy
 #| msgid "Symmetry"
 msgid "Symmetry…"
-msgstr "Simetrija"
-
-#. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
-#. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/symmetry/symmetry.h:34:1869
-msgid "Symmetry"
 msgstr "Simetrija"
 
 #: qtplugins/symmetry/symmetry.h:67
@@ -5738,6 +5783,8 @@ msgstr "Dijalog"
 #. i18n: ectx: property (windowTitle), widget (QWidget, ManipulateWidget)
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SelectionToolWidget)
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, OrbitalWidget)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:20
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::TemplateToolWidget)
 msgid "Form"
@@ -8323,6 +8370,58 @@ msgstr ""
 msgid "&Load data..."
 msgstr "&Учитај податке..."
 
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
+#. i18n: ectx: property (text), widget (QLabel, label)
+msgid "Quality: "
+msgstr "Квалитет: "
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:76
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:224
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very Low"
+msgstr "Veoma niska"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:81
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:229
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Low"
+msgstr "Niska"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:86
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:234
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:380
+#. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
+msgid "Medium"
+msgstr "Srednja"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:91
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:239
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "High"
+msgstr "Visoka"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:96
+#. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:244
+#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
+msgid "Very High"
+msgstr "Vrlo visoka"
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
+#. i18n: ectx: property (text), widget (QPushButton, push_render)
+msgid "Render"
+msgstr ""
+
+#. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
+#. i18n: ectx: property (text), widget (QPushButton, push_configure)
+msgid "Configure"
+msgstr ""
+
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
 msgid "Create Surfaces"
@@ -8360,33 +8459,6 @@ msgstr "Електростатички потенцијал"
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Resolution:"
 msgstr "Rezolucija:"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:224
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Very Low"
-msgstr "Veoma niska"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:229
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Low"
-msgstr "Niska"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:234
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:380
-#. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-msgid "Medium"
-msgstr "Srednja"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:239
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "High"
-msgstr "Visoka"
-
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:244
-#. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-msgid "Very High"
-msgstr "Vrlo visoka"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:299
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -11012,20 +11084,6 @@ msgstr ""
 
 #~ msgid "Orbitals"
 #~ msgstr "Орбите"
-
-#~ msgctxt "Highest Occupied MO"
-#~ msgid "HOMO"
-#~ msgstr "НвЗМО"
-
-#~ msgctxt "Lowest Unoccupied MO"
-#~ msgid "LUMO"
-#~ msgstr "НнСМО"
-
-#~ msgid "Orbital"
-#~ msgstr "Орбита"
-
-#~ msgid "Status"
-#~ msgstr "Стање"
 
 #~ msgctxt "A cube type of nothing - empty cube"
 #~ msgid "Nothing"
@@ -13743,9 +13801,6 @@ msgstr ""
 
 #~ msgid "Limit orbital precalculations to "
 #~ msgstr "Ограничи предпрорачуне орбитале на "
-
-#~ msgid "Quality: "
-#~ msgstr "Квалитет: "
 
 #~ msgid "Surface Type:"
 #~ msgstr "Врста површине:"
