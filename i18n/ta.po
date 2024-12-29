@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-27 02:52+0000\n"
+"POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2024-12-26 19:19+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -1232,7 +1232,7 @@ msgid "Licorice"
 msgstr "லைகோரைச்"
 
 #: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
-#: qtplugins/surfaces/orbitals.cpp:490 qtplugins/surfaces/surfaces.cpp:839
+#: qtplugins/surfaces/orbitals.cpp:525 qtplugins/surfaces/surfaces.cpp:842
 msgid "Meshes"
 msgstr "மெச்கள்"
 
@@ -1365,7 +1365,7 @@ msgid "Add Atom"
 msgstr "அணுவைச் சேர்க்கவும்"
 
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
-#: qtplugins/editor/editor.cpp:132
+#: qtplugins/editor/editor.cpp:133
 msgid "Remove Atom"
 msgstr "அணுவை அகற்று"
 
@@ -1527,7 +1527,7 @@ msgid "3DMol HTML Block."
 msgstr "3DMOL உஉகுமொ தொகுதி."
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
-#: qtplugins/importpqr/importpqr.cpp:43
+#: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
@@ -1550,7 +1550,7 @@ msgid "Change Elements…"
 msgstr "கூறுகளை மாற்றவும்…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
-#: qtplugins/centroid/centroid.cpp:44
+#: qtplugins/centroid/centroid.cpp:45
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:34
 #: qtplugins/customelements/customelements.cpp:42
 #: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
@@ -1802,25 +1802,25 @@ msgstr "செப்பிளி திட்டத்தால்"
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:759
+#: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Parula"
 msgstr "பேசுங்கள்"
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:761
+#: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Heat"
 msgstr "வெப்பம்"
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:763
+#: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Hot"
 msgstr "சூடான"
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:765
+#: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Gray"
 msgstr "சாம்பல்"
@@ -1828,7 +1828,7 @@ msgstr "சாம்பல்"
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:767
+#: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Magma"
 msgstr "கற்குழம்பு"
@@ -1836,7 +1836,7 @@ msgstr "கற்குழம்பு"
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:769
+#: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "இன்ஃபெர்னோ"
@@ -1844,7 +1844,7 @@ msgstr "இன்ஃபெர்னோ"
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:771
+#: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "மின்மம்"
@@ -1852,7 +1852,7 @@ msgstr "மின்மம்"
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:773
+#: qtplugins/surfaces/surfaces.cpp:776
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "விரிடிச்"
@@ -1860,7 +1860,7 @@ msgstr "விரிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:775
+#: qtplugins/surfaces/surfaces.cpp:778
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "சிடிச்"
@@ -1872,7 +1872,7 @@ msgstr "சிடிச்"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:777:183 rc.cpp:1824
+#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1824
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "நிறமாலை"
@@ -1882,7 +1882,7 @@ msgstr "நிறமாலை"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:779:180 rc.cpp:1821
+#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1821
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "கூல்வார்ம்"
@@ -1892,7 +1892,7 @@ msgstr "கூல்வார்ம்"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:781:174 rc.cpp:1815
+#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1815
 msgctxt "colormap"
 msgid "Balance"
 msgstr "இருப்பு"
@@ -1902,7 +1902,7 @@ msgstr "இருப்பு"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:783:177 rc.cpp:1818
+#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1818
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "நீலம்-இருண்ட"
@@ -1914,7 +1914,7 @@ msgstr "நீலம்-இருண்ட"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:785:186 rc.cpp:1827
+#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1827
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "டர்போ"
@@ -2028,7 +2028,7 @@ msgid "%L1°"
 msgstr "%L1 °"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:803
-#: qtplugins/editor/editor.cpp:269 qtplugins/measuretool/measuretool.cpp:224
+#: qtplugins/editor/editor.cpp:270 qtplugins/measuretool/measuretool.cpp:224
 #: qtplugins/measuretool/measuretool.cpp:225
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
@@ -2130,15 +2130,15 @@ msgstr "கயிறு"
 msgid "Display of biomolecule ribbons / cartoons."
 msgstr "உயிர் மூலக்கூறு ரிப்பன்கள் / கார்ட்டூன்களின் காட்சி."
 
-#: qtplugins/centroid/centroid.cpp:20
+#: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
 msgstr "சென்ட்ராய்டு சேர்க்கவும்"
 
-#: qtplugins/centroid/centroid.cpp:21
+#: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
 msgstr "வெகுசன மையத்தைச் சேர்க்கவும்"
 
-#: qtplugins/centroid/centroid.cpp:23
+#: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
 msgstr "செங்குத்தாக சேர்க்கவும்"
@@ -2834,7 +2834,7 @@ msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:119
+#: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:120
 msgid "Draw"
 msgstr "டிரா"
 
@@ -2851,24 +2851,24 @@ msgstr ""
 " இடது சுட்டி: அணுக்கள் மற்றும் பிணைப்பை உருவாக்க சொடுக்கு செய்து இழுக்கவும்\n"
 " வலது சுட்டி: அணுவை நீக்கு"
 
-#: qtplugins/editor/editor.cpp:113
+#: qtplugins/editor/editor.cpp:114
 msgid "Draw Atom"
 msgstr "அணுவை வரைய"
 
-#: qtplugins/editor/editor.cpp:123
+#: qtplugins/editor/editor.cpp:124
 msgid "Change Bond Type"
 msgstr "பிணைப்பு வகையை மாற்றவும்"
 
-#: qtplugins/editor/editor.cpp:136
+#: qtplugins/editor/editor.cpp:137
 msgid "Remove Bond"
 msgstr "பிணைப்பை அகற்று"
 
-#: qtplugins/editor/editor.cpp:264 qtplugins/measuretool/measuretool.cpp:198
+#: qtplugins/editor/editor.cpp:265 qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:223
 msgid "Distance:"
 msgstr "தூரம்:"
 
-#: qtplugins/editor/editor.cpp:267
+#: qtplugins/editor/editor.cpp:268
 #, qt-format
 msgid "%1 %L2"
 msgstr "1 %இல்லை"
@@ -2897,7 +2897,7 @@ msgstr "இரட்டை"
 msgid "Triple"
 msgstr "மும்மை"
 
-#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:43
+#: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 msgid "&Import"
@@ -2985,7 +2985,8 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "மூலக்கூறின் அணுக்களுக்கான படை புலம் காட்சிப்படுத்தல்களை வழங்கவும்."
 
 #: qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:341 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:300
+#: qtplugins/forcefield/forcefield.cpp:354 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "வடிவவியலை மேம்படுத்தவும்"
@@ -3011,11 +3012,11 @@ msgid "&Calculate"
 msgstr "& கணக்கிடுங்கள்"
 
 #: qtplugins/forcefield/forcefield.cpp:247
-#: qtplugins/forcefield/forcefield.cpp:377
-#: qtplugins/forcefield/forcefield.cpp:423
+#: qtplugins/forcefield/forcefield.cpp:393
+#: qtplugins/forcefield/forcefield.cpp:439
 #: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:913
-#: qtplugins/surfaces/surfaces.cpp:957 qtplugins/surfaces/surfaces.cpp:969
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:916
+#: qtplugins/surfaces/surfaces.cpp:960 qtplugins/surfaces/surfaces.cpp:972
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "அவோகாட்ரோ"
@@ -3024,12 +3025,18 @@ msgstr "அவோகாட்ரோ"
 msgid "No atoms provided for optimization"
 msgstr "தேர்வுமுறைக்கு அணுக்கள் எதுவும் வழங்கப்படவில்லை"
 
-#: qtplugins/forcefield/forcefield.cpp:376
+#: qtplugins/forcefield/forcefield.cpp:317
+#, qt-format
+msgctxt "force field energy"
+msgid "Energy: %L1"
+msgstr ""
+
+#: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 ஆற்றல் = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:422
+#: qtplugins/forcefield/forcefield.cpp:438
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 படை விதிமுறை = %L2"
@@ -3187,15 +3194,15 @@ msgstr "& ஐட்ரசன்கள்"
 msgid "Hydrogens"
 msgstr "ஐட்ரசன்கள்"
 
-#: qtplugins/importpqr/importpqr.cpp:24
+#: qtplugins/importpqr/importpqr.cpp:25
 msgid "&Search PQR…"
 msgstr "& PQR ஐத் தேடுங்கள்…"
 
-#: qtplugins/importpqr/importpqr.h:34
+#: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
 msgstr "PQR இலிருந்து இறக்குமதி"
 
-#: qtplugins/importpqr/importpqr.h:38
+#: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
 msgstr "PQR இலிருந்து ஒரு மூலக்கூறைப் பதிவிறக்கவும்."
 
@@ -3645,7 +3652,7 @@ msgstr "ஒரு மூலக்கூறின் பொதுவான பண
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:49 qtplugins/surfaces/surfaces.cpp:263
+#: qtplugins/surfaces/orbitals.cpp:63 qtplugins/surfaces/surfaces.cpp:263
 #: qtplugins/symmetry/symmetry.cpp:82 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analysis"
 msgstr "& பகுப்பாய்வு"
@@ -4160,7 +4167,7 @@ msgstr "பிட்மேப் கிராபிக்ச் ஏற்று�
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "திரைப்படம் (*.mp4) ;; திரைப்படம் (*.avi) ;; gif (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:885
+#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:888
 msgid "GIF (*.gif)"
 msgstr "Gif (*.gif)"
 
@@ -4176,11 +4183,11 @@ msgstr "GIF கோப்பு வடிவம் 100 FPS க்கு மேல
 msgid "Movie (*.avi)"
 msgstr "திரைப்படம் (*.வி)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:958
+#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:961
 msgid "Error: cannot add frame to video."
 msgstr "பிழை: வீடியோவில் சட்டத்தை சேர்க்க முடியாது."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:970
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:973
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "கோப்பு %1 ஐ சேமிக்க முடியாது."
@@ -5038,7 +5045,7 @@ msgstr "மின்னணு நிறமாலை"
 #: qtplugins/spectra/spectradialog.cpp:628
 #: qtplugins/spectra/spectradialog.cpp:641
 #: qtplugins/spectra/spectradialog.cpp:654
-#: qtplugins/surfaces/orbitaltablemodel.cpp:106
+#: qtplugins/surfaces/orbitaltablemodel.cpp:108
 msgid "Energy (eV)"
 msgstr "ஆற்றல் (ev)"
 
@@ -5064,29 +5071,29 @@ msgstr ""
 msgid "Display orbital lists."
 msgstr ""
 
-#: qtplugins/surfaces/orbitaltablemodel.cpp:104
+#: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Orbital"
 msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
-#: qtplugins/surfaces/orbitaltablemodel.cpp:108
+#: qtplugins/surfaces/orbitaltablemodel.cpp:110
 #: qtplugins/symmetry/symmetry.h:34:1896
 msgid "Symmetry"
 msgstr "சமச்சீர்"
 
-#: qtplugins/surfaces/orbitaltablemodel.cpp:110
+#: qtplugins/surfaces/orbitaltablemodel.cpp:112
 msgid "Status"
 msgstr ""
 
-#: qtplugins/surfaces/orbitaltablemodel.cpp:122
-#: qtplugins/surfaces/orbitaltablemodel.cpp:184
+#: qtplugins/surfaces/orbitaltablemodel.cpp:124
+#: qtplugins/surfaces/orbitaltablemodel.cpp:186
 msgctxt "Highest Occupied MO"
 msgid "HOMO"
 msgstr ""
 
-#: qtplugins/surfaces/orbitaltablemodel.cpp:131
-#: qtplugins/surfaces/orbitaltablemodel.cpp:185
+#: qtplugins/surfaces/orbitaltablemodel.cpp:133
+#: qtplugins/surfaces/orbitaltablemodel.cpp:187
 msgctxt "Lowest Unoccupied MO"
 msgid "LUMO"
 msgstr ""
@@ -5171,28 +5178,28 @@ msgstr "சுழல் அடர்த்தியை வழங்கவும�
 msgid "Render a cube supplied with the file."
 msgstr "கோப்புடன் வழங்கப்பட்ட ஒரு கனசதுரத்தை வழங்கவும்."
 
-#: qtplugins/surfaces/surfaces.cpp:587
+#: qtplugins/surfaces/surfaces.cpp:586
 msgid "Calculating electron density"
 msgstr "எலக்ட்ரான் அடர்த்தியைக் கணக்கிடுகிறது"
 
-#: qtplugins/surfaces/surfaces.cpp:596
+#: qtplugins/surfaces/surfaces.cpp:595
 msgid "Calculating spin density"
 msgstr "சுழல் அடர்த்தியைக் கணக்கிடுகிறது"
 
-#: qtplugins/surfaces/surfaces.cpp:605
+#: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "மூலக்கூறு சுற்றுப்பாதை %L1 கணக்கிடுதல்"
 
-#: qtplugins/surfaces/surfaces.cpp:862 qtplugins/surfaces/surfaces.cpp:890
+#: qtplugins/surfaces/surfaces.cpp:865 qtplugins/surfaces/surfaces.cpp:893
 msgid "Movie AVI (*.avi)"
 msgstr "மூவி அவி (*.வி)"
 
-#: qtplugins/surfaces/surfaces.cpp:864
+#: qtplugins/surfaces/surfaces.cpp:867
 msgid "Export Movie"
 msgstr "ஏற்றுமதி திரைப்படம்"
 
-#: qtplugins/surfaces/surfaces.cpp:865
+#: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "திரைப்பட MP4 (*.mp4) ;; திரைப்படங்கள் அவி (*.avi) ;; gif (*.gif)"
 
