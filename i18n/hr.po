@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-29 11:45+0000\n"
+"PO-Revision-Date: 2024-12-29 11:47+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
@@ -5070,7 +5070,7 @@ msgstr "Gustoća"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Molekulska orbitala"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
