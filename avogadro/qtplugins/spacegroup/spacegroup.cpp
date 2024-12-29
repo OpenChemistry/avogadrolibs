@@ -73,7 +73,8 @@ SpaceGroup::SpaceGroup(QObject* parent_)
   m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
   connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
   m_actions.push_back(m_fillUnitCellAction);
-  m_fillUnitCellAction->setProperty("menu priority", 50);
+  // should fall next to the "Wrap Atoms to Unit Cell" action
+  m_fillUnitCellAction->setProperty("menu priority", 185);
 
   m_reduceToAsymmetricUnitAction->setText(tr("Reduce to Asymmetric Unit"));
   connect(m_reduceToAsymmetricUnitAction, SIGNAL(triggered()),
@@ -100,8 +101,11 @@ QList<QAction*> SpaceGroup::actions() const
   return m_actions;
 }
 
-QStringList SpaceGroup::menuPath(QAction*) const
+QStringList SpaceGroup::menuPath(QAction* action) const
 {
+  if (action == m_fillUnitCellAction)
+    return QStringList() << tr("&Crystal");
+
   return QStringList() << tr("&Crystal") << tr("Space Group");
 }
 
