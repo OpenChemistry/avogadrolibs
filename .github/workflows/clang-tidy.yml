@@ -7,6 +7,8 @@ env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
   BUILD_TYPE: RelWithDebInfo
   QT_VERSION: 5.15.2
+  CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  SCCACHE_GHA_ENABLED: "true"
 
 jobs:
   build:
@@ -33,7 +35,7 @@ jobs:
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
-        sudo apt-get -qq install clang-tidy clazy
+        sudo apt-get -qq install clang-tidy clang-tools clazy
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -61,12 +63,14 @@ jobs:
 
     - name: Grab cache files
       uses: actions/cache@v4
-      if: runner.os != 'Windows'
       with:
         path: |
           ${{ runner.workspace }}/build/thirdparty
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-thirdparty
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@main
 
     - name: Configure
       run: |
@@ -77,7 +81,7 @@ jobs:
 
     - name: Build
       run: |
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} ninja
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache ninja
         # only re-compile avogadrolibs
         (cd avogadrolibs; ninja clean)
         bear -- ninja
@@ -86,29 +90,31 @@ jobs:
 
     - name: Create results directory
       run: |
-        mkdir ${{ runner.workspace }}/clang-tidy-result
+        mkdir ${{ runner.workspace }}/results
 
-    # let's try manually running clazy
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    - name: Clazy
+      run: |
+        find ../avogadrolibs/avogadrolibs/avogadro/ -name "*.cpp" | xargs clazy-standalone -p compile_commands.json -checks=old-style-connect -export-fixes=${{ runner.workspace }}/results/clazy-fixes.yaml
+        clang-apply-replacements ${{ runner.workspace }}/results/clazy-fixes.yaml
+      working-directory: ${{ runner.workspace }}/build
 
     - name: Analyze
       run: |
         # generate the fixes and we'll make a diff
-        run-clang-tidy -p ../build -fix
+        #run-clang-tidy -p ../build -fix
         cd avogadrolibs
         pwd
         echo "Generating diff"
-        git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
+        git diff >${{ runner.workspace }}/results/tidy.patch
       working-directory: ${{ runner.workspace }}/avogadrolibs
 
     - name: Save PR metadata
       run: |
-        echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
-        echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-repo.txt
-        echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/clang-tidy-result/pr-head-ref.txt
+        echo ${{ github.event.number }} > ${{ runner.workspace }}/results/pr-id.txt
+        echo ${{ github.event.pull_request.head.repo.full_name }} > ${{ runner.workspace }}/results/pr-head-repo.txt
+        echo ${{ github.event.pull_request.head.ref }} > ${{ runner.workspace }}/results/pr-head-ref.txt
 
     - uses: actions/upload-artifact@v4
       with:
-        name: clang-tidy-result
-        path: ${{ runner.workspace }}/clang-tidy-result/
+        name: results
+        path: ${{ runner.workspace }}/results/
