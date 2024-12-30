@@ -1,7 +1,7 @@
 name: Clang-Tidy Static Analysis
 
-on: 
-  workflow_dispatch:
+on:
+  [pull_request, workflow_dispatch]
 
 env:
   FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_YAEHMOP=ON
@@ -29,10 +29,11 @@ jobs:
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
+        sudo add-apt-repository -y universe
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install ninja-build bear libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
-        sudo apt-get -qq install clang-tidy
+        sudo apt-get -qq install clang-tidy clazy
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -82,11 +83,15 @@ jobs:
         bear -- ninja
       shell: bash
       working-directory: ${{ runner.workspace }}/build
-        
+
     - name: Create results directory
       run: |
         mkdir ${{ runner.workspace }}/clang-tidy-result
-    
+
+    # let's try manually running clazy
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+
     - name: Analyze
       run: |
         # generate the fixes and we'll make a diff
@@ -96,7 +101,7 @@ jobs:
         echo "Generating diff"
         git diff >${{ runner.workspace }}/clang-tidy-result/tidy.patch
       working-directory: ${{ runner.workspace }}/avogadrolibs
-    
+
     - name: Save PR metadata
       run: |
         echo ${{ github.event.number }} > ${{ runner.workspace }}/clang-tidy-result/pr-id.txt
@@ -107,7 +112,3 @@ jobs:
       with:
         name: clang-tidy-result
         path: ${{ runner.workspace }}/clang-tidy-result/
-        
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
