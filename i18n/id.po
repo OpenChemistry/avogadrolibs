@@ -10,13 +10,14 @@
 # fikril Ha <fikrilha099@gmail.com>, 2021.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 # "C.Y.A.N" <bd3alz@gmail.com>, 2024.
+# Syifa Tadjoedin <31january2003@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-24 01:16+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2024-12-30 12:00+0000\n"
+"Last-Translator: Syifa Tadjoedin <31january2003@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -153,6 +154,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Gagal menghasilkan benda cjson: gagal mengurai di ofset  %1: %2\n"
+"JSON Baku:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:376 qtgui/interfacescript.cpp:572
 #, qt-format
@@ -160,6 +165,8 @@ msgid ""
 "Error generator cjson object: Parsed JSON is not an object:\n"
 "%1"
 msgstr ""
+"Gagal pembuatan objek cjson: JSON yang diuraikan bukan sebuah objek:\n"
+"%1"
 
 #: molequeue/inputgeneratordialog.cpp:41
 msgid "Input Generator (error)"
@@ -216,7 +223,12 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-msgstr[1] ""
+"File(-file) berikut telah dimodifikasi:\n"
+"\n"
+"%1\n"
+"\n"
+"Apakah Anda ingin menulis perubahan Anda untuk mencerminkan geometri atau "
+"pilihan pekerjaan baru?"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -316,7 +328,7 @@ msgstr "Galat Keluaran"
 #: qtplugins/openmminput/openmminputdialog.cpp:467
 #, qt-format
 msgid "Failed to write to file %1."
-msgstr ""
+msgstr "Gagal untuk menulis ke file %1."
 
 #: molequeue/inputgeneratorwidget.cpp:491
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
@@ -354,13 +366,13 @@ msgstr "%1: File akan di overwritten."
 #: qtplugins/openmminput/openmminputdialog.cpp:392
 #, qt-format
 msgid "%1: File is not writable."
-msgstr ""
+msgstr "%1: File tidak dapat dituliskan."
 
 #: molequeue/inputgeneratorwidget.cpp:542
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "File pemasukan tidak bisa dituliskan karena kegagalan tidak diketahui."
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -371,6 +383,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"File pemasukan tidak bisa ditulis: \n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -385,6 +400,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"File pemasukan tidak bisa ditulis: \n"
+"\n"
+"%1\n"
+"\n"
+"Peringatan:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -397,80 +419,87 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Peringatan: \n"
+"\n"
+"%1\n"
+"\n"
+"Apakah Anda ingin melanjutkan?"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Tulis file pemasukan"
 
 #: molequeue/inputgeneratorwidget.cpp:617
 msgid "Configure Job"
-msgstr ""
+msgstr "Konfigurasi Pekerjaan"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "Mengirimkan pekerjaan ke MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
-msgstr ""
+msgstr "Batas Waktu Pengiriman Pekerjaan"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "Avogadro kebatasan waktu selagi menunggu balasan dari MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Menunggui untuk pekerjaan %1 “%2\" menyelesai…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Berhenti menunggu"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Mengambil informasi pekerjaan selesai…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Batas Waktu Pengambilan Pekerjaan"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro kebatasan waktu selagi menunggu rincian pekerjaan selesai dari "
+"MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Gagal Mengirimkan Pekerjaan"
 
 #: molequeue/molequeuedialog.cpp:128
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Pekerjaan telah ditolak MoleQueue: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Tidak ada program yang dipilih."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "Silahkan pilih target program dari catatan \"Queue and Program\"."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Klien gagal mengirimkan pekerjaan ke MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Kesalahan internal."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Tidak dapat menyelesaikan pemilihan program. Ini adalah bug."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
@@ -486,11 +515,11 @@ msgstr "Tidak ada nama file di setel dalam file format latarbelakang!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Berpisah Horizontal"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "Berpisah Vertikal"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -979,11 +1008,11 @@ msgstr "Cari..."
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
-msgstr ""
+msgstr "Pilih file:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr ""
+msgstr "Pilih executable:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
