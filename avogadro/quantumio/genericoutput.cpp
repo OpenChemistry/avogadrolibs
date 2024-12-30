@@ -7,6 +7,7 @@
 
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
+#include <avogadro/io/xyzformat.h>
 
 #include "gamessus.h"
 #include "molden.h"
@@ -58,6 +59,10 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
     } else if (line.find("O   R   C   A") != std::string::npos) {
       // ORCA reader
       reader = new ORCAOutput;
+      break;
+    } else if (line.find("xtb:") != std::string::npos) {
+      // xtb reader
+      reader = new Io::XyzFormat;
       break;
     }
   }
