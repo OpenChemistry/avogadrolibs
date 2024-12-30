@@ -140,8 +140,8 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
 
   // Set up text editor
   m_ui->text->setFont(QFont(EDITOR_FONT, qApp->font().pointSize()));
-  connect(m_ui->text->document(), SIGNAL(modificationChanged(bool)),
-          SLOT(textModified(bool)));
+  connect(m_ui->text->document(), &QTextDocument::modificationChanged, this,
+          &CoordinateEditorDialog::textModified);
 
   // Setup spec edit
   QRegularExpression specRegExp("[#ZGSLNabcxyz01_]*");
@@ -149,19 +149,28 @@ CoordinateEditorDialog::CoordinateEditorDialog(QWidget* parent_)
   m_ui->spec->setValidator(specValidator);
   connect(m_ui->presets, SIGNAL(currentIndexChanged(int)),
           SLOT(presetChanged(int)));
-  connect(m_ui->spec, SIGNAL(textChanged(QString)), SLOT(specChanged()));
-  connect(m_ui->spec, SIGNAL(textEdited(QString)), SLOT(specEdited()));
+  connect(m_ui->spec, &QLineEdit::textChanged, this,
+          &CoordinateEditorDialog::specChanged);
+  connect(m_ui->spec, &QLineEdit::textEdited, this,
+          &CoordinateEditorDialog::specEdited);
 
   connect(m_ui->distanceUnit, SIGNAL(currentIndexChanged(int)),
           SLOT(updateText()));
 
-  connect(m_ui->help, SIGNAL(clicked()), SLOT(helpClicked()));
-  connect(m_ui->cut, SIGNAL(clicked()), SLOT(cutClicked()));
-  connect(m_ui->copy, SIGNAL(clicked()), SLOT(copyClicked()));
-  connect(m_ui->paste, SIGNAL(clicked()), SLOT(pasteClicked()));
-  connect(m_ui->revert, SIGNAL(clicked()), SLOT(revertClicked()));
-  connect(m_ui->clear, SIGNAL(clicked()), SLOT(clearClicked()));
-  connect(m_ui->apply, SIGNAL(clicked()), SLOT(applyClicked()));
+  connect(m_ui->help, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::helpClicked);
+  connect(m_ui->cut, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::cutClicked);
+  connect(m_ui->copy, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::copyClicked);
+  connect(m_ui->paste, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::pasteClicked);
+  connect(m_ui->revert, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::revertClicked);
+  connect(m_ui->clear, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::clearClicked);
+  connect(m_ui->apply, &QAbstractButton::clicked, this,
+          &CoordinateEditorDialog::applyClicked);
 
   m_ui->cut->setIcon(QIcon::fromTheme("edit-cut"));
   m_ui->copy->setIcon(QIcon::fromTheme("edit-copy"));
@@ -182,7 +191,8 @@ void CoordinateEditorDialog::setMolecule(QtGui::Molecule* mol)
     if (m_molecule)
       m_molecule->disconnect(this);
     m_molecule = mol;
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &CoordinateEditorDialog::moleculeChanged);
     updateText();
   }
 }
@@ -528,7 +538,7 @@ void CoordinateEditorDialog::validateInputWorker()
 
   // If we're not at the end, post this method back into the event loop.
   if (!lineCursor.atEnd()) {
-    QTimer::singleShot(0, this, SLOT(validateInputWorker()));
+    QTimer::singleShot(0, this, &CoordinateEditorDialog::validateInputWorker);
   } else {
     // Otherwise emit the finished signal.
     emit validationFinished(!m_ui->text->hasInvalidMarks());
@@ -567,7 +577,8 @@ void CoordinateEditorDialog::applyClicked()
       break;
   }
 
-  connect(this, SIGNAL(validationFinished(bool)), SLOT(applyFinish(bool)));
+  connect(this, &CoordinateEditorDialog::validationFinished, this,
+          &CoordinateEditorDialog::applyFinish);
   validateInput();
 }
 
@@ -577,8 +588,8 @@ void CoordinateEditorDialog::applyFinish(bool valid)
   m_validate->collectAtoms = false;
   QVector<AtomStruct> atoms(m_validate->atoms);
   m_validate->atoms.clear();
-  disconnect(this, SIGNAL(validationFinished(bool)), this,
-             SLOT(applyFinish(bool)));
+  disconnect(this, &CoordinateEditorDialog::validationFinished, this,
+             &CoordinateEditorDialog::applyFinish);
 
   if (!valid) {
     QMessageBox::critical(this, tr("Error applying geometry"),
@@ -654,9 +665,11 @@ void CoordinateEditorDialog::buildPresets()
 void CoordinateEditorDialog::listenForTextEditChanges(bool enable)
 {
   if (enable)
-    connect(m_ui->text, SIGNAL(textChanged()), this, SLOT(validateInput()));
+    connect(m_ui->text, &QTextEdit::textChanged, this,
+            &CoordinateEditorDialog::validateInput);
   else
-    disconnect(m_ui->text, SIGNAL(textChanged()), this, SLOT(validateInput()));
+    disconnect(m_ui->text, &QTextEdit::textChanged, this,
+               &CoordinateEditorDialog::validateInput);
 }
 
 QString CoordinateEditorDialog::detectInputFormat() const

@@ -90,8 +90,8 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   // Allow blocking until the read is completed.
   OBProcess proc;
   ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
-                   SLOT(responseReceived(QByteArray)));
+  QObject::connect(&proc, &OBProcess::convertFinished, &listener,
+                   &ProcessListener::responseReceived);
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -263,8 +263,8 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
   // Block until the OpenBabel conversion finishes:
   OBProcess proc;
   ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
-                   SLOT(responseReceived(QByteArray)));
+  QObject::connect(&proc, &OBProcess::convertFinished, &listener,
+                   &ProcessListener::responseReceived);
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.

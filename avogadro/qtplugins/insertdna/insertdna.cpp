@@ -42,7 +42,7 @@ InsertDna::InsertDna(QObject* p)
 {
   auto* action = new QAction(tr("DNA/RNA…"), this);
   action->setProperty("menu priority", 870);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &InsertDna::showDialog);
 
   m_actions.append(action);
 }
@@ -101,8 +101,8 @@ void InsertDna::constructDialog()
     numStrands->addButton(m_dialog->doubleStrandRadio, 1);
     numStrands->setExclusive(true);
 
-    connect(m_dialog->insertButton, SIGNAL(clicked()), this,
-            SLOT(performInsert()));
+    connect(m_dialog->insertButton, &QAbstractButton::clicked, this,
+            &InsertDna::performInsert);
 
     connect(m_dialog->bpCombo, SIGNAL(currentIndexChanged(int)), this,
             SLOT(updateBPTurns(int)));
@@ -112,9 +112,9 @@ void InsertDna::constructDialog()
 
     // Set the nucleic buttons to update the sequence
     foreach (const QToolButton* child, m_dialog->findChildren<QToolButton*>()) {
-      connect(child, SIGNAL(clicked()), this, SLOT(updateText()));
+      connect(child, &QAbstractButton::clicked, this, &InsertDna::updateText);
     }
-    connect(m_dialog, SIGNAL(destroyed()), this, SLOT(dialogDestroyed()));
+    connect(m_dialog, &QObject::destroyed, this, &InsertDna::dialogDestroyed);
   }
   m_dialog->sequenceText->setPlainText(QString());
 }

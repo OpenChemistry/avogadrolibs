@@ -21,8 +21,8 @@ using Core::Array;
 using Core::Elements;
 
 Alchemy::Alchemy(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_),
-    m_action(new QAction(tr("Change Elements…"), this)), m_molecule(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_action(new QAction(tr("Change Elements…"), this))
 {
   m_action->setProperty("menu priority", 750);
 

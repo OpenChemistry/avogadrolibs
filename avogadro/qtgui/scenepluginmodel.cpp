@@ -153,7 +153,8 @@ void ScenePluginModel::addItem(ScenePlugin* item)
   if (!m_scenePlugins.contains(item)) {
     m_scenePlugins.append(item);
     item->setParent(this);
-    connect(item, SIGNAL(drawablesChanged()), SIGNAL(pluginConfigChanged()));
+    connect(item, &ScenePlugin::drawablesChanged, this,
+            &ScenePluginModel::pluginConfigChanged);
   }
 }
 

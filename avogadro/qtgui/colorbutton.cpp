@@ -18,7 +18,7 @@ ColorButton::ColorButton(QWidget* parent)
 {
   setMinimumSize(35, 20);
 
-  connect(this, SIGNAL(clicked()), this, SLOT(changeColor()));
+  connect(this, &QAbstractButton::clicked, this, &ColorButton::changeColor);
 }
 
 ColorButton::ColorButton(const QColor& initial, QWidget* parent)
@@ -26,7 +26,7 @@ ColorButton::ColorButton(const QColor& initial, QWidget* parent)
 {
   setMinimumSize(35, 20);
 
-  connect(this, SIGNAL(clicked()), this, SLOT(changeColor()));
+  connect(this, &QAbstractButton::clicked, this, &ColorButton::changeColor);
 }
 
 void ColorButton::changeColor()
@@ -85,4 +85,4 @@ bool ColorButton::event(QEvent* e)
   return QAbstractButton::event(e);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

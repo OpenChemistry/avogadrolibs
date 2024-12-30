@@ -42,7 +42,7 @@ public:
 };
 
 ArrowGeometry::ArrowGeometry()
-  : m_dirty(false), d(new Private), m_color(0, 255, 0)
+  : m_color(0, 255, 0), m_dirty(false), d(new Private)
 {
 }
 

@@ -69,17 +69,17 @@ QWidget* PlayerTool::toolWidget() const
     auto* controls = new QHBoxLayout;
     controls->addStretch(1);
     auto* leftButton = new QPushButton("<");
-    connect(leftButton, SIGNAL(clicked()), SLOT(back()));
+    connect(leftButton, &QAbstractButton::clicked, this, &PlayerTool::back);
     controls->addWidget(leftButton);
     playButton = new QPushButton(tr("Play"));
-    connect(playButton, SIGNAL(clicked()), SLOT(play()));
+    connect(playButton, &QAbstractButton::clicked, this, &PlayerTool::play);
     controls->addWidget(playButton);
     stopButton = new QPushButton(tr("Stop"));
-    connect(stopButton, SIGNAL(clicked()), SLOT(stop()));
+    connect(stopButton, &QAbstractButton::clicked, this, &PlayerTool::stop);
     controls->addWidget(stopButton);
     stopButton->setEnabled(false);
     auto* rightButton = new QPushButton(">");
-    connect(rightButton, SIGNAL(clicked()), SLOT(forward()));
+    connect(rightButton, &QAbstractButton::clicked, this, &PlayerTool::forward);
     controls->addWidget(rightButton);
     controls->addStretch(1);
     layout->addLayout(controls);
@@ -99,8 +99,8 @@ QWidget* PlayerTool::toolWidget() const
     m_slider = new QSlider(Qt::Horizontal);
     m_slider->setMinimum(0);
     m_slider->setTickInterval(1);
-    connect(m_slider, SIGNAL(valueChanged(int)),
-            SLOT(sliderPositionChanged(int)));
+    connect(m_slider, &QAbstractSlider::valueChanged, this,
+            &PlayerTool::sliderPositionChanged);
     sliderLayout->addWidget(m_slider);
     layout->addLayout(sliderLayout);
     if (m_molecule->coordinate3dCount() > 1)
@@ -142,7 +142,8 @@ QWidget* PlayerTool::toolWidget() const
     auto* recordLayout = new QHBoxLayout;
     recordLayout->addStretch(1);
     auto* recordButton = new QPushButton(tr("Record Movie…"));
-    connect(recordButton, SIGNAL(clicked()), SLOT(recordMovie()));
+    connect(recordButton, &QAbstractButton::clicked, this,
+            &PlayerTool::recordMovie);
     recordLayout->addWidget(recordButton);
     recordLayout->addStretch(1);
     layout->addLayout(recordLayout);

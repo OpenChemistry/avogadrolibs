@@ -155,8 +155,8 @@ struct LayerLabel : Core::LayerData
       auto* form = new QFormLayout;
       // color button
       auto* colorButton = new QtGui::ColorButton;
-      QObject::connect(colorButton, SIGNAL(colorChanged(const QColor&)), slot,
-                       SLOT(setColor(const QColor&)));
+      QObject::connect(colorButton, &QtGui::ColorButton::colorChanged, slot,
+                       &Label::setColor);
       form->addRow(QObject::tr("Color:"), colorButton);
 
       // radius scalar

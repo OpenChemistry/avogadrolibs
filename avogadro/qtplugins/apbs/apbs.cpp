@@ -30,12 +30,12 @@ Apbs::Apbs(QObject* parent_)
 {
   auto* action = new QAction(this);
   action->setText(tr("Run APBS…"));
-  connect(action, SIGNAL(triggered()), this, SLOT(onRunApbs()));
+  connect(action, &QAction::triggered, this, &Apbs::onRunApbs);
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Open Output File…"));
-  connect(action, SIGNAL(triggered()), this, SLOT(onOpenOutputFile()));
+  connect(action, &QAction::triggered, this, &Apbs::onOpenOutputFile);
   m_actions.append(action);
 }
 
@@ -72,8 +72,7 @@ void Apbs::onOpenOutputFile()
 
 void Apbs::meshGeneratorFinished()
 {
-  auto* generator =
-    qobject_cast<QtGui::MeshGenerator*>(sender());
+  auto* generator = qobject_cast<QtGui::MeshGenerator*>(sender());
   if (!generator) {
     return;
   }
@@ -155,12 +154,11 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       qApp->processEvents();
 
       Mesh* mesh = molecule.addMesh();
-      auto* meshGenerator =
-        new QtGui::MeshGenerator(cube, mesh, 0.1f);
-      connect(meshGenerator, SIGNAL(finished()), this,
-              SLOT(meshGeneratorFinished()));
-      connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
-              SLOT(onMeshGeneratorProgress(int)));
+      auto* meshGenerator = new QtGui::MeshGenerator(cube, mesh, 0.1f);
+      connect(meshGenerator, &QThread::finished, this,
+              &Apbs::meshGeneratorFinished);
+      connect(meshGenerator, &QtGui::MeshGenerator::progressValueChanged, this,
+              &Apbs::onMeshGeneratorProgress);
       meshGenerator->run();
 
       // generate negative mesh
@@ -171,10 +169,10 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
 
       mesh = molecule.addMesh();
       meshGenerator = new QtGui::MeshGenerator(cube, mesh, -0.1f);
-      connect(meshGenerator, SIGNAL(finished()), this,
-              SLOT(meshGeneratorFinished()));
-      connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
-              SLOT(onMeshGeneratorProgress(int)));
+      connect(meshGenerator, &QThread::finished, this,
+              &Apbs::meshGeneratorFinished);
+      connect(meshGenerator, &QtGui::MeshGenerator::progressValueChanged, this,
+              &Apbs::onMeshGeneratorProgress);
       meshGenerator->run();
 
       m_progressDialog->setValue(100);
@@ -184,4 +182,4 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
 
   return true;
 }
-}
+} // namespace Avogadro::QtPlugins

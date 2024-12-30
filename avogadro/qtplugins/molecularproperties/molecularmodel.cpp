@@ -40,8 +40,8 @@ MolecularModel::MolecularModel(QObject* parent)
   : QAbstractTableModel(parent), m_molecule(nullptr)
 {
   m_network = new QNetworkAccessManager(this);
-  connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
-          SLOT(updateNameReady(QNetworkReply*)));
+  connect(m_network, &QNetworkAccessManager::finished, this,
+          &MolecularModel::updateNameReady);
 }
 
 void MolecularModel::setMolecule(QtGui::Molecule* molecule)
@@ -87,7 +87,7 @@ QString MolecularModel::name() const
   m_network->get(QNetworkRequest(QUrl(requestURL)));
 
   // don't update again until we're ready - 5 seconds
-  QTimer::singleShot(5000, this, SLOT(canUpdateName()));
+  QTimer::singleShot(5000, this, &MolecularModel::canUpdateName);
 
   return m_name;
 }

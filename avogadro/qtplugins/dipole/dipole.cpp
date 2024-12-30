@@ -36,7 +36,7 @@ void Dipole::process(const QtGui::Molecule& molecule,
 {
   // check if the molecule is empty
   // (single atoms don't have a dipole moment)
-  if (molecule.atomCount() < 0)
+  if (molecule.atomCount() < 2)
     return;
 
   // check if the molecule has the dipole set
@@ -46,7 +46,8 @@ void Dipole::process(const QtGui::Molecule& molecule,
     } else {
       // connect to molecule changes
       connect(&molecule, &QtGui::Molecule::update, this, &Dipole::updateDipole);
-      connect(&molecule, SIGNAL(changed(unsigned int)), SLOT(updateDipole()));
+      connect(&molecule, &QtGui::Molecule::changed, this,
+              &Dipole::updateDipole);
     }
   } else {
     // custom dipole moment set
@@ -89,7 +90,7 @@ void Dipole::updateDipole()
     m_dipoleVector =
       Calc::ChargeManager::instance().dipoleMoment(m_type, *molecule);
     // single-shot
-    QTimer::singleShot(0, this, SLOT(updateFinished()));
+    QTimer::singleShot(0, this, &Dipole::updateFinished);
   }
 }
 

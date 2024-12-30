@@ -68,8 +68,10 @@ void InputGeneratorWidget::setMolecule(QtGui::Molecule* mol)
     // make sure to call the base class method
     QtGui::JsonWidget::setMolecule(mol);
 
-    connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
-    connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
+    connect(mol, &QtGui::Molecule::changed, this,
+            &InputGeneratorWidget::updatePreviewText);
+    connect(mol, &QtGui::Molecule::changed, this,
+            &InputGeneratorWidget::updateTitlePlaceholder);
   }
 
   updateTitlePlaceholder();
@@ -132,7 +134,8 @@ void InputGeneratorWidget::showEvent(QShowEvent* e)
   // Update the preview text if an update was requested while hidden. Use a
   // single shot to allow the dialog to show before popping up any warnings.
   if (m_updatePending)
-    QTimer::singleShot(0, this, SLOT(updatePreviewTextImmediately()));
+    QTimer::singleShot(0, this,
+                       &InputGeneratorWidget::updatePreviewTextImmediately);
 }
 
 void InputGeneratorWidget::updatePreviewText()
@@ -141,7 +144,8 @@ void InputGeneratorWidget::updatePreviewText()
     return;
 
   m_updatePending = true;
-  QTimer::singleShot(250, this, SLOT(updatePreviewTextImmediately()));
+  QTimer::singleShot(250, this,
+                     &InputGeneratorWidget::updatePreviewTextImmediately);
 }
 
 void InputGeneratorWidget::updatePreviewTextImmediately()
@@ -234,7 +238,8 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
     auto* edit = new QTextEdit(this);
     edit->setObjectName(fileName);
     edit->setFontFamily("monospace");
-    connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
+    connect(edit, &QTextEdit::textChanged, this,
+            &InputGeneratorWidget::textEditModified);
     m_ui->tabWidget->addTab(edit, fileName);
     m_textEdits.insert(fileName, edit);
   }
@@ -623,22 +628,26 @@ QJsonObject InputGeneratorWidget::promptForBatchJobOptions() const
 
 void InputGeneratorWidget::connectButtons()
 {
-  connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)), &m_inputGenerator,
-          SLOT(setDebug(bool)));
-  connect(m_ui->debugCheckBox, SIGNAL(toggled(bool)),
-          SLOT(updatePreviewText()));
-  connect(m_ui->defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
-  connect(m_ui->generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
-  connect(m_ui->warningTextButton, SIGNAL(clicked()),
-          SLOT(toggleWarningText()));
+  connect(m_ui->debugCheckBox, &QAbstractButton::toggled, &m_inputGenerator,
+          &InputGenerator::setDebug);
+  connect(m_ui->debugCheckBox, &QAbstractButton::toggled, this,
+          &InputGeneratorWidget::updatePreviewText);
+  connect(m_ui->defaultsButton, &QAbstractButton::clicked, this,
+          &InputGeneratorWidget::defaultsClicked);
+  connect(m_ui->generateButton, &QAbstractButton::clicked, this,
+          &InputGeneratorWidget::generateClicked);
+  connect(m_ui->closeButton, &QAbstractButton::clicked, this,
+          &InputGeneratorWidget::closeClicked);
+  connect(m_ui->warningTextButton, &QAbstractButton::clicked, this,
+          &InputGeneratorWidget::toggleWarningText);
 
   // disable the compute button if Molequeue is not running
   MoleQueueManager& mqManager = MoleQueueManager::instance();
   if (!mqManager.connectIfNeeded()) {
     m_ui->computeButton->setEnabled(false);
   } else {
-    connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
+    connect(m_ui->computeButton, &QAbstractButton::clicked, this,
+            &InputGeneratorWidget::computeClicked);
   }
 }
 

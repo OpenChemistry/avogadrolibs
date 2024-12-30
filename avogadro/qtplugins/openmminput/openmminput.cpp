@@ -28,7 +28,7 @@ OpenMMInput::OpenMMInput(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&OpenMM Script…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(m_action, &QAction::triggered, this, &OpenMMInput::menuActivated);
 }
 
 OpenMMInput::~OpenMMInput() {}

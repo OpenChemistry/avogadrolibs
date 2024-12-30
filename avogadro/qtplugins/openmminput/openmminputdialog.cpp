@@ -71,10 +71,10 @@ OpenMMInputDialog::OpenMMInputDialog(QWidget* parent, Qt::WindowFlags flag)
                                        : ui.inputTopEdit->text());
 
   // Connect the GUI elements to the correct slots
-  connect(ui.jobScriptEdit, SIGNAL(textChanged(QString)), this,
-          SLOT(setScriptName()));
-  connect(ui.inputCoordEdit, SIGNAL(textChanged(QString)), this,
-          SLOT(setInputCoordName()));
+  connect(ui.jobScriptEdit, &QLineEdit::textChanged, this,
+          &OpenMMInputDialog::setScriptName);
+  connect(ui.inputCoordEdit, &QLineEdit::textChanged, this,
+          &OpenMMInputDialog::setInputCoordName);
   connect(ui.forceFieldCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setForceField(int)));
   connect(ui.constraintsCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -87,8 +87,8 @@ OpenMMInputDialog::OpenMMInputDialog(QWidget* parent, Qt::WindowFlags flag)
           SLOT(setIntegratorType(int)));
   connect(ui.barostatCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setBarostatType(int)));
-  connect(ui.inputTopEdit, SIGNAL(textChanged(QString)), this,
-          SLOT(setTopologyName()));
+  connect(ui.inputTopEdit, &QLineEdit::textChanged, this,
+          &OpenMMInputDialog::setTopologyName);
   connect(ui.rigidWaterCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setRigidWater(int)));
   connect(ui.temperatureSpin, SIGNAL(valueChanged(double)), this,
@@ -131,37 +131,41 @@ OpenMMInputDialog::OpenMMInputDialog(QWidget* parent, Qt::WindowFlags flag)
           SLOT(setPlatformType(int)));
   connect(ui.precisionCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setPrecisionType(int)));
-  connect(ui.dcdCheck, SIGNAL(toggled(bool)), this, SLOT(setDCDReporter(bool)));
-  connect(ui.pdbCheck, SIGNAL(toggled(bool)), this, SLOT(setPDBReporter(bool)));
-  connect(ui.stateDataCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setStateDataReporter(bool)));
+  connect(ui.dcdCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setDCDReporter);
+  connect(ui.pdbCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setPDBReporter);
+  connect(ui.stateDataCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setStateDataReporter);
 
-  connect(ui.stepIndexCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setStepIndexBoolean(bool)));
-  connect(ui.timeCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setTimeBoolean(bool)));
-  connect(ui.speedCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setSpeedBoolean(bool)));
-  connect(ui.progressCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setProgressBoolean(bool)));
-  connect(ui.potentialEnergyCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setPotentialEnergyBoolean(bool)));
-  connect(ui.kineticEnergyCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setKineticEnergyBoolean(bool)));
-  connect(ui.totalEnergyCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setTotalEnergyBoolean(bool)));
-  connect(ui.temperatureCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setTemperatureBoolean(bool)));
-  connect(ui.volumeCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setVolumeBoolean(bool)));
-  connect(ui.densityCheck, SIGNAL(toggled(bool)), this,
-          SLOT(setDensityBoolean(bool)));
+  connect(ui.stepIndexCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setStepIndexBoolean);
+  connect(ui.timeCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setTimeBoolean);
+  connect(ui.speedCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setSpeedBoolean);
+  connect(ui.progressCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setProgressBoolean);
+  connect(ui.potentialEnergyCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setPotentialEnergyBoolean);
+  connect(ui.kineticEnergyCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setKineticEnergyBoolean);
+  connect(ui.totalEnergyCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setTotalEnergyBoolean);
+  connect(ui.temperatureCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setTemperatureBoolean);
+  connect(ui.volumeCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setVolumeBoolean);
+  connect(ui.densityCheck, &QAbstractButton::toggled, this,
+          &OpenMMInputDialog::setDensityBoolean);
 
-  connect(ui.generateButton, SIGNAL(clicked()), this, SLOT(generateClicked()));
-  connect(ui.resetButton, SIGNAL(clicked()), this, SLOT(resetClicked()));
+  connect(ui.generateButton, &QAbstractButton::clicked, this,
+          &OpenMMInputDialog::generateClicked);
+  connect(ui.resetButton, &QAbstractButton::clicked, this,
+          &OpenMMInputDialog::resetClicked);
 
-  connect(ui.enableFormButton, SIGNAL(clicked()), this,
-          SLOT(enableFormClicked()));
+  connect(ui.enableFormButton, &QAbstractButton::clicked, this,
+          &OpenMMInputDialog::enableFormClicked);
 
   QSettings settings;
   readSettings(settings);
@@ -214,7 +218,8 @@ void OpenMMInputDialog::updatePreviewText()
   m_jobEdit = new QTextEdit(this);
   m_jobEdit->setObjectName(m_jobFileName);
   m_jobEdit->setFontFamily("monospace");
-  connect(m_jobEdit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
+  connect(m_jobEdit, &QTextEdit::textChanged, this,
+          &OpenMMInputDialog::textEditModified);
   m_jobEdit->setText(generateInputDeck());
   ui.tabWidget->insertTab(jobTabPosition, m_jobEdit, m_jobFileName);
   deckDirty(false);
@@ -408,8 +413,8 @@ void OpenMMInputDialog::generateClicked()
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
         break;
       default: {
-        // If a fatal error occurred, it will be last one in the list. Pop it off
-        // and tell the user that it was the reason we had to stop.
+        // If a fatal error occurred, it will be last one in the list. Pop it
+        // off and tell the user that it was the reason we had to stop.
         QString fatal = errors.last();
         QStringList tmp(errors);
         tmp.pop_back();
@@ -640,7 +645,8 @@ void OpenMMInputDialog::setMolecule(QtGui::Molecule* molecule)
 
   m_molecule = molecule;
   // Update the preview text whenever primitives are changed
-  connect(molecule, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+  connect(molecule, &QtGui::Molecule::changed, this,
+          &OpenMMInputDialog::updatePreviewText);
   updatePreviewText();
 }
 
@@ -956,8 +962,9 @@ QString OpenMMInputDialog::generateInputDeck()
   scriptStream << "nonbondedMethod="
                << "app." << getNonBondedType(m_nonBondedType) << ",";
   if (m_nonBondedCutoff > 0) {
-    scriptStream << " nonbondedCutoff=" << Qt::fixed << qSetRealNumberPrecision(4)
-                 << m_nonBondedCutoff << "*unit.nanometers,";
+    scriptStream << " nonbondedCutoff=" << Qt::fixed
+                 << qSetRealNumberPrecision(4) << m_nonBondedCutoff
+                 << "*unit.nanometers,";
   }
   if (m_constraintType == None) {
     scriptStream << " constraints=" << getConstraintType(m_constraintType);
@@ -1344,4 +1351,4 @@ void OpenMMInputDialog::writeSettings(QSettings& settings) const
   settings.setValue("openmm/savepath", m_savePath);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

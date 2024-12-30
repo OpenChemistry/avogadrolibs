@@ -62,7 +62,7 @@ private:
   Array<double> m_output;
 };
 
-OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel()
+OBCharges::OBCharges(const std::string& id) : ChargeModel(), m_identifier(id)
 {
   // set the element mask based on our type / identifier
   m_elements.reset();

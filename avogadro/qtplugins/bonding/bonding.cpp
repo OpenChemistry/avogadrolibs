@@ -42,11 +42,11 @@ Bonding::Bonding(QObject* parent_)
   m_orderAction->setProperty("menu priority", 735);
   m_clearAction->setProperty("menu priority", 720);
 
-  connect(m_action, SIGNAL(triggered()), SLOT(bond()));
-  connect(m_createBondsAction, SIGNAL(triggered()), SLOT(createBond()));
-  connect(m_orderAction, SIGNAL(triggered()), SLOT(bondOrders()));
-  connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
-  connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
+  connect(m_action, &QAction::triggered, this, &Bonding::bond);
+  connect(m_createBondsAction, &QAction::triggered, this, &Bonding::createBond);
+  connect(m_orderAction, &QAction::triggered, this, &Bonding::bondOrders);
+  connect(m_clearAction, &QAction::triggered, this, &Bonding::clearBonds);
+  connect(m_configAction, &QAction::triggered, this, &Bonding::configure);
 }
 
 QList<QAction*> Bonding::actions() const
@@ -103,8 +103,10 @@ void Bonding::configure()
     m_ui->toleranceSpinBox->setValue(m_tolerance);
     m_ui->minimumSpinBox->setValue(m_minDistance);
 
-    connect(m_ui->buttonBox, SIGNAL(accepted()), this, SLOT(setValues()));
-    connect(m_ui->buttonBox, SIGNAL(rejected()), m_dialog, SLOT(close()));
+    connect(m_ui->buttonBox, &QDialogButtonBox::accepted, this,
+            &Bonding::setValues);
+    connect(m_ui->buttonBox, &QDialogButtonBox::rejected, m_dialog,
+            &QWidget::close);
   }
 
   m_dialog->show();

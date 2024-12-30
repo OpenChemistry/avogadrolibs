@@ -38,46 +38,51 @@ Crystal::Crystal(QObject* parent_)
     m_wrapAtomsToCellAction(new QAction(this))
 {
   m_importCrystalClipboardAction->setText(tr("Import Crystal from Clipboard…"));
-  connect(m_importCrystalClipboardAction, SIGNAL(triggered()),
-          SLOT(importCrystalClipboard()));
+  connect(m_importCrystalClipboardAction, &QAction::triggered, this,
+          &Crystal::importCrystalClipboard);
   m_actions.push_back(m_importCrystalClipboardAction);
   m_importCrystalClipboardAction->setProperty("menu priority", 220);
 
   // this will be changed when the molecule is set:
   m_toggleUnitCellAction->setText(tr("Toggle Unit Cell"));
-  connect(m_toggleUnitCellAction, SIGNAL(triggered()), SLOT(toggleUnitCell()));
+  connect(m_toggleUnitCellAction, &QAction::triggered, this,
+          &Crystal::toggleUnitCell);
   m_actions.push_back(m_toggleUnitCellAction);
   m_toggleUnitCellAction->setProperty("menu priority", 210);
 
   m_editUnitCellAction->setText(tr("Edit Unit Cell…"));
-  connect(m_editUnitCellAction, SIGNAL(triggered()), SLOT(editUnitCell()));
+  connect(m_editUnitCellAction, &QAction::triggered, this,
+          &Crystal::editUnitCell);
   m_actions.push_back(m_editUnitCellAction);
   m_editUnitCellAction->setProperty("menu priority", 190);
 
   m_wrapAtomsToCellAction->setText(tr("&Wrap Atoms to Unit Cell"));
-  connect(m_wrapAtomsToCellAction, SIGNAL(triggered()),
-          SLOT(wrapAtomsToCell()));
+  connect(m_wrapAtomsToCellAction, &QAction::triggered, this,
+          &Crystal::wrapAtomsToCell);
   m_actions.push_back(m_wrapAtomsToCellAction);
   m_wrapAtomsToCellAction->setProperty("menu priority", 180);
 
   m_standardOrientationAction->setText(tr("Rotate to Standard &Orientation"));
-  connect(m_standardOrientationAction, SIGNAL(triggered()),
-          SLOT(standardOrientation()));
+  connect(m_standardOrientationAction, &QAction::triggered, this,
+          &Crystal::standardOrientation);
   m_actions.push_back(m_standardOrientationAction);
   m_standardOrientationAction->setProperty("menu priority", 170);
 
   m_scaleVolumeAction->setText(tr("Scale Cell &Volume…"));
-  connect(m_scaleVolumeAction, SIGNAL(triggered()), SLOT(scaleVolume()));
+  connect(m_scaleVolumeAction, &QAction::triggered, this,
+          &Crystal::scaleVolume);
   m_actions.push_back(m_scaleVolumeAction);
   m_scaleVolumeAction->setProperty("menu priority", 160);
 
   m_buildSupercellAction->setText(tr("Build &Supercell…"));
-  connect(m_buildSupercellAction, SIGNAL(triggered()), SLOT(buildSupercell()));
+  connect(m_buildSupercellAction, &QAction::triggered, this,
+          &Crystal::buildSupercell);
   m_actions.push_back(m_buildSupercellAction);
   m_buildSupercellAction->setProperty("menu priority", 150);
 
   m_niggliReduceAction->setText(tr("Reduce Cell (&Niggli)"));
-  connect(m_niggliReduceAction, SIGNAL(triggered()), SLOT(niggliReduce()));
+  connect(m_niggliReduceAction, &QAction::triggered, this,
+          &Crystal::niggliReduce);
   m_actions.push_back(m_niggliReduceAction);
   m_niggliReduceAction->setProperty("menu priority", 140);
 
@@ -116,7 +121,8 @@ void Crystal::setMolecule(QtGui::Molecule* mol)
     m_unitCellDialog->setMolecule(m_molecule);
 
   if (m_molecule)
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &Crystal::moleculeChanged);
 
   updateActions();
 }

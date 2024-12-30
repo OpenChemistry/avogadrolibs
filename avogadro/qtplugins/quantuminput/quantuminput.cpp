@@ -131,8 +131,8 @@ void QuantumInput::menuActivated()
 
   if (!dlg) {
     dlg = new InputGeneratorDialog(scriptFileName, theParent);
-    connect(&dlg->widget(), SIGNAL(openJobOutput(const MoleQueue::JobObject&)),
-            this, SLOT(openJobOutput(const MoleQueue::JobObject&)));
+    connect(&dlg->widget(), &MoleQueue::InputGeneratorWidget::openJobOutput,
+            this, &QuantumInput::openJobOutput);
     m_dialogs.insert(scriptFileName, dlg);
   }
   dlg->setMolecule(m_molecule);
@@ -173,7 +173,7 @@ void QuantumInput::addAction(const QString& label,
   auto* action = new QAction(label, this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
-  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(action, &QAction::triggered, this, &QuantumInput::menuActivated);
   m_actions << action;
 }
 

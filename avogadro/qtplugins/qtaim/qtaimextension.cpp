@@ -41,21 +41,21 @@ QTAIMExtension::QTAIMExtension(QObject* aParent)
   action->setText(tr("Molecular Graph…"));
   m_actions.append(action);
   action->setData(FirstAction);
-  connect(action, SIGNAL(triggered()), SLOT(triggered()));
+  connect(action, &QAction::triggered, this, &QTAIMExtension::triggered);
 
   // create an action for our second action
   action = new QAction(this);
   action->setText(tr("Molecular Graph with Lone Pairs…"));
   m_actions.append(action);
   action->setData(SecondAction);
-  connect(action, SIGNAL(triggered()), SLOT(triggered()));
+  connect(action, &QAction::triggered, this, &QTAIMExtension::triggered);
 
   // create an action for our third action
   action = new QAction(this);
   action->setText(tr("Atomic Charge…"));
   m_actions.append(action);
   action->setData(ThirdAction);
-  connect(action, SIGNAL(triggered()), SLOT(triggered()));
+  connect(action, &QAction::triggered, this, &QTAIMExtension::triggered);
 }
 
 QList<QAction*> QTAIMExtension::actions() const
@@ -260,12 +260,9 @@ void QTAIMExtension::triggered()
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
                 for (auto j : bondPathList.at(bondPair)) {
-                  x =
-                    j.x() * convertBohrToAngstrom;
-                  y =
-                    j.y() * convertBohrToAngstrom;
-                  z =
-                    j.z() * convertBohrToAngstrom;
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -435,12 +432,9 @@ void QTAIMExtension::triggered()
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
                 for (auto j : bondPathList.at(bondPair)) {
-                  x =
-                    j.x() * convertBohrToAngstrom;
-                  y =
-                    j.y() * convertBohrToAngstrom;
-                  z =
-                    j.z() * convertBohrToAngstrom;
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -646,12 +640,9 @@ void QTAIMExtension::triggered()
 
                   bondPathSegmentStartIndexVariantList.append(bpCtr);
                   for (auto j : bondPathList.at(bondPair)) {
-                    x = j.x() *
-                        convertBohrToAngstrom;
-                    y = j.y() *
-                        convertBohrToAngstrom;
-                    z = j.z() *
-                        convertBohrToAngstrom;
+                    x = j.x() * convertBohrToAngstrom;
+                    y = j.y() * convertBohrToAngstrom;
+                    z = j.z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append(x);
                     yBondPathsVariantList.append(y);
@@ -727,4 +718,4 @@ void QTAIMExtension::triggered()
   emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

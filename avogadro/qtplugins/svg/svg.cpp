@@ -5,11 +5,11 @@
 
 #include "svg.h"
 
+#include <QAction>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
 #include <QSvgGenerator>
-#include <QAction>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/scene.h>
@@ -27,9 +27,10 @@ const Vector3ub SVG::DEFAULT_BOND_COLOR = Vector3ub(125, 125, 125);
 
 SVG::SVG(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
-    m_scene(nullptr), m_camera(nullptr), m_action(new QAction(tr("&SVG…"), this))
+    m_scene(nullptr), m_camera(nullptr),
+    m_action(new QAction(tr("&SVG…"), this))
 {
-  connect(m_action, SIGNAL(triggered()), SLOT(render()));
+  connect(m_action, &QAction::triggered, this, &SVG::render);
 }
 
 SVG::~SVG() {}
@@ -277,4 +278,4 @@ void SVG::render()
   painter.end();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

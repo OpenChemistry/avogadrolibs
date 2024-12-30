@@ -25,19 +25,19 @@ using Avogadro::QtGui::FileFormatDialog;
 namespace Avogadro::QtPlugins {
 
 LineFormatInput::LineFormatInput(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_),
-    m_molecule(nullptr), m_reader(nullptr)
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_reader(nullptr)
 {
   auto* action = new QAction(tr("SMILES…"), this);
   action->setProperty("menu priority", 800);
   action->setData("SMILES");
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &LineFormatInput::showDialog);
   m_actions.append(action);
 
   action = new QAction(tr("InChI…"), this);
   action->setProperty("menu priority", 810);
   action->setData("InChI");
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &LineFormatInput::showDialog);
   m_actions.append(action);
 
   // These are the line formats that we can load -- key is a user-friendly name,
@@ -137,4 +137,4 @@ void LineFormatInput::showDialog()
   m_reader = nullptr;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

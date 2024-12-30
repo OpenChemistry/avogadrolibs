@@ -27,8 +27,9 @@
 namespace Avogadro::QtPlugins {
 
 ScriptChargeModel::ScriptChargeModel(const QString& scriptFileName_)
-  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(false),
-    m_partialCharges(false), m_electrostatics(false), m_inputFormat(NotUsed)
+  : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
+    m_inputFormat(NotUsed), m_valid(false), m_partialCharges(false),
+    m_electrostatics(false)
 {
   m_elements.reset();
   readMetaData();

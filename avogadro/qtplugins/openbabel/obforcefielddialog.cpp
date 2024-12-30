@@ -35,8 +35,8 @@ OBForceFieldDialog::OBForceFieldDialog(const QStringList& forceFields,
   ui->forceField->addItems(forceFields);
   updateRecommendedForceField();
 
-  connect(ui->useRecommended, SIGNAL(toggled(bool)),
-          SLOT(useRecommendedForceFieldToggled(bool)));
+  connect(ui->useRecommended, &QAbstractButton::toggled, this,
+          &OBForceFieldDialog::useRecommendedForceFieldToggled);
 
   QSettings settings;
   bool autoDetect =
@@ -323,4 +323,4 @@ void OBForceFieldDialog::updateRecommendedForceField()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

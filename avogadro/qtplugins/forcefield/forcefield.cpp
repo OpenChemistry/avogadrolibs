@@ -72,7 +72,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   action->setData(optimizeAction);
   action->setProperty("menu priority", 920);
-  connect(action, SIGNAL(triggered()), SLOT(optimize()));
+  connect(action, &QAction::triggered, this, &Forcefield::optimize);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -80,7 +80,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Energy")); // calculate energy
   action->setData(energyAction);
   action->setProperty("menu priority", 910);
-  connect(action, SIGNAL(triggered()), SLOT(energy()));
+  connect(action, &QAction::triggered, this, &Forcefield::energy);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -88,7 +88,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Forces")); // calculate gradients
   action->setData(forcesAction);
   action->setProperty("menu priority", 910);
-  connect(action, SIGNAL(triggered()), SLOT(forces()));
+  connect(action, &QAction::triggered, this, &Forcefield::forces);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -96,7 +96,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Configure…"));
   action->setData(configureAction);
   action->setProperty("menu priority", 900);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &Forcefield::showDialog);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -107,14 +107,14 @@ Forcefield::Forcefield(QObject* parent_)
   action->setEnabled(true);
   action->setText(tr("Freeze Selected Atoms"));
   action->setData(freezeAction);
-  connect(action, SIGNAL(triggered()), SLOT(freezeSelected()));
+  connect(action, &QAction::triggered, this, &Forcefield::freezeSelected);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Unfreeze Selected Atoms"));
   action->setData(unfreezeAction);
-  connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
+  connect(action, &QAction::triggered, this, &Forcefield::unfreezeSelected);
   m_actions.push_back(action);
 
   // initialize the calculators

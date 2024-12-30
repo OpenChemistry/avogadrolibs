@@ -41,8 +41,9 @@ ResetView::ResetView(QObject* parent_)
   m_centerAction->setProperty("menu priority", 210);
   m_viewToAxesAction->setProperty("menu priority", 200);
 
-  connect(m_centerAction, SIGNAL(triggered()), SLOT(centerView()));
-  connect(m_viewToAxesAction, SIGNAL(triggered()), SLOT(alignToAxes()));
+  connect(m_centerAction, &QAction::triggered, this, &ResetView::centerView);
+  connect(m_viewToAxesAction, &QAction::triggered, this,
+          &ResetView::alignToAxes);
 }
 
 ResetView::~ResetView() {}

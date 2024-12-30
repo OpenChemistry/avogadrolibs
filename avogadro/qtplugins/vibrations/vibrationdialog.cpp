@@ -23,10 +23,12 @@ VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
   m_ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_ui->tableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-  connect(m_ui->amplitudeSlider, SIGNAL(sliderMoved(int)),
-          SIGNAL(amplitudeChanged(int)));
-  connect(m_ui->startButton, SIGNAL(clicked(bool)), SIGNAL(startAnimation()));
-  connect(m_ui->stopButton, SIGNAL(clicked(bool)), SIGNAL(stopAnimation()));
+  connect(m_ui->amplitudeSlider, &QAbstractSlider::sliderMoved, this,
+          &VibrationDialog::amplitudeChanged);
+  connect(m_ui->startButton, &QAbstractButton::clicked, this,
+          &VibrationDialog::startAnimation);
+  connect(m_ui->stopButton, &QAbstractButton::clicked, this,
+          &VibrationDialog::stopAnimation);
 }
 
 VibrationDialog::~VibrationDialog()
@@ -38,16 +40,16 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
 {
   if (m_ui->tableView->selectionModel()) {
     disconnect(m_ui->tableView->selectionModel(),
-               SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this,
-               SLOT(selectRow(QModelIndex)));
+               &QItemSelectionModel::currentRowChanged, this,
+               &VibrationDialog::selectRow);
   }
 
   auto* model = new VibrationModel(this);
   model->setMolecule(molecule);
   m_ui->tableView->setModel(model);
   connect(m_ui->tableView->selectionModel(),
-          SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-          SLOT(selectRow(QModelIndex)));
+          &QItemSelectionModel::currentRowChanged, this,
+          &VibrationDialog::selectRow);
 
   Core::Array<double> freqs = molecule->vibrationFrequencies();
   for (size_t i = 0; i < freqs.size(); ++i) {

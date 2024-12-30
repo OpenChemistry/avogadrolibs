@@ -32,7 +32,8 @@ SlaterSetConcurrent::SlaterSetConcurrent(QObject* p)
   : QObject(p), m_shells(nullptr), m_set(nullptr), m_tools(nullptr)
 {
   // Watch for the future
-  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
+  connect(&m_watcher, &QFutureWatcherBase::finished, this,
+          &SlaterSetConcurrent::calculationComplete);
 }
 
 SlaterSetConcurrent::~SlaterSetConcurrent()

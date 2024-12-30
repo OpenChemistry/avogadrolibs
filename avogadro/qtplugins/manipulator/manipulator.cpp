@@ -54,8 +54,8 @@ Manipulator::Manipulator(QObject* parent_)
        "Right Mouse: \tClick and drag to rotate atoms.\n")
       .arg(shortcut));
   setIcon();
-  connect(m_toolWidget->buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
-          SLOT(buttonClicked(QAbstractButton*)));
+  connect(m_toolWidget->buttonBox, &QDialogButtonBox::clicked, this,
+          &Manipulator::buttonClicked);
 }
 
 Manipulator::~Manipulator() {}

@@ -25,7 +25,7 @@ Vibrations::Vibrations(QObject* p)
   auto* action = new QAction(this);
   action->setEnabled(false);
   action->setText(tr("Vibrational Modes…"));
-  connect(action, SIGNAL(triggered()), SLOT(openDialog()));
+  connect(action, &QAction::triggered, this, &Vibrations::openDialog);
   m_actions.push_back(action);
 }
 
@@ -63,8 +63,8 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
   if (isVibrational)
     openDialog();
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)),
-          SLOT(moleculeChanged(unsigned int)));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &Vibrations::moleculeChanged);
 }
 
 void Vibrations::moleculeChanged(unsigned int changes)
@@ -207,7 +207,7 @@ void Vibrations::startVibrationAnimation()
 
   if (!m_timer) {
     m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), SLOT(advanceFrame()));
+    connect(m_timer, &QTimer::timeout, this, &Vibrations::advanceFrame);
   }
   if (!m_timer->isActive()) {
     m_timer->start(50);
@@ -228,11 +228,14 @@ void Vibrations::openDialog()
 {
   if (!m_dialog) {
     m_dialog = new VibrationDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(modeChanged(int)), SLOT(setMode(int)));
-    connect(m_dialog, SIGNAL(amplitudeChanged(int)), SLOT(setAmplitude(int)));
-    connect(m_dialog, SIGNAL(startAnimation()),
-            SLOT(startVibrationAnimation()));
-    connect(m_dialog, SIGNAL(stopAnimation()), SLOT(stopVibrationAnimation()));
+    connect(m_dialog, &VibrationDialog::modeChanged, this,
+            &Vibrations::setMode);
+    connect(m_dialog, &VibrationDialog::amplitudeChanged, this,
+            &Vibrations::setAmplitude);
+    connect(m_dialog, &VibrationDialog::startAnimation, this,
+            &Vibrations::startVibrationAnimation);
+    connect(m_dialog, &VibrationDialog::stopAnimation, this,
+            &Vibrations::stopVibrationAnimation);
   }
   if (m_molecule)
     m_dialog->setMolecule(m_molecule);

@@ -55,7 +55,8 @@ SelectionTool::SelectionTool(QObject* parent_)
        "\tDrag to select a range of atoms\n"
        "Right Mouse: \tClick outside the molecule to clear selection\n"
        "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-       "Double-Click: \tSelect an entire fragment.").arg(shortcut));
+       "Double-Click: \tSelect an entire fragment.")
+      .arg(shortcut));
   setIcon();
 }
 
@@ -73,10 +74,10 @@ QWidget* SelectionTool::toolWidget() const
 {
   if (m_toolWidget == nullptr) {
     m_toolWidget = new SelectionToolWidget(qobject_cast<QWidget*>(parent()));
-    connect(m_toolWidget, SIGNAL(colorApplied(Vector3ub)), this,
-            SLOT(applyColor(Vector3ub)));
-    connect(m_toolWidget, SIGNAL(changeLayer(int)), this,
-            SLOT(applyLayer(int)));
+    connect(m_toolWidget, &SelectionToolWidget::colorApplied, this,
+            &SelectionTool::applyColor);
+    connect(m_toolWidget, &SelectionToolWidget::changeLayer, this,
+            &SelectionTool::applyLayer);
   }
   return m_toolWidget;
 }

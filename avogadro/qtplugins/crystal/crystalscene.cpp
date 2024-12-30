@@ -176,11 +176,12 @@ QWidget* CrystalScene::setupWidget()
     auto* multiColor = new QCheckBox;
     multiColor->setChecked(m_multiColor);
     form->addRow(tr("Color axes:"), multiColor);
-    connect(multiColor, SIGNAL(toggled(bool)), SLOT(setMultiColor(bool)));
+    connect(multiColor, &QAbstractButton::toggled, this,
+            &CrystalScene::setMultiColor);
 
     auto* color = new QtGui::ColorButton;
-    connect(color, SIGNAL(colorChanged(const QColor&)),
-            SLOT(setColor(const QColor&)));
+    connect(color, &QtGui::ColorButton::colorChanged, this,
+            &CrystalScene::setColor);
     form->addRow(tr("Line color:"), color);
 
     v->addLayout(form);

@@ -13,8 +13,8 @@
 
 #include <avogadro/molequeue/client/jobobject.h>
 
-#include <QtCore/QDebug>
 #include <QAction>
+#include <QtCore/QDebug>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {
@@ -31,7 +31,7 @@ Cp2kInput::Cp2kInput(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&CP2K…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(m_action, &QAction::triggered, this, &Cp2kInput::menuActivated);
 }
 
 Cp2kInput::~Cp2kInput() {}
@@ -98,8 +98,8 @@ void Cp2kInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new Cp2kInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)), this,
-            SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
+    connect(m_dialog, &Cp2kInputDialog::openJobOutput, this,
+            &Cp2kInput::openJobOutput);
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();

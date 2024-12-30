@@ -47,7 +47,7 @@ enum LigandType
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   : QWidget(parent_), m_ui(new Ui::TemplateToolWidget),
-    m_elementSelector(nullptr), m_fragmentDialog(nullptr), m_currentElement(26)
+    m_fragmentDialog(nullptr), m_elementSelector(nullptr), m_currentElement(26)
 {
   m_ui->setupUi(this);
 
@@ -217,8 +217,8 @@ void TemplateToolWidget::groupChanged(int index)
       m_fragmentDialog->deleteLater();
 
     m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
-    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
-            SLOT(otherLigandInsert(const QString&, bool)));
+    connect(m_fragmentDialog, &QtGui::InsertFragmentDialog::performInsert, this,
+            &TemplateToolWidget::otherLigandInsert);
     m_fragmentDialog->show();
     return;
   }
@@ -268,8 +268,8 @@ void TemplateToolWidget::ligandChanged(int index)
       m_fragmentDialog->deleteLater();
 
     m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
-    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
-            SLOT(otherLigandInsert(const QString&, bool)));
+    connect(m_fragmentDialog, &QtGui::InsertFragmentDialog::performInsert, this,
+            &TemplateToolWidget::otherLigandInsert);
     m_fragmentDialog->show();
     return;
   }
@@ -388,8 +388,8 @@ void TemplateToolWidget::elementChanged(int index)
     if (itemData.toInt() == ELEMENT_SELECTOR_TAG) {
       if (!m_elementSelector) {
         m_elementSelector = new QtGui::PeriodicTableView(this);
-        connect(m_elementSelector, SIGNAL(elementChanged(int)), this,
-                SLOT(elementSelectedFromTable(int)));
+        connect(m_elementSelector, &QtGui::PeriodicTableView::elementChanged,
+                this, &TemplateToolWidget::elementSelectedFromTable);
       }
       m_elementSelector->setElement(m_currentElement);
       m_elementSelector->show();

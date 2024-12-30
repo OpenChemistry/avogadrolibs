@@ -27,28 +27,28 @@ PropertyTables::PropertyTables(QObject* parent_)
   action->setText(tr("Atom Properties…"));
   action->setData(PropertyType::AtomType);
   action->setProperty("menu priority", 880);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &PropertyTables::showDialog);
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Bond Properties…"));
   action->setData(PropertyType::BondType);
   action->setProperty("menu priority", 870);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &PropertyTables::showDialog);
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Angle Properties…"));
   action->setData(PropertyType::AngleType);
   action->setProperty("menu priority", 860);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &PropertyTables::showDialog);
   m_actions.append(action);
 
   action = new QAction(this);
   action->setText(tr("Torsion Properties…"));
   action->setData(PropertyType::TorsionType);
   action->setProperty("menu priority", 850);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &PropertyTables::showDialog);
   m_actions.append(action);
 
   action = new QAction(this);
@@ -56,7 +56,7 @@ PropertyTables::PropertyTables(QObject* parent_)
   action->setData(PropertyType::ResidueType);
   action->setProperty("menu priority", 840);
   action->setEnabled(false); // changed by molecule
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &PropertyTables::showDialog);
   m_actions.append(action);
 
   action = new QAction(this);
@@ -64,7 +64,7 @@ PropertyTables::PropertyTables(QObject* parent_)
   action->setData(PropertyType::ConformerType);
   action->setProperty("menu priority", 830);
   action->setEnabled(false); // changed by molecule
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &PropertyTables::showDialog);
   m_actions.append(action);
 }
 
@@ -96,7 +96,8 @@ void PropertyTables::setMolecule(QtGui::Molecule* mol)
   updateActions();
 
   // update if the molecule changes
-  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &PropertyTables::updateActions);
 }
 
 void PropertyTables::updateActions()

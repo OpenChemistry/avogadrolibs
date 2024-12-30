@@ -30,7 +30,8 @@ PeriodicTableView::PeriodicTableView(QWidget* parent_)
   setRenderHint(QPainter::Antialiasing);
   setWindowTitle(tr("Periodic Table"));
   resize(490, 270);
-  connect(table, SIGNAL(elementChanged(int)), this, SLOT(elementClicked(int)));
+  connect(table, &PeriodicTableScene::elementChanged, this,
+          &PeriodicTableView::elementClicked);
 }
 
 PeriodicTableView::~PeriodicTableView()
@@ -68,7 +69,7 @@ void PeriodicTableView::keyPressEvent(QKeyEvent* event_)
     // This is the first character typed.
     // Wait for 2 seconds, then clear the buffer,
     // this ensures we can get multi-character elements.
-    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
+    QTimer::singleShot(2000, this, &PeriodicTableView::clearKeyPressBuffer);
   }
 
   if (event_->key() == Qt::Key_Escape || event_->key() == Qt::Key_Return ||
@@ -147,4 +148,4 @@ void PeriodicTableView::resizeEvent(QResizeEvent* e)
   setTransform(scaleTransform);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

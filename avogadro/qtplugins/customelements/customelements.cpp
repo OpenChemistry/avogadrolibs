@@ -18,14 +18,13 @@ CustomElements::CustomElements(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
     m_reassignAction(new QAction(tr("Reassign &Custom Elements…"), this))
 {
-  connect(m_reassignAction, SIGNAL(triggered()), SLOT(reassign()));
+  connect(m_reassignAction, &QAction::triggered, this,
+          &CustomElements::reassign);
 
   updateReassignAction();
 }
 
-CustomElements::~CustomElements()
-{
-}
+CustomElements::~CustomElements() {}
 
 QString CustomElements::description() const
 {
@@ -51,7 +50,8 @@ void CustomElements::setMolecule(QtGui::Molecule* mol)
     m_molecule = mol;
 
     if (m_molecule)
-      connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+      connect(m_molecule, &QtGui::Molecule::changed, this,
+              &CustomElements::moleculeChanged);
 
     updateReassignAction();
   }
@@ -79,4 +79,4 @@ void CustomElements::updateReassignAction()
   m_reassignAction->setEnabled(m_molecule && m_molecule->hasCustomElements());
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

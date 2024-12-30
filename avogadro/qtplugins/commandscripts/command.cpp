@@ -194,8 +194,9 @@ void Command::menuActivated()
   auto* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(run()));
-  connect(buttonBox, SIGNAL(rejected()), m_currentDialog, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &Command::run);
+  connect(buttonBox, &QDialogButtonBox::rejected, m_currentDialog,
+          &QDialog::reject);
   vbox->addWidget(buttonBox);
   m_currentDialog->setLayout(vbox);
   m_currentDialog->exec();
@@ -210,8 +211,8 @@ void Command::run()
     m_progress->deleteLater();
 
   if (m_currentScript) {
-    disconnect(m_currentScript, SIGNAL(finished()), this,
-               SLOT(processFinished()));
+    disconnect(m_currentScript, &QtGui::InterfaceScript::finished, this,
+               &Command::processFinished);
     m_currentScript->deleteLater();
   }
 
@@ -223,7 +224,8 @@ void Command::run()
       m_currentInterface->interfaceScript().scriptFilePath();
 
     m_currentScript = new InterfaceScript(scriptFilePath, parent());
-    connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+    connect(m_currentScript, &QtGui::InterfaceScript::finished, this,
+            &Command::processFinished);
 
     // no cancel button - just an indication we're waiting...
     QString title = tr("Processing %1").arg(m_currentScript->displayName());
@@ -293,8 +295,8 @@ void Command::configurePython()
   dlg.setLayout(layout);
 
   // Connect
-  connect(buttonBox, SIGNAL(accepted()), &dlg, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
 
   // Show dialog
   auto response = static_cast<QDialog::DialogCode>(dlg.exec());
@@ -337,7 +339,7 @@ void Command::addAction(const QString& label, const QString& scriptFilePath)
   auto* action = new QAction(tr(label.toUtf8()), this);
   action->setData(scriptFilePath);
   action->setEnabled(true);
-  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(action, &QAction::triggered, this, &Command::menuActivated);
   m_actions << action;
 }
 

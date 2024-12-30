@@ -391,12 +391,14 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   dialog.setLabelText(QString("Nuclear Critical Points Search"));
 
   QFutureWatcher<void> futureWatcher;
-  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
-                   &dialog, SLOT(setRange(int, int)));
-  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog,
-                   SLOT(setValue(int)));
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::finished, &dialog,
+                   &QProgressDialog::reset);
+  QObject::connect(&dialog, &QProgressDialog::canceled, &futureWatcher,
+                   &QFutureWatcherBase::cancel);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressRangeChanged,
+                   &dialog, &QProgressDialog::setRange);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressValueChanged,
+                   &dialog, &QProgressDialog::setValue);
 
   QFuture<QList<QVariant>> future =
     QtConcurrent::mapped(inputList, QTAIMLocateNuclearCriticalPoint);
@@ -414,11 +416,9 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
     if (n.at(0).toBool()) {
-      QVector3D result(n.at(1).toReal(),
-                       n.at(2).toReal(),
-                       n.at(3).toReal());
+      QVector3D result(n.at(1).toReal(), n.at(2).toReal(), n.at(3).toReal());
 
       m_nuclearCriticalPoints.append(result);
     }
@@ -490,12 +490,14 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   dialog.setLabelText(QString("Bond Critical Points Search"));
 
   QFutureWatcher<void> futureWatcher;
-  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
-                   &dialog, SLOT(setRange(int, int)));
-  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog,
-                   SLOT(setValue(int)));
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::finished, &dialog,
+                   &QProgressDialog::reset);
+  QObject::connect(&dialog, &QProgressDialog::canceled, &futureWatcher,
+                   &QFutureWatcherBase::cancel);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressRangeChanged,
+                   &dialog, &QProgressDialog::setRange);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressValueChanged,
+                   &dialog, &QProgressDialog::setValue);
 
   QFuture<QList<QVariant>> future =
     QtConcurrent::mapped(inputList, QTAIMLocateBondCriticalPoint);
@@ -637,12 +639,14 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   dialog.setLabelText(QString("Electron Density Sources Search"));
 
   QFutureWatcher<void> futureWatcher;
-  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
-                   &dialog, SLOT(setRange(int, int)));
-  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog,
-                   SLOT(setValue(int)));
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::finished, &dialog,
+                   &QProgressDialog::reset);
+  QObject::connect(&dialog, &QProgressDialog::canceled, &futureWatcher,
+                   &QFutureWatcherBase::cancel);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressRangeChanged,
+                   &dialog, &QProgressDialog::setRange);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressValueChanged,
+                   &dialog, &QProgressDialog::setValue);
 
   QFuture<QList<QVariant>> future =
     QtConcurrent::mapped(inputList, QTAIMLocateElectronDensitySource);
@@ -660,7 +664,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
     if (n.at(0).toBool()) {
       qreal x = n.at(1).toReal();
       qreal y = n.at(2).toReal();
@@ -782,12 +786,14 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   dialog.setLabelText(QString("Electron Density Sinks Search"));
 
   QFutureWatcher<void> futureWatcher;
-  QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
-  QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
-  QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
-                   &dialog, SLOT(setRange(int, int)));
-  QObject::connect(&futureWatcher, SIGNAL(progressValueChanged(int)), &dialog,
-                   SLOT(setValue(int)));
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::finished, &dialog,
+                   &QProgressDialog::reset);
+  QObject::connect(&dialog, &QProgressDialog::canceled, &futureWatcher,
+                   &QFutureWatcherBase::cancel);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressRangeChanged,
+                   &dialog, &QProgressDialog::setRange);
+  QObject::connect(&futureWatcher, &QFutureWatcherBase::progressValueChanged,
+                   &dialog, &QProgressDialog::setValue);
 
   QFuture<QList<QVariant>> future =
     QtConcurrent::mapped(inputList, QTAIMLocateElectronDensitySink);
@@ -805,7 +811,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
     if (n.at(0).toBool()) {
       qreal x = n.at(1).toReal();
       qreal y = n.at(2).toReal();
@@ -857,4 +863,4 @@ QString QTAIMCriticalPointLocator::temporaryFileName()
   return tempFileName;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

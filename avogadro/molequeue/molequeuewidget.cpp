@@ -25,8 +25,8 @@ MoleQueueWidget::MoleQueueWidget(QWidget* parent_)
 {
   m_ui->setupUi(this);
 
-  connect(m_ui->refreshProgramsButton, SIGNAL(clicked()),
-          SLOT(refreshPrograms()));
+  connect(m_ui->refreshProgramsButton, &QAbstractButton::clicked, this,
+          &MoleQueueWidget::refreshPrograms);
 
   MoleQueueManager& mqManager = MoleQueueManager::instance();
   m_ui->queueListView->setModel(&mqManager.queueListModel());
@@ -107,8 +107,8 @@ void MoleQueueWidget::showAndSelectProgram(const QString& programName)
   MoleQueueManager& mqManager = MoleQueueManager::instance();
   setProperty("selectProgramName", programName);
 
-  connect(&mqManager, SIGNAL(queueListUpdated()),
-          SLOT(showAndSelectProgramHandler()));
+  connect(&mqManager, &MoleQueueManager::queueListUpdated, this,
+          &MoleQueueWidget::showAndSelectProgramHandler);
 
   if (mqManager.connectIfNeeded())
     mqManager.requestQueueList();
@@ -180,8 +180,8 @@ void MoleQueueWidget::showAndSelectProgramHandler()
   MoleQueueManager& mqManager = MoleQueueManager::instance();
   const QString program(property("selectProgramName").toString());
   setProperty("selectProgramName", QVariant());
-  disconnect(&mqManager, SIGNAL(queueListUpdated()), this,
-             SLOT(showAndSelectProgramHandler()));
+  disconnect(&mqManager, &MoleQueueManager::queueListUpdated, this,
+             &MoleQueueWidget::showAndSelectProgramHandler);
 
   // Get all program nodes that match the name
   QModelIndexList list(mqManager.queueListModel().findProgramIndices(program));
@@ -255,11 +255,11 @@ void MoleQueueWidget::listenForLookupJobReply(bool listen)
 {
   Client& mqClient(MoleQueueManager::instance().client());
   if (listen) {
-    connect(&mqClient, SIGNAL(lookupJobResponse(int, QJsonObject)), this,
-            SLOT(onLookupJobReply(int, QJsonObject)));
+    connect(&mqClient, &Client::lookupJobResponse, this,
+            &MoleQueueWidget::onLookupJobReply);
   } else {
-    disconnect(&mqClient, SIGNAL(lookupJobResponse(int, QJsonObject)), this,
-               SLOT(onLookupJobReply(int, QJsonObject)));
+    disconnect(&mqClient, &Client::lookupJobResponse, this,
+               &MoleQueueWidget::onLookupJobReply);
   }
 }
 
@@ -268,15 +268,15 @@ void MoleQueueWidget::listenForJobSubmitReply(bool listen)
   MoleQueue::Client& mqClient(MoleQueueManager::instance().client());
 
   if (listen) {
-    connect(&mqClient, SIGNAL(submitJobResponse(int, uint)), this,
-            SLOT(onSubmissionSuccess(int, uint)));
-    connect(&mqClient, SIGNAL(errorReceived(int, uint, QString)), this,
-            SLOT(onSubmissionFailure(int, uint, QString)));
+    connect(&mqClient, &Client::submitJobResponse, this,
+            &MoleQueueWidget::onSubmissionSuccess);
+    connect(&mqClient, &Client::errorReceived, this,
+            &MoleQueueWidget::onSubmissionFailure);
   } else {
-    disconnect(&mqClient, SIGNAL(submitJobResponse(int, uint)), this,
-               SLOT(onSubmissionSuccess(int, uint)));
-    disconnect(&mqClient, SIGNAL(errorReceived(int, uint, QString)), this,
-               SLOT(onSubmissionFailure(int, uint, QString)));
+    disconnect(&mqClient, &Client::submitJobResponse, this,
+               &MoleQueueWidget::onSubmissionSuccess);
+    disconnect(&mqClient, &Client::errorReceived, this,
+               &MoleQueueWidget::onSubmissionFailure);
   }
 }
 
@@ -285,11 +285,11 @@ void MoleQueueWidget::listenForJobStateChange(bool listen)
   MoleQueue::Client& mqClient(MoleQueueManager::instance().client());
 
   if (listen) {
-    connect(&mqClient, SIGNAL(jobStateChanged(uint, QString, QString)), this,
-            SLOT(onJobStateChange(uint, QString, QString)));
+    connect(&mqClient, &Client::jobStateChanged, this,
+            &MoleQueueWidget::onJobStateChange);
   } else {
-    disconnect(&mqClient, SIGNAL(jobStateChanged(uint, QString, QString)), this,
-               SLOT(onJobStateChange(uint, QString, QString)));
+    disconnect(&mqClient, &Client::jobStateChanged, this,
+               &MoleQueueWidget::onJobStateChange);
   }
 }
 
@@ -299,4 +299,4 @@ bool MoleQueueWidget::programSelected()
   return sel.size() > 0;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

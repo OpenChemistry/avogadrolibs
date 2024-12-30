@@ -28,14 +28,14 @@ bool Client::connectToServer(const QString& serverName)
 {
   if (!m_jsonRpcClient) {
     m_jsonRpcClient = new JsonRpcClient(this);
-    connect(m_jsonRpcClient, SIGNAL(resultReceived(QJsonObject)),
-            SLOT(processResult(QJsonObject)));
-    connect(m_jsonRpcClient, SIGNAL(notificationReceived(QJsonObject)),
-            SLOT(processNotification(QJsonObject)));
-    connect(m_jsonRpcClient, SIGNAL(errorReceived(QJsonObject)),
-            SLOT(processError(QJsonObject)));
-    connect(m_jsonRpcClient, SIGNAL(connectionStateChanged()),
-            SIGNAL(connectionStateChanged()));
+    connect(m_jsonRpcClient, &JsonRpcClient::resultReceived, this,
+            &Client::processResult);
+    connect(m_jsonRpcClient, &JsonRpcClient::notificationReceived, this,
+            &Client::processNotification);
+    connect(m_jsonRpcClient, &JsonRpcClient::errorReceived, this,
+            &Client::processError);
+    connect(m_jsonRpcClient, &JsonRpcClient::connectionStateChanged, this,
+            &Client::connectionStateChanged);
   }
 
   return m_jsonRpcClient->connectToServer(serverName);

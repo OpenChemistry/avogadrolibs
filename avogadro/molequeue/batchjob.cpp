@@ -206,14 +206,14 @@ void BatchJob::setup()
 
   MoleQueueManager& mqManager = MoleQueueManager::instance();
   Client& client = mqManager.client();
-  connect(&client, SIGNAL(submitJobResponse(int, uint)),
-          SLOT(handleSubmissionReply(int, uint)));
-  connect(&client, SIGNAL(lookupJobResponse(int, QJsonObject)),
-          SLOT(handleLookupJobReply(int, QJsonObject)));
-  connect(&client, SIGNAL(jobStateChanged(uint, QString, QString)),
-          SLOT(handleJobStateChange(uint, QString, QString)));
-  connect(&client, SIGNAL(errorReceived(int, int, QString, QJsonValue)),
-          SLOT(handleErrorResponse(int, int, QString, QJsonValue)));
+  connect(&client, &Client::submitJobResponse, this,
+          &BatchJob::handleSubmissionReply);
+  connect(&client, &Client::lookupJobResponse, this,
+          &BatchJob::handleLookupJobReply);
+  connect(&client, &Client::jobStateChanged, this,
+          &BatchJob::handleJobStateChange);
+  connect(&client, &Client::errorReceived, this,
+          &BatchJob::handleErrorResponse);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue
