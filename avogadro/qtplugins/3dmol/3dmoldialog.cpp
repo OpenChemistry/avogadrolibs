@@ -55,10 +55,13 @@ void ThreeDMolDialog::setMolecule(QtGui::Molecule* mol)
   if (!m_molecule)
     return;
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateLabels()));
-  connect(m_molecule, SIGNAL(destroyed()), SLOT(moleculeDestroyed()));
-  connect(m_ui->closeButton, SIGNAL(clicked()), SLOT(close()));
-  connect(m_ui->copyButton, SIGNAL(clicked()), SLOT(copyToClipboard()));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &ThreeDMolDialog::updateLabels);
+  connect(m_molecule, &QObject::destroyed, this,
+          &ThreeDMolDialog::moleculeDestroyed);
+  connect(m_ui->closeButton, &QAbstractButton::clicked, this, &QWidget::close);
+  connect(m_ui->copyButton, &QAbstractButton::clicked, this,
+          &ThreeDMolDialog::copyToClipboard);
 
   updateLabels();
 }
@@ -123,4 +126,4 @@ void ThreeDMolDialog::copyToClipboard()
   QApplication::clipboard()->setText(m_ui->plainTextEdit->toPlainText());
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

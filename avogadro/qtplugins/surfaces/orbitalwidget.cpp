@@ -39,15 +39,15 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
   ui.table->hideColumn(OrbitalTableModel::C_Symmetry);
   ui.table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  connect(
-    ui.table->selectionModel(),
-    SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    this, SLOT(tableClicked(const QItemSelection&)));
-  connect(ui.push_render, SIGNAL(clicked()), this, SLOT(renderClicked()));
+  connect(ui.table->selectionModel(), &QItemSelectionModel::selectionChanged,
+          this, &OrbitalWidget::tableClicked);
+  connect(ui.push_render, &QAbstractButton::clicked, this,
+          &OrbitalWidget::renderClicked);
 
   // TODO: Implement configure dialog
   ui.push_configure->setVisible(false);
-  connect(ui.push_configure, SIGNAL(clicked()), this, SLOT(configureClicked()));
+  connect(ui.push_configure, &QAbstractButton::clicked, this,
+          &OrbitalWidget::configureClicked);
   readSettings();
 }
 

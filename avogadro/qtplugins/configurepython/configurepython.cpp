@@ -31,7 +31,7 @@ ConfigurePython::ConfigurePython(QObject* parent_)
   m_action->setEnabled(true);
   m_action->setText(tr("Python Settings…"));
   m_action->setProperty("menu priority", 510);
-  connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(m_action, &QAction::triggered, this, &ConfigurePython::showDialog);
 
   // check for Python on first launch
   QStringList paths = pythonPaths();

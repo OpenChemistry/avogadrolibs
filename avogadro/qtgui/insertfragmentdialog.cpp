@@ -130,21 +130,21 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory)
   m_ui->directoryTreeView->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_ui->directoryTreeView->setUniformRowHeights(true);
 
-  connect(m_ui->insertFragmentButton, SIGNAL(clicked(bool)), this,
-          SLOT(activated()));
+  connect(m_ui->insertFragmentButton, &QAbstractButton::clicked, this,
+          &InsertFragmentDialog::activated);
 
-  connect(m_ui->directoryTreeView, SIGNAL(doubleClicked(const QModelIndex)),
-          this, SLOT(activated()));
+  connect(m_ui->directoryTreeView, &QAbstractItemView::doubleClicked, this,
+          &InsertFragmentDialog::activated);
 
-  connect(m_ui->directoryTreeView, SIGNAL(activated(const QModelIndex)), this,
-          SLOT(activated()));
+  connect(m_ui->directoryTreeView, &QAbstractItemView::activated, this,
+          &InsertFragmentDialog::activated);
 
-  connect(m_ui->filterLineEdit, SIGNAL(textChanged(const QString&)), this,
-          SLOT(filterTextChanged(const QString&)));
+  connect(m_ui->filterLineEdit, &QLineEdit::textChanged, this,
+          &InsertFragmentDialog::filterTextChanged);
 
   connect(m_ui->directoryTreeView->selectionModel(),
-          SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this,
-          SLOT(currentChanged(const QModelIndex&, const QModelIndex&)));
+          &QItemSelectionModel::currentChanged, this,
+          &InsertFragmentDialog::currentChanged);
 }
 
 InsertFragmentDialog::~InsertFragmentDialog()

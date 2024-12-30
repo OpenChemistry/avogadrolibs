@@ -29,9 +29,9 @@ Centroid::Centroid(QObject* parent_)
   m_comAction->setProperty("menu priority", 180);
   m_normalAction->setProperty("menu priority", 170);
 
-  connect(m_centroidAction, SIGNAL(triggered()), SLOT(addCentroid()));
-  connect(m_comAction, SIGNAL(triggered()), SLOT(addCenterOfMass()));
-  connect(m_normalAction, SIGNAL(triggered()), SLOT(normal()));
+  connect(m_centroidAction, &QAction::triggered, this, &Centroid::addCentroid);
+  connect(m_comAction, &QAction::triggered, this, &Centroid::addCenterOfMass);
+  connect(m_normalAction, &QAction::triggered, this, &Centroid::normal);
 }
 
 QList<QAction*> Centroid::actions() const

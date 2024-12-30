@@ -129,8 +129,10 @@ void GamessInputDialog::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
+  connect(mol, &QtGui::Molecule::changed, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(mol, &QtGui::Molecule::changed, this,
+          &GamessInputDialog::updateTitlePlaceholder);
 
   updateTitlePlaceholder();
   updatePreviewText();
@@ -143,13 +145,13 @@ void GamessInputDialog::showEvent(QShowEvent* e)
   // Update the preview text if an update was requested while hidden. Use a
   // single shot to allow the dialog to show before popping up any warnings.
   if (m_updatePending)
-    QTimer::singleShot(0, this, SLOT(updatePreviewText()));
+    QTimer::singleShot(0, this, &GamessInputDialog::updatePreviewText);
 }
 
 void GamessInputDialog::connectBasic()
 {
-  connect(ui.titleEdit, SIGNAL(textChanged(QString)), this,
-          SLOT(updatePreviewText()));
+  connect(ui.titleEdit, &QLineEdit::textChanged, this,
+          &GamessInputDialog::updatePreviewText);
   connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -174,11 +176,15 @@ void GamessInputDialog::connectPreview() {}
 
 void GamessInputDialog::connectButtons()
 {
-  connect(ui.resetAllButton, SIGNAL(clicked()), SLOT(resetClicked()));
-  connect(ui.defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
-  connect(ui.generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(ui.computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
-  connect(ui.closeButton, SIGNAL(clicked()), SLOT(close()));
+  connect(ui.resetAllButton, &QAbstractButton::clicked, this,
+          &GamessInputDialog::resetClicked);
+  connect(ui.defaultsButton, &QAbstractButton::clicked, this,
+          &GamessInputDialog::defaultsClicked);
+  connect(ui.generateButton, &QAbstractButton::clicked, this,
+          &GamessInputDialog::generateClicked);
+  connect(ui.computeButton, &QAbstractButton::clicked, this,
+          &GamessInputDialog::computeClicked);
+  connect(ui.closeButton, &QAbstractButton::clicked, this, &QWidget::close);
 }
 
 void GamessInputDialog::buildOptions()

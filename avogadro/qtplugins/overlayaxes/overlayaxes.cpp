@@ -5,19 +5,19 @@
 
 #include "overlayaxes.h"
 
+#include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/avogadrogl.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/scene.h>
-#include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-#include <QSettings>
 #include <QAction>
+#include <QSettings>
 
 #include <Eigen/Geometry>
 
@@ -236,7 +236,7 @@ OverlayAxes::OverlayAxes(QObject* p)
     m_render(new RenderImpl), m_glWidget(nullptr),
     m_axesAction(new QAction(tr("Reference Axes"), this))
 {
-  connect(m_axesAction, SIGNAL(triggered()), SLOT(processAxes()));
+  connect(m_axesAction, &QAction::triggered, this, &OverlayAxes::processAxes);
 
   QSettings settings;
   m_enabled = settings.value("overlayAxes/enabled", true).toBool();
@@ -325,4 +325,4 @@ void OverlayAxes::setScene(Rendering::Scene* scene)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

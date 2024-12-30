@@ -8,9 +8,9 @@
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QAction>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QAction>
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -24,12 +24,10 @@ NetworkDatabases::NetworkDatabases(QObject* parent_)
   m_action->setEnabled(true);
   m_action->setText("Download by &Name…");
   m_action->setProperty("menu priority", 190);
-  connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(m_action, &QAction::triggered, this, &NetworkDatabases::showDialog);
 }
 
-NetworkDatabases::~NetworkDatabases()
-{
-}
+NetworkDatabases::~NetworkDatabases() {}
 
 QList<QAction*> NetworkDatabases::actions() const
 {
@@ -63,8 +61,8 @@ void NetworkDatabases::showDialog()
 {
   if (!m_network) {
     m_network = new QNetworkAccessManager(this);
-    connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
-            SLOT(replyFinished(QNetworkReply*)));
+    connect(m_network, &QNetworkAccessManager::finished, this,
+            &NetworkDatabases::replyFinished);
   }
   if (!m_progressDialog) {
     m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
@@ -80,9 +78,9 @@ void NetworkDatabases::showDialog()
 
   // Hard coding the NIH resolver download URL - this could be used for other
   // services
-  m_network->get(QNetworkRequest(
-    QUrl("https://cactus.nci.nih.gov/chemical/structure/" + structureName +
-         "/file?format=sdf&get3d=true")));
+  m_network->get(
+    QNetworkRequest(QUrl("https://cactus.nci.nih.gov/chemical/structure/" +
+                         structureName + "/file?format=sdf&get3d=true")));
 
   m_moleculeName = structureName;
   m_progressDialog->setLabelText(tr("Querying for %1").arg(structureName));
@@ -115,4 +113,4 @@ void NetworkDatabases::replyFinished(QNetworkReply* reply)
   emit moleculeReady(1);
   reply->deleteLater();
 }
-}
+} // namespace Avogadro::QtPlugins

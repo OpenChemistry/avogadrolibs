@@ -63,11 +63,12 @@ msym_thresholds_t sloppy_thresholds = {
 };
 
 SymmetryWidget::SymmetryWidget(QWidget* parent_)
-  : QWidget(parent_), m_ui(new Ui::SymmetryWidget), m_molecule(nullptr),
+  : QWidget(parent_), m_ui(new Ui::SymmetryWidget),
     m_equivalenceTreeModel(new QStandardItemModel(this)),
     m_operationsTableModel(new OperationsTableModel(this)),
-    m_subgroupsTreeModel(new QStandardItemModel(this)), m_es(nullptr),
-    m_sops(nullptr), m_sg(nullptr), m_sopsl(0), m_sgl(0), m_radius(0.0)
+    m_subgroupsTreeModel(new QStandardItemModel(this)), m_molecule(nullptr),
+    m_es(nullptr), m_sops(nullptr), m_sg(nullptr), m_sopsl(0), m_sgl(0),
+    m_radius(0.0)
 {
   setWindowFlags(Qt::Dialog);
   m_ui->setupUi(this);
@@ -81,10 +82,10 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
   m_ui->subgroupsTree->setModel(m_subgroupsTreeModel);
   m_ui->subgroupsTree->setItemDelegateForColumn(0, new RichTextDelegate(this));
 
-  connect(m_ui->detectSymmetryButton, SIGNAL(clicked()),
-          SIGNAL(detectSymmetry()));
-  connect(m_ui->symmetrizeMoleculeButton, SIGNAL(clicked()),
-          SIGNAL(symmetrizeMolecule()));
+  connect(m_ui->detectSymmetryButton, &QAbstractButton::clicked, this,
+          &SymmetryWidget::detectSymmetry);
+  connect(m_ui->symmetrizeMoleculeButton, &QAbstractButton::clicked, this,
+          &SymmetryWidget::symmetrizeMolecule);
 
   connect(
     m_ui->equivalenceTree->selectionModel(),
@@ -97,11 +98,9 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
     SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
     SLOT(operationsSelectionChanged(const QItemSelection&,
                                     const QItemSelection&)));
-  connect(
-    m_ui->subgroupsTree->selectionModel(),
-    SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    SLOT(
-      subgroupsSelectionChanged(const QItemSelection&, const QItemSelection&)));
+  connect(m_ui->subgroupsTree->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &SymmetryWidget::subgroupsSelectionChanged);
 }
 
 SymmetryWidget::~SymmetryWidget()
@@ -118,7 +117,8 @@ void SymmetryWidget::setMolecule(QtGui::Molecule* molecule)
     m_molecule = molecule;
 
     if (m_molecule) {
-      connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+      connect(m_molecule, &QtGui::Molecule::changed, this,
+              &SymmetryWidget::moleculeChanged);
     }
   }
 }

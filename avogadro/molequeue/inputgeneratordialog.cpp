@@ -16,7 +16,8 @@ InputGeneratorDialog::InputGeneratorDialog(QWidget* parent_)
   : QDialog(parent_), ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
-  connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
+  connect(ui->widget, &InputGeneratorWidget::closeClicked, this,
+          &QDialog::accept);
 }
 
 InputGeneratorDialog::InputGeneratorDialog(const QString& scriptFileName,
@@ -24,7 +25,8 @@ InputGeneratorDialog::InputGeneratorDialog(const QString& scriptFileName,
   : QDialog(parent_), ui(new Ui::InputGeneratorDialog)
 {
   ui->setupUi(this);
-  connect(ui->widget, SIGNAL(closeClicked()), SLOT(accept()));
+  connect(ui->widget, &InputGeneratorWidget::closeClicked, this,
+          &QDialog::accept);
   this->setInputGeneratorScript(scriptFileName);
 }
 
@@ -68,4 +70,4 @@ void InputGeneratorDialog::setMolecule(Molecule* mol)
   ui->widget->setMolecule(mol);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

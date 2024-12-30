@@ -82,9 +82,11 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
 {
   auto action = new QAction(this);
   action->setText(tr("Create Surfaces…"));
-  connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
-  connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(displayMesh()));
-  connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
+  connect(action, &QAction::triggered, this, &Surfaces::surfacesActivated);
+  connect(&m_displayMeshWatcher, &QFutureWatcherBase::finished, this,
+          &Surfaces::displayMesh);
+  connect(&m_performEDTStepWatcher, &QFutureWatcherBase::finished, this,
+          &Surfaces::performEDTStep);
 
   m_actions.push_back(action);
 
@@ -240,7 +242,8 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 
   if (m_molecule != nullptr) {
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &Surfaces::moleculeChanged);
   }
 }
 
@@ -268,10 +271,12 @@ void Surfaces::surfacesActivated()
 {
   if (!m_dialog) {
     m_dialog = new SurfaceDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(calculateClickedSignal()),
-            SLOT(calculateSurface()));
-    connect(m_dialog, SIGNAL(recordClicked()), SLOT(recordMovie()));
-    connect(m_dialog, SIGNAL(stepChanged(int)), SLOT(stepChanged(int)));
+    connect(m_dialog, &SurfaceDialog::calculateClickedSignal, this,
+            &Surfaces::calculateSurface);
+    connect(m_dialog, &SurfaceDialog::recordClicked, this,
+            &Surfaces::recordMovie);
+    connect(m_dialog, &SurfaceDialog::stepChanged, this,
+            &Surfaces::stepChanged);
   }
 
   if (m_basis) {
@@ -622,14 +627,15 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
 
     if (connectSlots) {
       connect(&m_gaussianConcurrent->watcher(),
-              SIGNAL(progressValueChanged(int)), m_progressDialog,
-              SLOT(setValue(int)));
+              &QFutureWatcherBase::progressValueChanged, m_progressDialog,
+              &QProgressDialog::setValue);
       connect(&m_gaussianConcurrent->watcher(),
-              SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
-              SLOT(setRange(int, int)));
-      connect(m_gaussianConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
-      connect(m_progressDialog, SIGNAL(canceled()),
-              &m_gaussianConcurrent->watcher(), SLOT(cancel()));
+              &QFutureWatcherBase::progressRangeChanged, m_progressDialog,
+              &QProgressDialog::setRange);
+      connect(m_gaussianConcurrent, &QtGui::GaussianSetConcurrent::finished,
+              this, &Surfaces::displayMesh);
+      connect(m_progressDialog, &QProgressDialog::canceled,
+              &m_gaussianConcurrent->watcher(), &QFutureWatcherBase::cancel);
     }
   } else {
     // slaters
@@ -639,14 +645,16 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_progressDialog->setValue(m_slaterConcurrent->watcher().progressValue());
     m_progressDialog->show();
 
-    connect(&m_slaterConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
-            m_progressDialog, SLOT(setValue(int)));
     connect(&m_slaterConcurrent->watcher(),
-            SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
-            SLOT(setRange(int, int)));
-    connect(m_progressDialog, SIGNAL(canceled()),
-            &m_slaterConcurrent->watcher(), SLOT(cancel()));
-    connect(m_slaterConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
+            &QFutureWatcherBase::progressValueChanged, m_progressDialog,
+            &QProgressDialog::setValue);
+    connect(&m_slaterConcurrent->watcher(),
+            &QFutureWatcherBase::progressRangeChanged, m_progressDialog,
+            &QProgressDialog::setRange);
+    connect(m_progressDialog, &QProgressDialog::canceled,
+            &m_slaterConcurrent->watcher(), &QFutureWatcherBase::cancel);
+    connect(m_slaterConcurrent, &QtGui::SlaterSetConcurrent::finished, this,
+            &Surfaces::displayMesh);
   }
 }
 
@@ -704,7 +712,8 @@ void Surfaces::displayMesh()
     m_mesh1 = m_molecule->addMesh();
   if (!m_meshGenerator1) {
     m_meshGenerator1 = new QtGui::MeshGenerator;
-    connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
+    connect(m_meshGenerator1, &QThread::finished, this,
+            &Surfaces::meshFinished);
   }
   m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
 
@@ -720,7 +729,8 @@ void Surfaces::displayMesh()
       m_mesh2 = m_molecule->addMesh();
     if (!m_meshGenerator2) {
       m_meshGenerator2 = new QtGui::MeshGenerator;
-      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+      connect(m_meshGenerator2, &QThread::finished, this,
+              &Surfaces::meshFinished);
     }
     m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
                                  m_smoothingPasses, true);

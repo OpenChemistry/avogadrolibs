@@ -15,17 +15,17 @@ ConformerSearchDialog::ConformerSearchDialog(QWidget* parent) : QDialog(parent)
 {
   ui.setupUi(this);
 
-  connect(ui.systematicRadio, SIGNAL(toggled(bool)), this,
-          SLOT(systematicToggled(bool)));
-  connect(ui.randomRadio, SIGNAL(toggled(bool)), this,
-          SLOT(randomToggled(bool)));
-  connect(ui.weightedRadio, SIGNAL(toggled(bool)), this,
-          SLOT(weightedToggled(bool)));
-  connect(ui.geneticRadio, SIGNAL(toggled(bool)), this,
-          SLOT(geneticToggled(bool)));
+  connect(ui.systematicRadio, &QAbstractButton::toggled, this,
+          &ConformerSearchDialog::systematicToggled);
+  connect(ui.randomRadio, &QAbstractButton::toggled, this,
+          &ConformerSearchDialog::randomToggled);
+  connect(ui.weightedRadio, &QAbstractButton::toggled, this,
+          &ConformerSearchDialog::weightedToggled);
+  connect(ui.geneticRadio, &QAbstractButton::toggled, this,
+          &ConformerSearchDialog::geneticToggled);
 
-  connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
-          SLOT(buttonClicked(QAbstractButton*)));
+  connect(ui.buttonBox, &QDialogButtonBox::clicked, this,
+          &ConformerSearchDialog::buttonClicked);
 
   m_method = 1; // systematic
   m_numConformers = 100;

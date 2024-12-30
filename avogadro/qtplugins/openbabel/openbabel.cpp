@@ -45,43 +45,45 @@ OpenBabel::OpenBabel(QObject* p)
   auto* action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Optimize Geometry"));
-  connect(action, SIGNAL(triggered()), SLOT(onOptimizeGeometry()));
+  connect(action, &QAction::triggered, this, &OpenBabel::onOptimizeGeometry);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Configure Force Field…"));
-  connect(action, SIGNAL(triggered()), SLOT(onConfigureGeometryOptimization()));
+  connect(action, &QAction::triggered, this,
+          &OpenBabel::onConfigureGeometryOptimization);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Conformer Search…"));
-  connect(action, SIGNAL(triggered()), SLOT(onConfigureConformerSearch()));
+  connect(action, &QAction::triggered, this,
+          &OpenBabel::onConfigureConformerSearch);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Perceive Bonds"));
-  connect(action, SIGNAL(triggered()), SLOT(onPerceiveBonds()));
+  connect(action, &QAction::triggered, this, &OpenBabel::onPerceiveBonds);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Add Hydrogens"));
-  connect(action, SIGNAL(triggered()), SLOT(onAddHydrogens()));
+  connect(action, &QAction::triggered, this, &OpenBabel::onAddHydrogens);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Add Hydrogens for pH…"));
-  connect(action, SIGNAL(triggered()), SLOT(onAddHydrogensPh()));
+  connect(action, &QAction::triggered, this, &OpenBabel::onAddHydrogensPh);
   m_actions.push_back(action);
 
   action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Remove Hydrogens"));
-  connect(action, SIGNAL(triggered()), SLOT(onRemoveHydrogens()));
+  connect(action, &QAction::triggered, this, &OpenBabel::onRemoveHydrogens);
   m_actions.push_back(action);
 
   refreshReadFormats();
@@ -314,8 +316,8 @@ void OpenBabel::refreshForceFields()
   // process for the refresh methods.
   auto* proc = new OBProcess(this);
 
-  connect(proc, SIGNAL(queryForceFieldsFinished(QMultiMap<QString, QString>)),
-          SLOT(handleForceFieldsUpdate(QMultiMap<QString, QString>)));
+  connect(proc, &OBProcess::queryForceFieldsFinished, this,
+          &OpenBabel::handleForceFieldsUpdate);
 
   proc->queryForceFields();
 }
@@ -336,8 +338,8 @@ void OpenBabel::refreshCharges()
   // process for the refresh methods.
   auto* proc = new OBProcess(this);
 
-  connect(proc, SIGNAL(queryChargesFinished(QMultiMap<QString, QString>)),
-          SLOT(handleChargesUpdate(QMultiMap<QString, QString>)));
+  connect(proc, &OBProcess::queryChargesFinished, this,
+          &OpenBabel::handleChargesUpdate);
 
   proc->queryCharges();
 }
@@ -469,12 +471,11 @@ void OpenBabel::onOptimizeGeometry()
   // Connect process
   disconnect(m_process);
   m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process,
-          SIGNAL(optimizeGeometryStatusUpdate(int, int, double, double)),
-          SLOT(onOptimizeGeometryStatusUpdate(int, int, double, double)));
-  connect(m_process, SIGNAL(optimizeGeometryFinished(QByteArray)),
-          SLOT(onOptimizeGeometryFinished(QByteArray)));
+  connect(m_progress, &QProgressDialog::canceled, m_process, &OBProcess::abort);
+  connect(m_process, &OBProcess::optimizeGeometryStatusUpdate, this,
+          &OpenBabel::onOptimizeGeometryStatusUpdate);
+  connect(m_process, &OBProcess::optimizeGeometryFinished, this,
+          &OpenBabel::onOptimizeGeometryFinished);
 
   // Generate CML
   std::string mol;
@@ -622,11 +623,11 @@ void OpenBabel::onGenerateConformers()
   // Connect process
   disconnect(m_process);
   m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process, SIGNAL(conformerStatusUpdate(int, int, double, double)),
-          SLOT(onConformerStatusUpdate(int, int, double, double)));
-  connect(m_process, SIGNAL(generateConformersFinished(QByteArray)),
-          SLOT(onGenerateConformersFinished(QByteArray)));
+  connect(m_progress, &QProgressDialog::canceled, m_process, &OBProcess::abort);
+  connect(m_process, &OBProcess::conformerStatusUpdate, this,
+          &OpenBabel::onConformerStatusUpdate);
+  connect(m_process, &OBProcess::generateConformersFinished, this,
+          &OpenBabel::onGenerateConformersFinished);
 
   std::string mol;
   if (!Io::FileFormatManager::instance().writeString(*m_molecule, mol,
@@ -753,9 +754,9 @@ void OpenBabel::onPerceiveBonds()
   // Connect process
   disconnect(m_process);
   m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process, SIGNAL(convertFinished(QByteArray)),
-          SLOT(onPerceiveBondsFinished(QByteArray)));
+  connect(m_progress, &QProgressDialog::canceled, m_process, &OBProcess::abort);
+  connect(m_process, &OBProcess::convertFinished, this,
+          &OpenBabel::onPerceiveBondsFinished);
 
   m_progress->setLabelText(tr("Converting XYZ to Open Babel with %1…")
                              .arg(m_process->obabelExecutable()));
@@ -841,9 +842,9 @@ void OpenBabel::onAddHydrogens()
   // Connect process
   disconnect(m_process);
   m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process, SIGNAL(convertFinished(QByteArray)),
-          SLOT(onHydrogenOperationFinished(QByteArray)));
+  connect(m_progress, &QProgressDialog::canceled, m_process, &OBProcess::abort);
+  connect(m_process, &OBProcess::convertFinished, this,
+          &OpenBabel::onHydrogenOperationFinished);
 
   m_progress->setLabelText(
     tr("Running %1…").arg(m_process->obabelExecutable()));
@@ -891,9 +892,9 @@ void OpenBabel::onAddHydrogensPh()
   // Connect process
   disconnect(m_process);
   m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process, SIGNAL(convertFinished(QByteArray)),
-          SLOT(onHydrogenOperationFinished(QByteArray)));
+  connect(m_progress, &QProgressDialog::canceled, m_process, &OBProcess::abort);
+  connect(m_process, &OBProcess::convertFinished, this,
+          &OpenBabel::onHydrogenOperationFinished);
 
   m_progress->setLabelText(
     tr("Running %1…").arg(m_process->obabelExecutable()));
@@ -933,9 +934,9 @@ void OpenBabel::onRemoveHydrogens()
   // Connect process
   disconnect(m_process);
   m_process->disconnect(this);
-  connect(m_progress, SIGNAL(canceled()), m_process, SLOT(abort()));
-  connect(m_process, SIGNAL(convertFinished(QByteArray)),
-          SLOT(onHydrogenOperationFinished(QByteArray)));
+  connect(m_progress, &QProgressDialog::canceled, m_process, &OBProcess::abort);
+  connect(m_process, &OBProcess::convertFinished, this,
+          &OpenBabel::onHydrogenOperationFinished);
 
   m_progress->setLabelText(
     tr("Running %1…").arg(m_process->obabelExecutable()));

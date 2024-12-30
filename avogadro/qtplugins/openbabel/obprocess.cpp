@@ -415,8 +415,8 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
               << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
-  connect(m_process, SIGNAL(readyReadStandardError()),
-          SLOT(optimizeGeometryReadLog()));
+  connect(m_process, &QProcess::readyReadStandardError, this,
+          &OBProcess::optimizeGeometryReadLog);
 
   // Initialize the log reader ivars
   m_optimizeGeometryLog.clear();
@@ -449,8 +449,8 @@ bool OBProcess::generateConformers(const QByteArray& mol,
               << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
-  connect(m_process, SIGNAL(readyReadStandardError()),
-          SLOT(conformerReadLog()));
+  connect(m_process, &QProcess::readyReadStandardError, this,
+          &OBProcess::conformerReadLog);
 
   // Initialize the log reader ivars
   m_optimizeGeometryLog.clear();
@@ -565,8 +565,7 @@ void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
     connect(m_process, SIGNAL(finished(int)), receiver, slot);
     connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver,
             slot);
-    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
-            SLOT(obError()));
+    connect(m_process, &QProcess::errorOccurred, this, &OBProcess::obError);
   }
 
   // Start process
@@ -587,7 +586,7 @@ void OBProcess::resetState()
   m_aborted = false;
   m_process->disconnect(this);
   disconnect(m_process);
-  connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
+  connect(this, &OBProcess::aborted, m_process, &QProcess::kill);
 }
 
 } // namespace Avogadro::QtPlugins

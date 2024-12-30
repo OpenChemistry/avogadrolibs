@@ -28,12 +28,10 @@ LammpsInput::LammpsInput(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&LAMMPS…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(m_action, &QAction::triggered, this, &LammpsInput::menuActivated);
 }
 
-LammpsInput::~LammpsInput()
-{
-}
+LammpsInput::~LammpsInput() {}
 
 QList<QAction*> LammpsInput::actions() const
 {
@@ -81,5 +79,5 @@ void LammpsInput::menuActivated()
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
 }
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro

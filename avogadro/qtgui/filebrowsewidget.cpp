@@ -38,10 +38,11 @@ FileBrowseWidget::FileBrowseWidget(QWidget* theParent)
   m_edit->setCompleter(fsCompleter);
 
   // Connections:
-  connect(m_button, SIGNAL(clicked()), SLOT(browse()));
-  connect(m_edit, SIGNAL(textChanged(QString)), SLOT(testFileName()));
-  connect(m_edit, SIGNAL(textChanged(QString)),
-          SIGNAL(fileNameChanged(QString)));
+  connect(m_button, &QAbstractButton::clicked, this, &FileBrowseWidget::browse);
+  connect(m_edit, &QLineEdit::textChanged, this,
+          &FileBrowseWidget::testFileName);
+  connect(m_edit, &QLineEdit::textChanged, this,
+          &FileBrowseWidget::fileNameChanged);
 
   setMode(ExistingFile);
 }

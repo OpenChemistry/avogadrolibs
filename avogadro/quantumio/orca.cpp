@@ -484,6 +484,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         }
 
         m_currentMode = NotParsing;
+        break;
       }
       case OrbitalEnergies: {
         if (key.empty())
@@ -681,6 +682,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+        break;
       }
       case ECD: {
         if (key.empty())
@@ -709,6 +711,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+        break;
       }
       case NMR: {
         if (key.empty())

@@ -54,7 +54,8 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
 {
   ui.setupUi(this);
   // Connect the GUI elements to the correct slots
-  connect(ui.titleLine, SIGNAL(editingFinished()), this, SLOT(setTitle()));
+  connect(ui.titleLine, &QLineEdit::editingFinished, this,
+          &LammpsInputDialog::setTitle);
 
   // now for something useful
   connect(ui.unitsCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -71,8 +72,8 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
           SLOT(setZBoundaryType(int)));
   connect(ui.waterPotentialCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setWaterPotential(int)));
-  connect(ui.readDataLine, SIGNAL(editingFinished()), this,
-          SLOT(setReadData()));
+  connect(ui.readDataLine, &QLineEdit::editingFinished, this,
+          &LammpsInputDialog::setReadData);
   connect(ui.ensembleCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setEnsemble(int)));
   connect(ui.tempSpin, SIGNAL(valueChanged(double)), this,
@@ -88,25 +89,30 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
           SLOT(setYReplicate(int)));
   connect(ui.zReplicateSpin, SIGNAL(valueChanged(int)), this,
           SLOT(setZReplicate(int)));
-  connect(ui.dumpXYZEdit, SIGNAL(editingFinished()), this, SLOT(setDumpXYZ()));
+  connect(ui.dumpXYZEdit, &QLineEdit::editingFinished, this,
+          &LammpsInputDialog::setDumpXYZ);
   connect(ui.dumpStepSpin, SIGNAL(valueChanged(int)), this,
           SLOT(setDumpStep(int)));
   connect(ui.velocityDistCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setVelocityDist(int)));
   connect(ui.velocityTempSpin, SIGNAL(valueChanged(double)), this,
           SLOT(setVelocityTemp(double)));
-  connect(ui.zeroMOMCheck, SIGNAL(toggled(bool)), this, SLOT(setZeroMOM(bool)));
-  connect(ui.zeroLCheck, SIGNAL(toggled(bool)), this, SLOT(setZeroL(bool)));
+  connect(ui.zeroMOMCheck, &QAbstractButton::toggled, this,
+          &LammpsInputDialog::setZeroMOM);
+  connect(ui.zeroLCheck, &QAbstractButton::toggled, this,
+          &LammpsInputDialog::setZeroL);
   connect(ui.thermoStyleCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(setThermoStyle(int)));
   connect(ui.thermoSpin, SIGNAL(valueChanged(int)), this,
           SLOT(setThermoInterval(int)));
 
-  connect(ui.generateButton, SIGNAL(clicked()), this, SLOT(generateClicked()));
-  connect(ui.resetButton, SIGNAL(clicked()), this, SLOT(resetClicked()));
+  connect(ui.generateButton, &QAbstractButton::clicked, this,
+          &LammpsInputDialog::generateClicked);
+  connect(ui.resetButton, &QAbstractButton::clicked, this,
+          &LammpsInputDialog::resetClicked);
 
-  connect(ui.enableFormButton, SIGNAL(clicked()), this,
-          SLOT(enableFormClicked()));
+  connect(ui.enableFormButton, &QAbstractButton::clicked, this,
+          &LammpsInputDialog::enableFormClicked);
 
   QSettings settings;
   readSettings(settings);
@@ -161,7 +167,8 @@ void LammpsInputDialog::updatePreviewText()
   m_jobEdit = new QTextEdit(this);
   m_jobEdit->setObjectName(m_jobFileName);
   m_jobEdit->setFontFamily("monospace");
-  connect(m_jobEdit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
+  connect(m_jobEdit, &QTextEdit::textChanged, this,
+          &LammpsInputDialog::textEditModified);
   m_jobEdit->setText(generateInputDeck());
   ui.tabWidget->insertTab(jobTabPosition, m_jobEdit, m_jobFileName);
   deckDirty(false);
@@ -310,8 +317,8 @@ void LammpsInputDialog::generateClicked()
           tr("The input files cannot be written:\n\n%1").arg(errors.first());
         break;
       default: {
-        // If a fatal error occurred, it will be last one in the list. Pop it off
-        // and tell the user that it was the reason we had to stop.
+        // If a fatal error occurred, it will be last one in the list. Pop it
+        // off and tell the user that it was the reason we had to stop.
         QString fatal = errors.last();
         QStringList tmp(errors);
         tmp.pop_back();
@@ -473,7 +480,8 @@ void LammpsInputDialog::setMolecule(QtGui::Molecule* molecule)
 
   m_molecule = molecule;
   // Update the preview text whenever primitives are changed
-  connect(molecule, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+  connect(molecule, &QtGui::Molecule::changed, this,
+          &LammpsInputDialog::updatePreviewText);
   updatePreviewText();
 }
 
@@ -632,8 +640,8 @@ QString LammpsInputDialog::generateInputDeck()
       << "mom " << getZeroMOM() << " "
       << "dist " << getVelocityDist(m_velocityDist) << "\n";
   mol << getEnsemble(m_ensemble) << "\n";
-  mol << "timestep       " << Qt::fixed << qSetRealNumberPrecision(1) << m_timeStep
-      << "\n";
+  mol << "timestep       " << Qt::fixed << qSetRealNumberPrecision(1)
+      << m_timeStep << "\n";
   mol << "\n";
 
   mol << "# Output\n";
@@ -853,9 +861,9 @@ QString LammpsInputDialog::getEnsemble(ensemble t)
       QString ensembleInput;
       QTextStream fix(&ensembleInput);
       fix << "fix            ensemble all nvt"
-          << " temp " << Qt::fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " " << Qt::fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " 100 "
+          << " temp " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " 100 "
           << "tchain " << m_nhChain << "\n";
       return ensembleInput;
     }
@@ -869,9 +877,9 @@ QString LammpsInputDialog::getEnsemble(ensemble t)
       QString ensembleInput;
       QTextStream fix(&ensembleInput);
       fix << "fix            ensemble all nvt"
-          << " temp " << Qt::fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " " << Qt::fixed << qSetRealNumberPrecision(2) << m_temperature
-          << " 100 "
+          << " temp " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " " << Qt::fixed << qSetRealNumberPrecision(2)
+          << m_temperature << " 100 "
           << "tchain " << m_nhChain << "\n";
       return ensembleInput;
     }
@@ -964,4 +972,4 @@ void LammpsInputDialog::determineAtomTypesSPC(int& hyd, int& oxy)
   hyd = AtomType.value("O");
   oxy = AtomType.value("H");
 }
-}
+} // namespace Avogadro::QtPlugins

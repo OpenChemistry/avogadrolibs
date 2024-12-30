@@ -12,8 +12,8 @@ MoleQueueManager* MoleQueueManager::m_instance = nullptr;
 MoleQueueManager::MoleQueueManager(QObject* parent_)
   : QObject(parent_), m_client(this), m_queueModel(this)
 {
-  connect(&m_client, SIGNAL(queueListReceived(QJsonObject)),
-          SLOT(updateQueueModel(QJsonObject)));
+  connect(&m_client, &Client::queueListReceived, this,
+          &MoleQueueManager::updateQueueModel);
 }
 
 MoleQueueManager& MoleQueueManager::instance()
@@ -63,4 +63,4 @@ void MoleQueueManager::updateQueueModel(const QJsonObject& json)
   emit queueListUpdated();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

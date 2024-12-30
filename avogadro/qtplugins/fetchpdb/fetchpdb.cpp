@@ -26,7 +26,7 @@ FetchPDB::FetchPDB(QObject* parent_)
   m_action->setEnabled(true);
   m_action->setText("Fetch from &PDB…");
   m_action->setProperty("menu priority", 180);
-  connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(m_action, &QAction::triggered, this, &FetchPDB::showDialog);
 }
 
 FetchPDB::~FetchPDB() {}
@@ -93,8 +93,8 @@ void FetchPDB::showDialog()
 
   if (!m_network) {
     m_network = new QNetworkAccessManager(this);
-    connect(m_network, SIGNAL(finished(QNetworkReply*)), this,
-            SLOT(replyFinished(QNetworkReply*)));
+    connect(m_network, &QNetworkAccessManager::finished, this,
+            &FetchPDB::replyFinished);
   }
 
   // Hard coding the PDB download URL

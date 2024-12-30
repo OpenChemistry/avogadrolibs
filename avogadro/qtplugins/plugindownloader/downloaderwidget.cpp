@@ -52,10 +52,10 @@ DownloaderWidget::DownloaderWidget(QWidget* parent)
   // enable links in the readme to open an external browser
   m_ui->readmeBrowser->setOpenExternalLinks(true);
 
-  connect(m_ui->downloadButton, SIGNAL(clicked(bool)), this,
-          SLOT(getCheckedRepos()));
-  connect(m_ui->repoTable, SIGNAL(cellClicked(int, int)), this,
-          SLOT(downloadREADME(int, int)));
+  connect(m_ui->downloadButton, &QAbstractButton::clicked, this,
+          &DownloaderWidget::getCheckedRepos);
+  connect(m_ui->repoTable, &QTableWidget::cellClicked, this,
+          &DownloaderWidget::downloadREADME);
 
   m_ui->repoTable->setColumnCount(4);
   m_ui->repoTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -84,7 +84,8 @@ void DownloaderWidget::getRepoData(QString url)
   setRawHeaders(&request);
   request.setUrl(url); // Set the url
   m_reply = m_NetworkAccessManager->get(request);
-  connect(m_reply, SIGNAL(finished()), this, SLOT(updateRepoData()));
+  connect(m_reply, &QNetworkReply::finished, this,
+          &DownloaderWidget::updateRepoData);
 }
 
 // Process the master plugin.json hosted on Avogadro.cc
@@ -187,7 +188,8 @@ void DownloaderWidget::downloadREADME(int row, int col)
   setRawHeaders(&request);
   request.setUrl(url); // Set the url
   m_reply = m_NetworkAccessManager->get(request);
-  connect(m_reply, SIGNAL(finished()), this, SLOT(showREADME()));
+  connect(m_reply, &QNetworkReply::finished, this,
+          &DownloaderWidget::showREADME);
 }
 
 // display README when the user clicks a row
@@ -282,7 +284,8 @@ void DownloaderWidget::downloadNext()
     setRawHeaders(&request);
     request.setUrl(url); // Set the url
     m_reply = m_NetworkAccessManager->get(request);
-    connect(m_reply, SIGNAL(finished()), this, SLOT(handleRedirect()));
+    connect(m_reply, &QNetworkReply::finished, this,
+            &DownloaderWidget::handleRedirect);
   }
 }
 
@@ -347,7 +350,8 @@ void DownloaderWidget::handleRedirect()
       request.setUrl(_urlRedirectedTo); // Set the url
       m_reply = m_NetworkAccessManager->get(request);
       // Now we have the actual zip and can extract it
-      connect(m_reply, SIGNAL(finished()), this, SLOT(unzipPlugin()));
+      connect(m_reply, &QNetworkReply::finished, this,
+              &DownloaderWidget::unzipPlugin);
     } else if (statusCode == 200) {
       // Normal success response
       unzipPlugin();

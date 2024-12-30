@@ -196,7 +196,7 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 
   // Set a timer to clear the buffer on first keypress:
   if (m_keyPressBuffer.isEmpty())
-    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
+    QTimer::singleShot(2000, this, &TemplateTool::clearKeyPressBuffer);
 
   m_keyPressBuffer.append(m_keyPressBuffer.isEmpty() ? e->text().toUpper()
                                                      : e->text().toLower());

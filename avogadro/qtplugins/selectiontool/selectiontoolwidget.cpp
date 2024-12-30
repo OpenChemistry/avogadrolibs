@@ -15,8 +15,8 @@ SelectionToolWidget::SelectionToolWidget(QWidget* parent)
 {
   m_ui->setupUi(this);
   setDropDown(0, 1);
-  connect(m_ui->applyColorButton, SIGNAL(clicked()), this,
-          SLOT(userClickedColor()));
+  connect(m_ui->applyColorButton, &QAbstractButton::clicked, this,
+          &SelectionToolWidget::userClickedColor);
 }
 
 SelectionToolWidget::~SelectionToolWidget()

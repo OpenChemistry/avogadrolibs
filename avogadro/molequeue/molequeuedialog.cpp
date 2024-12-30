@@ -80,7 +80,8 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
           return SubmissionSuccessful;
 
         // Update progress dialog
-        progress.setLabelText(tr("Waiting for job %1 “%2” to finish…", "%1 = job ID, %2 = description")
+        progress.setLabelText(tr("Waiting for job %1 “%2” to finish…",
+                                 "%1 = job ID, %2 = description")
                                 .arg(dlg.widget().moleQueueId())
                                 .arg(jobTemplate.description()));
         progress.setCancelButtonText(tr("Stop waiting"));
@@ -106,8 +107,8 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
         progress.setCancelButton(nullptr);
 
         // Job completed -- overwrite job template with updated job details.
-        connect(&dlg.widget(), SIGNAL(jobUpdated(MoleQueue::JobObject)),
-                &dlg.widget(), SLOT(setJobTemplate(MoleQueue::JobObject)));
+        connect(&dlg.widget(), &MoleQueueWidget::jobUpdated, &dlg.widget(),
+                &MoleQueueWidget::setJobTemplate);
         QList<MetaMethod> lookupSignal;
         lookupSignal << MetaMethod(&dlg.widget(),
                                    SIGNAL(jobUpdated(MoleQueue::JobObject)));
@@ -124,9 +125,10 @@ MoleQueueDialog::SubmitStatus MoleQueueDialog::submitJob(
         return JobFinished;
       } else {
         progress.hide();
-        QMessageBox::warning(&dlg, tr("Error Submitting Job"),
-                             tr("The job has been rejected by MoleQueue: %1", "%1 = error")
-                               .arg(dlg.widget().submissionError()));
+        QMessageBox::warning(
+          &dlg, tr("Error Submitting Job"),
+          tr("The job has been rejected by MoleQueue: %1", "%1 = error")
+            .arg(dlg.widget().submissionError()));
         continue;
       }
     } else {
@@ -180,7 +182,7 @@ bool MoleQueueDialog::waitForSignal(const QList<MetaMethod>& signalList,
   QTimer limiter;
   if (msTimeout >= 0) {
     limiter.setSingleShot(true);
-    connect(&limiter, SIGNAL(timeout()), &waiter, SLOT(quit()));
+    connect(&limiter, &QTimer::timeout, &waiter, &QEventLoop::quit);
     limiter.start(msTimeout);
   }
 
@@ -200,4 +202,4 @@ void MoleQueueDialog::done(int r)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

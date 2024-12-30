@@ -43,8 +43,8 @@ namespace Avogadro::QtPlugins {
 
 AlignTool::AlignTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_toolWidget(nullptr), m_renderer(nullptr),
-    m_alignType(0), m_axis(0)
+    m_molecule(nullptr), m_renderer(nullptr), m_axis(0), m_alignType(0),
+    m_toolWidget(nullptr)
 {
   m_activateAction->setText(tr("Align"));
   m_activateAction->setToolTip(
@@ -90,7 +90,7 @@ QWidget* AlignTool::toolWidget() const
     // Button to actually perform actions
     auto* buttonAlign = new QPushButton(m_toolWidget);
     buttonAlign->setText(tr("Align"));
-    connect(buttonAlign, SIGNAL(clicked()), this, SLOT(align()));
+    connect(buttonAlign, &QAbstractButton::clicked, this, &AlignTool::align);
 
     auto* gridLayout = new QGridLayout();
     gridLayout->addWidget(labelAxis, 0, 0, 1, 1, Qt::AlignRight);
@@ -112,8 +112,8 @@ QWidget* AlignTool::toolWidget() const
     connect(comboAxis, SIGNAL(currentIndexChanged(int)), this,
             SLOT(axisChanged(int)));
 
-    connect(m_toolWidget, SIGNAL(destroyed()), this,
-            SLOT(toolWidgetDestroyed()));
+    connect(m_toolWidget, &QObject::destroyed, this,
+            &AlignTool::toolWidgetDestroyed);
   }
 
   return m_toolWidget;

@@ -26,7 +26,8 @@ PluginDownloader::PluginDownloader(QObject* parent_)
   m_downloadAction->setEnabled(true);
   m_downloadAction->setText(tr("Download Plugins…"));
   m_downloadAction->setProperty("menu priority", 520);
-  connect(m_downloadAction, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(m_downloadAction, &QAction::triggered, this,
+          &PluginDownloader::showDialog);
 }
 
 PluginDownloader::~PluginDownloader() = default;

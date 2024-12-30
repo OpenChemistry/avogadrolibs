@@ -31,9 +31,9 @@
 #include <map>
 #include <vector>
 
+using Avogadro::MoleQueue::JobObject;
 using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
-using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro::QtPlugins {
 
@@ -145,8 +145,10 @@ void Cp2kInputDialog::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
+  connect(mol, &QtGui::Molecule::changed, this,
+          &Cp2kInputDialog::updatePreviewText);
+  connect(mol, &QtGui::Molecule::changed, this,
+          &Cp2kInputDialog::updateTitlePlaceholder);
 
   updateTitlePlaceholder();
   updatePreviewText();
@@ -159,13 +161,13 @@ void Cp2kInputDialog::showEvent(QShowEvent* e)
   // Update the preview text if an update was requested while hidden. Use a
   // single shot to allow the dialog to show before popping up any warnings.
   if (m_updatePending)
-    QTimer::singleShot(0, this, SLOT(updatePreviewText()));
+    QTimer::singleShot(0, this, &Cp2kInputDialog::updatePreviewText);
 }
 
 void Cp2kInputDialog::connectBasic()
 {
-  connect(ui.titleEdit, SIGNAL(textChanged(QString)), this,
-          SLOT(updatePreviewText()));
+  connect(ui.titleEdit, &QLineEdit::textChanged, this,
+          &Cp2kInputDialog::updatePreviewText);
   connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)), this,
@@ -190,8 +192,8 @@ void Cp2kInputDialog::connectBasic()
           SLOT(updatePreviewText()));
   connect(ui.ewaldgmaxSpin, SIGNAL(valueChanged(double)), this,
           SLOT(updatePreviewText()));
-  connect(ui.lsdcheckBox, SIGNAL(stateChanged(bool)), this,
-          SLOT(updatePreviewText()));
+  connect(ui.lsdcheckBox, &QCheckBox::stateChanged, this,
+          &Cp2kInputDialog::updatePreviewText);
   connect(ui.maxscfspinBox, SIGNAL(valueChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.epsscfSpinBox, SIGNAL(valueChanged(double)), this,
@@ -210,11 +212,15 @@ void Cp2kInputDialog::connectPreview() {}
 
 void Cp2kInputDialog::connectButtons()
 {
-  connect(ui.resetAllButton, SIGNAL(clicked()), SLOT(resetClicked()));
-  connect(ui.defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
-  connect(ui.generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(ui.computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
-  connect(ui.closeButton, SIGNAL(clicked()), SLOT(close()));
+  connect(ui.resetAllButton, &QAbstractButton::clicked, this,
+          &Cp2kInputDialog::resetClicked);
+  connect(ui.defaultsButton, &QAbstractButton::clicked, this,
+          &Cp2kInputDialog::defaultsClicked);
+  connect(ui.generateButton, &QAbstractButton::clicked, this,
+          &Cp2kInputDialog::generateClicked);
+  connect(ui.computeButton, &QAbstractButton::clicked, this,
+          &Cp2kInputDialog::computeClicked);
+  connect(ui.closeButton, &QAbstractButton::clicked, this, &QWidget::close);
 }
 
 void Cp2kInputDialog::buildOptions()
@@ -553,8 +559,7 @@ void Cp2kInputDialog::updatePreviewText()
   auto functional(
     static_cast<FunctionalOption>(ui.functionalCombo->currentIndex()));
   auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  auto method(
-    static_cast<MethodOption>(ui.methodCombo->currentIndex()));
+  auto method(static_cast<MethodOption>(ui.methodCombo->currentIndex()));
   auto EWALDType(
     static_cast<EWALDTypeOption>(ui.ewaldtypeCombo->currentIndex()));
   auto SCFGuess(
@@ -1038,4 +1043,4 @@ void Cp2kInputDialog::updateTitlePlaceholder()
   ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

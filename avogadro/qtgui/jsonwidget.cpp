@@ -31,8 +31,8 @@
 namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
-  : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
-    m_centralWidget(nullptr), m_empty(true), m_batchMode(false)
+  : QWidget(parent_), m_molecule(nullptr), m_empty(true), m_batchMode(false),
+    m_currentLayout(nullptr), m_centralWidget(nullptr)
 {
 }
 

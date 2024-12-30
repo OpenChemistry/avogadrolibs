@@ -31,13 +31,13 @@ Select::Select(QObject* parent_)
   auto* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
   action->setProperty("menu priority", 990);
-  connect(action, SIGNAL(triggered()), SLOT(selectAll()));
+  connect(action, &QAction::triggered, this, &Select::selectAll);
   m_actions.append(action);
 
   action = new QAction(tr("Select None"), this);
   action->setShortcut(QKeySequence("Ctrl+Shift+A"));
   action->setProperty("menu priority", 980);
-  connect(action, SIGNAL(triggered()), SLOT(selectNone()));
+  connect(action, &QAction::triggered, this, &Select::selectNone);
   m_actions.append(action);
 
   action = new QAction(this);
@@ -47,7 +47,7 @@ Select::Select(QObject* parent_)
 
   action = new QAction(tr("Invert Selection"), this);
   action->setProperty("menu priority", 890);
-  connect(action, SIGNAL(triggered()), SLOT(invertSelection()));
+  connect(action, &QAction::triggered, this, &Select::invertSelection);
   m_actions.append(action);
 
   action = new QAction(tr("Select by Element…"), this);
@@ -57,27 +57,27 @@ Select::Select(QObject* parent_)
 
   action = new QAction(tr("Select by Atom Index…"), this);
   action->setProperty("menu priority", 870);
-  connect(action, SIGNAL(triggered()), SLOT(selectAtomIndex()));
+  connect(action, &QAction::triggered, this, &Select::selectAtomIndex);
   m_actions.append(action);
 
   action = new QAction(tr("Select by Residue…"), this);
   action->setProperty("menu priority", 860);
-  connect(action, SIGNAL(triggered()), SLOT(selectResidue()));
+  connect(action, &QAction::triggered, this, &Select::selectResidue);
   m_actions.append(action);
 
   action = new QAction(tr("Select Backbone Atoms…"), this);
   action->setProperty("menu priority", 858);
-  connect(action, SIGNAL(triggered()), SLOT(selectBackboneAtoms()));
+  connect(action, &QAction::triggered, this, &Select::selectBackboneAtoms);
   m_actions.append(action);
 
   action = new QAction(tr("Select Sidechain Atoms…"), this);
   action->setProperty("menu priority", 855);
-  connect(action, SIGNAL(triggered()), SLOT(selectSidechainAtoms()));
+  connect(action, &QAction::triggered, this, &Select::selectSidechainAtoms);
   m_actions.append(action);
 
   action = new QAction(tr("Select Water"), this);
   action->setProperty("menu priority", 850);
-  connect(action, SIGNAL(triggered()), SLOT(selectWater()));
+  connect(action, &QAction::triggered, this, &Select::selectWater);
   m_actions.append(action);
 
   action = new QAction(this);
@@ -87,12 +87,12 @@ Select::Select(QObject* parent_)
 
   action = new QAction(tr("Enlarge Selection"), this);
   action->setProperty("menu priority", 790);
-  connect(action, SIGNAL(triggered()), SLOT(enlargeSelection()));
+  connect(action, &QAction::triggered, this, &Select::enlargeSelection);
   m_actions.append(action);
 
   action = new QAction(tr("Shrink Selection"), this);
   action->setProperty("menu priority", 780);
-  connect(action, SIGNAL(triggered()), SLOT(shrinkSelection()));
+  connect(action, &QAction::triggered, this, &Select::shrinkSelection);
   m_actions.append(action);
 
   action = new QAction(this);
@@ -102,7 +102,7 @@ Select::Select(QObject* parent_)
 
   action = new QAction(tr("Create New Layer from Selection"), this);
   action->setProperty("menu priority", 300);
-  connect(action, SIGNAL(triggered()), SLOT(createLayerFromSelection()));
+  connect(action, &QAction::triggered, this, &Select::createLayerFromSelection);
   m_actions.append(action);
 }
 

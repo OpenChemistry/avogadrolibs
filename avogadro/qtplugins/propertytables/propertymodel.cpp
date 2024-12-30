@@ -921,8 +921,8 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 
     updateCache();
 
-    connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-            SLOT(updateTable(unsigned int)));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &PropertyModel::updateTable);
   }
 }
 

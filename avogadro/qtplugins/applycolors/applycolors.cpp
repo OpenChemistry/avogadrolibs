@@ -45,53 +45,55 @@ ApplyColors::ApplyColors(QObject* parent_)
 
   action = new QAction(tr("By Custom Color…"), this);
   action->setData(atomColors);
-  connect(action, SIGNAL(triggered()), SLOT(openColorDialog()));
+  connect(action, &QAction::triggered, this, &ApplyColors::openColorDialog);
   m_actions.append(action);
 
   action = new QAction(tr("By Atomic Index…"), this);
   action->setData(atomColors);
-  connect(action, SIGNAL(triggered()), SLOT(applyIndexColors()));
+  connect(action, &QAction::triggered, this, &ApplyColors::applyIndexColors);
   m_actions.append(action);
 
   action = new QAction(tr("By Distance…"), this);
   action->setData(atomColors);
-  connect(action, SIGNAL(triggered()), SLOT(applyDistanceColors()));
+  connect(action, &QAction::triggered, this, &ApplyColors::applyDistanceColors);
   m_actions.append(action);
 
   action = new QAction(tr("By Element"), this);
   action->setData(atomColors);
-  connect(action, SIGNAL(triggered()), SLOT(resetColors()));
+  connect(action, &QAction::triggered, this, &ApplyColors::resetColors);
   m_actions.append(action);
 
   // not sure if we want to color atoms by residue or not...
   action = new QAction(tr("By Custom Color…"), this);
   action->setData(residueColors);
-  connect(action, SIGNAL(triggered()), SLOT(openColorDialogResidue()));
+  connect(action, &QAction::triggered, this,
+          &ApplyColors::openColorDialogResidue);
   m_actions.append(action);
 
   action = new QAction(tr("By Chain"), this);
   action->setData(residueColors);
-  connect(action, SIGNAL(triggered()), SLOT(resetColorsResidue()));
+  connect(action, &QAction::triggered, this, &ApplyColors::resetColorsResidue);
   m_actions.append(action);
 
   action = new QAction(tr("By Partial Charge…"), this);
   action->setData(atomColors);
-  connect(action, SIGNAL(triggered()), SLOT(applyChargeColors()));
+  connect(action, &QAction::triggered, this, &ApplyColors::applyChargeColors);
   m_actions.append(action);
 
   action = new QAction(tr("By Secondary Structure"), this);
   action->setData(residueColors);
-  connect(action, SIGNAL(triggered()), SLOT(applySecondaryStructureColors()));
+  connect(action, &QAction::triggered, this,
+          &ApplyColors::applySecondaryStructureColors);
   m_actions.append(action);
 
   action = new QAction(tr("By Amino Acid"), this);
   action->setData(residueColors);
-  connect(action, SIGNAL(triggered()), SLOT(applyAminoColors()));
+  connect(action, &QAction::triggered, this, &ApplyColors::applyAminoColors);
   m_actions.append(action);
 
   action = new QAction(tr("By Shapely Scheme"), this);
   action->setData(residueColors);
-  connect(action, SIGNAL(triggered()), SLOT(applyShapelyColors()));
+  connect(action, &QAction::triggered, this, &ApplyColors::applyShapelyColors);
   m_actions.append(action);
 }
 
@@ -165,8 +167,8 @@ void ApplyColors::openColorDialog()
 {
   if (m_dialog == nullptr) {
     m_dialog = new QColorDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(currentColorChanged(const QColor&)),
-            SLOT(applyCustomColor(const QColor&)));
+    connect(m_dialog, &QColorDialog::currentColorChanged, this,
+            &ApplyColors::applyCustomColor);
   }
 
   m_dialog->exec();
@@ -385,8 +387,8 @@ void ApplyColors::openColorDialogResidue()
     m_dialog = new QColorDialog(qobject_cast<QWidget*>(parent()));
   }
   m_dialog->disconnect();
-  connect(m_dialog, SIGNAL(currentColorChanged(const QColor&)),
-          SLOT(applyCustomColorResidue(const QColor&)));
+  connect(m_dialog, &QColorDialog::currentColorChanged, this,
+          &ApplyColors::applyCustomColorResidue);
 
   m_dialog->exec();
 }

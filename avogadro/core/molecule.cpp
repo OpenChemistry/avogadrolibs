@@ -46,9 +46,8 @@ Molecule::Molecule(const Molecule& other)
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
-    m_frozenAtomMask(other.m_frozenAtomMask),
+    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   // Copy over any meshes
@@ -142,9 +141,8 @@ Molecule::Molecule(Molecule&& other) noexcept
     m_selectedAtoms(std::move(other.m_selectedAtoms)),
     m_meshes(std::move(other.m_meshes)), m_cubes(std::move(other.m_cubes)),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_graph(other.m_graph), m_bondOrders(other.m_bondOrders),
-    m_atomicNumbers(other.m_atomicNumbers),
-    m_frozenAtomMask(other.m_frozenAtomMask),
+    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
+    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layers(LayerManager::getMoleculeLayer(this))
 {
   m_basisSet = other.m_basisSet;

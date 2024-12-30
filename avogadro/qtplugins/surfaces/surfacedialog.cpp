@@ -37,8 +37,10 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   connect(m_ui->smoothingCombo, SIGNAL(currentIndexChanged(int)),
           SLOT(smoothingComboChanged(int)));
   connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
-  connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
-  connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
+  connect(m_ui->calculateButton, &QAbstractButton::clicked, this,
+          &SurfaceDialog::calculateClicked);
+  connect(m_ui->recordButton, &QAbstractButton::clicked, this,
+          &SurfaceDialog::record);
 }
 
 SurfaceDialog::~SurfaceDialog()

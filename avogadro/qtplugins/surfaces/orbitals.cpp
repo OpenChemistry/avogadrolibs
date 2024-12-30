@@ -28,12 +28,12 @@ const double cubePadding = 5.0;
 const int smoothingPasses = 1;
 
 Orbitals::Orbitals(QObject* p)
-  : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
-    m_action(new QAction(this)), m_runningMutex(new QMutex)
+  : ExtensionPlugin(p), m_action(new QAction(this)), m_molecule(nullptr),
+    m_dialog(nullptr), m_runningMutex(new QMutex)
 {
   m_action->setEnabled(false);
   m_action->setText(tr("Molecular Orbitals…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(openDialog()));
+  connect(m_action, &QAction::triggered, this, &Orbitals::openDialog);
 }
 
 Orbitals::~Orbitals()
@@ -88,8 +88,8 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
       m_dialog->hide();
   }
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)),
-          SLOT(moleculeChanged(unsigned int)));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &Orbitals::moleculeChanged);
 
   // Stuff we manage that will not be valid any longer
   m_queue.clear();
@@ -128,12 +128,12 @@ void Orbitals::loadOrbitals()
 
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
-    connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
-            SLOT(renderOrbital(unsigned int)));
-    connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
-            SLOT(calculateOrbitalFromWidget(unsigned int, double)));
-    connect(m_dialog, SIGNAL(calculateAll()), this,
-            SLOT(precalculateOrbitals()));
+    connect(m_dialog, &OrbitalWidget::orbitalSelected, this,
+            &Orbitals::renderOrbital);
+    connect(m_dialog, &OrbitalWidget::renderRequested, this,
+            &Orbitals::calculateOrbitalFromWidget);
+    connect(m_dialog, &OrbitalWidget::calculateAll, this,
+            &Orbitals::precalculateOrbitals);
   }
 
   m_dialog->fillTable(m_basis);
@@ -164,12 +164,12 @@ void Orbitals::openDialog()
 {
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
-    connect(m_dialog, SIGNAL(orbitalSelected(unsigned int)), this,
-            SLOT(renderOrbital(unsigned int)));
-    connect(m_dialog, SIGNAL(renderRequested(unsigned int, double)), this,
-            SLOT(calculateOrbitalFromWidget(unsigned int, double)));
-    connect(m_dialog, SIGNAL(calculateAll()), this,
-            SLOT(precalculateOrbitals()));
+    connect(m_dialog, &OrbitalWidget::orbitalSelected, this,
+            &Orbitals::renderOrbital);
+    connect(m_dialog, &OrbitalWidget::renderRequested, this,
+            &Orbitals::calculateOrbitalFromWidget);
+    connect(m_dialog, &OrbitalWidget::calculateAll, this,
+            &Orbitals::precalculateOrbitals);
   }
 
   m_dialog->show();
@@ -371,13 +371,14 @@ void Orbitals::calculateCube()
   m_gaussianConcurrent->setMolecule(m_molecule);
 
   auto* watcher = &m_gaussianConcurrent->watcher();
-  connect(watcher, SIGNAL(finished()), this, SLOT(calculateCubeDone()));
+  connect(watcher, &QFutureWatcherBase::finished, this,
+          &Orbitals::calculateCubeDone);
 
   m_dialog->initializeProgress(info->orbital, watcher->progressMinimum(),
                                watcher->progressMaximum(), 1, 3);
 
-  connect(watcher, SIGNAL(progressValueChanged(int)), this,
-          SLOT(updateProgress(int)));
+  connect(watcher, &QFutureWatcherBase::progressValueChanged, this,
+          &Orbitals::updateProgress);
 
 #ifndef NDEBUG
   qDebug() << info->orbital << " Cube calculation started.";
@@ -411,7 +412,8 @@ void Orbitals::calculatePosMesh()
   if (!m_meshGenerator) {
     m_meshGenerator = new QtGui::MeshGenerator;
   }
-  connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculatePosMeshDone()));
+  connect(m_meshGenerator, &QThread::finished, this,
+          &Orbitals::calculatePosMeshDone);
   m_meshGenerator->initialize(cube, posMesh, m_isoValue, smoothingPasses);
   m_meshGenerator->start();
 }
@@ -436,7 +438,8 @@ void Orbitals::calculateNegMesh()
     // shouldn't happen, but better to be careful
     m_meshGenerator = new QtGui::MeshGenerator;
   }
-  connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculateNegMeshDone()));
+  connect(m_meshGenerator, &QThread::finished, this,
+          &Orbitals::calculateNegMeshDone);
   // true indicates that we want to reverse the surface
   m_meshGenerator->initialize(cube, negMesh, -m_isoValue, smoothingPasses,
                               true);

@@ -30,8 +30,8 @@
 namespace Avogadro::QtPlugins {
 
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
-  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(true),
-    m_inputFormat(NotUsed), m_gradients(false), m_ions(false),
+  : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
+    m_inputFormat(NotUsed), m_valid(true), m_gradients(false), m_ions(false),
     m_radicals(false), m_unitCells(false)
 {
   m_elements.reset();

@@ -29,7 +29,7 @@ ThreeDMol::ThreeDMol(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText("&3DMol HTML Snippet…");
-  connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(m_action, &QAction::triggered, this, &ThreeDMol::showDialog);
 }
 
 QString ThreeDMol::description() const

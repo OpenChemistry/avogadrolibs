@@ -23,11 +23,11 @@ ImportPQR::ImportPQR(QObject* parent_)
 {
   m_action->setEnabled(false);
   m_action->setText(tr("&Search PQR…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(m_action, &QAction::triggered, this, &ImportPQR::menuActivated);
 
   // check if PQR is up
-  connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-          SLOT(checkAccess(QNetworkReply*)));
+  connect(m_manager, &QNetworkAccessManager::finished, this,
+          &ImportPQR::checkAccess);
   m_manager->get(QNetworkRequest(QUrl("https://pqr.pitt.edu")));
 }
 
