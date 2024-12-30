@@ -92,6 +92,9 @@ jobs:
       run: |
         mkdir ${{ runner.workspace }}/results
 
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+
     - name: Clazy
       run: |
         find ../avogadrolibs/avogadrolibs/avogadro/ -name "*.cpp" | xargs clazy-standalone -p compile_commands.json -checks=old-style-connect -export-fixes=${{ runner.workspace }}/results/clazy-fixes.yaml
