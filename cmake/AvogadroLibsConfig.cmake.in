@@ -19,6 +19,12 @@ set(AvogadroLibs_CMAKE_DIR       "${AvogadroLibs_LIBRARY_DIR}/cmake/avogadrolibs
 set(AvogadroLibs_PLUGINS         "@AvogadroLibs_PLUGINS@")
 set(AvogadroLibs_STATIC_PLUGINS  "@AvogadroLibs_STATIC_PLUGINS@")
 
+include(CMakeFindDependencyMacro)
+
+if (@QT_VERSION@ EQUAL 6)
+  find_dependency(Qt6OpenGLWidgets)
+endif()
+
 if(NOT TARGET AvogadroCore)
   include("${AvogadroLibs_CMAKE_DIR}/AvogadroLibsTargets.cmake")
 endif()

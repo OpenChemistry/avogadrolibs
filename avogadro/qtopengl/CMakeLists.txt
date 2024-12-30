@@ -21,5 +21,5 @@ target_sources(QtOpenGL PRIVATE
 avogadro_add_library(QtOpenGL)
 target_link_libraries(QtOpenGL PUBLIC Avogadro::Rendering Avogadro::QtGui Qt::Widgets)
 if(QT_VERSION EQUAL 6)
-  target_link_libraries(QtOpenGL PRIVATE Qt6::OpenGLWidgets)
+  target_link_libraries(QtOpenGL PUBLIC Qt6::OpenGLWidgets)
 endif()
