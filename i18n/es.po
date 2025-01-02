@@ -10,14 +10,14 @@
 # William <eduardo.957@hotmail.com>, 2022.
 # Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>, 2023.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
+# Saúl Palacios <palacios22c@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-01-03 14:11+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Saúl Palacios <palacios22c@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1469,7 +1469,7 @@ msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:407
 msgid "Add Unit Cell…"
-msgstr "Añadir celda de unidad…"
+msgstr "Añadir celda unidad…"
 
 #: qtgui/rwmolecule.cpp:419
 msgid "Remove Unit Cell"
@@ -1534,7 +1534,7 @@ msgstr "Cambiar la Etiqueta de un Átomo"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Etiqueta cambio de enlace"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -3398,7 +3398,7 @@ msgstr "Longitud"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
-msgstr ""
+msgstr "Etiqueta de enlace:"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
@@ -5120,7 +5120,7 @@ msgstr "Densidad"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Orbitales moleculares…"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
@@ -5159,7 +5159,7 @@ msgstr "LUMO (orbital molecular vacío de menor energía)"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "Orbitales moleculares"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
