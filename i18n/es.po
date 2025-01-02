@@ -11,13 +11,14 @@
 # Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>, 2023.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 # Saúl Palacios <palacios22c@gmail.com>, 2025.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-01-03 14:11+0000\n"
-"Last-Translator: Saúl Palacios <palacios22c@gmail.com>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1609,7 +1610,7 @@ msgstr "Alquimia"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr "Cambiar los elementos de los átomos."
+msgstr "Cambiar elementos de átomos."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -3074,7 +3075,7 @@ msgstr "No se proporcionan átomos para la optimización"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Energía: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
@@ -5124,11 +5125,11 @@ msgstr "Orbitales moleculares…"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
-msgstr ""
+msgstr "Ventana orbital"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Mostrar listas orbitales."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Orbital"
