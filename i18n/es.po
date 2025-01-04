@@ -9,13 +9,16 @@
 # gallegonovato <fran-carro@hotmail.es>, 2022, 2023, 2024.
 # William <eduardo.957@hotmail.com>, 2022.
 # Alejandro Díaz-Moscoso <a.diaz.moscoso@csic.es>, 2023.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
+# Saúl Palacios <palacios22c@gmail.com>, 2025.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-26 19:19+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2025-01-03 14:11+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -1467,7 +1470,7 @@ msgstr "Actualizar Enlace"
 
 #: qtgui/rwmolecule.cpp:407
 msgid "Add Unit Cell…"
-msgstr "Añadir celda de unidad…"
+msgstr "Añadir celda unidad…"
 
 #: qtgui/rwmolecule.cpp:419
 msgid "Remove Unit Cell"
@@ -1532,7 +1535,7 @@ msgstr "Cambiar la Etiqueta de un Átomo"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Etiqueta cambio de enlace"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1607,7 +1610,7 @@ msgstr "Alquimia"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr "Cambiar los elementos de los átomos."
+msgstr "Cambiar elementos de átomos."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -1783,7 +1786,7 @@ msgstr "Guardar Archivo de Entrada APBS"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr "Entrada APBS (*.in)"
+msgstr "Archivo de Entrada APBS (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
@@ -3036,7 +3039,7 @@ msgstr "Optimizar Geometría"
 
 #: qtplugins/forcefield/forcefield.cpp:88
 msgid "Forces"
-msgstr "Forces"
+msgstr "Fuerzas"
 
 #: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
@@ -3072,7 +3075,7 @@ msgstr "No se proporcionan átomos para la optimización"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Energía: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
@@ -3396,7 +3399,7 @@ msgstr "Longitud"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
-msgstr ""
+msgstr "Etiqueta de enlace:"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
@@ -5118,15 +5121,15 @@ msgstr "Densidad"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Orbitales moleculares…"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
-msgstr ""
+msgstr "Ventana orbital"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Mostrar listas orbitales."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Orbital"
@@ -5157,7 +5160,7 @@ msgstr "LUMO (orbital molecular vacío de menor energía)"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "Orbitales moleculares"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -8020,7 +8023,7 @@ msgstr "&Carga de datos ..."
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Quality: "
-msgstr ""
+msgstr "Calidad: "
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
@@ -8062,12 +8065,12 @@ msgstr "Muy Alto"
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
 msgid "Render"
-msgstr ""
+msgstr "Visualizar"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
