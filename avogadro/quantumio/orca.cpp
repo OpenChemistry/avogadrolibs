@@ -869,7 +869,11 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           numColumns = list.size();
           columns.resize(numColumns);
           while (list.size() > 0) {
-            orcaOrbitals.push_back(list[1]);
+            // get the '2s' or '1dx2y2' piece from the line
+            // so we can re-order the orbitals later
+            std::vector<std::string> pieces = Core::split(key, ' ');
+            orcaOrbitals.push_back(pieces[1]);
+
             for (unsigned int i = 0; i < numColumns; ++i) {
               columns[i].push_back(Core::lexicalCast<double>(list[i]));
             }
@@ -945,31 +949,34 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             getline(in, key); // skip -----------
             getline(in, key); // now we've got coefficients
 
-            regex rx("[.][0-9]{6}[0-9-]");
+            regex rx("[-]?[0-9]{1,2}[.][0-9]{6}");
             auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
             auto key_end = std::sregex_iterator();
+            list.clear();
             for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-              key += i->str() + " ";
+              list.push_back(i->str());
             }
 
-            list = Core::split(key, ' ');
-            numColumns = list.size() - 2;
+            numColumns = list.size();
             columns.resize(numColumns);
-            while (list.size() > 2) {
-              orcaOrbitals.push_back(list[1]);
+            while (list.size() > 0) {
+              // get the '2s' or '1dx2y2' piece from the line
+              // so we can re-order the orbitals later
+              std::vector<std::string> pieces = Core::split(key, ' ');
+              orcaOrbitals.push_back(pieces[1]);
+
               //                    columns.resize(numColumns);
               for (unsigned int i = 0; i < numColumns; ++i) {
-                columns[i].push_back(Core::lexicalCast<double>(list[i + 2]));
+                columns[i].push_back(Core::lexicalCast<double>(list[i]));
               }
 
-              getline(in, key);
-              key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
-              key_end = std::sregex_iterator();
+              auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
+              auto key_end = std::sregex_iterator();
+              list.clear();
               for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
-                key += i->str() + " ";
+                list.push_back(i->str());
               }
-              list = Core::split(key, ' ');
-              if (list.size() != numColumns + 2)
+              if (list.size() != numColumns)
                 break;
 
             } // ok, we've finished one batch of MO coeffs
@@ -1001,7 +1008,6 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             for (unsigned int i = 0; i < numColumns; ++i) {
               numRows = columns[i].size();
               for (unsigned int j = 0; j < numRows; ++j) {
-
                 m_BetaMOcoeffs.push_back(columns[i][j]);
               }
             }
