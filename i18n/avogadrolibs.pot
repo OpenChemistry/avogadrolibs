@@ -1,5 +1,5 @@
 # Translations for the Avogadro molecular builder.
-# Copyright (C) 2006-2024 The Avogadro Project
+# Copyright (C) 2006-2025 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.99.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-29 02:36+0000\n"
+"POT-Creation-Date: 2025-01-05 02:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1405,11 +1405,11 @@ msgid "Reduce to Primitive"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
-#: qtplugins/spacegroup/spacegroup.cpp:259
+#: qtplugins/spacegroup/spacegroup.cpp:263
 msgid "Conventionalize Cell"
 msgstr ""
 
-#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:284
+#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:288
 msgid "Symmetrize Cell"
 msgstr ""
 
@@ -2646,7 +2646,8 @@ msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:48 qtplugins/plotxrd/plotxrd.cpp:53
-#: qtplugins/spacegroup/spacegroup.cpp:105
+#: qtplugins/spacegroup/spacegroup.cpp:107
+#: qtplugins/spacegroup/spacegroup.cpp:109
 msgid "&Crystal"
 msgstr ""
 
@@ -4675,98 +4676,98 @@ msgstr ""
 msgid "Fill Unit Cell…"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:78
-#: qtplugins/spacegroup/spacegroup.cpp:334
+#: qtplugins/spacegroup/spacegroup.cpp:79
+#: qtplugins/spacegroup/spacegroup.cpp:338
 msgid "Reduce to Asymmetric Unit"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:84
+#: qtplugins/spacegroup/spacegroup.cpp:85
 msgid "Set Tolerance…"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:105
+#: qtplugins/spacegroup/spacegroup.cpp:109
 msgid "Space Group"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:112
+#: qtplugins/spacegroup/spacegroup.cpp:116
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:187
+#: qtplugins/spacegroup/spacegroup.cpp:191
 msgid "Perceive Space Group"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:188
+#: qtplugins/spacegroup/spacegroup.cpp:192
 #, qt-format
 msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:218
+#: qtplugins/spacegroup/spacegroup.cpp:222
 msgid "Failure"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:219
+#: qtplugins/spacegroup/spacegroup.cpp:223
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:234
+#: qtplugins/spacegroup/spacegroup.cpp:238
 msgid "Primitive Reduction"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:235
-#: qtplugins/spacegroup/spacegroup.cpp:260
-#: qtplugins/spacegroup/spacegroup.cpp:285
+#: qtplugins/spacegroup/spacegroup.cpp:239
+#: qtplugins/spacegroup/spacegroup.cpp:264
+#: qtplugins/spacegroup/spacegroup.cpp:289
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:248
+#: qtplugins/spacegroup/spacegroup.cpp:252
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:273
+#: qtplugins/spacegroup/spacegroup.cpp:277
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:297
+#: qtplugins/spacegroup/spacegroup.cpp:301
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:359 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
 msgid "Avogadro2"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:356
+#: qtplugins/spacegroup/spacegroup.cpp:360
 msgid "Select tolerance in Å:"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:372
+#: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "International"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:372
+#: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "Hall"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:372
+#: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "Hermann-Mauguin"
 msgstr ""
 
-#: qtplugins/spacegroup/spacegroup.cpp:385
+#: qtplugins/spacegroup/spacegroup.cpp:389
 msgid "Select Space Group"
 msgstr ""
 
