@@ -207,6 +207,9 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
 
 void Forcefield::setupMethod()
 {
+  if (m_molecule == nullptr)
+    return; // nothing to do until its set
+
   if (m_autodetect)
     m_methodName = recommendedForceField();
 
@@ -234,14 +237,19 @@ void Forcefield::setupMethod()
     delete m_method; // delete the previous one
     m_method = Calc::EnergyManager::instance().model(m_methodName);
   }
-
-  m_method->setMolecule(m_molecule);
+  if (m_method != nullptr)
+    m_method->setMolecule(m_molecule);
 }
 
 void Forcefield::optimize()
 {
-  if (m_molecule == nullptr || m_method == nullptr)
+  if (m_molecule == nullptr)
     return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return; // bad news
 
   if (!m_molecule->atomCount()) {
     QMessageBox::information(nullptr, tr("Avogadro"),
@@ -375,8 +383,13 @@ void Forcefield::optimize()
 
 void Forcefield::energy()
 {
-  if (m_molecule == nullptr || m_method == nullptr)
+  if (m_molecule == nullptr)
     return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return; // bad news
 
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
@@ -395,8 +408,13 @@ void Forcefield::energy()
 
 void Forcefield::forces()
 {
-  if (m_molecule == nullptr || m_method == nullptr)
+  if (m_molecule == nullptr)
     return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return; // bad news
 
   int n = m_molecule->atomCount();
 
