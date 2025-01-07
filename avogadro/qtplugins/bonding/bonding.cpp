@@ -40,6 +40,7 @@ Bonding::Bonding(QObject* parent_)
   m_action->setProperty("menu priority", 750);
   m_createBondsAction->setProperty("menu priority", 740);
   m_orderAction->setProperty("menu priority", 735);
+  m_clearAction->setShortcut(QKeySequence("Ctrl+Shift+B"));
   m_clearAction->setProperty("menu priority", 720);
 
   connect(m_action, SIGNAL(triggered()), SLOT(bond()));
