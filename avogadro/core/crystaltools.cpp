@@ -29,9 +29,16 @@ bool CrystalTools::wrapAtomsToUnitCell(Molecule& molecule)
   if (!molecule.unitCell())
     return false;
 
+  // remove any bonds first - otherwise they may wrap
+  // across the unit cell strangely
+  molecule.clearBonds();
+
   std::for_each(molecule.atomPositions3d().begin(),
                 molecule.atomPositions3d().end(),
                 WrapAtomsToCellFunctor(molecule));
+
+  molecule.perceiveBondsSimple();
+  molecule.perceiveBondOrders();
   return true;
 }
 
