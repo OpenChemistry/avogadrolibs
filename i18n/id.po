@@ -8,7 +8,7 @@
 # RIDHO NURUL ADILLA <ridhonuruladilla@gmail.com>, 2021.
 # Jacque Fresco <aidter@use.startmail.com>, 2021.
 # fikril Ha <fikrilha099@gmail.com>, 2021.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # "C.Y.A.N" <bd3alz@gmail.com>, 2024.
 # Syifa Tadjoedin <31january2003@gmail.com>, 2024.
 msgid ""
@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-30 12:00+0000\n"
-"Last-Translator: Syifa Tadjoedin <31january2003@gmail.com>\n"
+"PO-Revision-Date: 2025-01-08 01:12+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -1004,7 +1004,7 @@ msgstr "Oganeson"
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "Cari..."
+msgstr "Cari"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1109,9 +1109,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr ""
 
 #: qtgui/jsonwidget.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Tidak dapat menjalankan povray"
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
@@ -1139,7 +1139,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:226
 #, fuzzy
 msgid "Theory"
-msgstr "Teori:"
+msgstr "Teori"
 
 #: qtgui/jsonwidget.cpp:226
 msgid "Basis"
@@ -1361,9 +1361,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:263:1640
-#, fuzzy
 msgid "Change Layer"
-msgstr "Merubah Orde Ikatan"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1406,9 +1405,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:272
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Merubah Orde Ikatan"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:288
 msgid "Add Bond"
@@ -1435,7 +1433,7 @@ msgstr "Merubah Orde Ikatan"
 #: qtgui/rwmolecule.cpp:369
 #, fuzzy
 msgid "Update Bonds"
-msgstr " Kancingkan ke Ikatan"
+msgstr "Kancingkan ke Ikatan"
 
 #: qtgui/rwmolecule.cpp:388
 msgid "Update Bond"
@@ -1488,9 +1486,8 @@ msgid "Conventionalize Cell"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:284
-#, fuzzy
 msgid "Symmetrize Cell"
-msgstr "Kristal Simetri"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:682
 msgid "Fill Unit Cell"
@@ -1502,29 +1499,24 @@ msgid "Reduce Cell to Asymmetric Unit"
 msgstr "Kurangi Ukuran Asimetrik"
 
 #: qtgui/rwmolecule.h:214
-#, fuzzy
 msgid "Change Atom Positions"
-msgstr "Merubah Orde Ikatan"
+msgstr ""
 
 #: qtgui/rwmolecule.h:224
-#, fuzzy
 msgid "Change Atom Position"
-msgstr "Merubah Orde Ikatan"
+msgstr ""
 
 #: qtgui/rwmolecule.h:242
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "Merubah Orde Ikatan"
+msgstr ""
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
 msgstr ""
 
 #: qtgui/rwmolecule.h:266
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Change Selection"
-msgstr "Lupakan Pilihan"
+msgstr ""
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1537,10 +1529,9 @@ msgid "Settings"
 msgstr "Pengaturan"
 
 #: qtgui/scriptloader.cpp:33
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Tidak bisa menyimpan berkas %1."
+msgstr ""
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format

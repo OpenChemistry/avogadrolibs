@@ -2,7 +2,7 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2021, 2022, 2023, 2024, 2025.
 # Chiyu Liang <532117255@qq.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-25 15:00+0000\n"
+"PO-Revision-Date: 2025-01-08 01:12+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -1460,8 +1460,9 @@ msgid "Change Atom Label"
 msgstr "原子のラベルを変更"
 
 #: qtgui/rwmolecule.h:260
+#, fuzzy
 msgid "Change Bond Label"
-msgstr ""
+msgstr "結合ラベルの変更"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1509,8 +1510,9 @@ msgid "ThreeDMol"
 msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
+#, fuzzy
 msgid "Change Elements…"
-msgstr ""
+msgstr "元素の変更…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1537,7 +1539,7 @@ msgstr "Alchemy"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "原子の元素を変更"
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -3003,7 +3005,7 @@ msgstr "最適化する原子がありません"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "エネルギー: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
@@ -3329,8 +3331,9 @@ msgid "Length"
 msgstr "長さ"
 
 #: qtplugins/label/label.cpp:217
+#, fuzzy
 msgid "Bond Label:"
-msgstr ""
+msgstr "結合のラベル:"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
@@ -5035,15 +5038,16 @@ msgstr "密度"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "分子軌道…"
 
 #: qtplugins/surfaces/orbitals.h:48
+#, fuzzy
 msgid "Orbital Window"
-msgstr ""
+msgstr "軌道ウィンドウ"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "軌道の一覧を表示"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Orbital"
@@ -5074,7 +5078,7 @@ msgstr "LUMO"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "分子軌道"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -7925,13 +7929,15 @@ msgstr "最高"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
+#, fuzzy
 msgid "Render"
-msgstr ""
+msgstr "描画"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
+#, fuzzy
 msgid "Configure"
-msgstr ""
+msgstr "設定"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
