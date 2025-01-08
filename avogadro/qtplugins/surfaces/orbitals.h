@@ -148,7 +148,9 @@ private:
 
   QList<calcInfo> m_queue;
   int m_currentRunningCalculation = -1;
+  bool m_runningCube = false;
   int m_currentMeshCalculation = -1;
+  int m_nextMeshCalculation = -1;
 
   QtGui::GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
   QtGui::SlaterSetConcurrent* m_slaterConcurrent = nullptr;
@@ -163,7 +165,6 @@ private:
 
   OrbitalWidget* m_dialog = nullptr;
   // OrbitalSettingsDialog* m_orbitalSettingsDialog = nullptr;
-  QMutex* m_runningMutex = nullptr;
 };
 
 } // namespace QtPlugins

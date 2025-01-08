@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-01 17:00+0000\n"
+"PO-Revision-Date: 2025-01-06 03:49+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -1310,6 +1310,11 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Greška pri pokretanju skripts „%1 %2”: Abnormalano stanje izlaska %3 (%4: %5)"
+"\n"
+"\n"
+"Rezultat:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:145
 #, qt-format
@@ -1426,11 +1431,11 @@ msgstr "Izbriši veze"
 
 #: qtgui/rwmolecule.cpp:335
 msgid "Set Bond Orders"
-msgstr "Postavi redoslijed veza"
+msgstr "Postavi redove veza"
 
 #: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
-msgstr "Promijeni redoslijed veza"
+msgstr "Promijeni redove veza"
 
 #: qtgui/rwmolecule.cpp:369
 msgid "Update Bonds"
@@ -1524,12 +1529,12 @@ msgstr "Postavke"
 #: qtgui/scriptloader.cpp:33
 #, qt-format
 msgid "Cannot load script %1"
-msgstr "Nije moguće učitati skript %1"
+msgstr "Skripta %1 se ne može učitati"
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr ""
+msgstr "Provjeranje %1 skripta u stazi %2"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -2064,7 +2069,7 @@ msgstr "Poveži atome"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
-msgstr "Prepoznaj redoslijed veza"
+msgstr "Prepoznaj redove veza"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2093,7 +2098,7 @@ msgstr "Stvori veze između svih ili odabranih atoma."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
-msgstr "Prepoznaj redoslijed veza."
+msgstr "Prepoznaj redove veza."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2661,7 +2666,7 @@ msgstr "ATOMSKI"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
-msgstr ""
+msgstr "JEZGRA"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
 msgid "DENSITIES"
@@ -2701,7 +2706,7 @@ msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
 msgid "Steepest descent"
-msgstr ""
+msgstr "Gradijentni spust"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
 #: qtplugins/gamessinput/gamessinputdialog.cpp:414
@@ -2948,7 +2953,7 @@ msgstr "Prvi znak PDB koda mora biti znamenka 1 do 9."
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Upit za %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
@@ -3799,11 +3804,11 @@ msgstr "Konfiguriraj polje sile …"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Conformer Search…"
-msgstr ""
+msgstr "Konformer pretraga …"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
-msgstr "Spoznaj veze"
+msgstr "Prepoznaj veze"
 
 #: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add Hydrogens for pH…"
@@ -3940,11 +3945,11 @@ msgstr "Nije moguće otvoriti datoteku s Open Babel."
 
 #: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Nevažeća molekula: Nije moguće prepoznati veze."
 
 #: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Prepoznavanje veza (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
@@ -4454,7 +4459,7 @@ msgstr "Kraj atoma"
 
 #: qtplugins/propertytables/propertymodel.cpp:535
 msgid "Bond Order"
-msgstr "Redoslijed veza"
+msgstr "Red veze"
 
 #: qtplugins/propertytables/propertymodel.cpp:539
 msgctxt "in Angstrom"
@@ -4830,7 +4835,7 @@ msgstr "Novi sloj"
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
-msgstr "Percepcija prostornih grupa …"
+msgstr "Prepoznaj prostornu grupu …"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -4861,7 +4866,7 @@ msgstr "Ispuni simetrične atome na temelju prostorne grupe kristala."
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Prepoznaj prostornu grupu"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -5182,7 +5187,7 @@ msgstr "Iscrtaj gustoću elektrona."
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
-msgstr ""
+msgstr "Iscrtaj gustoću spina."
 
 #: qtplugins/surfaces/surfaces.cpp:125
 msgid "Render a cube supplied with the file."
@@ -5194,7 +5199,7 @@ msgstr "Izračunavanje gustoće elektrona"
 
 #: qtplugins/surfaces/surfaces.cpp:595
 msgid "Calculating spin density"
-msgstr ""
+msgstr "Izračunavanje gustoće spina"
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5542,6 +5547,8 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Označi za standardno sprečavanje prikazivanja ovog "
+"posla u MoleQueue GUI-u.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5955,7 +5962,7 @@ msgstr "MM"
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:264
 #. i18n: ectx: property (text), widget (QLabel, emaxSplineSpin_label)
 msgid "FF Emax Spline Spin"
-msgstr ""
+msgstr "FF Emax Spline Spin"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:304
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -6167,7 +6174,7 @@ msgstr "Tekstualna oznaka"
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:33
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Bond Order:"
-msgstr "Redoslijed veza:"
+msgstr "Red veze:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -6682,7 +6689,7 @@ msgstr "Datoteka podataka koordinata"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:306
 #. i18n: ectx: property (text), widget (QLabel, label_therm)
 msgid "Ensemble"
-msgstr ""
+msgstr "Ansambl"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:314
 #. i18n: ectx: property (text), item, widget (QComboBox, ensembleCombo)
@@ -7167,7 +7174,7 @@ msgstr "Tehnika pretraživanja linija:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "Steepest Descent"
-msgstr ""
+msgstr "Gradijentni spust"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:72
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
@@ -7545,7 +7552,7 @@ msgstr "Barostatski interval"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:703
 #. i18n: ectx: property (text), widget (QLabel, label_reporters)
 msgid "Reporters:"
-msgstr ""
+msgstr "Izvejstitelji:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:710
 #. i18n: ectx: property (text), widget (QCheckBox, stateDataCheck)
@@ -8403,11 +8410,14 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Podesiti energije tako da nula bude Fermi? Dostupno "
+"samo ako crtamo Fermi razinu.</p><p><br/></p><p>Zadano: "
+"isključeno</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
 msgid "Zero Fermi?"
-msgstr ""
+msgstr "Fermi nula?"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:81
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8444,6 +8454,17 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Upiši posebne k-točke kao takve:</p><p>L 0,5 0,5 0,5</"
+"p><p>G 0,0 0,0 0,0</p><p> X 0,5 0,0 0,5</p><p>To je &lt;symbol&gt; &lt;x&gt; "
+"&lt;y&gt; &lt;z&gt; gdje su x, y i z razlomačke recipročne prostorne "
+"koordinate. Povući će se linije koje povezuju te k-točke na grafikonu "
+"redoslijedom upisivanja. Imaj na umu da orijentacija tvoje ćelije može "
+"utjecati na lokacije ovih recipročnih prostornih točaka.</p><p>Ako je "
+"prostorna grupa kristala prepoznata ili postavljena, posebne k točke će se "
+"automatski ispuniti točkama visoke simetrije primitivne ćelije za tu "
+"prostornu grupu. Postoji nekoliko prostornih grupa s različitim visokim "
+"točkama simetrije ovisno o rešetki (kao što je a &gt; b ili a &lt; b) - to "
+"se automatski uzima u obzir.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)

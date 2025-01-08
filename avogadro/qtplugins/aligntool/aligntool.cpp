@@ -140,8 +140,6 @@ void AlignTool::align()
     shiftAtomToOrigin(m_atoms[0].index);
   if (m_atoms.size() == 2)
     alignAtomToAxis(m_atoms[1].index, m_axis);
-
-  m_atoms.clear();
 }
 
 void AlignTool::shiftAtomToOrigin(Index atomIndex)

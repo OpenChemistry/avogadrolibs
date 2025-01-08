@@ -542,22 +542,44 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     }
 
     // Find dummy atom in template and get all necessary info
+    // for haptic ligands, we pick the dummy atom that's
+    // furthest from the centroid of the carbon atoms
+    Vector3 centroid(0.0, 0.0, 0.0);
+    unsigned carbonCount = 0;
+    for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+      if (templateMolecule.atomicNumber(i) == 6) {
+        carbonCount++;
+        centroid += templateMolecule.atomPosition3d(i);
+      }
+    }
+    if (carbonCount > 1)
+      centroid = centroid / carbonCount;
+
     size_t templateDummyIndex = 0;
     std::vector<size_t> templateLigandIndices;
     std::vector<size_t> templateLigandUIDs;
-    for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
+    float maxDistance = 0.0;
+    for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
+      // in some ligands (e.g., haptic) we might have two dummy atoms
+      // so we only select the one furthest from the ligand centroid
       if (templateMolecule.atomicNumber(i) == 0) {
+        Vector3 delta = templateMolecule.atomPosition3d(i) - centroid;
+        if (delta.squaredNorm() < maxDistance)
+          continue; // too close to the centroid
+
+        maxDistance = delta.squaredNorm();
         templateDummyIndex = i;
+        templateLigandIndices.clear();
+        templateLigandUIDs.clear();
         for (const auto& bond : templateMolecule.bonds(i)) {
           size_t newIndex = bond.getOtherAtom(i).index();
           templateLigandIndices.push_back(newIndex);
           templateLigandUIDs.push_back(templateMolecule.atomUniqueId(newIndex));
         }
-        break; // only use first dummy atom
       }
     }
 
-    // Find center atom in molecule and get all necessary info
+    // Find center atom in our current molecule and get all necessary info
     // - first check to see if there is a bond
     Vector3 moleculeLigandOutVector(0.0, 0.0, 0.0);
     Vector3 displacement(0.0, 0.0, 0.0);

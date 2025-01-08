@@ -29,7 +29,7 @@ const int smoothingPasses = 1;
 
 Orbitals::Orbitals(QObject* p)
   : ExtensionPlugin(p), m_molecule(nullptr), m_dialog(nullptr),
-    m_action(new QAction(this)), m_runningMutex(new QMutex)
+    m_action(new QAction(this))
 {
   m_action->setEnabled(false);
   m_action->setText(tr("Molecular Orbitals…"));
@@ -45,7 +45,6 @@ Orbitals::~Orbitals()
     if (watcher != nullptr && watcher->isRunning())
       watcher->cancel();
   }
-  delete m_runningMutex;
 
   if (m_dialog)
     m_dialog->deleteLater();
@@ -269,8 +268,9 @@ void Orbitals::addCalculationToQueue(unsigned int orbital, double resolution,
 
 void Orbitals::checkQueue()
 {
-  if (!m_runningMutex->tryLock())
+  if (m_runningCube)
     return;
+  m_runningCube = true;
 
   // Create a hash: keys=priority, values=indices
 
@@ -292,7 +292,7 @@ void Orbitals::checkQueue()
 
   // Do nothing if all calcs are finished.
   if (hash.size() == 0) {
-    m_runningMutex->unlock();
+    m_runningCube = false;
 #ifndef NDEBUG
     qDebug() << "Finished queue.";
 #endif
@@ -392,8 +392,12 @@ void Orbitals::calculateCubeDone()
   watcher->disconnect(this);
 
   if (m_updateMesh) {
-    m_currentMeshCalculation = m_currentRunningCalculation;
-    calculatePosMesh();
+    if (m_currentMeshCalculation == -1) {
+      m_currentMeshCalculation = m_currentRunningCalculation;
+      calculatePosMesh();
+    } else {
+      m_nextMeshCalculation = m_currentRunningCalculation;
+    }
   }
   calculationComplete();
 }
@@ -405,6 +409,7 @@ void Orbitals::calculatePosMesh()
 
   calcInfo* info = &m_queue[m_currentMeshCalculation];
 
+  m_molecule->clearMeshes();
   auto posMesh = m_molecule->addMesh();
   auto cube = info->cube;
 
@@ -458,7 +463,14 @@ void Orbitals::meshComplete()
   if (m_currentMeshCalculation == -1)
     return;
 
-  m_currentMeshCalculation = -1;
+  if (m_nextMeshCalculation != -1) {
+    // start the next mesh calculation
+    m_currentMeshCalculation = m_nextMeshCalculation;
+    m_nextMeshCalculation = -1;
+    calculatePosMesh();
+    return;
+  } else
+    m_currentMeshCalculation = -1;
 }
 
 void Orbitals::calculationComplete()
@@ -472,7 +484,7 @@ void Orbitals::calculationComplete()
 
   info->state = Completed;
   m_currentRunningCalculation = -1;
-  m_runningMutex->unlock();
+  m_runningCube = false;
 
 #ifndef NDEBUG
   qDebug() << info->orbital << " all calculations complete.";
@@ -509,15 +521,19 @@ void Orbitals::renderOrbital(unsigned int row)
   }
 
   // calculate the meshes
-  m_molecule->clearMeshes();
   if (index == -1) {
     // need to calculate the cube first
     calculateOrbitalFromWidget(orbital, OrbitalWidget::OrbitalQualityToDouble(
                                           m_dialog->defaultQuality()));
   } else {
     // just need to update the meshes
-    m_currentMeshCalculation = index;
-    calculatePosMesh(); // will eventually call negMesh too
+    if (m_currentMeshCalculation == -1) {
+      m_currentMeshCalculation = index;
+      calculatePosMesh(); // will eventually call negMesh too
+    } else {
+      // queue it up
+      m_nextMeshCalculation = index;
+    }
   }
 
   // add the orbital to the renderer
