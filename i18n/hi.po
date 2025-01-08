@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 # Atharva Kanherkar <techwave99@gmail.com>, 2023.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
+"PO-Revision-Date: 2025-01-09 06:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hindi <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hi/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1277,14 +1277,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:196
-#, fuzzy
 msgid "Remove Layer"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:203
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -2108,9 +2106,8 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
 msgid "Maximum distance:"
-msgstr "दूरी के अनुसार रंग"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -3202,9 +3199,8 @@ msgid "Color:"
 msgstr ""
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "दूरी के अनुसार रंग"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3676,14 +3672,12 @@ msgid "Perceive Bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:83
-#, fuzzy
 msgid "Remove Hydrogens"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
@@ -4259,9 +4253,8 @@ msgid "Valence"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:503
-#, fuzzy
 msgid "Formal Charge"
-msgstr "आंशिक चार्ज द्वारा रंग"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:506
 #, qt-format
@@ -4368,9 +4361,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
 msgid "Adjust Fragment"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
@@ -4487,9 +4479,8 @@ msgid "Molecular Graph with Lone Pairs…"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
-#, fuzzy
 msgid "Atomic Charge…"
-msgstr "आंशिक चार्ज द्वारा रंग"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
@@ -4676,9 +4667,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
 msgid "New Layer"
-msgstr "हाइड्रोजन"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
@@ -5179,10 +5169,8 @@ msgid "Vibrations"
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Display visual cues"
 msgid "Display vibrational modes."
-msgstr "दृश्य cues प्रदर्शित करें"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -7907,9 +7895,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "आंशिक चार्ज द्वारा रंग"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
