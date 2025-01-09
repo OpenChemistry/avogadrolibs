@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-08 01:12+0000\n"
+"PO-Revision-Date: 2025-01-10 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -1191,10 +1191,8 @@ msgid "Meshes"
 msgstr ""
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "共價"
+msgstr ""
 
 #: qtgui/layermodel.cpp:156
 #, fuzzy
@@ -2879,7 +2877,7 @@ msgstr "&匯入"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "取自 PDB (蛋白質資料庫)..."
+msgstr "取自 PDB (蛋白質資料庫)"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -2933,7 +2931,7 @@ msgstr "找不到指定的分子: %1"
 #: qtplugins/fetchpdb/fetchpdb.h:35
 #, fuzzy
 msgid "Fetch from PDB"
-msgstr "取自 PDB (蛋白質資料庫)..."
+msgstr "取自 PDB (蛋白質資料庫)"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -5503,7 +5501,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save Input…"
-msgstr "儲存圖片..."
+msgstr "儲存圖片…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
