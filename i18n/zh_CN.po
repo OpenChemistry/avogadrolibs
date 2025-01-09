@@ -14,13 +14,13 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # zhang tengshuo <zhangtengshuo@gmail.com>, 2024.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-07 04:20+0000\n"
+"PO-Revision-Date: 2025-01-09 06:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2959,10 +2959,8 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr "从 Protein Data Bank 下载 PDB 模型"
 
 #: qtplugins/focus/focus.cpp:22
-#, fuzzy
-#| msgid "Selection"
 msgid "Focus Selection"
-msgstr "选择"
+msgstr ""
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
@@ -3947,7 +3945,7 @@ msgstr "无法通过 Open Babel 添加氢。"
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 #, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "添加氢原子"
+msgstr "添加氢原子 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
@@ -3984,7 +3982,7 @@ msgstr "无法通过 Open Babel 移除氢。"
 #: qtplugins/openbabel/openbabel.cpp:919
 #, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "删除氢原子"
+msgstr "删除氢原子 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
 #, fuzzy
@@ -4735,10 +4733,8 @@ msgid "Enlarge Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "选择"
+msgstr ""
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -5015,10 +5011,8 @@ msgid "Select Foreground Color"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:522
-#, fuzzy
-#| msgid "Export Calculated Spectrum"
 msgid "Select Calculated Spectra Color"
-msgstr "导出光谱计算结果"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:534
 msgid "Select Imported Spectra Color"
@@ -5081,7 +5075,7 @@ msgstr "电子光谱"
 #, fuzzy
 #| msgid "Energy"
 msgid "Energy (eV)"
-msgstr "能量"
+msgstr "能量 (eV)"
 
 #: qtplugins/spectra/spectradialog.cpp:640
 msgid "Circular Dichroism Spectra"
@@ -5154,10 +5148,8 @@ msgid "Electron Density"
 msgstr "电子密度"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Spin Density"
-msgstr "密度"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -5190,22 +5182,16 @@ msgid "Render the van der Waals surface."
 msgstr "按 van der Waals 界面渲染原子。"
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "将分子渲染为线框。"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "将分子渲染为线框。"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "将分子渲染为线框。"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 msgid "Render a molecular orbital."
@@ -5229,9 +5215,8 @@ msgid "Calculating electron density"
 msgstr "计算电子密度"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
 msgid "Calculating spin density"
-msgstr "计算密度"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5357,10 +5342,8 @@ msgid "Show the vibrational modes dialog."
 msgstr "显示振动模式对话框。"
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Display spectra and vibrational modes."
 msgid "Set the vibrational mode."
-msgstr "振动模式。"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -5758,7 +5741,7 @@ msgstr "部分电荷"
 #, fuzzy
 #| msgid "Charge:"
 msgid "Charge Model:"
-msgstr "电荷:"
+msgstr "电荷模型:"
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6376,7 +6359,7 @@ msgstr "名称："
 #, fuzzy
 #| msgid "Insert DNA"
 msgid "Insert Nucleic Acids"
-msgstr "插入"
+msgstr "插入核酸"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
