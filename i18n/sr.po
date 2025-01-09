@@ -5,13 +5,13 @@
 # Danial K <danial@proctorio.com>, 2021.
 # Nathan <bonnemainsnathan@gmail.com>, 2021.
 # Nikola Matić <nikolamatic225@gmail.com>, 2021.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-10 12:07+0000\n"
+"PO-Revision-Date: 2025-01-10 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -454,7 +454,7 @@ msgstr "Konfigurišite posao"
 #, fuzzy
 #| msgid "Submitting job to MoleQueue..."
 msgid "Submitting job to MoleQueue…"
-msgstr "Slanje posla u MoleQueue..."
+msgstr "Slanje posla u MoleQueue…"
 
 #: molequeue/molequeuedialog.cpp:66
 msgid "Job Submission Timeout"
@@ -469,7 +469,7 @@ msgstr "Avogadro je istekao čekajući na odgovor od MoleQueue."
 #| msgid "Waiting for job %1 '%2' to finish..."
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr "Čeka se završetak posla %1 ' %2' ..."
+msgstr "Čeka se završetak posla %1 “ %2” …"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
@@ -479,7 +479,7 @@ msgstr "Prestani čekati"
 #, fuzzy
 #| msgid "Fetching completed job information..."
 msgid "Fetching completed job information…"
-msgstr "Preuzimanje završenih informacija o poslu..."
+msgstr "Preuzimanje završenih informacija o poslu…"
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
@@ -1023,7 +1023,7 @@ msgstr "Oganeson"
 
 #: qtgui/filebrowsewidget.cpp:23
 msgid "Browse"
-msgstr "Razgledaj..."
+msgstr "Razgledaj"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1120,7 +1120,7 @@ msgstr "Greška pri pisanju prikaza molekula u niz: %1"
 #: qtgui/jsonwidget.cpp:86
 #, fuzzy
 msgid "'userOptions' missing."
-msgstr "'userOptions' nedostaje ili nije objekt."
+msgstr "'userOptions' nedostaje."
 
 #: qtgui/jsonwidget.cpp:117
 #, qt-format
@@ -1133,9 +1133,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr "'tzpe' nije niz za opciju '%1'."
 
 #: qtgui/jsonwidget.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Не могу да покренем повреј."
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
@@ -1222,9 +1222,9 @@ msgid "[no molecule]"
 msgstr "Nije podešen molekul"
 
 #: qtgui/layermodel.cpp:85
-#, fuzzy, qt-format
+#, qt-format
 msgid "Layer %1"
-msgstr "Plejer"
+msgstr ""
 
 #: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
@@ -1271,10 +1271,8 @@ msgid "Meshes"
 msgstr "Mreže"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Kovalentna"
+msgstr ""
 
 #: qtgui/layermodel.cpp:156
 #, fuzzy
@@ -1836,7 +1834,7 @@ msgstr "Ulazna datoteka zapisana u '%1'"
 #, fuzzy
 #| msgid "By Custom Color..."
 msgid "By Custom Color…"
-msgstr "Proizvoljna boja"
+msgstr "Proizvoljna boja…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
@@ -2309,7 +2307,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Edit Color Opacity Map..."
 msgid "Edit Color Opacity Map…"
-msgstr "Izmeni boju mape neprozirnosti..."
+msgstr "Izmeni boju mape neprozirnosti…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2420,7 +2418,7 @@ msgstr "Друго"
 #, fuzzy
 #| msgid "Atomic &Coordinate Editor..."
 msgid "Atomic &Coordinate Editor…"
-msgstr "Atomski i koordinatni uređivač ..."
+msgstr "Atomski i koordinatni uređivač …"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
@@ -2945,7 +2943,7 @@ msgstr "Nema prisutnih jediničnih ćelija."
 #, fuzzy
 #| msgid "Reassign &Custom Elements..."
 msgid "Reassign &Custom Elements…"
-msgstr "Ponovo dodeli &prilagođene elemente ..."
+msgstr "Ponovo dodeli &prilagođene elemente …"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
@@ -3033,7 +3031,7 @@ msgstr "&Uvezi"
 #, fuzzy
 #| msgid "Fetch from PDB"
 msgid "Fetch PDB"
-msgstr "Dovuci sa PDB-а..."
+msgstr "Dovuci sa PDB-а"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, fuzzy, qt-format
@@ -3356,7 +3354,7 @@ msgstr "Preuzmite molekul iz PQR -a."
 #, fuzzy
 #| msgid "DNA/RNA..."
 msgid "DNA/RNA…"
-msgstr "ДНА/РНА..."
+msgstr "ДНА/РНА…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -3398,14 +3396,14 @@ msgstr "Тимин"
 #, fuzzy
 #| msgid "Insert Molecule..."
 msgid "Insert Molecule…"
-msgstr "Umetni molekul ..."
+msgstr "Umetni molekul …"
 
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 #, fuzzy
 #| msgid "Generating 3D molecule..."
 msgid "Generating 3D molecule…"
-msgstr "Generiše se 3D molekul ..."
+msgstr "Generiše se 3D molekul …"
 
 #: qtplugins/insertdna/insertdna.h:33
 #, fuzzy
@@ -3571,7 +3569,7 @@ msgstr "Alat za uređivanje"
 #, fuzzy
 #| msgid "&LAMMPS..."
 msgid "&LAMMPS…"
-msgstr "&ЛАМПС..."
+msgstr "&ЛАМПС…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3955,7 +3953,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Configure Force Field..."
 msgid "Configure Force Field…"
-msgstr "Podesi polje sile..."
+msgstr "Podesi polje sile…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 #, fuzzy
@@ -3994,7 +3992,7 @@ msgstr "Formati datoteka Open Babel nisu spremni za dodavanje."
 #, fuzzy
 #| msgid "Loading molecule from CML..."
 msgid "Loading molecule from Open Babel…"
-msgstr "Učitavanje molekula iz CML -a ..."
+msgstr "Učitavanje molekula iz Open Babel -a …"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
@@ -4058,7 +4056,7 @@ msgstr ""
 #| msgid "Starting %1..."
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr "Pokretanje %1 ..."
+msgstr "Pokretanje %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
 #: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
@@ -4076,7 +4074,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Updating molecule..."
 msgid "Updating molecule…"
-msgstr "Ažuriranje molekula ..."
+msgstr "Ažuriranje molekula …"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
@@ -4131,7 +4129,7 @@ msgstr "Opazivanje Veza (Open Babel)"
 #, fuzzy
 #| msgid "Generating XYZ representation..."
 msgid "Generating XYZ representation…"
-msgstr "Generisanje XYZ predstavljanja ..."
+msgstr "Generisanje XYZ predstavljanja …"
 
 #: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
@@ -4141,13 +4139,13 @@ msgstr "Greška pri generisanju XYZ niza."
 #, fuzzy, qt-format
 #| msgid "Converting XYZ to CML with %1..."
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr "Pretvaranje XYZ u CML sa %1 ..."
+msgstr "Pretvaranje XYZ u Open Babel sa %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:770
 #, fuzzy
 #| msgid "Updating molecule from CML..."
 msgid "Updating molecule from Open Babel…"
-msgstr "Ažuriranje molekula iz CML -a ..."
+msgstr "Ažuriranje molekula iz Open Babel -a …"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
@@ -4161,7 +4159,7 @@ msgstr "Dodaj Vodonike (Open Babel)"
 #, fuzzy
 #| msgid "Generating Open Babel input..."
 msgid "Generating Open Babel input…"
-msgstr "Generisanje unosa Open Babel ..."
+msgstr "Generisanje unosa Open Babel …"
 
 #: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
@@ -4172,7 +4170,7 @@ msgstr "Greška pri generisanju unosa Open Babel."
 #, fuzzy, qt-format
 #| msgid "Running %1..."
 msgid "Running %1…"
-msgstr "Pokreće se %1 ..."
+msgstr "Pokreće se %1 …"
 
 #: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
@@ -4186,7 +4184,7 @@ msgstr "pH:"
 #, fuzzy
 #| msgid "Generating obabel input..."
 msgid "Generating obabel input…"
-msgstr "Generiranje obabel unosa ..."
+msgstr "Generiranje obabel unosa …"
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
@@ -4206,7 +4204,7 @@ msgstr "Greška pri generisanju unosa Open Babel."
 #, fuzzy
 #| msgid "Reading obabel output..."
 msgid "Reading obabel output…"
-msgstr "Čitanje Obabel izlaza ..."
+msgstr "Čitanje Obabel izlaza …"
 
 #: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
@@ -4364,7 +4362,7 @@ msgstr "Dinamičke veze?"
 #, fuzzy
 #| msgid "Record Movie..."
 msgid "Record Movie…"
-msgstr "Snimi film..."
+msgstr "Snimi film…"
 
 #: qtplugins/playertool/playertool.cpp:248
 #: qtplugins/playertool/playertool.cpp:353
@@ -4416,7 +4414,7 @@ msgstr "Reprodukujte putanje"
 #, fuzzy
 #| msgid "Plot Pair Distribution Function..."
 msgid "Plot Pair Distribution Function…"
-msgstr "Funkcija distribucije parcela..."
+msgstr "Funkcija distribucije parcela…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
@@ -4438,7 +4436,7 @@ msgstr "Generišite i iscrtajte krivu funkcije raspodele parova."
 #, fuzzy
 #| msgid "Plot RMSD curve..."
 msgid "Plot RMSD curve…"
-msgstr "Iscrtajte krivu RMSD ..."
+msgstr "Iscrtajte krivu RMSD …"
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
@@ -4452,7 +4450,7 @@ msgstr "Generišite i iscrtajte RMSD krivu."
 #, fuzzy
 #| msgid "Plot Theoretical XRD Pattern..."
 msgid "Plot Theoretical XRD Pattern…"
-msgstr "Teoretski XRD uzorak ..."
+msgstr "Teoretski XRD uzorak …"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
@@ -4870,19 +4868,19 @@ msgstr "Renderuje primitive koristeći QTAIM svojstva"
 #, fuzzy
 #| msgid "Molecular Graph..."
 msgid "Molecular Graph…"
-msgstr "Molekularni grafikon ..."
+msgstr "Molekularni grafikon …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 #, fuzzy
 #| msgid "Molecular Graph with Lone Pairs..."
 msgid "Molecular Graph with Lone Pairs…"
-msgstr "Molekularni grafikon sa usamljenim parovima ..."
+msgstr "Molekularni grafikon sa usamljenim parovima …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 #, fuzzy
 #| msgid "Atomic Charge..."
 msgid "Atomic Charge…"
-msgstr "Naelektrisanje Atoma..."
+msgstr "Naelektrisanje Atoma…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
@@ -4960,19 +4958,19 @@ msgstr "Obrni selekciju"
 #, fuzzy
 #| msgid "Select by Element..."
 msgid "Select by Element…"
-msgstr "Biraj po elementu ..."
+msgstr "Biraj po elementu …"
 
 #: qtplugins/select/select.cpp:58
 #, fuzzy
 #| msgid "Select by Atom Index..."
 msgid "Select by Atom Index…"
-msgstr "Biraj prema Atom indeksu ..."
+msgstr "Biraj prema Atom indeksu …"
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select by Residue…"
-msgstr "Odaberite prema ostatku ..."
+msgstr "Odaberite prema ostatku …"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
@@ -5014,7 +5012,7 @@ msgstr "&Izaberi"
 #, fuzzy
 #| msgid "Select by Element..."
 msgid "Select Element"
-msgstr "Biraj po elementu ..."
+msgstr "Biraj po elementu …"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -5048,7 +5046,7 @@ msgstr "Ostaci za izbor:"
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "Odaberite prema ostatku ..."
+msgstr "Odaberite prema ostatku …"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -5638,22 +5636,16 @@ msgid "Vibrational Modes…"
 msgstr "Režimi vibracija"
 
 #: qtplugins/vibrations/vibrations.cpp:90
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Show the vibrational modes dialog."
-msgstr "Vibracije..."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational mode."
-msgstr "Vibracije..."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational amplitude."
-msgstr "Vibracije..."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:95
 msgid "Start the vibrational animation."
@@ -5701,7 +5693,7 @@ msgstr "Predstavi molekul kao žičani okvir."
 #, fuzzy
 #| msgid "Calculate band structure..."
 msgid "Calculate Band Structure…"
-msgstr "Izračunaj strukturu opsega ..."
+msgstr "Izračunaj strukturu opsega …"
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -5800,7 +5792,7 @@ msgstr "Postavke izračunavanja"
 #, fuzzy
 #| msgid "Placeholder text..."
 msgid "Placeholder text…"
-msgstr "Tekst čuvara mesta ..."
+msgstr "Tekst čuvara mesta …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:86
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
@@ -5816,7 +5808,7 @@ msgstr "Resetuj"
 #, fuzzy
 #| msgid "Debug script..."
 msgid "Debug Script…"
-msgstr "Otkrivanje grešaka ..."
+msgstr "Otkrivanje grešaka …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:116
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
@@ -5827,7 +5819,7 @@ msgstr "Otkrivanje grešaka ..."
 #, fuzzy
 #| msgid "Submit Calculation..."
 msgid "Submit Calculation…"
-msgstr "Predloži proračun ..."
+msgstr "Predloži proračun …"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -7398,7 +7390,7 @@ msgstr "Koristi obrazac"
 #, fuzzy
 #| msgid "Generate..."
 msgid "Generate…"
-msgstr "Generiši..."
+msgstr "Generiši…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
