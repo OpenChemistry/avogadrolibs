@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-09 06:00+0000\n"
+"PO-Revision-Date: 2025-01-10 07:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -1441,9 +1441,8 @@ msgid "Change Atom Position"
 msgstr ""
 
 #: qtgui/rwmolecule.h:242
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "تسمية"
+msgstr ""
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
@@ -1548,7 +1547,7 @@ msgstr ""
 #, fuzzy
 #| msgid "X Axis"
 msgid "Axis:"
-msgstr "محورX"
+msgstr "محور"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
@@ -5254,9 +5253,8 @@ msgstr "&إدراج"
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "قياس"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5272,9 +5270,8 @@ msgid "Show the vibrational modes dialog."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
 msgid "Set the vibrational mode."
-msgstr "الاهتزازات"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -5295,9 +5292,8 @@ msgid "Vibrations"
 msgstr "إهتزاز"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
 msgid "Display vibrational modes."
-msgstr "الاهتزازات"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
