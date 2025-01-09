@@ -11,14 +11,14 @@
 # Hıncal Gökhan BAKIR <hgokhanb@gmail.com>, 2023.
 # Hakkı Konu <hakkikonu@gmail.com>, 2023.
 # Emir <bitigchi@me.com>, 2024.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Onur Kalkan <onurkalkanmv@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-11-25 20:00+0000\n"
+"PO-Revision-Date: 2025-01-10 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1268,7 +1268,7 @@ msgstr "Simetri Unsurları"
 #: qtplugins/vanderwaals/vanderwaals.h:29
 #, fuzzy
 msgid "Van der Waals"
-msgstr "Van der Waals Küreleri"
+msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:162 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
@@ -1565,7 +1565,7 @@ msgstr "&Dışa Aktar"
 #: qtplugins/3dmol/3dmol.h:42
 #, fuzzy
 msgid "ThreeDMol"
-msgstr "3DMol"
+msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
@@ -2987,10 +2987,8 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 
 #: qtplugins/focus/focus.cpp:22
-#, fuzzy
-#| msgid "Selection"
 msgid "Focus Selection"
-msgstr "Seçim"
+msgstr ""
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
@@ -3023,19 +3021,17 @@ msgstr "Kuvvetler"
 #, fuzzy
 #| msgid "Configure Bonding…"
 msgid "Configure…"
-msgstr "Bağ Oluşturmayı Yapılandır…"
+msgstr "Yapılandır…"
 
 #: qtplugins/forcefield/forcefield.cpp:108
 #, fuzzy
 #| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Seçilen Atomları Yükle"
+msgstr "Seçilen Atomları Düzelt"
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Seçilen Atomları Düzelt"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:154
 #, fuzzy
@@ -3067,7 +3063,7 @@ msgstr ""
 #, fuzzy, qt-format
 #| msgid "Energy = %L1 %2"
 msgid "%1 Energy = %L2"
-msgstr "Enerji = %L1 %2"
+msgstr "%1 Enerji = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:438
 #, qt-format
@@ -3093,10 +3089,8 @@ msgid "Autodetect (%1)"
 msgstr "Otomatik algılama (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Configure Force Field…"
 msgid "Universal Force Field"
-msgstr "Kuvvet Alanını Yapılandır…"
+msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3257,7 +3251,7 @@ msgstr "&Ekle"
 #, fuzzy
 #| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "Ekle"
+msgstr "Ekle DNA|RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -3293,10 +3287,8 @@ msgid "Generating 3D molecule…"
 msgstr "3D molekül üretiliyor…"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "Ekle"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3571,11 +3563,9 @@ msgid "Render polygon meshes."
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
-#, fuzzy
-#| msgid "Bonding"
 msgctxt "asking server for molecule name"
 msgid "(pending)"
-msgstr "Bağ oluşturma"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:108
 #: qtplugins/molecularproperties/molecularmodel.cpp:116
@@ -3583,7 +3573,7 @@ msgstr "Bağ oluşturma"
 #, fuzzy
 #| msgid "[no molecule]"
 msgid "unknown molecule"
-msgstr "[molekül yok]"
+msgstr "bilinmeyen molekül"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:611
@@ -3711,10 +3701,8 @@ msgstr "Molekül Özellikleri"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:248
-#, fuzzy
-#| msgid "&Export"
 msgid "Export CSV"
-msgstr "Dışa Aktar"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:249
@@ -3738,7 +3726,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "Dışa Aktar"
+msgstr "Dışa Aktar…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
@@ -3854,7 +3842,7 @@ msgstr "Open Babel dosya biçimleri eklenmeye hazır değil."
 #, fuzzy
 #| msgid "Loading molecule from CML…"
 msgid "Loading molecule from Open Babel…"
-msgstr "CML'den molekül yükleniyor…"
+msgstr "Open Babel'den molekül yükleniyor…"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
@@ -3894,7 +3882,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:466
 #, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "Geometriyi Optimize Et"
+msgstr "Geometriyi Optimize Et (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 #, fuzzy
@@ -3910,7 +3898,8 @@ msgstr "oluşturuluyor…"
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
-msgstr "Mevcut molekülün CML gösterimini oluştururken dahili bir hata oluştu."
+msgstr ""
+"Mevcut molekülün Open Babel gösterimini oluştururken dahili bir hata oluştu."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
@@ -3953,22 +3942,19 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molekül geçersiz. Geometri iyileştirilemiyor."
+msgstr "Molekül geçersiz."
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Open Babel ile dosya açılamıyor."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Uydurucu %1"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -3999,7 +3985,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Updating molecule from CML…"
 msgid "Updating molecule from Open Babel…"
-msgstr "CML'den molekül güncelleniyor…"
+msgstr "Open Babel'den molekül güncelleniyor…"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
@@ -4560,10 +4546,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Parça Ekle"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
@@ -4729,10 +4713,8 @@ msgid "Script Charge Models"
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
-#, fuzzy
-#| msgid "Load file reader/writers from external scripts."
 msgid "Load electrostatic models from external scripts."
-msgstr "Harici komut dosyalarından dosya okuyucu / yazıcılar yükleyin."
+msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
@@ -4767,34 +4749,24 @@ msgid "Select by Residue…"
 msgstr "Kalıntı ile seç…"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Backbone Atoms…"
-msgstr "Atom dizini ile seç…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Sidechain Atoms…"
-msgstr "Atom dizini ile seç…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Water"
-msgstr "Atom dizini ile seç…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Seçilenleri İhmal Et"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "Seçim"
+msgstr ""
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4812,19 +4784,15 @@ msgstr "&Seç"
 #, fuzzy
 #| msgid "Select by Element…"
 msgid "Select Element"
-msgstr "Element ile seç…"
+msgstr "Element ile seç"
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Backbone"
-msgstr "Atom dizini ile seç…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
-#| msgid "Select by Atom Index…"
 msgid "Select Sidechain"
-msgstr "Atom dizini ile seç…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4850,7 +4818,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Select by Residue…"
 msgid "Select Residue"
-msgstr "Kalıntı ile seç…"
+msgstr "Kalıntı ile seç"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4892,7 +4860,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Layer"
 msgid "New Layer"
-msgstr "Katman"
+msgstr "Yeni Katman"
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
@@ -5017,10 +4985,8 @@ msgid "Space group features for crystals."
 msgstr "Kristaller için uzay grubu özellikleri."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Plot RMSD curve…"
 msgid "Plot Spectra…"
-msgstr "RMSD eğrisini çiz…"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -5076,20 +5042,16 @@ msgid "Select Calculated Spectra Color"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:534
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Imported Spectra Color"
-msgstr "Bağ Etiketi Rengi Seç"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:586
-#, fuzzy
-#| msgid "Vibrational Modes…"
 msgid "Vibrational Spectra"
-msgstr "Titreşim Modları…"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:587
 #: qtplugins/spectra/spectradialog.cpp:601
@@ -5119,7 +5081,7 @@ msgstr ""
 #| msgctxt "colormap"
 #| msgid "Spectral"
 msgid "NMR Spectra"
-msgstr "Spektral"
+msgstr "NMR Spektral"
 
 #: qtplugins/spectra/spectradialog.cpp:614
 msgid "Chemical Shift (ppm)"
@@ -5238,10 +5200,8 @@ msgid "Render the van der Waals surface."
 msgstr "Van der Waals yüzeyini görüntüle."
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals molecular surface."
-msgstr "Atomları Van der Waals Küreleri olarak kaplar"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the solvent-accessible molecular surface."
@@ -5373,23 +5333,17 @@ msgid "Clipboard"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:404
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Ekle"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:679
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Ekle"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
-#| msgid "Manipulate tool"
 msgid "Template tool"
-msgstr "Düzenleme aracı"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5423,7 +5377,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Vibrational Modes…"
 msgid "Vibrations"
-msgstr "Titreşim Modları…"
+msgstr "Titreşim"
 
 #: qtplugins/vibrations/vibrations.h:37
 msgid "Display vibrational modes."
@@ -5969,7 +5923,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Save File"
 msgid "Save File…"
-msgstr "Dosyayı Kaydet"
+msgstr "Dosyayı Kaydet…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7128,10 +7082,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of Dimensions:"
 msgid "Number of conformers:"
-msgstr "Boyut Sayısı:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7199,7 +7151,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Energy convergence:"
 msgid "Convergence:"
-msgstr "Enerji yakınsaması:"
+msgstr "Yakınsaması:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7888,10 +7840,8 @@ msgstr "Rengi Ayarla..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "Import Trajectory"
 msgid "Imported Spectra:"
-msgstr "Eğri İçe Aktar"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:317
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
@@ -7900,18 +7850,13 @@ msgstr "&Dışa Aktar..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:343
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgctxt "protein rendering style"
-#| msgid "Backbone"
 msgid "Background:"
-msgstr "Omurga"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:356
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Calculation Type"
 msgid "Calculated Spectra:"
-msgstr "Hesaplama Türü"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7951,10 +7896,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:458
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
-#| msgid "&Export"
 msgid "Export Data"
-msgstr "Dışa Aktar"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:471
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -8193,9 +8136,8 @@ msgstr "Ortala"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "Kısmi Yük"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -8309,7 +8251,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "Tip"
+msgstr "Tip:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
