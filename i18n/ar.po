@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Lihan Zhu <zhulihan@seas.upenn.edu>, 2021.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-24 01:16+0000\n"
+"PO-Revision-Date: 2025-01-09 06:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -1283,14 +1283,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:196
-#, fuzzy
 msgid "Remove Layer"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:203
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1452,9 +1450,8 @@ msgid "Change Bond Label"
 msgstr ""
 
 #: qtgui/rwmolecule.h:266
-#, fuzzy
 msgid "Change Selection"
-msgstr "عنصر"
+msgstr ""
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -2007,9 +2004,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2039,9 +2035,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
 msgid "Perceive bond orders."
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2555,9 +2550,8 @@ msgid "Energy and Forces"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
-#, fuzzy
 msgid "Molecular Dynamics"
-msgstr "المدارات الجزيئية..."
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
 msgid "Geometry Optimization"
@@ -2568,9 +2562,8 @@ msgid "Electronic structure methods (DFT)"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
-#, fuzzy
 msgid "Molecular Mechanics"
-msgstr "المدارات الجزيئية..."
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
@@ -3221,9 +3214,8 @@ msgid "Insert DNA / RNA fragments through a dialog."
 msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
 msgid "Molecule…"
-msgstr "المدارات الجزيئية..."
+msgstr ""
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
@@ -3593,9 +3585,8 @@ msgid "Point Group"
 msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
-#, fuzzy
 msgid "&Molecular…"
-msgstr "المدارات الجزيئية..."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
@@ -3738,14 +3729,12 @@ msgid "Configure Force Field…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
 msgid "Conformer Search…"
-msgstr "خصائص الذرة"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
-#, fuzzy
 msgid "Perceive Bonds"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
@@ -3806,9 +3795,8 @@ msgid "Cannot optimize geometry with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:466
-#, fuzzy
 msgid "Optimizing Geometry (Open Babel)"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
@@ -3861,9 +3849,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
@@ -4340,9 +4327,8 @@ msgid "Valence"
 msgstr "التكافؤ"
 
 #: qtplugins/propertytables/propertymodel.cpp:503
-#, fuzzy
 msgid "Formal Charge"
-msgstr "لون عن طريق الشحن الجزئي"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:506
 #, qt-format
@@ -4520,14 +4506,12 @@ msgid "Angle Properties…"
 msgstr "خصائص الزاوية..."
 
 #: qtplugins/propertytables/propertytables.cpp:48
-#, fuzzy
 msgid "Torsion Properties…"
-msgstr "خصائص الروابط"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "خصائص الروابط"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4557,19 +4541,16 @@ msgid "Angle Properties"
 msgstr "خصائص الزاوية..."
 
 #: qtplugins/propertytables/propertyview.cpp:53
-#, fuzzy
 msgid "Torsion Properties"
-msgstr "خصائص الروابط"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:56
-#, fuzzy
 msgid "Conformer Properties"
-msgstr "خصائص الذرة"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:59
-#, fuzzy
 msgid "Residue Properties"
-msgstr "خصائص الروابط"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -4581,18 +4562,16 @@ msgid "Renders primitives using QTAIM properties"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
-#, fuzzy
 msgid "Molecular Graph…"
-msgstr "المدارات الجزيئية..."
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
-#, fuzzy
 msgid "Atomic Charge…"
-msgstr "لون عن طريق الشحن الجزئي"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
@@ -4677,19 +4656,16 @@ msgid "Select by Residue…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "عنصر"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
 msgid "Select Sidechain Atoms…"
-msgstr "عنصر"
+msgstr ""
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
 msgid "Select Water"
-msgstr "عنصر"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
@@ -4717,14 +4693,12 @@ msgid "Select Element"
 msgstr "عنصر"
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "عنصر"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "عنصر"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4791,9 +4765,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
 msgid "New Layer"
-msgstr "إزالة الهيدروجين"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
@@ -5146,9 +5119,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "المدارات الجزيئية..."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:122
 #, fuzzy
@@ -7001,9 +6973,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
-#, fuzzy
 msgid "Conformer Search"
-msgstr "خصائص الذرة"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -8076,9 +8047,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "لون عن طريق الشحن الجزئي"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
