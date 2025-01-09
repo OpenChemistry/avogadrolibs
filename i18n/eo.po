@@ -2,13 +2,13 @@
 # Copyright (C) 2006-2020 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # phlostically <phlostically@mailinator.com>, 2021.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-24 01:16+0000\n"
+"PO-Revision-Date: 2025-01-10 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -1260,10 +1260,8 @@ msgid "Meshes"
 msgstr "Maŝoj"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Kovalenta"
+msgstr ""
 
 #: qtgui/layermodel.cpp:156
 #, fuzzy
