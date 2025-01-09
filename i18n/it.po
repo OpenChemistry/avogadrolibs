@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-08 01:12+0000\n"
+"PO-Revision-Date: 2025-01-10 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
@@ -1150,7 +1150,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
 #, fuzzy
 msgid "[no molecule]"
-msgstr "Nessuna molecola impostata"
+msgstr "[nessuna molecola]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
@@ -1200,10 +1200,8 @@ msgid "Meshes"
 msgstr ""
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
-#| msgid "Covalent"
 msgid "Non-Covalent"
-msgstr "Covalente"
+msgstr ""
 
 #: qtgui/layermodel.cpp:156
 #, fuzzy
