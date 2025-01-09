@@ -95,11 +95,6 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
   m_currentRunningCalculation = -1;
   m_currentMeshCalculation = -1;
 
-  if (m_basis) {
-    delete m_basis;
-    m_basis = nullptr;
-  }
-
   loadBasis();
 
   if (!m_basis || m_basis->electronCount() == 0 || !hasOrbitals)
