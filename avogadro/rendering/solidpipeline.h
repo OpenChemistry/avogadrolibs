@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_RENDERING_SOLIDPIPELINE_H
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
+#include <avogadro/core/cube.h>
+#include "camera.h"
 namespace Avogadro {
 namespace Rendering {
 
@@ -26,6 +28,7 @@ public:
    */
   void initialize();
 
+  void renderVolumeFaces(const Camera& cam);
   /**
    * @brief Begin solid geometry rendering.
    */
@@ -41,15 +44,24 @@ public:
    */
   void resize(int width, int height);
 
+  void adjustOffset(const Camera& camera);
+
   /**
    * @brief Set pixel ratio (1.0 on standard displays, 2.0 on Retina, etc.).
    */
   void setPixelRatio(float ratio);
 
+
   /**
    * @brief Get or set whether Ambient Occlusion is enabled.
    */
   bool getAoEnabled() { return m_aoEnabled; }
+
+  void setData(float data);
+
+  float getData() const;
+
+
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
   /**
@@ -57,6 +69,10 @@ public:
    */
   float getAoStrength() { return m_aoStrength; }
   void setAoStrength(float strength) { m_aoStrength = strength; }
+  
+  float getBackground() { return background; }
+
+  void setBackground(float strength) { background = strength; }
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
@@ -82,6 +98,8 @@ private:
   float m_edStrength;
   int m_width;
   int m_height;
+  float m_currentCube;
+  float background;
 
   class Private;
   Private* d;

@@ -1,125 +1,110 @@
-//////////////////////////////////////////////////////////////////////
-//
-// First-stage screen-space fragment shader for the solid pipeline
-//
-// It offers ambient occlusion and edge detection capabilities.
-//
-//////////////////////////////////////////////////////////////////////
-
 #version 120
 
-//
-// Input
-//
-
-// texture coordinates
+// Interpolated UV from the vertex shader
 varying vec2 UV;
 
-//
-// Uniforms
-//
-
-// RGB rendered texture
+// Scene textures
 uniform sampler2D inRGBTex;
-// Depth rendered texture
-uniform sampler2D inDepthTex;
-// 1.0 if enabled, 0.0 if disabled
+uniform sampler2D inFrontDepthTex;
+uniform sampler2D inBackDepthTex;
+
+// The 3D volume data
+uniform sampler3D uVolumeData;
+
+// A 2D colormap texture (the “transfer function”)
+// uniform sampler2D colormap;
+
+// Some toggles from your pipeline (if needed)
 uniform float inAoEnabled;
-// Shadow strength for SSAO
 uniform float inAoStrength;
-// 1.0 if enabled, 0.0 if disabled
 uniform float inEdStrength;
-// Rendering surface dimensions, in pixels
-uniform float width, height;
 
-vec3 getNormalAt(vec2 normalUV)
-{
-  float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
-  float xdelta = xpos - xneg;
-  float ydelta = ypos - yneg;
-  vec3 r = vec3(xdelta, ydelta, 1.0 / width + 1.0 / height);
-  return normalize(r);
-}
+// Screen size (passed in from C++ code, if needed)
+uniform float width;
+uniform float height;
 
-vec3 getNormalNear(vec2 normalUV)
-{
-  float cent = texture2D(inDepthTex, normalUV).x;
-  float xpos = texture2D(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture2D(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture2D(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture2D(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
-  float xposdelta = xpos - cent;
-  float xnegdelta = cent - xneg;
-  float yposdelta = ypos - cent;
-  float ynegdelta = cent - yneg;
-  float xdelta = abs(xposdelta) > abs(xnegdelta) ? xnegdelta : xposdelta;
-  float ydelta = abs(yposdelta) > abs(ynegdelta) ? ynegdelta : yposdelta;
-  vec3 r = vec3(xdelta, ydelta, 0.5 / width + 0.5 / height);
-  return normalize(r);
-}
+// Transfer-function range
+uniform float transferMin;
+uniform float transferMax;
 
-float lerp(float a, float b, float f)
-{
-    return a + f * (b - a);
-}
-
-const vec2 SSAOkernel[16] = vec2[16](
-  vec2(0.072170, 0.081556),
-  vec2(-0.035126, 0.056701),
-  vec2(-0.034186, -0.083598),
-  vec2(-0.056102, -0.009235),
-  vec2(0.017487, -0.099822),
-  vec2(0.071065, 0.015921),
-  vec2(0.040950, 0.079834),
-  vec2(-0.087751, 0.065326),
-  vec2(0.061108, -0.025829),
-  vec2(0.081262, -0.025854),
-  vec2(-0.063816, 0.083857),
-  vec2(0.043747, -0.068586),
-  vec2(-0.089848, 0.049046),
-  vec2(-0.065370, 0.058761),
-  vec2(0.099581, -0.089322),
-  vec2(-0.032077, -0.042826)
-);
-
-float computeSSAOLuminosity(vec3 normal)
-{
-  float totalOcclusion = 0.0;
-  float depth = texture2D(inDepthTex, UV).x;
-  float A = (width * UV.x + 10 * height * UV.y) * 2.0 * 3.14159265358979 * 5.0 / 16.0;
-  float S = sin(A);
-  float C = cos(A);
-  mat2 rotation = mat2(
-    C, -S,
-    S, C
-  );
-  for (int i = 0; i < 16; i++) {
-    vec2 samplePoint = rotation * SSAOkernel[i];
-    float occluderDepth = texture2D(inDepthTex, UV + samplePoint).x;
-    vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
-    float d = length(occluder);
-    float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
-    totalOcclusion += occlusion;
-  }
-  
-  return max(0.0, 1.2 - inAoStrength * totalOcclusion);
-}
-
-float computeEdgeLuminosity(vec3 normal)
-{
-  return max(0.0, pow(normal.z - 0.1, 1.0 / 3.0));
-}
+// How many steps to take, etc.
+uniform int   numSteps;       // e.g., 128
+uniform float alphaScale;     // e.g., 0.1 or something similar
 
 void main()
 {
-  float luminosity = 1.0;
-  luminosity *= max(1.2 * (1.0 - inAoEnabled), computeSSAOLuminosity(getNormalNear(UV)));
-  luminosity *= max(1.0 - inEdStrength, computeEdgeLuminosity(getNormalAt(UV)));
+  // 1) Fetch the scene color
+  vec4 sceneColor = texture2D(inRGBTex, UV);
 
-  vec4 color = texture2D(inRGBTex, UV);
-  gl_FragColor = vec4(color.xyz * luminosity, color.w);
-  gl_FragDepth = texture2D(inDepthTex, UV).x;
+  // 2) Fetch front and back depths 
+  float frontDepth = texture2D(inFrontDepthTex, UV).r;
+  float backDepth  = texture2D(inBackDepthTex,  UV).r;
+
+  // Basic sanity checks: if the box is clipped or if front/back are invalid
+  if (frontDepth >= 1.0 || backDepth >= 1.0 || backDepth <= frontDepth) {
+    gl_FragColor = sceneColor;
+    return;
+  }
+
+  // 3) Compute the total “thickness” in normalized [0..1] Z
+  float thickness = backDepth - frontDepth;
+
+  // Step size for the raymarch
+  float stepSize = thickness / float(numSteps);
+
+  // 4) Accumulate color over the ray
+  vec4 accumulatedColor = vec4(0.0);
+
+  // Raymarch from frontDepth to backDepth
+  for (int i = 0; i < numSteps; i++) {
+    // Parametric Z coordinate in [frontDepth..backDepth]
+    float z = frontDepth + (float(i) + 0.5) * stepSize;
+
+    // UVW in volume texture: XY from screen, Z in [0..1] (assuming the volume
+    // is also in [0..1] for that axis). You may need to invert or shift if
+    // your volume is mapped differently.
+    vec3 uvw = vec3(UV, -z);
+
+    // Sample the raw density or intensity from the volume
+    float rawVal = texture3D(uVolumeData, uvw).r;
+
+    // Map that raw value to [0..1] for a colormap lookup
+    float cval = (rawVal - transferMin) / (transferMax - transferMin);
+    cval = clamp(cval, 0.0, 1.0);
+
+    // Fetch a color from the colormap — assume 1D colormap along X,
+    // picking the center of Y=0.5 if it’s just a 1D gradient stored in a 2D texture
+    vec4 sampleColor = vec4(1.0,0.0,1.0,0.5);
+
+    // Scale alpha if you want the volume to be more or less transparent
+    // (like your ALPHA_SCALE from the original code)
+    sampleColor.a *= alphaScale;
+
+    // Standard “over” alpha compositing:
+    float remainingAlpha = 1.0 - accumulatedColor.a;
+    accumulatedColor.rgb += sampleColor.rgb * sampleColor.a * remainingAlpha;
+    accumulatedColor.a   += sampleColor.a * remainingAlpha;
+
+    // Optional early-out if almost fully opaque:
+    if (accumulatedColor.a >= 0.5)
+      break;
+  }
+
+  // 5) (Optional) If you have toggles for AO or edges:
+  //    For demonstration, we do something simple:
+  if (inAoEnabled < 0.5) {
+    // Example: make the volume darker if AO is disabled
+    accumulatedColor.rgb *= 0.5;
+  }
+  // Scale by AO strength (could be done differently)
+  accumulatedColor.rgb *= inAoStrength;
+
+  // 6) Composite final volume color over the original scene
+  //    Similar to “1 - alpha” logic you had:
+  float oneMinusA = 1.0 - accumulatedColor.a;
+  vec3 finalRGB   = accumulatedColor.rgb + oneMinusA * sceneColor.rgb;
+  float finalA    = sceneColor.a + oneMinusA * accumulatedColor.a;
+
+  // Write out final pixel color
+  gl_FragColor = vec4(finalRGB, finalA);
 }

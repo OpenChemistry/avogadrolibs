@@ -17,6 +17,7 @@
 #include "solidpipeline.h"
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/cube.h>
 
 #include <map>
 #include <string> // For member variables.

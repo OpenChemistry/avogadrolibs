@@ -85,6 +85,8 @@ public:
 public slots:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
+
+  // void updateGLWidget(QtOpenGL::GLWidget* widget);
   void moleculeChanged(unsigned int changes);
 
 private slots:
