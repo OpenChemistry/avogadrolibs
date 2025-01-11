@@ -70,7 +70,8 @@ OBMMEnergy::OBMMEnergy(const std::string& method)
 OBMMEnergy::~OBMMEnergy()
 {
   delete m_inputFormat;
-  delete m_process;
+  if (m_process != nullptr)
+    delete m_process;
 }
 
 bool OBMMEnergy::acceptsRadicals() const

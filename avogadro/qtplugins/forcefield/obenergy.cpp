@@ -35,8 +35,8 @@ public:
 
   ~Private()
   {
-    delete m_obmol;
-    delete m_forceField;
+    if (m_obmol != nullptr)
+      delete m_obmol;
   }
 };
 

@@ -230,13 +230,11 @@ void Forcefield::setupMethod()
     m_methodName = recommendedForceField();
   }
 
-  if (m_method == nullptr) {
-    // we have to create the calculator
-    m_method = Calc::EnergyManager::instance().model(m_methodName);
-  } else if (m_method->identifier() != m_methodName) {
+  if (m_method != nullptr) {
     delete m_method; // delete the previous one
-    m_method = Calc::EnergyManager::instance().model(m_methodName);
   }
+  m_method = Calc::EnergyManager::instance().model(m_methodName);
+
   if (m_method != nullptr)
     m_method->setMolecule(m_molecule);
 }
