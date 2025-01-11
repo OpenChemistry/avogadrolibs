@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-08 01:12+0000\n"
+"PO-Revision-Date: 2025-01-11 04:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -1386,9 +1386,8 @@ msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:419
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Popuni jedinicu ćelije"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:483
 msgid "Edit Unit Cell"
@@ -1942,9 +1941,8 @@ msgstr "Prikaži višestruke spojeve"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
-#, fuzzy
 msgid "Show hydrogens"
-msgstr "Vodici"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2312,33 +2310,31 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
 #, fuzzy
 msgid "Element name."
-msgstr "Ime elementa"
+msgstr "Ime elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "Simbol elementa"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
 #, fuzzy
 msgid "Element symbol."
-msgstr "Simbol elementa"
+msgstr "Simbol elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
 msgid "Invalid atomic index."
-msgstr "Indikacije atoma"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
 msgid "Atomic index."
-msgstr "Indikacije atoma"
+msgstr "Indikacije atoma."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2686,9 +2682,8 @@ msgid "Toggle Unit Cell"
 msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:52
-#, fuzzy
 msgid "Edit Unit Cell…"
-msgstr "jedinicu ćelije"
+msgstr ""
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -3901,9 +3896,8 @@ msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Konformer"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4711,9 +4705,8 @@ msgid "Select by Element…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "Indikacije atoma"
+msgstr ""
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
@@ -5011,10 +5004,8 @@ msgid "Select Calculated Spectra Color"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:534
-#, fuzzy
-#| msgid "Imported Spectra:"
 msgid "Select Imported Spectra Color"
-msgstr "Uneseni spektar"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
@@ -5143,10 +5134,8 @@ msgid "Electron Density"
 msgstr "Gustina elektrona"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Electron Density"
 msgid "Spin Density"
-msgstr "Gustina"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format

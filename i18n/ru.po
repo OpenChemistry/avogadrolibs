@@ -6,20 +6,20 @@
 # Yuri Kozlov <yuray@komyakino.ru>, 2011.
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # koffevar <egor.kafisov@gmail.com>, 2020.
-# Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022, 2023, 2024.
+# Anna Malinovskaia <tacitcoast@gmail.com>, 2021, 2022, 2023, 2024, 2025.
 # Alex Brohovsky <san4ito94@gmail.com>, 2021.
 # МАН69К <weblate@mah69k.net>, 2022.
 # Kateryna Golovanvoa <kasya8888@gmail.com>, 2022.
 # Oleg Shparber <trollixx@gmail.com>, 2023.
 # Ivanushka <oplata.kes1@mail.ru>, 2023.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-11-29 18:38+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-01-11 04:00+0000\n"
+"Last-Translator: Anna Malinovskaia <tacitcoast@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1246,9 +1246,8 @@ msgid "Force"
 msgstr "Градиент"
 
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
-#, fuzzy
 msgid "Labels"
-msgstr "Отображать символы элементов"
+msgstr ""
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
@@ -1440,9 +1439,8 @@ msgid "Clear Bonds"
 msgstr "Удалить связь"
 
 #: qtgui/rwmolecule.cpp:335
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Порядок связи"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
@@ -1461,9 +1459,8 @@ msgid "Add Unit Cell…"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:419
-#, fuzzy
 msgid "Remove Unit Cell"
-msgstr "Заполнить ячейку"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:483
 msgid "Edit Unit Cell"
@@ -1571,7 +1568,7 @@ msgstr "&Файл"
 #: qtplugins/vrml/vrml.cpp:46
 #, fuzzy
 msgid "&Export"
-msgstr "Экспортировать"
+msgstr "Экспорт"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
@@ -1645,10 +1642,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "Выровнять"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1792,9 +1787,8 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
-#, fuzzy
 msgid "By Custom Color…"
-msgstr "Другой цвет"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
@@ -1805,9 +1799,8 @@ msgid "By Distance…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
-msgstr "Элемент"
+msgstr "По Элементам"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
