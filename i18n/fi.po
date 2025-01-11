@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-10 07:00+0000\n"
+"PO-Revision-Date: 2025-01-11 18:41+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
@@ -1605,10 +1605,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "Kohdista"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1940,14 +1938,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "Väri:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Värit"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -2165,9 +2161,8 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
 msgid "Maximum distance:"
-msgstr "Etäisyys:"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2334,9 +2329,8 @@ msgstr "Alkuaineen nimi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "Kemiallinen merkki"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
@@ -2760,9 +2754,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
 msgid "Color axes:"
-msgstr "Väri:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3029,10 +3022,8 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Voimakenttä"
+msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3279,9 +3270,8 @@ msgid "Color:"
 msgstr "Väri:"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Etäisyys"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3762,9 +3752,8 @@ msgid "Perceive Bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Lisää vetyjä…"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -3934,9 +3923,8 @@ msgid "Running %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:871
-#, fuzzy
 msgid "Add hydrogens for pH"
-msgstr "Lisää vetyjä"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:871
 #, fuzzy
@@ -4094,9 +4082,8 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:118:1887
-#, fuzzy
 msgid "Frame:"
-msgstr "Parametrit:"
+msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:125
 #: qtplugins/playertool/playertool.cpp:416
@@ -4666,9 +4653,8 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
 msgid "Select by Element…"
-msgstr "Alkuaine:"
+msgstr ""
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -4711,9 +4697,8 @@ msgid "&Select"
 msgstr "&Valitse"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
 msgid "Select Element"
-msgstr "Alkuaine:"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
