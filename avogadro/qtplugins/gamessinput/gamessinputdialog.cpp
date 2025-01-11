@@ -28,9 +28,9 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
+using Avogadro::MoleQueue::JobObject;
 using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
-using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro::QtPlugins {
 
@@ -117,9 +117,7 @@ GamessInputDialog::GamessInputDialog(QWidget* parent_, Qt::WindowFlags f)
   updatePreviewText();
 }
 
-GamessInputDialog::~GamessInputDialog()
-{
-}
+GamessInputDialog::~GamessInputDialog() {}
 
 void GamessInputDialog::setMolecule(QtGui::Molecule* mol)
 {
@@ -172,9 +170,7 @@ void GamessInputDialog::connectBasic()
           SLOT(updatePreviewText()));
 }
 
-void GamessInputDialog::connectPreview()
-{
-}
+void GamessInputDialog::connectPreview() {}
 
 void GamessInputDialog::connectButtons()
 {
@@ -396,7 +392,7 @@ QString GamessInputDialog::generateJobTitle() const
 
   // Merge theory/basis into theory
   theory += "/" + basis;
-  theory.replace(QRegExp("\\s+"), "");
+  theory.replace(QRegularExpression("\\s+"), "");
 
   return QString("%1 | %2 | %3").arg(formula, calculation, theory);
 }
@@ -435,14 +431,12 @@ void GamessInputDialog::updatePreviewText()
 
   auto calculate(
     static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
-  auto theory(
-    static_cast<TheoryOption>(ui.theoryCombo->currentIndex()));
+  auto theory(static_cast<TheoryOption>(ui.theoryCombo->currentIndex()));
   auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
   auto state(static_cast<StateOption>(ui.stateCombo->currentIndex()));
   auto multiplicity(
     static_cast<MultiplicityOption>(ui.multiplicityCombo->currentIndex()));
-  auto charge(
-    static_cast<ChargeOption>(ui.chargeCombo->currentIndex()));
+  auto charge(static_cast<ChargeOption>(ui.chargeCombo->currentIndex()));
 
   // Disable basis selection for semiempirical methods.
   ui.basisCombo->setEnabled(theory != TheoryAM1 && theory != TheoryPM3);
@@ -738,4 +732,4 @@ void GamessInputDialog::updateTitlePlaceholder()
   ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

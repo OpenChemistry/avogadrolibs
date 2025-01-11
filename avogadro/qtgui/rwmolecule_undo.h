@@ -667,22 +667,42 @@ public:
 } // namespace
 
 namespace {
-class ModifyLabelCommand : public RWMolecule::UndoCommand
+class ModifyAtomLabelCommand : public RWMolecule::UndoCommand
 {
   Index m_atomId;
   std::string m_newLabel;
   std::string m_oldLabel;
 
 public:
-  ModifyLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
+  ModifyAtomLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
     : UndoCommand(m), m_atomId(atomId), m_newLabel(label)
   {
-    m_oldLabel = m_mol.molecule().label(m_atomId);
+    m_oldLabel = m_mol.molecule().atomLabel(m_atomId);
   }
 
-  void redo() override { m_mol.molecule().setLabel(m_atomId, m_newLabel); }
+  void redo() override { m_mol.molecule().setAtomLabel(m_atomId, m_newLabel); }
 
-  void undo() override { m_mol.molecule().setLabel(m_atomId, m_oldLabel); }
+  void undo() override { m_mol.molecule().setAtomLabel(m_atomId, m_oldLabel); }
+};
+} // namespace
+
+namespace {
+class ModifyBondLabelCommand : public RWMolecule::UndoCommand
+{
+  Index m_bondId;
+  std::string m_newLabel;
+  std::string m_oldLabel;
+
+public:
+  ModifyBondLabelCommand(RWMolecule& m, Index bondId, const std::string& label)
+    : UndoCommand(m), m_bondId(bondId), m_newLabel(label)
+  {
+    m_oldLabel = m_mol.molecule().bondLabel(m_bondId);
+  }
+
+  void redo() override { m_mol.molecule().setBondLabel(m_bondId, m_newLabel); }
+
+  void undo() override { m_mol.molecule().setBondLabel(m_bondId, m_oldLabel); }
 };
 } // namespace
 

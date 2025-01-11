@@ -1,7 +1,7 @@
 if(QT_VERSION EQUAL 6)
-  find_package(Qt6 COMPONENTS Widgets Core5Compat REQUIRED)
+  find_package(Qt6 COMPONENTS Widgets Concurrent REQUIRED)
 else()
-  find_package(Qt5 COMPONENTS Widgets REQUIRED)
+  find_package(Qt5 COMPONENTS Widgets Concurrent REQUIRED)
 endif()
 
 # Provide some simple API to find the plugins, scripts, etc.
@@ -40,6 +40,7 @@ avogadro_headers(QtGui
   extensionplugin.h
   filebrowsewidget.h
   fileformatdialog.h
+  gaussiansetconcurrent.h
   generichighlighter.h
   hydrogentools.h
   insertfragmentdialog.h
@@ -57,10 +58,12 @@ avogadro_headers(QtGui
   persistentbond.h
   pluginlayermanager.h
   pythonscript.h
+  richtextdelegate.h
   rwmolecule.h
   sceneplugin.h
   scenepluginmodel.h
   scriptloader.h
+  slatersetconcurrent.h
   sortfiltertreeproxymodel.h
   toolplugin.h
   utilities.h
@@ -78,6 +81,7 @@ target_sources(QtGui PRIVATE
   extensionplugin.cpp
   filebrowsewidget.cpp
   fileformatdialog.cpp
+  gaussiansetconcurrent.cpp
   generichighlighter.cpp
   hydrogentools.cpp
   insertfragmentdialog.cpp
@@ -85,6 +89,7 @@ target_sources(QtGui PRIVATE
   interfacewidget.cpp
   jsonwidget.cpp
   layermodel.cpp
+  richtextdelegate.cpp
   rwlayermanager.cpp
   meshgenerator.cpp
   molecule.cpp
@@ -98,6 +103,7 @@ target_sources(QtGui PRIVATE
   sceneplugin.cpp
   scenepluginmodel.cpp
   scriptloader.cpp
+  slatersetconcurrent.cpp
   sortfiltertreeproxymodel.cpp
   toolplugin.cpp
   utilities.cpp
@@ -118,7 +124,4 @@ qt_add_resources(RC_SOURCES ${RCS})
 target_sources(QtGui PRIVATE ${RC_SOURCES})
 
 avogadro_add_library(QtGui)
-target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets)
-if(QT_VERSION EQUAL 6)
-  target_link_libraries(QtGui PRIVATE Qt6::Core5Compat)
-endif()
+target_link_libraries(QtGui PUBLIC Avogadro::IO Qt::Widgets Qt::Concurrent)

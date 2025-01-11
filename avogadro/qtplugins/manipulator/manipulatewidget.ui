@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>337</width>
-    <height>247</height>
+    <width>371</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -104,6 +104,39 @@
     </layout>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Rotate around:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="rotateComboBox">
+       <item>
+        <property name="text">
+         <string>Origin</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Center of Molecule</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Center of Selection</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="2" column="0">
       <widget class="QDoubleSpinBox" name="xRotateSpinBox">
@@ -174,23 +207,30 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Rotate around:</string>
+        <string>Move:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="rotateComboBox">
+     <item>
+      <widget class="QComboBox" name="moveComboBox">
        <item>
         <property name="text">
-         <string>Origin</string>
+         <string>Selected Atoms</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Geometry</string>
+         <string>Everything Else</string>
         </property>
        </item>
       </widget>

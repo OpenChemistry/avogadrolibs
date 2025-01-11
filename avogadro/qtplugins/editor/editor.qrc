@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>editor.png</file>
-        <file>editor@2x.png</file>
+        <file>editor_light.svg</file>
+        <file>editor_dark.svg</file>
     </qresource>
 </RCC>

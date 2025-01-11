@@ -72,7 +72,7 @@ Array<Index> NeighborPerceiver::getNeighborsInclusive(const Vector3 &point) cons
 
 std::array<int, 3> NeighborPerceiver::getBinIndex(const Vector3 &point) const
 {
-  std::array<int, 3> r;
+  std::array<int, 3> r = {};
   for (size_t c = 0; c < 3; c++) {
     r[c] = std::floor((point(c) - m_minPos(c)) / m_maxDistance);
   }

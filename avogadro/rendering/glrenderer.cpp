@@ -56,7 +56,7 @@ GLRenderer::~GLRenderer()
 void GLRenderer::initialize()
 {
   GLenum result = glewInit();
-  m_valid = (result == GLEW_OK);
+  m_valid = (result == GLEW_OK || result == GLEW_ERROR_NO_GLX_DISPLAY);
   if (!m_valid) {
     m_error += "GLEW could not be initialized.\n";
     return;
@@ -105,6 +105,7 @@ void GLRenderer::render()
   glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
   m_solidPipeline.end();
+  m_solidPipeline.adjustOffset(m_camera);
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);

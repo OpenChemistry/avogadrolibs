@@ -34,6 +34,7 @@ public:
   unsigned char priority() const override { return 25; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule*) override;
   void setGLRenderer(Rendering::GLRenderer* renderer) override;

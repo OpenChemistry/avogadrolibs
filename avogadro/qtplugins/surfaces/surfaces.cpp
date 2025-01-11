@@ -6,9 +6,6 @@
 #include "surfaces.h"
 #include "surfacedialog.h"
 
-#include "gaussiansetconcurrent.h"
-#include "slatersetconcurrent.h"
-
 // Header only, but duplicate symbols if included globally...
 namespace {
 #include <gif.h>
@@ -25,9 +22,11 @@ namespace {
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/neighborperceiver.h>
+#include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/meshgenerator.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwlayermanager.h>
+#include <avogadro/qtgui/slatersetconcurrent.h>
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -65,9 +64,12 @@ using namespace tinycolormap;
 namespace Avogadro::QtPlugins {
 
 using Core::Array;
+using Core::Cube;
 using Core::GaussianSet;
 using Core::NeighborPerceiver;
+using QtGui::GaussianSetConcurrent;
 using QtGui::Molecule;
+using QtGui::SlaterSetConcurrent;
 
 class Surfaces::PIMPL
 {
@@ -127,8 +129,6 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 {
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.
-
-  qDebug() << "handle surface cmd:" << command << options;
 
   // Set up some defaults for the options.
   int index = -1;
@@ -224,6 +224,10 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
 
 void Surfaces::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr) {
+    m_molecule->disconnect(this);
+  }
+
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
   } else if (mol->cubes().size() != 0) {
@@ -234,6 +238,18 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (m_molecule != nullptr) {
+    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+  }
+}
+
+void Surfaces::moleculeChanged(unsigned int changes)
+{
+  if (changes & Molecule::Added || changes & Molecule::Removed) {
+    m_cubes = m_molecule->cubes();
+    m_basis = m_molecule->basisSet();
+  }
 }
 
 QList<QAction*> Surfaces::actions() const
@@ -544,7 +560,6 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {
     m_progressDialog = new QProgressDialog(qobject_cast<QWidget*>(parent()));
-    m_progressDialog->setCancelButtonText(nullptr);
     m_progressDialog->setWindowModality(Qt::NonModal);
     connectSlots = true;
   }
@@ -576,7 +591,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     } else {
       m_slaterConcurrent->calculateElectronDensity(m_cube);
     }
-  } else if (type == ElectronDensity) {
+  } else if (type == SpinDensity) {
     progressText = tr("Calculating spin density");
     m_cube->setName("Spin Density");
     m_cube->setCubeType(Core::Cube::Type::SpinDensity);
@@ -613,6 +628,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
               SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
               SLOT(setRange(int, int)));
       connect(m_gaussianConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
+      connect(m_progressDialog, SIGNAL(canceled()),
+              &m_gaussianConcurrent->watcher(), SLOT(cancel()));
     }
   } else {
     // slaters
@@ -627,6 +644,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     connect(&m_slaterConcurrent->watcher(),
             SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
             SLOT(setRange(int, int)));
+    connect(m_progressDialog, SIGNAL(canceled()),
+            &m_slaterConcurrent->watcher(), SLOT(cancel()));
     connect(m_slaterConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
   }
 }
@@ -676,8 +695,6 @@ void Surfaces::displayMesh()
   if (!m_cube)
     return;
 
-  // qDebug() << " running displayMesh";
-
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
   else
@@ -689,31 +706,38 @@ void Surfaces::displayMesh()
     m_meshGenerator1 = new QtGui::MeshGenerator;
     connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, -m_isoValue, m_smoothingPasses);
+  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
 
-  // TODO - only do this if we're generating an orbital
-  //    and we need two meshes
-  //   How do we know? - likely ask the cube if it's an MO?
-  qDebug() << "Cube " << m_cube->name().c_str() << " type "
-           << m_cube->cubeType();
-
-  if (!m_mesh2)
-    m_mesh2 = m_molecule->addMesh();
-  if (!m_meshGenerator2) {
-    m_meshGenerator2 = new QtGui::MeshGenerator;
-    connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+  bool isMO = false;
+  // if it's from a file we should "play it safe"
+  if (m_cube->cubeType() == Cube::Type::MO ||
+      m_cube->cubeType() == Cube::Type::FromFile) {
+    isMO = true;
   }
-  m_meshGenerator2->initialize(m_cube, m_mesh2, m_isoValue, m_smoothingPasses,
-                               true);
+
+  if (isMO) {
+    if (!m_mesh2)
+      m_mesh2 = m_molecule->addMesh();
+    if (!m_meshGenerator2) {
+      m_meshGenerator2 = new QtGui::MeshGenerator;
+      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+    }
+    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
+                                 m_smoothingPasses, true);
+  }
 
   // Start the mesh generation - this needs an improved mutex with a read lock
   // to function as expected. Write locks are exclusive, read locks can have
   // many read locks but no write lock.
   m_meshGenerator1->start();
-  m_meshGenerator2->start();
+  if (isMO)
+    m_meshGenerator2->start();
 
   // Track how many meshes are left to show.
-  m_meshesLeft = 2;
+  if (isMO)
+    m_meshesLeft = 2;
+  else
+    m_meshesLeft = 1;
 }
 
 Core::Color3f Surfaces::chargeGradient(double value, double clamp,
@@ -773,6 +797,9 @@ void Surfaces::colorMeshByPotential()
   const auto colormap = getColormapFromString(m_dialog->colormapName());
 
   const auto positionsf = m_mesh1->vertices();
+  if (positionsf.empty())
+    return;
+
   Core::Array<Vector3> positions(positionsf.size());
   std::transform(positionsf.begin(), positionsf.end(), positions.begin(),
                  [](const Vector3f& pos) { return pos.cast<double>(); });
@@ -809,6 +836,12 @@ void Surfaces::meshFinished()
   --m_meshesLeft;
   if (m_meshesLeft == 0) {
     colorMesh();
+
+    // finished, so request to enable the mesh display type
+    QStringList displayTypes;
+    displayTypes << tr("Meshes");
+    requestActiveDisplayTypes(displayTypes);
+
     if (m_recordingMovie) {
       // Move to the next frame.
       qDebug() << "Let's get to the next frame…";
@@ -818,12 +851,9 @@ void Surfaces::meshFinished()
       if (m_dialog != nullptr)
         m_dialog->reenableCalculateButton();
 
-      qDebug() << " mesh finished";
-
       m_molecule->emitChanged(QtGui::Molecule::Added);
     }
   }
-  // TODO: enable the mesh display type
 }
 
 void Surfaces::recordMovie()

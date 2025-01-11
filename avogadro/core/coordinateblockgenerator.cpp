@@ -15,15 +15,10 @@
 
 namespace Avogadro::Core {
 
-CoordinateBlockGenerator::CoordinateBlockGenerator()
-  : m_molecule(nullptr), m_distanceUnit(Angstrom)
-{
-}
-
 std::string CoordinateBlockGenerator::generateCoordinateBlock()
 {
   if (!m_molecule)
-    return "";
+    return {};
 
   // Reset stream.
   m_stream.str("");

@@ -71,6 +71,7 @@ public slots:
 
 private slots:
   void energy();
+  void forces();
   void optimize();
   void freezeSelected();
   void unfreezeSelected();

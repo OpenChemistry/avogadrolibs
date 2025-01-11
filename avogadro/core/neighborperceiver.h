@@ -16,8 +16,7 @@
 #include <array>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class NeighborPerceiver neighborperceiver.h <avogadro/core/neighborperceiver.h>
@@ -66,7 +65,6 @@ protected:
   mutable std::array<int, 3> m_cachedIndex;
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_NEIGHBORPERCEIVER_H

@@ -223,9 +223,41 @@ public:
   bool setAtomPosition3d(Index atomId, const Vector3& pos,
                          const QString& undoText = tr("Change Atom Position"));
 
-  std::string label(Index atomId) const;
-  bool setLabel(Index atomId, const std::string& label,
-                const QString& undoText = tr("Change Atom Label"));
+  /**
+   * Get the label on an atom.
+   * @param atomId The index of the atom.
+   * @return The label of the atom indexed at @a atomId, or an empty string if
+   * @a atomId is invalid or has no label.
+   */
+  std::string atomLabel(Index atomId) const;
+
+  /**
+   * Set the label of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param label The new label.
+   * @param undoText The undo text to be displayed for undo commands.
+   * @return True on success, false otherwise.
+   */
+  bool setAtomLabel(Index atomId, const std::string& label,
+                    const QString& undoText = tr("Change Atom Label"));
+
+  /**
+   * Get the label on a bond
+   * @param bondId The index of the bond.
+   * @return The label of the bond indexed at @a bondId, or an empty string if
+   * @a bondId is invalid or has no label.
+   */
+  std::string bondLabel(Index bondId) const;
+
+  /**
+   * Set the label of a single bond.
+   * @param bondId The index of the bond to modify.
+   * @param label The new label.
+   * @param undoText The undo text to be displayed for undo commands.
+   * @return True on success, false otherwise.
+   */
+  bool setBondLabel(Index bondId, const std::string& label,
+                    const QString& undoText = tr("Change Bond Label"));
 
   /**
    * Set whether the specified atom is selected or not.
@@ -735,9 +767,14 @@ inline Vector3 RWMolecule::atomPosition3d(Index atomId) const
   return m_molecule.atomPosition3d(atomId);
 }
 
-inline std::string RWMolecule::label(Index atomId) const
+inline std::string RWMolecule::atomLabel(Index atomId) const
 {
-  return m_molecule.label(atomId);
+  return m_molecule.atomLabel(atomId);
+}
+
+inline std::string RWMolecule::bondLabel(Index bondId) const
+{
+  return m_molecule.bondLabel(bondId);
 }
 
 inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const

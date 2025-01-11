@@ -8,10 +8,15 @@
 #include "obmmenergy.h"
 #include "scriptenergy.h"
 
+#ifdef BUILD_GPL_PLUGINS
+#include "obenergy.h"
+#endif
+
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 #include <QMutex>
@@ -31,9 +36,6 @@
 
 #include <cppoptlib/meta.h>
 #include <cppoptlib/problem.h>
-#include <cppoptlib/solver/bfgssolver.h>
-#include <cppoptlib/solver/conjugatedgradientdescentsolver.h>
-#include <cppoptlib/solver/gradientdescentsolver.h>
 #include <cppoptlib/solver/lbfgssolver.h>
 
 namespace Avogadro {
@@ -49,6 +51,7 @@ const int configureAction = 2;
 const int freezeAction = 3;
 const int unfreezeAction = 4;
 const int constraintAction = 5;
+const int forcesAction = 6;
 
 Forcefield::Forcefield(QObject* parent_)
   : ExtensionPlugin(parent_), m_method(nullptr)
@@ -63,16 +66,10 @@ Forcefield::Forcefield(QObject* parent_)
   m_gradientTolerance = settings.value("gradientTolerance", 1.0e-4).toDouble();
   settings.endGroup();
 
-  refreshScripts();
-  /* @todo - finish OBMM interface
-  Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
-  */
-
   QAction* action = new QAction(this);
   action->setEnabled(true);
-  action->setText(tr("Optimize"));
+  action->setText(tr("Optimize Geometry"));
+  action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   action->setData(optimizeAction);
   action->setProperty("menu priority", 920);
   connect(action, SIGNAL(triggered()), SLOT(optimize()));
@@ -84,6 +81,14 @@ Forcefield::Forcefield(QObject* parent_)
   action->setData(energyAction);
   action->setProperty("menu priority", 910);
   connect(action, SIGNAL(triggered()), SLOT(energy()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(tr("Forces")); // calculate gradients
+  action->setData(forcesAction);
+  action->setProperty("menu priority", 910);
+  connect(action, SIGNAL(triggered()), SLOT(forces()));
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -111,6 +116,26 @@ Forcefield::Forcefield(QObject* parent_)
   action->setData(unfreezeAction);
   connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
   m_actions.push_back(action);
+
+  // initialize the calculators
+
+  // prefer to use Python interface scripts if available
+  refreshScripts();
+
+  // add the openbabel calculators in case they don't exist
+#ifdef BUILD_GPL_PLUGINS
+  // These directly use Open Babel and are fast
+  qDebug() << " registering GPL plugins";
+  Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
+  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
+  Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
+#else
+  // These call obmm and can be slower
+  qDebug() << " registering obmm plugins";
+  Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
+  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
+  Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
+#endif
 }
 
 Forcefield::~Forcefield() {}
@@ -123,7 +148,11 @@ QList<QAction*> Forcefield::actions() const
 QStringList Forcefield::menuPath(QAction* action) const
 {
   QStringList path;
-  path << tr("&Extensions") << tr("&Calculate");
+  if (action->data().toInt() == optimizeAction)
+    path << tr("&Extensions");
+  else
+    path << tr("&Extensions") << tr("&Calculate");
+
   return path;
 }
 
@@ -153,7 +182,7 @@ void Forcefield::showDialog()
     settings.beginGroup("forcefield");
     m_methodName = results["forcefield"].toString().toStdString();
     settings.setValue("forcefield", m_methodName.c_str());
-    
+
     m_maxSteps = results["maxSteps"].toInt();
     settings.setValue("maxSteps", m_maxSteps);
     m_tolerance = results["tolerance"].toDouble();
@@ -169,18 +198,37 @@ void Forcefield::showDialog()
 
 void Forcefield::setMolecule(QtGui::Molecule* mol)
 {
-  if (m_molecule == mol)
+  if (mol == nullptr || m_molecule == mol)
     return;
 
   m_molecule = mol;
-
   setupMethod();
 }
 
 void Forcefield::setupMethod()
 {
+  if (m_molecule == nullptr)
+    return; // nothing to do until its set
+
   if (m_autodetect)
     m_methodName = recommendedForceField();
+
+  // check if m_methodName even exists (e.g., saved preference)
+  // or if that method doesn't work for this (e.g., unit cell, etc.)
+  auto list =
+    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
+  bool found = false;
+  for (auto option : list) {
+    if (option == m_methodName) {
+      found = true;
+      break;
+    }
+  }
+
+  // fall back to recommended if not found (LJ will always work)
+  if (!found) {
+    m_methodName = recommendedForceField();
+  }
 
   if (m_method == nullptr) {
     // we have to create the calculator
@@ -189,27 +237,37 @@ void Forcefield::setupMethod()
     delete m_method; // delete the previous one
     m_method = Calc::EnergyManager::instance().model(m_methodName);
   }
-
-  m_method->setMolecule(m_molecule);
+  if (m_method != nullptr)
+    m_method->setMolecule(m_molecule);
 }
 
 void Forcefield::optimize()
 {
-  if (m_molecule == nullptr || m_method == nullptr)
+  if (m_molecule == nullptr)
     return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return; // bad news
+
+  if (!m_molecule->atomCount()) {
+    QMessageBox::information(nullptr, tr("Avogadro"),
+                             tr("No atoms provided for optimization"));
+    return;
+  }
 
   // merge all coordinate updates into one step for undo
   bool isInteractive = m_molecule->undoMolecule()->isInteractive();
   m_molecule->undoMolecule()->setInteractive(true);
 
   cppoptlib::LbfgsSolver<EnergyCalculator> solver;
-  // cppoptlib::ConjugatedGradientDescentSolver<EnergyCalculator> solver;
 
   int n = m_molecule->atomCount();
 
   // double-check the mask
   auto mask = m_molecule->frozenAtomMask();
-  if (mask.rows() != 3*n) {
+  if (mask.rows() != 3 * n) {
     mask = Eigen::VectorXd::Zero(3 * n);
     // set to 1.0
     for (Index i = 0; i < 3 * n; ++i) {
@@ -235,7 +293,7 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = 5;
+  crit.iterations = 2;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
@@ -244,19 +302,33 @@ void Forcefield::optimize()
   Real energy = m_method->value(positions);
   m_method->gradient(positions, gradient);
   qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
-  qDebug() << " maxSteps" << m_maxSteps << " steps " << m_maxSteps / crit.iterations;
+  qDebug() << " maxSteps" << m_maxSteps << " steps "
+           << m_maxSteps / crit.iterations;
+
+  QProgressDialog progress(tr("Optimize Geometry"), "Cancel", 0,
+                           m_maxSteps / crit.iterations);
+  progress.setWindowModality(Qt::WindowModal);
+  progress.setMinimumDuration(0);
+  progress.setAutoClose(true);
+  progress.show();
 
   Real currentEnergy = 0.0;
   for (unsigned int i = 0; i < m_maxSteps / crit.iterations; ++i) {
     solver.minimize(*m_method, positions);
+    // update the progress dialog
+    progress.setValue(i);
 
     qApp->processEvents(QEventLoop::AllEvents, 500);
 
     currentEnergy = m_method->value(positions);
+    progress.setLabelText(
+      tr("Energy: %L1", "force field energy").arg(currentEnergy, 0, 'f', 3));
     // get the current gradient for force visualization
     m_method->gradient(positions, gradient);
+#ifndef NDEBUG
     qDebug() << " optimize " << i << currentEnergy
              << " gradNorm: " << gradient.norm();
+#endif
 
     // update coordinates
     bool isFinite = std::isfinite(currentEnergy);
@@ -277,6 +349,11 @@ void Forcefield::optimize()
         forces[i] = -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1],
                                    gradient[3 * i + 2]);
       }
+    } else {
+      // reset to last positions
+      positions = lastPositions;
+      gradient = Eigen::VectorXd::Zero(3 * n);
+      break;
     }
 
     // todo - merge these into one undo step
@@ -289,19 +366,16 @@ void Forcefield::optimize()
       lastPositions = positions;
 
       // check for convergence
-      /*
       if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
         break;
       if (fabs(currentEnergy - energy) < m_tolerance)
         break;
-      */
 
       energy = currentEnergy;
-    } else {
-      // reset to last positions
-      positions = lastPositions;
-      gradient = Eigen::VectorXd::Zero(3 * n);
     }
+
+    if (progress.wasCanceled())
+      break;
   }
 
   m_molecule->undoMolecule()->setInteractive(isInteractive);
@@ -309,8 +383,13 @@ void Forcefield::optimize()
 
 void Forcefield::energy()
 {
-  if (m_molecule == nullptr || m_method == nullptr)
+  if (m_molecule == nullptr)
     return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return; // bad news
 
   int n = m_molecule->atomCount();
   // we have to cast the current 3d positions into a VectorXd
@@ -324,6 +403,57 @@ void Forcefield::energy()
   Real energy = m_method->value(positions);
 
   QString msg(tr("%1 Energy = %L2").arg(m_methodName.c_str()).arg(energy));
+  QMessageBox::information(nullptr, tr("Avogadro"), msg);
+}
+
+void Forcefield::forces()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  if (m_method == nullptr)
+    setupMethod();
+  if (m_method == nullptr)
+    return; // bad news
+
+  int n = m_molecule->atomCount();
+
+  // double-check the mask
+  auto mask = m_molecule->frozenAtomMask();
+  if (mask.rows() != 3 * n) {
+    mask = Eigen::VectorXd::Zero(3 * n);
+    // set to 1.0
+    for (Index i = 0; i < 3 * n; ++i) {
+      mask[i] = 1.0;
+    }
+  }
+  m_method->setMolecule(m_molecule);
+  m_method->setMask(mask);
+
+  // we have to cast the current 3d positions into a VectorXd
+  Core::Array<Vector3> pos = m_molecule->atomPositions3d();
+  double* p = pos[0].data();
+  Eigen::Map<Eigen::VectorXd> map(p, 3 * n);
+  Eigen::VectorXd positions = map;
+
+  Eigen::VectorXd gradient = Eigen::VectorXd::Zero(3 * n);
+  // just to get the right size / shape
+  // we'll use this to draw the force arrows
+  Core::Array<Vector3> forces = m_molecule->atomPositions3d();
+
+  m_method->gradient(positions, gradient);
+
+  for (size_t i = 0; i < n; ++i) {
+    forces[i] =
+      -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1], gradient[3 * i + 2]);
+  }
+
+  m_molecule->setForceVectors(forces);
+  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
+  m_molecule->emitChanged(changes);
+
+  QString msg(
+    tr("%1 Force Norm = %L2").arg(m_methodName.c_str()).arg(gradient.norm()));
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
@@ -391,7 +521,7 @@ void Forcefield::refreshScripts()
   qDeleteAll(m_scripts);
   m_scripts.clear();
 
-  QMap<QString, QString> scriptPaths =
+  QMultiMap<QString, QString> scriptPaths =
     QtGui::ScriptLoader::scriptList("energy");
   foreach (const QString& filePath, scriptPaths) {
     auto* model = new ScriptEnergy(filePath);

@@ -33,6 +33,7 @@ public:
   unsigned char priority() const override { return 10; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule* mol) override { m_molecule = mol; }
   void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }
@@ -48,6 +49,11 @@ public:
   QUndoCommand* wheelEvent(QWheelEvent* e) override;
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
   QUndoCommand* keyReleaseEvent(QKeyEvent* e) override;
+
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
 
 protected slots:
   void swapZoomDirection(bool checked);

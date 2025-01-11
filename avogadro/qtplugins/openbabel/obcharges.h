@@ -55,6 +55,7 @@ public:
    * @brief Retrieve the relevant charges from the molecule for our defined type
    */
   virtual MatrixX partialCharges(Core::Molecule& mol) const override;
+  virtual MatrixX partialCharges(const Core::Molecule& mol) const override;
 
   /**
    * @brief Synchronous use of the OBProcess.

@@ -81,8 +81,7 @@ private:
   std::vector<int> m_fragment;
   Eigen::Affine3d m_transform;
   bool fragmentHasAtom(int uid) const;
-  void buildFragment(const QtGui::RWBond& bond,
-                      const QtGui::RWAtom& startAtom);
+  void buildFragment(const QtGui::RWBond& bond, const QtGui::RWAtom& startAtom);
   bool fragmentRecurse(const QtGui::RWBond& bond,
                        const QtGui::RWAtom& startAtom,
                        const QtGui::RWAtom& currentAtom);
@@ -113,6 +112,7 @@ private:
     AtomDataX,
     AtomDataY,
     AtomDataZ,
+    AtomDataLabel,
     AtomDataColor,
     AtomDataCharge,
     AtomDataCustom,
@@ -125,7 +125,8 @@ private:
     BondDataAtom1,
     BondDataAtom2,
     BondDataOrder,
-    BondDataLength
+    BondDataLength,
+    BondDataLabel
   };
 
   // Angle Data
@@ -152,7 +153,7 @@ private:
   // Conformer Data
   enum ConformerColumn
   {
-    ConformerDataType = 0,
+    ConformerDataRMSD = 0,
     ConformerDataEnergy
   };
 

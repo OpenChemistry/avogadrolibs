@@ -11,8 +11,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class GromacsFormat gromacsformat.h <avogadro/io/gromacsformat.h>
@@ -21,8 +20,8 @@ namespace Io {
 class AVOGADROIO_EXPORT GromacsFormat : public FileFormat
 {
 public:
-  GromacsFormat();
-  ~GromacsFormat() override;
+  GromacsFormat() = default;
+  ~GromacsFormat() override = default;
 
   Operations supportedOperations() const override
   {
@@ -46,10 +45,11 @@ public:
   std::vector<std::string> mimeTypes() const override;
 
   bool read(std::istream& in, Core::Molecule& molecule) override;
+
+  // Unimplemented
   bool write(std::ostream& out, const Core::Molecule& molecule) override;
 };
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_GROMACSFORMAT_H

@@ -8,15 +8,15 @@ concurrency:
 
 env:
   # Don't build python 2.7, pypy, or 32-bit wheels or Mac arm64 on Py3.8
-  CIBW_SKIP: "cp36-* cp37-* cp311-* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
+  CIBW_SKIP: "cp36-* cp37-* cp311-manylinux* cp312-manylinux* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
 
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
 
-  CIBW_BEFORE_ALL_LINUX: yum install -y git eigen3-devel
+  CIBW_BEFORE_ALL_LINUX: bash scripts/github-actions/repair-linux.sh
 
   # Specify eigen location for windows
-  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEigen3_INCLUDE_DIR:PATH=/c/eigen"
+  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
 
   # On Mac build both x64 and arm64
   CIBW_ARCHS_MACOS: "x86_64 arm64"
@@ -52,13 +52,14 @@ jobs:
           # give it a correct version even on non-tag push.
           fetch-depth: 0
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         name: Install Python
         with:
-          python-version: '3.7'
+          python-version: '3.8'
+          cache: 'pip' # caching pip dependencies
 
       - name: Install cibuildwheel
-        run: pip install cibuildwheel==2.12.3
+        run: pip install cibuildwheel==2.16.2
 
       - name: Install dependencies
         run: . ./scripts/github-actions/install.sh
@@ -66,8 +67,9 @@ jobs:
       - name: Build wheels
         run:  cibuildwheel --output-dir wheelhouse
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
 
   upload_pypi:
@@ -77,7 +79,7 @@ jobs:
     # upload to PyPI on every tag push
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
           path: dist

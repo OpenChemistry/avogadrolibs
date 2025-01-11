@@ -7,6 +7,7 @@
 #define AVOGADRO_QUANTUMIO_MOLDEN_H
 
 #include "avogadroquantumioexport.h"
+#include <avogadro/core/array.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/io/fileformat.h>
 
@@ -67,17 +68,25 @@ private:
   std::vector<double> m_orbitalEnergy;
   std::vector<double> m_MOcoeffs;
 
+  Core::Array<double> m_frequencies;
+  Core::Array<double> m_IRintensities;
+  Core::Array<double> m_RamanIntensities;
+  Core::Array<Core::Array<Vector3>> m_vibDisplacements;
+
   enum Mode
   {
     Atoms,
     GTO,
     MO,
+    Frequencies,
+    VibrationalModes,
+    Intensities,
     Unrecognized
   };
   Mode m_mode;
 };
 
-} // End namespace
-}
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif

@@ -23,10 +23,6 @@ namespace Io {
 class FileFormat;
 }
 
-namespace QtGui {
-class PythonScript;
-}
-
 namespace QtPlugins {
 
 class OBMMEnergy : public Avogadro::Calc::EnergyCalculator
@@ -70,10 +66,14 @@ public:
   // gradient (which may be unsupported and fall back to numeric)
   void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
 
+  bool acceptsIons() const override { return true; }
+  // UFF can handle radicals
+  bool acceptsRadicals() const override;
+
   /**
    * @brief Synchronous use of the QProcess.
    */
-  class ProcessListener;
+  QByteArray writeAndRead(const QByteArray& input);
 
 private:
   Core::Molecule* m_molecule;

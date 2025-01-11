@@ -18,12 +18,13 @@ set(_prefix "${AvogadroLibs_SOURCE_DIR}/../avogadrogenerators")
 if(EXISTS "${_prefix}/generators.cmake")
   # Bundled generator scripts,
   include("${_prefix}/generators.cmake")
-  message("We have ${input_generators}")
+  # message("We have ${input_generators}")
   unset(_generators)
   foreach(gen ${input_generators})
     list(APPEND _generators "${_prefix}/${gen}")
   endforeach()
-  message("We have ${_generators}")
+  # debugging info with paths
+  # message("We have ${_generators}")
 
   option(INSTALL_TEST_INPUT_GENERATOR
     "Install a dummy input generator that is used to test generator scripts."

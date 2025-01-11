@@ -27,12 +27,12 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
+#include <QAction>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
 
@@ -68,16 +68,26 @@ Editor::Editor(QObject* parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
     m_fixValenceLater(false), m_layerManager("Editor")
 {
+  QString shortcut = tr("Ctrl+2", "control-key 2");
   m_activateAction->setText(tr("Draw"));
-  m_activateAction->setIcon(QIcon(":/icons/editor.png"));
   m_activateAction->setToolTip(
-    tr("Draw Tool\n\n"
+    tr("Draw Tool \t(%1)\n\n"
        "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
-       "Right Mouse: \tDelete Atom"));
+       "Right Mouse: \tDelete Atom")
+      .arg(shortcut));
+  setIcon();
   reset();
 }
 
 Editor::~Editor() {}
+
+void Editor::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/editor_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/editor_light.svg"));
+}
 
 QWidget* Editor::toolWidget() const
 {
@@ -412,9 +422,9 @@ void Editor::atomRightClick(QMouseEvent* e)
   Core::Array<Index> bondedAtoms;
   if (m_toolWidget->adjustHydrogens()) {
     // before we remove the atom, we need to delete any H atoms
-    // that are bonded to it
+    // that are bonded to it -- unless it's a hydrogen atom itself
     RWAtom atom = m_molecule->atom(m_clickedObject.index);
-    if (atom.isValid()) {
+    if (atom.isValid() && atom.atomicNumber() != Core::Hydrogen) {
       // get the list of bonded atoms
       Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
       for (const RWBond& bond : atomBonds) {
@@ -444,8 +454,17 @@ void Editor::atomRightClick(QMouseEvent* e)
 void Editor::bondRightClick(QMouseEvent* e)
 {
   e->accept();
-  m_molecule->removeBond(m_clickedObject.index);
-  m_molecule->emitChanged(Molecule::Bonds | Molecule::Removed);
+  // see if we need to adjust hydrogens
+  if (m_toolWidget->adjustHydrogens()) {
+    RWBond bond = m_molecule->bond(m_clickedObject.index);
+    RWAtom atom1 = bond.atom1();
+    RWAtom atom2 = bond.atom2();
+    m_molecule->removeBond(m_clickedObject.index);
+    QtGui::HydrogenTools::adjustHydrogens(atom1);
+    QtGui::HydrogenTools::adjustHydrogens(atom2);
+  }
+  m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
+                          Molecule::Removed);
 }
 
 int expectedBondOrder(RWAtom atom1, RWAtom atom2)

@@ -59,7 +59,9 @@ if (NOT WIN32)
                         INSTALL_RPATH ${_rpath_value})
 endif()
 
-install(FILES avogadro/__init__.py  COMPONENT python DESTINATION "${_python_module_install_dir}")
+# Install the python files.
+FILE(GLOB PY_SRCS "avogadro/*.py")
+install(FILES ${PY_SRCS} COMPONENT python DESTINATION "${_python_module_install_dir}")
 
 # Set the output directory so the python modules can be used from the build
 # tree.

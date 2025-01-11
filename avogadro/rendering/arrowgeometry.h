@@ -66,6 +66,9 @@ public:
     return m_vertices;
   }
 
+  /** Set the color of the arrow */
+  void setColor(const Vector3ub& c) { m_color = c; }
+
 private:
   /**
    * @brief Update the shaders ready for rendering.
@@ -74,6 +77,7 @@ private:
 
   Core::Array<std::pair<Vector3f, Vector3f>> m_vertices;
   Core::Array<unsigned int> m_lineStarts;
+  Vector3ub m_color;
 
   bool m_dirty;
 

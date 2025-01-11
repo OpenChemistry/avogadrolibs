@@ -1,21 +1,21 @@
-# Security Policy 
+# Security Policy
 
-## Supported Versions 
+## Supported Versions
 
-At the moment, Avogadro2 is in beta release. As such, we can most easily support 
-security updates on the most recent release and current nightly snapshots. 
-We will work with distributions (e.g., Ubuntu, FreeBSD, etc.) to provide security 
+At the moment, Avogadro2 is in beta release. As such, we can most easily support
+security updates on the most recent release and current nightly snapshots.
+We will work with distributions (e.g., Ubuntu, FreeBSD, etc.) to provide security
 patches for widely used long-term-support OS.
 
-| Version | Supported          | 
-| ------- | ------------------ | 
+| Version | Supported          |
+| ------- | ------------------ |
+| 1.99.x  | :white_check_mark: |
 | 1.98.x  | :white_check_mark: |
-| 1.97.x  | :white_check_mark: |
-| < 1.97  | :x:                |
+| < 1.98  | :x:                |
 
-## Reporting a Vulnerability 
+## Reporting a Vulnerability
 
-We currently support private security vulnerability reporting through our 
-[GitHub](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability) 
-pages. We will work to verify the security vulnerability within 14 days 
+We currently support private security vulnerability reporting through our
+[GitHub](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)
+pages. We will work to verify the security vulnerability within 14 days
 and a patch or new release within 30 days of reporting.

@@ -22,23 +22,16 @@ using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
-using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::SecondaryStructureAssigner;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
-using Avogadro::Core::UnitCell;
 
 using std::getline;
 using std::istringstream;
 using std::string;
-using std::vector;
 
 namespace Avogadro::Io {
-
-PdbFormat::PdbFormat() {}
-
-PdbFormat::~PdbFormat() {}
 
 bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 {
@@ -144,8 +137,6 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       if (buffer.size() >= 78) {
         element = buffer.substr(76, 2);
         element = trimmed(element);
-        if (element == "SE") // For Sulphur
-          element = 'S';
         if (element.length() == 2)
           element[1] = std::tolower(element[1]);
 
@@ -160,6 +151,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         // remove any trailing digits
         while (element.size() && std::isdigit(element.back()))
           element.pop_back();
+
+        if (element == "SE") // For Sulphur
+          element = 'S';
 
         atomicNum = Elements::atomicNumberFromSymbol(element);
         if (atomicNum == 255) {
@@ -191,8 +185,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
 
-    else if (startsWith(buffer, "TER")) { //  This is very important, each TER
-                                          //  record also counts in the serial.
+    else if (startsWith(buffer, "TER") &&
+             buffer.length() >= 11) { //  This is very important, each TER
+                                      //  record also counts in the serial.
       // Need to account for that when comparing with CONECT
       terList.push_back(lexicalCast<int>(buffer.substr(6, 5), ok));
 

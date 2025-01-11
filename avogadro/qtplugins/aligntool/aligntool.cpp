@@ -21,12 +21,12 @@
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/textproperties.h>
 
+#include <QAction>
 #include <QtCore/QDebug>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
@@ -34,7 +34,6 @@
 #include <QtWidgets/QPushButton>
 
 using Avogadro::Core::Elements;
-using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::Identifier;
 using Avogadro::Rendering::TextLabel3D;
@@ -42,16 +41,12 @@ using Avogadro::Rendering::TextProperties;
 
 namespace Avogadro::QtPlugins {
 
-using QtGui::Molecule;
-using QtGui::RWAtom;
-
 AlignTool::AlignTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_toolWidget(nullptr), m_renderer(nullptr),
     m_alignType(0), m_axis(0)
 {
   m_activateAction->setText(tr("Align"));
-  m_activateAction->setIcon(QIcon(":/icons/align.png"));
   m_activateAction->setToolTip(
     tr("Align Molecules\n\n"
        "Left Mouse: \tSelect up to two atoms.\n"
@@ -59,6 +54,7 @@ AlignTool::AlignTool(QObject* parent_)
        "\tThe second atom is aligned to the selected axis.\n"
        "Right Mouse: \tReset alignment.\n"
        "Double-Click: \tCenter the atom at the origin."));
+  setIcon();
 }
 
 AlignTool::~AlignTool()
@@ -67,39 +63,47 @@ AlignTool::~AlignTool()
     m_toolWidget->deleteLater();
 }
 
+void AlignTool::setIcon(bool darkTheme)
+{
+  if (darkTheme)
+    m_activateAction->setIcon(QIcon(":/icons/align_dark.svg"));
+  else
+    m_activateAction->setIcon(QIcon(":/icons/align_light.svg"));
+}
+
 QWidget* AlignTool::toolWidget() const
 {
   if (!m_toolWidget) {
     m_toolWidget = new QWidget;
 
-    QLabel* labelAxis = new QLabel(tr("Axis:"), m_toolWidget);
+    auto* labelAxis = new QLabel(tr("Axis:"), m_toolWidget);
     labelAxis->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     labelAxis->setMaximumHeight(15);
 
     // Combo box to select desired aixs to align to
-    QComboBox* comboAxis = new QComboBox(m_toolWidget);
+    auto* comboAxis = new QComboBox(m_toolWidget);
     comboAxis->addItem("x");
     comboAxis->addItem("y");
     comboAxis->addItem("z");
     comboAxis->setCurrentIndex(m_axis);
 
     // Button to actually perform actions
-    QPushButton* buttonAlign = new QPushButton(m_toolWidget);
+    auto* buttonAlign = new QPushButton(m_toolWidget);
     buttonAlign->setText(tr("Align"));
     connect(buttonAlign, SIGNAL(clicked()), this, SLOT(align()));
 
-    QGridLayout* gridLayout = new QGridLayout();
+    auto* gridLayout = new QGridLayout();
     gridLayout->addWidget(labelAxis, 0, 0, 1, 1, Qt::AlignRight);
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    auto* hLayout = new QHBoxLayout;
     hLayout->addWidget(comboAxis);
     hLayout->addStretch(1);
     gridLayout->addLayout(hLayout, 0, 1);
 
-    QHBoxLayout* hLayout3 = new QHBoxLayout();
+    auto* hLayout3 = new QHBoxLayout();
     hLayout3->addStretch(1);
     hLayout3->addWidget(buttonAlign);
     hLayout3->addStretch(1);
-    QVBoxLayout* layout = new QVBoxLayout();
+    auto* layout = new QVBoxLayout();
     layout->addLayout(gridLayout);
     layout->addLayout(hLayout3);
     layout->addStretch(1);
@@ -136,8 +140,6 @@ void AlignTool::align()
     shiftAtomToOrigin(m_atoms[0].index);
   if (m_atoms.size() == 2)
     alignAtomToAxis(m_atoms[1].index, m_axis);
-
-  m_atoms.clear();
 }
 
 void AlignTool::shiftAtomToOrigin(Index atomIndex)

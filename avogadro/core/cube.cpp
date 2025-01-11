@@ -13,7 +13,7 @@ namespace Avogadro::Core {
 Cube::Cube()
   : m_data(0), m_min(0.0, 0.0, 0.0), m_max(0.0, 0.0, 0.0),
     m_spacing(0.0, 0.0, 0.0), m_points(0, 0, 0), m_minValue(0.0),
-    m_maxValue(0.0), m_lock(new Mutex)
+    m_maxValue(0.0), m_cubeType(None), m_lock(new Mutex)
 {
 }
 
@@ -37,7 +37,6 @@ bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
   m_data.resize(m_points.x() * m_points.y() * m_points.z());
   return true;
 }
-
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_, float spacing_)
 {
   Vector3 delta = max_ - min_;
@@ -194,8 +193,159 @@ float Cube::value(int i, int j, int k) const
     return 0.0;
 }
 
-float Cube::value(const Vector3i& pos) const
+std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 {
+    int nx = m_points.x();
+    int ny = m_points.y();
+    int nz = m_points.z();
+    int dataIdx = (i * ny * nz) + (j * nz) + k;
+
+    std::array<std::array<float, 2>, 3> x;
+    std::array<float, 3> run;
+
+    // X-direction
+    if (i == 0) {
+        x[0][0] = m_data[dataIdx + ny * nz];
+        x[0][1] = m_data[dataIdx];
+        run[0] = m_spacing.x();
+    } else if (i == (nx - 1)) {
+        x[0][0] = m_data[dataIdx];
+        x[0][1] = m_data[dataIdx - ny * nz];
+        run[0] = m_spacing.x();
+    } else {
+        x[0][0] = m_data[dataIdx + ny * nz];
+        x[0][1] = m_data[dataIdx - ny * nz];
+        run[0] = 2 * m_spacing.x();
+    }
+
+    // Y-direction
+    if (j == 0) {
+        x[1][0] = m_data[dataIdx + nz];
+        x[1][1] = m_data[dataIdx];
+        run[1] = m_spacing.y();
+    } else if (j == (ny - 1)) {
+        x[1][0] = m_data[dataIdx];
+        x[1][1] = m_data[dataIdx - nz];
+        run[1] = m_spacing.y();
+    } else {
+        x[1][0] = m_data[dataIdx + nz];
+        x[1][1] = m_data[dataIdx - nz];
+        run[1] = 2 * m_spacing.y();
+    }
+
+    // Z-direction
+    if (k == 0) {
+        x[2][0] = m_data[dataIdx + 1];
+        x[2][1] = m_data[dataIdx];         
+        run[2] = m_spacing.z();
+    } else if (k == (nz - 1)) {
+        x[2][0] = m_data[dataIdx];        
+        x[2][1] = m_data[dataIdx - 1];     
+        run[2] = m_spacing.z();
+    } else {
+        x[2][0] = m_data[dataIdx + 1];    
+        x[2][1] = m_data[dataIdx - 1];     
+        run[2] = 2 * m_spacing.z();
+    }
+
+    std::array<float, 3> ret;
+
+    ret[0] = (x[0][1] - x[0][0]) / run[0];
+    ret[1] = (x[1][1] - x[1][0]) / run[1];
+    ret[2] = (x[2][1] - x[2][0]) / run[2];
+
+    return ret;
+}
+
+std::array<std::array<float, 3>, 8>
+Cube::getGradCube(int i, int j, int k) const
+{
+    std::array<std::array<float, 3>, 8> grad;
+
+    grad[0] = computeGradient(i, j, k);
+    grad[1] = computeGradient(i + 1, j, k);
+    grad[2] = computeGradient(i + 1, j + 1, k);
+    grad[3] = computeGradient(i, j + 1, k);
+    grad[4] = computeGradient(i, j, k + 1);
+    grad[5] = computeGradient(i + 1, j, k + 1);
+    grad[6] = computeGradient(i + 1, j + 1, k + 1);
+    grad[7] = computeGradient(i, j + 1, k + 1);
+
+    return grad;
+}
+
+std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
+{
+    std::array<float, 8> vals;
+    
+    vals[0] = getData(i, j, k);
+    vals[1] = getData(i + 1, j, k);
+    vals[2] = getData(i + 1, j + 1, k);
+    vals[3] = getData(i, j + 1, k);
+    vals[4] = getData(i, j, k + 1);
+    vals[5] = getData(i + 1, j, k + 1);
+    vals[6] = getData(i + 1, j + 1, k + 1);
+    vals[7] = getData(i, j + 1, k + 1);
+
+    return vals;
+}
+
+
+float Cube::getData(int i, int j, int k) const
+{
+    int nx = m_points.x();
+    int ny = m_points.y();
+    int nz = m_points.z();
+    return m_data[(i * ny * nz) + (j * nz) + k];
+}
+
+
+std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
+{
+
+  std::array<std::array<float, 3>, 8> pos;
+
+  float xpos = m_min.x() + (i * m_spacing.x());
+  float ypos = m_min.y() + (j * m_spacing.y());
+  float zpos = m_min.z() + (k * m_spacing.z());
+
+  pos[0][0] = xpos;
+  pos[0][1] = ypos;
+  pos[0][2] = zpos;
+
+  pos[1][0] = xpos + m_spacing.x();
+  pos[1][1] = ypos;
+  pos[1][2] = zpos;
+
+  pos[2][0] = xpos + m_spacing.x();
+  pos[2][1] = ypos + m_spacing.y();
+  pos[2][2] = zpos;
+
+  pos[3][0] = xpos;
+  pos[3][1] = ypos + m_spacing.y();
+  pos[3][2] = zpos;
+
+  pos[4][0] = xpos;
+  pos[4][1] = ypos;
+  pos[4][2] = zpos + m_spacing.z();
+
+  pos[5][0] = xpos + m_spacing.x();
+  pos[5][1] = ypos;
+  pos[5][2] = zpos + m_spacing.z();
+
+  pos[6][0] = xpos + m_spacing.x();
+  pos[6][1] = ypos + m_spacing.y();
+  pos[6][2] = zpos + m_spacing.z();
+
+  pos[7][0] = xpos;
+  pos[7][1] = ypos + m_spacing.y();
+  pos[7][2] = zpos + m_spacing.z();
+
+  return pos;
+}
+
+float Cube::value(const Vector3i& pos) const
+{  
   unsigned int index =
     pos.x() * m_points.y() * m_points.z() + pos.y() * m_points.z() + pos.z();
   if (index < m_data.size())

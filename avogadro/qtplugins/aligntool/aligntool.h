@@ -11,8 +11,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/rendering/primitive.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @class AlignTool aligntool.h
@@ -35,6 +34,8 @@ public:
   unsigned char priority() const override { return 90; }
   QAction* activateAction() const override { return m_activateAction; }
   QWidget* toolWidget() const override;
+
+  void setIcon(bool darkTheme = false) override;
 
   void setMolecule(QtGui::Molecule* mol) override
   {
@@ -90,7 +91,6 @@ private Q_SLOTS:
   void toolWidgetDestroyed();
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTOPENGL_ALIGNTOOL_H

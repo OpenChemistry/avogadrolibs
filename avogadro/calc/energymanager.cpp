@@ -7,9 +7,6 @@
 #include "energycalculator.h"
 #include "lennardjones.h"
 
-#include <algorithm>
-#include <memory>
-
 namespace Avogadro::Calc {
 
 EnergyManager& EnergyManager::instance()
@@ -112,7 +109,10 @@ std::set<std::string> EnergyManager::identifiersForMolecule(
   std::set<std::string> identifiers;
 
   // check our models for compatibility
-  for (auto m_model : m_models) {
+  for (auto* m_model : m_models) {
+    if (m_model == nullptr)
+      continue;
+
     // we can check easy things first
     // - is the molecule an ion based on total charge
     // - is the molecule a radical based on spin multiplicity

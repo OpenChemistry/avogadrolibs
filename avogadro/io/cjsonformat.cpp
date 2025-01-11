@@ -41,10 +41,6 @@ using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
 
-CjsonFormat::CjsonFormat() = default;
-
-CjsonFormat::~CjsonFormat() = default;
-
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
   if (j.count(key) && j.find(key)->is_string()) {
@@ -78,6 +74,16 @@ bool isBooleanArray(json& j)
     return true;
   }
   return false;
+}
+
+json eigenColToJson(const MatrixX& matrix, int column)
+{
+  json j;
+  j = json::array();
+  for (Index i = 0; i < matrix.rows(); ++i) {
+    j.push_back(matrix(i, column));
+  }
+  return j;
 }
 
 bool CjsonFormat::read(std::istream& file, Molecule& molecule)
@@ -149,12 +155,21 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  // todo? 2d position
+  // Array of vector3 for forces if available
+  json forces = atoms["forces"];
+  if (isNumericArray(forces) && forces.size() == 3 * atomCount) {
+    for (Index i = 0; i < atomCount; ++i) {
+      auto a = molecule.atom(i);
+      a.setForceVector(
+        Vector3(forces[3 * i], forces[3 * i + 1], forces[3 * i + 2]));
+    }
+  }
+
   // labels
   json labels = atoms["labels"];
   if (labels.is_array() && labels.size() == atomCount) {
     for (size_t i = 0; i < atomCount; ++i) {
-      molecule.atom(i).setLabel(labels[i]);
+      molecule.setAtomLabel(i, labels[i]);
     }
   }
 
@@ -205,26 +220,11 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     json layerJson = atoms["layer"];
     if (isNumericArray(layerJson)) {
       auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-      for (Index i = 0; i < atomCount; ++i) {
+      for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
         while (layerJson[i] > layer.maxLayer()) {
           layer.addLayer();
         }
         layer.addAtom(layerJson[i], i);
-      }
-    }
-  }
-
-  // Partial charges are optional, but if present should be loaded.
-  json partialCharges = atoms["partialCharges"];
-  if (partialCharges.is_object()) {
-    // keys are types, values are arrays of charges
-    for (auto& kv : partialCharges.items()) {
-      MatrixX charges(atomCount, 1);
-      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
-        for (size_t i = 0; i < kv.value().size(); ++i) {
-          charges(i, 0) = kv.value()[i];
-        }
-        molecule.setPartialCharges(kv.key(), charges);
       }
     }
   }
@@ -242,6 +242,15 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
            ++i) {
         molecule.bond(i).setOrder(static_cast<int>(order[i]));
+      }
+    }
+
+    // are there bond labels?
+    json bondLabels = bonds["labels"];
+    if (bondLabels.is_array()) {
+      for (unsigned int i = 0;
+           i < molecule.bondCount() && i < bondLabels.size(); ++i) {
+        molecule.setBondLabel(i, bondLabels[i]);
       }
     }
   }
@@ -408,6 +417,13 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           numArray.push_back(static_cast<unsigned int>(number));
         basis->setMolecularOrbitalNumber(numArray);
       }
+      json symmetryLabels = orbitals["symmetries"];
+      if (symmetryLabels.is_array()) {
+        std::vector<std::string> symArray;
+        for (auto& sym : symmetryLabels)
+          symArray.push_back(sym);
+        basis->setSymmetryLabels(symArray);
+      }
       json moCoefficients = orbitals["moCoefficients"];
       json moCoefficientsA = orbitals["alphaCoefficients"];
       json moCoefficientsB = orbitals["betaCoefficients"];
@@ -541,6 +557,58 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
+  // check for spectra data
+  json spectra = jsonRoot["spectra"];
+  if (spectra.is_object()) {
+    // electronic
+    json electronic = spectra["electronic"];
+    if (electronic.is_object()) {
+      // check to see "energies" and "intensities"
+      json energies = electronic["energies"];
+      json intensities = electronic["intensities"];
+      // make sure they are both numeric arrays
+      if (isNumericArray(energies) && isNumericArray(intensities)) {
+        // make sure they are the same size
+        if (energies.size() == intensities.size()) {
+          // create the matrix
+          MatrixX electronicData(energies.size(), 2);
+          // copy the data
+          for (std::size_t i = 0; i < energies.size(); ++i) {
+            electronicData(i, 0) = energies[i];
+            electronicData(i, 1) = intensities[i];
+          }
+          // set the data
+          molecule.setSpectra("Electronic", electronicData);
+        }
+      }
+      // check if there's CD data for "rotation"
+      json rotation = electronic["rotation"];
+      if (isNumericArray(rotation) && rotation.size() == energies.size()) {
+        MatrixX rotationData(rotation.size(), 2);
+        for (std::size_t i = 0; i < rotation.size(); ++i) {
+          rotationData(i, 0) = energies[i];
+          rotationData(i, 1) = rotation[i];
+        }
+        molecule.setSpectra("CircularDichroism", rotationData);
+      }
+    }
+
+    // nmr
+    json nmr = spectra["nmr"];
+    if (nmr.is_object()) {
+      // chemical shifts
+      json chemicalShifts = nmr["shifts"];
+      if (isNumericArray(chemicalShifts)) {
+        MatrixX chemicalShiftData(chemicalShifts.size(), 2);
+        for (std::size_t i = 0; i < chemicalShifts.size(); ++i) {
+          chemicalShiftData(i, 0) = static_cast<double>(chemicalShifts[i]);
+          chemicalShiftData(i, 1) = 1.0;
+        }
+        molecule.setSpectra("NMR", chemicalShiftData);
+      }
+    }
+  }
+
   // properties
   if (jsonRoot.find("properties") != jsonRoot.end()) {
     json properties = jsonRoot["properties"];
@@ -548,15 +616,22 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       if (properties.find("totalCharge") != properties.end()) {
         molecule.setData("totalCharge",
                          static_cast<int>(properties["totalCharge"]));
-      }
-      if (properties.find("totalSpinMultiplicity") != properties.end()) {
+      } else if (properties.find("totalSpinMultiplicity") != properties.end()) {
         molecule.setData("totalSpinMultiplicity",
                          static_cast<int>(properties["totalSpinMultiplicity"]));
+      } else if (properties.find("dipoleMoment") != properties.end()) {
+        // read the numeric array
+        json dipole = properties["dipoleMoment"];
+        if (isNumericArray(dipole) && dipole.size() == 3) {
+          Core::Variant dipoleMoment(dipole[0], dipole[1], dipole[2]);
+          molecule.setData("dipoleMoment", dipoleMoment);
+        }
       }
       // iterate through everything else
       for (auto& element : properties.items()) {
         if (element.key() == "totalCharge" ||
-            element.key() == "totalSpinMultiplicity") {
+            element.key() == "totalSpinMultiplicity" ||
+            element.key() == "dipoleMoment") {
           continue;
         }
         if (element.value().type() == json::value_t::array) {
@@ -599,12 +674,41 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
           // std::cout << " property: " << element.key() << " = " << matrix
           //           << " size " << matrix.rows() << 'x' << matrix.cols()
           //          << std::endl;
+        } else if (element.value().type() == json::value_t::number_float) {
+          molecule.setData(element.key(), element.value().get<double>());
+        } else if (element.value().type() == json::value_t::number_integer) {
+          molecule.setData(element.key(), element.value().get<int>());
+        } else if (element.value().type() == json::value_t::boolean) {
+          molecule.setData(element.key(), element.value().get<bool>());
+        } else if (element.value().type() == json::value_t::string) {
+          molecule.setData(element.key(), element.value().get<std::string>());
         } else {
-          molecule.setData(element.key(), element.value());
-          // std::cout << " property: " << element.key() << " = "
-          //          << element.value() << " type "
-          //          << element.value().type_name() << std::endl;
+          std::cout << " cannot store property: " << element.key() << " = "
+                    << element.value() << " type "
+                    << element.value().type_name() << std::endl;
         }
+      }
+    }
+  }
+
+  // inputParameters are calculation metadata
+  if (jsonRoot.find("inputParameters") != jsonRoot.end()) {
+    json inputParameters = jsonRoot["inputParameters"];
+    // add this as a string to the molecule data
+    molecule.setData("inputParameters", inputParameters.dump());
+  }
+
+  // Partial charges are optional, but if present should be loaded.
+  json partialCharges = atoms["partialCharges"];
+  if (partialCharges.is_object()) {
+    // keys are types, values are arrays of charges
+    for (auto& kv : partialCharges.items()) {
+      MatrixX charges(atomCount, 1);
+      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
+        for (size_t i = 0; i < kv.value().size(); ++i) {
+          charges(i, 0) = kv.value()[i];
+        }
+        molecule.setPartialCharges(kv.key(), charges);
       }
     }
   }
@@ -680,6 +784,13 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     if (element.first == "name" || element.first == "inchi")
       continue;
 
+    // check for "inputParameters" and handle it separately
+    if (element.first == "inputParameters") {
+      json inputParameters = json::parse(element.second.toString());
+      root["inputParameters"] = inputParameters;
+      continue;
+    }
+
     if (element.second.type() == Variant::String)
       properties[element.first] = element.second.toString().c_str();
     else if (element.second.type() == Variant::Double)
@@ -690,7 +801,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       properties[element.first] = element.second.toInt();
     else if (element.second.type() == Variant::Bool)
       properties[element.first] = element.second.toBool();
-    else if (element.second.type() == Variant::Matrix) {
+    else if (element.second.type() == Variant::Vector) {
+      // e.g. dipole moment
+      Vector3 v = element.second.toVector3();
+      json vector;
+      vector.push_back(v.x());
+      vector.push_back(v.y());
+      vector.push_back(v.z());
+      properties[element.first] = vector;
+    } else if (element.second.type() == Variant::Matrix) {
       MatrixX m = element.second.toMatrix();
       json matrix;
       for (int i = 0; i < m.rows(); ++i) {
@@ -734,6 +853,30 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       Core::SpaceGroups::international(molecule.hallNumber());
 
     root["unitCell"] = unitCell;
+  }
+
+  // check for spectra data
+  // vibrations are separate
+  if (molecule.spectraTypes().size() != 0) {
+    json spectra, electronic, nmr;
+    bool hasElectronic = false;
+    for (const auto& type : molecule.spectraTypes()) {
+      if (type == "Electronic") {
+        hasElectronic = true;
+        electronic["energies"] = eigenColToJson(molecule.spectra(type), 0);
+        electronic["intensities"] = eigenColToJson(molecule.spectra(type), 1);
+      } else if (type == "CircularDichroism") {
+        electronic["rotation"] = eigenColToJson(molecule.spectra(type), 1);
+      } else if (type == "NMR") {
+        json data;
+        data["shifts"] = eigenColToJson(molecule.spectra(type), 0);
+        spectra["nmr"] = data;
+      }
+    }
+    if (hasElectronic) {
+      spectra["electronic"] = electronic;
+    }
+    root["spectra"] = spectra;
   }
 
   // Create a basis set/MO matrix we can round trip.
@@ -915,6 +1058,20 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     if (hasCustomColors)
       root["atoms"]["colors"] = colors;
 
+    // check for partial charges
+    auto partialCharges = molecule.partialChargeTypes();
+    if (!partialCharges.empty()) {
+      // add them to the atoms object
+      for (const auto& type : partialCharges) {
+        MatrixX chargesMatrix = molecule.partialCharges(type);
+        json charges;
+        for (Index i = 0; i < molecule.atomCount(); ++i) {
+          charges.push_back(chargesMatrix(i, 0));
+        }
+        root["atoms"]["partialCharges"][type] = charges;
+      }
+    }
+
     // 3d positions:
     if (molecule.atomPositions3d().size() == molecule.atomCount()) {
       // everything gets real-space Cartesians
@@ -950,14 +1107,29 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
       }
       root["atoms"]["coords"]["2d"] = coords2d;
     }
+
+    // forces if present
+    const auto forceVectors = molecule.forceVectors();
+    if (forceVectors.size() == molecule.atomCount()) {
+      json forces;
+      for (const auto& force : forceVectors) {
+        forces.push_back(force.x());
+        forces.push_back(force.y());
+        forces.push_back(force.z());
+      }
+      root["atoms"]["forces"] = forces;
+    }
   }
 
-  // labels
-  json labels;
-  for (size_t i = 0; i < molecule.atomCount(); ++i) {
-    labels.push_back(molecule.label(i));
+  // check for atom labels
+  Array atomLabels = molecule.atomLabels();
+  if (atomLabels.size() == molecule.atomCount()) {
+    json labels;
+    for (Index i = 0; i < molecule.atomCount(); ++i) {
+      labels.push_back(atomLabels[i]);
+    }
+    root["atoms"]["labels"] = labels;
   }
-  root["atoms"]["labels"] = labels;
 
   // formal charges
   json formalCharges;
@@ -987,6 +1159,16 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
     }
     root["bonds"]["connections"]["index"] = connections;
     root["bonds"]["order"] = order;
+
+    // check if there are bond labels
+    Array bondLabels = molecule.bondLabels();
+    if (bondLabels.size() == molecule.bondCount()) {
+      json labels;
+      for (Index i = 0; i < molecule.bondCount(); ++i) {
+        labels.push_back(bondLabels[i]);
+      }
+      root["bonds"]["labels"] = labels;
+    }
   }
 
   // Create and populate any residue arrays

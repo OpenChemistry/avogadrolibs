@@ -37,26 +37,26 @@ jobs:
           }
         - {
             name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-20.04,
+            os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
             cpack: "",
           }
         - {
-            name: "macOS Latest Clang", artifact: "macOS.dmg",
-            os: macos-latest,
+            name: "macOS Clang", artifact: "macOS.dmg",
+            os: macos-13,
             cc: "clang", cxx: "clang++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF",
             cpack_flags: "-G DragNDrop",
           }
         - {
             name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: windows-latest,
+            os: windows-2019,
             cc: "cl", cxx: "cl",
             build_type: "Release",
-            cmake_flags: "-DOPENSSL_ROOT_DIR=D:\\a\\Tools\\OpenSSL\\Win_x64",
+            cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
@@ -82,10 +82,12 @@ jobs:
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
+        sudo add-apt-repository -y universe
         sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev 
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
         sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
         sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
+        sudo apt install libfuse2
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -104,17 +106,23 @@ jobs:
         repository: openchemistry/openchemistry
         submodules: recursive
 
-    - name: Checkout avogadroapp
-      uses: actions/checkout@v4
-      with:
-        repository: openchemistry/avogadroapp
-        path: avogadroapp
-
     - name: Checkout molecules
       uses: actions/checkout@v4
       with:
         repository: openchemistry/molecules
         path: molecules
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: fragments
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: crystals
 
     - name: Checkout i18n
       uses: actions/checkout@v4
@@ -122,27 +130,25 @@ jobs:
         repository: openchemistry/avogadro-i18n
         path: avogadro-i18n
 
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadroapp
+        path: avogadroapp
+        fetch-depth: 0
+
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
         path: avogadrolibs
+        fetch-depth: 0
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        cache: True
+        aqtversion: '==3.1.*'
+        cache: true
         version: ${{ env.QT_VERSION }}
-
-    - name: Install OpenSSL (Win64)
-      if: runner.os == 'Windows'
-      uses: jurplel/install-qt-action@v3
-      with:
-        cache: True
-        tools: 'tools_opensslv3_x64'
-        version: ${{ env.QT_VERSION }}
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_msvc2019_64'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -151,7 +157,7 @@ jobs:
         arch: x64
 
     - name: Grab cache files
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       if: runner.os != 'Windows'
       with:
         path: |
@@ -178,34 +184,36 @@ jobs:
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
-      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel 
+      working-directory: ${{ runner.workspace }}/build/prefix/lib/openbabel
       run: |
         for plugin in *.so; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
             export lib=`echo $libpath | cut -d '/' -f 9`;
             echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
         cd .. # build/prefix/lib
-        for plugin in libinchi.?.?.?.dylib; do
-          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do 
+        for plugin in libinchi.?.?.?.dylib libopenbabel.?.?.?.dylib; do
+          for libpath in `otool -L ${plugin} | grep '/Users/runner/work' | awk '{print $1}'`; do
             export lib=`echo $libpath | cut -d '/' -f 9`;
             echo "Fixing $plugin $lib $libpath"
             install_name_tool -change $libpath @executable_path/../Frameworks/$lib $plugin
           done
         done
         otool -L libinchi.?.?.?.dylib
+        otool -L libopenbabel.?.?.?.dylib
         cp -p libinchi* ../Avogadro2.app/Contents/Frameworks/
+        cp -p libopenbabel* ../Avogadro2.app/Contents/Frameworks/
         # finally, fixup the binaries
-        #cd ../bin
-        #for exe in obabel obmm eht_bind genXrdPattern; do
-        #  for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do 
-        #    export lib=`echo $libpath | cut -d '/' -f 9`;
-        #    echo "Fixing $exe $lib $libpath"
-        #    install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
-        #  done
-        #done
+        cd ../bin
+        for exe in obabel obmm eht_bind genXrdPattern; do
+          for libpath in `otool -L ${exe} | grep '/Users/runner/work' | awk '{print $1}'`; do
+            export lib=`echo $libpath | cut -d '/' -f 9`;
+            echo "Fixing $exe $lib $libpath"
+            install_name_tool -change $libpath @executable_path/../Frameworks/$lib $exe
+          done
+        done
 
     - name: Run tests
       if: matrix.config.os == 'ubuntu-20.04'
@@ -237,13 +245,18 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       run: |
+        # be sure the DMG can be created easily
+        # https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
+        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo waiting...; while pgrep XProtect; do sleep 3; done;
+
         # create variables
         if [ -n "${P12_PASSWORD}" ]; then
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 -d -o $CERTIFICATE_PATH
 
           # create temporary keychain if the cert is non-zero
           if [ -s $CERTIFICATE_PATH ]; then
@@ -260,35 +273,45 @@ jobs:
         fi # password exists
 
     - name: Create Mac and Windows Packages
-      if: matrix.config.os == 'windows-latest' || matrix.config.os == 'macos-latest'
+      if: runner.os == 'Windows' || runner.os == 'macOS'
       shell: bash
       run: |
         if [ -z "${P12_PASSWORD}" ]; then
           unset CODESIGN_IDENTITY # to prevent cpack failing when trying to sign
         fi
-        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date -j "+%d-%m-%y"`
+        if [ -z "${OPENSSL_ROOT_DIR}" ]; then
+          unset OPENSSL_ROOT_DIR
+        fi
+        [[ ! "${GITHUB_REF}" =~ "tags" ]] && export SNAPSHOT_DATE=`date "+%d-%m-%y"`
         cpack ${{ matrix.config.cpack_flags }}
       working-directory: ${{ runner.workspace }}/build/avogadroapp
+      continue-on-error: true
       env:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
 
     - name: AppImage
-      if: matrix.config.os == 'ubuntu-20.04' && matrix.config.build_type == 'Release'
+      if: matrix.config.os == 'ubuntu-22.04' && matrix.config.build_type == 'Release'
       shell: bash
       run: |
         mkdir appdir
         mv prefix appdir/usr
-        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:appdir/usr/lib
+
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
         chmod a+x *.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -extra-plugins=iconengines
+
+        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
         # add the custom AppRun
         rm appdir/AppRun
         cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro2*.AppImage avogadroapp # for upload
+        mv Avogadro*.AppImage avogadroapp # for upload
       working-directory: ${{ runner.workspace }}/build
 
     - name: Notarize Mac DMG
@@ -308,15 +331,12 @@ jobs:
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
       continue-on-error: true
 
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
-
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@v3
+      id: upload-artifact
+      uses: actions/upload-artifact@v4
       with:
-        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro*.*
         name: ${{ matrix.config.artifact }}
 
     - name: Cleanup
@@ -327,4 +347,3 @@ jobs:
         rm -rf ./* || true
         rm -rf ./.??* || true
         ls -la ./
- 

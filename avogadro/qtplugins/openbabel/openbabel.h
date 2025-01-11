@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_QTPLUGINS_OPENBABEL_H
 #define AVOGADRO_QTPLUGINS_OPENBABEL_H
 
+#include "conformersearchdialog.h"
+
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <QtCore/QMultiMap>
@@ -67,11 +69,17 @@ private slots:
   void handleChargesUpdate(const QMultiMap<QString, QString>& chargeMap);
 
   void onConfigureGeometryOptimization();
+  void onConfigureConformerSearch();
 
   void onOptimizeGeometry();
   void onOptimizeGeometryStatusUpdate(int step, int numSteps, double energy,
                                       double lastEnergy);
   void onOptimizeGeometryFinished(const QByteArray& output);
+
+  void onGenerateConformers();
+  void onConformerStatusUpdate(int step, int numSteps, double energy,
+                               double lastEnergy);
+  void onGenerateConformersFinished(const QByteArray& output);
 
   void onPerceiveBonds();
   void onPerceiveBondsFinished(const QByteArray& output);
@@ -100,8 +108,11 @@ private:
   QMultiMap<QString, QString> m_charges;
   std::string m_defaultFormat;
   QProgressDialog* m_progress;
+
+  ConformerSearchDialog* m_conformerSearchDialog;
 };
-}
-}
+
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_OPENBABEL_H

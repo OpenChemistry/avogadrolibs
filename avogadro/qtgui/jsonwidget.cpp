@@ -32,7 +32,7 @@ namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
   : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
-    m_centralWidget(nullptr)
+    m_centralWidget(nullptr), m_empty(true), m_batchMode(false)
 {
 }
 
@@ -40,6 +40,37 @@ JsonWidget::~JsonWidget() {}
 
 void JsonWidget::setMolecule(QtGui::Molecule* mol)
 {
+  if (m_molecule != nullptr) {
+    // update charge and multiplicity if needed
+    int charge = static_cast<int>(m_molecule->totalCharge());
+    int multiplicity = static_cast<int>(m_molecule->totalSpinMultiplicity());
+
+    setOption("Charge", charge);
+    setOption("Multiplicity", multiplicity);
+
+    // check the molecule for "inputParameters" from CJSON
+    // e.g.
+    // https://github.com/OpenChemistry/chemicaljson/blob/main/chemicaljson.py#L130
+    if (m_molecule->hasData("inputParameters")) {
+      QByteArray data(m_molecule->data("inputParameters").toString().c_str());
+      QJsonDocument doc = QJsonDocument::fromJson(data);
+      if (!doc.isNull() && doc.isObject()) {
+        QJsonObject inputParameters = doc.object();
+        // check for a few known keys
+        if (inputParameters.contains("processors"))
+          setOption("Processor Cores", inputParameters["processors"].toInt());
+        else if (inputParameters.contains("memory"))
+          setOption("Memory", inputParameters["memory"].toInt());
+        else if (inputParameters.contains("basis"))
+          setOption("Basis", inputParameters["basis"].toString());
+        else if (inputParameters.contains("functional"))
+          setOption("Theory", inputParameters["functional"].toString());
+        else if (inputParameters.contains("task"))
+          setOption("Calculation Type", inputParameters["task"].toString());
+      }
+    }
+  }
+
   if (mol == m_molecule)
     return;
 
@@ -208,11 +239,29 @@ void JsonWidget::buildOptionGui()
     }
 
     // Add remaining keys at bottom.
+    // look for "order" key to determine order
+    QMap<int, QString> keys;
+    int order = 0;
     for (QJsonObject::const_iterator it = userOptions.constBegin(),
                                      itEnd = userOptions.constEnd();
          it != itEnd; ++it) {
-      addOptionRow(it.key(), it.key(), it.value());
+      if (it.value().isObject()) {
+        QJsonObject obj = it.value().toObject();
+        if (obj.contains("order") && obj.value("order").isDouble()) {
+          order = obj.value("order").toInt();
+          keys.insert(order, it.key());
+        } else { // object doesn't contain "order"
+          keys.insert(order, it.key());
+          order++;
+        }
+      } else {
+        keys.insert(order++, it.key());
+      }
     }
+
+    // now loop over keys and add them
+    for (QString key : std::as_const(keys))
+      addOptionRow(key, key, userOptions.take(key));
 
     // Make connections for standard options:
     if (auto* combo = qobject_cast<QComboBox*>(
@@ -347,6 +396,8 @@ QWidget* JsonWidget::createOptionWidget(const QJsonValue& option)
     return createFloatWidget(obj);
   else if (type == QLatin1String("boolean"))
     return createBooleanWidget(obj);
+  else if (type == QLatin1String("text"))
+    return createTextWidget(obj);
 
   qDebug() << "Unrecognized option type:" << type;
   return nullptr;
@@ -396,6 +447,19 @@ QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
   }
 
   return edit;
+}
+
+QWidget* JsonWidget::createTextWidget(const QJsonObject& obj)
+{
+  auto* text = new QLabel(this);
+  text->setWordWrap(true);
+
+  if (obj.contains(QStringLiteral("toolTip")) &&
+      obj.value(QStringLiteral("toolTip")).isString()) {
+    text->setToolTip(obj[QStringLiteral("toolTip")].toString());
+  }
+
+  return text;
 }
 
 QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
@@ -551,6 +615,8 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
     return setFloatOption(name, defaultValue);
   else if (type == QLatin1String("boolean"))
     return setBooleanOption(name, defaultValue);
+  else if (type == QLatin1String("text"))
+    return setTextOption(name, defaultValue);
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
@@ -612,6 +678,27 @@ void JsonWidget::setStringOption(const QString& name, const QJsonValue& value)
   }
 
   lineEdit->setText(value.toString());
+}
+
+void JsonWidget::setTextOption(const QString& name, const QJsonValue& value)
+{
+  auto* text = qobject_cast<QLabel*>(m_widgets.value(name, nullptr));
+  if (text == nullptr) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad widget type.")
+                    .arg(name);
+    return;
+  }
+
+  if (!value.isString()) {
+    qWarning() << tr("Error setting default for option '%1'. "
+                     "Bad default value:")
+                    .arg(name)
+               << value;
+    return;
+  }
+
+  text->setText(value.toString());
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
@@ -760,8 +847,11 @@ QJsonObject JsonWidget::collectOptions() const
 
 void JsonWidget::applyOptions(const QJsonObject& opts)
 {
-  foreach (const QString& label, opts.keys())
+  foreach (const QString& label, opts.keys()) {
     setOption(label, opts[label]);
+
+    qDebug() << "Setting option" << label << "to" << opts[label];
+  }
 }
 
 QString JsonWidget::generateJobTitle() const

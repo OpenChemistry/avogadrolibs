@@ -22,12 +22,17 @@ include(DetermineVersion)
 
 # Set up our version.
 set(AvogadroLibs_VERSION_MAJOR   "1")
-set(AvogadroLibs_VERSION_MINOR   "98")
-set(AvogadroLibs_VERSION_PATCH   "1")
+set(AvogadroLibs_VERSION_MINOR   "99")
+set(AvogadroLibs_VERSION_PATCH   "0")
 set(AvogadroLibs_VERSION
   "${AvogadroLibs_VERSION_MAJOR}.${AvogadroLibs_VERSION_MINOR}.${AvogadroLibs_VERSION_PATCH}")
 find_package(Git)
 determine_version(${AvogadroLibs_SOURCE_DIR} ${GIT_EXECUTABLE} "AvogadroLibs")
+
+# path for data / fragment files which could be overriden by package maintainers
+# by default we assume we're using the openchemistry superbuild layout
+# .. this is used by the fragment library, molecules, crystals, etc.
+set(AvogadroLibs_SOURCEDATA_DIR "${AvogadroLibs_SOURCE_DIR}/..")
 
 option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
 
@@ -40,6 +45,14 @@ if(MSVC)
   # Ensure __cplusplus is correct, otherwise it defaults to 199711L which isn't true
   # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+
+  message(STATUS "Setting MSVC debug information format to 'Embedded'")
+  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+
+  set(CMAKE_VS_GLOBALS
+    "UseMultiToolTask=true"
+    "DebugInformationFormat=OldStyle"
+  )
 endif()
 
 option(ENABLE_TESTING "Enable testing and building the tests." OFF)
@@ -116,7 +129,6 @@ if (NOT SKBUILD)
   install(FILES
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake"
     "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfigVersion.cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findlibmsym.cmake"
     DESTINATION "${INSTALL_LIBRARY_DIR}/cmake/avogadrolibs")
   install(EXPORT "AvogadroLibsTargets"

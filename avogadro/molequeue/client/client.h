@@ -8,11 +8,11 @@
 
 #include "avogadromolequeueexport.h"
 
+#include <QRegularExpression>
+#include <QtCore/QHash>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
-#include <QRegExp>
-#include <QtCore/QHash>
 
 namespace Avogadro {
 namespace MoleQueue {
@@ -35,7 +35,7 @@ class AVOGADROMOLEQUEUE_EXPORT Client : public QObject
   Q_OBJECT
 
 public:
-  explicit Client(QObject *parent_ = nullptr);
+  explicit Client(QObject* parent_ = nullptr);
   ~Client();
 
   /**
@@ -50,7 +50,7 @@ public slots:
    * @param serverName Name of the socket to connect to, the default of
    * "MoleQueue" is usually correct when connecting to the running MoleQueue.
    */
-  bool connectToServer(const QString &serverName = "MoleQueue");
+  bool connectToServer(const QString& serverName = "MoleQueue");
 
   /**
    * Request the list of queues and programs from the server. The signal
@@ -65,7 +65,7 @@ public slots:
    * @param job The job specification to be submitted to MoleQueue.
    * @return The local ID of the job submission request.
    */
-  int submitJob(const JobObject &job);
+  int submitJob(const JobObject& job);
 
   /**
    * Request information about a job. You should supply the MoleQueue ID that
@@ -88,9 +88,9 @@ public slots:
    * @param executable Executable to call with the filename as the first
    * argument. If the full path to the exectuble is not specified, it must be
    * in the user's $PATH.
-   * @param filePatterns A list of QRegExp objects that the handler can open.
-   * The QRegExp objects must use RegExp, RegExp2, WildCard, or WildCardUnix
-   * pattern syntax, else they will be ignored.
+   * @param filePatterns A list of QRegularExpression objects that the handler
+   * can open. The QRegularExpression objects may only use the new
+   * QRegularExpression pattern syntax.
    * @return The local ID of the request.
    * @note The executable is expected to use the following calling convention
    * to open files:
@@ -98,17 +98,17 @@ public slots:
 executable /absolute/path/to/selected/fileName
 ~~~
    */
-  int registerOpenWith(const QString &name, const QString &executable,
-                       const QList<QRegExp> &filePatterns);
+  int registerOpenWith(const QString& name, const QString& executable,
+                       const QList<QRegularExpression>& filePatterns);
 
   /**
    * Register a JSON-RPC 2.0 local socket file handler with MoleQueue.
    * @param name GUI name of the file handler.
    * @param rpcServer Name of the local socket that the server is listening on.
    * @param rpcMethod JSON-RPC 2.0 request method to use.
-   * @param filePatterns A list of QRegExp objects that the handler can open.
-   * The QRegExp objects must use RegExp, RegExp2, WildCard, or WildCardUnix
-   * pattern syntax, else they will be ignored.
+   * @param filePatterns A list of QRegularExpression objects that the handler
+   * can open. The QRegularExpression objects may only use the new
+   * QRegularExpression pattern syntax.
    * @return The local ID of the request.
    * @note The following JSON-RPC 2.0 request is sent to the server when the
    * handler is activated:
@@ -125,9 +125,9 @@ executable /absolute/path/to/selected/fileName
 ~~~
    * where <rpcMethod> is replaced by the @a rpcMethod argument.
    */
-  int registerOpenWith(const QString &name,
-                       const QString &rpcServer, const QString &rpcMethod,
-                       const QList<QRegExp> &filePatterns);
+  int registerOpenWith(const QString& name, const QString& rpcServer,
+                       const QString& rpcMethod,
+                       const QList<QRegularExpression>& filePatterns);
 
   /**
    * @brief Request a list of all file handler names.
@@ -141,7 +141,7 @@ executable /absolute/path/to/selected/fileName
    * @return The local ID of the request.
    * @sa listOpenWithNames
    */
-  int unregisterOpenWith(const QString &handlerName);
+  int unregisterOpenWith(const QString& handlerName);
 
   /**
    * @brief flush Flush all pending messages to the server.
@@ -215,16 +215,17 @@ signals:
 
 protected slots:
   /** Parse the response object and emit the appropriate signal(s). */
-  void processResult(const QJsonObject &response);
+  void processResult(const QJsonObject& response);
 
   /** Parse a notification object and emit the appropriate signal(s). */
-  void processNotification(const QJsonObject &notification);
+  void processNotification(const QJsonObject& notification);
 
   /** Parse an error object and emit the appropriate signal(s). */
-  void processError(const QJsonObject &notification);
+  void processError(const QJsonObject& notification);
 
 protected:
-  enum MessageType {
+  enum MessageType
+  {
     Invalid = -1,
     ListQueues,
     SubmitJob,
@@ -235,13 +236,13 @@ protected:
     UnregisterOpenWith
   };
 
-  JsonRpcClient *m_jsonRpcClient;
+  JsonRpcClient* m_jsonRpcClient;
   QHash<unsigned int, MessageType> m_requests;
 
 private:
-  QJsonObject buildRegisterOpenWithRequest(const QString &name,
-                                           const QList<QRegExp> &filePatterns,
-                                           const QJsonObject &handlerMethod);
+  QJsonObject buildRegisterOpenWithRequest(
+    const QString& name, const QList<QRegularExpression>& filePatterns,
+    const QJsonObject& handlerMethod);
 };
 
 } // End namespace MoleQueue

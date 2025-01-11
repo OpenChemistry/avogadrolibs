@@ -4,12 +4,12 @@
 ******************************************************************************/
 
 #include "banddialog.h"
+
 #include "ui_banddialog.h"
 
 #include <QSettings>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 BandDialog::BandDialog(QWidget* aParent, YaehmopSettings& yaehmopSettings)
   : QDialog(aParent), m_ui(new Ui::BandDialog),
@@ -18,6 +18,7 @@ BandDialog::BandDialog(QWidget* aParent, YaehmopSettings& yaehmopSettings)
   m_ui->setupUi(this);
 }
 
+// Destructor must be defined after Ui::BandDialog has been resovled
 BandDialog::~BandDialog() = default;
 
 int BandDialog::exec()
@@ -56,5 +57,4 @@ void BandDialog::accept()
   QDialog::accept();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

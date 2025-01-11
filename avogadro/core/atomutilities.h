@@ -8,14 +8,11 @@
 
 #include "avogadrocoreexport.h"
 
-#include "avogadrocoreexport.h"
-
 #include <avogadro/core/molecule.h>
 
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Atom;
 class Molecule;
 
@@ -41,7 +38,6 @@ private:
   ~AtomUtilities(); // Not implemented
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_QTGUI_ATOMUTILITIES_H

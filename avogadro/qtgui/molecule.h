@@ -73,6 +73,7 @@ public:
     UnitCell = 0x04,
     Selection = 0x08,
     Layers = 0x16,
+    Properties = 0x32,
     /** Operations that can affect the above types. */
     Added = 0x1024,
     Removed = 0x2048,
@@ -93,7 +94,8 @@ public:
    */
   virtual AtomType addAtom(unsigned char atomicNumber, Index uniqueId);
 
-  AtomType addAtom(unsigned char number, Vector3 position3d, Index uniqueId = MaxIndex);
+  AtomType addAtom(unsigned char number, Vector3 position3d,
+                   Index uniqueId = MaxIndex);
 
   /**
    * @brief Remove the specified atom from the molecule.
@@ -232,6 +234,8 @@ public:
 
   RWMolecule* undoMolecule();
 
+  bool isInteractive() const;
+
   void swapBond(Index a, Index b);
   void swapAtom(Index a, Index b);
 
@@ -242,6 +246,11 @@ public slots:
    */
   void emitChanged(unsigned int change);
 
+  /**
+   * @brief Request an update through the update() signal
+   */
+  void emitUpdate() const;
+
 signals:
   /**
    * @brief Indicates that the molecule has changed.
@@ -251,7 +260,13 @@ signals:
    * change & Atoms == true then atoms were changed in some way, and if
    * change & Removed == true then one or more atoms were removed.
    */
-  void changed(unsigned int change);
+  void changed(unsigned int change) const;
+
+  /**
+   * @brief Request an update of the molecule.
+   * (e.g., re-compute properties)
+   */
+  void update() const;
 
 private:
   Core::Array<Index> m_atomUniqueIds;

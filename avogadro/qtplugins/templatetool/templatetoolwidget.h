@@ -43,6 +43,8 @@ public:
   int denticity() const;
   std::vector<size_t>& selectedUIDs();
 
+  int currentTab() const;
+
 private slots:
   void elementChanged(int index);
   void updateElementCombo();
@@ -54,6 +56,7 @@ private slots:
 
   void typeChanged(int index);
   void ligandChanged(int index);
+  void groupChanged(int index);
 
   void otherLigandInsert(const QString& fileName, bool crystal);
 

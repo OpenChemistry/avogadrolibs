@@ -8,11 +8,7 @@
 #include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
 
-#include <iostream>
-
 namespace Avogadro::Core {
-
-using namespace std;
 
 DihedralIterator::DihedralIterator(const Molecule* mol)
   : m_current(0, 0, 0, 0), m_mol(mol)
@@ -21,7 +17,7 @@ DihedralIterator::DihedralIterator(const Molecule* mol)
 Dihedral DihedralIterator::begin()
 {
   if (m_mol == nullptr)
-    return make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 
   // Loop through bonds until we get one with a-b-c-d
   Graph graph = m_mol->graph();
@@ -49,7 +45,7 @@ Dihedral DihedralIterator::begin()
       // try to find a new d
       for (const auto maybeD : graph.neighbors(c)) {
         if (maybeD != b && maybeD != a) {
-          m_current = make_tuple(a, b, c, maybeD);
+          m_current = std::make_tuple(a, b, c, maybeD);
           return m_current; // done
         }
       }
@@ -59,13 +55,13 @@ Dihedral DihedralIterator::begin()
   }
 
   // we couldn't find a valid dihedral (e.g., small molecule, single atom)
-  return make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+  return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 }
 
 Dihedral DihedralIterator::operator++()
 {
   if (m_mol == nullptr)
-    return make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 
   Index a, b, c, d;
   std::tie(a, b, c, d) = m_current;
@@ -83,7 +79,7 @@ Dihedral DihedralIterator::operator++()
       // we have a valid current dihedral, try to find a new "d"
       for (const auto maybeD : graph.neighbors(c)) {
         if (maybeD != a && maybeD != b && maybeD > d) {
-          m_current = make_tuple(a, b, c, maybeD);
+          m_current = std::make_tuple(a, b, c, maybeD);
           return m_current;
         }
 
@@ -128,7 +124,7 @@ Dihedral DihedralIterator::operator++()
         // try to find a new d
         for (const auto maybeD : graph.neighbors(c)) {
           if (maybeD != b && maybeD != a) {
-            m_current = make_tuple(a, b, c, maybeD);
+            m_current = std::make_tuple(a, b, c, maybeD);
             return m_current; // done
           }
         }
@@ -147,7 +143,7 @@ Dihedral DihedralIterator::operator++()
   } while (valid && bcBond < bondCount);
 
   // can't find anything
-  return make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+  return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 } // end ++ operator
 
-} // namespace Avogadro
+} // namespace Avogadro::Core

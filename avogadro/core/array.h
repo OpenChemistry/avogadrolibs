@@ -11,8 +11,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 using std::size_t;
 
@@ -22,22 +21,22 @@ template <typename T>
 class ArrayRefContainer
 {
 public:
-  typedef T ValueType;
-  typedef std::vector<T> Parent; // The parent container for iterators etc
+  using ValueType = T;
+  using Parent = std::vector<T>; // The parent container for iterators etc
 
   // STL compatibility, forward typedefs from std::vector:
-  typedef typename Parent::value_type value_type;
-  typedef typename Parent::allocator_type allocator_type;
-  typedef typename Parent::reference reference;
-  typedef typename Parent::const_reference const_reference;
-  typedef typename Parent::pointer pointer;
-  typedef typename Parent::const_pointer const_pointer;
-  typedef typename Parent::iterator iterator;
-  typedef typename Parent::const_iterator const_iterator;
-  typedef typename Parent::reverse_iterator reverse_iterator;
-  typedef typename Parent::const_reverse_iterator const_reverse_iterator;
-  typedef typename Parent::difference_type difference_type;
-  typedef typename Parent::size_type size_type;
+  using value_type = typename Parent::value_type;
+  using allocator_type = typename Parent::allocator_type;
+  using reference = typename Parent::reference;
+  using const_reference = typename Parent::const_reference;
+  using pointer = typename Parent::pointer;
+  using const_pointer = typename Parent::const_pointer;
+  using iterator = typename Parent::iterator;
+  using const_iterator = typename Parent::const_iterator;
+  using reverse_iterator = typename Parent::reverse_iterator;
+  using const_reverse_iterator = typename Parent::const_reverse_iterator;
+  using difference_type = typename Parent::difference_type;
+  using size_type = typename Parent::size_type;
 
   ArrayRefContainer() : m_ref(1), data() {}
 
@@ -93,24 +92,22 @@ template <typename T>
 class Array
 {
 public:
-  typedef internal::ArrayRefContainer<T> Container;
-
-public:
-  typedef T ValueType;
+  using Container = internal::ArrayRefContainer<T>;
+  using ValueType = T;
 
   /** Typedefs for STL compatibility @{ */
-  typedef typename Container::value_type value_type;
-  typedef typename Container::allocator_type allocator_type;
-  typedef typename Container::reference reference;
-  typedef typename Container::const_reference const_reference;
-  typedef typename Container::pointer pointer;
-  typedef typename Container::const_pointer const_pointer;
-  typedef typename Container::iterator iterator;
-  typedef typename Container::const_iterator const_iterator;
-  typedef typename Container::reverse_iterator reverse_iterator;
-  typedef typename Container::const_reverse_iterator const_reverse_iterator;
-  typedef typename Container::difference_type difference_type;
-  typedef typename Container::size_type size_type;
+  using value_type = typename Container::value_type;
+  using allocator_type = typename Container::allocator_type;
+  using reference = typename Container::reference;
+  using const_reference = typename Container::const_reference;
+  using pointer = typename Container::pointer;
+  using const_pointer = typename Container::const_pointer;
+  using iterator = typename Container::iterator;
+  using const_iterator = typename Container::const_iterator;
+  using reverse_iterator = typename Container::reverse_iterator;
+  using const_reverse_iterator = typename Container::const_reverse_iterator;
+  using difference_type = typename Container::difference_type;
+  using size_type = typename Container::size_type;
   /** @} */
 
   /** Constructors for new containers. */
@@ -362,7 +359,7 @@ template <typename T>
 inline void Array<T>::detachWithCopy()
 {
   if (d && d->ref() != 1) {
-    Container* o = new Container(*d);
+    auto* o = new Container(*d);
     d->deref();
     d = o;
   }
@@ -421,7 +418,6 @@ inline void swap(Array<T>& lhs, Array<T>& rhs)
   lhs.swap(rhs);
 }
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_ARRAY_H

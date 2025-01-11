@@ -8,8 +8,14 @@
 
 #include "avogadrocoreexport.h"
 
-namespace Avogadro {
-namespace Core {
+#include "array.h"
+#include "vector.h"
+
+#include <string>
+
+namespace Avogadro::Core {
+
+class Molecule;
 
 /**
  * Enumeration of the crystal system.
@@ -38,8 +44,8 @@ enum CrystalSystem
 class AVOGADROCORE_EXPORT SpaceGroups
 {
 public:
-  SpaceGroups();
-  ~SpaceGroups();
+  SpaceGroups() = default;
+  ~SpaceGroups() = default;
 
   /**
    * @return The hall number of the matching space group string or 0 if not
@@ -120,7 +126,7 @@ public:
    */
   static void fillUnitCell(Molecule& mol, unsigned short hallNumber,
                            double cartTol = 1e-5, bool wrapToCell = true,
-                           bool allCopies = true);
+                           bool allCopies = false);
 
   /**
    * Reduce a cell to its asymmetric unit.
@@ -139,7 +145,6 @@ private:
   static const char* transformsString(unsigned short hallNumber);
 };
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_SPACE_GROUPS_H

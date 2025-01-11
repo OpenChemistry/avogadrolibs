@@ -27,6 +27,13 @@ const int ELEMENT_SELECTOR_TAG = 255;
 namespace Avogadro {
 namespace QtPlugins {
 
+enum TabType
+{
+  Elements = 0,
+  Ligands = 1,
+  FunctionalGroups = 2
+};
+
 enum LigandType
 {
   Monodentate = 0,
@@ -35,8 +42,7 @@ enum LigandType
   Tetradentate = 3,
   Hexadentate = 4,
   Haptic = 5,
-  FunctionalGroup = 6,
-  Clipboard = 7
+  Clipboard = 6
 };
 
 TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
@@ -79,6 +85,9 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   connect(m_ui->ligandComboBox, SIGNAL(currentIndexChanged(int)), this,
           SLOT(ligandChanged(int)));
 
+  connect(m_ui->groupComboBox, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(groupChanged(int)));
+
   // default coordination = octahedral
   QString currentCoord = settings.value("coordination", "6-oct").toString();
   int index = m_centers.indexOf(currentCoord);
@@ -94,6 +103,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   m_ui->typeComboBox->setCurrentIndex(ligandType);
   // update the ligand combo box
   typeChanged(ligandType);
+  groupChanged(0);
 }
 
 TemplateToolWidget::~TemplateToolWidget()
@@ -146,6 +156,11 @@ QString TemplateToolWidget::coordinationString() const
   return m_centers.at(m_ui->coordinationComboBox->currentIndex());
 }
 
+int TemplateToolWidget::currentTab() const
+{
+  return m_ui->tabWidget->currentIndex();
+}
+
 unsigned char TemplateToolWidget::ligand() const
 {
   return static_cast<unsigned char>(m_ui->ligandComboBox->currentIndex());
@@ -153,6 +168,17 @@ unsigned char TemplateToolWidget::ligand() const
 
 QString TemplateToolWidget::ligandString() const
 {
+  // first check which tab is open
+  int tabIndex = m_ui->tabWidget->currentIndex();
+
+  if (tabIndex == TabType::FunctionalGroups) {
+    // check if it's "other"
+    if (m_ui->groupComboBox->currentText() == "Other…")
+      return m_ligandPath;
+    else
+      return m_ui->groupComboBox->currentText();
+  }
+
   // tell us if we are using the clipboard
   if (m_ui->typeComboBox->currentIndex() == LigandType::Clipboard)
     return "Clipboard";
@@ -176,9 +202,34 @@ void TemplateToolWidget::coordinationChanged(int index)
   m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
 }
 
+void TemplateToolWidget::groupChanged(int index)
+{
+  // get the current name from the text
+  QString groupName = m_ui->groupComboBox->currentText();
+  QString iconName = groupName;
+  m_denticity = 1;
+
+  // check if it's "other"
+  if (index == m_ui->groupComboBox->count() - 1) {
+    QString path = "fragments/groups";
+
+    if (m_fragmentDialog != nullptr)
+      m_fragmentDialog->deleteLater();
+
+    m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
+    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
+            SLOT(otherLigandInsert(const QString&, bool)));
+    m_fragmentDialog->show();
+    return;
+  }
+
+  m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+}
+
 void TemplateToolWidget::ligandChanged(int index)
 {
-  if (index < 0 || index > m_ui->ligandComboBox->count())
+  // we need to check if it's "other"
+  if (index < 0 || index > m_ui->ligandComboBox->count() - 1)
     return;
 
   // get the icon name
@@ -210,9 +261,6 @@ void TemplateToolWidget::ligandChanged(int index)
         break;
       case LigandType::Haptic:
         path += "/ligands/haptic";
-        break;
-      case LigandType::FunctionalGroup:
-        path += "/groups";
         break;
     }
 
@@ -247,6 +295,9 @@ void TemplateToolWidget::otherLigandInsert(const QString& fileName,
   if (iconName.endsWith(".cjson"))
     iconName.chop(6);
   iconName += ".png";
+
+  // check which tab is active
+
   m_ui->ligandPreview->setIcon(QIcon(iconName));
 }
 
@@ -317,18 +368,6 @@ void TemplateToolWidget::typeChanged(int index)
                 << "eta5-cyclopentyl"
                 << "eta6-benzene"
                 << "eta-other";
-      m_denticity = 1;
-      break;
-    case LigandType::FunctionalGroup: // Functional Groups
-      ligandNames << "amide"
-                  << "carboxylate"
-                  << "ester"
-                  << "nitro"
-                  << "phenyl"
-                  << "sulfonate" << tr("Other…");
-      m_ligands = ligandNames;
-      // make sure last one is "other"
-      m_ligands.last() = "1-other";
       m_denticity = 1;
       break;
     case LigandType::Clipboard: // Clipboard

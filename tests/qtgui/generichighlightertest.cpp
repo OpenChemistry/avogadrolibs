@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -95,7 +84,7 @@ public:
   }
 };
 
-} // end anon namespace
+} // namespace
 
 // This currently seg faults...
 TEST(DISABLED_GenericHighlighterTest, exercise)
@@ -109,26 +98,17 @@ TEST(DISABLED_GenericHighlighterTest, exercise)
   QTextCharFormat format;
 
   GenericHighlighter::Rule& regexpRule = highlighter.addRule();
-  regexpRule.addPattern(
-    QRegExp("^.*regexp.*$", Qt::CaseSensitive, QRegExp::RegExp));
+  regexpRule.addPattern(QRegularExpression("^.*regexp.*$"));
   format.setForeground(Qt::blue);
   regexpRule.setFormat(format);
 
   GenericHighlighter::Rule& regexpCapRule = highlighter.addRule();
-  regexpCapRule.addPattern(
-    QRegExp("^.*(this)[^\n]*(that).*$", Qt::CaseSensitive, QRegExp::RegExp));
+  regexpCapRule.addPattern(QRegularExpression("^.*(this)[^\n]*(that).*$"));
   format.setForeground(Qt::yellow);
   regexpCapRule.setFormat(format);
 
-  GenericHighlighter::Rule& wildcardRule = highlighter.addRule();
-  wildcardRule.addPattern(
-    QRegExp("A w*red.", Qt::CaseSensitive, QRegExp::Wildcard));
-  format.setForeground(Qt::red);
-  wildcardRule.setFormat(format);
-
   GenericHighlighter::Rule& stringRule = highlighter.addRule();
-  stringRule.addPattern(QRegExp("This string will be green.", Qt::CaseSensitive,
-                                QRegExp::FixedString));
+  stringRule.addPattern(QRegularExpression("This string will be green."));
   format.setForeground(Qt::green);
   stringRule.setFormat(format);
 

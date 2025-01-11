@@ -11,8 +11,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 class JobObject;
 class MoleQueueWidget;
 
@@ -153,7 +152,7 @@ public slots:
   void done(int r) override;
 
 private:
-  typedef QPair<QObject*, const char*> MetaMethod;
+  using MetaMethod = QPair<QObject*, const char*>;
   /**
    * Wait @a timeout milliseconds for @a source to emit @a signal.
    * @param signalList List of QObject* and const char* (signals) to listen for.
@@ -169,6 +168,6 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MoleQueueDialog::SubmitOptions)
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue
+
 #endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEDIALOG_H

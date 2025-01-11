@@ -29,7 +29,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="centersTab">
       <property name="minimumSize">
@@ -358,11 +358,6 @@
            </item>
            <item>
             <property name="text">
-             <string>Functional Groups</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>From Clipboard</string>
             </property>
            </item>
@@ -449,6 +444,134 @@
           <size>
            <width>20</width>
            <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Groups</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Group:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QComboBox" name="groupComboBox">
+           <item>
+            <property name="text">
+             <string>amide</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>carboxylate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ester</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ethylene</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ethyne</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>nitro</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>phenyl</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>phosphate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>sulfonate</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Other…</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QToolButton" name="groupPreview">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>64</width>
+             <height>64</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>

@@ -3,30 +3,24 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include <algorithm> // for std::count()
-#include <cassert>
-#include <cctype> // for isdigit()
-#include <iostream>
+#include "spacegroups.h"
 
-#include "array.h"
 #include "crystaltools.h"
 #include "molecule.h"
 #include "spacegroupdata.h"
 #include "unitcell.h"
 #include "utilities.h"
-#include "vector.h"
 
-#include "spacegroups.h"
+#include <algorithm> // for std::count()
+#include <cassert>
+#include <cctype> // for isdigit()
+#include <iostream>
 
 namespace Avogadro::Core {
 
-SpaceGroups::SpaceGroups() {}
-
-SpaceGroups::~SpaceGroups() {}
-
 unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
-  unsigned short hall = 0; // can't find anything
+  unsigned short hall = 0;               // can't find anything
   const unsigned short hall_count = 531; // 530 but first one is empty
   // some files use " instead of = for the space group symbol
   std::string sg = spaceGroup;
@@ -281,6 +275,9 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
     for (Index j = 1; j < newAtoms.size(); ++j) {
       // The new atoms are in fractional coordinates. Convert to cartesian.
       Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
+      // if we are wrapping to the cell, we need to wrap the new atom
+      if (wrapToCell)
+        newCandidate = uc->wrapCartesian(newCandidate);
 
       // If there is already an atom in this location within a
       // certain tolerance, do not add the atom.
@@ -304,10 +301,7 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
     }
   }
 
-  if (wrapToCell)
-    CrystalTools::wrapAtomsToUnitCell(mol);
-
-  // Now we need to generate any copies on the unit boundary
+  // Now we generate any copies on the unit boundary
   // We need to loop through all the atoms again
   // if a fractional coordinate contains 0.0, we need to generate a copy
   // of the atom at 1.0
@@ -356,9 +350,9 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
         fabs(pos[2] - 1.0) < 0.001)
       newAtoms.push_back(Vector3(0.0, 0.0, 0.0));
 
-    for (Index j = 0; j < newAtoms.size(); ++j) {
+    for (const auto& atomMat : newAtoms) {
       // The new atoms are in fractional coordinates. Convert to cartesian.
-      Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
+      Vector3 newCandidate = uc->toCartesian(atomMat);
 
       // If there is already an atom in this location within a
       // certain tolerance, do not add the atom.
@@ -370,8 +364,10 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
 
         Real distance = (mol.atomPosition3d(k) - newCandidate).norm();
 
-        if (distance <= cartTol)
+        if (distance <= cartTol) {
           atomAlreadyPresent = true;
+          break;
+        }
       }
 
       // If there is already an atom present here, just continue

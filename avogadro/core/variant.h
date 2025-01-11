@@ -10,11 +10,11 @@
 
 #include "avogadrocore.h"
 #include "matrix.h"
+#include "vector.h"
 
 #include <string>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Variant variant.h <avogadro/core/variant.h>
@@ -38,6 +38,7 @@ public:
     Double,
     Pointer,
     String,
+    Vector,
     Matrix
   };
 
@@ -51,73 +52,88 @@ public:
   /** Creates a new copy of @p variant. */
   inline Variant(const Variant& variant);
 
+  /** Creates a variant to store a 3D vector */
+  Variant(double x, double y, double z);
+
   /** Destroys the variant object. */
   inline ~Variant();
 
-  /** Returns variant's type. */
+  /** @return variant's type. */
   inline Type type() const;
 
-  /** Returns \c true if the variant is null. */
+  /** @return \c true if the variant is null. */
   inline bool isNull() const;
 
   /** Sets the value of the variant to @p value. */
   template <typename T>
   bool setValue(T value);
 
-  /** Returns the value of the variant in the type given by \c T. */
+  /** Sets the value of the variant to a 3D vector */
+  bool setValue(double x, double y, double z);
+
+  /** Sets the value of the variant to a vector<double> */
+  bool setValue(const std::vector<double>& v);
+
+  /** @return the value of the variant in the type given by \c T. */
   template <typename T>
   T value() const;
 
   /** Clears the variant's data and sets the variant to null. */
   inline void clear();
 
-  /** Returns the value of the variant as a \c bool. */
+  /** @return the value of the variant as a \c bool. */
   inline bool toBool() const;
 
-  /** Returns the value of the variant as a \c char. */
+  /** @return the value of the variant as a \c char. */
   inline char toChar() const;
 
-  /** Returns the value of the variant as an \c unsigned \c char. */
+  /** @return the value of the variant as an \c unsigned \c char. */
   inline unsigned char toUChar() const;
 
-  /** Returns the value of the variant as a \c short. */
+  /** @return the value of the variant as a \c short. */
   inline short toShort() const;
 
-  /** Returns the value of the variant as an \c unsigned \c short. */
+  /** @return the value of the variant as an \c unsigned \c short. */
   inline unsigned short toUShort() const;
 
-  /** Returns the value of the variant as an \c int. */
+  /** @return the value of the variant as an \c int. */
   inline int toInt() const;
 
-  /** Returns the value of the variant as an \c unsigned \c int. */
+  /** @return the value of the variant as an \c unsigned \c int. */
   inline unsigned int toUInt() const;
 
-  /**  Returns the value of the variant as a \c long. */
+  /**  @return the value of the variant as a \c long. */
   inline long toLong() const;
 
-  /**  Returns the value of the variant as an \c unsigned \c long. */
+  /**  @return the value of the variant as an \c unsigned \c long. */
   inline unsigned long toULong() const;
 
-  /** Returns the value of the variant as a \c float. */
+  /** @return the value of the variant as a \c float. */
   inline float toFloat() const;
 
-  /** Returns the value of the variant as a \c double. */
+  /** @return the value of the variant as a \c double. */
   inline double toDouble() const;
 
-  /** Returns the value of the variant as a \c Real. */
+  /** @return the value of the variant as a \c Real. */
   inline Real toReal() const;
 
-  /** Returns the value of the variant as a pointer. */
+  /** @return the value of the variant as a pointer. */
   inline void* toPointer() const;
 
-  /** Returns the value of the variant as a string. */
+  /** @return the value of the variant as a string. */
   inline std::string toString() const;
 
-  /** Returns the value of the variant as a MatrixX. */
+  /** @return the value of the variant as a MatrixX. */
   inline MatrixX toMatrix() const;
 
+  /** @return the value of the variant as a Vector3 */
+  inline Vector3 toVector3() const;
+
+  /** @return the value as a vector<double> */
+  inline std::vector<double> toList() const;
+
   /**
-   * Returns a reference to the value of the variant as a MatrixX.
+   * @return a reference to the value of the variant as a MatrixX.
    * This method will not perform any casting -- if type() is not exactly
    * MatrixX, the function will fail and return a reference to an empty MatrixX.
    */
@@ -142,12 +158,12 @@ private:
     double _double;
     void* pointer;
     std::string* string;
+    Vector3* vector;
     MatrixX* matrix;
   } m_value;
 };
 
-} // end Core namespace
-} // end Avogadro namespace
+} // namespace Avogadro::Core
 
 #include "variant-inline.h"
 

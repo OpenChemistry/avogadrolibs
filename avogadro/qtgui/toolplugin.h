@@ -65,6 +65,11 @@ public:
   virtual QAction* activateAction() const = 0;
 
   /**
+   * Set the tool icon (based on dark / light theme).
+   */
+  virtual void setIcon(bool darkTheme = false) = 0;
+
+  /**
    * @return A QWidget that will be displayed to the user while this tool is
    * active.
    */
@@ -131,6 +136,13 @@ signals:
    * @sa handleCommand
    */
   void registerCommand(QString command, QString description);
+
+  /**
+   * Request a specific display type (or types) are made active.
+   * This can be useful when loading a specific type of data that
+   * would be most readily viewed with a specialized view.
+   */
+  void requestActiveDisplayTypes(QStringList displayTypes);
 
 public slots:
   /**

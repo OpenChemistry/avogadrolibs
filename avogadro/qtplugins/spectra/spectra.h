@@ -10,12 +10,16 @@
 
 class QAction;
 class QDialog;
-class QTimer;
 
 namespace Avogadro {
+
+namespace VTK {
+class ChartDialog;
+}
+
 namespace QtPlugins {
 
-class VibrationDialog;
+class SpectraDialog;
 
 /**
  * @brief The Spectra plugin handles vibrations and spectra.
@@ -27,14 +31,11 @@ class Spectra : public QtGui::ExtensionPlugin
 
 public:
   explicit Spectra(QObject* parent = nullptr);
-  ~Spectra() override;
+  ~Spectra() override = default;
 
-  QString name() const override { return tr("Spectra and Vibrations"); }
+  QString name() const override { return tr("Spectra"); }
 
-  QString description() const override
-  {
-    return tr("Display spectra and vibrational modes.");
-  }
+  QString description() const override { return tr("Display spectra plots."); }
 
   QList<QAction*> actions() const override;
 
@@ -42,35 +43,19 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
-  bool handleCommand(const QString& command,
-                     const QVariantMap& options) override;
-
-  void registerCommands() override;
-
 public slots:
-  void setMode(int mode);
-  void setAmplitude(int amplitude);
-  void startVibrationAnimation();
-  void stopVibrationAnimation();
-  void openDialog();
 
-private slots:
-  void advanceFrame();
+  void openDialog();
+  void moleculeChanged(unsigned int changes);
 
 private:
+  void gatherSpectra();
+
   QList<QAction*> m_actions;
-
   QtGui::Molecule* m_molecule;
-
-  VibrationDialog* m_dialog;
-
-  QTimer* m_timer;
-
-  int m_currentFrame;
-  int m_totalFrames;
-  int m_mode;
-  int m_amplitude;
+  SpectraDialog* m_dialog;
 };
+
 } // namespace QtPlugins
 } // namespace Avogadro
 

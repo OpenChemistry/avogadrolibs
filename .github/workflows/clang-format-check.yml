@@ -8,7 +8,7 @@ jobs:
     if: ${{ github.ref != 'refs/heads/master' }}
     steps:
     - name: 'Install clang-format'
-      run: sudo apt-get -qq install clang-format-13
+      run: sudo apt-get -qq install clang-format-16
 
     - uses: actions/checkout@v4
 
@@ -17,23 +17,22 @@ jobs:
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/openchemistry/avogadrolibs
         git fetch origin master:master
 
-        echo `which clang-format-diff-13`
         export MASTER_SHA=`cat .git/refs/heads/master`
         echo MASTER_SHA=${MASTER_SHA}
 
         git diff `cat .git/refs/heads/master` --name-only
-        DIFF=`git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-13 -p1`
+        DIFF=`git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-16 -p1`
         if [ -z "$DIFF" ]; then
           printf "clang-format-diff reports no problems"
           exit 0
         else
-          git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-13 -p1 >${{ runner.workspace }}/clang-format.diff
+          git diff -U0 ${MASTER_SHA} -- '*.h' '*.cpp' | clang-format-diff-16 -p1 >${{ runner.workspace }}/clang-format.diff
           exit 1
         fi
 
     - name: Upload patch
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ${{ runner.workspace }}/clang-format.diff
         name: clang-format.diff

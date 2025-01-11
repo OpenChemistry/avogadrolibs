@@ -1,8 +1,5 @@
-if(QT_VERSION EQUAL 6)
-  find_package(Qt6 COMPONENTS Core5Compat REQUIRED)
-endif()
-
 set(openbabel_srcs
+  conformersearchdialog.cpp
   obcharges.cpp
   obfileformat.cpp
   obforcefielddialog.cpp
@@ -11,6 +8,7 @@ set(openbabel_srcs
 )
 
 set(openbabel_uis
+  conformersearchdialog.ui
   obforcefielddialog.ui
 )
 
@@ -24,6 +22,3 @@ avogadro_plugin(OpenBabel
 )
 
 target_link_libraries(OpenBabel PRIVATE Avogadro::IO Avogadro::Calc nlohmann_json::nlohmann_json)
-if(QT_VERSION EQUAL 6)
-  target_link_libraries(OpenBabel PRIVATE Qt6::Core5Compat)
-endif()

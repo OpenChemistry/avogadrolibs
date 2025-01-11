@@ -13,8 +13,7 @@
 
 #include "client/jobobject.h"
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 namespace Ui {
 class MoleQueueWidget;
@@ -197,7 +196,6 @@ private:
   unsigned int m_moleQueueId;
 };
 
-} // namespace MoleQueue
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue
 
 #endif // AVOGADRO_MOLEQUEUE_MOLEQUEUEWIDGET_H

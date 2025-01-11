@@ -6,14 +6,13 @@
 #ifndef AVOGADRO_QTPLUGINS_YAEHMOPBANDDIALOG_H
 #define AVOGADRO_QTPLUGINS_YAEHMOPBANDDIALOG_H
 
-#include <memory>
+#include "yaehmopsettings.h"
 
 #include <QDialog>
 
-#include "yaehmopsettings.h"
+#include <memory>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace Ui {
 class BandDialog;
@@ -41,6 +40,6 @@ private:
   YaehmopSettings& m_yaehmopSettings;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_YAEHMOPBANDDIALOG_H

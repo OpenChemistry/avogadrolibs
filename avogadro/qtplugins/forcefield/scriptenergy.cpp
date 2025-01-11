@@ -13,11 +13,14 @@
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/pdbformat.h>
+#include <avogadro/io/sdfformat.h>
 #include <avogadro/io/xyzformat.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QScopedPointer>
+
+#include <QRegularExpression>
 
 #include <qjsonarray.h>
 #include <qjsondocument.h>
@@ -115,17 +118,20 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
   QByteArray input;
   for (Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
-    input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
-             QString::number(x[i + 2]) + "\n";
+    input += QString::number(x[i]).toUtf8() + " " +
+             QString::number(x[i + 1]).toUtf8() + " " +
+             QString::number(x[i + 2]).toUtf8() + "\n";
   }
+  // qDebug() << " wrote coords ";
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
+  // qDebug() << " got result " << result;
 
   // go through lines in result until we see "AvogadroEnergy: "
   QStringList lines = QString(result).remove('\r').split('\n');
   double energy = 0.0;
   for (auto line : lines) {
     if (line.startsWith("AvogadroEnergy:")) {
-      QStringList items = line.split(" ", QString::SkipEmptyParts);
+      QStringList items = line.split(" ", Qt::SkipEmptyParts);
       if (items.size() > 1) {
         energy = items[1].toDouble();
         break;
@@ -148,8 +154,9 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   QByteArray input;
   for (Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
-    input += QString::number(x[i]) + " " + QString::number(x[i + 1]) + " " +
-             QString::number(x[i + 2]) + "\n";
+    input += QString::number(x[i]).toUtf8() + " " +
+             QString::number(x[i + 1]).toUtf8() + " " +
+             QString::number(x[i + 2]).toUtf8() + "\n";
   }
   QByteArray result = m_interpreter->asyncWriteAndResponse(input);
 
@@ -165,7 +172,7 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
     }
 
     if (readingGrad) {
-      QStringList items = line.split(" ", QString::SkipEmptyParts);
+      QStringList items = line.split(" ", Qt::SkipEmptyParts);
       if (items.size() == 3) {
         grad[i] = items[0].toDouble();
         grad[i + 1] = items[1].toDouble();
@@ -187,10 +194,12 @@ ScriptEnergy::Format ScriptEnergy::stringToFormat(const std::string& str)
     return Cjson;
   else if (str == "cml")
     return Cml;
-  else if (str == "mdl" || str == "mol" || str == "sdf" || str == "sd")
+  else if (str == "mdl" || str == "mol")
     return Mdl;
   else if (str == "pdb")
     return Pdb;
+  else if (str == "sdf")
+    return Sdf;
   else if (str == "xyz")
     return Xyz;
   return NotUsed;
@@ -207,6 +216,8 @@ Io::FileFormat* ScriptEnergy::createFileFormat(ScriptEnergy::Format fmt)
       return new Io::MdlFormat;
     case Pdb:
       return new Io::PdbFormat;
+    case Sdf:
+      return new Io::SdfFormat;
     case Xyz:
       return new Io::XyzFormat;
     default:
@@ -316,7 +327,7 @@ void ScriptEnergy::readMetaData()
   m_inputFormat = inputFormatTmp;
 
   // check ions, radicals, unit cells
-  /*
+  /* e.g.,
         "unitCell": False,
         "gradients": True,
         "ion": False,
@@ -365,7 +376,8 @@ void ScriptEnergy::processElementString(const QString& str)
   QString str2(str);
   str2.replace(',', ' ');
   // then split on whitespace
-  QStringList strList = str2.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+  QStringList strList =
+    str2.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
   foreach (QString sstr, strList) {
     // these should be numbers or ranges (e.g., 1-84)
     if (sstr.contains('-')) {

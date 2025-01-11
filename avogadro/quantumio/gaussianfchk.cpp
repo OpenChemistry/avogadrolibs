@@ -68,6 +68,16 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
+  // set the total charge
+  molecule.setData("totalCharge", m_charge);
+  // set the spin multiplicity
+  molecule.setData("totalSpinMultiplicity", m_spin);
+  // dipole moment
+  // TODO: This should be a Vector3d
+  Core::Variant dipole(m_dipoleMoment.x(), m_dipoleMoment.y(),
+                       m_dipoleMoment.z());
+  molecule.setData("dipoleMoment", dipole);
+
   // Do simple bond perception.
   molecule.perceiveBondsSimple();
   molecule.perceiveBondOrders();
@@ -105,9 +115,14 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (key == "Number of atoms" && list.size() > 1) {
     m_numAtoms = Core::lexicalCast<int>(list[1]);
   } else if (key == "Charge" && list.size() > 1) {
-    m_charge = Core::lexicalCast<signed char>(list[1]);
+    m_charge = Core::lexicalCast<int>(list[1]);
   } else if (key == "Multiplicity" && list.size() > 1) {
-    m_spin = Core::lexicalCast<char>(list[1]);
+    m_spin = Core::lexicalCast<int>(list[1]);
+  } else if (key == "Dipole Moment" && list.size() > 2) {
+    vector<double> dipole = readArrayD(in, Core::lexicalCast<int>(list[2]));
+    m_dipoleMoment = Vector3(dipole[0], dipole[1], dipole[2]);
+    // convert from au
+    m_dipoleMoment *= 2.541746;
   } else if (key == "Number of electrons" && list.size() > 1) {
     m_electrons = Core::lexicalCast<int>(list[1]);
   } else if (key == "Number of alpha electrons" && list.size() > 1) {
@@ -311,14 +326,20 @@ void GaussianFchk::load(GaussianSet* basis)
       basis->setMolecularOrbitals(m_alphaMOcoeffs, BasisSet::Alpha);
     if (m_betaMOcoeffs.size())
       basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
+
     if (m_density.rows())
       basis->setDensityMatrix(m_density);
     if (m_spinDensity.rows())
       basis->setSpinDensityMatrix(m_spinDensity);
-    if (m_alphaOrbitalEnergy.size())
-      basis->setMolecularOrbitalEnergy(m_alphaOrbitalEnergy, BasisSet::Alpha);
-    if (m_betaOrbitalEnergy.size())
-      basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
+
+    if (m_orbitalEnergy.size()) // restricted calculation
+      basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
+    else {
+      if (m_alphaOrbitalEnergy.size())
+        basis->setMolecularOrbitalEnergy(m_alphaOrbitalEnergy, BasisSet::Alpha);
+      if (m_betaOrbitalEnergy.size())
+        basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
+    }
   } else {
     cout << "Basis set is not valid!\n";
   }

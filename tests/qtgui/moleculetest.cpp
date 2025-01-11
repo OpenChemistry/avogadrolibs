@@ -1,17 +1,6 @@
 /******************************************************************************
-
   This source file is part of the Avogadro project.
-
-  Copyright 2013 Kitware, Inc.
-
-  This source code is released under the New BSD License, (the "License").
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #include <gtest/gtest.h>
@@ -26,15 +15,15 @@
 
 #include "utils.h"
 
-using Avogadro::QtGui::Molecule;
-using Avogadro::QtGui::PersistentAtom;
-using Avogadro::QtGui::PersistentBond;
+using Avogadro::Index;
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
 using Avogadro::Core::Mesh;
-using Avogadro::Index;
+using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::PersistentAtom;
+using Avogadro::QtGui::PersistentBond;
 
 class MoleculeTest : public testing::Test
 {
@@ -470,15 +459,15 @@ TEST_F(MoleculeTest, centerOfGeometry)
   a = mol.addAtom(1);
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(0.0, 1.0, -1.0));
   center = mol.centerOfGeometry();
-  EXPECT_DOUBLE_EQ(center.x(), 1./3.);
-  EXPECT_DOUBLE_EQ(center.y(), 1./3.);
-  EXPECT_DOUBLE_EQ(center.z(), -1./3.);
+  EXPECT_DOUBLE_EQ(center.x(), 1. / 3.);
+  EXPECT_DOUBLE_EQ(center.y(), 1. / 3.);
+  EXPECT_DOUBLE_EQ(center.z(), -1. / 3.);
 
   a8.setAtomicNumber(9);
   center = mol.centerOfGeometry();
-  EXPECT_DOUBLE_EQ(center.x(), 1./3.);
-  EXPECT_DOUBLE_EQ(center.y(), 1./3.);
-  EXPECT_DOUBLE_EQ(center.z(), -1./3.);
+  EXPECT_DOUBLE_EQ(center.x(), 1. / 3.);
+  EXPECT_DOUBLE_EQ(center.y(), 1. / 3.);
+  EXPECT_DOUBLE_EQ(center.z(), -1. / 3.);
 }
 
 TEST_F(MoleculeTest, centerOfMass)
@@ -496,22 +485,38 @@ TEST_F(MoleculeTest, centerOfMass)
   Atom a = mol.addAtom(2);
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(2.0, 0.0, 0.0));
   center = mol.centerOfMass();
-  EXPECT_DOUBLE_EQ(center.x(), (2.0 * Avogadro::Core::Elements::mass(2) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.x(),
+                   (2.0 * Avogadro::Core::Elements::mass(2) / mol.atomCount()) /
+                     mol.mass());
   EXPECT_DOUBLE_EQ(center.y(), 0.0);
   EXPECT_DOUBLE_EQ(center.z(), 0.0);
 
   a = mol.addAtom(3);
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(1.0, 3.0, -4.0));
   center = mol.centerOfMass();
-  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) + 1.0 * Avogadro::Core::Elements::mass(3)) / mol.atomCount()) / mol.mass());
-  EXPECT_DOUBLE_EQ(center.y(), (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
-  EXPECT_DOUBLE_EQ(center.z(), (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) +
+                                 1.0 * Avogadro::Core::Elements::mass(3)) /
+                                mol.atomCount()) /
+                                 mol.mass());
+  EXPECT_DOUBLE_EQ(center.y(),
+                   (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) /
+                     mol.mass());
+  EXPECT_DOUBLE_EQ(
+    center.z(),
+    (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
 
   a8.setAtomicNumber(9);
   center = mol.centerOfMass();
-  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) + 1.0 * Avogadro::Core::Elements::mass(3)) / mol.atomCount()) / mol.mass());
-  EXPECT_DOUBLE_EQ(center.y(), (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
-  EXPECT_DOUBLE_EQ(center.z(), (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
+  EXPECT_DOUBLE_EQ(center.x(), ((2.0 * Avogadro::Core::Elements::mass(2) +
+                                 1.0 * Avogadro::Core::Elements::mass(3)) /
+                                mol.atomCount()) /
+                                 mol.mass());
+  EXPECT_DOUBLE_EQ(center.y(),
+                   (3.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) /
+                     mol.mass());
+  EXPECT_DOUBLE_EQ(
+    center.z(),
+    (-4.0 * Avogadro::Core::Elements::mass(3) / mol.atomCount()) / mol.mass());
 }
 
 TEST_F(MoleculeTest, radius)

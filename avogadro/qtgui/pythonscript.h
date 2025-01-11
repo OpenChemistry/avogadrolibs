@@ -77,7 +77,7 @@ public:
    * - The "interpreters/python" QSettings value
    * - The path specified in avogadropython.h.
    */
-  void setDefaultPythonInterpretor();
+  void setDefaultPythonInterpreter();
 
   /**
    * Start a new process to execute:

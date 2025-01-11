@@ -9,8 +9,7 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Detect and render close contacts between atoms.
@@ -22,19 +21,23 @@ class CloseContacts : public QtGui::ScenePlugin
 
 public:
   explicit CloseContacts(QObject* parent = nullptr);
-  ~CloseContacts() override;
+  ~CloseContacts() override = default;
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
 
-  QString name() const override { return tr("Close Contacts", "rendering of non-covalent close contacts"); }
+  QString name() const override
+  {
+    return tr("Close Contacts", "rendering of non-covalent close contacts");
+  }
 
   QString description() const override
   {
     return tr("Render close contacts between atoms.");
   }
-  
+
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {
@@ -47,17 +50,16 @@ public slots:
 
 private:
   std::string m_name = "Close Contacts";
-  
-  const std::array<QString, 3> INTERACTION_NAMES = {
-	tr("Contact"), tr("Salt Bridge"), tr("Repulsive")
-  };
+
+  const std::array<QString, 3> INTERACTION_NAMES = { tr("Contact"),
+                                                     tr("Salt Bridge"),
+                                                     tr("Repulsive") };
 
   std::array<double, 3> m_maximumDistances;
   std::array<Vector3ub, 3> m_lineColors;
   std::array<float, 3> m_lineWidths;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // end namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CLOSECONTACTS_H

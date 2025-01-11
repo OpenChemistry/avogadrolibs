@@ -31,6 +31,7 @@ public:
   QString description() const override { return tr("Render polygon meshes."); }
 
   QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
 
   DefaultBehavior defaultBehavior() const override
   {

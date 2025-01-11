@@ -1,7 +1,6 @@
 /******************************************************************************
   This source file is part of the Avogadro project.
-
-  This source code is released under the New BSD License, (the "License").
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
 #ifndef AVOGADRO_QTPLUGINS_BONDING_H
@@ -16,8 +15,7 @@ namespace Ui {
 class BondingDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The Bonding class performs bonding operations on demand.
@@ -27,7 +25,7 @@ class Bonding : public QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit Bonding(QObject* parent_ = nullptr);
-  ~Bonding() override;
+  ~Bonding() override = default;
 
   QString name() const override { return tr("Bonding"); }
 
@@ -72,7 +70,6 @@ private:
   Ui::BondingDialog* m_ui;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_BONDING_H

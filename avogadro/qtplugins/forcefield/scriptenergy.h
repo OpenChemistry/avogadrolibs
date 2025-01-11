@@ -39,8 +39,9 @@ public:
     NotUsed,
     Cjson,
     Cml,
-    Mdl, // sdf
+    Mdl,
     Pdb,
+    Sdf,
     Xyz
   };
 
@@ -60,9 +61,9 @@ public:
 
   Core::Molecule::ElementMask elements() const override { return m_elements; }
   bool supportsGradients() const { return m_gradients; }
-  bool supportsIons() const { return m_ions; }
-  bool supportsRadicals() const { return m_radicals; }
-  bool supportsUnitCells() const { return m_unitCells; }
+  bool acceptsIons() const override { return m_ions; }
+  bool acceptsRadicals() const override { return m_radicals; }
+  bool acceptsUnitCell() const override { return m_unitCells; }
 
   // This will check if the molecule is valid for this script
   // and then start the external process

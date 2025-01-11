@@ -4,17 +4,18 @@
 ******************************************************************************/
 
 #include "symmetrywidget.h"
-#include "richtextdelegate.h"
 #include "symmetryutil.h"
 #include "ui_symmetrywidget.h"
 
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/richtextdelegate.h>
 
 #include <QtCore/QDebug>
 
 #include <QtWidgets/QPlainTextEdit>
 
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::RichTextDelegate;
 
 using namespace msym;
 using namespace Avogadro::QtPlugins::SymmetryUtil;
@@ -62,18 +63,11 @@ msym_thresholds_t sloppy_thresholds = {
 };
 
 SymmetryWidget::SymmetryWidget(QWidget* parent_)
-  : QWidget(parent_)
-  , m_ui(new Ui::SymmetryWidget)
-  , m_molecule(nullptr)
-  , m_equivalenceTreeModel(new QStandardItemModel(this))
-  , m_operationsTableModel(new OperationsTableModel(this))
-  , m_subgroupsTreeModel(new QStandardItemModel(this))
-  , m_es(nullptr)
-  , m_sops(nullptr)
-  , m_sg(nullptr)
-  , m_sopsl(0)
-  , m_sgl(0)
-  , m_radius(0.0)
+  : QWidget(parent_), m_ui(new Ui::SymmetryWidget), m_molecule(nullptr),
+    m_equivalenceTreeModel(new QStandardItemModel(this)),
+    m_operationsTableModel(new OperationsTableModel(this)),
+    m_subgroupsTreeModel(new QStandardItemModel(this)), m_es(nullptr),
+    m_sops(nullptr), m_sg(nullptr), m_sopsl(0), m_sgl(0), m_radius(0.0)
 {
   setWindowFlags(Qt::Dialog);
   m_ui->setupUi(this);
@@ -87,10 +81,9 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
   m_ui->subgroupsTree->setModel(m_subgroupsTreeModel);
   m_ui->subgroupsTree->setItemDelegateForColumn(0, new RichTextDelegate(this));
 
-  connect(
-    m_ui->detectSymmetryButton, SIGNAL(clicked()), SIGNAL(detectSymmetry()));
-  connect(m_ui->symmetrizeMoleculeButton,
-          SIGNAL(clicked()),
+  connect(m_ui->detectSymmetryButton, SIGNAL(clicked()),
+          SIGNAL(detectSymmetry()));
+  connect(m_ui->symmetrizeMoleculeButton, SIGNAL(clicked()),
           SIGNAL(symmetrizeMolecule()));
 
   connect(
@@ -138,8 +131,7 @@ void SymmetryWidget::moleculeChanged(unsigned int changes)
 }
 
 void SymmetryWidget::operationsSelectionChanged(
-  const QItemSelection& selected,
-  const QItemSelection& deselected)
+  const QItemSelection& selected, const QItemSelection& deselected)
 {
 
   if (!m_molecule)
@@ -240,24 +232,23 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
     QModelIndex left = m_operationsTableModel->index(row, 0);
     QModelIndex right = m_operationsTableModel->index(
       row, m_operationsTableModel->columnCount(left) - 1);
-    //if (!left.isValid() || !right.isValid())
-    //  qDebug() << "invalid index " << j;
+    // if (!left.isValid() || !right.isValid())
+    //   qDebug() << "invalid index " << j;
     QItemSelection sel(left, right);
 
     selection.merge(sel, QItemSelectionModel::Select);
   }
 
   QModelIndexList tmp = selection.indexes();
-  //foreach (QModelIndex j, tmp) {
-  //  qDebug() << "selecting " << j.row() << " " << j.column();
-  //}
+  // foreach (QModelIndex j, tmp) {
+  //   qDebug() << "selecting " << j.row() << " " << j.column();
+  // }
 
   selectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
 }
 
 void SymmetryWidget::equivalenceSelectionChanged(
-  const QItemSelection& selected,
-  const QItemSelection& deselected)
+  const QItemSelection& selected, const QItemSelection& deselected)
 {
   QModelIndex i =
     m_ui->equivalenceTree->selectionModel()->selectedIndexes().first();
@@ -310,11 +301,11 @@ void SymmetryWidget::setCenterOfMass(double cm[3])
 void SymmetryWidget::setPointGroupSymbol(QString pg)
 {
   m_ui->pointGroupLabel->setText(pg);
+  m_molecule->setData("pointgroup", pg.toStdString());
 }
 
 void SymmetryWidget::setSymmetryOperations(
-  int sopsl,
-  const msym::msym_symmetry_operation_t* sops)
+  int sopsl, const msym::msym_symmetry_operation_t* sops)
 {
   m_sops = sops;
   m_sopsl = sopsl;
@@ -373,8 +364,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
       auto* const child = new QStandardItem;
       child->setText(pointGroupSymbol(generator->name));
 
-      child->setData(static_cast<int>(generator - m_sg),
-                     Qt::UserRole);
+      child->setData(static_cast<int>(generator - m_sg), Qt::UserRole);
       parent->appendRow(child);
     }
   }
@@ -400,4 +390,4 @@ msym_thresholds_t* SymmetryWidget::getThresholds() const
   return thresholds;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

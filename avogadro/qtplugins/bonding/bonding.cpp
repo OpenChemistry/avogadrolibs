@@ -21,7 +21,7 @@ namespace Avogadro::QtPlugins {
 using Core::Array;
 using Core::Elements;
 
-typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
+using NeighborListType = Avogadro::Core::Array<Avogadro::Core::Bond>;
 
 Bonding::Bonding(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_),
@@ -40,6 +40,7 @@ Bonding::Bonding(QObject* parent_)
   m_action->setProperty("menu priority", 750);
   m_createBondsAction->setProperty("menu priority", 740);
   m_orderAction->setProperty("menu priority", 735);
+  m_clearAction->setShortcut(QKeySequence("Ctrl+Shift+B"));
   m_clearAction->setProperty("menu priority", 720);
 
   connect(m_action, SIGNAL(triggered()), SLOT(bond()));
@@ -48,8 +49,6 @@ Bonding::Bonding(QObject* parent_)
   connect(m_clearAction, SIGNAL(triggered()), SLOT(clearBonds()));
   connect(m_configAction, SIGNAL(triggered()), SLOT(configure()));
 }
-
-Bonding::~Bonding() {}
 
 QList<QAction*> Bonding::actions() const
 {

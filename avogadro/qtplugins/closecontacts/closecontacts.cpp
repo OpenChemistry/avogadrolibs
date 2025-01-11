@@ -33,7 +33,6 @@ using QtGui::Molecule;
 using QtGui::PluginLayerManager;
 using Rendering::DashedLineGeometry;
 using Rendering::GeometryNode;
-using Rendering::GroupNode;
 
 CloseContacts::CloseContacts(QObject *p) : ScenePlugin(p)
 {
@@ -59,8 +58,6 @@ CloseContacts::CloseContacts(QObject *p) : ScenePlugin(p)
     settings.value("closeContacts/lineWidth2", 5.0).toFloat()
   };
 }
-
-CloseContacts::~CloseContacts() {}
 
 static bool checkPairNot1213(const Molecule &molecule, Index i, Index n)
 {

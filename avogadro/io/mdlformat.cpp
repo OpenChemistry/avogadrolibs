@@ -22,7 +22,7 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Elements;
 using Avogadro::Core::lexicalCast;
-using Avogadro::Core::Molecule;
+using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 
@@ -34,15 +34,35 @@ using std::string;
 
 namespace Avogadro::Io {
 
-typedef std::pair<size_t, signed int> chargePair;
+using chargePair = std::pair<size_t, int>;
+namespace {
 
-MdlFormat::MdlFormat() {}
+// Helper function to handle partial charge property blocks
+// e.g. PUBCHEM_MMFF94_PARTIAL_CHARGES
+void handlePartialCharges(Core::Molecule& mol, std::string data)
+{
+  // the string starts with the number of charges
+  // then atom index  charge
+  MatrixX charges(mol.atomCount(), 1);
+  std::istringstream iss(data);
+  size_t numCharges;
+  iss >> numCharges;
+  for (size_t i = 0; i < numCharges; ++i) {
+    size_t index;
+    Real charge;
+    iss >> index >> charge;
+    // prints with atom index 1, not zero
+    charges(index - 1, 0) = charge;
+  }
 
-MdlFormat::~MdlFormat() {}
+  mol.setPartialCharges("MMFF94", charges);
+}
+} // namespace
 
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 {
   string buffer;
+  int spinMultiplicity = 1; // check for RAD lines
 
   // The first line is the molecule name.
   getline(in, buffer);
@@ -73,8 +93,10 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     return false;
   }
   string mdlVersion(trimmed(buffer.substr(33)));
-  if (mdlVersion != "V2000") {
-    appendError("Unsupported file format version encountered: " + mdlVersion);
+  if (mdlVersion == "V3000")
+    return readV3000(in, mol);
+  else if (mdlVersion != "V2000") {
+    appendError("Unsupported MDL version: " + mdlVersion);
     return false;
   }
 
@@ -106,6 +128,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(pos);
       // In case there's no CHG property
+      if (charge == 4) // doublet radical
+        spinMultiplicity += 1;
+
       charge = (charge > 4) ? ((charge <= 7) ? 4 - charge : 0)
                             : ((charge < 4) ? charge : 0);
       if (charge)
@@ -173,6 +198,49 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         if (charge)
           chargeList.emplace_back(index, charge);
       }
+    } else if (prefix == "M  RAD") {
+      // radical center
+      spinMultiplicity = 1; // reset and count
+      size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      for (size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        if (!ok) {
+          appendError("Error parsing radical atom index:" +
+                      buffer.substr(10 + 8 * i, 3));
+          return false;
+        }
+        auto radical(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        if (!ok) {
+          appendError("Error parsing radical type:" +
+                      buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        // we don't set radical centers, just count them
+        // for the total spin multiplicity
+        if (radical == 2) // doublet
+          spinMultiplicity += 1;
+        else if (radical == 3) // triplet
+          spinMultiplicity += 2;
+      }
+    } else if (prefix == "M  ISO") {
+      // isotope
+      size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      for (size_t i = 0; i < entryCount; i++) {
+        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        if (!ok) {
+          appendError("Error parsing isotope atom index:" +
+                      buffer.substr(10 + 8 * i, 3));
+          return false;
+        }
+        auto isotope(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        if (!ok) {
+          appendError("Error parsing isotope type:" +
+                      buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        // TODO: Implement isotope setting
+        // mol.atom(index).setIsotope(isotope);
+      }
     }
   }
 
@@ -182,11 +250,15 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // Apply charges.
-  for (auto & i : chargeList) {
+  for (auto& i : chargeList) {
     size_t index = i.first;
     signed int charge = i.second;
     mol.setFormalCharge(index, charge);
   }
+
+  // Set the total spin multiplicity
+  if (spinMultiplicity > 1)
+    mol.setData("totalSpinMultiplicity", spinMultiplicity);
 
   // Check that all atoms were handled.
   if (mol.atomCount() != static_cast<size_t>(numAtoms) ||
@@ -208,7 +280,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       return true;
     if (inValue) {
       if (buffer.empty() && dataName.length() > 0) {
-        mol.setData(dataName, dataValue);
+        // check for partial charges
+        if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
+          handlePartialCharges(mol, dataValue);
+        else
+          mol.setData(dataName, dataValue);
         dataName.clear();
         dataValue.clear();
         inValue = false;
@@ -218,12 +294,233 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         dataValue += buffer;
       }
     } else if (startsWith(buffer, "> <")) {
-      // This is a data header, read the name of the entry, and the value on the
-      // following lines.
+      // This is a data header, read the name of the entry, and the value on
+      // the following lines.
       dataName = trimmed(buffer).substr(3, buffer.length() - 4);
       inValue = true;
     }
   }
+
+  return true;
+}
+
+bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
+{
+  string buffer;
+  int spinMultiplicity = 1; // check for RAD lines
+  // we should have M  V30 BEGIN CTAB
+  getline(in, buffer);
+  if (trimmed(buffer) != "M  V30 BEGIN CTAB") {
+    appendError("Error parsing V3000 file, expected 'M  V30 BEGIN CTAB'.");
+    return false;
+  }
+  // now we should get the counts line
+  // e.g. 'M  V30 COUNTS 23694 24297 0 0 1'
+  getline(in, buffer);
+  // split by whitespace
+  std::vector<string> counts = split(trimmed(buffer), ' ');
+  if (counts.size() < 5) {
+    appendError("Error parsing V3000 counts line.");
+    return false;
+  }
+  bool ok(false);
+  int numAtoms(lexicalCast<int>(counts[3], ok));
+  if (!ok) {
+    appendError("Error parsing number of atoms.");
+    return false;
+  }
+  int numBonds(lexicalCast<int>(counts[4], ok));
+  if (!ok) {
+    appendError("Error parsing number of bonds.");
+    return false;
+  }
+
+  // Parse the atom block.
+  // 'M  V30 BEGIN ATOM'
+  // 'M  V30 1 N 171.646 251.874 224.877 0'
+  getline(in, buffer);
+  if (trimmed(buffer) != "M  V30 BEGIN ATOM") {
+    appendError("Error parsing V3000 atom block.");
+    return false;
+  }
+  for (int i = 0; i < numAtoms; ++i) {
+    getline(in, buffer);
+    std::vector<string> atomData = split(trimmed(buffer), ' ');
+    if (atomData.size() < 7) {
+      appendError("Error parsing V3000 atom line.");
+      return false;
+    }
+
+    string element(trimmed(atomData[3]));
+    unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
+    Atom newAtom = mol.addAtom(atomicNum);
+
+    Vector3 pos;
+    pos.x() = lexicalCast<Real>(atomData[4], ok);
+    if (!ok) {
+      appendError("Failed to parse x coordinate: " + atomData[3]);
+      return false;
+    }
+    pos.y() = lexicalCast<Real>(atomData[5], ok);
+    if (!ok) {
+      appendError("Failed to parse y coordinate: " + atomData[4]);
+      return false;
+    }
+    pos.z() = lexicalCast<Real>(atomData[6], ok);
+    if (!ok) {
+      appendError("Failed to parse z coordinate: " + atomData[5]);
+      return false;
+    }
+    newAtom.setPosition3d(pos);
+    // check for formal charge in the atom block
+    // CHG=1 for example
+    if (atomData.size() > 8) {
+      // loop through the key=value pairs
+      for (size_t j = 8; j < atomData.size(); ++j) {
+        string key = atomData[j];
+        if (startsWith(key, "CHG=")) {
+          int charge = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse atom charge: " + key);
+            return false;
+          }
+          newAtom.setFormalCharge(charge);
+        } else if (startsWith(key, "RAD=")) {
+          // radical center
+          int radical = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse radical type: " + key);
+            return false;
+          }
+          // we don't set radical centers, just count them
+          // for the total spin multiplicity
+          if (radical == 2) // doublet
+            spinMultiplicity += 1;
+          else if (radical == 3) // triplet
+            spinMultiplicity += 2;
+        } else if (startsWith(key, "ISO=")) {
+          // isotope
+          int isotope = lexicalCast<int>(key.substr(4), ok);
+          if (!ok) {
+            appendError("Failed to parse isotope type: " + key);
+            return false;
+          }
+          // TODO: handle isotopes
+          // mol.atom(i).setIsotope(isotope);
+        }
+      } // end of key-value loop
+    }
+  } // end of atom block
+  getline(in, buffer);
+  // check for END ATOM
+  if (trimmed(buffer) != "M  V30 END ATOM") {
+    appendError("Error parsing V3000 atom block.");
+    return false;
+  }
+
+  // bond block
+  // 'M  V30 BEGIN BOND'
+  // 'M  V30 1 1 1 2'
+  getline(in, buffer);
+  if (trimmed(buffer) != "M  V30 BEGIN BOND") {
+    appendError("Error parsing V3000 bond block.");
+    return false;
+  }
+  for (int i = 0; i < numBonds; ++i) {
+    getline(in, buffer);
+    std::vector<string> bondData = split(trimmed(buffer), ' ');
+    if (bondData.size() < 5) {
+      appendError("Error parsing V3000 bond line.");
+      return false;
+    }
+    int order = lexicalCast<int>(bondData[3], ok);
+    if (!ok) {
+      appendError("Failed to parse bond order: " + bondData[3]);
+      return false;
+    }
+    int atom1 = lexicalCast<int>(bondData[4], ok) - 1;
+    if (!ok) {
+      appendError("Failed to parse bond atom1: " + bondData[4]);
+      return false;
+    }
+    int atom2 = lexicalCast<int>(bondData[5], ok) - 1;
+    if (!ok) {
+      appendError("Failed to parse bond atom2: " + bondData[5]);
+      return false;
+    }
+    mol.addBond(mol.atom(atom1), mol.atom(atom2),
+                static_cast<unsigned char>(order));
+  } // end of bond block
+
+  // look for M  END
+  while (getline(in, buffer)) {
+    if (trimmed(buffer) == "M  END")
+      break;
+  }
+  // read in any properties
+  while (getline(in, buffer)) {
+    if (startsWith(buffer, "> <")) {
+      string key = trimmed(buffer.substr(3, buffer.length() - 4));
+      string value;
+      while (getline(in, buffer)) {
+        if (trimmed(buffer) == "")
+          break;
+        value += buffer + "\n";
+      }
+      mol.setData(key, value);
+    }
+  }
+
+  // if we have a spin multiplicity, set it
+  if (spinMultiplicity > 1)
+    mol.setData("totalSpinMultiplicity", spinMultiplicity);
+
+  return true;
+}
+
+bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
+{
+  // write the "fake" counts line
+  out << "  0  0  0     0  0            999 V3000\n";
+  out << "M  V30 BEGIN CTAB\n";
+  out << "M  V30 COUNTS " << mol.atomCount() << ' ' << mol.bondCount()
+      << " 0 0 0\n";
+  // atom block
+  out << "M  V30 BEGIN ATOM\n";
+  for (size_t i = 0; i < mol.atomCount(); ++i) {
+    Atom atom = mol.atom(i);
+    out << "M  V30 " << i + 1 << ' ' << Elements::symbol(atom.atomicNumber())
+        << ' ' << atom.position3d().x() << ' ' << atom.position3d().y() << ' '
+        << atom.position3d().z() << " 0";
+    if (atom.formalCharge())
+      out << " CHG=" << atom.formalCharge();
+    out << "\n";
+  }
+  out << "M  V30 END ATOM\n";
+  // bond block
+  out << "M  V30 BEGIN BOND\n";
+  for (size_t i = 0; i < mol.bondCount(); ++i) {
+    Bond bond = mol.bond(i);
+    out << "M  V30 " << i + 1 << ' ' << static_cast<int>(bond.order()) << ' '
+        << (bond.atom1().index() + 1) << ' ' << (bond.atom2().index() + 1)
+        << " \n";
+  }
+  out << "M  V30 END BOND\n";
+  out << "M  V30 END CTAB\n";
+  out << "M  END\n";
+
+  // TODO: isotopes, radicals, etc.
+  if (m_writeProperties) {
+    const auto dataMap = mol.dataMap();
+    for (const auto& key : dataMap.names()) {
+      out << "> <" << key << ">\n";
+      out << dataMap.value(key).toString() << "\n";
+      out << "\n"; // empty line between data blocks
+    }
+  }
+
+  if (m_writeProperties || isMode(FileFormat::MultiMolecule))
+    out << "$$$$\n";
 
   return true;
 }
@@ -233,6 +530,11 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   // Header lines.
   out << mol.data("name").toString() << "\n  Avogadro\n\n";
   // Counts line.
+  if (mol.atomCount() > 999 || mol.bondCount() > 999) {
+    // we need V3000 support for big molecules
+    return writeV3000(out, mol);
+  }
+
   out << setw(3) << std::right << mol.atomCount() << setw(3) << mol.bondCount()
       << "  0  0  0  0  0  0  0  0999 V2000\n";
   // Atom block.
@@ -246,7 +548,7 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
                                             : ((charge <= 3) ? charge : 0);
     out << setw(10) << std::right << std::fixed << setprecision(4)
         << atom.position3d().x() << setw(10) << atom.position3d().y()
-        << setw(10) << atom.position3d().z() << " " << setw(3) << std::left
+        << setw(10) << atom.position3d().z() << ' ' << setw(3) << std::left
         << Elements::symbol(atom.atomicNumber()) << " 0" << setw(3)
         << std::right << chargeField /* for compatibility */
         << "  0  0  0  0  0  0  0  0  0  0\n";
@@ -260,15 +562,25 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
         << "  0  0  0  0\n";
   }
   // Properties block.
-  for (auto & i : chargeList) {
+  for (auto& i : chargeList) {
     Index atomIndex = i.first;
     signed int atomCharge = i.second;
-    out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << " "
+    out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << ' '
         << setw(3) << atomCharge << "\n";
   }
+  // TODO: isotopes, etc.
   out << "M  END\n";
+  // Data block
+  if (m_writeProperties) {
+    const auto dataMap = mol.dataMap();
+    for (const auto& key : dataMap.names()) {
+      out << "> <" << key << ">\n";
+      out << dataMap.value(key).toString() << "\n";
+      out << "\n"; // empty line between data blocks
+    }
+  }
 
-  if (isMode(FileFormat::MultiMolecule))
+  if (m_writeProperties || isMode(FileFormat::MultiMolecule))
     out << "$$$$\n";
 
   return true;
@@ -278,7 +590,6 @@ std::vector<std::string> MdlFormat::fileExtensions() const
 {
   std::vector<std::string> ext;
   ext.emplace_back("mol");
-  ext.emplace_back("sdf");
   return ext;
 }
 
@@ -289,4 +600,4 @@ std::vector<std::string> MdlFormat::mimeTypes() const
   return mime;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io
