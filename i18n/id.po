@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-10 07:00+0000\n"
+"PO-Revision-Date: 2025-01-11 18:41+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -7186,7 +7186,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Origin:"
 msgid "Origin"
-msgstr "Titik Asal:"
+msgstr "Titik Asal"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
