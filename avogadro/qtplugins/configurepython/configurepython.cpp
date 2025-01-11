@@ -148,9 +148,13 @@ QStringList ConfigurePython::pythonPaths() const
 
   QStringList paths = findExecutablePaths(names);
 
-  // Add the current interpreter to the list if it's not already there.
-  if (!paths.contains(pythonInterp))
-    paths.prepend(pythonInterp);
+  // Add the current interpreter to the list if it's not already there
+  // and it exists as an executable
+  if (!paths.contains(pythonInterp)) {
+    QFileInfo info(pythonInterp);
+    if (info.exists() && info.isExecutable())
+      paths.prepend(pythonInterp);
+  }
 
   return paths;
 }
