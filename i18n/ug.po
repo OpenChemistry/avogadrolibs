@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Uyghur <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ug/>\n"
@@ -951,7 +951,7 @@ msgstr ""
 #: qtgui/filebrowsewidget.cpp:23
 #, fuzzy
 msgid "Browse"
-msgstr "كۆز يۈگۈرت…"
+msgstr "كۆز يۈگۈرت"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
@@ -1136,9 +1136,8 @@ msgstr ""
 
 #: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
-#, fuzzy
 msgid "[no molecule]"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
@@ -1325,9 +1324,8 @@ msgid "Adjust Hydrogens"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
-#, fuzzy
 msgid "Change Elements"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
@@ -1439,19 +1437,16 @@ msgid "Change Atom Position"
 msgstr ""
 
 #: qtgui/rwmolecule.h:242
-#, fuzzy
 msgid "Change Atom Label"
-msgstr "ئەن"
+msgstr ""
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
 msgstr ""
 
 #: qtgui/rwmolecule.h:266
-#, fuzzy
-#| msgid "Selection"
 msgid "Change Selection"
-msgstr "تاللانما"
+msgstr ""
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
@@ -1546,7 +1541,7 @@ msgstr ""
 #, fuzzy
 #| msgid "X Axis"
 msgid "Axis:"
-msgstr "X ئوقى"
+msgstr "ئوقى"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
@@ -1565,10 +1560,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "توغرىلا"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1735,9 +1728,8 @@ msgid "By Chain"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
 msgid "By Partial Charge…"
-msgstr "فورمات:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
@@ -1883,9 +1875,8 @@ msgid "&View"
 msgstr "كۆرۈنۈش(&V)"
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#, fuzzy
 msgid "Color Atoms"
-msgstr "رەڭلەر"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:154
 msgid "Color Residues"
@@ -1902,14 +1893,12 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "رەڭلەر:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "رەڭلەر"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
@@ -1994,9 +1983,8 @@ msgid "Bond Atoms"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
 msgid "Perceive Bond Orders"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2024,9 +2012,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
 msgid "Perceive bond orders."
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2037,10 +2024,9 @@ msgid "Perform bonding operations."
 msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:92
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr "تەگلىك:"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
@@ -2131,9 +2117,8 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
 msgid "Maximum distance:"
-msgstr "ئارىلىق"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2187,7 +2172,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:83
 #, fuzzy
 msgid "Scripts"
-msgstr "قوليازمىلار(&S)"
+msgstr "قوليازمىلار"
 
 #: qtplugins/commandscripts/command.cpp:140
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2307,9 +2292,8 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
-#, fuzzy
 msgid "Element symbol."
-msgstr "ئېلېمېنت ئاتى"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
@@ -2619,9 +2603,8 @@ msgid "BROYDEN"
 msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
-#, fuzzy
 msgid "Conjugate Gradients"
-msgstr "گۈل نۇسخىسى"
+msgstr ""
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
 msgid "DIIS"
@@ -2726,9 +2709,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
 msgid "Color axes:"
-msgstr "رەڭلەر:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -2901,10 +2883,8 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 
 #: qtplugins/focus/focus.cpp:22
-#, fuzzy
-#| msgid "Selection"
 msgid "Focus Selection"
-msgstr "تاللانما"
+msgstr ""
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
@@ -3156,10 +3136,8 @@ msgid "&Insert"
 msgstr "قىستۇر(&I)"
 
 #: qtplugins/insertdna/insertdna.cpp:79
-#, fuzzy
-#| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "قىستۇر(&I)"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -3188,10 +3166,8 @@ msgstr ""
 #: qtplugins/insertdna/insertdna.cpp:200
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
-#, fuzzy
-#| msgid "Molecule"
 msgid "Insert Molecule…"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
@@ -3199,10 +3175,8 @@ msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "قىستۇر(&I)"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3248,9 +3222,8 @@ msgid "Color:"
 msgstr "رەڭلەر:"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "ئارىلىق"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3279,9 +3252,8 @@ msgid "Element"
 msgstr "ئېلېمېنت"
 
 #: qtplugins/label/label.cpp:184
-#, fuzzy
 msgid "Element & Number"
-msgstr "ئېلېمېنت ئاتى"
+msgstr ""
 
 #: qtplugins/label/label.cpp:186
 msgid "Element & ID"
@@ -3293,9 +3265,8 @@ msgid "Partial Charge"
 msgstr ""
 
 #: qtplugins/label/label.cpp:203
-#, fuzzy
 msgid "Atom Label:"
-msgstr "ئەن"
+msgstr ""
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
@@ -3333,9 +3304,8 @@ msgid "Ctrl+4"
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:32
-#, fuzzy
 msgid "Edit Labels"
-msgstr "ئەن"
+msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
@@ -3487,9 +3457,8 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularmodel.cpp:108
 #: qtplugins/molecularproperties/molecularmodel.cpp:116
 #: qtplugins/molecularproperties/molecularmodel.cpp:132
-#, fuzzy
 msgid "unknown molecule"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:611
@@ -3612,15 +3581,13 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
 #: qtplugins/propertytables/propertyview.cpp:62
-#, fuzzy
 msgid "Molecule Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:248
-#, fuzzy
 msgid "Export CSV"
-msgstr "چىقار"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:249
@@ -3685,9 +3652,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
-#, fuzzy
 msgid "Navigate tool"
-msgstr "يول باشلا"
+msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
@@ -3708,9 +3674,8 @@ msgid " °"
 msgstr "°"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
 msgid "Angle tolerance:"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -3729,9 +3694,8 @@ msgid "Configure Force Field…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
 msgid "Conformer Search…"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -3823,9 +3787,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
-#, fuzzy
 msgid "Updating molecule…"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
@@ -3849,9 +3812,8 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
@@ -3883,9 +3845,8 @@ msgid "Converting XYZ to Open Babel with %1…"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:770
-#, fuzzy
 msgid "Updating molecule from Open Babel…"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
@@ -4324,9 +4285,8 @@ msgid "Valence"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:503
-#, fuzzy
 msgid "Formal Charge"
-msgstr "فورمات:"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:506
 #, qt-format
@@ -4377,9 +4337,8 @@ msgid "End Atom"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:535
-#, fuzzy
 msgid "Bond Order"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:539
 msgctxt "in Angstrom"
@@ -4483,29 +4442,24 @@ msgid "Coil"
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:27
-#, fuzzy
 msgid "Atom Properties…"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:34
-#, fuzzy
 msgid "Bond Properties…"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:41
-#, fuzzy
 msgid "Angle Properties…"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:48
-#, fuzzy
 msgid "Torsion Properties…"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4517,39 +4471,32 @@ msgid ""
 msgstr ""
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:44
-#, fuzzy
 msgid "Atom Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:47
-#, fuzzy
 msgid "Bond Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:50
-#, fuzzy
 msgid "Angle Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:53
-#, fuzzy
 msgid "Torsion Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:56
-#, fuzzy
 msgid "Conformer Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:59
-#, fuzzy
 msgid "Residue Properties"
-msgstr "خاسلىق"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -4569,9 +4516,8 @@ msgid "Molecular Graph with Lone Pairs…"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
-#, fuzzy
 msgid "Atomic Charge…"
-msgstr "فورمات:"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
@@ -4643,9 +4589,8 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
 msgid "Select by Element…"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -4656,31 +4601,24 @@ msgid "Select by Residue…"
 msgstr ""
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
 msgid "Select Backbone Atoms…"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
 msgid "Select Sidechain Atoms…"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
 msgid "Select Water"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Selection"
 msgid "Enlarge Selection"
-msgstr "تاللانما"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "تاللانما"
+msgstr ""
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4695,19 +4633,16 @@ msgid "&Select"
 msgstr "تاللا(&S)"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
 msgid "Select Element"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
 msgid "Select Backbone"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
 msgid "Select Sidechain"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4730,10 +4665,8 @@ msgid "Residues to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:491
-#, fuzzy
-#| msgid "Selection"
 msgid "Select Residue"
-msgstr "تاللانما"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4936,9 +4869,8 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:496
-#, fuzzy
 msgid "Select Background Color"
-msgstr "ئېلېمېنت"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:509
 msgid "Select Foreground Color"
@@ -5095,10 +5027,8 @@ msgid "From File"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:84
-#, fuzzy
-#| msgid "Surfaces"
 msgid "Create Surfaces…"
-msgstr "سىرتقى يۈز"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:112
 msgid "Render the van der Waals surface."
@@ -5150,9 +5080,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "چىقار"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5239,21 +5168,17 @@ msgid "Clipboard"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:404
-#, fuzzy
-#| msgid "Molecule"
 msgid "Insert Template"
-msgstr "مولېكۇلا"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:679
-#, fuzzy
 msgid "Insert Ligand"
-msgstr "قىستۇر(&I)"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "يول باشلا"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5639,15 +5564,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
-#, fuzzy
 msgid "Load Cube File"
-msgstr "ھۆججەت يۈكلە…"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
 msgid "Partial Charges"
-msgstr "فورمات:"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
@@ -6926,10 +6849,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
-#| msgid "Foreground:"
 msgid "Rotate around:"
-msgstr "ئالدى كۆرۈنۈش:"
+msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:122
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
@@ -6978,9 +6899,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
-#, fuzzy
 msgid "Conformer Search"
-msgstr "خاسلىق"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -7672,10 +7592,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "ئەڭ كىچىك:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7694,10 +7612,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "ئەڭ كىچىك:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -7767,17 +7683,13 @@ msgstr "تەگلىك:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:356
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Calculate"
 msgid "Calculated Spectra:"
-msgstr "ھېسابلا"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Font:"
 msgid "Font Size:"
-msgstr "خەت نۇسخا:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
@@ -7812,9 +7724,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:458
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
 msgid "Export Data"
-msgstr "چىقار"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:471
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -8050,9 +7961,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "فورمات:"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
