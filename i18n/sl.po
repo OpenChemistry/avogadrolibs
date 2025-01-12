@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-10 07:01+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sl/>\n"
@@ -1144,7 +1144,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
 #, fuzzy
 msgid "[no molecule]"
-msgstr "Ni nastavljene molekule"
+msgstr "[ni molekule]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
@@ -1372,18 +1372,16 @@ msgid "Clear Bonds"
 msgstr "Izbriši vezi"
 
 #: qtgui/rwmolecule.cpp:335
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Vrsta vezi"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
 msgstr "Spremeni vrsto vezi"
 
 #: qtgui/rwmolecule.cpp:369
-#, fuzzy
 msgid "Update Bonds"
-msgstr "Pripni na vez"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:388
 msgid "Update Bond"
@@ -1589,10 +1587,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "Poravnava"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1751,9 +1747,8 @@ msgid "By Distance…"
 msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
-msgstr "Element"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
@@ -1913,9 +1908,8 @@ msgid "&View"
 msgstr "&Pogled"
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Barve"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:154
 #, fuzzy
@@ -1924,10 +1918,8 @@ msgstr "Barva po ostanku"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Izbrane barve"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1935,15 +1927,12 @@ msgstr "Izbrane barve"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Barva:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Barve"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 #, fuzzy
@@ -1951,9 +1940,8 @@ msgid "Atom scale"
 msgstr "Slog atomov"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "Kot vezi"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2343,9 +2331,8 @@ msgstr "Ime elementa."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "Simbol elementa"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
@@ -2358,9 +2345,8 @@ msgid "Invalid atom label."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
 msgid "Invalid atomic index."
-msgstr "Atomski indeksi"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
@@ -2481,7 +2467,7 @@ msgstr "Skript Turbomole"
 #: qtplugins/propertytables/propertyview.cpp:300:277
 #, fuzzy
 msgid "Copy"
-msgstr "Kopiraj vse"
+msgstr "Kopiraj"
 
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2505,7 +2491,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:34:286
 #, fuzzy
 msgid "Clear"
-msgstr "Počisti vse"
+msgstr "Počisti"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -2516,9 +2502,8 @@ msgid "&Edit"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
 msgid "Copy As"
-msgstr "Kopiraj vse"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2785,8 +2770,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:216
 #, fuzzy
 msgid "The unit cell is already reduced."
-msgstr ""
-"Osnovna celica je že zmanjšana na lastno Nigglijevo kanonsko predstavitev."
+msgstr "Osnovna celica je že zmanjšana."
 
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
@@ -2798,15 +2782,12 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Barve:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
-#, fuzzy
 msgid "Line color:"
-msgstr "barvni"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
@@ -2875,7 +2856,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:223
 #, fuzzy
 msgid "Distance:"
-msgstr "Razdalja"
+msgstr "Razdalja:"
 
 #: qtplugins/editor/editor.cpp:268
 #, qt-format
@@ -2916,13 +2897,12 @@ msgstr "Uvozi"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "Pridobi iz zbirke PDB ..."
+msgstr "Pridobi iz zbirke PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Datoteke molekulskega zapisa  %1 ni mogoče prebrati."
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
@@ -2971,7 +2951,7 @@ msgstr "Navedene molekule ni mogoče najti: %1"
 #: qtplugins/fetchpdb/fetchpdb.h:35
 #, fuzzy
 msgid "Fetch from PDB"
-msgstr "Pridobi iz zbirke PDB ..."
+msgstr "Pridobi iz zbirke PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
@@ -3012,19 +2992,15 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:96
 #, fuzzy
 msgid "Configure…"
-msgstr "Nastavitev polja sil ..."
+msgstr "Nastavitev …"
 
 #: qtplugins/forcefield/forcefield.cpp:108
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Uvozi izbrane atome"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Popravi izbrane atome"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:154
 #, fuzzy
@@ -3082,10 +3058,8 @@ msgid "Autodetect (%1)"
 msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Polje sil"
+msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3116,7 +3090,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&GAMESS"
 msgid "&GAMESS…"
-msgstr "&GAMESS"
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 #, fuzzy
@@ -3243,7 +3217,7 @@ msgstr ""
 #, fuzzy
 #| msgid "DNA/RNA..."
 msgid "DNA/RNA…"
-msgstr "DNA/RNA..."
+msgstr "DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
@@ -3255,7 +3229,7 @@ msgstr "&Vstavi"
 #, fuzzy
 #| msgid "Insert DNA/RNA"
 msgid "Insert DNA/RNA…"
-msgstr "Vstavi DNA/RNA"
+msgstr "Vstavi DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -3309,7 +3283,7 @@ msgstr "Molekula…"
 #: qtplugins/insertfragment/insertfragment.cpp:38
 #, fuzzy
 msgid "Crystal…"
-msgstr "Kristal ..."
+msgstr "Kristal …"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
@@ -3342,9 +3316,8 @@ msgid "Color:"
 msgstr "Barva:"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Razdalja"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3373,9 +3346,8 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:184
-#, fuzzy
 msgid "Element & Number"
-msgstr "Ime elementa"
+msgstr ""
 
 #: qtplugins/label/label.cpp:186
 msgid "Element & ID"
@@ -3389,7 +3361,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:203
 #, fuzzy
 msgid "Atom Label:"
-msgstr "Oznake atomov"
+msgstr "Oznake atomov:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
@@ -3416,7 +3388,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:248
 #, fuzzy
 msgid "Residue Label:"
-msgstr "Ime preostanka"
+msgstr "Oznake preostanka:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3428,10 +3400,8 @@ msgid "Ctrl+4"
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:32
-#, fuzzy
-#| msgid "Bond Labels"
 msgid "Edit Labels"
-msgstr "Oznake vezi"
+msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
@@ -3453,7 +3423,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&LAMMPS..."
 msgid "&LAMMPS…"
-msgstr "&LAMMPS..."
+msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3470,7 +3440,7 @@ msgid ""
 "Lammps input deck preview pane?"
 msgstr ""
 "Ali naj se posodobi besedilo predogleda in zavrže vse spremembe okna "
-"predogleda skripta Gaussian?"
+"predogleda skripta Lammps?"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
@@ -3486,7 +3456,7 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 #, fuzzy
 msgid "SMILES…"
-msgstr "SMILES ..."
+msgstr "SMILES …"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
@@ -3494,9 +3464,8 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
-#, fuzzy
 msgid "No descriptors found!"
-msgstr "Brez opisa"
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
@@ -3574,9 +3543,8 @@ msgstr "Kot:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
-#, fuzzy
 msgid "Measure tool"
-msgstr "Izmeri"
+msgstr ""
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
@@ -3789,9 +3757,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
-#, fuzzy
 msgid "Navigate tool"
-msgstr "KrmarjenjeSkok navzgor"
+msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
@@ -3828,13 +3795,13 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:53
 #, fuzzy
 msgid "Configure Force Field…"
-msgstr "Nastavitev polja sil ..."
+msgstr "Nastavitev polja sil …"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 #, fuzzy
 #| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Iskanje konformer"
+msgstr "Iskanje konformer …"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 #, fuzzy
@@ -3844,7 +3811,7 @@ msgstr "Ali naj bodo vezi zaznane"
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Dodaj vodike do vrednosti pH"
+msgstr "Dodaj vodike do vrednosti pH …"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -3960,9 +3927,8 @@ msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Konformera %1"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4135,9 +4101,8 @@ msgid "True"
 msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
 msgid "Reference Axes"
-msgstr "Sklic"
+msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4183,7 +4148,7 @@ msgstr ""
 #: qtplugins/playertool/playertool.cpp:118:1887
 #, fuzzy
 msgid "Frame:"
-msgstr "Sličice"
+msgstr "Sličice:"
 
 #: qtplugins/playertool/playertool.cpp:125
 #: qtplugins/playertool/playertool.cpp:416
@@ -4420,9 +4385,8 @@ msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4610,25 +4574,25 @@ msgstr ""
 #, fuzzy
 #| msgid "Atom Properties"
 msgid "Atom Properties…"
-msgstr "Lastnosti atomov"
+msgstr "Lastnosti atomov…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 #, fuzzy
 #| msgid "Bond Properties"
 msgid "Bond Properties…"
-msgstr "Lastnosti vezi"
+msgstr "Lastnosti vezi…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 #, fuzzy
 #| msgid "Angle Properties"
 msgid "Angle Properties…"
-msgstr "Lastnosti kotov"
+msgstr "Lastnosti kotov…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 #, fuzzy
 #| msgid "Torsion Properties"
 msgid "Torsion Properties…"
-msgstr "Lastnosti torzije"
+msgstr "Lastnosti torzije…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
@@ -4642,9 +4606,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Okna za prikaz lastnosti atomov, vezi, kotov in drugih podatkov. Vključuje "
-"tudi urejevalnik kartezijskih  koordinat."
+msgstr "Okna za prikaz lastnosti atomov, vezi, kotov in drugih podatkov."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -4696,7 +4658,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Atomic Charge..."
 msgid "Atomic Charge…"
-msgstr "Atomski nabo ..."
+msgstr "Atomski nabo …"
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
@@ -4740,10 +4702,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Naboj"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4773,7 +4733,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Select by Element..."
 msgid "Select by Element…"
-msgstr "Izbor po elementu ..."
+msgstr "Izbor po elementu …"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -4783,7 +4743,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select by Residue…"
-msgstr "Izbor po ostanku ..."
+msgstr "Izbor po ostanku …"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
@@ -4821,7 +4781,7 @@ msgstr "&Izberi"
 #, fuzzy
 #| msgid "Select by Element..."
 msgid "Select Element"
-msgstr "Izbor po elementu ..."
+msgstr "Izbor elementu"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -4855,7 +4815,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "Izbor po ostanku ..."
+msgstr "Izbor ostanku"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4896,15 +4856,13 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
-#| msgid "New Label:"
 msgid "New Layer"
-msgstr "Nova oznaka:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
 msgid "Perceive Space Group…"
-msgstr "Zaznaj prostorsko skupino"
+msgstr "Zaznaj prostorsko skupino …"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
@@ -4916,7 +4874,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Zapolni osnovno celico"
+msgstr "Zapolni osnovno celico …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
@@ -4958,7 +4916,6 @@ msgid ""
 "Would you like to try again with a different tolerance?"
 msgstr ""
 "Zaznavanje prostroske skupine je spodletelo.\n"
-"\n"
 "Ali želite poskusiti znova z drugačno nastavitvijo tolerance?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:234
@@ -5030,10 +4987,8 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Uvozi podatke spektra"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -5080,7 +5035,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "Nastavitve gostote stanj (DOS)"
+msgstr "Gostote stanj (DOS)"
 
 #: qtplugins/spectra/spectradialog.cpp:496
 msgid "Select Background Color"
@@ -5103,9 +5058,8 @@ msgid "Wavelength (nm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:586
-#, fuzzy
 msgid "Vibrational Spectra"
-msgstr "Vibracije"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:587
 #: qtplugins/spectra/spectradialog.cpp:601
@@ -5261,16 +5215,12 @@ msgid "Create Surfaces…"
 msgstr "Ustvari površine…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Izriše atome z Van der Waalsovimi radii"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals molecular surface."
-msgstr "Izriše atome z Van der Waalsovimi radii"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the solvent-accessible molecular surface."
@@ -5281,14 +5231,12 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Molekulska orbitala"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Izračunavanje elektronske gostote"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5317,9 +5265,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Izvozi sliko"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5357,7 +5304,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Symmetry"
 msgid "Symmetry…"
-msgstr "Simetrija"
+msgstr "Simetrija …"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -5425,19 +5372,16 @@ msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:27
-#, fuzzy
 msgid "Vibrational Modes…"
-msgstr "Vibracije"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Set Fractional Coordinates"
 msgid "Set the vibrational mode."
-msgstr "Nastavitev delnih koordinat"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
 msgid "Set the vibrational amplitude."
@@ -5458,10 +5402,8 @@ msgid "Vibrations"
 msgstr "Vibracija"
 
 #: qtplugins/vibrations/vibrations.h:37
-#, fuzzy
-#| msgid "Set Fractional Coordinates"
 msgid "Display vibrational modes."
-msgstr "Nastavitev delnih koordinat"
+msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -5599,10 +5541,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#, fuzzy
-#| msgid "Calculation:"
 msgid "Submit Calculation…"
-msgstr "Izračun:"
+msgstr ""
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
@@ -5812,15 +5752,13 @@ msgstr "Uspešno končano!"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:27
 #. i18n: ectx: property (text), widget (QCheckBox, loadStructureCheckBox)
-#, fuzzy
 msgid "Load Structure File"
-msgstr "Naloži datoteko"
+msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
-#, fuzzy
 msgid "Load Cube File"
-msgstr "Naloži datoteko"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
@@ -5831,10 +5769,8 @@ msgstr "Delni naboj"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
-#, fuzzy
-#| msgid "Charge:"
 msgid "Charge Model:"
-msgstr "Naboj:"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6003,7 +5939,7 @@ msgstr "Privzeto"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save File…"
-msgstr "Shrani datoteko"
+msgstr "Shrani datoteko …"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -7171,7 +7107,7 @@ msgstr "Način"
 #, fuzzy
 #| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Število konformer"
+msgstr "Število konformer:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7215,7 +7151,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Children"
 msgid "Children:"
-msgstr "Podrejeni"
+msgstr "Podrejeni:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7229,7 +7165,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Mutability"
 msgid "Mutability:"
-msgstr "Mutabilnost"
+msgstr "Mutabilnost:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7248,7 +7184,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Scoring method"
 msgid "Scoring method:"
-msgstr "Način ocenjevanja"
+msgstr "Način ocenjevanja:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -7507,7 +7443,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 #, fuzzy
 msgid "Constraints:"
-msgstr "Omejitve"
+msgstr "Omejitve:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -7865,10 +7801,8 @@ msgstr "Faktor merila:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Najmanj:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7887,10 +7821,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Najmanj:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -7966,7 +7898,7 @@ msgstr "Ozadje:"
 #, fuzzy
 #| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "Izvoz izračunanih podatkov spektra"
+msgstr "Izračunanih spektra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8256,7 +8188,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
 #, fuzzy
 msgid "Formal Charge:"
-msgstr "Formalni naboj"
+msgstr "Formalni naboj:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
@@ -8374,7 +8306,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "Vrsta"
+msgstr "Vrsta:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8633,10 +8565,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Number of Bonds:"
 msgid "Number of Dimensions:"
-msgstr "Število vezi:"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
