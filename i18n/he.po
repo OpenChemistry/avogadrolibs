@@ -2,13 +2,13 @@
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the avogadro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-11-12 01:05+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/he/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1280,14 +1280,12 @@ msgid "Modify Layers"
 msgstr ""
 
 #: qtgui/rwlayermanager.cpp:196
-#, fuzzy
 msgid "Remove Layer"
-msgstr "מימן"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:203
-#, fuzzy
 msgid "Remove Layer Info"
-msgstr "מימן"
+msgstr ""
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
@@ -1551,10 +1549,8 @@ msgid "Align to Axis"
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "מרנדר את צירי x,y,z במקור"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -1884,10 +1880,8 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Select Atom Labels Color"
 msgid "Select Colormap"
-msgstr "בחר צבע לתוויות אטומים"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1923,9 +1917,8 @@ msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
-#, fuzzy
 msgid "Show hydrogens"
-msgstr "מימן"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -3088,9 +3081,8 @@ msgid "Submit GAMESS Calculation"
 msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
-#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "מימן"
+msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
 msgid "Add Hydrogens"
@@ -3697,14 +3689,12 @@ msgid "Perceive Bonds"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:77
-#, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "מימן"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:83
-#, fuzzy
 msgid "Remove Hydrogens"
-msgstr "מימן"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
@@ -4393,9 +4383,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
 msgid "Adjust Fragment"
-msgstr "מימן"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
@@ -4708,9 +4697,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
 msgid "New Layer"
-msgstr "מימן"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
