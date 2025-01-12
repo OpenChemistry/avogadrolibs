@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-10 07:01+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -1130,9 +1130,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr "'type' não é uma cadeia para a opção '%1'."
 
 #: qtgui/jsonwidget.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "Não é possível executar '%1'."
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
@@ -1568,7 +1568,7 @@ msgstr ""
 #, fuzzy
 #| msgid "ThreeDMol HTML Block."
 msgid "3DMol HTML Block."
-msgstr "Bloco HTML ThreeDMol."
+msgstr "Bloco HTML 3DMol."
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
@@ -1651,20 +1651,16 @@ msgid "Align to Axis"
 msgstr "Alinhar Visão aos Eixos"
 
 #: qtplugins/aligntool/aligntool.cpp:308
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "Mostra os eixos x, y e z na origem"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
-msgstr "Ferramenta de Seleção"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1680,7 +1676,7 @@ msgstr "Executar APBS…"
 #, fuzzy
 #| msgid "Open Output File"
 msgid "Open Output File…"
-msgstr "Abrir Ficheiro de Saída"
+msgstr "Abrir Ficheiro de Saída…"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
@@ -1987,9 +1983,8 @@ msgid "&View"
 msgstr "&Ver"
 
 #: qtplugins/applycolors/applycolors.cpp:152
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Cores"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:154
 #, fuzzy
@@ -1998,10 +1993,8 @@ msgstr "Cor por resíduo"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Cores Seleccionadas"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -2009,23 +2002,20 @@ msgstr "Cores Seleccionadas"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "Cores:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Cores"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "Ângulo da Ligação"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2037,13 +2027,13 @@ msgstr "Opacidade"
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
 msgid "Show multiple bonds"
-msgstr "Exibir ligações múltiplas?"
+msgstr "Exibir ligações múltiplas"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 #, fuzzy
 msgid "Show hydrogens"
-msgstr "Mostrar hidrogênios?"
+msgstr "Mostrar hidrogênios"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2601,10 +2591,8 @@ msgid "&Edit"
 msgstr "&Editar"
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "Copiar"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2888,9 +2876,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Ferramentas para edição/análise específica de cristal."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
 msgid "Color axes:"
-msgstr "Cores:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 #, fuzzy
@@ -3533,9 +3520,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
-#, fuzzy
 msgid "Create Label"
-msgstr "Criar Superfícies"
+msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3938,7 +3924,7 @@ msgstr "Configurar Campo de Força…"
 #, fuzzy
 #| msgid "Conformer Search..."
 msgid "Conformer Search…"
-msgstr "Procurar conformação..."
+msgstr "Procurar conformação…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -4018,7 +4004,7 @@ msgstr "Otimizando Geometria (Open Babel)"
 #, fuzzy
 #| msgid "Generating MDL..."
 msgid "Generating…"
-msgstr "Criando MDL..."
+msgstr "Criando…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 #, fuzzy
@@ -4074,25 +4060,20 @@ msgstr ""
 "átomos na molécula (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molécula inválida. Não é possível otimizar a geometria."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Não é possível abrir o ficheiro com o Open Babel."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Conformação %1"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4279,9 +4260,8 @@ msgid "True"
 msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
 msgid "Reference Axes"
-msgstr "Referência"
+msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4574,9 +4554,8 @@ msgid "Render the scene using PLY."
 msgstr "Renderizar a cena usando PLY."
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4714,10 +4693,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Inserir fragmento"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 #, fuzzy
@@ -4800,8 +4777,7 @@ msgstr ""
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
-"Janelas para visualizar as propriedades do átomo, ligação, ângulo e torsão. "
-"Inclui ainda um editor de coordenadas cartesianas."
+"Janelas para visualizar as propriedades do átomo, ligação, ângulo e torsão."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -4904,10 +4880,8 @@ msgid "Manipulate the view camera."
 msgstr "Manipular câmara de visualização."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Carga"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 #, fuzzy
@@ -5209,10 +5183,8 @@ msgid "Space group features for crystals."
 msgstr "Recursos do grupo espacial para cristais."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "espectro"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -5226,7 +5198,7 @@ msgstr "Espectro"
 #, fuzzy
 #| msgid "Display spectra and vibrational modes."
 msgid "Display spectra plots."
-msgstr "Mostrar espectros e modos vibracionais."
+msgstr "Mostrar espectros."
 
 #: qtplugins/spectra/spectradialog.cpp:436
 #, fuzzy
@@ -5323,10 +5295,8 @@ msgid "Intensity"
 msgstr "Intensidades"
 
 #: qtplugins/spectra/spectradialog.cpp:613
-#, fuzzy
-#| msgid "Spectra"
 msgid "NMR Spectra"
-msgstr "Espectro"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:614
 #, fuzzy
@@ -5444,43 +5414,31 @@ msgstr "Do Ficheiro"
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
-msgstr "Criar Superfícies"
+msgstr "Criar Superfícies…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Mostra os átomos como esferas de Van der Waals"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "Desenha a molécula como estrutura de arame."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Desenha a molécula como estrutura de arame."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "Desenha a molécula como estrutura de arame."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
-#| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "Orbital Molecular"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "Calculando densidade eletrônica"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5549,7 +5507,7 @@ msgstr "Classe"
 #, fuzzy
 #| msgid "Symmetry"
 msgid "Symmetry…"
-msgstr "Simetria"
+msgstr "Simetria…"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -5600,23 +5558,17 @@ msgid "Clipboard"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:404
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Template"
-msgstr "Inserir"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:679
-#, fuzzy
-#| msgid "Insert Peptide"
 msgid "Insert Ligand"
-msgstr "Inserir"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
-#| msgid "Manipulate tool"
 msgid "Template tool"
-msgstr "Ferramenta de manipulação"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5626,25 +5578,19 @@ msgstr "Exibição simples de esferas VdW."
 #, fuzzy
 #| msgid "Vibrational Modes"
 msgid "Vibrational Modes…"
-msgstr "Modos Vibracionais"
+msgstr "Modos Vibracionais…"
 
 #: qtplugins/vibrations/vibrations.cpp:90
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Show the vibrational modes dialog."
-msgstr "Modos vibracionais..."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational mode."
-msgstr "Modos vibracionais..."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational amplitude."
-msgstr "Modos vibracionais..."
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:95
 msgid "Start the vibrational animation."
@@ -5664,7 +5610,7 @@ msgstr "Vibração"
 #, fuzzy
 #| msgid "Display spectra and vibrational modes."
 msgid "Display vibrational modes."
-msgstr "Mostrar espectros e modos vibracionais."
+msgstr "Mostrar modos vibracionais."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
@@ -6048,10 +5994,8 @@ msgstr "Carga Parcial"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
-#, fuzzy
-#| msgid "Charge:"
 msgid "Charge Model:"
-msgstr "Carga:"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6562,7 +6506,7 @@ msgstr "Critérios de Convergência"
 #, fuzzy
 #| msgid "\"Energy\" convergence:"
 msgid "Energy convergence:"
-msgstr "\"Energia\" de convergência:"
+msgstr "Energia de convergência:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6602,10 +6546,8 @@ msgstr " passos"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "\"Energy\" convergence:"
 msgid "Gradient convergence:"
-msgstr "\"Energia\" de convergência:"
+msgstr ""
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:126
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -6734,10 +6676,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nucleus:"
 msgid "Nucleic Acids:"
-msgstr "Núcleo:"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
@@ -7356,7 +7296,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Generating MDL..."
 msgid "Generate…"
-msgstr "Criando MDL..."
+msgstr "Criando…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7433,21 +7373,21 @@ msgstr ""
 #, fuzzy
 #| msgid "Conformer Search..."
 msgid "Conformer Search"
-msgstr "Procurar conformação..."
+msgstr "Procurar conformação…"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
 #, fuzzy
 #| msgid "Method:"
 msgid "Method"
-msgstr "Método:"
+msgstr "Método"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 #, fuzzy
 #| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Total de conformações"
+msgstr "Total de conformações:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7525,7 +7465,7 @@ msgstr ""
 #, fuzzy
 #| msgid "\"Energy\" convergence:"
 msgid "Convergence:"
-msgstr "\"Energia\" de convergência:"
+msgstr "Convergência:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -8256,7 +8196,7 @@ msgstr "Núcleo"
 #, fuzzy
 #| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "Exportar o espectro calculado"
+msgstr "Espectro calculado:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8660,7 +8600,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "Tipo"
+msgstr "Tipo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8917,10 +8857,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Number of Bonds:"
 msgid "Number of Dimensions:"
-msgstr "Número de Ligações:"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)
