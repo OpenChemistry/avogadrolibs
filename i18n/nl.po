@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
@@ -1594,10 +1594,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "Uitlijnen"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -2764,10 +2762,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Kleuren:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3781,9 +3777,8 @@ msgid "Configure Force Field…"
 msgstr "Stel Krachtveld op"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
 msgid "Conformer Search…"
-msgstr "Conformer"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
 #, fuzzy
@@ -3910,9 +3905,8 @@ msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Conformer"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4365,9 +4359,8 @@ msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4584,9 +4577,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Vensters om atoom, bindings, hoek en torsie eigenschappen te tonen. Er is "
-"ook een cartesiaanse coördinaten bewerker."
+msgstr "Vensters om atoom, bindings, hoek en torsie eigenschappen te tonen."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -5022,10 +5013,8 @@ msgid "Select Calculated Spectra Color"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:534
-#, fuzzy
-#| msgid "Imported Spectra:"
 msgid "Select Imported Spectra Color"
-msgstr "Geïmorteerde Spectra"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
@@ -5205,9 +5194,8 @@ msgid "Render a molecular orbital."
 msgstr "Moleculaire orbitaal"
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Berekenen van Elektronen Dichtheid"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5236,9 +5224,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Exporteer Beeld"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5334,9 +5321,8 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "Meet"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -7772,10 +7758,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Minimum:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7794,10 +7778,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Minimum:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -7808,10 +7790,8 @@ msgstr "Breedte:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Snap-to Threshold: "
 msgid "Peak Threshold:"
-msgstr "Aanhaakdrempel "
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
