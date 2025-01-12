@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pl/>\n"
@@ -1369,9 +1369,8 @@ msgid "Clear Bonds"
 msgstr "Usuń wiązanie"
 
 #: qtgui/rwmolecule.cpp:335
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Kolejność wiązań"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
@@ -1569,10 +1568,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "Wyrównaj"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1896,10 +1893,8 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Wybrane kolory"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1907,23 +1902,20 @@ msgstr "Wybrane kolory"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "Kolory:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
-#, fuzzy
 msgid "ApplyColors"
-msgstr "Zastosuj"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "Kolejność wiązań:"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2304,9 +2296,8 @@ msgstr "Nazwa pierwiastka."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "Symbol pierwiastka"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
@@ -2315,9 +2306,8 @@ msgid "Element symbol."
 msgstr "Symbol pierwiastka."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
-#, fuzzy
 msgid "Invalid atom label."
-msgstr "Symbol pierwiastka"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
@@ -2470,10 +2460,8 @@ msgid "&Edit"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "Kopiuj"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2735,9 +2723,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
 msgid "Color axes:"
-msgstr "Kolory:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -2946,10 +2933,8 @@ msgid "Configure…"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:108
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Napraw zaznaczone atomy"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:115
 msgid "Unfreeze Selected Atoms"
@@ -3254,9 +3239,8 @@ msgid "Color:"
 msgstr "Kolory:"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "Odległość:"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3285,9 +3269,8 @@ msgid "Element"
 msgstr "Pierwiastek"
 
 #: qtplugins/label/label.cpp:184
-#, fuzzy
 msgid "Element & Number"
-msgstr "Nazwa pierwiastka"
+msgstr ""
 
 #: qtplugins/label/label.cpp:186
 msgid "Element & ID"
@@ -3402,7 +3385,7 @@ msgstr "InChI…"
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
 #, fuzzy
 msgid "No descriptors found!"
-msgstr "Brak opisu"
+msgstr "Brak opisu!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
@@ -3480,9 +3463,8 @@ msgstr "Kąt:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
-#, fuzzy
 msgid "Measure tool"
-msgstr "Pomiary"
+msgstr ""
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
@@ -3744,7 +3726,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:77
 #, fuzzy
 msgid "Add Hydrogens for pH…"
-msgstr "Dodaj wodory, aby uzyskać podane pH"
+msgstr "Dodaj wodory, aby uzyskać podane pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 #, fuzzy
@@ -4312,9 +4294,8 @@ msgid "Render the scene using PLY."
 msgstr ""
 
 #: qtplugins/povray/povray.cpp:29
-#, fuzzy
 msgid "POV-Ray Render…"
-msgstr "POV-Ray"
+msgstr ""
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -5143,9 +5124,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Eksportuj obraz"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -7720,7 +7700,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Import"
 msgid "&Import..."
-msgstr "&Importuj"
+msgstr "&Importuj…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -7730,10 +7710,8 @@ msgstr "&Importuj"
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
 #. i18n: file: qtplugins/spectra/spectradialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Set Color..."
-msgstr "Wybrane kolory"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
