@@ -2,13 +2,14 @@
 # Copyright (C) 2006-2018 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Balavamsi Krishna <balavamsikrishna38@gmail.com>, 2023.
+# Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2023-10-11 16:27+0000\n"
-"Last-Translator: Balavamsi Krishna <balavamsikrishna38@gmail.com>\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/te/>\n"
 "Language: te\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -3555,9 +3556,8 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:248
-#, fuzzy
 msgid "Export CSV"
-msgstr "ఎగుమతి చెయ్యి"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:249
@@ -7659,9 +7659,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:458
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
-#, fuzzy
 msgid "Export Data"
-msgstr "ఎగుమతి చెయ్యి"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:471
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)

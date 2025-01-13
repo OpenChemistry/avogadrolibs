@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca/>\n"
@@ -2458,7 +2458,7 @@ msgstr "Entrada turbomole"
 #: qtplugins/propertytables/propertyview.cpp:300:277
 #, fuzzy
 msgid "Copy"
-msgstr "Copia-ho tot"
+msgstr "Copia"
 
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
@@ -2482,7 +2482,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:34:286
 #, fuzzy
 msgid "Clear"
-msgstr "Suprimeix-ho tot"
+msgstr "Suprimeix"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -2495,7 +2495,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:81
 #, fuzzy
 msgid "Copy As"
-msgstr "Copia-ho tot"
+msgstr "Copia com"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -5237,9 +5237,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Exporta Imatge"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"

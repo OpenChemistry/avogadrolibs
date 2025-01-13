@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/el/>\n"
@@ -4598,9 +4598,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Παράθυρα για εμφάνιση ατόμου, δεσμού, γωνίας και ιδιοτήτων στρέψης. "
-"Περιλαμβάνει επίσης έναν καρτεσιανό επεξεργαστή συντεταγμένων."
+msgstr "Παράθυρα για εμφάνιση ατόμου, δεσμού, γωνίας και ιδιοτήτων στρέψης."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -4700,10 +4698,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Φορτίο"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -4988,10 +4984,8 @@ msgid "Space group features for crystals."
 msgstr ""
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Plot Spectra…"
-msgstr "Εισαγωγή φασμάτων"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -5061,9 +5055,8 @@ msgid "Wavelength (nm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:586
-#, fuzzy
 msgid "Vibrational Spectra"
-msgstr "Δονήσεις"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:587
 #: qtplugins/spectra/spectradialog.cpp:601
@@ -5092,10 +5085,8 @@ msgid "Intensity"
 msgstr "Εντάσεις"
 
 #: qtplugins/spectra/spectradialog.cpp:613
-#, fuzzy
-#| msgid "Spectra"
 msgid "NMR Spectra"
-msgstr "Φάσματα"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:614
 #, fuzzy
@@ -5217,16 +5208,12 @@ msgid "Create Surfaces…"
 msgstr "Δημιουργία επιφανειών…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Αποτύπωση ατόμων ως σφαίρες Van der Waals"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals molecular surface."
-msgstr "Αποτύπωση ατόμων ως σφαίρες Van der Waals"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the solvent-accessible molecular surface."
@@ -5237,14 +5224,12 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Μοριακό τροχιακό"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Υπολογίζεται η ηλεκτρονική πυκνότητα"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5273,9 +5258,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Εξαγωγή εικόνας"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5373,18 +5357,16 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "Μέτρηση"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:27
-#, fuzzy
 msgid "Vibrational Modes…"
-msgstr "Δονήσεις"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
@@ -7157,7 +7139,7 @@ msgstr "Μέθοδος"
 #, fuzzy
 #| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Αριθμός διαμορφομερών"
+msgstr "Αριθμός διαμορφομερών:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7851,10 +7833,8 @@ msgstr "Συντελεστής κλίμακας:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Ελάχιστο:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7873,10 +7853,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Ελάχιστο:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -7950,7 +7928,7 @@ msgstr "Φόντο:"
 #, fuzzy
 #| msgid "Export Calculated Spectrum"
 msgid "Calculated Spectra:"
-msgstr "υπολογιζόμενου φάσματος"
+msgstr "υπολογιζόμενου φάσματος:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8358,7 +8336,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "Τύπος"
+msgstr "Τύπος:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)

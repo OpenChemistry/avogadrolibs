@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/da/>\n"
@@ -1900,10 +1900,8 @@ msgstr "Farv rest"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Valgte farver"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1911,9 +1909,8 @@ msgstr "Valgte farver"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "Farver:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -1924,9 +1921,8 @@ msgid "Atom scale"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "Bindingsvinkel"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -3371,9 +3367,8 @@ msgid "Ctrl+4"
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:32
-#, fuzzy
 msgid "Edit Labels"
-msgstr "Etiket"
+msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
@@ -3384,9 +3379,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
-#, fuzzy
 msgid "Create Label"
-msgstr "Skab overflader"
+msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3531,9 +3525,8 @@ msgstr "(afventende)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:108
 #: qtplugins/molecularproperties/molecularmodel.cpp:116
 #: qtplugins/molecularproperties/molecularmodel.cpp:132
-#, fuzzy
 msgid "unknown molecule"
-msgstr "Intet molekylesæt"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:611
@@ -3732,9 +3725,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
-#, fuzzy
 msgid "Navigate tool"
-msgstr "Navigér"
+msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
@@ -4577,9 +4569,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Vindue til at vise atomer-, binding-, vinkle- og drejningsegenskaber. Det "
-"inkludere også en kartesiansk editor"
+msgstr "Vindue til at vise atomer-, binding-, vinkle- og drejningsegenskaber."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -5223,9 +5213,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Exporter billede"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"

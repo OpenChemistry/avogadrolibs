@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/vi/>\n"
@@ -1568,10 +1568,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "Dóng hàng"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1902,10 +1900,8 @@ msgstr "Dư chất"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "Các màu được chọn"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1913,10 +1909,8 @@ msgstr "Các màu được chọn"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Màu:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 #, fuzzy
@@ -1929,9 +1923,8 @@ msgid "Atom scale"
 msgstr "Nhãn của nguyên tử"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "Góc liên kết"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2494,9 +2487,8 @@ msgid "&Edit"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
 msgid "Copy As"
-msgstr "Chép tất cả"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2761,10 +2753,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Màu sắc:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 #, fuzzy
@@ -3409,9 +3399,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
-#, fuzzy
 msgid "Create Label"
-msgstr "Tạo các mặt"
+msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3802,7 +3791,7 @@ msgstr "Thiết lập trường lực..."
 #, fuzzy
 #| msgid "Conformer Search"
 msgid "Conformer Search…"
-msgstr "Tìm đồng phân"
+msgstr "Tìm đồng phân…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -3925,14 +3914,12 @@ msgid "Cannot generate conformers with Open Babel."
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
-#, fuzzy
 msgid "Generating Conformers (Open Babel)"
-msgstr "&Tối ưu hình học"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Đồng phân %1"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4103,9 +4090,8 @@ msgid "True"
 msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
 msgid "Reference Axes"
-msgstr "&Tham khảo:"
+msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4525,10 +4511,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Chèn đoạn"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 #, fuzzy
@@ -4611,9 +4595,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr ""
-"Cửa sổ hiện các thuộc tính nguyên tử, liên kết, góc và xoắn. Nó cũng bao gồm "
-"một trình soạn thảo tọa độ Đề-các"
+msgstr "Cửa sổ hiện các thuộc tính nguyên tử, liên kết, góc và xoắn."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -4710,10 +4692,8 @@ msgid "Manipulate the view camera."
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
-#, fuzzy
-#| msgid "Charge:"
 msgid "Script Charge Models"
-msgstr "Điện tích:"
+msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
@@ -5036,7 +5016,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Density Of States Settings"
 msgid "Density of States"
-msgstr "Đặt mật độ trạng thái (DOS)"
+msgstr "Mật độ trạng thái (DOS)"
 
 #: qtplugins/spectra/spectradialog.cpp:496
 msgid "Select Background Color"
@@ -5074,10 +5054,8 @@ msgid "Transmission"
 msgstr "Xoắn"
 
 #: qtplugins/spectra/spectradialog.cpp:600
-#, fuzzy
-#| msgid "Import Spectra"
 msgid "Raman Spectra"
-msgstr "Nhập phổ"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:602
 #: qtplugins/spectra/spectradialog.cpp:615
@@ -5087,10 +5065,8 @@ msgid "Intensity"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:613
-#, fuzzy
-#| msgid "Spectra"
 msgid "NMR Spectra"
-msgstr "Phổ"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:614
 msgid "Chemical Shift (ppm)"
@@ -5210,16 +5186,12 @@ msgid "Create Surfaces…"
 msgstr "Tạo các mặt"
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals surface."
-msgstr "Hiển thị nguyên tử như hình cầu Van der Waals"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Renders atoms as Van der Waals spheres"
 msgid "Render the van der Waals molecular surface."
-msgstr "Hiển thị nguyên tử như hình cầu Van der Waals"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the solvent-accessible molecular surface."
@@ -5235,9 +5207,8 @@ msgid "Render a molecular orbital."
 msgstr "Orbital phân tử"
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
 msgid "Render the electron density."
-msgstr "Tính mật độ electron"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5266,9 +5237,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "&Xuất ảnh"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5364,9 +5334,8 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "Đo"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5427,10 +5396,8 @@ msgid "Render the molecule as a wireframe."
 msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
-#, fuzzy
-#| msgid "Calculated Spectra:"
 msgid "Calculate Band Structure…"
-msgstr "Tính toán phổ:"
+msgstr ""
 
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Yaehmop"
@@ -5773,10 +5740,8 @@ msgstr "Điện tích từng phần"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
-#, fuzzy
-#| msgid "Charge:"
 msgid "Charge Model:"
-msgstr "Điện tích:"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6407,10 +6372,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#, fuzzy
-#| msgid "Nucleus:"
 msgid "Nucleic Acids:"
-msgstr "Hạt nhân:"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:49
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_A)
@@ -7112,10 +7075,8 @@ msgstr "Phương pháp"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Số đồng phân"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7807,10 +7768,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "Cực tiểu:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7829,10 +7788,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "Cực tiểu:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -8312,7 +8269,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "Kiểu"
+msgstr "Kiểu:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -8569,10 +8526,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Number of Bonds:"
 msgid "Number of Dimensions:"
-msgstr "Số liên kết:"
+msgstr ""
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:220
 #. i18n: ectx: property (text), widget (QCheckBox, cb_displayYaehmopInput)

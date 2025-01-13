@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-10 07:01+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -1122,9 +1122,9 @@ msgid "'type' is not a string for option '%1'."
 msgstr "'type' ne estas signoĉeno por opcio '%1'."
 
 #: qtgui/jsonwidget.cpp:131
-#, fuzzy, qt-format
+#, qt-format
 msgid "Could not find option '%1'."
-msgstr "'type' ne estas signoĉeno por opcio '%1'."
+msgstr ""
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
@@ -1655,10 +1655,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Selection tool"
 msgid "Align tool"
-msgstr "Elekta ilo"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1991,9 +1989,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "Kolorigi laŭ:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 #, fuzzy
@@ -2006,9 +2003,8 @@ msgid "Atom scale"
 msgstr "Atoma Stilo"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "HLigoj"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2020,13 +2016,13 @@ msgstr "Opakeco"
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
 msgid "Show multiple bonds"
-msgstr "Ĉu montri pluroblajn ligojn?"
+msgstr "Ĉu montri pluroblajn ligojn"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 #, fuzzy
 msgid "Show hydrogens"
-msgstr "Ĉu montri hidrogenojn?"
+msgstr "Ĉu montri hidrogenojn"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2580,7 +2576,7 @@ msgstr "R&edakti"
 #, fuzzy
 #| msgid "Copy"
 msgid "Copy As"
-msgstr "Kopii"
+msgstr "Kopii kiel"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2861,9 +2857,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Iloj por kristal-specifaj redaktado/analizo."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
 msgid "Color axes:"
-msgstr "Kolorigi laŭ:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3494,9 +3489,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
-#, fuzzy
 msgid "Create Label"
-msgstr "Krei Surfacojn"
+msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 #, fuzzy
@@ -3896,10 +3890,8 @@ msgid "Configure Force Field…"
 msgstr "Agordi Fortokampon…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
-#, fuzzy
-#| msgid "Conformer"
 msgid "Conformer Search…"
-msgstr "Formizomero"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
@@ -3932,7 +3924,7 @@ msgstr "La OpenBabel-dosierformoj ne pretas aldoniĝi."
 #, fuzzy
 #| msgid "Loading molecule from CML..."
 msgid "Loading molecule from Open Babel…"
-msgstr "Ŝargante molekulon el CML…"
+msgstr "Ŝargante molekulon el Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
@@ -3976,7 +3968,7 @@ msgstr "Optimumigante Geometrion (OpenBabel)"
 #, fuzzy
 #| msgid "Generating MDL..."
 msgid "Generating…"
-msgstr "Generante MDL…"
+msgstr "Generante…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 #, fuzzy
@@ -3986,7 +3978,8 @@ msgstr "Generante MDL…"
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
-msgstr "Interna eraro okazis generante CML-prezenton de la aktuala molekulo."
+msgstr ""
+"Interna eraro okazis generante Open Babel-prezenton de la aktuala molekulo."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, fuzzy, qt-format
@@ -4030,26 +4023,20 @@ msgstr ""
 "en la originala molekulo (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molekulo ne estas valida."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:586
-#, fuzzy
-#| msgid "Cannot open file with Open Babel."
 msgid "Cannot generate conformers with Open Babel."
-msgstr "Ne eblas malfermi dosieron per OpenBabel."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
-#| msgid "Conformer"
 msgid "Generate Conformers"
-msgstr "Formizomero"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4077,13 +4064,13 @@ msgstr "Eraro pri generado de XYZ-signoĉeno."
 #, fuzzy, qt-format
 #| msgid "Converting XYZ to CML with %1..."
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr "Konvertante XYZ al CML laŭ %1…"
+msgstr "Konvertante XYZ al Open Babel laŭ %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:770
 #, fuzzy
 #| msgid "Updating molecule from CML..."
 msgid "Updating molecule from Open Babel…"
-msgstr "Ĝisdatigante molekulon laŭ CML…"
+msgstr "Ĝisdatigante molekulon laŭ Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
@@ -4233,9 +4220,8 @@ msgid "True"
 msgstr "Vera"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
 msgid "Reference Axes"
-msgstr "Referenco"
+msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4533,7 +4519,7 @@ msgstr "Bildigi ĉi tiun scenon per PLY."
 #, fuzzy
 #| msgid "POV-Ray Render"
 msgid "POV-Ray Render…"
-msgstr "Bildigi per POV-Ray"
+msgstr "Bildigi per POV-Ray…"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -4669,10 +4655,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Adjust Fragment"
-msgstr "Enmeti Fragmenton"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
@@ -5164,10 +5148,8 @@ msgid "Space group features for crystals."
 msgstr "Funkcioj pri spacgrupoj de kristaloj."
 
 #: qtplugins/spectra/spectra.cpp:29
-#, fuzzy
-#| msgid "Plot RMSD curve..."
 msgid "Plot Spectra…"
-msgstr "Desegni RMSD-kurbon…"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -5231,10 +5213,8 @@ msgid "Wavelength (nm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:586
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "Vibraj Modoj"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:587
 #: qtplugins/spectra/spectradialog.cpp:601
@@ -5411,10 +5391,8 @@ msgid "Render a molecular orbital."
 msgstr "Molekula Orbito"
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Render the electron density."
-msgstr "Kalkulante elektronan denson"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5483,7 +5461,7 @@ msgstr "Klaso"
 #, fuzzy
 #| msgid "Symmetry"
 msgid "Symmetry…"
-msgstr "Simetrio"
+msgstr "Simetrio…"
 
 #: qtplugins/symmetry/symmetry.h:67
 msgid "Provide symmetry functionality."
@@ -5534,23 +5512,17 @@ msgid "Clipboard"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:404
-#, fuzzy
-#| msgid "Insert Molecule..."
 msgid "Insert Template"
-msgstr "Enmeti Molekulon…"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:679
-#, fuzzy
-#| msgid "Insert Fragment"
 msgid "Insert Ligand"
-msgstr "Enmeti Fragmenton"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
-#| msgid "Manipulate tool"
 msgid "Template tool"
-msgstr "Manipula ilo"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -5560,25 +5532,19 @@ msgstr "Simpla montro de sferoj de Van der Waals."
 #, fuzzy
 #| msgid "Vibrational Modes"
 msgid "Vibrational Modes…"
-msgstr "Vibraj Modoj"
+msgstr "Vibraj Modoj…"
 
 #: qtplugins/vibrations/vibrations.cpp:90
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Show the vibrational modes dialog."
-msgstr "Vibraj modoj…"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:91
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational mode."
-msgstr "Vibraj modoj…"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:93
-#, fuzzy
-#| msgid "Vibrational modes..."
 msgid "Set the vibrational amplitude."
-msgstr "Vibraj modoj…"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:95
 msgid "Start the vibrational animation."
@@ -5604,7 +5570,7 @@ msgstr "Montru vibrajn modojn."
 #, fuzzy
 #| msgid "VRML Render"
 msgid "VRML Render…"
-msgstr "VRML-Bildigo"
+msgstr "VRML-Bildigo…"
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -6501,7 +6467,7 @@ msgstr "Kriterioj pri Konverĝo"
 #, fuzzy
 #| msgid "\"Energy\" convergence:"
 msgid "Energy convergence:"
-msgstr "\"Energia\" konverĝo:"
+msgstr "Energia konverĝo:"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:52
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -6541,10 +6507,8 @@ msgstr " paŝoj"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:97
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
-#| msgid "\"Energy\" convergence:"
 msgid "Gradient convergence:"
-msgstr "\"Energia\" konverĝo:"
+msgstr ""
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:126
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
@@ -7393,10 +7357,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
-#, fuzzy
-#| msgid "Conformer"
 msgid "Conformer Search"
-msgstr "Formizomero"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -7407,10 +7369,8 @@ msgstr "Metodo:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
-#| msgid "Number of Atoms:"
 msgid "Number of conformers:"
-msgstr "Nombro de Atomoj:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7478,7 +7438,7 @@ msgstr ""
 #, fuzzy
 #| msgid "\"Energy\" convergence:"
 msgid "Convergence:"
-msgstr "\"Energia\" konverĝo:"
+msgstr "Konverĝo:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -8202,10 +8162,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:356
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Calculate:"
 msgid "Calculated Spectra:"
-msgstr "Kalkuli:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:376
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8610,7 +8568,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "Tipo"
+msgstr "Tipo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)

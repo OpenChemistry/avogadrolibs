@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -1326,9 +1326,8 @@ msgid "Adjust Hydrogens"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
-#, fuzzy
 msgid "Change Elements"
-msgstr "عنصر"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
@@ -1558,20 +1557,16 @@ msgid "Align to Axis"
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
-#, fuzzy
-#| msgid "Renders the x, y, and z axes at the origin"
 msgid "Center the atom at the origin."
-msgstr "يجعل خطوط x ، y و z على الأصل"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "حاذي"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1898,10 +1893,8 @@ msgstr "تلوين حسب لون الرواسب"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Select Background Color"
 msgid "Select Colormap"
-msgstr "اختر لون الخلفية"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1909,9 +1902,8 @@ msgstr "اختر لون الخلفية"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
 msgid "Colormap:"
-msgstr "طبّق"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 #, fuzzy
@@ -1923,9 +1915,8 @@ msgid "Atom scale"
 msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "ترتيب الرابطة"
+msgstr ""
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -2732,9 +2723,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
 msgid "Color axes:"
-msgstr "طبّق"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -4442,9 +4432,8 @@ msgid "Energy (kcal/mol)"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:807
-#, fuzzy
 msgid "Adjust Fragment"
-msgstr "إضافة الهيدروجين"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
@@ -5117,9 +5106,8 @@ msgid "Render a molecular orbital."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:122
-#, fuzzy
 msgid "Render the electron density."
-msgstr "كثافة الإلكترون"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5149,9 +5137,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "تصدير صورة"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5242,9 +5229,8 @@ msgid "Insert Template"
 msgstr ""
 
 #: qtplugins/templatetool/templatetool.cpp:679
-#, fuzzy
 msgid "Insert Ligand"
-msgstr "&إدراج"
+msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
@@ -5256,9 +5242,8 @@ msgid "Simple display of VdW spheres."
 msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:27
-#, fuzzy
 msgid "Vibrational Modes…"
-msgstr "الاهتزازات"
+msgstr ""
 
 #: qtplugins/vibrations/vibrations.cpp:90
 msgid "Show the vibrational modes dialog."
@@ -6972,7 +6957,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Method:"
 msgid "Method"
-msgstr "المنهج:"
+msgstr "المنهج"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7658,10 +7643,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "الحد الأدنى:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7680,10 +7663,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "الحد الأدنى:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)

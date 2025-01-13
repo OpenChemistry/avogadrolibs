@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 04:00+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bg/>\n"
@@ -2454,10 +2454,8 @@ msgid "&Edit"
 msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "Копирай"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -5104,9 +5102,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "Изнасяне на изображение"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"

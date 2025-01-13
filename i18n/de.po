@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-08 01:12+0000\n"
+"PO-Revision-Date: 2025-01-13 03:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2810,10 +2810,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Werkzeuge für Kristall-spezifische Bearbeitung und Analyse."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "Farben:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3944,9 +3942,8 @@ msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "Konformer"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."

@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
@@ -1980,10 +1980,8 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "Цвет:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 #, fuzzy
@@ -2543,7 +2541,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:34:286
 #, fuzzy
 msgid "Clear"
-msgstr "Очистить всё"
+msgstr "Очистить"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -4656,8 +4654,7 @@ msgstr ""
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
-"Окна, отображающие свойства атомов, связей, валентных и двугранных углов. "
-"Также включает редактор декартовых координат."
+"Окна, отображающие свойства атомов, связей, валентных и двугранных углов."
 
 #: qtplugins/propertytables/propertytables.h:29
 #, fuzzy
@@ -5399,9 +5396,8 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
-#, fuzzy
 msgid "Template tool"
-msgstr "Измерение"
+msgstr ""
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -7147,7 +7143,7 @@ msgstr "Метод"
 #, fuzzy
 #| msgid "Number of conformers"
 msgid "Number of conformers:"
-msgstr "Число конформеров"
+msgstr "Число конформеров:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)

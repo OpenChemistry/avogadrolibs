@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hant/>\n"
@@ -1570,10 +1570,8 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:29
-#, fuzzy
-#| msgid "Align"
 msgid "Align tool"
-msgstr "排列"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1901,10 +1899,8 @@ msgstr "依照殘基上顏色"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
-#, fuzzy
-#| msgid "Selected Colors"
 msgid "Select Colormap"
-msgstr "所選取的顏色"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1912,10 +1908,8 @@ msgstr "所選取的顏色"
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
-#, fuzzy
-#| msgid "Color:"
 msgid "Colormap:"
-msgstr "顏色:"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.h:29
 #, fuzzy
@@ -1947,7 +1941,7 @@ msgstr "顯示多個鍵"
 #: qtplugins/wireframe/wireframe.cpp:106
 #, fuzzy
 msgid "Show hydrogens"
-msgstr "氫"
+msgstr "显示氫"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2319,9 +2313,8 @@ msgstr "元素名稱"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
-#, fuzzy
 msgid "Invalid element symbol."
-msgstr "元素符號"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
@@ -2334,9 +2327,8 @@ msgid "Invalid atom label."
 msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
-#, fuzzy
 msgid "Invalid atomic index."
-msgstr "原子指數"
+msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
@@ -2481,7 +2473,7 @@ msgstr ""
 #: qtplugins/copypaste/copypaste.cpp:34:286
 #, fuzzy
 msgid "Clear"
-msgstr "全部清除"
+msgstr "清除"
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
@@ -2760,15 +2752,12 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Colors:"
 msgid "Color axes:"
-msgstr "顏色:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
-#, fuzzy
 msgid "Line color:"
-msgstr "胺基顏色"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
@@ -2837,7 +2826,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:223
 #, fuzzy
 msgid "Distance:"
-msgstr "距離"
+msgstr "距離："
 
 #: qtplugins/editor/editor.cpp:268
 #, qt-format
@@ -2877,7 +2866,7 @@ msgstr "&匯入"
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 #, fuzzy
 msgid "Fetch PDB"
-msgstr "取自 PDB (蛋白質資料庫)"
+msgstr "取 PDB (蛋白質資料庫)"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -3290,9 +3279,8 @@ msgid "Color:"
 msgstr "顏色:"
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "距離"
+msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3387,9 +3375,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
-#, fuzzy
 msgid "Create Label"
-msgstr "產生外觀"
+msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -3533,7 +3520,7 @@ msgstr "(未決)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:132
 #, fuzzy
 msgid "unknown molecule"
-msgstr "沒有設定分子"
+msgstr "不明分子"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:611
@@ -3896,9 +3883,8 @@ msgid "Generating Conformers (Open Babel)"
 msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:710
-#, fuzzy
 msgid "Generate Conformers"
-msgstr "構形異構物"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
@@ -4068,9 +4054,8 @@ msgid "True"
 msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
-#, fuzzy
 msgid "Reference Axes"
-msgstr "參考"
+msgstr ""
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
@@ -4499,7 +4484,7 @@ msgstr ""
 #, fuzzy
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "螺旋"
+msgstr "π 螺旋"
 
 #: qtplugins/propertytables/propertymodel.cpp:935
 msgctxt "protein bend secondary structure"
@@ -4510,13 +4495,13 @@ msgstr ""
 #, fuzzy
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "螺旋"
+msgstr "α 螺旋"
 
 #: qtplugins/propertytables/propertymodel.cpp:939
 #, fuzzy
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr "平板"
+msgstr "β 平板"
 
 #: qtplugins/propertytables/propertymodel.cpp:941
 #, fuzzy
@@ -4567,12 +4552,11 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
-msgstr "這些視窗可以用來顯示原子, 鍵, 鍵角,及扭力性質等. 也包含直角座標編輯器."
+msgstr "這些視窗可以用來顯示原子, 鍵, 鍵角, 及扭力性質等."
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "性質"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:44
 msgid "Atom Properties"
@@ -4695,9 +4679,8 @@ msgid "Select by Element…"
 msgstr "依元素選擇…"
 
 #: qtplugins/select/select.cpp:58
-#, fuzzy
 msgid "Select by Atom Index…"
-msgstr "原子指數"
+msgstr ""
 
 #: qtplugins/select/select.cpp:63
 #, fuzzy
@@ -5184,12 +5167,12 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 msgid "Render a molecular orbital."
-msgstr "分子軌域"
+msgstr "渲染分子軌域"
 
 #: qtplugins/surfaces/surfaces.cpp:122
 #, fuzzy
 msgid "Render the electron density."
-msgstr "電子密度"
+msgstr "渲染電子密度"
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
@@ -5218,9 +5201,8 @@ msgid "Movie AVI (*.avi)"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:867
-#, fuzzy
 msgid "Export Movie"
-msgstr "匯出圖形"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -5709,9 +5691,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:37
 #. i18n: ectx: property (text), widget (QCheckBox, loadCubeCheckBox)
-#, fuzzy
 msgid "Load Cube File"
-msgstr "載入檔案"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
@@ -7750,10 +7731,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "X-Axis Minimum:"
-msgstr "最小值："
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -7772,10 +7751,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#, fuzzy
-#| msgid "Minimum:"
 msgid "Y-Axis Minimum:"
-msgstr "最小值："
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
@@ -8259,7 +8236,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Type"
 msgid "Type:"
-msgstr "種類"
+msgstr "種類："
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)

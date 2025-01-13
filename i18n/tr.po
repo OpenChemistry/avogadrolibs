@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-10 07:01+0000\n"
+"PO-Revision-Date: 2025-01-13 03:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -2065,10 +2065,8 @@ msgid "Bond Atoms"
 msgstr "Atomları Bağla"
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
-#| msgid "Perceive Bonds"
 msgid "Perceive Bond Orders"
-msgstr "Bağları Algıla"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2096,10 +2094,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr "Tüm atomlar veya seçilen atomlar arasında bağlar oluşturun."
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
-#| msgid "Perceive Bonds"
 msgid "Perceive bond orders."
-msgstr "Bağları Algıla"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2540,10 +2536,8 @@ msgid "&Edit"
 msgstr "&Düzen"
 
 #: qtplugins/copypaste/copypaste.cpp:81
-#, fuzzy
-#| msgid "Copy"
 msgid "Copy As"
-msgstr "(...) Olarak Kopyala"
+msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
@@ -2811,10 +2805,8 @@ msgid "Tools for crystal-specific editing/analysis."
 msgstr "Kristale özgü düzenleme / analiz araçları."
 
 #: qtplugins/crystal/crystalscene.cpp:178
-#, fuzzy
-#| msgid "Color:"
 msgid "Color axes:"
-msgstr "Renk:"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
@@ -3939,10 +3931,8 @@ msgstr ""
 "(%2) eşleşmiyor."
 
 #: qtplugins/openbabel/openbabel.cpp:568
-#, fuzzy
-#| msgid "Molecule invalid. Cannot optimize geometry."
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr "Molekül geçersiz."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
@@ -4781,10 +4771,8 @@ msgid "&Select"
 msgstr "&Seç"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Select by Element…"
 msgid "Select Element"
-msgstr "Element ile seç"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -4815,10 +4803,8 @@ msgid "Residues to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:491
-#, fuzzy
-#| msgid "Select by Residue…"
 msgid "Select Residue"
-msgstr "Kalıntı ile seç"
+msgstr ""
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
