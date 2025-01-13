@@ -1,4 +1,4 @@
-name: CMake Build Matrix
+name: Qt5 Build Matrix
 # Many thanks to Cristian Adam for examples
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
@@ -11,7 +11,7 @@ env:
   # this is different from MACOSX_DEPLOYMENT_TARGET to prevent build problems
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 10.12
-  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DUSE_VTK=ON -DUSE_3DCONNEXION=ON -DQT_VERSION=5
   CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   SCCACHE_GHA_ENABLED: "true"
 
@@ -27,22 +27,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "Ubuntu GCC", artifact: "Ubuntu-Latest.tar.gz",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu AppImage", artifact: "Avogadro2.AppImage",
-            os: ubuntu-22.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DBUILD_MOLEQUEUE=OFF -DINSTALL_BUNDLE_FILES=ON -USE_SYSTEM_ZLIB=ON",
-            cpack: "",
-          }
         - {
             name: "macOS Clang", artifact: "macOS.dmg",
             os: macos-13,
@@ -60,34 +44,9 @@ jobs:
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
-        - {
-            name: "Ubuntu Address Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-            cpack: "",
-          }
-        - {
-            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
-            os: ubuntu-20.04,
-            cc: "gcc", cxx: "g++",
-            build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
-            cpack: "",
-          }
 
     steps:
 
-    - name: Install Dependencies (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        sudo add-apt-repository -y universe
-        sudo apt-get -qq update
-        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
-        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
-        sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
-        sudo apt install libfuse2
     - name: Install Dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -215,23 +174,6 @@ jobs:
           done
         done
 
-    - name: Run tests
-      if: matrix.config.os == 'ubuntu-20.04'
-      shell: cmake -P {0}
-      run: |
-        include(ProcessorCount)
-        ProcessorCount(N)
-        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
-        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
-        execute_process(
-          COMMAND ctest -j ${N}
-          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
-          RESULT_VARIABLE result
-        )
-        if (NOT result EQUAL 0)
-          message(FATAL_ERROR "Running tests failed!")
-        endif()
-
     - name: Install the Apple certificate
       # From GitHub docs: https://docs.github.com/en/actions/guides/installing-an-apple-certificate-on-macos-runners-for-xcode-development
       if: runner.os == 'macOS'
@@ -290,29 +232,6 @@ jobs:
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
         OPENSSL_ROOT_DIR: ${{ matrix.config.ssl_env }}
-
-    - name: AppImage
-      if: matrix.config.os == 'ubuntu-22.04' && matrix.config.build_type == 'Release'
-      shell: bash
-      run: |
-        mkdir appdir
-        mv prefix appdir/usr
-
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:appdir/usr/lib
-
-        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
-        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
-        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-        chmod a+x *.AppImage
-
-        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
-        # add the custom AppRun
-        rm appdir/AppRun
-        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
-        chmod a+x appdir/AppRun
-        ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro*.AppImage avogadroapp # for upload
-      working-directory: ${{ runner.workspace }}/build
 
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
