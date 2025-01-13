@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-13 03:01+0000\n"
+"PO-Revision-Date: 2025-01-14 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -3171,10 +3171,8 @@ msgid "Autodetect (%1)"
 msgstr "Automatsko otkrivanje (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Поље силе"
+msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3669,10 +3667,8 @@ msgid "Measure tool"
 msgstr "Alatka za merenje"
 
 #: qtplugins/meshes/meshes.h:31
-#, fuzzy
-#| msgid "Render triangle meshes."
 msgid "Render polygon meshes."
-msgstr "Renderirajte trouglaste mreže."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
