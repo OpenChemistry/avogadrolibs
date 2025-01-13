@@ -23,6 +23,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <algorithm> // for clamp
 
 namespace Avogadro::Rendering {
 
@@ -81,10 +82,24 @@ public:
     glUniform1i(backLoc, 5);
 
     // Pass screen size
-    prog.setUniformValue("width",  float(w));
-    prog.setUniformValue("height", float(h));
+    // prog.setUniformValue("width",  float(w));
+    // prog.setUniformValue("height", float(h));
   }
 
+  void attachTransferFunction(ShaderProgram& prog,
+                              const GLchar* tfName, GLuint tfTex)
+  {
+    prog.bind();
+    GLuint programID = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint*)&programID);
+
+    // Bind the transfer function texture on some texture unit (say GL_TEXTURE6)
+    GLuint loc = glGetUniformLocation(programID, tfName);
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, tfTex);
+    glUniform1i(loc, 6); // tell the sampler that our TF is at unit 6
+  }
+  
   /** Our FBOs and textures. */
   GLuint defaultFBO;       // The system FBO (screen)
   GLuint renderFBO;        // Main scene FBO
@@ -114,6 +129,7 @@ public:
   Shader firstFragmentShader;
 
   // Box geometry for front/back pass
+  GLuint transferTexture;
   GLuint volumeBoxVao;
   GLuint volumeBoxVbo;
   GLuint volumeBoxEbo;
@@ -147,24 +163,24 @@ static const GLfloat boxVertices[] = {
 };
 
 static const GLuint boxIndices[] = {
-  // Front face
-  0, 1, 2,
-  2, 3, 0,
-  // Back face
-  4, 5, 6,
-  6, 7, 4,
-  // Left face
-  4, 0, 3,
-  3, 7, 4,
-  // Right face
-  1, 5, 6,
-  6, 2, 1,
-  // Top face
-  3, 2, 6,
-  6, 7, 3,
-  // Bottom face
-  4, 5, 1,
-  1, 0, 4
+              // front
+              0, 1, 2,
+              0, 2, 3,
+              // right
+              1, 5, 6,
+              1, 6, 2,
+              // back
+              5, 4, 7,
+              5, 7, 6,
+              // left
+              4, 0, 3,
+              4, 3, 7,
+              // top
+              2, 6, 7,
+              2, 7, 3,
+              // bottom
+              4, 5, 1,
+              4, 1, 0,
 };
 
 // Helper to create an FBO
@@ -173,35 +189,21 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
   glGenFramebuffers(1, outFBO);
   glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
 
-  // Color
   glGenTextures(1, texRGB);
   glBindTexture(GL_TEXTURE_2D, *texRGB);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_2D, *texRGB, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                         *texRGB, 0);
 
-  // Depth
   glGenTextures(1, texDepth);
   glBindTexture(GL_TEXTURE_2D, *texDepth);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 1, 1, 0,
-               GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                         GL_TEXTURE_2D, *texDepth, 0);
-
-  GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
-  glDrawBuffers(1, drawBuffersList);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "Error: FBO not complete!" << std::endl;
-  }
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                         *texDepth, 0);
 }
 
 SolidPipeline::SolidPipeline()
@@ -218,11 +220,16 @@ SolidPipeline::SolidPipeline()
 
 SolidPipeline::~SolidPipeline()
 {
+    if (d->transferTexture) {
+    glDeleteTextures(1, &d->transferTexture);
+    d->transferTexture = 0;
+  }
   delete d;
 }
 
 void SolidPipeline::initialize()
 {
+  std::cout<<"SolidPipeline::initialize()"<<std::endl;
   // 1) Create FBOs
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeFramebuffer(&d->backFBO,   &d->backColorTexture, &d->backDepthTexture);
@@ -237,8 +244,8 @@ void SolidPipeline::initialize()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  int size = 64;
-  std::vector<float> volumeData(size * size * size);
+  int size = 256;
+  std::vector<float> volumeData(size * size * size, 0.0f);
   for (int z = 0; z < size; ++z) {
     for (int y = 0; y < size; ++y) {
       for (int x = 0; x < size; ++x) {
@@ -250,11 +257,34 @@ void SolidPipeline::initialize()
       }
     }
   }
+
   glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
                size, size, size, 0,
                GL_RED, GL_FLOAT,
                volumeData.data());
+  std::vector<unsigned char> tfData(256 * 4);
+  for (int i = 0; i < 256; ++i) {
+    // i ko [0..255] se normalize karke color aur alpha define
+    float t = float(i) / 255.0f;
+    // let’s do a pinkish gradient: RGBA
+    tfData[i*4 + 0] = static_cast<unsigned char>(255.0f * t);    // R
+    tfData[i*4 + 1] = static_cast<unsigned char>(128.0f * t);    // G
+    tfData[i*4 + 2] = static_cast<unsigned char>(255.0f * (1-t));// B
+    tfData[i*4 + 3] = static_cast<unsigned char>(255.0f * t);    // A
+  }
 
+  glGenTextures(1, &d->transferTexture);
+  glBindTexture(GL_TEXTURE_2D, d->transferTexture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // Upload 256x1 RGBA8
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0,
+               GL_RGBA, GL_UNSIGNED_BYTE, tfData.data());
+  glBindTexture(GL_TEXTURE_2D, 0);
   // 3) Create box geometry VAO
   glGenVertexArrays(1, &d->volumeBoxVao);
   glBindVertexArray(d->volumeBoxVao);
@@ -318,6 +348,7 @@ void SolidPipeline::initialize()
 void SolidPipeline::renderVolumeFaces(const Camera& cam)
 {
   // Simple approach: use boxShaders to set up MVP
+
   d->boxShaders.bind();
 
   // Get the combined projection * modelView
@@ -333,6 +364,7 @@ void SolidPipeline::renderVolumeFaces(const Camera& cam)
     glViewport(0, 0, m_width, m_height);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    // glDepthFunc(GL_GREATER);
     glCullFace(GL_FRONT); // cull front, show back
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -354,6 +386,7 @@ void SolidPipeline::renderVolumeFaces(const Camera& cam)
     glViewport(0, 0, m_width, m_height);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    // glDepthFunc(GL_LESS);
     glCullFace(GL_BACK); // cull back, show front
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -424,6 +457,7 @@ void SolidPipeline::end()
                        "inBackDepthTex",  d->backDepthTexture,
                        m_width, m_height);
 
+  d->attachTransferFunction(d->firstStageShaders, "transferTex", d->transferTexture);
   d->firstStageShaders.bind();
   // Basic user uniforms
   d->firstStageShaders.setUniformValue("inAoEnabled",  (m_aoEnabled ? 1.0f : 0.0f));
@@ -432,7 +466,7 @@ void SolidPipeline::end()
   d->firstStageShaders.setUniformValue("transferMin",  0.0f);
   d->firstStageShaders.setUniformValue("transferMax",  1.0f);
   d->firstStageShaders.setUniformValue("numSteps",     128);
-  d->firstStageShaders.setUniformValue("alphaScale",   0.02f);
+  d->firstStageShaders.setUniformValue("alphaScale",   0.1f);
 
   // Bind volume
   GLint progID = 0;

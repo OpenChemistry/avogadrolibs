@@ -69,6 +69,7 @@ void GLRenderer::initialize()
   }
 
   m_solidPipeline.initialize();
+
 }
 
 void GLRenderer::resize(int width, int height)
@@ -100,10 +101,13 @@ void GLRenderer::render()
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   // Setup for solid geometry
   m_solidPipeline.begin();
+  {
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
+  m_solidPipeline.renderVolumeFaces(m_camera);
+  }
   m_solidPipeline.end();
 
   // Setup for opaque geometry
