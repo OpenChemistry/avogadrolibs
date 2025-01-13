@@ -171,7 +171,7 @@ QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
         scriptFiles << filePath;
         scriptNames << displayName;
         scriptHashes << QString::number(file.size()) +
-                          file.lastModified().toString();
+                          file.lastModified().toString(Qt::ISODate);
       }
     } // run queryProgramName
   }   // foreach files
