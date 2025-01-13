@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-06 03:49+0000\n"
+"PO-Revision-Date: 2025-01-14 07:01+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -4521,32 +4521,32 @@ msgstr "Prilagodi fragment"
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr "π spirala"
+msgstr "π-zavojnica"
 
 #: qtplugins/propertytables/propertymodel.cpp:935
 msgctxt "protein bend secondary structure"
 msgid "Bend"
-msgstr ""
+msgstr "Zavoj"
 
 #: qtplugins/propertytables/propertymodel.cpp:937
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr "α spirala"
+msgstr "α-zavojnica"
 
 #: qtplugins/propertytables/propertymodel.cpp:939
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr ""
+msgstr "β-ploča"
 
 #: qtplugins/propertytables/propertymodel.cpp:941
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr "3-10 spirala"
+msgstr "3-10 zavojnica"
 
 #: qtplugins/propertytables/propertymodel.cpp:943
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "β most"
 
 #: qtplugins/propertytables/propertymodel.cpp:945
 msgctxt "protein turn secondary structure"
