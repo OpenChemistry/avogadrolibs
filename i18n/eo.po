@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.93.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-13 03:01+0000\n"
+"PO-Revision-Date: 2025-01-14 07:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/eo/>\n"
@@ -1213,17 +1213,16 @@ msgstr "[neniu molekulo]"
 #, fuzzy, qt-format
 #| msgid "Layer"
 msgid "Layer %1"
-msgstr "Tavolo"
+msgstr "Tavolo %1"
 
 #: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "Pilkoj kaj Bastonoj"
 
 #: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
-#, fuzzy
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "Simpla"
+msgstr ""
 
 #: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
@@ -1245,7 +1244,7 @@ msgstr "Forto"
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
 #, fuzzy
 msgid "Labels"
-msgstr "Teksta Etikedo"
+msgstr "Etikedo"
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 #, fuzzy
@@ -1517,19 +1516,17 @@ msgstr "Redukti Ĉelon al Nesimetria Unito"
 #, fuzzy
 #| msgid "Change Atom Hybridization"
 msgid "Change Atom Positions"
-msgstr "Ŝanĝi Atoman Hibridiĝon"
+msgstr "Ŝanĝi Atoman Poziciojn"
 
 #: qtgui/rwmolecule.h:224
 #, fuzzy
 #| msgid "Change Atom Color"
 msgid "Change Atom Position"
-msgstr "Ŝanĝi Atoman Koloron"
+msgstr "Ŝanĝi Atoman Pozicio"
 
 #: qtgui/rwmolecule.h:242
-#, fuzzy
-#| msgid "Change Atom Layer"
 msgid "Change Atom Label"
-msgstr "Ŝanĝi atoman tavolon"
+msgstr ""
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
@@ -1549,13 +1546,12 @@ msgstr "Modifi Molekulon"
 #, fuzzy
 #| msgid "Server settings"
 msgid "Settings"
-msgstr "Agordoj pri servilo"
+msgstr "Agordoj"
 
 #: qtgui/scriptloader.cpp:33
-#, fuzzy, qt-format
-#| msgid "Cannot save file %1."
+#, qt-format
 msgid "Cannot load script %1"
-msgstr "Ne povas konservi dosieron %1."
+msgstr ""
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
@@ -1641,10 +1637,8 @@ msgid "Align at Origin"
 msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:192
-#, fuzzy
-#| msgid "Align View to Axes"
 msgid "Align to Axis"
-msgstr "Rektigi Vidon laŭ Aksoj"
+msgstr ""
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
@@ -1813,18 +1807,18 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:61
 #, fuzzy
 msgid "By Element"
-msgstr "Elemento"
+msgstr "Laŭ Elemento"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 #, fuzzy
 msgid "By Chain"
-msgstr "NH-Ĉenoj"
+msgstr "Ĉenoj"
 
 #: qtplugins/applycolors/applycolors.cpp:77
 #, fuzzy
 #| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Parta Ŝargo"
+msgstr "Laŭ Parta Ŝargo…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
@@ -1972,7 +1966,7 @@ msgstr "&Vidi"
 #: qtplugins/applycolors/applycolors.cpp:152
 #, fuzzy
 msgid "Color Atoms"
-msgstr "Forviŝi Atomojn"
+msgstr "Koloro Atomojn"
 
 #: qtplugins/applycolors/applycolors.cpp:154
 msgid "Color Residues"
@@ -1998,9 +1992,8 @@ msgid "ApplyColors"
 msgstr "Apliki Koloron"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
-#, fuzzy
 msgid "Atom scale"
-msgstr "Atoma Stilo"
+msgstr ""
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
 msgid "Bond scale"
@@ -2016,13 +2009,13 @@ msgstr "Opakeco"
 #: qtplugins/wireframe/wireframe.cpp:100
 #, fuzzy
 msgid "Show multiple bonds"
-msgstr "Ĉu montri pluroblajn ligojn"
+msgstr "Montri pluroblajn ligojn"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 #, fuzzy
 msgid "Show hydrogens"
-msgstr "Ĉu montri hidrogenojn"
+msgstr "Montri hidrogenojn"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
@@ -2085,10 +2078,8 @@ msgid "Bond Atoms"
 msgstr "Ligaj Atomoj"
 
 #: qtplugins/bonding/bonding.cpp:29
-#, fuzzy
-#| msgid "Perceive Bonds"
 msgid "Perceive Bond Orders"
-msgstr "Trovi Ligojn"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
@@ -2116,10 +2107,8 @@ msgid "Create bonds between all or selected atoms."
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:75
-#, fuzzy
-#| msgid "Perceive Bonds"
 msgid "Perceive bond orders."
-msgstr "Trovi Ligojn"
+msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
@@ -2150,10 +2139,9 @@ msgid "Ribbon"
 msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:96
-#, fuzzy
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr "Simpla"
+msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
@@ -2170,10 +2158,8 @@ msgid "Display of biomolecule ribbons / cartoons."
 msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:21
-#, fuzzy
-#| msgid "Add Atom"
 msgid "Add Centroid"
-msgstr "Aldoni Atomon"
+msgstr ""
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
@@ -2185,10 +2171,8 @@ msgid "Add Perpendicular"
 msgstr ""
 
 #: qtplugins/centroid/centroid.h:24
-#, fuzzy
-#| msgid "Center"
 msgid "Centroid"
-msgstr "Centrigi"
+msgstr ""
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
@@ -2228,15 +2212,14 @@ msgstr " Å"
 #, fuzzy
 #| msgid "Minimum Distance:"
 msgid "Maximum distance:"
-msgstr "Minimuma Distanco:"
+msgstr "Maksimuma Distanco:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:96
-#, fuzzy
 msgid "Line width:"
-msgstr "Larĝo de pinto:"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
@@ -2424,7 +2407,7 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
 msgid "Atomic index."
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr "Atoma Indico."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
@@ -2638,7 +2621,7 @@ msgstr "Interagi kun la tondujo."
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 #, fuzzy
 msgid "&CP2K…"
-msgstr "&CP2K"
+msgstr "&CP2K…"
 
 #: qtplugins/cp2kinput/cp2kinput.h:34
 msgid "CP2K input"
@@ -2774,7 +2757,7 @@ msgstr "Submeti CP2K-Kalkulon"
 #, fuzzy
 #| msgid "Import Crystal from Clipboard"
 msgid "Import Crystal from Clipboard…"
-msgstr "Importi Kristalon el Tondujo"
+msgstr "Importi Kristalon el Tondujo…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
@@ -2784,7 +2767,7 @@ msgstr "Baskuligi Unitan Ĉelon"
 #, fuzzy
 #| msgid "Edit Unit Cell"
 msgid "Edit Unit Cell…"
-msgstr "Redakti Unitan Ĉelon"
+msgstr "Redakti Unitan Ĉelon…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
@@ -2798,13 +2781,13 @@ msgstr "Turni al Norma &Orientiĝo"
 #, fuzzy
 #| msgid "Scale Cell &Volume"
 msgid "Scale Cell &Volume…"
-msgstr "Ŝanĝi Ĉelan &Volumenon"
+msgstr "Ŝanĝi Ĉelan &Volumenon…"
 
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 #| msgid "Build &Supercell"
 msgid "Build &Supercell…"
-msgstr "Konstrui &Superĉelon"
+msgstr "Konstrui &Superĉelon…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3033,10 +3016,8 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr "Elŝuti PDB-modelojn el la Proteina Datenbanko"
 
 #: qtplugins/focus/focus.cpp:22
-#, fuzzy
-#| msgid "Selection"
 msgid "Focus Selection"
-msgstr "Elektitaĵo"
+msgstr ""
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
@@ -3069,7 +3050,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Configure Bonding…"
 msgid "Configure…"
-msgstr "Agordi Ligadon…"
+msgstr "Agordi…"
 
 #: qtplugins/forcefield/forcefield.cpp:108
 msgid "Freeze Selected Atoms"
@@ -3116,10 +3097,8 @@ msgid "%1 Force Norm = %L2"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:46
-#, fuzzy
-#| msgid "Geometry Optimization"
 msgid "Forcefield optimization"
-msgstr "Optimumigo de Geometrio"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.h:50
 msgid "Forcefield minimization, including scripts"
@@ -3132,10 +3111,8 @@ msgid "Autodetect (%1)"
 msgstr "Aŭtomate trovi (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Configure Force Field..."
 msgid "Universal Force Field"
-msgstr "Agordi Fortokampon…"
+msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3165,7 +3142,7 @@ msgstr ""
 #: qtplugins/gamessinput/gamessinput.cpp:34
 #, fuzzy
 msgid "&GAMESS…"
-msgstr "&GAMESS"
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
@@ -3275,7 +3252,7 @@ msgstr "Hidrogenoj"
 #, fuzzy
 #| msgid "Search"
 msgid "&Search PQR…"
-msgstr "Serĉi"
+msgstr "&Serĉi PQR…"
 
 #: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
@@ -3296,10 +3273,8 @@ msgid "&Insert"
 msgstr "Enmet&i"
 
 #: qtplugins/insertdna/insertdna.cpp:79
-#, fuzzy
-#| msgid "Insert"
 msgid "Insert DNA/RNA…"
-msgstr "Enmeti"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
@@ -3339,10 +3314,8 @@ msgid "Generating 3D molecule…"
 msgstr "Generante 3D-molekulon…"
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "Insert"
 msgid "InsertDNA"
-msgstr "Enmeti"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3352,13 +3325,13 @@ msgstr ""
 #, fuzzy
 #| msgid "Molecule"
 msgid "Molecule…"
-msgstr "Molekulo"
+msgstr "Molekulo…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 #, fuzzy
 #| msgid "Crystal"
 msgid "Crystal…"
-msgstr "Kristalo"
+msgstr "Kristalo…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
@@ -3387,12 +3360,12 @@ msgstr "Enmeti molekulajn fragmentojn por konstrui pli grandajn molekulojn."
 #: qtplugins/meshes/meshes.cpp:183
 #, fuzzy
 msgid "Color:"
-msgstr "Kolorigi laŭ:"
+msgstr "Koloro:"
 
 #: qtplugins/label/label.cpp:170
 #, fuzzy
 msgid "Distance from center:"
-msgstr "Distanca Tolero:"
+msgstr "Distanca de centro:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3410,7 +3383,7 @@ msgstr "Nenio"
 #: qtplugins/label/label.cpp:181 qtplugins/label/label.cpp:212
 #, fuzzy
 msgid "Index"
-msgstr "Paŝa Indico"
+msgstr "Indico"
 
 #: qtplugins/label/label.cpp:182
 msgid "Unique ID"
@@ -3435,9 +3408,8 @@ msgid "Partial Charge"
 msgstr ""
 
 #: qtplugins/label/label.cpp:203
-#, fuzzy
 msgid "Atom Label:"
-msgstr "Teksta Etikedo"
+msgstr ""
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
@@ -3462,9 +3434,8 @@ msgid " & "
 msgstr ""
 
 #: qtplugins/label/label.cpp:248
-#, fuzzy
 msgid "Residue Label:"
-msgstr "Elektotaj restaĵoj:"
+msgstr ""
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
@@ -3493,14 +3464,13 @@ msgid "Create Label"
 msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
-#, fuzzy
 msgid "Label editor tool"
-msgstr "Redakta ilo"
+msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 #, fuzzy
 msgid "&LAMMPS…"
-msgstr "&LAMMPS-Enigo"
+msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3528,19 +3498,19 @@ msgstr "Opakeco:"
 #: qtplugins/licorice/licorice.h:36
 #, fuzzy
 msgid "Render atoms as licorice / sticks."
-msgstr "Montri atomojn kiel glicirizon."
+msgstr "Montri atomojn kiel glicirizon / bastonoj."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 #, fuzzy
 #| msgid "SMILES"
 msgid "SMILES…"
-msgstr "SMILES"
+msgstr "SMILES…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 #, fuzzy
 #| msgid "InChI"
 msgid "InChI…"
-msgstr "InChI"
+msgstr "InChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
@@ -3626,25 +3596,19 @@ msgid "Measure tool"
 msgstr "Mezura ilo"
 
 #: qtplugins/meshes/meshes.h:31
-#, fuzzy
-#| msgid "Render triangle meshes."
 msgid "Render polygon meshes."
-msgstr "Montri triangulajan maŝojn."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
-#, fuzzy
-#| msgid "Bonding"
 msgctxt "asking server for molecule name"
 msgid "(pending)"
-msgstr "Ligado"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:108
 #: qtplugins/molecularproperties/molecularmodel.cpp:116
 #: qtplugins/molecularproperties/molecularmodel.cpp:132
-#, fuzzy
-#| msgid "[no molecule]"
 msgid "unknown molecule"
-msgstr "[neniu molekulo]"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:611
@@ -3773,10 +3737,8 @@ msgstr "Atributoj de Molekulo"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:248
-#, fuzzy
-#| msgid "&Export"
 msgid "Export CSV"
-msgstr "Eksporti"
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:249
@@ -3800,7 +3762,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "Export…"
-msgstr "Eksporti"
+msgstr "Eksporti…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
@@ -3866,10 +3828,8 @@ msgid " °"
 msgstr "°"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Angle tolerance:"
-msgstr "Tolero:"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -3901,7 +3861,7 @@ msgstr "Trovi Ligojn"
 #, fuzzy
 #| msgid "Add hydrogens for pH"
 msgid "Add Hydrogens for pH…"
-msgstr "Aldoni hidrogenojn por pH"
+msgstr "Aldoni hidrogenojn por pH…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
 msgid "Remove Hydrogens"
@@ -4084,7 +4044,7 @@ msgstr "Aldonante Hidrogenojn (OpenBabel)"
 #, fuzzy
 #| msgid "Generating Open Babel input..."
 msgid "Generating Open Babel input…"
-msgstr "Generante enigon de OpenBabel…"
+msgstr "Generante enigon de Open Babel…"
 
 #: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
@@ -4095,7 +4055,7 @@ msgstr "Eraro pri generado de enigo de OpenBabel."
 #, fuzzy, qt-format
 #| msgid "Running %1..."
 msgid "Running %1…"
-msgstr "Rulante %1..."
+msgstr "Rulante %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
@@ -4109,7 +4069,7 @@ msgstr "pH:"
 #, fuzzy
 #| msgid "Generating obabel input..."
 msgid "Generating obabel input…"
-msgstr "Generante enigon de OpenBabel…"
+msgstr "Generante enigon de obabel…"
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
@@ -4120,10 +4080,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "Forigante Hidrogenojn (OpenBabel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
-#, fuzzy
-#| msgid "Error generating Open Babel input."
 msgid "Error generating Open Babel data."
-msgstr "Eraro pri generado de enigo de OpenBabel."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:951
 #, fuzzy
@@ -4149,7 +4107,7 @@ msgstr "Interagi kun OpenBabel-utilaĵoj."
 #: qtplugins/openmminput/openmminput.cpp:30
 #, fuzzy
 msgid "&OpenMM Script…"
-msgstr "Konstruilo de &OpenMM-Programetoj"
+msgstr "&OpenMM-Programetoj…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
@@ -4478,7 +4436,7 @@ msgstr "Eraro dum maldensigado: %1"
 #, fuzzy
 #| msgid "Download Plugins"
 msgid "Download Plugins…"
-msgstr "Elŝuti kromprogramojn"
+msgstr "Elŝuti kromprogramojn…"
 
 #: qtplugins/plugindownloader/plugindownloader.h:37
 msgid "Download Plugins"
@@ -4492,7 +4450,7 @@ msgstr "Elŝuti kromprogramojn el GitHub-deponejoj."
 #, fuzzy
 #| msgid "VRML Render"
 msgid "PLY Render…"
-msgstr "PLY-Bildigo"
+msgstr "PLY-Bildigo…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4602,12 +4560,11 @@ msgstr "Longo (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:554
 #, fuzzy
 msgid "Chain"
-msgstr "NH-Ĉenoj"
+msgstr "Ĉenoj"
 
 #: qtplugins/propertytables/propertymodel.cpp:556
-#, fuzzy
 msgid "Secondary Structure"
-msgstr "Ŝargi Strukturan Dosieron"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:558
 msgid "Heterogen"
@@ -4702,30 +4659,29 @@ msgstr ""
 #, fuzzy
 #| msgid "Atom Properties"
 msgid "Atom Properties…"
-msgstr "Atributoj de Atomo"
+msgstr "Atributoj de Atomo…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 #, fuzzy
 #| msgid "Bond Properties"
 msgid "Bond Properties…"
-msgstr "Atributoj de Ligo"
+msgstr "Atributoj de Ligo…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 #, fuzzy
 #| msgid "Angle Properties"
 msgid "Angle Properties…"
-msgstr "Atributoj de Angulo"
+msgstr "Atributoj de Angulo…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 #, fuzzy
 #| msgid "Torsion Properties"
 msgid "Torsion Properties…"
-msgstr "Atributoj de Tordo"
+msgstr "Atributoj de Tordo…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Atributoj de Ligo"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4762,9 +4718,8 @@ msgid "Conformer Properties"
 msgstr "Atributoj de Formizomero"
 
 #: qtplugins/propertytables/propertyview.cpp:59
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Atributoj de Ligo"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -4840,10 +4795,8 @@ msgid "Script Charge Models"
 msgstr ""
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
-#, fuzzy
-#| msgid "Load file reader/writers from external scripts."
 msgid "Load electrostatic models from external scripts."
-msgstr "Ŝargi dosierlegilojn/dosierskribilojn el eksteraj programetoj."
+msgstr ""
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
@@ -4884,34 +4837,24 @@ msgid "Select by Residue…"
 msgstr "Elekti laŭ restaĵo…"
 
 #: qtplugins/select/select.cpp:68
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Backbone Atoms…"
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:73
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Sidechain Atoms…"
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Water"
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Invert Selection"
 msgid "Enlarge Selection"
-msgstr "Inversigi Elekton"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "Elektitaĵo"
+msgstr ""
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4929,19 +4872,15 @@ msgstr "Elekti (&S)"
 #, fuzzy
 #| msgid "Select by Element..."
 msgid "Select Element"
-msgstr "Elekti laŭ Elemento…"
+msgstr "Elekti Elemento"
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Backbone"
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Sidechain"
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr ""
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
@@ -4969,7 +4908,7 @@ msgstr "Elektotaj restaĵoj:"
 #, fuzzy
 #| msgid "Select by Residue..."
 msgid "Select Residue"
-msgstr "Elekti laŭ restaĵo…"
+msgstr "Elekti restaĵo"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4999,9 +4938,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "Ligaj Atomoj"
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -5012,7 +4950,7 @@ msgstr "Elekta ilo"
 #, fuzzy
 #| msgid "Layer"
 msgid "New Layer"
-msgstr "Tavolo"
+msgstr "Nova Tavolo"
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
@@ -5030,7 +4968,7 @@ msgstr "Simetriigi"
 #, fuzzy
 #| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Plenigi Unitan Ĉelon"
+msgstr "Plenigi Unitan Ĉelon…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
@@ -5041,7 +4979,7 @@ msgstr "Redukti al Nesimetria Unito"
 #, fuzzy
 #| msgid "Set Tolerance"
 msgid "Set Tolerance…"
-msgstr "Agordi Toleron"
+msgstr "Agordi Toleron…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
@@ -5191,10 +5129,8 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:496
-#, fuzzy
-#| msgid "Select by Atom Index..."
 msgid "Select Background Color"
-msgstr "Elekti laŭ Atoma Indico…"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:509
 msgid "Select Foreground Color"
@@ -5233,10 +5169,8 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:615
 #: qtplugins/spectra/spectradialog.cpp:629
 #: qtplugins/spectra/spectradialog.cpp:642
-#, fuzzy
-#| msgid "Density"
 msgid "Intensity"
-msgstr "Denso"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:613
 msgid "NMR Spectra"
@@ -5329,10 +5263,8 @@ msgid "Electron Density"
 msgstr "Elektrona Denso"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Density"
 msgid "Spin Density"
-msgstr "Denso"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, qt-format
@@ -5358,37 +5290,29 @@ msgstr "El Dosiero"
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
-msgstr "Krei Surfacojn"
+msgstr "Krei Surfacojn…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
-#, fuzzy
-#| msgid "Read and render surfaces."
 msgid "Render the van der Waals surface."
-msgstr "Legi kaj montri surfacojn."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:114
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the van der Waals molecular surface."
-msgstr "Montri molekulon kiel dratan kadron."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:116
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-accessible molecular surface."
-msgstr "Montri molekulon kiel dratan kadron."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:118
-#, fuzzy
-#| msgid "Render the molecule as a wireframe."
 msgid "Render the solvent-excluded molecular surface."
-msgstr "Montri molekulon kiel dratan kadron."
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 #| msgid "Molecular Orbital"
 msgid "Render a molecular orbital."
-msgstr "Molekula Orbito"
+msgstr "Montri Molekula Orbito."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the electron density."
@@ -5407,10 +5331,8 @@ msgid "Calculating electron density"
 msgstr "Kalkulante elektronan denson"
 
 #: qtplugins/surfaces/surfaces.cpp:595
-#, fuzzy
-#| msgid "Calculating electron density"
 msgid "Calculating spin density"
-msgstr "Kalkulante elektronan denson"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:604
 #, qt-format
@@ -5558,7 +5480,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Vibrational Modes"
 msgid "Vibrations"
-msgstr "Vibraj Modoj"
+msgstr "Vibraj"
 
 #: qtplugins/vibrations/vibrations.h:37
 #, fuzzy
@@ -5724,7 +5646,7 @@ msgstr "Submeti Kalkulon…"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save Input…"
-msgstr "Konservi Enigan Dosieron"
+msgstr "Konservi Enigan Dosieron…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5809,7 +5731,7 @@ msgstr "Alinomi Elementojn"
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Insert Fragment…"
-msgstr "Enmeti Fragmenton"
+msgstr "Enmeti Fragmenton…"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5954,10 +5876,8 @@ msgstr "Parta Ŝargo"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
-#, fuzzy
-#| msgid "Water Model:"
 msgid "Charge Model:"
-msgstr "Akva Modelo:"
+msgstr ""
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6166,7 +6086,7 @@ msgstr "Aprioroj"
 #, fuzzy
 #| msgid "Save File"
 msgid "Save File…"
-msgstr "Konservi Dosieron"
+msgstr "Konservi Dosieron…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6561,7 +6481,7 @@ msgstr "Ŝargo:"
 #, fuzzy
 #| msgid "Import From PQR"
 msgid "Import From PQR…"
-msgstr "Importi el PQR"
+msgstr "Importi el PQR…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -6645,11 +6565,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "A:"
 msgctxt "adenine (A)"
 msgid "A"
-msgstr "A:"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:59
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_C)
@@ -6658,11 +6576,9 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "C:"
 msgctxt "cytosine (C)"
 msgid "C"
-msgstr "C:"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:69
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_G)
@@ -6695,17 +6611,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "A:"
 msgid "A"
-msgstr "A:"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "B:"
 msgid "B"
-msgstr "B:"
+msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:137
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
@@ -6719,7 +6631,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Other..."
 msgid "Other"
-msgstr "Alia…"
+msgstr "Alia"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -7365,7 +7277,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Method:"
 msgid "Method"
-msgstr "Metodo:"
+msgstr "Metodo"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7442,10 +7354,8 @@ msgstr "Konverĝo:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
-#| msgid "Nonbonded method:"
 msgid "Scoring method:"
-msgstr "Neliga metodo:"
+msgstr ""
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -8130,7 +8040,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Import"
 msgid "&Import..."
-msgstr "&Importi"
+msgstr "&Importi..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -8153,7 +8063,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "&Export..."
-msgstr "&Eksporti"
+msgstr "&Eksporti..."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:343
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8208,7 +8118,7 @@ msgstr ""
 #, fuzzy
 #| msgid "&Export"
 msgid "Export Data"
-msgstr "Eksporti"
+msgstr "Eksporti datumojn"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:471
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
@@ -8326,10 +8236,8 @@ msgstr "Kolorigi laŭ:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#, fuzzy
-#| msgid "Water Potential"
 msgid "Electrostatic Potential"
-msgstr "Akva Potencialo"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:202
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8357,10 +8265,8 @@ msgstr ""
 #. i18n: ectx: property (currentText), widget (QComboBox, smoothingCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:375
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#, fuzzy
-#| msgid "Tight"
 msgid "Light"
-msgstr "Strikta"
+msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
@@ -8454,7 +8360,7 @@ msgstr "Centrigi"
 #, fuzzy
 #| msgid "Formal Charge"
 msgid "Formal Charge:"
-msgstr "Formala Ŝargo"
+msgstr "Formala Ŝargo:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
