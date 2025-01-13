@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-13 03:01+0000\n"
+"PO-Revision-Date: 2025-01-14 07:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
@@ -2380,7 +2380,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Other..."
 msgid "Other…"
-msgstr "Outro..."
+msgstr "Outro…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 #, fuzzy
@@ -3160,10 +3160,8 @@ msgid "Autodetect (%1)"
 msgstr "Autodetectar (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
-#, fuzzy
-#| msgid "Force Field"
 msgid "Universal Force Field"
-msgstr "Campo de Força"
+msgstr ""
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
@@ -3656,15 +3654,12 @@ msgstr "Ângulos:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
-#, fuzzy
 msgid "Measure tool"
-msgstr "Medida"
+msgstr ""
 
 #: qtplugins/meshes/meshes.h:31
-#, fuzzy
-#| msgid "Render triangle meshes."
 msgid "Render polygon meshes."
-msgstr "Desenha malhas triangulares."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -6758,7 +6753,7 @@ msgstr "Z"
 #, fuzzy
 #| msgid "Other..."
 msgid "Other"
-msgstr "Outro..."
+msgstr "Outro"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:172
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8127,10 +8122,8 @@ msgstr "Largura do pico:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Snap-to Threshold: "
 msgid "Peak Threshold:"
-msgstr "Limiar de Acoplagem: "
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
