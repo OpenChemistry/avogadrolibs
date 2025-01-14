@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-11 18:41+0000\n"
+"PO-Revision-Date: 2025-01-14 07:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
@@ -3490,9 +3490,8 @@ msgstr "Kulma:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
-#, fuzzy
 msgid "Measure tool"
-msgstr "Mittaa"
+msgstr ""
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
@@ -4964,9 +4963,8 @@ msgid "Wavenumbers (cm⁻¹)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:588
-#, fuzzy
 msgid "Transmission"
-msgstr "Kiertokulma"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:600
 msgid "Raman Spectra"
