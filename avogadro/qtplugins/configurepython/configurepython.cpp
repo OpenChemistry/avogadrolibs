@@ -13,6 +13,8 @@
 
 #include <QAction>
 #include <QtCore/QDebug>
+#include <QtCore/QFileInfo>
+#include <QtCore/QProcess>
 #include <QtCore/QSettings>
 #include <QtCore/QSysInfo>
 #include <QtCore/QUrl>
@@ -148,11 +150,39 @@ QStringList ConfigurePython::pythonPaths() const
 
   QStringList paths = findExecutablePaths(names);
 
-  // Add the current interpreter to the list if it's not already there.
-  if (!paths.contains(pythonInterp))
+  // Add the current interpreter to the list
+  // it may be filtered out by the loop below
+  if (!paths.contains(pythonInterp)) {
     paths.prepend(pythonInterp);
+  }
 
-  return paths;
+  // check to make sure each of the items are valid or remove them
+  // (i.e., the python should return a version flag)
+  QStringList validPaths;
+  QStringList arguments;
+  arguments << "-V";
+  foreach (const QString& path, paths) {
+    QFileInfo info(path);
+    if (info.exists() && info.isExecutable()) {
+      // try to run it to get the version
+      QProcess process;
+      process.start(path, arguments);
+      if (process.waitForFinished()) {
+        QString output = process.readAllStandardOutput();
+        // should be like Python 3.10.14
+        if (output.startsWith("Python")) {
+          QString version = output.split(" ").at(1).simplified();
+          // make sure it's at least Python 3
+          // in the future, we can ensure particular releases
+          if (version.startsWith("3"))
+            validPaths << path;
+        }
+      }
+      // if we didn't get results, it's not valid
+    }
+  }
+
+  return validPaths;
 }
 
 void ConfigurePython::showDialog()
