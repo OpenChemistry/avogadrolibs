@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-13 03:01+0000\n"
+"PO-Revision-Date: 2025-01-15 13:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/tr/>\n"
@@ -2919,7 +2919,7 @@ msgstr "&İçe Aktar"
 #, fuzzy
 #| msgid "Fetch from PDB"
 msgid "Fetch PDB"
-msgstr "PDB'den Al"
+msgstr "PDB Al"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
@@ -4020,10 +4020,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "Hidrojenler Kaldırılıyor (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
-#, fuzzy
-#| msgid "Error generating Open Babel input."
 msgid "Error generating Open Babel data."
-msgstr "Open Babel girdisi oluşturulurken hata oluştu."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
