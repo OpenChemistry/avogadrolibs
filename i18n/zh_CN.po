@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-14 07:01+0000\n"
+"PO-Revision-Date: 2025-01-15 13:00+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
@@ -3753,7 +3753,7 @@ msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
-msgstr "容差："
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -3979,10 +3979,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "删除氢原子 (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
-#, fuzzy
-#| msgid "Error generating Open Babel input."
 msgid "Error generating Open Babel data."
-msgstr "生成 Open Babel 输入时出错。"
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
