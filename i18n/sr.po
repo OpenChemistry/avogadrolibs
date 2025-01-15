@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-15 13:00+0000\n"
+"PO-Revision-Date: 2025-01-16 14:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -4128,10 +4128,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "Ukloni Vodonike (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
-#, fuzzy
-#| msgid "Error generating Open Babel input."
 msgid "Error generating Open Babel data."
-msgstr "Greška pri generisanju unosa Open Babel."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:951
 #, fuzzy
@@ -4501,7 +4499,7 @@ msgstr "Preuzmite dodatke iz spremišta GitHub."
 #, fuzzy
 #| msgid "VRML Render"
 msgid "PLY Render…"
-msgstr "PLY Render"
+msgstr "PLY Render…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
@@ -4614,12 +4612,12 @@ msgstr "Величина (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:554
 #, fuzzy
 msgid "Chain"
-msgstr "NH Lanci"
+msgstr "Lanci"
 
 #: qtplugins/propertytables/propertymodel.cpp:556
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Učitaj strukturu datoteke"
+msgstr "секундарну структуру"
 
 #: qtplugins/propertytables/propertymodel.cpp:558
 msgid "Heterogen"
@@ -4718,30 +4716,29 @@ msgstr ""
 #, fuzzy
 #| msgid "Atom Properties"
 msgid "Atom Properties…"
-msgstr "Својства атома"
+msgstr "Својства атома…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
 #, fuzzy
 #| msgid "Bond Properties"
 msgid "Bond Properties…"
-msgstr "Својства везе"
+msgstr "Својства везе…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 #, fuzzy
 #| msgid "Angle Properties"
 msgid "Angle Properties…"
-msgstr "Својства угла"
+msgstr "Својства угла…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 #, fuzzy
 #| msgid "Torsion Properties"
 msgid "Torsion Properties…"
-msgstr "Својства увијања"
+msgstr "Својства увијања…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Својства молекула"
+msgstr ""
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4779,9 +4776,8 @@ msgid "Conformer Properties"
 msgstr "Својства саобразника"
 
 #: qtplugins/propertytables/propertyview.cpp:59
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Својства молекула"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -4911,10 +4907,8 @@ msgid "Select Water"
 msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Занемари избор"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
@@ -5031,7 +5025,7 @@ msgstr "Simetrizuj"
 #, fuzzy
 #| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Ispuni jediničnu ćeliju"
+msgstr "Ispuni jediničnu ćeliju …"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
@@ -5220,10 +5214,8 @@ msgid "Wavelength (nm)"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:586
-#, fuzzy
-#| msgid "Vibrational Modes"
 msgid "Vibrational Spectra"
-msgstr "Režimi vibracija"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:587
 #: qtplugins/spectra/spectradialog.cpp:601
@@ -5365,7 +5357,7 @@ msgstr "Iz Datoteke"
 #, fuzzy
 #| msgid "Create Surfaces"
 msgid "Create Surfaces…"
-msgstr "Napravi Površine"
+msgstr "Napravi Površine…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
 msgid "Render the van der Waals surface."
@@ -5719,7 +5711,7 @@ msgstr "Predloži proračun …"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #, fuzzy
 msgid "Save Input…"
-msgstr "Sačuvaj ulaznu datoteku"
+msgstr "Sačuvaj ulaznu datoteku…"
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5804,7 +5796,7 @@ msgstr "Preimenujte elemente"
 #, fuzzy
 #| msgid "Insert Fragment"
 msgid "Insert Fragment…"
-msgstr "Umetni odlomak"
+msgstr "Umetni odlomak…"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6162,7 +6154,7 @@ msgstr "Osnovno"
 #, fuzzy
 #| msgid "Save File"
 msgid "Save File…"
-msgstr "Sačuvaj Datoteku"
+msgstr "Sačuvaj Datoteku…"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:95
 #. i18n: ectx: attribute (title), widget (QWidget, basicWidget)
@@ -6250,7 +6242,7 @@ msgstr "Poisson EWALD Alpha"
 #, fuzzy
 #| msgid "Poiosson EWALD GMAX"
 msgid "Poisson EWALD GMAX"
-msgstr "Poiosson EWALD GMAX"
+msgstr "Poisson EWALD GMAX"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:434
 #. i18n: ectx: attribute (title), widget (QWidget, tab_2)
@@ -6558,7 +6550,7 @@ msgstr "Naelektrisanje:"
 #, fuzzy
 #| msgid "Import From PQR"
 msgid "Import From PQR…"
-msgstr "Uvezi iz PQR -a"
+msgstr "Uvezi iz PQR -a…"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:34
 #. i18n: ectx: property (text), widget (QPushButton, searchButton)
@@ -7411,7 +7403,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Children"
 msgid "Children:"
-msgstr "Потпроцеси"
+msgstr "Потпроцеси:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7425,7 +7417,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Mutability"
 msgid "Mutability:"
-msgstr "Променљивост"
+msgstr "Променљивост:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:154
 #. i18n: ectx: property (toolTip), widget (QLabel, label_4)
@@ -7446,7 +7438,7 @@ msgstr "Konvergencija:"
 #, fuzzy
 #| msgid "Scoring method"
 msgid "Scoring method:"
-msgstr "Начин вредновања"
+msgstr "Начин вредновања:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -8453,7 +8445,7 @@ msgstr "Centar"
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
 #, fuzzy
 msgid "Formal Charge:"
-msgstr "Званично наелектрисање"
+msgstr "Званично наелектрисање:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
