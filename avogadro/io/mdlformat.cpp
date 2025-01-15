@@ -277,7 +277,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   string dataValue;
   while (getline(in, buffer)) {
     if (trimmed(buffer) == "$$$$")
-      return true;
+      break;
     if (inValue) {
       if (buffer.empty() && dataName.length() > 0) {
         // check for partial charges
@@ -293,12 +293,37 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
           dataValue += "\n";
         dataValue += buffer;
       }
-    } else if (startsWith(buffer, "> <")) {
+    } else if (startsWith(buffer, "> ")) {
       // This is a data header, read the name of the entry, and the value on
       // the following lines.
-      dataName = trimmed(buffer).substr(3, buffer.length() - 4);
-      inValue = true;
+      // e.g., > <propName>
+      // dataName will be anything from < to >
+      size_t start = buffer.find('<');
+      size_t end = buffer.find('>', start);
+      if (start != string::npos && end != string::npos) {
+        dataName = buffer.substr(start + 1, end - start - 1);
+        inValue = true;
+      }
     }
+  }
+
+  // handle pKa from QupKake model
+  if (mol.hasData("pka") && mol.hasData("idx")) {
+    // pka can sometimes say "tensor(3.1452)" or "3.1452"
+    // just convert to a string with 2 decimal places
+    std::string pka = mol.data("pka").toString();
+    if (startsWith(pka, "tensor("))
+      pka = pka.substr(7, pka.size() - 8);
+    // find the decimal to only keep 2 decimal places
+    size_t decimal = pka.find(".");
+    if (decimal != std::string::npos)
+      pka = pka.substr(0, decimal + 3);
+    mol.setData("pka", pka);
+    // convert the idx to an atom index
+    // and set the label
+    std::string idx = mol.data("idx").toString();
+    size_t atomIdx = lexicalCast<size_t>(idx);
+    mol.setAtomLabel(atomIdx, pka);
   }
 
   return true;
