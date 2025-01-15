@@ -379,14 +379,14 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
 
     auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
-    std::string text = "";
+    std::string text = atom.label();
 
     if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge) {
       QString charge = partialCharge(const_cast<Molecule*>(&molecule), i);
       text += charge.toStdString();
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Custom) {
-      text += (text == "" ? "" : " / ") + atom.label();
+      // already set
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Index) {
       text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
