@@ -44,6 +44,22 @@ jobs:
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
           }
+        - {
+            name: "Ubuntu Address Sanitizer", artifact: "",
+            os: ubuntu-22.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "asan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cpack: "",
+          }
+        - {
+            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
+            os: ubuntu-22.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "ubsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cpack: "",
+          }
 
     steps:
 
@@ -55,9 +71,20 @@ jobs:
         else # not self-hosted runner
           brew install ninja eigen glew
         fi
+    
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
+    
+    - name: Install Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo add-apt-repository -y universe
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+        sudo apt-get -qq install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5x11extras5-dev libqt5svg5-dev
+        sudo apt-get -qq install libgcc-10-dev libgcc-9-dev
+        sudo apt install libfuse2
 
     - name: Checkout openchemistry
       uses: actions/checkout@v4
@@ -140,6 +167,23 @@ jobs:
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} CMAKE_C_COMPILER_LAUNCHER=sccache CMAKE_CXX_COMPILER_LAUNCHER=sccache cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    - name: Run tests
+      if: (matrix.config.build_type == 'asan') || (matrix.config.build_type == 'ubsan')
+      shell: cmake -P {0}
+      run: |
+        include(ProcessorCount)
+        ProcessorCount(N)
+        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
+        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
+        execute_process(
+          COMMAND ctest -j ${N}
+          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
+          RESULT_VARIABLE result
+        )
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Running tests failed!")
+        endif()
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'

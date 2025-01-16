@@ -125,7 +125,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
 
     - name: Run tests
-      if: matrix.config.os == 'ubuntu-latest'
+      if: (matrix.config.build_type == 'asan') || (matrix.config.build_type == 'ubsan')
       shell: cmake -P {0}
       run: |
         include(ProcessorCount)
