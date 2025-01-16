@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-15 13:00+0000\n"
+"PO-Revision-Date: 2025-01-16 14:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -2816,7 +2816,7 @@ msgstr ""
 #: qtplugins/crystal/crystal.cpp:216
 #, fuzzy
 msgid "The unit cell is already reduced."
-msgstr "Unit sel telah direduksi ke representasi standar Niggli"
+msgstr "Unit sel telah direduksi."
 
 #: qtplugins/crystal/crystal.h:25
 #, fuzzy
@@ -2832,9 +2832,8 @@ msgid "Color axes:"
 msgstr ""
 
 #: qtplugins/crystal/crystalscene.cpp:184
-#, fuzzy
 msgid "Line color:"
-msgstr "Warna Amino"
+msgstr ""
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
@@ -3399,9 +3398,8 @@ msgid "Element"
 msgstr "Unsur"
 
 #: qtplugins/label/label.cpp:184
-#, fuzzy
 msgid "Element & Number"
-msgstr "Nama Unsur"
+msgstr ""
 
 #: qtplugins/label/label.cpp:186
 msgid "Element & ID"
@@ -4935,9 +4933,8 @@ msgid "Reduce to Asymmetric Unit"
 msgstr "Kurangi Ukuran Asimetrik"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
-#, fuzzy
 msgid "Set Tolerance…"
-msgstr "Toleransi SCF:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 #, fuzzy
@@ -5602,9 +5599,8 @@ msgstr "Submit %1 Kalkulasi"
 
 #. i18n: file: molequeue/inputgeneratorwidget.ui:123
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save Input…"
-msgstr "Simpan gambar…"
+msgstr ""
 
 #. i18n: file: molequeue/molequeuewidget.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_4)
