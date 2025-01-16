@@ -1,0 +1,162 @@
+name: Linux Build Matrix
+# Many thanks to Cristian Adam for examples
+# e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
+# https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  QT_VERSION: 6.8.1
+  FEATURES: -DUSE_VTK=ON -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Ubuntu", artifact: "ubuntu-x86_64.tar.gz",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja",
+          }
+        - {
+            name: "AppImage", artifact: "Avogadro2.AppImage",
+            os: ubuntu-22.04,
+            cc: "gcc", cxx: "g++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+          }
+        - {
+            name: "Ubuntu Address Sanitizer", artifact: "",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "asan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+          }
+        - {
+            name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            build_type: "ubsan",
+            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+          }
+
+    steps:
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+
+    - name: Checkout openchemistry
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/openchemistry
+        submodules: recursive
+        path: openchemistry
+          
+    - name: Checkout avogadroapp
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadroapp
+        path: openchemistry/avogadroapp
+        
+    - name: Checkout avogadrolibs
+      uses: actions/checkout@v4
+      with:
+        path: openchemistry/avogadrolibs
+
+    - name: Checkout i18n
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogadro-i18n
+        path: openchemistry/avogadro-i18n
+    
+    - name: Checkout avogadrogenerators
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/avogenerators
+        path: openchemistry/avogadrogenerators
+
+    - name: Checkout crystals
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/crystals
+        path: openchemistry/crystals
+
+    - name: Checkout fragments
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/fragments
+        path: openchemistry/fragments
+
+    - name: Checkout molecules
+      uses: actions/checkout@v4
+      with:
+        repository: openchemistry/molecules
+        path: openchemistry/molecules
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        # won't have any effect except on Mac
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    - name: Run tests
+      if: matrix.config.os == 'ubuntu-latest'
+      shell: cmake -P {0}
+      run: |
+        include(ProcessorCount)
+        ProcessorCount(N)
+        set(ENV{CTEST_OUTPUT_ON_FAILURE} "ON")
+        set(ENV{ASAN_OPTIONS} "new_delete_type_mismatch=0")
+        execute_process(
+          COMMAND ctest -j ${N}
+          WORKING_DIRECTORY ${{ runner.workspace }}/build/avogadrolibs
+          RESULT_VARIABLE result
+        )
+        if (NOT result EQUAL 0)
+          message(FATAL_ERROR "Running tests failed!")
+        endif()
+
+    - name: Upload
+      if: matrix.config.artifact != 0
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
+        name: ${{ matrix.config.artifact }}
+
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
+
+    - name: Cleanup
+      if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+      shell: bash
+      run: |
+        ls -la ./
+        rm -rf ./* || true
+        rm -rf ./.??* || true
+        ls -la ./
