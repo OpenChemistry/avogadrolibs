@@ -22,18 +22,25 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu", artifact: "ubuntu-x86_64.tar.gz",
+            name: "Ubuntu x86", artifact: "Avogadro2-ubuntu-x86_64.tar.gz",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja",
           }
         - {
-            name: "AppImage", artifact: "Avogadro2.AppImage",
+            name: "AppImage x86", artifact: "Avogadro2-x86_64.AppImage",
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+          }
+        - {
+            name: "Ubuntu ARM", artifact: "ubuntu-arm64.tar.gz",
+            os: ubuntu-22.04-arm,
+            cc: "gcc", cxx: "g++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja",
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
@@ -140,6 +147,29 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    - name: Package AppImage
+      if: matrix.config.name == 'AppImage x86'
+      shell: bash
+      run: |
+        mkdir appdir
+        mv prefix appdir/usr
+
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:appdir/usr/lib
+
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+        wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+        chmod a+x *.AppImage
+
+        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
+        # add the custom AppRun
+        rm appdir/AppRun
+        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
+        chmod a+x appdir/AppRun
+        ./appimagetool-x86_64.AppImage appdir
+        mv Avogadro*.AppImage avogadroapp # for upload
+      working-directory: ${{ runner.workspace }}/build
 
     - name: Upload
       if: matrix.config.artifact != 0
