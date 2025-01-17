@@ -51,3 +51,18 @@ foreach(TestName ${tests})
   add_test(NAME "Io-${TestName}"
     COMMAND AvogadroIOTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+option(ENABLE_FUZZ "Enable fuzz testing." OFF)
+
+if(ENABLE_FUZZ)
+  add_definitions(-DFUZZTEST_FUZZING_MODE=on)
+  # fuzztest uses abseil-cpp
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_VISIBILITY_PRESET default)
+  add_subdirectory(fuzztest)
+
+  fuzztest_setup_fuzzing_flags()
+  add_executable(AvogadroFuzzTests fuzztest.cpp)
+  target_link_libraries(AvogadroFuzzTests PRIVATE Avogadro::IO)
+  link_fuzztest(AvogadroFuzzTests)
+endif()
