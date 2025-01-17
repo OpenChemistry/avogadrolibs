@@ -70,6 +70,7 @@ jobs:
       run: |
         sudo apt-get -qq update
         sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev
+        sudo apt-get -qq install libfuse2
 
     - name: Checkout openchemistry
       uses: actions/checkout@v4
