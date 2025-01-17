@@ -28,13 +28,13 @@ jobs:
             build_type: "Release",
             cmake_flags: "-G Ninja",
           }
-        - {
-            name: "Ubuntu ARM", artifact: "",
-            os: ubuntu-24.04-arm,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja",
-          }
+        #- {
+        #    name: "Ubuntu ARM", artifact: "",
+        #    os: ubuntu-24.04-arm,
+        #    cc: "gcc", cxx: "g++",
+        #    build_type: "Release",
+        #    cmake_flags: "-G Ninja",
+        #  }
         - {
             name: "AppImage x86", artifact: "Avogadro2-x86_64.AppImage",
             os: ubuntu-22.04,
@@ -42,13 +42,13 @@ jobs:
             build_type: "Release",
             cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
           }
-        - {
-            name: "AppImage ARM", artifact: "Avogadro2-arm64.AppImage",
-            os: ubuntu-22.04-arm,
-            cc: "gcc", cxx: "g++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
-          }
+        #- {
+        #    name: "AppImage ARM", artifact: "Avogadro2-arm64.AppImage",
+        #    os: ubuntu-22.04-arm,
+        #    cc: "gcc", cxx: "g++",
+        #    build_type: "Release",
+        #    cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+        #  }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
             os: ubuntu-latest,
