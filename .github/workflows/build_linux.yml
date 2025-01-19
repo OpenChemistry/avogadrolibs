@@ -172,7 +172,7 @@ jobs:
         ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
         # add the custom AppRun
         rm appdir/AppRun
-        cp ../avogadrolibs/avogadrolibs/scripts/AppImage.sh appdir/AppRun
+        cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
         mv Avogadro*.AppImage avogadroapp # for upload
