@@ -560,6 +560,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
 
 Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d)
 {
+  std::cout << atomCount()<<std::endl;
   if (m_positions3d.size() == atomCount()) {
     m_positions3d.push_back(position3d);
   }

@@ -17,7 +17,7 @@
 #include "solidpipeline.h"
 
 #include <avogadro/core/array.h>
-#include <avogadro/core/cube.h>
+#include <avogadro/core/molecule.h>
 
 #include <map>
 #include <string> // For member variables.
@@ -49,6 +49,7 @@ public:
   /** Set the ratio of physical to logical pixels. */
   void setPixelRatio(float ratio);
 
+  // void setMolecule(Avogadro::Core::Molecule* mol) { m_molecule = mol; }
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
 
@@ -152,6 +153,7 @@ private:
   Scene m_scene;
   TextRenderStrategy* m_textRenderStrategy;
   SolidPipeline m_solidPipeline;
+  // Avogadro::Core::Molecule* m_molecule;
 
   Vector3f m_center;
   float m_radius;

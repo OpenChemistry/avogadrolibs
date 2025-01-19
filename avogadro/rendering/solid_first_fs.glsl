@@ -47,18 +47,19 @@ void main()
   }
 
   // 3) Compute the total “thickness” in normalized [0..1] Z
-  float thickness = (backDepth - frontDepth);
+  float thickness = (backDepth - frontDepth) ;
 
   // Step size for the raymarch
-  float stepSize = thickness / float(numSteps);
+  float stepSize = thickness / 128.0;
 
   // 4) Accumulate color over the ray
   vec4 accumulatedColor = vec4(0.0);
-
   // Raymarch from frontDepth to backDepth
-  for (int i = 0; i < 256; i++) {
+  for (int i = 0; i < 64; i++) {
     // Parametric Z coordinate in [frontDepth..backDepth]
-    float z = frontDepth + (float(i) + 0.5) * stepSize;
+    float t = float(i) * stepSize;
+    float z = frontDepth + t;
+    // float z = frontDepth + (float(i) ) * stepSize;
 
     // UVW in volume texture: XY from screen, Z in [0..1] (assuming the volume
     // is also in [0..1] for that axis). You may need to invert or shift if
@@ -74,7 +75,7 @@ void main()
 
     // Fetch a color from the colormap — assume 1D colormap along X,
     // picking the center of Y=0.5 if it’s just a 1D gradient stored in a 2D texture
-    vec4 sampleColor = texture2D(transferTex, vec2(cval, 0.9));
+    vec4 sampleColor = texture2D(transferTex, vec2(cval, 0.05));
 
     // Scale alpha if you want the volume to be more or less transparent
     // (like your ALPHA_SCALE from the original code)
@@ -82,11 +83,11 @@ void main()
 
     // Standard “over” alpha compositing:
     float remainingAlpha = 1.0 - accumulatedColor.a;
-    accumulatedColor.rgb += sampleColor.rgb * sampleColor.a * remainingAlpha;
+    accumulatedColor.rgb += sampleColor.rgb * sampleColor.a * remainingAlpha * vec3(1.0,0.0,0.0);
     accumulatedColor.a   += sampleColor.a * remainingAlpha;
 
     // Optional early-out if almost fully opaque:
-    if (accumulatedColor.a >= 0.95) 
+    if (accumulatedColor.a >= 1.0) 
         break;
   }
 
@@ -103,7 +104,7 @@ void main()
   //    Similar to “1 - alpha” logic you had:
   float oneMinusA = 1.0 - accumulatedColor.a;
   vec3 finalRGB   = accumulatedColor.rgb + oneMinusA * sceneColor.rgb;
-  float finalA    = sceneColor.a + oneMinusA * accumulatedColor.a; //This was backwards
+  float finalA    =   0.001 - accumulatedColor.a; //This was backwards
 
   // Write out final pixel color
   gl_FragColor = vec4(finalRGB, finalA);

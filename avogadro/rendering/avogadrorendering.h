@@ -49,7 +49,9 @@ enum RenderPass
    * [-1, 1], and the origin is in the bottom-left corner. Depth testing is
    * disabled, and alpha blending is performed the same as in TranslucentPass.
    */
-  Overlay2DPass
+  Overlay2DPass,
+
+  VolumetricPass
 };
 
 } // end namespace Rendering

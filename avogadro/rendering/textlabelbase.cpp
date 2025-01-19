@@ -289,6 +289,7 @@ void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
   // Determine texture size and allocate buffer
   int bbox[4];
   tren.boundingBox(m_text, m_textProperties, bbox);
+  
   const Vector2i newDims(bbox[1] - bbox[0] + 1, bbox[3] - bbox[2] + 1);
   if (newDims != m_imageDimensions) {
     m_imageDimensions = newDims;

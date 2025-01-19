@@ -199,6 +199,94 @@ void MeshGeometry::render(const Camera& camera)
   program->release();
 }
 
+void MeshGeometry::addBoundingBox(const Vector3f& minPos, 
+                                  const Vector3f& maxPos,
+                                  const Vector4ub& color)
+{
+  // 8 corners of the box
+  // near face (z = minPos.z)
+  Vector3f v0(minPos.x(), minPos.y(), minPos.z()); // bottom-left-near
+  Vector3f v1(maxPos.x(), minPos.y(), minPos.z()); // bottom-right-near
+  Vector3f v2(maxPos.x(), maxPos.y(), minPos.z()); // top-right-near
+  Vector3f v3(minPos.x(), maxPos.y(), minPos.z()); // top-left-near
+
+  // far face (z = maxPos.z)
+  Vector3f v4(minPos.x(), minPos.y(), maxPos.z()); // bottom-left-far
+  Vector3f v5(maxPos.x(), minPos.y(), maxPos.z()); // bottom-right-far
+  Vector3f v6(maxPos.x(), maxPos.y(), maxPos.z()); // top-right-far
+  Vector3f v7(minPos.x(), maxPos.y(), maxPos.z()); // top-left-far
+
+  // For a quick bounding box, let's just give a normal for each face.
+  // (If you prefer per-vertex normals that are averaged, you can do that,
+  // but for a box it's typical to have face normals.)
+  // We'll make a small helper lambda to push back a face:
+  auto addFace = [&](const Vector3f& a, const Vector3f& b, const Vector3f& c, 
+                     const Vector3f& d, const Vector3f& normal)
+  {
+    // Each face is 2 triangles: (a,b,c) and (a,c,d)
+    // We'll collect positions, normals, color in arrays and then
+    // call addVertices(...) + addTriangles(...).
+
+    // The caller of this lambda will hold a temporary arrays:
+    Core::Array<Vector3f> faceVerts;
+    Core::Array<Vector3f> faceNorms;
+    Core::Array<Vector4ub> faceColors;
+    Core::Array<unsigned int> faceIndices;
+
+    faceVerts.reserve(4);
+    faceNorms.reserve(4);
+    faceColors.reserve(4);
+    faceIndices.reserve(6);
+
+    // push back 4 corners
+    faceVerts.push_back(a);
+    faceVerts.push_back(b);
+    faceVerts.push_back(c);
+    faceVerts.push_back(d);
+
+    // same normal for each corner
+    for (int i = 0; i < 4; ++i) {
+      faceNorms.push_back(normal);
+      faceColors.push_back(color);
+    }
+
+    // Triangles
+    // 0->1->2,  0->2->3
+    faceIndices.push_back(0);
+    faceIndices.push_back(1);
+    faceIndices.push_back(2);
+    faceIndices.push_back(0);
+    faceIndices.push_back(2);
+    faceIndices.push_back(3);
+
+    // Now add them to "this" MeshGeometry
+    // 1) Add vertices returns the *base index* we must offset the faceIndices by
+    unsigned int base = addVertices(faceVerts, faceNorms, faceColors);
+    // 2) We need to offset faceIndices by 'base'
+    for (auto & idx : faceIndices) {
+      idx += base;
+    }
+    // 3) Add triangles to the main index buffer
+    addTriangles(faceIndices);
+  };
+
+  // near face normal = negative z
+  addFace(v0, v1, v2, v3, Vector3f(0.f, 0.f, -1.f));
+  // far face normal = +z
+  addFace(v5, v4, v7, v6, Vector3f(0.f, 0.f, 1.f));
+
+  // left face normal = -x
+  addFace(v4, v0, v3, v7, Vector3f(-1.f, 0.f, 0.f));
+  // right face normal = +x
+  addFace(v1, v5, v6, v2, Vector3f(1.f, 0.f, 0.f));
+
+  // bottom face normal = -y
+  addFace(v4, v5, v1, v0, Vector3f(0.f, -1.f, 0.f));
+  // top face normal = +y
+  addFace(v3, v2, v6, v7, Vector3f(0.f, 1.f, 0.f));
+}
+
+
 unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
                                        const Core::Array<Vector3f>& n,
                                        const Core::Array<Vector4ub>& c)

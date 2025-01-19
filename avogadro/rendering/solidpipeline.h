@@ -34,6 +34,11 @@ public:
    */
   void begin();
 
+
+  void beginFront();
+  void endFront();
+  void beginBack();
+  void endBack();
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
    */
@@ -64,15 +69,21 @@ public:
 
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
+
+  // float backgroundColor() const { return m_backgroundColor; }
+  // void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
   /**
    * @brief Get or set shadow strength for Ambient Occlusion.
    */
   float getAoStrength() { return m_aoStrength; }
   void setAoStrength(float strength) { m_aoStrength = strength; }
   
-  float getBackground() { return background; }
+  // float getBackground() { return background; }
 
-  void setBackground(float strength) { background = strength; }
+  void setBackgroundX(float strength) { backgroundX = strength; }
+  void setBackgroundY(float strength) { backgroundY = strength; }
+  void setBackgroundZ(float strength) { backgroundZ = strength; }
+
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
@@ -99,7 +110,9 @@ private:
   int m_width;
   int m_height;
   float m_currentCube;
-  float background;
+  float backgroundX;
+  float backgroundY;
+  float backgroundZ;
 
   class Private;
   Private* d;

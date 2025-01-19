@@ -13,6 +13,7 @@
 #include "spheregeometry.h"
 #include "textlabel2d.h"
 #include "textlabel3d.h"
+#include <iostream>
 
 namespace Avogadro::Rendering {
 

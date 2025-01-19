@@ -253,7 +253,7 @@ void SolidPipeline::initialize()
         float dy = (y - size / 2.0f) / (size / 2.0f);
         float dz = (z - size / 2.0f) / (size / 2.0f);
         float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
-        volumeData[z*size*size + y*size + x] = std::exp(-3.0f * dist);
+        volumeData[z*size*size + y*size + x] = std::exp(-4.0f * dist);
       }
     }
   }
@@ -351,8 +351,15 @@ void SolidPipeline::renderVolumeFaces(const Camera& cam)
 
   d->boxShaders.bind();
 
+  Eigen::Affine3f translation(Eigen::Affine3f::Identity());
+  translation.translate(Eigen::Vector3f(backgroundX, backgroundY, backgroundZ));
+
+
   // Get the combined projection * modelView
-  Eigen::Matrix4f projView = cam.projection().matrix() * cam.modelView().matrix();
+  Eigen::Matrix4f modelView = cam.modelView().matrix() * translation.matrix();
+  Eigen::Matrix4f projView  = cam.projection().matrix() * modelView;
+
+  // Eigen::Matrix4f projView = cam.projection().matrix() * cam.modelView().matrix();
   d->boxShaders.setUniformValue("uMVP", projView);
 
   // BACK FACES
@@ -435,6 +442,8 @@ void SolidPipeline::begin()
 
 void SolidPipeline::end()
 {
+
+  // std::cout<<background<<std::endl;
   // Bind default FBO again
   if (glIsFramebuffer(d->defaultFBO)) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
@@ -471,17 +480,42 @@ void SolidPipeline::end()
   // Bind volume
   GLint progID = 0;
   glGetIntegerv(GL_CURRENT_PROGRAM, &progID);
-  GLint volLoc = glGetUniformLocation(progID, "uVolumeData");
+  GLint volLoc = glGetUniformLocation(progID, "VolumeTex");
   if (volLoc >= 0) {
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
     glUniform1i(volLoc, 3);
+  }
+  GLint exitPointsLoc = glGetUniformLocation(progID, "ExitPoints");
+  if (exitPointsLoc >= 0) {
+    // Suppose we store the back-face pass in d->backColorTexture
+    // (where you actually wrote out the exit points in RGBA)
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, d->backColorTexture);
+    glUniform1i(exitPointsLoc, 7);
+  }
+
+  // Attach "TransferFunc" as sampler1D (or sampler2D if you switched to 2D)
+  GLint transferFuncLoc = glGetUniformLocation(progID, "TransferFunc");
+  if (transferFuncLoc >= 0) {
+    // If you created your 1D transfer function as a GL_TEXTURE_1D, bind it here.
+    // Or if your code sets up a 2D texture with height=1, you might do GL_TEXTURE_2D
+    // so adjust the call accordingly:
+    glActiveTexture(GL_TEXTURE8);
+    // e.g., glBindTexture(GL_TEXTURE_1D, d->transferTexture);
+    // Or if you used a 2D texture of size 256x1, do:
+    glBindTexture(GL_TEXTURE_2D, d->transferTexture);
+    glUniform1i(transferFuncLoc, 8);
   }
 
   // Fullscreen quad
   glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                        3*sizeof(GLfloat), (GLvoid*)0);
+
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
                         3*sizeof(GLfloat), (GLvoid*)0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
