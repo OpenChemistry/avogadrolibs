@@ -3,30 +3,19 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "fuzztest/fuzztest.h"
-#include "iotests.h"
-
-#include <gtest/gtest.h>
-
-#include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
-#include <avogadro/core/unitcell.h>
-
 #include <avogadro/io/cjsonformat.h>
 
 using Avogadro::Core::Molecule;
 using Avogadro::Io::CjsonFormat;
 
-static const std::string cjsonDir = std::string(AVOGADRO_DATA) + "/data/cjson/";
-
-void readCjson(const std::string& data)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 {
+  std::string input(reinterpret_cast<const char*>(Data), Size);
+
   CjsonFormat cjson;
   Molecule molecule;
-  bool success = cjson.readString(data, molecule);
-  EXPECT_TRUE(success);
-  EXPECT_EQ(cjson.error(), "");
-}
+  bool success = cjson.readString(input, molecule);
 
-FUZZ_TEST(AvogadroFuzzTests, readCjson)
-  .WithSeeds(fuzztest::ReadFilesFromDirectory(cjsonDir));
+  return 0;
+}
