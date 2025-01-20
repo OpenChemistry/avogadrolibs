@@ -175,7 +175,7 @@ jobs:
         cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
         ./appimagetool-x86_64.AppImage appdir
-        mv Avogadro*.AppImage avogadroapp # for upload
+        mv Avogadro*.AppImage avogadroapp/Avogadro2-x86_64.AppImage # for upload
       working-directory: ${{ runner.workspace }}/build
 
     - name: Upload
