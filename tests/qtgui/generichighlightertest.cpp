@@ -73,7 +73,7 @@ public:
           else
           {
             foreach (const QTextLayout::FormatRange& range,
-                      layout->additionalformats()) {
+                      layout->formats()) {
                 const int startIdx = current.position() + range.start - selectionStart;
                 const int endIdx = startIdx + range.length;
                 if (endIdx <= 0 || startIdx >= endOfDocument)
