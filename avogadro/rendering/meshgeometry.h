@@ -100,8 +100,6 @@ public:
   /**
    * Clear the contents of the node.
    */
-  void addBoundingBox(const Vector3f& minPos, const Vector3f& maxPos,
-                      const Vector4ub& color);
   void clear() override;
 
   /**
