@@ -59,6 +59,28 @@ public:
     prog.setUniformValue("height", float(h));
   }
 
+// Instead of attachVolumeStage() for depth, do:
+void attachVolumePosStage(ShaderProgram& prog,
+                          const GLchar* frontPosName, GLuint frontPosTex,
+                          const GLchar* backPosName,  GLuint backPosTex)
+{
+  prog.bind();
+  GLint progId = 0;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &progId);
+
+  // front
+  GLuint locFront = glGetUniformLocation(progId, frontPosName);
+  glActiveTexture(GL_TEXTURE7);
+  glBindTexture(GL_TEXTURE_2D, frontPosTex);
+  glUniform1i(locFront, 4);
+
+  // back
+  GLuint locBack  = glGetUniformLocation(progId, backPosName);
+  glActiveTexture(GL_TEXTURE8);
+  glBindTexture(GL_TEXTURE_2D, backPosTex);
+  glUniform1i(locBack, 5);
+}
+
   /** Attach front/back depth passes for the volume bounding box. */
   void attachVolumeStage(ShaderProgram& prog,
                          const GLchar* frontDepthName, GLuint frontDepthTex,
@@ -244,7 +266,7 @@ void SolidPipeline::initialize()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  int size = 256;
+  int size = 128;
   std::vector<float> volumeData(size * size * size, 0.0f);
   for (int z = 0; z < size; ++z) {
     for (int y = 0; y < size; ++y) {
@@ -253,7 +275,7 @@ void SolidPipeline::initialize()
         float dy = (y - size / 2.0f) / (size / 2.0f);
         float dz = (z - size / 2.0f) / (size / 2.0f);
         float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
-        volumeData[z*size*size + y*size + x] = std::exp(-4.0f * dist);
+        volumeData[z*size*size + y*size + x] = std::exp(-3.0f * dist);
       }
     }
   }
@@ -267,9 +289,9 @@ void SolidPipeline::initialize()
     // i ko [0..255] se normalize karke color aur alpha define
     float t = float(i) / 255.0f;
     // let’s do a pinkish gradient: RGBA
-    tfData[i*4 + 0] = static_cast<unsigned char>(255.0f * t);    // R
-    tfData[i*4 + 1] = static_cast<unsigned char>(128.0f * t);    // G
-    tfData[i*4 + 2] = static_cast<unsigned char>(255.0f * (1-t));// B
+    tfData[i*4 + 0] = static_cast<unsigned char>(0.0 * (t));    // R
+    tfData[i*4 + 1] = static_cast<unsigned char>(255.0f * t);    // G
+    tfData[i*4 + 2] = static_cast<unsigned char>(0.0f * (1-t));// B
     tfData[i*4 + 3] = static_cast<unsigned char>(255.0f * t);    // A
   }
 
@@ -377,7 +399,7 @@ void SolidPipeline::renderVolumeFaces(const Camera& cam)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(d->volumeBoxVao);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     glDisable(GL_CULL_FACE);
@@ -465,6 +487,9 @@ void SolidPipeline::end()
                        "inFrontDepthTex", d->frontDepthTexture,
                        "inBackDepthTex",  d->backDepthTexture,
                        m_width, m_height);
+  d->attachVolumePosStage(d->firstStageShaders,
+                     "inFrontPosTex", d->frontColorTexture,
+                     "inBackPosTex",  d->backColorTexture);
 
   d->attachTransferFunction(d->firstStageShaders, "transferTex", d->transferTexture);
   d->firstStageShaders.bind();
@@ -486,27 +511,8 @@ void SolidPipeline::end()
     glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
     glUniform1i(volLoc, 3);
   }
-  GLint exitPointsLoc = glGetUniformLocation(progID, "ExitPoints");
-  if (exitPointsLoc >= 0) {
-    // Suppose we store the back-face pass in d->backColorTexture
-    // (where you actually wrote out the exit points in RGBA)
-    glActiveTexture(GL_TEXTURE7);
-    glBindTexture(GL_TEXTURE_2D, d->backColorTexture);
-    glUniform1i(exitPointsLoc, 7);
-  }
 
   // Attach "TransferFunc" as sampler1D (or sampler2D if you switched to 2D)
-  GLint transferFuncLoc = glGetUniformLocation(progID, "TransferFunc");
-  if (transferFuncLoc >= 0) {
-    // If you created your 1D transfer function as a GL_TEXTURE_1D, bind it here.
-    // Or if your code sets up a 2D texture with height=1, you might do GL_TEXTURE_2D
-    // so adjust the call accordingly:
-    glActiveTexture(GL_TEXTURE8);
-    // e.g., glBindTexture(GL_TEXTURE_1D, d->transferTexture);
-    // Or if you used a 2D texture of size 256x1, do:
-    glBindTexture(GL_TEXTURE_2D, d->transferTexture);
-    glUniform1i(transferFuncLoc, 8);
-  }
 
   // Fullscreen quad
   glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
