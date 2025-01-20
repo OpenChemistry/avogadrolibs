@@ -40,7 +40,7 @@ TEST(InputGeneratorTest, exercise)
   // Create a set of input options by setting defaults
   QJsonObject inputOptions;
   QJsonObject options;
-  foreach (const QString& optionName, userOptions.keys()) {
+  for (const QString& optionName : userOptions.keys()) {
     EXPECT_TRUE(userOptions[optionName].isObject());
     QJsonObject option(userOptions[optionName].toObject());
     QString optionType(option["type"].toString());
