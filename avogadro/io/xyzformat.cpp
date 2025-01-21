@@ -81,6 +81,10 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   string buffer;
   getline(inStream, buffer); // Finish the first line
+  if (!inStream.good()) {
+    appendError("Error reading first line.");
+    return false;
+  }
   getline(inStream, buffer); // comment or name or energy
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
@@ -147,9 +151,19 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
   }
 
+  if (!inStream.good()) {
+    appendError("Error reading comment line.");
+    return false;
+  }
+
   // Parse atoms
   for (size_t i = 0; i < numAtoms; ++i) {
     getline(inStream, buffer);
+    if (!inStream.good()) {
+      appendError("Error reading atom at index " + std::to_string(i) + ".");
+      return false;
+    }
+
     std::vector<string> tokens;
     // check for tabs PR#1512
     if (buffer.find('\t') != std::string::npos)
