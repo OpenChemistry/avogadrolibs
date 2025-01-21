@@ -337,7 +337,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  if (jsonRoot.contains("unitCell")) {
+  if (jsonRoot.contains("unitCell") || jsonRoot.contains("unit cell")) {
     json unitCell = jsonRoot["unitCell"];
     if (!unitCell.is_object())
       unitCell = jsonRoot["unit cell"];
@@ -381,7 +381,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
   }
 
-  if (atoms["coords"].contains("3dFractional")) {
+  if (atoms["coords"].contains("3dFractional") ||
+      atoms["coords"].contains("3d fractional")) {
     json fractional = atoms["coords"]["3dFractional"];
     if (!fractional.is_array())
       fractional = atoms["coords"]["3d fractional"];
