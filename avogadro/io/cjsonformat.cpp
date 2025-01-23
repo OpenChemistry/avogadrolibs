@@ -133,7 +133,23 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     return false;
   }
 
-  json atomicNumbers = atoms["elements"]["number"];
+  if (!atoms.contains("elements")) {
+    appendError("The 'atoms' key does not contain an 'elements' key.");
+    return false;
+  }
+
+  if (atoms.contains("elements") && !atoms["elements"].is_object()) {
+    appendError("The 'elements' key does not contain an object.");
+    return false;
+  }
+
+  json elements = atoms["elements"];
+  if (!elements.contains("number")) {
+    appendError("The 'elements' key does not contain a 'number' key.");
+    return false;
+  }
+
+  json atomicNumbers = elements["number"];
   // This represents our minimal spec for a molecule - atoms that have an
   // atomic number.
   if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
@@ -145,371 +161,406 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
   Index atomCount = molecule.atomCount();
 
-  // 3d coordinates if available for our atoms
-  json atomicCoords = atoms["coords"]["3d"];
-  if (isNumericArray(atomicCoords) && atomicCoords.size() == 3 * atomCount) {
-    for (Index i = 0; i < atomCount; ++i) {
-      auto a = molecule.atom(i);
-      a.setPosition3d(Vector3(atomicCoords[3 * i], atomicCoords[3 * i + 1],
-                              atomicCoords[3 * i + 2]));
+  if (atoms.contains("coords") && atoms["coords"].is_object()) {
+    if (atoms["coords"].contains("3d") && atoms["coords"]["3d"].is_array()) {
+      json atomicCoords = atoms["coords"]["3d"];
+      if (isNumericArray(atomicCoords) &&
+          atomicCoords.size() == 3 * atomCount) {
+        for (Index i = 0; i < atomCount; ++i) {
+          auto a = molecule.atom(i);
+          a.setPosition3d(Vector3(atomicCoords[3 * i], atomicCoords[3 * i + 1],
+                                  atomicCoords[3 * i + 2]));
+        }
+      }
+    }
+
+    if (atoms["coords"].contains("3dSets")) {
+      // Check for coordinate sets, and read them in if found, e.g.
+      // trajectories.
+      json coordSets = atoms["coords"]["3dSets"];
+      if (coordSets.is_array() && coordSets.size()) {
+        for (unsigned int i = 0; i < coordSets.size(); ++i) {
+          Array<Vector3> setArray;
+          json set = coordSets[i];
+          if (isNumericArray(set)) {
+            for (unsigned int j = 0; j < set.size() / 3; ++j) {
+              setArray.push_back(
+                Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
+            }
+            molecule.setCoordinate3d(setArray, i);
+          }
+        }
+        // Make sure the first step is active once we are done loading the sets.
+        molecule.setCoordinate3d(0);
+      }
     }
   }
 
   // Array of vector3 for forces if available
-  json forces = atoms["forces"];
-  if (isNumericArray(forces) && forces.size() == 3 * atomCount) {
-    for (Index i = 0; i < atomCount; ++i) {
-      auto a = molecule.atom(i);
-      a.setForceVector(
-        Vector3(forces[3 * i], forces[3 * i + 1], forces[3 * i + 2]));
+  if (atoms.contains("forces")) {
+    json forces = atoms["forces"];
+    if (isNumericArray(forces) && forces.size() == 3 * atomCount) {
+      for (Index i = 0; i < atomCount; ++i) {
+        auto a = molecule.atom(i);
+        a.setForceVector(
+          Vector3(forces[3 * i], forces[3 * i + 1], forces[3 * i + 2]));
+      }
     }
   }
 
   // labels
-  json labels = atoms["labels"];
-  if (labels.is_array() && labels.size() == atomCount) {
-    for (size_t i = 0; i < atomCount; ++i) {
-      molecule.setAtomLabel(i, labels[i]);
+  if (atoms.contains("labels")) {
+    json labels = atoms["labels"];
+    if (labels.is_array() && labels.size() == atomCount) {
+      for (size_t i = 0; i < atomCount; ++i) {
+        molecule.setAtomLabel(i, labels[i]);
+      }
     }
   }
 
   // formal charges
-  json formalCharges = atoms["formalCharges"];
-  if (formalCharges.is_array() && formalCharges.size() == atomCount) {
-    for (size_t i = 0; i < atomCount; ++i) {
-      molecule.atom(i).setFormalCharge(formalCharges[i]);
-    }
-  }
-
-  // Check for coordinate sets, and read them in if found, e.g. trajectories.
-  json coordSets = atoms["coords"]["3dSets"];
-  if (coordSets.is_array() && coordSets.size()) {
-    for (unsigned int i = 0; i < coordSets.size(); ++i) {
-      Array<Vector3> setArray;
-      json set = coordSets[i];
-      if (isNumericArray(set)) {
-        for (unsigned int j = 0; j < set.size() / 3; ++j) {
-          setArray.push_back(
-            Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
-        }
-        molecule.setCoordinate3d(setArray, i);
+  if (atoms.contains("formalCharges")) {
+    json formalCharges = atoms["formalCharges"];
+    if (formalCharges.is_array() && formalCharges.size() == atomCount) {
+      for (size_t i = 0; i < atomCount; ++i) {
+        molecule.atom(i).setFormalCharge(formalCharges[i]);
       }
     }
-    // Make sure the first step is active once we are done loading the sets.
-    molecule.setCoordinate3d(0);
   }
 
   // Read in colors if they are present.
-  json colors = atoms["colors"];
-  if (colors.is_array() && colors.size() == 3 * atomCount) {
-    for (Index i = 0; i < atomCount; ++i) {
-      Vector3ub color(colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]);
-      molecule.setColor(i, color);
+  if (atoms.contains("colors")) {
+    json colors = atoms["colors"];
+    if (colors.is_array() && colors.size() == 3 * atomCount) {
+      for (Index i = 0; i < atomCount; ++i) {
+        Vector3ub color(colors[3 * i], colors[3 * i + 1], colors[3 * i + 2]);
+        molecule.setColor(i, color);
+      }
     }
   }
 
   // Selection is optional, but if present should be loaded.
-  json selection = atoms["selected"];
-  if (isBooleanArray(selection) && selection.size() == atomCount)
-    for (Index i = 0; i < atomCount; ++i)
-      molecule.setAtomSelected(i, selection[i]);
-  else if (isNumericArray(selection) && selection.size() == atomCount)
-    for (Index i = 0; i < atomCount; ++i)
-      molecule.setAtomSelected(i, selection[i] != 0);
-  if (atoms.find("layer") != atoms.end()) {
-    json layerJson = atoms["layer"];
-    if (isNumericArray(layerJson)) {
-      auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
-      for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
-        while (layerJson[i] > layer.maxLayer()) {
-          layer.addLayer();
+  if (atoms.contains("selected")) {
+    json selection = atoms["selected"];
+    if (isBooleanArray(selection) && selection.size() == atomCount)
+      for (Index i = 0; i < atomCount; ++i)
+        molecule.setAtomSelected(i, selection[i]);
+    else if (isNumericArray(selection) && selection.size() == atomCount)
+      for (Index i = 0; i < atomCount; ++i)
+        molecule.setAtomSelected(i, selection[i] != 0);
+    if (atoms.find("layer") != atoms.end()) {
+      json layerJson = atoms["layer"];
+      if (isNumericArray(layerJson)) {
+        auto& layer = LayerManager::getMoleculeInfo(&molecule)->layer;
+        for (Index i = 0; i < atomCount && i < layerJson.size(); ++i) {
+          while (layerJson[i] > layer.maxLayer()) {
+            layer.addLayer();
+          }
+          layer.addAtom(layerJson[i], i);
         }
-        layer.addAtom(layerJson[i], i);
       }
     }
   }
 
   // Bonds are optional, but if present should be loaded.
-  json bonds = jsonRoot["bonds"];
-  if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
-    json connections = bonds["connections"]["index"];
-    for (unsigned int i = 0; i < connections.size() / 2; ++i) {
-      molecule.addBond(static_cast<Index>(connections[2 * i]),
-                       static_cast<Index>(connections[2 * i + 1]), 1);
-    }
-    json order = bonds["order"];
-    if (isNumericArray(order)) {
-      for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
-           ++i) {
-        molecule.bond(i).setOrder(static_cast<int>(order[i]));
+  if (jsonRoot.contains("bonds")) {
+    json bonds = jsonRoot["bonds"];
+    if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
+      json connections = bonds["connections"]["index"];
+      for (unsigned int i = 0; i < connections.size() / 2; ++i) {
+        molecule.addBond(static_cast<Index>(connections[2 * i]),
+                         static_cast<Index>(connections[2 * i + 1]), 1);
       }
-    }
+      if (bonds.contains("order")) {
+        json order = bonds["order"];
+        if (isNumericArray(order)) {
+          for (unsigned int i = 0; i < molecule.bondCount() && i < order.size();
+               ++i) {
+            molecule.bond(i).setOrder(static_cast<int>(order[i]));
+          }
+        }
+      }
 
-    // are there bond labels?
-    json bondLabels = bonds["labels"];
-    if (bondLabels.is_array()) {
-      for (unsigned int i = 0;
-           i < molecule.bondCount() && i < bondLabels.size(); ++i) {
-        molecule.setBondLabel(i, bondLabels[i]);
+      // are there bond labels?
+      if (bonds.contains("labels")) {
+        json bondLabels = bonds["labels"];
+        if (bondLabels.is_array()) {
+          for (unsigned int i = 0;
+               i < molecule.bondCount() && i < bondLabels.size(); ++i) {
+            molecule.setBondLabel(i, bondLabels[i]);
+          }
+        }
       }
     }
   }
 
   // residues are optional, but should be loaded
-  json residues = jsonRoot["residues"];
-  if (residues.is_array()) {
-    for (auto residue : residues) {
-      if (!residue.is_object())
-        continue; // malformed
+  if (jsonRoot.contains("residues")) {
+    json residues = jsonRoot["residues"];
+    if (residues.is_array()) {
+      for (auto residue : residues) {
+        if (!residue.is_object())
+          continue; // malformed
 
-      auto name = residue["name"].get<std::string>();
-      auto id = static_cast<Index>(residue["id"]);
-      auto chainId = residue["chainId"].get<char>();
-      Residue newResidue(name, id, chainId);
+        auto name = residue["name"].get<std::string>();
+        auto id = static_cast<Index>(residue["id"]);
+        auto chainId = residue["chainId"].get<char>();
+        Residue newResidue(name, id, chainId);
 
-      json hetero = residue["hetero"];
-      if (hetero == true)
-        newResidue.setHeterogen(true);
+        json hetero = residue["hetero"];
+        if (hetero == true)
+          newResidue.setHeterogen(true);
 
-      int secStruct = residue.value("secStruct", -1);
-      if (secStruct != -1)
-        newResidue.setSecondaryStructure(
-          static_cast<Avogadro::Core::Residue::SecondaryStructure>(secStruct));
+        int secStruct = residue.value("secStruct", -1);
+        if (secStruct != -1)
+          newResidue.setSecondaryStructure(
+            static_cast<Avogadro::Core::Residue::SecondaryStructure>(
+              secStruct));
 
-      json atomsResidue = residue["atoms"];
-      if (atomsResidue.is_object()) {
-        for (auto& item : atomsResidue.items()) {
-          if (item.value() < molecule.atomCount()) {
-            const Atom& atom = molecule.atom(item.value());
-            newResidue.addResidueAtom(item.key(), atom);
+        json atomsResidue = residue["atoms"];
+        if (atomsResidue.is_object()) {
+          for (auto& item : atomsResidue.items()) {
+            if (item.value() < molecule.atomCount()) {
+              const Atom& atom = molecule.atom(item.value());
+              newResidue.addResidueAtom(item.key(), atom);
+            }
           }
         }
-      }
-      json color = residue["color"];
-      if (color.is_array() && color.size() == 3) {
-        Vector3ub col = Vector3ub(color[0], color[1], color[2]);
-        newResidue.setColor(col);
-      }
+        json color = residue["color"];
+        if (color.is_array() && color.size() == 3) {
+          Vector3ub col = Vector3ub(color[0], color[1], color[2]);
+          newResidue.setColor(col);
+        }
 
-      molecule.addResidue(newResidue);
+        molecule.addResidue(newResidue);
+      }
     }
   }
 
-  json unitCell = jsonRoot["unitCell"];
-  if (!unitCell.is_object())
-    unitCell = jsonRoot["unit cell"];
+  if (jsonRoot.contains("unitCell") || jsonRoot.contains("unit cell")) {
+    json unitCell = jsonRoot["unitCell"];
+    if (!unitCell.is_object())
+      unitCell = jsonRoot["unit cell"];
 
-  if (unitCell.is_object()) {
-    Core::UnitCell* unitCellObject = nullptr;
+    if (unitCell.is_object()) {
+      Core::UnitCell* unitCellObject = nullptr;
 
-    // read in cell vectors in preference to a, b, c parameters
-    json cellVectors = unitCell["cellVectors"];
-    if (cellVectors.is_array() && cellVectors.size() == 9 &&
-        isNumericArray(cellVectors)) {
-      Vector3 aVector(cellVectors[0], cellVectors[1], cellVectors[2]);
-      Vector3 bVector(cellVectors[3], cellVectors[4], cellVectors[5]);
-      Vector3 cVector(cellVectors[6], cellVectors[7], cellVectors[8]);
-      unitCellObject = new Core::UnitCell(aVector, bVector, cVector);
-    } else if (unitCell["a"].is_number() && unitCell["b"].is_number() &&
-               unitCell["c"].is_number() && unitCell["alpha"].is_number() &&
-               unitCell["beta"].is_number() && unitCell["gamma"].is_number()) {
-      Real a = static_cast<Real>(unitCell["a"]);
-      Real b = static_cast<Real>(unitCell["b"]);
-      Real c = static_cast<Real>(unitCell["c"]);
-      Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
-      Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
-      Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
-      unitCellObject = new Core::UnitCell(a, b, c, alpha, beta, gamma);
-    }
-    if (unitCellObject != nullptr)
-      molecule.setUnitCell(unitCellObject);
+      // read in cell vectors in preference to a, b, c parameters
+      json cellVectors = unitCell["cellVectors"];
+      if (cellVectors.is_array() && cellVectors.size() == 9 &&
+          isNumericArray(cellVectors)) {
+        Vector3 aVector(cellVectors[0], cellVectors[1], cellVectors[2]);
+        Vector3 bVector(cellVectors[3], cellVectors[4], cellVectors[5]);
+        Vector3 cVector(cellVectors[6], cellVectors[7], cellVectors[8]);
+        unitCellObject = new Core::UnitCell(aVector, bVector, cVector);
+      } else if (unitCell["a"].is_number() && unitCell["b"].is_number() &&
+                 unitCell["c"].is_number() && unitCell["alpha"].is_number() &&
+                 unitCell["beta"].is_number() &&
+                 unitCell["gamma"].is_number()) {
+        Real a = static_cast<Real>(unitCell["a"]);
+        Real b = static_cast<Real>(unitCell["b"]);
+        Real c = static_cast<Real>(unitCell["c"]);
+        Real alpha = static_cast<Real>(unitCell["alpha"]) * DEG_TO_RAD;
+        Real beta = static_cast<Real>(unitCell["beta"]) * DEG_TO_RAD;
+        Real gamma = static_cast<Real>(unitCell["gamma"]) * DEG_TO_RAD;
+        unitCellObject = new Core::UnitCell(a, b, c, alpha, beta, gamma);
+      }
+      if (unitCellObject != nullptr)
+        molecule.setUnitCell(unitCellObject);
 
-    // check for Hall number if present
-    if (unitCell["hallNumber"].is_number()) {
-      auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
-      if (hallNumber > 0 && hallNumber < 531)
-        molecule.setHallNumber(hallNumber);
-    } else if (unitCell["spaceGroup"].is_string()) {
-      auto hallNumber = Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
-      if (hallNumber != 0)
-        molecule.setHallNumber(hallNumber);
+      // check for Hall number if present
+      if (unitCell["hallNumber"].is_number()) {
+        auto hallNumber = static_cast<int>(unitCell["hallNumber"]);
+        if (hallNumber > 0 && hallNumber < 531)
+          molecule.setHallNumber(hallNumber);
+      } else if (unitCell["spaceGroup"].is_string()) {
+        auto hallNumber = Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
+        if (hallNumber != 0)
+          molecule.setHallNumber(hallNumber);
+      }
     }
   }
 
-  json fractional = atoms["coords"]["3dFractional"];
-  if (!fractional.is_array())
-    fractional = atoms["coords"]["3d fractional"];
-  if (fractional.is_array() && fractional.size() == 3 * atomCount &&
-      isNumericArray(fractional) && molecule.unitCell()) {
-    Array<Vector3> fcoords;
-    fcoords.reserve(atomCount);
-    for (Index i = 0; i < atomCount; ++i) {
-      fcoords.push_back(Vector3(static_cast<Real>(fractional[i * 3 + 0]),
-                                static_cast<Real>(fractional[i * 3 + 1]),
-                                static_cast<Real>(fractional[i * 3 + 2])));
+  if (atoms["coords"].contains("3dFractional") ||
+      atoms["coords"].contains("3d fractional")) {
+    json fractional = atoms["coords"]["3dFractional"];
+    if (!fractional.is_array())
+      fractional = atoms["coords"]["3d fractional"];
+    if (fractional.is_array() && fractional.size() == 3 * atomCount &&
+        isNumericArray(fractional) && molecule.unitCell()) {
+      Array<Vector3> fcoords;
+      fcoords.reserve(atomCount);
+      for (Index i = 0; i < atomCount; ++i) {
+        fcoords.push_back(Vector3(static_cast<Real>(fractional[i * 3 + 0]),
+                                  static_cast<Real>(fractional[i * 3 + 1]),
+                                  static_cast<Real>(fractional[i * 3 + 2])));
+      }
+      CrystalTools::setFractionalCoordinates(molecule, fcoords);
     }
-    CrystalTools::setFractionalCoordinates(molecule, fcoords);
   }
 
   // Basis set is optional, if present read it in.
-  json basisSet = jsonRoot["basisSet"];
-  if (basisSet.is_object()) {
-    auto* basis = new GaussianSet;
-    basis->setMolecule(&molecule);
-    // Gather the relevant pieces together so that they can be read in.
-    json shellTypes = basisSet["shellTypes"];
-    json primitivesPerShell = basisSet["primitivesPerShell"];
-    json shellToAtomMap = basisSet["shellToAtomMap"];
-    json exponents = basisSet["exponents"];
-    json coefficients = basisSet["coefficients"];
+  if (jsonRoot.contains("basisSet")) {
+    json basisSet = jsonRoot["basisSet"];
+    if (basisSet.is_object()) {
+      auto* basis = new GaussianSet;
+      basis->setMolecule(&molecule);
+      // Gather the relevant pieces together so that they can be read in.
+      json shellTypes = basisSet["shellTypes"];
+      json primitivesPerShell = basisSet["primitivesPerShell"];
+      json shellToAtomMap = basisSet["shellToAtomMap"];
+      json exponents = basisSet["exponents"];
+      json coefficients = basisSet["coefficients"];
 
-    int nGTO = 0;
-    for (unsigned int i = 0; i < shellTypes.size(); ++i) {
-      GaussianSet::orbital type;
-      switch (static_cast<int>(shellTypes[i])) {
-        case 0:
-          type = GaussianSet::S;
-          break;
-        case 1:
-          type = GaussianSet::P;
-          break;
-        case 2:
-          type = GaussianSet::D;
-          break;
-        case -2:
-          type = GaussianSet::D5;
-          break;
-        default:
-          // If we encounter GTOs we do not understand, the basis is likely
-          // invalid
-          type = GaussianSet::UU;
-      }
-      if (type != GaussianSet::UU) {
-        int b = basis->addBasis(static_cast<int>(shellToAtomMap[i]), type);
-        for (int j = 0; j < static_cast<int>(primitivesPerShell[i]); ++j) {
-          basis->addGto(b, coefficients[nGTO], exponents[nGTO]);
-          ++nGTO;
+      int nGTO = 0;
+      for (unsigned int i = 0; i < shellTypes.size(); ++i) {
+        GaussianSet::orbital type;
+        switch (static_cast<int>(shellTypes[i])) {
+          case 0:
+            type = GaussianSet::S;
+            break;
+          case 1:
+            type = GaussianSet::P;
+            break;
+          case 2:
+            type = GaussianSet::D;
+            break;
+          case -2:
+            type = GaussianSet::D5;
+            break;
+          default:
+            // If we encounter GTOs we do not understand, the basis is likely
+            // invalid
+            type = GaussianSet::UU;
         }
-      }
-    }
-
-    json orbitals = jsonRoot["orbitals"];
-    if (orbitals.is_object() && basis->isValid()) {
-      basis->setElectronCount(orbitals["electronCount"]);
-      json occupations = orbitals["occupations"];
-      if (isNumericArray(occupations)) {
-        std::vector<unsigned char> occs;
-        for (auto& occupation : occupations)
-          occs.push_back(static_cast<unsigned char>(occupation));
-        basis->setMolecularOrbitalOccupancy(occupations);
-      }
-      json energies = orbitals["energies"];
-      if (isNumericArray(energies)) {
-        std::vector<double> energyArray;
-        for (auto& energie : energies)
-          energyArray.push_back(static_cast<double>(energie));
-        basis->setMolecularOrbitalEnergy(energyArray);
-      }
-      json numbers = orbitals["numbers"];
-      if (isNumericArray(numbers)) {
-        std::vector<unsigned int> numArray;
-        for (auto& number : numbers)
-          numArray.push_back(static_cast<unsigned int>(number));
-        basis->setMolecularOrbitalNumber(numArray);
-      }
-      json symmetryLabels = orbitals["symmetries"];
-      if (symmetryLabels.is_array()) {
-        std::vector<std::string> symArray;
-        for (auto& sym : symmetryLabels)
-          symArray.push_back(sym);
-        basis->setSymmetryLabels(symArray);
-      }
-      json moCoefficients = orbitals["moCoefficients"];
-      json moCoefficientsA = orbitals["alphaCoefficients"];
-      json moCoefficientsB = orbitals["betaCoefficients"];
-      bool openShell = false;
-      if (isNumericArray(moCoefficients)) {
-        std::vector<double> coeffs;
-        for (auto& moCoefficient : moCoefficients)
-          coeffs.push_back(static_cast<double>(moCoefficient));
-        basis->setMolecularOrbitals(coeffs);
-      } else if (isNumericArray(moCoefficientsA) &&
-                 isNumericArray(moCoefficientsB)) {
-        std::vector<double> coeffsA;
-        for (auto& i : moCoefficientsA)
-          coeffsA.push_back(static_cast<double>(i));
-        std::vector<double> coeffsB;
-        for (auto& i : moCoefficientsB)
-          coeffsB.push_back(static_cast<double>(i));
-        basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
-        basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
-        openShell = true;
-      } else {
-        std::cout << "No orbital cofficients found!" << std::endl;
-      }
-      // Check for orbital coefficient sets, these are paired with coordinates
-      // when they exist, but have constant basis set, atom types, etc.
-      if (orbitals["sets"].is_array() && orbitals["sets"].size()) {
-        json orbSets = orbitals["sets"];
-        for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
-          moCoefficients = orbSets[idx]["moCoefficients"];
-          moCoefficientsA = orbSets[idx]["alphaCoefficients"];
-          moCoefficientsB = orbSets[idx]["betaCoefficients"];
-          if (isNumericArray(moCoefficients)) {
-            std::vector<double> coeffs;
-            for (auto& moCoefficient : moCoefficients)
-              coeffs.push_back(static_cast<double>(moCoefficient));
-            basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
-          } else if (isNumericArray(moCoefficientsA) &&
-                     isNumericArray(moCoefficientsB)) {
-            std::vector<double> coeffsA;
-            for (auto& i : moCoefficientsA)
-              coeffsA.push_back(static_cast<double>(i));
-            std::vector<double> coeffsB;
-            for (auto& i : moCoefficientsB)
-              coeffsB.push_back(static_cast<double>(i));
-            basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
-            basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
-            openShell = true;
+        if (type != GaussianSet::UU) {
+          int b = basis->addBasis(static_cast<int>(shellToAtomMap[i]), type);
+          for (int j = 0; j < static_cast<int>(primitivesPerShell[i]); ++j) {
+            basis->addGto(b, coefficients[nGTO], exponents[nGTO]);
+            ++nGTO;
           }
         }
-        // Set the first step as active.
-        basis->setActiveSetStep(0);
       }
-      if (openShell) {
-        // look for alpha and beta orbital energies
-        json energiesA = orbitals["alphaEnergies"];
-        json energiesB = orbitals["betaEnergies"];
-        // check if they are numeric arrays
-        if (isNumericArray(energiesA) && isNumericArray(energiesB)) {
-          std::vector<double> moEnergiesA;
-          for (auto& i : energiesA)
-            moEnergiesA.push_back(static_cast<double>(i));
-          std::vector<double> moEnergiesB;
-          for (auto& i : energiesB)
-            moEnergiesB.push_back(static_cast<double>(i));
-          basis->setMolecularOrbitalEnergy(moEnergiesA, BasisSet::Alpha);
-          basis->setMolecularOrbitalEnergy(moEnergiesB, BasisSet::Beta);
 
-          // look for alpha and beta orbital occupations
-          json occupationsA = orbitals["alphaOccupations"];
-          json occupationsB = orbitals["betaOccupations"];
+      json orbitals = jsonRoot["orbitals"];
+      if (orbitals.is_object() && basis->isValid()) {
+        basis->setElectronCount(orbitals["electronCount"]);
+        json occupations = orbitals["occupations"];
+        if (isNumericArray(occupations)) {
+          std::vector<unsigned char> occs;
+          for (auto& occupation : occupations)
+            occs.push_back(static_cast<unsigned char>(occupation));
+          basis->setMolecularOrbitalOccupancy(occupations);
+        }
+        json energies = orbitals["energies"];
+        if (isNumericArray(energies)) {
+          std::vector<double> energyArray;
+          for (auto& energie : energies)
+            energyArray.push_back(static_cast<double>(energie));
+          basis->setMolecularOrbitalEnergy(energyArray);
+        }
+        json numbers = orbitals["numbers"];
+        if (isNumericArray(numbers)) {
+          std::vector<unsigned int> numArray;
+          for (auto& number : numbers)
+            numArray.push_back(static_cast<unsigned int>(number));
+          basis->setMolecularOrbitalNumber(numArray);
+        }
+        json symmetryLabels = orbitals["symmetries"];
+        if (symmetryLabels.is_array()) {
+          std::vector<std::string> symArray;
+          for (auto& sym : symmetryLabels)
+            symArray.push_back(sym);
+          basis->setSymmetryLabels(symArray);
+        }
+        json moCoefficients = orbitals["moCoefficients"];
+        json moCoefficientsA = orbitals["alphaCoefficients"];
+        json moCoefficientsB = orbitals["betaCoefficients"];
+        bool openShell = false;
+        if (isNumericArray(moCoefficients)) {
+          std::vector<double> coeffs;
+          for (auto& moCoefficient : moCoefficients)
+            coeffs.push_back(static_cast<double>(moCoefficient));
+          basis->setMolecularOrbitals(coeffs);
+        } else if (isNumericArray(moCoefficientsA) &&
+                   isNumericArray(moCoefficientsB)) {
+          std::vector<double> coeffsA;
+          for (auto& i : moCoefficientsA)
+            coeffsA.push_back(static_cast<double>(i));
+          std::vector<double> coeffsB;
+          for (auto& i : moCoefficientsB)
+            coeffsB.push_back(static_cast<double>(i));
+          basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha);
+          basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
+          openShell = true;
+        } else {
+          std::cout << "No orbital cofficients found!" << std::endl;
+        }
+        // Check for orbital coefficient sets, these are paired with coordinates
+        // when they exist, but have constant basis set, atom types, etc.
+        if (orbitals["sets"].is_array() && orbitals["sets"].size()) {
+          json orbSets = orbitals["sets"];
+          for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
+            moCoefficients = orbSets[idx]["moCoefficients"];
+            moCoefficientsA = orbSets[idx]["alphaCoefficients"];
+            moCoefficientsB = orbSets[idx]["betaCoefficients"];
+            if (isNumericArray(moCoefficients)) {
+              std::vector<double> coeffs;
+              for (auto& moCoefficient : moCoefficients)
+                coeffs.push_back(static_cast<double>(moCoefficient));
+              basis->setMolecularOrbitals(coeffs, BasisSet::Paired, idx);
+            } else if (isNumericArray(moCoefficientsA) &&
+                       isNumericArray(moCoefficientsB)) {
+              std::vector<double> coeffsA;
+              for (auto& i : moCoefficientsA)
+                coeffsA.push_back(static_cast<double>(i));
+              std::vector<double> coeffsB;
+              for (auto& i : moCoefficientsB)
+                coeffsB.push_back(static_cast<double>(i));
+              basis->setMolecularOrbitals(coeffsA, BasisSet::Alpha, idx);
+              basis->setMolecularOrbitals(coeffsB, BasisSet::Beta, idx);
+              openShell = true;
+            }
+          }
+          // Set the first step as active.
+          basis->setActiveSetStep(0);
+        }
+        if (openShell) {
+          // look for alpha and beta orbital energies
+          json energiesA = orbitals["alphaEnergies"];
+          json energiesB = orbitals["betaEnergies"];
           // check if they are numeric arrays
-          if (isNumericArray(occupationsA) && isNumericArray(occupationsB)) {
-            std::vector<unsigned char> moOccupationsA;
-            for (auto& i : occupationsA)
-              moOccupationsA.push_back(static_cast<unsigned char>(i));
-            std::vector<unsigned char> moOccupationsB;
-            for (auto& i : occupationsB)
-              moOccupationsB.push_back(static_cast<unsigned char>(i));
-            basis->setMolecularOrbitalOccupancy(moOccupationsA,
-                                                BasisSet::Alpha);
-            basis->setMolecularOrbitalOccupancy(moOccupationsB, BasisSet::Beta);
+          if (isNumericArray(energiesA) && isNumericArray(energiesB)) {
+            std::vector<double> moEnergiesA;
+            for (auto& i : energiesA)
+              moEnergiesA.push_back(static_cast<double>(i));
+            std::vector<double> moEnergiesB;
+            for (auto& i : energiesB)
+              moEnergiesB.push_back(static_cast<double>(i));
+            basis->setMolecularOrbitalEnergy(moEnergiesA, BasisSet::Alpha);
+            basis->setMolecularOrbitalEnergy(moEnergiesB, BasisSet::Beta);
+
+            // look for alpha and beta orbital occupations
+            json occupationsA = orbitals["alphaOccupations"];
+            json occupationsB = orbitals["betaOccupations"];
+            // check if they are numeric arrays
+            if (isNumericArray(occupationsA) && isNumericArray(occupationsB)) {
+              std::vector<unsigned char> moOccupationsA;
+              for (auto& i : occupationsA)
+                moOccupationsA.push_back(static_cast<unsigned char>(i));
+              std::vector<unsigned char> moOccupationsB;
+              for (auto& i : occupationsB)
+                moOccupationsB.push_back(static_cast<unsigned char>(i));
+              basis->setMolecularOrbitalOccupancy(moOccupationsA,
+                                                  BasisSet::Alpha);
+              basis->setMolecularOrbitalOccupancy(moOccupationsB,
+                                                  BasisSet::Beta);
+            }
           }
         }
       }
+      molecule.setBasisSet(basis);
     }
-    molecule.setBasisSet(basis);
   }
 
   // See if there is any vibration data, load it if so.
@@ -699,16 +750,18 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
 
   // Partial charges are optional, but if present should be loaded.
-  json partialCharges = atoms["partialCharges"];
-  if (partialCharges.is_object()) {
-    // keys are types, values are arrays of charges
-    for (auto& kv : partialCharges.items()) {
-      MatrixX charges(atomCount, 1);
-      if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
-        for (size_t i = 0; i < kv.value().size(); ++i) {
-          charges(i, 0) = kv.value()[i];
+  if (atoms.contains("partialCharges")) {
+    json partialCharges = atoms["partialCharges"];
+    if (partialCharges.is_object()) {
+      // keys are types, values are arrays of charges
+      for (auto& kv : partialCharges.items()) {
+        MatrixX charges(atomCount, 1);
+        if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
+          for (size_t i = 0; i < kv.value().size(); ++i) {
+            charges(i, 0) = kv.value()[i];
+          }
+          molecule.setPartialCharges(kv.key(), charges);
         }
-        molecule.setPartialCharges(kv.key(), charges);
       }
     }
   }
