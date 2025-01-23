@@ -47,10 +47,27 @@ void handlePartialCharges(Core::Molecule& mol, std::string data)
   std::istringstream iss(data);
   size_t numCharges;
   iss >> numCharges;
+  if (numCharges == 0 || numCharges > mol.atomCount()) {
+    return;
+  }
+
   for (size_t i = 0; i < numCharges; ++i) {
-    size_t index;
-    Real charge;
-    iss >> index >> charge;
+    if (!iss.good()) {
+      return;
+    }
+
+    size_t index = 0;
+    Real charge = 0.0;
+
+    iss >> index;
+    if (iss.fail() || index == 0 || index > mol.atomCount()) {
+      return;
+    }
+
+    iss >> charge;
+    if (iss.fail()) {
+      return;
+    }
     // prints with atom index 1, not zero
     charges(index - 1, 0) = charge;
   }
