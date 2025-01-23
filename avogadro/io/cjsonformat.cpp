@@ -95,10 +95,19 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
                               bool isJson)
 {
   json jsonRoot;
-  if (isJson)
-    jsonRoot = json::parse(file, nullptr, false);
-  else // msgpack
-    jsonRoot = json::from_msgpack(file);
+  // could throw parse errors
+  try {
+    if (isJson)
+      jsonRoot = json::parse(file, nullptr, false);
+    else // msgpack
+      jsonRoot = json::from_msgpack(file);
+  } catch (json::parse_error& e) {
+    appendError("Error reading CJSON file: " + string(e.what()));
+    return false;
+  } catch (json::type_error& e) {
+    appendError("Error reading CJSON file: " + string(e.what()));
+    return false;
+  }
 
   if (jsonRoot.is_discarded()) {
     appendError("Error reading CJSON file.");
@@ -119,6 +128,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
   if (*jsonValue != 0 && *jsonValue != 1) {
     appendError("Warning: chemical json version is not 0 or 1.");
+    return false;
   }
 
   // Read some basic key-value pairs (all strings).
@@ -153,8 +163,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   // This represents our minimal spec for a molecule - atoms that have an
   // atomic number.
   if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
-    for (auto& atomicNumber : atomicNumbers)
+    for (auto& atomicNumber : atomicNumbers) {
+      if (!atomicNumber.is_number_integer() || atomicNumber < 0 ||
+          atomicNumber > Core::element_count) {
+        appendError("Error: atomic number is invalid.");
+        return false;
+      }
       molecule.addAtom(atomicNumber);
+    }
   } else {
     // we're done, actually - this is an empty file
     return true;
