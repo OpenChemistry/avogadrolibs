@@ -65,7 +65,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
     // e.g.   CRYST1    4.912    4.912    6.696  90.00  90.00 120.00 P1 1
     // https://www.wwpdb.org/documentation/file-format-content/format33/sect8.html
-    else if (startsWith(buffer, "CRYST1")) {
+    else if (startsWith(buffer, "CRYST1") && buffer.length() >= 55) {
       // PDB reports in degrees and Angstroms
       //   Avogadro uses radians internally
       Real a = lexicalCast<Real>(buffer.substr(6, 9), ok);
@@ -80,6 +80,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     else if (startsWith(buffer, "ATOM") || startsWith(buffer, "HETATM")) {
+      if (buffer.length() < 54) {
+        appendError("Error reading line.");
+        return false;
+      }
+
       // First we initialize the residue instance
       auto residueId = lexicalCast<size_t>(buffer.substr(22, 4), ok);
       if (!ok) {
@@ -200,6 +205,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
     }
 
     else if (startsWith(buffer, "CONECT")) {
+      if (buffer.length() < 16) {
+        appendError("Error reading line.");
+        return false;
+      }
+
       int a = lexicalCast<int>(buffer.substr(6, 5), ok);
       if (!ok) {
         appendError("Failed to parse bond connection a " + buffer.substr(6, 5));
