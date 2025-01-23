@@ -50,6 +50,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   Array<Vector3> altAtomPositions;
 
   while (getline(in, buffer)) { // Read Each line one by one
+    if (!in.good())
+      break;
 
     if (startsWith(buffer, "ENDMDL")) {
       if (coordSet == 0) {
@@ -238,6 +240,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
   } // End while loop
+
+  if (mol.atomCount() == 0) {
+    appendError("No atoms found in this file.");
+    return false;
+  }
 
   int count = mol.coordinate3dCount() ? mol.coordinate3dCount() : 1;
   for (int c = 0; c < count; ++c) {

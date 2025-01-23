@@ -95,10 +95,19 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
                               bool isJson)
 {
   json jsonRoot;
-  if (isJson)
-    jsonRoot = json::parse(file, nullptr, false);
-  else // msgpack
-    jsonRoot = json::from_msgpack(file);
+  // could throw parse errors
+  try {
+    if (isJson)
+      jsonRoot = json::parse(file, nullptr, false);
+    else // msgpack
+      jsonRoot = json::from_msgpack(file);
+  } catch (json::parse_error& e) {
+    appendError("Error reading CJSON file: " + string(e.what()));
+    return false;
+  } catch (json::type_error& e) {
+    appendError("Error reading CJSON file: " + string(e.what()));
+    return false;
+  }
 
   if (jsonRoot.is_discarded()) {
     appendError("Error reading CJSON file.");

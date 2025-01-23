@@ -54,6 +54,24 @@ TEST(FileFormatManagerTest, identifiers)
     std::cout << "\t" << extensions[i] << std::endl;
 }
 
+TEST(FileFormatManagerTest, emptyFile)
+{
+  std::vector<std::string> ids = FileFormatManager::instance().identifiers();
+  for (size_t i = 0; i < ids.size(); ++i) {
+    FileFormat* format =
+      FileFormatManager::instance().newFormatFromIdentifier(ids[i]);
+    EXPECT_TRUE(format != nullptr);
+    if (!format)
+      continue;
+    std::cout << "Testing " << ids[i] << std::endl;
+
+    Molecule molecule;
+    format->readString("", molecule);
+    EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
+    EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+  }
+}
+
 TEST(FileFormatManagerTest, readFileGuessCml)
 {
   Molecule molecule;
