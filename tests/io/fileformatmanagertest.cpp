@@ -61,14 +61,17 @@ TEST(FileFormatManagerTest, emptyFile)
     FileFormat* format =
       FileFormatManager::instance().newFormatFromIdentifier(ids[i]);
     EXPECT_TRUE(format != nullptr);
-    if (!format)
+    if (!format) {
+      delete format;
       continue;
+    }
     std::cout << "Testing " << ids[i] << std::endl;
 
     Molecule molecule;
     format->readString("", molecule);
     EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(0));
     EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(0));
+    delete format;
   }
 }
 

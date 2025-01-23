@@ -128,6 +128,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   }
   if (*jsonValue != 0 && *jsonValue != 1) {
     appendError("Warning: chemical json version is not 0 or 1.");
+    return false;
   }
 
   // Read some basic key-value pairs (all strings).
