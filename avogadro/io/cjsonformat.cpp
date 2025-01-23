@@ -146,8 +146,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
   // This represents our minimal spec for a molecule - atoms that have an
   // atomic number.
   if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
-    for (auto& atomicNumber : atomicNumbers)
+    for (auto& atomicNumber : atomicNumbers) {
+      if (!atomicNumber.is_number_integer() || atomicNumber < 0 ||
+          atomicNumber > Core::element_count) {
+        appendError("Error: atomic number is invalid.");
+        return false;
+      }
       molecule.addAtom(atomicNumber);
+    }
   } else {
     // we're done, actually - this is an empty file
     return true;
