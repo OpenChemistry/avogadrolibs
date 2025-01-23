@@ -243,7 +243,8 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           b = b - terCount;
           b = rawToAtomId[b];
 
-          if (a < b && a >= 0 && b >= 0) {
+          if (a < b && a >= 0 && b >= 0 && a < mol.atomCount() &&
+              b < mol.atomCount()) {
             mol.Avogadro::Core::Molecule::addBond(a, b, 1);
           }
         }
