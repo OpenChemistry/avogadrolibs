@@ -109,7 +109,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   getline(in, buffer);
   // should be long enough, e.g.
   //   5  4  0  0  0  0  0  0  0  0999 V2000
-  if (buffer.size() < 39) {
+  if (!in.good() || buffer.size() < 39) {
     appendError("Error reading counts line.");
     return false;
   }
@@ -214,6 +214,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                 static_cast<unsigned char>(order));
   }
 
+  std::cout << "read atoms and bonds" << std::endl;
+
   // Parse the properties block until the end of the file.
   // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
@@ -222,6 +224,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (!in.good() || buffer.size() < 6) {
       break;
     }
+    std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
+
     string prefix = buffer.substr(0, 6);
     if (prefix == "M  END") {
       foundEnd = true;
@@ -230,8 +234,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       if (!foundChgProperty)
         chargeList.clear(); // Forget old-style charges
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
-      if (buffer.length() < 17 + 8 * entryCount) {
+      if (buffer.length() < 17 + 8 * (entryCount - 1)) {
         appendError("Error parsing charge block.");
+        std::cout << " " << entryCount << " " << buffer.length() << std::endl;
         return false;
       }
 
@@ -255,7 +260,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       // radical center
       spinMultiplicity = 1; // reset and count
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
-      if (buffer.length() < 17 + 8 * entryCount) {
+      if (buffer.length() < 17 + 8 * (entryCount - 1)) {
         appendError("Error parsing radical block.");
         return false;
       }
@@ -283,7 +288,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     } else if (prefix == "M  ISO") {
       // isotope
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
-      if (buffer.length() < 17 + 8 * entryCount) {
+      if (buffer.length() < 17 + 8 * (entryCount - 1)) {
         appendError("Error parsing isotope block.");
         return false;
       }
@@ -306,6 +311,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
   }
+
+  std::cout << " read properties " << std::endl;
 
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
@@ -338,7 +345,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   bool inValue(false);
   string dataName;
   string dataValue;
-  while (getline(in, buffer)) {
+  while (getline(in, buffer) && in.good()) {
     if (trimmed(buffer) == "$$$$")
       break;
     if (inValue) {
