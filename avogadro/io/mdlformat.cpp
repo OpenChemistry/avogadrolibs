@@ -230,6 +230,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       if (!foundChgProperty)
         chargeList.clear(); // Forget old-style charges
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      if (buffer.length() < 17 + 8 * entryCount) {
+        appendError("Error parsing charge block.");
+        return false;
+      }
+
       for (size_t i = 0; i < entryCount; i++) {
         size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
@@ -250,6 +255,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       // radical center
       spinMultiplicity = 1; // reset and count
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      if (buffer.length() < 17 + 8 * entryCount) {
+        appendError("Error parsing radical block.");
+        return false;
+      }
+
       for (size_t i = 0; i < entryCount; i++) {
         size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
@@ -273,6 +283,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     } else if (prefix == "M  ISO") {
       // isotope
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
+      if (buffer.length() < 17 + 8 * entryCount) {
+        appendError("Error parsing isotope block.");
+        return false;
+      }
+
       for (size_t i = 0; i < entryCount; i++) {
         size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
