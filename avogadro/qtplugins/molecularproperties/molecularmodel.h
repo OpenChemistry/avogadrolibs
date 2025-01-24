@@ -43,7 +43,7 @@ public slots:
   void canUpdateName();                       // don't do it too often
 
 public:
-  explicit MolecularModel(QObject* parent = 0);
+  explicit MolecularModel(QObject* parent = nullptr);
 
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;

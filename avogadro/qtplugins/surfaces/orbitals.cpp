@@ -418,7 +418,7 @@ void Orbitals::calculatePosMesh()
 
 void Orbitals::calculatePosMeshDone()
 {
-  disconnect(m_meshGenerator, 0, this, 0);
+  disconnect(m_meshGenerator, nullptr, this, nullptr);
   calculateNegMesh();
 }
 
@@ -445,7 +445,7 @@ void Orbitals::calculateNegMesh()
 
 void Orbitals::calculateNegMeshDone()
 {
-  disconnect(m_meshGenerator, 0, this, 0);
+  disconnect(m_meshGenerator, nullptr, this, nullptr);
 
   meshComplete();
 

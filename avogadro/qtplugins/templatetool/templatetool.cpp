@@ -72,7 +72,7 @@ using Avogadro::Rendering::TextProperties;
 
 TemplateTool::TemplateTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(NULL), m_glWidget(NULL), m_renderer(NULL),
+    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
     m_toolWidget(new TemplateToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
@@ -111,7 +111,7 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
 {
   clearKeyPressBuffer();
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, false);
   m_clickPosition = e->pos();
@@ -126,10 +126,10 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
     switch (m_clickedObject.type) {
       case Rendering::InvalidType:
         emptyLeftClick(e);
-        return NULL;
+        return nullptr;
       case Rendering::AtomType:
         atomLeftClick(e);
-        return NULL;
+        return nullptr;
       default:
         break;
     }
@@ -139,19 +139,19 @@ QUndoCommand* TemplateTool::mousePressEvent(QMouseEvent* e)
     switch (m_clickedObject.type) {
       case Rendering::AtomType:
         atomRightClick(e);
-        return NULL;
+        return nullptr;
       default:
         break;
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   updatePressedButtons(e, true);
 
@@ -160,7 +160,7 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
   }
 
   if (m_clickedObject.type == Rendering::InvalidType)
-    return NULL;
+    return nullptr;
 
   switch (e->button()) {
     case Qt::LeftButton:
@@ -172,25 +172,25 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
       break;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand* TemplateTool::mouseMoveEvent(QMouseEvent* e)
 {
   if (!m_renderer)
-    return NULL;
+    return nullptr;
 
   if (m_pressedButtons & Qt::LeftButton)
     if (m_clickedObject.type == Rendering::AtomType)
       atomLeftDrag(e);
 
-  return NULL;
+  return nullptr;
 }
 
 QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 {
   if (e->text().isEmpty())
-    return NULL;
+    return nullptr;
 
   e->accept();
 
@@ -208,7 +208,7 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
       currentTab++;
     }
     m_toolWidget->setCurrentTab(currentTab);
-    return NULL;
+    return nullptr;
   }
 
   // Set a timer to clear the buffer on first keypress:
@@ -220,7 +220,7 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 
   if (m_keyPressBuffer.size() >= 3) {
     clearKeyPressBuffer();
-    return NULL;
+    return nullptr;
   }
 
   if (currentTab == 0) {
@@ -233,7 +233,7 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
         formalCharge--;
       m_toolWidget->setFormalCharge(formalCharge);
       clearKeyPressBuffer();
-      return NULL;
+      return nullptr;
     }
 
     // metal center -- interpret as an element
@@ -300,7 +300,7 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
     // p = phenyl group
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void TemplateTool::draw(Rendering::GroupNode&) {}

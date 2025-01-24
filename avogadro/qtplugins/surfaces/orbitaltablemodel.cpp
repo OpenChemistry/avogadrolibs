@@ -197,7 +197,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
       orb->symmetry = alphaSymmetries[i];
     orb->index = i;
     orb->description = desc;
-    orb->queueEntry = 0;
+    orb->queueEntry = nullptr;
     orb->min = 0;
     orb->max = 0;
     orb->current = 0;

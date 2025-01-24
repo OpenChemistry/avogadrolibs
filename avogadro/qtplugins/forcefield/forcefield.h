@@ -41,7 +41,7 @@ public:
     FIRE,
   };
 
-  explicit Forcefield(QObject* parent = 0);
+  explicit Forcefield(QObject* parent = nullptr);
   ~Forcefield() override;
 
   QString name() const override { return tr("Forcefield optimization"); }

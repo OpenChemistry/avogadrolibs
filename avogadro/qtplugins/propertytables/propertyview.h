@@ -21,7 +21,7 @@ class PropertyView : public QTableView
 {
   Q_OBJECT
 public:
-  explicit PropertyView(PropertyType type, QWidget* parent = 0);
+  explicit PropertyView(PropertyType type, QWidget* parent = nullptr);
 
   void selectionChanged(const QItemSelection& selected,
                         const QItemSelection& previous) override;
