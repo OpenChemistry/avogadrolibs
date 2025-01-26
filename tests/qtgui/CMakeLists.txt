@@ -43,6 +43,7 @@ if(PYTHON_EXECUTABLE AND AVOGADRO_DATA)
 #    InputGeneratorWidget
   )
 endif()
+# link_directories(/usr/lib)
 
 # Build up the source file names.
 set(testSrcs "")

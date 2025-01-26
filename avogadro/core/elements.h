@@ -76,7 +76,8 @@ public:
 
   /** @return the mass of the element with the supplied @p atomicNumber. */
   static double mass(unsigned char atomicNumber);
-
+  static void setCustomElementVDWRadius(unsigned char atomicNumber, double radius);
+  static void setCustomElementCovalentRadius(unsigned char atomicNumber, double radius);
   /**
    * @return the Van der Waals radius of the element with the supplied
    * @p atomicNumber.

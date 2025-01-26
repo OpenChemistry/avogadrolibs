@@ -26,9 +26,8 @@ static std::vector<std::string> CustomElementSymbols;
 static std::vector<std::string> CustomElementNames;
 
 // Match carbon's radii
-static double CustomElementCovalentRadius = element_covalent[6];
-static double CustomElementVDWRadius = element_VDW[6];
-
+static std::vector<double> CustomElementCovalentRadii;
+static std::vector<double> CustomElementVDWRadii;
 inline std::string encodeCustomElement(unsigned char atomicNumber)
 {
   std::string result;
@@ -101,6 +100,8 @@ public:
   {
     CustomElementSymbols.resize(CustomElementCount);
     CustomElementNames.resize(CustomElementCount);
+    CustomElementCovalentRadii.resize(CustomElementCount, element_covalent[6]); 
+    CustomElementVDWRadii.resize(CustomElementCount, element_VDW[6]); 
     std::string suffix;
     for (unsigned char i = CustomElementMin; i <= CustomElementMax; ++i) {
       suffix = encodeCustomElement(i);
@@ -111,7 +112,19 @@ public:
     }
   }
 } CustomElementTableInitializer;
+void setCustomElementCovalentRadius(unsigned char atomicNumber, double radius)
+{
+  if (isCustomElement(atomicNumber)) {
+    CustomElementCovalentRadii[atomicNumber - CustomElementMin] = radius;
+  }
+}
 
+void setCustomElementVDWRadius(unsigned char atomicNumber, double radius)
+{
+  if (isCustomElement(atomicNumber)) {
+    CustomElementVDWRadii[atomicNumber - CustomElementMin] = radius;
+  }
+}
 } // end anon namespace
 
 unsigned char Elements::elementCount()
@@ -235,7 +248,7 @@ double Elements::radiusVDW(unsigned char atomicNumber)
   if (atomicNumber < element_count)
     return element_VDW[atomicNumber];
   else if (isCustomElement(atomicNumber))
-    return CustomElementVDWRadius;
+    return CustomElementVDWRadii[atomicNumber - CustomElementMin];
   else
     return element_VDW[0];
 }
@@ -245,7 +258,7 @@ double Elements::radiusCovalent(unsigned char atomicNumber)
   if (atomicNumber < element_count)
     return element_covalent[atomicNumber];
   else if (isCustomElement(atomicNumber))
-    return CustomElementCovalentRadius;
+    return CustomElementCovalentRadii[atomicNumber - CustomElementMin];
   else
     return element_covalent[0];
 }
