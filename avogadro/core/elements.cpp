@@ -28,6 +28,7 @@ static std::vector<std::string> CustomElementNames;
 // Match carbon's radii
 static std::vector<double> CustomElementCovalentRadii;
 static std::vector<double> CustomElementVDWRadii;
+
 inline std::string encodeCustomElement(unsigned char atomicNumber)
 {
   std::string result;
@@ -126,7 +127,19 @@ void setCustomElementVDWRadius(unsigned char atomicNumber, double radius)
   }
 }
 } // end anon namespace
+void setCustomElementCovalentRadius(unsigned char atomicNumber, double radius)
+{
+  if (isCustomElement(atomicNumber)) {
+    CustomElementCovalentRadii[atomicNumber - CustomElementMin] = radius;
+  }
+}
 
+void setCustomElementVDWRadius(unsigned char atomicNumber, double radius)
+{
+  if (isCustomElement(atomicNumber)) {
+    CustomElementVDWRadii[atomicNumber - CustomElementMin] = radius;
+  }
+}
 unsigned char Elements::elementCount()
 {
   return element_count;
