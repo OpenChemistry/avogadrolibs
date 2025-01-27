@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-14 07:01+0000\n"
+"PO-Revision-Date: 2025-01-22 05:30+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/hr/>\n"
@@ -1310,7 +1310,7 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Greška pri pokretanju skripts „%1 %2”: Abnormalano stanje izlaska %3 (%4: %5)"
+"Greška pri pokretanju skripta „%1 %2”: Abnormalano stanje izlaska %3 (%4: %5)"
 "\n"
 "\n"
 "Rezultat:\n"
@@ -4556,7 +4556,7 @@ msgstr "Okretaj"
 #: qtplugins/propertytables/propertymodel.cpp:947
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Spirala"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -5656,7 +5656,7 @@ msgstr "CHARMM"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:85
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
 msgid "PARSE"
-msgstr ""
+msgstr "RAŠČLANI"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:90
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldComboBox)
@@ -8397,6 +8397,13 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>Fermi razina mora biti poznata prije nego što označiš "
+"ovu opciju. Fermi razinu možeš otkriti izvođenjem izračuna gustoće stanja i "
+"prikazivanjem podataka (bit će na vrhu podataka). Osim toga, ako se izvrši "
+"izračun gustoće stanja, Fermi razina će se automatski postaviti na "
+"vrijednost koja je detektirana tijekom izračuna gustoće stanja.</p><p>Ako je "
+"ova opcija označena, provjeri je li ispravna Fermi razina postavljena u "
+"izborniku s desne strane.</p><p>Standardno: isključeno</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
