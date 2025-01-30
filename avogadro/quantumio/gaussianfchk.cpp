@@ -25,6 +25,9 @@ using Core::Rhf;
 using Core::Rohf;
 using Core::Uhf;
 
+// https://physics.nist.gov/cgi-bin/cuu/Value?hrev
+const double hartreeToEV = 27.211386245981;
+
 GaussianFchk::GaussianFchk() : m_scftype(Rhf) {}
 
 GaussianFchk::~GaussianFchk() {}
@@ -158,17 +161,14 @@ void GaussianFchk::processLine(std::istream& in)
     m_csp = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
   } else if (key == "Alpha Orbital Energies") {
     if (m_scftype == Rhf) {
-      m_orbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      // cout << "MO energies, n = " << m_orbitalEnergy.size() << endl;
+      m_orbitalEnergy =
+        readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
     } else if (m_scftype == Uhf) {
       m_alphaOrbitalEnergy =
-        readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-      // cout << "Alpha MO energies, n = " << m_alphaOrbitalEnergy.size() <<
-      // endl;
+        readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
     }
   } else if (key == "Beta Orbital Energies") {
     if (m_scftype != Uhf) {
-      // cout << "UHF detected. Reassigning Alpha properties." << endl;
       m_scftype = Uhf;
       m_alphaOrbitalEnergy = m_orbitalEnergy;
       m_orbitalEnergy = vector<double>();
@@ -177,8 +177,8 @@ void GaussianFchk::processLine(std::istream& in)
       m_MOcoeffs = vector<double>();
     }
 
-    m_betaOrbitalEnergy = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
-    // cout << "Beta MO energies, n = " << m_betaOrbitalEnergy.size() << endl;
+    m_betaOrbitalEnergy =
+      readArrayD(in, Core::lexicalCast<int>(list[2]), 16, hartreeToEV);
   } else if (key == "Alpha MO coefficients" && list.size() > 2) {
     if (m_scftype == Rhf) {
       m_MOcoeffs = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
@@ -379,7 +379,7 @@ vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
 }
 
 vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
-                                        int width)
+                                        int width, double factor)
 {
   vector<double> tmp;
   tmp.reserve(n);
@@ -402,7 +402,7 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Core::lexicalCast<double>(i, ok));
+        tmp.push_back(Core::lexicalCast<double>(i, ok) * factor);
         if (!ok) {
           cout << "Warning: problem converting string to integer: " << i
                << " in GaussianFchk::readArrayD.\n";
@@ -420,7 +420,7 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
                << tmp.size() << " of " << n << endl;
           return tmp;
         }
-        tmp.push_back(Core::lexicalCast<double>(substring, ok));
+        tmp.push_back(Core::lexicalCast<double>(substring, ok) * factor);
         if (!ok) {
           cout << "Warning: problem converting string to double: " << substring
                << " in GaussianFchk::readArrayD.\n";
