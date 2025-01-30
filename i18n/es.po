@@ -12,13 +12,14 @@
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 # Saúl Palacios <palacios22c@gmail.com>, 2025.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
+# Adrian Lopez <adrlop1012@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-03 14:11+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2025-01-30 14:08+0000\n"
+"Last-Translator: Adrian Lopez <adrlop1012@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -525,7 +526,8 @@ msgstr "¡«Io::FileFormat» no establecido en «BackgroundFileFormat»!"
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr "¡No hay nombre de archivo establecido en «BackgroundFileFormat»!"
+msgstr ""
+"No se ha establecido ningún nombre de archivo en «BackgroundFileFormat»!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
