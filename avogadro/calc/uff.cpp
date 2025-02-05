@@ -6,7 +6,9 @@
 #include "uff.h"
 #include "uffdata.h"
 
+#include <avogadro/core/angleiterator.h>
 #include <avogadro/core/array.h>
+#include <avogadro/core/dihedraliterator.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 
@@ -226,11 +228,38 @@ public:
         }
       }
     }
+  }
 
-    // output the atom types for debugging
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      std::cout << "Atom " << i << " type " << m_atomTypes[i] << std::endl;
+  // calculate the ideal bond distance between two atoms
+  // used in a few places
+  Real calculateRij(Index atom1, Index atom2)
+  {
+    Real ri = uffparams[m_atomTypes[atom1]].r1;
+    Real rj = uffparams[m_atomTypes[atom2]].r1;
+    Real r0 = ri + rj;
+    // bond order correction
+    Bond bond = m_molecule->bond(atom1, atom2);
+    Real order = static_cast<Real>(bond.order());
+    // check if it's a resonant / aromatic bond
+    auto symbol1 = uffparams[m_atomTypes[atom1]].label;
+    auto symbol2 = uffparams[m_atomTypes[atom2]].label;
+    if (symbol1.size() > 2 && symbol1[2] == 'R' && symbol2.size() > 2 &&
+        symbol2[2] == 'R') {
+      order = 1.5;
+      // tweak for amide
+      if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
+          (symbol1[0] == 'C' && symbol2[0] == 'N'))
+        order = 1.41;
     }
+    Real rbo = -0.1332 * r0 * log(order);
+
+    // electronegativity correction
+    Real chi1 = uffparams[m_atomTypes[atom1]].Xi;
+    Real chi2 = uffparams[m_atomTypes[atom2]].Xi;
+    Real ren =
+      ri * rj * pow((sqrt(chi1) - sqrt(chi2)), 2) / (chi1 * ri + chi2 * rj);
+
+    return r0 + rbo + ren;
   }
 
   void setBonds()
@@ -244,31 +273,7 @@ public:
       b.m_atom1 = atom1;
       b.m_atom2 = atom2;
 
-      Real ri = uffparams[m_atomTypes[atom1]].r1;
-      Real rj = uffparams[m_atomTypes[atom2]].r1;
-      Real r0 = ri + rj;
-      // bond order correction
-      Real order = static_cast<Real>(bond.order());
-      // check if it's a resonant / aromatic bond
-      auto symbol1 = uffparams[m_atomTypes[atom1]].label;
-      auto symbol2 = uffparams[m_atomTypes[atom2]].label;
-      if (symbol1.size() > 2 && symbol1[2] == 'R' && symbol2.size() > 2 &&
-          symbol2[2] == 'R') {
-        order = 1.5;
-        // tweak for amide
-        if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
-            (symbol1[0] == 'C' && symbol2[0] == 'N'))
-          order = 1.41;
-      }
-      Real rbo = -0.1332 * r0 * log(order);
-
-      // electronegativity correction
-      Real chi1 = uffparams[m_atomTypes[atom1]].Xi;
-      Real chi2 = uffparams[m_atomTypes[atom2]].Xi;
-      Real ren =
-        ri * rj * pow((sqrt(chi1) - sqrt(chi2)), 2) / (chi1 * ri + chi2 * rj);
-
-      b.m_r0 = r0 + rbo + ren;
+      b.m_r0 = calculateRij(atom1, atom2);
       Real z1 = uffparams[m_atomTypes[atom1]].Z1;
       Real z2 = uffparams[m_atomTypes[atom2]].Z1;
       b.m_kb = 664.12 * z1 * z2 / pow((b.m_r0), 3);
@@ -278,7 +283,39 @@ public:
 
   void setAngles()
   {
-    // TODO
+    AngleIterator ai(m_molecule);
+    auto angle = ai.begin();
+    while (angle != ai.end()) {
+      Index i = std::get<0>(angle);
+      Index j = std::get<1>(angle);
+      Index k = std::get<2>(angle);
+      UFFAngle a;
+      a.m_atom1 = i;
+      a.m_atom2 = j;
+      a.m_atom3 = k;
+
+      Real theta0 = uffparams[m_atomTypes[j]].theta0;
+      a.m_theta0 = theta0;
+
+      // calculate the kijk
+      Real rij = calculateRij(i, j);
+      Real rjk = calculateRij(j, k);
+
+      std::cout << " Angle " << i << " " << j << " " << k << " " << rij << " "
+                << rjk << " " << theta0 << std::endl;
+
+      Real rik = sqrt(rij * rij + rjk * rjk - 2 * rij * rjk * cos(theta0));
+      Real Zi = uffparams[m_atomTypes[i]].Z1;
+      Real Zk = uffparams[m_atomTypes[k]].Z1;
+      a.m_kijk = 664.12 / (rij * rjk) * (Zi * Zk) / (pow(rik, 5)) * rij * rjk;
+      Real cosTheta0 = cos(theta0);
+      Real cosTheta0Sq = cosTheta0 * cosTheta0;
+      a.m_kijk =
+        a.m_kijk * (rij * rjk * (1 - cosTheta0Sq) - rik * rik * cosTheta0);
+
+      m_angles.push_back(a);
+      angle = ++ai;
+    }
   }
 
   void setOOPs()
@@ -324,7 +361,7 @@ public:
       Index i = angle.m_atom1;
       Index j = angle.m_atom2;
       Index k = angle.m_atom3;
-      Real theta0 = angle.m_theta0;
+      Real theta0 = angle.m_theta0 * DEG_TO_RAD;
       Real kijk = angle.m_kijk;
 
       Real dx1 = x[3 * i] - x[3 * j];
@@ -371,9 +408,6 @@ public:
       Real r0 = bond.m_r0;
       Real kb = bond.m_kb;
 
-      std::cout << "Bond " << i << " " << j << " r0 " << r0 << " kb " << kb
-                << std::endl;
-
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
@@ -391,7 +425,51 @@ public:
     }
   }
 
-  void angleGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
+  void angleGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad)
+  {
+    for (const UFFAngle& angle : m_angles) {
+      Index i = angle.m_atom1;
+      Index j = angle.m_atom2;
+      Index k = angle.m_atom3;
+      Real theta0 = angle.m_theta0 * DEG_TO_RAD;
+      Real kijk = angle.m_kijk;
+
+      Real dx1 = x[3 * i] - x[3 * j];
+      Real dy1 = x[3 * i + 1] - x[3 * j + 1];
+      Real dz1 = x[3 * i + 2] - x[3 * j + 2];
+      Real dx2 = x[3 * k] - x[3 * j];
+      Real dy2 = x[3 * k + 1] - x[3 * j + 1];
+      Real dz2 = x[3 * k + 2] - x[3 * j + 2];
+
+      Real r1 = sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1);
+      Real r2 = sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
+
+      Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
+      Real theta = acos(dot / (r1 * r2));
+      Real dtheta = theta - theta0;
+
+      std::cout << " Angle " << i << " " << j << " " << k << " " << r1 << " "
+                << r2 << " " << theta << " " << theta0 << std::endl;
+
+      Real f = 2 * kijk * dtheta;
+
+      // atom i
+      Real dcos1 = -f / r1;
+      Real dcos2 = -f / r2;
+      // check for nan
+      if (std::isnan(f) || std::isnan(dcos1) || std::isnan(dcos2))
+        continue;
+
+      grad[3 * i] += dcos1 * (dy1 * dz2 - dz1 * dy2);
+      grad[3 * i + 1] += dcos1 * (dz1 * dx2 - dx1 * dz2);
+      grad[3 * i + 2] += dcos1 * (dx1 * dy2 - dy1 * dx2);
+
+      // atom j
+      grad[3 * j] += -dcos1 * dx1 * dy2 + dcos2 * dx2 * dy1;
+      grad[3 * j + 1] += -dcos1 * dy1 * dz2 + dcos2 * dy2 * dz1;
+      grad[3 * j + 2] += -dcos1 * dz1 * dx2 + dcos2 * dz2 * dx1;
+    }
+  }
 
   void oopGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
 
@@ -454,7 +532,7 @@ Real UFF::value(const Eigen::VectorXd& x)
   energy += d->angleEnergies(x);
   // torsion component
   energy += d->torsionEnergies(x);
-  // out-of-plane component (TODO)
+  // out-of-plane component
   energy += d->oopEnergies(x);
   // van der Waals component
   energy += d->vdwEnergies(x);
@@ -478,7 +556,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   d->angleGradient(x, grad);
   // torsion gradients
   d->torsionGradient(x, grad);
-  // out-of-plane gradients (TODO)
+  // out-of-plane gradients
   d->oopGradient(x, grad);
   // van der Waals gradients
   d->vdwGradient(x, grad);
