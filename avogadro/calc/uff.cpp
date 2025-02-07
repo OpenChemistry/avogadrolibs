@@ -46,7 +46,7 @@ public:
   Index m_atom3;
   Real m_theta0;
   Real m_kijk;
-  int coordination;
+  Coordination coordination;
 };
 
 class UFFTorsion
@@ -301,8 +301,9 @@ public:
       Real rij = calculateRij(i, j);
       Real rjk = calculateRij(j, k);
 
-      std::cout << " Angle " << i << " " << j << " " << k << " " << rij << " "
-                << rjk << " " << theta0 << std::endl;
+      // std::cout << " Angle " << i << " " << j << " " << k << " " << rij << "
+      // "
+      //           << rjk << " " << theta0 << std::endl;
 
       Real rik = sqrt(rij * rij + rjk * rjk - 2 * rij * rjk * cos(theta0));
       Real Zi = uffparams[m_atomTypes[i]].Z1;
@@ -333,7 +334,7 @@ public:
     // TODO
   }
 
-  Real bondEnergies(const ::Eigen::VectorXd& x)
+  Real bondEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
 
@@ -354,7 +355,7 @@ public:
     return energy;
   }
 
-  Real angleEnergies(const ::Eigen::VectorXd& x)
+  Real angleEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
     for (const UFFAngle& angle : m_angles) {
@@ -382,25 +383,25 @@ public:
     return energy;
   }
 
-  Real oopEnergies(const ::Eigen::VectorXd& x)
+  Real oopEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
     return energy;
   }
 
-  Real torsionEnergies(const ::Eigen::VectorXd& x)
+  Real torsionEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
     return energy;
   }
 
-  Real vdwEnergies(const ::Eigen::VectorXd& x)
+  Real vdwEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
     return energy;
   }
 
-  void bondGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad)
+  void bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
     for (const UFFBond& bond : m_bonds) {
       Index i = bond.m_atom1;
@@ -425,7 +426,7 @@ public:
     }
   }
 
-  void angleGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad)
+  void angleGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
     for (const UFFAngle& angle : m_angles) {
       Index i = angle.m_atom1;
@@ -434,48 +435,67 @@ public:
       Real theta0 = angle.m_theta0 * DEG_TO_RAD;
       Real kijk = angle.m_kijk;
 
-      Real dx1 = x[3 * i] - x[3 * j];
-      Real dy1 = x[3 * i + 1] - x[3 * j + 1];
-      Real dz1 = x[3 * i + 2] - x[3 * j + 2];
-      Real dx2 = x[3 * k] - x[3 * j];
-      Real dy2 = x[3 * k + 1] - x[3 * j + 1];
-      Real dz2 = x[3 * k + 2] - x[3 * j + 2];
+      const Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      const Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      const Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
 
-      Real r1 = sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1);
-      Real r2 = sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
+      const Eigen::Vector3d ij = vi - vj;
+      const Eigen::Vector3d kj = vk - vj;
+      const Eigen::Vector3d ki = vk - vi;
 
-      Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
-      Real theta = acos(dot / (r1 * r2));
+      Real rij = ij.norm();
+      Real rkj = kj.norm();
+      Real rki = ki.norm();
+
+      Real dot = ij.dot(kj);
+      Real theta = acos(dot / (rij * rkj));
       Real dtheta = theta - theta0;
 
-      std::cout << " Angle " << i << " " << j << " " << k << " " << r1 << " "
-                << r2 << " " << theta << " " << theta0 << std::endl;
+      //      std::cout << " Angle " << i << " " << j << " " << k << " "
+      //                << theta0 * RAD_TO_DEG << " " << theta * RAD_TO_DEG << "
+      //                "
+      //                << dtheta * RAD_TO_DEG << std::endl;
 
+      // dE / dtheta
       Real f = 2 * kijk * dtheta;
 
-      // atom i
-      Real dcos1 = -f / r1;
-      Real dcos2 = -f / r2;
       // check for nan
-      if (std::isnan(f) || std::isnan(dcos1) || std::isnan(dcos2))
+      if (std::isnan(f))
         continue;
 
-      grad[3 * i] += dcos1 * (dy1 * dz2 - dz1 * dy2);
-      grad[3 * i + 1] += dcos1 * (dz1 * dx2 - dx1 * dz2);
-      grad[3 * i + 2] += dcos1 * (dx1 * dy2 - dy1 * dx2);
+      // dtheta (using cross products)
+      // .. we're using ij x ki to get a perpendicular
+      // .. then cross with ij or kj to move those atoms
 
-      // atom j
-      grad[3 * j] += -dcos1 * dx1 * dy2 + dcos2 * dx2 * dy1;
-      grad[3 * j + 1] += -dcos1 * dy1 * dz2 + dcos2 * dy2 * dz1;
-      grad[3 * j + 2] += -dcos1 * dz1 * dx2 + dcos2 * dz2 * dx1;
+      Eigen::Vector3d ij_cross_ki = ij.cross(ki) / (rij * rki);
+      Eigen::Vector3d ijki_cross_ij = ij_cross_ki.cross(ij) / (rij);
+
+      grad[3 * i] += f * ijki_cross_ij[0];
+      grad[3 * i + 1] += f * ijki_cross_ij[1];
+      grad[3 * i + 2] += f * ijki_cross_ij[2];
+
+      Eigen::Vector3d ijki_cross_kj = ij_cross_ki.cross(kj) / (rkj);
+
+      // std::cout << " Cross norms " << ij_cross_ki.norm() << " "
+      //           << ijki_cross_ij.norm() << " " << ijki_cross_kj.norm() <<
+      //           std::endl;
+
+      grad[3 * k] += f * ijki_cross_kj[0];
+      grad[3 * k + 1] += f * ijki_cross_kj[1];
+      grad[3 * k + 2] += f * ijki_cross_kj[2];
+
+      // the central atom
+      grad[3 * j] -= f * (ijki_cross_ij[0] + ijki_cross_kj[0]);
+      grad[3 * j + 1] -= f * (ijki_cross_ij[1] + ijki_cross_kj[1]);
+      grad[3 * j + 2] -= f * (ijki_cross_ij[2] + ijki_cross_kj[2]);
     }
   }
 
-  void oopGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
+  void oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
 
-  void torsionGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
+  void torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
 
-  void vdwGradient(const ::Eigen::VectorXd& x, Eigen::VectorXd& grad)
+  void vdwGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
     for (const UFFVdW& vdw : m_vdws) {
       Index i = vdw.m_atom1;
@@ -540,6 +560,74 @@ Real UFF::value(const Eigen::VectorXd& x)
   return energy;
 }
 
+Real UFF::bondEnergy(const Eigen::VectorXd& x)
+{
+  Real energy = 0.0;
+
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return energy; // nothing to do
+  if (m_molecule->atomCount() < 2)
+    return energy; // no bonds
+
+  energy = d->bondEnergies(x);
+  return energy;
+}
+
+Real UFF::angleEnergy(const Eigen::VectorXd& x)
+{
+  Real energy = 0.0;
+
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return energy; // nothing to do
+  if (m_molecule->atomCount() < 3)
+    return energy; // no angle
+
+  energy = d->angleEnergies(x);
+  return energy;
+}
+
+Real UFF::oopEnergy(const Eigen::VectorXd& x)
+{
+  Real energy = 0.0;
+
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return energy; // nothing to do
+  if (m_molecule->atomCount() < 4)
+    return energy; // no oop
+
+  energy = d->oopEnergies(x);
+  return energy;
+}
+
+Real UFF::torsionEnergy(const Eigen::VectorXd& x)
+{
+  Real energy = 0.0;
+
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return energy; // nothing to do
+  if (m_molecule->atomCount() < 4)
+    return energy; // no torsion
+
+  energy = d->torsionEnergies(x);
+  return energy;
+}
+
+Real UFF::vdwEnergy(const Eigen::VectorXd& x)
+{
+  Real energy = 0.0;
+
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return energy; // nothing to do
+  if (m_molecule->atomCount() < 2)
+    return energy; // nothing to do
+
+  energy = d->vdwEnergies(x);
+  return energy;
+}
+
+/*
+// TODO - for now use numeric gradients
+
 void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
   // clear the gradients
@@ -564,6 +652,58 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+}
+
+*/
+
+void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return; // nothing to do
+  if (m_molecule->atomCount() < 2)
+    return; // no bonds
+
+  d->bondGradient(x, grad);
+}
+
+void UFF::angleGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return; // nothing to do
+  if (m_molecule->atomCount() < 3)
+    return; // no bonds
+
+  d->angleGradient(x, grad);
+}
+
+void UFF::oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return; // nothing to do
+  if (m_molecule->atomCount() < 4)
+    return; // no bonds
+
+  d->oopGradient(x, grad);
+}
+
+void UFF::torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return; // nothing to do
+  if (m_molecule->atomCount() < 4)
+    return; // no bonds
+
+  d->torsionGradient(x, grad);
+}
+
+void UFF::vdwGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+{
+  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+    return; // nothing to do
+  if (m_molecule->atomCount() < 2)
+    return; // no bonds
+
+  d->vdwGradient(x, grad);
 }
 
 } // namespace Avogadro::Calc

@@ -35,7 +35,20 @@ public:
   Core::Molecule::ElementMask elements() const override { return (m_elements); }
 
   Real value(const Eigen::VectorXd& x) override;
-  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  // void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+
+  // components
+  Real bondEnergy(const Eigen::VectorXd& x);
+  Real angleEnergy(const Eigen::VectorXd& x);
+  Real oopEnergy(const Eigen::VectorXd& x);
+  Real torsionEnergy(const Eigen::VectorXd& x);
+  Real vdwEnergy(const Eigen::VectorXd& x);
+
+  void bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
+  void angleGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
+  void oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
+  void torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
+  void vdwGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad);
 
   /**
    * Called when the current molecule changes.
