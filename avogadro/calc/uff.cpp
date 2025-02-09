@@ -7,6 +7,7 @@
 #include "uffdata.h"
 
 #include <avogadro/core/angleiterator.h>
+#include <avogadro/core/angletools.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/core/elements.h>
@@ -56,8 +57,9 @@ public:
   Index m_atom2;
   Index m_atom3;
   Index m_atom4;
-  Real m_phi0;
-  Real m_klmn;
+  Real m_cos_phi0;
+  Real m_ijkl;
+  short m_n; // periodicity
 };
 
 class UFFOOP
@@ -76,8 +78,8 @@ class UFFVdW
 public:
   Index m_atom1;
   Index m_atom2;
-  Real m_epsilon;
-  Real m_r0;
+  Real m_depth;
+  Real m_x;
 };
 
 class UFFPrivate // track the particular calculations for a molecule
@@ -259,7 +261,9 @@ public:
     Real ren =
       ri * rj * pow((sqrt(chi1) - sqrt(chi2)), 2) / (chi1 * ri + chi2 * rj);
 
-    return r0 + rbo + ren;
+    // UFF publication has an error (electronegativity correction):
+    // https://towhee.sourceforge.net/forcefields/uff.html
+    return r0 + rbo - ren;
   }
 
   void setBonds()
@@ -308,11 +312,12 @@ public:
       Real rik = sqrt(rij * rij + rjk * rjk - 2 * rij * rjk * cos(theta0));
       Real Zi = uffparams[m_atomTypes[i]].Z1;
       Real Zk = uffparams[m_atomTypes[k]].Z1;
-      a.m_kijk = 664.12 / (rij * rjk) * (Zi * Zk) / (pow(rik, 5)) * rij * rjk;
       Real cosTheta0 = cos(theta0);
       Real cosTheta0Sq = cosTheta0 * cosTheta0;
-      a.m_kijk =
-        a.m_kijk * (rij * rjk * (1 - cosTheta0Sq) - rik * rik * cosTheta0);
+      // see https://towhee.sourceforge.net/forcefields/uff.html
+      // e.g., original paper had some typos
+      a.m_kijk = 664.12 / (rij * rjk) * (Zi * Zk) / (pow(rik, 5)) * rij * rjk;
+      a.m_kijk *= (3 * rij * rjk * (1 - cosTheta0Sq) - rik * rik * cosTheta0);
 
       m_angles.push_back(a);
       angle = ++ai;
@@ -326,12 +331,106 @@ public:
 
   void setTorsions()
   {
-    // TODO
+    DihedralIterator di(m_molecule);
+    auto dihedral = di.begin();
+    while (dihedral != di.end()) {
+      Index i = std::get<0>(dihedral);
+      Index j = std::get<1>(dihedral);
+      Index k = std::get<2>(dihedral);
+      Index l = std::get<3>(dihedral);
+
+      // check the bond order of j-k
+      // (if it's not rotatable, we can skip this one)
+      Bond bond = m_molecule->bond(j, k);
+      if (bond.order() != 1) {
+        dihedral = ++di;
+        continue;
+      }
+
+      UFFTorsion t;
+      t.m_atom1 = i;
+      t.m_atom2 = j;
+      t.m_atom3 = k;
+      t.m_atom4 = l;
+
+      // default is for sp3-sp3
+      Real order = static_cast<Real>(bond.order());
+
+      auto symbol1 = uffparams[m_atomTypes[j]].label;
+      auto symbol2 = uffparams[m_atomTypes[k]].label;
+
+      // TODO: a bunch of special cases
+      if (symbol1.size() < 3 || symbol2.size() < 3 || symbol1[2] == '3' ||
+          symbol2[2] == '3') {
+        // default is sp3-sp3
+        t.m_n = 3;
+        t.m_cos_phi0 = cos(t.m_n * 60.0 * DEG_TO_RAD);
+        // geometric mean of the two V1 parameters
+        t.m_ijkl = 0.5 * sqrt(uffparams[m_atomTypes[j]].Vi *
+                              uffparams[m_atomTypes[k]].Vi);
+      } else if (symbol1[2] == 'R' && symbol2[2] == 'R') {
+        order = 1.5;
+        // tweak for amide
+        if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
+            (symbol1[0] == 'C' && symbol2[0] == 'N'))
+          order = 1.41;
+        t.m_n = 2;
+        t.m_cos_phi0 = cos(t.m_n * 180.0 * DEG_TO_RAD);
+        t.m_ijkl = 5.0 * sqrt(uffparams[m_atomTypes[j]].Uj *
+                              uffparams[m_atomTypes[k]].Uj);
+        t.m_ijkl *= 0.5 * (1.0 + 4.18 * log(order));
+      } else if ((symbol1[2] == '2' && symbol2[2] == '3') ||
+                 (symbol1[2] == '3' && symbol2[2] == '2')) {
+        // sp2-sp3
+        t.m_cos_phi0 = cos(0.0 * DEG_TO_RAD);
+        t.m_n = 6;
+        t.m_ijkl = 0.5;
+      } else {
+        dihedral = ++di;
+        continue;
+      }
+
+      m_torsions.push_back(t);
+      dihedral = ++di;
+    }
+  }
+
+  // check if atoms i and j are 1-2 or 1-3 connected
+  // fairly fast because we're only checking neighbors
+  bool areConnected(Index i, Index j)
+  {
+    const std::vector<Index>& neighbors = m_molecule->graph().neighbors(i);
+    const std::vector<Index>& neighbors2 = m_molecule->graph().neighbors(j);
+    for (Index k : neighbors) {
+      if (k == j)
+        return true;
+      for (Index l : neighbors2) {
+        if (l == k)
+          return true;
+      }
+    }
+    return false;
   }
 
   void setVdWs()
   {
-    // TODO
+    // we do a double-loop through the atoms
+    // and check for 1-2 or 1-3 with areConnected
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      for (Index j = i + 1; j < m_molecule->atomCount(); ++j) {
+        if (!areConnected(i, j)) {
+          UFFVdW v;
+          v.m_atom1 = i;
+          v.m_atom2 = j;
+
+          v.m_depth =
+            sqrt(uffparams[m_atomTypes[i]].D1 * uffparams[m_atomTypes[j]].D1);
+          v.m_x =
+            sqrt(uffparams[m_atomTypes[i]].x1 * uffparams[m_atomTypes[j]].x1);
+          m_vdws.push_back(v);
+        }
+      }
+    }
   }
 
   Real bondEnergies(const Eigen::VectorXd& x)
@@ -386,18 +485,72 @@ public:
   Real oopEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
+    for (const UFFOOP& oop : m_oops) {
+      // TODO
+      // for UFF - I is defined as the central atom
+      Index i = oop.m_atom1;
+      Index j = oop.m_atom2;
+      Index k = oop.m_atom3;
+      Index l = oop.m_atom4;
+
+      Real kijkl = oop.m_kop;
+
+      Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      Eigen::Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+    }
+
     return energy;
   }
 
   Real torsionEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
+    for (const UFFTorsion& torsion : m_torsions) {
+      Index i = torsion.m_atom1;
+      Index j = torsion.m_atom2;
+      Index k = torsion.m_atom3;
+      Index l = torsion.m_atom4;
+
+      Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      Eigen::Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+
+      Real phi = calcDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+
+      Real cosPhi = cos(torsion.m_n * phi);
+      Real cosPhi0 = torsion.m_cos_phi0;
+      Real kijkl = torsion.m_ijkl;
+
+      // 0.5 * kijkl is already in the kijkl to save a multiplication
+      energy += kijkl * (1.0 - cosPhi0 * cosPhi);
+    }
+
     return energy;
   }
 
   Real vdwEnergies(const Eigen::VectorXd& x)
   {
     Real energy = 0.0;
+    for (const UFFVdW& vdw : m_vdws) {
+      Index i = vdw.m_atom1;
+      Index j = vdw.m_atom2;
+      Real depth = vdw.m_depth;
+      Real xij = vdw.m_x;
+      Real x6 = xij * xij * xij * xij * xij * xij;
+      Real x12 = x6 * x6;
+
+      Real dx = x[3 * i] - x[3 * j];
+      Real dy = x[3 * i + 1] - x[3 * j + 1];
+      Real dz = x[3 * i + 2] - x[3 * j + 2];
+      // we don't need a square root since 6 and 12 are even powers
+      Real r2 = (dx * dx + dy * dy + dz * dz);
+      Real r6 = r2 * r2 * r2;
+      Real r12 = r6 * r6;
+      energy += depth * (x12 / r12 - 2 * x6 / r6);
+    }
     return energy;
   }
 
@@ -500,10 +653,30 @@ public:
     for (const UFFVdW& vdw : m_vdws) {
       Index i = vdw.m_atom1;
       Index j = vdw.m_atom2;
+      Real depth = vdw.m_depth;
+      Real xij = vdw.m_x;
 
-      // use a 6-12 Lennard-Jones potential
-      Real epsilon = vdw.m_epsilon;
-      Real r0 = vdw.m_r0;
+      // dE / dr for a Lennard-Jones potential
+      // E = depth * (x^12 / r^12 - 2 * x^6 / r^6)
+      // dE / dr = -12 * depth * x^12 / r^13 + 12 * depth * x^6 / r^7
+      //         = 12 * depth * x^6 / r^7 * (x^6 / r^6 - 1)
+
+      Real dx = x[3 * i] - x[3 * j];
+      Real dy = x[3 * i + 1] - x[3 * j + 1];
+      Real dz = x[3 * i + 2] - x[3 * j + 2];
+      Real r2 = dx * dx + dy * dy + dz * dz;
+      Real r6 = r2 * r2 * r2;
+      Real r7 = r6 * sqrt(r2);
+      Real x6 = xij * xij * xij * xij * xij * xij;
+      Real dE = 12 * depth * x6 / r7 * (x6 / r6 - 1);
+
+      grad[3 * i] += dE * dx;
+      grad[3 * i + 1] += dE * dy;
+      grad[3 * i + 2] += dE * dz;
+
+      grad[3 * j] -= dE * dx;
+      grad[3 * j + 1] -= dE * dy;
+      grad[3 * j + 2] -= dE * dz;
     }
   }
 };
@@ -648,7 +821,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   d->oopGradient(x, grad);
   // van der Waals gradients
   d->vdwGradient(x, grad);
-  // UFF doesn't have electrostatics
+  // UFF doesn't have electrostatics so we're done
 
   // handle any constraints
   cleanGradients(grad);
