@@ -333,6 +333,7 @@ float Surfaces::resolution(float specified)
   return r;
 }
 
+
 void Surfaces::calculateSurface()
 {
   if (!m_dialog)
@@ -364,6 +365,7 @@ void Surfaces::calculateSurface()
   }
 }
 
+
 float inline square(float x)
 {
   return x * x;
@@ -371,92 +373,113 @@ float inline square(float x)
 
 void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
-  if (type == Unknown && m_dialog != nullptr)
+  if (type == Unknown && m_dialog != nullptr){
     type = m_dialog->surfaceType();
-
-  if (!m_cube)
+  }
+  if (!m_cube){
     m_cube = m_molecule->addCube();
-
-  QFuture future = QtConcurrent::run([=]() {
-    double probeRadius = 0.0;
-    switch (type) {
-      case VanDerWaals:
-        m_cube->setCubeType(Core::Cube::Type::VdW);
-        break;
-      case SolventAccessible:
-        m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
-      case SolventExcluded:
-        probeRadius = 1.4;
-        m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
-        break;
-      default:
-        break;
-    }
-
-    // first, make a list of all atom positions and radii
-    Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    auto* atoms = new std::vector<std::pair<Vector3, double>>();
-    double max_radius = probeRadius;
-    QtGui::RWLayerManager layerManager;
-    for (size_t i = 0; i < m_molecule->atomCount(); i++) {
-      if (!layerManager.visible(m_molecule->layer(i)))
-        continue; // ignore invisible atoms
-      auto radius =
-        Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-      atoms->emplace_back(atomPositions[i], radius);
-      if (radius > max_radius)
-        max_radius = radius;
-    }
-
-    double padding = max_radius + probeRadius;
-    m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
-    m_cube->fill(-1.0);
-
-    const float res = resolution(defaultResolution);
-    const Vector3 min = m_cube->min();
-
-    // then, for each atom, set cubes around it up to a certain radius
-    QFuture innerFuture =
-      QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
-        double startPosX = in.first(0) - in.second;
-        double endPosX = in.first(0) + in.second;
-        int startIndexX = (startPosX - min(0)) / res;
-        int endIndexX = (endPosX - min(0)) / res + 1;
-        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-          double posX = indexX * res + min(0);
-          double radiusXsq = square(in.second) - square(posX - in.first(0));
-          if (radiusXsq < 0.0)
-            continue;
-          double radiusX = sqrt(radiusXsq);
-          double startPosY = in.first(1) - radiusX;
-          double endPosY = in.first(1) + radiusX;
-          int startIndexY = (startPosY - min(1)) / res;
-          int endIndexY = (endPosY - min(1)) / res + 1;
-          for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-            double posY = indexY * res + min(1);
-            double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-            if (lengthXYsq < 0.0)
-              continue;
-            double lengthXY = sqrt(lengthXYsq);
-            double startPosZ = in.first(2) - lengthXY;
-            double endPosZ = in.first(2) + lengthXY;
-            int startIndexZ = (startPosZ - min(2)) / res;
-            int endIndexZ = (endPosZ - min(2)) / res + 1;
-            m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
-                               1.0f);
-          }
-        }
-      });
-
-    innerFuture.waitForFinished();
+  }
+  
+  m_cube2 = m_molecule->addCube();
+  
+   QFuture future = QtConcurrent::run([=]() {
+    calculateEDTpass(m_cube2, type, 0.5);
   });
 
-  // SolventExcluded requires an extra pass
-  if (type == SolventExcluded) {
+    if(type == SolventExcluded){
     m_performEDTStepWatcher.setFuture(future);
-  } else {
-    m_displayMeshWatcher.setFuture(future);
+    } else{
+    m_displayMeshWatcher.setFuture(future); 
   }
+
+  if(defaultResolution != 0.5){
+    future = QtConcurrent::run([=]() {
+    calculateEDTpass(m_cube, type, defaultResolution);
+  });
+  
+  if(type == SolventExcluded){
+    m_performEDTStepWatcher.setFuture(future);
+  }else{
+    m_displayMeshWatcher.setFuture(future); 
+  }
+  }
+
+}
+
+void Surfaces::calculateEDTpass(Core::Cube* cube, Type type, float defaultResolution)
+{
+  double probeRadius = 0.0;
+  switch (type) {
+    case VanDerWaals:
+      cube->setCubeType(Core::Cube::Type::VdW);
+      break;
+    case SolventAccessible:
+      probeRadius = 1.4;
+      cube->setCubeType(Core::Cube::Type::SolventAccessible);
+      break;
+    case SolventExcluded:
+      probeRadius = 1.4;
+      cube->setCubeType(Core::Cube::Type::SolventExcluded);
+      break;
+    default:
+      break;
+  }
+
+  // first, make a list of all atom positions and radii
+  Array<Vector3> atomPositions = m_molecule->atomPositions3d();
+  auto* atoms = new std::vector<std::pair<Vector3, double>>();
+  double max_radius = probeRadius;
+  QtGui::RWLayerManager layerManager;
+  for (size_t i = 0; i < m_molecule->atomCount(); i++) {
+    if (!layerManager.visible(m_molecule->layer(i)))
+      continue; // ignore invisible atoms
+    auto radius =
+      Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
+    atoms->emplace_back(atomPositions[i], radius);
+    if (radius > max_radius)
+      max_radius = radius;
+  }
+
+  double padding = max_radius + probeRadius;
+
+  const float res = resolution(defaultResolution);
+  cube->setLimits(*m_molecule, res, padding);
+  cube->fill(-1.0);
+  const Vector3 min = cube->min();
+
+  // then, for each atom, set cubes around it up to a certain radius
+  QFuture innerFuture =
+    QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
+      double startPosX = in.first(0) - in.second;
+      double endPosX = in.first(0) + in.second;
+      int startIndexX = (startPosX - min(0)) / res;
+      int endIndexX = (endPosX - min(0)) / res + 1;
+      for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
+        double posX = indexX * res + min(0);
+        double radiusXsq = square(in.second) - square(posX - in.first(0));
+        if (radiusXsq < 0.0)
+          continue;
+        double radiusX = sqrt(radiusXsq);
+        double startPosY = in.first(1) - radiusX;
+        double endPosY = in.first(1) + radiusX;
+        int startIndexY = (startPosY - min(1)) / res;
+        int endIndexY = (endPosY - min(1)) / res + 1;
+        for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
+          double posY = indexY * res + min(1);
+          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+          if (lengthXYsq < 0.0)
+            continue;
+          double lengthXY = sqrt(lengthXYsq);
+          double startPosZ = in.first(2) - lengthXY;
+          double endPosZ = in.first(2) + lengthXY;
+          int startIndexZ = (startPosZ - min(2)) / res;
+          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
+                             1.0f);
+        }
+      }
+    });
+  innerFuture.waitForFinished();
 }
 
 void Surfaces::performEDTStep()
@@ -518,7 +541,7 @@ void Surfaces::performEDTStep()
     innerFuture.waitForFinished();
   });
 
-  m_displayMeshWatcher.setFuture(future);
+  m_displayMeshWatcher.setFuture(future); 
 }
 
 void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
@@ -690,54 +713,52 @@ void Surfaces::stepChanged(int n)
   }
 }
 
+void Surfaces::generateMesh(Core::Cube* cube, Core::Mesh* mesh, QtGui::MeshGenerator*& meshGenerator, 
+                            bool isoaValue, bool isMO)
+{
+    
+    if (!meshGenerator) {
+        meshGenerator = new QtGui::MeshGenerator;
+        connect(meshGenerator, SIGNAL(finished()), SLOT(meshFinished()));
+    }
+
+    meshGenerator->initialize(cube, mesh, isoaValue ? m_isoValue : -m_isoValue, m_smoothingPasses, isMO);
+    meshGenerator->start();
+}
+
 void Surfaces::displayMesh()
 {
-  if (!m_cube)
-    return;
+    if (!m_cube || !m_cube2)
+        return;
 
-  if (m_dialog != nullptr)
-    m_smoothingPasses = m_dialog->smoothingPassesValue();
-  else
-    m_smoothingPasses = 0;
+    if (m_dialog != nullptr)
+        m_smoothingPasses = m_dialog->smoothingPassesValue();
+    else
+        m_smoothingPasses = 0;
 
-  if (!m_mesh1)
-    m_mesh1 = m_molecule->addMesh();
-  if (!m_meshGenerator1) {
-    m_meshGenerator1 = new QtGui::MeshGenerator;
-    connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
-  }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
+    m_molecule->clearMeshes();
 
-  bool isMO = false;
-  // if it's from a file we should "play it safe"
-  if (m_cube->cubeType() == Cube::Type::MO ||
-      m_cube->cubeType() == Cube::Type::FromFile) {
-    isMO = true;
-  }
-
-  if (isMO) {
-    if (!m_mesh2)
-      m_mesh2 = m_molecule->addMesh();
-    if (!m_meshGenerator2) {
-      m_meshGenerator2 = new QtGui::MeshGenerator;
-      connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
+    if (m_cube) {
+        m_mesh1 = m_molecule->addMesh();
+        generateMesh(m_cube, m_mesh1, m_meshGenerator1, true, false);
+        m_meshesLeft = 2;
     }
-    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
-                                 m_smoothingPasses, true);
-  }
 
-  // Start the mesh generation - this needs an improved mutex with a read lock
-  // to function as expected. Write locks are exclusive, read locks can have
-  // many read locks but no write lock.
-  m_meshGenerator1->start();
-  if (isMO)
-    m_meshGenerator2->start();
+    m_molecule->clearMeshes();
 
-  // Track how many meshes are left to show.
-  if (isMO)
-    m_meshesLeft = 2;
-  else
-    m_meshesLeft = 1;
+    if (m_cube2) {
+        m_mesh2 = m_molecule->addMesh();
+        generateMesh(m_cube2, m_mesh2, m_meshGenerator2, true, false);
+        m_meshesLeftPass2 = 2;
+    }
+
+    bool isMO = (m_cube->cubeType() == Cube::Type::MO || m_cube->cubeType() == Cube::Type::FromFile);
+    if (isMO) {
+        m_mesh3 = m_molecule->addMesh();
+        generateMesh(m_cube, m_mesh3, m_meshGenerator3, false, true);
+        ++m_meshesLeft;
+        ++m_meshesLeftPass2;
+    }
 }
 
 Core::Color3f Surfaces::chargeGradient(double value, double clamp,
@@ -819,8 +840,9 @@ void Surfaces::colorMeshByPotential()
 
 void Surfaces::colorMesh()
 {
-  if (m_dialog == nullptr)
+  if (m_dialog == nullptr){
     return;
+  }
 
   switch (m_dialog->colorProperty()) {
     case None:
@@ -833,28 +855,32 @@ void Surfaces::colorMesh()
 
 void Surfaces::meshFinished()
 {
-  --m_meshesLeft;
-  if (m_meshesLeft == 0) {
-    colorMesh();
 
-    // finished, so request to enable the mesh display type
+  --m_meshesLeft;
+  --m_meshesLeftPass2;
+
+  if ((m_meshesLeft == 2 && m_meshesLeftPass2 == 2) || 
+      (m_meshesLeft == 1 && m_meshesLeftPass2 == 1) || 
+      (m_meshesLeft == 0 && m_meshesLeftPass2 == 0)) {
+    
+    colorMesh();
     QStringList displayTypes;
     displayTypes << tr("Meshes");
     requestActiveDisplayTypes(displayTypes);
 
     if (m_recordingMovie) {
       // Move to the next frame.
-      qDebug() << "Let's get to the next frame…";
       m_molecule->emitChanged(QtGui::Molecule::Added);
       movieFrame();
     } else {
-      if (m_dialog != nullptr)
+      if (m_dialog != nullptr && m_meshesLeftPass2 == 0)
         m_dialog->reenableCalculateButton();
-
       m_molecule->emitChanged(QtGui::Molecule::Added);
     }
   }
+
 }
+
 
 void Surfaces::recordMovie()
 {
