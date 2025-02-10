@@ -10,8 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-02-10 04:22+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -5123,7 +5122,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
 msgid "Clipboard"
-msgstr "გაცვლის ბაფერი"
+msgstr "გაცვლის ბუფერი"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 msgid "Insert Template"
