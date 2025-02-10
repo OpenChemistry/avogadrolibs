@@ -33,53 +33,55 @@ enum Coordination
 class UFFBond // track the bond parameters
 {
 public:
-  Index m_atom1;
-  Index m_atom2;
-  Real m_r0;
-  Real m_kb;
+  Index _atom1;
+  Index _atom2;
+  Real _r0;
+  Real _kb;
 };
 
 class UFFAngle
 {
 public:
-  Index m_atom1;
-  Index m_atom2;
-  Index m_atom3;
-  Real m_theta0;
-  Real m_kijk;
+  Index _atom1;
+  Index _atom2;
+  Index _atom3;
+  Real _theta0;
+  Real _kijk;
   Coordination coordination;
 };
 
 class UFFTorsion
 {
 public:
-  Index m_atom1;
-  Index m_atom2;
-  Index m_atom3;
-  Index m_atom4;
-  Real m_cos_phi0;
-  Real m_ijkl;
-  short m_n; // periodicity
+  Index _atom1;
+  Index _atom2;
+  Index _atom3;
+  Index _atom4;
+  Real _cos_phi0;
+  Real _ijkl;
+  short _n; // periodicity
 };
 
 class UFFOOP
 {
 public:
-  Index m_atom1;
-  Index m_atom2;
-  Index m_atom3;
-  Index m_atom4;
-  Real m_phi0;
-  Real m_kop;
+  Index _atom1; // central atom
+  Index _atom2;
+  Index _atom3;
+  Index _atom4;
+  Real _c0;
+  Real _c1;
+  Real _c2;
+  Real _koop;
 };
 
 class UFFVdW
 {
 public:
-  Index m_atom1;
-  Index m_atom2;
-  Real m_depth;
-  Real m_x;
+  Index _atom1;
+  Index _atom2;
+  Real _depth;
+  Real _x;
 };
 
 class UFFPrivate // track the particular calculations for a molecule
@@ -274,13 +276,13 @@ public:
       Index atom1 = bond.atom1().index();
       Index atom2 = bond.atom2().index();
       UFFBond b;
-      b.m_atom1 = atom1;
-      b.m_atom2 = atom2;
+      b._atom1 = atom1;
+      b._atom2 = atom2;
 
-      b.m_r0 = calculateRij(atom1, atom2);
+      b._r0 = calculateRij(atom1, atom2);
       Real z1 = uffparams[m_atomTypes[atom1]].Z1;
       Real z2 = uffparams[m_atomTypes[atom2]].Z1;
-      b.m_kb = 664.12 * z1 * z2 / pow((b.m_r0), 3);
+      b._kb = 664.12 * z1 * z2 / pow((b._r0), 3);
       m_bonds.push_back(b);
     }
   }
@@ -294,12 +296,12 @@ public:
       Index j = std::get<1>(angle);
       Index k = std::get<2>(angle);
       UFFAngle a;
-      a.m_atom1 = i;
-      a.m_atom2 = j;
-      a.m_atom3 = k;
+      a._atom1 = i;
+      a._atom2 = j;
+      a._atom3 = k;
 
       Real theta0 = uffparams[m_atomTypes[j]].theta0;
-      a.m_theta0 = theta0;
+      a._theta0 = theta0;
 
       // calculate the kijk
       Real rij = calculateRij(i, j);
@@ -316,8 +318,8 @@ public:
       Real cosTheta0Sq = cosTheta0 * cosTheta0;
       // see https://towhee.sourceforge.net/forcefields/uff.html
       // e.g., original paper had some typos
-      a.m_kijk = 664.12 / (rij * rjk) * (Zi * Zk) / (pow(rik, 5)) * rij * rjk;
-      a.m_kijk *= (3 * rij * rjk * (1 - cosTheta0Sq) - rik * rik * cosTheta0);
+      a._kijk = 664.12 / (rij * rjk) * (Zi * Zk) / (pow(rik, 5)) * rij * rjk;
+      a._kijk *= (3 * rij * rjk * (1 - cosTheta0Sq) - rik * rik * cosTheta0);
 
       m_angles.push_back(a);
       angle = ++ai;
@@ -326,7 +328,80 @@ public:
 
   void setOOPs()
   {
-    // TODO
+    // loop through atoms checking for cases with 3 neighbors
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      auto neighbors = m_molecule->graph().neighbors(i);
+      if (neighbors.size() != 3)
+        continue;
+
+      // also only for certain elements
+      const Core::Atom& atom = m_molecule->atom(i);
+      int atomicNumber = atom.atomicNumber();
+      switch (atomicNumber) {
+        case 6:  // carbon
+        case 7:  // nitrogen
+        case 8:  // oxygen
+        case 15: // phos.
+        case 33: // as
+        case 51: // sb
+        case 83: // bi
+          break;
+        default: // no inversion term for this element
+          continue;
+      }
+
+      UFFOOP oop;
+      oop._atom1 = i;
+      oop._atom2 = neighbors[0];
+      oop._atom3 = neighbors[1];
+      oop._atom4 = neighbors[2];
+
+      std::string symbol = uffparams[m_atomTypes[i]].label;
+      if (symbol == "N_R" || symbol == "N_2" || symbol == "N_R" ||
+          symbol == "O_2" || symbol == "O_R") {
+        oop._c0 = 1.0;
+        oop._c1 = -1.0;
+        oop._c2 = 0.0;
+        oop._koop = 6.0;
+      } else if (symbol == "P_3+3" || symbol == "As3+3" || symbol == "Sb3+3" ||
+                 symbol == "Bi3+3") {
+
+        Real phi;
+        switch (atomicNumber) {
+          case 15: // P
+            phi = 84.4339 * DEG_TO_RAD;
+            break;
+          case 33: // As
+            phi = 86.9735 * DEG_TO_RAD;
+            break;
+          case 51: // Sb
+            phi = 87.7047 * DEG_TO_RAD;
+            break;
+          case 83: // Bi
+          default:
+            phi = 90.0;
+        }
+        oop._c1 = -4.0 * cos(phi);
+        oop._c2 = 1.0;
+        oop._c0 = -1.0 * oop._c1 * cos(phi) + oop._c2 * cos(2.0 * phi);
+        oop._koop = 22.0;
+      } else if (symbol == "C_2" || symbol == "C_R") {
+        oop._c0 = 1.0;
+        oop._c1 = -1.0;
+        oop._c2 = 0.0;
+        oop._koop = 6.0;
+        // check if one of the other atoms is "O_2"
+        if (uffparams[m_atomTypes[neighbors[0]]].label == "O_2" ||
+            uffparams[m_atomTypes[neighbors[1]]].label == "O_2" ||
+            uffparams[m_atomTypes[neighbors[2]]].label == "O_2") {
+          oop._koop = 50.0;
+        }
+      } else {
+        continue;
+      }
+
+      m_oops.push_back(oop);
+    }
   }
 
   void setTorsions()
@@ -348,10 +423,10 @@ public:
       }
 
       UFFTorsion t;
-      t.m_atom1 = i;
-      t.m_atom2 = j;
-      t.m_atom3 = k;
-      t.m_atom4 = l;
+      t._atom1 = i;
+      t._atom2 = j;
+      t._atom3 = k;
+      t._atom4 = l;
 
       // default is for sp3-sp3
       Real order = static_cast<Real>(bond.order());
@@ -363,28 +438,28 @@ public:
       if (symbol1.size() < 3 || symbol2.size() < 3 || symbol1[2] == '3' ||
           symbol2[2] == '3') {
         // default is sp3-sp3
-        t.m_n = 3;
-        t.m_cos_phi0 = cos(t.m_n * 60.0 * DEG_TO_RAD);
+        t._n = 3;
+        t._cos_phi0 = cos(t._n * 60.0 * DEG_TO_RAD);
         // geometric mean of the two V1 parameters
-        t.m_ijkl = 0.5 * sqrt(uffparams[m_atomTypes[j]].Vi *
-                              uffparams[m_atomTypes[k]].Vi);
+        t._ijkl = 0.5 * sqrt(uffparams[m_atomTypes[j]].Vi *
+                             uffparams[m_atomTypes[k]].Vi);
       } else if (symbol1[2] == 'R' && symbol2[2] == 'R') {
         order = 1.5;
         // tweak for amide
         if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
             (symbol1[0] == 'C' && symbol2[0] == 'N'))
           order = 1.41;
-        t.m_n = 2;
-        t.m_cos_phi0 = cos(t.m_n * 180.0 * DEG_TO_RAD);
-        t.m_ijkl = 5.0 * sqrt(uffparams[m_atomTypes[j]].Uj *
-                              uffparams[m_atomTypes[k]].Uj);
-        t.m_ijkl *= 0.5 * (1.0 + 4.18 * log(order));
+        t._n = 2;
+        t._cos_phi0 = cos(t._n * 180.0 * DEG_TO_RAD);
+        t._ijkl = 5.0 * sqrt(uffparams[m_atomTypes[j]].Uj *
+                             uffparams[m_atomTypes[k]].Uj);
+        t._ijkl *= 0.5 * (1.0 + 4.18 * log(order));
       } else if ((symbol1[2] == '2' && symbol2[2] == '3') ||
                  (symbol1[2] == '3' && symbol2[2] == '2')) {
         // sp2-sp3
-        t.m_cos_phi0 = cos(0.0 * DEG_TO_RAD);
-        t.m_n = 6;
-        t.m_ijkl = 0.5;
+        t._cos_phi0 = cos(0.0 * DEG_TO_RAD);
+        t._n = 6;
+        t._ijkl = 0.5;
       } else {
         dihedral = ++di;
         continue;
@@ -420,12 +495,12 @@ public:
       for (Index j = i + 1; j < m_molecule->atomCount(); ++j) {
         if (!areConnected(i, j)) {
           UFFVdW v;
-          v.m_atom1 = i;
-          v.m_atom2 = j;
+          v._atom1 = i;
+          v._atom2 = j;
 
-          v.m_depth =
+          v._depth =
             sqrt(uffparams[m_atomTypes[i]].D1 * uffparams[m_atomTypes[j]].D1);
-          v.m_x =
+          v._x =
             sqrt(uffparams[m_atomTypes[i]].x1 * uffparams[m_atomTypes[j]].x1);
           m_vdws.push_back(v);
         }
@@ -438,10 +513,10 @@ public:
     Real energy = 0.0;
 
     for (const UFFBond& bond : m_bonds) {
-      Index i = bond.m_atom1;
-      Index j = bond.m_atom2;
-      Real r0 = bond.m_r0;
-      Real kb = bond.m_kb;
+      Index i = bond._atom1;
+      Index j = bond._atom2;
+      Real r0 = bond._r0;
+      Real kb = bond._kb;
 
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
@@ -458,11 +533,11 @@ public:
   {
     Real energy = 0.0;
     for (const UFFAngle& angle : m_angles) {
-      Index i = angle.m_atom1;
-      Index j = angle.m_atom2;
-      Index k = angle.m_atom3;
-      Real theta0 = angle.m_theta0 * DEG_TO_RAD;
-      Real kijk = angle.m_kijk;
+      Index i = angle._atom1;
+      Index j = angle._atom2;
+      Index k = angle._atom3;
+      Real theta0 = angle._theta0 * DEG_TO_RAD;
+      Real kijk = angle._kijk;
 
       Real dx1 = x[3 * i] - x[3 * j];
       Real dy1 = x[3 * i + 1] - x[3 * j + 1];
@@ -486,19 +561,25 @@ public:
   {
     Real energy = 0.0;
     for (const UFFOOP& oop : m_oops) {
-      // TODO
       // for UFF - I is defined as the central atom
-      Index i = oop.m_atom1;
-      Index j = oop.m_atom2;
-      Index k = oop.m_atom3;
-      Index l = oop.m_atom4;
+      Index i = oop._atom1;
+      Index j = oop._atom2;
+      Index k = oop._atom3;
+      Index l = oop._atom4;
 
-      Real kijkl = oop.m_kop;
+      Real koop = oop._koop;
+      Real c0 = oop._c0;
+      Real c1 = oop._c1;
+      Real c2 = oop._c2;
 
       Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
       Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
       Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
       Eigen::Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+
+      // use outOfPlaneAngle() from angletools.h
+      Real angle = outOfPlaneAngle(vi, vj, vk, vl) * DEG_TO_RAD;
+      energy += koop * (c0 + c1 * cos(angle) + c2 * cos(2 * angle));
     }
 
     return energy;
@@ -508,21 +589,21 @@ public:
   {
     Real energy = 0.0;
     for (const UFFTorsion& torsion : m_torsions) {
-      Index i = torsion.m_atom1;
-      Index j = torsion.m_atom2;
-      Index k = torsion.m_atom3;
-      Index l = torsion.m_atom4;
+      Index i = torsion._atom1;
+      Index j = torsion._atom2;
+      Index k = torsion._atom3;
+      Index l = torsion._atom4;
 
       Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
       Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
       Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
       Eigen::Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
 
-      Real phi = calcDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+      Real phi = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
 
-      Real cosPhi = cos(torsion.m_n * phi);
-      Real cosPhi0 = torsion.m_cos_phi0;
-      Real kijkl = torsion.m_ijkl;
+      Real cosPhi = cos(torsion._n * phi);
+      Real cosPhi0 = torsion._cos_phi0;
+      Real kijkl = torsion._ijkl;
 
       // 0.5 * kijkl is already in the kijkl to save a multiplication
       energy += kijkl * (1.0 - cosPhi0 * cosPhi);
@@ -535,10 +616,10 @@ public:
   {
     Real energy = 0.0;
     for (const UFFVdW& vdw : m_vdws) {
-      Index i = vdw.m_atom1;
-      Index j = vdw.m_atom2;
-      Real depth = vdw.m_depth;
-      Real xij = vdw.m_x;
+      Index i = vdw._atom1;
+      Index j = vdw._atom2;
+      Real depth = vdw._depth;
+      Real xij = vdw._x;
       Real x6 = xij * xij * xij * xij * xij * xij;
       Real x12 = x6 * x6;
 
@@ -557,10 +638,10 @@ public:
   void bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
     for (const UFFBond& bond : m_bonds) {
-      Index i = bond.m_atom1;
-      Index j = bond.m_atom2;
-      Real r0 = bond.m_r0;
-      Real kb = bond.m_kb;
+      Index i = bond._atom1;
+      Index j = bond._atom2;
+      Real r0 = bond._r0;
+      Real kb = bond._kb;
 
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
@@ -582,11 +663,11 @@ public:
   void angleGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
     for (const UFFAngle& angle : m_angles) {
-      Index i = angle.m_atom1;
-      Index j = angle.m_atom2;
-      Index k = angle.m_atom3;
-      Real theta0 = angle.m_theta0 * DEG_TO_RAD;
-      Real kijk = angle.m_kijk;
+      Index i = angle._atom1;
+      Index j = angle._atom2;
+      Index k = angle._atom3;
+      Real theta0 = angle._theta0 * DEG_TO_RAD;
+      Real kijk = angle._kijk;
 
       const Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
       const Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
@@ -651,10 +732,10 @@ public:
   void vdwGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
     for (const UFFVdW& vdw : m_vdws) {
-      Index i = vdw.m_atom1;
-      Index j = vdw.m_atom2;
-      Real depth = vdw.m_depth;
-      Real xij = vdw.m_x;
+      Index i = vdw._atom1;
+      Index j = vdw._atom2;
+      Real depth = vdw._depth;
+      Real xij = vdw._x;
 
       // dE / dr for a Lennard-Jones potential
       // E = depth * (x^12 / r^12 - 2 * x^6 / r^6)
