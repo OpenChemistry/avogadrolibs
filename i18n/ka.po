@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-02-10 04:22+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -4925,7 +4926,7 @@ msgstr "სიმეტრია"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:112
 msgid "Status"
-msgstr ""
+msgstr "სტატუსი"
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:124
 #: qtplugins/surfaces/orbitaltablemodel.cpp:186
@@ -5122,7 +5123,7 @@ msgstr ""
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
 msgid "Clipboard"
-msgstr ""
+msgstr "გაცვლის ბაფერი"
 
 #: qtplugins/templatetool/templatetool.cpp:404
 msgid "Insert Template"
