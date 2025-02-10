@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-02-10 04:20+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -3451,7 +3452,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
-msgstr ""
+msgstr "ქიმიური ფორმულა:"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
