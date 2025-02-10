@@ -3443,7 +3443,7 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
-msgstr "მოლეკულის სახელი:"
+msgstr "მოლეკულის სახელი"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
