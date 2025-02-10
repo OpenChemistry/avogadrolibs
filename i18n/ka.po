@@ -1708,7 +1708,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "დაშორებით"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
