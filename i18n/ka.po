@@ -2,14 +2,14 @@
 # Copyright (C) 2006-2021 The Avogadro Project
 # This file is distributed under the same license as the Avogadro package.
 # Temuri Doghonadze <temuri@delta-net.ge>, 2022.
-# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023, 2024.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022, 2023, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-02-24 01:26+0000\n"
+"PO-Revision-Date: 2025-02-10 04:19+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1374,7 +1374,7 @@ msgstr "ბმის განახლება"
 
 #: qtgui/rwmolecule.cpp:407
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "ერთეულის უჯრედის დამატება…"
 
 #: qtgui/rwmolecule.cpp:419
 msgid "Remove Unit Cell"
