@@ -10,7 +10,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-02-10 04:22+0000\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
 "Language: ka\n"
@@ -6851,7 +6852,7 @@ msgstr "Z-ღერძი"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Move:"
-msgstr ""
+msgstr "გადატანა"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
