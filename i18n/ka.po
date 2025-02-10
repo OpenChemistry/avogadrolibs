@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-02-10 04:22+0000\n"
+"PO-Revision-Date: 2025-02-10 04:23+0000\n"
 "Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
 "memory@weblate.org>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
@@ -7057,7 +7057,7 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
 msgid "Forcefield:"
-msgstr ""
+msgstr "ძალის ველი:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:99
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
@@ -7593,7 +7593,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "ერთეულები:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -7682,7 +7682,7 @@ msgstr "18"
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgctxt "Size in pixels of the line drawing the spectra"
 msgid "Line Width:"
-msgstr ""
+msgstr "ხაზის სიგანე:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:458
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
@@ -7727,7 +7727,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Quality: "
-msgstr ""
+msgstr "ხარისხი: "
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
