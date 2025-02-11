@@ -39,6 +39,8 @@ public:
 
   explicit LayerModel(QObject* p = 0);
 
+  void loadIcons(bool darkMode);
+
   QModelIndex parent(const QModelIndex& child) const override;
   int rowCount(const QModelIndex& parent) const override;
   int columnCount(const QModelIndex& parent) const override;
