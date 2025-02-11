@@ -47,6 +47,9 @@ public:
   Index _atom3;
   Real _theta0;
   Real _kijk;
+  Real _c0;
+  Real _c1;
+  Real _c2;
   Coordination coordination;
 };
 
@@ -321,6 +324,44 @@ public:
       a._kijk = 664.12 / (rij * rjk) * (Zi * Zk) / (pow(rik, 5)) * rij * rjk;
       a._kijk *= (3 * rij * rjk * (1 - cosTheta0Sq) - rik * rik * cosTheta0);
 
+      // calculate the c0, c1, c2 terms
+      // based on coordination of the central atom
+      std::string label = uffparams[m_atomTypes[j]].label;
+      auto neighbors = m_molecule->graph().neighbors(j);
+      a._c0 = 0.0;
+      a._c1 = 0.0;
+      a._c2 = 0.0;
+      if (label.size() < 3 || neighbors.size() == 1) {
+        // linear
+        a.coordination = Linear;
+        a._c0 = 1.0;
+      } else if ((label[2] == '2' || label[2] == 'R') &&
+                 neighbors.size() == 3) {
+        a.coordination = Trigonal;
+        a._kijk = a._kijk / 9.0; // divide by n**2
+        a._c0 = 3.0;
+      } else if (label[2] == '4') {
+        a.coordination = SquarePlanar;
+        a._kijk = a._kijk / 16.0;
+        a._c0 = 4.0;
+      } else if (label[2] == '5') {
+        // TODO
+        a.coordination = TrigonalBipyramidal;
+      } else if (label[2] == '6') {
+        a.coordination = Octahedral;
+        a._kijk = a._kijk / 16.0;
+        a._c0 = 4.0;
+      } else if (neighbors.size() > 6) {
+        // TODO - trigonal bipentagonal and higher coordination
+        a.coordination = Other;
+      } else {
+        a.coordination = Tetrahedral;
+        Real sinTheta0 = sin(theta0);
+        a._c2 = 1.0 / (4.0 * sinTheta0 * sinTheta0);
+        a._c1 = -4.0 * a._c2 * cosTheta0;
+        a._c0 = a._c2 * (2.0 * cosTheta0 * cosTheta0 + 1.0);
+      }
+
       m_angles.push_back(a);
       angle = ++ai;
     }
@@ -549,9 +590,44 @@ public:
       Real r2 = sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
       Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
       Real theta = acos(dot / (r1 * r2));
-      Real dtheta = theta - theta0;
-      // hah, if only UFF used harmonic angles
-      energy += 0.5 * kijk * dtheta * dtheta;
+
+      // TODO - migrate special cases from Open Babel
+      Coordination coord = angle.coordination;
+      Real c0 = angle._c0;
+      Real c1 = angle._c1;
+      Real c2 = angle._c2;
+      switch (coord) {
+        case Linear:
+          // fixed typo in UFF paper (it's 1+ cos(theta) not 1 - cos(theta))
+          energy += kijk * (1 + cos(c0 * theta));
+          break;
+        case Trigonal:
+        case Resonant:
+        case SquarePlanar:
+        case Octahedral:
+          // c0 contains n for these cases
+          // and kijk is already divided by n**2
+          // i.e., if the angle is less than approx theta0, energy goes up
+          // exponentially
+          energy +=
+            kijk * (1 - cos(c0 * theta)) + exp(-20.0 * (theta - theta0 + 0.25));
+
+          break;
+        case Tetrahedral: {
+          Real cosTheta = cos(theta);
+          // use cos 2t = (2cos^2 - 1)
+          energy +=
+            kijk * (c0 + c1 * cosTheta + c2 * (2 * cosTheta * cosTheta - 1));
+          break;
+        }
+        case TrigonalBipyramidal:
+          energy += kijk * (theta - theta0) * (theta - theta0);
+          break;
+        case TrigonalBipentagonal:
+        case Other:
+        default:
+          energy += kijk * (theta - theta0) * (theta - theta0);
+      }
     }
 
     return energy;
