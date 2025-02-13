@@ -16,12 +16,12 @@ namespace Core {
 /** A simple struct to define internal / z-matrix coordinates. */
 struct InternalCoordinate
 {
-  Index a;
-  Index b;
-  Index c;
-  Real length;
-  Real angle;
-  Real dihedral;
+  Index a = MaxIndex;
+  Index b = MaxIndex;
+  Index c = MaxIndex;
+  Real length = 0.0;
+  Real angle = 0.0;
+  Real dihedral = 0.0;
 };
 
 Array<Vector3> internalToCartesian(
