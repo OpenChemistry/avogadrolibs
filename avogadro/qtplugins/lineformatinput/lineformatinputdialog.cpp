@@ -14,6 +14,12 @@ LineFormatInputDialog::LineFormatInputDialog(QWidget* aParent)
   : QDialog(aParent), m_ui(new Ui::LineFormatInputDialog)
 {
   m_ui->setupUi(this);
+
+  QSettings settings;
+  // set the last used descriptor
+  QString lastDescriptor =
+    settings.value("lineformatinput/lastDescriptor").toString();
+  setDescriptor(lastDescriptor);
 }
 
 LineFormatInputDialog::~LineFormatInputDialog()
@@ -45,6 +51,11 @@ void LineFormatInputDialog::setCurrentFormat(const QString& format)
     m_ui->formats->setCurrentIndex(index);
 }
 
+void LineFormatInputDialog::setDescriptor(const QString& descriptor)
+{
+  m_ui->descriptor->setText(descriptor);
+}
+
 QString LineFormatInputDialog::descriptor() const
 {
   return m_ui->descriptor->text();
@@ -54,7 +65,8 @@ void LineFormatInputDialog::accept()
 {
   QSettings settings;
   settings.setValue("lineformatinput/lastUsed", format());
+  settings.setValue("lineformatinput/lastDescriptor", descriptor());
   QDialog::accept();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
