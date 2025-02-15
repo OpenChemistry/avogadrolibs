@@ -127,13 +127,11 @@ Forcefield::Forcefield(QObject* parent_)
   // These directly use Open Babel and are fast
   qDebug() << " registering GPL plugins";
   Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
 #else
   // These call obmm and can be slower
   qDebug() << " registering obmm plugins";
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
 #endif
 }
@@ -471,8 +469,6 @@ std::string Forcefield::recommendedForceField() const
   // iterate to see what we have
   std::string bestOption;
   for (auto option : list) {
-    // ideally, we'd use GFN-FF but it needs tweaking
-    // everything else is a ranking
     // GAFF is better than MMFF94 which is better than UFF
     if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
       bestOption = option;
