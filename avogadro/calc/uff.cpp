@@ -180,15 +180,17 @@ public:
                 coord = '2'; // sp2 trigonal
               else if (doubleBonds == 0 && tripleBonds == 0)
                 coord = '3'; // sp3 tetrahedral
+
               // check the atom type symbols
               if (uffparams[j].label[2] == coord) {
                 atomType = j;
                 break;
               } else {
                 // bump up until we find one
-                while (j < 125 && uffparams[j + 1].label[2] != coord) {
+                while (j < 125 && uffparams[j].label[2] != coord) {
                   ++j;
                 }
+                atomType = j;
                 break;
               }
             }
@@ -212,12 +214,20 @@ public:
           atomicNumber == 16) {
 
         const char symbol = uffparams[m_atomTypes[i]].label[2];
-        // we allow N next to another sp2 to be resonant (e.g. amide)
-        if (atomicNumber != 7 && symbol != '2')
+
+        // we might have an aromatic / resonant N, O, or S
+        // e.g., furan, thiophene .. we also mark amide N
+        // if it's an sp3 carbon, skip it
+        if (atomicNumber == 6 && symbol == '3')
           continue;
 
         // check the neighbors
         const std::vector<Index>& neighbors = m_molecule->graph().neighbors(i);
+
+        // we can skip carbonyl oxygen (i.e., only one neighbor)
+        if ((atomicNumber == 8 || atomicNumber == 16) && neighbors.size() == 1)
+          continue;
+
         bool resonant = false;
         for (Index j : neighbors) {
           auto symbol = uffparams[m_atomTypes[j]].label;
@@ -231,7 +241,16 @@ public:
         }
         if (resonant) {
           // set the resonant type
-          m_atomTypes[i] = m_atomTypes[i] - 1; // C_R before C_2
+          if (atomicNumber == 7 && symbol == '3')
+            m_atomTypes[i] = m_atomTypes[i] + 1; // N_R after N_3
+          else if (atomicNumber == 8 && symbol == '3')
+            m_atomTypes[i] = m_atomTypes[i] + 2; // O_R after O_3 and O_3_z
+          else if (atomicNumber == 16 && symbol == '3') {
+            // loop until we find 'R' .. might be a few different S types
+            while (uffparams[m_atomTypes[i]].label[2] != 'R')
+              ++m_atomTypes[i];
+          } else
+            m_atomTypes[i] = m_atomTypes[i] - 1; // C_R before C_2
         }
       }
     }
@@ -287,6 +306,13 @@ public:
       Real z2 = uffparams[m_atomTypes[atom2]].Z1;
       b._kb = 664.12 * z1 * z2 / pow((b._r0), 3);
       m_bonds.push_back(b);
+
+      /*
+      std::cout << " bond " << atom1 << " "
+                << uffparams[m_atomTypes[atom1]].label << " " << atom2 << " "
+                << uffparams[m_atomTypes[atom2]].label << " " << b._r0 << " "
+                << b._kb << std::endl;
+                */
     }
   }
 
@@ -310,9 +336,10 @@ public:
       Real rij = calculateRij(i, j);
       Real rjk = calculateRij(j, k);
 
-      // std::cout << " Angle " << i << " " << j << " " << k << " " << rij << "
-      // "
-      //           << rjk << " " << theta0 << std::endl;
+      /*
+      std::cout << " Angle " << i << " " << j << " " << k << " " << rij << " "
+                << rjk << " " << theta0 << std::endl;
+                */
 
       Real rik = sqrt(rij * rij + rjk * rjk - 2 * rij * rjk * cos(theta0));
       Real Zi = uffparams[m_atomTypes[i]].Z1;
@@ -353,6 +380,7 @@ public:
         a._c0 = 4.0;
       } else if (neighbors.size() > 6) {
         // TODO - trigonal bipentagonal and higher coordination
+        // (e.g., as a repulsion between the other atoms)
         a.coordination = Other;
       } else {
         a.coordination = Tetrahedral;
@@ -564,6 +592,7 @@ public:
       Real dz = x[3 * i + 2] - x[3 * j + 2];
       Real r = sqrt(dx * dx + dy * dy + dz * dz);
       Real dr = r - r0;
+
       // the 0.5 * kb is already in the kb to save a multiplication
       energy += kb * dr * dr;
     }
@@ -590,6 +619,12 @@ public:
       Real r2 = sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
       Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
       Real theta = acos(dot / (r1 * r2));
+
+      /*
+      std::cout << " Angle " << i << " " << j << " " << k << " " << r1 << " "
+                << r2 << " " << theta * RAD_TO_DEG << " " << theta0 * RAD_TO_DEG
+                << std::endl;
+      */
 
       // TODO - migrate special cases from Open Babel
       Coordination coord = angle.coordination;
@@ -881,11 +916,11 @@ Real UFF::value(const Eigen::VectorXd& x)
   // angle component
   energy += d->angleEnergies(x);
   // torsion component
-  energy += d->torsionEnergies(x);
+  // energy += d->torsionEnergies(x);
   // out-of-plane component
-  energy += d->oopEnergies(x);
+  // energy += d->oopEnergies(x);
   // van der Waals component
-  energy += d->vdwEnergies(x);
+  // energy += d->vdwEnergies(x);
   // UFF doesn't have electrostatics
   return energy;
 }
