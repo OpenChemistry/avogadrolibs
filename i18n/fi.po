@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-02-15 08:01+0000\n"
+"PO-Revision-Date: 2025-02-17 04:37+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
@@ -3696,7 +3696,7 @@ msgstr "Vie CSV"
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:249
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr "CSV-tiedostot (*.csv);; kaikki tiedostot (*)"
+msgstr "CSV-tiedostot (*.csv);;kaikki tiedostot (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:261
@@ -3949,28 +3949,28 @@ msgstr "Epäkelvollinen molekyyli: Ei voi havaita sidoksia."
 
 #: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Sidosten havaitseminen (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Luodaan XYZ-esitystä…"
 
 #: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Virhe luotaessa XYZ-merkkijonoa."
 
 #: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr ""
+msgstr "Muunnetaan XYZ Open Babeliksi %1:lla…"
 
 #: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
-msgstr ""
+msgstr "Päivitetään molekyyliä Open Babelista…"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Vetyjä ei voi lisätä Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
 msgid "Adding Hydrogens (Open Babel)"
@@ -3978,21 +3978,21 @@ msgstr "Lisätään vedyt (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Luodaan Open Babel -syötettä…"
 
 #: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Virhe luotaessa Open Babel -syötettä."
 
 #: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
 #: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
-msgstr ""
+msgstr "Suoritetaan %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "Lisää vetyjä pH:n vuoksi"
 
 #: qtplugins/openbabel/openbabel.cpp:871
 msgid "pH:"
@@ -4000,11 +4000,11 @@ msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Luodaan obabel-syötettä…"
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Vetyjä ei voi poistaa Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:919
 msgid "Removing Hydrogens (Open Babel)"
@@ -4012,33 +4012,35 @@ msgstr "Poistetaan vedyt (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Virhe luotaessa Open Babel -dataa."
 
 #: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Luetaan obabel-tulostetta…"
 
 #: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel on jo käynnissä. Odota, että toinen toiminto on suoritettu "
+"loppuun, ja yritä uudelleen."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Ole vuorovaikutuksessa OpenBabel-apuohjelmien kanssa."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr ""
+msgstr "&AvaaMM-skripti…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM-syöttö"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
@@ -4049,6 +4051,8 @@ msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
+"Haluatko päivittää esikatselun tekstin, menettäen kaikki OpenMM-syöttöpakin "
+"esikatseluruudussa tehdyt muutokset?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -4056,7 +4060,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
@@ -4064,32 +4068,32 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1053
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1274
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
 #: qtplugins/openmminput/openmminputdialog.cpp:1042
 #: qtplugins/openmminput/openmminputdialog.cpp:1049
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "yläosa"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -4100,15 +4104,15 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1391 rc.cpp:1406
 msgid "True"
-msgstr ""
+msgstr "Tosi"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 msgid "Reference Axes"
-msgstr ""
+msgstr "Viiteakselit"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
-msgstr ""
+msgstr "Viiteakselien peittokuva"
 
 #: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
@@ -4117,7 +4121,7 @@ msgstr "Hahmonnoi referenssiakselit näytön kulmassa."
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
@@ -4126,11 +4130,11 @@ msgstr "Toistin"
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "Animaatiotyökalu \t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
-msgstr ""
+msgstr "Toista"
 
 #: qtplugins/playertool/playertool.cpp:77
 msgid "Stop"
@@ -4138,40 +4142,40 @@ msgstr "Pysäytä"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
-msgstr ""
+msgstr "Kuvataajuus:"
 
 #: qtplugins/playertool/playertool.cpp:94
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS (ruutua sekunnissa)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:118:1887
 msgid "Frame:"
-msgstr ""
+msgstr "Ruutu:"
 
 #: qtplugins/playertool/playertool.cpp:125
 #: qtplugins/playertool/playertool.cpp:416
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " %0:sta"
 
 #: qtplugins/playertool/playertool.cpp:136
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "Dynaaminen sidos?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:144:1893
 msgid "Record Movie…"
-msgstr ""
+msgstr "Tallenna elokuva…"
 
 #: qtplugins/playertool/playertool.cpp:248
 #: qtplugins/playertool/playertool.cpp:353
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Elokuva (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:250
 msgid "Export Bitmap Graphics"
@@ -4179,19 +4183,20 @@ msgstr "Vie bittikarttagrafiikka"
 
 #: qtplugins/playertool/playertool.cpp:251
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Elokuva (*.mp4);;Elokuva (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:888
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:271
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "GIF FPS -tuen varoitus"
 
 #: qtplugins/playertool/playertool.cpp:272
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
+"GIF-tiedostomuoto ei tue kuvanopeuksia, jotka ovat yli 100 ruutua sekunnissa."
 
 #: qtplugins/playertool/playertool.cpp:317
 msgid "Movie (*.avi)"
@@ -4199,12 +4204,12 @@ msgstr "Elokuva (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:961
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "Virhe: kehystä ei voi lisätä videoon."
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:973
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Tiedostoa %1 ei voi tallentaa."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -4212,11 +4217,11 @@ msgstr "Toistimen työkalut"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Toista liikeradat"
 
 #: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
-msgstr ""
+msgstr "Piirrä parijakautumisfunktio…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
@@ -4224,11 +4229,11 @@ msgstr "PDF-kuvion luominen epäonnistui"
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
-msgstr ""
+msgstr "Virheviesti: "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
@@ -4236,11 +4241,11 @@ msgstr "Luo ja piirrä parijakaumafunktiokäyrä."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
-msgstr ""
+msgstr "Piirrä RMSD-käyrä…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
-msgstr ""
+msgstr "PlotRmsd"
 
 #: qtplugins/plotrmsd/plotrmsd.h:64
 msgid "Generate and plot an RMSD curve."
@@ -4248,7 +4253,7 @@ msgstr "Luo ja piirrä RMSD-käyrä."
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
-msgstr ""
+msgstr "Piirrä teoreettinen XRD-kuvio…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
@@ -4256,25 +4261,25 @@ msgstr "XRD-kuvion luominen epäonnistui"
 
 #: qtplugins/plotxrd/plotxrd.cpp:157
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "Molekyylin muuntaminen CIF-muodoksi epäonnistui."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "GenXrdPatternista luetut tiedot näyttävät olevan vioittuneet!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:230
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Virhe: genXrdPattern-suoritettavaa ei löytynyt!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
 #: qtplugins/yaehmop/yaehmop.cpp:555
 msgid "Error: "
-msgstr ""
+msgstr "Virhe: "
 
 #: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
-msgstr ""
+msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:86
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
@@ -4282,37 +4287,39 @@ msgstr "Luo ja piirrä teoreettinen XRD-kuvio käyttämällä ObjCryst++:ta."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Update"
-msgstr ""
+msgstr "Päivitä"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Version"
-msgstr ""
+msgstr "Versio"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:64
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Virhe ladattaessa liitännäistietoja."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Virhe jäsennettäessä liitännäistietoja."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:306
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
+"Tämä liitännäinen edellyttää tiettyjen pakettien asentamista.\n"
+"Haluatko asentaa ne?"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:314
 msgid "Always"
-msgstr ""
+msgstr "Aina"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Never"
-msgstr ""
+msgstr "Ei koskaan"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:358
 #: qtplugins/plugindownloader/downloaderwidget.cpp:368
@@ -4321,12 +4328,12 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Lataaminen kohteesta %1 epäonnistui: tilakoodi %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:400
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Ladataan %1 kohteeseen %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:413
 #, qt-format
@@ -4372,7 +4379,7 @@ msgstr "Tallenna tiedosto"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr ""
+msgstr "PLY (*.ply);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -4388,7 +4395,7 @@ msgstr "POV-Ray Hahmonnoi…"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray (*.pov);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
@@ -4638,7 +4645,7 @@ msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:94
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr ""
+msgstr "WFN-tiedostot (*.wfn);;kaikki tiedostot (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
@@ -5205,7 +5212,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Elokuva MP4 (*.mp4);;Elokuva AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
@@ -5342,7 +5349,7 @@ msgstr "VRML-hahmonnointi…"
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
-msgstr ""
+msgstr "VRML (*.wrl);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/vrml/vrml.h:25
 msgid "VRML"
