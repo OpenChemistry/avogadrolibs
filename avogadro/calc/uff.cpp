@@ -916,11 +916,11 @@ Real UFF::value(const Eigen::VectorXd& x)
   // angle component
   energy += d->angleEnergies(x);
   // torsion component
-  // energy += d->torsionEnergies(x);
+  energy += d->torsionEnergies(x);
   // out-of-plane component
-  // energy += d->oopEnergies(x);
+  energy += d->oopEnergies(x);
   // van der Waals component
-  // energy += d->vdwEnergies(x);
+  energy += d->vdwEnergies(x);
   // UFF doesn't have electrostatics
   return energy;
 }
