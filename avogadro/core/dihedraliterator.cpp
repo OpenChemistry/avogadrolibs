@@ -11,139 +11,175 @@
 namespace Avogadro::Core {
 
 DihedralIterator::DihedralIterator(const Molecule* mol)
-  : m_current(0, 0, 0, 0), m_mol(mol)
-{}
+  : m_i(MaxIndex), m_jk(0), m_l(MaxIndex), m_mol(mol)
+{
+  m_current = std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+}
 
 Dihedral DihedralIterator::begin()
 {
-  if (m_mol == nullptr)
-    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
-
-  // Loop through bonds until we get one with a-b-c-d
-  Graph graph = m_mol->graph();
-  Index bondCount = m_mol->bondCount();
-  if (bondCount > 3) {
-    // need at least a-b-c-d to have a dihedral
-    bool valid = false;
-    for (Index bcBond = 0; bcBond < bondCount; ++bcBond) {
-      auto bc = m_mol->bondPair(bcBond);
-      Index b = bc.first;
-      Index c = bc.second;
-
-      // find an a
-      Index a = 0;
-      for (const auto maybeA : graph.neighbors(b)) {
-        if (maybeA != c) {
-          a = maybeA;
-          valid = true; // maybe
-          break;
-        }
-      }
-      if (!valid)
-        continue; // need to find a new bond with real neighbors
-
-      // try to find a new d
-      for (const auto maybeD : graph.neighbors(c)) {
-        if (maybeD != b && maybeD != a) {
-          m_current = std::make_tuple(a, b, c, maybeD);
-          return m_current; // done
-        }
-      }
-      // didn't find a good "d", so try a new bond
-      valid = false;
-    }
-  }
-
-  // we couldn't find a valid dihedral (e.g., small molecule, single atom)
-  return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+  // all the logic is in the operator++
+  return ++(*this);
 }
 
 Dihedral DihedralIterator::operator++()
 {
-  if (m_mol == nullptr)
+  // impossible to have a dihedral, so quit
+  if (m_mol == nullptr || m_mol->atomCount() < 4 || m_mol->bondCount() < 3)
     return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 
-  Index a, b, c, d;
-  std::tie(a, b, c, d) = m_current;
-
   Graph graph = m_mol->graph();
+  Index count = m_mol->bondCount();
 
-  // we start at a good state (i.e., we have a valid dihedral)
-  bool valid = (b != c && b != MaxIndex);
-  Index bondCount = m_mol->bondCount();
-  Index bcBond = 0;
+  // true if we have a valid current state
+  // (i.e. false at the start)
+  bool valid = (m_i != MaxIndex && m_l != MaxIndex);
 
-  do { // b-c bond
+  // m_jk is the current bond (i.e. index into the bonds)
+  // m_i and m_l are instead index into the neighbors of m_jk
+  // (i.e., m_i is the index into the neighbors of the first atom of the bond)
+  // and m_l is the index into the neighbors of the second atom of the bond
+  Index iIndex = MaxIndex;
+  Index lIndex = MaxIndex;
 
-    if (valid) {
-      // we have a valid current dihedral, try to find a new "d"
-      for (const auto maybeD : graph.neighbors(c)) {
-        if (maybeD != a && maybeD != b && maybeD > d) {
-          m_current = std::make_tuple(a, b, c, maybeD);
-          return m_current;
+  // if we don't have a valid state, try to find an initial dihedral
+  if (!valid) {
+    for (Index i = 0; i < count; ++i) {
+      const Bond bond = m_mol->bond(i);
+      const auto& neighbors1 = graph.neighbors(bond.atom1().index());
+      const auto& neighbors2 = graph.neighbors(bond.atom2().index());
+
+      if (neighbors1.size() < 1 || neighbors2.size() < 1)
+        continue; // need to have at least one neighbor
+
+      m_jk = i;
+      // make sure that m_i doesn't point to atom2
+      m_i = 0;
+      if (neighbors1[m_i] == bond.atom2().index()) {
+        // try to increment m_i
+        if (m_i + 1 < neighbors1.size()) {
+          ++m_i;
+        } else {
+          continue; // this central bond doesn't work
         }
-
-      }              // end "d" loop
-      valid = false; // we couldn't find a "d", so find a new "a"
-    }                // end if()
-
-    // try to find a new "a"
-    for (const auto maybeA : graph.neighbors(b)) {
-      if (maybeA != c && maybeA > a) {
-        a = maybeA;
-        d = 0;
-        valid = true; // maybe
-        break;
-      }
-    }
-
-    // find our current bond and go to the next
-    if (!valid) {
-    bool nextBond = false;
-    for (bcBond = 0; bcBond < bondCount; ++bcBond) {
-      auto bc = m_mol->bondPair(bcBond);
-      Index maybeB = bc.first;
-      Index maybeC = bc.second;
-
-      if (nextBond) {
-        b = maybeB;
-        c = maybeC;
-
-        // find an a
-        for (const auto maybeA : graph.neighbors(b)) {
-          if (maybeA != c) {
-            a = maybeA;
-            valid = true; // maybe
-            break;
-          }
-        }
-        if (!valid) {
-          continue; // need to find a new bond with real neighbors
-        }
-
-        // try to find a new d
-        for (const auto maybeD : graph.neighbors(c)) {
-          if (maybeD != b && maybeD != a) {
-            m_current = std::make_tuple(a, b, c, maybeD);
-            return m_current; // done
-          }
-        }
-        // didn't find a good "d", so try a new bond
-        break;
       }
 
-      if (!nextBond && maybeB == b && maybeC == c) {
-        // found current bond
-        nextBond = true;
+      m_l = 0;
+      // make sure that m_l doesn't point to atom1
+      if (neighbors2[m_l] == bond.atom1().index()) {
+        // try to increment m_l
+        if (m_l + 1 < neighbors2.size()) {
+          ++m_l;
+        } else {
+          continue; // this central bond doesn't work
+        }
       }
+
+      iIndex = neighbors1[m_i];
+      lIndex = neighbors2[m_l];
+
+      valid = true;
+      break;
+    }
+  } else {
+    // we have a valid state, try to find the next dihedral
+    const Bond bond = m_mol->bond(m_jk);
+    const auto& neighbors1 = graph.neighbors(bond.atom1().index());
+    const auto& neighbors2 = graph.neighbors(bond.atom2().index());
+
+    // first check if we can increment m_l
+    while (m_l + 1 < neighbors2.size()) {
+      ++m_l;
+
+      // make sure that m_l doesn't point to atom1
+      if (neighbors2[m_l] == bond.atom1().index()) {
+        continue; // increment it again
+      }
+
+      iIndex = neighbors1[m_i];
+      lIndex = neighbors2[m_l];
+      m_current = std::make_tuple(iIndex, bond.atom1().index(),
+                                  bond.atom2().index(), lIndex);
+      return m_current;
     }
 
-    valid = nextBond;
-    }
-  } while (valid && bcBond < bondCount);
+    // we can try to increment m_i
+    while (m_i + 1 < neighbors1.size()) {
+      ++m_i;
+      // make sure that m_i doesn't point to atom2
+      if (neighbors1[m_i] == bond.atom2().index()) {
+        // try to increment m_i again
+        continue;
+      }
 
-  // can't find anything
-  return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
+      // reset m_l and make sure it doesn't point to atom1
+      m_l = 0;
+      if (neighbors2[m_l] == bond.atom1().index()) {
+        // try to increment m_l
+        if (m_l + 1 < neighbors2.size()) {
+          ++m_l;
+        } else {
+          continue; // this combination doesn't work
+        }
+      }
+
+      iIndex = neighbors1[m_i];
+      lIndex = neighbors2[m_l];
+      m_current = std::make_tuple(iIndex, bond.atom1().index(),
+                                  bond.atom2().index(), lIndex);
+      return m_current;
+    }
+
+    // okay, try to increment m_jk and reset m_i and m_l
+    valid = false;
+    for (Index i = m_jk + 1; i < count; ++i) {
+      const Bond bond = m_mol->bond(i);
+
+      const auto& newNeighbors1 = graph.neighbors(bond.atom1().index());
+      const auto& newNeighbors2 = graph.neighbors(bond.atom2().index());
+
+      if (newNeighbors1.size() < 1 || newNeighbors2.size() < 1)
+        continue; // need to have at least one neighbor
+
+      m_jk = i;
+      // make sure that m_i doesn't point to atom2
+      m_i = 0;
+      if (newNeighbors1[m_i] == bond.atom2().index()) {
+        // try to increment m_i
+        if (m_i + 1 < newNeighbors1.size()) {
+          ++m_i;
+        } else {
+          continue; // this central bond doesn't work
+        }
+      }
+
+      m_l = 0;
+      // make sure that m_l doesn't point to atom1
+      if (newNeighbors2[m_l] == bond.atom1().index()) {
+        // try to increment m_l
+        if (m_l + 1 < newNeighbors2.size()) {
+          ++m_l;
+        } else {
+          continue; // this central bond doesn't work
+        }
+      }
+
+      iIndex = newNeighbors1[m_i];
+      lIndex = newNeighbors2[m_l];
+
+      valid = true;
+      break;
+    }
+  }
+
+  // did we find anything?
+  if (valid) {
+    const Bond bond = m_mol->bond(m_jk);
+    m_current = std::make_tuple(iIndex, bond.atom1().index(),
+                                bond.atom2().index(), lIndex);
+    return m_current;
+  } else
+    return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 } // end ++ operator
 
 } // namespace Avogadro::Core
