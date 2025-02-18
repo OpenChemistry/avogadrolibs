@@ -18,51 +18,70 @@ uniform float height;
 uniform float transferMin;
 uniform float transferMax;
 
-uniform int   numSteps;
+uniform int numSteps;
 uniform float alphaScale;
 
 void main()
 {
+  // Sample the current scene color.
   vec4 sceneColor = texture2D(inRGBTex, UV);
 
-  vec3 EntryPoint = texture2D(inFrontPosTex, UV).xyz;
+  // Retrieve the ray’s entry and exit positions.
+  vec3 entryPoint = texture2D(inFrontPosTex, UV).xyz;
   vec3 exitPoint  = texture2D(inBackPosTex,  UV).xyz;
 
-  if (EntryPoint == exitPoint) {
+
+// // Remap from [-1,1] to [0,1]
+// entryPoint = entryPoint * 0.5 + 0.5;
+// exitPoint  = exitPoint  * 0.5 + 0.5;
+
+  // If there’s no valid ray, return the scene color.
+  if (entryPoint == exitPoint) {
     gl_FragColor = sceneColor;
     return;
   }
 
-  vec3 dir = exitPoint - EntryPoint;
-  float len = length(dir);
+  // Compute the ray direction and its total length.
+  vec3 dir = exitPoint - entryPoint;
+  float rayLength = length(dir);
 
-  vec3 deltaDir = normalize(dir) * (len / float(numSteps));
-  float deltaDirLen = length(deltaDir);
+  // Calculate a normalized step so that we march exactly from entry to exit.
+  vec3 step = normalize(dir) * (rayLength / float(numSteps));
 
-  vec4 colorAcum = vec4(0.0);
-  float alphaAcum = 0.0;
-  float lengthAcum = 0.0;
+  // Initialize the ray marching variables.
+  vec4 accumulatedColor = vec4(0.0);
+  float accumulatedAlpha = 0.0;
+  float accumulatedLength = 0.0;
+  vec3 currentPosition = entryPoint;
 
-  vec3 voxelCoord = EntryPoint;
-
-  for(int i = 0; i < numSteps; i++)
+  // Ray marching loop.
+  for (int i = 0; i < numSteps; i++)
   {
-    float intensity = texture3D(uVolumeData, voxelCoord).x;
+    // Early exit if we have reached the end of the ray or opacity is nearly full.
+    if (accumulatedLength >= rayLength || accumulatedAlpha >= 1.0)
+      break;
 
+    // Sample the volume at the current position.
+    // (Assumes the volume data is a scalar intensity in the red channel.)
+    float intensity = texture3D(uVolumeData, currentPosition).x;
+
+    // Look up the transfer function using the intensity value.
+    // The transfer texture maps the intensity (x coordinate) to a color and opacity.
     vec4 colorSample = texture2D(transferTex, vec2(intensity, 0.5));
 
+    // Apply the alpha correction (similar to the tutorial’s alphaCorrection).
     colorSample.a *= alphaScale;
 
-    colorAcum.rgb += (1.0 - colorAcum.a) * colorSample.rgb * colorSample.a;
-    colorAcum.a   += (1.0 - colorAcum.a) * colorSample.a;
+    // Composite the current sample using front-to-back accumulation.
+    accumulatedColor.rgb += (1.0 - accumulatedAlpha) * colorSample.rgb * colorSample.a;
+    accumulatedAlpha += (1.0 - accumulatedAlpha) * colorSample.a;
+    accumulatedColor.a = accumulatedAlpha;
 
-    voxelCoord += deltaDir;
-    lengthAcum += deltaDirLen;
-
-    if (lengthAcum >= len || colorAcum.a >= 0.78) {
-      break;
-    }
+    // Advance the ray.
+    currentPosition += step;
+    accumulatedLength += length(step);
   }
-  // colorAcum.rgb = colorAcum.rgb / lengthAcum;
-  gl_FragColor = mix(sceneColor, colorAcum, colorAcum.a);
+
+  // Composite the computed volume color with the original scene color.
+  gl_FragColor = vec4(accumulatedColor.rgb, accumulatedColor.a);
 }

@@ -19,7 +19,8 @@
 
 #include <avogadro/core/cube.h>
 #include "camera.h"
-
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -72,13 +73,12 @@ void attachVolumePosStage(ShaderProgram& prog,
   GLuint locFront = glGetUniformLocation(progId, frontPosName);
   glActiveTexture(GL_TEXTURE7);
   glBindTexture(GL_TEXTURE_2D, frontPosTex);
-  glUniform1i(locFront, 4);
-
+  glUniform1i(locFront, 7);
   // back
   GLuint locBack  = glGetUniformLocation(progId, backPosName);
   glActiveTexture(GL_TEXTURE8);
   glBindTexture(GL_TEXTURE_2D, backPosTex);
-  glUniform1i(locBack, 5);
+  glUniform1i(locBack, 8);
 }
 
   /** Attach front/back depth passes for the volume bounding box. */
@@ -251,13 +251,48 @@ SolidPipeline::~SolidPipeline()
 
 void SolidPipeline::initialize()
 {
-  std::cout<<"SolidPipeline::initialize()"<<std::endl;
+  std::cout << "SolidPipeline::initialize()" << std::endl;
+
   // 1) Create FBOs
+  const std::string filename = "/home/perminder/Downloads/hydrogen_atom_128x128x128_uint8.raw";
+  std::ifstream rawFile(filename, std::ios::binary | std::ios::ate);
+  if (!rawFile) {
+    std::cerr << "Cannot open raw file: " << filename << std::endl;
+    return;
+  }
+
+  // Check file size
+  std::streamsize size = rawFile.tellg();
+  rawFile.seekg(0, std::ios::beg);
+
+  const int nx = 128, ny = 128, nz = 128;
+  const size_t expectedSize = nx * ny * nz * sizeof(uint8_t);
+  if (size != expectedSize) {
+    std::cerr << "Invalid file size. Expected " << expectedSize
+              << " bytes, got " << size << std::endl;
+    return;
+  }
+
+  // Read the entire file into a uint8 buffer
+  std::vector<uint8_t> rawData(nx * ny * nz);
+  if (!rawFile.read(reinterpret_cast<char*>(rawData.data()), size)) {
+    std::cerr << "Failed to read raw data." << std::endl;
+    return;
+  }
+
+  // Normalize data to [0.0, 1.0] floats
+  std::cout<<rawData.size()<<std::endl;
+  std::vector<float> volumeData(rawData.size());
+  for (size_t i = 0; i < rawData.size(); ++i) {
+    volumeData[i] = static_cast<float>(rawData[i]) / 255.0f;
+  }
+
+  // Create FBOs and textures (existing code)
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeFramebuffer(&d->backFBO,   &d->backColorTexture, &d->backDepthTexture);
-  initializeFramebuffer(&d->frontFBO,  &d->frontColorTexture,&d->frontDepthTexture);
+  initializeFramebuffer(&d->frontFBO,  &d->frontColorTexture, &d->frontDepthTexture);
 
-  // 2) Make a 3D volume texture
+  // 2) Create 3D volume texture
   glGenTextures(1, &d->volumeTexture);
   glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -266,32 +301,18 @@ void SolidPipeline::initialize()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  int size = 128;
-  std::vector<float> volumeData(size * size * size, 0.0f);
-  for (int z = 0; z < size; ++z) {
-    for (int y = 0; y < size; ++y) {
-      for (int x = 0; x < size; ++x) {
-        float dx = (x - size / 2.0f) / (size / 2.0f);
-        float dy = (y - size / 2.0f) / (size / 2.0f);
-        float dz = (z - size / 2.0f) / (size / 2.0f);
-        float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
-        volumeData[z*size*size + y*size + x] = std::exp(-3.0f * dist);
-      }
-    }
-  }
+  // Upload the raw data as 8-bit unsigned integers
+  glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, nx, ny, nz, 0,
+               GL_RED, GL_UNSIGNED_BYTE, rawData.data());
 
-  glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
-               size, size, size, 0,
-               GL_RED, GL_FLOAT,
-               volumeData.data());
   std::vector<unsigned char> tfData(256 * 4);
   for (int i = 0; i < 256; ++i) {
     // i ko [0..255] se normalize karke color aur alpha define
     float t = float(i) / 255.0f;
     // let’s do a pinkish gradient: RGBA
-    tfData[i*4 + 0] = static_cast<unsigned char>(0.0 * (t));    // R
+    tfData[i*4 + 0] = static_cast<unsigned char>(255.0 * (t));    // R
     tfData[i*4 + 1] = static_cast<unsigned char>(255.0f * t);    // G
-    tfData[i*4 + 2] = static_cast<unsigned char>(0.0f * (1-t));// B
+    tfData[i*4 + 2] = static_cast<unsigned char>(255.0f * (t));// B
     tfData[i*4 + 3] = static_cast<unsigned char>(255.0f * t);    // A
   }
 
@@ -383,7 +404,8 @@ void SolidPipeline::renderVolumeFaces(const Camera& cam)
 
   // Eigen::Matrix4f projView = cam.projection().matrix() * cam.modelView().matrix();
   d->boxShaders.setUniformValue("uMVP", projView);
-
+  d->boxShaders.setUniformValue("uModel", modelyy);
+  d->boxShaders.setUniformValue("uViewProj", projView);
   // BACK FACES
   glBindFramebuffer(GL_FRAMEBUFFER, d->backFBO);
   {
@@ -399,7 +421,7 @@ void SolidPipeline::renderVolumeFaces(const Camera& cam)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(d->volumeBoxVao);
-    // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     glDisable(GL_CULL_FACE);
@@ -499,13 +521,13 @@ void SolidPipeline::end()
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("transferMin",  0.0f);
   d->firstStageShaders.setUniformValue("transferMax",  1.0f);
-  d->firstStageShaders.setUniformValue("numSteps",     128);
-  d->firstStageShaders.setUniformValue("alphaScale",   0.1f);
+  d->firstStageShaders.setUniformValue("numSteps",     256);
+  d->firstStageShaders.setUniformValue("alphaScale",   0.5f);
 
   // Bind volume
   GLint progID = 0;
   glGetIntegerv(GL_CURRENT_PROGRAM, &progID);
-  GLint volLoc = glGetUniformLocation(progID, "VolumeTex");
+  GLint volLoc = glGetUniformLocation(progID, "uVolumeData");
   if (volLoc >= 0) {
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_3D, d->volumeTexture);

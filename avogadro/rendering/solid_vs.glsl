@@ -23,3 +23,5 @@ void main()
   gl_Position =  vec4(inXYZ.xyz, 0.5);
   UV = inXYZ.xy * vec2(0.5, 0.5) + vec2(0.5, 0.5);
 }
+
+

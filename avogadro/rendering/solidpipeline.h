@@ -113,6 +113,7 @@ private:
   float backgroundX;
   float backgroundY;
   float backgroundZ;
+  Eigen::Matrix4f modelyy;
 
   class Private;
   Private* d;
