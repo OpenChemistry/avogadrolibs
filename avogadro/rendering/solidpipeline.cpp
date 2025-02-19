@@ -170,7 +170,7 @@ static const GLfloat s_fullscreenQuad[] = {
 
 // A simple cube bounding box
 static const GLfloat boxVertices[] = {
-  //    x     y     z
+  //    x      y      z
   // Front face
   -1.0f, -1.0f,  1.0f,
    1.0f, -1.0f,  1.0f,
@@ -251,48 +251,65 @@ SolidPipeline::~SolidPipeline()
 
 void SolidPipeline::initialize()
 {
-  std::cout << "SolidPipeline::initialize()" << std::endl;
-
+  std::cout<<"SolidPipeline::initialize()"<<std::endl;
   // 1) Create FBOs
-  const std::string filename = "/home/perminder/Downloads/hydrogen_atom_128x128x128_uint8.raw";
-  std::ifstream rawFile(filename, std::ios::binary | std::ios::ate);
-  if (!rawFile) {
-    std::cerr << "Cannot open raw file: " << filename << std::endl;
-    return;
+  std::ifstream cubeFile("/home/perminder/Downloads/ammonia.cube"); //please use the cube data located at your system.
+    if (!cubeFile) {
+    std::cerr << "Cannot open cube file: " << "water.cube" << std::endl;
+    // return false;
+  }
+  std::string line;
+
+  std::getline(cubeFile, line);
+  std::getline(cubeFile, line);
+
+  int numAtoms, nx, ny, nz;
+  float origin[3], axis[3][3];
+  
+  // Read origin and voxel counts
+  cubeFile >> numAtoms >> origin[0] >> origin[1] >> origin[2];
+  cubeFile >> nx >> axis[0][0] >> axis[0][1] >> axis[0][2];
+  cubeFile >> ny >> axis[1][0] >> axis[1][1] >> axis[1][2];
+  cubeFile >> nz >> axis[2][0] >> axis[2][1] >> axis[2][2];
+    
+    std::getline(cubeFile, line);
+    
+    for (int i = 0; i < numAtoms; i++) {
+    std::getline(cubeFile, line);
   }
 
-  // Check file size
-  std::streamsize size = rawFile.tellg();
-  rawFile.seekg(0, std::ios::beg);
 
-  const int nx = 128, ny = 128, nz = 128;
-  const size_t expectedSize = nx * ny * nz * sizeof(uint8_t);
-  if (size != expectedSize) {
-    std::cerr << "Invalid file size. Expected " << expectedSize
-              << " bytes, got " << size << std::endl;
-    return;
+  std::vector<float> volumeData(nx*ny*nz * 2, 0);
+  size_t idx = 0;
+  float value;
+  while (cubeFile >> value) {
+    if (idx < volumeData.size()) { // safety check
+      volumeData[idx++] = value;
+    } else {
+      break; // or handle error: too many values!
+    }
   }
+    
 
-  // Read the entire file into a uint8 buffer
-  std::vector<uint8_t> rawData(nx * ny * nz);
-  if (!rawFile.read(reinterpret_cast<char*>(rawData.data()), size)) {
-    std::cerr << "Failed to read raw data." << std::endl;
-    return;
-  }
+  // Construct Eigen vectors for the origin and the three cube axes:
+  // Eigen::Vector3f cubeOrigin(origin[0], origin[1], origin[2]);
+  // Eigen::Vector3f a0(axis[0][0], axis[0][1], axis[0][2]);
+  // Eigen::Vector3f a1(axis[1][0], axis[1][1], axis[1][2]);
+  // Eigen::Vector3f a2(axis[2][0], axis[2][1], axis[2][2]);
 
-  // Normalize data to [0.0, 1.0] floats
-  std::cout<<rawData.size()<<std::endl;
-  std::vector<float> volumeData(rawData.size());
-  for (size_t i = 0; i < rawData.size(); ++i) {
-    volumeData[i] = static_cast<float>(rawData[i]) / 255.0f;
-  }
+  std::getline(cubeFile, line);
+  // // Optionally, check that you read exactly nx*ny*nz values
+  // float minVal = *std::min_element(volumeData.begin(), volumeData.end());
+  // float maxVal = *std::max_element(volumeData.begin(), volumeData.end());
+  // for (auto& v : volumeData) {
+  //   v = (v - minVal) / (maxVal - minVal);
+  // }
 
-  // Create FBOs and textures (existing code)
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeFramebuffer(&d->backFBO,   &d->backColorTexture, &d->backDepthTexture);
-  initializeFramebuffer(&d->frontFBO,  &d->frontColorTexture, &d->frontDepthTexture);
+  initializeFramebuffer(&d->frontFBO,  &d->frontColorTexture,&d->frontDepthTexture);
 
-  // 2) Create 3D volume texture
+  // 2) Make a 3D volume texture
   glGenTextures(1, &d->volumeTexture);
   glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -301,18 +318,23 @@ void SolidPipeline::initialize()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  // Upload the raw data as 8-bit unsigned integers
-  glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, nx, ny, nz, 0,
-               GL_RED, GL_UNSIGNED_BYTE, rawData.data());
+
+glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F, 
+             nx, ny, nz, 0,
+             GL_RED, GL_FLOAT, 
+             volumeData.data());
+
 
   std::vector<unsigned char> tfData(256 * 4);
   for (int i = 0; i < 256; ++i) {
     // i ko [0..255] se normalize karke color aur alpha define
     float t = float(i) / 255.0f;
+    // float t = float(i) / 128.0f;
+
     // let’s do a pinkish gradient: RGBA
     tfData[i*4 + 0] = static_cast<unsigned char>(255.0 * (t));    // R
     tfData[i*4 + 1] = static_cast<unsigned char>(255.0f * t);    // G
-    tfData[i*4 + 2] = static_cast<unsigned char>(255.0f * (t));// B
+    tfData[i*4 + 2] = static_cast<unsigned char>(0.0* (t));// B
     tfData[i*4 + 3] = static_cast<unsigned char>(255.0f * t);    // A
   }
 
@@ -521,8 +543,8 @@ void SolidPipeline::end()
   d->firstStageShaders.setUniformValue("inEdStrength", m_edStrength);
   d->firstStageShaders.setUniformValue("transferMin",  0.0f);
   d->firstStageShaders.setUniformValue("transferMax",  1.0f);
-  d->firstStageShaders.setUniformValue("numSteps",     256);
-  d->firstStageShaders.setUniformValue("alphaScale",   0.5f);
+  d->firstStageShaders.setUniformValue("numSteps",     32);
+  d->firstStageShaders.setUniformValue("alphaScale",   1.0f);
 
   // Bind volume
   GLint progID = 0;
