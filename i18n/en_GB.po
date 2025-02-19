@@ -6,15 +6,15 @@
 # ovari <ovari123@zoho.com>, 2022.
 # Geoff Hutchison <geoff.hutchison@gmail.com>, 2023.
 # matterhorn103 <milner94@live.co.uk>, 2023.
-# Andi Chandler <andi@gowling.com>, 2024.
+# Andi Chandler <andi@gowling.com>, 2024, 2025.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-11-24 01:00+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-02-20 14:20+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
 "Language: en_GB\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.10.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1502,7 +1502,7 @@ msgstr "Change Atom Label"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Change Bond Label"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1551,7 +1551,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Change Elements…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1573,11 +1573,11 @@ msgstr "Element:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alchemy"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Change elements of atoms."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -1991,7 +1991,7 @@ msgstr "Render atoms as spheres and bonds as cylinders."
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
@@ -2011,6 +2011,16 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Bond Centric Manipulation Tool \t(%1)\n"
+"\n"
+"Left Mouse: \tClick and drag to rotate the view.\n"
+"Middle Mouse: \tClick and drag to zoom in or out.\n"
+"Right Mouse: \tClick and drag to move the view.\n"
+"Double-Click: \tReset the view.\n"
+"\n"
+"Left Click & Drag on a Bond to set the Manipulation Plane:\n"
+"Left Click & Drag one of the Atoms in the Bond to change the angle\n"
+"Right Click & Drag one of the Atoms in the Bond to change the length"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:781
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:869
@@ -2819,12 +2829,12 @@ msgstr "Custom Elements"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Render the dipole moment of the molecule."
 
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:120
 msgid "Draw"
@@ -2838,6 +2848,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Draw Tool \t(%1)\n"
+"\n"
+"Left Mouse: \tClick and Drag to create Atoms and Bond\n"
+"Right Mouse: \tDelete Atom"
 
 #: qtplugins/editor/editor.cpp:114
 msgid "Draw Atom"
@@ -3017,7 +3031,7 @@ msgstr "No atoms provided for optimisation"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Energy: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
