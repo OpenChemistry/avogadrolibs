@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-02-17 04:37+0000\n"
+"PO-Revision-Date: 2025-02-20 14:20+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10\n"
+"X-Generator: Weblate 5.10.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4343,30 +4343,30 @@ msgstr ""
 #: qtplugins/plugindownloader/downloaderwidget.cpp:416
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "%1 tiedostoa valmiina\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:420
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "Purkaminen onnistui\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:496
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr ""
+msgstr "Virhe purettaessa: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
 #: qtplugins/plugindownloader/plugindownloader.cpp:27:1613
 msgid "Download Plugins…"
-msgstr ""
+msgstr "Lataa liitännäiset…"
 
 #: qtplugins/plugindownloader/plugindownloader.h:37
 msgid "Download Plugins"
-msgstr ""
+msgstr "Lataa liitännäiset"
 
 #: qtplugins/plugindownloader/plugindownloader.h:41
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "Lataa liitännäiset GitHub-tietovarastoista."
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
@@ -4383,7 +4383,7 @@ msgstr "PLY (*.ply);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
-msgstr ""
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
@@ -4399,7 +4399,7 @@ msgstr "POV-Ray (*.pov);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
@@ -4411,13 +4411,13 @@ msgstr "Valenssi"
 
 #: qtplugins/propertytables/propertymodel.cpp:503
 msgid "Formal Charge"
-msgstr ""
+msgstr "Muodollinen varaus"
 
 #: qtplugins/propertytables/propertymodel.cpp:506
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "%1 Osittainen varaus"
 
 #: qtplugins/propertytables/propertymodel.cpp:511
 msgid "X (Å)"
@@ -4434,7 +4434,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "Nimiö"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
@@ -4450,11 +4450,11 @@ msgstr "Atomi"
 #: qtplugins/propertytables/propertymodel.cpp:587
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #: qtplugins/propertytables/propertymodel.cpp:531
 msgid "Start Atom"
-msgstr ""
+msgstr "Aloita atomi"
 
 #: qtplugins/propertytables/propertymodel.cpp:533
 msgid "End Atom"
@@ -4467,19 +4467,19 @@ msgstr "Sidosjärjestys"
 #: qtplugins/propertytables/propertymodel.cpp:539
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr ""
+msgstr "Pituus (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Chain"
-msgstr ""
+msgstr "Ketju"
 
 #: qtplugins/propertytables/propertymodel.cpp:556
 msgid "Secondary Structure"
-msgstr ""
+msgstr "Toissijainen rakenne"
 
 #: qtplugins/propertytables/propertymodel.cpp:558
 msgid "Heterogen"
-msgstr ""
+msgstr "Heterogeeni"
 
 #: qtplugins/propertytables/propertymodel.cpp:572
 #: qtplugins/propertytables/propertymodel.cpp:589
@@ -4488,7 +4488,7 @@ msgstr "Atomi 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:574
 msgid "Vertex"
-msgstr ""
+msgstr "Vertex"
 
 #: qtplugins/propertytables/propertymodel.cpp:576
 #: qtplugins/propertytables/propertymodel.cpp:593
@@ -4511,20 +4511,20 @@ msgstr "Atomi 4"
 #: qtplugins/propertytables/propertymodel.cpp:608
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:611
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Energia (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:807
 msgid "Adjust Fragment"
-msgstr ""
+msgstr "Säädä fragmenttia"
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr ""
+msgstr "π Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:935
 msgctxt "protein bend secondary structure"
@@ -4534,22 +4534,22 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:937
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr ""
+msgstr "α Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:939
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr ""
+msgstr "β-arkki"
 
 #: qtplugins/propertytables/propertymodel.cpp:941
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr ""
+msgstr "3-10 helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:943
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "β-silta"
 
 #: qtplugins/propertytables/propertymodel.cpp:945
 msgctxt "protein turn secondary structure"
@@ -4559,7 +4559,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:947
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Kela"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -4571,7 +4571,7 @@ msgstr "Sidosominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 msgid "Angle Properties…"
-msgstr ""
+msgstr "Kulmaominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
 msgid "Torsion Properties…"
@@ -4579,7 +4579,7 @@ msgstr "Vääntöominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
-msgstr ""
+msgstr "Jäännösominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -4589,6 +4589,8 @@ msgstr "Konformeerin ominaisuudet…"
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
+"Taulukot atomin, sidoksen, kulman ja vääntöominaisuuksien näyttämiseen ja "
+"muokkaamiseen."
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
@@ -4604,7 +4606,7 @@ msgstr "Sidosominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:50
 msgid "Angle Properties"
-msgstr ""
+msgstr "Kulmaominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:53
 msgid "Torsion Properties"
@@ -4616,12 +4618,12 @@ msgstr "Konformeerien ominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:59
 msgid "Residue Properties"
-msgstr ""
+msgstr "Jäännösominaisuudet"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
 msgid "QTAIM"
-msgstr ""
+msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:29
 msgid "Renders primitives using QTAIM properties"
@@ -4629,19 +4631,19 @@ msgstr "Hahmonnoi primitiivit QTAIM-ominaisuuksia käyttäen"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
-msgstr ""
+msgstr "Molekyylikaavio…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Molekyylikaavio yksinäisillä pareilla…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 msgid "Atomic Charge…"
-msgstr ""
+msgstr "Atomivaraus…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
-msgstr ""
+msgstr "Avaa WFN-tiedosto"
 
 #: qtplugins/qtaim/qtaimextension.cpp:94
 msgid "WFN files (*.wfn);;All files (*.*)"
@@ -4649,11 +4651,11 @@ msgstr "WFN-tiedostot (*.wfn);;kaikki tiedostot (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
-msgstr ""
+msgstr "QTAIM-laajennus"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
-msgstr ""
+msgstr "Kvanttisyöttö"
 
 #: qtplugins/quantuminput/quantuminput.h:46
 msgid "Generate input for quantum codes."
@@ -4661,15 +4663,15 @@ msgstr "Luo syöte kvanttikoodeille."
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Center"
-msgstr ""
+msgstr "Keskipiste"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Kohdista näkymä akseleihin"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr ""
+msgstr "Kohdista näkymä akseleihin."
 
 #: qtplugins/resetview/resetview.h:26
 msgid "Reset view"
@@ -4677,67 +4679,67 @@ msgstr "Nollaa näkymä"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Manipuloi katselukameraa."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 msgid "Script Charge Models"
-msgstr ""
+msgstr "Komentosarjojen varausmallit"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
-msgstr ""
+msgstr "Lataa sähköstaattiset mallit ulkoisista skripteistä."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skriptitiedostomuodot"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
-msgstr ""
+msgstr "Lataa tiedostonlukija/kirjoittimet ulkoisista skripteistä."
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "Valitse Kaikki"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr ""
+msgstr "Valitse ei mitään"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "Käänteinen valinta"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
-msgstr ""
+msgstr "Valitse alkuaineen mukaan…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
-msgstr ""
+msgstr "Valitse atomi-indeksin mukaan…"
 
 #: qtplugins/select/select.cpp:63
 msgid "Select by Residue…"
-msgstr ""
+msgstr "Valitse jäännöksen mukaan…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
-msgstr ""
+msgstr "Valitse selkärangan atomit…"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
-msgstr ""
+msgstr "Valitse sivuketjun atomit…"
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 msgid "Select Water"
-msgstr ""
+msgstr "Valitse vesi"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
-msgstr ""
+msgstr "Suurenna valinta"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
-msgstr ""
+msgstr "Pienennä valinta"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4753,23 +4755,23 @@ msgstr "&Valitse"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
-msgstr ""
+msgstr "Valitse alkuaine"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
-msgstr ""
+msgstr "Valitse selkäranka"
 
 #: qtplugins/select/select.cpp:308
 msgid "Select Sidechain"
-msgstr ""
+msgstr "Valitse sivuketju"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Valitse atomit indeksin mukaan"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Valittavat atomit:"
 
 #: qtplugins/select/select.cpp:446
 msgid "Select Atom"
@@ -4777,15 +4779,15 @@ msgstr "Valitse atomi"
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Valitse atomit jäännösten mukaan"
 
 #: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Valittavat jäännökset:"
 
 #: qtplugins/select/select.cpp:491
 msgid "Select Residue"
-msgstr ""
+msgstr "Valitse jäännös"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -4796,7 +4798,7 @@ msgstr "Valitse"
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -4824,12 +4826,12 @@ msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
-msgstr ""
+msgstr "Maalaa atomit"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "Valintatyökalu"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
@@ -4837,13 +4839,13 @@ msgstr "Uusi kerros"
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
-msgstr ""
+msgstr "Havaitse avaruusryhmä…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1911
 msgid "Symmetrize"
-msgstr ""
+msgstr "Aseta symmetriseksi"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
@@ -4856,11 +4858,11 @@ msgstr "Pelkistä epäsymmetriseksi yksiköksi"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Määritä toleranssi…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
-msgstr ""
+msgstr "Avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
@@ -4868,7 +4870,7 @@ msgstr "Täytä symmetriset atomit kideavaruusryhmän perusteella."
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Havaitse avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -4876,16 +4878,20 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"Avaruusryhmä on jo määritetty täksi: %1.\n"
+"Haluatko korvata sen?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
-msgstr ""
+msgstr "Epäonnistuminen"
 
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Avaruusryhmän havaitseminen epäonnistui.\n"
+"Haluatko yrittää uudelleen eri toleranssilla?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
@@ -4899,6 +4905,8 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Toleranssi on tällä hetkellä määritetty täksi: %1.\n"
+"Edetäänkö tällä toleranssilla?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
@@ -4932,11 +4940,11 @@ msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Valitse toleranssi Å:nä:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
-msgstr ""
+msgstr "Kansainvälinen"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
@@ -4944,15 +4952,15 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
-msgstr ""
+msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
-msgstr ""
+msgstr "Valitse avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
-msgstr ""
+msgstr "Avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
