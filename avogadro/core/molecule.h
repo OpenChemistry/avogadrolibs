@@ -91,6 +91,10 @@ public:
    */
   bool hasData(const std::string& name) const;
 
+
+  // inline const BasisSet* basisSet() const { return m_basisSet; }
+  // inline BasisSet* basisSet() { return m_basisSet; }
+
   /** Set the molecule's variant data to the entries in map. */
   void setDataMap(const VariantMap& map);
 

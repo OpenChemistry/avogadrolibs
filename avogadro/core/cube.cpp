@@ -7,6 +7,7 @@
 
 #include "molecule.h"
 #include "mutex.h"
+#include<iostream>
 
 namespace Avogadro::Core {
 

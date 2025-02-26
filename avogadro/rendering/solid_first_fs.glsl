@@ -21,6 +21,7 @@ uniform float transferMax;
 uniform int numSteps;
 uniform float alphaScale;
 
+
 void main()
 {
   // Sample the current scene color.
@@ -31,9 +32,9 @@ void main()
   vec3 exitPoint  = texture2D(inBackPosTex,  UV).xyz;
 
 
-// // Remap from [-1,1] to [0,1]
-// entryPoint = entryPoint * 0.5 + 0.5;
-// exitPoint  = exitPoint  * 0.5 + 0.5;
+  // Remap from [-1,1] to [0,1]
+  // entryPoint = entryPoint * 0.5 + 0.5;
+  // exitPoint  = exitPoint  * 0.5 + 0.5;
 
   // If there’s no valid ray, return the scene color.
   if (entryPoint == exitPoint) {
@@ -69,7 +70,7 @@ void main()
     // The transfer texture maps the intensity (x coordinate) to a color and opacity.
     vec4 colorSample = texture2D(transferTex, vec2(intensity, 0.5));
 
-    // Apply the alpha correction (similar to the tutorial’s alphaCorrection).
+    // Apply the alpha correction.
     colorSample.a *= alphaScale;
 
     // Composite the current sample using front-to-back accumulation.
@@ -83,5 +84,5 @@ void main()
   }
 
   // Composite the computed volume color with the original scene color.
-  gl_FragColor = vec4(accumulatedColor.rgb, accumulatedColor.a);
+  gl_FragColor = mix(sceneColor, accumulatedColor, accumulatedColor.a);
 }

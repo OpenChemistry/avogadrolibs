@@ -181,6 +181,10 @@ public:
    */
   float value(const Vector3& pos) const;
 
+
+  int nx() const { return m_points.x(); }
+  int ny() const { return m_points.y(); }
+  int nz() const { return m_points.z(); }
   /**
    * Sets the value at the specified point in the cube.
    * @param i x component of the position.

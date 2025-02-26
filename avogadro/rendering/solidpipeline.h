@@ -7,7 +7,9 @@
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
 #include <avogadro/core/cube.h>
+#include <avogadro/core/molecule.h>
 #include "camera.h"
+
 namespace Avogadro {
 namespace Rendering {
 
@@ -29,16 +31,17 @@ public:
   void initialize();
 
   void renderVolumeFaces(const Camera& cam);
+
   /**
    * @brief Begin solid geometry rendering.
    */
   void begin();
 
-
   void beginFront();
   void endFront();
   void beginBack();
   void endBack();
+
   /**
    * @brief End solid geometry rendering and apply screen-space shaders.
    */
@@ -56,34 +59,29 @@ public:
    */
   void setPixelRatio(float ratio);
 
-
   /**
    * @brief Get or set whether Ambient Occlusion is enabled.
    */
   bool getAoEnabled() { return m_aoEnabled; }
 
   void setData(float data);
-
   float getData() const;
 
+  // Corrected setCube: assign cubing to the member variable m_cube.
+  // void setCube(Avogadro::Core::Cube* cubing) { m_cube = cubing; }
+  // Avogadro::Core::Cube* cube() const { return m_cube; }
 
   void setAoEnabled(bool enabled) { m_aoEnabled = enabled; }
 
-
-  // float backgroundColor() const { return m_backgroundColor; }
-  // void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
   /**
    * @brief Get or set shadow strength for Ambient Occlusion.
    */
   float getAoStrength() { return m_aoStrength; }
   void setAoStrength(float strength) { m_aoStrength = strength; }
   
-  // float getBackground() { return background; }
-
   void setBackgroundX(float strength) { backgroundX = strength; }
   void setBackgroundY(float strength) { backgroundY = strength; }
   void setBackgroundZ(float strength) { backgroundZ = strength; }
-
 
   /**
    * @brief Get or set whether Edge Detection is enabled.
@@ -92,13 +90,13 @@ public:
   void setEdEnabled(bool enabled)
   {
     m_edEnabled = enabled;
-    m_edStrength = (m_edEnabled) ? 1.0 : 0.0;
+    m_edStrength = (m_edEnabled) ? 1.0f : 0.0f;
   }
 
   /**
-   * @brief Get or set the strength of the edge effect
+   * @brief Get or set the strength of the edge effect.
    */
-  bool getEdStrength() { return m_edStrength; }
+  float getEdStrength() { return m_edStrength; }
   void setEdStrength(float strength) { m_edStrength = strength; }
 
 private:
@@ -113,7 +111,9 @@ private:
   float backgroundX;
   float backgroundY;
   float backgroundZ;
+  Avogadro::Core::Molecule* m_molecule;
   Eigen::Matrix4f modelyy;
+  // Avogadro::Core::Cube* m_cube;  // Renamed member variable
 
   class Private;
   Private* d;

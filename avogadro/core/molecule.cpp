@@ -860,6 +860,7 @@ Cube* Molecule::cube(Index index)
 
 const Cube* Molecule::cube(Index index) const
 {
+  std::cout<<m_cubes.size()<<std::endl;
   if (index < static_cast<Index>(m_cubes.size()))
     return m_cubes[index];
   else

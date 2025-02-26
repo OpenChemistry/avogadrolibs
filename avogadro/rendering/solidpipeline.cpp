@@ -305,6 +305,8 @@ void SolidPipeline::initialize()
   //   v = (v - minVal) / (maxVal - minVal);
   // }
 
+
+
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeFramebuffer(&d->backFBO,   &d->backColorTexture, &d->backDepthTexture);
   initializeFramebuffer(&d->frontFBO,  &d->frontColorTexture,&d->frontDepthTexture);
@@ -511,6 +513,13 @@ void SolidPipeline::end()
 
   // std::cout<<background<<std::endl;
   // Bind default FBO again
+
+  Avogadro::Core::Cube* m_cube;
+
+  if(m_cube){
+    std::cout<<"yes I am present"<<std::endl;
+    std::cout<<"data-size" << m_cube->data()->size()<<std::endl;  
+  }
   if (glIsFramebuffer(d->defaultFBO)) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
     GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
