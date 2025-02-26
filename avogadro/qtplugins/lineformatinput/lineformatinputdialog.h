@@ -31,6 +31,8 @@ public:
 
   void setCurrentFormat(const QString& format);
 
+  void setDescriptor(const QString& descriptor);
+
   QString descriptor() const;
 
 protected slots:
