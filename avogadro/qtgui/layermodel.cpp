@@ -157,6 +157,8 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Van der Waals");
   else if (name == "Van der Waals (AO)")
     return tr("Van der Waals (AO)", "ambient occlusion");
+  else if (name == "Volumes")
+    return tr("Volumes", "volumetric clouds");
   else if (name == "Wireframe")
     return tr("Wireframe");
 
