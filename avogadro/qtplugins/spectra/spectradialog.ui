@@ -230,7 +230,7 @@
           <string>Imports a tsv of experimental spectra to overlay on the plot.</string>
          </property>
          <property name="text">
-          <string>&amp;Import...</string>
+          <string>&amp;Import…</string>
          </property>
         </widget>
        </item>
@@ -246,7 +246,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -298,7 +298,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -314,7 +314,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>&amp;Export...</string>
+          <string>&amp;Export…</string>
          </property>
         </widget>
        </item>
@@ -327,7 +327,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -366,7 +366,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Color...</string>
+          <string>Set Color…</string>
          </property>
         </widget>
        </item>
@@ -585,7 +585,7 @@ Scroll wheel: Zoom to cursor</string>
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&amp;Load data...</string>
+      <string>&amp;Load data…</string>
      </property>
     </widget>
    </item>
