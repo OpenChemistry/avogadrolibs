@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-03-13 16:44+0000\n"
+"PO-Revision-Date: 2025-03-13 17:07+0000\n"
 "Last-Translator: nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>"
 "\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -469,8 +469,6 @@ msgid "Stop waiting"
 msgstr "Parar de esperar"
 
 #: molequeue/molequeuedialog.cpp:105
-#, fuzzy
-#| msgid "Fetching completed job information..."
 msgid "Fetching completed job information…"
 msgstr "Buscando informações do trabalho concluído…"
 
@@ -1117,7 +1115,6 @@ msgid "Error writing molecule representation to string: %1"
 msgstr "Erro ao gravar a representação da molécula na string: %1"
 
 #: qtgui/jsonwidget.cpp:86
-#, fuzzy
 msgid "'userOptions' missing."
 msgstr "'userOptions' faltando."
 
