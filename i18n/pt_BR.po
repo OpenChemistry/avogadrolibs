@@ -9,13 +9,15 @@
 # Iago Emanuel <iagoemanuel@live.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Khemis <khemis@bol.com.br>, 2024.
+# nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-29 14:27+0000\n"
-"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
+"PO-Revision-Date: 2025-03-13 16:44+0000\n"
+"Last-Translator: nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>"
+"\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -23,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -457,11 +459,10 @@ msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr "Avogadro esgotou o tempo aguardando uma resposta de MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
-#, fuzzy, qt-format
-#| msgid "Waiting for job %1 '%2' to finish..."
+#, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr "Esperando o trabalho %1 '%2' para terminar…"
+msgstr "Esperando o trabalho %1 “%2” terminar…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
