@@ -10,14 +10,15 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Khemis <khemis@bol.com.br>, 2024.
 # nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-03-13 17:07+0000\n"
-"Last-Translator: nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>"
-"\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1080,10 +1081,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Vários %1 encontrados que podem %2 este formato. Qual deve ser usado?"
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
-msgstr "Todos os Arquivos"
+msgstr "Todos os arquivos"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
