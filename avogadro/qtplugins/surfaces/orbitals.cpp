@@ -59,7 +59,7 @@ QList<QAction*> Orbitals::actions() const
 QStringList Orbitals::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 
