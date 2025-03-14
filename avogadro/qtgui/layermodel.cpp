@@ -20,8 +20,7 @@ namespace {
 const int QTTY_COLUMNS = 6;
 }
 
-LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0)
-{
+LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0) {
   m_plusIcon = QIcon(":/icons/fallback/32x32/plus.png");
   m_dotsIcon = QIcon(":/icons/fallback/32x32/dots.png");
   m_previewIcon = QIcon(":/icons/fallback/32x32/preview.png");
@@ -54,7 +53,8 @@ Qt::ItemFlags LayerModel::flags(const QModelIndex&) const
   return Qt::ItemIsEnabled;
 }
 
-bool LayerModel::setData(const QModelIndex&, const QVariant&, int)
+bool LayerModel::setData(const QModelIndex&, const QVariant&,
+                         int)
 {
   return false;
 }
@@ -82,8 +82,7 @@ QVariant LayerModel::data(const QModelIndex& idx, int role) const
     if (idx.column() == ColumnType::Name) {
       switch (role) {
         case Qt::DisplayRole: {
-          return QString(tr("Layer %1"))
-            .arg(layer + 1); // count starts at 0 internally
+          return QString(tr("Layer %1")).arg(layer + 1); // count starts at 0 internally
         }
         case Qt::ForegroundRole:
           if (layer == getMoleculeLayer().activeLayer())
@@ -140,8 +139,6 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Close Contacts", "rendering of non-covalent close contacts");
   else if (name == "Crystal Lattice")
     return tr("Crystal Lattice");
-  else if (name == "Dipole Moment")
-    return tr("Dipole Moment");
   else if (name == "Force")
     return tr("Force");
   else if (name == "Labels")
@@ -158,6 +155,10 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Symmetry Elements");
   else if (name == "Van der Waals")
     return tr("Van der Waals");
+  else if (name == "Van der Waals (AO)")
+    return tr("Van der Waals (AO)", "ambient occlusion");
+  else if (name == "Volumes")
+    return tr("Volumes", "volumetric clouds");
   else if (name == "Wireframe")
     return tr("Wireframe");
 
@@ -248,4 +249,4 @@ size_t LayerModel::layerCount() const
   return LayerManager::layerCount();
 }
 
-} // namespace Avogadro::QtGui
+} // namespace Avogadro

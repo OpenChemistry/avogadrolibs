@@ -100,7 +100,6 @@ SolidPipeline::~SolidPipeline()
 void SolidPipeline::initialize()
 {
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
-
   glGenBuffers(1, &d->screenVBO);
   glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
@@ -120,6 +119,8 @@ void SolidPipeline::initialize()
   d->firstStageShaders.attachShader(d->firstFragmentShader);
   if (!d->firstStageShaders.link())
     std::cout << d->firstStageShaders.error() << std::endl;
+
+  // here is the end of the code that needs to be compared
 }
 
 void SolidPipeline::begin()
