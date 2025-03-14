@@ -608,8 +608,8 @@ void VolumeGeometry::render(const Camera& camera)
 
   d->program->setUniformValue("width",  float(m_width));
   d->program->setUniformValue("height", float(m_height));
-  d->program->setUniformValue("numSteps", 128);
-  d->program->setUniformValue("alphaScale", 0.6f);
+  d->program->setUniformValue("numSteps", 256);
+  d->program->setUniformValue("alphaScale", 0.8f);
 
   glBindVertexArray(d->vao);
   glDrawArrays(GL_TRIANGLES, 0, 6);
