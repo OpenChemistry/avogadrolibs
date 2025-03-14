@@ -34,13 +34,13 @@ namespace Avogadro::Io {
 namespace {
 const Real DEG_TO_RAD = static_cast<Avogadro::Real>(M_PI / 180.0);
 const Real RAD_TO_DEG = static_cast<Avogadro::Real>(180.0 / M_PI);
-}
+} // namespace
 
 using std::string;
 
+using pugi::xml_attribute;
 using pugi::xml_document;
 using pugi::xml_node;
-using pugi::xml_attribute;
 
 using namespace Core;
 
@@ -298,6 +298,11 @@ public:
         }
       }
 
+      if (!bond.isValid()) {
+        // Couldn't create the bond.
+        return false;
+      }
+
       attribute = node.attribute("order");
       if (attribute && strlen(attribute.value()) == 1) {
         char o = attribute.value()[0];
@@ -429,7 +434,7 @@ public:
   string filename;
   string error;
 };
-}
+} // namespace
 
 bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
 {
@@ -447,7 +452,7 @@ bool CmlFormat::read(std::istream& file, Core::Molecule& mol)
   return parser.success;
 }
 
-std::string formatNumber(std::stringstream &s, double n)
+std::string formatNumber(std::stringstream& s, double n)
 {
   s.str(""); // clear it
   s.precision(6);
@@ -455,7 +460,7 @@ std::string formatNumber(std::stringstream &s, double n)
   return s.str();
 }
 
-std::string formatNumber(std::stringstream &s, int n)
+std::string formatNumber(std::stringstream& s, int n)
 {
   s.str(""); // clear it
   s << n;
@@ -470,10 +475,11 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
   //   i.e. modify current stream locale with "C" numeric
   std::locale currentLocale("");
   std::locale numLocale(out.getloc(), "C", std::locale::numeric);
-  out.imbue(numLocale);  // imbue modified locale
+  out.imbue(numLocale); // imbue modified locale
 
   // We also need to set the locale temporarily for XML string formatting
-  std::stringstream numberStream; // use this to format floats as C-format strings
+  std::stringstream
+    numberStream; // use this to format floats as C-format strings
   numberStream.imbue(numLocale);
 
   // Add a custom declaration node.
@@ -535,15 +541,19 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     crystalANode.text() = formatNumber(numberStream, cell->a()).c_str();
     crystalBNode.text() = formatNumber(numberStream, cell->b()).c_str();
     crystalCNode.text() = formatNumber(numberStream, cell->c()).c_str();
-    crystalAlphaNode.text() = formatNumber(numberStream, cell->alpha() * RAD_TO_DEG).c_str();
-    crystalBetaNode.text() = formatNumber(numberStream, cell->beta() * RAD_TO_DEG).c_str();
-    crystalGammaNode.text() = formatNumber(numberStream, cell->gamma() * RAD_TO_DEG).c_str();
+    crystalAlphaNode.text() =
+      formatNumber(numberStream, cell->alpha() * RAD_TO_DEG).c_str();
+    crystalBetaNode.text() =
+      formatNumber(numberStream, cell->beta() * RAD_TO_DEG).c_str();
+    crystalGammaNode.text() =
+      formatNumber(numberStream, cell->gamma() * RAD_TO_DEG).c_str();
 
     // add the space group
     unsigned short hall = mol.hallNumber();
     if (hall != 0) {
       xml_node spaceGroupNode = crystalNode.append_child("symmetry");
-      spaceGroupNode.append_attribute("spaceGroup") = Core::SpaceGroups::international(hall);
+      spaceGroupNode.append_attribute("spaceGroup") =
+        Core::SpaceGroups::international(hall);
     }
   }
 
@@ -558,17 +568,23 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
       Elements::symbol(a.atomicNumber());
     if (cell) {
       Vector3 fracPos = cell->toFractional(a.position3d());
-      atomNode.append_attribute("xFract") = formatNumber(numberStream,fracPos.x()).c_str();
-      atomNode.append_attribute("yFract") = formatNumber(numberStream,fracPos.y()).c_str();
-      atomNode.append_attribute("zFract") = formatNumber(numberStream,fracPos.z()).c_str();
+      atomNode.append_attribute("xFract") =
+        formatNumber(numberStream, fracPos.x()).c_str();
+      atomNode.append_attribute("yFract") =
+        formatNumber(numberStream, fracPos.y()).c_str();
+      atomNode.append_attribute("zFract") =
+        formatNumber(numberStream, fracPos.z()).c_str();
     } else {
-      atomNode.append_attribute("x3") = formatNumber(numberStream,a.position3d().x()).c_str();
-      atomNode.append_attribute("y3") = formatNumber(numberStream,a.position3d().y()).c_str();
-      atomNode.append_attribute("z3") = formatNumber(numberStream,a.position3d().z()).c_str();
+      atomNode.append_attribute("x3") =
+        formatNumber(numberStream, a.position3d().x()).c_str();
+      atomNode.append_attribute("y3") =
+        formatNumber(numberStream, a.position3d().y()).c_str();
+      atomNode.append_attribute("z3") =
+        formatNumber(numberStream, a.position3d().z()).c_str();
     }
-    if(a.formalCharge() != 0) {
+    if (a.formalCharge() != 0) {
       atomNode.append_attribute("formalCharge") =
-          formatNumber(numberStream, a.formalCharge()).c_str();
+        formatNumber(numberStream, a.formalCharge()).c_str();
     }
   }
 
@@ -650,8 +666,8 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
         if (openFile) {
           if (!hdf5.openFile(fileName() + ".h5",
                              Hdf5DataFormat::ReadWriteAppend)) {
-            appendError("CmlFormat::writeFile: Cannot open file: " +
-                        fileName() + ".h5");
+            appendError(
+              "CmlFormat::writeFile: Cannot open file: " + fileName() + ".h5");
           }
           openFile = false;
         }

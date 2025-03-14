@@ -5,13 +5,13 @@
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Ricky Tigg <ricky.tigg@gmail.com>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-16 14:00+0000\n"
+"PO-Revision-Date: 2025-02-20 14:20+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fi/>\n"
@@ -20,13 +20,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.10.1-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
 msgid "Batch Job #%L1 (%2)"
-msgstr "Batch Job #%L1 (%2)"
+msgstr "Erätyö #%L1 (%2)"
 
 #: molequeue/client/client.cpp:240
 msgid "No message specified."
@@ -39,6 +39,9 @@ msgid ""
 "Received:\n"
 "%1"
 msgstr ""
+"'script --print-options':n tulosteen on oltava ylätason JSON-objekti. "
+"Vastaanotettu:\n"
+"%1"
 
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
@@ -93,7 +96,7 @@ msgstr "\"files\" -jäsen puuttuu."
 
 #: molequeue/inputgenerator.cpp:259 qtgui/interfacescript.cpp:432
 msgid "'mainFile' member does not refer to an entry in 'files'."
-msgstr ""
+msgstr "\"mainFile\" -jäsen ei viittaa tietueeseen \"tiedostot\":ssa."
 
 #: molequeue/inputgenerator.cpp:264 qtgui/interfacescript.cpp:437
 msgid "'mainFile' member must be a string."
@@ -120,6 +123,10 @@ msgid ""
 "\n"
 "%3"
 msgstr ""
+"Jäsennysvirhe poikkeamassa %L1: '%2'\n"
+"Raaka JSON:\n"
+"\n"
+"%3"
 
 #: molequeue/inputgenerator.cpp:346
 #, qt-format
@@ -243,7 +250,7 @@ msgstr "Ei tallennettavia syöttötiedostoja!"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:985
 #: qtplugins/gamessinput/gamessinputdialog.cpp:679
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Ei voi muodostaa yhteyttä MoleQueueeseen"
 
 #: molequeue/inputgeneratorwidget.cpp:295
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
@@ -253,6 +260,8 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Ei voi muodostaa yhteyttä MoleQueue-palvelimeen. Varmista, että se on "
+"käynnissä, ja yritä uudelleen."
 
 #: molequeue/inputgeneratorwidget.cpp:326
 #, qt-format
@@ -477,39 +486,39 @@ msgstr "Ei valittua ohjelmaa."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
-msgstr ""
+msgstr "Valitse kohdeohjelma \"Jono ja ohjelma\" -luettelosta."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Asiakas epäonnistui lähettämään työtä MoleQueueelle."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Sisäinen virhe."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Ohjelman valintaa ei voi ratkaista. Tämä on vika."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormatissa ei ole asetettu molekyyliä!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormatissa ei ole asetettu Io::FileFormatia!"
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "BackgroundFileFormatissa ei ole asetettu tiedoston nimeä!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Jaettu vaakasuoraan"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "Jaettu pystysuora"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -737,7 +746,7 @@ msgstr "Ksenon"
 
 #: qtgui/elementtranslator.cpp:181
 msgid "Cesium"
-msgstr ""
+msgstr "Cesium"
 
 #: qtgui/elementtranslator.cpp:184
 msgid "Barium"
@@ -992,165 +1001,166 @@ msgid "Oganesson"
 msgstr "Oganesson"
 
 #: qtgui/filebrowsewidget.cpp:23
-#, fuzzy
 msgid "Browse"
 msgstr "Selaa"
 
 #: qtgui/filebrowsewidget.cpp:96
 msgid "Select file:"
-msgstr ""
+msgstr "Valitse tiedosto:"
 
 #: qtgui/filebrowsewidget.cpp:99
 msgid "Select executable:"
-msgstr ""
+msgstr "Valitse suoritettava:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "Valitulle tiedostolle ei löydy sopivaa tiedostonlukijaa."
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
+"Tiedostotunniste puuttuu, joten muotoa ei voida määrittää. Haluatko lisätä "
+"sen?"
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "Valitulle muodolle ei löydy sopivaa tiedostonkirjoitusohjelmaa."
 
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "käsittelijät"
 
 #: qtgui/fileformatdialog.cpp:164
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "käsittele"
 
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "lukijat"
 
 #: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "lue"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "kirjoittajat"
 
 #: qtgui/fileformatdialog.cpp:174
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "kirjoita"
 
 #: qtgui/fileformatdialog.cpp:179
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
-msgstr ""
+msgstr "Löytyi useita %1, jotka voivat %2 tämän muodon. Kumpaa pitäisi käyttää?"
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
-msgstr ""
+msgstr "Kaikki tuetut muodot"
 
 #: qtgui/interfacescript.cpp:227
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
-msgstr ""
+msgstr "Virhe luettaessa molekyyliesitystä: Tuntematon tiedostomuoto: %1"
 
 #: qtgui/interfacescript.cpp:295
 #, qt-format
 msgid "%1 Message"
-msgstr ""
+msgstr "%1 viesti"
 
 #: qtgui/interfacescript.cpp:538
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
 msgstr ""
+"Virhe kirjoitettaessa molekyyliesitystä merkkijonoon: Tuntematon "
+"tiedostomuoto: %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
 msgid "Error writing molecule representation to string: %1"
-msgstr ""
+msgstr "Virhe kirjoitettaessa molekyyliesitystä merkkijonoon: %1"
 
 #: qtgui/jsonwidget.cpp:86
 msgid "'userOptions' missing."
-msgstr ""
+msgstr "\"userOptions\" puuttuu."
 
 #: qtgui/jsonwidget.cpp:117
 #, qt-format
 msgid "Option '%1' does not refer to an object."
-msgstr ""
+msgstr "Vaihtoehto '%1' ei viittaa objektiin."
 
 #: qtgui/jsonwidget.cpp:124
 #, qt-format
 msgid "'type' is not a string for option '%1'."
-msgstr ""
+msgstr "'type' ei ole merkkijono vaihtoehdolle '%1'."
 
 #: qtgui/jsonwidget.cpp:131
 #, qt-format
 msgid "Could not find option '%1'."
-msgstr ""
+msgstr "Vaihtoehtoa '%1' ei löytynyt."
 
 #: qtgui/jsonwidget.cpp:185
 #, qt-format
 msgid "Tab %1"
-msgstr ""
+msgstr "Välilehti %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
 #: qtgui/jsonwidget.cpp:208:691
 msgid "Title"
-msgstr ""
+msgstr "Otsikko"
 
 #: qtgui/jsonwidget.cpp:212
 msgid "Filename Base"
-msgstr ""
+msgstr "Tiedoston nimen perusta"
 
 #: qtgui/jsonwidget.cpp:217
 msgid "Processor Cores"
-msgstr ""
+msgstr "Suorittimen ytimet"
 
 #: qtgui/jsonwidget.cpp:222
 msgid "Calculation Type"
-msgstr ""
+msgstr "Laskentatyyppi"
 
 #: qtgui/jsonwidget.cpp:226
-#, fuzzy
 msgid "Theory"
 msgstr "Teoria"
 
 #: qtgui/jsonwidget.cpp:226
 msgid "Basis"
-msgstr ""
+msgstr "Perusta"
 
 #: qtgui/jsonwidget.cpp:231 qtgui/jsonwidget.cpp:235
 msgid "Charge"
-msgstr ""
+msgstr "Varaus"
 
 #: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:237
 msgid "Multiplicity"
-msgstr ""
+msgstr "Monikertaisuus"
 
 #: qtgui/jsonwidget.cpp:589
 #, qt-format
 msgid "Error: value must be object for key '%1'."
-msgstr ""
+msgstr "Virhe: arvon on oltava objekti avaimelle '%1'."
 
 #: qtgui/jsonwidget.cpp:622
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
-msgstr ""
+msgstr "Tuntematon vaihtoehdon tyyppi '%1' vaihtoehdolle '%2'."
 
 #: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
 #: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
@@ -1158,13 +1168,14 @@ msgstr ""
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
+"Virhe asetetessa oletusasetusta vaihtoehdolle '%1'. Huono vimpaintyyppi."
 
 #: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
 #: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
 #: qtgui/jsonwidget.cpp:780
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
-msgstr ""
+msgstr "Virhe asetetessa oletusasetusta vaihtoehdolle '%1'. Huono oletusarvo:"
 
 #: qtgui/jsonwidget.cpp:652
 #, qt-format
@@ -1172,22 +1183,23 @@ msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
 "index from value:"
 msgstr ""
+"Virhe asetetessa oletusasetusta vaihtoehdolle '%1'. Arvosta ei löytynyt "
+"kelvollista yhdistelmätietueindeksiä:"
 
 #: qtgui/jsonwidget.cpp:841
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
-msgstr ""
+msgstr "Käsittelemätön vimpain collectOptionsissa vaihtoehdolle '%1'."
 
 #: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:391
-#, fuzzy
 msgid "[no molecule]"
-msgstr "[ei molekyyli]"
+msgstr "[ei molekyyliä]"
 
 #: qtgui/layermodel.cpp:85
 #, qt-format
 msgid "Layer %1"
-msgstr ""
+msgstr "Kerros %1"
 
 #: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
@@ -1196,16 +1208,16 @@ msgstr "Pallo ja tikku"
 #: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr ""
+msgstr "Sarjakuvat"
 
 #: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
-msgstr ""
+msgstr "Läheiset kontaktit"
 
 #: qtgui/layermodel.cpp:142 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
-msgstr ""
+msgstr "Kidehila"
 
 #: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
@@ -1217,48 +1229,49 @@ msgstr "Voima"
 
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
 msgid "Labels"
-msgstr ""
+msgstr "Nimiöt"
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
-msgstr ""
+msgstr "Lakritsi"
 
 #: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
 #: qtplugins/surfaces/orbitals.cpp:525 qtplugins/surfaces/surfaces.cpp:842
 msgid "Meshes"
-msgstr ""
+msgstr "Verkot"
 
 #: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
-msgstr ""
+msgstr "Ei-kovalenttinen"
 
 #: qtgui/layermodel.cpp:156
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr ""
+"Molekyylien atomien kvanttiteoria (Quantum theory of atoms in molecules "
+"(QTAIM))"
 
 #: qtgui/layermodel.cpp:158 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
-msgstr ""
+msgstr "Symmetriaelementit"
 
 #: qtgui/layermodel.cpp:160 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
-#, fuzzy
 msgid "Van der Waals"
 msgstr "Van der Waals"
 
 #: qtgui/layermodel.cpp:162 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
-msgstr ""
+msgstr "Lankakehys"
 
 #: qtgui/moleculemodel.cpp:92
 msgid "Untitled"
-msgstr ""
+msgstr "Ei otsikkoa"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
-msgstr ""
+msgstr "Luo uusi näkymä"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1268,6 +1281,8 @@ msgstr "Jaksollinen järjestelmä"
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
+"Virhe suoritettaessa komentosarjaa '%1 %2': Aikakatkaisu odottaa "
+"käynnistystä (%3)."
 
 #: qtgui/pythonscript.cpp:114 qtgui/pythonscript.cpp:202
 #, qt-format
@@ -1275,11 +1290,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
+"Virhe suoritettaessa komentosarjaa '%1 %2': kirjoitus epäonnistui stdiniin ("
+"len=%3, kirjoitti %4 tavua, QProcess-virhe: %5)."
 
 #: qtgui/pythonscript.cpp:127
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
+"Virhe suoritettaessa komentosarjaa '%1 %2': Aikakatkaisu odottaa "
+"valmistumista (%3)."
 
 #: qtgui/pythonscript.cpp:136
 #, qt-format
@@ -1289,57 +1308,61 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
+"Virhe suoritettaessa komentosarjaa '%1 %2': Epänormaali poistumistila %3 (%4:"
+" %5)\n"
+"\n"
+"Lähtö:\n"
+"%6"
 
 #: qtgui/pythonscript.cpp:145
 #, qt-format
 msgid "Warning '%1'"
-msgstr ""
+msgstr "Varoitus '%1'"
 
 #: qtgui/pythonscript.cpp:267
 msgid "Script failed to start."
-msgstr ""
+msgstr "Komentosarjan käynnistyminen epäonnistui."
 
 #: qtgui/pythonscript.cpp:270
 msgid "Script crashed."
-msgstr ""
+msgstr "Komentosarja kaatui."
 
 #: qtgui/pythonscript.cpp:273
 msgid "Script timed out."
-msgstr ""
+msgstr "Komentosarja aikakatkaistiin."
 
 #: qtgui/pythonscript.cpp:276
 msgid "Read error."
-msgstr ""
+msgstr "Lukuvirhe."
 
 #: qtgui/pythonscript.cpp:279
 msgid "Write error."
-msgstr ""
+msgstr "Kirjoitusvirhe."
 
 #: qtgui/pythonscript.cpp:283
 msgid "Unknown error."
-msgstr ""
+msgstr "Tuntematon virhe."
 
 #: qtgui/rwlayermanager.cpp:32 qtgui/rwlayermanager.cpp:106
 #: qtgui/rwlayermanager.cpp:132
 msgid "Modify Layers"
-msgstr ""
+msgstr "Muokkaa kerroksia"
 
 #: qtgui/rwlayermanager.cpp:196
-#, fuzzy
 msgid "Remove Layer"
 msgstr "Poista kerros"
 
 #: qtgui/rwlayermanager.cpp:203
 msgid "Remove Layer Info"
-msgstr ""
+msgstr "Poista kerrostiedot"
 
 #: qtgui/rwlayermanager.cpp:212
 msgid "Add Layer"
-msgstr ""
+msgstr "Lisää kerros"
 
 #: qtgui/rwlayermanager.cpp:215
 msgid "Add Layer Info"
-msgstr ""
+msgstr "Lisää kerrostiedot"
 
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1347,7 +1370,7 @@ msgstr ""
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:263:1640
 msgid "Change Layer"
-msgstr ""
+msgstr "Vaihda kerros"
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1356,7 +1379,7 @@ msgstr "Lisää atomi"
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
 #: qtplugins/editor/editor.cpp:133
 msgid "Remove Atom"
-msgstr ""
+msgstr "Poista atomi"
 
 #: qtgui/rwmolecule.cpp:95
 msgid "Clear Atoms"
@@ -1369,9 +1392,8 @@ msgid "Adjust Hydrogens"
 msgstr "Säädä vetyjä"
 
 #: qtgui/rwmolecule.cpp:143 qtplugins/alchemy/alchemy.cpp:74
-#, fuzzy
 msgid "Change Elements"
-msgstr "Vaihda alkuaine"
+msgstr "Vaihda alkuaineet"
 
 #: qtgui/rwmolecule.cpp:155
 msgid "Change Element"
@@ -1379,19 +1401,19 @@ msgstr "Vaihda alkuaine"
 
 #: qtgui/rwmolecule.cpp:236
 msgid "Change Atom Hybridization"
-msgstr ""
+msgstr "Vaihda atomihybridisaatio"
 
 #: qtgui/rwmolecule.cpp:248
 msgid "Change Atom Formal Charge"
-msgstr ""
+msgstr "Vaihda atomin muodollinen varaus"
 
 #: qtgui/rwmolecule.cpp:260
 msgid "Change Atom Color"
-msgstr ""
+msgstr "Vaihda atomin väri"
 
 #: qtgui/rwmolecule.cpp:272
 msgid "Change Atom Layer"
-msgstr ""
+msgstr "Vaihda atomikerros"
 
 #: qtgui/rwmolecule.cpp:288
 msgid "Add Bond"
@@ -1399,7 +1421,7 @@ msgstr "Lisää sidos"
 
 #: qtgui/rwmolecule.cpp:314
 msgid "Removed Bond"
-msgstr ""
+msgstr "Sidos poistettu"
 
 #: qtgui/rwmolecule.cpp:321
 #, fuzzy
@@ -1407,66 +1429,65 @@ msgid "Clear Bonds"
 msgstr "Poista sidos"
 
 #: qtgui/rwmolecule.cpp:335
-#, fuzzy
 msgid "Set Bond Orders"
-msgstr "Sidoskertaluku"
+msgstr "Määritä sidosjärjestykset"
 
 #: qtgui/rwmolecule.cpp:347
 msgid "Change Bond Order"
-msgstr "Vaihda sidosten järjestystä"
+msgstr "Vaihda sidosten järjestys"
 
 #: qtgui/rwmolecule.cpp:369
 msgid "Update Bonds"
-msgstr ""
+msgstr "Päivitä sidokset"
 
 #: qtgui/rwmolecule.cpp:388
 msgid "Update Bond"
-msgstr ""
+msgstr "Päivitä sidos"
 
 #: qtgui/rwmolecule.cpp:407
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Lisää yksikkösolu…"
 
 #: qtgui/rwmolecule.cpp:419
 msgid "Remove Unit Cell"
-msgstr ""
+msgstr "Poista yksikkösolu"
 
 #: qtgui/rwmolecule.cpp:483
 msgid "Edit Unit Cell"
-msgstr ""
+msgstr "Muokkaa yksikkösolua"
 
 #: qtgui/rwmolecule.cpp:499
 msgid "Wrap Atoms to Cell"
-msgstr ""
+msgstr "Kääri atomit soluun"
 
 #: qtgui/rwmolecule.cpp:522
 msgid "Scale Cell Volume"
-msgstr ""
+msgstr "Skaalaa solun tilavuutta"
 
 #: qtgui/rwmolecule.cpp:542
 msgid "Build Super Cell"
-msgstr ""
+msgstr "Rakenna supersolu"
 
 #: qtgui/rwmolecule.cpp:566
 msgid "Niggli Reduction"
-msgstr ""
+msgstr "Niggli-pelkistys"
 
 #: qtgui/rwmolecule.cpp:588
 msgid "Rotate to Standard Orientation"
-msgstr ""
+msgstr "Kierrä vakiosuuntaan"
 
 #: qtgui/rwmolecule.cpp:613 qtplugins/spacegroup/spacegroup.cpp:56
 msgid "Reduce to Primitive"
-msgstr ""
+msgstr "Pelkistä primitiiviseksi"
 
 #: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:259
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "Perinteisoi solu"
 
 #: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:284
 msgid "Symmetrize Cell"
-msgstr ""
+msgstr "Tee solu symmetriseksi"
 
 #: qtgui/rwmolecule.cpp:682
 msgid "Fill Unit Cell"
@@ -1474,49 +1495,49 @@ msgstr "Täytä yksikkökoppi"
 
 #: qtgui/rwmolecule.cpp:702
 msgid "Reduce Cell to Asymmetric Unit"
-msgstr ""
+msgstr "Pelkistä solun epäsymmetriseksi yksiköksi"
 
 #: qtgui/rwmolecule.h:214
 msgid "Change Atom Positions"
-msgstr ""
+msgstr "Vaihda atomin sijainnit"
 
 #: qtgui/rwmolecule.h:224
 msgid "Change Atom Position"
-msgstr ""
+msgstr "Vaihda atomin sijainti"
 
 #: qtgui/rwmolecule.h:242
 msgid "Change Atom Label"
-msgstr ""
+msgstr "Vaihda atomin nimiö"
 
 #: qtgui/rwmolecule.h:260
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Vaihda sidoksen nimiö"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
-msgstr ""
+msgstr "Vaihda valinta"
 
 #: qtgui/rwmolecule_undo.h:31
 msgid "Modify Molecule"
-msgstr ""
+msgstr "Muuta molekyyliä"
 
 #: qtgui/scenepluginmodel.cpp:92
 msgid "Settings"
-msgstr ""
+msgstr "Asetukset"
 
 #: qtgui/scriptloader.cpp:33
 #, qt-format
 msgid "Cannot load script %1"
-msgstr ""
+msgstr "Ei voi ladata komentosarjaa %1"
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
 msgid "Checking for %1 scripts in path %2"
-msgstr ""
+msgstr "Tarkistetaan %1 komentosarjaa polussa %2"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
-msgstr ""
+msgstr "3DMol HTML -lohko."
 
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
@@ -1531,15 +1552,15 @@ msgstr "&Tiedosto"
 #: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
 #: qtplugins/vrml/vrml.cpp:46
 msgid "&Export"
-msgstr ""
+msgstr "&Vie"
 
 #: qtplugins/3dmol/3dmol.h:42
 msgid "ThreeDMol"
-msgstr ""
+msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Vaihda alkuaineet…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1549,7 +1570,7 @@ msgstr ""
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
 msgid "&Build"
-msgstr ""
+msgstr "&Rakenna"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:23
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1561,11 +1582,11 @@ msgstr "Alkuaine:"
 
 #: qtplugins/alchemy/alchemy.h:31
 msgid "Alchemy"
-msgstr ""
+msgstr "Alkemia"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Vaihda atomien alkuaineet."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -1581,6 +1602,13 @@ msgid ""
 "Right Mouse: \tReset alignment.\n"
 "Double-Click: \tCenter the atom at the origin."
 msgstr ""
+"Kohdista molekyylit\n"
+"\n"
+"Hiiren vasen painike: Valitse enintään kaksi atomia.\n"
+"\tEnsimmäinen atomi on keskitetty alkupisteeseen.\n"
+"\tToinen atomi on kohdistettu valitulle akselille.\n"
+"Hiiren oikea painike:\tNollaa kohdistus.\n"
+"Kaksoisnapsautus:\tKeskitä atomi alkupisteeseen."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -1590,35 +1618,35 @@ msgstr "Akseli:"
 
 #: qtplugins/aligntool/aligntool.cpp:156
 msgid "Align at Origin"
-msgstr ""
+msgstr "Kohdista Origoon"
 
 #: qtplugins/aligntool/aligntool.cpp:192
 msgid "Align to Axis"
-msgstr ""
+msgstr "Kohdista akseliin"
 
 #: qtplugins/aligntool/aligntool.cpp:308
 msgid "Center the atom at the origin."
-msgstr ""
+msgstr "Keskitä atomi origoon."
 
 #: qtplugins/aligntool/aligntool.cpp:311
 msgid "Rotate the molecule to align the atom to the specified axis."
-msgstr ""
+msgstr "Kierrä molekyyliä kohdistaaksesi atomi määritellylle akselille."
 
 #: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
-msgstr ""
+msgstr "Kohdistamistyökalu"
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
-msgstr ""
+msgstr "Kohdista molekyylit karteesiselle akselille"
 
 #: qtplugins/apbs/apbs.cpp:32
 msgid "Run APBS…"
-msgstr ""
+msgstr "Suorita APBS…"
 
 #: qtplugins/apbs/apbs.cpp:37
 msgid "Open Output File…"
-msgstr ""
+msgstr "Avaa lähtötiedosto…"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
@@ -1626,70 +1654,69 @@ msgstr ""
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:64
 msgid "&Input"
-msgstr ""
+msgstr "&Syöttö"
 
 #: qtplugins/apbs/apbs.cpp:50
 msgid "&APBS"
-msgstr ""
+msgstr "&APBS"
 
 #: qtplugins/apbs/apbs.cpp:62 qtplugins/cp2kinput/cp2kinput.cpp:69
 #: qtplugins/gamessinput/gamessinput.cpp:70
 #: qtplugins/quantuminput/quantuminput.cpp:88
 msgid "Open Output File"
-msgstr ""
+msgstr "Avaa lähtötiedosto"
 
 #: qtplugins/apbs/apbs.cpp:63
 msgid "OpenDX File (*.dx)"
-msgstr ""
+msgstr "OpenDX-tiedosto (*.dx)"
 
 #: qtplugins/apbs/apbs.cpp:116
-#, fuzzy
 msgid "IO Error"
-msgstr "Virhe"
+msgstr "ID-virhe"
 
 #: qtplugins/apbs/apbs.cpp:117
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "Virhe luettaessa rakennetiedostoa (%1)."
 
 #: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
 msgid "OpenDX Error"
-msgstr ""
+msgstr "OpenDX-virhe"
 
 #: qtplugins/apbs/apbs.cpp:138
 #, qt-format
 msgid "Error reading OpenDX file: %1"
-msgstr ""
+msgstr "Virhe luettaessa OpenDX-tiedostoa: %1"
 
 #: qtplugins/apbs/apbs.cpp:145
 msgid "Error reading OpenDX file: No cube found"
-msgstr ""
+msgstr "Virhe luettaessa OpenDX-tiedostoa: Kuutiota ei löytynyt"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:30:96
 msgid "APBS"
-msgstr ""
+msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Ole vuorovaikutuksessa APBS-apuohjelmien kanssa."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
-msgstr ""
+msgstr "Avaa PDB-tiedosto"
 
 #: qtplugins/apbs/apbsdialog.cpp:80
 msgid "PDB Files (*.pdb)"
-msgstr ""
+msgstr "PDB-tiedostot (*.pdb)"
 
 #: qtplugins/apbs/apbsdialog.cpp:90
 msgid "Open PQR File"
-msgstr ""
+msgstr "Avaa PQR-tiedosto"
 
 #: qtplugins/apbs/apbsdialog.cpp:91
 msgid "PQR Files (*.pqr)"
-msgstr ""
+msgstr "PQR-tiedostot (*.pqr)"
 
 #: qtplugins/apbs/apbsdialog.cpp:131 qtplugins/apbs/apbsdialog.cpp:141
 #: qtplugins/commandscripts/command.cpp:139
@@ -1723,70 +1750,67 @@ msgstr "Virhe"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr ""
+msgstr "Virhe APBS:n suorittamisessa: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "Määritä PDB-tiedosto"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
-msgstr ""
+msgstr "Tallenna APBS-syöttötiedosto"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "APBS Input (*.in)"
-msgstr ""
+msgstr "APBS-syöttö (*.in)"
 
 #. i18n: file: qtplugins/apbs/apbsoutputdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsOutputDialog)
 #: qtplugins/apbs/apbsdialog.cpp:178:156
 msgid "Success"
-msgstr ""
+msgstr "Menestys"
 
 #: qtplugins/apbs/apbsdialog.cpp:179
 #, qt-format
 msgid "Input file written to '%1'"
-msgstr ""
+msgstr "Syötetiedosto kirjoitettu kohteeseen '%1'"
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
 msgid "By Custom Color…"
-msgstr ""
+msgstr "Mukautetun värin mukaan…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Atomi-indeksin mukaan…"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
-msgstr ""
+msgstr "Etäisyyden mukaan…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
-msgstr "Alkuaine"
+msgstr "Alkuaineen mukaan"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
-msgstr ""
+msgstr "Ketjun mukaan"
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
-msgstr "Osittaisvaraus"
+msgstr "Osittaisvarauksen mukaan…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
 msgid "By Secondary Structure"
-msgstr ""
+msgstr "Toissijaisen rakenteen mukaan"
 
 #: qtplugins/applycolors/applycolors.cpp:87
 msgid "By Amino Acid"
-msgstr ""
+msgstr "Aminohapon mukaan"
 
 #: qtplugins/applycolors/applycolors.cpp:92
 msgid "By Shapely Scheme"
-msgstr ""
+msgstr "Muotoillun kaavan mukaan"
 
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
@@ -1794,25 +1818,25 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:762
 msgctxt "colormap"
 msgid "Parula"
-msgstr ""
+msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:109
 #: qtplugins/surfaces/surfaces.cpp:764
 msgctxt "colormap"
 msgid "Heat"
-msgstr ""
+msgstr "Lämpö"
 
 #: qtplugins/applycolors/applycolors.cpp:111
 #: qtplugins/surfaces/surfaces.cpp:766
 msgctxt "colormap"
 msgid "Hot"
-msgstr ""
+msgstr "Kuuma"
 
 #: qtplugins/applycolors/applycolors.cpp:113
 #: qtplugins/surfaces/surfaces.cpp:768
 msgctxt "colormap"
 msgid "Gray"
-msgstr ""
+msgstr "Harmaa"
 
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
@@ -1820,7 +1844,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:770
 msgctxt "colormap"
 msgid "Magma"
-msgstr ""
+msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1828,7 +1852,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:772
 msgctxt "colormap"
 msgid "Inferno"
-msgstr ""
+msgstr "Helvetti"
 
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
@@ -1836,7 +1860,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Plasma"
-msgstr ""
+msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1844,7 +1868,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:776
 msgctxt "colormap"
 msgid "Viridis"
-msgstr ""
+msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1852,7 +1876,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:778
 msgctxt "colormap"
 msgid "Cividis"
-msgstr ""
+msgstr "Cividis"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:50
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1864,7 +1888,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1824
 msgctxt "colormap"
 msgid "Spectral"
-msgstr ""
+msgstr "Spektraalinen"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:45
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1874,7 +1898,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1821
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr ""
+msgstr "Viileä lämmin"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1884,7 +1908,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1815
 msgctxt "colormap"
 msgid "Balance"
-msgstr ""
+msgstr "Tasapaino"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:40
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1894,7 +1918,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1818
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr ""
+msgstr "Sinitummanpunainen"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -1906,11 +1930,11 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1827
 msgctxt "colormap"
 msgid "Turbo"
-msgstr ""
+msgstr "Turbo"
 
 #: qtplugins/applycolors/applycolors.cpp:141
 msgid "Apply color schemes to atoms and residues."
-msgstr ""
+msgstr "Sovella värimallit atomeihin ja jäännöksiin."
 
 #: qtplugins/applycolors/applycolors.cpp:152
 #: qtplugins/applycolors/applycolors.cpp:154 qtplugins/focus/focus.cpp:42
@@ -1921,16 +1945,16 @@ msgstr "&Näytä"
 
 #: qtplugins/applycolors/applycolors.cpp:152
 msgid "Color Atoms"
-msgstr ""
+msgstr "Värilliset atomit"
 
 #: qtplugins/applycolors/applycolors.cpp:154
 msgid "Color Residues"
-msgstr ""
+msgstr "Värilliset jäänökset"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
 msgid "Select Colormap"
-msgstr ""
+msgstr "Valitse värikartta"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -1939,49 +1963,48 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
 msgid "Colormap:"
-msgstr ""
+msgstr "Värikartta:"
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
-msgstr ""
+msgstr "Sovella värit"
 
 #: qtplugins/ballandstick/ballandstick.cpp:107
 msgid "Atom scale"
-msgstr ""
+msgstr "Atomin mittakaava"
 
 #: qtplugins/ballandstick/ballandstick.cpp:116
-#, fuzzy
 msgid "Bond scale"
-msgstr "Sidoksen pituus"
+msgstr "Sidoksen asteikko"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:96
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: qtplugins/ballandstick/ballandstick.cpp:125:222
 msgid "Opacity"
-msgstr ""
+msgstr "Läpikuultamattomuus"
 
 #: qtplugins/ballandstick/ballandstick.cpp:129
 #: qtplugins/wireframe/wireframe.cpp:100
 msgid "Show multiple bonds"
-msgstr ""
+msgstr "Näytä useat sidokset"
 
 #: qtplugins/ballandstick/ballandstick.cpp:135
 #: qtplugins/wireframe/wireframe.cpp:106
 msgid "Show hydrogens"
-msgstr ""
+msgstr "Näytä vedyt"
 
 #: qtplugins/ballandstick/ballandstick.h:32
 msgid "Render atoms as spheres and bonds as cylinders."
-msgstr ""
+msgstr "Esitä atomit palloina ja sidokset sylintereinä."
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 msgid "Bond-Centric Manipulation"
-msgstr ""
+msgstr "Sidoskeskeinen käsittely"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format
@@ -1997,6 +2020,17 @@ msgid ""
 "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
 "Right Click & Drag one of the Atoms in the Bond to change the length"
 msgstr ""
+"Sidoskeskeinen käsittelytyökalu\t(%1)\n"
+"\n"
+"Hiiren vasen painike:\tKierrä näkymää napsauttamalla ja vetämällä.\n"
+"Keskihiiri:\tLähennä tai loitonna napsauttamalla ja vetämällä.\n"
+"Hiiren oikea painike:\tSiirrä näkymää napsauttamalla ja vetämällä.\n"
+"Kaksoisnapsautus:\tNollaa näkymä.\n"
+"\n"
+"Napsauta vasenta painiketta ja vedä sidosta asettaaksesi manipulointitason:\n"
+"Napsauta vasenta nappia ja vedä yhtä sidoksen atomeista muuttaaksesi kulmaa\n"
+"Napsauta hiiren kakkospainikkeella ja vedä yhtä sidoksen atomeista "
+"muuttaaksesi pituus"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:781
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:869
@@ -2005,7 +2039,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:217
 #, qt-format
 msgid "%L1°"
-msgstr ""
+msgstr "%L1°"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:803
 #: qtplugins/editor/editor.cpp:270 qtplugins/measuretool/measuretool.cpp:224
@@ -2013,122 +2047,123 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:227
 #, qt-format
 msgid "%L1 Å"
-msgstr ""
+msgstr "%L1 Å"
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:169
 msgid "Bond centric manipulation tool."
-msgstr ""
+msgstr "Sidoskeskeinen käsittelytyökalu."
 
 #: qtplugins/bondcentrictool/bondcentrictool.h:174
 msgid ""
 "Tool used to edit molecular geometry by changing bond lengths and angles."
 msgstr ""
+"Työkalu, jolla muokataan molekyyligeometriaa muuttamalla sidosten pituutta "
+"ja kulmia."
 
 #: qtplugins/bonding/bonding.cpp:28
 msgid "Bond Atoms"
-msgstr ""
+msgstr "Sido atomit"
 
 #: qtplugins/bonding/bonding.cpp:29
 msgid "Perceive Bond Orders"
-msgstr ""
+msgstr "Havaitse sidoslärjestykset"
 
 #: qtplugins/bonding/bonding.cpp:30
 msgid "Remove Bonds"
-msgstr ""
+msgstr "Poista sidokset"
 
 #: qtplugins/bonding/bonding.cpp:31
 msgid "Configure Bonding…"
-msgstr ""
+msgstr "Määritä sidonta…"
 
 #: qtplugins/bonding/bonding.cpp:32
 msgid "Bond Selected Atoms"
-msgstr ""
+msgstr "Sido valitut atomit"
 
 #: qtplugins/bonding/bonding.cpp:61
 #: qtplugins/propertytables/propertymodel.cpp:543
-#, fuzzy
 msgid "Bond"
 msgstr "Sidos"
 
 #: qtplugins/bonding/bonding.cpp:72
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Poista sidokset kaikista tai valituista atomeista."
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Luo sidoksia kaikkien tai valittujen atomien välille."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
-msgstr ""
+msgstr "Havaitse sidosjärjestykset."
 
 #: qtplugins/bonding/bonding.h:30
 msgid "Bonding"
-msgstr ""
+msgstr "Sidonta"
 
 #: qtplugins/bonding/bonding.h:34
 msgid "Perform bonding operations."
-msgstr ""
+msgstr "Suorita sidostoiminnot."
 
 #: qtplugins/cartoons/cartoons.cpp:92
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr ""
+msgstr "Selkäranka"
 
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr ""
+msgstr "Jälki"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "Putki"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
 msgid "Ribbon"
-msgstr ""
+msgstr "Nauha"
 
 #: qtplugins/cartoons/cartoons.cpp:96
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
-msgstr ""
+msgstr "Yksinkertainen sarjakuva"
 
 #: qtplugins/cartoons/cartoons.cpp:97
 msgctxt "protein rendering style"
 msgid "Cartoon"
-msgstr ""
+msgstr "Sarjakuva"
 
 #: qtplugins/cartoons/cartoons.cpp:98
 msgctxt "protein rendering style"
 msgid "Rope"
-msgstr ""
+msgstr "Köysi"
 
 #: qtplugins/cartoons/cartoons.h:36
 msgid "Display of biomolecule ribbons / cartoons."
-msgstr ""
+msgstr "Esittely biomolekyylin nauhoista/sarjakuvista."
 
 #: qtplugins/centroid/centroid.cpp:21
 msgid "Add Centroid"
-msgstr ""
+msgstr "Lisää keskipiste"
 
 #: qtplugins/centroid/centroid.cpp:22
 msgid "Add Center of Mass"
-msgstr ""
+msgstr "Lisää massankeskipiste"
 
 #: qtplugins/centroid/centroid.cpp:24
 msgctxt "add a point normal to the plane of the molecule"
 msgid "Add Perpendicular"
-msgstr ""
+msgstr "Lisää kohtisuora"
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
-msgstr ""
+msgstr "Keskipiste"
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Lisää keskipisteet ja massankeskipiste."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -2157,39 +2192,39 @@ msgstr ""
 #: qtplugins/closecontacts/closecontacts.cpp:212
 #: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:406
 msgid " Å"
-msgstr ""
+msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
 msgid "Maximum distance:"
-msgstr ""
+msgstr "Enimmäisetäisyys:"
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
 #: qtplugins/noncovalent/noncovalent.cpp:370
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
-msgstr ""
+msgstr "Viivan leveys:"
 
 #: qtplugins/closecontacts/closecontacts.h:36
 msgid "Render close contacts between atoms."
-msgstr ""
+msgstr "Hahmonnoi läheiset kontaktit atomien välille."
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
-msgstr ""
+msgstr "Yhteystiedot"
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
-msgstr ""
+msgstr "Suolasilta"
 
 #: qtplugins/closecontacts/closecontacts.h:56
 msgid "Repulsive"
-msgstr ""
+msgstr "Hylkivä"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
 msgid "Edit Color Opacity Map…"
-msgstr ""
+msgstr "Muokkaa värien läpikuultamattomuuskarttaa…"
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2201,20 +2236,22 @@ msgstr ""
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
 msgid "&Extensions"
-msgstr ""
+msgstr "&Laajennukset"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:24
 msgid "ColorOpacityMap"
-msgstr ""
+msgstr "VärienLäpinäkymättömyyskartta"
 
 #: qtplugins/coloropacitymap/coloropacitymap.h:59
 msgid "Edit color opacity maps, primarily for volume rendering."
 msgstr ""
+"Muokkaa värien peittävyyskarttoja ensisijaisesti tilavuuden hahmonnointia "
+"varten."
 
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
 msgid "Scripts"
-msgstr ""
+msgstr "Komentosarjat"
 
 #: qtplugins/commandscripts/command.cpp:140
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
@@ -2227,29 +2264,33 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"Virhe luettaessa tulostiedostoa '%1':\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:229
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Käsitellään %1"
 
 #: qtplugins/commandscripts/command.cpp:284
 msgid "Set path to Python interpreter:"
-msgstr ""
+msgstr "Aseta polku Python-tulkkiin:"
 
 #: qtplugins/commandscripts/command.cpp:286
 msgid ""
 "Select the python interpreter to run external scripts.\n"
 "Avogadro must be restarted for any changes to take effect."
 msgstr ""
+"Valitse python-tulkki ulkoisten komentosarjojen suorittamista varten.\n"
+"Avogadro on käynnistettävä uudelleen, jotta muutokset tulevat voimaan."
 
 #: qtplugins/commandscripts/command.h:43
 msgid "Command scripts"
-msgstr ""
+msgstr "Komentosarjakomennot"
 
 #: qtplugins/commandscripts/command.h:47
 msgid "Run external script commands"
-msgstr ""
+msgstr "Suorita ulkoiset komentosarjakomennot"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
@@ -2257,24 +2298,25 @@ msgstr ""
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Python-asetukset…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Asenna Python"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Pythonia käytetään moniin Avogadron ominaisuuksiin. Haluatko ladata Pythonin?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr ""
+msgstr "Määritä Python"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Määritä Python-ympäristöt."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2287,77 +2329,74 @@ msgstr ""
 #: qtplugins/templatetool/templatetoolwidget.cpp:358
 #: qtplugins/templatetool/templatetoolwidget.cpp:366
 #: qtplugins/templatetool/templatetoolwidget.cpp:429:2097
-#, fuzzy
-#| msgid "Other..."
 msgid "Other…"
 msgstr "Muu…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.cpp:17
 msgid "Atomic &Coordinate Editor…"
-msgstr ""
+msgstr "Atomi&koordinaattimuokkain…"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:28
 msgid "Coordinate editor"
-msgstr ""
+msgstr "Koordinaattieditori"
 
 #: qtplugins/coordinateeditor/coordinateeditor.h:32
 msgid "Text editing of atomic coordinates."
-msgstr ""
+msgstr "Atomien koordinaattien tekstin muokkaus."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:228
 msgid "Overwrite changes?"
-msgstr ""
+msgstr "Ylikirjoitetaanko muutokset?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:229
 msgid ""
 "The text document has been modified. Would you like to discard your changes "
 "and revert to the current molecule?"
 msgstr ""
+"Tekstiasiakirjaa on muokattu. Haluatko hylätä tekemäsi muutokset ja palata "
+"nykyiseen molekyyliin?"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:356
 msgid "Too few entries on line."
-msgstr ""
+msgstr "Liian vähän merkintöjä rivillä."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:372
 msgid "Invalid element name."
-msgstr ""
+msgstr "Epäkelvollinen alkuaineen nimi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:374
-#, fuzzy
 msgid "Element name."
 msgstr "Alkuaineen nimi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:386
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:409
 msgid "Invalid element symbol."
-msgstr ""
+msgstr "Epäkelvollinen alkuaineen symboli."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:388
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:411
-#, fuzzy
 msgid "Element symbol."
-msgstr "Kemiallinen merkki."
+msgstr "Alkuaineen symboli."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:402
 msgid "Invalid atom label."
-msgstr ""
+msgstr "Epäkelvollinen atominnimiö."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
-msgstr ""
+msgstr "Epäkelvollinen atomi-indeksi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 msgid "Atomic index."
-msgstr ""
+msgstr "Atomi-indeksi."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:432
 msgid "Invalid atomic number."
-msgstr ""
+msgstr "Epäkelvollinen atomiluku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:434
-#, fuzzy
 msgid "Atomic number."
-msgstr "Järjestysluku."
+msgstr "Atomiluku."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:443
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:454
@@ -2366,35 +2405,35 @@ msgstr "Järjestysluku."
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:487
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:498
 msgid "Invalid coordinate."
-msgstr ""
+msgstr "Epäkelvollinen koordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:445
 msgid "X coordinate."
-msgstr ""
+msgstr "X-koordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:456
 msgid "Y coordinate."
-msgstr ""
+msgstr "Y-koordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:467
 msgid "Z coordinate."
-msgstr ""
+msgstr "Z-koordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:478
 msgid "'a' lattice coordinate."
-msgstr ""
+msgstr "'a'-hilakoordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:489
 msgid "'b' lattice coordinate."
-msgstr ""
+msgstr "'b'-hilakoordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
 msgid "'c' lattice coordinate."
-msgstr ""
+msgstr "'c'-hilakoordinaatti."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
-msgstr ""
+msgstr "Virhe geometriaa soveltaessa"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:585
 msgid ""
@@ -2403,10 +2442,15 @@ msgid ""
 "\n"
 "(Hint: Hold the mouse over red text for a description of the error.)"
 msgstr ""
+"Geometrian määritystä ei voitu jäsentää. Korjaa korostetut virheet ja yritä "
+"uudelleen.\n"
+"\n"
+"(Vihje: pidä hiiren osoitinta punaisen tekstin päällä nähdäksesi virheen "
+"kuvauksen.)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:620
 msgid "Edit Atomic Coordinates"
-msgstr ""
+msgstr "Muokkaa atomikoordinaatteja"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:254
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
@@ -2415,43 +2459,43 @@ msgstr ""
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
 #: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1854
 msgid "Custom"
-msgstr ""
+msgstr "Mukautettu"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
 msgid "XYZ format (symbols)"
-msgstr ""
+msgstr "XYZ-muoto (symbolit)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:640
 msgid "XYZ format (names)"
-msgstr ""
+msgstr "XYZ-muoto (nimet)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:641
 msgid "XYZ format (atomic numbers)"
-msgstr ""
+msgstr "XYZ-muoto (atomiluvut)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:642
 msgid "Lattice coordinates (symbols)"
-msgstr ""
+msgstr "Hilakoordinaatit (symbolit)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:643
 msgid "Lattice coordinates (names)"
-msgstr ""
+msgstr "Hilakoordinaatit (nimet)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:644
 msgid "Lattice coordinates (atomic numbers)"
-msgstr ""
+msgstr "Hilakoordinaatit (atomiluvut)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:646
 msgid "GAMESS format (symbols)"
-msgstr ""
+msgstr "GAMESS-muoto (symbolit)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:647
 msgid "GAMESS format (names)"
-msgstr ""
+msgstr "GAMESS-muoto (nimet)"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:648
 msgid "Turbomole format"
-msgstr ""
+msgstr "Turbomoolinmuoto"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
@@ -2459,23 +2503,23 @@ msgstr ""
 #: qtplugins/molecularproperties/molecularview.cpp:199
 #: qtplugins/propertytables/propertyview.cpp:300:277
 msgid "Copy"
-msgstr ""
+msgstr "Kopioi"
 
 #: qtplugins/copypaste/copypaste.cpp:31 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:46
 msgid "SMILES"
-msgstr ""
+msgstr "SMILES"
 
 #: qtplugins/copypaste/copypaste.cpp:32 qtplugins/copypaste/copypaste.cpp:78
 #: qtplugins/lineformatinput/lineformatinput.cpp:45
 msgid "InChI"
-msgstr ""
+msgstr "InChI"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
 #: qtplugins/copypaste/copypaste.cpp:33:274
 msgid "Cut"
-msgstr ""
+msgstr "Leikkaa"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, clear)
@@ -2485,23 +2529,23 @@ msgstr ""
 
 #: qtplugins/copypaste/copypaste.cpp:35
 msgid "&Paste"
-msgstr ""
+msgstr "&Liitä"
 
 #: qtplugins/copypaste/copypaste.cpp:79 qtplugins/copypaste/copypaste.cpp:81
 msgid "&Edit"
-msgstr ""
+msgstr "&Muokkaa"
 
 #: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
-msgstr ""
+msgstr "Kopioi nimellä"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"
-msgstr ""
+msgstr "Virhe leikattaessa molekyyliä"
 
 #: qtplugins/copypaste/copypaste.cpp:151
 msgid "Error generating clipboard data."
-msgstr ""
+msgstr "Virhe luotaessa leikepöydän dataa."
 
 #: qtplugins/copypaste/copypaste.cpp:152
 #, qt-format
@@ -2510,6 +2554,8 @@ msgid ""
 "Output format: %1\n"
 "%2"
 msgstr ""
+"Lähtömuoto: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.cpp:156 qtplugins/copypaste/copypaste.cpp:277
 #, qt-format
@@ -2517,18 +2563,20 @@ msgid ""
 "Reader error:\n"
 "%1"
 msgstr ""
+"Lukijavirhe:\n"
+"%1"
 
 #: qtplugins/copypaste/copypaste.cpp:238 qtplugins/copypaste/copypaste.cpp:271
 msgid "Error Pasting Molecule"
-msgstr ""
+msgstr "Virhe liitettäessä molekyyliä"
 
 #: qtplugins/copypaste/copypaste.cpp:239
 msgid "Cannot paste molecule: Clipboard empty!"
-msgstr ""
+msgstr "Molekyyliä ei voi liittää: Leikepöytä tyhjä!"
 
 #: qtplugins/copypaste/copypaste.cpp:272
 msgid "Error reading clipboard data."
-msgstr ""
+msgstr "Virhe luettaessa leikepöydän dataa."
 
 #: qtplugins/copypaste/copypaste.cpp:273
 #, qt-format
@@ -2537,26 +2585,28 @@ msgid ""
 "Detected format: %1\n"
 "%2"
 msgstr ""
+"Havaittu muoto: %1\n"
+"%2"
 
 #: qtplugins/copypaste/copypaste.h:31
 msgid "Copy and paste"
-msgstr ""
+msgstr "Kopioi ja liitä"
 
 #: qtplugins/copypaste/copypaste.h:35
 msgid "Interact with the clipboard."
-msgstr ""
+msgstr "Ole vuorovaikutuksessa leikepöydän kanssa."
 
 #: qtplugins/cp2kinput/cp2kinput.cpp:33
 msgid "&CP2K…"
-msgstr ""
+msgstr "&CP2K…"
 
 #: qtplugins/cp2kinput/cp2kinput.h:34
 msgid "CP2K input"
-msgstr ""
+msgstr "CP2K-syöttö"
 
 #: qtplugins/cp2kinput/cp2kinput.h:36
 msgid "Generate input for CP2K."
-msgstr ""
+msgstr "Luo syöte CP2K:lle."
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
@@ -2567,97 +2617,96 @@ msgstr "Energia"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
 msgid "Energy and Forces"
-msgstr ""
+msgstr "Energia ja voimat"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
 msgid "Molecular Dynamics"
-msgstr ""
+msgstr "Molekyylidynamiikka"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
-#, fuzzy
 msgid "Geometry Optimization"
-msgstr "Geometrinen optimisaatio"
+msgstr "Geometrinen optimointi"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
 msgid "Electronic structure methods (DFT)"
-msgstr ""
+msgstr "Elektroniset rakennemenetelmät (DFT)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
 msgid "Molecular Mechanics"
-msgstr ""
+msgstr "Molekyylimekaniikka"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr ""
+msgstr "Hybridi kvanttiklassikko (ei vielä tuettu)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
 msgid "EWALD"
-msgstr ""
+msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
 msgid "NONE"
-msgstr ""
+msgstr "EI MITÄÄN"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1364
 msgid "PME"
-msgstr ""
+msgstr "PME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
 msgid "SPME"
-msgstr ""
+msgstr "SPME"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
 msgid "ATOMIC"
-msgstr ""
+msgstr "ATOMI"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
 msgid "CORE"
-msgstr ""
+msgstr "YDIN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
 msgid "DENSITIES"
-msgstr ""
+msgstr "TIHEUDET"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "HISTORIAN _UUDELLEENKÄYNNISTYS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
-msgstr ""
+msgstr "MOPAC"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
 msgid "RANDOM"
-msgstr ""
+msgstr "SATUNNAINEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
 msgid "RESTART"
-msgstr ""
+msgstr "KÄYNNISTÄ UUDELLEEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
 msgid "SPARSE"
-msgstr ""
+msgstr "HARVA"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:420
 msgid "BROYDEN"
-msgstr ""
+msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
 msgid "Conjugate Gradients"
-msgstr ""
+msgstr "Yhdistä gradientit"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
 msgid "DIIS"
-msgstr ""
+msgstr "DIIS"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
 msgid "Steepest descent"
-msgstr ""
+msgstr "Jyrkin alamäki"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
 #: qtplugins/gamessinput/gamessinputdialog.cpp:414
@@ -2665,139 +2714,141 @@ msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
 msgstr ""
+"Syöttötiedostoa on muokattu. Haluatko korvata muutokset vastaamaan uutta "
+"geometriaa tai työvaihtoehtoja?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
 #: qtplugins/gamessinput/gamessinputdialog.cpp:418
 msgid "Overwrite modified input file?"
-msgstr ""
+msgstr "Korvataanko muokattu syöttötiedosto?"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:957
 msgid "Save CP2K input file"
-msgstr ""
+msgstr "Tallenna CP2K-syöttötiedosto"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1006
 msgid "Submit CP2K Calculation"
-msgstr ""
+msgstr "Lähetä CP2K-laskenta"
 
 #: qtplugins/crystal/crystal.cpp:40
 msgid "Import Crystal from Clipboard…"
-msgstr ""
+msgstr "Tuo kide leikepöydältä…"
 
 #: qtplugins/crystal/crystal.cpp:47
 msgid "Toggle Unit Cell"
-msgstr ""
+msgstr "Vaihda yksikkösolu"
 
 #: qtplugins/crystal/crystal.cpp:52
 msgid "Edit Unit Cell…"
-msgstr ""
+msgstr "Muokkaa yksikkösolua…"
 
 #: qtplugins/crystal/crystal.cpp:57
 msgid "&Wrap Atoms to Unit Cell"
-msgstr ""
+msgstr "&Kääri atomit yksikkösoluun"
 
 #: qtplugins/crystal/crystal.cpp:63
 msgid "Rotate to Standard &Orientation"
-msgstr ""
+msgstr "Kierrä vakios&uuntaan"
 
 #: qtplugins/crystal/crystal.cpp:69
 msgid "Scale Cell &Volume…"
-msgstr ""
+msgstr "Skaalaa solun &tilavuutta…"
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr ""
+msgstr "Rakenna &supersolu…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
-msgstr ""
+msgstr "Pelkistä solu (&Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:55
 #: qtplugins/plotrmsd/plotrmsd.cpp:48 qtplugins/plotxrd/plotxrd.cpp:53
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "&Crystal"
-msgstr ""
+msgstr "&Kide"
 
 #: qtplugins/crystal/crystal.cpp:149
 msgid "Remove &Unit Cell"
-msgstr ""
+msgstr "Poista &yksikkösolu"
 
 #: qtplugins/crystal/crystal.cpp:156
 msgid "Add &Unit Cell"
-msgstr ""
+msgstr "Lisää &yksikkösolu"
 
 #: qtplugins/crystal/crystal.cpp:168
 msgid "Import Crystal from Clipboard"
-msgstr ""
+msgstr "Tuo kide leikepöydältä"
 
 #: qtplugins/crystal/crystal.cpp:175
 msgid "Wrap atoms into the unit cell."
-msgstr ""
+msgstr "Kääri atomit yksikkösoluun."
 
 #: qtplugins/crystal/crystal.cpp:177
 msgid "Rotate the unit cell to the standard orientation."
-msgstr ""
+msgstr "Kierrä yksikkösolu vakioasentoon."
 
 #: qtplugins/crystal/crystal.cpp:215
 msgid "Niggli Reduce Crystal"
-msgstr ""
+msgstr "Niggli pelkistä kide"
 
 #: qtplugins/crystal/crystal.cpp:216
 msgid "The unit cell is already reduced."
-msgstr ""
+msgstr "Yksikkösolu on jo pelkistetty."
 
 #: qtplugins/crystal/crystal.h:25
 msgid "Crystal"
-msgstr ""
+msgstr "Kide"
 
 #: qtplugins/crystal/crystal.h:69
 msgid "Tools for crystal-specific editing/analysis."
-msgstr ""
+msgstr "Työkalut kidekohtaiseen muokkaamiseen/analysoimiseen."
 
 #: qtplugins/crystal/crystalscene.cpp:178
 msgid "Color axes:"
-msgstr ""
+msgstr "Väritä akselit:"
 
 #: qtplugins/crystal/crystalscene.cpp:184
 msgid "Line color:"
-msgstr ""
+msgstr "Viivan väri:"
 
 #: qtplugins/crystal/crystalscene.h:35
 msgid "Render the unit cell boundaries."
-msgstr ""
+msgstr "Hahmonnoi yksikkösolun rajat."
 
 #: qtplugins/crystal/importcrystaldialog.cpp:68
 msgid "Cannot Parse Text"
-msgstr ""
+msgstr "Tekstiä ei voi jäsentää"
 
 #: qtplugins/crystal/importcrystaldialog.cpp:69
 msgid "Failed to read the data with the supplied format."
-msgstr ""
+msgstr "Datan lukeminen toimitetussa muodossa epäonnistui."
 
 #: qtplugins/crystal/unitcelldialog.cpp:249
 #: qtplugins/crystal/unitcelldialog.cpp:262
 msgid "No unit cell present."
-msgstr ""
+msgstr "Ei yksikkösolua läsnä."
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
-msgstr ""
+msgstr "Määritä &mukautetut alkuaineet uudelleen…"
 
 #: qtplugins/customelements/customelements.cpp:32
 msgid "Manipulate custom element types in the current molecule."
-msgstr ""
+msgstr "Käsittele mukautettuja alkuainetyyppejä nykyisessä molekyylissä."
 
 #: qtplugins/customelements/customelements.h:24
 msgid "Custom Elements"
-msgstr ""
+msgstr "Mukautetut alkuaineet"
 
 #: qtplugins/dipole/dipole.h:33
 msgid "Render the dipole moment of the molecule."
-msgstr ""
+msgstr "Hahmonnoi molekyylin dipolimomentti."
 
 #: qtplugins/editor/editor.cpp:71
 msgctxt "control-key 2"
 msgid "Ctrl+2"
-msgstr ""
+msgstr "Ctrl+2"
 
 #: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:120
 msgid "Draw"
@@ -2811,6 +2862,10 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Piirustustyökalu\t(%1 )\n"
+"\n"
+"Vasen-hiiri:\tNapsauta ja vedä luodaksesi atomeja ja sidos\n"
+"Oikea-hiiri:\tPoista atomi"
 
 #: qtplugins/editor/editor.cpp:114
 msgid "Draw Atom"
@@ -2818,26 +2873,25 @@ msgstr "Piirrä atomi"
 
 #: qtplugins/editor/editor.cpp:124
 msgid "Change Bond Type"
-msgstr ""
+msgstr "Vaihda sidostyyppi"
 
 #: qtplugins/editor/editor.cpp:137
 msgid "Remove Bond"
-msgstr ""
+msgstr "Poista sidos"
 
 #: qtplugins/editor/editor.cpp:265 qtplugins/measuretool/measuretool.cpp:198
 #: qtplugins/measuretool/measuretool.cpp:223
-#, fuzzy
 msgid "Distance:"
 msgstr "Etäisyys:"
 
 #: qtplugins/editor/editor.cpp:268
 #, qt-format
 msgid "%1 %L2"
-msgstr ""
+msgstr "%1 %L2"
 
 #: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
 msgid "Editor tool"
-msgstr ""
+msgstr "Muokkaintyökalu"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:217
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
@@ -2845,7 +2899,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
 #: qtplugins/editor/editortoolwidget.cpp:208:1833 rc.cpp:1851
 msgid "Automatic"
-msgstr ""
+msgstr "Automaattinen"
 
 #: qtplugins/editor/editortoolwidget.cpp:209
 msgid "Single"
@@ -2863,119 +2917,115 @@ msgstr "Kolmoissidos"
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:41
 msgid "&Import"
-msgstr ""
+msgstr "&Tuo"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:61
 msgid "Fetch PDB"
-msgstr ""
+msgstr "Nouda PDB"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
 #, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr ""
+msgstr "PDB-molekyyliä ei voitu lukea: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
-msgstr ""
+msgstr "PDB-koodi"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
 #: qtplugins/networkdatabases/networkdatabases.cpp:76
 msgid "Chemical structure to download."
-msgstr ""
+msgstr "Ladattava kemiallinen rakenne."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:81 qtplugins/fetchpdb/fetchpdb.cpp:89
 msgid "Invalid PDB Code"
-msgstr ""
+msgstr "Epäkelvollinen PDB-koodi"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:82
 msgid "The PDB code must be exactly 4 characters long."
-msgstr ""
+msgstr "PDB-koodin on oltava täsmälleen neljä merkkiä pitkä."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:90
 msgid "The first character of the PDB code must be 1-9."
-msgstr ""
+msgstr "PDB-koodin ensimmäisen merkin on oltava 1–9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
 #: qtplugins/networkdatabases/networkdatabases.cpp:88
 #, qt-format
 msgid "Querying for %1"
-msgstr ""
+msgstr "Kysellään %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr ""
+msgstr "Verkkolataus epäonnistui"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
 msgid "Network timeout or other error."
-msgstr ""
+msgstr "Verkon aikakatkaisu tai muu virhe."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:134
 #: qtplugins/networkdatabases/networkdatabases.cpp:111
 #, qt-format
 msgid "Specified molecule could not be found: %1"
-msgstr ""
+msgstr "Määriteltyä molekyyliä ei löytynyt: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.h:35
 msgid "Fetch from PDB"
-msgstr ""
+msgstr "Nouda PDB:sta"
 
 #: qtplugins/fetchpdb/fetchpdb.h:39
 msgid "Download PDB models from the Protein Data Bank"
-msgstr ""
+msgstr "Lataa PDB-mallit Protein Data Bankista"
 
 #: qtplugins/focus/focus.cpp:22
 msgid "Focus Selection"
-msgstr ""
+msgstr "Keskittymisvalinta"
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
-msgstr ""
+msgstr "Kumoa keskittyminen"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
-msgstr ""
+msgstr "Keskitä"
 
 #: qtplugins/focus/focus.h:30
 msgid "Focus the view on specific features."
-msgstr ""
+msgstr "Keskitä näkymä tiettyihin ominaisuuksiin."
 
 #: qtplugins/force/force.h:33
 msgid "Render the force field visualizations for the atoms of the molecule."
-msgstr ""
+msgstr "Hahmonnoi molekyylin atomien voimakenttävisualisoinnit."
 
 #: qtplugins/forcefield/forcefield.cpp:71
 #: qtplugins/forcefield/forcefield.cpp:300
 #: qtplugins/forcefield/forcefield.cpp:354 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
-msgstr ""
+msgstr "Optimoi geometria"
 
 #: qtplugins/forcefield/forcefield.cpp:88
 msgid "Forces"
-msgstr ""
+msgstr "Voimat"
 
 #: qtplugins/forcefield/forcefield.cpp:96
 msgid "Configure…"
-msgstr ""
+msgstr "Määritä…"
 
 #: qtplugins/forcefield/forcefield.cpp:108
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Kiinnitä valitut atomit paikoilleen"
+msgstr "Jäädytä valitut atomit"
 
 #: qtplugins/forcefield/forcefield.cpp:115
 msgid "Unfreeze Selected Atoms"
-msgstr ""
+msgstr "Vapauta valittujen atomien jäädytyksestä"
 
 #: qtplugins/forcefield/forcefield.cpp:154
-#, fuzzy
-#| msgid "Calculate Energy"
 msgid "&Calculate"
-msgstr "Laske"
+msgstr "&Laske"
 
 #: qtplugins/forcefield/forcefield.cpp:247
 #: qtplugins/forcefield/forcefield.cpp:393
@@ -2989,59 +3039,59 @@ msgstr "Avogadro"
 
 #: qtplugins/forcefield/forcefield.cpp:248
 msgid "No atoms provided for optimization"
-msgstr ""
+msgstr "Ei atomeja ilmoitettu optimointia varten"
 
 #: qtplugins/forcefield/forcefield.cpp:317
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Energia: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
 msgid "%1 Energy = %L2"
-msgstr ""
+msgstr "%1 Energia = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:438
 #, qt-format
 msgid "%1 Force Norm = %L2"
-msgstr ""
+msgstr "%1 voimanormi = %L2"
 
 #: qtplugins/forcefield/forcefield.h:46
 msgid "Forcefield optimization"
-msgstr ""
+msgstr "Voimakentän optimointi"
 
 #: qtplugins/forcefield/forcefield.h:50
 msgid "Forcefield minimization, including scripts"
-msgstr ""
+msgstr "Pakota kentän minimointi, mukaan lukien komentosarjat"
 
 #: qtplugins/forcefield/forcefielddialog.cpp:119
 #: qtplugins/openbabel/obforcefielddialog.cpp:319
 #, qt-format
 msgid "Autodetect (%1)"
-msgstr ""
+msgstr "Automaattinen tunnistus (%1)"
 
 #: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
 msgid "Universal Force Field"
-msgstr ""
+msgstr "Universaali voimakenttä"
 
 #: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
 msgid "Generalized Amber Force Field"
-msgstr ""
+msgstr "Yleistetty Amber-voimakenttä"
 
 #: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:52
 msgid "Merck Molecular Force Field 94"
-msgstr ""
+msgstr "Merckin molekyylivoimakenttä 94"
 
 #: qtplugins/forcefield/scriptenergy.cpp:251
 #, qt-format
 msgid "Error retrieving metadata for energy script: %1"
-msgstr ""
+msgstr "Virhe noudettaessa metatietoja energiaskriptille: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:261
 #, qt-format
 msgid "Error parsing metadata for energy script: %1"
-msgstr ""
+msgstr "Virhe jäsennettäessä metatietoja energia-skriptille: %1"
 
 #: qtplugins/forcefield/scriptenergy.cpp:269
 #, qt-format
@@ -3049,24 +3099,24 @@ msgid ""
 "Error parsing metadata for energy script: %1\n"
 "Result is not a JSON object.\n"
 msgstr ""
+"Virhe jäsennettäessä metatietoja energia-skriptille: %1\n"
+"Tulos ei ole JSON-objekti.\n"
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
-#, fuzzy
 msgid "&GAMESS…"
 msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
-msgstr ""
+msgstr "GAMESS-syöttö"
 
 #: qtplugins/gamessinput/gamessinput.h:38
 msgid "Generate input for GAMESS."
-msgstr ""
+msgstr "Luo syöte GAMESSille."
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:221
-#, fuzzy
 msgid "Single Point"
-msgstr "Satulapiste"
+msgstr "Yksittäinen piste"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:224
 msgid "Equilibrium Geometry"
@@ -3074,7 +3124,7 @@ msgstr "Tasapainotilan geometria"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:227
 msgid "Transition State"
-msgstr ""
+msgstr "Siirtymätila"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:230
 msgid "Frequencies"
@@ -3082,7 +3132,7 @@ msgstr "Taajuudet"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:299
 msgid "Core Potential"
-msgstr ""
+msgstr "Ydinpotentiaali"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:314
 msgid "Gas"
@@ -3102,11 +3152,11 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:338
 msgid "Triplet"
-msgstr ""
+msgstr "Kolmikko"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:353
 msgid "Dication"
-msgstr ""
+msgstr "Sanelu"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:356
 msgid "Cation"
@@ -3122,92 +3172,89 @@ msgstr "Anioni"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:365
 msgid "Dianion"
-msgstr ""
+msgstr "Dianioni"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:650
 msgid "Save GAMESS input file"
-msgstr ""
+msgstr "Tallenna GAMESS-syöttötiedosto"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:700
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "Lähetä GAMESS-laskelma"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
-#, fuzzy
 msgid "&Adjust Hydrogens"
-msgstr "Säädä vetyjä"
+msgstr "&Säädä vedyt"
 
 #: qtplugins/hydrogens/hydrogens.cpp:27 qtplugins/openbabel/openbabel.cpp:71
 msgid "Add Hydrogens"
 msgstr "Lisää vetyjä"
 
 #: qtplugins/hydrogens/hydrogens.cpp:32
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Poista vetyjä"
+msgstr "Poista &ylimääräiset vedyt"
 
 #: qtplugins/hydrogens/hydrogens.cpp:37
 msgid "&Remove All Hydrogens"
-msgstr ""
+msgstr "&Poista kaikki vedyt"
 
 #: qtplugins/hydrogens/hydrogens.cpp:49
 msgid "Add/remove hydrogens from the current molecule."
-msgstr ""
+msgstr "Lisää/poista vetyjä nykyisestä molekyylistä."
 
 #: qtplugins/hydrogens/hydrogens.cpp:59
-#, fuzzy
 msgid "&Hydrogens"
-msgstr "Vety"
+msgstr "&Vedyt"
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
-msgstr ""
+msgstr "Vedyt"
 
 #: qtplugins/importpqr/importpqr.cpp:25
 msgid "&Search PQR…"
-msgstr ""
+msgstr "&Etsi PQR…"
 
 #: qtplugins/importpqr/importpqr.h:35
 msgid "Import From PQR"
-msgstr ""
+msgstr "Tuo PQR:sta"
 
 #: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
-msgstr ""
+msgstr "Lataa molekyyli PQR:sta."
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
-msgstr ""
+msgstr "DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
 msgid "&Insert"
-msgstr ""
+msgstr "&Lisää"
 
 #: qtplugins/insertdna/insertdna.cpp:79
 msgid "Insert DNA/RNA…"
-msgstr ""
+msgstr "Lisää DNA/RNA…"
 
 #: qtplugins/insertdna/insertdna.cpp:159
 msgctxt "uracil"
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: qtplugins/insertdna/insertdna.cpp:160
 msgid "Uracil"
-msgstr ""
+msgstr "Uracil"
 
 #: qtplugins/insertdna/insertdna.cpp:166
 msgctxt "thymine"
 msgid "T"
-msgstr ""
+msgstr "T"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
 #: qtplugins/insertdna/insertdna.cpp:167:637
 msgid "Thymine"
-msgstr ""
+msgstr "Tymiini"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
@@ -3215,63 +3262,60 @@ msgstr ""
 #: qtplugins/lineformatinput/lineformatinput.cpp:108
 #: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
 msgid "Insert Molecule…"
-msgstr ""
+msgstr "Lisää molekyyli…"
 
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:124
 msgid "Generating 3D molecule…"
-msgstr ""
+msgstr "Luodaan kolmiulotteista molekyyliä…"
 
 #: qtplugins/insertdna/insertdna.h:33
 msgid "InsertDNA"
-msgstr ""
+msgstr "Lisää DNA"
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
-msgstr ""
+msgstr "Lisää DNA/RNA-palasia dialogin kautta."
 
 #: qtplugins/insertfragment/insertfragment.cpp:32
-#, fuzzy
-#| msgid "Molecule"
 msgid "Molecule…"
 msgstr "Molekyyli…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:38
 msgid "Crystal…"
-msgstr ""
+msgstr "Kide…"
 
 #: qtplugins/insertfragment/insertfragment.cpp:108
 #, qt-format
 msgid "Error reading file (%1)."
-msgstr ""
+msgstr "Virhe luettaessa tiedostoa (%1)."
 
 #. i18n: file: qtplugins/crystal/importcrystaldialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ImportCrystalDialog)
 #: qtplugins/insertfragment/insertfragment.cpp:117:379
 msgid "Import Crystal"
-msgstr ""
+msgstr "Tuo kide"
 
 #: qtplugins/insertfragment/insertfragment.cpp:121
 msgid "Insert Fragment"
-msgstr ""
+msgstr "Lisää palanen"
 
 #: qtplugins/insertfragment/insertfragment.h:35
 msgid "InsertFragment"
-msgstr ""
+msgstr "Lisää palanen"
 
 #: qtplugins/insertfragment/insertfragment.h:60
 msgid "Insert molecular fragments for building larger molecules."
-msgstr ""
+msgstr "Lisää molekyylipalasia suurempien molekyylien rakentamiseksi."
 
 #: qtplugins/label/label.cpp:160 qtplugins/meshes/meshes.cpp:177
 #: qtplugins/meshes/meshes.cpp:183
-#, fuzzy
 msgid "Color:"
 msgstr "Väri:"
 
 #: qtplugins/label/label.cpp:170
 msgid "Distance from center:"
-msgstr ""
+msgstr "Etäisyys keskipisteestä:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -3284,76 +3328,76 @@ msgstr ""
 #: qtplugins/label/label.cpp:180 qtplugins/label/label.cpp:210
 #: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1806
 msgid "None"
-msgstr ""
+msgstr "Ei mitään"
 
 #: qtplugins/label/label.cpp:181 qtplugins/label/label.cpp:212
 msgid "Index"
-msgstr ""
+msgstr "Indeksi"
 
 #: qtplugins/label/label.cpp:182
 msgid "Unique ID"
-msgstr ""
+msgstr "Ainutlaatuinen tunnus"
 
 #: qtplugins/label/label.cpp:183 qtplugins/propertytables/propertymodel.cpp:499
 #: qtplugins/symmetry/operationstablemodel.cpp:63
 msgid "Element"
-msgstr ""
+msgstr "Alkuaine"
 
 #: qtplugins/label/label.cpp:184
 msgid "Element & Number"
-msgstr ""
+msgstr "Alkuaine ja luku"
 
 #: qtplugins/label/label.cpp:186
 msgid "Element & ID"
-msgstr ""
+msgstr "Alkuaine ja tunnus"
 
 #: qtplugins/label/label.cpp:188
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
-msgstr ""
+msgstr "Osittainen varaus"
 
 #: qtplugins/label/label.cpp:203
 msgid "Atom Label:"
-msgstr ""
+msgstr "Atominimiö:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "Pituus"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
-msgstr ""
+msgstr "Sidosnimiö:"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
-msgstr ""
+msgstr "Tunnus"
 
 #: qtplugins/label/label.cpp:232
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 #: qtplugins/propertytables/propertymodel.cpp:550
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #: qtplugins/label/label.cpp:236
 msgid " & "
-msgstr ""
+msgstr " & "
 
 #: qtplugins/label/label.cpp:248
 msgid "Residue Label:"
-msgstr ""
+msgstr "Jäännösnimiö:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."
-msgstr ""
+msgstr "Näytä nimiöt palloon ja kiinnitä tyyliin."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgctxt "control-key 4"
 msgid "Ctrl+4"
-msgstr ""
+msgstr "Ctrl+4"
 
 #: qtplugins/label/labeleditor.cpp:32
 msgid "Edit Labels"
-msgstr ""
+msgstr "Muokkaa nimiöitä"
 
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
@@ -3362,64 +3406,69 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"Atominimiötyökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta atomit lisätäksesi mukautettuja nimiöitä"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
-msgstr ""
+msgstr "Luo nimiö"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr ""
+msgstr "Nimiömuokkaintyökalu"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
-msgstr ""
+msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
-msgstr ""
+msgstr "LAMMPS-syöttö"
 
 #: qtplugins/lammpsinput/lammpsinput.h:35
 msgid "Generate input for LAMMPS."
-msgstr ""
+msgstr "Luo syöte LAMMPS:lle."
 
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:144
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "Lammps input deck preview pane?"
 msgstr ""
+"Haluatko päivittää esikatselun tekstin menettäen kaikki Lampps-"
+"syöttölaitteen esikatseluruudussa tehdyt muutokset?"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
 #: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
 #: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
 msgid "Opacity:"
-msgstr ""
+msgstr "Peittävyys:"
 
 #: qtplugins/licorice/licorice.h:36
 msgid "Render atoms as licorice / sticks."
-msgstr ""
+msgstr "Hahmonnoi atomit lakritsina/tikkuina."
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
 msgid "SMILES…"
-msgstr ""
+msgstr "SMILES…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 msgid "InChI…"
-msgstr ""
+msgstr "InChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
 #: qtplugins/lineformatinput/lineformatinput.cpp:112
 msgid "No descriptors found!"
-msgstr "Kuvaajia ei löytynyt!"
+msgstr "Kuvailijoita ei löytynyt!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 msgid "No line format readers found!"
-msgstr ""
+msgstr "Rivimuotoisia lukijoita ei löytynyt!"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "Unable to load requested format reader."
-msgstr ""
+msgstr "Pyydetyn muodon lukijan lataaminen ei onnistu."
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
@@ -3427,12 +3476,12 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:54
 msgid "Load single-line molecule descriptors through an input dialog."
-msgstr ""
+msgstr "Lataa yksiriviset molekyylikuvailijat syöttövalintaikkunan kautta."
 
 #: qtplugins/manipulator/manipulator.cpp:49
 msgctxt "control-key 6"
 msgid "Ctrl+6"
-msgstr ""
+msgstr "Ctrl+6"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
@@ -3446,16 +3495,20 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
+"Manipulointityökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta ja vedä siirtääksesi atomeja\n"
+"Oikea-hiiri:\tKierrä atomeja napsauttamalla ja vetämällä.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
 msgid "Manipulate tool"
-msgstr ""
+msgstr "Manipuloi työkalua"
 
 #: qtplugins/measuretool/measuretool.cpp:49
 msgctxt "control-key 8"
 msgid "Ctrl+8"
-msgstr ""
+msgstr "Ctrl+8"
 
 #: qtplugins/measuretool/measuretool.cpp:50
 msgid "Measure"
@@ -3472,149 +3525,153 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"Mittaustyökalu\t(%1)\n"
+"\n"
+"Vasen.hiiri:\tValitse enintään neljä atomia.\n"
+"\tEtäisyydet mitataan välillä 1-2 ja 2-3\n"
+"\tKulma mitataan välillä 1-3 käyttämällä 2:ta yhteisenä pisteenä\n"
+"\tDihedral mitataan välillä 1-2-3-4\n"
+"Oikea-hiiri:\tNollaa mittaukset."
 
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
 msgid "Dihedral:"
-msgstr ""
+msgstr "Dihedral:"
 
 #: qtplugins/measuretool/measuretool.cpp:197
 msgid "Angle:"
-msgstr ""
+msgstr "Kulma:"
 
 #: qtplugins/measuretool/measuretool.cpp:215
-#, fuzzy
 msgid "Angles:"
-msgstr "Kulma:"
+msgstr "Kulmat:"
 
 #: qtplugins/measuretool/measuretool.h:33
 #: qtplugins/measuretool/measuretool.h:34
 msgid "Measure tool"
-msgstr ""
+msgstr "Mittaustyökalu"
 
 #: qtplugins/meshes/meshes.h:31
 msgid "Render polygon meshes."
-msgstr ""
+msgstr "Hahmonnoi monikulmioverkot."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
 msgid "(pending)"
-msgstr ""
+msgstr "(odottava)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:108
 #: qtplugins/molecularproperties/molecularmodel.cpp:116
 #: qtplugins/molecularproperties/molecularmodel.cpp:132
-#, fuzzy
 msgid "unknown molecule"
 msgstr "tuntematon molekyyli"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:293
 #: qtplugins/propertytables/propertymodel.cpp:611
 msgid "Property"
-msgstr ""
+msgstr "Ominaisuus"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:300
 msgid "Molecule Name"
-msgstr ""
+msgstr "Molekyylin nimi"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:302
 msgid "Molecular Mass (g/mol)"
-msgstr ""
+msgstr "Molekyylimassa (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Kemiallinen kaava"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
-msgstr ""
+msgstr "Atomien lukumäärä"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:308
 msgid "Number of Bonds"
-msgstr ""
+msgstr "Sidosten lukumäärä"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:310
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Koordinaattimääritteet"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
-msgstr ""
+msgstr "Jäännösten lukumäärä"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:314
 msgid "Number of Chains"
-msgstr ""
+msgstr "Ketjujen lukumäärä"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
-msgstr ""
+msgstr "Nettovaraus"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:318
 msgid "Net Spin Multiplicity"
-msgstr ""
+msgstr "Nettopyörimismonikertaisuus"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:320
 msgid "Dipole Moment (Debye)"
-msgstr ""
+msgstr "Dipolimomentti (Debye)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "HOMO-energia (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "LUMO-energia (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "SOMO-energia (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Kokonaisenergia (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Nollapisteenergia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
-msgstr ""
+msgstr "Entalpia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:336
 msgid "Entropy (kcal/mol•K)"
-msgstr ""
+msgstr "Entropia (kcal/mol•K)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:338
 msgid "Gibbs Free Energy (kcal/mol)"
-msgstr ""
+msgstr "Gibbsin vapaa energia (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:340
 msgctxt "point group symmetry"
 msgid "Point Group"
-msgstr ""
+msgstr "Pisteryhmä"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:27
 msgid "&Molecular…"
-msgstr ""
+msgstr "&Molekylaarinen…"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:37
 msgid "View general properties of a molecule."
-msgstr ""
+msgstr "Katso molekyylin yleiset ominaisuudet."
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
 #: qtplugins/surfaces/orbitals.cpp:63 qtplugins/surfaces/surfaces.cpp:263
 #: qtplugins/symmetry/symmetry.cpp:82 qtplugins/vibrations/vibrations.cpp:42
-#, fuzzy
 msgid "&Analysis"
-msgstr "&Analyyttinen"
+msgstr "&Analyysi"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -3624,47 +3681,46 @@ msgstr "&Ominaisuudet"
 
 #: qtplugins/molecularproperties/molecularproperties.h:30
 msgid "Molecular Properties"
-msgstr ""
+msgstr "Molekyyliominaisuudet"
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
 #: qtplugins/propertytables/propertyview.cpp:62
-#, fuzzy
 msgid "Molecule Properties"
-msgstr "Molekyylin Ominaisuudet"
+msgstr "Molekyylin ominaisuudet"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:248
 msgid "Export CSV"
-msgstr ""
+msgstr "Vie CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
 #: qtplugins/propertytables/propertyview.cpp:249
 msgid "CSV Files (*.csv);;All Files (*)"
-msgstr ""
+msgstr "CSV-tiedostot (*.csv);;kaikki tiedostot (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
 #: qtplugins/propertytables/propertyview.cpp:261
 msgid "Could not open the file for writing."
-msgstr ""
+msgstr "Tiedostoa ei voitu avata kirjoittamista varten."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/propertytables/propertyview.cpp:293
 msgid "Error writing to the file."
-msgstr ""
+msgstr "Virhe kirjoitettaessa tiedostoon."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
 #: qtplugins/propertytables/propertyview.cpp:305
 msgid "Export…"
-msgstr ""
+msgstr "Vie…"
 
 #: qtplugins/navigator/navigator.cpp:39
 msgctxt "control-key 1"
 msgid "Ctrl+1"
-msgstr ""
+msgstr "Ctrl+1"
 
 #: qtplugins/navigator/navigator.cpp:40
 msgid "Navigate"
-msgstr ""
+msgstr "Navigoi"
 
 #: qtplugins/navigator/navigator.cpp:42
 #, qt-format
@@ -3675,14 +3731,19 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"Navigointityökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tKierrä näkymää napsauttamalla ja vetämällä.\n"
+"Keskihiiri:\tLähennä tai loitonna napsauttamalla ja vetämällä.\n"
+"Oikea-hiiri:\tSiirrä näkymää napsauttamalla ja vetämällä.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
-msgstr ""
+msgstr "Kierrä kohtausta x-, y- tai z-akselia pitkin."
 
 #: qtplugins/navigator/navigator.cpp:63
 msgid "Zoom the scene."
-msgstr ""
+msgstr "Zoomaa kohtausta."
 
 #: qtplugins/navigator/navigator.cpp:64
 msgid "Translate the scene."
@@ -3690,105 +3751,106 @@ msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:105
 msgid "Reverse Direction of Zoom on Scroll"
-msgstr ""
+msgstr "Käännä zoomaussuunta vierittämisen yhteydessä"
 
 #: qtplugins/navigator/navigator.cpp:107
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
 msgstr ""
+"Oletus:\tVieritä alas loitontaaksesi ja vieritä ylös lähentääksesi\n"
+"Käänteinen:\tVieritä ylös loitontaaksesi ja vieritä alas lähentääksesi"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
-msgstr ""
+msgstr "Navigointityökalu"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:75
 msgid "Chemical Name"
-msgstr ""
+msgstr "Kemiallinen nimi"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
-msgstr ""
+msgstr "Verkkotietokannat"
 
 #: qtplugins/networkdatabases/networkdatabases.h:39
 msgid "Interact with online databases, query structures etc."
 msgstr ""
+"Ole vuorovaikutuksessa verkkotietokantojen, kyselyrakenteiden jne. kanssa."
 
 #: qtplugins/noncovalent/noncovalent.cpp:340
-#, fuzzy
-#| msgid "°"
 msgid " °"
 msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
-msgstr ""
+msgstr "Kulman toleranssi:"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
-msgstr ""
+msgstr "Hahmonnoi muutama ei-kovalenttinen vuorovaikutus."
 
 #: qtplugins/noncovalent/noncovalent.h:54
 msgid "Halogen"
-msgstr ""
+msgstr "Halogeeni"
 
 #: qtplugins/noncovalent/noncovalent.h:55
 msgid "Chalcogen"
-msgstr ""
+msgstr "Kalkogeeni"
 
 #: qtplugins/openbabel/openbabel.cpp:53
-#, fuzzy
 msgid "Configure Force Field…"
-msgstr "Aseta voimakenttä…"
+msgstr "Määritä voimakenttä…"
 
 #: qtplugins/openbabel/openbabel.cpp:59
 msgid "Conformer Search…"
-msgstr ""
+msgstr "Konformeerien haku…"
 
 #: qtplugins/openbabel/openbabel.cpp:65
 msgid "Perceive Bonds"
-msgstr ""
+msgstr "Havaitse sidokset"
 
 #: qtplugins/openbabel/openbabel.cpp:77
 msgid "Add Hydrogens for pH…"
-msgstr ""
+msgstr "Lisää vetyä pH:n vuoksi…"
 
 #: qtplugins/openbabel/openbabel.cpp:83
-#, fuzzy
 msgid "Remove Hydrogens"
-msgstr "Poista vetyjä"
+msgstr "Poista vedyt"
 
 #: qtplugins/openbabel/openbabel.cpp:94
 #, qt-format
 msgid "%1 not found! Disabling Open Babel plugin actions."
-msgstr ""
+msgstr "%1 ei löytynyt! Poistetaan Open Babel -liitännäisen toiminnot käytöstä."
 
 #: qtplugins/openbabel/openbabel.cpp:112
 msgid "&Open Babel"
-msgstr ""
+msgstr "&Open Babel"
 
 #: qtplugins/openbabel/openbabel.cpp:119
 msgid "The Open Babel file formats are not ready to be added."
-msgstr ""
+msgstr "Open Babel -tiedostomuodot eivät ole valmiita lisättäväksi."
 
 #: qtplugins/openbabel/openbabel.cpp:203
 msgid "Loading molecule from Open Babel…"
-msgstr ""
+msgstr "Ladataan molekyyliä Open Babelista…"
 
 #: qtplugins/openbabel/openbabel.cpp:209
 msgid ""
 "An internal error occurred: OpenBabel::readMolecule called, but no obabel "
 "output is available to parse!"
 msgstr ""
+"Tapahtui sisäinen virhe: OpenBabel::readMolecule kutsuttiin, mutta obabel-"
+"tulostetta ei ole saatavilla jäsennettäväksi!"
 
 #: qtplugins/openbabel/openbabel.cpp:218
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr ""
+msgstr "Virhe suoritettaessa Open Babel (%1)."
 
 #: qtplugins/openbabel/openbabel.cpp:228
 msgid "Error parsing openbabel output."
-msgstr ""
+msgstr "Virhe jäsennettäessä openbabel-tulostetta."
 
 #: qtplugins/openbabel/openbabel.cpp:370 qtplugins/openbabel/openbabel.cpp:398
 #: qtplugins/openbabel/openbabel.cpp:432 qtplugins/openbabel/openbabel.cpp:577
@@ -3797,34 +3859,38 @@ msgid ""
 "An error occurred while retrieving the list of supported forcefields. (using "
 "'%1')."
 msgstr ""
+"Tuettujen voimakenttien luetteloa noudettaessa tapahtui virhe. (käyttäen "
+"'%1')."
 
 #: qtplugins/openbabel/openbabel.cpp:423
 msgid "Molecule invalid. Cannot optimize geometry."
-msgstr ""
+msgstr "Molekyyli epäkelvollinen. Geometriaa ei voi optimoida."
 
 #: qtplugins/openbabel/openbabel.cpp:441
 msgid "Cannot optimize geometry with Open Babel."
-msgstr ""
+msgstr "Geometriaa ei voi optimoida Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:466
 msgid "Optimizing Geometry (Open Babel)"
-msgstr ""
+msgstr "Optimoidaan geometriaa (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:467 qtplugins/openbabel/openbabel.cpp:620
 msgid "Generating…"
-msgstr ""
+msgstr "Luodaan…"
 
 #: qtplugins/openbabel/openbabel.cpp:486 qtplugins/openbabel/openbabel.cpp:637
 msgid ""
 "An internal error occurred while generating an Open Babel representation of "
 "the current molecule."
 msgstr ""
+"Tapahtui sisäinen virhe luotaessa Open Babel -esitystä nykyisestä "
+"molekyylistä."
 
 #: qtplugins/openbabel/openbabel.cpp:492 qtplugins/openbabel/openbabel.cpp:643
 #, qt-format
 msgctxt "arg is an executable file."
 msgid "Starting %1…"
-msgstr ""
+msgstr "Käynnistetään %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:506 qtplugins/openbabel/openbabel.cpp:514
 #: qtplugins/openbabel/openbabel.cpp:657 qtplugins/openbabel/openbabel.cpp:665
@@ -3834,15 +3900,18 @@ msgid ""
 "Current energy: %3\n"
 "dE: %4"
 msgstr ""
+"Vaihe %1/%2\n"
+"Nykyinen energia: %3\n"
+"dE: %4"
 
 #: qtplugins/openbabel/openbabel.cpp:528 qtplugins/openbabel/openbabel.cpp:679
 msgid "Updating molecule…"
-msgstr ""
+msgstr "Päivitetään molekyyliä…"
 
 #: qtplugins/openbabel/openbabel.cpp:536 qtplugins/openbabel/openbabel.cpp:687
 #: qtplugins/openbabel/openbabel.cpp:778 qtplugins/openbabel/openbabel.cpp:960
 msgid "Error interpreting Open Babel output."
-msgstr ""
+msgstr "Virhe tulkittaessa Open Babel -tulostetta."
 
 #: qtplugins/openbabel/openbabel.cpp:549 qtplugins/openbabel/openbabel.cpp:700
 #: qtplugins/openbabel/openbabel.cpp:790
@@ -3851,136 +3920,139 @@ msgid ""
 "Number of atoms in obabel output (%1) does not match the number of atoms in "
 "the original molecule (%2)."
 msgstr ""
+"Obabelin tulosteen atomien lukumäärä (%1) ei vastaa alkuperäisen molekyylin "
+"atomien lukumäärää (%2)."
 
 #: qtplugins/openbabel/openbabel.cpp:568
 msgid "Molecule invalid. Cannot generate conformers."
-msgstr ""
+msgstr "Molekyyli epäkelvollinen. Ei voi luoda konformeereja."
 
 #: qtplugins/openbabel/openbabel.cpp:586
 msgid "Cannot generate conformers with Open Babel."
-msgstr ""
+msgstr "Ei voi luoda konformeereja Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:619
 msgid "Generating Conformers (Open Babel)"
-msgstr ""
+msgstr "Konformeerien luominen (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:710
 msgid "Generate Conformers"
-msgstr ""
+msgstr "Luo konformeerit"
 
 #: qtplugins/openbabel/openbabel.cpp:729
 msgid "Cannot open file with Open Babel."
-msgstr ""
+msgstr "Tiedostoa ei voi avata Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:735
 msgid "Invalid molecule: Cannot perceive bonds."
-msgstr ""
+msgstr "Epäkelvollinen molekyyli: Ei voi havaita sidoksia."
 
 #: qtplugins/openbabel/openbabel.cpp:741
 msgid "Perceiving Bonds (Open Babel)"
-msgstr ""
+msgstr "Sidosten havaitseminen (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:742
 msgid "Generating XYZ representation…"
-msgstr ""
+msgstr "Luodaan XYZ-esitystä…"
 
 #: qtplugins/openbabel/openbabel.cpp:749
 msgid "Error generating XYZ string."
-msgstr ""
+msgstr "Virhe luotaessa XYZ-merkkijonoa."
 
 #: qtplugins/openbabel/openbabel.cpp:760
 #, qt-format
 msgid "Converting XYZ to Open Babel with %1…"
-msgstr ""
+msgstr "Muunnetaan XYZ Open Babeliksi %1:lla…"
 
 #: qtplugins/openbabel/openbabel.cpp:770
 msgid "Updating molecule from Open Babel…"
-msgstr ""
+msgstr "Päivitetään molekyyliä Open Babelista…"
 
 #: qtplugins/openbabel/openbabel.cpp:822 qtplugins/openbabel/openbabel.cpp:864
 msgid "Cannot add hydrogens with Open Babel."
-msgstr ""
+msgstr "Vetyjä ei voi lisätä Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:827 qtplugins/openbabel/openbabel.cpp:877
-#, fuzzy
 msgid "Adding Hydrogens (Open Babel)"
-msgstr "Lisää vetyjä (Open Babel)"
+msgstr "Lisätään vedyt (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:828
 msgid "Generating Open Babel input…"
-msgstr ""
+msgstr "Luodaan Open Babel -syötettä…"
 
 #: qtplugins/openbabel/openbabel.cpp:836 qtplugins/openbabel/openbabel.cpp:886
 msgid "Error generating Open Babel input."
-msgstr ""
+msgstr "Virhe luotaessa Open Babel -syötettä."
 
 #: qtplugins/openbabel/openbabel.cpp:849 qtplugins/openbabel/openbabel.cpp:899
 #: qtplugins/openbabel/openbabel.cpp:941
 #, qt-format
 msgid "Running %1…"
-msgstr ""
+msgstr "Suoritetaan %1…"
 
 #: qtplugins/openbabel/openbabel.cpp:871
 msgid "Add hydrogens for pH"
-msgstr ""
+msgstr "Lisää vetyjä pH:n vuoksi"
 
 #: qtplugins/openbabel/openbabel.cpp:871
-#, fuzzy
 msgid "pH:"
 msgstr "pH:"
 
 #: qtplugins/openbabel/openbabel.cpp:878 qtplugins/openbabel/openbabel.cpp:920
 msgid "Generating obabel input…"
-msgstr ""
+msgstr "Luodaan obabel-syötettä…"
 
 #: qtplugins/openbabel/openbabel.cpp:914
 msgid "Cannot remove hydrogens with Open Babel."
-msgstr ""
+msgstr "Vetyjä ei voi poistaa Open Babelilla."
 
 #: qtplugins/openbabel/openbabel.cpp:919
-#, fuzzy
 msgid "Removing Hydrogens (Open Babel)"
-msgstr "Poista vetyjä (Open Babel)"
+msgstr "Poistetaan vedyt (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
 msgid "Error generating Open Babel data."
-msgstr ""
+msgstr "Virhe luotaessa Open Babel -dataa."
 
 #: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
-msgstr ""
+msgstr "Luetaan obabel-tulostetta…"
 
 #: qtplugins/openbabel/openbabel.cpp:1014
 msgid ""
 "Already running Open Babel. Wait for the other operation to complete and try "
 "again."
 msgstr ""
+"Open Babel on jo käynnissä. Odota, että toinen toiminto on suoritettu "
+"loppuun, ja yritä uudelleen."
 
 #: qtplugins/openbabel/openbabel.h:38
 msgid "OpenBabel"
-msgstr ""
+msgstr "OpenBabel"
 
 #: qtplugins/openbabel/openbabel.h:42
 msgid "Interact with OpenBabel utilities."
-msgstr ""
+msgstr "Ole vuorovaikutuksessa OpenBabel-apuohjelmien kanssa."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr ""
+msgstr "&AvaaMM-skripti…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
-msgstr ""
+msgstr "OpenMM-syöttö"
 
 #: qtplugins/openmminput/openmminput.h:35
 msgid "Generate input for OpenMM."
-msgstr ""
+msgstr "Luo syöte OpenMM:lle."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
+"Haluatko päivittää esikatselun tekstin, menettäen kaikki OpenMM-syöttöpakin "
+"esikatseluruudussa tehdyt muutokset?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -3988,7 +4060,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:933
 #: qtplugins/openmminput/openmminputdialog.cpp:1051
 msgid "inpcrd"
-msgstr ""
+msgstr "inpcrd"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:498
@@ -3996,32 +4068,32 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1053
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1274
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
 #: qtplugins/openmminput/openmminputdialog.cpp:1042
 #: qtplugins/openmminput/openmminputdialog.cpp:1049
 msgid "pdb"
-msgstr ""
+msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
-msgstr ""
+msgstr "yläosa"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:402
 #. i18n: ectx: property (text), item, widget (QComboBox, rigidWaterCombo)
@@ -4032,37 +4104,37 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:1060
 #: qtplugins/openmminput/openmminputdialog.cpp:1069:1391 rc.cpp:1406
 msgid "True"
-msgstr ""
+msgstr "Tosi"
 
 #: qtplugins/overlayaxes/overlayaxes.cpp:237
 msgid "Reference Axes"
-msgstr ""
+msgstr "Viiteakselit"
 
 #: qtplugins/overlayaxes/overlayaxes.h:30
 msgid "Reference Axes Overlay"
-msgstr ""
+msgstr "Viiteakselien peittokuva"
 
 #: qtplugins/overlayaxes/overlayaxes.h:33
 msgid "Render reference axes in the corner of the display."
-msgstr ""
+msgstr "Hahmonnoi referenssiakselit näytön kulmassa."
 
 #: qtplugins/playertool/playertool.cpp:47
 msgctxt "control-key 9"
 msgid "Ctrl+9"
-msgstr ""
+msgstr "Ctrl+9"
 
 #: qtplugins/playertool/playertool.cpp:48
 msgid "Player"
-msgstr ""
+msgstr "Toistin"
 
 #: qtplugins/playertool/playertool.cpp:49
 #, qt-format
 msgid "Animation Tool \t(%1)"
-msgstr ""
+msgstr "Animaatiotyökalu \t(%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
-msgstr ""
+msgstr "Toista"
 
 #: qtplugins/playertool/playertool.cpp:77
 msgid "Stop"
@@ -4070,182 +4142,184 @@ msgstr "Pysäytä"
 
 #: qtplugins/playertool/playertool.cpp:88
 msgid "Frame rate:"
-msgstr ""
+msgstr "Kuvataajuus:"
 
 #: qtplugins/playertool/playertool.cpp:94
 msgctxt "frames per second"
 msgid " FPS"
-msgstr ""
+msgstr " FPS (ruutua sekunnissa)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:118:1887
 msgid "Frame:"
-msgstr ""
+msgstr "Ruutu:"
 
 #: qtplugins/playertool/playertool.cpp:125
 #: qtplugins/playertool/playertool.cpp:416
 #: qtplugins/surfaces/surfacedialog.cpp:230
 #, qt-format
 msgid " of %0"
-msgstr ""
+msgstr " %0:sta"
 
 #: qtplugins/playertool/playertool.cpp:136
 msgid "Dynamic bonding?"
-msgstr ""
+msgstr "Dynaaminen sidos?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
 #: qtplugins/playertool/playertool.cpp:144:1893
 msgid "Record Movie…"
-msgstr ""
+msgstr "Tallenna elokuva…"
 
 #: qtplugins/playertool/playertool.cpp:248
 #: qtplugins/playertool/playertool.cpp:353
 msgid "Movie (*.mp4)"
-msgstr ""
+msgstr "Elokuva (*.mp4)"
 
 #: qtplugins/playertool/playertool.cpp:250
 msgid "Export Bitmap Graphics"
-msgstr ""
+msgstr "Vie bittikarttagrafiikka"
 
 #: qtplugins/playertool/playertool.cpp:251
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Elokuva (*.mp4);;Elokuva (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:888
 msgid "GIF (*.gif)"
-msgstr ""
+msgstr "GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:271
 msgid "GIF FPS support warning"
-msgstr ""
+msgstr "GIF FPS -tuen varoitus"
 
 #: qtplugins/playertool/playertool.cpp:272
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
+"GIF-tiedostomuoto ei tue kuvanopeuksia, jotka ovat yli 100 ruutua sekunnissa."
 
 #: qtplugins/playertool/playertool.cpp:317
-#, fuzzy
 msgid "Movie (*.avi)"
-msgstr "videotiedostot (*.avi)"
+msgstr "Elokuva (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:961
 msgid "Error: cannot add frame to video."
-msgstr ""
+msgstr "Virhe: kehystä ei voi lisätä videoon."
 
 #: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:973
 #, qt-format
 msgid "Cannot save file %1."
-msgstr ""
+msgstr "Tiedostoa %1 ei voi tallentaa."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
-msgstr ""
+msgstr "Toistimen työkalut"
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Play back trajectories"
-msgstr ""
+msgstr "Toista liikeradat"
 
 #: qtplugins/plotpdf/plotpdf.cpp:37
 msgid "Plot Pair Distribution Function…"
-msgstr ""
+msgstr "Piirrä parijakautumisfunktio…"
 
 #: qtplugins/plotpdf/plotpdf.cpp:121
 msgid "Failed to generate PDF pattern"
-msgstr ""
+msgstr "PDF-kuvion luominen epäonnistui"
 
 #: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
-msgstr ""
+msgstr "Virheviesti: "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
-msgstr ""
+msgstr "Luo ja piirrä parijakaumafunktiokäyrä."
 
 #: qtplugins/plotrmsd/plotrmsd.cpp:30
 msgid "Plot RMSD curve…"
-msgstr ""
+msgstr "Piirrä RMSD-käyrä…"
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
-msgstr ""
+msgstr "PlotRmsd"
 
 #: qtplugins/plotrmsd/plotrmsd.h:64
 msgid "Generate and plot an RMSD curve."
-msgstr ""
+msgstr "Luo ja piirrä RMSD-käyrä."
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
 msgid "Plot Theoretical XRD Pattern…"
-msgstr ""
+msgstr "Piirrä teoreettinen XRD-kuvio…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
-msgstr ""
+msgstr "XRD-kuvion luominen epäonnistui"
 
 #: qtplugins/plotxrd/plotxrd.cpp:157
 msgid "Failed to convert molecule to CIF format."
-msgstr ""
+msgstr "Molekyylin muuntaminen CIF-muodoksi epäonnistui."
 
 #: qtplugins/plotxrd/plotxrd.cpp:192
 msgid "Data read from genXrdPattern appears to be corrupt!"
-msgstr ""
+msgstr "GenXrdPatternista luetut tiedot näyttävät olevan vioittuneet!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:230
 msgid "Error: could not find genXrdPattern executable!"
-msgstr ""
+msgstr "Virhe: genXrdPattern-suoritettavaa ei löytynyt!"
 
 #: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
 #: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
 #: qtplugins/yaehmop/yaehmop.cpp:555
 msgid "Error: "
-msgstr ""
+msgstr "Virhe: "
 
 #: qtplugins/plotxrd/plotxrd.h:38
 msgid "PlotXrd"
-msgstr ""
+msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:86
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
-msgstr ""
+msgstr "Luo ja piirrä teoreettinen XRD-kuvio käyttämällä ObjCryst++:ta."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Update"
-msgstr ""
+msgstr "Päivitä"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Version"
-msgstr ""
+msgstr "Versio"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:64
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Virhe ladattaessa liitännäistietoja."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Virhe jäsennettäessä liitännäistietoja."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:306
 msgid ""
 "This plugin requires certain packages to be installed.\n"
 "Do you want to install them?"
 msgstr ""
+"Tämä liitännäinen edellyttää tiettyjen pakettien asentamista.\n"
+"Haluatko asentaa ne?"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:314
 msgid "Always"
-msgstr ""
+msgstr "Aina"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:315
 msgid "Never"
-msgstr ""
+msgstr "Ei koskaan"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:358
 #: qtplugins/plugindownloader/downloaderwidget.cpp:368
@@ -4254,12 +4328,12 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Lataaminen kohteesta %1 epäonnistui: tilakoodi %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:400
 #, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr ""
+msgstr "Ladataan %1 kohteeseen %2\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:413
 #, qt-format
@@ -4269,68 +4343,67 @@ msgstr ""
 #: qtplugins/plugindownloader/downloaderwidget.cpp:416
 #, qt-format
 msgid "Finished %1 files\n"
-msgstr ""
+msgstr "%1 tiedostoa valmiina\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:420
 msgid "Extraction successful\n"
-msgstr ""
+msgstr "Purkaminen onnistui\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:496
 #, qt-format
 msgid "Error while extracting: %1"
-msgstr ""
+msgstr "Virhe purettaessa: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
 #: qtplugins/plugindownloader/plugindownloader.cpp:27:1613
 msgid "Download Plugins…"
-msgstr ""
+msgstr "Lataa liitännäiset…"
 
 #: qtplugins/plugindownloader/plugindownloader.h:37
 msgid "Download Plugins"
-msgstr ""
+msgstr "Lataa liitännäiset"
 
 #: qtplugins/plugindownloader/plugindownloader.h:41
 msgid "Download plugins from GitHub repositories."
-msgstr ""
+msgstr "Lataa liitännäiset GitHub-tietovarastoista."
 
 #: qtplugins/ply/ply.cpp:29
 msgid "PLY Render…"
-msgstr ""
+msgstr "PLY Hahmonnoi…"
 
 #: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
-#, fuzzy
 msgid "Save File"
 msgstr "Tallenna tiedosto"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr ""
+msgstr "PLY (*.ply);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
-msgstr ""
+msgstr "PLY"
 
 #: qtplugins/ply/ply.h:29
 msgid "Render the scene using PLY."
-msgstr ""
+msgstr "Hahmonnoi kohtaus PLY:ta käyttäen."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
-msgstr ""
+msgstr "POV-Ray Hahmonnoi…"
 
 #: qtplugins/povray/povray.cpp:71
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
-msgstr ""
+msgstr "POV-Ray (*.pov);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/povray/povray.h:25
 msgid "POVRay"
-msgstr ""
+msgstr "POVRay"
 
 #: qtplugins/povray/povray.h:29
 msgid "Render the scene using POV-Ray."
-msgstr ""
+msgstr "Hahmonnoi kohtaus POV-Ray:ta käyttäen."
 
 #: qtplugins/propertytables/propertymodel.cpp:501
 msgid "Valence"
@@ -4338,13 +4411,13 @@ msgstr "Valenssi"
 
 #: qtplugins/propertytables/propertymodel.cpp:503
 msgid "Formal Charge"
-msgstr ""
+msgstr "Muodollinen varaus"
 
 #: qtplugins/propertytables/propertymodel.cpp:506
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
-msgstr ""
+msgstr "%1 Osittainen varaus"
 
 #: qtplugins/propertytables/propertymodel.cpp:511
 msgid "X (Å)"
@@ -4361,11 +4434,10 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "Nimiö"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
-#, fuzzy
 msgid "Color"
 msgstr "Väri"
 
@@ -4378,88 +4450,81 @@ msgstr "Atomi"
 #: qtplugins/propertytables/propertymodel.cpp:587
 #: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #: qtplugins/propertytables/propertymodel.cpp:531
 msgid "Start Atom"
-msgstr ""
+msgstr "Aloita atomi"
 
 #: qtplugins/propertytables/propertymodel.cpp:533
-#, fuzzy
 msgid "End Atom"
-msgstr "Näytä atomit"
+msgstr "Lopussa oleva atomi"
 
 #: qtplugins/propertytables/propertymodel.cpp:535
-#, fuzzy
 msgid "Bond Order"
-msgstr "Sidoskertaluku"
+msgstr "Sidosjärjestys"
 
 #: qtplugins/propertytables/propertymodel.cpp:539
 msgctxt "in Angstrom"
 msgid "Length (Å)"
-msgstr ""
+msgstr "Pituus (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Chain"
-msgstr ""
+msgstr "Ketju"
 
 #: qtplugins/propertytables/propertymodel.cpp:556
 msgid "Secondary Structure"
-msgstr ""
+msgstr "Toissijainen rakenne"
 
 #: qtplugins/propertytables/propertymodel.cpp:558
 msgid "Heterogen"
-msgstr ""
+msgstr "Heterogeeni"
 
 #: qtplugins/propertytables/propertymodel.cpp:572
 #: qtplugins/propertytables/propertymodel.cpp:589
-#, fuzzy
 msgid "Atom 1"
 msgstr "Atomi 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:574
 msgid "Vertex"
-msgstr ""
+msgstr "Vertex"
 
 #: qtplugins/propertytables/propertymodel.cpp:576
 #: qtplugins/propertytables/propertymodel.cpp:593
-#, fuzzy
 msgid "Atom 3"
 msgstr "Atomi 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:578
 #: qtplugins/propertytables/propertymodel.cpp:597
-#, fuzzy
 msgid "Angle (°)"
 msgstr "Kulma (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:591
-#, fuzzy
 msgid "Atom 2"
 msgstr "Atomi 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:595
-#, fuzzy
 msgid "Atom 4"
 msgstr "Atomi 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:608
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
-msgstr ""
+msgstr "RMSD (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:611
 msgid "Energy (kcal/mol)"
-msgstr ""
+msgstr "Energia (kcal/mol)"
 
 #: qtplugins/propertytables/propertymodel.cpp:807
 msgid "Adjust Fragment"
-msgstr ""
+msgstr "Säädä fragmenttia"
 
 #: qtplugins/propertytables/propertymodel.cpp:933
 msgctxt "pi helix"
 msgid "π Helix"
-msgstr ""
+msgstr "π Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:935
 msgctxt "protein bend secondary structure"
@@ -4469,22 +4534,22 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:937
 msgctxt "alpha helix"
 msgid "α Helix"
-msgstr ""
+msgstr "α Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:939
 msgctxt "beta sheet"
 msgid "β Sheet"
-msgstr ""
+msgstr "β-arkki"
 
 #: qtplugins/propertytables/propertymodel.cpp:941
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr ""
+msgstr "3-10 helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:943
 msgctxt "beta bridge"
 msgid "β Bridge"
-msgstr ""
+msgstr "β-silta"
 
 #: qtplugins/propertytables/propertymodel.cpp:945
 msgctxt "protein turn secondary structure"
@@ -4494,201 +4559,195 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:947
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "Kela"
 
 #: qtplugins/propertytables/propertytables.cpp:27
-#, fuzzy
 msgid "Atom Properties…"
-msgstr "Atomiominaisuudet…"
+msgstr "Atomin ominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:34
-#, fuzzy
 msgid "Bond Properties…"
 msgstr "Sidosominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:41
 msgid "Angle Properties…"
-msgstr ""
+msgstr "Kulmaominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:48
-#, fuzzy
 msgid "Torsion Properties…"
-msgstr "Kiertokulmaominaisuudet…"
+msgstr "Vääntöominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
 msgid "Residue Properties…"
-msgstr ""
+msgstr "Jäännösominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
-msgstr ""
+msgstr "Konformeerin ominaisuudet…"
 
 #: qtplugins/propertytables/propertytables.cpp:75
 msgid ""
 "Tables for displaying and editng atom, bond, angle and torsion properties."
 msgstr ""
+"Taulukot atomin, sidoksen, kulman ja vääntöominaisuuksien näyttämiseen ja "
+"muokkaamiseen."
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "Ominaisuudet"
+msgstr "Ominaisuustaulukot"
 
 #: qtplugins/propertytables/propertyview.cpp:44
-#, fuzzy
 msgid "Atom Properties"
 msgstr "Atomiominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:47
-#, fuzzy
 msgid "Bond Properties"
 msgstr "Sidosominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:50
 msgid "Angle Properties"
-msgstr ""
+msgstr "Kulmaominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:53
-#, fuzzy
 msgid "Torsion Properties"
-msgstr "Kiertokulmaominaisuudet"
+msgstr "Vääntöominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:56
 msgid "Conformer Properties"
-msgstr ""
+msgstr "Konformeerien ominaisuudet"
 
 #: qtplugins/propertytables/propertyview.cpp:59
 msgid "Residue Properties"
-msgstr ""
+msgstr "Jäännösominaisuudet"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
 msgid "QTAIM"
-msgstr ""
+msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:29
 msgid "Renders primitives using QTAIM properties"
-msgstr ""
+msgstr "Hahmonnoi primitiivit QTAIM-ominaisuuksia käyttäen"
 
 #: qtplugins/qtaim/qtaimextension.cpp:41
 msgid "Molecular Graph…"
-msgstr ""
+msgstr "Molekyylikaavio…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:48
 msgid "Molecular Graph with Lone Pairs…"
-msgstr ""
+msgstr "Molekyylikaavio yksinäisillä pareilla…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
 msgid "Atomic Charge…"
-msgstr ""
+msgstr "Atomivaraus…"
 
 #: qtplugins/qtaim/qtaimextension.cpp:93
 msgid "Open WFN File"
-msgstr ""
+msgstr "Avaa WFN-tiedosto"
 
 #: qtplugins/qtaim/qtaimextension.cpp:94
 msgid "WFN files (*.wfn);;All files (*.*)"
-msgstr ""
+msgstr "WFN-tiedostot (*.wfn);;kaikki tiedostot (*.*)"
 
 #: qtplugins/qtaim/qtaimextension.h:23
 msgid "QTAIM extension"
-msgstr ""
+msgstr "QTAIM-laajennus"
 
 #: qtplugins/quantuminput/quantuminput.h:42
 msgid "Quantum input"
-msgstr ""
+msgstr "Kvanttisyöttö"
 
 #: qtplugins/quantuminput/quantuminput.h:46
 msgid "Generate input for quantum codes."
-msgstr ""
+msgstr "Luo syöte kvanttikoodeille."
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Center"
-msgstr ""
+msgstr "Keskipiste"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
-msgstr ""
+msgstr "Kohdista näkymä akseleihin"
 
 #: qtplugins/resetview/resetview.cpp:52
 msgid "Align view to axes."
-msgstr ""
+msgstr "Kohdista näkymä akseleihin."
 
 #: qtplugins/resetview/resetview.h:26
-#, fuzzy
 msgid "Reset view"
-msgstr "Palauta oletusarvot"
+msgstr "Nollaa näkymä"
 
 #: qtplugins/resetview/resetview.h:29
 msgid "Manipulate the view camera."
-msgstr ""
+msgstr "Manipuloi katselukameraa."
 
 #: qtplugins/scriptcharges/scriptcharges.h:32
 msgid "Script Charge Models"
-msgstr ""
+msgstr "Komentosarjojen varausmallit"
 
 #: qtplugins/scriptcharges/scriptcharges.h:36
 msgid "Load electrostatic models from external scripts."
-msgstr ""
+msgstr "Lataa sähköstaattiset mallit ulkoisista skripteistä."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:28
 msgid "Script File Formats"
-msgstr ""
+msgstr "Skriptitiedostomuodot"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:32
 msgid "Load file reader/writers from external scripts."
-msgstr ""
+msgstr "Lataa tiedostonlukija/kirjoittimet ulkoisista skripteistä."
 
 #: qtplugins/select/select.cpp:31
 msgid "Select All"
-msgstr ""
+msgstr "Valitse Kaikki"
 
 #: qtplugins/select/select.cpp:37
 msgid "Select None"
-msgstr ""
+msgstr "Valitse ei mitään"
 
 #: qtplugins/select/select.cpp:48 qtplugins/select/select.cpp:553
 msgid "Invert Selection"
-msgstr ""
+msgstr "Käänteinen valinta"
 
 #: qtplugins/select/select.cpp:53
 msgid "Select by Element…"
-msgstr ""
+msgstr "Valitse alkuaineen mukaan…"
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
-msgstr ""
+msgstr "Valitse atomi-indeksin mukaan…"
 
 #: qtplugins/select/select.cpp:63
 msgid "Select by Residue…"
-msgstr ""
+msgstr "Valitse jäännöksen mukaan…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
-msgstr ""
+msgstr "Valitse selkärangan atomit…"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Sidechain Atoms…"
-msgstr ""
+msgstr "Valitse sivuketjun atomit…"
 
 #: qtplugins/select/select.cpp:78 qtplugins/select/select.cpp:217
 msgid "Select Water"
-msgstr ""
+msgstr "Valitse vesi"
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
 msgid "Enlarge Selection"
-msgstr ""
+msgstr "Suurenna valinta"
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
-msgstr ""
+msgstr "Pienennä valinta"
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
-msgstr ""
+msgstr "Luo uusi kerros valinnasta"
 
 #: qtplugins/select/select.cpp:117
 msgid "Change selections"
-msgstr ""
+msgstr "Vaihda valinnat"
 
 #: qtplugins/select/select.cpp:127
 msgid "&Select"
@@ -4696,53 +4755,50 @@ msgstr "&Valitse"
 
 #: qtplugins/select/select.cpp:180
 msgid "Select Element"
-msgstr ""
+msgstr "Valitse alkuaine"
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
-msgstr ""
+msgstr "Valitse selkäranka"
 
 #: qtplugins/select/select.cpp:308
 msgid "Select Sidechain"
-msgstr ""
+msgstr "Valitse sivuketju"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "Valitse atomit indeksin mukaan"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
-msgstr ""
+msgstr "Valittavat atomit:"
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Select Atom"
 msgstr "Valitse atomi"
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
-msgstr ""
+msgstr "Valitse atomit jäännösten mukaan"
 
 #: qtplugins/select/select.cpp:486
 msgid "Residues to Select:"
-msgstr ""
+msgstr "Valittavat jäännökset:"
 
 #: qtplugins/select/select.cpp:491
 msgid "Select Residue"
-msgstr ""
+msgstr "Valitse jäännös"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
 #: qtplugins/select/select.h:30:1926
-#, fuzzy
 msgid "Select"
 msgstr "Valitse"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"
 msgid "Ctrl+5"
-msgstr ""
+msgstr "Ctrl+5"
 
 #: qtplugins/selectiontool/selectiontool.cpp:51
 msgid "Selection"
@@ -4759,56 +4815,62 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"Valintatyökalu\t(%1)\n"
+"\n"
+"Vasen-hiiri:\tNapsauta valitaksesi yksittäiset atomit, jäännökset tai "
+"palaset\n"
+"\tValitse atomialue vetämällä\n"
+"Oikea-hiiri:\tNapsauta molekyylin ulkopuolella poistaaksesi valinnan\n"
+"\tKäytä Ctrl vaihtaaksesi valintaa ja siirrä lisätäksesi valintaan.\n"
+"Kaksoisnapsautus:\tValitse koko palanen."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
-msgstr ""
+msgstr "Maalaa atomit"
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
 msgid "Selection tool"
-msgstr ""
+msgstr "Valintatyökalu"
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
 msgid "New Layer"
-msgstr ""
+msgstr "Uusi kerros"
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
-msgstr ""
+msgstr "Havaitse avaruusryhmä…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1911
 msgid "Symmetrize"
-msgstr ""
+msgstr "Aseta symmetriseksi"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
-#, fuzzy
-#| msgid "Fill Unit Cell"
 msgid "Fill Unit Cell…"
-msgstr "Täytä yksikkökoppi…"
+msgstr "Täytä yksikkösolu…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:78
 #: qtplugins/spacegroup/spacegroup.cpp:334
 msgid "Reduce to Asymmetric Unit"
-msgstr ""
+msgstr "Pelkistä epäsymmetriseksi yksiköksi"
 
 #: qtplugins/spacegroup/spacegroup.cpp:84
 msgid "Set Tolerance…"
-msgstr ""
+msgstr "Määritä toleranssi…"
 
 #: qtplugins/spacegroup/spacegroup.cpp:105
 msgid "Space Group"
-msgstr ""
+msgstr "Avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.cpp:112
 msgid "Fill symmetric atoms based on the crystal space group."
-msgstr ""
+msgstr "Täytä symmetriset atomit kideavaruusryhmän perusteella."
 
 #: qtplugins/spacegroup/spacegroup.cpp:187
 msgid "Perceive Space Group"
-msgstr ""
+msgstr "Havaitse avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.cpp:188
 #, qt-format
@@ -4816,20 +4878,24 @@ msgid ""
 "The space group is already set to: %1.\n"
 "Would you like to overwrite it?"
 msgstr ""
+"Avaruusryhmä on jo määritetty täksi: %1.\n"
+"Haluatko korvata sen?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
-msgstr ""
+msgstr "Epäonnistuminen"
 
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
 msgstr ""
+"Avaruusryhmän havaitseminen epäonnistui.\n"
+"Haluatko yrittää uudelleen eri toleranssilla?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:234
 msgid "Primitive Reduction"
-msgstr ""
+msgstr "Primitiivinen pelkistys"
 
 #: qtplugins/spacegroup/spacegroup.cpp:235
 #: qtplugins/spacegroup/spacegroup.cpp:260
@@ -4839,39 +4905,46 @@ msgid ""
 "The tolerance is currently set to: %1.\n"
 "Proceed with this tolerance?"
 msgstr ""
+"Toleranssi on tällä hetkellä määritetty täksi: %1.\n"
+"Edetäänkö tällä toleranssilla?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:248
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Primitiivinen pelkistys epäonnistui.\n"
+"Tarkista kiteesi ja yritä uudelleen eri toleranssilla."
 
 #: qtplugins/spacegroup/spacegroup.cpp:273
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Solun perinteiseksi saaminen epäonnistui.\n"
+"Tarkista kiteesi ja yritä uudelleen eri toleranssilla."
 
 #: qtplugins/spacegroup/spacegroup.cpp:297
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
 msgstr ""
+"Symmetriseksi saaminen epäonnistui.\n"
+"Tarkista kiteesi ja yritä uudelleen eri toleranssilla."
 
 #: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
-#, fuzzy
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
 #: qtplugins/spacegroup/spacegroup.cpp:356
 msgid "Select tolerance in Å:"
-msgstr ""
+msgstr "Valitse toleranssi Å:nä:"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "International"
-msgstr ""
+msgstr "Kansainvälinen"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
@@ -4879,19 +4952,19 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
-msgstr ""
+msgstr "Hermann-Mauguin"
 
 #: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
-msgstr ""
+msgstr "Valitse avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.h:24
 msgid "SpaceGroup"
-msgstr ""
+msgstr "Avaruusryhmä"
 
 #: qtplugins/spacegroup/spacegroup.h:70
 msgid "Space group features for crystals."
-msgstr ""
+msgstr "Avaruusryhmäominaisuudet kiteille."
 
 #: qtplugins/spectra/spectra.cpp:29
 msgid "Plot Spectra…"
@@ -4992,8 +5065,6 @@ msgstr ""
 #: qtplugins/spectra/spectradialog.cpp:641
 #: qtplugins/spectra/spectradialog.cpp:654
 #: qtplugins/surfaces/orbitaltablemodel.cpp:108
-#, fuzzy
-#| msgid "Energy"
 msgid "Energy (eV)"
 msgstr "Energia (eV)"
 
@@ -5091,47 +5162,44 @@ msgid "From File"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:84
-#, fuzzy
-#| msgid "Create Surfaces..."
 msgid "Create Surfaces…"
-msgstr "Luo pintoja…"
+msgstr "Luo pinnat…"
 
 #: qtplugins/surfaces/surfaces.cpp:112
 msgid "Render the van der Waals surface."
-msgstr ""
+msgstr "Hahmonnoi van der Waalsin pinta."
 
 #: qtplugins/surfaces/surfaces.cpp:114
 msgid "Render the van der Waals molecular surface."
-msgstr ""
+msgstr "Hahmonnoi van der Waalsin molekyylipinta."
 
 #: qtplugins/surfaces/surfaces.cpp:116
 msgid "Render the solvent-accessible molecular surface."
-msgstr ""
+msgstr "Hahmonnoi liuottimellasaavutettava molekyylipinta."
 
 #: qtplugins/surfaces/surfaces.cpp:118
 msgid "Render the solvent-excluded molecular surface."
-msgstr ""
+msgstr "Hahmonnoi liuottimestapoissuljettu molekyylipinta."
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 msgid "Render a molecular orbital."
-msgstr ""
+msgstr "Hahmonnoi molekyylin kiertorata."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the electron density."
-msgstr ""
+msgstr "Hahmonnoi elektronitiheys."
 
 #: qtplugins/surfaces/surfaces.cpp:123
 msgid "Render the spin density."
-msgstr ""
+msgstr "Hahmonnoi pyörimistiheys."
 
 #: qtplugins/surfaces/surfaces.cpp:125
 msgid "Render a cube supplied with the file."
-msgstr ""
+msgstr "Hahmonnoi tiedoston mukana toimitettu kuutio."
 
 #: qtplugins/surfaces/surfaces.cpp:586
-#, fuzzy
 msgid "Calculating electron density"
-msgstr "Lasketaan elektronitiheyttä"
+msgstr "Lasketaan elektronin tiheyttä"
 
 #: qtplugins/surfaces/surfaces.cpp:595
 msgid "Calculating spin density"
@@ -5152,7 +5220,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:868
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Elokuva MP4 (*.mp4);;Elokuva AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
@@ -5160,7 +5228,7 @@ msgstr "Pinnat"
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
-msgstr ""
+msgstr "Lue ja hahmonnoi pinnat."
 
 #: qtplugins/svg/svg.cpp:30
 msgid "&SVG…"
@@ -5176,7 +5244,7 @@ msgstr "SVG"
 
 #: qtplugins/svg/svg.h:31
 msgid "Render the scene in a SVG file."
-msgstr ""
+msgstr "Hahmonnoi kohtaus SVG-tiedostossa."
 
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Class"
@@ -5192,16 +5260,16 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetryscene.h:37
 msgid "Render symmetry elements."
-msgstr ""
+msgstr "Hahmonnoi symmetriaelementit."
 
 #: qtplugins/symmetry/symmetryutil.cpp:36
 msgid "∞"
 msgstr ""
 
 #: qtplugins/symmetry/symmetrywidget.cpp:331
-#, fuzzy, qt-format
+#, qt-format
 msgid "Group %1"
-msgstr "Ryhmän %1"
+msgstr "Ryhmä %1"
 
 #: qtplugins/symmetry/symmetrywidget.cpp:339
 #, qt-format
@@ -5285,11 +5353,11 @@ msgstr ""
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
-msgstr ""
+msgstr "VRML-hahmonnointi…"
 
 #: qtplugins/vrml/vrml.cpp:71
 msgid "VRML (*.wrl);;Text file (*.txt)"
-msgstr ""
+msgstr "VRML (*.wrl);;Tekstitiedosto (*.txt)"
 
 #: qtplugins/vrml/vrml.h:25
 msgid "VRML"
@@ -5297,11 +5365,11 @@ msgstr ""
 
 #: qtplugins/vrml/vrml.h:29
 msgid "Render the scene using VRML."
-msgstr ""
+msgstr "Hahmonnoi kohtaus VRML:ta käyttäen."
 
 #: qtplugins/wireframe/wireframe.h:32
 msgid "Render the molecule as a wireframe."
-msgstr ""
+msgstr "Esitä molekyyli rautalankakehyksenä."
 
 #: qtplugins/yaehmop/yaehmop.cpp:90
 msgid "Calculate Band Structure…"
@@ -5540,7 +5608,7 @@ msgstr ""
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
 msgid "Generate Input From PDB"
-msgstr ""
+msgstr "Luo syöte PDB:sta"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, pdbFileLabel)
@@ -5636,10 +5704,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "Partial Charges"
-msgstr "Osittaisvaraus"
+msgstr "Osittaisvaraukset"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
@@ -5659,7 +5725,7 @@ msgstr ""
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ComDialog)
 msgid "Volume Rendering"
-msgstr ""
+msgstr "Tilavuuden hahmonnointi"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -5669,12 +5735,12 @@ msgstr ""
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:42
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Enable volume rendering"
-msgstr ""
+msgstr "Ota tilavuuden hahmonnointi käyttöön"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:59
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Enable surface rendering"
-msgstr ""
+msgstr "Ota pinnan hahmonnointi käyttöön"
 
 #. i18n: file: qtplugins/coloropacitymap/comdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -5767,6 +5833,28 @@ msgid ""
 "optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Muodin määrittely. Jokainen merkki ilmaisee "
+"kirjoitettavan arvon atomia kohti:</p><p><span style=\" font-weight:600;\""
+">#</span> - Atomin indeksi (1, 2, ..., numAtoms)<br/><span style="
+"\" font-weight:600;\">Z</span> - Atomiluku (esim. \"6\" hiilelle)<br/><span "
+"style=\" font-weight:600;\">G</span> - GAMESS-tyylinen atomiluku (esim. "
+"\"6,0\" hiilelle)<br/><span style=\" font-weight:600;\">N</span> - Elementin "
+"nimi (esim. \"Hiili\")<br/><span style=\" font-weight:600;\">S</span> - "
+"Elementin symboli (esim. \"C\" hiilelle)<br/><span style="
+"\" font-weight:700;\">L</span> - Atominimiö (esim. \"C2\" toiselle "
+"hiiliatomille, \"H1\" ensimmäiselle vetylle) <br/><span style="
+"\" font-weight:600;\">x</span> - X-paikan koordinaatti<br/><span style="
+"\" font-weight:600;\">y</span> - Y-paikan koordinaatti<br/><span style="
+"\" font-weight:600;\">z</span> - Z-paikan koordinaatti<br/><span style="
+"\" font-weight:600;\">a</span> - 'a'-hilakoordinaatti (kiteet vain)<br/"
+"><span style=\" font-weight:600;\">b</span> - 'b'-hilakoordinaatti (kiteet "
+"vain)<br/><span style=\" font-weight:600;\">c</span> - 'c'-hilakoordinaatti ("
+"kiteet vain)<br/><span style=\" font-weight:600;\">_</span> - Kirjaimellinen "
+"välilyönti (\" \"), hyödyllinen tasaukselle<br/><span style="
+"\" font-weight:600;\">0</span> - Kirjaimellinen 0 (\"0\"), hyödyllinen "
+"optimointilipuille<br/><span style=\" font-weight:600;\">1</span> - "
+"Kirjaimellinen 1 (\"1\"), hyödyllinen optimointilipuille<br/"
+"></p></body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -5811,7 +5899,6 @@ msgstr "Oletusasetukset"
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#, fuzzy
 msgid "Save File…"
 msgstr "Tallenna tiedosto…"
 
@@ -6285,8 +6372,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:52
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_A)
-#, fuzzy
-#| msgid "A:"
 msgctxt "adenine (A)"
 msgid "A"
 msgstr "A"
@@ -6298,8 +6383,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:62
 #. i18n: ectx: property (text), widget (QToolButton, toolButton_C)
-#, fuzzy
-#| msgid "C:"
 msgctxt "cytosine (C)"
 msgid "C"
 msgstr "C"
@@ -6335,15 +6418,11 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "A:"
 msgid "A"
 msgstr "A"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "B:"
 msgid "B"
 msgstr "B"
 
@@ -6356,8 +6435,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:142
 #. i18n: ectx: property (text), item, widget (QComboBox, bpCombo)
-#, fuzzy
-#| msgid "Other..."
 msgid "Other"
 msgstr "Muu"
 
@@ -6373,19 +6450,15 @@ msgstr ""
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
-#| msgid "Single"
 msgctxt "single-strand DNA"
 msgid "Single"
-msgstr "Yksinkertainen sidos"
+msgstr "Yksittäinen"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
-#, fuzzy
-#| msgid "Double"
 msgctxt "double-strand DNA"
 msgid "Double"
-msgstr "Kaksoissidos"
+msgstr "Kaksois-"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
@@ -6672,7 +6745,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:446
 #. i18n: ectx: property (toolTip), widget (QComboBox, zBoundaryCombo)
 msgid "Change Z boundary style."
-msgstr ""
+msgstr "Vaihda Z-reunuksen tyyli."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:453
 #. i18n: ectx: property (text), item, widget (QComboBox, zBoundaryCombo)
@@ -6731,12 +6804,12 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:486
 #. i18n: ectx: property (toolTip), widget (QComboBox, yBoundaryCombo)
 msgid "Change Y boundary style."
-msgstr ""
+msgstr "Vaihda Y-reunuksen tyyli."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:526
 #. i18n: ectx: property (toolTip), widget (QComboBox, xBoundaryCombo)
 msgid "Change X boundary style."
-msgstr ""
+msgstr "Vaihda X-reunuksen tyyli."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:566
 #. i18n: ectx: property (toolTip), widget (QLabel, label_boundary)
@@ -6894,12 +6967,12 @@ msgstr ""
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1012
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Generate…"
-msgstr ""
+msgstr "Luo…"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:41
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Descriptor:"
-msgstr ""
+msgstr "Kuvailija:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:79
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -6923,8 +6996,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:122
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
-#, fuzzy
-#| msgid "Origin:"
 msgid "Origin"
 msgstr "Origo"
 
@@ -6971,7 +7042,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
 msgid "Conformer Search"
-msgstr ""
+msgstr "Konformeerien haku"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, systematicOptionsGroupBox)
@@ -6981,7 +7052,7 @@ msgstr "Menetelmä"
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Number of conformers:"
-msgstr ""
+msgstr "Konformeerien lukumäärä:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
@@ -7006,7 +7077,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:68
 #. i18n: ectx: property (text), widget (QLabel, optimizationStepsLabel)
 msgid "Optimization per conformer:"
-msgstr ""
+msgstr "Optimointi konformeeria kohti:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:94
 #. i18n: ectx: property (title), widget (QGroupBox, geneticGroupBox)
@@ -7160,7 +7231,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:91
 #. i18n: ectx: property (text), widget (QLabel, label_forceField)
-#, fuzzy
 msgid "Forcefield:"
 msgstr "Voimakenttä:"
 
@@ -7614,6 +7684,8 @@ msgid ""
 "<html><head/><body><p>The number of 2theta points to generate.</"
 "p><p>Default: 1000</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Luotettavan 2theta-pisteen määrä.</p><p>Oletus: "
+"1000</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7687,10 +7759,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Width:"
 msgid "Peak Width:"
-msgstr "Leveys:"
+msgstr "Huipun leveys:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
@@ -7752,8 +7822,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:356
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#, fuzzy
-#| msgid "Calculate Energy"
 msgid "Calculated Spectra:"
 msgstr "Laskettu spektri:"
 
@@ -7764,8 +7832,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:387
 #. i18n: ectx: property (text), item, widget (QComboBox, fontSizeCombo)
-#, fuzzy
-#| msgid "10e-"
 msgid "10"
 msgstr "10"
 
@@ -7880,7 +7946,7 @@ msgstr ""
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
 msgid "Render"
-msgstr ""
+msgstr "Hahmonnus"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
@@ -7909,9 +7975,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Color by:"
-msgstr "Väri:"
+msgstr "Väritys mukaan:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -7930,8 +7995,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:311
 #. i18n: ectx: property (prefix), widget (QDoubleSpinBox, isosurfaceDoubleSpinBox)
-#, fuzzy
-#| msgid " ("
 msgid " "
 msgstr " "
 
@@ -7954,7 +8017,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:515
 #. i18n: ectx: property (text), widget (QPushButton, calculateButton)
-#, fuzzy
 msgid "Calculate"
 msgstr "Laske"
 
@@ -8080,9 +8142,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
-#, fuzzy
 msgid "Coordination:"
-msgstr "Koordinaatio:"
+msgstr "Koordinointi:"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
@@ -8193,13 +8254,11 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#, fuzzy
 msgid "Groups"
 msgstr "Ryhmät"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
 #. i18n: ectx: property (text), widget (QLabel, label)
-#, fuzzy
 msgid "Group:"
 msgstr "Ryhmä:"
 
@@ -8353,6 +8412,17 @@ msgid ""
 "high symmetry points depending on the lattice (such as if a &gt; b or a &lt; "
 "b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Syötä erityiset k-pisteet sellaisenaan:</p><p>L 0,5 "
+"0,5 0,5</p><p>G 0,0 0,0 0,0</p><p>X 0,5 0,0 0,5</p><p>Toisin sanoen "
+"&lt;symboli&gt; &lt;x&gt; &lt;y&gt; &lt;z&gt; missä x, y ja z ovat murto-"
+"osia käänteisavaruuden koordinaatteja. Nämä k-pisteet yhdistetään kaavioon "
+"siinä järjestyksessä, jossa ne asetit. Huomaa, että solusi suunta voi "
+"vaikuttaa näiden käänteisavaruuspisteiden sijaintiin.</p><p>Jos kiteen "
+"avaruusryhmä on havaittu tai asetettu, erityiset k-pisteet täytetään "
+"automaattisesti tämän avaruusryhmän primitiivisillä solun korkean symmetrian "
+"pisteillä. On olemassa muutamia avaruusryhmiä, joilla on erilaiset korkeat "
+"symmetriapisteet hilasta riippuen (kuten jos &gt; b tai &lt; b) - tämä "
+"huomioidaan automaattisesti.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
@@ -8401,6 +8471,12 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Jaksottaisten mittojen määrä.</p><p><br/></p><p>Jos "
+"arvoksi on asetettu 1, materiaali on jaksollinen vain pitkin kiteen "
+"A-vektoria.</p><p><br/></p><p>Jos arvoksi on asetettu 2, materiaali on "
+"jaksollista sekä A- että B-vektorilla.</p><p><br/></p><p>Jos arvoksi on "
+"asetettu 3, materiaali on jaksoittaista kiteen A-, B- ja C-vektoreita "
+"pitkin.</p><p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:194
 #. i18n: ectx: property (text), widget (QLabel, label_3)
@@ -8414,29 +8490,11 @@ msgstr ""
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
-",Launchpad Contributions:,Ulla, ,Launchpad Contributions:,Geoff Hutchison,"
-"Ulla, ,Launchpad Contributions:,Avogadro Team, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison, ,Launchpad "
-"Contributions:,Avogadro Team,Geoff Hutchison, ,Launchpad Contributions:,"
-"Avogadro Team,Geoff Hutchison, ,Launchpad Contributions:,Avogadro Team,Geoff "
-"Hutchison, ,Launchpad Contributions:,Avogadro Team,Geoff Hutchison, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Lasse Liehu, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Lasse Liehu, ,"
-"Launchpad Contributions:,Avogadro Team,Geoff Hutchison,Lasse Liehu"
+msgstr "Ricky Tigg,"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,,,,,,,,avogadro-devel@lists.sourceforge.net,,,avogadro-devel@lists."
-"sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-"
-"devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,"
-"avogadro-devel@lists.sourceforge.net,,,,avogadro-devel@lists.sourceforge."
-"net,,,,avogadro-devel@lists.sourceforge.net,,,,avogadro-devel@lists."
-"sourceforge.net,,,,avogadro-devel@lists.sourceforge.net,,,,,avogadro-"
-"devel@lists.sourceforge.net,,,,,avogadro-devel@lists.sourceforge.net,,"
 
 #, fuzzy
 #~| msgid "Partial Charge"

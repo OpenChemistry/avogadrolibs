@@ -3,18 +3,20 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include "molecule.h"
 #include "moleculemodel.h"
+#include "molecule.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
+#include <QtGui/QPalette>
 
 namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
-{}
+{
+}
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
 {
@@ -115,14 +117,16 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
       case Qt::ForegroundRole:
         if (mol == m_activeMolecule)
           return QVariant(QColor(Qt::red));
-        else
-          return QVariant(QColor(Qt::black));
+        else {
+          const QPalette defaultPalette;
+          return QVariant(defaultPalette.color(QPalette::WindowText));
+        }
       default:
         return QVariant();
     }
   } else if (idx.column() == 1) {
     if (role == Qt::DecorationRole)
-      return QIcon(":/icons/fallback/32x32/edit-delete.png");
+      return QIcon::fromTheme("document-close");
   }
   return QVariant();
 }
@@ -197,4 +201,4 @@ void MoleculeModel::itemChanged()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

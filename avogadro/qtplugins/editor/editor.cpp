@@ -455,11 +455,12 @@ void Editor::bondRightClick(QMouseEvent* e)
 {
   e->accept();
   // see if we need to adjust hydrogens
+  RWBond bond = m_molecule->bond(m_clickedObject.index);
+  RWAtom atom1 = bond.atom1();
+  RWAtom atom2 = bond.atom2();
+  m_molecule->removeBond(m_clickedObject.index);
+
   if (m_toolWidget->adjustHydrogens()) {
-    RWBond bond = m_molecule->bond(m_clickedObject.index);
-    RWAtom atom1 = bond.atom1();
-    RWAtom atom2 = bond.atom2();
-    m_molecule->removeBond(m_clickedObject.index);
     QtGui::HydrogenTools::adjustHydrogens(atom1);
     QtGui::HydrogenTools::adjustHydrogens(atom2);
   }
