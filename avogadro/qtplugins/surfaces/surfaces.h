@@ -91,6 +91,7 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT(Type type = Unknown, float defaultResolution = 0.0);
+  void calculateEDTpass(Core::Cube* cube, Type type = Unknown, float defaultResolution = 0.0);
   void performEDTStep(); // EDT step for SolventExcluded
   void calculateQM(Type type = Unknown, int index = -1, bool betaSpin = false,
                    float isoValue = 0.0, float defaultResolution = 0.0);
@@ -99,7 +100,9 @@ private slots:
   void stepChanged(int);
 
   void displayMesh();
+  void generateMesh(Core::Cube* cube, Core::Mesh* mesh, QtGui::MeshGenerator*& meshGenerator, bool isoaValue, bool isMO);
   void meshFinished();
+
 
   void colorMesh();
   void colorMeshByPotential();
@@ -117,26 +120,37 @@ private:
   QProgressDialog* m_progressDialog = nullptr;
 
   QtGui::Molecule* m_molecule = nullptr;
+  QtGui::Molecule* m_molecule2 = nullptr;
+
   Core::BasisSet* m_basis = nullptr;
 
   QtGui::GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
   QtGui::SlaterSetConcurrent* m_slaterConcurrent = nullptr;
 
   Core::Cube* m_cube = nullptr;
+  Core::Cube* m_cube2 = nullptr;
+  // Core::Cube* m_temp = nullptr;
+
   std::vector<Core::Cube*> m_cubes;
   /* One QFutureWatcher per asynchronous slot function, e.g.:*/
   /* calculateEDT() -> [performEDTStep()] -> displayMesh() */
   QFutureWatcher<void> m_performEDTStepWatcher;
+
   QFutureWatcher<void> m_displayMeshWatcher;
   Core::Mesh* m_mesh1 = nullptr;
   Core::Mesh* m_mesh2 = nullptr;
+  Core::Mesh* m_mesh3 = nullptr;
+
   /* displayMesh() -> meshFinished() */
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
+  QtGui::MeshGenerator* m_meshGenerator3 = nullptr;
 
   float m_isoValue = 0.01;
   int m_smoothingPasses = 6;
   int m_meshesLeft = 0;
+  int m_meshesLeftPass2 = 0;
+
 
   bool m_recordingMovie = false;
   int m_currentFrame = 0;
