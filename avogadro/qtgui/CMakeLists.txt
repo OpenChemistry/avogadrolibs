@@ -19,11 +19,11 @@ if(USE_SPGLIB)
 endif()
 
 # Find python for input generator scripts:
-find_package(PythonInterp 3)
+find_package(Python3 COMPONENTS Interpreter)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
 "namespace Avogadro {
-static const char *pythonInterpreterPath = \"${PYTHON_EXECUTABLE}\";
+static const char *pythonInterpreterPath = \"${Python3_EXECUTABLE}\";
 }
 ")
 configure_file("${CMAKE_CURRENT_BINARY_DIR}/avogadropython.h.in"
