@@ -345,24 +345,47 @@ void VolumeGeometry::initialize()
 
   std::cout << "VolumeGeometry::initialize()\n";
 
-  // ---------------------------------------------------------
-  // CHANGED: Use a floating-point 3D texture (GL_R32F) so that
-  //          negative values are preserved in wavefunction data.
-  // ---------------------------------------------------------
+{
+  int nx = m_cube->nx();
+  int ny = m_cube->ny();
+  int nz = m_cube->nz();
+  std::vector<float> volumeData(nx * ny * nz);
+  const float* src = m_cube->data()->data();
+  for (int z = 0; z < nz; ++z) {
+    for (int y = 0; y < ny; ++y) {
+      for (int x = 0; x < nx; ++x) {
+        // oldIndex: if Avogadro stored z-fastest:
+        int oldIndex = z + nz * (y + ny * x);
+
+        // newIndex: x-fastest for OpenGL
+        int newIndex = x + nx * (y + ny * z);
+
+        volumeData[newIndex] = src[oldIndex];
+      }
+    }
+  }
+
+  // Now use volumeData.data() instead of m_cube->data()->data()
   glGenTextures(1, &d->volumeTexture);
   glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
+
+  // It's a good idea to set alignment to 1 to avoid row padding issues:
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  // Instead of 'GL_R8', do 'GL_R32F' with float data:
+  // Now upload the data with the dimensions in (nx, ny, nz) order:
   glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
-               m_cube->nx(), m_cube->ny(), m_cube->nz(),
-               0, GL_RED, GL_FLOAT,
-               m_cube->data()->data());
-  // ---------------------------------------------------------
+               nx, ny, nz,
+               0, GL_RED, GL_FLOAT, volumeData.data());
+
+  // glBindTexture(GL_TEXTURE_3D, 0);
+}
+
 
   // Make a simple 1D transfer function. If you want to see negative vs.
   // positive distinctly, you'd create a more sophisticated one. For now,
@@ -370,10 +393,11 @@ void VolumeGeometry::initialize()
   std::vector<unsigned char> tfData(256 * 4);
   for (int i = 0; i < 256; ++i) {
     float t = float(i) / 255.0f;
-    tfData[i * 4 + 0] = static_cast<unsigned char>(0.0f);          // R
-    tfData[i * 4 + 1] = static_cast<unsigned char>(255.0f * t);    // G
-    tfData[i * 4 + 2] = static_cast<unsigned char>(0.0f);          // B
-    tfData[i * 4 + 3] = static_cast<unsigned char>(255.0f * t);    // A
+  tfData[i * 4 + 0] = static_cast<unsigned char>(128.0f * t); // R (Red)
+  tfData[i * 4 + 1] = static_cast<unsigned char>(128.0f);       // G (Green)
+  tfData[i * 4 + 2] = static_cast<unsigned char>(0.0f);     // B (Blue)
+  tfData[i * 4 + 3] = static_cast<unsigned char>(255.0f * t);   // A (Alpha)
+
   }
 
   glGenTextures(1, &d->transferTexture);
@@ -608,7 +632,7 @@ void VolumeGeometry::render(const Camera& camera)
 
   d->program->setUniformValue("width",  float(m_width));
   d->program->setUniformValue("height", float(m_height));
-  d->program->setUniformValue("numSteps", 128);
+  d->program->setUniformValue("numSteps", 150);
   d->program->setUniformValue("alphaScale", 0.6f);
 
   glBindVertexArray(d->vao);
