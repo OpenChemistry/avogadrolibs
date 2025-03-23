@@ -1706,7 +1706,7 @@ msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
-msgstr "Interagieren Sie mit APBS-Diensten."
+msgstr "Mit APBS-Diensten interagieren."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
