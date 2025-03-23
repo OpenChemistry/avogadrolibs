@@ -17,7 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-03-23 22:06+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1788,7 +1789,7 @@ msgstr "Nach benutzerdefinierter Farbe…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Nach Atomindex"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
