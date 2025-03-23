@@ -6,7 +6,8 @@ uniform sampler2D inRGBTex;
 // The ray entry/exit attachments from bounding‐box passes:
 uniform sampler2D inFrontPosTex;
 uniform sampler2D inBackPosTex;
-
+uniform vec3 positiveColor;
+uniform vec3 negativeColor;
 // Our 3D volume (wavefunction):
 uniform sampler3D uVolumeData;
 
@@ -62,8 +63,8 @@ void main()
         float psi = texture3D(uVolumeData, volumeUV).r;
 
         float amplitude = abs(psi);
-        vec3 colorPos = vec3(1.0, 0.0, 0.0); // red
-        vec3 colorNeg = vec3(0.0, 0.0, 1.0); // blue
+        vec3 colorPos = positiveColor; 
+        vec3 colorNeg = negativeColor; 
         vec3 color = (psi >= 0.0) ? colorPos : colorNeg;
 
         float alphaSample = amplitude * alphaScale;

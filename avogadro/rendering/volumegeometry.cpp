@@ -620,11 +620,22 @@ void VolumeGeometry::render(const Camera& camera)
       glUniform1i(loc, 4);
     }
   }
-
+  Eigen::Vector3f posCol(
+    m_positiveColor[0] / 255.0f,
+    m_positiveColor[1] / 255.0f,
+    m_positiveColor[2] / 255.0f
+  );
+  Eigen::Vector3f negCol(
+    m_negativeColor[0] / 255.0f,
+    m_negativeColor[1] / 255.0f,
+    m_negativeColor[2] / 255.0f
+  );
   d->program->setUniformValue("width",  float(m_width));
   d->program->setUniformValue("height", float(m_height));
   d->program->setUniformValue("numSteps", 150);
   d->program->setUniformValue("alphaScale", 0.6f);
+  d->program->setUniformValue("positiveColor", posCol);
+  d->program->setUniformValue("negativeColor", negCol);
 
   glBindVertexArray(d->vao);
   glDrawArrays(GL_TRIANGLES, 0, 6);
