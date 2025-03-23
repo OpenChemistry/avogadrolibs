@@ -16,9 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-03-23 22:06+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2025-03-23 22:21+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1789,7 +1788,7 @@ msgstr "Nach benutzerdefinierter Farbe…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr "Nach Atomindex"
+msgstr "Nach Atomindex …"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
@@ -2012,9 +2011,8 @@ msgid "Ctrl+7"
 msgstr "Strg+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
-#, fuzzy
 msgid "Bond-Centric Manipulation"
-msgstr "Bindungsorientierte Manipulation"
+msgstr "Bindungsorientierte Bearbeitung"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format
