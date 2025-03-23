@@ -354,10 +354,8 @@ void VolumeGeometry::initialize()
   for (int z = 0; z < nz; ++z) {
     for (int y = 0; y < ny; ++y) {
       for (int x = 0; x < nx; ++x) {
-        // oldIndex: if Avogadro stored z-fastest:
         int oldIndex = z + nz * (y + ny * x);
 
-        // newIndex: x-fastest for OpenGL
         int newIndex = x + nx * (y + ny * z);
 
         volumeData[newIndex] = src[oldIndex];
@@ -365,11 +363,9 @@ void VolumeGeometry::initialize()
     }
   }
 
-  // Now use volumeData.data() instead of m_cube->data()->data()
   glGenTextures(1, &d->volumeTexture);
   glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
 
-  // It's a good idea to set alignment to 1 to avoid row padding issues:
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -378,18 +374,13 @@ void VolumeGeometry::initialize()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  // Now upload the data with the dimensions in (nx, ny, nz) order:
   glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
                nx, ny, nz,
                0, GL_RED, GL_FLOAT, volumeData.data());
 
-  // glBindTexture(GL_TEXTURE_3D, 0);
 }
 
 
-  // Make a simple 1D transfer function. If you want to see negative vs.
-  // positive distinctly, you'd create a more sophisticated one. For now,
-  // this just goes from transparent black to opaque green:
   std::vector<unsigned char> tfData(256 * 4);
   for (int i = 0; i < 256; ++i) {
     float t = float(i) / 255.0f;

@@ -50,7 +50,7 @@ void main()
 
   for (int i = 0; i < numSteps; i++)
   {
-    if (accumulatedAlpha > 0.98)
+    if (accumulatedAlpha > 0.85)
       break;
 
     vec3 volumeUV = (currentPosition * 0.5) + 0.5;

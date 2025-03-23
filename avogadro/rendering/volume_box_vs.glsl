@@ -12,8 +12,9 @@ void main()
 
   vec3 ndc = clipPos.xyz / clipPos.w;
 
-  ndc.x *= 3.5;
-  ndc.y *= 3.5;
+  ndc.x *= 5.5;
+  ndc.y *= 5.5;
+  // ndc.z *= 4.0;
   clipPos.xyz = ndc * clipPos.w;
 
   gl_Position = clipPos;
