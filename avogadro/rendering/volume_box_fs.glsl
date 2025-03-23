@@ -1,9 +1,9 @@
-#version 330
+#version 120
 
-in vec3 vBoxPos;
-out vec4 outColor;
+varying vec3 vBoxPos;
+
 void main()
 {
-  vec3 mappedPos = (vBoxPos * 0.5) + 0.5;
-  outColor   = vec4(mappedPos, 1.0);
+    vec3 mappedPos = (vBoxPos * 0.5) + 0.5;
+    gl_FragColor = vec4(mappedPos, 1.0);
 }
