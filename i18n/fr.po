@@ -3,7 +3,7 @@
 # Maxime Leroy <lisacintosh@gmail.com>, 2021, 2022.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
 # Translator <kvb@tuta.io>, 2022, 2023.
-# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025.
 # research11111 <urgent.research@mailo.fr>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
@@ -13,9 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-03-23 21:45+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2025-03-23 22:05+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1584,7 +1583,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr "Modifier les éléments"
+msgstr "Modifier les éléments …"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
