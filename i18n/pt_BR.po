@@ -4,18 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Gustavo Sousa Jr <grsousajunior@gmail.com>, 2020, 2021, 2022.
 # Pietro Valente Benevenga <pvbenevenga@gmail.com>, 2020.
-# Alexandre R Soares <ntegti@zipmail.com.br>, 2021, 2024.
+# Alexandre R Soares <ntegti@zipmail.com.br>, 2021, 2024, 2025.
 # "Kirito ._." <kiritokunn18@gmail.com>, 2024.
 # Iago Emanuel <iagoemanuel@live.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Khemis <khemis@bol.com.br>, 2024.
+# nicejammer <snoring_parrot@users.noreply.hosted.weblate.org>, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-13 03:01+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-03-13 17:07+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -23,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:00+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -133,10 +136,7 @@ msgstr ""
 "%3"
 
 #: molequeue/inputgenerator.cpp:346
-#, fuzzy, qt-format
-#| msgid ""
-#| "Error writing molecule representation to string: Unrecognized file "
-#| "format: %1"
+#, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
 msgstr ""
@@ -144,8 +144,7 @@ msgstr ""
 "não reconhecido: %1"
 
 #: molequeue/inputgenerator.cpp:354
-#, fuzzy, qt-format
-#| msgid "Error writing molecule representation to string: %1"
+#, qt-format
 msgctxt "%1 = error message"
 msgid "Error saving molecule representation to string: %1"
 msgstr "Erro ao gravar a representação da molécula na string: %1"
@@ -449,8 +448,6 @@ msgid "Configure Job"
 msgstr "Configurar Trabalho"
 
 #: molequeue/molequeuedialog.cpp:57
-#, fuzzy
-#| msgid "Submitting job to MoleQueue..."
 msgid "Submitting job to MoleQueue…"
 msgstr "Enviar trabalho para MoleQueue…"
 
@@ -463,19 +460,16 @@ msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr "Avogadro esgotou o tempo aguardando uma resposta de MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:83
-#, fuzzy, qt-format
-#| msgid "Waiting for job %1 '%2' to finish..."
+#, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr "Esperando o trabalho %1 '%2' para terminar…"
+msgstr "Esperando o trabalho %1 “%2” terminar…"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
 msgstr "Parar de esperar"
 
 #: molequeue/molequeuedialog.cpp:105
-#, fuzzy
-#| msgid "Fetching completed job information..."
 msgid "Fetching completed job information…"
 msgstr "Buscando informações do trabalho concluído…"
 
@@ -494,8 +488,7 @@ msgid "Error Submitting Job"
 msgstr "Erro ao Enviar Trabalho"
 
 #: molequeue/molequeuedialog.cpp:128
-#, fuzzy, qt-format
-#| msgid "The job has been rejected by MoleQueue: %1"
+#, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
 msgstr "O trabalho foi recusado por MoleQueue: %1"
@@ -1088,10 +1081,8 @@ msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr "Vários %1 encontrados que podem %2 este formato. Qual deve ser usado?"
 
 #: qtgui/fileformatdialog.cpp:279
-#, fuzzy
-#| msgid "All Files"
 msgid "All files"
-msgstr "Todos os Arquivos"
+msgstr "Todos os arquivos"
 
 #: qtgui/fileformatdialog.cpp:282
 msgid "All supported formats"
@@ -1123,7 +1114,6 @@ msgid "Error writing molecule representation to string: %1"
 msgstr "Erro ao gravar a representação da molécula na string: %1"
 
 #: qtgui/jsonwidget.cpp:86
-#, fuzzy
 msgid "'userOptions' missing."
 msgstr "'userOptions' faltando."
 
@@ -1475,8 +1465,9 @@ msgid "Update Bond"
 msgstr "Atualizar Ligação"
 
 #: qtgui/rwmolecule.cpp:407
+#, fuzzy
 msgid "Add Unit Cell…"
-msgstr ""
+msgstr "Adicionar Célula Unitária…"
 
 #: qtgui/rwmolecule.cpp:419
 msgid "Remove Unit Cell"
@@ -1542,8 +1533,9 @@ msgid "Change Atom Label"
 msgstr "Mudar Rótulo do Átomo"
 
 #: qtgui/rwmolecule.h:260
+#, fuzzy
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Mudar Rótulo da Ligação"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1560,9 +1552,9 @@ msgid "Settings"
 msgstr "Definições"
 
 #: qtgui/scriptloader.cpp:33
-#, qt-format
+#, fuzzy, qt-format
 msgid "Cannot load script %1"
-msgstr ""
+msgstr "Não foi possível carregar o script %1"
 
 #: qtgui/scriptloader.cpp:69
 #, qt-format
@@ -1595,8 +1587,9 @@ msgid "ThreeDMol"
 msgstr ""
 
 #: qtplugins/alchemy/alchemy.cpp:25
+#, fuzzy
 msgid "Change Elements…"
-msgstr ""
+msgstr "Mudar Elementos…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1622,7 +1615,7 @@ msgstr ""
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Mudar elementos dos átomos."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -1669,8 +1662,9 @@ msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr "Girar a molécula para alinhar o átomo com o eixo especificado."
 
 #: qtplugins/aligntool/aligntool.h:29
+#, fuzzy
 msgid "Align tool"
-msgstr ""
+msgstr "Ferramenta de alinhamento"
 
 #: qtplugins/aligntool/aligntool.h:32
 msgid "Align molecules to a Cartesian axis"
@@ -1988,8 +1982,9 @@ msgid "&View"
 msgstr "&Exibir"
 
 #: qtplugins/applycolors/applycolors.cpp:152
+#, fuzzy
 msgid "Color Atoms"
-msgstr ""
+msgstr "Cor dos Átomos"
 
 #: qtplugins/applycolors/applycolors.cpp:154
 #, fuzzy
@@ -1998,8 +1993,9 @@ msgstr "Colorir resíduo"
 
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314
+#, fuzzy
 msgid "Select Colormap"
-msgstr ""
+msgstr "Selecionar Mapa de Cores"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, colormapLabel)
@@ -2008,7 +2004,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:216
 #: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
 msgid "Colormap:"
-msgstr ""
+msgstr "Mapa de Cores:"
 
 #: qtplugins/applycolors/applycolors.h:29
 #, fuzzy
@@ -2048,7 +2044,7 @@ msgstr "Desenha átomos como esferas e ligações como cilindros."
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:117
 msgctxt "control-key 7"
 msgid "Ctrl+7"
-msgstr ""
+msgstr "Ctrl+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
 #, fuzzy
@@ -2115,8 +2111,9 @@ msgid "Configure Bonding…"
 msgstr "Configurar Ligações…"
 
 #: qtplugins/bonding/bonding.cpp:32
+#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr ""
+msgstr "Ligar Átomos Selecionados"
 
 #: qtplugins/bonding/bonding.cpp:61
 #: qtplugins/propertytables/propertymodel.cpp:543
@@ -2125,20 +2122,22 @@ msgid "Bond"
 msgstr "Ligar"
 
 #: qtplugins/bonding/bonding.cpp:72
+#, fuzzy
 msgid "Remove bonds from all or selected atoms."
-msgstr ""
+msgstr "Remover ligações entre todos os átomos ou entre os selecionados."
 
 #: qtplugins/bonding/bonding.cpp:74
 msgid "Create bonds between all or selected atoms."
-msgstr ""
+msgstr "Criar ligações entre todos os átomos ou entre os selecionados."
 
 #: qtplugins/bonding/bonding.cpp:75
 msgid "Perceive bond orders."
 msgstr ""
 
 #: qtplugins/bonding/bonding.h:30
+#, fuzzy
 msgid "Bonding"
-msgstr ""
+msgstr "Ligando"
 
 #: qtplugins/bonding/bonding.h:34
 msgid "Perform bonding operations."
@@ -2156,9 +2155,10 @@ msgid "Trace"
 msgstr ""
 
 #: qtplugins/cartoons/cartoons.cpp:94
+#, fuzzy
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr ""
+msgstr "Tubo"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 #, fuzzy
@@ -2202,11 +2202,11 @@ msgstr ""
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
-msgstr ""
+msgstr "Centroide"
 
 #: qtplugins/centroid/centroid.h:28
 msgid "Add centroids and center-of-mass."
-msgstr ""
+msgstr "Adicionar centroides e centro de massa."
 
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:41
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, toleranceSpinBox)
@@ -2262,7 +2262,7 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
-msgstr ""
+msgstr "Ponte Salina"
 
 #: qtplugins/closecontacts/closecontacts.h:56
 msgid "Repulsive"
@@ -2318,7 +2318,7 @@ msgstr ""
 #: qtplugins/commandscripts/command.cpp:229
 #, qt-format
 msgid "Processing %1"
-msgstr ""
+msgstr "Processando %1"
 
 #: qtplugins/commandscripts/command.cpp:284
 msgid "Set path to Python interpreter:"
@@ -2346,24 +2346,27 @@ msgstr "Executar comandos de script externos"
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
 #: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
 msgid "Python Settings…"
-msgstr ""
+msgstr "Configurações Python…"
 
 #: qtplugins/configurepython/configurepython.cpp:46
 msgid "Install Python"
-msgstr ""
+msgstr "Instalar Python"
 
 #: qtplugins/configurepython/configurepython.cpp:47
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
+"Python é usado em vários recursos do Avogadro. Desejar fazer download do "
+"Python?"
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
 msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:29
+#, fuzzy
 msgid "Configure Python environments."
-msgstr ""
+msgstr "Configurar ambientes do Python."
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -2435,7 +2438,7 @@ msgstr ""
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:420
 msgid "Invalid atomic index."
-msgstr ""
+msgstr "Índice atômico inválido."
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:422
 #, fuzzy
@@ -2591,7 +2594,7 @@ msgstr "&Editar"
 
 #: qtplugins/copypaste/copypaste.cpp:81
 msgid "Copy As"
-msgstr ""
+msgstr "Copiar Como"
 
 #: qtplugins/copypaste/copypaste.cpp:150
 msgid "Error Clipping Molecule"

@@ -83,7 +83,7 @@ QList<QAction*> PropertyTables::actions() const
 
 QStringList PropertyTables::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("&Properties");
+  return QStringList() << tr("&Analyze") << tr("&Properties");
 }
 
 void PropertyTables::setMolecule(QtGui::Molecule* mol)

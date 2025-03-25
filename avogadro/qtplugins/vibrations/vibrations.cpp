@@ -39,7 +39,7 @@ QList<QAction*> Vibrations::actions() const
 QStringList Vibrations::menuPath(QAction*) const
 {
   QStringList path;
-  path << tr("&Analysis");
+  path << tr("&Analyze");
   return path;
 }
 

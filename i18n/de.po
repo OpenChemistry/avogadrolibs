@@ -5,10 +5,10 @@
 # matterhorn103 <milner94@live.co.uk>, 2022, 2023.
 # Sebastian Ehlert <awvwgk@gmail.com>, 2022.
 # "Jörg S." <joerg.schwerdtfeger@gmail.com>, 2023.
-# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025.
 # Jörn Weigend <das.jott@gmail.com>, 2023.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # matterhorn103 <83813148+matterhorn103@users.noreply.github.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 msgid ""
@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-01-13 03:00+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-03-23 22:21+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1425,7 +1425,6 @@ msgid "Add Bond"
 msgstr "Bindung hinzufügen"
 
 #: qtgui/rwmolecule.cpp:314
-#, fuzzy
 msgid "Removed Bond"
 msgstr "Bindung entfernt"
 
@@ -1566,7 +1565,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Elemente ändern …"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1707,7 +1706,7 @@ msgstr "APBS"
 
 #: qtplugins/apbs/apbs.h:33
 msgid "Interact with APBS utilities."
-msgstr ""
+msgstr "Mit APBS-Diensten interagieren."
 
 #: qtplugins/apbs/apbsdialog.cpp:79
 msgid "Open PDB File"
@@ -1789,7 +1788,7 @@ msgstr "Nach benutzerdefinierter Farbe…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
 msgid "By Atomic Index…"
-msgstr ""
+msgstr "Nach Atomindex …"
 
 #: qtplugins/applycolors/applycolors.cpp:56
 msgid "By Distance…"
@@ -2012,9 +2011,8 @@ msgid "Ctrl+7"
 msgstr "Strg+7"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:118
-#, fuzzy
 msgid "Bond-Centric Manipulation"
-msgstr "Bindungsorientierte Manipulation"
+msgstr "Bindungsorientierte Bearbeitung"
 
 #: qtplugins/bondcentrictool/bondcentrictool.cpp:120
 #, qt-format

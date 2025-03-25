@@ -6,7 +6,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Test REQUIRED)
 
 # Find python interpreter for input generator
-find_package(PythonInterp 3)
+find_package(Python3 COMPONENTS Interpreter)
 
 # Setup config file with data location
 if(AVOGADRO_DATA_ROOT)
@@ -35,7 +35,7 @@ if (BUILD_MOLEQUEUE)
   set(MoleQueueLink Avogadro::MoleQueue MoleQueueClient)
 endif()
 
-if(PYTHON_EXECUTABLE AND AVOGADRO_DATA)
+if(Python3_EXECUTABLE AND AVOGADRO_DATA)
   list(APPEND tests
 # FIXME: These tests are broken
 #    FileBrowseWidget
