@@ -3,17 +3,18 @@
 # Maxime Leroy <lisacintosh@gmail.com>, 2021, 2022.
 # Pa <poubelleanonyme@protonmail.com>, 2021.
 # Translator <kvb@tuta.io>, 2022, 2023.
-# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024.
+# Norwid Behrnd <nbehrnd@yahoo.com>, 2023, 2024, 2025.
 # research11111 <urgent.research@mailo.fr>, 2023.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
+# Eric Remy <eric.remy3@free.fr>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-20 20:35+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2025-03-23 22:05+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1531,8 +1532,9 @@ msgid "Change Atom Label"
 msgstr "Modifier l'étiquette de l'atome"
 
 #: qtgui/rwmolecule.h:260
+#, fuzzy
 msgid "Change Bond Label"
-msgstr ""
+msgstr "Change l'étiquette de liaison"
 
 #: qtgui/rwmolecule.h:266
 msgid "Change Selection"
@@ -1581,7 +1583,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr ""
+msgstr "Modifier les éléments …"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1602,12 +1604,13 @@ msgid "Element:"
 msgstr "Élément :"
 
 #: qtplugins/alchemy/alchemy.h:31
+#, fuzzy
 msgid "Alchemy"
-msgstr ""
+msgstr "Alchimie"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr ""
+msgstr "Change les éléments des atomes."
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -3055,7 +3058,7 @@ msgstr "Aucun atome fourni pour l'optimisation"
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
-msgstr ""
+msgstr "Énergie : %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #, qt-format
