@@ -36,10 +36,6 @@ public:
    */
   void render(const Camera& camera) override;
 
-  /**
-   * Resize the offscreen FBO to match the new window size.
-   */
-  void resize(int width, int height);
 
   /**
    * Destroy all GL resources (FBO, textures, etc.).

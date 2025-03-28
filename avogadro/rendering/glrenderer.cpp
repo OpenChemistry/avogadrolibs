@@ -76,7 +76,7 @@ void GLRenderer::resize(int width, int height)
   if (!m_valid)
     return;
 
-  m_volume.resize(width, height);
+  // m_volume.resize(width, height);
   glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);

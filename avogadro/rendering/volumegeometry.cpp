@@ -77,9 +77,6 @@ static const GLuint boxIndices[] = {
 void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
                             int width, int height)
 {
-  // Log the actual size used here:
-  std::cout << "Initializing FBO: " << width << " x " << height << std::endl;
-
   glGenFramebuffers(1, outFBO);
   glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
 
@@ -124,29 +121,15 @@ void initializeFramebuffers(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth,
 class VolumeGeometry::Private
 {
 public:
-  Private() : vertexShader(nullptr),
-              fragmentShader(nullptr),
-              program(nullptr),
-              vao(0),
-              vbo(0),
-              defaultFBO(0),
-              renderFBO(0),
-              renderTexture(0),
-              depthTexture(0),
-              frontFBO(0),
-              frontColorTexture(0),
-              frontDepthTexture(0),
-              backFBO(0),
-              backColorTexture(0),
-              backDepthTexture(0),
-              boxVertexShader(nullptr),
-              boxFragmentShader(nullptr),
-              boxShaders(nullptr),
-              transferTexture(0),
-              volumeBoxVao(0),
-              volumeBoxVbo(0),
-              volumeBoxEbo(0),
-              volumeTexture(0)
+  Private()
+    : vertexShader(nullptr), fragmentShader(nullptr), program(nullptr),
+      vao(0), vbo(0), defaultFBO(0), renderFBO(0),
+      renderTexture(0), depthTexture(0),
+      frontFBO(0), frontColorTexture(0), frontDepthTexture(0),
+      backFBO(0), backColorTexture(0), backDepthTexture(0),
+      boxVertexShader(nullptr), boxFragmentShader(nullptr), boxShaders(nullptr),
+      transferTexture(0), volumeBoxVao(0), volumeBoxVbo(0),
+      volumeBoxEbo(0), volumeTexture(0)
   { }
 
   // GL resources
@@ -188,8 +171,6 @@ VolumeGeometry::VolumeGeometry()
     m_negativeColor(0, 0, 255),
     d(new Private)
 {
-  m_width = 1000;
-  m_height = 900;
 }
 
 VolumeGeometry::~VolumeGeometry()
@@ -225,7 +206,6 @@ void swap(VolumeGeometry& lhs, VolumeGeometry& rhs)
   swap(lhs.m_negativeColor, rhs.m_negativeColor);
   swap(static_cast<Drawable&>(lhs), static_cast<Drawable&>(rhs));
   swap(lhs.d, rhs.d);
-  // Fix the width/height swap bug:
   swap(lhs.m_width, rhs.m_width);
   swap(lhs.m_height, rhs.m_height);
 }
@@ -246,43 +226,7 @@ void VolumeGeometry::setCube(const Core::Cube& cube)
   m_cube = &cube;
   m_dirty = true;
 
-  // Compute min/max from the raw volume data:
-  Vector3f min = cube.min().cast<float>();
-  Vector3f max = cube.max().cast<float>();
-  m_boundingVertices[0] = min.x();
-  m_boundingVertices[1] = min.y();
-  m_boundingVertices[2] = max.z();
-
-  m_boundingVertices[3] = max.x();
-  m_boundingVertices[4] = min.y();
-  m_boundingVertices[5] = max.z();
-
-  m_boundingVertices[6] = max.x();
-  m_boundingVertices[7] = max.y();
-  m_boundingVertices[8] = max.z();
-
-  m_boundingVertices[9] = min.x();
-  m_boundingVertices[10] = max.y();
-  m_boundingVertices[11] = max.z();
-
-  // back face
-  m_boundingVertices[12] = min.x();
-  m_boundingVertices[13] = min.y();
-  m_boundingVertices[14] = min.z();
-
-  m_boundingVertices[15] = max.x();
-  m_boundingVertices[16] = min.y();
-  m_boundingVertices[17] = min.z();
-
-  m_boundingVertices[18] = max.x();
-  m_boundingVertices[19] = max.y();
-  m_boundingVertices[20] = min.z();
-
-  m_boundingVertices[21] = min.x();
-  m_boundingVertices[22] = max.y();
-  m_boundingVertices[23] = min.z();
 }
-
 
 void VolumeGeometry::resizeFBO(int newWidth, int newHeight)
 {
@@ -343,104 +287,107 @@ void VolumeGeometry::initialize()
   if (!m_cube || !m_dirty)
     return;
 
-  std::cout << "VolumeGeometry::initialize()\n";
+  GLint vp[4];
+  glGetIntegerv(GL_VIEWPORT, vp);
+  int currentW = vp[2];
+  int currentH = vp[3];
 
-{
-  int nx = m_cube->nx();
-  int ny = m_cube->ny();
-  int nz = m_cube->nz();
-  std::vector<float> volumeData(nx * ny * nz);
-  const float* src = m_cube->data()->data();
-  for (int z = 0; z < nz; ++z) {
-    for (int y = 0; y < ny; ++y) {
-      for (int x = 0; x < nx; ++x) {
-        int oldIndex = z + nz * (y + ny * x);
 
-        int newIndex = x + nx * (y + ny * z);
+  // Build (or rebuild) the volume texture if needed:
+  {
+    int nx = m_cube->nx();
+    int ny = m_cube->ny();
+    int nz = m_cube->nz();
+    std::vector<float> volumeData(nx * ny * nz);
+    const float* src = m_cube->data()->data();
 
-        volumeData[newIndex] = src[oldIndex];
+    // Reorder data to x‐fastest if needed
+    for (int z = 0; z < nz; ++z) {
+      for (int y = 0; y < ny; ++y) {
+        for (int x = 0; x < nx; ++x) {
+          int oldIndex = z + nz * (y + ny * x);
+          int newIndex = x + nx * (y + ny * z);
+          volumeData[newIndex] = src[oldIndex];
+        }
       }
     }
+
+    glGenTextures(1, &d->volumeTexture);
+    glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
+                 nx, ny, nz, 0, GL_RED, GL_FLOAT, volumeData.data());
   }
 
-  glGenTextures(1, &d->volumeTexture);
-  glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
+  // Simple 1D transfer function texture:
+  {
+    std::vector<unsigned char> tfData(256 * 4);
+    for (int i = 0; i < 256; ++i) {
+      float t = float(i) / 255.0f;
+      tfData[i * 4 + 0] = static_cast<unsigned char>(128.0f * t); // R
+      tfData[i * 4 + 1] = static_cast<unsigned char>(128.0f);     // G
+      tfData[i * 4 + 2] = static_cast<unsigned char>(0.0f);       // B
+      tfData[i * 4 + 3] = static_cast<unsigned char>(255.0f * t); // A
+    }
 
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glGenTextures(1, &d->transferTexture);
+    glBindTexture(GL_TEXTURE_2D, d->transferTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-  glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F,
-               nx, ny, nz,
-               0, GL_RED, GL_FLOAT, volumeData.data());
-
-}
-
-
-  std::vector<unsigned char> tfData(256 * 4);
-  for (int i = 0; i < 256; ++i) {
-    float t = float(i) / 255.0f;
-  tfData[i * 4 + 0] = static_cast<unsigned char>(128.0f * t); // R (Red)
-  tfData[i * 4 + 1] = static_cast<unsigned char>(128.0f);       // G (Green)
-  tfData[i * 4 + 2] = static_cast<unsigned char>(0.0f);     // B (Blue)
-  tfData[i * 4 + 3] = static_cast<unsigned char>(255.0f * t);   // A (Alpha)
-
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, tfData.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
   }
 
-  glGenTextures(1, &d->transferTexture);
-  glBindTexture(GL_TEXTURE_2D, d->transferTexture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  // Box geometry for front/back pass:
+  {
+    glGenVertexArrays(1, &d->volumeBoxVao);
+    glBindVertexArray(d->volumeBoxVao);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0,
-               GL_RGBA, GL_UNSIGNED_BYTE, tfData.data());
-  glBindTexture(GL_TEXTURE_2D, 0);
+    glGenBuffers(1, &d->volumeBoxVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, d->volumeBoxVbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
+                          (GLvoid*)0);
 
-  // Box geometry for front/back pass
-  glGenVertexArrays(1, &d->volumeBoxVao);
-  glBindVertexArray(d->volumeBoxVao);
+    glGenBuffers(1, &d->volumeBoxEbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d->volumeBoxEbo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boxIndices), boxIndices, GL_STATIC_DRAW);
 
-  glGenBuffers(1, &d->volumeBoxVbo);
-  glBindBuffer(GL_ARRAY_BUFFER, d->volumeBoxVbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices),
-               boxVertices, GL_STATIC_DRAW);
+    glBindVertexArray(0);
+  }
 
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                        3 * sizeof(GLfloat), (GLvoid*)0);
+  // Fullscreen quad geometry:
+  {
+    glGenBuffers(1, &d->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad),
+                 s_fullscreenQuad, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  glGenBuffers(1, &d->volumeBoxEbo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d->volumeBoxEbo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boxIndices),
-               boxIndices, GL_STATIC_DRAW);
+    glGenVertexArrays(1, &d->vao);
+    glBindVertexArray(d->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          0, reinterpret_cast<void*>(0));
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
+  }
 
-  glBindVertexArray(0);
+  // Create (or re‐create) our FBOs at this newly detected size:
+  resizeFBO(currentW, currentH);
 
-  // Fullscreen quad geometry
-  glGenBuffers(1, &d->vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad),
-               s_fullscreenQuad, GL_STATIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  glGenVertexArrays(1, &d->vao);
-  glBindVertexArray(d->vao);
-  glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                        0, reinterpret_cast<void*>(0));
-  glEnableVertexAttribArray(0);
-  glBindVertexArray(0);
-
-  // Create/resize FBOs
-  resizeFBO(m_width, m_height);
-
-  // Main volume shaders
+  // Main volume shaders:
   if (!d->vertexShader) {
     d->vertexShader = new Shader(Shader::Vertex);
     d->vertexShader->setSource(volume_vs);
@@ -463,7 +410,7 @@ void VolumeGeometry::initialize()
       std::cerr << "VolumeGeometry: Shader program linking failed.\n";
   }
 
-  // Box pass shaders
+  // Box pass shaders (for front/back):
   if (!d->boxVertexShader) {
     d->boxVertexShader = new Shader(Shader::Vertex);
     d->boxVertexShader->setSource(volume_box_vs);
@@ -486,6 +433,7 @@ void VolumeGeometry::initialize()
       std::cerr << "VolumeGeometry: Box shader program linking failed.\n";
   }
 
+  // Done initializing:
   m_dirty = false;
 }
 
@@ -496,9 +444,19 @@ void VolumeGeometry::render(const Camera& camera)
   if (m_dirty)
     initialize();
 
+  GLint vp[4];
+  glGetIntegerv(GL_VIEWPORT, vp);
+  int newW = vp[2];
+  int newH = vp[3];
+  if (newW != m_width || newH != m_height) {
+    m_dirty = true;
+    initialize();
+  }
+
+
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
 
-  // 1) Copy default FBO into renderFBO
+  // 1) Copy default FBO into renderFBO:
   glBindFramebuffer(GL_READ_FRAMEBUFFER, d->defaultFBO);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, d->renderFBO);
   glBlitFramebuffer(0, 0, m_width, m_height,
@@ -506,7 +464,7 @@ void VolumeGeometry::render(const Camera& camera)
                     GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
                     GL_NEAREST);
 
-  // 2) Render the BACK faces of bounding box
+  // 2) Render the BACK faces of bounding box:
   {
     glBindFramebuffer(GL_FRAMEBUFFER, d->backFBO);
     glViewport(0, 0, m_width, m_height);
@@ -534,7 +492,7 @@ void VolumeGeometry::render(const Camera& camera)
     glDisable(GL_DEPTH_TEST);
   }
 
-  // 3) Render the FRONT faces of bounding box
+  // 3) Render the FRONT faces of bounding box:
   {
     glBindFramebuffer(GL_FRAMEBUFFER, d->frontFBO);
     glViewport(0, 0, m_width, m_height);
@@ -562,7 +520,7 @@ void VolumeGeometry::render(const Camera& camera)
     glDisable(GL_DEPTH_TEST);
   }
 
-  // 4) Final pass: ray marching
+  // 4) Final pass: ray marching into the default framebuffer:
   glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
   glViewport(0, 0, m_width, m_height);
 
@@ -620,6 +578,8 @@ void VolumeGeometry::render(const Camera& camera)
       glUniform1i(loc, 4);
     }
   }
+
+  // Colors, etc.
   Eigen::Vector3f posCol(
     m_positiveColor[0] / 255.0f,
     m_positiveColor[1] / 255.0f,
@@ -642,13 +602,6 @@ void VolumeGeometry::render(const Camera& camera)
   glBindVertexArray(0);
 
   d->program->release();
-}
-
-void VolumeGeometry::resize(int width, int height)
-{
-  if (width == m_width && height == m_height)
-    return;
-  resizeFBO(width, height);
 }
 
 void VolumeGeometry::end()
