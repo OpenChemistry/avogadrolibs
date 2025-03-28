@@ -408,7 +408,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         max_radius = radius;
     }
 
-    double padding = max_radius + probeRadius;
+    double padding = max_radius + probeRadius + 0.2;
     m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
     m_cube->fill(-1.0);
 
