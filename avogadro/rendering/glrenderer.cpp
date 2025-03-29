@@ -45,7 +45,6 @@ GLRenderer::GLRenderer()
   m_orthographicFrustum = {
     -5.0f * aspectRatio, 5.0f * aspectRatio, -5.0f, 5.0f, -offset, offset
   };
-
 }
 
 GLRenderer::~GLRenderer()
@@ -117,13 +116,21 @@ void GLRenderer::render()
   // nvidia drivers have a bug where they don't like blending
   //  so on Mac we can use this (they don't use nvidia)
 #ifdef __APPLE__
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 #else
   // Thanks to Giuseppe D'Angelo for a related comment:
   // https://bugreports.qt.io/browse/QTBUG-36739
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 #endif
+  glEnable(GL_CULL_FACE);
   m_scene.rootNode().accept(visitor);
+
+  // Setup for opaque geometry
+  visitor.setRenderPass(OpaquePass);
+  m_scene.rootNode().accept(visitor);
+  glDisable(GL_CULL_FACE);
+  glDisable(GL_BLEND);
 
   // Setup for 3d overlay rendering
   visitor.setRenderPass(Overlay3DPass);
@@ -167,7 +174,8 @@ void GLRenderer::resetCamera()
 void GLRenderer::resetGeometry()
 {
   m_scene.setDirty(true);
-  if (m_camera.focus()(0) != m_camera.focus()(0) || m_camera.focus() == m_center)
+  if (m_camera.focus()(0) != m_camera.focus()(0) ||
+      m_camera.focus() == m_center)
     m_camera.setFocus(m_scene.center());
   m_center = m_scene.center();
   m_radius = m_scene.radius();
@@ -346,4 +354,4 @@ Array<Identifier> GLRenderer::hits(int x1, int y1, int x2, int y2) const
   return hits(&m_scene.rootNode(), f);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
