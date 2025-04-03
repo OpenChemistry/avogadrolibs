@@ -7,9 +7,9 @@
 ## Introduction
 
 Avogadro is an advanced molecular editor designed for cross-platform use in
-computational chemistry, molecular modeling, chemistry education, bioinformatics, materials science,
-and related areas. It offers flexible rendering and a powerful plugin
-architecture.
+computational chemistry, molecular modeling, education, bioinformatics,
+materials science, and related areas.
+It offers flexible rendering and a powerful plugin architecture.
 
 Core features and goals of the Avogadro project include:
 
@@ -20,9 +20,12 @@ Core features and goals of the Avogadro project include:
 * Extensible, making extensive use of a plugin architecture
 * Flexible, supporting a range of chemical data formats and packages
 
-Avogadro 2 began as a rewrite of the original [Avogadro 1.x][Avogadro1], which is now explicitly deprecated.
+Avogadro 2 began as a rewrite of the original [Avogadro 1.x][Avogadro1], which
+is now unsupported.
 The successor is faster, better, much more stable, and more featureful.
-A final couple of features yet to be ported will be implemented by the time of the 2.0 release, but in the meantime Avogadro 2 already has [much new functionality of its own](https://two.avogadro.cc/docs/whats-new-in-avogadro-2/).
+A final couple of features yet to be ported will be implemented by the time of
+the 2.0 release, but in the meantime Avogadro 2 already has
+[much new functionality of its own](https://two.avogadro.cc/docs/whats-new-in-avogadro-2/).
 
 Avogadro's codebase is split across a
 [libraries repository](https://github.com/openchemistry/avogadrolibs)
@@ -36,24 +39,32 @@ an open-source community project.
 
 ## Installing
 
-For the most up-to-date experience use the nightly builds prepared by GitHub actions for:
+For the most up-to-date experience use the nightly builds prepared by GitHub
+actions for:
 
 * [Linux (AppImage)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_linux/master/Avogadro2-x86_64.AppImage.zip)
 * [macOS (Apple Silicon)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_m1/master/macOS-arm64.dmg.zip)
 * [macOS (Intel)](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/macOS.dmg.zip)
 * [Windows](https://nightly.link/OpenChemistry/avogadrolibs/workflows/build_cmake/master/Win64.exe.zip)
 
-We also maintain a [`beta` Flatpak](https://two.avogadro.cc/install/flatpak.html#install-flatpak-beta) for Linux that is updated with the lastest changes every week or two.
+We also maintain a
+[`beta` Flatpak](https://two.avogadro.cc/install/flatpak.html#install-flatpak-beta)
+for Linux that is updated with the lastest changes every week or two.
 
-For full releases and an overview of all available ways to obtain Avogadro see the [overview](Install) on the Avogadro website.
+For full releases and an overview of all available ways to obtain Avogadro see
+the [overview](Install) on the Avogadro website.
 
-Binaries and the source code for each release can be found on the [GitHub releases page](https://github.com/OpenChemistry/avogadrolibs/releases).
+Binaries and the source code for each release can be found on the
+[GitHub releases page](https://github.com/OpenChemistry/avogadrolibs/releases).
 
-If you would like to build from source we recommend that you follow our [build guide][Build].
+If you would like to build from source we recommend that you follow our
+[build guide][Build].
 
 ## User guide
 
-Our [user documentation](https://two.avogadro.cc/docs/) can be found on the Avogadro website, as well as a brief guide to [getting started](https://two.avogadro.cc/docs/getting-started/).
+Our [user documentation](https://two.avogadro.cc/docs/) can be found on the
+Avogadro website, as well as a brief guide to
+[getting started](https://two.avogadro.cc/docs/getting-started/).
 
 ## Contributing
 
