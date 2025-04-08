@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-03-15 11:32+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2025-04-06 05:01+0000\n"
+"Last-Translator: gmkeebiy <gmkeebiy@sharklasers.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -1548,7 +1548,7 @@ msgstr "ThreeDMol"
 
 #: qtplugins/alchemy/alchemy.cpp:25
 msgid "Change Elements…"
-msgstr "更改元素"
+msgstr "更改元素…"
 
 #: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
 #: qtplugins/centroid/centroid.cpp:45
@@ -1574,7 +1574,7 @@ msgstr "炼金术"
 
 #: qtplugins/alchemy/alchemy.h:35
 msgid "Change elements of atoms."
-msgstr "更改原子中的元素"
+msgstr "更改原子中的元素。"
 
 #: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
 msgid "Align"
@@ -2094,12 +2094,12 @@ msgstr "骨架"
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
 msgid "Trace"
-msgstr "Trace"
+msgstr "追踪"
 
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr "Tube"
+msgstr "管道"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 #, fuzzy
@@ -2408,7 +2408,7 @@ msgstr "'b' 晶格坐标。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:500
 msgid "'c' lattice coordinate."
-msgstr "c轴晶格坐标"
+msgstr "c轴晶格坐标。"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:584
 msgid "Error applying geometry"
@@ -3753,7 +3753,7 @@ msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
 msgid "Angle tolerance:"
-msgstr ""
+msgstr "角度容差"
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
