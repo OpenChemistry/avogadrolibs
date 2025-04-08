@@ -51,7 +51,7 @@ const int ResidueColumns = 6;
 const int ConformerColumns = 1;
 
 // compute the RMSD between the two sets of coordinates
-inline double calcRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
+inline double calculateRMSD(const Array<Vector3>& v1, const Array<Vector3>& v2)
 {
   // if they're not the same length, it's an error
   if (v1.size() != v2.size())
@@ -400,7 +400,7 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return QString("%L1 °").arg(calcAngle(a1, a2, a3), 0, 'f', 3);
+        return QString("%L1 °").arg(calculateAngle(a1, a2, a3), 0, 'f', 3);
       default:
         return QVariant();
     }
@@ -436,7 +436,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case TorsionDataAtom4:
         return QVariant::fromValue(std::get<3>(torsion) + 1);
       case TorsionDataValue:
-        return QString("%L1 °").arg(calcDihedral(a1, a2, a3, a4), 0, 'f', 3);
+        return QString("%L1 °").arg(calculateDihedral(a1, a2, a3, a4), 0, 'f',
+                                    3);
       default:
         return QVariant();
     }
@@ -451,8 +452,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case ConformerDataRMSD: { // rmsd
         double rmsd = 0.0;
         if (row > 0) {
-          rmsd = calcRMSD(m_molecule->coordinate3d(row),
-                          m_molecule->coordinate3d(0));
+          rmsd = calculateRMSD(m_molecule->coordinate3d(row),
+                               m_molecule->coordinate3d(0));
         }
 
         return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
@@ -856,7 +857,7 @@ void PropertyModel::setAngle(unsigned int index, double newValue)
   Vector3 a = atom1.position3d();
   Vector3 b = atom2.position3d();
   Vector3 c = atom3.position3d();
-  const double currentValue = calcAngle(a, b, c);
+  const double currentValue = calculateAngle(a, b, c);
   Vector3 ab = b - a;
   Vector3 bc = c - b;
 
@@ -893,7 +894,7 @@ void PropertyModel::setTorsion(unsigned int index, double newValue)
   Vector3 b = atom2.position3d();
   Vector3 c = atom3.position3d();
   Vector3 d = atom4.position3d();
-  const double currentValue = calcDihedral(a, b, c, d);
+  const double currentValue = calculateDihedral(a, b, c, d);
 
   // Axis of rotation
   const Vector3 axis((c - b).normalized());

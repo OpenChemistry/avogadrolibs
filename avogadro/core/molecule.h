@@ -771,6 +771,11 @@ public:
    */
   void setFrozenAtomAxis(Index atomId, int axis, bool frozen);
 
+  /**
+   * @return the frozen status of atoms (i.e., 3*N array of 1.0 or 0.0)
+   * 0.0 means the atom is frozen, 1.0 means the atom is not frozen.
+   * (i.e., multiply this mask with gradients to freeze atoms)
+   */
   Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
 
   /**
@@ -778,11 +783,18 @@ public:
    */
   std::map<unsigned char, size_t> composition() const;
 
+  /**
+   * @return the atom pairs for all bonds to the atom indexed at @a index.
+   */
   Array<std::pair<Index, Index>> getAtomBonds(Index index) const;
+  /**
+   * @return the bond orders for all bonds to the atom indexed at @a index.
+   */
   Array<unsigned char> getAtomOrders(Index index) const;
 
   inline static std::pair<Index, Index> makeBondPair(const Index& a,
                                                      const Index& b);
+  /** Remove bonds to @a atom */
   bool removeBonds(Index atom);
 
   void addBonds(const Array<std::pair<Index, Index>>& bonds,
