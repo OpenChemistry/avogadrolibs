@@ -39,7 +39,9 @@ enum CalculateOption
   CalculateSinglePoint = 0,
   CalculateEquilibriumGeometry,
   CalculateTransitionState,
+  CalculateForces,
   CalculateFrequencies,
+  CalculateMakeEFP,
 
   CalculateCount
 };
@@ -50,8 +52,13 @@ enum TheoryOption
   TheoryPM3,
   TheoryRHF,
   TheoryB3LYP,
+  TheoryPBE0,
+  TheorywB97X,
+  TheorywB97XD,
   TheoryMP2,
   TheoryCCSDT,
+  TheoryCRCCL,
+  TheoryEOMCCSD,
 
   TheoryCount
 };
@@ -59,6 +66,9 @@ enum TheoryOption
 enum BasisOption
 {
   BasisSTO3G = 0,
+  BasisSTO4G,
+  BasisSTO5G,
+  BasisSTO6G,
   BasisMINI,
   Basis321G,
   Basis631Gd,
@@ -66,6 +76,16 @@ enum BasisOption
   Basis631PlusGdp,
   Basis631PlusG2dp,
   Basis6311PlusPlusG2dp,
+  BasisCCD,
+  BasisCCT,
+  BasisCCQ,
+  BasisCC5,
+  BasisCC6,
+  BasisAUGCCD,
+  BasisAUGCCT,
+  BasisAUGCCQ,
+  BasisAUGCC5,
+  BasisAUGCC6,
   BasisCorePotential,
 
   BasisCount
@@ -88,6 +108,7 @@ enum MultiplicityOption
   MultiplicityCount
 };
 
+// todo -> change to just take an int?
 enum ChargeOption
 {
   ChargeDication = 0,
@@ -253,11 +274,26 @@ void GamessInputDialog::buildTheoryOptions()
       case TheoryB3LYP:
         text = "B3LYP";
         break;
+      case TheoryPBE0:
+        text = "PBE0";
+        break;
+      case TheorywB97X:
+        text = "wB97X";
+        break;
+      case TheorywB97XD:
+        text = "wB97X-D";
+        break;
       case TheoryMP2:
         text = "MP2";
         break;
       case TheoryCCSDT:
         text = "CCSD(T)";
+        break;
+      case TheoryCRCCL:
+        text = "CR-CCL";
+        break;
+      case TheoryEOMCCSD:
+        text = "EOM-CCSD";
         break;
       default:
         break;
@@ -273,6 +309,15 @@ void GamessInputDialog::buildBasisOptions()
     switch (static_cast<BasisOption>(i)) {
       case BasisSTO3G:
         text = "STO-3G";
+        break;
+      case BasisSTO4G:
+        text = "STO-4G";
+        break;
+      case BasisSTO5G:
+        text = "STO-5G";
+        break;
+      case BasisSTO6G:
+        text = "STO-6G";
         break;
       case BasisMINI:
         text = "MINI";
@@ -294,6 +339,36 @@ void GamessInputDialog::buildBasisOptions()
         break;
       case Basis6311PlusPlusG2dp:
         text = "6-311++G(2d,p)";
+        break;
+      case BasisCCD:
+        text = "cc-pVDZ";
+        break;
+      case BasisCCT:
+        text = "cc-pVTZ";
+        break;
+      case BasisCCQ:
+        text = "cc-pVQZ";
+        break;
+      case BasisCC5:
+        text = "cc-pV5Z";
+        break;
+      case BasisCC6:
+        text = "cc-pV6Z";
+        break;
+      case BasisAUGCCD:
+        text = "aug-cc-pVDZ";
+        break;
+      case BasisAUGCCT:
+        text = "aug-cc-pVTZ";
+        break;
+      case BasisAUGCCQ:
+        text = "aug-cc-pVQZ";
+        break;
+      case BasisAUGCC5:
+        text = "aug-cc-pV5Z";
+        break;
+      case BasisAUGCC6:
+        text = "aug-cc-pV6Z";
         break;
       case BasisCorePotential:
         text = tr("Core Potential");
@@ -470,9 +545,16 @@ void GamessInputDialog::updatePreviewText()
       runTyp = "SADPOINT";
       statPt = " $STATPT OPTTOL=0.0001 NSTEP=20 $END\n";
       break;
+    case CalculateForces:
+      runTyp = "FORCE";
+      force = " $FORCE METHOD=ANALYTIC $END\n";
+      break;
     case CalculateFrequencies:
       runTyp = "HESSIAN";
       force = " $FORCE METHOD=ANALYTIC VIBANL=.TRUE. $END\n";
+      break;
+    case CalculateMakeEFP:
+      runTyp = "MAKEFP";
       break;
     default:
       break;
@@ -490,11 +572,26 @@ void GamessInputDialog::updatePreviewText()
     case TheoryB3LYP:
       extraContrl += " DFTTYP=B3LYP";
       break;
+    case TheoryPBE0:
+      extraContrl += " DFTTYP=PBE0";
+      break;
+    case TheorywB97X:
+      extraContrl += " DFTTYP=wB97X";
+      break;
+    case TheorywB97XD:
+      extraContrl += " DFTTYP=wB97X-D";
+      break;
     case TheoryMP2:
       extraContrl += " MPLEVL=2";
       break;
     case TheoryCCSDT:
       extraContrl += " CCTYP=CCSD(T)";
+      break;
+    case TheoryCRCCL:
+      extraContrl += " CCTYP=CR-CCL";
+      break;
+    case TheoryEOMCCSD:
+      extraContrl += " CCTYP=EOM-CCSD";
       break;
     default:
       break;
@@ -505,6 +602,18 @@ void GamessInputDialog::updatePreviewText()
       case BasisSTO3G:
         gBasis = "STO";
         extraBasis += " NGAUSS=3";
+        break;
+      case BasisSTO4G:
+        gBasis = "STO";
+        extraBasis += " NGAUSS=4";
+        break;
+      case BasisSTO5G:
+        gBasis = "STO";
+        extraBasis += " NGAUSS=5";
+        break;
+      case BasisSTO6G:
+        gBasis = "STO";
+        extraBasis += " NGAUSS=6";
         break;
       case BasisMINI:
         gBasis = "MINI";
@@ -532,6 +641,36 @@ void GamessInputDialog::updatePreviewText()
       case Basis6311PlusPlusG2dp:
         gBasis = "N311";
         extraBasis += " NGAUSS=6 NDFUNC=2 NPFUNC=1 DIFFSP=.TRUE. DIFFS=.TRUE.";
+        break;
+      case BasisCCD:
+        gBasis = "ccd";
+        break;
+      case BasisCCT:
+        gBasis = "cct";
+        break;
+      case BasisCCQ:
+        gBasis = "ccq";
+        break;
+      case BasisCC5:
+        gBasis = "cc5";
+        break;
+      case BasisCC6:
+        gBasis = "cc6";
+        break;
+      case BasisAUGCCD:
+        gBasis = "accd";
+        break;
+      case BasisAUGCCT:
+        gBasis = "acct";
+        break;
+      case BasisAUGCCQ:
+        gBasis = "accq";
+        break;
+      case BasisAUGCC5:
+        gBasis = "acc5";
+        break;
+      case BasisAUGCC6:
+        gBasis = "acc6";
         break;
       case BasisCorePotential:
         gBasis = "SBK";
@@ -592,16 +731,18 @@ void GamessInputDialog::updatePreviewText()
 
   // build up the input file:
   QString file;
-  file += QString("! %1\n").arg(title);
+  file += "! Input file generated by Avogadro\n";
   file += QString(" $BASIS GBASIS=%1%2 $END\n").arg(gBasis, extraBasis);
   file += pcm;
   file += QString(" $CONTRL SCFTYP=%1 RUNTYP=%2 ICHARG=%3 MULT=%4%5 $END\n")
             .arg(scfTyp, runTyp, iCharg, mult, extraContrl);
+  file += QString(" $CONTRL ISPHER=1 MAXIT=50 CONV=1.0d-06 $END\n");
+  file += QString(" $SCF DIRSCF=.T. $END\n");
   file += statPt;
   file += force;
   file += "\n";
   file += " $DATA\n";
-  file += "Title\n";
+  file += QString("%1\n").arg(title);
   file += "C1\n";
 
   if (m_molecule) {
