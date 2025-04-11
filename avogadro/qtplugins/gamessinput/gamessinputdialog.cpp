@@ -58,6 +58,7 @@ enum TheoryOption
   TheoryMP2,
   TheoryCCSDT,
   TheoryCRCCL,
+  TheoryEOMCCSD,
 
   TheoryCount
 };
@@ -308,6 +309,15 @@ void GamessInputDialog::buildBasisOptions()
     switch (static_cast<BasisOption>(i)) {
       case BasisSTO3G:
         text = "STO-3G";
+        break;
+      case BasisSTO4G:
+        text = "STO-4G";
+        break;
+      case BasisSTO5G:
+        text = "STO-5G";
+        break;
+      case BasisSTO6G:
+        text = "STO-6G";
         break;
       case BasisMINI:
         text = "MINI";
@@ -592,6 +602,18 @@ void GamessInputDialog::updatePreviewText()
       case BasisSTO3G:
         gBasis = "STO";
         extraBasis += " NGAUSS=3";
+        break;
+      case BasisSTO4G:
+        gBasis = "STO";
+        extraBasis += " NGAUSS=4";
+        break;
+      case BasisSTO5G:
+        gBasis = "STO";
+        extraBasis += " NGAUSS=5";
+        break;
+      case BasisSTO6G:
+        gBasis = "STO";
+        extraBasis += " NGAUSS=6";
         break;
       case BasisMINI:
         gBasis = "MINI";
