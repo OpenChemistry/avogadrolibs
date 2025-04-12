@@ -246,6 +246,12 @@ void GamessInputDialog::buildCalculateOptions()
       case CalculateTransitionState:
         text = tr("Transition State");
         break;
+      case CalculateForces:
+        text = tr("Forces");
+        break;
+      case CalculateMakeEFP:
+        text = tr("Make EFP");
+        break;
       case CalculateFrequencies:
         text = tr("Frequencies");
         break;
