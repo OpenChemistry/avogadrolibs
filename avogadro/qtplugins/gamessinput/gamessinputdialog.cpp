@@ -108,7 +108,6 @@ enum MultiplicityOption
   MultiplicityCount
 };
 
-// todo -> change to just take an int?
 enum ChargeOption
 {
   ChargeDication = 0,
@@ -451,7 +450,7 @@ void GamessInputDialog::setBasicDefaults()
   ui.titleEdit->setText(QString());
   ui.calculateCombo->setCurrentIndex(CalculateSinglePoint);
   ui.theoryCombo->setCurrentIndex(TheoryB3LYP);
-  ui.basisCombo->setCurrentIndex(Basis321G);
+  ui.basisCombo->setCurrentIndex(Basis631Gd);
   ui.stateCombo->setCurrentIndex(StateGas);
   ui.multiplicityCombo->setCurrentIndex(MultiplicitySinglet);
   ui.chargeCombo->setCurrentIndex(ChargeNeutral);
