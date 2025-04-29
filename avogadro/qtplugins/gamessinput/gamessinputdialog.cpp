@@ -119,6 +119,17 @@ enum ChargeOption
   ChargeCount
 };
 
+enum DispersionCorrectionOption 
+{
+  DispersionNone = 0,
+  DispersionD1,
+  DispersionD2,
+  DispersionD3,
+  DispersionD4,
+
+  DispersionCount
+};
+
 GamessInputDialog::GamessInputDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_molecule(nullptr), m_highlighter(nullptr),
     m_updatePending(false)
@@ -182,11 +193,19 @@ void GamessInputDialog::connectBasic()
           SLOT(updatePreviewText()));
   connect(ui.basisCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(updateTitlePlaceholder()));
+  connect(ui.DCVerCombo, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(updatePreviewText()));
+  connect(ui.DCVerCombo, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(updateTitlePlaceholder()));
   connect(ui.stateCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.multiplicityCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.chargeCombo, SIGNAL(currentIndexChanged(int)), this,
+          SLOT(updatePreviewText()));
+    connect(ui.maxscfspinBox, SIGNAL(valueChanged(int)), this,
+          SLOT(updatePreviewText()));
+  connect(ui.convergeSpinBox, SIGNAL(valueChanged(double)), this,
           SLOT(updatePreviewText()));
 }
 
@@ -206,6 +225,7 @@ void GamessInputDialog::buildOptions()
   buildCalculateOptions();
   buildTheoryOptions();
   buildBasisOptions();
+  buildDispersionCorrectionOptions();
   buildStateOptions();
   buildMultiplicityOptions();
   buildChargeOptions();
@@ -217,6 +237,7 @@ void GamessInputDialog::updateOptionCache()
   m_optionCache.insert(ui.calculateCombo, ui.calculateCombo->currentIndex());
   m_optionCache.insert(ui.theoryCombo, ui.theoryCombo->currentIndex());
   m_optionCache.insert(ui.basisCombo, ui.basisCombo->currentIndex());
+  m_optionCache.insert(ui.DCVerCombo, ui.DCVerCombo->currentIndex());
   m_optionCache.insert(ui.stateCombo, ui.stateCombo->currentIndex());
   m_optionCache.insert(ui.multiplicityCombo,
                        ui.multiplicityCombo->currentIndex());
@@ -243,17 +264,17 @@ void GamessInputDialog::buildCalculateOptions()
       case CalculateEquilibriumGeometry:
         text = tr("Equilibrium Geometry");
         break;
-      case CalculateTransitionState:
-        text = tr("Transition State");
-        break;
       case CalculateForces:
         text = tr("Forces");
         break;
-      case CalculateMakeEFP:
-        text = tr("Make EFP");
+      case CalculateTransitionState:
+        text = tr("Transition State");
         break;
       case CalculateFrequencies:
         text = tr("Frequencies");
+        break;
+      case CalculateMakeEFP:
+        text = tr("Make EFP");
         break;
       default:
         break;
@@ -385,6 +406,33 @@ void GamessInputDialog::buildBasisOptions()
   }
 }
 
+void GamessInputDialog::buildDispersionCorrectionOptions()
+{
+  for (int i = 0; i < static_cast<int>(DispersionCount); ++i) {
+    QString text = "";
+    switch (static_cast<DispersionCorrectionOption>(i)) {
+      case DispersionNone:
+        text = tr("None");
+        break;
+      case DispersionD1:
+        text = tr("D1");
+        break;
+      case DispersionD2:
+        text = tr("D2");
+        break;
+      case DispersionD3:
+        text = tr("D3");
+        break;
+      case DispersionD4:
+        text = tr("D4");
+        break;
+      default:
+        break;
+    }
+    ui.DCVerCombo->addItem(text);
+  }
+}
+
 void GamessInputDialog::buildStateOptions()
 {
   for (int i = 0; i < static_cast<int>(StateCount); ++i) {
@@ -455,8 +503,9 @@ void GamessInputDialog::setBasicDefaults()
 {
   ui.titleEdit->setText(QString());
   ui.calculateCombo->setCurrentIndex(CalculateSinglePoint);
-  ui.theoryCombo->setCurrentIndex(TheoryB3LYP);
-  ui.basisCombo->setCurrentIndex(Basis631Gd);
+  ui.theoryCombo->setCurrentIndex(TheorywB97X);
+  ui.basisCombo->setCurrentIndex(BasisCCD);
+  ui.DCVerCombo->setCurrentIndex(DispersionD3);
   ui.stateCombo->setCurrentIndex(StateGas);
   ui.multiplicityCombo->setCurrentIndex(MultiplicitySinglet);
   ui.chargeCombo->setCurrentIndex(ChargeNeutral);
@@ -513,6 +562,8 @@ void GamessInputDialog::updatePreviewText()
     static_cast<CalculateOption>(ui.calculateCombo->currentIndex()));
   auto theory(static_cast<TheoryOption>(ui.theoryCombo->currentIndex()));
   auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
+  auto dispersion(
+    static_cast<DispersionCorrectionOption>(ui.DCVerCombo->currentIndex()));
   auto state(static_cast<StateOption>(ui.stateCombo->currentIndex()));
   auto multiplicity(
     static_cast<MultiplicityOption>(ui.multiplicityCombo->currentIndex()));
@@ -520,6 +571,10 @@ void GamessInputDialog::updatePreviewText()
 
   // Disable basis selection for semiempirical methods.
   ui.basisCombo->setEnabled(theory != TheoryAM1 && theory != TheoryPM3);
+  bool is_dft = (theory == TheoryB3LYP || theory == TheoryPBE0 ||
+                  theory == TheorywB97X || theory == TheorywB97XD);
+  ui.DCVerCombo->setEnabled(is_dft);
+  
 
   // Generate text.
   //   Variables:
@@ -532,11 +587,14 @@ void GamessInputDialog::updatePreviewText()
   // Extra options for lines
   QString extraBasis;
   QString extraContrl;
+  QString extraDFT;
 
   // Optional lines
   QString statPt;
   QString force;
   QString pcm;
+  QString maxSCF = QString::number(ui.maxscfspinBox->value());
+  QString convthresh = QString::number(ui.convergeSpinBox->value());
 
   switch (calculate) {
     case CalculateSinglePoint:
@@ -575,16 +633,16 @@ void GamessInputDialog::updatePreviewText()
     case TheoryRHF:
       break;
     case TheoryB3LYP:
-      extraContrl += " DFTTYP=B3LYP";
+      extraDFT += " DFTTYP=B3LYP";
       break;
     case TheoryPBE0:
-      extraContrl += " DFTTYP=PBE0";
+      extraDFT += " DFTTYP=PBE0";
       break;
     case TheorywB97X:
-      extraContrl += " DFTTYP=wB97X";
+      extraDFT += " DFTTYP=wB97X";
       break;
     case TheorywB97XD:
-      extraContrl += " DFTTYP=wB97X-D";
+      extraDFT += " DFTTYP=wB97X-D";
       break;
     case TheoryMP2:
       extraContrl += " MPLEVL=2";
@@ -734,6 +792,28 @@ void GamessInputDialog::updatePreviewText()
       break;
   }
 
+  if(is_dft) {
+    switch (dispersion) {
+      case DispersionNone:
+        extraDFT += " DC=.F. ";
+        break;
+      case DispersionD1:
+        extraDFT += " DC=.T. IDCVER=1";
+        break;
+      case DispersionD2:
+        extraDFT += " DC=.T. IDCVER=2";
+        break;
+      case DispersionD3:
+        extraDFT += " DC=.T. IDCVER=3";
+        break;
+      case DispersionD4:
+        extraDFT += " DC=.T. IDCVER=4";
+        break;
+      default:
+        break;
+    }
+  }
+
   // build up the input file:
   QString file;
   file += "! Input file generated by Avogadro\n";
@@ -741,8 +821,11 @@ void GamessInputDialog::updatePreviewText()
   file += pcm;
   file += QString(" $CONTRL SCFTYP=%1 RUNTYP=%2 ICHARG=%3 MULT=%4%5 $END\n")
             .arg(scfTyp, runTyp, iCharg, mult, extraContrl);
-  file += QString(" $CONTRL ISPHER=1 MAXIT=50 CONV=1.0d-06 $END\n");
-  file += QString(" $SCF DIRSCF=.T. $END\n");
+  file += QString(" $CONTRL ISPHER=1 MAXIT=%1 $END\n").arg(maxSCF);
+  file += QString(" $SCF DIRSCF=.T. CONV=%1 $END\n").arg(convthresh);
+  if(is_dft) {
+    file += QString(" $DFT %1 $END\n").arg(extraDFT);
+  }
   file += statPt;
   file += force;
   file += "\n";
