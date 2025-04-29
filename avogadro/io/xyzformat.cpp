@@ -89,15 +89,11 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
 
-  std::cout << " read comment " << buffer << std::endl;
-
   double energy = 0.0;
   std::vector<double> energies;
   if (findEnergy(buffer, energy)) {
     mol.setData("totalEnergy", energy);
     energies.push_back(energy);
-
-    std::cout << " read energy " << energy << std::endl;
   }
 
   // check for Lattice= in an extended XYZ from ASE and company
