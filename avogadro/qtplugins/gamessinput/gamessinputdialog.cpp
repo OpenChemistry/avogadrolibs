@@ -76,6 +76,7 @@ enum BasisOption
   Basis631PlusGdp,
   Basis631PlusG2dp,
   Basis6311PlusPlusG2dp,
+  BasisMakeEFP,
   BasisCCD,
   BasisCCT,
   BasisCCQ,
@@ -366,6 +367,9 @@ void GamessInputDialog::buildBasisOptions()
       case Basis6311PlusPlusG2dp:
         text = "6-311++G(2d,p)";
         break;
+      case BasisMakeEFP:
+        text = "6-311++G(3df,2p)";
+        break;
       case BasisCCD:
         text = "cc-pVDZ";
         break;
@@ -618,6 +622,7 @@ void GamessInputDialog::updatePreviewText()
       break;
     case CalculateMakeEFP:
       runTyp = "MAKEFP";
+      basis = BasisMakeEFP;
       break;
     default:
       break;
@@ -704,6 +709,10 @@ void GamessInputDialog::updatePreviewText()
       case Basis6311PlusPlusG2dp:
         gBasis = "N311";
         extraBasis += " NGAUSS=6 NDFUNC=2 NPFUNC=1 DIFFSP=.TRUE. DIFFS=.TRUE.";
+        break;
+      case BasisMakeEFP:
+        gBasis = "N311";
+        extraBasis += " NGAUSS=6 NDFUNC=3 NPFUNC=2 NFFUNC=3 \n DIFFSP=.TRUE. DIFFS=.TRUE.";
         break;
       case BasisCCD:
         gBasis = "ccd";
