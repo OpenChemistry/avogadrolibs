@@ -508,8 +508,8 @@ void GamessInputDialog::setBasicDefaults()
   ui.titleEdit->setText(QString());
   ui.calculateCombo->setCurrentIndex(CalculateSinglePoint);
   ui.theoryCombo->setCurrentIndex(TheorywB97X);
-  ui.basisCombo->setCurrentIndex(BasisCCD);
-  ui.DCVerCombo->setCurrentIndex(DispersionD3);
+  ui.basisCombo->setCurrentIndex(Basis631Gd);
+  ui.DCVerCombo->setCurrentIndex(DispersionD4);
   ui.stateCombo->setCurrentIndex(StateGas);
   ui.multiplicityCombo->setCurrentIndex(MultiplicitySinglet);
   ui.chargeCombo->setCurrentIndex(ChargeNeutral);
