@@ -168,8 +168,7 @@ if(USE_LIBARCHIVE)
   add_subdirectory(plugindownloader)
 endif()
 
-if(USE_LIBMSYM AND QT_VERSION EQUAL 5)
-  # QStyleOptionViewItemV4 is not in Qt6, needs investigation
+if(USE_LIBMSYM)
   add_subdirectory(symmetry)
 endif()
 
