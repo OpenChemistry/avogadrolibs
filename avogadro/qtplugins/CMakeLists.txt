@@ -188,7 +188,7 @@ if (USE_OPENGL)
 endif()
 
 # other optional plugins
-if(BUILD_GPL_PLUGINS AND QT_VERSION EQUAL 5)
+if(BUILD_GPL_PLUGINS)
   # qtaimcurvature.h/cpp contains GPL licensed code:
   add_subdirectory(qtaim)
 endif()
