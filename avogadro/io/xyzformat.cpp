@@ -360,6 +360,7 @@ std::vector<std::string> XyzFormat::fileExtensions() const
   ext.emplace_back("xyz");
   ext.emplace_back("exyz");
   ext.emplace_back("extxyz");
+  ext.emplace_back("allxyz");
   return ext;
 }
 
