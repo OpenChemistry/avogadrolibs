@@ -70,6 +70,7 @@ private:
   void buildTheoryOptions();
   void buildBasisOptions();
   void buildStateOptions();
+  void buildDispersionCorrectionOptions();
   void buildMultiplicityOptions();
   void buildChargeOptions();
 
