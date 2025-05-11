@@ -390,7 +390,7 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Nuclear Critical Points Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -414,11 +414,9 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
     if (n.at(0).toBool()) {
-      QVector3D result(n.at(1).toReal(),
-                       n.at(2).toReal(),
-                       n.at(3).toReal());
+      QVector3D result(n.at(1).toReal(), n.at(2).toReal(), n.at(3).toReal());
 
       m_nuclearCriticalPoints.append(result);
     }
@@ -489,7 +487,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Bond Critical Points Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -636,7 +634,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Electron Density Sources Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -660,7 +658,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
     if (n.at(0).toBool()) {
       qreal x = n.at(1).toReal();
       qreal y = n.at(2).toReal();
@@ -781,7 +779,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   dialog.setWindowTitle("QTAIM");
   dialog.setLabelText(QString("Electron Density Sinks Search"));
 
-  QFutureWatcher<void> futureWatcher;
+  QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
   QObject::connect(&dialog, SIGNAL(canceled()), &futureWatcher, SLOT(cancel()));
   QObject::connect(&futureWatcher, SIGNAL(progressRangeChanged(int, int)),
@@ -805,7 +803,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
   QFile file;
   file.remove(tempFileName);
 
-  for (const auto & n : results) {
+  for (const auto& n : results) {
     if (n.at(0).toBool()) {
       qreal x = n.at(1).toReal();
       qreal y = n.at(2).toReal();
@@ -857,4 +855,4 @@ QString QTAIMCriticalPointLocator::temporaryFileName()
   return tempFileName;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
