@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-05-12 15:08+0000\n"
+"PO-Revision-Date: 2025-05-12 15:10+0000\n"
 "Last-Translator: Максим Горпиніч <maksimgorpinic4@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
@@ -5907,7 +5907,7 @@ msgstr "Довідка…"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 msgid "Paste"
-msgstr "вставити"
+msgstr "Вставити"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:135
 #. i18n: ectx: property (text), widget (QPushButton, revert)
@@ -6558,7 +6558,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
 msgid "Units"
-msgstr "одиниці"
+msgstr "Одиниці"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -7166,7 +7166,7 @@ msgstr "кількість дітей для кожної батьківсько
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Children:"
-msgstr "діти:"
+msgstr "Діти:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7234,7 +7234,7 @@ msgstr "Спряжений градієнт"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Simple"
-msgstr "просто"
+msgstr "Просто"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -7371,7 +7371,7 @@ msgstr "Платформа:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "Reference"
-msgstr "довідка"
+msgstr "Довідка"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
