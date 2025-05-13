@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-02-10 04:23+0000\n"
+"PO-Revision-Date: 2025-05-13 16:02+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -148,7 +148,7 @@ msgstr ""
 #: molequeue/inputgeneratordialog.cpp:43
 #, qt-format
 msgid "%1 Input Generator"
-msgstr ""
+msgstr "%1 შეყვანის გენერატორი"
 
 #: molequeue/inputgeneratorwidget.cpp:116
 msgid "Continue"
@@ -1598,7 +1598,7 @@ msgstr "შ/გ-ის შეცდომა"
 #: qtplugins/apbs/apbs.cpp:117
 #, qt-format
 msgid "Error reading structure file (%1)."
-msgstr ""
+msgstr "სტრუქტურის ფაილის (%1) წაკითხვის შეცდომა."
 
 #: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
 msgid "OpenDX Error"
@@ -1711,7 +1711,7 @@ msgstr "დაშორებით…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
 msgid "By Element"
-msgstr ""
+msgstr "ელემენტით"
 
 #: qtplugins/applycolors/applycolors.cpp:72
 msgid "By Chain"
@@ -2170,6 +2170,8 @@ msgid ""
 "Error reading output file '%1':\n"
 "%2"
 msgstr ""
+"გამოტანის ფაილის '%1' წაკითხვის შეცდომა:\n"
+"%2"
 
 #: qtplugins/commandscripts/command.cpp:229
 #, qt-format
@@ -2648,7 +2650,7 @@ msgstr "უჯრედის &მოცულობის მასშტაბ
 
 #: qtplugins/crystal/crystal.cpp:74
 msgid "Build &Supercell…"
-msgstr ""
+msgstr "&ზეუჯრედის აგება…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -3066,7 +3068,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:700
 msgid "Submit GAMESS Calculation"
-msgstr ""
+msgstr "GAMESS გამოთვლის გადაცემა"
 
 #: qtplugins/hydrogens/hydrogens.cpp:21
 msgid "&Adjust Hydrogens"
@@ -4561,7 +4563,7 @@ msgstr "ატომის ინდექსის მიხედვით მ
 
 #: qtplugins/select/select.cpp:63
 msgid "Select by Residue…"
-msgstr ""
+msgstr "არჩევა ნალექით…"
 
 #: qtplugins/select/select.cpp:68
 msgid "Select Backbone Atoms…"
@@ -4609,7 +4611,7 @@ msgstr "აირჩიეთ გვერდები"
 
 #: qtplugins/select/select.cpp:440
 msgid "Select Atoms by Index"
-msgstr ""
+msgstr "ატომების არჩევა ინდექსით"
 
 #: qtplugins/select/select.cpp:441
 msgid "Atoms to Select:"
@@ -4845,7 +4847,7 @@ msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "ტალღის სიგრძე (ნმ)"
 
 #: qtplugins/spectra/spectradialog.cpp:586
 msgid "Vibrational Spectra"
@@ -5580,7 +5582,7 @@ msgstr ""
 #. i18n: file: qtplugins/configurepython/condadialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Environment name:"
-msgstr ""
+msgstr "გარემოს სახელი:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:45
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, environmentName)
@@ -5952,7 +5954,7 @@ msgstr "&დამალვა"
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::VolumeScalingDialog)
 msgid "Scale Unit Cell Volume"
-msgstr ""
+msgstr "უჯრედის მოცულობის ერთეულის მასშტაბი"
 
 #. i18n: file: qtplugins/crystal/volumescalingdialog.ui:25
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6811,7 +6813,7 @@ msgstr "Y"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:100
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Translate by:"
-msgstr ""
+msgstr "გადატანა მოძრაობით:"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -6856,7 +6858,7 @@ msgstr "გადატანა:"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Selected Atoms"
-msgstr ""
+msgstr "არჩეული ატომები"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
@@ -7442,7 +7444,7 @@ msgstr "ტომი"
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "PDF ნახაზის პარამეტრები"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -7768,7 +7770,7 @@ msgstr "ძალიან მაღალი"
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
 msgid "Render"
-msgstr ""
+msgstr "რენდერი"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
@@ -7798,7 +7800,7 @@ msgstr "ბეტა"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Color by:"
-msgstr ""
+msgstr "გაფერადება:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -7977,12 +7979,12 @@ msgstr ""
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:192
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "1: Linear"
-msgstr ""
+msgstr "1: წრფივი"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:197
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "2: Linear"
-msgstr ""
+msgstr "2:წრფივი"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:202
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
@@ -8249,6 +8251,16 @@ msgid ""
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
 "family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 msgstr ""
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
+"\"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\""
+">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-"
+"size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+"family:'Ubuntu'; font-size:11pt;\">GM 0.0 0.0 0.0</span></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:156
 #. i18n: ectx: property (toolTip), widget (QSpinBox, spin_numKPoints)
