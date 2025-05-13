@@ -100,15 +100,23 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   // e.g. Lattice="H11 H21 H31 H12 H22 H32 H13 H23 H33"
   // https://atomsk.univ-lille.fr/doc/en/format_xyz.html
   // https://gitlab.com/ase/ase/-/merge_requests/62
-  std::size_t start = buffer.find("Lattice=\"");
+  std::size_t start = buffer.find("Lattice=");
   if (start != std::string::npos) {
     // step through bit by bit until we hit the next quote character
-    start = start + 9;
+    start = start + 8;
+    // skip over the first quote
+    if (buffer[start] == '\"') {
+      start++;
+    }
     std::size_t end = buffer.find('\"', start);
     std::string lattice = buffer.substr(start, (end - start));
 
     std::vector<string> tokens(split(lattice, ' '));
-    if (tokens.size() == 9) {
+
+    // check for size
+    std::cout << "Lattice size: " << tokens.size() << std::endl;
+
+    if (tokens.size() >= 9) {
       Vector3 v1(lexicalCast<double>(tokens[0]), lexicalCast<double>(tokens[1]),
                  lexicalCast<double>(tokens[2]));
       Vector3 v2(lexicalCast<double>(tokens[3]), lexicalCast<double>(tokens[4]),
@@ -117,6 +125,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
                  lexicalCast<double>(tokens[8]));
 
       auto* cell = new Core::UnitCell(v1, v2, v3);
+      std::cout << " Lattice: " << cell->aVector() << " " << cell->bVector()
+                << " " << cell->cVector() << std::endl;
       mol.setUnitCell(cell);
     }
   }
