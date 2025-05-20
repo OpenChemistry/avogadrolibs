@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-05-20 22:11+0000\n"
-"Last-Translator: Hēphaïstos <hephaistos@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -5120,7 +5120,7 @@ msgstr "Fenêtre orbitale"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Affiche les listes orbitales."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Orbital"
