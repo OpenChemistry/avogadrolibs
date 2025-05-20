@@ -15,7 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-05-20 22:10+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -3383,7 +3384,7 @@ msgstr "Étiquettes de l'atome :"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "Longueur"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
