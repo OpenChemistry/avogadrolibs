@@ -8,13 +8,14 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
 # Eric Remy <eric.remy3@free.fr>, 2025.
+# Hēphaïstos <hephaistos@users.noreply.hosted.weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-03-23 22:05+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2025-05-21 23:01+0000\n"
+"Last-Translator: Hēphaïstos <hephaistos@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2878,6 +2879,11 @@ msgid ""
 "Left Mouse: \tClick and Drag to create Atoms and Bond\n"
 "Right Mouse: \tDelete Atom"
 msgstr ""
+"Outil de dessin \t(%1)\n"
+"\n"
+"Clic gauche : \tCliquer et faire glisser pour créer des atomes et des "
+"liaisons\n"
+"Clic droit : \tEffacer un atome"
 
 #: qtplugins/editor/editor.cpp:114
 msgid "Draw Atom"
@@ -3377,11 +3383,11 @@ msgstr "Étiquettes de l'atome :"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
-msgstr ""
+msgstr "Longueur"
 
 #: qtplugins/label/label.cpp:217
 msgid "Bond Label:"
-msgstr ""
+msgstr "Étiquette de liaison :"
 
 #: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
 msgid "ID"
@@ -3421,6 +3427,10 @@ msgid ""
 "\n"
 "Left Mouse: \tClick on Atoms to add Custom Labels"
 msgstr ""
+"Outil d'étiquetage d'atome \t(%1)\n"
+"\n"
+"Clic gauche : \t Cliquer sur les atomes pour leur attribuer des étiquettes "
+"personnalisées"
 
 #: qtplugins/label/labeleditor.cpp:81
 msgid "Create Label"
@@ -3428,7 +3438,7 @@ msgstr "Créer une étiquette"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
-msgstr "Outil d'édition d'étiquettes"
+msgstr "Outil d'édition d'étiquette"
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
@@ -3510,6 +3520,10 @@ msgid ""
 "Left Mouse: \tClick and drag to move atoms\n"
 "Right Mouse: \tClick and drag to rotate atoms.\n"
 msgstr ""
+"Outil de manipulation \t(%1)\n"
+"\n"
+"Clic gauche : \tCliquer et faire glisser pour mouvoir les atomes\n"
+"Clic droit : \tCliquer et faire glisser pour faire tourner les atomes.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3536,6 +3550,13 @@ msgid ""
 "\tDihedral is measured between 1-2-3-4\n"
 "Right Mouse: \tReset the measurements."
 msgstr ""
+"Outil de mesure \t(%1)\n"
+"\n"
+"Clic gauche : \tSélectionner jusqu'à quatre atomes.\n"
+"\tLes distances sont mesurées entre 1-2 et 2-3\n"
+"\tL'angle est mesuré entre 1-3 en utilisant 2 comme point commun\n"
+"\tLe dihèdre est mesuré entre 1-2-3-4\n"
+"Clic droit : \tRéinitialiser les mesures."
 
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
@@ -3585,7 +3606,7 @@ msgstr "Masse moléculaire (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:304
 msgid "Chemical Formula"
-msgstr ""
+msgstr "Formule chimique"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:306
 msgid "Number of Atoms"
@@ -3597,7 +3618,7 @@ msgstr "Nombre de liaisons"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:310
 msgid "Coordinate Sets"
-msgstr ""
+msgstr "Sets de coordonnées"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:312
 msgid "Number of Residues"
@@ -3609,7 +3630,7 @@ msgstr "Nombre de chaînes"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:316
 msgid "Net Charge"
-msgstr ""
+msgstr "Charge nette"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:318
 msgid "Net Spin Multiplicity"
@@ -3622,27 +3643,27 @@ msgstr "moment dipolaire (Debye)"
 #: qtplugins/molecularproperties/molecularmodel.cpp:322
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
-msgstr ""
+msgstr "Énergie HOMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:324
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
-msgstr ""
+msgstr "Énergie LUMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:326
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
-msgstr ""
+msgstr "Énergie SOMO (eV)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:328
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
-msgstr ""
+msgstr "Énergie totale (Hartree)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:331
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
-msgstr ""
+msgstr "Énergie du point zéro (kcal/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:334
 msgid "Enthalpy (kcal/mol)"
@@ -3735,6 +3756,12 @@ msgid ""
 "Middle Mouse: \tClick and drag to zoom in or out.\n"
 "Right Mouse: \tClick and drag to move the view.\n"
 msgstr ""
+"Outil de navigation \t(%1)\n"
+"\n"
+"Clic gauche : \tCliquer et faire glisser pour faire pivoter l'angle de vue.\n"
+"Clic central : \tCliquer et faire glisser pour effectuer un zoom avant ou "
+"arrière.\n"
+"Clic droit : \tCliquer et faire glisser pour déplacer l'angle de vue.\n"
 
 #: qtplugins/navigator/navigator.cpp:62
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4305,11 +4332,11 @@ msgstr "Description"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 msgid "Error downloading plugin data."
-msgstr ""
+msgstr "Erreur lors du téléchargement des données du plugin."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
 msgid "Error parsing plugin data."
-msgstr ""
+msgstr "Erreur lors de l'analyse des données du plugin."
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:306
 msgid ""
@@ -4334,7 +4361,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr ""
+msgstr "Échec du téléchargement depuis %1 : code d'état %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:400
 #, qt-format
@@ -4440,7 +4467,7 @@ msgstr "Z (Å)"
 #: qtplugins/propertytables/propertymodel.cpp:517
 #: qtplugins/propertytables/propertymodel.cpp:537
 msgid "Label"
-msgstr ""
+msgstr "Étiquette"
 
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
@@ -4822,6 +4849,15 @@ msgid ""
 "Use Ctrl to toggle the selection and shift to add to the selection.\n"
 "Double-Click: \tSelect an entire fragment."
 msgstr ""
+"Outil de sélection \t(%1)\n"
+"\n"
+"Clic gauche : \tCliquer pour choisir des atomes individuels, des résidus ou "
+"des fragments\n"
+"\tFaire glisser pour sélectionner une série d'atomes\n"
+"Clic droit \tCliquer en dehors de la molécule pour annuler la sélection\n"
+"Utiliser « Ctrl » pour déclencher la sélection et « shift » pour ajouter à "
+"la sélection.\n"
+"Double clic : \tSélectionner un fragment entier."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
@@ -5025,7 +5061,7 @@ msgstr "Choisir la couleur des spectres importés"
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
-msgstr ""
+msgstr "Longueur d'onde (nm)"
 
 #: qtplugins/spectra/spectradialog.cpp:586
 msgid "Vibrational Spectra"
@@ -5082,15 +5118,15 @@ msgstr "Densité"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
-msgstr ""
+msgstr "Orbitales moléculaires…"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
-msgstr ""
+msgstr "Fenêtre orbitale"
 
 #: qtplugins/surfaces/orbitals.h:49
 msgid "Display orbital lists."
-msgstr ""
+msgstr "Afficher les listes d'orbitales."
 
 #: qtplugins/surfaces/orbitaltablemodel.cpp:106
 msgid "Orbital"
@@ -5121,7 +5157,7 @@ msgstr "BV"
 
 #: qtplugins/surfaces/orbitalwidget.cpp:26
 msgid "Molecular Orbitals"
-msgstr ""
+msgstr "Orbitales moléculaires"
 
 #: qtplugins/surfaces/surfacedialog.cpp:26
 msgid "Solvent Accessible"
@@ -5298,6 +5334,14 @@ msgid ""
 "\n"
 "Select a ligand or functional group and clickon a hydrogen atom to attach it."
 msgstr ""
+"Outil de modélisation \t(%1)\n"
+"\n"
+"Insérer des fragments, y compris des centres métalliques\n"
+"Sélectionner un élément et la géométrie coordinatrice, puis cliquer pour "
+"insérer un fragment.\n"
+"\n"
+"Sélectionner un ligand ou un groupe fonctionnel et cliquer sur un atome "
+"d'hydrogène pour le lier."
 
 #: qtplugins/templatetool/templatetool.cpp:316
 #: qtplugins/templatetool/templatetool.cpp:484
@@ -5315,7 +5359,7 @@ msgstr "Insérer un ligand"
 #: qtplugins/templatetool/templatetool.h:35
 #: qtplugins/templatetool/templatetool.h:36
 msgid "Template tool"
-msgstr "Outil de Templates"
+msgstr "Outil de modélisation"
 
 #: qtplugins/vanderwaals/vanderwaals.h:33
 msgid "Simple display of VdW spheres."
@@ -7057,12 +7101,12 @@ msgstr "Origine"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:127
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Molecule"
-msgstr ""
+msgstr "Centre de la molécule"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:132
 #. i18n: ectx: property (text), item, widget (QComboBox, rotateComboBox)
 msgid "Center of Selection"
-msgstr ""
+msgstr "Centre de la sélection"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:192
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -7082,7 +7126,7 @@ msgstr "Axe des Z"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:220
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "Move:"
-msgstr ""
+msgstr "Déplacer :"
 
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:228
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
@@ -7092,7 +7136,7 @@ msgstr "Atomes sélectionnés"
 #. i18n: file: qtplugins/manipulator/manipulatewidget.ui:233
 #. i18n: ectx: property (text), item, widget (QComboBox, moveComboBox)
 msgid "Everything Else"
-msgstr ""
+msgstr "Tout le reste"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ConformerSearchDialog)
@@ -7836,7 +7880,7 @@ msgstr "Seuil de pic :"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr ""
+msgstr "Unités :"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -8017,13 +8061,14 @@ msgstr "Très élevée"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:104
 #. i18n: ectx: property (text), widget (QPushButton, push_render)
+#, fuzzy
 msgid "Render"
-msgstr ""
+msgstr "Modéliser"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:128
 #. i18n: ectx: property (text), widget (QPushButton, push_configure)
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:23
 #. i18n: ectx: property (windowTitle), widget (QDialog, SurfaceDialog)
