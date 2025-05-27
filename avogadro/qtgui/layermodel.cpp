@@ -182,8 +182,8 @@ QString LayerModel::getTranslatedName(const std::string& name) const
     return tr("Labels");
   else if (name == "Licorice")
     return tr("Licorice", "stick / licorice rendering");
-  else if (name == "Meshes")
-    return tr("Meshes");
+  else if (name == "Surfaces")
+    return tr("Surfaces");
   else if (name == "Non-Covalent")
     return tr("Non-Covalent");
   else if (name == "QTAIM")
