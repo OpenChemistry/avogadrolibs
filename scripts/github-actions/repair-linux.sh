@@ -16,4 +16,8 @@ rpm -i ca-certificates.rpm
 
 yum clean all ; yum makecache
 yum repolist
-yum install -y git eigen3-devel
+yum install -y git
+
+# install eigen3-devel
+urlgrabber -o eigen3-devel.rpm https://mirror.stream.centos.org/9-stream/CRB/x86_64/os/Packages/eigen3-devel-3.4.0-2.el9.noarch.rpm
+rpm -i eigen3-devel.rpm
