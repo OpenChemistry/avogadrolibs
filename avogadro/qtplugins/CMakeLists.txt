@@ -168,8 +168,7 @@ if(USE_LIBARCHIVE)
   add_subdirectory(plugindownloader)
 endif()
 
-if(USE_LIBMSYM AND QT_VERSION EQUAL 5)
-  # QStyleOptionViewItemV4 is not in Qt6, needs investigation
+if(USE_LIBMSYM)
   add_subdirectory(symmetry)
 endif()
 
@@ -188,7 +187,7 @@ if (USE_OPENGL)
 endif()
 
 # other optional plugins
-if(BUILD_GPL_PLUGINS AND QT_VERSION EQUAL 5)
+if(BUILD_GPL_PLUGINS)
   # qtaimcurvature.h/cpp contains GPL licensed code:
   add_subdirectory(qtaim)
 endif()

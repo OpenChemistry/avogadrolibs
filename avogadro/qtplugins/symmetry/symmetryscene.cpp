@@ -19,6 +19,7 @@
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QVariant>
 
 #include <QVector3D>
 
@@ -36,7 +37,8 @@ using Rendering::SphereGeometry;
 
 SymmetryScene::SymmetryScene(QObject* p)
   : QtGui::ScenePlugin(p), m_enabled(true)
-{}
+{
+}
 
 SymmetryScene::~SymmetryScene() {}
 
@@ -145,4 +147,4 @@ void SymmetryScene::setEnabled(bool enable)
 {
   m_enabled = enable;
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

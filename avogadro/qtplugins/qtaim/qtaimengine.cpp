@@ -13,6 +13,7 @@
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <QDebug>
+#include <QtCore/QVariant>
 
 using namespace Avogadro;
 using namespace Avogadro::Rendering;
@@ -221,4 +222,4 @@ void QTAIMEngine::process(const QtGui::Molecule& molecule,
   }
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -84,9 +84,6 @@ void QTAIMExtension::triggered()
 
   int i = action->data().toInt();
 
-  QTime timer;
-  timer.start();
-
   QString fileName;
   if (!wavefunctionAlreadyLoaded) {
     fileName = QFileDialog::getOpenFileName(
@@ -260,12 +257,9 @@ void QTAIMExtension::triggered()
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
                 for (auto j : bondPathList.at(bondPair)) {
-                  x =
-                    j.x() * convertBohrToAngstrom;
-                  y =
-                    j.y() * convertBohrToAngstrom;
-                  z =
-                    j.z() * convertBohrToAngstrom;
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -435,12 +429,9 @@ void QTAIMExtension::triggered()
 
                 bondPathSegmentStartIndexVariantList.append(bpCtr);
                 for (auto j : bondPathList.at(bondPair)) {
-                  x =
-                    j.x() * convertBohrToAngstrom;
-                  y =
-                    j.y() * convertBohrToAngstrom;
-                  z =
-                    j.z() * convertBohrToAngstrom;
+                  x = j.x() * convertBohrToAngstrom;
+                  y = j.y() * convertBohrToAngstrom;
+                  z = j.z() * convertBohrToAngstrom;
 
                   xBondPathsVariantList.append(x);
                   yBondPathsVariantList.append(y);
@@ -646,12 +637,9 @@ void QTAIMExtension::triggered()
 
                   bondPathSegmentStartIndexVariantList.append(bpCtr);
                   for (auto j : bondPathList.at(bondPair)) {
-                    x = j.x() *
-                        convertBohrToAngstrom;
-                    y = j.y() *
-                        convertBohrToAngstrom;
-                    z = j.z() *
-                        convertBohrToAngstrom;
+                    x = j.x() * convertBohrToAngstrom;
+                    y = j.y() * convertBohrToAngstrom;
+                    z = j.z() * convertBohrToAngstrom;
 
                     xBondPathsVariantList.append(x);
                     yBondPathsVariantList.append(y);
@@ -727,4 +715,4 @@ void QTAIMExtension::triggered()
   emit requestActiveDisplayTypes(QStringList() << "QTAIMScenePlugin");
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
