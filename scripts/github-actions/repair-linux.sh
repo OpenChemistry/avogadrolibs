@@ -6,3 +6,7 @@ if command -v apt-get >/dev/null; then
   apt-get -y install git libeigen3-dev
 elif command -v yum >/dev/null; then
   yum install -y git eigen3-devel
+else
+  echo "Neither apt-get nor yum found. Cannot install dependencies."
+  exit 1
+fi
