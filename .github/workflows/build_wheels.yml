@@ -42,8 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # For Windows, we have to use visual studio 2017, which is on windows-2016
-        os: [ubuntu-20.04, macos-latest, windows-2019]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-14]
 
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +58,7 @@ jobs:
           cache: 'pip' # caching pip dependencies
 
       - name: Install cibuildwheel
-        run: pip install cibuildwheel==2.16.2
+        run: pip install cibuildwheel==2.23.3
 
       - name: Install dependencies
         run: . ./scripts/github-actions/install.sh
