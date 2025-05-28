@@ -8,7 +8,7 @@ concurrency:
 
 env:
   # Don't build python 2.7, pypy, or 32-bit wheels or Mac arm64 on Py3.8
-  CIBW_SKIP: "cp36-* cp37-* cp311-manylinux* cp312-manylinux* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
+  CIBW_SKIP: "cp36-* cp37-* *-manylinux2014* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
 
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
