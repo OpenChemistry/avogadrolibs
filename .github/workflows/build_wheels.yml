@@ -51,20 +51,11 @@ jobs:
           # give it a correct version even on non-tag push.
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
-        name: Install Python
-        with:
-          python-version: '3.8'
-          cache: 'pip' # caching pip dependencies
-
-      - name: Install cibuildwheel
-        run: pip install cibuildwheel==2.23.3
-
       - name: Install dependencies
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        run:  cibuildwheel --output-dir wheelhouse
+        uses: pypa/cibuildwheel@v2.23.3
 
       - uses: actions/upload-artifact@v4
         with:
@@ -80,8 +71,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: artifact
+          # unpacks all CIBW artifacts into dist/
+          pattern: cibw-*
           path: dist
+          merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@master
         with:
