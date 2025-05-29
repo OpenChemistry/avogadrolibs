@@ -380,8 +380,52 @@ void Editor::atomLeftClick(QMouseEvent* e)
     // Store the original atomic number of the clicked atom before updating it.
     unsigned char atomicNumber = m_toolWidget->atomicNumber();
     if (atom.atomicNumber() != atomicNumber) {
+      // Okay, we're changing this element
       m_clickedAtomicNumber = atom.atomicNumber();
       atom.setAtomicNumber(atomicNumber);
+
+      const auto& atomBonds = m_molecule->bonds(atom);
+      RWBond bond;
+      if (atomBonds.size() == 1) {
+        // If the clicked atom only has one bond, we can adjust the bond length
+        bond = atomBonds[0];
+      } else if (atomBonds.size() > 1 && m_toolWidget->adjustHydrogens()) {
+        // loop through to see if there's one bond and *only* one bond
+        // that's not a hydrogen
+        for (const RWBond& b : atomBonds) {
+          RWAtom otherAtom = b.getOtherAtom(atom);
+          if (otherAtom.atomicNumber() != Core::Hydrogen) {
+            if (bond.isValid()) {
+              // More than one non-H bond, so we can't adjust the bond length
+              bond = RWBond();
+              break;
+            }
+            bond = b;
+          }
+        }
+      }
+
+      // If we found a valid bond, adjust the bond distance
+      if (bond.isValid()) {
+        RWAtom atom2 = bond.getOtherAtom(atom);
+
+        m_bondDistance = Elements::radiusCovalent(atomicNumber) +
+                         Elements::radiusCovalent(atom2.atomicNumber());
+
+        // tweak the bond distance if we have a double or triple bond
+        if (bond.order() == 2) {
+          m_bondDistance *= 0.87; // e.g. C=C vs C-C
+        } else if (bond.order() == 3) {
+          m_bondDistance *= 0.78; // e.g. C#C vs C-C
+        }
+
+        Vector3 bondVector = atom.position3d() - atom2.position3d();
+        bondVector.normalize();
+        bondVector *= m_bondDistance;
+        // okay set my new position
+        Vector3 newPos = atom2.position3d() + bondVector;
+        atom.setPosition3d(newPos);
+      }
 
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
