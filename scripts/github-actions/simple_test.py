@@ -1,4 +1,7 @@
 import avogadro
+import faulthandler
+
+faulthandler.enable()
 
 ethane_xyz = '''8
 Ethane
@@ -15,10 +18,10 @@ H     -1.18499    0.00442   -0.98752
 
 def test_simple():
     mol = avogadro.core.Molecule()
-    manager = avogadro.io.FileFormatManager()
 
     assert mol.atom_count() == 0
 
+    manager = avogadro.io.FileFormatManager()
     assert manager.read_string(mol, ethane_xyz, 'xyz')
 
     assert mol.atom_count() == 8
