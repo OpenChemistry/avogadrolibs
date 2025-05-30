@@ -445,6 +445,73 @@ void Editor::bondLeftClick(QMouseEvent* e)
 
   Molecule::MoleculeChanges changes = Molecule::Bonds | Molecule::Modified;
 
+  // see if we should adjust the bond length
+  bool adjustBondLength = false;
+  RWAtom atom1 = bond.atom1();
+  RWAtom atom2 = bond.atom2();
+
+  // Estimate the adjusted bond length
+  Real distance = Elements::radiusCovalent(atom1.atomicNumber()) +
+                  Elements::radiusCovalent(atom2.atomicNumber());
+
+  // tweak the bond distance if we have a double or triple bond
+  if (bond.order() == 2) {
+    distance *= 0.87; // e.g. C=C vs C-C
+  } else if (bond.order() == 3) {
+    distance *= 0.78; // e.g. C#C vs C-C
+  }
+
+  // check if at least one of the atoms either has only one bond
+  // or all the other bonds are hydrogens
+  const Core::Array<RWBond>& atom1Bonds = m_molecule->bonds(atom1);
+  const Core::Array<RWBond>& atom2Bonds = m_molecule->bonds(atom2);
+  // if both atoms have only one bond, we're set
+  if (atom1Bonds.size() == 1 && atom2Bonds.size() == 1) {
+    adjustBondLength = true;
+  } else if (atom1Bonds.size() > 1) {
+    // check to see if all the other bonds are hydrogens
+    for (const RWBond& b : atom1Bonds) {
+      RWAtom bondedAtom = b.getOtherAtom(atom1);
+      if (bondedAtom == atom2)
+        continue; // skip the bond we're changing
+      if (bondedAtom.atomicNumber() != Core::Hydrogen) {
+        adjustBondLength = false;
+        break;
+      }
+      adjustBondLength = true;
+    }
+  }
+
+  // can we move atom1?
+  if (adjustBondLength) {
+    Vector3 bondVector = atom1.position3d() - atom2.position3d();
+    bondVector.normalize();
+    bondVector *= distance;
+    // okay move the atom
+    Vector3 newPos = atom2.position3d() + bondVector;
+    atom1.setPosition3d(newPos);
+  } else {
+    // check if we can move atom2
+    for (const RWBond& b : atom2Bonds) {
+      RWAtom bondedAtom = b.getOtherAtom(atom2);
+      if (bondedAtom == atom1)
+        continue; // skip the bond we're changing
+      if (bondedAtom.atomicNumber() != Core::Hydrogen) {
+        adjustBondLength = false;
+        break;
+      }
+      adjustBondLength = true;
+    }
+    if (adjustBondLength) {
+      Vector3 bondVector = atom2.position3d() - atom1.position3d();
+      bondVector.normalize();
+      bondVector *= distance;
+      // okay move the atom
+      Vector3 newPos = atom1.position3d() + bondVector;
+      atom2.setPosition3d(newPos);
+    }
+  }
+
   if (m_toolWidget->adjustHydrogens()) {
     // change for the new bond order
     RWAtom atom1 = bond.atom1();
