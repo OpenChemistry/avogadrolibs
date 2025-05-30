@@ -490,8 +490,8 @@ void Editor::bondLeftClick(QMouseEvent* e)
     // okay move the atom
     Vector3 newPos = atom2.position3d() + bondVector;
     atom1.setPosition3d(newPos);
-  } else {
-    // check if we can move atom2
+    changes |= Molecule::Atoms;
+  } else { // instead, check if we can move atom2
     for (const RWBond& b : atom2Bonds) {
       RWAtom bondedAtom = b.getOtherAtom(atom2);
       if (bondedAtom == atom1)
@@ -509,13 +509,12 @@ void Editor::bondLeftClick(QMouseEvent* e)
       // okay move the atom
       Vector3 newPos = atom1.position3d() + bondVector;
       atom2.setPosition3d(newPos);
+      changes |= Molecule::Atoms;
     }
   }
 
   if (m_toolWidget->adjustHydrogens()) {
     // change for the new bond order
-    RWAtom atom1 = bond.atom1();
-    RWAtom atom2 = bond.atom2();
     QtGui::HydrogenTools::adjustHydrogens(atom1);
     QtGui::HydrogenTools::adjustHydrogens(atom2);
 
