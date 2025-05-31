@@ -489,7 +489,9 @@ void Editor::bondLeftClick(QMouseEvent* e)
     bondVector *= distance;
     // okay move the atom
     Vector3 newPos = atom2.position3d() + bondVector;
-    atom1.setPosition3d(newPos);
+    // we use the underlying molecule to set the position
+    // so that the undo stack is updated correctly
+    m_molecule->molecule().setAtomPosition3d(atom1.index(), newPos);
     changes |= Molecule::Atoms;
   } else { // instead, check if we can move atom2
     for (const RWBond& b : atom2Bonds) {
@@ -508,7 +510,9 @@ void Editor::bondLeftClick(QMouseEvent* e)
       bondVector *= distance;
       // okay move the atom
       Vector3 newPos = atom1.position3d() + bondVector;
-      atom2.setPosition3d(newPos);
+      // we use the underlying molecule to set the position
+      // so that the undo stack is updated correctly
+      m_molecule->molecule().setAtomPosition3d(atom2.index(), newPos);
       changes |= Molecule::Atoms;
     }
   }
