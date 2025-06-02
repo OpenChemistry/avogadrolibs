@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
 "PO-Revision-Date: 2025-06-03 11:59+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1533,7 +1533,6 @@ msgid "Change Atom Label"
 msgstr "Modifier l'étiquette de l'atome"
 
 #: qtgui/rwmolecule.h:260
-#, fuzzy
 msgid "Change Bond Label"
 msgstr "Change l'étiquette de liaison"
 
@@ -4361,7 +4360,7 @@ msgctxt ""
 "After an HTTP request; %1 is a URL, %2 is the HTTP status code, %3 is the "
 "error message (if any)"
 msgid "Failed to download from %1: status code %2, %3\n"
-msgstr "Échec du téléchargement depuis %1 : code d'état %2, %3\n"
+msgstr "Échec de télécharger depuis %1 : code d'état %2, %3\n"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:400
 #, qt-format
