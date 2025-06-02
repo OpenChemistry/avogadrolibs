@@ -196,14 +196,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       json coordSets = atoms["coords"]["3dSets"];
       if (coordSets.is_array() && coordSets.size()) {
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
-          Array<Vector3> setArray;
           json set = coordSets[i];
-          if (isNumericArray(set)) {
-            for (unsigned int j = 0; j < set.size() / 3; ++j) {
-              setArray.push_back(
-                Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
-            }
-            molecule.setCoordinate3d(setArray, i);
+          if (isNumericArray(set) && set.size() == 3) {
+            auto a = molecule.atom(i);
+            a.setPosition3d(Vector3(set[0], set[1], set[2]));
           }
         }
         // Make sure the first step is active once we are done loading the sets.
