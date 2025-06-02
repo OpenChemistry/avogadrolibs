@@ -534,9 +534,6 @@ public:
         continue;
       }
 
-      t._ijkl *= 664.12; // convert to kcal/mol
-      // and make it larger for debugging
-
       m_torsions.push_back(t);
       dihedral = ++di;
     }
@@ -851,7 +848,109 @@ public:
 
   void oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
-    // TODO
+    for (const UFFOOP& oop : m_oops) {
+      // for UFF - I is defined as the central atom
+      Index i = oop._atom1;
+      Index j = oop._atom2;
+      Index k = oop._atom3;
+      Index l = oop._atom4;
+
+      Real koop = oop._koop;
+      Real c0 = oop._c0;
+      Real c1 = oop._c1;
+      Real c2 = oop._c2;
+
+      Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      Eigen::Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+
+      // use outOfPlaneAngle() from angletools.h
+      Real angle = outOfPlaneAngle(vi, vj, vk, vl) * DEG_TO_RAD;
+      Real sinAngle = sin(angle);
+      // dE / dangle
+      Real dE = koop * (-c1 * sinAngle - 2.0 * c2 * sin(2.0 * angle));
+
+      // check for nan
+      if (std::isnan(dE))
+        continue;
+
+      // Get the bond vectors
+      Eigen::Vector3d ij = vj - vi;
+      Eigen::Vector3d ik = vk - vi;
+      Eigen::Vector3d il = vl - vi;
+
+      Real rij = ij.norm();
+      Real rik = ik.norm();
+      Real ril = il.norm();
+      // check if the bond vectors are near zero
+      if (rij < 1e-3 || rik < 1e-3 || ril < 1e-3)
+        continue; // skip this oop
+      // normalize the bond vectors
+      ij = ij / rij;
+      ik = ik / rik;
+      il = il / ril;
+
+      // we also need the angle between the bonds (i.e., j-i-k)
+      Real cosTheta = ij.dot(ik) / (rij * rik);
+      // clamp the cosTheta to -1 to 1
+      cosTheta = std::max(-1.0, std::min(1.0, cosTheta));
+      Real theta = acos(cosTheta);
+      Real sinTheta = sin(theta);
+
+      // get the cross products
+      Eigen::Vector3d ij_cross_ik = ij.cross(ik).stableNormalized();
+      Eigen::Vector3d ik_cross_il = ik.cross(il).stableNormalized();
+      Eigen::Vector3d ij_cross_il = ij.cross(il).stableNormalized();
+
+      // some common factors
+      Real numerator = cosTheta * sinAngle / sinTheta;
+
+      // get the forces on the atoms
+      Real dj0 =
+        -dE *
+        (ik_cross_il[0] - ij[0] + (ik[0] * cosTheta * sinAngle / sinTheta)) /
+        (rij * sinTheta);
+      Real dj1 =
+        -dE *
+        (ik_cross_il[1] - ij[1] + (ik[1] * cosTheta * sinAngle / sinTheta)) /
+        (rij * sinTheta);
+      Real dj2 =
+        -dE *
+        (ik_cross_il[2] - ij[2] + (ik[2] * cosTheta * sinAngle / sinTheta)) /
+        (rij * sinTheta);
+      grad[3 * j] += dj0;
+      grad[3 * j + 1] += dj1;
+      grad[3 * j + 2] += dj2;
+
+      Real dk0 =
+        -dE *
+        (ij_cross_il[0] - ik[0] + (ij[0] * cosTheta * sinAngle / sinTheta)) /
+        (rik * sinTheta);
+      Real dk1 =
+        -dE *
+        (ij_cross_il[1] - ik[1] + (ij[1] * cosTheta * sinAngle / sinTheta)) /
+        (rik * sinTheta);
+      Real dk2 =
+        -dE *
+        (ij_cross_il[2] - ik[2] + (ij[2] * cosTheta * sinAngle / sinTheta)) /
+        (rik * sinTheta);
+      grad[3 * k] += dk0;
+      grad[3 * k + 1] += dk1;
+      grad[3 * k + 2] += dk2;
+
+      Real dl0 = -dE * (-ij_cross_il[0] / sinTheta - il[0] * sinAngle) / ril;
+      Real dl1 = -dE * (-ij_cross_il[1] / sinTheta - il[1] * sinAngle) / ril;
+      Real dl2 = -dE * (-ij_cross_il[2] / sinTheta - il[2] * sinAngle) / ril;
+      grad[3 * l] += dl0;
+      grad[3 * l + 1] += dl1;
+      grad[3 * l + 2] += dl2;
+
+      // i is the central atom, so add the other forces
+      grad[3 * i] -= dj0 + dk0 + dl0;
+      grad[3 * i + 1] -= dj1 + dk1 + dl1;
+      grad[3 * i + 2] -= dj2 + dk2 + dl2;
+    }
   }
 
   void torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
