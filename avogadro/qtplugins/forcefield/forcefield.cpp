@@ -297,6 +297,15 @@ void Forcefield::optimize()
 
   Real energy = m_method->value(positions);
   m_method->gradient(positions, gradient);
+
+  // debug the gradients
+#ifndef NDEBUG
+  for (size_t i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
+             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
+  }
+#endif
+
   qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
   qDebug() << " maxSteps" << m_maxSteps << " steps "
            << m_maxSteps / crit.iterations;
@@ -346,6 +355,7 @@ void Forcefield::optimize()
                                    gradient[3 * i + 2]);
       }
     } else {
+      qDebug() << "Non-finite energy, stopping optimization";
       // reset to last positions
       positions = lastPositions;
       gradient = Eigen::VectorXd::Zero(3 * n);

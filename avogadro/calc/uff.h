@@ -35,7 +35,7 @@ public:
   Core::Molecule::ElementMask elements() const override { return (m_elements); }
 
   Real value(const Eigen::VectorXd& x) override;
-  // void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
 
   // components
   Real bondEnergy(const Eigen::VectorXd& x);
@@ -67,4 +67,4 @@ protected:
 } // namespace Calc
 } // namespace Avogadro
 
-#endif // AVOGADRO_CALC_LENNARDJONES_H
+#endif // AVOGADRO_CALC_UFF_H

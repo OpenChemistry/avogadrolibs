@@ -329,8 +329,8 @@ public:
       a._atom2 = j;
       a._atom3 = k;
 
-      Real theta0 = uffparams[m_atomTypes[j]].theta0;
-      a._theta0 = theta0;
+      Real theta0 = uffparams[m_atomTypes[j]].theta0 * DEG_TO_RAD;
+      a._theta0 = theta0 * RAD_TO_DEG; // store in degrees for consistency
 
       // calculate the kijk
       Real rij = calculateRij(i, j);
@@ -534,6 +534,9 @@ public:
         continue;
       }
 
+      t._ijkl *= 664.12; // convert to kcal/mol
+      // and make it larger for debugging
+
       m_torsions.push_back(t);
       dihedral = ++di;
     }
@@ -593,6 +596,11 @@ public:
       Real r = sqrt(dx * dx + dy * dy + dz * dz);
       Real dr = r - r0;
 
+      /*
+      std::cout << " Bond " << i << " " << j << " " << r0 << " " << r << " "
+                << dr << std::endl;
+                */
+
       // the 0.5 * kb is already in the kb to save a multiplication
       energy += kb * dr * dr;
     }
@@ -624,7 +632,7 @@ public:
       std::cout << " Angle " << i << " " << j << " " << k << " " << r1 << " "
                 << r2 << " " << theta * RAD_TO_DEG << " " << theta0 * RAD_TO_DEG
                 << std::endl;
-      */
+  */
 
       // TODO - migrate special cases from Open Babel
       Coordination coord = angle.coordination;
@@ -734,6 +742,7 @@ public:
       Real x6 = xij * xij * xij * xij * xij * xij;
       Real x12 = x6 * x6;
 
+      // TODO: use the unit cell if available
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
@@ -792,17 +801,24 @@ public:
       Real rkj = kj.norm();
       Real rki = ki.norm();
 
+      // check if these are near-zero
+      if (rij < 1e-3 || rkj < 1e-3 || rki < 1e-3)
+        continue; // skip this angle
+
       Real dot = ij.dot(kj);
       Real theta = acos(dot / (rij * rkj));
       Real dtheta = theta - theta0;
 
-      //      std::cout << " Angle " << i << " " << j << " " << k << " "
-      //                << theta0 * RAD_TO_DEG << " " << theta * RAD_TO_DEG << "
-      //                "
-      //                << dtheta * RAD_TO_DEG << std::endl;
+      /*
+            std::cout << " AngleGrad " << i << " " << j << " " << k << " "
+                      << theta0 * RAD_TO_DEG << " " << theta * RAD_TO_DEG << " "
+                      << dtheta * RAD_TO_DEG << " " << kijk << std::endl;
+                      std::cout << " Norms " << rij << " " << rkj << " " << rki
+         << std::endl;
+      */
 
       // dE / dtheta
-      Real f = 2 * kijk * dtheta;
+      Real f = -kijk * dtheta;
 
       // check for nan
       if (std::isnan(f))
@@ -812,33 +828,130 @@ public:
       // .. we're using ij x ki to get a perpendicular
       // .. then cross with ij or kj to move those atoms
 
-      Eigen::Vector3d ij_cross_ki = ij.cross(ki) / (rij * rki);
-      Eigen::Vector3d ijki_cross_ij = ij_cross_ki.cross(ij) / (rij);
+      Eigen::Vector3d ij_cross_kj = ij.cross(kj);
+      Eigen::Vector3d ijkj_cross_ij = ij_cross_kj.cross(ij).stableNormalized();
 
-      grad[3 * i] += f * ijki_cross_ij[0];
-      grad[3 * i + 1] += f * ijki_cross_ij[1];
-      grad[3 * i + 2] += f * ijki_cross_ij[2];
+      grad[3 * i] += f * ijkj_cross_ij[0];
+      grad[3 * i + 1] += f * ijkj_cross_ij[1];
+      grad[3 * i + 2] += f * ijkj_cross_ij[2];
 
-      Eigen::Vector3d ijki_cross_kj = ij_cross_ki.cross(kj) / (rkj);
+      Eigen::Vector3d ijkj_cross_kj = -ij_cross_kj.cross(kj).stableNormalized();
 
-      // std::cout << " Cross norms " << ij_cross_ki.norm() << " "
-      //           << ijki_cross_ij.norm() << " " << ijki_cross_kj.norm() <<
-      //           std::endl;
+      grad[3 * k] += f * ijkj_cross_kj[0];
+      grad[3 * k + 1] += f * ijkj_cross_kj[1];
+      grad[3 * k + 2] += f * ijkj_cross_kj[2];
 
-      grad[3 * k] += f * ijki_cross_kj[0];
-      grad[3 * k + 1] += f * ijki_cross_kj[1];
-      grad[3 * k + 2] += f * ijki_cross_kj[2];
-
-      // the central atom
-      grad[3 * j] -= f * (ijki_cross_ij[0] + ijki_cross_kj[0]);
-      grad[3 * j + 1] -= f * (ijki_cross_ij[1] + ijki_cross_kj[1]);
-      grad[3 * j + 2] -= f * (ijki_cross_ij[2] + ijki_cross_kj[2]);
+      // for the central atom, we need to add the two contributions
+      // from i and k
+      grad[3 * j] -= f * (ijkj_cross_ij[0] + ijkj_cross_kj[0]);
+      grad[3 * j + 1] -= f * (ijkj_cross_ij[1] + ijkj_cross_kj[1]);
+      grad[3 * j + 2] -= f * (ijkj_cross_ij[2] + ijkj_cross_kj[2]);
     }
   }
 
-  void oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
+  void oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+  {
+    // TODO
+  }
 
-  void torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) {}
+  void torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
+  {
+    for (const UFFTorsion& torsion : m_torsions) {
+      Index i = torsion._atom1;
+      Index j = torsion._atom2;
+      Index k = torsion._atom3;
+      Index l = torsion._atom4;
+
+      Eigen::Vector3d vi(x[3 * i], x[3 * i + 1], x[3 * i + 2]);
+      Eigen::Vector3d vj(x[3 * j], x[3 * j + 1], x[3 * j + 2]);
+      Eigen::Vector3d vk(x[3 * k], x[3 * k + 1], x[3 * k + 2]);
+      Eigen::Vector3d vl(x[3 * l], x[3 * l + 1], x[3 * l + 2]);
+
+      // get the bond vectors
+      Eigen::Vector3d ij = vj - vi;
+      Eigen::Vector3d jk = vk - vj;
+      Eigen::Vector3d kl = vl - vk;
+
+      Real rij = ij.norm();
+      Real rjk = jk.norm();
+      Real rkl = kl.norm();
+
+      // check if the bond vectors are near zero
+      if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3)
+        continue; // skip this torsion
+
+      Real phi = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+      Real cosPhi0 = torsion._cos_phi0;
+      Real kijkl = torsion._ijkl;
+      // dE / dphi
+      Real dE = kijkl * torsion._n * sin(torsion._n * phi) * cosPhi0;
+
+      // check for nan
+      if (std::isnan(dE))
+        continue;
+
+      // get the displacements in Cartesian coordinates
+      Real sinPhi = sin(phi);
+      Real sinPhiSq = sinPhi * sinPhi;
+      Real cosPhi = cos(phi);
+
+      // debug
+      if (fabs(sinPhiSq) < 1e-6 || fabs(cosPhi) < 1e-6) {
+        // if sinPhi or cosPhi are near zero, skip this torsion
+        continue;
+      }
+
+      // calculate the normals to the planes
+      // n1 is the plane i-j-k
+      Eigen::Vector3d ij_norm = ij.stableNormalized();
+      Eigen::Vector3d jk_norm = jk.stableNormalized();
+      Eigen::Vector3d kl_norm = kl.stableNormalized();
+      Eigen::Vector3d n1 = ij_norm.cross(jk_norm).stableNormalized();
+      // n2 is the plane j-k-l
+      Eigen::Vector3d n2 = jk_norm.cross(kl_norm).stableNormalized();
+
+      // calculate the derivatives
+      // atom i
+      Real di0 = -dE * n1[0] / (sinPhiSq * rij);
+      Real di1 = -dE * n1[1] / (sinPhiSq * rij);
+      Real di2 = -dE * n1[2] / (sinPhiSq * rij);
+      grad[3 * i] += di0;
+      grad[3 * i + 1] += di1;
+      grad[3 * i + 2] += di2;
+
+      // atom l
+      Real dl0 = dE * n2[0] / (sinPhiSq * rkl);
+      Real dl1 = dE * n2[1] / (sinPhiSq * rkl);
+      Real dl2 = dE * n2[2] / (sinPhiSq * rkl);
+      grad[3 * l] += dl0;
+      grad[3 * l + 1] += dl1;
+      grad[3 * l + 2] += dl2;
+
+      // atom j
+      // adding contributions from i and l
+      // clamp the cos(angle) to -1 to 1
+      Real cos_ijk = ij.dot(jk);
+      Real cos_jkl = jk.dot(kl);
+      cos_ijk = std::max(-1.0, std::min(1.0, cos_ijk));
+      cos_jkl = std::max(-1.0, std::min(1.0, cos_jkl));
+
+      Real dj0 =
+        di0 * ((rij / rjk * (-cos_ijk)) - 1) - dl0 * (rkl / rjk * (-cos_jkl));
+      Real dj1 =
+        di1 * ((rij / rjk * (-cos_ijk)) - 1) - dl1 * (rkl / rjk * (-cos_jkl));
+      Real dj2 =
+        di2 * ((rij / rjk * (-cos_ijk)) - 1) - dl2 * (rkl / rjk * (-cos_jkl));
+      grad[3 * j] += dj0;
+      grad[3 * j + 1] += dj1;
+      grad[3 * j + 2] += dj2;
+
+      // atom k
+      // adding forces from all atoms
+      grad[3 * k] -= di0 + dl0 + dj0;
+      grad[3 * k + 1] -= di1 + dl1 + dj1;
+      grad[3 * k + 2] -= di2 + dl2 + dj2;
+    }
+  }
 
   void vdwGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   {
@@ -853,6 +966,7 @@ public:
       // dE / dr = -12 * depth * x^12 / r^13 + 12 * depth * x^6 / r^7
       //         = 12 * depth * x^6 / r^7 * (x^6 / r^6 - 1)
 
+      // TODO: handle unit cells and periodic boundary conditions
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
@@ -990,9 +1104,6 @@ Real UFF::vdwEnergy(const Eigen::VectorXd& x)
   return energy;
 }
 
-/*
-// TODO - for now use numeric gradients
-
 void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
   // clear the gradients
@@ -1018,8 +1129,6 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // handle any constraints
   cleanGradients(grad);
 }
-
-*/
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {

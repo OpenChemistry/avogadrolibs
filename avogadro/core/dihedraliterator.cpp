@@ -133,10 +133,10 @@ Dihedral DihedralIterator::operator++()
     // okay, try to increment m_jk and reset m_i and m_l
     valid = false;
     for (Index i = m_jk + 1; i < count; ++i) {
-      const Bond bond = m_mol->bond(i);
+      const Bond bondI = m_mol->bond(i);
 
-      const auto& newNeighbors1 = graph.neighbors(bond.atom1().index());
-      const auto& newNeighbors2 = graph.neighbors(bond.atom2().index());
+      const auto& newNeighbors1 = graph.neighbors(bondI.atom1().index());
+      const auto& newNeighbors2 = graph.neighbors(bondI.atom2().index());
 
       if (newNeighbors1.size() < 1 || newNeighbors2.size() < 1)
         continue; // need to have at least one neighbor
@@ -144,7 +144,7 @@ Dihedral DihedralIterator::operator++()
       m_jk = i;
       // make sure that m_i doesn't point to atom2
       m_i = 0;
-      if (newNeighbors1[m_i] == bond.atom2().index()) {
+      if (newNeighbors1[m_i] == bondI.atom2().index()) {
         // try to increment m_i
         if (m_i + 1 < newNeighbors1.size()) {
           ++m_i;
@@ -155,7 +155,7 @@ Dihedral DihedralIterator::operator++()
 
       m_l = 0;
       // make sure that m_l doesn't point to atom1
-      if (newNeighbors2[m_l] == bond.atom1().index()) {
+      if (newNeighbors2[m_l] == bondI.atom1().index()) {
         // try to increment m_l
         if (m_l + 1 < newNeighbors2.size()) {
           ++m_l;
