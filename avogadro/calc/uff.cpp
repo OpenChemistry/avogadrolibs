@@ -1203,6 +1203,7 @@ Real UFF::vdwEnergy(const Eigen::VectorXd& x)
   return energy;
 }
 
+/*
 void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
   // clear the gradients
@@ -1228,6 +1229,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // handle any constraints
   cleanGradients(grad);
 }
+  */
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
