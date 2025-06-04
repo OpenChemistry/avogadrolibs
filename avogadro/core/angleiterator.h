@@ -24,28 +24,31 @@ public:
   /**
    * Constructor.
    */
-  AngleIterator(const Molecule *mol);
+  AngleIterator(const Molecule* mol);
 
   ~AngleIterator() {}
 
-  Angle* operator*() {
-    return &m_current;
-  }
+  Angle* operator*() { return &m_current; }
 
   Angle begin();
 
-  Angle end() const {
+  Angle end() const
+  {
     return std::make_tuple(Avogadro::MaxIndex, Avogadro::MaxIndex,
                            Avogadro::MaxIndex);
   }
 
   Angle operator++();
 
-  bool operator!=(const AngleIterator& other ) {
-    return m_current != other.m_current;
+  bool operator!=(const AngleIterator& other)
+  {
+    return (m_a != other.m_a || m_b != other.m_b || m_c != other.m_c);
   }
 
 private:
+  // m_b is the current vertex
+  // m_a and m_c are instead index into the neighbors of m_b
+  Index m_a, m_b, m_c;
   Angle m_current;
   const Molecule* m_mol;
 };
