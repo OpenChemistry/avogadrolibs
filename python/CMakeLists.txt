@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 if (NOT TARGET Avogadro::Core)
   find_package(AvogadroLibs REQUIRED)
