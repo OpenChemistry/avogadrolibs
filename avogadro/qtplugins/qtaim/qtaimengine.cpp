@@ -23,6 +23,7 @@ namespace Avogadro::QtPlugins {
 QTAIMEngine::QTAIMEngine(QObject* aParent)
   : QtGui::ScenePlugin(aParent), m_enabled(false)
 {
+  m_layerManager = QtGui::PluginLayerManager(m_name);
 }
 
 void QTAIMEngine::process(const QtGui::Molecule& molecule,
