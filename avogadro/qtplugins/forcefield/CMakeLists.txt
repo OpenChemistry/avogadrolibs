@@ -13,7 +13,7 @@ set(forcefield_srcs
 
 if (BUILD_GPL_PLUGINS)
   find_package(OpenBabel3)
-  if (OpenBabel3_LIBRARY)
+  if (OpenBabel3_LIBRARIES)
     list(APPEND forcefield_srcs
       obenergy.cpp
     )
@@ -40,7 +40,7 @@ else()
   target_link_libraries(Forcefield PRIVATE Qt5::Widgets)
 endif()
 
-if (BUILD_GPL_PLUGINS AND OpenBabel3_LIBRARY)
+if (BUILD_GPL_PLUGINS AND OpenBabel3_LIBRARIES)
   target_link_libraries(Forcefield PRIVATE OpenBabel3)
 endif()
 

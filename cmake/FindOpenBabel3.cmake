@@ -7,8 +7,11 @@
 #  OpenBabel3_LIBRARY      - The OpenBabel library
 #
 find_path(OpenBabel3_INCLUDE_DIR openbabel3/openbabel/babelconfig.h)
-if(OPENBABEL3_INCLUDE_DIR)
-  set(OPENBABEL3_INCLUDE_DIR ${OPENBABEL3_INCLUDE_DIR}/openbabel3)
+if(NOT EXISTS "${OpenBabel3_INCLUDE_DIR}/openbabel/babelconfig.h"
+   AND EXISTS "${OpenBabel3_INCLUDE_DIR}/openbabel3/openbabel/babelconfig.h"
+)
+  # modify the variable in order that `#include <openbabel/babelconfig.h>` works
+  set(OpenBabel3_INCLUDE_DIR "${OpenBabel3_INCLUDE_DIR}/openbabel3" CACHE PATH "Path to a file." FORCE)
 endif()
 find_library(OpenBabel3_LIBRARY NAMES openbabel openbabel3 openbabel-3)
 
@@ -20,6 +23,7 @@ mark_as_advanced(OpenBabel3_INCLUDE_DIR OpenBabel3_LIBRARY)
 
 if(OpenBabel3_FOUND)
   set(OpenBabel3_INCLUDE_DIRS "${OpenBabel3_INCLUDE_DIR}")
+  set(OpenBabel3_LIBRARIES "${OpenBabel3_LIBRARY}")
 
   if(NOT TARGET OpenBabel3)
     add_library(OpenBabel3 SHARED IMPORTED GLOBAL)
