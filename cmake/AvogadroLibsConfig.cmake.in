@@ -23,6 +23,11 @@ include(CMakeFindDependencyMacro)
 
 if (@QT_VERSION@ EQUAL 6)
   find_dependency(Qt6OpenGLWidgets)
+  find_dependency(Qt6Widgets)
+  find_dependency(Qt6Core)
+  find_dependency(Qt6Gui)
+  find_dependency(Qt6Network)
+  find_dependency(Qt6Concurrent)
 endif()
 
 if(NOT TARGET AvogadroCore)
