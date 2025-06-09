@@ -7,6 +7,7 @@
 #include "molecule.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 #include <QtGui/QPalette>
@@ -16,6 +17,39 @@ namespace Avogadro::QtGui {
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
 {
+}
+
+QString formatFormula(const Molecule* molecule)
+{
+  QString formula = QString::fromStdString(molecule->formula());
+  QRegularExpression digitParser("(\\d+)");
+
+  QRegularExpressionMatchIterator i = digitParser.globalMatch(formula);
+  unsigned int offset = 0;
+  while (i.hasNext()) {
+    const QRegularExpressionMatch match = i.next();
+    QString digits = match.captured(1);
+
+    formula.replace(match.capturedStart(1) + offset, digits.size(),
+                    QString("<sub>%1</sub>").arg(digits));
+    offset += 11; // length of <sub>...</sub>
+  }
+
+  // add total charge as a superscript
+  int charge = molecule->totalCharge();
+  if (charge < 0)
+    formula += QString("<sup>%1</sup>").arg(charge);
+  else if (charge > 0)
+    formula += QString("<sup>+%1</sup>").arg(charge);
+
+  // add doublet or triplet for spin multiplicity as radical dot
+  int spinMultiplicity = molecule->totalSpinMultiplicity();
+  if (spinMultiplicity == 2)
+    formula += "<sup>•</sup>";
+  else if (spinMultiplicity == 3)
+    formula += "<sup>••</sup>";
+
+  return formula;
 }
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const
@@ -102,16 +136,18 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
                    .toStdString();
         }
         if (mol)
-          return (name + " (" + mol->formula() + ")").c_str();
+          return QString("%1 (%2)")
+            .arg(QString::fromStdString(name))
+            .arg(formatFormula(mol));
         else
-          return "Edit molecule";
+          return tr("Edit molecule");
       }
       case Qt::EditRole:
         return mol->data("name").toString().c_str();
       case Qt::ToolTipRole:
         if (mol->hasData("fileName"))
           return mol->data("fileName").toString().c_str();
-        return "Not saved";
+        return tr("Not saved");
       case Qt::WhatsThisRole:
         return mol->formula().c_str();
       case Qt::ForegroundRole:
