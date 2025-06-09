@@ -47,6 +47,9 @@ public:
   QList<ScenePlugin*> scenePlugins() const;
   QList<ScenePlugin*> activeScenePlugins() const;
 
+  ScenePlugin* scenePlugin(const QModelIndex& index) const;
+  ScenePlugin* scenePlugin(int row) const;
+
 signals:
   void pluginStateChanged(Avogadro::QtGui::ScenePlugin*);
   void pluginConfigChanged();
@@ -60,7 +63,7 @@ private:
   QList<ScenePlugin*> m_scenePlugins;
 };
 
-} // End QtGui namespace
-} // End Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_SCENEPLUGINMODEL_H
