@@ -9,15 +9,17 @@
 # Yarema Kertytsky <y.kertytsky@gmail.com>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024.
 # Максим Горпиніч <mgorpinic2005@gmail.com>, 2024.
-# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
+# Максим Горпиніч <maksimgorpinic4@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2024-12-29 11:33+0000\n"
-"Last-Translator: Максим Горпиніч <mgorpinic2005@gmail.com>\n"
+"PO-Revision-Date: 2025-05-13 16:02+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
 "Language: uk\n"
@@ -26,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1225,7 +1227,7 @@ msgstr "Кульки і стрижні"
 #: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
-msgstr "мультфільми"
+msgstr "Мультфільми"
 
 #: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
@@ -1246,7 +1248,7 @@ msgstr "Сила"
 
 #: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
 msgid "Labels"
-msgstr "етикетки"
+msgstr "Мітки"
 
 #: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
@@ -1873,7 +1875,7 @@ msgstr "Пекло"
 #: qtplugins/surfaces/surfaces.cpp:774
 msgctxt "colormap"
 msgid "Plasma"
-msgstr "плазма"
+msgstr "Плазма"
 
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
@@ -1954,7 +1956,7 @@ msgstr "Застосуйте кольорові схеми до атомів і 
 #: qtplugins/overlayaxes/overlayaxes.cpp:265
 #: qtplugins/resetview/resetview.cpp:76
 msgid "&View"
-msgstr "П&ерегляд"
+msgstr "&Переглянути"
 
 #: qtplugins/applycolors/applycolors.cpp:152
 msgid "Color Atoms"
@@ -2133,7 +2135,7 @@ msgstr "Слід"
 #: qtplugins/cartoons/cartoons.cpp:94
 msgctxt "protein rendering style"
 msgid "Tube"
-msgstr "трубка"
+msgstr "Трубка"
 
 #: qtplugins/cartoons/cartoons.cpp:95
 msgctxt "protein rendering style"
@@ -2227,7 +2229,7 @@ msgstr "Візуалізація тісних контактів між атом
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
-msgstr "контакт"
+msgstr "Контакт"
 
 #: qtplugins/closecontacts/closecontacts.h:55
 msgid "Salt Bridge"
@@ -4150,7 +4152,7 @@ msgstr "Інструмент анімації (%1)"
 
 #: qtplugins/playertool/playertool.cpp:74
 msgid "Play"
-msgstr "грати"
+msgstr "Грати"
 
 #: qtplugins/playertool/playertool.cpp:77
 msgid "Stop"
@@ -4302,7 +4304,7 @@ msgstr "Створіть і побудуйте теоретичну модель
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Update"
-msgstr "оновлення"
+msgstr "Оновлення"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
 msgid "Version"
@@ -4310,7 +4312,7 @@ msgstr "Версія"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:64
 msgid "Description"
-msgstr "опис"
+msgstr "Опис"
 
 #: qtplugins/plugindownloader/downloaderwidget.cpp:100
 msgid "Error downloading plugin data."
@@ -4454,7 +4456,7 @@ msgstr "Мітка"
 #: qtplugins/propertytables/propertymodel.cpp:519
 #: qtplugins/propertytables/propertymodel.cpp:560
 msgid "Color"
-msgstr "колір"
+msgstr "Колір"
 
 #: qtplugins/propertytables/propertymodel.cpp:522
 msgid "Atom"
@@ -4486,7 +4488,7 @@ msgstr "Довжина (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Chain"
-msgstr "ланцюг"
+msgstr "Ланцюг"
 
 #: qtplugins/propertytables/propertymodel.cpp:556
 msgid "Secondary Structure"
@@ -4499,7 +4501,7 @@ msgstr "Гетероген"
 #: qtplugins/propertytables/propertymodel.cpp:572
 #: qtplugins/propertytables/propertymodel.cpp:589
 msgid "Atom 1"
-msgstr "атом 1"
+msgstr "Атом 1"
 
 #: qtplugins/propertytables/propertymodel.cpp:574
 msgid "Vertex"
@@ -4508,7 +4510,7 @@ msgstr "Вершина"
 #: qtplugins/propertytables/propertymodel.cpp:576
 #: qtplugins/propertytables/propertymodel.cpp:593
 msgid "Atom 3"
-msgstr "атом 3"
+msgstr "Атом 3"
 
 #: qtplugins/propertytables/propertymodel.cpp:578
 #: qtplugins/propertytables/propertymodel.cpp:597
@@ -4517,11 +4519,11 @@ msgstr "Кут (°)"
 
 #: qtplugins/propertytables/propertymodel.cpp:591
 msgid "Atom 2"
-msgstr "атом 2"
+msgstr "Атом 2"
 
 #: qtplugins/propertytables/propertymodel.cpp:595
 msgid "Atom 4"
-msgstr "атом 4"
+msgstr "Атом 4"
 
 #: qtplugins/propertytables/propertymodel.cpp:608
 msgctxt "root mean squared displacement in Angstrom"
@@ -4569,7 +4571,7 @@ msgstr "β Міст"
 #: qtplugins/propertytables/propertymodel.cpp:945
 msgctxt "protein turn secondary structure"
 msgid "Turn"
-msgstr "поворот"
+msgstr "Поворот"
 
 #: qtplugins/propertytables/propertymodel.cpp:947
 msgctxt "protein coil secondary structure"
@@ -4678,7 +4680,7 @@ msgstr "Створення вхідних даних для квантових �
 
 #: qtplugins/resetview/resetview.cpp:38
 msgid "Center"
-msgstr "центр"
+msgstr "Центр"
 
 #: qtplugins/resetview/resetview.cpp:39
 msgid "Align View to Axes"
@@ -4898,7 +4900,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:218
 msgid "Failure"
-msgstr "провал"
+msgstr "Провал"
 
 #: qtplugins/spacegroup/spacegroup.cpp:219
 msgid ""
@@ -4989,7 +4991,7 @@ msgstr "Ділянка спектрів…"
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
 #: qtplugins/spectra/spectra.h:36:1646
 msgid "Spectra"
-msgstr "спектри"
+msgstr "Спектри"
 
 #: qtplugins/spectra/spectra.h:38
 msgid "Display spectra plots."
@@ -5009,7 +5011,7 @@ msgstr "ЯМР"
 
 #: qtplugins/spectra/spectradialog.cpp:446
 msgid "Electronic"
-msgstr "електронні"
+msgstr "Електронні"
 
 #: qtplugins/spectra/spectradialog.cpp:450
 msgid "Circular Dichroism"
@@ -5430,7 +5432,7 @@ msgstr ""
 #: qtplugins/yaehmop/yaehmop.cpp:367
 #, qt-format
 msgid "Band %1"
-msgstr "група %1"
+msgstr "Гурт %1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:387
 msgid "Fermi Level"
@@ -5906,7 +5908,7 @@ msgstr "Довідка…"
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:115
 #. i18n: ectx: property (text), widget (QToolButton, paste)
 msgid "Paste"
-msgstr "вставити"
+msgstr "Вставити"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:135
 #. i18n: ectx: property (text), widget (QPushButton, revert)
@@ -6557,7 +6559,7 @@ msgstr ""
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:87
 #. i18n: ectx: property (text), widget (QLabel, label_units)
 msgid "Units"
-msgstr "одиниці"
+msgstr "Одиниці"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:111
 #. i18n: ectx: property (text), item, widget (QComboBox, unitsCombo)
@@ -7165,7 +7167,7 @@ msgstr "кількість дітей для кожної батьківсько
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Children:"
-msgstr "діти:"
+msgstr "Діти:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:128
 #. i18n: ectx: property (toolTip), widget (QLabel, label_3)
@@ -7233,7 +7235,7 @@ msgstr "Спряжений градієнт"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:81
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
 msgid "Simple"
-msgstr "просто"
+msgstr "Просто"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:86
 #. i18n: ectx: property (text), item, widget (QComboBox, lineSearch)
@@ -7370,7 +7372,7 @@ msgstr "Платформа:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:176
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
 msgid "Reference"
-msgstr "довідка"
+msgstr "По посиланню"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:181
 #. i18n: ectx: property (text), item, widget (QComboBox, platformCombo)
@@ -7450,7 +7452,7 @@ msgstr "Толерантність Евальда:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:337
 #. i18n: ectx: property (text), widget (QLabel, label_constraints)
 msgid "Constraints:"
-msgstr "обмеження:"
+msgstr "Обмеження:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:350
 #. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
@@ -7661,7 +7663,7 @@ msgstr "час"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:868
 #. i18n: ectx: property (text), widget (QCheckBox, speedCheck)
 msgid "Speed"
-msgstr "швидкість"
+msgstr "Швидкість"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:878
 #. i18n: ectx: property (text), widget (QCheckBox, progressCheck)
@@ -7851,7 +7853,7 @@ msgstr "Піковий поріг:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
 msgid "Units:"
-msgstr "одиниці:"
+msgstr "Одиниці:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:205
 #. i18n: ectx: attribute (title), widget (QWidget, tab_appearance)
@@ -8604,15 +8606,7 @@ msgstr "Відобразити вхід Yaehmop?"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
-",Launchpad Contributions:,Vladimir Kurg,svv, ,Launchpad Contributions:,svv, ,"
-"Launchpad Contributions:,svv, ,Launchpad Contributions:,svv, ,Launchpad "
-"Contributions:,svv, ,Launchpad Contributions:,svv, ,Launchpad Contributions:,"
-"Yuri Chornoivan,svv, ,Launchpad Contributions:,Yuri Chornoivan,svv, ,"
-"Launchpad Contributions:,Yuri Chornoivan,svv, ,Launchpad Contributions:,Yuri "
-"Chornoivan,svv, ,Launchpad Contributions:,Yuri Chornoivan,svv,yurchor, ,"
-"Launchpad Contributions:,Yuri Chornoivan,svv,yurchor, ,Launchpad "
-"Contributions:,Andrii Prokopenko,Yuri Chornoivan,svv,yurchor"
+msgstr "Ваші імена"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"

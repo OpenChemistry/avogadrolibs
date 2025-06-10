@@ -1,5 +1,5 @@
 avogadro_plugin(Meshes
-  "Mesh rendering"
+  "Surface and mesh rendering"
   ScenePlugin
   meshes.h
   Meshes

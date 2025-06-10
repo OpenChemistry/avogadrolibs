@@ -127,13 +127,11 @@ Forcefield::Forcefield(QObject* parent_)
   // These directly use Open Babel and are fast
   qDebug() << " registering GPL plugins";
   Calc::EnergyManager::registerModel(new OBEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBEnergy("GAFF"));
 #else
   // These call obmm and can be slower
   qDebug() << " registering obmm plugins";
   Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("UFF"));
   Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
 #endif
 }
@@ -299,6 +297,15 @@ void Forcefield::optimize()
 
   Real energy = m_method->value(positions);
   m_method->gradient(positions, gradient);
+
+  // debug the gradients
+#ifndef NDEBUG
+  for (size_t i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
+             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
+  }
+#endif
+
   qDebug() << " initial " << energy << " gradNorm: " << gradient.norm();
   qDebug() << " maxSteps" << m_maxSteps << " steps "
            << m_maxSteps / crit.iterations;
@@ -348,6 +355,7 @@ void Forcefield::optimize()
                                    gradient[3 * i + 2]);
       }
     } else {
+      qDebug() << "Non-finite energy, stopping optimization";
       // reset to last positions
       positions = lastPositions;
       gradient = Eigen::VectorXd::Zero(3 * n);
@@ -471,8 +479,6 @@ std::string Forcefield::recommendedForceField() const
   // iterate to see what we have
   std::string bestOption;
   for (auto option : list) {
-    // ideally, we'd use GFN-FF but it needs tweaking
-    // everything else is a ranking
     // GAFF is better than MMFF94 which is better than UFF
     if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
       bestOption = option;

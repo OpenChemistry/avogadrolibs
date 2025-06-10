@@ -34,6 +34,7 @@ xgettext --from-code=UTF-8 -C -T --qt -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:
   -ktrUtf8:1,2c -ktr:1,1t -ktr:1,2c,2t -ktr:1,1,2c,3t -ktrUtf8:1 \
   --package-name=${PACKAGE} --package-version=${VERSION} \
 	--msgid-bugs-address="${BUGADDR}" --foreign-user --copyright-holder="The Avogadro Project" \
+	--check=ellipsis-unicode \
 	--files-from=infiles.list -D ${BASEDIR} -D ${WDIR} -o ${PROJECT}.pot || { echo "error while calling xgettext. aborting."; exit 1; }
 echo "Done extracting messages"
 

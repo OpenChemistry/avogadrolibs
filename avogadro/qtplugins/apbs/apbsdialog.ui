@@ -47,7 +47,7 @@
           <item>
            <widget class="QPushButton" name="openPdbFileButton">
             <property name="text">
-             <string>...</string>
+             <string>…</string>
             </property>
            </widget>
           </item>
@@ -139,7 +139,7 @@
           <item>
            <widget class="QPushButton" name="openPqrFileButton">
             <property name="text">
-             <string>...</string>
+             <string>…</string>
             </property>
            </widget>
           </item>

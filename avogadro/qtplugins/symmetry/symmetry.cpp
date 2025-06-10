@@ -79,7 +79,7 @@ QList<QAction*> Symmetry::actions() const
 
 QStringList Symmetry::menuPath(QAction*) const
 {
-  return QStringList() << tr("&Analysis") << tr("&Properties");
+  return QStringList() << tr("&Analyze") << tr("&Properties");
 }
 
 void Symmetry::setMolecule(QtGui::Molecule* mol)

@@ -58,7 +58,7 @@ private:
   void load(Core::GaussianSet* basis);
   std::vector<int> readArrayI(std::istream& in, unsigned int n);
   std::vector<double> readArrayD(std::istream& in, unsigned int n,
-                                 int width = 0);
+                                 int width = 0, double factor = 1.0);
   bool readDensityMatrix(std::istream& in, unsigned int n, int width = 0);
   bool readSpinDensityMatrix(std::istream& in, unsigned int n, int width = 0);
 

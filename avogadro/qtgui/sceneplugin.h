@@ -78,6 +78,14 @@ public:
   virtual void setEnabled(bool enable);
 
   /**
+   * @return whether this plugin works with the current molecule.
+   * This is used to determine if the plugin should be enabled in the UI.
+   * For example, a plugin that only works with unit cells would return
+   * false if the current molecule does not include a unit cell.
+   */
+  virtual bool isApplicable() const { return true; }
+
+  /**
    * @return the widget for plugin settings (e.g., colors, widths, etc.)
    */
   virtual QWidget* setupWidget();
