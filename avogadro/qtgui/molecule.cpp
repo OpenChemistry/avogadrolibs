@@ -8,6 +8,9 @@
 
 #include <iostream>
 
+// for HTML-formatted formulas
+#include <QtCore/QRegularExpression>
+
 namespace Avogadro::QtGui {
 
 using std::swap;
@@ -313,6 +316,43 @@ Index Molecule::findBondUniqueId(Index index) const
 RWMolecule* Molecule::undoMolecule()
 {
   return m_undoMolecule;
+}
+
+QString Molecule::formattedFormula() const
+{
+  QString formula = QString::fromStdString(this->formula());
+  QRegularExpression digitParser("(\\d+)");
+
+  QRegularExpressionMatchIterator i = digitParser.globalMatch(formula);
+  unsigned int offset = 0;
+  while (i.hasNext()) {
+    const QRegularExpressionMatch match = i.next();
+    QString digits = match.captured(1);
+
+    formula.replace(match.capturedStart(1) + offset, digits.size(),
+                    QString("<sub>%1</sub>").arg(digits));
+    offset += 11; // length of <sub>...</sub>
+  }
+
+  // add total charge as a superscript
+  int charge = totalCharge();
+  if (charge == -1)
+    formula += QString("<sup>-</sup>");
+  else if (charge < -1)
+    formula += QString("<sup>%1</sup>").arg(charge);
+  else if (charge == 1)
+    formula += QString("<sup>+</sup>");
+  else if (charge > 1)
+    formula += QString("<sup>+%1</sup>").arg(charge);
+
+  // add doublet or triplet for spin multiplicity as radical dot
+  int spinMultiplicity = totalSpinMultiplicity();
+  if (spinMultiplicity == 2)
+    formula += "<sup>•</sup>";
+  else if (spinMultiplicity == 3)
+    formula += "<sup>••</sup>";
+
+  return formula;
 }
 
 bool Molecule::isInteractive() const
