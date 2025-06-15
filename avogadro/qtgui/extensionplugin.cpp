@@ -25,9 +25,9 @@ bool ExtensionPlugin::readMolecule(Molecule&)
 
 void ExtensionPlugin::setScene(Rendering::Scene*) {}
 
-void ExtensionPlugin::setCamera(Rendering::Camera* camera) {}
+void ExtensionPlugin::setCamera([[maybe_unused]] Rendering::Camera* camera) {}
 
-void ExtensionPlugin::setActiveWidget(QWidget* widget) {}
+void ExtensionPlugin::setActiveWidget([[maybe_unused]] QWidget* widget) {}
 
 bool ExtensionPlugin::handleCommand(const QString& command,
                                     const QVariantMap& options)

@@ -19,9 +19,9 @@ Mesh::Mesh() : m_stable(true), m_other(0), m_cube(0), m_lock(new Mutex)
 
 Mesh::Mesh(const Mesh& other)
   : m_vertices(other.m_vertices), m_normals(other.m_normals),
-    m_colors(other.m_colors), m_name(other.m_name), m_stable(true),
+    m_colors(other.m_colors), m_triangles(other.m_triangles), m_name(other.m_name), m_stable(true),
     m_isoValue(other.m_isoValue), m_other(other.m_other), m_cube(other.m_cube),
-    m_lock(new Mutex), m_triangles(other.m_triangles)
+    m_lock(new Mutex)
 {
 }
 
@@ -175,7 +175,7 @@ bool Mesh::clear()
 Mesh& Mesh::operator=(const Mesh& other)
 {
   m_vertices = other.m_vertices;
-  m_normals = other.m_vertices;
+  m_normals = other.m_normals;
   m_colors = other.m_colors;
   m_name = other.m_name;
   m_isoValue = other.m_isoValue;

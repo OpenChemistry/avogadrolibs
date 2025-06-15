@@ -67,7 +67,7 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
           SLOT(moleculeChanged(unsigned int)));
 }
 
-void Vibrations::moleculeChanged(unsigned int changes)
+void Vibrations::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   if (m_molecule == nullptr)
     return;

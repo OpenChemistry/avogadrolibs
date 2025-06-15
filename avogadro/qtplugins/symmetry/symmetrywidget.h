@@ -18,7 +18,6 @@
 #include <QStyledItemDelegate>
 
 #include "operationstablemodel.h"
-#include "symmetrywidget.h"
 
 // class QPlainTextEdit;
 

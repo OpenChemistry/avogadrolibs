@@ -57,6 +57,7 @@ DistanceMatrix::DistanceMatrix(size_t size)
   memset(m_values, 0, size * size * sizeof(size_t));
 }
 
+[[maybe_unused]]
 DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
   : m_size(other.m_size),
     m_values(other.m_size ? new size_t[other.m_size * other.m_size] : nullptr)
@@ -66,6 +67,7 @@ DistanceMatrix::DistanceMatrix(const DistanceMatrix& other)
               m_values);
 }
 
+[[maybe_unused]]
 DistanceMatrix& DistanceMatrix::operator=(DistanceMatrix other)
 {
   // will use friend swap function via Argument Dependent Lookup

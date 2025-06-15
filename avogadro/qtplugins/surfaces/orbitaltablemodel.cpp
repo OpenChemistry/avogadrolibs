@@ -170,11 +170,11 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
   const auto labels = basis->symmetryLabels();
   QStringList alphaSymmetries;
   alphaSymmetries.reserve(labels.size());
-  for (const std::string label : labels) {
+  for (const std::string& label : labels) {
     alphaSymmetries.push_back(QString::fromStdString(label));
   }
 
-  for (int i = 0; i < basis->molecularOrbitalCount(); i++) {
+  for (unsigned int i = 0; i < basis->molecularOrbitalCount(); i++) {
     QString num = "";
     if (i + 1 != homo && i + 1 != lumo) {
       num = (leqHOMO) ? "-" : "+";
@@ -188,12 +188,12 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
 
     Orbital* orb = new Orbital;
     // Get the energy from the molecule property list, if available
-    if (alphaEnergies.size() > i)
+    if (static_cast<unsigned int>(alphaEnergies.size()) > i)
       orb->energy = alphaEnergies[i].toDouble();
     else
       orb->energy = 0.0;
     // symmetries (if available)
-    if (alphaSymmetries.size() > i)
+    if (static_cast<unsigned int>(alphaSymmetries.size()) > i)
       orb->symmetry = alphaSymmetries[i];
     orb->index = i;
     orb->description = desc;

@@ -107,7 +107,7 @@ QList<QString> ZipExtracter::extract(std::string extractdir,
     toReturn.append(errorMsg);
     return toReturn;
   }
-  long itrCount = 0;
+  [[maybe_unused]] long itrCount = 0;
 
   for (;;) {
     r = archive_read_next_header(a, &entry);
