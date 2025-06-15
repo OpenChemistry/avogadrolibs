@@ -266,7 +266,7 @@ void Forcefield::optimize()
   if (mask.rows() != 3 * n) {
     mask = Eigen::VectorXd::Zero(3 * n);
     // set to 1.0
-    for (Index i = 0; i < 3 * n; ++i) {
+    for (Eigen::Index i = 0; i < 3 * n; ++i) {
       mask[i] = 1.0;
     }
   }
@@ -300,7 +300,7 @@ void Forcefield::optimize()
 
   // debug the gradients
 #ifndef NDEBUG
-  for (size_t i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
              << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
   }
@@ -339,20 +339,20 @@ void Forcefield::optimize()
     bool isFinite = std::isfinite(currentEnergy);
     if (isFinite) {
       const double* d = positions.data();
-      bool isFinite = true;
+      [[maybe_unused]] bool allFinite = true;
       // casting back would be lovely...
-      for (size_t i = 0; i < n; ++i) {
+      for (int j = 0; j < n; ++j) {
         if (!std::isfinite(*d) || !std::isfinite(*(d + 1)) ||
             !std::isfinite(*(d + 2))) {
-          isFinite = false;
+          allFinite = false;
           break;
         }
 
-        pos[i] = Vector3(*(d), *(d + 1), *(d + 2));
+        pos[j] = Vector3(*(d), *(d + 1), *(d + 2));
         d += 3;
 
-        forces[i] = -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1],
-                                   gradient[3 * i + 2]);
+        forces[j] = -0.1 * Vector3(gradient[3 * j], gradient[3 * j + 1],
+                                   gradient[3 * j + 2]);
       }
     } else {
       qDebug() << "Non-finite energy, stopping optimization";
@@ -429,7 +429,7 @@ void Forcefield::forces()
   if (mask.rows() != 3 * n) {
     mask = Eigen::VectorXd::Zero(3 * n);
     // set to 1.0
-    for (Index i = 0; i < 3 * n; ++i) {
+    for (Eigen::Index i = 0; i < 3 * n; ++i) {
       mask[i] = 1.0;
     }
   }
@@ -449,7 +449,7 @@ void Forcefield::forces()
 
   m_method->gradient(positions, gradient);
 
-  for (size_t i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i) {
     forces[i] =
       -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1], gradient[3 * i + 2]);
   }
@@ -498,7 +498,7 @@ void Forcefield::freezeSelected()
 
   int numAtoms = m_molecule->atomCount();
   // now freeze the specified atoms
-  for (Index i = 0; i < numAtoms; ++i) {
+  for (int i = 0; i < numAtoms; ++i) {
     if (m_molecule->atomSelected(i)) {
       m_molecule->setFrozenAtom(i, true);
     }
@@ -512,7 +512,7 @@ void Forcefield::unfreezeSelected()
 
   int numAtoms = m_molecule->atomCount();
   // now freeze the specified atoms
-  for (Index i = 0; i < numAtoms; ++i) {
+  for (int i = 0; i < numAtoms; ++i) {
     if (m_molecule->atomSelected(i)) {
       m_molecule->setFrozenAtom(i, false);
     }

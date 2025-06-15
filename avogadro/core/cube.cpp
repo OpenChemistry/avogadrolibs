@@ -293,7 +293,6 @@ std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
 
 float Cube::getData(int i, int j, int k) const
 {
-    int nx = m_points.x();
     int ny = m_points.y();
     int nz = m_points.z();
     return m_data[(i * ny * nz) + (j * nz) + k];

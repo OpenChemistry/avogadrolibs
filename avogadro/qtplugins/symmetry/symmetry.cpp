@@ -357,7 +357,7 @@ void Symmetry::symmetrizeMolecule()
   if (MSYM_SUCCESS != (ret = msymGetElements(m_ctx, &mlength, &melements)))
     return;
 
-  if (mlength != length)
+  if (mlength != static_cast<int>(length))
     return;
 
   for (Index i = 0; i < length; ++i) {

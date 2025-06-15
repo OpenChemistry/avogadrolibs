@@ -415,7 +415,7 @@ void CoordinateEditorDialog::validateInputWorker()
         case '#': {
           // Validate integer:
           bool isInt;
-          int index = tokenCursor.selectedText().toInt(&isInt);
+          [[maybe_unused]] int index = tokenCursor.selectedText().toInt(&isInt);
           if (!isInt)
             m_ui->text->markInvalid(tokenCursor, tr("Invalid atomic index."));
           else

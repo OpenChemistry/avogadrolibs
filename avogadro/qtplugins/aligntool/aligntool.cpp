@@ -43,8 +43,8 @@ namespace Avogadro::QtPlugins {
 
 AlignTool::AlignTool(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_toolWidget(nullptr), m_renderer(nullptr),
-    m_alignType(0), m_axis(0)
+    m_molecule(nullptr), m_renderer(nullptr), m_axis(0), m_alignType(0),
+    m_toolWidget(nullptr)
 {
   m_activateAction->setText(tr("Align"));
   m_activateAction->setToolTip(
@@ -158,11 +158,12 @@ void AlignTool::shiftAtomToOrigin(Index atomIndex)
 void AlignTool::alignAtomToAxis(Index atomIndex, int axis)
 {
   // Align the atom to the specified axis
-  Vector3 align = m_molecule->atom(atomIndex).position3d();
+  [[maybe_unused]] Vector3 align = m_molecule->atom(atomIndex).position3d();
   const Core::Array<Vector3>& coords = m_molecule->atomPositions3d();
   Core::Array<Vector3> newCoords(coords.size());
 
-  double alpha, beta, gamma;
+  [[maybe_unused]] double alpha;
+  double beta, gamma;
   alpha = beta = gamma = 0.0;
 
   Vector3 pos = m_molecule->atom(atomIndex).position3d();

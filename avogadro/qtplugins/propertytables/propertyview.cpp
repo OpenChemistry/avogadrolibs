@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "propertyview.h"
+#include "core/avogadrocore.h"
 
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
@@ -36,7 +37,7 @@ namespace Avogadro {
 using QtGui::Molecule;
 
 PropertyView::PropertyView(PropertyType type, QWidget* parent)
-  : QTableView(parent), m_molecule(nullptr), m_type(type), m_model(nullptr)
+  : QTableView(parent), m_type(type), m_molecule(nullptr), m_model(nullptr)
 {
   QString title;
   switch (type) {
@@ -113,12 +114,12 @@ void PropertyView::selectionChanged(const QItemSelection& selected,
       return;
 
     if (m_type == PropertyType::AtomType) {
-      if (rowNum >= m_molecule->atomCount())
+      if (static_cast<Index>(rowNum) >= m_molecule->atomCount())
         return;
 
       m_molecule->setAtomSelected(rowNum, true);
     } else if (m_type == PropertyType::BondType) {
-      if (rowNum >= m_molecule->bondCount())
+      if (static_cast<Index>(rowNum) >= m_molecule->bondCount())
         return;
 
       auto bondPair = m_molecule->bondPair(rowNum);

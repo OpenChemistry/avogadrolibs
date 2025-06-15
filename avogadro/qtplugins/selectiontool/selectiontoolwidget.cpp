@@ -33,8 +33,8 @@ void SelectionToolWidget::setDropDown(size_t current, size_t max)
     m_ui->changeLayerDropDown->addItem(QString::number(i + 1));
   }
   m_ui->changeLayerDropDown->addItem(tr("New Layer"));
-  if (current != m_ui->changeLayerDropDown->currentIndex())
-    m_ui->changeLayerDropDown->setCurrentIndex(current);
+  if (current != static_cast<size_t>(m_ui->changeLayerDropDown->currentIndex()))
+    m_ui->changeLayerDropDown->setCurrentIndex(static_cast<int>(current));
 
   // reconnect the signal
   connect(m_ui->changeLayerDropDown, SIGNAL(currentIndexChanged(int)), this,

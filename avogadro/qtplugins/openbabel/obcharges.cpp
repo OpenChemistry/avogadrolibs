@@ -62,7 +62,7 @@ private:
   Array<double> m_output;
 };
 
-OBCharges::OBCharges(const std::string& id) : m_identifier(id), ChargeModel()
+OBCharges::OBCharges(const std::string& id) : ChargeModel(), m_identifier(id)
 {
   // set the element mask based on our type / identifier
   m_elements.reset();
@@ -169,7 +169,7 @@ MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
   charges = molecule.partialCharges(m_identifier);
   // if the number of charges matches the number of atoms
   // and there's a non-zero charge, then we're done
-  if (charges.rows() == molecule.atomCount()) {
+  if (charges.rows() == static_cast<Eigen::Index>(molecule.atomCount())) {
     for (unsigned int i = 0; i < charges.rows(); ++i) {
       if (abs(charges(i, 0)) > 0.00001)
         return charges;

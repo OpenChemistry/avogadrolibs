@@ -84,11 +84,11 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 }
 
 SolidPipeline::SolidPipeline()
-  : m_pixelRatio(1.0f), m_aoEnabled(false), m_dofEnabled(false),
-    m_aoStrength(1.0f), m_fogStrength(1.0f), m_fogPosition(1.0),
-    m_fogEnabled(true), m_edEnabled(false), m_edStrength(1.0f), m_width(0),
-    m_height(0), m_dofStrength(1.0f), m_dofPosition(1.0),
-    m_backgroundColor(0, 0, 0, 0), d(new Private)
+  : m_pixelRatio(1.0f), m_aoEnabled(false), m_dofStrength(1.0f),
+    m_dofPosition(1.0), m_dofEnabled(false), m_fogPosition(1.0),
+    m_backgroundColor(0, 0, 0, 0), m_fogEnabled(true), m_aoStrength(1.0f),
+    m_fogStrength(1.0f), m_edEnabled(false), m_edStrength(1.0f), m_width(0),
+    m_height(0), d(new Private)
 {
 }
 

@@ -179,7 +179,7 @@ void DownloaderWidget::updateRepoData()
 }
 
 // Grab README data from Github
-void DownloaderWidget::downloadREADME(int row, int col)
+void DownloaderWidget::downloadREADME(int row, [[maybe_unused]] int col)
 {
   m_ui->readmeBrowser->clear();
   QString url = m_repoList[row].readmeUrl;
