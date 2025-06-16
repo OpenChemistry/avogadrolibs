@@ -31,8 +31,8 @@
 namespace Avogadro::QtGui {
 
 JsonWidget::JsonWidget(QWidget* parent_)
-  : QWidget(parent_), m_molecule(nullptr), m_currentLayout(nullptr),
-    m_centralWidget(nullptr), m_empty(true), m_batchMode(false)
+  : QWidget(parent_), m_molecule(nullptr), m_empty(true), m_batchMode(false),
+    m_currentLayout(nullptr), m_centralWidget(nullptr)
 {
 }
 
@@ -52,8 +52,9 @@ void JsonWidget::setMolecule(QtGui::Molecule* mol)
     // e.g.
     // https://github.com/OpenChemistry/chemicaljson/blob/main/chemicaljson.py#L130
     if (m_molecule->hasData("inputParameters")) {
-      QByteArray data(m_molecule->data("inputParameters").toString().c_str());
-      QJsonDocument doc = QJsonDocument::fromJson(data);
+      QByteArray inputData(
+        m_molecule->data("inputParameters").toString().c_str());
+      QJsonDocument doc = QJsonDocument::fromJson(inputData);
       if (!doc.isNull() && doc.isObject()) {
         QJsonObject inputParameters = doc.object();
         // check for a few known keys

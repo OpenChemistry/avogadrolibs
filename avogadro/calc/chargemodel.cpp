@@ -5,9 +5,11 @@
 
 #include "chargemodel.h"
 
+#include <Eigen/src/Core/util/Meta.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
 
+#include <cstddef>
 #include <iostream>
 
 namespace Avogadro {
@@ -33,11 +35,11 @@ Vector3 ChargeModel::dipoleMoment(const Molecule& mol) const
   const Array<Vector3> positions = mol.atomPositions3d();
 
   Vector3 dipole(0.0, 0.0, 0.0);
-  if (charges.rows() != positions.size())
+  if (static_cast<std::size_t>(charges.rows()) != positions.size())
     std::cout << "Error: charges " << charges.rows() << " != positions "
               << positions.size() << std::endl;
 
-  for (unsigned int i = 0; i < charges.size(); ++i)
+  for (Eigen::Index i = 0; i < charges.size(); ++i)
     dipole += charges(i, 0) * positions[i];
 
   dipole *= 4.80320471257; // convert to Debye from electron-Angstrom

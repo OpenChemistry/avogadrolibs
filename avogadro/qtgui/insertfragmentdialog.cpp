@@ -81,9 +81,9 @@ InsertFragmentDialog::InsertFragmentDialog(QWidget* aParent, QString directory)
 
   foreach (const QString& dirStr, dirs) {
     qDebug() << "Checking for " << directory << " data in" << dirStr;
-    QDir dir(dirStr + '/' + directory);
-    if (dir.exists() && dir.isReadable()) {
-      m_directory = dir.absolutePath();
+    QDir testdir(dirStr + '/' + directory);
+    if (testdir.exists() && testdir.isReadable()) {
+      m_directory = testdir.absolutePath();
       break;
     }
   }

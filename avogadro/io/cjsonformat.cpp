@@ -80,7 +80,7 @@ json eigenColToJson(const MatrixX& matrix, int column)
 {
   json j;
   j = json::array();
-  for (Index i = 0; i < matrix.rows(); ++i) {
+  for (Eigen::Index i = 0; i < matrix.rows(); ++i) {
     j.push_back(matrix(i, column));
   }
   return j;

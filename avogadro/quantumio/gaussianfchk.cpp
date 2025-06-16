@@ -9,6 +9,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <cstddef>
 #include <iostream>
 
 using std::cout;
@@ -206,7 +207,7 @@ void GaussianFchk::processLine(std::istream& in)
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
 
     // read in the first 3N-6 elements as frequencies
-    for (unsigned int i = 0; i < m_normalModes; ++i) {
+    for (int i = 0; i < m_normalModes; ++i) {
       m_frequencies.push_back(tmpVec[i]);
     }
     // skip to after threeN elements then read IR intensities
@@ -223,10 +224,11 @@ void GaussianFchk::processLine(std::istream& in)
   } else if (key == "Vib-Modes" && list.size() > 2) {
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
     m_vibDisplacements.clear();
-    if (tmpVec.size() == m_numAtoms * 3 * m_normalModes) {
-      for (unsigned int i = 0; i < m_normalModes; ++i) {
+    if (tmpVec.size() == static_cast<size_t>(m_numAtoms) * 3 *
+                           static_cast<size_t>(m_normalModes)) {
+      for (int i = 0; i < m_normalModes; ++i) {
         Core::Array<Vector3> mode;
-        for (unsigned int j = 0; j < m_numAtoms; ++j) {
+        for (int j = 0; j < m_numAtoms; ++j) {
           Vector3 v(tmpVec[i * m_numAtoms * 3 + j * 3],
                     tmpVec[i * m_numAtoms * 3 + j * 3 + 1],
                     tmpVec[i * m_numAtoms * 3 + j * 3 + 2]);

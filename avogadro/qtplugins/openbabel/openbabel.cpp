@@ -712,7 +712,7 @@ void OpenBabel::onGenerateConformersFinished(const QByteArray& output)
   // copy the coordinate sets
   m_molecule->clearCoordinate3d();
   for (size_t i = 0; i < mol.coordinate3dCount(); ++i)
-    m_molecule->setCoordinate3d(mol.coordinate3d(i), i);
+    m_molecule->setCoordinate3d(mol.coordinate3d(i), static_cast<int>(i));
 
   // energy data too
   // TODO: check if other properties are needed

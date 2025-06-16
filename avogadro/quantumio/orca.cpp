@@ -10,6 +10,7 @@
 #include <avogadro/core/utilities.h>
 
 #include <algorithm>
+#include <cstddef>
 #include <iostream>
 #include <regex>
 
@@ -156,7 +157,8 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   return true;
 }
 
-void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
+void ORCAOutput::processLine(std::istream& in,
+                             [[maybe_unused]] GaussianSet* basis)
 {
   // First truncate the line, remove trailing white space and check
   string line;
@@ -166,7 +168,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
   string key = Core::trimmed(line);
   vector<string> list;
   int nGTOs = 0;
-  float vibScaling = 1.0f;
+  [[maybe_unused]] float vibScaling = 1.0f;
 
   if (Core::contains(key, "CARTESIAN COORDINATES (A.U.)")) {
     m_coordFactor = 1.; // leave the coords in BOHR ....
@@ -446,8 +448,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
           if (bondOrder > 1.6) {
             std::vector<int> bond;
-            bond.push_back(firstAtom);
-            bond.push_back(secondAtom);
+            bond.push_back(static_cast<int>(firstAtom));
+            bond.push_back(static_cast<int>(secondAtom));
             bond.push_back(static_cast<int>(std::round(bondOrder)));
             m_bondOrders.push_back(bond);
           }
@@ -459,8 +461,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
             if (bondOrder > 1.6) {
               std::vector<int> bond;
-              bond.push_back(firstAtom);
-              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(firstAtom));
+              bond.push_back(static_cast<int>(secondAtom));
               bond.push_back(static_cast<int>(std::round(bondOrder)));
               m_bondOrders.push_back(bond);
             }
@@ -472,8 +474,8 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
             if (bondOrder > 1.6) {
               std::vector<int> bond;
-              bond.push_back(firstAtom);
-              bond.push_back(secondAtom);
+              bond.push_back(static_cast<int>(firstAtom));
+              bond.push_back(static_cast<int>(secondAtom));
               bond.push_back(static_cast<int>(std::round(bondOrder)));
               m_bondOrders.push_back(bond);
             }
@@ -484,6 +486,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
         }
 
         m_currentMode = NotParsing;
+        break;
       }
       case OrbitalEnergies: {
         if (key.empty())
@@ -681,13 +684,14 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+        break;
       }
       case ECD: {
         if (key.empty())
           break;
         list = Core::split(key, ' ');
 
-        double wavenumbers;
+        [[maybe_unused]] double wavenumbers;
         while (!key.empty()) {
           // should have 7 columns
           if (list.size() != 7) {
@@ -709,6 +713,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             break; // hit the blank line
         }
         m_currentMode = NotParsing;
+        break;
       }
       case NMR: {
         if (key.empty())
@@ -892,7 +897,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
           } // ok, we've finished one batch of MO coeffs
           // now reorder the p orbitals from "orcaStyle" (pz, px,py)
           // to expected Avogadro (px,py,pz)
-          int idx = 0;
+          std::size_t idx = 0;
           while (idx < orcaOrbitals.size()) {
             if (Core::contains(orcaOrbitals.at(idx), "pz")) {
               for (unsigned int i = 0; i < numColumns; i++) {
@@ -970,10 +975,12 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
                 columns[i].push_back(Core::lexicalCast<double>(list[i]));
               }
 
-              auto key_begin = std::sregex_iterator(key.begin(), key.end(), rx);
-              auto key_end = std::sregex_iterator();
+              auto inner_key_begin =
+                std::sregex_iterator(key.begin(), key.end(), rx);
+              auto inner_key_end = std::sregex_iterator();
               list.clear();
-              for (std::sregex_iterator i = key_begin; i != key_end; ++i) {
+              for (std::sregex_iterator i = inner_key_begin; i != inner_key_end;
+                   ++i) {
                 list.push_back(i->str());
               }
               if (list.size() != numColumns)
@@ -982,7 +989,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
             } // ok, we've finished one batch of MO coeffs
             // now reorder the p orbitals from "orcaStyle" (pz, px,py) to
             // expected Avogadro (px,py,pz)
-            int idx = 0;
+            std::size_t idx = 0;
             while (idx < orcaOrbitals.size()) {
               if (Core::contains(orcaOrbitals.at(idx), "pz")) {
                 for (unsigned int i = 0; i < numColumns; i++) {
@@ -1016,7 +1023,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
 
             if (Core::trimmed(key).empty())
               getline(in, key); // skip the blank line after the MOs
-          }                     // finished parsing 2nd. MOs
+          } // finished parsing 2nd. MOs
           if (m_MOcoeffs.size() != numRows * numRows) {
             m_orcaSuccess = false;
           }
@@ -1028,7 +1035,7 @@ void ORCAOutput::processLine(std::istream& in, GaussianSet* basis)
       }
       default:;
     } // end switch
-  }   // end if (mode)
+  } // end if (mode)
 }
 
 void ORCAOutput::load(GaussianSet* basis)

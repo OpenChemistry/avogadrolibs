@@ -36,8 +36,10 @@ void Dipole::process(const QtGui::Molecule& molecule,
 {
   // check if the molecule is empty
   // (single atoms don't have a dipole moment)
-  if (molecule.atomCount() < 0)
+  if (molecule.atomCount() < 2) {
+    qDebug() << "Dipole: Molecule has less than two atoms, no dipole moment.";
     return;
+  }
 
   // check if the molecule has the dipole set
   if (!m_customDipole) {

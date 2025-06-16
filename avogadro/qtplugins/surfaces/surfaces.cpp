@@ -175,15 +175,15 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       // modify HOMO / LUMO based on "+ number" or "- number"
       if (expression.contains('-')) {
         modifier = expression.remove('-');
-        bool ok;
-        int n = modifier.toInt(&ok);
-        if (ok)
+        bool ok1;
+        int n = modifier.toInt(&ok1);
+        if (ok1)
           index = index - n;
       } else if (expression.contains('+')) {
         modifier = expression.remove('+');
-        bool ok;
-        int n = modifier.toInt(&ok);
-        if (ok)
+        bool ok2;
+        int n = modifier.toInt(&ok2);
+        if (ok2)
           index = index + n;
       }
       index = index - 1; // start from zero
@@ -385,6 +385,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         break;
       case SolventAccessible:
         m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
+        break;
       case SolventExcluded:
         probeRadius = 1.4;
         m_cube->setCubeType(Core::Cube::Type::SolventExcluded);

@@ -299,7 +299,7 @@ void TemplateTool::emptyLeftClick(QMouseEvent* e)
       return;
 
     // Add the atom and hydrogens around it following template
-    size_t centerIndex = 0;
+    [[maybe_unused]] size_t centerIndex = 0;
     for (size_t i = 0; i < templateMolecule.atomCount(); i++) {
       if (templateMolecule.atomicNumber(i) != 1) {
         center = templateMolecule.atomPosition3d(i);
@@ -583,7 +583,8 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     // - first check to see if there is a bond
     Vector3 moleculeLigandOutVector(0.0, 0.0, 0.0);
     Vector3 displacement(0.0, 0.0, 0.0);
-    Vector3 centerPosition = m_molecule->atomPosition3d(selectedIndex);
+    [[maybe_unused]] Vector3 centerPosition =
+      m_molecule->atomPosition3d(selectedIndex);
     size_t moleculeCenterIndex = selectedIndex;
     size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
 
