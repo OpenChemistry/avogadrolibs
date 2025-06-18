@@ -97,10 +97,6 @@ if(USE_PYTHON)
   add_subdirectory(python)
 endif()
 
-if(ENABLE_TRANSLATIONS)
-  find_package(Qt5LinguistTools)
-endif()
-
 # SKBUILD is set for binary wheel
 if (NOT SKBUILD)
   install(
