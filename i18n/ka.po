@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.95.1\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-05-13 16:02+0000\n"
+"PO-Revision-Date: 2025-06-11 08:03+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ka/>\n"
@@ -2016,7 +2016,7 @@ msgstr ""
 #: qtplugins/cartoons/cartoons.cpp:92
 msgctxt "protein rendering style"
 msgid "Backbone"
-msgstr ""
+msgstr "კარკასი"
 
 #: qtplugins/cartoons/cartoons.cpp:93
 msgctxt "protein rendering style"
@@ -2570,7 +2570,7 @@ msgstr "სიმკვრივეები"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
 msgid "HISTORY_RESTART"
-msgstr ""
+msgstr "HISTORY_RESTART"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
 msgid "MOPAC"
@@ -2586,11 +2586,11 @@ msgstr "გადატვირთვა"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
 msgid "SPARSE"
-msgstr ""
+msgstr "SPARSE"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:420
 msgid "BROYDEN"
-msgstr ""
+msgstr "BROYDEN"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
 msgid "Conjugate Gradients"
@@ -2992,7 +2992,7 @@ msgstr ""
 
 #: qtplugins/gamessinput/gamessinput.cpp:34
 msgid "&GAMESS…"
-msgstr ""
+msgstr "&GAMESS…"
 
 #: qtplugins/gamessinput/gamessinput.h:34
 msgid "GAMESS input"
@@ -3305,7 +3305,7 @@ msgstr ""
 
 #: qtplugins/lammpsinput/lammpsinput.cpp:30
 msgid "&LAMMPS…"
-msgstr ""
+msgstr "&LAMMPS…"
 
 #: qtplugins/lammpsinput/lammpsinput.h:31
 msgid "LAMMPS input"
@@ -3355,7 +3355,7 @@ msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.h:31
 msgid "LineFormatInput"
-msgstr ""
+msgstr "LineFormatInput"
 
 #: qtplugins/lineformatinput/lineformatinput.h:54
 msgid "Load single-line molecule descriptors through an input dialog."
@@ -3368,7 +3368,7 @@ msgstr "Ctrl+6"
 
 #: qtplugins/manipulator/manipulator.cpp:50
 msgid "Manipulate"
-msgstr ""
+msgstr "გადაადგილება"
 
 #: qtplugins/manipulator/manipulator.cpp:52
 #, qt-format
@@ -3408,7 +3408,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:196
 #: qtplugins/measuretool/measuretool.cpp:207
 msgid "Dihedral:"
-msgstr ""
+msgstr "ორწახნაგა:"
 
 #: qtplugins/measuretool/measuretool.cpp:197
 msgid "Angle:"
@@ -3917,17 +3917,17 @@ msgstr "inpcrd"
 #: qtplugins/openmminput/openmminputdialog.cpp:942
 #: qtplugins/openmminput/openmminputdialog.cpp:1053
 msgid "gro"
-msgstr ""
+msgstr "gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
 #: qtplugins/openmminput/openmminputdialog.cpp:497:1274
 msgid "input.prmtop"
-msgstr ""
+msgstr "input.prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:499
 msgid "input.top"
-msgstr ""
+msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
@@ -3938,7 +3938,7 @@ msgstr "pdb"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:523
 msgid "prmtop"
-msgstr ""
+msgstr "prmtop"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:527
 msgid "top"
@@ -4081,7 +4081,7 @@ msgstr "შეცდომის შეტყობინება: "
 
 #: qtplugins/plotpdf/plotpdf.h:33
 msgid "PlotPdf"
-msgstr ""
+msgstr "PlotPdf"
 
 #: qtplugins/plotpdf/plotpdf.h:68
 msgid "Generate and plot a Pair Distribution Function curve."
@@ -4093,7 +4093,7 @@ msgstr ""
 
 #: qtplugins/plotrmsd/plotrmsd.h:34
 msgid "PlotRmsd"
-msgstr ""
+msgstr "PlotRmsd"
 
 #: qtplugins/plotrmsd/plotrmsd.h:64
 msgid "Generate and plot an RMSD curve."
@@ -4405,7 +4405,7 @@ msgstr "გრუპეტო"
 #: qtplugins/propertytables/propertymodel.cpp:947
 msgctxt "protein coil secondary structure"
 msgid "Coil"
-msgstr ""
+msgstr "კოჭა"
 
 #: qtplugins/propertytables/propertytables.cpp:27
 msgid "Atom Properties…"
@@ -4438,7 +4438,7 @@ msgstr ""
 
 #: qtplugins/propertytables/propertytables.h:29
 msgid "PropertyTables"
-msgstr ""
+msgstr "თვისებისცხრილები"
 
 #: qtplugins/propertytables/propertyview.cpp:44
 msgid "Atom Properties"
@@ -4681,7 +4681,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
 #: qtplugins/spacegroup/spacegroup.cpp:68:1911
 msgid "Symmetrize"
-msgstr ""
+msgstr "სიმეტრიზაცია"
 
 #: qtplugins/spacegroup/spacegroup.cpp:73
 msgid "Fill Unit Cell…"
@@ -4772,11 +4772,11 @@ msgstr "საერთაშორისო"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hall"
-msgstr ""
+msgstr "ჰოლი"
 
 #: qtplugins/spacegroup/spacegroup.cpp:372
 msgid "Hermann-Mauguin"
-msgstr ""
+msgstr "ჰერმან-მოგენი"
 
 #: qtplugins/spacegroup/spacegroup.cpp:385
 msgid "Select Space Group"
