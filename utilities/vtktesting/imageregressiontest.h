@@ -19,19 +19,19 @@
 
 #include <QtGui/QImage>
 
-#include <vtkQImageToImageSource.h>
+#include <vtkImageData.h>
 #include <vtkImageDifference.h>
 #include <vtkImageShiftScale.h>
+#include <vtkNew.h>
 #include <vtkPNGReader.h>
 #include <vtkPNGWriter.h>
-#include <vtkImageData.h>
 #include <vtkPointData.h>
-#include <vtkUnsignedCharArray.h>
+#include <vtkQImageToImageSource.h>
 #include <vtkTrivialProducer.h>
-#include <vtkNew.h>
+#include <vtkUnsignedCharArray.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 
 namespace Avogadro {
@@ -84,13 +84,13 @@ public:
    * the test name if it does not start with --, it can also be overridden
    * later.
    */
-  ImageRegressionTest(int argc, char *argv[]);
+  ImageRegressionTest(int argc, char* argv[]);
 
   /**
    * Set the baseline path, specifying the directory the baseline images are
    * located in.
    */
-  void setBaselinePath(const std::string &path) { m_baselinePath = path; }
+  void setBaselinePath(const std::string& path) { m_baselinePath = path; }
 
   /**
    * Get the path to the baseline directory.
@@ -101,7 +101,7 @@ public:
    * Set the temporary path, specifying the directory temporary files can be
    * written.
    */
-  void setTemporaryPath(const std::string &path) { m_temporaryPath = path; }
+  void setTemporaryPath(const std::string& path) { m_temporaryPath = path; }
 
   /**
    * Get the path to the temporary directory.
@@ -112,7 +112,7 @@ public:
    * Set the name of the test, this is used to compute baseline image names,
    * temporary files if the test fails etc.
    */
-  void setName(const std::string &name_) { m_name = name_; }
+  void setName(const std::string& name_) { m_name = name_; }
 
   /**
    * Get the current name of the test.
@@ -138,17 +138,17 @@ public:
   /**
    * Perform an image threshold test, returning the measured image difference.
    */
-  int imageThresholdTest(vtkImageData *imageData, std::ostream &os);
+  int imageThresholdTest(vtkImageData* imageData, std::ostream& os);
 
   /**
    * Perform an image threshold test, returning the measured image difference.
    */
-  int imageThresholdTest(QImage &image, std::ostream &os);
+  int imageThresholdTest(QImage& image, std::ostream& os);
 
   /**
    * Convert a QImage to a vtkImageData ready to be diffed.
    */
-  void convertImage(QImage &inputImage, vtkImageData *outputImage);
+  void convertImage(QImage& inputImage, vtkImageData* outputImage);
 
 private:
   std::string m_baselinePath;
@@ -157,10 +157,9 @@ private:
   double m_threshold;
 
   bool m_valid;
-
 };
 
-inline ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
+inline ImageRegressionTest::ImageRegressionTest(int argc, char* argv[])
   : m_threshold(15.0), m_valid(false)
 {
   if (argc < 2) {
@@ -187,16 +186,15 @@ inline ImageRegressionTest::ImageRegressionTest(int argc, char *argv[])
     m_valid = true;
 }
 
-inline int ImageRegressionTest::imageThresholdTest(vtkImageData *imageData,
-                                                   std::ostream &os)
+inline int ImageRegressionTest::imageThresholdTest(vtkImageData* imageData,
+                                                   std::ostream& os)
 {
   // Check the input file exists, and can be read.
   std::string inputFileName(m_baselinePath + "/" + m_name + ".png");
   std::ifstream inputFile(inputFileName.c_str());
   if (inputFile.good()) {
     inputFile.close();
-  }
-  else {
+  } else {
     // There was no input file, write one to the temporary directory and return.
     std::string testFileName = m_temporaryPath + "/" + m_name + ".png";
     vtkNew<vtkPNGWriter> pngWriter;
@@ -234,8 +232,7 @@ inline int ImageRegressionTest::imageThresholdTest(vtkImageData *imageData,
   if (errorIndex <= 0) {
     os << "<DartMeasurement name=\"BaselineImage\" type=\"text/string\">"
        << "Standard</DartMeasurement>";
-  }
-  else {
+  } else {
     os << "<DartMeasurement name=\"BaselineImage\" type=\"numeric/integer\">"
        << errorIndex << "</DartMeasurement>";
   }
@@ -277,16 +274,16 @@ inline int ImageRegressionTest::imageThresholdTest(vtkImageData *imageData,
   return minError < m_threshold ? 0 : 1;
 }
 
-inline int ImageRegressionTest::imageThresholdTest(QImage &image,
-                                                   std::ostream &os)
+inline int ImageRegressionTest::imageThresholdTest(QImage& image,
+                                                   std::ostream& os)
 {
   vtkNew<vtkImageData> imageData;
   convertImage(image, imageData.GetPointer());
   return imageThresholdTest(imageData.GetPointer(), os);
 }
 
-inline void ImageRegressionTest::convertImage(QImage &inputImage,
-                                              vtkImageData *outputImage)
+inline void ImageRegressionTest::convertImage(QImage& inputImage,
+                                              vtkImageData* outputImage)
 {
   // Now to convert this to a vtkImageData, so that we can diff it.
   vtkNew<vtkQImageToImageSource> qimage;
@@ -296,15 +293,14 @@ inline void ImageRegressionTest::convertImage(QImage &inputImage,
   qimage->Update();
   outputImage->SetDimensions(qimage->GetOutput()->GetDimensions());
   outputImage->AllocateScalars(VTK_UNSIGNED_CHAR, 3);
-  unsigned char *source =
-      reinterpret_cast<unsigned char*>(
-        vtkUnsignedCharArray::SafeDownCast(qimage->GetOutput()
-                                           ->GetPointData()->GetScalars())
-                                           ->GetVoidPointer(0));
-  unsigned char *dest =
-      reinterpret_cast<unsigned char*>(
-        vtkUnsignedCharArray::SafeDownCast(outputImage->GetPointData()
-                                           ->GetScalars())->GetVoidPointer(0));
+  unsigned char* source = reinterpret_cast<unsigned char*>(
+    vtkUnsignedCharArray::SafeDownCast(
+      qimage->GetOutput()->GetPointData()->GetScalars())
+      ->GetVoidPointer(0));
+  unsigned char* dest = reinterpret_cast<unsigned char*>(
+    vtkUnsignedCharArray::SafeDownCast(
+      outputImage->GetPointData()->GetScalars())
+      ->GetVoidPointer(0));
   int size = inputImage.width() * inputImage.height();
   for (int i = 0; i < size; ++i) {
     dest[3 * i + 0] = source[4 * i + 0];
@@ -313,7 +309,7 @@ inline void ImageRegressionTest::convertImage(QImage &inputImage,
   }
 }
 
-}
-}
+} // namespace VtkTesting
+} // namespace Avogadro
 
 #endif // AVOGADRO_UTILITIES_IMAGEREGRESSIONTEST_H

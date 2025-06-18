@@ -16,11 +16,11 @@ class @PluginName@Factory : public QObject, public QtGui::@PluginType@Factory
   Q_INTERFACES(Avogadro::QtGui::@PluginType@Factory)
 
 public:
-  explicit @PluginName@Factory(QObject *parent_ = nullptr) : QObject(parent_) {}
+  explicit @PluginName@Factory(QObject* parent_ = nullptr) : QObject(parent_) {}
 
-  QtGui::@PluginType@ * createInstance(QObject *parent_ = nullptr)
+  QtGui::@PluginType@* createInstance(QObject* parent_ = nullptr)
   {
-    auto *object = new @PluginClass@(parent_);
+    auto* object = new @PluginClass@(parent_);
     object->setObjectName("@PluginName@");
     return object;
   }
@@ -31,6 +31,6 @@ public:
 
 };
 
-}
+} // namespace Avogadro::QtPlugins
 
 #include "@PluginName@Plugin.moc"

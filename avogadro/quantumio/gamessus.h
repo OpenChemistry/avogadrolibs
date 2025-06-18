@@ -102,7 +102,7 @@ private:
 
   MatrixX m_density; /// Total density matrix
 };
-}
-}
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif

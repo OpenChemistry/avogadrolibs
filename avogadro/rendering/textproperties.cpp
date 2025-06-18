@@ -27,9 +27,7 @@ TextProperties::TextProperties(const TextProperties& other)
   m_rgba[3] = other.m_rgba[3];
 }
 
-TextProperties::~TextProperties()
-{
-}
+TextProperties::~TextProperties() {}
 
 TextProperties& TextProperties::operator=(TextProperties other)
 {
@@ -63,4 +61,4 @@ bool TextProperties::operator==(const TextProperties& other) const
          m_rgba[3] == other.m_rgba[3];
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

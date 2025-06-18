@@ -100,8 +100,8 @@ private:
   Private* d;
 };
 
-inline AmbientOcclusionSphereGeometry& AmbientOcclusionSphereGeometry::
-operator=(AmbientOcclusionSphereGeometry other)
+inline AmbientOcclusionSphereGeometry&
+AmbientOcclusionSphereGeometry::operator=(AmbientOcclusionSphereGeometry other)
 {
   using std::swap;
   swap(*this, other);

@@ -14,9 +14,7 @@ Shader::Shader(Type type_, const std::string& source_)
 {
 }
 
-Shader::~Shader()
-{
-}
+Shader::~Shader() {}
 
 void Shader::setType(Type type_)
 {
@@ -80,4 +78,4 @@ void Shader::cleanup()
   m_dirty = false;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Rendering

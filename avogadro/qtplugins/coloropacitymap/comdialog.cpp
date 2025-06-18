@@ -91,4 +91,4 @@ void ComDialog::setOpacity(double value)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

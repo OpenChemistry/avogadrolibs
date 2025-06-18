@@ -79,6 +79,6 @@ private:
   /** Pointer to the plugin that opened the dialog */
   ImportPQR* plugin;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 #endif // AVOGADRO_PQRWIDGET_H

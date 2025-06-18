@@ -8,17 +8,17 @@
 
 #include "visitor.h"
 
-#include "avogadrorendering.h"
-#include "spheregeometry.h"
-#include "cylindergeometry.h"
 #include "ambientocclusionspheregeometry.h"
+#include "avogadrorendering.h"
+#include "camera.h"
+#include "cylindergeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
-#include "camera.h"
-#include <string>
-#include <vector>
+#include "spheregeometry.h"
 #include <iostream>
 #include <ostream>
+#include <string>
+#include <vector>
 
 namespace Avogadro {
 namespace Rendering {
@@ -73,8 +73,10 @@ private:
   std::string m_sceneVertices = "";
   std::string m_sceneFaces = "";
 
-  void visitSphereIcosphereRecursionMethod(const SphereColor& geometry, unsigned int subdivisions);
-  void visitCylinderLateralMethod(const CylinderColor& geometry, unsigned int lateralFaces);
+  void visitSphereIcosphereRecursionMethod(const SphereColor& geometry,
+                                           unsigned int subdivisions);
+  void visitCylinderLateralMethod(const CylinderColor& geometry,
+                                  unsigned int lateralFaces);
 };
 
 } // End namespace Rendering

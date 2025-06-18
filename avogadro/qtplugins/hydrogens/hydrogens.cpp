@@ -8,8 +8,8 @@
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QtGui/QKeySequence>
 #include <QAction>
+#include <QtGui/QKeySequence>
 
 #include <QtCore/QStringList>
 
@@ -40,9 +40,7 @@ Hydrogens::Hydrogens(QObject* parent_)
   m_actions.append(action);
 }
 
-Hydrogens::~Hydrogens()
-{
-}
+Hydrogens::~Hydrogens() {}
 
 QString Hydrogens::description() const
 {
@@ -107,4 +105,4 @@ void Hydrogens::removeAllHydrogens()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

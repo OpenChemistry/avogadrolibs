@@ -55,7 +55,8 @@ SelectionTool::SelectionTool(QObject* parent_)
        "\tDrag to select a range of atoms\n"
        "Right Mouse: \tClick outside the molecule to clear selection\n"
        "Use Ctrl to toggle the selection and shift to add to the selection.\n"
-       "Double-Click: \tSelect an entire fragment.").arg(shortcut));
+       "Double-Click: \tSelect an entire fragment.")
+      .arg(shortcut));
   setIcon();
 }
 

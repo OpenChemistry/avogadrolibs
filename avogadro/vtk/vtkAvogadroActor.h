@@ -13,7 +13,7 @@ namespace Avogadro {
 namespace Rendering {
 class Scene;
 }
-}
+} // namespace Avogadro
 
 /**
  * @class vtkAvogadroActor vtkAvogadroActor.h <avogadro/vtk/vtkAvogadroActor.h>
@@ -31,8 +31,8 @@ public:
   /** Required type macro. */
   vtkTypeMacro(vtkAvogadroActor, vtkActor)
 
-  /** Print the state of the object. */
-  void PrintSelf(ostream& os, vtkIndent indent) override;
+    /** Print the state of the object. */
+    void PrintSelf(ostream& os, vtkIndent indent) override;
 
   /** Render the opaque geometry. */
   int RenderOpaqueGeometry(vtkViewport* viewport) override;

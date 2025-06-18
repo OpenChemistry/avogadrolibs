@@ -1081,13 +1081,15 @@ public:
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry()
   : m_dirty(false), d(new Private)
-{}
+{
+}
 
 AmbientOcclusionSphereGeometry::AmbientOcclusionSphereGeometry(
   const AmbientOcclusionSphereGeometry& other)
   : Drawable(other), m_spheres(other.m_spheres), m_indices(other.m_indices),
     m_dirty(true), d(new Private)
-{}
+{
+}
 
 AmbientOcclusionSphereGeometry::~AmbientOcclusionSphereGeometry()
 {
@@ -1124,7 +1126,7 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate center
     Vector3f center(Vector3f::Zero());
-    for (auto & m_sphere : m_spheres)
+    for (auto& m_sphere : m_spheres)
       center += m_sphere.center;
     center /= static_cast<float>(nSpheres);
 
@@ -1137,7 +1139,7 @@ void AmbientOcclusionSphereGeometry::update()
 
     // calculate radius
     float radius = 0.0f;
-    for (auto & m_sphere : m_spheres)
+    for (auto& m_sphere : m_spheres)
       if ((m_sphere.center - center).norm() > radius)
         radius = (m_sphere.center - center).norm();
 
@@ -1362,4 +1364,4 @@ void AmbientOcclusionSphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

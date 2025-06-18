@@ -85,4 +85,4 @@ bool ColorButton::event(QEvent* e)
   return QAbstractButton::event(e);
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

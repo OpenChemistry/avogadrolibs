@@ -479,7 +479,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
         inputList.append(input);
       }
     } // end N
-  }   // end M
+  } // end M
 
   m_wfn->saveToBinaryFile(tempFileName);
 

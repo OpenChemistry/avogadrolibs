@@ -217,7 +217,7 @@ private Q_SLOTS:
   void setThermoStyle(int);
   void setThermoInterval(int);
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif

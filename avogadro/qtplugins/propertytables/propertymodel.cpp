@@ -792,7 +792,7 @@ bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
         return false;
       }
     } // *it != bond
-  }   // foreach bond
+  } // foreach bond
   return true;
 }
 

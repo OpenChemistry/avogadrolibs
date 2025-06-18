@@ -194,12 +194,14 @@ private:
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate()
   : m_molecule(nullptr), m_index(MaxIndex)
-{}
+{
+}
 
 template <class Molecule_T>
 AtomTemplate<Molecule_T>::AtomTemplate(MoleculeType* m, Index i)
   : m_molecule(m), m_index(i)
-{}
+{
+}
 
 template <class Molecule_T>
 bool AtomTemplate<Molecule_T>::operator==(

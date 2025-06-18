@@ -89,7 +89,7 @@ private:
   QString m_keyPressBuffer;
 };
 
-} // End of QtGui namespace
-} // End of Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif

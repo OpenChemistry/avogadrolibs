@@ -29,7 +29,8 @@ bool YaehmopOut::readBandData(const QString& data,
   kpoints.clear();
   specialKPoints.clear();
 
-  QStringList lines = data.split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
+  QStringList lines =
+    data.split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
 
   while (!lines.isEmpty() && !lines[0].contains("#BAND_DATA"))
     lines.removeFirst();
@@ -41,7 +42,8 @@ bool YaehmopOut::readBandData(const QString& data,
   foreach (const QString& line, lines) {
     if (line.contains("Error value from Diagonalization"))
       lines.removeOne(line);
-    if (line.contains("On entry to ZHEGV , parameter number  6 had an illegal value"))
+    if (line.contains(
+          "On entry to ZHEGV , parameter number  6 had an illegal value"))
       lines.removeOne(line);
   }
 
@@ -79,8 +81,8 @@ bool YaehmopOut::readBandData(const QString& data,
     // If the label is "GM", use "Γ" instead
     // FIXME: our vtk can't currently display a unicode gamma like this. When
     // we add a font that can, we can uncomment this.
-//    if (kp.label.toLower() == "gm")
-//      kp.label = QString::fromUtf8("Γ");
+    //    if (kp.label.toLower() == "gm")
+    //      kp.label = QString::fromUtf8("Γ");
     kp.coords = Vector3(lines[ind].split(" ")[1].toDouble(),
                         lines[ind].split(" ")[2].toDouble(),
                         lines[ind].split(" ")[3].toDouble());
