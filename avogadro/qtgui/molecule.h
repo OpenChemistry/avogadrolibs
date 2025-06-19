@@ -234,6 +234,14 @@ public:
 
   RWMolecule* undoMolecule();
 
+  /**
+   * @brief Get the formatted chemical formula for the molecule.
+   * @return The formatted chemical formula in HTML format.
+   * This will include subscripts for atom counts and superscripts for charge
+   * and spin multiplicity.
+   */
+  QString formattedFormula() const;
+
   bool isInteractive() const;
 
   void swapBond(Index a, Index b);

@@ -34,10 +34,19 @@ int ScenePluginModel::columnCount(const QModelIndex&) const
 
 Qt::ItemFlags ScenePluginModel::flags(const QModelIndex& index_) const
 {
+  auto* item =
+    qobject_cast<ScenePlugin*>(static_cast<QObject*>(index_.internalPointer()));
+  if (!item)
+    return Qt::NoItemFlags;
+
+  Qt::ItemFlags flags = Qt::ItemIsEnabled;
+  if (!item->isApplicable())
+    flags = Qt::NoItemFlags;
+
   if (index_.column() == 0)
-    return Qt::ItemIsEditable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
+    return flags | Qt::ItemIsEditable | Qt::ItemIsUserCheckable;
   else
-    return Qt::ItemIsEnabled;
+    return flags;
 }
 
 bool ScenePluginModel::setData(const QModelIndex& index_, const QVariant& value,
@@ -131,6 +140,22 @@ QModelIndex ScenePluginModel::index(int row, int column,
 void ScenePluginModel::clear()
 {
   m_scenePlugins.clear();
+}
+
+ScenePlugin* ScenePluginModel::scenePlugin(const QModelIndex& index) const
+{
+  if (!index.isValid() || index.column() != 0)
+    return nullptr;
+
+  return m_scenePlugins[index.row()];
+}
+
+ScenePlugin* ScenePluginModel::scenePlugin(int row) const
+{
+  if (row < 0 || row >= m_scenePlugins.size())
+    return nullptr;
+
+  return m_scenePlugins[row];
 }
 
 QList<ScenePlugin*> ScenePluginModel::scenePlugins() const
