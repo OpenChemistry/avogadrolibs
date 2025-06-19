@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-16 14:01+0000\n"
+"PO-Revision-Date: 2025-06-20 11:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2083,10 +2083,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Menetapkan Pilihan Atom"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:544
@@ -2210,10 +2208,8 @@ msgstr " Å"
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
-#| msgid "Maximum Radius:"
 msgid "Maximum distance:"
-msgstr "Radius Maksimum:"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2223,10 +2219,8 @@ msgid "Line width:"
 msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:36
-#, fuzzy
-#| msgid "Renders force displacements on atoms"
 msgid "Render close contacts between atoms."
-msgstr "Menggambarkan gaya pemindahan pada atom"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.h:54
 msgid "Contact"
@@ -2954,10 +2948,9 @@ msgid "Fetch PDB"
 msgstr "Mengambil dari PDB..."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:62
-#, fuzzy, qt-format
-#| msgid "Cannot read molecular file %1."
+#, qt-format
 msgid "Could not read the PDB molecule: %1"
-msgstr "Tidak dapat membaca berkas molekul %1"
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:72
 msgid "PDB Code"
@@ -3048,19 +3041,15 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:96
 #, fuzzy
 msgid "Configure…"
-msgstr "Pengaturan Bidang Gaya..."
+msgstr "Pengaturan…"
 
 #: qtplugins/forcefield/forcefield.cpp:108
-#, fuzzy
-#| msgid "Import Selected Atoms"
 msgid "Freeze Selected Atoms"
-msgstr "Impor Atom Terpilih"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Menetapkan Pilihan Atom"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:152
 #, fuzzy
@@ -3444,7 +3433,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:203
 #, fuzzy
 msgid "Atom Label:"
-msgstr "Label Atom"
+msgstr "Label Atom:"
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
@@ -3483,10 +3472,8 @@ msgid "Ctrl+4"
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:32
-#, fuzzy
-#| msgid "Bond Labels"
 msgid "Edit Labels"
-msgstr "Label Ikatan"
+msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:34
 #, qt-format
@@ -3537,10 +3524,8 @@ msgid "Render atoms as licorice / sticks."
 msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:31
-#, fuzzy
-#| msgid "SMILES"
 msgid "SMILES…"
-msgstr "Senyum"
+msgstr ""
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:37
 #, fuzzy
@@ -3833,10 +3818,8 @@ msgid "Zoom the scene."
 msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:64
-#, fuzzy
-#| msgid "&Translate Atoms..."
 msgid "Translate the scene."
-msgstr "Geser Atom-atom"
+msgstr ""
 
 #: qtplugins/navigator/navigator.cpp:105
 msgid "Reverse Direction of Zoom on Scroll"
@@ -3869,10 +3852,8 @@ msgid " °"
 msgstr " °"
 
 #: qtplugins/noncovalent/noncovalent.cpp:368
-#, fuzzy
-#| msgid "Tolerance:"
 msgid "Angle tolerance:"
-msgstr "Toleransi:"
+msgstr ""
 
 #: qtplugins/noncovalent/noncovalent.h:34
 msgid "Render a few non-covalent interactions."
@@ -4342,10 +4323,8 @@ msgid "Generate and plot an RMSD curve."
 msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:35
-#, fuzzy
-#| msgid "Theoretical XRD Pattern Options"
 msgid "Plot Theoretical XRD Pattern…"
-msgstr "Opsi Pola XRD Teoritis"
+msgstr ""
 
 #: qtplugins/plotxrd/plotxrd.cpp:120
 msgid "Failed to generate XRD pattern"
@@ -4522,10 +4501,8 @@ msgid "Y (Å)"
 msgstr "Y (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:516
-#, fuzzy
-#| msgid "X (Å)"
 msgid "Z (Å)"
-msgstr "X (Å)"
+msgstr "Z (Å)"
 
 #: qtplugins/propertytables/propertymodel.cpp:518
 #: qtplugins/propertytables/propertymodel.cpp:538
@@ -4572,7 +4549,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:557
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "Struktur"
+msgstr "Struktur Sekunder"
 
 #: qtplugins/propertytables/propertymodel.cpp:559
 msgid "Heterogen"
@@ -4810,10 +4787,8 @@ msgid "Invert Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:53
-#, fuzzy
-#| msgid "Color by Element"
 msgid "Select by Element…"
-msgstr "Warna berdasarkan Unsur"
+msgstr ""
 
 #: qtplugins/select/select.cpp:58
 msgid "Select by Atom Index…"
@@ -4838,10 +4813,8 @@ msgid "Select Water"
 msgstr ""
 
 #: qtplugins/select/select.cpp:88 qtplugins/select/select.cpp:377
-#, fuzzy
-#| msgid "Ignore Selection"
 msgid "Enlarge Selection"
-msgstr "Lupakan Pilihan"
+msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
 msgid "Shrink Selection"
@@ -4860,10 +4833,8 @@ msgid "&Select"
 msgstr "&Pilih"
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Color by Element"
 msgid "Select Element"
-msgstr "Warna berdasarkan Unsur"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
 msgid "Select Backbone"
@@ -4937,10 +4908,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
-#| msgid "New Label:"
 msgid "New Layer"
-msgstr "Label Baru:"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 #, fuzzy
@@ -5080,10 +5049,8 @@ msgid "Spectra"
 msgstr "Spektra"
 
 #: qtplugins/spectra/spectra.h:38
-#, fuzzy
-#| msgid "Display as &row vectors"
 msgid "Display spectra plots."
-msgstr "Menampilkan baris vektor"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:436
 #, fuzzy
@@ -5264,10 +5231,8 @@ msgid "Electron Density"
 msgstr "Kepadatan Elektron"
 
 #: qtplugins/surfaces/surfacedialog.cpp:173
-#, fuzzy
-#| msgid "Density"
 msgid "Spin Density"
-msgstr "Kerapatan"
+msgstr ""
 
 #: qtplugins/surfaces/surfacedialog.cpp:185
 #, fuzzy, qt-format
@@ -7884,7 +7849,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Frequency Scale Factor:"
 msgid "Scale Factor:"
-msgstr "Faktor Skala Frekuensi:"
+msgstr "Faktor Skala:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:75
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -7920,10 +7885,8 @@ msgstr "luas terpuncak:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Threshold:"
 msgid "Peak Threshold:"
-msgstr "Batasan:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
