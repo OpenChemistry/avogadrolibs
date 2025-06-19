@@ -207,17 +207,19 @@ void GaussianFchk::processLine(std::istream& in)
     tmpVec = readArrayD(in, Core::lexicalCast<int>(list[2]), 16);
 
     // read in the first 3N-6 elements as frequencies
-    for (int i = 0; i < m_normalModes; ++i) {
+    for (unsigned int i = 0; i < static_cast<unsigned int>(m_normalModes);
+         ++i) {
       m_frequencies.push_back(tmpVec[i]);
     }
     // skip to after threeN elements then read IR intensities
-    for (unsigned int i = threeN; i < threeN + m_normalModes; ++i) {
+    for (unsigned int i = threeN;
+         i < threeN + static_cast<unsigned int>(m_normalModes); ++i) {
       m_IRintensities.push_back(tmpVec[i]);
     }
     // now check if we have Raman intensities
     if (tmpVec[threeN + m_normalModes] != 0.0) {
       for (unsigned int i = threeN + m_normalModes;
-           i < threeN + 2 * m_normalModes; ++i) {
+           i < threeN + 2 * static_cast<unsigned int>(m_normalModes); ++i) {
         m_RamanIntensities.push_back(tmpVec[i]);
       }
     }
@@ -226,9 +228,11 @@ void GaussianFchk::processLine(std::istream& in)
     m_vibDisplacements.clear();
     if (tmpVec.size() == static_cast<size_t>(m_numAtoms) * 3 *
                            static_cast<size_t>(m_normalModes)) {
-      for (int i = 0; i < m_normalModes; ++i) {
+      for (unsigned int i = 0; i < static_cast<unsigned int>(m_normalModes);
+           ++i) {
         Core::Array<Vector3> mode;
-        for (int j = 0; j < m_numAtoms; ++j) {
+        for (unsigned int j = 0; j < static_cast<unsigned int>(m_numAtoms);
+             ++j) {
           Vector3 v(tmpVec[i * m_numAtoms * 3 + j * 3],
                     tmpVec[i * m_numAtoms * 3 + j * 3 + 1],
                     tmpVec[i * m_numAtoms * 3 + j * 3 + 2]);
@@ -255,12 +259,14 @@ void GaussianFchk::load(GaussianSet* basis)
       // SP orbital type - actually have to add two shells
       int s = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::S);
       int tmpGTO = nGTO;
-      for (int j = 0; j < m_shellNums[i]; ++j) {
+      for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
+           ++j) {
         basis->addGto(s, m_c[nGTO], m_a[nGTO]);
         ++nGTO;
       }
       int p = basis->addBasis(m_shelltoAtom[i] - 1, GaussianSet::P);
-      for (int j = 0; j < m_shellNums[i]; ++j) {
+      for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
+           ++j) {
         basis->addGto(p, m_csp[tmpGTO], m_a[tmpGTO]);
         ++tmpGTO;
       }
@@ -311,7 +317,8 @@ void GaussianFchk::load(GaussianSet* basis)
       }
       if (type != GaussianSet::UU) {
         int b = basis->addBasis(m_shelltoAtom[i] - 1, type);
-        for (int j = 0; j < m_shellNums[i]; ++j) {
+        for (unsigned int j = 0; j < static_cast<unsigned int>(m_shellNums[i]);
+             ++j) {
           basis->addGto(b, m_c[nGTO], m_a[nGTO]);
           ++nGTO;
         }
@@ -412,8 +419,8 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
         }
       }
     } else { // Q-Chem files use 16 character fields
-      int maxColumns = 80 / width;
-      for (int i = 0; i < maxColumns; ++i) {
+      size_t maxColumns = 80 / width;
+      for (size_t i = 0; i < maxColumns; ++i) {
         string substring = line.substr(i * width, width);
         if (static_cast<int>(substring.length()) != width)
           break;
@@ -479,8 +486,8 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
         }
       }
     } else { // Q-Chem files use 16-character fields
-      int maxColumns = 80 / width;
-      for (int c = 0; c < maxColumns; ++c) {
+      size_t maxColumns = 80 / width;
+      for (size_t c = 0; c < maxColumns; ++c) {
         string substring = line.substr(c * width, width);
         if (static_cast<int>(substring.length()) != width) {
           break;
@@ -555,8 +562,8 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
         }
       }
     } else { // Q-Chem files use 16-character fields
-      int maxColumns = 80 / width;
-      for (int c = 0; c < maxColumns; ++c) {
+      size_t maxColumns = 80 / width;
+      for (size_t c = 0; c < maxColumns; ++c) {
         string substring = line.substr(c * width, width);
         if (static_cast<int>(substring.length()) != width) {
           break;

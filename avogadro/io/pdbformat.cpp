@@ -4,8 +4,8 @@
 ******************************************************************************/
 
 #include "pdbformat.h"
-#include "core/avogadrocore.h"
 
+#include "avogadro/core/avogadrocore.h"
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>

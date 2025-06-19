@@ -58,13 +58,14 @@ Molecule::Molecule(const Molecule& other)
     *m = *other.mesh(i);
   }
 
+  // Copy over any cubes
   for (Index i = 0; i < other.cubeCount(); ++i) {
     Cube* c = addCube();
     *c = *other.cube(i);
   }
 
   // Make sure all the atoms are in the active layer
-  if (other.m_layers.maxLayer() <= 0) {
+  if (other.m_layers.maxLayer() == 0) {
     for (Index i = 0; i < atomCount(); ++i)
       m_layers.addAtomToActiveLayer(i);
   }
