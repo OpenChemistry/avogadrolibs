@@ -43,7 +43,7 @@ jobs:
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
-            ssl_env: "D:\\a\\avogadroapp\\Qt\\Tools\\OpenSSLv3\\Win_x64",
+            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
@@ -122,11 +122,13 @@ jobs:
       with:
         repository: openchemistry/avogadroapp
         path: avogadroapp
+        fetch-depth: 0
 
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
         path: avogadrolibs
+        fetch-depth: 0
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
