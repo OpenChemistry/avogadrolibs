@@ -6,6 +6,7 @@
 #include "energymanager.h"
 #include "energycalculator.h"
 #include "lennardjones.h"
+#include "uff.h"
 
 namespace Avogadro::Calc {
 
@@ -92,6 +93,8 @@ EnergyManager::EnergyManager()
   // LJ is the fallback, since it can handle anything
   // (maybe not well, but it can handle it)
   addModel(new LennardJones);
+  // UFF is good for a wide range of molecules
+  addModel(new UFF);
 }
 
 EnergyManager::~EnergyManager()

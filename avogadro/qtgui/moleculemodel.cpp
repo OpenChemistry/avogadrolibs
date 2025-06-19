@@ -102,16 +102,18 @@ QVariant MoleculeModel::data(const QModelIndex& idx, int role) const
                    .toStdString();
         }
         if (mol)
-          return (name + " (" + mol->formula() + ")").c_str();
+          return QString("%1 (%2)")
+            .arg(QString::fromStdString(name))
+            .arg(mol->formattedFormula());
         else
-          return "Edit molecule";
+          return tr("Edit molecule");
       }
       case Qt::EditRole:
         return mol->data("name").toString().c_str();
       case Qt::ToolTipRole:
         if (mol->hasData("fileName"))
           return mol->data("fileName").toString().c_str();
-        return "Not saved";
+        return tr("Not saved");
       case Qt::WhatsThisRole:
         return mol->formula().c_str();
       case Qt::ForegroundRole:

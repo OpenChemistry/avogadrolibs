@@ -31,6 +31,7 @@ public:
 
 private:
   bool m_enabled;
+  std::string m_name = "QTAIM";
 };
 
 } // end namespace Avogadro::QtPlugins

@@ -171,39 +171,6 @@ int MolecularModel::columnCount(const QModelIndex& parent) const
   return 1; // values
 }
 
-QString formatFormula(Molecule* molecule)
-{
-  QString formula = QString::fromStdString(molecule->formula());
-  QRegularExpression digitParser("(\\d+)");
-
-  QRegularExpressionMatchIterator i = digitParser.globalMatch(formula);
-  unsigned int offset = 0;
-  while (i.hasNext()) {
-    const QRegularExpressionMatch match = i.next();
-    QString digits = match.captured(1);
-
-    formula.replace(match.capturedStart(1) + offset, digits.size(),
-                    QString("<sub>%1</sub>").arg(digits));
-    offset += 11; // length of <sub>...</sub>
-  }
-
-  // add total charge as a superscript
-  int charge = molecule->totalCharge();
-  if (charge < 0)
-    formula += QString("<sup>%1</sup>").arg(charge);
-  else if (charge > 0)
-    formula += QString("<sup>+%1</sup>").arg(charge);
-
-  // add doublet or triplet for spin multiplicity as radical dot
-  int spinMultiplicity = molecule->totalSpinMultiplicity();
-  if (spinMultiplicity == 2)
-    formula += "<sup>•</sup>";
-  else if (spinMultiplicity == 3)
-    formula += "<sup>••</sup>";
-
-  return formula;
-}
-
 QString formatPointGroup(std::string pointgroup)
 {
   // first character is in capital
@@ -246,7 +213,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     case 1:
       return m_molecule->mass();
     case 2:
-      return formatFormula(m_molecule);
+      return m_molecule->formattedFormula();
     case 3:
       return QVariant::fromValue(m_molecule->atomCount());
     case 4:
@@ -426,7 +393,7 @@ void MolecularModel::updateTable(unsigned int flags)
   // update the display names in the headerData method
   m_propertiesCache.setValue(" 1name", name());
   m_propertiesCache.setValue(" 2mass", m_molecule->mass());
-  m_propertiesCache.setValue(" 3formula", formatFormula(m_molecule));
+  m_propertiesCache.setValue(" 3formula", m_molecule->formattedFormula());
   m_propertiesCache.setValue(" 4atoms", m_molecule->atomCount());
   m_propertiesCache.setValue(" 5bonds", m_molecule->bondCount());
   if (m_molecule->coordinate3dCount() > 0)

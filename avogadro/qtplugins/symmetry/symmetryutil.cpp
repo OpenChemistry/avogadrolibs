@@ -33,7 +33,7 @@ QString pointGroupSymbol(const char* point_group)
 
   // check if we need an infinity symbol
   if (pointGroup[1] == '0')
-    pointGroup = pointGroup.replace(1, 1, QObject::trUtf8("\u221e"));
+    pointGroup = pointGroup.replace(1, 1, "\u221e"); // infinity symbol
 
   // After first character, point group should subscript everything
   pointGroup.insert(1, "<sub>");
@@ -70,4 +70,4 @@ QString operationSymbol(const msym::msym_symmetry_operation_t* operation)
 
   return symbol;
 }
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins::SymmetryUtil
