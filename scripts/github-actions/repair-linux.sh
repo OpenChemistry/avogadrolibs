@@ -7,7 +7,7 @@ if command -v apt-get >/dev/null; then
 elif command -v yum >/dev/null; then
   yum install -y git eigen3-devel
 elif command -v apk >/dev/null; then
-  apk add --no-cache git eigen3-dev
+  apk add --no-cache git eigen-dev
 else
   echo "Neither apt-get nor yum found. Cannot install dependencies."
   exit 1
