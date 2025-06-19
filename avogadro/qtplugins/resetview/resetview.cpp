@@ -53,7 +53,7 @@ void ResetView::registerCommands()
 }
 
 bool ResetView::handleCommand(const QString& command,
-                              const QVariantMap& options)
+                              [[maybe_unused]] const QVariantMap& options)
 {
   if (m_molecule == nullptr || m_camera == nullptr)
     return false; // Nothing to do

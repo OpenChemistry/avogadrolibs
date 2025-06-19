@@ -173,7 +173,7 @@ struct LayerLabel : Core::LayerData
       atom->setObjectName("atom");
 
       // set up the various atom options
-      char val = LabelOptions::None;
+      [[maybe_unused]] char val = LabelOptions::None;
       QStringList text;
 
       // first add the individual options
@@ -222,21 +222,21 @@ struct LayerLabel : Core::LayerData
         if (i == 0) {
           residue->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
-          char val = 0x00;
-          QStringList text;
+          char optval = 0x00;
+          QStringList opttext;
           if (i & LabelOptions::Index) {
-            text << QObject::tr("ID");
-            val |= LabelOptions::Index;
+            opttext << QObject::tr("ID");
+            optval |= LabelOptions::Index;
           }
           if (i & LabelOptions::Name) {
-            text << QObject::tr("Name");
-            val |= LabelOptions::Name;
+            opttext << QObject::tr("Name");
+            optval |= LabelOptions::Name;
           }
-          if (val != 0x00) {
+          if (optval != 0x00) {
             QString join = QObject::tr(" & ");
-            residue->addItem(text.join(join), QVariant(val));
-            if (val == residueOptions) {
-              residue->setCurrentText(text.join(join));
+            residue->addItem(opttext.join(join), QVariant(optval));
+            if (optval == residueOptions) {
+              residue->setCurrentText(opttext.join(join));
             }
           }
         }
@@ -416,7 +416,8 @@ void Label::processAtom(const Core::Molecule& molecule,
 }
 
 void Label::processBond(const Core::Molecule& molecule,
-                        Rendering::GroupNode& node, size_t layer)
+                        Rendering::GroupNode& node,
+                        [[maybe_unused]] size_t layer)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);

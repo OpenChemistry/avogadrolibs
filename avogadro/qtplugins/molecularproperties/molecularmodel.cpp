@@ -189,7 +189,7 @@ QVariant MolecularModel::data(const QModelIndex& index, int role) const
     return QVariant();
 
   int row = index.row();
-  int col = index.column();
+  [[maybe_unused]] int col = index.column();
 
   // Simple lambda to convert QFlags to variant as in Qt 6 this needs help.
   auto toVariant = [&](auto flags) {

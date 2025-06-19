@@ -5,6 +5,7 @@
 
 #include "pdbformat.h"
 
+#include "avogadro/core/avogadrocore.h"
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
@@ -243,9 +244,15 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           b = b - terCount;
           b = rawToAtomId[b];
 
-          if (a < b && a >= 0 && b >= 0 && a < mol.atomCount() &&
-              b < mol.atomCount()) {
-            mol.Avogadro::Core::Molecule::addBond(a, b, 1);
+          if (a >= 0 && b >= 0) {
+            auto aIndex = static_cast<Avogadro::Index>(a);
+            auto bIndex = static_cast<Avogadro::Index>(b);
+            if (aIndex < mol.atomCount() && bIndex < mol.atomCount()) {
+              mol.Avogadro::Core::Molecule::addBond(aIndex, bIndex, 1);
+            } else {
+              appendError("Invalid bond connection: " + std::to_string(a) +
+                          " - " + std::to_string(b));
+            }
           }
         }
       }

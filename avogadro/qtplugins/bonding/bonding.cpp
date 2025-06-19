@@ -76,7 +76,8 @@ void Bonding::registerCommands()
   emit registerCommand("addBondOrders", tr("Perceive bond orders."));
 }
 
-bool Bonding::handleCommand(const QString& command, const QVariantMap& options)
+bool Bonding::handleCommand(const QString& command,
+                            [[maybe_unused]] const QVariantMap& options)
 {
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.

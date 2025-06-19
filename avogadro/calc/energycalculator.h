@@ -51,7 +51,10 @@ public:
   /**
    * Called to set the configuration (e.g., for a GUI options dialog)
    */
-  virtual bool setConfiguration(Core::VariantMap& config) { return true; }
+  virtual bool setConfiguration([[maybe_unused]] Core::VariantMap& config)
+  {
+    return true;
+  }
 
   /**
    * @brief Indicate if your method only treats a subset of elements
