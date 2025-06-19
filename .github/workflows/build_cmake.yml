@@ -43,6 +43,7 @@ jobs:
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
             build_flags: "-j 2",
             cpack_flags: "-G NSIS",
+            ssl_env: "D:\\a\\avogadrolibs\\Qt\\Tools\\OpenSSLv3\\Win_x64",
           }
         - {
             name: "Ubuntu Address Sanitizer", artifact: "",
@@ -135,6 +136,17 @@ jobs:
         aqtversion: '==3.1.*'
         cache: true
         version: ${{ env.QT_VERSION }}
+
+    - name: Install OpenSSL (Win64)
+      if: runner.os == 'Windows'
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        cache: true
+        host: 'windows'
+        target: 'desktop'
+        tools-only: 'true'
+        tools: 'tools_opensslv3_x64'
 
     - name: Configure MSVC Command Prompt
       if: runner.os == 'Windows'
@@ -280,6 +292,9 @@ jobs:
     - name: Notarize Mac DMG
       if: runner.os == 'macOS'
       run: |
+        # check current directory (failing signing)
+        echo `pwd`
+        ls -ld
         # check if we have the password and the username
         if [ -n "${NOTARIZE_PASSWORD}" ] && [ -n "${NOTARIZE_USERNAME}" ]; then
           codesign -s "$CODESIGN_IDENTITY" --timestamp Avogadro2*.dmg
@@ -292,6 +307,7 @@ jobs:
         NOTARIZE_USERNAME: ${{ secrets.AC_USERNAME }}
         NOTARIZE_PASSWORD: ${{ secrets.AC_PASSWORD }}
         CODESIGN_IDENTITY: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_BUNDLE_IDENTIFIER: cc.avogadro
       continue-on-error: true
 
     - name: Upload
