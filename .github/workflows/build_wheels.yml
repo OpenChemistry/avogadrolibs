@@ -7,11 +7,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Don't build python 2.7, pypy, or 32-bit wheels or Mac arm64 on Py3.8
-  CIBW_SKIP: "cp36-* cp37-* cp38-macosx_arm64 pp* *-musllinux_* *-manylinux_i686 *-win32"
-
-  CIBW_MANYLINUX_X86_64_IMAGE: "manylinux_2_28"
-  CIBW_MANYLINUX_AARCH64_IMAGE: "manylinux_2_28"
+  # builds to skip (e.g. skip 32-bit windows)
+  CIBW_SKIP: "cp38-macosx_arm64 *-manylinux_i686 *-win32"
 
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
@@ -30,7 +27,7 @@ env:
   CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
 
   # We can't currently test Mac arm64 builds on x64
-  CIBW_TEST_SKIP: "*_arm64 *_universal2:arm64"
+  CIBW_TEST_SKIP: "*_arm64"
 
 
 # Use bash by default for the run command
