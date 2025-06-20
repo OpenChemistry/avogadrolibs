@@ -102,7 +102,7 @@ public:
   /**
    * @brief Calculate the electrostatic potential at multiple points
    * @param mol The molecule to calculate the potential for.
-   * @param array The points in space to calculate the potential at.
+   * @param points The points in space to calculate the potential at.
    * @return The electrostatic potential at the points in an array.
    *
    * This method is used for batch calculation and defaults to simply

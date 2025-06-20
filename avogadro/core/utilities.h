@@ -74,11 +74,11 @@ inline bool startsWith(const std::string& input, const std::string& search)
  * @param ending String that will be searched for.
  * @return True if the string ends with ending, false otherwise.
  */
-inline bool endsWith(std::string const& value, std::string const& ending)
+inline bool endsWith(std::string const& input, std::string const& ending)
 {
-  if (ending.size() > value.size())
+  if (ending.size() > input.size())
     return false;
-  return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+  return std::equal(ending.rbegin(), ending.rend(), input.rbegin());
 }
 
 /**

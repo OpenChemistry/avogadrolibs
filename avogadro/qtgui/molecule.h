@@ -172,8 +172,8 @@ public:
 
   /**
    * @brief Add a bond between the specified atoms.
-   * @param a The index of the first atom in the bond.
-   * @param b The index of the second atom in the bond.
+   * @param atomId1 The index of the first atom in the bond.
+   * @param atomId2 The index of the second atom in the bond.
    * @param bondOrder The order of the bond.
    * @param uniqueId The unique ID to use for the bond.
    * @return The bond created. This can be invalid if the unique ID was already
