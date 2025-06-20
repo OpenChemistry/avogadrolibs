@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-16 14:00+0000\n"
+"PO-Revision-Date: 2025-06-20 11:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ar/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1464,10 +1464,8 @@ msgid "Modify Molecule"
 msgstr ""
 
 #: qtgui/scenepluginmodel.cpp:101
-#, fuzzy
-#| msgid "&UV Settings"
 msgid "Settings"
-msgstr "&إعدادات الأشعة فوق البنفسجية"
+msgstr ""
 
 #: qtgui/scriptloader.cpp:33
 #, qt-format
@@ -2014,9 +2012,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
 msgid "Bond Selected Atoms"
-msgstr "ا&ختر"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:544
@@ -2138,9 +2135,8 @@ msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:229
 #: qtplugins/noncovalent/noncovalent.cpp:369
-#, fuzzy
 msgid "Maximum distance:"
-msgstr "المسافة"
+msgstr ""
 
 #: qtplugins/closecontacts/closecontacts.cpp:230
 #: qtplugins/crystal/crystalscene.cpp:174
@@ -2942,14 +2938,12 @@ msgid "Configure…"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:108
-#, fuzzy
 msgid "Freeze Selected Atoms"
-msgstr "ا&ختر"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
 msgid "Unfreeze Selected Atoms"
-msgstr "ا&ختر"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:152
 msgid "&Calculate"
@@ -3283,9 +3277,8 @@ msgid "Color:"
 msgstr ""
 
 #: qtplugins/label/label.cpp:170
-#, fuzzy
 msgid "Distance from center:"
-msgstr "المسافة"
+msgstr ""
 
 #: qtplugins/label/label.cpp:181 qtplugins/label/label.cpp:212
 msgid "Index"
@@ -3629,9 +3622,8 @@ msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
 #: qtplugins/propertytables/propertyview.cpp:62
-#, fuzzy
 msgid "Molecule Properties"
-msgstr "خصائص الزاوية..."
+msgstr ""
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
 #: qtplugins/propertytables/propertyview.cpp:248
@@ -4698,6 +4690,7 @@ msgid "Change selections"
 msgstr ""
 
 #: qtplugins/select/select.cpp:127
+#, fuzzy
 msgid "&Select"
 msgstr "ا&ختر"
 
@@ -4723,9 +4716,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
 msgid "Select Atom"
-msgstr "ا&ختر"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4745,7 +4737,7 @@ msgstr "تلوين حسب لون الرواسب"
 #: qtplugins/select/select.h:30:1932
 #, fuzzy
 msgid "Select"
-msgstr "ا&ختر"
+msgstr "اختر"
 
 #: qtplugins/selectiontool/selectiontool.cpp:50
 msgctxt "control-key 5"

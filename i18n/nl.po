@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-16 14:01+0000\n"
+"PO-Revision-Date: 2025-06-20 11:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/nl/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2035,10 +2035,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Herstel geselecteerde atomen"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:544
@@ -2976,9 +2974,8 @@ msgid "Forces"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:96
-#, fuzzy
 msgid "Configure…"
-msgstr "Stel Krachtveld op"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:108
 #, fuzzy
@@ -2987,10 +2984,8 @@ msgid "Freeze Selected Atoms"
 msgstr "Importeer geseelecteerde atomen"
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Unfreeze Selected Atoms"
-msgstr "Herstel geselecteerde atomen"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:152
 #, fuzzy
@@ -5221,7 +5216,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
 #, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Moleculaire orbitaal"
+msgstr "Geef een moleculaire orbitaal."
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the electron density."
@@ -7812,10 +7807,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Width:"
 msgid "Peak Width:"
-msgstr "Breedte:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)

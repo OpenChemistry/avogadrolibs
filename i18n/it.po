@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-16 14:01+0000\n"
+"PO-Revision-Date: 2025-06-20 11:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2039,10 +2039,8 @@ msgid "Configure Bonding…"
 msgstr "Configura unione…"
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Fix Selected Atoms"
 msgid "Bond Selected Atoms"
-msgstr "Fissa gli atomi selezionati"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:544
@@ -2193,10 +2191,8 @@ msgid "Repulsive"
 msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:66
-#, fuzzy
-#| msgid "ColorOpacityMap"
 msgid "Edit Color Opacity Map…"
-msgstr "ColorOpacityMap"
+msgstr ""
 
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
@@ -2737,7 +2733,7 @@ msgstr "Scala Cella &Volume…"
 #: qtplugins/crystal/crystal.cpp:74
 #, fuzzy
 msgid "Build &Supercell…"
-msgstr "&Super Cella"
+msgstr "Costruisci &Super Cella…"
 
 #: qtplugins/crystal/crystal.cpp:79
 msgid "Reduce Cell (&Niggli)"
@@ -4050,10 +4046,8 @@ msgid "Removing Hydrogens (Open Babel)"
 msgstr "Rimuovi idrogeni (Open Babel)"
 
 #: qtplugins/openbabel/openbabel.cpp:928
-#, fuzzy
-#| msgid "Error generating Open Babel input."
 msgid "Error generating Open Babel data."
-msgstr "Errore nel generare l'input Open Babel."
+msgstr ""
 
 #: qtplugins/openbabel/openbabel.cpp:951
 msgid "Reading obabel output…"
@@ -7889,17 +7883,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Width:"
 msgid "Peak Width:"
-msgstr "Larghezza:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Threshold:"
 msgid "Peak Threshold:"
-msgstr "Soglia:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)

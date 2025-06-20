@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-16 14:00+0000\n"
+"PO-Revision-Date: 2025-06-20 11:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/he/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1999,10 +1999,8 @@ msgid "Configure Bonding…"
 msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:32
-#, fuzzy
-#| msgid "Select Atom Labels Color"
 msgid "Bond Selected Atoms"
-msgstr "בחר צבע לתוויות אטומים"
+msgstr ""
 
 #: qtplugins/bonding/bonding.cpp:62
 #: qtplugins/propertytables/propertymodel.cpp:544
@@ -2922,16 +2920,12 @@ msgid "Configure…"
 msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:108
-#, fuzzy
-#| msgid "Select Atom Labels Color"
 msgid "Freeze Selected Atoms"
-msgstr "בחר צבע לתוויות אטומים"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:115
-#, fuzzy
-#| msgid "Select Atom Labels Color"
 msgid "Unfreeze Selected Atoms"
-msgstr "בחר צבע לתוויות אטומים"
+msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:152
 msgid "&Calculate"
@@ -4647,10 +4641,8 @@ msgid "&Select"
 msgstr ""
 
 #: qtplugins/select/select.cpp:180
-#, fuzzy
-#| msgid "Select Atom Labels Color"
 msgid "Select Element"
-msgstr "בחר צבע לתוויות אטומים"
+msgstr ""
 
 #: qtplugins/select/select.cpp:269
 #, fuzzy
@@ -4671,10 +4663,8 @@ msgid "Atoms to Select:"
 msgstr ""
 
 #: qtplugins/select/select.cpp:446
-#, fuzzy
-#| msgid "Select Atom Labels Color"
 msgid "Select Atom"
-msgstr "בחר צבע לתוויות אטומים"
+msgstr ""
 
 #: qtplugins/select/select.cpp:485
 msgid "Select Atoms by Residue"
@@ -4887,26 +4877,20 @@ msgid "Density of States"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:496
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Background Color"
-msgstr "בחר צבע תוויות קשרים"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:509
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Foreground Color"
-msgstr "בחר צבע תוויות קשרים"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:522
 msgid "Select Calculated Spectra Color"
 msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:534
-#, fuzzy
-#| msgid "Select Bond Labels Color"
 msgid "Select Imported Spectra Color"
-msgstr "בחר צבע תוויות קשרים"
+msgstr ""
 
 #: qtplugins/spectra/spectradialog.cpp:580
 msgid "Wavelength (nm)"
@@ -5053,10 +5037,8 @@ msgid "From File"
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:84
-#, fuzzy
-#| msgid "Surfaces"
 msgid "Create Surfaces…"
-msgstr "משטחים"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:112
 msgid "Render the van der Waals surface."

@@ -13,13 +13,15 @@
 # Saúl Palacios <palacios22c@gmail.com>, 2025.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
 # Adrian Lopez <adrlop1012@gmail.com>, 2025.
+# Armando Castro <darkarr2d2@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-30 14:08+0000\n"
-"Last-Translator: Adrian Lopez <adrlop1012@gmail.com>\n"
+"PO-Revision-Date: 2025-06-20 11:01+0000\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
 "Language: es\n"
@@ -27,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1298,11 +1300,11 @@ msgstr "Sin título"
 
 #: qtgui/moleculemodel.cpp:109
 msgid "Edit molecule"
-msgstr ""
+msgstr "Editar molécula"
 
 #: qtgui/moleculemodel.cpp:116
 msgid "Not saved"
-msgstr ""
+msgstr "No guardado"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
@@ -2350,7 +2352,7 @@ msgstr ""
 
 #: qtplugins/configurepython/configurepython.h:26
 msgid "ConfigurePython"
-msgstr "ConfigurePython"
+msgstr "ConfigurarPython"
 
 #: qtplugins/configurepython/configurepython.h:29
 msgid "Configure Python environments."
@@ -3199,19 +3201,19 @@ msgstr "Ninguno"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:422
 msgid "D1"
-msgstr ""
+msgstr "D1"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:425
 msgid "D2"
-msgstr ""
+msgstr "D2"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:428
 msgid "D3"
-msgstr ""
+msgstr "D3"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:431
 msgid "D4"
-msgstr ""
+msgstr "D4"
 
 #: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
@@ -3565,9 +3567,8 @@ msgid ""
 msgstr ""
 "Herramienta de manipulación (%1)\n"
 "\n"
-"Botón izquierdo ratón: \tClic y arrastrar\n"
-"para mover átomos\n"
-"Botón derecho ratón: \tClic y arrastrar para rotar átomos.\n"
+"Botón izquierdo del ratón: \tClic y arrastrar para mover átomos\n"
+"Botón derecho del ratón: \tClic y arrastrar para rotar átomos.\n"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -3622,7 +3623,7 @@ msgstr "Herramienta de medición"
 
 #: qtplugins/meshes/meshes.h:33
 msgid "Render molecular surfaces."
-msgstr ""
+msgstr "Renderizar superficies moleculares."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -3740,7 +3741,7 @@ msgstr "Ver las propiedades generales de una molécula."
 #: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:263
 #: qtplugins/symmetry/symmetry.cpp:82 qtplugins/vibrations/vibrations.cpp:42
 msgid "&Analyze"
-msgstr ""
+msgstr "&Analizar"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
@@ -4887,13 +4888,14 @@ msgid ""
 msgstr ""
 "Herramienta de selección (%1)\n"
 "\n"
-"Botón izquierdo ratón: Haga clic para seleccionar átomos individuales, "
+"Botón izquierdo del ratón: Haga clic para seleccionar átomos individuales, "
 "residuos o fragmentos\n"
 "\tArrastrar para seleccionar un rango de átomos\n"
-"Botón derecho ratón: Haga clic fuera de la molécula para borrar la "
+"Botón derecho del ratón: Haga clic fuera de la molécula para borrar la "
 "selección\n"
-"Utilice Ctrl para alternar la selección y Mayús para añadir a la selección.\n"
-"Doble click:  Seleccione un fragmento completo."
+"Utilice \"Ctrl\" para alternar la selección y \"Shift\" para añadir a la "
+"selección.\n"
+"Doble clic:  Seleccione un fragmento completo."
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
 msgid "Paint Atoms"
@@ -5713,7 +5715,7 @@ msgstr "Archivo PDB:"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6374,7 +6376,7 @@ msgstr "Dentro:"
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "CONV THRESH"
-msgstr ""
+msgstr "UMBR CONV"
 
 #. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -7940,7 +7942,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 msgid "&Import…"
-msgstr ""
+msgstr "&Importar"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -7951,7 +7953,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
 msgid "Set Color…"
-msgstr ""
+msgstr "Establecer color…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -7961,7 +7963,7 @@ msgstr "Spectra importados:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:317
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
 msgid "&Export…"
-msgstr ""
+msgstr "&Exportar"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:343
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8054,7 +8056,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:588
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
 msgid "&Load data…"
-msgstr ""
+msgstr "&Cargar datos…"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
