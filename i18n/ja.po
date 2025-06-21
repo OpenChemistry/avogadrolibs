@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-20 11:02+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"PO-Revision-Date: 2025-06-21 17:01+0000\n"
+"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -3585,12 +3585,10 @@ msgid "Number of Chains"
 msgstr "チェインの数"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:283
-#, fuzzy
 msgid "Net Charge"
 msgstr "正味の電荷"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:285
-#, fuzzy
 msgid "Net Spin Multiplicity"
 msgstr "正味のスピン多重度"
 
