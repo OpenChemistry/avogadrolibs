@@ -228,16 +228,20 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
     m_molecule->disconnect(this);
   }
 
-  if (mol->basisSet()) {
-    m_basis = mol->basisSet();
-  } else if (mol->cubes().size() != 0) {
-    m_cubes = mol->cubes();
-  }
-
   m_cube = nullptr;
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (mol->basisSet()) {
+    m_basis = mol->basisSet();
+  } else if (mol->cubes().size() != 0) {
+    m_cubes = mol->cubes();
+    // calculate the mesh for the first cube
+    if (m_cubes.size() > 0) {
+      calculateCube(0, m_isoValue);
+    }
+  }
 
   if (m_molecule != nullptr) {
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
@@ -290,8 +294,18 @@ void Surfaces::surfacesActivated()
   if (m_cubes.size() > 0) {
     QStringList cubeNames;
     for (auto* cube : m_cubes) {
-      if (cube->cubeType() == Core::Cube::Type::FromFile)
-        cubeNames << cube->name().c_str();
+      if (cube->cubeType() == Core::Cube::Type::FromFile) {
+        // check if there's a name
+        if (cube->name().empty()) {
+          // use a numbered name
+          int number = 1;
+          QString name;
+          name = tr("Cube %1", "3D Volume Data Set").arg(number);
+          cubeNames << name;
+        } else {
+          cubeNames << cube->name().c_str();
+        }
+      }
     }
     m_dialog->setupCubes(cubeNames);
   }
