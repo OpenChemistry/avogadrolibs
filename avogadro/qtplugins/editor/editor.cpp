@@ -9,6 +9,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
@@ -53,6 +54,7 @@ using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 
+using Avogadro::Core::contrastColor;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -231,28 +233,6 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
-inline Vector3ub contrastingColor(const Vector3ub& rgb)
-{
-  // If we're far 'enough' (+/-32) away from 128, just invert the component.
-  // If we're close to 128, inverting the color will end up too close to the
-  // input -- adjust the component before inverting.
-  const unsigned char minVal = 32;
-  const unsigned char maxVal = 223;
-  Vector3ub result;
-  for (size_t i = 0; i < 3; ++i) {
-    unsigned char input = rgb[i];
-    if (input > 160 || input < 96)
-      result[i] = static_cast<unsigned char>(255 - input);
-    else
-      result[i] = static_cast<unsigned char>(255 - (input / 4));
-
-    // Clamp to 32-->223 to prevent pure black/white
-    result[i] = std::min(maxVal, std::max(minVal, result[i]));
-  }
-
-  return result;
-}
-
 void Editor::draw(Rendering::GroupNode& node)
 {
   if (fabs(m_bondDistance) < 0.3)
@@ -272,7 +252,7 @@ void Editor::draw(Rendering::GroupNode& node)
   Vector3ub color(64, 255, 220);
   if (m_renderer) {
     auto backgroundColor = m_renderer->scene().backgroundColor();
-    color = contrastingColor(
+    color = contrastColor(
       Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
   }
 

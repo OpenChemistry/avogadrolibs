@@ -12,6 +12,7 @@
 // for partial charges
 #include <avogadro/calc/chargemanager.h>
 
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
@@ -33,6 +34,7 @@ namespace Avogadro::QtPlugins {
 using Avogadro::Rendering::TextLabel3D;
 using Core::Array;
 using Core::Atom;
+using Core::contrastColor;
 using Core::Elements;
 using Core::Molecule;
 using QtGui::PluginLayerManager;
@@ -50,6 +52,7 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
+  tprop.setBold(true);
   tprop.setColorRgb(color.data());
 
   auto* label = new TextLabel3D;
@@ -405,11 +408,12 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
-      Vector3ub color = interface->color;
+      Vector3ub color = atom.color();
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                      interface->radiusScalar;
 
-      TextLabel3D* atomLabel = createLabel(text, pos, radius, color);
+      TextLabel3D* atomLabel =
+        createLabel(text, pos, radius, contrastColor(color));
       geometry->addDrawable(atomLabel);
     }
   }
