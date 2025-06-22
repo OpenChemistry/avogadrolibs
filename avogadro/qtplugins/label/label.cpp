@@ -52,7 +52,6 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
   tprop.setAlign(Rendering::TextProperties::HCenter,
                  Rendering::TextProperties::VCenter);
   tprop.setFontFamily(Rendering::TextProperties::SansSerif);
-  tprop.setBold(true);
   tprop.setColorRgb(color.data());
 
   auto* label = new TextLabel3D;
@@ -534,7 +533,7 @@ void Label::setRadiusScalar(double radius)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusScalar", interface->radiusScalar);
+  settings.setValue("label/radiusscalar", interface->radiusScalar);
 }
 
 QWidget* Label::setupWidget()
