@@ -12,6 +12,7 @@
 // for partial charges
 #include <avogadro/calc/chargemanager.h>
 
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
@@ -33,6 +34,7 @@ namespace Avogadro::QtPlugins {
 using Avogadro::Rendering::TextLabel3D;
 using Core::Array;
 using Core::Atom;
+using Core::contrastColor;
 using Core::Elements;
 using Core::Molecule;
 using QtGui::PluginLayerManager;
@@ -405,11 +407,12 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
-      Vector3ub color = interface->color;
+      Vector3ub color = atom.color();
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                      interface->radiusScalar;
 
-      TextLabel3D* atomLabel = createLabel(text, pos, radius, color);
+      TextLabel3D* atomLabel =
+        createLabel(text, pos, radius, contrastColor(color));
       geometry->addDrawable(atomLabel);
     }
   }
@@ -492,6 +495,9 @@ void Label::atomLabelType(int index)
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/atomoptions", interface->atomOptions);
 }
 
 void Label::bondLabelType(int index)
@@ -502,6 +508,9 @@ void Label::bondLabelType(int index)
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/bondoptions", interface->bondOptions);
 }
 
 void Label::residueLabelType(int index)
@@ -512,6 +521,9 @@ void Label::residueLabelType(int index)
                                      ->itemData(index)
                                      .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/residueoptions", interface->residueOptions);
 }
 
 void Label::setRadiusScalar(double radius)
@@ -521,7 +533,7 @@ void Label::setRadiusScalar(double radius)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusScalar", interface->radiusScalar);
+  settings.setValue("label/radiusscalar", interface->radiusScalar);
 }
 
 QWidget* Label::setupWidget()
