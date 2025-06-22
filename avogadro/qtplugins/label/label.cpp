@@ -492,6 +492,9 @@ void Label::atomLabelType(int index)
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/atomoptions", interface->atomOptions);
 }
 
 void Label::bondLabelType(int index)
@@ -502,6 +505,9 @@ void Label::bondLabelType(int index)
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/bondoptions", interface->bondOptions);
 }
 
 void Label::residueLabelType(int index)
@@ -512,6 +518,9 @@ void Label::residueLabelType(int index)
                                      ->itemData(index)
                                      .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/residueoptions", interface->residueOptions);
 }
 
 void Label::setRadiusScalar(double radius)
