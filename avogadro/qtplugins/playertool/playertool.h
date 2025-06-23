@@ -58,6 +58,8 @@ protected slots:
   void recordMovie();
   void sliderPositionChanged(int k);
   void spinnerPositionChanged(int k);
+  void firstFramePositionChanged(int k);
+  void lastFramePositionChanged(int k);
   void setSliderLimit();
 
 private:

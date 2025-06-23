@@ -33,6 +33,7 @@
 
 #include <QScreen>
 
+#include <algorithm>
 #include <cmath>
 
 namespace Avogadro::QtPlugins {
@@ -111,26 +112,37 @@ QWidget* PlayerTool::toolWidget() const
 
     auto* frameLayout = new QHBoxLayout;
 
-    // QHBoxLayout* leftColumn = new QHBoxLayout;
-    // QLabel* label2 = new QLabel(tr("Timestep:"));
-    // leftColumn->addWidget(label2);
-    // frameLayout->addLayout(leftColumn);
+    // first frame index
+    auto* label3 = new QLabel(tr("Start:", "start or first frame index"));
+    m_firstFrameIdx = new QSpinBox;
+    m_firstFrameIdx->setValue(1);
+    m_firstFrameIdx->setMinimum(1);
+    m_firstFrameIdx->setMaximum(m_molecule->coordinate3dCount());
+    connect(m_firstFrameIdx, SIGNAL(valueChanged(int)),
+            SLOT(firstFramePositionChanged(int)));
+    frameLayout->addWidget(label3);
+    frameLayout->addWidget(m_firstFrameIdx);
 
-    auto* rightColumn = new QHBoxLayout;
-    rightColumn->addStretch(1);
-    auto* label3 = new QLabel(tr("Frame:"));
-    rightColumn->addWidget(label3);
+    auto* label4 = new QLabel(tr("Frame:"));
     m_frameIdx = new QSpinBox;
     m_frameIdx->setValue(1);
     m_frameIdx->setMinimum(1);
-    if (m_molecule->coordinate3dCount() > 1) {
-      m_frameIdx->setMaximum(m_molecule->coordinate3dCount());
-      m_frameIdx->setSuffix(tr(" of %0").arg(m_molecule->coordinate3dCount()));
-    }
+    m_frameIdx->setMaximum(m_molecule->coordinate3dCount());
     connect(m_frameIdx, SIGNAL(valueChanged(int)),
             SLOT(spinnerPositionChanged(int)));
-    rightColumn->addWidget(m_frameIdx);
-    frameLayout->addLayout(rightColumn);
+    frameLayout->addWidget(label4);
+    frameLayout->addWidget(m_frameIdx);
+
+    // last frame index
+    auto* label5 = new QLabel(tr("End:", "end or last frame index"));
+    m_lastFrameIdx = new QSpinBox;
+    m_lastFrameIdx->setValue(m_molecule->coordinate3dCount());
+    m_lastFrameIdx->setMinimum(1);
+    m_lastFrameIdx->setMaximum(m_molecule->coordinate3dCount());
+    connect(m_lastFrameIdx, SIGNAL(valueChanged(int)),
+            SLOT(lastFramePositionChanged(int)));
+    frameLayout->addWidget(label5);
+    frameLayout->addWidget(m_lastFrameIdx);
 
     layout->addLayout(frameLayout);
 
@@ -209,13 +221,20 @@ void PlayerTool::stop()
 
 void PlayerTool::animate(int advance)
 {
+  // check the start and end boxes
+  int firstFrame = m_firstFrameIdx->value() - 1;
+  int lastFrame = m_lastFrameIdx->value() - 1;
+
   if (m_molecule) {
     if (m_currentFrame < m_molecule->coordinate3dCount() - advance &&
-        m_currentFrame + advance >= 0) {
+        m_currentFrame + advance >= firstFrame &&
+        m_currentFrame + advance <= lastFrame) {
       m_currentFrame += advance;
       m_molecule->setCoordinate3d(m_currentFrame);
     } else {
-      m_currentFrame = advance > 0 ? 0 : m_molecule->coordinate3dCount() - 1;
+      int end = std::min(static_cast<int>(m_molecule->coordinate3dCount() - 1),
+                         lastFrame);
+      m_currentFrame = advance > 0 ? firstFrame : end;
       m_molecule->setCoordinate3d(m_currentFrame);
     }
     if (m_dynamicBonding->isChecked()) {
@@ -408,6 +427,32 @@ void PlayerTool::sliderPositionChanged(int k)
 void PlayerTool::spinnerPositionChanged(int k)
 {
   animate(k - m_currentFrame - 1);
+}
+
+void PlayerTool::firstFramePositionChanged(int k)
+{
+  if (k < 1 || k > m_molecule->coordinate3dCount()) {
+    m_firstFrameIdx->setValue(1);
+    return;
+  }
+  m_frameIdx->setMinimum(k);
+  if (m_frameIdx->value() < k)
+    m_frameIdx->setValue(k);
+
+  m_lastFrameIdx->setMinimum(k);
+  if (m_lastFrameIdx->value() < k)
+    m_lastFrameIdx->setValue(k);
+}
+
+void PlayerTool::lastFramePositionChanged(int k)
+{
+  if (k < 1 || k > m_molecule->coordinate3dCount()) {
+    m_lastFrameIdx->setValue(m_molecule->coordinate3dCount());
+    return;
+  }
+  m_frameIdx->setMaximum(k);
+  if (m_frameIdx->value() > k)
+    m_frameIdx->setValue(k);
 }
 
 void PlayerTool::setSliderLimit()
