@@ -55,19 +55,20 @@ mv ${PROJECT}.new ${PROJECT}.pot
 
 mv ${PROJECT}.pot ${I18NDIR}
 
-#cd ${I18NDIR}
-#echo "Merging translations"
-#catalogs=`find . -name '*.po'`
-#for cat in $catalogs; do
-#  # remove any \r escapes
-#  sed -e 's/\\r//' <$cat >$cat.new
-#  mv $cat.new $cat
-#  echo $cat
-#  msgmerge -o $cat.new $cat ${PROJECT}.pot
-#  mv $cat.new $cat
-#  msgmerge -U $cat ${PROJECT}.pot
-#done
-#echo "Done merging translations"
+cd ${I18NDIR}
+echo "Merging translations"
+catalogs=`find . -name '*.po'`
+for cat in $catalogs; do
+  # remove any \r escapes
+  sed -e 's/\\r//' <$cat >$cat.new
+  mv $cat.new $cat
+  echo $cat
+  # do not use fuzzy-matching
+  msgmerge -N -o $cat.new $cat ${PROJECT}.pot
+  mv $cat.new $cat
+  msgmerge -N -U $cat ${PROJECT}.pot
+done
+echo "Done merging translations"
 
 
 echo "Cleaning up"
