@@ -37,7 +37,7 @@ jobs:
           }
         - {
             name: "Windows Latest MSVC", artifact: "Win64.exe",
-            os: windows-2019,
+            os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
             cmake_flags: "-DBUILD_MOLEQUEUE=OFF",
@@ -72,11 +72,11 @@ jobs:
         else # not self-hosted runner
           brew install ninja eigen glew
         fi
-    
+
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja
-    
+
     - name: Install Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
