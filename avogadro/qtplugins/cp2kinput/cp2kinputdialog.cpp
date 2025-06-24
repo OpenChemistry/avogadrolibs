@@ -900,7 +900,6 @@ void Cp2kInputDialog::updatePreviewText()
     file += "  &END MM\n";
   }
 
-  file += " $END\n";
   file += "&END FORCE_EVAL\n";
 
   ui.previewText->setText(file);
