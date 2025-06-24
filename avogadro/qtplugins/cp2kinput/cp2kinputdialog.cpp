@@ -444,7 +444,7 @@ void Cp2kInputDialog::updatePreviewText()
   std::map<QString, int> valencee;
 
   valencee["H"] = 1;
-  valencee["He"] = 2;
+  valencee["He"] = 2; // Z=2
   valencee["Li"] = 3;
   valencee["Be"] = 4;
   valencee["B"] = 3;
@@ -452,7 +452,7 @@ void Cp2kInputDialog::updatePreviewText()
   valencee["N"] = 5;
   valencee["O"] = 6;
   valencee["F"] = 7;
-  valencee["Ne"] = 8;
+  valencee["Ne"] = 8; // Z=10
   valencee["Na"] = 9;
   valencee["Mg"] = 10;
   valencee["Al"] = 3;
@@ -460,7 +460,7 @@ void Cp2kInputDialog::updatePreviewText()
   valencee["P"] = 5;
   valencee["S"] = 6;
   valencee["Cl"] = 7;
-  valencee["Ar"] = 8;
+  valencee["Ar"] = 8; // Z=18
   valencee["K"] = 9;
   valencee["Ca"] = 10;
   valencee["Sc"] = 11;
@@ -478,24 +478,34 @@ void Cp2kInputDialog::updatePreviewText()
   valencee["As"] = 5;
   valencee["Se"] = 6;
   valencee["Br"] = 7;
-  valencee["Kr"] = 8;
-  valencee["As"] = 5;
+  valencee["Kr"] = 8; // Z=36
+  valencee["Rb"] = 9;
   valencee["Sr"] = 10;
   valencee["Y"] = 11;
   valencee["Zr"] = 12;
+  valencee["Nb"] = 13;
   valencee["Mo"] = 14;
+  valencee["Tc"] = 15;
   valencee["Ru"] = 16;
   valencee["Rh"] = 17;
   valencee["Pd"] = 18;
   valencee["Ag"] = 11;
+  valencee["Cd"] = 12;
   valencee["In"] = 13;
+  valencee["Sn"] = 4;
   valencee["Sb"] = 5;
   valencee["Te"] = 6;
   valencee["I"] = 7;
+  valencee["Xe"] = 8; // Z=54
+  valencee["Cs"] = 9;
   valencee["Ba"] = 10;
   valencee["W"] = 14;
+  valencee["Pt"] = 10;
   valencee["Au"] = 11;
+  valencee["Hg"] = 12;
+  valencee["Pb"] = 14;
   valencee["Bi"] = 15;
+  valencee["Rn"] = 8; // Z=86
 
   // If the dialog is not shown, delay the update in case we need to prompt the
   // user to overwrite changes. Set the m_updatePending flag to true so we'll
