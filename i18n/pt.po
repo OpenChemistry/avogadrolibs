@@ -9,14 +9,14 @@
 # Andre Azevedo <andreazevedo2015@hotmail.com>, 2021.
 # Gustavo Sousa Jr <grsousajunior@gmail.com>, 2022.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
-# Alexandre R Soares <ntegti@zipmail.com.br>, 2024.
+# Alexandre R Soares <ntegti@zipmail.com.br>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-04-07 09:03+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2025-06-25 17:01+0000\n"
+"Last-Translator: Alexandre R Soares <ntegti@zipmail.com.br>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/pt/>\n"
 "Language: pt\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1287,11 +1287,11 @@ msgstr "Sem título"
 
 #: qtgui/moleculemodel.cpp:109
 msgid "Edit molecule"
-msgstr ""
+msgstr "Editar molécula"
 
 #: qtgui/moleculemodel.cpp:116
 msgid "Not saved"
-msgstr ""
+msgstr "Não salvo"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
