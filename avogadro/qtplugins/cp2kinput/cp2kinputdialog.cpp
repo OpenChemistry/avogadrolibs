@@ -37,16 +37,6 @@ using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro::QtPlugins {
 
-enum CalculateOption
-{
-  CalculateEnergy = 0,
-  CalculateEnergyAndForces,
-  CalculateMolecularDynamics,
-  CalculateGeometryOptimization,
-
-  CalculateCount
-};
-
 enum FunctionalOption
 {
   FunctionalBLYP = 0,
@@ -56,17 +46,6 @@ enum FunctionalOption
   FunctionalPBE,
 
   FunctionalCount
-};
-
-enum BasisOption
-{
-  BasisSZVGTH = 0,
-  BasisDZVGTH,
-  BasisDZVPGTH,
-  BasisTZVPGTH,
-  BasisTZV2PGTH,
-
-  BasisCount
 };
 
 enum MethodOption
