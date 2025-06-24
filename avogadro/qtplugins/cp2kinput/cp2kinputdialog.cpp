@@ -769,9 +769,13 @@ void Cp2kInputDialog::updatePreviewText()
         file += QString("        ELEMENT %1\n")
                   .arg(Core::Elements::symbol(atom.atomicNumber()));
         file += QString("        BASIS_SET %1\n").arg(gbasis);
-        file += QString("        POTENTIAL GTH-%1-q%2\n")
-                  .arg(gfunc)
-                  .arg(valencee[symbol]);
+        const auto e = valencee.find(symbol);
+        const auto suffix =
+          e != valencee.cend() ? QString("-q%1").arg(e->second) : "";
+        file += QString(
+          "        ! XXX you may have to manually modify/append '-qn' suffix, "
+          "where n is the number of valence electrons\n");
+        file += QString("        POTENTIAL GTH-%1%2\n").arg(gfunc).arg(suffix);
         file += QString("    &END KIND\n");
       }
     }
@@ -823,6 +827,8 @@ void Cp2kInputDialog::updatePreviewText()
 
   if (gmethod == "QS") {
     file += "  &DFT\n";
+    file += "    ! XXX: you may have to manually modify the file names, "
+            "depending on the system and calculation level\n";
     file += "    BASIS_SET_FILE_NAME  BASIS_SET\n";
     file += "    POTENTIAL_FILE_NAME  GTH_POTENTIALS\n";
     if (ui.lsdcheckBox->isChecked())
