@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-20 11:02+0000\n"
+"PO-Revision-Date: 2025-06-23 19:17+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sk/>\n"
@@ -1612,7 +1612,7 @@ msgstr ""
 #: qtplugins/apbs/apbs.cpp:116
 #, fuzzy
 msgid "IO Error"
-msgstr "Chyba"
+msgstr "IO Chyba"
 
 #: qtplugins/apbs/apbs.cpp:117
 #, qt-format
@@ -2016,7 +2016,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:544
 #, fuzzy
 msgid "Bond"
-msgstr "Pridať Väzby"
+msgstr "Väzby"
 
 #: qtplugins/bonding/bonding.cpp:73
 msgid "Remove bonds from all or selected atoms."
@@ -2887,7 +2887,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
 msgid "Network Download Failed"
-msgstr "Stiahnutie zo siete zlyhalo"
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100
@@ -3358,7 +3358,7 @@ msgstr ""
 #: qtplugins/label/label.cpp:248
 #, fuzzy
 msgid "Residue Label:"
-msgstr "Číslo zvyšku"
+msgstr "Číslo zvyšku:"
 
 #: qtplugins/label/label.h:29
 msgid "Display labels on ball and stick style."

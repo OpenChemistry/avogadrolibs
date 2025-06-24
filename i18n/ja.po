@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-21 17:01+0000\n"
+"PO-Revision-Date: 2025-06-23 19:17+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -42,7 +42,6 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:171 qtgui/interfacescript.cpp:210
 #: qtgui/interfacescript.cpp:343
-#, fuzzy
 msgid "Non-string warning returned."
 msgstr "文字列でない警告が返却されました。"
 
@@ -84,7 +83,7 @@ msgstr ""
 
 #: molequeue/inputgenerator.cpp:244 qtgui/interfacescript.cpp:417
 msgid "'files' member not an array."
-msgstr "'files' メンバーは配列ではありません."
+msgstr "'files' メンバーが配列ではありません."
 
 #: molequeue/inputgenerator.cpp:248 qtgui/interfacescript.cpp:421
 msgid "'files' member missing."
@@ -124,7 +123,7 @@ msgstr ""
 #, qt-format
 msgid ""
 "Error saving molecule representation to string: Unrecognized file format: %1"
-msgstr ""
+msgstr "分子表現を文字列に保存する際にエラー: 認識できないファイルフォーマット: %1"
 
 #: molequeue/inputgenerator.cpp:354
 #, qt-format
@@ -203,7 +202,11 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-msgstr[1] ""
+"以下のファイルが変更されました:\n"
+"\n"
+"%1\n"
+"\n"
+"変更を上書きして新しい構造やジョブオプションを反映しますか？"
 
 #: molequeue/inputgeneratorwidget.cpp:171
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
@@ -256,7 +259,7 @@ msgstr "ジョブは正常に完了しませんでした。"
 
 #: molequeue/inputgeneratorwidget.cpp:360 qtgui/interfacewidget.cpp:55
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "スクリプトからの警告:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:377
 msgid "Hide &Warnings"
@@ -346,7 +349,7 @@ msgstr "%1: ファイルの書き込みができません。"
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:306
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
-msgstr ""
+msgstr "未知のエラーによりファイルを書き込みできません。"
 
 #: molequeue/inputgeneratorwidget.cpp:546
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -357,6 +360,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"インプットファイルを書き込みできません:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:555
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -371,6 +377,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"インプットファイルを書き込みできません:\n"
+"\n"
+"%1\n"
+"\n"
+"警告:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:566
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -397,22 +410,20 @@ msgid "Write input files"
 msgstr "入力ファイルの書き込み"
 
 #: molequeue/inputgeneratorwidget.cpp:617
-#, fuzzy
 msgid "Configure Job"
 msgstr "ジョブの設定"
 
 #: molequeue/molequeuedialog.cpp:57
 msgid "Submitting job to MoleQueue…"
-msgstr ""
+msgstr "MoleQueueにジョブを投入中…"
 
 #: molequeue/molequeuedialog.cpp:66
-#, fuzzy
 msgid "Job Submission Timeout"
 msgstr "ジョブの投入がタイムアウト"
 
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
-msgstr ""
+msgstr "MoleQueueからの応答を待っている間にAvogadroはタイムアウトしました。"
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
@@ -422,7 +433,7 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "待機をやめる"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -981,7 +992,7 @@ msgstr "実行ファイルを選択:"
 
 #: qtgui/fileformatdialog.cpp:52
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "選択したファイルに対して適切なリーダーを見つけられません。"
 
 #: qtgui/fileformatdialog.cpp:100
 msgid ""
@@ -992,7 +1003,7 @@ msgstr ""
 
 #: qtgui/fileformatdialog.cpp:114
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "選択したファイルフォーマットに対して適切なライターを見つけられません。"
 
 #: qtgui/fileformatdialog.cpp:163
 msgctxt "File handlers"
@@ -1007,7 +1018,7 @@ msgstr ""
 #: qtgui/fileformatdialog.cpp:168
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "リーダー"
 
 #: qtgui/fileformatdialog.cpp:169
 msgctxt "e.g. file readers that can 'read' this file."
@@ -1040,7 +1051,7 @@ msgstr "サポートされているすべてのフォーマット"
 #: qtgui/interfacescript.cpp:227
 #, qt-format
 msgid "Error reading molecule representation: Unrecognized file format: %1"
-msgstr ""
+msgstr "分子表現の読み込みでエラー: 認識できないファイルフォーマット: %1"
 
 #: qtgui/interfacescript.cpp:295
 #, qt-format
@@ -1051,7 +1062,7 @@ msgstr "%1メッセージ"
 #, qt-format
 msgid ""
 "Error writing molecule representation to string: Unrecognized file format: %1"
-msgstr ""
+msgstr "分子表現を文字列に書き出しす際にエラー: 認識できないファイルフォーマット: %1"
 
 #: qtgui/interfacescript.cpp:546
 #, qt-format
@@ -1155,7 +1166,7 @@ msgstr ""
 #: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
 #: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
-msgstr "[分子がありません]"
+msgstr "[分子なし]"
 
 #: qtgui/layermodel.cpp:117
 #, qt-format
@@ -1203,7 +1214,6 @@ msgid "Surfaces"
 msgstr "表面"
 
 #: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
-#, fuzzy
 msgid "Non-Covalent"
 msgstr "非共有"
 
@@ -1235,7 +1245,7 @@ msgstr "分子の編集"
 
 #: qtgui/moleculemodel.cpp:116
 msgid "Not saved"
-msgstr ""
+msgstr "未保存"
 
 #: qtgui/multiviewwidget.cpp:191
 msgid "Create a new view"
@@ -1434,14 +1444,13 @@ msgid "Rotate to Standard Orientation"
 msgstr "標準配向に回転"
 
 #: qtgui/rwmolecule.cpp:613 qtplugins/spacegroup/spacegroup.cpp:56
-#, fuzzy
 msgid "Reduce to Primitive"
-msgstr "セルをPrimitive既約化"
+msgstr "基本胞に既約化"
 
 #: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
 #: qtplugins/spacegroup/spacegroup.cpp:263
 msgid "Conventionalize Cell"
-msgstr ""
+msgstr "慣用胞に変換"
 
 #: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:288
 msgid "Symmetrize Cell"
@@ -1468,7 +1477,6 @@ msgid "Change Atom Label"
 msgstr "原子のラベルを変更"
 
 #: qtgui/rwmolecule.h:260
-#, fuzzy
 msgid "Change Bond Label"
 msgstr "結合ラベルの変更"
 
@@ -1713,7 +1721,7 @@ msgstr ""
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
-msgstr ""
+msgstr "PDBファイルを指定してください"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -1736,22 +1744,18 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:46
 #: qtplugins/applycolors/applycolors.cpp:67
-#, fuzzy
 msgid "By Custom Color…"
 msgstr "カスタムカラー…"
 
 #: qtplugins/applycolors/applycolors.cpp:51
-#, fuzzy
 msgid "By Atomic Index…"
 msgstr "原子のインデックス…"
 
 #: qtplugins/applycolors/applycolors.cpp:56
-#, fuzzy
 msgid "By Distance…"
 msgstr "距離…"
 
 #: qtplugins/applycolors/applycolors.cpp:61
-#, fuzzy
 msgid "By Element"
 msgstr "元素"
 
@@ -1761,18 +1765,14 @@ msgid "By Chain"
 msgstr "チェーン"
 
 #: qtplugins/applycolors/applycolors.cpp:77
-#, fuzzy
-#| msgid "Partial Charge"
 msgid "By Partial Charge…"
 msgstr "部分電荷…"
 
 #: qtplugins/applycolors/applycolors.cpp:82
-#, fuzzy
 msgid "By Secondary Structure"
 msgstr "二次構造"
 
 #: qtplugins/applycolors/applycolors.cpp:87
-#, fuzzy
 msgid "By Amino Acid"
 msgstr "アミノ酸"
 
@@ -4684,7 +4684,6 @@ msgid "Select All"
 msgstr "全て選択"
 
 #: qtplugins/select/select.cpp:37
-#, fuzzy
 msgid "Select None"
 msgstr "選択の解除"
 
