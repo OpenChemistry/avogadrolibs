@@ -180,6 +180,7 @@ add_subdirectory(licorice)
 add_subdirectory(meshes)
 add_subdirectory(noncovalent)
 add_subdirectory(vanderwaals)
+add_subdirectory(volumes)
 add_subdirectory(wireframe)
 if (USE_OPENGL)
   # needs some raw OpenGL code
@@ -203,7 +204,6 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/avogadrostaticqtplugins.h.in"
   "// Automatically generated file. Do not edit.
 #ifndef AVOGADRO_STATIC_QTPLUGINS_H
 #define AVOGADRO_STATIC_QTPLUGINS_H
-
 #include <QtCore/QtPlugin>\n\n")
 
 foreach(_plugin ${AvogadroLibs_STATIC_PLUGINS})
