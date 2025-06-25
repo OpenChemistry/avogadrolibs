@@ -679,10 +679,12 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       if (properties.find("totalCharge") != properties.end()) {
         molecule.setData("totalCharge",
                          static_cast<int>(properties["totalCharge"]));
-      } else if (properties.find("totalSpinMultiplicity") != properties.end()) {
+      }
+      if (properties.find("totalSpinMultiplicity") != properties.end()) {
         molecule.setData("totalSpinMultiplicity",
                          static_cast<int>(properties["totalSpinMultiplicity"]));
-      } else if (properties.find("dipoleMoment") != properties.end()) {
+      }
+      if (properties.find("dipoleMoment") != properties.end()) {
         // read the numeric array
         json dipole = properties["dipoleMoment"];
         if (isNumericArray(dipole) && dipole.size() == 3) {
