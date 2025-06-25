@@ -41,7 +41,25 @@ bool Shader::compile()
     m_handle = 0;
   }
 
-  GLenum type_ = m_type == Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER;
+GLenum type_;
+switch (m_type) {
+    case Vertex:
+        type_ = GL_VERTEX_SHADER;
+        break;
+    case Fragment:
+        type_ = GL_FRAGMENT_SHADER;
+        break;
+    case TessellationControl:
+        type_ = GL_TESS_CONTROL_SHADER;
+        break;
+    case TessellationEvaluation:
+        type_ = GL_TESS_EVALUATION_SHADER;
+        break;
+    default:
+      m_error = "Unknown shader type.";
+      return false;
+}
+
   GLuint handle_ = glCreateShader(type_);
   const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
   glShaderSource(handle_, 1, &source_, nullptr);

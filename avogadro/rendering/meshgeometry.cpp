@@ -24,6 +24,8 @@ namespace {
 #include "mesh_fs.h"
 #include "mesh_opaque_fs.h"
 #include "mesh_vs.h"
+#include "mesh_tcs.h"
+#include "mesh_tev.h"
 } // namespace
 
 using Avogadro::Vector3f;
@@ -49,9 +51,10 @@ public:
   inline static Shader* vertexShader = nullptr;
   inline static Shader* fragmentShader = nullptr;
   inline static Shader* fragmentShaderOpaque = nullptr;
+  inline static Shader* TessellationControlShader = nullptr;
+  inline static Shader* TessellationEvaluationShader = nullptr;
   inline static ShaderProgram* program = nullptr;
   inline static ShaderProgram* programOpaque = nullptr;
-
   size_t numberOfVertices;
   size_t numberOfIndices;
 };
@@ -105,26 +108,59 @@ void MeshGeometry::update()
     d->fragmentShaderOpaque->setType(Shader::Fragment);
     d->fragmentShaderOpaque->setSource(mesh_opaque_fs);
 
+    d->TessellationControlShader = new Shader;
+    d->TessellationControlShader->setType(Shader::TessellationControl);
+    d->TessellationControlShader->setSource(mesh_tcs);
+
+    d->TessellationEvaluationShader = new Shader;
+    d->TessellationEvaluationShader->setType(Shader::TessellationEvaluation);
+    d->TessellationEvaluationShader->setSource(mesh_tev);
+
     if (!d->vertexShader->compile())
       cout << d->vertexShader->error() << endl;
     if (!d->fragmentShader->compile())
       cout << d->fragmentShader->error() << endl;
     if (!d->fragmentShaderOpaque->compile())
       cout << d->fragmentShaderOpaque->error() << endl;
+    if (!d->TessellationControlShader->compile()){
+      cout << d->TessellationControlShader->error() << endl; 
+    }else{
+      cout << "Success tess-control-shader" <<endl;   
+    }
+    if (!d->TessellationEvaluationShader->compile()){
+      cout << d->TessellationEvaluationShader->error() << endl;
+    }else{
+      cout << "Success tess-evaluation-shader" <<endl;
+    }
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
     d->program->attachShader(*d->vertexShader);
+    d->program->attachShader(*d->TessellationControlShader);
+    d->program->attachShader(*d->TessellationEvaluationShader);
     d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
+    if (!d->program->link()){
       cout << d->program->error() << endl;
+    }else{
+      cout << "shader program linked non-opaque" << endl; 
+    }
+    
 
     if (d->programOpaque == nullptr)
       d->programOpaque = new ShaderProgram;
     d->programOpaque->attachShader(*d->vertexShader);
+    d->programOpaque->attachShader(*d->TessellationControlShader);
+    d->programOpaque->attachShader(*d->TessellationEvaluationShader);
     d->programOpaque->attachShader(*d->fragmentShaderOpaque);
-    if (!d->programOpaque->link())
+    if (!d->programOpaque->link()){
       cout << d->programOpaque->error() << endl;
+    }else{
+      cout << "shader program linked" << endl; 
+    }
+
+    /*
+    will create shader program for tessellation shader
+    */
   }
 }
 
@@ -157,13 +193,15 @@ void MeshGeometry::render(const Camera& camera)
                                  ShaderProgram::NoNormalize)) {
     cout << program->error() << endl;
   }
+  
   if (!program->enableAttributeArray("color"))
-    cout << program->error() << endl;
+      cout << program->error() << endl;
   if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
                                  sizeof(PackedVertex), UCharType, 4,
                                  ShaderProgram::Normalize)) {
     cout << program->error() << endl;
   }
+
   if (!program->enableAttributeArray("normal"))
     cout << program->error() << endl;
   if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
@@ -182,17 +220,20 @@ void MeshGeometry::render(const Camera& camera)
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
   if (!program->setUniformValue("normalMatrix", normalMatrix))
     std::cout << program->error() << std::endl;
+   
 
-  // Render the loaded spheres using the shader and bound VBO.
-  glDrawRangeElements(GL_TRIANGLES, 0,
-                      static_cast<GLuint>(d->numberOfVertices - 1),
-                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(0));
+  GLint MaxPatchVertices = 0;
+  glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
+  cout << "max supported patch" << MaxPatchVertices << endl;
+  
+  glPatchParameteri(GL_PATCH_VERTICES, 3);
+  glDrawElements(GL_PATCHES, static_cast<GLsizei>(d->numberOfIndices),
+                 GL_UNSIGNED_INT, reinterpret_cast<const GLvoid*>(0));
 
   d->vbo.release();
   d->ibo.release();
 
-  program->disableAttributeArray("vector");
+  program->disableAttributeArray("vertex");
   program->disableAttributeArray("color");
   program->disableAttributeArray("normal");
 
