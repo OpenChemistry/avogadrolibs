@@ -804,7 +804,7 @@ void Cp2kInputDialog::updatePreviewText()
               .arg(c.z(), 16, 'f', 7);
 
   } else {
-    // @todo - this should look at the dimensions of the Molecule
+    file += "    ! XXX please manually adjust cell size\n";
     file += "    A     10.00000000    0.000000000    0.000000000\n";
     file += "    B     0.000000000    10.00000000    0.000000000\n";
     file += "    C     0.000000000    0.000000000    10.00000000\n";
