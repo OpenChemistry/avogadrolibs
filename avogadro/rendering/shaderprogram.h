@@ -159,6 +159,8 @@ protected:
   Index m_handle;
   Index m_vertexShader;
   Index m_fragmentShader;
+  Index m_tcsShader;
+  Index m_tevShader; 
 
   bool m_linked;
 
