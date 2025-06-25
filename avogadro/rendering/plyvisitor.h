@@ -8,17 +8,17 @@
 
 #include "visitor.h"
 
-#include "ambientocclusionspheregeometry.h"
 #include "avogadrorendering.h"
-#include "camera.h"
+#include "spheregeometry.h"
 #include "cylindergeometry.h"
+#include "ambientocclusionspheregeometry.h"
 #include "linestripgeometry.h"
 #include "meshgeometry.h"
-#include "spheregeometry.h"
-#include <iostream>
-#include <ostream>
+#include "camera.h"
 #include <string>
 #include <vector>
+#include <iostream>
+#include <ostream>
 
 namespace Avogadro {
 namespace Rendering {

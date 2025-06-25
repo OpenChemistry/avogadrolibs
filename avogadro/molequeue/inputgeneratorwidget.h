@@ -9,8 +9,8 @@
 #include <QtCore/QJsonObject>
 #include <QtWidgets/QWidget>
 
-#include "inputgenerator.h"
 #include <avogadro/qtgui/jsonwidget.h>
+#include "inputgenerator.h"
 
 class QJsonValue;
 class QTextEdit;

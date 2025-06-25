@@ -13,8 +13,8 @@
 
 #include <avogadro/molequeue/client/jobobject.h>
 
-#include <QAction>
 #include <QtCore/QDebug>
+#include <QAction>
 #include <QtWidgets/QMessageBox>
 
 namespace Avogadro {

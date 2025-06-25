@@ -7,10 +7,10 @@
 
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/vector.h>
-#include <avogadro/rendering/avogadrogl.h>
 #include <avogadro/rendering/camera.h>
-#include <avogadro/rendering/glrendervisitor.h>
 #include <avogadro/rendering/scene.h>
+#include <avogadro/rendering/avogadrogl.h>
+#include <avogadro/rendering/glrendervisitor.h>
 
 #include <vtkObjectFactory.h>
 #include <vtkViewport.h>

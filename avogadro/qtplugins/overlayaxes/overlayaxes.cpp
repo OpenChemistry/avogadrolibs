@@ -5,19 +5,19 @@
 
 #include "overlayaxes.h"
 
-#include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/avogadrogl.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/scene.h>
+#include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-#include <QAction>
 #include <QSettings>
+#include <QAction>
 
 #include <Eigen/Geometry>
 

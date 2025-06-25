@@ -5,8 +5,8 @@
 
 #include "jsonrpcclient.h"
 
-#include <QtCore/QDataStream>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QDataStream>
 #include <QtCore/QTimer>
 #include <QtNetwork/QLocalSocket>
 

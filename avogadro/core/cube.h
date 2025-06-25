@@ -10,8 +10,8 @@
 
 #include "vector.h"
 
-#include <array>
 #include <vector>
+#include <array>
 
 namespace Avogadro::Core {
 

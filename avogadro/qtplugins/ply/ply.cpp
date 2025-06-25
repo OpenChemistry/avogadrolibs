@@ -10,11 +10,11 @@
 #include <avogadro/rendering/plyvisitor.h>
 #include <avogadro/rendering/scene.h>
 
-#include <QAction>
 #include <QtCore/QTextStream>
 #include <QtGui/QClipboard>
 #include <QtGui/QIcon>
 #include <QtGui/QKeySequence>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>

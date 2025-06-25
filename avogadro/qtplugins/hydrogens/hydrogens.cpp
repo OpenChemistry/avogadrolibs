@@ -8,8 +8,8 @@
 #include <avogadro/qtgui/hydrogentools.h>
 #include <avogadro/qtgui/molecule.h>
 
-#include <QAction>
 #include <QtGui/QKeySequence>
+#include <QAction>
 
 #include <QtCore/QStringList>
 

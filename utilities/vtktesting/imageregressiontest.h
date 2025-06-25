@@ -19,19 +19,19 @@
 
 #include <QtGui/QImage>
 
-#include <vtkImageData.h>
+#include <vtkQImageToImageSource.h>
 #include <vtkImageDifference.h>
 #include <vtkImageShiftScale.h>
-#include <vtkNew.h>
 #include <vtkPNGReader.h>
 #include <vtkPNGWriter.h>
+#include <vtkImageData.h>
 #include <vtkPointData.h>
-#include <vtkQImageToImageSource.h>
-#include <vtkTrivialProducer.h>
 #include <vtkUnsignedCharArray.h>
+#include <vtkTrivialProducer.h>
+#include <vtkNew.h>
 
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <string>
 
 namespace Avogadro {

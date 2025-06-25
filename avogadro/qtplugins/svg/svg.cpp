@@ -5,11 +5,11 @@
 
 #include "svg.h"
 
-#include <QAction>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
 #include <QSvgGenerator>
+#include <QAction>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/scene.h>
