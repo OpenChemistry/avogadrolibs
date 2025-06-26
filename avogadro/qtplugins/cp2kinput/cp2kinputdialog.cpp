@@ -230,6 +230,22 @@ void Cp2kInputDialog::restoreOptionCache()
   }
 }
 
+QString Cp2kInputDialog::toenum(CalculateOption option)
+{
+  switch (option) {
+    case CalculateEnergy:
+      return "ENERGY";
+    case CalculateEnergyAndForces:
+      return "ENERGY_FORCE";
+    case CalculateMolecularDynamics:
+      return "MOLECULAR_DYNAMICS";
+    case CalculateGeometryOptimization:
+      return "GEO_OPT";
+    default:
+      throw std::invalid_argument{ __func__ }; // unreachable
+  }
+}
+
 void Cp2kInputDialog::buildCalculateOptions()
 {
   for (int i = 0; i < static_cast<int>(CalculateCount); ++i) {
@@ -428,7 +444,8 @@ void Cp2kInputDialog::setBasicDefaults()
 
 QString Cp2kInputDialog::generateJobTitle() const
 {
-  QString calculation(ui.calculateCombo->currentText());
+  QString calculation(
+    toenum(static_cast<CalculateOption>(ui.calculateCombo->currentIndex())));
   QString basis(ui.basisCombo->currentText());
   QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
                              : tr("[no molecule]"));
@@ -584,22 +601,7 @@ void Cp2kInputDialog::updatePreviewText()
   QString force;
   QString pcm;
 
-  switch (calculate) {
-    case CalculateEnergy:
-      runTyp = "ENERGY";
-      break;
-    case CalculateEnergyAndForces:
-      runTyp = "ENERGY_FORCE";
-      break;
-    case CalculateMolecularDynamics:
-      runTyp = "MOLECULAR_DYNAMICS";
-      break;
-    case CalculateGeometryOptimization:
-      runTyp = "GEO_OPT";
-      break;
-    default:
-      break;
-  }
+  runTyp = toenum(calculate);
 
   switch (functional) {
     case FunctionalBLYP:
