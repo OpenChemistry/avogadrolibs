@@ -512,12 +512,14 @@ void Editor::bondLeftClick(QMouseEvent* e)
 void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
+
   // check to see if we need to adjust hydrogens
   Core::Array<Index> bondedAtoms;
+  Core::Array<Index> hToRemove; // atoms to remove
+  RWAtom atom = m_molecule->atom(m_clickedObject.index);
   if (m_toolWidget->adjustHydrogens()) {
     // before we remove the atom, we need to delete any H atoms
     // that are bonded to it -- unless it's a hydrogen atom itself
-    RWAtom atom = m_molecule->atom(m_clickedObject.index);
     if (atom.isValid() && atom.atomicNumber() != Core::Hydrogen) {
       // get the list of bonded atoms
       Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
@@ -525,7 +527,7 @@ void Editor::atomRightClick(QMouseEvent* e)
         RWAtom bondedAtom = bond.getOtherAtom(atom);
         if (bondedAtom.atomicNumber() == Core::Hydrogen) {
           // remove the H atom
-          m_molecule->removeAtom(bondedAtom.index());
+          hToRemove.push_back(m_molecule->atomUniqueId(bondedAtom));
         } else {
           // save the atom to adjust after we remove the target
           bondedAtoms.push_back(m_molecule->atomUniqueId(bondedAtom));
@@ -533,13 +535,23 @@ void Editor::atomRightClick(QMouseEvent* e)
       }
     }
   }
-  m_molecule->removeAtom(m_clickedObject.index);
+  if (atom.isValid())
+    m_molecule->removeAtom(atom);
 
-  // okay, now adjust the valence on the bonded atoms
+  // remove the hydrogens
+  for (Index hIndex : hToRemove) {
+    RWAtom hAtom = m_molecule->atomByUniqueId(hIndex);
+    if (hAtom.isValid()) {
+      m_molecule->removeAtom(hAtom);
+    }
+  }
+
+  // okay, now adjust any valence on the bonded atoms
   // (e.g., add back some hydrogens)
   for (Index atomIndex : bondedAtoms) {
     RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
-    QtGui::HydrogenTools::adjustHydrogens(atom);
+    if (atom.isValid())
+      QtGui::HydrogenTools::adjustHydrogens(atom, QtGui::HydrogenTools::Add);
   }
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
