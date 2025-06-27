@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="256px" baseProfile="full" version="1.1" viewBox="0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+
+ <!-- END OF HEADER -->
+<rect width="256" height="256" fill="#fff"> </rect>
+<path class="bond-0 atom-0 atom-1" d="m27 131.9 34.8-14.8" fill="none" stroke="#191919" stroke-width="2px"/>
+<path class="bond-0 atom-0 atom-1" d="m61.8 117.1 34.9-14.8" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-1 atom-1 atom-2" d="m96.7 102.3 67.9 51" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-2 atom-2 atom-3" d="m164.6 153.3 78.2-33.2" fill="none" stroke="#000" stroke-width="2px"/>
+<path d="m94.9 103 1.8-0.7 3.4 2.5" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path d="m161.2 150.8 3.4 2.5 3.9-1.6" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path class="atom-0" d="m14 132.8 3.5-3.6-4.7-0.9 0.7-2.4 4.3 2.2-0.6-4.8h2.6l-0.7 4.7 4.3-2 0.8 2.3-4.8 0.9 3.4 3.6-2 1.5-2.4-4.5-2.4 4.5-2-1.5" fill="#191919"/>
+</svg>
