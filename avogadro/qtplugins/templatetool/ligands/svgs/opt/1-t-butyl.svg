@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="256px" baseProfile="full" version="1.1" viewBox="0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+
+ <!-- END OF HEADER -->
+<rect width="256" height="256" fill="#fff"> </rect>
+<path class="bond-0 atom-0 atom-1" d="m31.4 185.4 49.9-28.8" fill="none" stroke="#191919" stroke-width="2px"/>
+<path class="bond-0 atom-0 atom-1" d="m81.3 156.6 49.9-28.8" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-1 atom-1 atom-2" d="m131.2 127.8 110.7-63.9" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-2 atom-1 atom-3" d="m131.2 127.8 63.9 110.7" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-3 atom-1 atom-4" d="m131.2 127.8-64-110.7" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="atom-0" d="m15.1 188.6 4.2-4.3-5.6-1.1 0.9-2.8 5.1 2.5-0.8-5.5 3-0.1-0.8 5.6 5.2-2.4 0.8 2.7-5.6 1 4 4.3-2.4 1.8-2.8-5.3-2.8 5.3-2.4-1.7" fill="#191919"/>
+</svg>
