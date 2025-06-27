@@ -230,7 +230,7 @@ void Cp2kInputDialog::restoreOptionCache()
   }
 }
 
-QString Cp2kInputDialog::toenum(CalculateOption option)
+QString Cp2kInputDialog::fromCalcEnum(CalculateOption option)
 {
   switch (option) {
     case CalculateEnergy:
@@ -444,8 +444,8 @@ void Cp2kInputDialog::setBasicDefaults()
 
 QString Cp2kInputDialog::generateJobTitle() const
 {
-  QString calculation(
-    toenum(static_cast<CalculateOption>(ui.calculateCombo->currentIndex())));
+  QString calculation(fromCalcEnum(
+    static_cast<CalculateOption>(ui.calculateCombo->currentIndex())));
   QString basis(ui.basisCombo->currentText());
   QString formula(m_molecule ? QString::fromStdString(m_molecule->formula())
                              : tr("[no molecule]"));
@@ -601,7 +601,7 @@ void Cp2kInputDialog::updatePreviewText()
   QString force;
   QString pcm;
 
-  runTyp = toenum(calculate);
+  runTyp = fromCalcEnum(calculate);
 
   switch (functional) {
     case FunctionalBLYP:
