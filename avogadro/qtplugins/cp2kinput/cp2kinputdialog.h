@@ -102,6 +102,8 @@ private:
 
   void setBasicDefaults();
 
+  /// @return valid values for CP2K RUN_TYPE
+  static QString fromCalcEnum(CalculateOption option);
   QString generateJobTitle() const;
 
   Ui::Cp2kInputDialog ui;
