@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="256px" baseProfile="full" version="1.1" viewBox="0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+
+ <!-- END OF HEADER -->
+<rect width="256" height="256" fill="#fff"> </rect>
+<path class="bond-0 atom-0 atom-1" d="m230.3 127.8h-33.8" fill="none" stroke="#191919" stroke-width="2px"/>
+<path class="bond-0 atom-0 atom-1" d="m196.5 127.8h-33.7" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-1 atom-1 atom-2" d="m162.8 127.8-37.5 64.9" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-2 atom-2 atom-3" d="m125.3 192.7h-75" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-3 atom-3 atom-4" d="m50.3 192.7-37.5-64.9" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-4 atom-4 atom-5" d="m12.8 127.8 37.5-64.9" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-5 atom-5 atom-6" d="m50.3 62.9h75" fill="none" stroke="#000" stroke-width="2px"/>
+<path class="bond-6 atom-6 atom-1" d="m125.3 62.9 37.5 64.9" fill="none" stroke="#000" stroke-width="2px"/>
+<path d="m127.2 189.5-1.9 3.2h-3.8" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path d="m54 192.7h-3.7l-1.9-3.2" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path d="m14.7 131-1.9-3.2 1.9-3.2" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path d="m48.4 66.1 1.9-3.2h3.7" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path d="m121.5 62.9h3.8l1.9 3.2" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
+<path class="atom-0" d="m233.8 125.4 3.1-3.1-4.1-0.9 0.6-2.1 3.8 1.9-0.5-4.2h2.2l-0.6 4.2 3.8-1.8 0.7 2-4.2 0.8 3 3.2-1.8 1.3-2.1-3.9-2.1 3.9-1.8-1.3" fill="#191919"/>
+</svg>

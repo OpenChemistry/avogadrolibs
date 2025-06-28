@@ -1,5 +1,7 @@
 include(ExternalProject)
 
+find_package(Qt5 REQUIRED COMPONENTS Widgets OpenGL Svg)
+
 set(template_srcs
   templatetool.cpp
   templatetoolwidget.cpp
@@ -45,4 +47,8 @@ install(DIRECTORY "${AvogadroLibs_SOURCEDATA_DIR}/fragments"
   PATTERN ".git" EXCLUDE
 )
 
-target_link_libraries(TemplateTool LINK_PRIVATE Avogadro::QtOpenGL)
+target_link_libraries(TemplateTool
+  PRIVATE
+    Avogadro::QtOpenGL
+    Qt5::Svg
+)

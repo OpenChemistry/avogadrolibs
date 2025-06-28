@@ -60,7 +60,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   selectElement(currentElement);
 
   // In the same order of the coordinationComboBox
-  // append ".png" for the icon and ".cjson" for the template
+  // append ".svg" for the icon and ".cjson" for the template
   m_centers << "1-lin"
             << "2-lin"
             << "3-tpl"
@@ -96,7 +96,7 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
   m_ui->coordinationComboBox->setCurrentIndex(index);
 
   // update the preview icon
-  QString iconPath = QString(":/icons/centers/%1.png").arg(currentCoord);
+  QString iconPath = QString(":/icons/centers/%1.svg").arg(currentCoord);
   m_ui->centerPreview->setIcon(QIcon(iconPath));
 
   unsigned int ligandType = settings.value("ligandType", 0).toUInt();
@@ -199,7 +199,7 @@ void TemplateToolWidget::coordinationChanged(int index)
   QSettings settings;
   settings.setValue("templatetool/coordination", iconName);
 
-  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".png"));
+  m_ui->centerPreview->setIcon(QIcon(":/icons/centers/" + iconName + ".svg"));
 }
 
 void TemplateToolWidget::groupChanged(int index)
@@ -223,7 +223,7 @@ void TemplateToolWidget::groupChanged(int index)
     return;
   }
 
-  m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+  m_ui->groupPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".svg"));
 }
 
 void TemplateToolWidget::ligandChanged(int index)
@@ -274,7 +274,7 @@ void TemplateToolWidget::ligandChanged(int index)
     return;
   }
 
-  m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".png"));
+  m_ui->ligandPreview->setIcon(QIcon(":/icons/ligands/" + iconName + ".svg"));
 }
 
 void TemplateToolWidget::otherLigandInsert(const QString& fileName,
@@ -290,11 +290,11 @@ void TemplateToolWidget::otherLigandInsert(const QString& fileName,
   m_fragmentDialog->hide();
   // it will be deleted later
 
-  // update the icon from the filename (so check for .png)
+  // update the icon from the filename (so check for .svg)
   QString iconName = fileName;
   if (iconName.endsWith(".cjson"))
     iconName.chop(6);
-  iconName += ".png";
+  iconName += ".svg";
 
   // check which tab is active
 
