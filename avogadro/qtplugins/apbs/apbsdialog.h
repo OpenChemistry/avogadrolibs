@@ -74,7 +74,7 @@ private:
   bool m_loadStructureFile;
   bool m_loadCubeFile;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_APBS_APBSDIALOG_H

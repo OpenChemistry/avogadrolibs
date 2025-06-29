@@ -60,4 +60,4 @@ void ActiveObjects::setActiveMolecule(QtGui::Molecule* molecule)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL

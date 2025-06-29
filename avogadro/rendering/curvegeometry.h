@@ -29,7 +29,8 @@ struct Point
 {
   Point(const Vector3f& p, const Vector3ub& c, size_t i)
     : pos(p), color(c), id(i)
-  {}
+  {
+  }
   Vector3f pos;
   Vector3ub color;
   size_t id;

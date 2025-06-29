@@ -45,7 +45,7 @@ public:
                             const QString& recommendedForceField_ = QString());
 
   /**
-   * Get/set the options displayed in the dialog. 
+   * Get/set the options displayed in the dialog.
    */
   QVariantMap options() const;
   void setOptions(const QVariantMap& opts);

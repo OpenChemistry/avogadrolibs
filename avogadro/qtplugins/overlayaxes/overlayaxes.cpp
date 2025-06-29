@@ -325,4 +325,4 @@ void OverlayAxes::setScene(Rendering::Scene* scene)
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

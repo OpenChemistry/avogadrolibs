@@ -175,7 +175,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // Set the custom element map if needed:
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (const auto & atomType : atomTypes) {
+    for (const auto& atomType : atomTypes) {
       elementMap.insert(std::make_pair(atomType.second, atomType.first));
     }
     molecule.setCustomElementMap(elementMap);
@@ -221,4 +221,4 @@ bool GromacsFormat::write(std::ostream&, const Core::Molecule&)
   return false;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Io

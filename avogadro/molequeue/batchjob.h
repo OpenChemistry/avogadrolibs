@@ -235,9 +235,7 @@ private: // variables
   QMap<RequestId, Request> m_requests;
 };
 
-inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b)
-{
-}
+inline BatchJob::Request::Request(Type t, BatchId b) : type(t), batchId(b) {}
 
 inline void BatchJob::setInputGeneratorOptions(const QJsonObject& opts)
 {
@@ -288,11 +286,10 @@ inline BatchJob::JobState BatchJob::jobState(BatchJob::BatchId id) const
 
 inline BatchJob::ServerId BatchJob::serverId(BatchJob::BatchId id) const
 {
-  return id < m_jobObjects.size()
-           ? m_jobObjects[id]
-               .value("moleQueueId", InvalidServerId)
-               .value<ServerId>()
-           : InvalidServerId;
+  return id < m_jobObjects.size() ? m_jobObjects[id]
+                                      .value("moleQueueId", InvalidServerId)
+                                      .value<ServerId>()
+                                  : InvalidServerId;
 }
 
 inline JobObject BatchJob::jobObject(BatchJob::BatchId id) const

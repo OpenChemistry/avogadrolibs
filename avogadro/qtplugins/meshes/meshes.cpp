@@ -80,24 +80,26 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
       auto colors = mesh->colors();
       Core::Array<Vector3ub> colorsRGB(colors.size());
       for (size_t i = 0; i < colors.size(); i++)
-        colorsRGB[i] = Vector3ub(static_cast<unsigned char>(colors[i].red() * 255),
-                                 static_cast<unsigned char>(colors[i].green() * 255),
-                                 static_cast<unsigned char>(colors[i].blue() * 255));
+        colorsRGB[i] =
+          Vector3ub(static_cast<unsigned char>(colors[i].red() * 255),
+                    static_cast<unsigned char>(colors[i].green() * 255),
+                    static_cast<unsigned char>(colors[i].blue() * 255));
       mesh1->addVertices(mesh->vertices(), mesh->normals(), colorsRGB);
     } else {
       mesh1->setColor(m_color1);
       mesh1->addVertices(mesh->vertices(), mesh->normals());
-    }   
+    }
 
     // Add the triangles for the first mesh
     for (size_t i = 0; i < triangles.size(); ++i) {
       mesh1->addTriangle(triangles[i][0], triangles[i][1], triangles[i][2]);
     }
 
-    mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass : Rendering::TranslucentPass);
+    mesh1->setRenderPass(m_opacity == 255 ? Rendering::SolidPass
+                                          : Rendering::TranslucentPass);
 
     // Handle the second mesh if present
-    if (mol.meshCount() >= 2) { 
+    if (mol.meshCount() >= 2) {
       auto* mesh2 = new MeshGeometry;
       geometry->addDrawable(mesh2);
 
@@ -112,7 +114,8 @@ void Meshes::process(const QtGui::Molecule& mol, GroupNode& node)
 
       // Add the correct triangles for the second mesh
       for (size_t i = 0; i < triangles2.size(); ++i) {
-        mesh2->addTriangle(triangles2[i][0], triangles2[i][1], triangles2[i][2]);
+        mesh2->addTriangle(triangles2[i][0], triangles2[i][1],
+                           triangles2[i][2]);
       }
 
       mesh2->setRenderPass(m_opacity == 255 ? Rendering::SolidPass

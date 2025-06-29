@@ -112,7 +112,7 @@ public:
   }
 } CustomElementTableInitializer;
 
-} // end anon namespace
+} // namespace
 
 unsigned char Elements::elementCount()
 {
@@ -268,4 +268,4 @@ unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
     return valence_electrons[0];
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Core

@@ -323,4 +323,4 @@ void OBForceFieldDialog::updateRecommendedForceField()
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

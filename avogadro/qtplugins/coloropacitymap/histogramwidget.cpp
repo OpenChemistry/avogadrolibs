@@ -35,7 +35,6 @@
 
 namespace Avogadro {
 
-
 HistogramWidget::HistogramWidget(QWidget* parent)
   : QWidget(parent), m_qvtk(new VTK::QVTKWidget(this))
 {

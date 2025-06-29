@@ -20,7 +20,7 @@ inline GLenum convertType(BufferObject::ObjectType type)
       return GL_ELEMENT_ARRAY_BUFFER;
   }
 }
-}
+} // namespace
 
 struct BufferObject::Private
 {
@@ -93,4 +93,4 @@ bool BufferObject::uploadInternal(const void* buffer, size_t size,
   return true;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Rendering

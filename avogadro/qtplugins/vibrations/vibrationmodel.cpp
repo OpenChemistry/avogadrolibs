@@ -60,8 +60,7 @@ QVariant VibrationModel::headerData(int section, Qt::Orientation orientation,
         case 2:
           return QString("Raman Intensity (Å⁴/amu)");
       }
-    }
-    else if (orientation == Qt::Vertical) {
+    } else if (orientation == Qt::Vertical) {
       return QString::number(section + 1);
     }
   }

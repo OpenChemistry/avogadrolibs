@@ -57,7 +57,7 @@ inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
   return static_cast<float>(hCovRadius + covRadius);
 }
 
-} // end anon namespace
+} // namespace
 
 namespace Avogadro::QtGui {
 
@@ -65,9 +65,8 @@ void HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
 {
   const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
-  for (auto it = atomicNums.rbegin(),
-                                                    itEnd = atomicNums.rend();
-       it != itEnd; ++it, --atomIndex) {
+  for (auto it = atomicNums.rbegin(), itEnd = atomicNums.rend(); it != itEnd;
+       ++it, --atomIndex) {
     if (*it == 1)
       molecule.removeAtom(atomIndex);
   }
@@ -98,7 +97,7 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
     if (doAdd && hDiff > 0) {
       newHPos.clear();
       generateNewHydrogenPositions(atom, hDiff, newHPos);
-      for (auto & newHPo : newHPos) {
+      for (auto& newHPo : newHPos) {
         RWAtom newH(molecule.addAtom(1));
         newH.setPosition3d(newHPo);
         molecule.addBond(atom, newH, 1);
@@ -114,11 +113,9 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
   // indexing sane.
   if (doRemove && !badHIndices.empty()) {
     std::sort(badHIndices.begin(), badHIndices.end());
-    auto newEnd(
-      std::unique(badHIndices.begin(), badHIndices.end()));
+    auto newEnd(std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
-    for (auto it = badHIndices.rbegin(),
-                                                     itEnd = badHIndices.rend();
+    for (auto it = badHIndices.rbegin(), itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule.removeAtom(*it);
     }
@@ -150,11 +147,9 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     } // end loop through bonds
 
     std::sort(badHIndices.begin(), badHIndices.end());
-    auto newEnd(
-      std::unique(badHIndices.begin(), badHIndices.end()));
+    auto newEnd(std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
-    for (auto it = badHIndices.rbegin(),
-                                                     itEnd = badHIndices.rend();
+    for (auto it = badHIndices.rbegin(), itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule->removeAtom(*it);
     }
@@ -166,7 +161,7 @@ void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
     // Temporary container for calls to generateNewHydrogenPositions.
     std::vector<Vector3> newHPos;
     generateNewHydrogenPositions(atom, hDiff, newHPos);
-    for (auto & newHPo : newHPos) {
+    for (auto& newHPo : newHPos) {
       RWAtom newH(molecule->addAtom(1));
       newH.setPosition3d(newHPo);
       molecule->addBond(atom, newH, 1);
@@ -221,8 +216,8 @@ void HydrogenTools::generateNewHydrogenPositions(
   if (hybridization == Core::HybridizationUnknown) {
     // Perceive it
     hybridization = Core::AtomUtilities::perceiveHybridization(
-        Core::Atom(dynamic_cast<Core::Molecule*>(&atom.molecule()->molecule()), atom.index())
-    );
+      Core::Atom(dynamic_cast<Core::Molecule*>(&atom.molecule()->molecule()),
+                 atom.index()));
   }
 
   const Avogadro::Real bondLength = hydrogenBondDistance(atom.atomicNumber());
@@ -243,12 +238,12 @@ void HydrogenTools::generateNewHydrogenPositions(
     // First try to derive the bond vector based on the hybridization
     // Fallback will be to a random vector
     Vector3 newPos = Core::AtomUtilities::generateNewBondVector(
-        Core::Atom(dynamic_cast<Core::Molecule*>(&atom.molecule()->molecule()), atom.index()),
-        allVectors, hybridization
-    );
+      Core::Atom(dynamic_cast<Core::Molecule*>(&atom.molecule()->molecule()),
+                 atom.index()),
+      allVectors, hybridization);
     allVectors.push_back(newPos);
     positions.emplace_back(atom.position3d() + (newPos * bondLength));
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

@@ -21,11 +21,11 @@ class PluginFactory
 public:
   virtual ~PluginFactory() {}
 
-  virtual T* createInstance(QObject *parent = nullptr) = 0;
+  virtual T* createInstance(QObject* parent = nullptr) = 0;
   virtual QString identifier() const = 0;
   virtual QString description() const = 0;
 };
 
-} /* namespace Avogadro */
+} // namespace Avogadro::QtPlugins
 
 #endif /* AVOGADRO_QTPLUGINS_PLUGINFACTORY_H */

@@ -39,7 +39,7 @@ class ProgressBarDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 public:
-  ProgressBarDelegate(QObject* parent = 0) : QStyledItemDelegate(parent){};
+  ProgressBarDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {};
   QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const
   {
     return QSize(60, 30);
@@ -72,7 +72,7 @@ class OrbitalSortingProxyModel : public QSortFilterProxyModel
 
 public:
   OrbitalSortingProxyModel(QObject* parent = 0)
-    : QSortFilterProxyModel(parent), m_HOMOFirst(false){};
+    : QSortFilterProxyModel(parent), m_HOMOFirst(false) {};
 
   bool isHOMOFirst() { return m_HOMOFirst; };
   void HOMOFirst(bool b) { m_HOMOFirst = b; };

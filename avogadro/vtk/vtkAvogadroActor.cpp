@@ -15,25 +15,23 @@
 #include <vtkObjectFactory.h>
 #include <vtkViewport.h>
 
-using Eigen::Affine3f;
 using Avogadro::Vector3f;
 using Avogadro::Rendering::Camera;
 using Avogadro::Rendering::GLRenderVisitor;
+using Eigen::Affine3f;
 
 vtkStandardNewMacro(vtkAvogadroActor)
 
-vtkAvogadroActor::vtkAvogadroActor()
+  vtkAvogadroActor::vtkAvogadroActor()
   : m_scene(nullptr), m_initialized(false)
 {
-  for (double & m_bound : m_bounds)
+  for (double& m_bound : m_bounds)
     m_bound = 0.0;
 }
 
-vtkAvogadroActor::~vtkAvogadroActor()
-{
-}
+vtkAvogadroActor::~vtkAvogadroActor() {}
 
-int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
+int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport*)
 {
   if (!m_initialized) {
     GLenum result = glewInit();
@@ -66,7 +64,7 @@ int vtkAvogadroActor::RenderOpaqueGeometry(vtkViewport *)
   return 1;
 }
 
-int vtkAvogadroActor::RenderTranslucentPolygonalGeometry(vtkViewport *)
+int vtkAvogadroActor::RenderTranslucentPolygonalGeometry(vtkViewport*)
 {
   // Figure out the current model view and projection matrices for our camera.
   Camera camera;
@@ -89,7 +87,7 @@ int vtkAvogadroActor::HasTranslucentPolygonalGeometry()
   return 1;
 }
 
-double * vtkAvogadroActor::GetBounds()
+double* vtkAvogadroActor::GetBounds()
 {
   if (!m_scene)
     return m_bounds;
@@ -106,12 +104,12 @@ double * vtkAvogadroActor::GetBounds()
   return m_bounds;
 }
 
-void vtkAvogadroActor::setScene(Avogadro::Rendering::Scene *scene)
+void vtkAvogadroActor::setScene(Avogadro::Rendering::Scene* scene)
 {
   m_scene = scene;
 }
 
-void vtkAvogadroActor::PrintSelf(ostream &os, vtkIndent indent)
+void vtkAvogadroActor::PrintSelf(ostream& os, vtkIndent indent)
 {
   Superclass::PrintSelf(os, indent);
 }

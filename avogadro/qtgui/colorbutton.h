@@ -61,7 +61,7 @@ Q_SIGNALS:
   /**
    *  emit any time the color is changed, either by a user or by setColor()
    */
-  void colorChanged(const QColor &);
+  void colorChanged(const QColor&);
 
 public Q_SLOTS:
   /**

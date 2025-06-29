@@ -89,4 +89,4 @@ Cube* OpenDxReader::cube() const
 {
   return m_cube;
 }
-}
+} // namespace Avogadro::QtPlugins

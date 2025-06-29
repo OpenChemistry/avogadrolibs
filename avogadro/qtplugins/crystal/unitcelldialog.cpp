@@ -27,7 +27,7 @@ const char MATRIX_FMT = 'f';
 // Valid value separators in matrix editors:
 const static QRegularExpression MATRIX_SEP(
   R"(\s|,|;|\||\[|\]|\{|\}|\(|\)|\&|/|<|>)");
-}
+} // namespace
 
 namespace Avogadro::QtPlugins {
 
@@ -366,4 +366,4 @@ Matrix3 UnitCellDialog::stringToMatrix(const QString& str)
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

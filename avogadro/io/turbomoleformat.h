@@ -28,7 +28,10 @@ public:
   }
 
   FileFormat* newInstance() const override { return new TurbomoleFormat; }
-  std::string identifier() const override { return "Avogadro: Turbomole Coord"; }
+  std::string identifier() const override
+  {
+    return "Avogadro: Turbomole Coord";
+  }
   std::string name() const override { return "Turbomole"; }
   std::string description() const override
   {
@@ -37,7 +40,8 @@ public:
 
   std::string specificationUrl() const override
   {
-    return "https://xtb-docs.readthedocs.io/en/latest/geometry.html#turbomole-coordinate-input";
+    return "https://xtb-docs.readthedocs.io/en/latest/"
+           "geometry.html#turbomole-coordinate-input";
   }
 
   std::vector<std::string> fileExtensions() const override;

@@ -42,7 +42,8 @@ Navigator::Navigator(QObject* parent_)
     tr("Navigation Tool \t(%1)\n\n"
        "Left Mouse: \tClick and drag to rotate the view.\n"
        "Middle Mouse: \tClick and drag to zoom in or out.\n"
-       "Right Mouse: \tClick and drag to move the view.\n").arg(shortcut));
+       "Right Mouse: \tClick and drag to move the view.\n")
+      .arg(shortcut));
   setIcon();
   QSettings settings;
   m_zoomDirection = settings.value("navigator/zoom", 1).toInt();

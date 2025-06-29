@@ -31,9 +31,9 @@
 #include <map>
 #include <vector>
 
+using Avogadro::MoleQueue::JobObject;
 using Avogadro::MoleQueue::MoleQueueDialog;
 using Avogadro::MoleQueue::MoleQueueManager;
-using Avogadro::MoleQueue::JobObject;
 
 namespace Avogadro::QtPlugins {
 
@@ -559,8 +559,7 @@ void Cp2kInputDialog::updatePreviewText()
   auto functional(
     static_cast<FunctionalOption>(ui.functionalCombo->currentIndex()));
   auto basis(static_cast<BasisOption>(ui.basisCombo->currentIndex()));
-  auto method(
-    static_cast<MethodOption>(ui.methodCombo->currentIndex()));
+  auto method(static_cast<MethodOption>(ui.methodCombo->currentIndex()));
   auto EWALDType(
     static_cast<EWALDTypeOption>(ui.ewaldtypeCombo->currentIndex()));
   auto SCFGuess(
@@ -1034,4 +1033,4 @@ void Cp2kInputDialog::updateTitlePlaceholder()
   ui.titleEdit->setPlaceholderText(generateJobTitle());
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -47,8 +47,8 @@ public:
                               Adjustment adjustment = AddAndRemove);
 
   /**
-  * Add/remove hydrogens on @a atom to satisfy valency.
-  */
+   * Add/remove hydrogens on @a atom to satisfy valency.
+   */
   static void adjustHydrogens(RWAtom& atom,
                               Adjustment adjustment = AddAndRemove);
 

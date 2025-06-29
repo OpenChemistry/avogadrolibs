@@ -124,7 +124,7 @@ typename Molecule_T::AtomType PersistentAtom<Molecule_T>::atom() const
   return m_molecule ? m_molecule->atomByUniqueId(m_uniqueId) : AtomType();
 }
 
-} // End of QtGui namespace
-} // End of Avogadro namespace
+} // namespace QtGui
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_PERSISTENTATOM_H

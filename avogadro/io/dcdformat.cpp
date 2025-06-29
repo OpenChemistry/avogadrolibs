@@ -217,7 +217,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     if (leadingNum == 48) {
       double unitcell[6];
-      for (double & aa : unitcell) {
+      for (double& aa : unitcell) {
         snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
         inStream.read(buff, struct_calcsize(fmt));
         struct_unpack(buff, fmt, &aa);
@@ -320,8 +320,9 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Set the custom element map if needed
   if (!atomTypes.empty()) {
     Molecule::CustomElementMap elementMap;
-    for (const auto & atomType : atomTypes) {
-      elementMap.insert(std::make_pair(atomType.second, "Atom " + atomType.first));
+    for (const auto& atomType : atomTypes) {
+      elementMap.insert(
+        std::make_pair(atomType.second, "Atom " + atomType.first));
     }
     mol.setCustomElementMap(elementMap);
   }
@@ -417,4 +418,4 @@ std::vector<std::string> DcdFormat::mimeTypes() const
   return mime;
 }
 
-} // end Avogadro namespace
+} // namespace Avogadro::Io

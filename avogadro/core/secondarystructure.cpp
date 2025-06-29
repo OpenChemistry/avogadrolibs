@@ -273,7 +273,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
         recordJ->residuePair = recordI->residue;
       }
     } // end for(j)
-  }   // end for(i)
+  } // end for(i)
 }
 
 } // namespace Avogadro::Core

@@ -313,4 +313,4 @@ Array<Identifier> CurveGeometry::areaHits(const Frustrum& f) const
   return result;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
