@@ -1,11 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="256px" height="256px" baseProfile="full" version="1.1" viewBox="0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-
- <!-- END OF HEADER -->
-<rect width="256" height="256" fill="#fff"> </rect>
-<path class="bond-0 atom-0 atom-1" d="m31.4 153.5 49.9-28.9" fill="none" stroke="#191919" stroke-width="2px"/>
-<path class="bond-0 atom-0 atom-1" d="m81.3 124.6 49.9-28.8" fill="none" stroke="#000" stroke-width="2px"/>
-<path class="bond-1 atom-1 atom-2" d="m131.2 95.8 110.7 64" fill="none" stroke="#000" stroke-width="2px"/>
-<path d="m128.7 97.3 2.5-1.5 5.5 3.2" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
-<path class="atom-0" d="m15.1 156.6 4.2-4.2-5.6-1.2 0.9-2.8 5.1 2.6-0.8-5.6h3l-0.8 5.5 5.2-2.4 0.8 2.7-5.6 1.1 4 4.3-2.4 1.7-2.8-5.3-2.8 5.3-2.4-1.7" fill="#191919"/>
-</svg>
+<svg height="256" viewBox="0 0 256 256" width="256" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h256v256h-256z" fill="#fff"/><ellipse cx="42.6" cy="129.8" fill="#ff7f7f" fill-rule="evenodd" rx="24.1" ry="24.1" stroke="#ff7f7f"/><g fill="none" stroke="#000" stroke-width="2"><path d="m112.2 89.7 54.9 31.7"/><path d="m112.2 89.7-55 31.7"/><path d="m114.9 91.3-2.7-1.6-2.8 1.6" stroke-miterlimit="10"/></g><text x="30.6" y="149.8"/><text font-family="sans-serif" font-size="40" x="169.7" y="149.9">C</text><text font-family="sans-serif" font-size="40" x="197.3" y="149.9">H</text><text font-family="sans-serif" font-size="26" x="224.9" y="165.9">3</text></svg>

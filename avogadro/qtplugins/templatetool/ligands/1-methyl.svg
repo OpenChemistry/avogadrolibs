@@ -1,9 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="256px" height="256px" baseProfile="full" version="1.1" viewBox="0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-
- <!-- END OF HEADER -->
-<rect width="256" height="256" fill="#fff"> </rect>
-<path class="bond-0 atom-0 atom-1" d="m37.2 135h100.9" fill="none" stroke="#191919" stroke-width="2px"/>
-<path class="bond-0 atom-0 atom-1" d="m138.1 135h100.8" fill="none" stroke="#000" stroke-width="2px"/>
-<path class="atom-0" d="m18 131.8 4.2-4.2-5.5-1.1 0.8-2.9 5.1 2.6-0.7-5.6h3l-0.9 5.6 5.2-2.4 0.9 2.7-5.6 1 4 4.3-2.5 1.8-2.7-5.3-2.8 5.3-2.5-1.8" fill="#191919"/>
-</svg>
+<svg height="256" viewBox="0 0 256 256" width="256" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h256v256h-256z" fill="#fff"/><ellipse cx="192.6" cy="126.3" fill="#ff7f7f" fill-rule="evenodd" rx="33.1" ry="33.1" stroke="#ff7f7f"/><path d="m98 126.3h79" fill="none" stroke="#000" stroke-width="2"/><text x="180.6" y="146.3"/><g font-family="sans-serif"><text font-size="40" x="29.9" y="146.3">H</text><text font-size="26" x="57.5" y="162.3">3</text><text font-size="40" x="70.3" y="146.3">C</text></g></svg>

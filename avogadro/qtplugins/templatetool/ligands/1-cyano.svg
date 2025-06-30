@@ -1,15 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="256px" height="256px" baseProfile="full" version="1.1" viewBox="0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-
- <!-- END OF HEADER -->
-<rect width="256" height="256" fill="#fff"> </rect>
-<path class="bond-0 atom-0 atom-1" d="m29.1 132.7 37.2-21.5" fill="none" stroke="#191919" stroke-width="2px"/>
-<path class="bond-0 atom-0 atom-1" d="m66.3 111.2 37.3-21.5" fill="none" stroke="#000" stroke-width="2px"/>
-<path class="bond-1 atom-1 atom-2" d="m103.6 89.7 35.3 20.4" fill="none" stroke="#000" stroke-width="2px"/>
-<path class="bond-1 atom-1 atom-2" d="m138.9 110.1 35.3 20.4" fill="none" stroke="#00f" stroke-width="2px"/>
-<path d="m101.8 90.8 1.8-1.1 1.8 1" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2px"/>
-<path class="atom-0" d="m14.1 135.3 4.1-4.2-5.4-1 0.8-2.8 5 2.5-0.7-5.4 2.9-0.1-0.8 5.4 5-2.3 0.8 2.7-5.4 1 3.9 4.1-2.4 1.7-2.7-5.1-2.7 5.1-2.4-1.6" fill="#191919"/>
-<path class="atom-2" d="m181.8 124.6 9 14.6q0.9 1.4 2.4 4 1.4 2.6 1.5 2.8v-21.4h3.7v27.5h-3.8l-9.7-15.9q-1.1-1.9-2.3-4-1.2-2.2-1.6-2.8v22.7h-3.5v-27.5h4.3" fill="#00f"/>
-<path class="atom-2" d="m203.6 124.6h3.8v11.7h14.1v-11.7h3.7v27.5h-3.7v-12.7h-14.1v12.7h-3.8v-27.5" fill="#00f"/>
-<path class="atom-2" d="m230.6 151.2q0.7-1.8 2.3-2.7 1.5-1 3.8-1 2.7 0 4.2 1.5 1.6 1.5 1.6 4.1 0 2.7-2 5.3-2 2.5-6.1 5.5h8.4v2h-12.3v-1.7q3.4-2.4 5.4-4.2 2.1-1.8 3-3.4 1-1.7 1-3.3 0-1.8-0.9-2.8-0.8-0.9-2.3-0.9t-2.5 0.6-1.7 1.9l-1.9-0.9" fill="#00f"/>
-</svg>
+<svg height="256" viewBox="0 0 256 256" width="256" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h256v256h-256z" fill="#fff"/><ellipse cx="208.3" cy="170" fill="#ff7f7f" fill-rule="evenodd" rx="31.2" ry="31.2" stroke="#ff7f7f"/><g fill="none" stroke="#000" stroke-width="2"><path d="m118.2 118.2-74.6-42.9"/><path d="m110.5 131.7-74.7-42.9"/><path d="m126 104.7-74.7-42.9"/><path d="m118.2 118.2 74.7 42.9"/><path d="m114.5 116.1 3.7 2.1 3.7 2.2" stroke-miterlimit="10"/></g><text x="196.3" y="190"/><text font-family="sans-serif" font-size="40" x="16.1" y="86.5">N</text></svg>
