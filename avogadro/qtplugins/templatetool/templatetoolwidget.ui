@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>361</width>
-    <height>305</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="centersTab">
       <property name="minimumSize">
@@ -414,8 +414,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>64</width>
-             <height>64</height>
+             <width>96</width>
+             <height>96</height>
             </size>
            </property>
           </widget>
@@ -542,8 +542,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>64</width>
-             <height>64</height>
+             <width>96</width>
+             <height>96</height>
             </size>
            </property>
           </widget>
