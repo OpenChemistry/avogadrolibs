@@ -2782,7 +2782,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:223
 #, fuzzy
 msgid "Distance:"
-msgstr "פי מרחק"
+msgstr "מרחק"
 
 #: qtplugins/editor/editor.cpp:268
 #, qt-format
@@ -3278,9 +3278,8 @@ msgid "Partial Charge"
 msgstr ""
 
 #: qtplugins/label/label.cpp:203
-#, fuzzy
 msgid "Atom Label:"
-msgstr "תווית"
+msgstr ""
 
 #: qtplugins/label/label.cpp:211
 msgid "Length"
@@ -4257,7 +4256,7 @@ msgstr ""
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
 #, fuzzy
 msgid "Save File"
-msgstr "שמור קובץ וידאו"
+msgstr "שמור קובץ"
 
 #: qtplugins/ply/ply.cpp:71
 msgid "PLY (*.ply);;Text file (*.txt)"
@@ -4292,9 +4291,8 @@ msgid "Valence"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:504
-#, fuzzy
 msgid "Formal Charge"
-msgstr "צבע על פי מטען חלקי"
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:507
 #, qt-format
@@ -4336,9 +4334,8 @@ msgid "Type"
 msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:532
-#, fuzzy
 msgid "Start Atom"
-msgstr "הנפשה..."
+msgstr ""
 
 #: qtplugins/propertytables/propertymodel.cpp:534
 msgid "End Atom"
@@ -4360,7 +4357,7 @@ msgstr ""
 #: qtplugins/propertytables/propertymodel.cpp:557
 #, fuzzy
 msgid "Secondary Structure"
-msgstr "מרנדר מבנה שניוני של חלבון"
+msgstr "מבנה שניוני"
 
 #: qtplugins/propertytables/propertymodel.cpp:559
 msgid "Heterogen"
@@ -4521,9 +4518,8 @@ msgid "Molecular Graph with Lone Pairs…"
 msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:55
-#, fuzzy
 msgid "Atomic Charge…"
-msgstr "צבע על פי מטען חלקי"
+msgstr ""
 
 #: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "Open WFN File"
@@ -4642,10 +4638,8 @@ msgid "Select Element"
 msgstr ""
 
 #: qtplugins/select/select.cpp:269
-#, fuzzy
-#| msgid "Select Bond Labels Font"
 msgid "Select Backbone"
-msgstr "בחר גופן תוויות קשרים"
+msgstr ""
 
 #: qtplugins/select/select.cpp:308
 msgid "Select Sidechain"
@@ -4703,9 +4697,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.cpp:247
-#, fuzzy
 msgid "Paint Atoms"
-msgstr "הנפשה..."
+msgstr ""
 
 #: qtplugins/selectiontool/selectiontool.h:32
 #: qtplugins/selectiontool/selectiontool.h:33
@@ -5568,9 +5561,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ChargeDialog)
-#, fuzzy
 msgid "Partial Charges"
-msgstr "צבע על פי מטען חלקי"
+msgstr ""
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:66
 #. i18n: ectx: property (text), widget (QLabel, chargeModelLabel)
@@ -7946,9 +7938,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:99
 #. i18n: ectx: property (text), widget (QLabel, formalChargeLabel)
-#, fuzzy
 msgid "Formal Charge:"
-msgstr "צבע על פי מטען חלקי"
+msgstr ""
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
