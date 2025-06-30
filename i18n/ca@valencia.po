@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-ca\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"PO-Revision-Date: 2025-07-01 18:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Valencian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ca@valencia/>\n"
@@ -1316,9 +1316,8 @@ msgstr ""
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
 #: qtplugins/selectiontool/selectiontool.cpp:263:1646
-#, fuzzy
 msgid "Change Layer"
-msgstr "Canvia l'orde de l'enllaç"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:39 qtgui/rwmolecule.cpp:48
 msgid "Add Atom"
@@ -1361,9 +1360,8 @@ msgid "Change Atom Color"
 msgstr ""
 
 #: qtgui/rwmolecule.cpp:272
-#, fuzzy
 msgid "Change Atom Layer"
-msgstr "Canvia l'orde de l'enllaç"
+msgstr ""
 
 #: qtgui/rwmolecule.cpp:288
 msgid "Add Bond"
@@ -2946,10 +2944,8 @@ msgid "Download PDB models from the Protein Data Bank"
 msgstr ""
 
 #: qtplugins/focus/focus.cpp:22
-#, fuzzy
-#| msgid "Selection"
 msgid "Focus Selection"
-msgstr "Selecció"
+msgstr ""
 
 #: qtplugins/focus/focus.cpp:23
 msgid "Unfocus"
@@ -3253,10 +3249,8 @@ msgid "&Insert"
 msgstr "&Insereix"
 
 #: qtplugins/insertdna/insertdna.cpp:79
-#, fuzzy
-#| msgid "&Insert"
 msgid "Insert DNA/RNA…"
-msgstr "Insereix"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:159
 #, fuzzy
@@ -3288,10 +3282,8 @@ msgstr ""
 #: qtplugins/insertdna/insertdna.cpp:200
 #: qtplugins/lineformatinput/lineformatinput.cpp:109
 #: qtplugins/lineformatinput/lineformatinput.cpp:124:1052
-#, fuzzy
-#| msgid "Molecule"
 msgid "Insert Molecule…"
-msgstr "Molècula"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.cpp:201
 #: qtplugins/lineformatinput/lineformatinput.cpp:125
@@ -3299,10 +3291,8 @@ msgid "Generating 3D molecule…"
 msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:33
-#, fuzzy
-#| msgid "&Insert"
 msgid "InsertDNA"
-msgstr "Insereix"
+msgstr ""
 
 #: qtplugins/insertdna/insertdna.h:63
 msgid "Insert DNA / RNA fragments through a dialog."
@@ -3433,9 +3423,8 @@ msgid ""
 msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:81
-#, fuzzy
 msgid "Create Label"
-msgstr "Crea Superfície"
+msgstr ""
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -4778,10 +4767,8 @@ msgid "Enlarge Selection"
 msgstr ""
 
 #: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:416
-#, fuzzy
-#| msgid "Selection"
 msgid "Shrink Selection"
-msgstr "Selecció"
+msgstr ""
 
 #: qtplugins/select/select.cpp:103
 msgid "Create New Layer from Selection"
@@ -4871,10 +4858,8 @@ msgid "Selection tool"
 msgstr ""
 
 #: qtplugins/selectiontool/selectiontoolwidget.cpp:35
-#, fuzzy
-#| msgid "New Label:"
 msgid "New Layer"
-msgstr "Etiqueta nova"
+msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:50
 msgid "Perceive Space Group…"
@@ -7826,17 +7811,13 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:156
 #. i18n: ectx: property (text), widget (QLabel, label_13)
-#, fuzzy
-#| msgid "Width:"
 msgid "Peak Width:"
-msgstr "Amplada:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
-#, fuzzy
-#| msgid "Threshold:"
 msgid "Peak Threshold:"
-msgstr "Llindar:"
+msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
