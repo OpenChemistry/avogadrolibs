@@ -137,7 +137,16 @@ unsigned char TemplateToolWidget::atomicNumber() const
 
 signed char TemplateToolWidget::formalCharge() const
 {
-  return m_ui->chargeComboBox->currentIndex() - 0;
+  return m_ui->chargeSpinBox->value();
+}
+
+void TemplateToolWidget::setFormalCharge(int charge)
+{
+  QSpinBox* spinBox = m_ui->chargeSpinBox;
+  if (charge < spinBox->minimum() || charge > spinBox->maximum()) {
+    return;
+  }
+  spinBox->setValue(charge);
 }
 
 void TemplateToolWidget::setCoordination(unsigned char order)
@@ -159,6 +168,16 @@ QString TemplateToolWidget::coordinationString() const
 int TemplateToolWidget::currentTab() const
 {
   return m_ui->tabWidget->currentIndex();
+}
+
+void TemplateToolWidget::setCurrentTab(int index)
+{
+  if (index < 0)
+    index = m_ui->tabWidget->count() - 1;
+  else if (index >= m_ui->tabWidget->count())
+    index = 0;
+
+  m_ui->tabWidget->setCurrentIndex(index);
 }
 
 unsigned char TemplateToolWidget::ligand() const
