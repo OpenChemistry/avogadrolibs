@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-20 11:01+0000\n"
+"PO-Revision-Date: 2025-07-01 18:01+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Bosnian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/bs/>\n"
@@ -5191,9 +5191,8 @@ msgid "Render the solvent-excluded molecular surface."
 msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:119 qtplugins/surfaces/surfaces.cpp:120
-#, fuzzy
 msgid "Render a molecular orbital."
-msgstr "Molekulrna kružna putanja"
+msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:122
 msgid "Render the electron density."

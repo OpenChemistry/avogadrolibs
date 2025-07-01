@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-01-13 03:01+0000\n"
+"PO-Revision-Date: 2025-07-01 18:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/te/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -2850,9 +2850,8 @@ msgstr ""
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
 #: qtplugins/networkdatabases/networkdatabases.cpp:99
 #: qtplugins/networkdatabases/networkdatabases.cpp:110
-#, fuzzy
 msgid "Network Download Failed"
-msgstr "జాలాకార వ్యవస్థ సవరణకు అవరోధం ఏర్పడింది"
+msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
 #: qtplugins/networkdatabases/networkdatabases.cpp:100

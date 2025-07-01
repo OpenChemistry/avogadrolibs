@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-23 19:17+0000\n"
+"PO-Revision-Date: 2025-07-01 18:02+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sr/>\n"
@@ -197,8 +197,9 @@ msgstr "Nastavi"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
+#, fuzzy
 msgid "Close"
-msgstr "Zatvori"
+msgstr "Затвори"
 
 #: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:374
 #: qtplugins/configurepython/configurepythondialog.cpp:188
