@@ -45,6 +45,10 @@ endif()
 install(DIRECTORY "${AvogadroLibs_SOURCEDATA_DIR}/fragments"
   DESTINATION "${INSTALL_DATA_DIR}/avogadro2"
   PATTERN ".git" EXCLUDE
+  PATTERN ".gitignore" EXCLUDE
+  PATTERN "README.md" EXCLUDE
+  PATTERN "LICENSE" EXCLUDE
+  PATTERN "*.smi" EXCLUDE
 )
 
 target_link_libraries(TemplateTool
