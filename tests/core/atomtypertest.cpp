@@ -14,7 +14,7 @@
 
 using namespace Avogadro::Core;
 
-TEST(AtomTyper, singleAtomTyping)
+TEST(AtomTyperTest, singleAtomTyping)
 {
   Molecule molecule;
   Array<double> ref;
@@ -64,7 +64,7 @@ TEST(AtomTyper, singleAtomTyping)
     << "Failed getting cached result.";
 }
 
-TEST(AtomTyper, resetOnMoleculeChange)
+TEST(AtomTyperTest, resetOnMoleculeChange)
 {
   Molecule molecule1;
   Molecule molecule2;
@@ -80,7 +80,7 @@ TEST(AtomTyper, resetOnMoleculeChange)
   EXPECT_EQ(0, typer.types().size());
 }
 
-TEST(AtomTyper, nameAtomTyper)
+TEST(AtomTyperTest, nameAtomTyper)
 {
   Molecule molecule;
   Array<std::string> ref;
@@ -100,7 +100,7 @@ TEST(AtomTyper, nameAtomTyper)
   }
 }
 
-TEST(AtomTyper, symbolAtomTyper)
+TEST(AtomTyperTest, symbolAtomTyper)
 {
   Molecule molecule;
   Array<std::string> ref;
