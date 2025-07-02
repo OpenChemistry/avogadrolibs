@@ -180,6 +180,7 @@ public:
 
   virtual ToolPlugin* createInstance(QObject* parent = nullptr) = 0;
   virtual QString identifier() const = 0;
+  virtual QString description() const = 0;
 };
 
 } // namespace QtGui
