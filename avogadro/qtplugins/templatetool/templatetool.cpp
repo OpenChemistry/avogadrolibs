@@ -194,6 +194,23 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 
   e->accept();
 
+  // check which tab is currently active
+  int currentTab = m_toolWidget->currentTab();
+
+  // if it's arrow keys, change tabs
+  if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right ||
+      e->key() == Qt::Key_BracketLeft || e->key() == Qt::Key_BracketRight) {
+    // cycle through tabs
+    // the widget will handle any wrap-around
+    if (e->key() == Qt::Key_Left || e->key() == Qt::Key_BracketLeft) {
+      currentTab--;
+    } else {
+      currentTab++;
+    }
+    m_toolWidget->setCurrentTab(currentTab);
+    return NULL;
+  }
+
   // Set a timer to clear the buffer on first keypress:
   if (m_keyPressBuffer.isEmpty())
     QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
@@ -206,11 +223,82 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
     return NULL;
   }
 
-  int atomicNum =
-    Core::Elements::atomicNumberFromSymbol(m_keyPressBuffer.toStdString());
+  if (currentTab == 0) {
+    // if it's + or -, change the formal charge
+    if (e->key() == Qt::Key_Plus || e->key() == Qt::Key_Minus) {
+      int formalCharge = m_toolWidget->formalCharge();
+      if (e->key() == Qt::Key_Plus)
+        formalCharge++;
+      else
+        formalCharge--;
+      m_toolWidget->setFormalCharge(formalCharge);
+      clearKeyPressBuffer();
+      return NULL;
+    }
 
-  if (atomicNum != Avogadro::InvalidElement)
-    m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+    // metal center -- interpret as an element
+    int atomicNum =
+      Core::Elements::atomicNumberFromSymbol(m_keyPressBuffer.toStdString());
+
+    if (atomicNum != Avogadro::InvalidElement)
+      m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+    else {
+      // if it's a number, try a coordination number
+      bool ok = false;
+      int coordinationNumber = m_keyPressBuffer.toInt(&ok);
+      if (ok) {
+        unsigned char geometry = 0;
+        switch (coordinationNumber) {
+          // 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8 are valid
+          case 1:
+            break;
+          case 2:
+            geometry = 1;
+            break;
+          case 3:
+            geometry = 2;
+            break;
+          case 4:
+            geometry = 3;
+            break;
+          case 44:
+            geometry = 4;
+            break;
+          case 5:
+            geometry = 5;
+            break;
+          case 55:
+            geometry = 6;
+            break;
+          case 6:
+            geometry = 7;
+            break;
+          case 66:
+            geometry = 8;
+            break;
+          case 7:
+            geometry = 9;
+            break;
+          case 8:
+            geometry = 10;
+            break;
+          default:
+            // do nothing, invalid coordination number
+            clearKeyPressBuffer();
+            break;
+        }
+        m_toolWidget->setCoordination(geometry);
+      }
+    }
+  } else if (currentTab == 1) {
+    // ligand
+    // e.g. bpy = bipyridine
+    // e.g. edta, tpy, etc.
+  } else if (currentTab == 2) {
+    // functional group
+    // e.g. c8 = octyl group
+    // p = phenyl group
+  }
 
   return NULL;
 }
