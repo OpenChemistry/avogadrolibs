@@ -14,13 +14,14 @@
 # Ivanushka <oplata.kes1@mail.ru>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Sergey Ponomarev <stokito@gmail.com>, 2025.
+# Илья Рябов <ilyarya131@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-20 11:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-07-04 19:01+0000\n"
+"Last-Translator: Илья Рябов <ilyarya131@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -473,7 +474,7 @@ msgstr "Время ожидания Avogadro истекло, ожидая отв
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Ожидание работы %1 \"%2\" для завершения"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
