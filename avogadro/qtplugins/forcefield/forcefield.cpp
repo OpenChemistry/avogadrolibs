@@ -289,7 +289,7 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = 2;
+  crit.iterations = 5;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
@@ -422,7 +422,7 @@ void Forcefield::forces()
   if (m_method == nullptr)
     return; // bad news
 
-  int n = m_molecule->atomCount();
+  Index n = m_molecule->atomCount();
 
   // double-check the mask
   auto mask = m_molecule->frozenAtomMask();
@@ -449,7 +449,22 @@ void Forcefield::forces()
 
   m_method->gradient(positions, gradient);
 
-  for (size_t i = 0; i < n; ++i) {
+#ifndef NDEBUG
+  qDebug() << " current gradient ";
+  for (Index i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
+             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
+  }
+
+  qDebug() << " numeric gradient ";
+  m_method->finiteGradient(positions, gradient);
+  for (Index i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
+             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
+  }
+#endif
+
+  for (Index i = 0; i < n; ++i) {
     forces[i] =
       -0.1 * Vector3(gradient[3 * i], gradient[3 * i + 1], gradient[3 * i + 2]);
   }

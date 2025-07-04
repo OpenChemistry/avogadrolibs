@@ -35,7 +35,7 @@ public:
   Core::Molecule::ElementMask elements() const override { return (m_elements); }
 
   Real value(const Eigen::VectorXd& x) override;
-  // void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override;
 
   // handle both ions and radicals
   bool acceptsIons() const override { return true; }
