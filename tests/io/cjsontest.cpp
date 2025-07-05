@@ -166,3 +166,28 @@ TEST(CjsonTest, saveFile)
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
 }
+
+TEST(CjsonTest, conformers)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/conformers.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(14));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(13));
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(3));
+
+  // okay now save it and make sure we still have the same number
+  success = cjson.writeFile("conformertmp.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+
+  success = cjson.readFile("conformertmp.cjson", molecule);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(cjson.error(), "");
+  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(14));
+  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(13));
+  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(3));
+}

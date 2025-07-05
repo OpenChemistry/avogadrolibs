@@ -1167,6 +1167,22 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
         }
         root["atoms"]["coords"]["3dFractional"] = coordsFractional;
       }
+
+      // if the molecule has multiple coordinate sets, write them out
+      if (molecule.coordinate3dCount() > 1) {
+        json coords3dSets;
+        for (Index i = 0; i < molecule.coordinate3dCount(); ++i) {
+          json coordsSet;
+          const auto& positions = molecule.coordinate3d(i);
+          for (const auto& it : positions) {
+            coordsSet.push_back(it.x());
+            coordsSet.push_back(it.y());
+            coordsSet.push_back(it.z());
+          }
+          coords3dSets.push_back(coordsSet);
+        }
+        root["atoms"]["coords"]["3dSets"] = coords3dSets;
+      }
     }
 
     // 2d positions:

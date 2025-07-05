@@ -597,7 +597,7 @@ public:
    */
   void perceiveSubstitutedCations();
 
-  size_t coordinate3dCount();
+  size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
   Array<Vector3> coordinate3d(size_t index) const;
   bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
