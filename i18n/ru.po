@@ -14,13 +14,15 @@
 # Ivanushka <oplata.kes1@mail.ru>, 2023.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025.
 # Sergey Ponomarev <stokito@gmail.com>, 2025.
+# Илья Рябов <ilyarya131@gmail.com>, 2025.
+# LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-06-15 03:04+0000\n"
-"PO-Revision-Date: 2025-06-20 11:02+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2025-07-04 19:01+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ru/>\n"
 "Language: ru\n"
@@ -473,11 +475,11 @@ msgstr "Время ожидания Avogadro истекло, ожидая отв
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "Ожидание работы %1 \"%2\" для завершения"
 
 #: molequeue/molequeuedialog.cpp:86
 msgid "Stop waiting"
-msgstr ""
+msgstr "Остановить ожидание"
 
 #: molequeue/molequeuedialog.cpp:105
 msgid "Fetching completed job information…"
@@ -485,11 +487,13 @@ msgstr ""
 
 #: molequeue/molequeuedialog.cpp:117
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Время ожидания поиска работы"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Время ожидания Avogadro истекло в ожидании сведений о готовой работе от "
+"MoleQueue."
 
 #: molequeue/molequeuedialog.cpp:127
 msgid "Error Submitting Job"
@@ -499,23 +503,24 @@ msgstr ""
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Работа была отклонена MoleQueueue: %1"
 
 #: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
-msgstr ""
+msgstr "Программа не выбрана."
 
 #: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
 msgstr ""
+"Пожалуйста, выберите целевую программу из списка \"Очередь и программа\"."
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Клиенту не удалось отправить задание в MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Внутренняя ошибка."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
@@ -523,23 +528,23 @@ msgstr ""
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Нет молекулы, установленной в BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:32 qtgui/backgroundfileformat.cpp:57
 msgid "No Io::FileFormat set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Нет Io::FileFormat установленного в BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr ""
+msgstr "Имя файла не задано в BackgroundFileFormat!"
 
 #: qtgui/containerwidget.cpp:29
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Разделение По Горизонтали"
 
 #: qtgui/containerwidget.cpp:32
 msgid "Split Vertical"
-msgstr ""
+msgstr "Разделение По Вертикали"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
