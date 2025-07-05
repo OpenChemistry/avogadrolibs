@@ -55,7 +55,7 @@ class Cp2kInputDialog : public QDialog
 public:
   explicit Cp2kInputDialog(QWidget* parent_ = nullptr,
                            Qt::WindowFlags f = Qt::WindowFlags());
-  ~Cp2kInputDialog();
+  ~Cp2kInputDialog() override;
 
   void setMolecule(QtGui::Molecule* mol);
 
@@ -66,7 +66,7 @@ signals:
   void openJobOutput(const Avogadro::MoleQueue::JobObject& job);
 
 protected:
-  void showEvent(QShowEvent* e);
+  void showEvent(QShowEvent* e) override;
 
 private slots:
   void updatePreviewText();

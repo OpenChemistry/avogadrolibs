@@ -39,7 +39,7 @@ class SpectraDialog : public QDialog
 
 public:
   explicit SpectraDialog(QWidget* parent = 0);
-  ~SpectraDialog();
+  ~SpectraDialog() override;
 
   void writeSettings() const;
   void readSettings();

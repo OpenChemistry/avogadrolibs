@@ -38,7 +38,7 @@ public:
   explicit OrbitalWidget(QWidget* parent = nullptr,
                          Qt::WindowFlags f = Qt::Widget);
   //! Deconstructor
-  virtual ~OrbitalWidget();
+  ~OrbitalWidget() override;
 
   double isovalue() { return m_isovalue; };
   OrbitalQuality defaultQuality() { return m_quality; };
