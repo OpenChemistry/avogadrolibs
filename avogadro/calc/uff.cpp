@@ -509,10 +509,50 @@ public:
           symbol2[2] == '3') {
         // default is sp3-sp3
         t._n = 3;
-        t._cos_phi0 = cos(t._n * 60.0 * DEG_TO_RAD);
+        Real Vi_j = uffparams[m_atomTypes[j]].Vi;
+        Real Vi_k = uffparams[m_atomTypes[k]].Vi;
+        Real phi0 = 60.0;
+
+        // handle some special cases
+        // e.g. a pair of group 6 sp3 atoms
+        auto atomicNumberJ = m_molecule->atom(j).atomicNumber();
+        auto atomicNumberK = m_molecule->atom(k).atomicNumber();
+        switch (atomicNumberJ) {
+          case 8: // oxygen
+            t._n = 2;
+            phi0 = 90.0; // hydrogen peroxide H-O-O-H
+            Vi_j = 2.0;
+            break;
+          case 16: // sulfur
+          case 34: // selenium
+          case 52: // tellurium
+          case 84: // polonium
+            Vi_j = 6.8;
+            t._n = 2;
+            phi0 = 90.0;
+          default:
+            break;
+        }
+        switch (atomicNumberK) {
+          case 8: // oxygen
+            t._n = 2;
+            phi0 = 90.0; // hydrogen peroxide H-O-O-H
+            Vi_k = 2.0;
+            break;
+          case 16: // sulfur
+          case 34: // selenium
+          case 52: // tellurium
+          case 84: // polonium
+            Vi_k = 6.8;
+            t._n = 2;
+            phi0 = 90.0;
+          default:
+            break;
+        }
+
+        t._cos_phi0 = cos(t._n * phi0 * DEG_TO_RAD);
         // geometric mean of the two V1 parameters
-        t._ijkl = 0.5 * sqrt(uffparams[m_atomTypes[j]].Vi *
-                             uffparams[m_atomTypes[k]].Vi);
+        t._ijkl = 0.5 * sqrt(Vi_j * Vi_k);
       } else if (symbol1[2] == 'R' && symbol2[2] == 'R') {
         order = 1.5;
         // tweak for amide
@@ -530,6 +570,18 @@ public:
         t._cos_phi0 = cos(0.0 * DEG_TO_RAD);
         t._n = 6;
         t._ijkl = 0.5;
+
+        // exceptions for Oxygen, Sulfur, Selenium, Tellurium, Polonium
+        auto atomicNumberJ = m_molecule->atom(j).atomicNumber();
+        auto atomicNumberK = m_molecule->atom(k).atomicNumber();
+        if (atomicNumberJ == 8 || atomicNumberK == 8 || atomicNumberJ == 16 ||
+            atomicNumberK == 16 || atomicNumberJ == 34 || atomicNumberK == 34 ||
+            atomicNumberJ == 52 || atomicNumberK == 52 || atomicNumberJ == 84 ||
+            atomicNumberK == 84) {
+          t._n = 2;
+          t._cos_phi0 = cos(90.0 * DEG_TO_RAD);
+        }
+
       } else {
         dihedral = ++di;
         continue;
@@ -662,11 +714,12 @@ public:
           break;
         }
         case TrigonalBipyramidal:
-          energy += kijk * (theta - theta0) * (theta - theta0);
-          break;
         case TrigonalBipentagonal:
         case Other:
         default:
+          // just use a harmonic potential
+          // but these should actually be set up as VdW repulsions
+          // so this shouldn't ever happen
           energy += kijk * (theta - theta0) * (theta - theta0);
       }
     }
@@ -856,9 +909,10 @@ public:
           Real cosTheta = cos(theta);
           Real sinTheta = sin(theta);
           // use cos 2t = (2cos^2 - 1)
+          // use sin 2t = 2sin(t)cos(t)
           // energy +=
           // kijk * (c0 + c1 * cosTheta + c2 * (2 * cosTheta * cosTheta - 1));
-          f = kijk * (c1 * sinTheta + c2 * 2.0 * cosTheta * sinTheta);
+          f = -kijk * (c1 * sinTheta + c2 * 2 * (2 * cosTheta * sinTheta));
           break;
         }
         case TrigonalBipyramidal:
@@ -1041,9 +1095,13 @@ public:
       Real rjk = jk.norm();
       Real rkl = kl.norm();
 
+      std::cout << " TorsionGrad " << i << " " << j << " " << k << " " << l
+                << " " << rij << " " << rjk << " " << rkl << std::endl;
+
       // check if the bond vectors are near zero
-      if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3)
+      if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3) {
         continue; // skip this torsion
+      }
 
       Real phi = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
       Real cosPhi0 = torsion._cos_phi0;
@@ -1051,70 +1109,54 @@ public:
       // dE / dphi
       Real dE = kijkl * torsion._n * sin(torsion._n * phi) * cosPhi0;
 
+      // debug
+      std::cout << " TorsionGrad " << phi * RAD_TO_DEG << " " << cosPhi0 << " "
+                << dE << " " << std::endl;
+
       // check for nan
       if (std::isnan(dE))
         continue;
 
       // get the displacements in Cartesian coordinates
-      Real sinPhi = sin(phi);
-      Real sinPhiSq = sinPhi * sinPhi;
-      Real cosPhi = cos(phi);
+      // use cross products
+      Vector3d A = ij.cross(jk);
+      Vector3d B = jk.cross(kl);
+      Vector3d C = jk.cross(A);
 
-      // debug
-      if (fabs(sinPhiSq) < 1e-6 || fabs(cosPhi) < 1e-6) {
-        // if sinPhi or cosPhi are near zero, skip this torsion
-        continue;
+      // get the magnitudes
+      Real rA = A.norm();
+      Real rB = B.norm();
+
+      if (rA < 1e-6 || rB < 1e-6 || rjk < 1e-6) {
+        continue; // skip this torsion
       }
 
-      // calculate the normals to the planes
-      // n1 is the plane i-j-k
-      Vector3d ij_norm = ij.stableNormalized();
-      Vector3d jk_norm = jk.stableNormalized();
-      Vector3d kl_norm = kl.stableNormalized();
-      Vector3d n1 = ij_norm.cross(jk_norm).stableNormalized();
-      // n2 is the plane j-k-l
-      Vector3d n2 = jk_norm.cross(kl_norm).stableNormalized();
-
       // calculate the derivatives
-      // atom i
-      Real di0 = -dE * n1[0] / (sinPhiSq * rij);
-      Real di1 = -dE * n1[1] / (sinPhiSq * rij);
-      Real di2 = -dE * n1[2] / (sinPhiSq * rij);
-      grad[3 * i] += di0;
-      grad[3 * i + 1] += di1;
-      grad[3 * i + 2] += di2;
+      Vector3d grad_i = -dE * rjk * A / (rA * rA);
+      grad[3 * i] += grad_i[0];
+      grad[3 * i + 1] += grad_i[1];
+      grad[3 * i + 2] += grad_i[2];
 
       // atom l
-      Real dl0 = dE * n2[0] / (sinPhiSq * rkl);
-      Real dl1 = dE * n2[1] / (sinPhiSq * rkl);
-      Real dl2 = dE * n2[2] / (sinPhiSq * rkl);
-      grad[3 * l] += dl0;
-      grad[3 * l + 1] += dl1;
-      grad[3 * l + 2] += dl2;
+      Vector3d grad_l = dE * rjk * B / (rB * rB);
+      grad[3 * l] += grad_l[0];
+      grad[3 * l + 1] += grad_l[1];
+      grad[3 * l + 2] += grad_l[2];
 
-      // atom j
-      // adding contributions from i and l
-      // clamp the cos(angle) to -1 to 1
-      Real cos_ijk = ij.dot(jk);
-      Real cos_jkl = jk.dot(kl);
-      cos_ijk = std::max(-1.0, std::min(1.0, cos_ijk));
-      cos_jkl = std::max(-1.0, std::min(1.0, cos_jkl));
+      Real dot_ij_jk = ij.dot(jk);
+      Real dot_jk_kl = jk.dot(kl);
 
-      Real dj0 =
-        di0 * ((rij / rjk * (-cos_ijk)) - 1) - dl0 * (rkl / rjk * (-cos_jkl));
-      Real dj1 =
-        di1 * ((rij / rjk * (-cos_ijk)) - 1) - dl1 * (rkl / rjk * (-cos_jkl));
-      Real dj2 =
-        di2 * ((rij / rjk * (-cos_ijk)) - 1) - dl2 * (rkl / rjk * (-cos_jkl));
-      grad[3 * j] += dj0;
-      grad[3 * j + 1] += dj1;
-      grad[3 * j + 2] += dj2;
+      Vector3d grad_j = (dot_ij_jk / (rjk * rjk) - 1.0) * grad_i -
+                        (dot_jk_kl / (rjk * rjk)) * grad_l;
 
-      // atom k
-      // adding forces from all atoms
-      grad[3 * k] -= di0 + dl0 + dj0;
-      grad[3 * k + 1] -= di1 + dl1 + dj1;
-      grad[3 * k + 2] -= di2 + dl2 + dj2;
+      grad[3 * j] += grad_j[0];
+      grad[3 * j + 1] += grad_j[1];
+      grad[3 * j + 2] += grad_j[2];
+
+      Vector3d grad_k = -grad_i - grad_j - grad_l;
+      grad[3 * k] += grad_k[0];
+      grad[3 * k + 1] += grad_k[1];
+      grad[3 * k + 2] += grad_k[2];
     }
   }
 
