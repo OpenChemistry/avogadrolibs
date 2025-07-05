@@ -305,14 +305,26 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AtomDataPartialCharge:
         return partialCharge(m_molecule, row);
       case AtomDataX:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the x coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).x();
+        else // format fixed to 4 decimals
+          return QString("%L1").arg(m_molecule->atomPosition3d(row).x(), 0, 'f',
+                                    4);
       case AtomDataY:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).y(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the y coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).y();
+        else // format fixed to 4 decimals
+          return QString("%L1").arg(m_molecule->atomPosition3d(row).y(), 0, 'f',
+                                    4);
       case AtomDataZ:
-        return QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f',
-                                  4);
+        if (role == Qt::UserRole)
+          // Return the z coordinate as a double for sorting
+          return m_molecule->atomPosition3d(row).z();
+        else // format fixed to 4 decimals
+          return QString("%L1").arg(m_molecule->atomPosition3d(row).z(), 0, 'f',
+                                    4);
       case AtomDataLabel:
         return m_molecule->atomLabel(row).c_str();
       case AtomDataColor:
@@ -346,8 +358,12 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case BondDataLabel:
         return m_molecule->bondLabel(row).c_str();
       default: // length, rounded to 4 decimals
-        return QString("%L1 Å").arg(
-          distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the bond length as a double for sorting
+          return distance(atom1.position3d(), atom2.position3d());
+        else
+          return QString("%L1 Å").arg(
+            distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
     }
   } else if (m_type == ResidueType) {
 
@@ -400,7 +416,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case AngleDataAtom3:
         return QVariant::fromValue(std::get<2>(angle) + 1);
       case AngleDataValue:
-        return QString("%L1 °").arg(calculateAngle(a1, a2, a3), 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the angle as a double for sorting
+          return calculateAngle(a1, a2, a3);
+        else // format fixed to 3 decimals
+          return QString("%L1 °").arg(calculateAngle(a1, a2, a3), 0, 'f', 3);
       default:
         return QVariant();
     }
@@ -436,8 +456,12 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
       case TorsionDataAtom4:
         return QVariant::fromValue(std::get<3>(torsion) + 1);
       case TorsionDataValue:
-        return QString("%L1 °").arg(calculateDihedral(a1, a2, a3, a4), 0, 'f',
-                                    3);
+        if (role == Qt::UserRole)
+          // Return the dihedral angle as a double for sorting
+          return calculateDihedral(a1, a2, a3, a4);
+        else // format fixed to 3 decimals
+          return QString("%L1 °").arg(calculateDihedral(a1, a2, a3, a4), 0, 'f',
+                                      3);
       default:
         return QVariant();
     }
@@ -455,8 +479,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
           rmsd = calculateRMSD(m_molecule->coordinate3d(row),
                                m_molecule->coordinate3d(0));
         }
-
-        return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
+        if (role == Qt::UserRole)
+          // Return the RMSD as a double for sorting
+          return rmsd;
+        else // format fixed to 3 decimals
+          return QString("%L1 Å").arg(rmsd, 0, 'f', 3);
       }
       case ConformerDataEnergy: {
         double energy = 0.0;
@@ -470,7 +497,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
           if (row < static_cast<int>(energies.size()))
             energy = energies[row] - minEnergy;
         }
-        return QString("%L1").arg(energy, 0, 'f', 4);
+        if (role == Qt::UserRole)
+          // Return the energy as a double for sorting
+          return energy;
+        else // format fixed to 4 decimals
+          return QString("%L1").arg(energy, 0, 'f', 4);
       }
     }
   }
@@ -792,7 +823,7 @@ bool PropertyModel::fragmentRecurse(const QtGui::RWBond& bond,
         return false;
       }
     } // *it != bond
-  } // foreach bond
+  }   // foreach bond
   return true;
 }
 
