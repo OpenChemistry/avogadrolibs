@@ -214,8 +214,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                 static_cast<unsigned char>(order));
   }
 
-  std::cout << "read atoms and bonds" << std::endl;
-
   // Parse the properties block until the end of the file.
   // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
@@ -224,7 +222,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (!in.good() || buffer.size() < 6) {
       break;
     }
+#ifndef NDEBUG
     std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
+#endif
 
     string prefix = buffer.substr(0, 6);
     if (prefix == "M  END") {
@@ -314,8 +314,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
   }
-
-  std::cout << " read properties " << std::endl;
 
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
