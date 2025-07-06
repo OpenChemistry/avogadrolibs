@@ -27,8 +27,8 @@ TEST(CjsonTest, readFile)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
@@ -42,8 +42,8 @@ TEST(CjsonTest, atoms)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -67,8 +67,8 @@ TEST(CjsonTest, bonds)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/ethane.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
@@ -89,8 +89,8 @@ TEST(CjsonTest, crystal)
 {
   CjsonFormat cjson;
   Molecule molecule;
-  bool success =
-    cjson.readFile(std::string(AVOGADRO_DATA) + "/data/rutile.cjson", molecule);
+  bool success = cjson.readFile(
+    std::string(AVOGADRO_DATA) + "/data/cjson/rutile.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.data("name").toString(), "TiO2 rutile");
@@ -141,7 +141,7 @@ TEST(CjsonTest, saveFile)
   CjsonFormat cjson;
   Molecule savedMolecule, molecule;
   bool success = cjson.readFile(
-    std::string(AVOGADRO_DATA) + "/data/ethane.cjson", savedMolecule);
+    std::string(AVOGADRO_DATA) + "/data/cjson/ethane.cjson", savedMolecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
 
@@ -174,7 +174,7 @@ TEST(CjsonTest, conformers)
   CjsonFormat cjson;
   Molecule molecule;
   bool success = cjson.readFile(
-    std::string(AVOGADRO_DATA) + "/data/conformers.cjson", molecule);
+    std::string(AVOGADRO_DATA) + "/data/cjson/conformers.cjson", molecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(14));
