@@ -184,10 +184,11 @@ TEST(CjsonTest, conformers)
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
 
-  success = cjson.readFile("conformertmp.cjson", molecule);
+  Molecule otherMolecule;
+  success = cjson.readFile("conformertmp.cjson", otherMolecule);
   EXPECT_TRUE(success);
   EXPECT_EQ(cjson.error(), "");
-  EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(14));
-  EXPECT_EQ(molecule.bondCount(), static_cast<size_t>(13));
-  EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(3));
+  EXPECT_EQ(otherMolecule.atomCount(), static_cast<size_t>(14));
+  EXPECT_EQ(otherMolecule.bondCount(), static_cast<size_t>(13));
+  EXPECT_EQ(otherMolecule.coordinate3dCount(), static_cast<size_t>(3));
 }
