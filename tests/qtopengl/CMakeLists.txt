@@ -11,10 +11,19 @@ include_directories(SYSTEM ${Qt5Widgets_INCLUDE_DIRS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
 # We want to find some parts of VTK in order to do image comparisons.
-find_package(VTK
-  COMPONENTS vtkImagingCore vtkRenderingQt vtkIOImage
-  NO_MODULE REQUIRED)
-include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
+# note: VTK 9 introduced breaking change—components are renamed and old names
+# do not work any longer since VTK_INCLUDE_DIRS is empty; include path
+# will be set via imported targets instead.
+find_package(VTK 9
+  COMPONENTS ImagingCore RenderingQt IOImage
+  NO_MODULE)
+if(NOT "${VTK_FOUND}")
+  # try to find VTK 8 or prior
+  find_package(VTK
+    COMPONENTS vtkImagingCore vtkRenderingQt vtkIOImage
+    NO_MODULE REQUIRED)
+  include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
+endif()
 
 if(AVOGADRO_DATA_ROOT)
   set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
@@ -44,11 +53,19 @@ create_test_sourcelist(testDriver qtopengltests.cpp ${testSrcs})
 
 add_executable(AvogadroQtOpenGLTests ${testDriver})
 
-target_link_libraries(AvogadroQtOpenGLTests
-  Avogadro::QtOpenGL
-  vtkImagingCore
-  vtkIOImage
-  vtkRenderingQt)
+if("${VTK_VERSION}" VERSION_GREATER_EQUAL 9)
+  target_link_libraries(AvogadroQtOpenGLTests
+    Avogadro::QtOpenGL
+    VTK::ImagingCore
+    VTK::IOImage
+    VTK::RenderingQt)
+else()
+  target_link_libraries(AvogadroQtOpenGLTests
+    Avogadro::QtOpenGL
+    vtkImagingCore
+    vtkIOImage
+    vtkRenderingQt)
+endif()
 
 foreach(test ${tests})
   string(TOLOWER ${test} testname)
