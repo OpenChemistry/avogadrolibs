@@ -1,5 +1,66 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel", "scikit-build", "pybind11", "ninja"]
-build-backend = "setuptools.build_meta:__legacy__"
+requires = ["scikit-build-core>=0.3.3", "pybind11", "ninja", "setuptools_scm"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "avogadro"
+dynamic = ["version"]
+description = "Avogadro provides analysis and data processing useful in computational chemistry, molecular modeling, bioinformatics, materials science, and related areas."
+readme = "README.md"
+authors = [
+    {name = "Avogadro / OpenChemistry Developers"}
+]
+license = {text = "BSD"}
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: C++",
+    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+]
+
+[project.urls]
+Documentation = "https://two.avogadro.cc"
+Funding = "https://github.com/sponsors/OpenChemistry"
+Source = "https://github.com/OpenChemistry/avogadrolibs"
+Tracker = "https://github.com/OpenChemistry/avogadrolibs/issues"
+Forum = "https://discuss.avogadro.cc"
+
+[tool.scikit-build]
+minimum-version = "0.4"
+cmake.minimum-version = "3.15"
+build-dir = "build/{wheel_tag}"
+sdist.include = ["python/avogadro/*.py"]
+wheel.expand-macos-universal-tags = true
+
+[tool.scikit-build.cmake.define]
+USE_SPGLIB = "FALSE"
+USE_OPENGL = "FALSE"
+USE_QT = "FALSE"
+USE_MMTF = "FALSE"
+USE_PYTHON = "TRUE"
+USE_HDF5 = "FALSE"
+USE_LIBARCHIVE = "FALSE"
+USE_LIBMSYM = "FALSE"
+INSTALL_RUNTIME_DIR = "avogadro"
+INSTALL_LIBRARY_DIR = "avogadro"
+INSTALL_ARCHIVE_DIR = "avogadro"
+PYTHON_WHEEL_BUILD = {env = "PYTHON_WHEEL_BUILD", default = "FALSE"}
+
+[tool.setuptools_scm]
+write_to = "python/avogadro/_version.py"
+
 [tool.cibuildwheel]
-build-verbosity = "1"
+build-verbosity = 1

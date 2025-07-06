@@ -15,8 +15,11 @@ env:
 
   CIBW_BEFORE_ALL_LINUX: bash scripts/github-actions/repair-linux.sh
 
-  # Specify eigen location for windows
-  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
+  # Specify eigen location for windows and add wheel build flag
+  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen PYTHON_WHEEL_BUILD=TRUE"
+
+  # Set wheel build flag for all platforms
+  CIBW_ENVIRONMENT: "PYTHON_WHEEL_BUILD=TRUE"
 
   # On Mac build both x64 and arm64
   CIBW_ARCHS_MACOS: "x86_64 arm64"
@@ -76,7 +79,7 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@master
+      - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.pypi_api_token }}
