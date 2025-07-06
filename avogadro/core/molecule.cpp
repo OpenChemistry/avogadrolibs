@@ -1241,7 +1241,7 @@ void Molecule::perceiveBondsFromResidueData()
   }
 }
 
-size_t Molecule::coordinate3dCount()
+size_t Molecule::coordinate3dCount() const
 {
   return m_coordinates3d.size();
 }

@@ -196,10 +196,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       json coordSets = atoms["coords"]["3dSets"];
       if (coordSets.is_array() && coordSets.size()) {
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
+          Array<Vector3> setArray;
           json set = coordSets[i];
-          if (isNumericArray(set) && set.size() == 3) {
-            auto a = molecule.atom(i);
-            a.setPosition3d(Vector3(set[0], set[1], set[2]));
+          if (isNumericArray(set)) {
+            for (unsigned int j = 0; j < set.size() / 3; ++j) {
+              setArray.push_back(
+                Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
+            }
+            molecule.setCoordinate3d(setArray, i);
           }
         }
         // Make sure the first step is active once we are done loading the sets.
@@ -1162,6 +1166,22 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
           coordsFractional.push_back(fcoord.z());
         }
         root["atoms"]["coords"]["3dFractional"] = coordsFractional;
+      }
+
+      // if the molecule has multiple coordinate sets, write them out
+      if (molecule.coordinate3dCount() > 1) {
+        json coords3dSets;
+        for (Index i = 0; i < molecule.coordinate3dCount(); ++i) {
+          json coordsSet;
+          const auto& positions = molecule.coordinate3d(i);
+          for (const auto& it : positions) {
+            coordsSet.push_back(it.x());
+            coordsSet.push_back(it.y());
+            coordsSet.push_back(it.z());
+          }
+          coords3dSets.push_back(coordsSet);
+        }
+        root["atoms"]["coords"]["3dSets"] = coords3dSets;
       }
     }
 
