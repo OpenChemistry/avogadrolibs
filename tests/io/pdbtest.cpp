@@ -18,7 +18,7 @@ TEST(PdbTest, altLoc)
 {
   PdbFormat pdb;
   Molecule molecule;
-  pdb.readFile(std::string(AVOGADRO_DATA) + "/data/1FDT.pdb", molecule);
+  pdb.readFile(std::string(AVOGADRO_DATA) + "/data/pdb/1FDT.pdb", molecule);
 
   EXPECT_EQ(molecule.coordinate3dCount(), 2);
 
