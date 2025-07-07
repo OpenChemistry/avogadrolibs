@@ -91,7 +91,7 @@ TEST(FileFormatManagerTest, readFileGuessCjson)
 {
   Molecule molecule;
   FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/cml/ethane.cjson");
+                                                     "/data/cjson/ethane.cjson");
   EXPECT_EQ(molecule.data("name").type(), Variant::String);
   EXPECT_EQ(molecule.data("name").toString(), "Ethane");
   EXPECT_EQ(molecule.data("inchi").type(), Variant::String);
