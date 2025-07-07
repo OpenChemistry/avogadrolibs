@@ -156,13 +156,18 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                       &mat[1][1], &mat[1][2], &mat[2][0], &mat[2][1],
                       &mat[2][2]);
         if (_kid == "box_size") {
-          mol.setUnitCell(new UnitCell(
+          auto* uc = new UnitCell(
             Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                     mat[0][2] * NM_TO_ANGSTROM),
             Vector3(mat[1][0] * NM_TO_ANGSTROM, mat[1][1] * NM_TO_ANGSTROM,
                     mat[1][2] * NM_TO_ANGSTROM),
             Vector3(mat[2][0] * NM_TO_ANGSTROM, mat[2][1] * NM_TO_ANGSTROM,
-                    mat[2][2] * NM_TO_ANGSTROM)));
+                    mat[2][2] * NM_TO_ANGSTROM));
+          if (!uc->isRegular()) {
+            appendError("lattice vectors are not linear independent");
+            return false;
+          }
+          mol.setUnitCell(uc);
         }
       } else {
         snprintf(fmt, sizeof(fmt), "%c%df", endian, DIM * DIM);
@@ -172,13 +177,18 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                       &mat[1][1], &mat[1][2], &mat[2][0], &mat[2][1],
                       &mat[2][2]);
         if (_kid == "box_size") {
-          mol.setUnitCell(new UnitCell(
+          auto* uc = new UnitCell(
             Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                     mat[0][2] * NM_TO_ANGSTROM),
             Vector3(mat[1][0] * NM_TO_ANGSTROM, mat[1][1] * NM_TO_ANGSTROM,
                     mat[1][2] * NM_TO_ANGSTROM),
             Vector3(mat[2][0] * NM_TO_ANGSTROM, mat[2][1] * NM_TO_ANGSTROM,
-                    mat[2][2] * NM_TO_ANGSTROM)));
+                    mat[2][2] * NM_TO_ANGSTROM));
+          if (!uc->isRegular()) {
+            appendError("lattice vectors are not linear independent");
+            return false;
+          }
+          mol.setUnitCell(uc);
         }
       }
     }
@@ -319,13 +329,18 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                         &mat[1][0], &mat[1][1], &mat[1][2], &mat[2][0],
                         &mat[2][1], &mat[2][2]);
           if (_kid == "box_size") {
-            mol.setUnitCell(new UnitCell(
+            auto* uc = new UnitCell(
               Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                       mat[0][2] * NM_TO_ANGSTROM),
               Vector3(mat[1][0] * NM_TO_ANGSTROM, mat[1][1] * NM_TO_ANGSTROM,
                       mat[1][2] * NM_TO_ANGSTROM),
               Vector3(mat[2][0] * NM_TO_ANGSTROM, mat[2][1] * NM_TO_ANGSTROM,
-                      mat[2][2] * NM_TO_ANGSTROM)));
+                      mat[2][2] * NM_TO_ANGSTROM));
+            if (!uc->isRegular()) {
+              appendError("lattice vectors are not linear independent");
+              return false;
+            }
+            mol.setUnitCell(uc);
           }
         } else {
           snprintf(fmt, sizeof(fmt), "%c%df", endian, DIM * DIM);
@@ -335,13 +350,18 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                         &mat[1][0], &mat[1][1], &mat[1][2], &mat[2][0],
                         &mat[2][1], &mat[2][2]);
           if (_kid == "box_size") {
-            mol.setUnitCell(new UnitCell(
+            auto* uc = new UnitCell(
               Vector3(mat[0][0] * NM_TO_ANGSTROM, mat[0][1] * NM_TO_ANGSTROM,
                       mat[0][2] * NM_TO_ANGSTROM),
               Vector3(mat[1][0] * NM_TO_ANGSTROM, mat[1][1] * NM_TO_ANGSTROM,
                       mat[1][2] * NM_TO_ANGSTROM),
               Vector3(mat[2][0] * NM_TO_ANGSTROM, mat[2][1] * NM_TO_ANGSTROM,
-                      mat[2][2] * NM_TO_ANGSTROM)));
+                      mat[2][2] * NM_TO_ANGSTROM));
+            if (!uc->isRegular()) {
+              appendError("lattice vectors are not linear independent");
+              return false;
+            }
+            mol.setUnitCell(uc);
           }
         }
       }

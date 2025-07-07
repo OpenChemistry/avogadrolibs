@@ -79,6 +79,51 @@ TEST(CmlTest, bonds)
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
 }
 
+TEST(CmlTest, readInvalidPeriodicFile)
+{
+  for (const auto& cmlStr : {
+
+         R"(<?xml version="1.0"?>
+<molecule xmlns="http://www.xml-cml.org/schema">
+  <name>lattice constant is zero</name>
+  <crystal>
+    <scalar title="a" units="units:angstrom">5.4</scalar>
+    <scalar title="b" units="units:angstrom">5.4</scalar>
+    <scalar title="c" units="units:angstrom">0.0</scalar>
+    <scalar title="alpha" units="units:degree">90.0</scalar>
+    <scalar title="beta" units="units:degree">90.0</scalar>
+    <scalar title="gamma" units="units:degree">90.0</scalar>
+  </crystal>
+  <atomArray>
+    <atom id="a" elementType="Xx" xFract="0.5" yFract="0.5" zFract="0.5"/>
+  </atomArray>
+</molecule>)"s,
+
+         R"(<?xml version="1.0"?>
+<molecule xmlns="http://www.xml-cml.org/schema">
+  <name>angle is zero</name>
+  <crystal>
+    <scalar title="a" units="units:angstrom">5.4</scalar>
+    <scalar title="b" units="units:angstrom">5.4</scalar>
+    <scalar title="c" units="units:angstrom">5.4</scalar>
+    <scalar title="alpha" units="units:degree">90.0</scalar>
+    <scalar title="beta" units="units:degree">0.0</scalar>
+    <scalar title="gamma" units="units:degree">90.0</scalar>
+  </crystal>
+  <atomArray>
+    <atom id="a" elementType="Xx" xFract="0.5" yFract="0.5" zFract="0.5"/>
+  </atomArray>
+</molecule>)"s,
+
+       }) {
+    CmlFormat cml;
+    Molecule molecule;
+    EXPECT_FALSE(cml.readString(cmlStr, molecule));
+    EXPECT_EQ(cml.error(),
+              "<crystal> does not give linear independent lattice vectors\n");
+  }
+}
+
 TEST(CmlTest, fractionalCoords)
 {
   std::string cmlStr(

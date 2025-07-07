@@ -27,6 +27,7 @@ using Avogadro::Core::UnitCell;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::OutcarFormat;
 using Avogadro::Io::PoscarFormat;
+using namespace std::string_literals;
 
 TEST(VaspTest, readPoscar)
 {
@@ -65,6 +66,40 @@ TEST(VaspTest, readPoscar)
   EXPECT_DOUBLE_EQ(pos5.x(), 0.5);
   EXPECT_DOUBLE_EQ(pos5.y(), 0.5);
   EXPECT_DOUBLE_EQ(pos5.z(), 0.5);
+}
+
+TEST(VaspTest, readInvalidPoscar)
+{
+  for (const auto& str : {
+
+         R"(vector length is zero
+5.4
+  0.00  0.00  0.00
+  0.00  1.00  0.00
+  0.00  0.00  1.00
+Si
+1
+Direct
+  0.00  0.00  0.00
+)"s,
+
+         R"(the vectors are linear dependent
+5.4
+  1.00  0.00  0.25
+  0.00  1.00  0.75
+  1.00  1.00  1.00
+Si
+1
+Direct
+  0.00  0.00  0.00
+)"s
+
+       }) {
+    Molecule molecule;
+    PoscarFormat poscar;
+    EXPECT_FALSE(poscar.readString(str, molecule));
+    EXPECT_EQ(poscar.error(), "cell vectors are not linear independent\n");
+  }
 }
 
 TEST(VaspTest, writePoscar)
