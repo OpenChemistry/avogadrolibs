@@ -10,13 +10,66 @@ env:
   # builds to skip (e.g. skip 32-bit windows)
   CIBW_SKIP: "cp38-macosx_arm64 *-manylinux_i686 *-win32"
 
+  # Specify which Python versions to build for
+  CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-*"
+
+  # Add build verbosity for better debugging
+  CIBW_BUILD_VERBOSITY: 1
+
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
 
   CIBW_BEFORE_ALL_LINUX: bash scripts/github-actions/repair-linux.sh
 
-  # Specify eigen location for windows
-  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen"
+  # Ensure proper dylib handling on macOS
+  CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
+    set -x  # Enable debugging
+    echo "=== Debugging wheel repair ==="
+    echo "Wheel file: {wheel}"
+    echo "Build directory contents:"
+    find . -name "*.dylib" -type f | head -20
+    
+    # Unpack the wheel to inspect and modify contents
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+    python -m wheel unpack {wheel}
+    WHEEL_NAME=$(basename {wheel} .whl)
+    
+    echo "Original wheel contents:"
+    find "$WHEEL_NAME" -type f | head -20
+    
+    # Find and copy dylib files from the build
+    echo "Searching for dylib files..."
+    AVOGADRO_DIR="$WHEEL_NAME/avogadro"
+    if [ -d "$AVOGADRO_DIR" ]; then
+      # Look for dylibs in common build locations
+      for dylib_pattern in "libAvogadroCore*" "libAvogadroIO*" "libAvogadroQuantumIO*" "libAvogadroCalc*"; do
+        find {project} -name "$dylib_pattern.dylib" -type f -exec cp {} "$AVOGADRO_DIR/" \; 2>/dev/null || true
+        find {project}/build -name "$dylib_pattern.dylib" -type f -exec cp {} "$AVOGADRO_DIR/" \; 2>/dev/null || true
+      done
+      
+      echo "Wheel contents after copying dylibs:"
+      ls -la "$AVOGADRO_DIR"/*.dylib 2>/dev/null || echo "No dylibs found in avogadro dir"
+    fi
+    
+    # Repack the wheel
+    python -m wheel pack "$WHEEL_NAME" --dest-dir .
+    cp "$WHEEL_NAME.whl" {wheel}
+    cd - > /dev/null
+    rm -rf "$TEMP_DIR"
+    
+    # Now run delocate with verbose output
+    echo "Running delocate..."
+    delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}
+
+  # Specify eigen location for windows and add wheel build flag
+  CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen PYTHON_WHEEL_BUILD=TRUE"
+
+  # Set wheel build flag for all platforms
+  CIBW_ENVIRONMENT: "PYTHON_WHEEL_BUILD=TRUE"
+
+  # Pass environment variables to build process
+  CIBW_ENVIRONMENT_PASS_LINUX: "PYTHON_WHEEL_BUILD"
 
   # On Mac build both x64 and arm64
   CIBW_ARCHS_MACOS: "x86_64 arm64"
@@ -55,7 +108,7 @@ jobs:
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.0.0
+        uses: pypa/cibuildwheel@v2.16.5
 
       - uses: actions/upload-artifact@v4
         with:
@@ -76,7 +129,7 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@master
+      - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.pypi_api_token }}
