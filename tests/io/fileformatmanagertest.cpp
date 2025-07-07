@@ -155,7 +155,7 @@ TEST(FileFormatManagerTest, writeStringCjsonOptions)
   Molecule molecule;
   std::string options = "{ \"properties\": false }";
   FileFormatManager::instance().readFile(molecule, std::string(AVOGADRO_DATA) +
-                                                     "/data/cml/ethane.cjson");
+                                                     "/data/cjson/ethane.cjson");
   std::string cjson;
   FileFormatManager::instance().writeString(molecule, cjson, "cjson", options);
 
