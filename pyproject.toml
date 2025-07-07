@@ -49,6 +49,8 @@ install.strip = false
 # Ensure all shared libraries are included
 wheel.packages = ["avogadro"]
 wheel.py-api = "py3"
+# Force installation of all components to ensure dylibs are included
+install.components = []
 
 [tool.scikit-build.cmake.define]
 USE_SPGLIB = "FALSE"
