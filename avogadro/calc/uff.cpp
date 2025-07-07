@@ -550,6 +550,8 @@ public:
             break;
         }
 
+        std::cout << " SetDihedral " << t._n << " " << phi0 << " " << std::endl;
+
         t._cos_phi0 = cos(t._n * phi0 * DEG_TO_RAD);
         // geometric mean of the two V1 parameters
         t._ijkl = 0.5 * sqrt(Vi_j * Vi_k);

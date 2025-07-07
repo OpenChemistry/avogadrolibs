@@ -452,15 +452,19 @@ void Forcefield::forces()
 #ifndef NDEBUG
   qDebug() << " current gradient ";
   for (Index i = 0; i < n; ++i) {
-    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
-             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
+    qDebug() << " atom " << i << " element "
+             << m_molecule->atom(i).atomicNumber()
+             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
+             << ", " << gradient[3 * i + 2];
   }
 
   qDebug() << " numeric gradient ";
   m_method->finiteGradient(positions, gradient);
   for (Index i = 0; i < n; ++i) {
-    qDebug() << " atom " << i << " grad: " << gradient[3 * i] << ", "
-             << gradient[3 * i + 1] << ", " << gradient[3 * i + 2];
+    qDebug() << " atom " << i << " element "
+             << m_molecule->atom(i).atomicNumber()
+             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
+             << ", " << gradient[3 * i + 2];
   }
 #endif
 
