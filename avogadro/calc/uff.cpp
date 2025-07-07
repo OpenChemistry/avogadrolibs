@@ -1095,11 +1095,6 @@ public:
       Real rjk = jk.norm();
       Real rkl = kl.norm();
 
-      /*
-      std::cout << " TorsionGrad " << i << " " << j << " " << k << " " << l
-                << " " << rij << " " << rjk << " " << rkl << std::endl;
-      */
-
       // check if the bond vectors are near zero
       if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3) {
         continue; // skip this torsion
@@ -1127,12 +1122,32 @@ public:
       Vector3d n2 = jk / rjk;
       Vector3d n3 = kl / rkl;
 
+      // get the angles between ijk and jkl
+      Vector3d n1_cross_n2 = n1.cross(n2);
+      Vector3d n2_cross_n3 = n2.cross(n3);
+
+      // check for near-zero cross products
+      if (n1_cross_n2.norm() < 1e-6 || n2_cross_n3.norm() < 1e-6) {
+        continue; // skip this torsion
+      }
+
+      Real sinAngleIJK = n1_cross_n2.norm();
+      Real sinAngleJKL = n2_cross_n3.norm();
+      Real cosAngleIJK = n1.dot(n2);
+      Real cosAngleJKL = n2.dot(n3);
+
       // get the gradient components
-      Vector3d grad_i = -n1.cross(n2) / (rij * sinPhi * sinPhi);
-      Vector3d grad_l = n2.cross(n3) / (rkl * sinPhi * sinPhi);
+      Vector3d grad_i = -n1_cross_n2 / (rij * sinAngleIJK * sinAngleIJK);
+      Vector3d grad_l = n2_cross_n3 / (rkl * sinAngleJKL * sinAngleJKL);
+
       // grad_j and grad_k are a bit more complicated
-      Real fraction1 = (rij / rjk) * (-cos(phi));
-      Real fraction2 = (rkl / rjk) * (-cos(phi));
+
+      // clamp the cosines to -1 to 1
+      cosAngleIJK = std::max(-1.0, std::min(1.0, cosAngleIJK));
+      cosAngleJKL = std::max(-1.0, std::min(1.0, cosAngleJKL));
+
+      Real fraction1 = (rij / rjk) * (-cosAngleIJK);
+      Real fraction2 = (rkl / rjk) * (-cosAngleJKL);
       Vector3d grad_j = grad_i * (fraction1 - 1) - grad_l * (fraction2);
       Vector3d grad_k = -(grad_i + grad_l + grad_j);
 
