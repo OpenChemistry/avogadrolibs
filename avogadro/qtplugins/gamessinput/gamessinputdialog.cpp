@@ -120,7 +120,7 @@ enum ChargeOption
   ChargeCount
 };
 
-enum DispersionCorrectionOption 
+enum DispersionCorrectionOption
 {
   DispersionNone = 0,
   DispersionD1,
@@ -204,7 +204,7 @@ void GamessInputDialog::connectBasic()
           SLOT(updatePreviewText()));
   connect(ui.chargeCombo, SIGNAL(currentIndexChanged(int)), this,
           SLOT(updatePreviewText()));
-    connect(ui.maxscfspinBox, SIGNAL(valueChanged(int)), this,
+  connect(ui.maxscfspinBox, SIGNAL(valueChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.convergeSpinBox, SIGNAL(valueChanged(double)), this,
           SLOT(updatePreviewText()));
@@ -576,9 +576,8 @@ void GamessInputDialog::updatePreviewText()
   // Disable basis selection for semiempirical methods.
   ui.basisCombo->setEnabled(theory != TheoryAM1 && theory != TheoryPM3);
   bool is_dft = (theory == TheoryB3LYP || theory == TheoryPBE0 ||
-                  theory == TheorywB97X || theory == TheorywB97XD);
+                 theory == TheorywB97X || theory == TheorywB97XD);
   ui.DCVerCombo->setEnabled(is_dft);
-  
 
   // Generate text.
   //   Variables:
@@ -712,7 +711,8 @@ void GamessInputDialog::updatePreviewText()
         break;
       case BasisMakeEFP:
         gBasis = "N311";
-        extraBasis += " NGAUSS=6 NDFUNC=3 NPFUNC=2 NFFUNC=3 \n DIFFSP=.TRUE. DIFFS=.TRUE.";
+        extraBasis +=
+          " NGAUSS=6 NDFUNC=3 NPFUNC=2 NFFUNC=3 \n DIFFSP=.TRUE. DIFFS=.TRUE.";
         break;
       case BasisCCD:
         gBasis = "ccd";
@@ -801,7 +801,7 @@ void GamessInputDialog::updatePreviewText()
       break;
   }
 
-  if(is_dft) {
+  if (is_dft) {
     switch (dispersion) {
       case DispersionNone:
         extraDFT += " DC=.F. ";
@@ -832,7 +832,7 @@ void GamessInputDialog::updatePreviewText()
             .arg(scfTyp, runTyp, iCharg, mult, extraContrl);
   file += QString(" $CONTRL ISPHER=1 MAXIT=%1 $END\n").arg(maxSCF);
   file += QString(" $SCF DIRSCF=.T. CONV=%1 $END\n").arg(convthresh);
-  if(is_dft) {
+  if (is_dft) {
     file += QString(" $DFT %1 $END\n").arg(extraDFT);
   }
   file += statPt;

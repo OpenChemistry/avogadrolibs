@@ -36,7 +36,7 @@ class AVOGADROMOLEQUEUE_EXPORT Client : public QObject
 
 public:
   explicit Client(QObject* parent_ = nullptr);
-  ~Client();
+  ~Client() override;
 
   /**
    * Query if the client is connected to a server.

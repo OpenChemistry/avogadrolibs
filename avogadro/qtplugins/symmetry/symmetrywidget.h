@@ -18,7 +18,6 @@
 #include <QStyledItemDelegate>
 
 #include "operationstablemodel.h"
-#include "symmetrywidget.h"
 
 // class QPlainTextEdit;
 
@@ -27,7 +26,7 @@ extern "C"
 {
 #include <libmsym/msym.h>
 }
-}
+} // namespace msym
 
 namespace Avogadro {
 

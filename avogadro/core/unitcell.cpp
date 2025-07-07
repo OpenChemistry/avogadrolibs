@@ -50,4 +50,4 @@ Real UnitCell::signedAngleRadians(const Vector3& v1, const Vector3& v2,
   return signDet > 0.f ? angle : -angle;
 }
 
-} // end namespace Avogadro
+} // namespace Avogadro::Core

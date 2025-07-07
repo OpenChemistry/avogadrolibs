@@ -115,8 +115,8 @@ QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
                   }
                 }
               } // "commands" JSON is array
-            }   // document is json
-          }     // plugin.json file exists
+            } // document is json
+          } // plugin.json file exists
 
           continue;
         } // end reading subdirectories with plugin.json
@@ -125,7 +125,7 @@ QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
           fileList << filePath;
       }
     } // end dir.exists()
-  }   // end for directory list
+  } // end for directory list
 
   // go through the list of files to see if they're actually scripts
   foreach (const QString& filePath, fileList) {
@@ -174,7 +174,7 @@ QMultiMap<QString, QString> ScriptLoader::scriptList(const QString& type)
                           file.lastModified().toString(Qt::ISODate);
       }
     } // run queryProgramName
-  }   // foreach files
+  } // foreach files
 
   return scriptList;
 }

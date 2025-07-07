@@ -22,18 +22,14 @@ Drawable::Drawable(const Drawable& other)
 {
 }
 
-Drawable::~Drawable()
-{
-}
+Drawable::~Drawable() {}
 
 void Drawable::accept(Visitor& visitor)
 {
   visitor.visit(*this);
 }
 
-void Drawable::render(const Camera&)
-{
-}
+void Drawable::render(const Camera&) {}
 
 std::multimap<float, Identifier> Drawable::hits(const Vector3f&,
                                                 const Vector3f&,
@@ -47,13 +43,11 @@ Array<Identifier> Drawable::areaHits(const Frustrum&) const
   return Array<Identifier>();
 }
 
-void Drawable::clear()
-{
-}
+void Drawable::clear() {}
 
 void Drawable::setParent(GeometryNode* parent_)
 {
   m_parent = parent_;
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

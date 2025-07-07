@@ -27,8 +27,7 @@ public:
                const std::string& specificationUrl_,
                const std::vector<std::string> fileExtensions_,
                const std::vector<std::string> mimeTypes_,
-               const std::string& defaultFormat_,
-               bool fileOnly_ = false);
+               const std::string& defaultFormat_, bool fileOnly_ = false);
   ~OBFileFormat() override;
 
   Operations supportedOperations() const override

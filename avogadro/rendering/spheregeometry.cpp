@@ -47,7 +47,8 @@ public:
   size_t numberOfIndices;
 };
 
-SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private) {
+SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
+{
   setRenderPass(SolidPass);
 }
 
@@ -143,12 +144,12 @@ void SphereGeometry::update()
     if (!d->program->link())
       cout << d->program->error() << endl;
 
-/*
-    d->program.detachShader(d->vertexShader);
-    d->program.detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
-    */
+    /*
+        d->program.detachShader(d->vertexShader);
+        d->program.detachShader(d->fragmentShader);
+        d->vertexShader.cleanup();
+        d->fragmentShader.cleanup();
+        */
   }
 }
 
@@ -177,8 +178,8 @@ void SphereGeometry::render(const Camera& camera)
   if (!d->program->enableAttributeArray("color"))
     cout << d->program->error() << endl;
   if (!d->program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
-                                    sizeof(ColorTextureVertex), UCharType, 3,
-                                    ShaderProgram::Normalize)) {
+                                     sizeof(ColorTextureVertex), UCharType, 3,
+                                     ShaderProgram::Normalize)) {
     cout << d->program->error() << endl;
   }
   if (!d->program->enableAttributeArray("texCoordinate"))
@@ -193,7 +194,8 @@ void SphereGeometry::render(const Camera& camera)
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
     cout << d->program->error() << endl;
   }
-  if (!d->program->setUniformValue("projection", camera.projection().matrix())) {
+  if (!d->program->setUniformValue("projection",
+                                   camera.projection().matrix())) {
     cout << d->program->error() << endl;
   }
   if (!d->program->setUniformValue("opacity", m_opacity)) {
@@ -292,4 +294,4 @@ void SphereGeometry::clear()
   m_indices.clear();
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

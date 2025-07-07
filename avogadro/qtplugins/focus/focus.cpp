@@ -86,7 +86,7 @@ void Focus::focusSelection()
     return;
   if (m_molecule->isSelectionEmpty())
     return;
-  
+
   Eigen::Vector3f selectionCenter(0, 0, 0);
   std::vector<Index> selection;
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -101,9 +101,9 @@ void Focus::focusSelection()
     Eigen::Vector3f pos = m_molecule->atomPosition3d(i).cast<float>();
     float distance = (pos - selectionCenter).norm();
     if (distance > selectionRadius)
-        selectionRadius = distance;
+      selectionRadius = distance;
   }
-  
+
   newFocus(selectionCenter, selectionRadius + 10.0f);
   emit updateRequested();
 }
@@ -112,9 +112,9 @@ void Focus::unfocus()
 {
   if (!m_camera || !m_scene)
     return;
-  
+
   newFocus(m_scene->center(), 2.22f * m_scene->radius());
   emit updateRequested();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

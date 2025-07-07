@@ -16,10 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-12-29 02:36+0000\n"
-"PO-Revision-Date: 2025-05-13 16:02+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"POT-Creation-Date: 2025-07-06 03:06+0000\n"
+"PO-Revision-Date: 2025-06-20 11:02+0000\n"
+"Last-Translator: Максим Горпиніч <maksimgorpinic4@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/uk/>\n"
 "Language: uk\n"
@@ -28,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -193,17 +192,17 @@ msgstr "Продовжити"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:66
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:302
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:377
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:955
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:1019
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:35
+#: molequeue/inputgeneratorwidget.cpp:116 qtgui/containerwidget.cpp:33
 msgid "Close"
 msgstr "Закрити"
 
-#: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:374
+#: molequeue/inputgeneratorwidget.cpp:164 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
 msgid "Unknown"
@@ -264,15 +263,15 @@ msgstr "Немає вхідних файлів для збереження!"
 
 #: molequeue/inputgeneratorwidget.cpp:294
 #: molequeue/inputgeneratorwidget.cpp:602 molequeue/molequeuewidget.cpp:69
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:985
-#: qtplugins/gamessinput/gamessinputdialog.cpp:679
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
+#: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
 msgstr "Не вдається підключитися до MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:295
 #: molequeue/inputgeneratorwidget.cpp:603 molequeue/molequeuewidget.cpp:70
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:986
-#: qtplugins/gamessinput/gamessinputdialog.cpp:680
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:981
+#: qtplugins/gamessinput/gamessinputdialog.cpp:918
 msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
@@ -286,14 +285,14 @@ msgid "Submit %1 Calculation"
 msgstr "Надіслати обчислення %1"
 
 #: molequeue/inputgeneratorwidget.cpp:342
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1022
-#: qtplugins/gamessinput/gamessinputdialog.cpp:716
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
+#: qtplugins/gamessinput/gamessinputdialog.cpp:954
 msgid "Job Failed"
 msgstr "Робота не виконана"
 
 #: molequeue/inputgeneratorwidget.cpp:343
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1023
-#: qtplugins/gamessinput/gamessinputdialog.cpp:717
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1018
+#: qtplugins/gamessinput/gamessinputdialog.cpp:955
 msgid "The job did not complete successfully."
 msgstr "Робота не виконана успішно."
 
@@ -325,8 +324,8 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:479
 #: molequeue/inputgeneratorwidget.cpp:590
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:975
-#: qtplugins/gamessinput/gamessinputdialog.cpp:669
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:970
+#: qtplugins/gamessinput/gamessinputdialog.cpp:907
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:324
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:354
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:368
@@ -338,8 +337,8 @@ msgstr "Помилка виведення"
 
 #: molequeue/inputgeneratorwidget.cpp:480
 #: molequeue/inputgeneratorwidget.cpp:591
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:976
-#: qtplugins/gamessinput/gamessinputdialog.cpp:670
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:971
+#: qtplugins/gamessinput/gamessinputdialog.cpp:908
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:355
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:369
 #: qtplugins/openmminput/openmminputdialog.cpp:453
@@ -471,38 +470,38 @@ msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
 msgstr "Очікування завершення завдання %1 «%2»…"
 
-#: molequeue/molequeuedialog.cpp:86
+#: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
 msgstr "Припиніть чекати"
 
-#: molequeue/molequeuedialog.cpp:105
+#: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
 msgstr "Отримання інформації про виконану роботу…"
 
-#: molequeue/molequeuedialog.cpp:117
+#: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
 msgstr "Час очікування отримання завдання"
 
-#: molequeue/molequeuedialog.cpp:118
+#: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
 "Авогадро вичерпав час очікування на деталі завершеної роботи від MoleQueue."
 
-#: molequeue/molequeuedialog.cpp:127
+#: molequeue/molequeuedialog.cpp:129
 msgid "Error Submitting Job"
 msgstr "Помилка надсилання завдання"
 
-#: molequeue/molequeuedialog.cpp:128
+#: molequeue/molequeuedialog.cpp:130
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
 msgstr "Завдання відхилено MoleQueue: %1"
 
-#: molequeue/molequeuedialog.cpp:195 molequeue/molequeuewidget.cpp:141
+#: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
 msgstr "Програма не вибрана."
 
-#: molequeue/molequeuedialog.cpp:196 molequeue/molequeuewidget.cpp:142
+#: molequeue/molequeuedialog.cpp:198 molequeue/molequeuewidget.cpp:142
 msgid "Please select the target program from the \"Queue and Program\" list."
 msgstr "Будь ласка, виберіть цільову програму зі списку «Черга та програма»."
 
@@ -530,491 +529,491 @@ msgstr "Не встановлено Io :: FileFormat у BackgroundFileFormat!"
 msgid "No file name set in BackgroundFileFormat!"
 msgstr "Назви файлу не встановлено у BackgroundFileFormat!"
 
-#: qtgui/containerwidget.cpp:29
+#: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
 msgstr "Розділ по горизонталі"
 
-#: qtgui/containerwidget.cpp:32
+#: qtgui/containerwidget.cpp:30
 msgid "Split Vertical"
 msgstr "Спліт по вертикалі"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:19 qtplugins/noncovalent/noncovalent.h:53
+#: qtgui/elementtranslator.cpp:17 qtplugins/noncovalent/noncovalent.h:53
 msgid "Hydrogen"
 msgstr "Гідроген"
 
-#: qtgui/elementtranslator.cpp:22
+#: qtgui/elementtranslator.cpp:20
 msgid "Helium"
 msgstr "Гелій"
 
-#: qtgui/elementtranslator.cpp:25
+#: qtgui/elementtranslator.cpp:23
 msgid "Lithium"
 msgstr "Літій"
 
-#: qtgui/elementtranslator.cpp:28
+#: qtgui/elementtranslator.cpp:26
 msgid "Beryllium"
 msgstr "Берилій"
 
-#: qtgui/elementtranslator.cpp:31
+#: qtgui/elementtranslator.cpp:29
 msgid "Boron"
 msgstr "Бор"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:34:1959
+#: qtgui/elementtranslator.cpp:32:1965
 msgid "Carbon"
 msgstr "Карбон"
 
-#: qtgui/elementtranslator.cpp:37
+#: qtgui/elementtranslator.cpp:35
 msgid "Nitrogen"
 msgstr "Нітроген"
 
-#: qtgui/elementtranslator.cpp:40
+#: qtgui/elementtranslator.cpp:38
 msgid "Oxygen"
 msgstr "Оксиген"
 
-#: qtgui/elementtranslator.cpp:43
+#: qtgui/elementtranslator.cpp:41
 msgid "Fluorine"
 msgstr "Флуор"
 
-#: qtgui/elementtranslator.cpp:46
+#: qtgui/elementtranslator.cpp:44
 msgid "Neon"
 msgstr "Неон"
 
-#: qtgui/elementtranslator.cpp:49
+#: qtgui/elementtranslator.cpp:47
 msgid "Sodium"
 msgstr "Натрій"
 
-#: qtgui/elementtranslator.cpp:52
+#: qtgui/elementtranslator.cpp:50
 msgid "Magnesium"
 msgstr "Магній"
 
-#: qtgui/elementtranslator.cpp:55
+#: qtgui/elementtranslator.cpp:53
 msgid "Aluminum"
 msgstr "Алюміній"
 
-#: qtgui/elementtranslator.cpp:58
+#: qtgui/elementtranslator.cpp:56
 msgid "Silicon"
 msgstr "Силіцій"
 
-#: qtgui/elementtranslator.cpp:61
+#: qtgui/elementtranslator.cpp:59
 msgid "Phosphorus"
 msgstr "Фосфор"
 
-#: qtgui/elementtranslator.cpp:64
+#: qtgui/elementtranslator.cpp:62
 msgid "Sulfur"
 msgstr "Сульфур"
 
-#: qtgui/elementtranslator.cpp:67
+#: qtgui/elementtranslator.cpp:65
 msgid "Chlorine"
 msgstr "Хлор"
 
-#: qtgui/elementtranslator.cpp:70
+#: qtgui/elementtranslator.cpp:68
 msgid "Argon"
 msgstr "Аргон"
 
-#: qtgui/elementtranslator.cpp:73
+#: qtgui/elementtranslator.cpp:71
 msgid "Potassium"
 msgstr "Калій"
 
-#: qtgui/elementtranslator.cpp:76
+#: qtgui/elementtranslator.cpp:74
 msgid "Calcium"
 msgstr "Кальцій"
 
-#: qtgui/elementtranslator.cpp:79
+#: qtgui/elementtranslator.cpp:77
 msgid "Scandium"
 msgstr "Скандій"
 
-#: qtgui/elementtranslator.cpp:82
+#: qtgui/elementtranslator.cpp:80
 msgid "Titanium"
 msgstr "Титан"
 
-#: qtgui/elementtranslator.cpp:85
+#: qtgui/elementtranslator.cpp:83
 msgid "Vanadium"
 msgstr "Ванадій"
 
-#: qtgui/elementtranslator.cpp:88
+#: qtgui/elementtranslator.cpp:86
 msgid "Chromium"
 msgstr "Хром"
 
-#: qtgui/elementtranslator.cpp:91
+#: qtgui/elementtranslator.cpp:89
 msgid "Manganese"
 msgstr "Манган"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:94:1962
+#: qtgui/elementtranslator.cpp:92:1968
 msgid "Iron"
 msgstr "Ферум"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:76
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
-#: qtgui/elementtranslator.cpp:97:1965
+#: qtgui/elementtranslator.cpp:95:1971
 msgid "Cobalt"
 msgstr "Кобальт"
 
-#: qtgui/elementtranslator.cpp:100
+#: qtgui/elementtranslator.cpp:98
 msgid "Nickel"
 msgstr "Нікол"
 
-#: qtgui/elementtranslator.cpp:103
+#: qtgui/elementtranslator.cpp:101
 msgid "Copper"
 msgstr "Купрум"
 
-#: qtgui/elementtranslator.cpp:106
+#: qtgui/elementtranslator.cpp:104
 msgid "Zinc"
 msgstr "Цинк"
 
-#: qtgui/elementtranslator.cpp:109
+#: qtgui/elementtranslator.cpp:107
 msgid "Gallium"
 msgstr "Галій"
 
-#: qtgui/elementtranslator.cpp:112
+#: qtgui/elementtranslator.cpp:110
 msgid "Germanium"
 msgstr "Германій"
 
-#: qtgui/elementtranslator.cpp:115
+#: qtgui/elementtranslator.cpp:113
 msgid "Arsenic"
 msgstr "Арсен"
 
-#: qtgui/elementtranslator.cpp:118
+#: qtgui/elementtranslator.cpp:116
 msgid "Selenium"
 msgstr "Селен"
 
-#: qtgui/elementtranslator.cpp:121
+#: qtgui/elementtranslator.cpp:119
 msgid "Bromine"
 msgstr "Бром"
 
-#: qtgui/elementtranslator.cpp:124
+#: qtgui/elementtranslator.cpp:122
 msgid "Krypton"
 msgstr "Криптон"
 
-#: qtgui/elementtranslator.cpp:127
+#: qtgui/elementtranslator.cpp:125
 msgid "Rubidium"
 msgstr "Рубідій"
 
-#: qtgui/elementtranslator.cpp:130
+#: qtgui/elementtranslator.cpp:128
 msgid "Strontium"
 msgstr "Стронцій"
 
-#: qtgui/elementtranslator.cpp:133
+#: qtgui/elementtranslator.cpp:131
 msgid "Yttrium"
 msgstr "Ітрій"
 
-#: qtgui/elementtranslator.cpp:136
+#: qtgui/elementtranslator.cpp:134
 msgid "Zirconium"
 msgstr "Цирконій"
 
-#: qtgui/elementtranslator.cpp:139
+#: qtgui/elementtranslator.cpp:137
 msgid "Niobium"
 msgstr "Ніобій"
 
-#: qtgui/elementtranslator.cpp:142
+#: qtgui/elementtranslator.cpp:140
 msgid "Molybdenum"
 msgstr "Молібден"
 
-#: qtgui/elementtranslator.cpp:145
+#: qtgui/elementtranslator.cpp:143
 msgid "Technetium"
 msgstr "Технецій"
 
-#: qtgui/elementtranslator.cpp:148
+#: qtgui/elementtranslator.cpp:146
 msgid "Ruthenium"
 msgstr "Рутеній"
 
-#: qtgui/elementtranslator.cpp:151
+#: qtgui/elementtranslator.cpp:149
 msgid "Rhodium"
 msgstr "Родій"
 
-#: qtgui/elementtranslator.cpp:154
+#: qtgui/elementtranslator.cpp:152
 msgid "Palladium"
 msgstr "Паладій"
 
-#: qtgui/elementtranslator.cpp:157
+#: qtgui/elementtranslator.cpp:155
 msgid "Silver"
 msgstr "Аргентум"
 
-#: qtgui/elementtranslator.cpp:160
+#: qtgui/elementtranslator.cpp:158
 msgid "Cadmium"
 msgstr "Кадмій"
 
-#: qtgui/elementtranslator.cpp:163
+#: qtgui/elementtranslator.cpp:161
 msgid "Indium"
 msgstr "Індій"
 
-#: qtgui/elementtranslator.cpp:166
+#: qtgui/elementtranslator.cpp:164
 msgid "Tin"
 msgstr "Станум"
 
-#: qtgui/elementtranslator.cpp:169
+#: qtgui/elementtranslator.cpp:167
 msgid "Antimony"
 msgstr "Сурма"
 
-#: qtgui/elementtranslator.cpp:172
+#: qtgui/elementtranslator.cpp:170
 msgid "Tellurium"
 msgstr "Телур"
 
-#: qtgui/elementtranslator.cpp:175
+#: qtgui/elementtranslator.cpp:173
 msgid "Iodine"
 msgstr "Йод"
 
-#: qtgui/elementtranslator.cpp:178
+#: qtgui/elementtranslator.cpp:176
 msgid "Xenon"
 msgstr "Ксенон"
 
-#: qtgui/elementtranslator.cpp:181
+#: qtgui/elementtranslator.cpp:179
 msgid "Cesium"
 msgstr "Цезій"
 
-#: qtgui/elementtranslator.cpp:184
+#: qtgui/elementtranslator.cpp:182
 msgid "Barium"
 msgstr "Барій"
 
-#: qtgui/elementtranslator.cpp:187
+#: qtgui/elementtranslator.cpp:185
 msgid "Lanthanum"
 msgstr "Лантан"
 
-#: qtgui/elementtranslator.cpp:190
+#: qtgui/elementtranslator.cpp:188
 msgid "Cerium"
 msgstr "Церій"
 
-#: qtgui/elementtranslator.cpp:193
+#: qtgui/elementtranslator.cpp:191
 msgid "Praseodymium"
 msgstr "Празеодим"
 
-#: qtgui/elementtranslator.cpp:196
+#: qtgui/elementtranslator.cpp:194
 msgid "Neodymium"
 msgstr "Неодим"
 
-#: qtgui/elementtranslator.cpp:199
+#: qtgui/elementtranslator.cpp:197
 msgid "Promethium"
 msgstr "Прометій"
 
-#: qtgui/elementtranslator.cpp:202
+#: qtgui/elementtranslator.cpp:200
 msgid "Samarium"
 msgstr "Самарій"
 
-#: qtgui/elementtranslator.cpp:205
+#: qtgui/elementtranslator.cpp:203
 msgid "Europium"
 msgstr "Європій"
 
-#: qtgui/elementtranslator.cpp:208
+#: qtgui/elementtranslator.cpp:206
 msgid "Gadolinium"
 msgstr "Гадоліній"
 
-#: qtgui/elementtranslator.cpp:211
+#: qtgui/elementtranslator.cpp:209
 msgid "Terbium"
 msgstr "Тербій"
 
-#: qtgui/elementtranslator.cpp:214
+#: qtgui/elementtranslator.cpp:212
 msgid "Dysprosium"
 msgstr "Диспрозій"
 
-#: qtgui/elementtranslator.cpp:217
+#: qtgui/elementtranslator.cpp:215
 msgid "Holmium"
 msgstr "Гольмій"
 
-#: qtgui/elementtranslator.cpp:220
+#: qtgui/elementtranslator.cpp:218
 msgid "Erbium"
 msgstr "Ербій"
 
-#: qtgui/elementtranslator.cpp:223
+#: qtgui/elementtranslator.cpp:221
 msgid "Thulium"
 msgstr "Тулій"
 
-#: qtgui/elementtranslator.cpp:226
+#: qtgui/elementtranslator.cpp:224
 msgid "Ytterbium"
 msgstr "Ітербій"
 
-#: qtgui/elementtranslator.cpp:229
+#: qtgui/elementtranslator.cpp:227
 msgid "Lutetium"
 msgstr "Лютецій"
 
-#: qtgui/elementtranslator.cpp:232
+#: qtgui/elementtranslator.cpp:230
 msgid "Hafnium"
 msgstr "Гафній"
 
-#: qtgui/elementtranslator.cpp:235
+#: qtgui/elementtranslator.cpp:233
 msgid "Tantalum"
 msgstr "Тантал"
 
-#: qtgui/elementtranslator.cpp:238
+#: qtgui/elementtranslator.cpp:236
 msgid "Tungsten"
 msgstr "Вольфрам"
 
-#: qtgui/elementtranslator.cpp:241
+#: qtgui/elementtranslator.cpp:239
 msgid "Rhenium"
 msgstr "Реній"
 
-#: qtgui/elementtranslator.cpp:244
+#: qtgui/elementtranslator.cpp:242
 msgid "Osmium"
 msgstr "Осмій"
 
-#: qtgui/elementtranslator.cpp:247
+#: qtgui/elementtranslator.cpp:245
 msgid "Iridium"
 msgstr "Іридій"
 
-#: qtgui/elementtranslator.cpp:250
+#: qtgui/elementtranslator.cpp:248
 msgid "Platinum"
 msgstr "Платина"
 
-#: qtgui/elementtranslator.cpp:253
+#: qtgui/elementtranslator.cpp:251
 msgid "Gold"
 msgstr "Аурум"
 
-#: qtgui/elementtranslator.cpp:256
+#: qtgui/elementtranslator.cpp:254
 msgid "Mercury"
 msgstr "Меркурій"
 
-#: qtgui/elementtranslator.cpp:259
+#: qtgui/elementtranslator.cpp:257
 msgid "Thallium"
 msgstr "Талій"
 
-#: qtgui/elementtranslator.cpp:262
+#: qtgui/elementtranslator.cpp:260
 msgid "Lead"
 msgstr "Плюмбум"
 
-#: qtgui/elementtranslator.cpp:265
+#: qtgui/elementtranslator.cpp:263
 msgid "Bismuth"
 msgstr "Бісмут"
 
-#: qtgui/elementtranslator.cpp:268
+#: qtgui/elementtranslator.cpp:266
 msgid "Polonium"
 msgstr "Полоній"
 
-#: qtgui/elementtranslator.cpp:271
+#: qtgui/elementtranslator.cpp:269
 msgid "Astatine"
 msgstr "Астат"
 
-#: qtgui/elementtranslator.cpp:274
+#: qtgui/elementtranslator.cpp:272
 msgid "Radon"
 msgstr "Радон"
 
-#: qtgui/elementtranslator.cpp:277
+#: qtgui/elementtranslator.cpp:275
 msgid "Francium"
 msgstr "Францій"
 
-#: qtgui/elementtranslator.cpp:280
+#: qtgui/elementtranslator.cpp:278
 msgid "Radium"
 msgstr "Радій"
 
-#: qtgui/elementtranslator.cpp:283
+#: qtgui/elementtranslator.cpp:281
 msgid "Actinium"
 msgstr "Актиній"
 
-#: qtgui/elementtranslator.cpp:286
+#: qtgui/elementtranslator.cpp:284
 msgid "Thorium"
 msgstr "Торій"
 
-#: qtgui/elementtranslator.cpp:289
+#: qtgui/elementtranslator.cpp:287
 msgid "Protactinium"
 msgstr "Протактиній"
 
-#: qtgui/elementtranslator.cpp:292
+#: qtgui/elementtranslator.cpp:290
 msgid "Uranium"
 msgstr "Уран"
 
-#: qtgui/elementtranslator.cpp:295
+#: qtgui/elementtranslator.cpp:293
 msgid "Neptunium"
 msgstr "Нептуній"
 
-#: qtgui/elementtranslator.cpp:298
+#: qtgui/elementtranslator.cpp:296
 msgid "Plutonium"
 msgstr "Плутоній"
 
-#: qtgui/elementtranslator.cpp:301
+#: qtgui/elementtranslator.cpp:299
 msgid "Americium"
 msgstr "Америцій"
 
-#: qtgui/elementtranslator.cpp:304
+#: qtgui/elementtranslator.cpp:302
 msgid "Curium"
 msgstr "Кюрій"
 
-#: qtgui/elementtranslator.cpp:307
+#: qtgui/elementtranslator.cpp:305
 msgid "Berkelium"
 msgstr "Берклій"
 
-#: qtgui/elementtranslator.cpp:310
+#: qtgui/elementtranslator.cpp:308
 msgid "Californium"
 msgstr "Каліфорній"
 
-#: qtgui/elementtranslator.cpp:313
+#: qtgui/elementtranslator.cpp:311
 msgid "Einsteinium"
 msgstr "Ейнштейній"
 
-#: qtgui/elementtranslator.cpp:316
+#: qtgui/elementtranslator.cpp:314
 msgid "Fermium"
 msgstr "Фермій"
 
-#: qtgui/elementtranslator.cpp:319
+#: qtgui/elementtranslator.cpp:317
 msgid "Mendelevium"
 msgstr "Менделєвій"
 
-#: qtgui/elementtranslator.cpp:322
+#: qtgui/elementtranslator.cpp:320
 msgid "Nobelium"
 msgstr "Нобелій"
 
-#: qtgui/elementtranslator.cpp:325
+#: qtgui/elementtranslator.cpp:323
 msgid "Lawrencium"
 msgstr "Лоуренсій"
 
-#: qtgui/elementtranslator.cpp:328
+#: qtgui/elementtranslator.cpp:326
 msgid "Rutherfordium"
 msgstr "Резерфордій"
 
-#: qtgui/elementtranslator.cpp:331
+#: qtgui/elementtranslator.cpp:329
 msgid "Dubnium"
 msgstr "Дубній"
 
-#: qtgui/elementtranslator.cpp:334
+#: qtgui/elementtranslator.cpp:332
 msgid "Seaborgium"
 msgstr "Сіборгій"
 
-#: qtgui/elementtranslator.cpp:337
+#: qtgui/elementtranslator.cpp:335
 msgid "Bohrium"
 msgstr "Борій"
 
-#: qtgui/elementtranslator.cpp:340
+#: qtgui/elementtranslator.cpp:338
 msgid "Hassium"
 msgstr "Гасій"
 
-#: qtgui/elementtranslator.cpp:343
+#: qtgui/elementtranslator.cpp:341
 msgid "Meitnerium"
 msgstr "Майтнерій"
 
-#: qtgui/elementtranslator.cpp:346
+#: qtgui/elementtranslator.cpp:344
 msgid "Darmstadtium"
 msgstr "Дармштадтій"
 
-#: qtgui/elementtranslator.cpp:349
+#: qtgui/elementtranslator.cpp:347
 msgid "Roentgenium"
 msgstr "Рентгеній"
 
-#: qtgui/elementtranslator.cpp:352
+#: qtgui/elementtranslator.cpp:350
 msgid "Copernicium"
 msgstr "Коперніцій"
 
-#: qtgui/elementtranslator.cpp:355
+#: qtgui/elementtranslator.cpp:353
 msgid "Nihonium"
 msgstr "Ніхоній"
 
-#: qtgui/elementtranslator.cpp:358
+#: qtgui/elementtranslator.cpp:356
 msgid "Flerovium"
 msgstr "Флеровій"
 
-#: qtgui/elementtranslator.cpp:361
+#: qtgui/elementtranslator.cpp:359
 msgid "Moscovium"
 msgstr "Московій"
 
-#: qtgui/elementtranslator.cpp:364
+#: qtgui/elementtranslator.cpp:362
 msgid "Livermorium"
 msgstr "Ліверморій"
 
-#: qtgui/elementtranslator.cpp:367
+#: qtgui/elementtranslator.cpp:365
 msgid "Tennessine"
 msgstr "Теннессин"
 
-#: qtgui/elementtranslator.cpp:370
+#: qtgui/elementtranslator.cpp:368
 msgid "Oganesson"
 msgstr "Оганесон"
 
@@ -1111,92 +1110,92 @@ msgstr ""
 msgid "Error writing molecule representation to string: %1"
 msgstr "Помилка запису представлення молекули в рядок: %1"
 
-#: qtgui/jsonwidget.cpp:86
+#: qtgui/jsonwidget.cpp:87
 msgid "'userOptions' missing."
 msgstr "Відсутній 'userOptions'."
 
-#: qtgui/jsonwidget.cpp:117
+#: qtgui/jsonwidget.cpp:118
 #, qt-format
 msgid "Option '%1' does not refer to an object."
 msgstr "Параметр \"%1\" не посилається на об'єкт."
 
-#: qtgui/jsonwidget.cpp:124
+#: qtgui/jsonwidget.cpp:125
 #, qt-format
 msgid "'type' is not a string for option '%1'."
 msgstr "'type' не є рядком для параметра '%1'."
 
-#: qtgui/jsonwidget.cpp:131
+#: qtgui/jsonwidget.cpp:132
 #, qt-format
 msgid "Could not find option '%1'."
 msgstr "Не вдалося знайти параметр \"%1\"."
 
-#: qtgui/jsonwidget.cpp:185
+#: qtgui/jsonwidget.cpp:186
 #, qt-format
 msgid "Tab %1"
 msgstr "вкладка %1"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:53
 #. i18n: ectx: property (text), widget (QLineEdit, titleLine)
-#: qtgui/jsonwidget.cpp:208:691
+#: qtgui/jsonwidget.cpp:209:697
 msgid "Title"
 msgstr "Назва"
 
-#: qtgui/jsonwidget.cpp:212
+#: qtgui/jsonwidget.cpp:213
 msgid "Filename Base"
 msgstr "База імен файлів"
 
-#: qtgui/jsonwidget.cpp:217
+#: qtgui/jsonwidget.cpp:218
 msgid "Processor Cores"
 msgstr "Ядра процесора"
 
-#: qtgui/jsonwidget.cpp:222
+#: qtgui/jsonwidget.cpp:223
 msgid "Calculation Type"
 msgstr "Тип розрахунку"
 
-#: qtgui/jsonwidget.cpp:226
+#: qtgui/jsonwidget.cpp:227
 msgid "Theory"
 msgstr "Теорія"
 
-#: qtgui/jsonwidget.cpp:226
+#: qtgui/jsonwidget.cpp:227
 msgid "Basis"
 msgstr "Основа"
 
-#: qtgui/jsonwidget.cpp:231 qtgui/jsonwidget.cpp:235
+#: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:236
 msgid "Charge"
 msgstr "Заряд"
 
-#: qtgui/jsonwidget.cpp:232 qtgui/jsonwidget.cpp:237
+#: qtgui/jsonwidget.cpp:233 qtgui/jsonwidget.cpp:238
 msgid "Multiplicity"
 msgstr "Кратність"
 
-#: qtgui/jsonwidget.cpp:589
+#: qtgui/jsonwidget.cpp:590
 #, qt-format
 msgid "Error: value must be object for key '%1'."
 msgstr "Помилка: значення має бути об’єктом для ключа «%1»."
 
-#: qtgui/jsonwidget.cpp:622
+#: qtgui/jsonwidget.cpp:623
 #, qt-format
 msgid "Unrecognized option type '%1' for option '%2'."
 msgstr "Нерозпізнаний тип опції \"%1\" для опції \"%2\"."
 
-#: qtgui/jsonwidget.cpp:631 qtgui/jsonwidget.cpp:666 qtgui/jsonwidget.cpp:687
-#: qtgui/jsonwidget.cpp:709 qtgui/jsonwidget.cpp:730 qtgui/jsonwidget.cpp:752
-#: qtgui/jsonwidget.cpp:773
+#: qtgui/jsonwidget.cpp:632 qtgui/jsonwidget.cpp:667 qtgui/jsonwidget.cpp:688
+#: qtgui/jsonwidget.cpp:710 qtgui/jsonwidget.cpp:731 qtgui/jsonwidget.cpp:753
+#: qtgui/jsonwidget.cpp:774
 #, qt-format
 msgid "Error setting default for option '%1'. Bad widget type."
 msgstr ""
 "Помилка налаштування параметра \"%1\" за умовчанням. Поганий тип віджета."
 
-#: qtgui/jsonwidget.cpp:638 qtgui/jsonwidget.cpp:673 qtgui/jsonwidget.cpp:694
-#: qtgui/jsonwidget.cpp:716 qtgui/jsonwidget.cpp:737 qtgui/jsonwidget.cpp:759
-#: qtgui/jsonwidget.cpp:780
+#: qtgui/jsonwidget.cpp:639 qtgui/jsonwidget.cpp:674 qtgui/jsonwidget.cpp:695
+#: qtgui/jsonwidget.cpp:717 qtgui/jsonwidget.cpp:738 qtgui/jsonwidget.cpp:760
+#: qtgui/jsonwidget.cpp:781
 #, qt-format
 msgid "Error setting default for option '%1'. Bad default value:"
 msgstr ""
 "Помилка налаштування параметра \"%1\" за умовчанням. Неправильне значення за "
 "умовчанням:"
 
-#: qtgui/jsonwidget.cpp:652
+#: qtgui/jsonwidget.cpp:653
 #, qt-format
 msgid ""
 "Error setting default for option '%1'. Could not find valid combo entry "
@@ -1205,88 +1204,96 @@ msgstr ""
 "Помилка налаштування параметра \"%1\" за умовчанням. Не вдалося знайти "
 "дійсний індекс комбінованого запису зі значення:"
 
-#: qtgui/jsonwidget.cpp:841
+#: qtgui/jsonwidget.cpp:842
 #, qt-format
 msgid "Unhandled widget in collectOptions for option '%1'."
 msgstr "Необроблений віджет у collectOptions для опції «%1»."
 
-#: qtgui/jsonwidget.cpp:886 qtplugins/cp2kinput/cp2kinputdialog.cpp:455
-#: qtplugins/gamessinput/gamessinputdialog.cpp:391
+#: qtgui/jsonwidget.cpp:887 qtplugins/cp2kinput/cp2kinputdialog.cpp:451
+#: qtplugins/gamessinput/gamessinputdialog.cpp:524
 msgid "[no molecule]"
 msgstr "[жодної молекули]"
 
-#: qtgui/layermodel.cpp:85
+#: qtgui/layermodel.cpp:117
 #, qt-format
 msgid "Layer %1"
 msgstr "Шар %1"
 
-#: qtgui/layermodel.cpp:136 qtplugins/ballandstick/ballandstick.h:28
+#: qtgui/layermodel.cpp:170 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
 msgstr "Кульки і стрижні"
 
-#: qtgui/layermodel.cpp:138 qtplugins/cartoons/cartoons.h:31
+#: qtgui/layermodel.cpp:172 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
 msgid "Cartoons"
 msgstr "Мультфільми"
 
-#: qtgui/layermodel.cpp:140 qtplugins/closecontacts/closecontacts.h:31
+#: qtgui/layermodel.cpp:174 qtplugins/closecontacts/closecontacts.h:31
 msgctxt "rendering of non-covalent close contacts"
 msgid "Close Contacts"
 msgstr "Закрити Контакти"
 
-#: qtgui/layermodel.cpp:142 qtplugins/crystal/crystalscene.h:31
+#: qtgui/layermodel.cpp:176 qtplugins/crystal/crystalscene.h:31
 msgid "Crystal Lattice"
 msgstr "Кристалічна решітка"
 
-#: qtgui/layermodel.cpp:144 qtplugins/dipole/dipole.h:29
+#: qtgui/layermodel.cpp:178 qtplugins/dipole/dipole.h:29
 msgid "Dipole Moment"
 msgstr "Дипольний момент"
 
-#: qtgui/layermodel.cpp:146 qtplugins/force/force.h:28
+#: qtgui/layermodel.cpp:180 qtplugins/force/force.h:28
 msgid "Force"
 msgstr "Сила"
 
-#: qtgui/layermodel.cpp:148 qtplugins/label/label.h:25
+#: qtgui/layermodel.cpp:182 qtplugins/label/label.h:25
 msgid "Labels"
 msgstr "Мітки"
 
-#: qtgui/layermodel.cpp:150 qtplugins/licorice/licorice.h:31
+#: qtgui/layermodel.cpp:184 qtplugins/licorice/licorice.h:31
 msgctxt "stick / licorice rendering"
 msgid "Licorice"
 msgstr "Солодка"
 
-#: qtgui/layermodel.cpp:152 qtplugins/meshes/meshes.h:29
-#: qtplugins/surfaces/orbitals.cpp:525 qtplugins/surfaces/surfaces.cpp:842
-msgid "Meshes"
-msgstr "Сітки"
+#: qtgui/layermodel.cpp:186 qtplugins/meshes/meshes.h:29
+#: qtplugins/surfaces/surfaces.h:71
+msgid "Surfaces"
+msgstr "Поверхні"
 
-#: qtgui/layermodel.cpp:154 qtplugins/noncovalent/noncovalent.h:30
+#: qtgui/layermodel.cpp:188 qtplugins/noncovalent/noncovalent.h:30
 msgid "Non-Covalent"
 msgstr "Нековалентний"
 
-#: qtgui/layermodel.cpp:156
+#: qtgui/layermodel.cpp:190
 msgctxt "quantum theory of atoms in molecules"
 msgid "QTAIM"
 msgstr "QTAIM"
 
-#: qtgui/layermodel.cpp:158 qtplugins/symmetry/symmetryscene.h:33
+#: qtgui/layermodel.cpp:192 qtplugins/symmetry/symmetryscene.h:33
 msgid "Symmetry Elements"
 msgstr "Елементи симетрії"
 
-#: qtgui/layermodel.cpp:160 qtplugins/surfaces/surfacedialog.cpp:25
+#: qtgui/layermodel.cpp:194 qtplugins/surfaces/surfacedialog.cpp:25
 #: qtplugins/vanderwaals/vanderwaals.h:29
 msgid "Van der Waals"
 msgstr "Ван-дер-Ваальса"
 
-#: qtgui/layermodel.cpp:162 qtplugins/wireframe/wireframe.h:28
+#: qtgui/layermodel.cpp:196 qtplugins/wireframe/wireframe.h:28
 msgid "Wireframe"
 msgstr "Каркас"
 
-#: qtgui/moleculemodel.cpp:92
+#: qtgui/moleculemodel.cpp:94
 msgid "Untitled"
 msgstr "Без назви"
 
-#: qtgui/multiviewwidget.cpp:191
+#: qtgui/moleculemodel.cpp:109
+msgid "Edit molecule"
+msgstr "Редагувати молекулу"
+
+#: qtgui/moleculemodel.cpp:116
+msgid "Not saved"
+msgstr "Не збережено"
+
+#: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
 msgstr "Створіть новий перегляд"
 
@@ -1384,7 +1391,7 @@ msgstr "Додати інформацію про шар"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:222 qtgui/rwlayermanager.cpp:225
 #: qtplugins/select/select.cpp:564
-#: qtplugins/selectiontool/selectiontool.cpp:263:1640
+#: qtplugins/selectiontool/selectiontool.cpp:264:1646
 msgid "Change Layer"
 msgstr "Змінити шар"
 
@@ -1393,7 +1400,7 @@ msgid "Add Atom"
 msgstr "Додати атом"
 
 #: qtgui/rwmolecule.cpp:70 qtgui/rwmolecule.cpp:85
-#: qtplugins/editor/editor.cpp:133
+#: qtplugins/editor/editor.cpp:135
 msgid "Remove Atom"
 msgstr "Вилучити атом"
 
@@ -1496,11 +1503,11 @@ msgid "Reduce to Primitive"
 msgstr "Зменшити до примітиву"
 
 #: qtgui/rwmolecule.cpp:638 qtplugins/spacegroup/spacegroup.cpp:62
-#: qtplugins/spacegroup/spacegroup.cpp:259
+#: qtplugins/spacegroup/spacegroup.cpp:263
 msgid "Conventionalize Cell"
 msgstr "Консультація Клітка"
 
-#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:284
+#: qtgui/rwmolecule.cpp:663 qtplugins/spacegroup/spacegroup.cpp:288
 msgid "Symmetrize Cell"
 msgstr "Симетризуйте клітинку"
 
@@ -1536,7 +1543,7 @@ msgstr "Змінити вибір"
 msgid "Modify Molecule"
 msgstr "Змінити молекулу"
 
-#: qtgui/scenepluginmodel.cpp:92
+#: qtgui/scenepluginmodel.cpp:101
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -1557,15 +1564,15 @@ msgstr "HTML-блок 3DMol."
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:41
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41 qtplugins/ply/ply.cpp:46
-#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
-#: qtplugins/vrml/vrml.cpp:46
+#: qtplugins/networkdatabases/networkdatabases.cpp:39 qtplugins/ply/ply.cpp:44
+#: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
+#: qtplugins/vrml/vrml.cpp:44
 msgid "&File"
 msgstr "&Файл"
 
-#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:46
-#: qtplugins/povray/povray.cpp:46 qtplugins/svg/svg.cpp:45
-#: qtplugins/vrml/vrml.cpp:46
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:44
+#: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
+#: qtplugins/vrml/vrml.cpp:44
 msgid "&Export"
 msgstr "&Експорт"
 
@@ -1577,11 +1584,11 @@ msgstr "ТриDMol"
 msgid "Change Elements…"
 msgstr "Змінити елементи…"
 
-#: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:61
+#: qtplugins/alchemy/alchemy.cpp:42 qtplugins/bonding/bonding.cpp:62
 #: qtplugins/centroid/centroid.cpp:45
-#: qtplugins/coordinateeditor/coordinateeditor.cpp:34
-#: qtplugins/customelements/customelements.cpp:42
-#: qtplugins/hydrogens/hydrogens.cpp:59 qtplugins/insertdna/insertdna.cpp:62
+#: qtplugins/coordinateeditor/coordinateeditor.cpp:32
+#: qtplugins/customelements/customelements.cpp:40
+#: qtplugins/hydrogens/hydrogens.cpp:57 qtplugins/insertdna/insertdna.cpp:62
 #: qtplugins/insertfragment/insertfragment.cpp:60
 #: qtplugins/lineformatinput/lineformatinput.cpp:61
 msgid "&Build"
@@ -1591,7 +1598,7 @@ msgstr "&Збирання"
 #. i18n: ectx: property (text), widget (QLabel, label)
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:48
 #. i18n: ectx: property (text), widget (QLabel, elementLabel)
-#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1953
+#: qtplugins/alchemy/alchemy.cpp:74:478 rc.cpp:1959
 msgid "Element:"
 msgstr "Елемент:"
 
@@ -1603,11 +1610,11 @@ msgstr "Алхімія"
 msgid "Change elements of atoms."
 msgstr "Зміна елементів атомів."
 
-#: qtplugins/aligntool/aligntool.cpp:49 qtplugins/aligntool/aligntool.cpp:92
+#: qtplugins/aligntool/aligntool.cpp:51 qtplugins/aligntool/aligntool.cpp:94
 msgid "Align"
 msgstr "Вирівняти"
 
-#: qtplugins/aligntool/aligntool.cpp:51
+#: qtplugins/aligntool/aligntool.cpp:53
 msgid ""
 "Align Molecules\n"
 "\n"
@@ -1627,7 +1634,7 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:262
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: qtplugins/aligntool/aligntool.cpp:79:1691
+#: qtplugins/aligntool/aligntool.cpp:81:1697
 msgid "Axis:"
 msgstr "Вісь:"
 
@@ -1635,15 +1642,15 @@ msgstr "Вісь:"
 msgid "Align at Origin"
 msgstr "Вирівняти за початком"
 
-#: qtplugins/aligntool/aligntool.cpp:192
+#: qtplugins/aligntool/aligntool.cpp:193
 msgid "Align to Axis"
 msgstr "Вирівняти по осі"
 
-#: qtplugins/aligntool/aligntool.cpp:308
+#: qtplugins/aligntool/aligntool.cpp:287
 msgid "Center the atom at the origin."
 msgstr "Центруйте атом у початку координат."
 
-#: qtplugins/aligntool/aligntool.cpp:311
+#: qtplugins/aligntool/aligntool.cpp:290
 msgid "Rotate the molecule to align the atom to the specified axis."
 msgstr "Обертайте молекулу, щоб вирівняти атом відносно вказаної осі."
 
@@ -1665,7 +1672,7 @@ msgstr "Відкрити вихідний файл…"
 
 #: qtplugins/apbs/apbs.cpp:50 qtplugins/cp2kinput/cp2kinput.cpp:49
 #: qtplugins/gamessinput/gamessinput.cpp:50
-#: qtplugins/lammpsinput/lammpsinput.cpp:48
+#: qtplugins/lammpsinput/lammpsinput.cpp:46
 #: qtplugins/openmminput/openmminput.cpp:46
 #: qtplugins/quantuminput/quantuminput.cpp:64
 msgid "&Input"
@@ -1685,25 +1692,25 @@ msgstr "Відкрийте вихідний файл"
 msgid "OpenDX File (*.dx)"
 msgstr "Файл OpenDX (*.dx)"
 
-#: qtplugins/apbs/apbs.cpp:116
+#: qtplugins/apbs/apbs.cpp:115
 msgid "IO Error"
 msgstr "IO Помилка"
 
-#: qtplugins/apbs/apbs.cpp:117
+#: qtplugins/apbs/apbs.cpp:116
 #, qt-format
 msgid "Error reading structure file (%1)."
 msgstr "Помилка читання файлу структури (%1)."
 
-#: qtplugins/apbs/apbs.cpp:137 qtplugins/apbs/apbs.cpp:144
+#: qtplugins/apbs/apbs.cpp:136 qtplugins/apbs/apbs.cpp:143
 msgid "OpenDX Error"
 msgstr "Помилка OpenDX"
 
-#: qtplugins/apbs/apbs.cpp:138
+#: qtplugins/apbs/apbs.cpp:137
 #, qt-format
 msgid "Error reading OpenDX file: %1"
 msgstr "Помилка читання файлу OpenDX: %1"
 
-#: qtplugins/apbs/apbs.cpp:145
+#: qtplugins/apbs/apbs.cpp:144
 msgid "Error reading OpenDX file: No cube found"
 msgstr "Помилка читання файлу OpenDX: куб не знайдено"
 
@@ -1738,7 +1745,7 @@ msgstr "Файли PQR (*.pqr)"
 #: qtplugins/cp2kinput/cp2kinput.cpp:85
 #: qtplugins/gamessinput/gamessinput.cpp:86
 #: qtplugins/insertfragment/insertfragment.cpp:107
-#: qtplugins/lammpsinput/lammpsinput.cpp:64
+#: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:158
 #: qtplugins/molecularproperties/molecularview.cpp:192
 #: qtplugins/openbabel/openbabel.cpp:208 qtplugins/openbabel/openbabel.cpp:217
@@ -1756,8 +1763,8 @@ msgstr "Файли PQR (*.pqr)"
 #: qtplugins/openmminput/openmminput.cpp:62
 #: qtplugins/plugindownloader/downloaderwidget.cpp:99
 #: qtplugins/plugindownloader/downloaderwidget.cpp:105
-#: qtplugins/propertytables/propertyview.cpp:260
-#: qtplugins/propertytables/propertyview.cpp:293
+#: qtplugins/propertytables/propertyview.cpp:261
+#: qtplugins/propertytables/propertyview.cpp:294
 #: qtplugins/quantuminput/quantuminput.cpp:104
 msgid "Error"
 msgstr "Помилка"
@@ -1830,25 +1837,25 @@ msgstr "За фігурною схемою"
 #: qtplugins/applycolors/applycolors.cpp:107
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:762
+#: qtplugins/surfaces/surfaces.cpp:777
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Парула"
 
 #: qtplugins/applycolors/applycolors.cpp:109
-#: qtplugins/surfaces/surfaces.cpp:764
+#: qtplugins/surfaces/surfaces.cpp:779
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Тепло"
 
 #: qtplugins/applycolors/applycolors.cpp:111
-#: qtplugins/surfaces/surfaces.cpp:766
+#: qtplugins/surfaces/surfaces.cpp:781
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Гаряче"
 
 #: qtplugins/applycolors/applycolors.cpp:113
-#: qtplugins/surfaces/surfaces.cpp:768
+#: qtplugins/surfaces/surfaces.cpp:783
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Сірий"
@@ -1856,7 +1863,7 @@ msgstr "Сірий"
 #: qtplugins/applycolors/applycolors.cpp:115
 #: qtplugins/applycolors/applycolors.cpp:210
 #: qtplugins/applycolors/applycolors.cpp:308
-#: qtplugins/surfaces/surfaces.cpp:770
+#: qtplugins/surfaces/surfaces.cpp:785
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Магма"
@@ -1864,7 +1871,7 @@ msgstr "Магма"
 #: qtplugins/applycolors/applycolors.cpp:117
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:772
+#: qtplugins/surfaces/surfaces.cpp:787
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Пекло"
@@ -1872,7 +1879,7 @@ msgstr "Пекло"
 #: qtplugins/applycolors/applycolors.cpp:119
 #: qtplugins/applycolors/applycolors.cpp:211
 #: qtplugins/applycolors/applycolors.cpp:309
-#: qtplugins/surfaces/surfaces.cpp:774
+#: qtplugins/surfaces/surfaces.cpp:789
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Плазма"
@@ -1880,7 +1887,7 @@ msgstr "Плазма"
 #: qtplugins/applycolors/applycolors.cpp:121
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:776
+#: qtplugins/surfaces/surfaces.cpp:791
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Зелений"
@@ -1888,7 +1895,7 @@ msgstr "Зелений"
 #: qtplugins/applycolors/applycolors.cpp:123
 #: qtplugins/applycolors/applycolors.cpp:212
 #: qtplugins/applycolors/applycolors.cpp:310
-#: qtplugins/surfaces/surfaces.cpp:778
+#: qtplugins/surfaces/surfaces.cpp:793
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "cividis"
@@ -1900,7 +1907,7 @@ msgstr "cividis"
 #: qtplugins/applycolors/applycolors.cpp:125
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:780:183 rc.cpp:1824
+#: qtplugins/surfaces/surfaces.cpp:795:183 rc.cpp:1830
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Спектральний"
@@ -1910,7 +1917,7 @@ msgstr "Спектральний"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:127
-#: qtplugins/surfaces/surfaces.cpp:782:180 rc.cpp:1821
+#: qtplugins/surfaces/surfaces.cpp:797:180 rc.cpp:1827
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Прохолодний"
@@ -1920,7 +1927,7 @@ msgstr "Прохолодний"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:129
-#: qtplugins/surfaces/surfaces.cpp:784:174 rc.cpp:1815
+#: qtplugins/surfaces/surfaces.cpp:799:174 rc.cpp:1821
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Баланс"
@@ -1930,7 +1937,7 @@ msgstr "Баланс"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:131
-#: qtplugins/surfaces/surfaces.cpp:786:177 rc.cpp:1818
+#: qtplugins/surfaces/surfaces.cpp:801:177 rc.cpp:1824
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Синьо-темно-червоний"
@@ -1942,7 +1949,7 @@ msgstr "Синьо-темно-червоний"
 #: qtplugins/applycolors/applycolors.cpp:133
 #: qtplugins/applycolors/applycolors.cpp:213
 #: qtplugins/applycolors/applycolors.cpp:311
-#: qtplugins/surfaces/surfaces.cpp:788:186 rc.cpp:1827
+#: qtplugins/surfaces/surfaces.cpp:803:186 rc.cpp:1833
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Турбо"
@@ -1976,7 +1983,7 @@ msgstr "Виберіть Colormap"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:216
-#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1812
+#: qtplugins/applycolors/applycolors.cpp:314:171 rc.cpp:1818
 msgid "Colormap:"
 msgstr "Кольорова карта:"
 
@@ -2049,19 +2056,19 @@ msgstr ""
 "Клацніть правою кнопкою миші та перетягніть один із атомів у зв’язку, щоб "
 "змінити довжину"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:781
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:869
-#: qtplugins/measuretool/measuretool.cpp:208
-#: qtplugins/measuretool/measuretool.cpp:216
-#: qtplugins/measuretool/measuretool.cpp:217
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:782
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:870
+#: qtplugins/measuretool/measuretool.cpp:210
+#: qtplugins/measuretool/measuretool.cpp:218
+#: qtplugins/measuretool/measuretool.cpp:219
 #, qt-format
 msgid "%L1°"
 msgstr "%L1°"
 
-#: qtplugins/bondcentrictool/bondcentrictool.cpp:803
-#: qtplugins/editor/editor.cpp:270 qtplugins/measuretool/measuretool.cpp:224
-#: qtplugins/measuretool/measuretool.cpp:225
+#: qtplugins/bondcentrictool/bondcentrictool.cpp:804
+#: qtplugins/editor/editor.cpp:250 qtplugins/measuretool/measuretool.cpp:226
 #: qtplugins/measuretool/measuretool.cpp:227
+#: qtplugins/measuretool/measuretool.cpp:229
 #, qt-format
 msgid "%L1 Å"
 msgstr "%L1 Å"
@@ -2097,20 +2104,20 @@ msgstr "Налаштувати приєднання…"
 msgid "Bond Selected Atoms"
 msgstr "З’єднайте вибрані атоми"
 
-#: qtplugins/bonding/bonding.cpp:61
-#: qtplugins/propertytables/propertymodel.cpp:543
+#: qtplugins/bonding/bonding.cpp:62
+#: qtplugins/propertytables/propertymodel.cpp:544
 msgid "Bond"
 msgstr "Зв’язок"
 
-#: qtplugins/bonding/bonding.cpp:72
+#: qtplugins/bonding/bonding.cpp:73
 msgid "Remove bonds from all or selected atoms."
 msgstr "Видаліть зв’язки з усіх або вибраних атомів."
 
-#: qtplugins/bonding/bonding.cpp:74
+#: qtplugins/bonding/bonding.cpp:75
 msgid "Create bonds between all or selected atoms."
 msgstr "Створення зв’язків між усіма або вибраними атомами."
 
-#: qtplugins/bonding/bonding.cpp:75
+#: qtplugins/bonding/bonding.cpp:76
 msgid "Perceive bond orders."
 msgstr "Сприймати зобов'язання."
 
@@ -2206,19 +2213,19 @@ msgstr "Додайте центроїди та центр мас."
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, spin_wavelength)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:265
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, resolutionDoubleSpinBox)
-#: qtplugins/closecontacts/closecontacts.cpp:212
-#: qtplugins/noncovalent/noncovalent.cpp:351:201 rc.cpp:204 rc.cpp:406
+#: qtplugins/closecontacts/closecontacts.cpp:233
+#: qtplugins/noncovalent/noncovalent.cpp:383:201 rc.cpp:204 rc.cpp:406
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/closecontacts/closecontacts.cpp:229
-#: qtplugins/noncovalent/noncovalent.cpp:369
+#: qtplugins/closecontacts/closecontacts.cpp:250
+#: qtplugins/noncovalent/noncovalent.cpp:401
 msgid "Maximum distance:"
 msgstr "Максимальна відстань:"
 
-#: qtplugins/closecontacts/closecontacts.cpp:230
+#: qtplugins/closecontacts/closecontacts.cpp:251
 #: qtplugins/crystal/crystalscene.cpp:174
-#: qtplugins/noncovalent/noncovalent.cpp:370
+#: qtplugins/noncovalent/noncovalent.cpp:402
 #: qtplugins/wireframe/wireframe.cpp:96
 msgid "Line width:"
 msgstr "Ширина лінії:"
@@ -2246,9 +2253,9 @@ msgstr "Редагувати карту непрозорості кольорі�
 #: qtplugins/coloropacitymap/coloropacitymap.cpp:84
 #: qtplugins/commandscripts/command.cpp:64
 #: qtplugins/commandscripts/command.cpp:83
-#: qtplugins/configurepython/configurepython.cpp:99
+#: qtplugins/configurepython/configurepython.cpp:101
+#: qtplugins/forcefield/forcefield.cpp:150
 #: qtplugins/forcefield/forcefield.cpp:152
-#: qtplugins/forcefield/forcefield.cpp:154
 #: qtplugins/openbabel/openbabel.cpp:112
 #: qtplugins/plugindownloader/plugindownloader.cpp:41
 #: qtplugins/yaehmop/yaehmop.cpp:111
@@ -2272,7 +2279,7 @@ msgstr "Сценарії"
 #: qtplugins/commandscripts/command.cpp:140
 #: qtplugins/cp2kinput/cp2kinput.cpp:86
 #: qtplugins/gamessinput/gamessinput.cpp:87
-#: qtplugins/lammpsinput/lammpsinput.cpp:65
+#: qtplugins/lammpsinput/lammpsinput.cpp:63
 #: qtplugins/openmminput/openmminput.cpp:63
 #: qtplugins/quantuminput/quantuminput.cpp:105
 #, qt-format
@@ -2312,15 +2319,15 @@ msgstr "Виконайте команди зовнішнього сценарі�
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::CondaDialog)
 #. i18n: file: qtplugins/configurepython/configurepythondialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConfigurePythonDialog)
-#: qtplugins/configurepython/configurepython.cpp:32:225 rc.cpp:240
+#: qtplugins/configurepython/configurepython.cpp:34:225 rc.cpp:240
 msgid "Python Settings…"
 msgstr "Налаштування Python…"
 
-#: qtplugins/configurepython/configurepython.cpp:46
+#: qtplugins/configurepython/configurepython.cpp:48
 msgid "Install Python"
 msgstr "Встановіть Python"
 
-#: qtplugins/configurepython/configurepython.cpp:47
+#: qtplugins/configurepython/configurepython.cpp:49
 msgid ""
 "Python is used for many Avogadro features. Do you want to download Python?"
 msgstr ""
@@ -2335,17 +2342,17 @@ msgstr "Налаштувати Python"
 msgid "Configure Python environments."
 msgstr "Налаштувати середовища Python."
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:516
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:482
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 #: qtplugins/configurepython/configurepythondialog.cpp:203
-#: qtplugins/editor/editortoolwidget.cpp:129
-#: qtplugins/templatetool/templatetoolwidget.cpp:321
-#: qtplugins/templatetool/templatetoolwidget.cpp:334
-#: qtplugins/templatetool/templatetoolwidget.cpp:342
-#: qtplugins/templatetool/templatetoolwidget.cpp:350
-#: qtplugins/templatetool/templatetoolwidget.cpp:358
-#: qtplugins/templatetool/templatetoolwidget.cpp:366
-#: qtplugins/templatetool/templatetoolwidget.cpp:429:2097
+#: qtplugins/editor/editortoolwidget.cpp:130
+#: qtplugins/templatetool/templatetoolwidget.cpp:340
+#: qtplugins/templatetool/templatetoolwidget.cpp:353
+#: qtplugins/templatetool/templatetoolwidget.cpp:361
+#: qtplugins/templatetool/templatetoolwidget.cpp:369
+#: qtplugins/templatetool/templatetoolwidget.cpp:377
+#: qtplugins/templatetool/templatetoolwidget.cpp:385
+#: qtplugins/templatetool/templatetoolwidget.cpp:448:2079
 msgid "Other…"
 msgstr "інше…"
 
@@ -2474,7 +2481,7 @@ msgstr "Редагувати атомні координати"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:638
-#: qtplugins/label/label.cpp:190 qtplugins/label/label.cpp:213:1854
+#: qtplugins/label/label.cpp:192 qtplugins/label/label.cpp:215:1860
 msgid "Custom"
 msgstr "Нетипова"
 
@@ -2518,7 +2525,7 @@ msgstr "Турбомольний формат"
 #. i18n: ectx: property (text), widget (QToolButton, copy)
 #: qtplugins/copypaste/copypaste.cpp:30
 #: qtplugins/molecularproperties/molecularview.cpp:199
-#: qtplugins/propertytables/propertyview.cpp:300:277
+#: qtplugins/propertytables/propertyview.cpp:301:277
 msgid "Copy"
 msgstr "Копіювати"
 
@@ -2621,112 +2628,112 @@ msgstr "&CP2K…"
 msgid "CP2K input"
 msgstr "Вхід CP2K"
 
-#: qtplugins/cp2kinput/cp2kinput.h:36
+#: qtplugins/cp2kinput/cp2kinput.h:38
 msgid "Generate input for CP2K."
 msgstr "Створити вхідні дані для CP2K."
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:196
 #. i18n: ectx: property (text), item, widget (QComboBox, scoringComboBox)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:260
-#: qtplugins/forcefield/forcefield.cpp:80:1184
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:255
+#: qtplugins/forcefield/forcefield.cpp:80:1190
 msgid "Energy"
 msgstr "Енергія"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:263
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:258
 msgid "Energy and Forces"
 msgstr "Енергія і Сили"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:266
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:261
 msgid "Molecular Dynamics"
 msgstr "Молекулярна динаміка"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:269
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:264
 msgid "Geometry Optimization"
 msgstr "Оптимізація геометрії"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:338
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:333
 msgid "Electronic structure methods (DFT)"
 msgstr "Методи електронної структури (DFT)"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:341
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:336
 msgid "Molecular Mechanics"
 msgstr "Молекулярна механіка"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:344
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:339
 msgid "Hybrid quantum classical (Not yet supported)"
 msgstr "Гібридний квантовий класичний (ще не підтримується)"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:359
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:354
 msgid "EWALD"
 msgstr "EWALD"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:152
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:362
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:397:744
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:750
 msgid "NONE"
 msgstr "НЕМАЄ"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:303
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:365:1364
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:360:1370
 msgid "PME"
 msgstr "PME"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:368
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:363
 msgid "SPME"
 msgstr "SPME"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:382
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:377
 msgid "ATOMIC"
 msgstr "АТОМНА"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:385
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:380
 msgid "CORE"
 msgstr "CORE"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:388
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:383
 msgid "DENSITIES"
 msgstr "ЩІЛЬНОСТІ"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:391
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:386
 msgid "HISTORY_RESTART"
 msgstr "HISTORY_RESTART"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:394
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:389
 msgid "MOPAC"
 msgstr "MOPAC"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:400
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:395
 msgid "RANDOM"
 msgstr "ВИПАДКОВО"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:403
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:398
 msgid "RESTART"
 msgstr "ПЕРЕЗАПУСК"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:406
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:401
 msgid "SPARSE"
 msgstr "РІДКИЙ"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:420
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:415
 msgid "BROYDEN"
 msgstr "БРОЙДЕН"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:423
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:418
 msgid "Conjugate Gradients"
 msgstr "Спряжені градієнти"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:426
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:421
 msgid "DIIS"
 msgstr "DIIS"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:429
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:424
 msgid "Steepest descent"
 msgstr "Найкрутіший спуск"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:533
-#: qtplugins/gamessinput/gamessinputdialog.cpp:414
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:539
+#: qtplugins/gamessinput/gamessinputdialog.cpp:547
 msgid ""
 "The input file has been modified. Would you like to overwrite your changes "
 "to reflect the new geometry or job options?"
@@ -2734,16 +2741,16 @@ msgstr ""
 "Вхідний файл було змінено. Чи бажаєте ви перезаписати свої зміни, щоб "
 "відобразити нову геометрію чи параметри роботи?"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:537
-#: qtplugins/gamessinput/gamessinputdialog.cpp:418
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:543
+#: qtplugins/gamessinput/gamessinputdialog.cpp:551
 msgid "Overwrite modified input file?"
 msgstr "Перезаписати змінений вхідний файл?"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:957
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:952
 msgid "Save CP2K input file"
 msgstr "Збережіть вхідний файл CP2K"
 
-#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1006
+#: qtplugins/cp2kinput/cp2kinputdialog.cpp:1001
 msgid "Submit CP2K Calculation"
 msgstr "Надішліть розрахунок CP2K"
 
@@ -2779,9 +2786,10 @@ msgstr "Створити &Supercell…"
 msgid "Reduce Cell (&Niggli)"
 msgstr "Звести комірку (за &Нігглі)"
 
-#: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:55
+#: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:54
 #: qtplugins/plotrmsd/plotrmsd.cpp:48 qtplugins/plotxrd/plotxrd.cpp:53
-#: qtplugins/spacegroup/spacegroup.cpp:105
+#: qtplugins/spacegroup/spacegroup.cpp:107
+#: qtplugins/spacegroup/spacegroup.cpp:109
 msgid "&Crystal"
 msgstr "&Кристал"
 
@@ -2805,11 +2813,11 @@ msgstr "Загорніть атоми в елементарну комірку."
 msgid "Rotate the unit cell to the standard orientation."
 msgstr "Поверніть елементарну комірку до стандартної орієнтації."
 
-#: qtplugins/crystal/crystal.cpp:215
+#: qtplugins/crystal/crystal.cpp:216
 msgid "Niggli Reduce Crystal"
 msgstr "Зменшити кристал Ніглі"
 
-#: qtplugins/crystal/crystal.cpp:216
+#: qtplugins/crystal/crystal.cpp:217
 msgid "The unit cell is already reduced."
 msgstr "Елементарна комірка вже зменшена."
 
@@ -2850,7 +2858,7 @@ msgstr "Немає елементарної комірки."
 msgid "Reassign &Custom Elements…"
 msgstr "Перепризначити &спеціальні елементи…"
 
-#: qtplugins/customelements/customelements.cpp:32
+#: qtplugins/customelements/customelements.cpp:30
 msgid "Manipulate custom element types in the current molecule."
 msgstr "Маніпулювати користувацькими типами елементів у поточній молекулі."
 
@@ -2862,16 +2870,16 @@ msgstr "Спеціальні елементи"
 msgid "Render the dipole moment of the molecule."
 msgstr "Відобразіть дипольний момент молекули."
 
-#: qtplugins/editor/editor.cpp:71
+#: qtplugins/editor/editor.cpp:73
 msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:72 qtplugins/editor/editor.cpp:120
+#: qtplugins/editor/editor.cpp:74 qtplugins/editor/editor.cpp:122
 msgid "Draw"
 msgstr "Малювати"
 
-#: qtplugins/editor/editor.cpp:74
+#: qtplugins/editor/editor.cpp:76
 #, qt-format
 msgid ""
 "Draw Tool \t(%1)\n"
@@ -2884,24 +2892,24 @@ msgstr ""
 "Ліва миша: клацніть і перетягніть, щоб створити атоми та зв’язок\n"
 "Права кнопка миші: Видалити атом"
 
-#: qtplugins/editor/editor.cpp:114
+#: qtplugins/editor/editor.cpp:116
 msgid "Draw Atom"
 msgstr "Намалювати атом"
 
-#: qtplugins/editor/editor.cpp:124
+#: qtplugins/editor/editor.cpp:126
 msgid "Change Bond Type"
 msgstr "Змінити тип облігації"
 
-#: qtplugins/editor/editor.cpp:137
+#: qtplugins/editor/editor.cpp:139
 msgid "Remove Bond"
 msgstr "Видалити Бонда"
 
-#: qtplugins/editor/editor.cpp:265 qtplugins/measuretool/measuretool.cpp:198
-#: qtplugins/measuretool/measuretool.cpp:223
+#: qtplugins/editor/editor.cpp:245 qtplugins/measuretool/measuretool.cpp:200
+#: qtplugins/measuretool/measuretool.cpp:225
 msgid "Distance:"
 msgstr "Відстань:"
 
-#: qtplugins/editor/editor.cpp:268
+#: qtplugins/editor/editor.cpp:248
 #, qt-format
 msgid "%1 %L2"
 msgstr "%1 %L2"
@@ -2914,25 +2922,25 @@ msgstr "Інструмент редактора"
 #. i18n: ectx: property (currentText), widget (QComboBox, resolutionCombo)
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:249
 #. i18n: ectx: property (text), item, widget (QComboBox, resolutionCombo)
-#: qtplugins/editor/editortoolwidget.cpp:208:1833 rc.cpp:1851
+#: qtplugins/editor/editortoolwidget.cpp:209:1839 rc.cpp:1857
 msgid "Automatic"
 msgstr "Автоматично"
 
-#: qtplugins/editor/editortoolwidget.cpp:209
+#: qtplugins/editor/editortoolwidget.cpp:210
 msgid "Single"
 msgstr "Одинарний"
 
-#: qtplugins/editor/editortoolwidget.cpp:210
+#: qtplugins/editor/editortoolwidget.cpp:211
 msgid "Double"
 msgstr "Подвійний"
 
-#: qtplugins/editor/editortoolwidget.cpp:211
+#: qtplugins/editor/editortoolwidget.cpp:212
 msgid "Triple"
 msgstr "Потрійний"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:41 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:41
+#: qtplugins/networkdatabases/networkdatabases.cpp:39
 msgid "&Import"
 msgstr "&Імпорт"
 
@@ -2950,7 +2958,7 @@ msgid "PDB Code"
 msgstr "PDB Код"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:73
-#: qtplugins/networkdatabases/networkdatabases.cpp:76
+#: qtplugins/networkdatabases/networkdatabases.cpp:74
 msgid "Chemical structure to download."
 msgstr "Хімічна структура для звантаження."
 
@@ -2967,24 +2975,24 @@ msgid "The first character of the PDB code must be 1-9."
 msgstr "Перший символ коду PDB має бути 1-9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:109
-#: qtplugins/networkdatabases/networkdatabases.cpp:88
+#: qtplugins/networkdatabases/networkdatabases.cpp:86
 #, qt-format
 msgid "Querying for %1"
 msgstr "Запит на %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:120 qtplugins/fetchpdb/fetchpdb.cpp:133
-#: qtplugins/networkdatabases/networkdatabases.cpp:99
-#: qtplugins/networkdatabases/networkdatabases.cpp:110
+#: qtplugins/networkdatabases/networkdatabases.cpp:97
+#: qtplugins/networkdatabases/networkdatabases.cpp:108
 msgid "Network Download Failed"
 msgstr "Завантаження через мережу не вдалось"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:121
-#: qtplugins/networkdatabases/networkdatabases.cpp:100
+#: qtplugins/networkdatabases/networkdatabases.cpp:98
 msgid "Network timeout or other error."
 msgstr "Перевищено час очікування на відповідь або інша помилка."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:134
-#: qtplugins/networkdatabases/networkdatabases.cpp:111
+#: qtplugins/networkdatabases/networkdatabases.cpp:109
 #, qt-format
 msgid "Specified molecule could not be found: %1"
 msgstr "Не вдалося знайти вказану молекулу: %1"
@@ -3018,13 +3026,14 @@ msgid "Render the force field visualizations for the atoms of the molecule."
 msgstr "Візуалізуйте силове поле для атомів молекули."
 
 #: qtplugins/forcefield/forcefield.cpp:71
-#: qtplugins/forcefield/forcefield.cpp:300
-#: qtplugins/forcefield/forcefield.cpp:354 qtplugins/openbabel/openbabel.cpp:47
+#: qtplugins/forcefield/forcefield.cpp:310
+#: qtplugins/forcefield/forcefield.cpp:365 qtplugins/openbabel/openbabel.cpp:47
 #: qtplugins/openbabel/openbabel.cpp:559
 msgid "Optimize Geometry"
 msgstr "Оптимізації геометрії"
 
 #: qtplugins/forcefield/forcefield.cpp:88
+#: qtplugins/gamessinput/gamessinputdialog.cpp:269
 msgid "Forces"
 msgstr "Сили"
 
@@ -3040,36 +3049,36 @@ msgstr "Заморозити вибрані атоми"
 msgid "Unfreeze Selected Atoms"
 msgstr "Розморозити вибрані атоми"
 
-#: qtplugins/forcefield/forcefield.cpp:154
+#: qtplugins/forcefield/forcefield.cpp:152
 msgid "&Calculate"
 msgstr "&Обчислити"
 
-#: qtplugins/forcefield/forcefield.cpp:247
-#: qtplugins/forcefield/forcefield.cpp:393
-#: qtplugins/forcefield/forcefield.cpp:439
+#: qtplugins/forcefield/forcefield.cpp:251
+#: qtplugins/forcefield/forcefield.cpp:409
+#: qtplugins/forcefield/forcefield.cpp:460
 #: qtplugins/playertool/playertool.cpp:348
-#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:916
-#: qtplugins/surfaces/surfaces.cpp:960 qtplugins/surfaces/surfaces.cpp:972
+#: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:931
+#: qtplugins/surfaces/surfaces.cpp:975 qtplugins/surfaces/surfaces.cpp:987
 #: qtplugins/yaehmop/yaehmop.cpp:533
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:248
+#: qtplugins/forcefield/forcefield.cpp:252
 msgid "No atoms provided for optimization"
 msgstr "Немає атомів для оптимізації"
 
-#: qtplugins/forcefield/forcefield.cpp:317
+#: qtplugins/forcefield/forcefield.cpp:327
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Енергія: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:392
+#: qtplugins/forcefield/forcefield.cpp:408
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Енергія = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:438
+#: qtplugins/forcefield/forcefield.cpp:459
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Норма сили = %L2"
@@ -3088,15 +3097,15 @@ msgstr "Мінімізація силового поля, включаючи с�
 msgid "Autodetect (%1)"
 msgstr "Автовизначення (%1)"
 
-#: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:33
+#: qtplugins/forcefield/obenergy.cpp:101 qtplugins/forcefield/obmmenergy.cpp:34
 msgid "Universal Force Field"
 msgstr "Універсальне силове поле"
 
-#: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:38
+#: qtplugins/forcefield/obenergy.cpp:106 qtplugins/forcefield/obmmenergy.cpp:39
 msgid "Generalized Amber Force Field"
 msgstr "Узагальнене силове поле Амбра"
 
-#: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:52
+#: qtplugins/forcefield/obenergy.cpp:120 qtplugins/forcefield/obmmenergy.cpp:53
 msgid "Merck Molecular Force Field 94"
 msgstr "Молекулярне силове поле Merck 94"
 
@@ -3131,71 +3140,105 @@ msgstr "Вхід GAMESS"
 msgid "Generate input for GAMESS."
 msgstr "Згенеруйте вхідні дані для GAMESS."
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:221
+#: qtplugins/gamessinput/gamessinputdialog.cpp:263
 msgid "Single Point"
 msgstr "Єдина точка"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:224
+#: qtplugins/gamessinput/gamessinputdialog.cpp:266
 msgid "Equilibrium Geometry"
 msgstr "Рівноважна геометрія"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:227
+#: qtplugins/gamessinput/gamessinputdialog.cpp:272
 msgid "Transition State"
 msgstr "Перехідний стан"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:230
+#: qtplugins/gamessinput/gamessinputdialog.cpp:275
 msgid "Frequencies"
 msgstr "Частоти"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:299
+#: qtplugins/gamessinput/gamessinputdialog.cpp:278
+msgid "Make EFP"
+msgstr "Створити ЕПФ"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:404
 msgid "Core Potential"
 msgstr "Псевдопотенціал"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:314
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
+#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
+#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:640
+#. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
+#. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
+#. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
+#. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
+#: qtplugins/gamessinput/gamessinputdialog.cpp:419
+#: qtplugins/label/label.cpp:182 qtplugins/label/label.cpp:212
+#: qtplugins/label/label.cpp:225:1379 rc.cpp:1472 rc.cpp:1812
+msgid "None"
+msgstr "Немає"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:422
+msgid "D1"
+msgstr "D1"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:425
+msgid "D2"
+msgstr "D2"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:428
+msgid "D3"
+msgstr "D3"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:431
+msgid "D4"
+msgstr "D4"
+
+#: qtplugins/gamessinput/gamessinputdialog.cpp:446
 msgid "Gas"
 msgstr "Газ"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:317
+#: qtplugins/gamessinput/gamessinputdialog.cpp:449
 msgid "Water"
 msgstr "Рідина"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:332
+#: qtplugins/gamessinput/gamessinputdialog.cpp:464
 msgid "Singlet"
 msgstr "Синглет"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:335
+#: qtplugins/gamessinput/gamessinputdialog.cpp:467
 msgid "Doublet"
 msgstr "Дуплет"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:338
+#: qtplugins/gamessinput/gamessinputdialog.cpp:470
 msgid "Triplet"
 msgstr "Триплет"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:353
+#: qtplugins/gamessinput/gamessinputdialog.cpp:485
 msgid "Dication"
 msgstr "Дикатіон"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:356
+#: qtplugins/gamessinput/gamessinputdialog.cpp:488
 msgid "Cation"
 msgstr "Катіон"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:359
+#: qtplugins/gamessinput/gamessinputdialog.cpp:491
 msgid "Neutral"
 msgstr "Нейтральна"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:362
+#: qtplugins/gamessinput/gamessinputdialog.cpp:494
 msgid "Anion"
 msgstr "Аніон"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:365
+#: qtplugins/gamessinput/gamessinputdialog.cpp:497
 msgid "Dianion"
 msgstr "Діаніон"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:650
+#: qtplugins/gamessinput/gamessinputdialog.cpp:888
 msgid "Save GAMESS input file"
 msgstr "Збережіть вхідний файл GAMESS"
 
-#: qtplugins/gamessinput/gamessinputdialog.cpp:700
+#: qtplugins/gamessinput/gamessinputdialog.cpp:938
 msgid "Submit GAMESS Calculation"
 msgstr "Надішліть розрахунок GAMESS"
 
@@ -3215,11 +3258,11 @@ msgstr "Вилучіть зайвий водень"
 msgid "&Remove All Hydrogens"
 msgstr "&Видалити всі водні"
 
-#: qtplugins/hydrogens/hydrogens.cpp:49
+#: qtplugins/hydrogens/hydrogens.cpp:47
 msgid "Add/remove hydrogens from the current molecule."
 msgstr "Додати/видалити атоми водню з поточної молекули."
 
-#: qtplugins/hydrogens/hydrogens.cpp:59
+#: qtplugins/hydrogens/hydrogens.cpp:57
 msgid "&Hydrogens"
 msgstr "&Гідрогени"
 
@@ -3269,20 +3312,20 @@ msgstr "Т"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:79
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton_TU)
-#: qtplugins/insertdna/insertdna.cpp:167:637
+#: qtplugins/insertdna/insertdna.cpp:167:643
 msgid "Thymine"
 msgstr "Тимін"
 
 #. i18n: file: qtplugins/lineformatinput/lineformatinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::LineFormatInputDialog)
 #: qtplugins/insertdna/insertdna.cpp:200
-#: qtplugins/lineformatinput/lineformatinput.cpp:108
-#: qtplugins/lineformatinput/lineformatinput.cpp:123:1046
+#: qtplugins/lineformatinput/lineformatinput.cpp:109
+#: qtplugins/lineformatinput/lineformatinput.cpp:124:1052
 msgid "Insert Molecule…"
 msgstr "Вставити молекулу…"
 
 #: qtplugins/insertdna/insertdna.cpp:201
-#: qtplugins/lineformatinput/lineformatinput.cpp:124
+#: qtplugins/lineformatinput/lineformatinput.cpp:125
 msgid "Generating 3D molecule…"
 msgstr "Створення 3D-молекули…"
 
@@ -3325,81 +3368,68 @@ msgstr "Вставити Фрагмент"
 msgid "Insert molecular fragments for building larger molecules."
 msgstr "Вставте молекулярні фрагменти для створення більших молекул."
 
-#: qtplugins/label/label.cpp:160 qtplugins/meshes/meshes.cpp:177
-#: qtplugins/meshes/meshes.cpp:183
+#: qtplugins/label/label.cpp:162 qtplugins/meshes/meshes.cpp:180
+#: qtplugins/meshes/meshes.cpp:186
 msgid "Color:"
 msgstr "Колір:"
 
-#: qtplugins/label/label.cpp:170
+#: qtplugins/label/label.cpp:172
 msgid "Distance from center:"
 msgstr "Відстань від центру:"
 
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:345
-#. i18n: ectx: property (text), item, widget (QComboBox, constraintsCombo)
-#. i18n: file: qtplugins/openmminput/openmminputdialog.ui:640
-#. i18n: ectx: property (text), item, widget (QComboBox, barostatCombo)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:108
-#. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
-#. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
-#. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
-#: qtplugins/label/label.cpp:180 qtplugins/label/label.cpp:210
-#: qtplugins/label/label.cpp:223:1373 rc.cpp:1466 rc.cpp:1806
-msgid "None"
-msgstr "Немає"
-
-#: qtplugins/label/label.cpp:181 qtplugins/label/label.cpp:212
+#: qtplugins/label/label.cpp:183 qtplugins/label/label.cpp:214
 msgid "Index"
 msgstr "Індекс"
 
-#: qtplugins/label/label.cpp:182
+#: qtplugins/label/label.cpp:184
 msgid "Unique ID"
 msgstr "Унікальний ідентифікатор"
 
-#: qtplugins/label/label.cpp:183 qtplugins/propertytables/propertymodel.cpp:499
-#: qtplugins/symmetry/operationstablemodel.cpp:63
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:500
+#: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "Елемент"
 
-#: qtplugins/label/label.cpp:184
+#: qtplugins/label/label.cpp:186
 msgid "Element & Number"
 msgstr "Елемент і число"
 
-#: qtplugins/label/label.cpp:186
+#: qtplugins/label/label.cpp:188
 msgid "Element & ID"
 msgstr "Елемент і ID"
 
-#: qtplugins/label/label.cpp:188
+#: qtplugins/label/label.cpp:190
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr "Часткова зарядка"
 
-#: qtplugins/label/label.cpp:203
+#: qtplugins/label/label.cpp:205
 msgid "Atom Label:"
 msgstr "Мітка Atom:"
 
-#: qtplugins/label/label.cpp:211
+#: qtplugins/label/label.cpp:213
 msgid "Length"
 msgstr "Довжина"
 
-#: qtplugins/label/label.cpp:217
+#: qtplugins/label/label.cpp:219
 msgid "Bond Label:"
 msgstr "Мітка облігації:"
 
-#: qtplugins/label/label.cpp:228 qtplugins/propertytables/propertymodel.cpp:552
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:553
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:232
+#: qtplugins/label/label.cpp:234
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:550
+#: qtplugins/propertytables/propertymodel.cpp:551
 msgid "Name"
 msgstr "Ім'я"
 
-#: qtplugins/label/label.cpp:236
+#: qtplugins/label/label.cpp:238
 msgid " & "
 msgstr " & "
 
-#: qtplugins/label/label.cpp:248
+#: qtplugins/label/label.cpp:250
 msgid "Residue Label:"
 msgstr "Мітка залишків:"
 
@@ -3457,8 +3487,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:157
 #. i18n: ectx: property (text), widget (QLabel, opacitySliderLabel)
-#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:171
-#: qtplugins/vanderwaals/vanderwaals.cpp:75:1631
+#: qtplugins/licorice/licorice.cpp:78 qtplugins/meshes/meshes.cpp:174
+#: qtplugins/vanderwaals/vanderwaals.cpp:75:1637
 msgid "Opacity:"
 msgstr "Непрозорість:"
 
@@ -3475,7 +3505,7 @@ msgid "InChI…"
 msgstr "In ChI…"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:88
-#: qtplugins/lineformatinput/lineformatinput.cpp:112
+#: qtplugins/lineformatinput/lineformatinput.cpp:113
 msgid "No descriptors found!"
 msgstr "Не знайдено дескрипторів!"
 
@@ -3483,7 +3513,7 @@ msgstr "Не знайдено дескрипторів!"
 msgid "No line format readers found!"
 msgstr "Не знайдено зчитувачів рядкового формату!"
 
-#: qtplugins/lineformatinput/lineformatinput.cpp:113
+#: qtplugins/lineformatinput/lineformatinput.cpp:114
 msgid "Unable to load requested format reader."
 msgstr "Неможливо завантажити запитаний зчитувач формату."
 
@@ -3523,16 +3553,16 @@ msgstr ""
 msgid "Manipulate tool"
 msgstr "Інструмент маніпуляції"
 
-#: qtplugins/measuretool/measuretool.cpp:49
+#: qtplugins/measuretool/measuretool.cpp:51
 msgctxt "control-key 8"
 msgid "Ctrl+8"
 msgstr "Ctrl+8"
 
-#: qtplugins/measuretool/measuretool.cpp:50
+#: qtplugins/measuretool/measuretool.cpp:52
 msgid "Measure"
 msgstr "Вимірювання"
 
-#: qtplugins/measuretool/measuretool.cpp:52
+#: qtplugins/measuretool/measuretool.cpp:54
 #, qt-format
 msgid ""
 "Measure Tool \t(%1)\n"
@@ -3551,16 +3581,16 @@ msgstr ""
 "\tДвогранник вимірюється між 1-2-3-4\n"
 "Права кнопка миші: скинути вимірювання."
 
-#: qtplugins/measuretool/measuretool.cpp:196
-#: qtplugins/measuretool/measuretool.cpp:207
+#: qtplugins/measuretool/measuretool.cpp:198
+#: qtplugins/measuretool/measuretool.cpp:209
 msgid "Dihedral:"
 msgstr "Двограний кут:"
 
-#: qtplugins/measuretool/measuretool.cpp:197
+#: qtplugins/measuretool/measuretool.cpp:199
 msgid "Angle:"
 msgstr "Кут:"
 
-#: qtplugins/measuretool/measuretool.cpp:215
+#: qtplugins/measuretool/measuretool.cpp:217
 msgid "Angles:"
 msgstr "Кути:"
 
@@ -3569,9 +3599,9 @@ msgstr "Кути:"
 msgid "Measure tool"
 msgstr "Інструмент для вимірювання"
 
-#: qtplugins/meshes/meshes.h:31
-msgid "Render polygon meshes."
-msgstr "Візуалізація полігональних сіток."
+#: qtplugins/meshes/meshes.h:33
+msgid "Render molecular surfaces."
+msgstr "Рендеринг молекулярних поверхонь."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:77
 msgctxt "asking server for molecule name"
@@ -3584,93 +3614,93 @@ msgstr "(очікується)"
 msgid "unknown molecule"
 msgstr "невідома молекула"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:293
-#: qtplugins/propertytables/propertymodel.cpp:611
+#: qtplugins/molecularproperties/molecularmodel.cpp:260
+#: qtplugins/propertytables/propertymodel.cpp:612
 msgid "Property"
 msgstr "Власність"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:300
+#: qtplugins/molecularproperties/molecularmodel.cpp:267
 msgid "Molecule Name"
 msgstr "Назва молекули"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:302
+#: qtplugins/molecularproperties/molecularmodel.cpp:269
 msgid "Molecular Mass (g/mol)"
 msgstr "Молекулярна маса (г/моль)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:304
+#: qtplugins/molecularproperties/molecularmodel.cpp:271
 msgid "Chemical Formula"
 msgstr "Хімічна формула"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:306
+#: qtplugins/molecularproperties/molecularmodel.cpp:273
 msgid "Number of Atoms"
 msgstr "Кількість атомів"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:308
+#: qtplugins/molecularproperties/molecularmodel.cpp:275
 msgid "Number of Bonds"
 msgstr "Кількість облігацій"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:310
+#: qtplugins/molecularproperties/molecularmodel.cpp:277
 msgid "Coordinate Sets"
 msgstr "Множини координат"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:312
+#: qtplugins/molecularproperties/molecularmodel.cpp:279
 msgid "Number of Residues"
 msgstr "Кількість залишків"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:314
+#: qtplugins/molecularproperties/molecularmodel.cpp:281
 msgid "Number of Chains"
 msgstr "Кількість ланцюгів"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:316
+#: qtplugins/molecularproperties/molecularmodel.cpp:283
 msgid "Net Charge"
 msgstr "Чиста плата"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:318
+#: qtplugins/molecularproperties/molecularmodel.cpp:285
 msgid "Net Spin Multiplicity"
 msgstr "Кратність чистого обертання"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:320
+#: qtplugins/molecularproperties/molecularmodel.cpp:287
 msgid "Dipole Moment (Debye)"
 msgstr "Дипольний момент (Дебая)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:322
+#: qtplugins/molecularproperties/molecularmodel.cpp:289
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr "Енергія HOMO (еВ)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:324
+#: qtplugins/molecularproperties/molecularmodel.cpp:291
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr "Енергія LUMO (еВ)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:326
+#: qtplugins/molecularproperties/molecularmodel.cpp:293
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr "Енергія SOMO (еВ)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:328
+#: qtplugins/molecularproperties/molecularmodel.cpp:295
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr "Загальна енергія (Хартрі)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:331
+#: qtplugins/molecularproperties/molecularmodel.cpp:298
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr "Енергія нульової точки (ккал/моль)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:334
+#: qtplugins/molecularproperties/molecularmodel.cpp:301
 msgid "Enthalpy (kcal/mol)"
 msgstr "Ентальпія (ккал/моль)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:336
+#: qtplugins/molecularproperties/molecularmodel.cpp:303
 msgid "Entropy (kcal/mol•K)"
 msgstr "Ентропія (ккал/моль•K)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:338
+#: qtplugins/molecularproperties/molecularmodel.cpp:305
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr "Вільна енергія Гіббса (ккал/моль)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:340
+#: qtplugins/molecularproperties/molecularmodel.cpp:307
 msgctxt "point group symmetry"
 msgid "Point Group"
 msgstr "Група точок"
@@ -3686,14 +3716,14 @@ msgstr "Перегляньте загальні властивості моле�
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:63 qtplugins/surfaces/surfaces.cpp:263
-#: qtplugins/symmetry/symmetry.cpp:82 qtplugins/vibrations/vibrations.cpp:42
-msgid "&Analysis"
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:267
+#: qtplugins/symmetry/symmetry.cpp:80 qtplugins/vibrations/vibrations.cpp:42
+msgid "&Analyze"
 msgstr "&Аналіз"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:47
 #: qtplugins/propertytables/propertytables.cpp:86
-#: qtplugins/symmetry/symmetry.cpp:82
+#: qtplugins/symmetry/symmetry.cpp:80
 msgid "&Properties"
 msgstr "&Властивості"
 
@@ -3702,32 +3732,32 @@ msgid "Molecular Properties"
 msgstr "Молекулярні властивості"
 
 #: qtplugins/molecularproperties/molecularview.cpp:39
-#: qtplugins/propertytables/propertyview.cpp:62
+#: qtplugins/propertytables/propertyview.cpp:63
 msgid "Molecule Properties"
 msgstr "Властивості молекули"
 
 #: qtplugins/molecularproperties/molecularview.cpp:146
-#: qtplugins/propertytables/propertyview.cpp:248
+#: qtplugins/propertytables/propertyview.cpp:249
 msgid "Export CSV"
 msgstr "Експорт CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:147
-#: qtplugins/propertytables/propertyview.cpp:249
+#: qtplugins/propertytables/propertyview.cpp:250
 msgid "CSV Files (*.csv);;All Files (*)"
 msgstr "Файли CSV (*.csv);;Усі файли (*)"
 
 #: qtplugins/molecularproperties/molecularview.cpp:159
-#: qtplugins/propertytables/propertyview.cpp:261
+#: qtplugins/propertytables/propertyview.cpp:262
 msgid "Could not open the file for writing."
 msgstr "Не вдалося відкрити файл для запису."
 
 #: qtplugins/molecularproperties/molecularview.cpp:192
-#: qtplugins/propertytables/propertyview.cpp:293
+#: qtplugins/propertytables/propertyview.cpp:294
 msgid "Error writing to the file."
 msgstr "Помилка запису у файл."
 
 #: qtplugins/molecularproperties/molecularview.cpp:204
-#: qtplugins/propertytables/propertyview.cpp:305
+#: qtplugins/propertytables/propertyview.cpp:306
 msgid "Export…"
 msgstr "Експорт…"
 
@@ -3755,23 +3785,23 @@ msgstr ""
 "Середня миша: натисніть і перетягніть, щоб збільшити або зменшити масштаб.\n"
 "Права кнопка миші: натисніть і перетягніть, щоб перемістити перегляд.\n"
 
-#: qtplugins/navigator/navigator.cpp:62
+#: qtplugins/navigator/navigator.cpp:63
 msgid "Rotate the scene along the x, y, or z axes."
 msgstr "Обертайте сцену вздовж осей x, y або z."
 
-#: qtplugins/navigator/navigator.cpp:63
+#: qtplugins/navigator/navigator.cpp:64
 msgid "Zoom the scene."
 msgstr "Збільште масштаб сцени."
 
-#: qtplugins/navigator/navigator.cpp:64
+#: qtplugins/navigator/navigator.cpp:65
 msgid "Translate the scene."
 msgstr "Перекладіть сцену."
 
-#: qtplugins/navigator/navigator.cpp:105
+#: qtplugins/navigator/navigator.cpp:106
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Зворотний напрямок масштабування під час прокручування"
 
-#: qtplugins/navigator/navigator.cpp:107
+#: qtplugins/navigator/navigator.cpp:108
 msgid ""
 "Default:\t Scroll down to shrink, scroll up to zoom\n"
 "Reversed:\t Scroll up to shrink, scroll down to zoom"
@@ -3784,7 +3814,7 @@ msgstr ""
 msgid "Navigate tool"
 msgstr "Знаряддя навігації"
 
-#: qtplugins/networkdatabases/networkdatabases.cpp:75
+#: qtplugins/networkdatabases/networkdatabases.cpp:73
 msgid "Chemical Name"
 msgstr "Назва речовини"
 
@@ -3796,11 +3826,11 @@ msgstr "Мережеві бази даних"
 msgid "Interact with online databases, query structures etc."
 msgstr "Взаємодія з онлайн-базами даних, структурами запитів тощо."
 
-#: qtplugins/noncovalent/noncovalent.cpp:340
+#: qtplugins/noncovalent/noncovalent.cpp:372
 msgid " °"
 msgstr " °"
 
-#: qtplugins/noncovalent/noncovalent.cpp:368
+#: qtplugins/noncovalent/noncovalent.cpp:400
 msgid "Angle tolerance:"
 msgstr "Допуск кута:"
 
@@ -4076,7 +4106,7 @@ msgstr ""
 #: qtplugins/openmminput/openmminputdialog.cpp:496
 #: qtplugins/openmminput/openmminputdialog.cpp:522
 #: qtplugins/openmminput/openmminputdialog.cpp:933
-#: qtplugins/openmminput/openmminputdialog.cpp:1051
+#: qtplugins/openmminput/openmminputdialog.cpp:1052
 msgid "inpcrd"
 msgstr "inpc rd"
 
@@ -4084,13 +4114,13 @@ msgstr "inpc rd"
 #: qtplugins/openmminput/openmminputdialog.cpp:498
 #: qtplugins/openmminput/openmminputdialog.cpp:526
 #: qtplugins/openmminput/openmminputdialog.cpp:942
-#: qtplugins/openmminput/openmminputdialog.cpp:1053
+#: qtplugins/openmminput/openmminputdialog.cpp:1054
 msgid "gro"
 msgstr "Gro"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:81
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, inputTopEdit)
-#: qtplugins/openmminput/openmminputdialog.cpp:497:1274
+#: qtplugins/openmminput/openmminputdialog.cpp:497:1280
 msgid "input.prmtop"
 msgstr "input.prmtop"
 
@@ -4100,8 +4130,8 @@ msgstr "input.top"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:502
 #: qtplugins/openmminput/openmminputdialog.cpp:926
-#: qtplugins/openmminput/openmminputdialog.cpp:1042
-#: qtplugins/openmminput/openmminputdialog.cpp:1049
+#: qtplugins/openmminput/openmminputdialog.cpp:1043
+#: qtplugins/openmminput/openmminputdialog.cpp:1050
 msgid "pdb"
 msgstr "PDB"
 
@@ -4119,8 +4149,8 @@ msgstr "зверху"
 #. i18n: ectx: property (text), item, widget (QComboBox, initVelCombo)
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:808
 #. i18n: ectx: property (text), item, widget (QComboBox, minimizeCombo)
-#: qtplugins/openmminput/openmminputdialog.cpp:1060
-#: qtplugins/openmminput/openmminputdialog.cpp:1069:1391 rc.cpp:1406
+#: qtplugins/openmminput/openmminputdialog.cpp:1061
+#: qtplugins/openmminput/openmminputdialog.cpp:1070:1397 rc.cpp:1412
 msgid "True"
 msgstr "True"
 
@@ -4169,7 +4199,7 @@ msgstr " FPS"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:118:1887
+#: qtplugins/playertool/playertool.cpp:118:1893
 msgid "Frame:"
 msgstr "Кадр:"
 
@@ -4186,7 +4216,7 @@ msgstr "Динамічне склеювання?"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:528
 #. i18n: ectx: property (text), widget (QPushButton, recordButton)
-#: qtplugins/playertool/playertool.cpp:144:1893
+#: qtplugins/playertool/playertool.cpp:144:1899
 msgid "Record Movie…"
 msgstr "Записати фільм…"
 
@@ -4203,7 +4233,7 @@ msgstr "Експорт растрової графіки"
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Фільм (*.mp4);;Фільм (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:888
+#: qtplugins/playertool/playertool.cpp:265 qtplugins/surfaces/surfaces.cpp:903
 msgid "GIF (*.gif)"
 msgstr "GIF i(*.gif)"
 
@@ -4219,11 +4249,11 @@ msgstr "Формат файлу GIF не підтримує частоту ка�
 msgid "Movie (*.avi)"
 msgstr "Фільм (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:961
+#: qtplugins/playertool/playertool.cpp:349 qtplugins/surfaces/surfaces.cpp:976
 msgid "Error: cannot add frame to video."
 msgstr "Помилка: неможливо додати кадр до відео."
 
-#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:973
+#: qtplugins/playertool/playertool.cpp:381 qtplugins/surfaces/surfaces.cpp:988
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Не вдається зберегти файл %1."
@@ -4236,15 +4266,15 @@ msgstr "Інструмент гравця"
 msgid "Play back trajectories"
 msgstr "Відтворення траєкторій"
 
-#: qtplugins/plotpdf/plotpdf.cpp:37
+#: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
 msgstr "Ділянка функції розподілу пар…"
 
-#: qtplugins/plotpdf/plotpdf.cpp:121
+#: qtplugins/plotpdf/plotpdf.cpp:120
 msgid "Failed to generate PDF pattern"
 msgstr "Не вдалося створити шаблон PDF"
 
-#: qtplugins/plotpdf/plotpdf.cpp:122 qtplugins/plotxrd/plotxrd.cpp:121
+#: qtplugins/plotpdf/plotpdf.cpp:121 qtplugins/plotxrd/plotxrd.cpp:121
 msgid "Error message: "
 msgstr "Повідомлення про помилку: "
 
@@ -4276,20 +4306,20 @@ msgstr "Побудуйте теоретичну рентгенограму…"
 msgid "Failed to generate XRD pattern"
 msgstr "Не вдалося створити рентгенограму XRD"
 
-#: qtplugins/plotxrd/plotxrd.cpp:157
+#: qtplugins/plotxrd/plotxrd.cpp:158
 msgid "Failed to convert molecule to CIF format."
 msgstr "Не вдалося перетворити молекулу у формат CIF."
 
-#: qtplugins/plotxrd/plotxrd.cpp:192
+#: qtplugins/plotxrd/plotxrd.cpp:193
 msgid "Data read from genXrdPattern appears to be corrupt!"
 msgstr "Дані, зчитані з genXrdPattern, виявляються пошкодженими!"
 
-#: qtplugins/plotxrd/plotxrd.cpp:230
+#: qtplugins/plotxrd/plotxrd.cpp:231
 msgid "Error: could not find genXrdPattern executable!"
 msgstr "Помилка: не вдалося знайти виконуваний файл genXrdPattern!"
 
-#: qtplugins/plotxrd/plotxrd.cpp:240 qtplugins/plotxrd/plotxrd.cpp:252
-#: qtplugins/plotxrd/plotxrd.cpp:263 qtplugins/plotxrd/plotxrd.cpp:270
+#: qtplugins/plotxrd/plotxrd.cpp:241 qtplugins/plotxrd/plotxrd.cpp:253
+#: qtplugins/plotxrd/plotxrd.cpp:264 qtplugins/plotxrd/plotxrd.cpp:271
 #: qtplugins/yaehmop/yaehmop.cpp:555
 msgid "Error: "
 msgstr "Помилка: "
@@ -4373,7 +4403,7 @@ msgstr "Помилка під час видобування: %1"
 
 #. i18n: file: qtplugins/plugindownloader/downloaderwidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DownloaderWidget)
-#: qtplugins/plugindownloader/plugindownloader.cpp:27:1613
+#: qtplugins/plugindownloader/plugindownloader.cpp:27:1619
 msgid "Download Plugins…"
 msgstr "Завантажити плагіни…"
 
@@ -4389,12 +4419,12 @@ msgstr "Завантажте плагіни зі сховищ GitHub."
 msgid "PLY Render…"
 msgstr "PLY Рендер…"
 
-#: qtplugins/ply/ply.cpp:70 qtplugins/povray/povray.cpp:70
-#: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:70
+#: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
+#: qtplugins/svg/svg.cpp:258 qtplugins/vrml/vrml.cpp:68
 msgid "Save File"
 msgstr "Зберегти файл"
 
-#: qtplugins/ply/ply.cpp:71
+#: qtplugins/ply/ply.cpp:69
 msgid "PLY (*.ply);;Text file (*.txt)"
 msgstr "PLY (*.ply);;Текстовий файл (*.txt)"
 
@@ -4410,7 +4440,7 @@ msgstr "Відтворіть сцену за допомогою PLY."
 msgid "POV-Ray Render…"
 msgstr "POV-Ray Рендер…"
 
-#: qtplugins/povray/povray.cpp:71
+#: qtplugins/povray/povray.cpp:69
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
 msgstr "POV-Ray (*.pov);;Текстовий файл (*.txt)"
 
@@ -4422,158 +4452,158 @@ msgstr "POV Ray"
 msgid "Render the scene using POV-Ray."
 msgstr "Візуалізуйте сцену за допомогою POV-Ray."
 
-#: qtplugins/propertytables/propertymodel.cpp:501
+#: qtplugins/propertytables/propertymodel.cpp:502
 msgid "Valence"
 msgstr "Валентність"
 
-#: qtplugins/propertytables/propertymodel.cpp:503
+#: qtplugins/propertytables/propertymodel.cpp:504
 msgid "Formal Charge"
 msgstr "Офіційне звинувачення"
 
-#: qtplugins/propertytables/propertymodel.cpp:506
+#: qtplugins/propertytables/propertymodel.cpp:507
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 Часткова зарядка"
 
-#: qtplugins/propertytables/propertymodel.cpp:511
+#: qtplugins/propertytables/propertymodel.cpp:512
 msgid "X (Å)"
 msgstr "X (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:513
+#: qtplugins/propertytables/propertymodel.cpp:514
 msgid "Y (Å)"
 msgstr "Y (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:515
+#: qtplugins/propertytables/propertymodel.cpp:516
 msgid "Z (Å)"
 msgstr "Z (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:517
-#: qtplugins/propertytables/propertymodel.cpp:537
+#: qtplugins/propertytables/propertymodel.cpp:518
+#: qtplugins/propertytables/propertymodel.cpp:538
 msgid "Label"
 msgstr "Мітка"
 
-#: qtplugins/propertytables/propertymodel.cpp:519
-#: qtplugins/propertytables/propertymodel.cpp:560
+#: qtplugins/propertytables/propertymodel.cpp:520
+#: qtplugins/propertytables/propertymodel.cpp:561
 msgid "Color"
 msgstr "Колір"
 
-#: qtplugins/propertytables/propertymodel.cpp:522
+#: qtplugins/propertytables/propertymodel.cpp:523
 msgid "Atom"
 msgstr "Атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:529
-#: qtplugins/propertytables/propertymodel.cpp:570
-#: qtplugins/propertytables/propertymodel.cpp:587
-#: qtplugins/symmetry/operationstablemodel.cpp:59
+#: qtplugins/propertytables/propertymodel.cpp:530
+#: qtplugins/propertytables/propertymodel.cpp:571
+#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "Тип"
 
-#: qtplugins/propertytables/propertymodel.cpp:531
+#: qtplugins/propertytables/propertymodel.cpp:532
 msgid "Start Atom"
 msgstr "Початковий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:533
+#: qtplugins/propertytables/propertymodel.cpp:534
 msgid "End Atom"
 msgstr "Кінцевий атом"
 
-#: qtplugins/propertytables/propertymodel.cpp:535
+#: qtplugins/propertytables/propertymodel.cpp:536
 msgid "Bond Order"
 msgstr "Порядок облігацій"
 
-#: qtplugins/propertytables/propertymodel.cpp:539
+#: qtplugins/propertytables/propertymodel.cpp:540
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "Довжина (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:554
+#: qtplugins/propertytables/propertymodel.cpp:555
 msgid "Chain"
 msgstr "Ланцюг"
 
-#: qtplugins/propertytables/propertymodel.cpp:556
+#: qtplugins/propertytables/propertymodel.cpp:557
 msgid "Secondary Structure"
 msgstr "Вторинна структура"
 
-#: qtplugins/propertytables/propertymodel.cpp:558
+#: qtplugins/propertytables/propertymodel.cpp:559
 msgid "Heterogen"
 msgstr "Гетероген"
 
-#: qtplugins/propertytables/propertymodel.cpp:572
-#: qtplugins/propertytables/propertymodel.cpp:589
+#: qtplugins/propertytables/propertymodel.cpp:573
+#: qtplugins/propertytables/propertymodel.cpp:590
 msgid "Atom 1"
 msgstr "Атом 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:574
+#: qtplugins/propertytables/propertymodel.cpp:575
 msgid "Vertex"
 msgstr "Вершина"
 
-#: qtplugins/propertytables/propertymodel.cpp:576
-#: qtplugins/propertytables/propertymodel.cpp:593
+#: qtplugins/propertytables/propertymodel.cpp:577
+#: qtplugins/propertytables/propertymodel.cpp:594
 msgid "Atom 3"
 msgstr "Атом 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:578
-#: qtplugins/propertytables/propertymodel.cpp:597
+#: qtplugins/propertytables/propertymodel.cpp:579
+#: qtplugins/propertytables/propertymodel.cpp:598
 msgid "Angle (°)"
 msgstr "Кут (°)"
 
-#: qtplugins/propertytables/propertymodel.cpp:591
+#: qtplugins/propertytables/propertymodel.cpp:592
 msgid "Atom 2"
 msgstr "Атом 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:595
+#: qtplugins/propertytables/propertymodel.cpp:596
 msgid "Atom 4"
 msgstr "Атом 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:608
+#: qtplugins/propertytables/propertymodel.cpp:609
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "RMSD (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:611
+#: qtplugins/propertytables/propertymodel.cpp:612
 msgid "Energy (kcal/mol)"
 msgstr "Енергія (ккал/моль)"
 
-#: qtplugins/propertytables/propertymodel.cpp:807
+#: qtplugins/propertytables/propertymodel.cpp:808
 msgid "Adjust Fragment"
 msgstr "Налаштувати фрагмент"
 
-#: qtplugins/propertytables/propertymodel.cpp:933
+#: qtplugins/propertytables/propertymodel.cpp:934
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "π Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:935
+#: qtplugins/propertytables/propertymodel.cpp:936
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "Вигин"
 
-#: qtplugins/propertytables/propertymodel.cpp:937
+#: qtplugins/propertytables/propertymodel.cpp:938
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α Спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:939
+#: qtplugins/propertytables/propertymodel.cpp:940
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β Аркуш"
 
-#: qtplugins/propertytables/propertymodel.cpp:941
+#: qtplugins/propertytables/propertymodel.cpp:942
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 спіраль"
 
-#: qtplugins/propertytables/propertymodel.cpp:943
+#: qtplugins/propertytables/propertymodel.cpp:944
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "β Міст"
 
-#: qtplugins/propertytables/propertymodel.cpp:945
+#: qtplugins/propertytables/propertymodel.cpp:946
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "Поворот"
 
-#: qtplugins/propertytables/propertymodel.cpp:947
+#: qtplugins/propertytables/propertymodel.cpp:948
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "Котушка"
@@ -4613,27 +4643,27 @@ msgstr ""
 msgid "PropertyTables"
 msgstr "Таблиці властивостей"
 
-#: qtplugins/propertytables/propertyview.cpp:44
+#: qtplugins/propertytables/propertyview.cpp:45
 msgid "Atom Properties"
 msgstr "Властивості атомів"
 
-#: qtplugins/propertytables/propertyview.cpp:47
+#: qtplugins/propertytables/propertyview.cpp:48
 msgid "Bond Properties"
 msgstr "Властивості зв’язків"
 
-#: qtplugins/propertytables/propertyview.cpp:50
+#: qtplugins/propertytables/propertyview.cpp:51
 msgid "Angle Properties"
 msgstr "Властивості кутів"
 
-#: qtplugins/propertytables/propertyview.cpp:53
+#: qtplugins/propertytables/propertyview.cpp:54
 msgid "Torsion Properties"
 msgstr "Властивості обертання"
 
-#: qtplugins/propertytables/propertyview.cpp:56
+#: qtplugins/propertytables/propertyview.cpp:57
 msgid "Conformer Properties"
 msgstr "Властивості конформерів"
 
-#: qtplugins/propertytables/propertyview.cpp:59
+#: qtplugins/propertytables/propertyview.cpp:60
 msgid "Residue Properties"
 msgstr "Властивості залишку"
 
@@ -4658,11 +4688,11 @@ msgstr "Молекулярний графік з одинокими парами
 msgid "Atomic Charge…"
 msgstr "Атомний заряд…"
 
-#: qtplugins/qtaim/qtaimextension.cpp:93
+#: qtplugins/qtaim/qtaimextension.cpp:90
 msgid "Open WFN File"
 msgstr "Відкриття файла WFN"
 
-#: qtplugins/qtaim/qtaimextension.cpp:94
+#: qtplugins/qtaim/qtaimextension.cpp:91
 msgid "WFN files (*.wfn);;All files (*.*)"
 msgstr "Файли WFN (*.wfn);;Всі файли (*.*)"
 
@@ -4808,7 +4838,7 @@ msgstr "Виберіть Залишок"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
-#: qtplugins/select/select.h:30:1926
+#: qtplugins/select/select.h:30:1932
 msgid "Select"
 msgstr "Виберіть"
 
@@ -4841,7 +4871,7 @@ msgstr ""
 "виділення. \n"
 "Подвійне клацання: виділення цілого фрагмента."
 
-#: qtplugins/selectiontool/selectiontool.cpp:247
+#: qtplugins/selectiontool/selectiontool.cpp:248
 msgid "Paint Atoms"
 msgstr "Атоми фарби"
 
@@ -4860,7 +4890,7 @@ msgstr "Сприйняти Космічну Групу…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:68:1911
+#: qtplugins/spacegroup/spacegroup.cpp:68:1917
 msgid "Symmetrize"
 msgstr "Симетризувати"
 
@@ -4868,28 +4898,28 @@ msgstr "Симетризувати"
 msgid "Fill Unit Cell…"
 msgstr "Заповнити елементну комірку…"
 
-#: qtplugins/spacegroup/spacegroup.cpp:78
-#: qtplugins/spacegroup/spacegroup.cpp:334
+#: qtplugins/spacegroup/spacegroup.cpp:79
+#: qtplugins/spacegroup/spacegroup.cpp:338
 msgid "Reduce to Asymmetric Unit"
 msgstr "Спростити до асиметричного модуля"
 
-#: qtplugins/spacegroup/spacegroup.cpp:84
+#: qtplugins/spacegroup/spacegroup.cpp:85
 msgid "Set Tolerance…"
 msgstr "Установити допуск…"
 
-#: qtplugins/spacegroup/spacegroup.cpp:105
+#: qtplugins/spacegroup/spacegroup.cpp:109
 msgid "Space Group"
 msgstr "Космічна група"
 
-#: qtplugins/spacegroup/spacegroup.cpp:112
+#: qtplugins/spacegroup/spacegroup.cpp:116
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr "Заповніть симетричні атоми на основі кристалічної просторової групи."
 
-#: qtplugins/spacegroup/spacegroup.cpp:187
+#: qtplugins/spacegroup/spacegroup.cpp:191
 msgid "Perceive Space Group"
 msgstr "Сприймайте Космічну Групу"
 
-#: qtplugins/spacegroup/spacegroup.cpp:188
+#: qtplugins/spacegroup/spacegroup.cpp:192
 #, qt-format
 msgid ""
 "The space group is already set to: %1.\n"
@@ -4898,11 +4928,11 @@ msgstr ""
 "Групу простору вже встановлено на: %1.\n"
 "Ви бажаєте перезаписати його?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:218
+#: qtplugins/spacegroup/spacegroup.cpp:222
 msgid "Failure"
 msgstr "Провал"
 
-#: qtplugins/spacegroup/spacegroup.cpp:219
+#: qtplugins/spacegroup/spacegroup.cpp:223
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
@@ -4910,13 +4940,13 @@ msgstr ""
 "Помилка сприйняття космічної групи.\n"
 "Бажаєте спробувати знову з іншим допуском?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:234
+#: qtplugins/spacegroup/spacegroup.cpp:238
 msgid "Primitive Reduction"
 msgstr "Примітивне скорочення"
 
-#: qtplugins/spacegroup/spacegroup.cpp:235
-#: qtplugins/spacegroup/spacegroup.cpp:260
-#: qtplugins/spacegroup/spacegroup.cpp:285
+#: qtplugins/spacegroup/spacegroup.cpp:239
+#: qtplugins/spacegroup/spacegroup.cpp:264
+#: qtplugins/spacegroup/spacegroup.cpp:289
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
@@ -4925,7 +4955,7 @@ msgstr ""
 "Наразі встановлено значення допуску: %1.\n"
 "Продовжувати цей допуск?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:248
+#: qtplugins/spacegroup/spacegroup.cpp:252
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4933,7 +4963,7 @@ msgstr ""
 "Примітивне скорочення не вдалося.\n"
 "Будь ласка, перевірте свій кристал і повторіть спробу з іншим допуском."
 
-#: qtplugins/spacegroup/spacegroup.cpp:273
+#: qtplugins/spacegroup/spacegroup.cpp:277
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4941,7 +4971,7 @@ msgstr ""
 "Не вдалося стандартизувати комірку.\n"
 "Будь ласка, перевірте свій кристал і повторіть спробу з іншим допуском."
 
-#: qtplugins/spacegroup/spacegroup.cpp:297
+#: qtplugins/spacegroup/spacegroup.cpp:301
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -4949,29 +4979,29 @@ msgstr ""
 "Помилка симетризації.\n"
 "Будь ласка, перевірте свій кристал і повторіть спробу з іншим допуском."
 
-#: qtplugins/spacegroup/spacegroup.cpp:355 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:359 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:432
 msgid "Avogadro2"
 msgstr "Авогадро2"
 
-#: qtplugins/spacegroup/spacegroup.cpp:356
+#: qtplugins/spacegroup/spacegroup.cpp:360
 msgid "Select tolerance in Å:"
 msgstr "Виберіть допуск в Å:"
 
-#: qtplugins/spacegroup/spacegroup.cpp:372
+#: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "International"
 msgstr "Міжнародні"
 
-#: qtplugins/spacegroup/spacegroup.cpp:372
+#: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "Hall"
 msgstr "Голл"
 
-#: qtplugins/spacegroup/spacegroup.cpp:372
+#: qtplugins/spacegroup/spacegroup.cpp:376
 msgid "Hermann-Mauguin"
 msgstr "Германн-Моген"
 
-#: qtplugins/spacegroup/spacegroup.cpp:385
+#: qtplugins/spacegroup/spacegroup.cpp:389
 msgid "Select Space Group"
 msgstr "Виберіть Space Group"
 
@@ -4989,7 +5019,7 @@ msgstr "Ділянка спектрів…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
-#: qtplugins/spectra/spectra.h:36:1646
+#: qtplugins/spectra/spectra.h:36:1652
 msgid "Spectra"
 msgstr "Спектри"
 
@@ -5091,13 +5121,17 @@ msgstr "Спектри кругового дихроїзму"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:938
 #. i18n: ectx: property (text), widget (QCheckBox, densityCheck)
-#: qtplugins/spectra/spectradialog.cpp:655:1544
+#: qtplugins/spectra/spectradialog.cpp:655:1550
 msgid "Density"
 msgstr "Щільність"
 
 #: qtplugins/surfaces/orbitals.cpp:35
 msgid "Molecular Orbitals…"
 msgstr "Молекулярні орбіталі…"
+
+#: qtplugins/surfaces/orbitals.cpp:536 qtplugins/surfaces/surfaces.cpp:857
+msgid "Meshes"
+msgstr "Сітки"
 
 #: qtplugins/surfaces/orbitals.h:48
 msgid "Orbital Window"
@@ -5114,7 +5148,7 @@ msgstr "Орбіталь"
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, Avogadro::QtPlugins::SymmetryWidget)
 #: qtplugins/surfaces/orbitaltablemodel.cpp:110
-#: qtplugins/symmetry/symmetry.h:34:1896
+#: qtplugins/symmetry/symmetry.h:34:1902
 msgid "Symmetry"
 msgstr "Симетрія"
 
@@ -5214,44 +5248,46 @@ msgstr "Візуалізуйте щільність обертання."
 msgid "Render a cube supplied with the file."
 msgstr "Виконайте візуалізацію куба, що надається разом із файлом."
 
-#: qtplugins/surfaces/surfaces.cpp:586
+#: qtplugins/surfaces/surfaces.cpp:303
+#, qt-format
+msgctxt "3D Volume Data Set"
+msgid "Cube %1"
+msgstr ""
+
+#: qtplugins/surfaces/surfaces.cpp:601
 msgid "Calculating electron density"
 msgstr "Обчислення електронної густини"
 
-#: qtplugins/surfaces/surfaces.cpp:595
+#: qtplugins/surfaces/surfaces.cpp:610
 msgid "Calculating spin density"
 msgstr "Розрахунок спінової щільності"
 
-#: qtplugins/surfaces/surfaces.cpp:604
+#: qtplugins/surfaces/surfaces.cpp:619
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Розрахунок молекулярної орбіталі %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:865 qtplugins/surfaces/surfaces.cpp:893
+#: qtplugins/surfaces/surfaces.cpp:880 qtplugins/surfaces/surfaces.cpp:908
 msgid "Movie AVI (*.avi)"
 msgstr "Фільм AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:867
+#: qtplugins/surfaces/surfaces.cpp:882
 msgid "Export Movie"
 msgstr "Експорт фільму"
 
-#: qtplugins/surfaces/surfaces.cpp:868
+#: qtplugins/surfaces/surfaces.cpp:883
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Фільм MP4 (*.mp4);;Фільм AVI (*.avi);;GIF (*.gif)"
-
-#: qtplugins/surfaces/surfaces.h:71
-msgid "Surfaces"
-msgstr "Поверхні"
 
 #: qtplugins/surfaces/surfaces.h:74
 msgid "Read and render surfaces."
 msgstr "Читання та візуалізація поверхонь."
 
-#: qtplugins/svg/svg.cpp:30
+#: qtplugins/svg/svg.cpp:31
 msgid "&SVG…"
 msgstr "&SVG…"
 
-#: qtplugins/svg/svg.cpp:258
+#: qtplugins/svg/svg.cpp:259
 msgid "SVG (*.svg)"
 msgstr "SVG (*.svg)"
 
@@ -5263,11 +5299,11 @@ msgstr "SVG"
 msgid "Render the scene in a SVG file."
 msgstr "Відобразіть сцену у файлі SVG."
 
-#: qtplugins/symmetry/operationstablemodel.cpp:61
+#: qtplugins/symmetry/operationstablemodel.cpp:59
 msgid "Class"
 msgstr "Клас"
 
-#: qtplugins/symmetry/symmetry.cpp:41
+#: qtplugins/symmetry/symmetry.cpp:39
 msgid "Symmetry…"
 msgstr "Симетрія…"
 
@@ -5279,16 +5315,12 @@ msgstr "Забезпечте функціональність симетрії."
 msgid "Render symmetry elements."
 msgstr "Відобразити елементи симетрії."
 
-#: qtplugins/symmetry/symmetryutil.cpp:36
-msgid "∞"
-msgstr "∞"
-
-#: qtplugins/symmetry/symmetrywidget.cpp:331
+#: qtplugins/symmetry/symmetrywidget.cpp:335
 #, qt-format
 msgid "Group %1"
 msgstr "Група %1"
 
-#: qtplugins/symmetry/symmetrywidget.cpp:339
+#: qtplugins/symmetry/symmetrywidget.cpp:343
 #, qt-format
 msgid "%1 %2"
 msgstr "%1 %2"
@@ -5322,16 +5354,16 @@ msgstr ""
 "Виберіть ліганд або функціональну групу та натисніть на атом водню, щоб "
 "приєднати його."
 
-#: qtplugins/templatetool/templatetool.cpp:316
-#: qtplugins/templatetool/templatetool.cpp:484
+#: qtplugins/templatetool/templatetool.cpp:404
+#: qtplugins/templatetool/templatetool.cpp:572
 msgid "Clipboard"
 msgstr "Буфер обміну"
 
-#: qtplugins/templatetool/templatetool.cpp:404
+#: qtplugins/templatetool/templatetool.cpp:492
 msgid "Insert Template"
 msgstr "Вставити шаблон"
 
-#: qtplugins/templatetool/templatetool.cpp:679
+#: qtplugins/templatetool/templatetool.cpp:790
 msgid "Insert Ligand"
 msgstr "Вставте ліганд"
 
@@ -5380,7 +5412,7 @@ msgstr "Відображення вібраційних режимів."
 msgid "VRML Render…"
 msgstr "VRML Рендер…"
 
-#: qtplugins/vrml/vrml.cpp:71
+#: qtplugins/vrml/vrml.cpp:69
 msgid "VRML (*.wrl);;Text file (*.txt)"
 msgstr "VRML (*.wrl);;Текстовий файл (*.txt)"
 
@@ -5513,7 +5545,7 @@ msgstr "Сценарій налагодження…"
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:288
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:363
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr "Надіслати розрахунок…"
@@ -5658,7 +5690,7 @@ msgstr "PDB Файл:"
 #. i18n: ectx: property (text), widget (QPushButton, openPdbFileButton)
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:142
 #. i18n: ectx: property (text), widget (QPushButton, openPqrFileButton)
-msgid "..."
+msgid "…"
 msgstr "…"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:67
@@ -5927,21 +5959,21 @@ msgstr "вхід CP2K"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:258
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:333
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
 msgstr "Скинути все"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:265
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:340
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
 msgstr "Типові значення"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:295
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:370
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save File…"
 msgstr "Зберегти файл…"
@@ -5955,7 +5987,7 @@ msgstr "&Просте налаштування"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:99
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:167
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -5964,7 +5996,7 @@ msgstr "Заголовок:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:235
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:310
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -5973,7 +6005,7 @@ msgstr "База імен файлів:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:245
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:320
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -5982,7 +6014,7 @@ msgstr "робота"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:209
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:284
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr "Обчислення:"
@@ -6048,6 +6080,8 @@ msgid "TRUE"
 msgstr "TRUE"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:471
+#. i18n: ectx: property (text), widget (QLabel, label_12)
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
 #. i18n: ectx: property (text), widget (QLabel, label_12)
 msgid "MAX SCF"
 msgstr "MAX SCF"
@@ -6316,17 +6350,22 @@ msgstr "Вхідні дані GAMESS"
 msgid "In:"
 msgstr "У:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:73
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:107
+#. i18n: ectx: property (text), widget (QLabel, label_13)
+msgid "CONV THRESH"
+msgstr "ПОРІГ КОНВ"
+
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
 msgstr "Мультиплетність:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:86
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:154
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
 msgstr "На основі:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:176
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:251
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
 msgstr "Заряд:"
@@ -7876,8 +7915,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:233
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
-msgid "&Import..."
-msgstr "&Імпортувати…"
+msgid "&Import…"
+msgstr "&Імпорт…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:249
 #. i18n: ectx: property (text), widget (QPushButton, push_colorImported)
@@ -7887,7 +7926,7 @@ msgstr "&Імпортувати…"
 #. i18n: ectx: property (text), widget (QPushButton, push_colorCalculated)
 #. i18n: file: qtplugins/spectra/spectradialog.ui:369
 #. i18n: ectx: property (text), widget (QPushButton, push_colorBackground)
-msgid "Set Color..."
+msgid "Set Color…"
 msgstr "Встановити колір…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:269
@@ -7897,8 +7936,8 @@ msgstr "Імпортовані спектри:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:317
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
-msgid "&Export..."
-msgstr "&Експортувати…"
+msgid "&Export…"
+msgstr "&Експорт…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:343
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -7988,8 +8027,8 @@ msgstr ""
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:588
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
-msgid "&Load data..."
-msgstr "З&авантажити дані…"
+msgid "&Load data…"
+msgstr "&Завантажити дані…"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8190,209 +8229,169 @@ msgstr "Центри"
 msgid "Formal Charge:"
 msgstr "Офіційне звинувачення:"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:109
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "0"
-msgstr "0"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:114
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+1"
-msgstr "+1"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:119
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+2"
-msgstr "+2"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:124
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+3"
-msgstr "+3"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:129
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+4"
-msgstr "+4"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:134
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+5"
-msgstr "+5"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:139
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+6"
-msgstr "+6"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:144
-#. i18n: ectx: property (text), item, widget (QComboBox, chargeComboBox)
-msgid "+7"
-msgstr "+7"
-
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:167
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:133
 #. i18n: ectx: property (text), widget (QLabel, coordinationLabel)
 msgid "Coordination:"
 msgstr "Координація:"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:182
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:148
 #. i18n: ectx: property (currentText), widget (QComboBox, coordinationComboBox)
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:227
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:193
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Octahedral"
 msgstr "6: Восьмигранний"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:192
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:158
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "1: Linear"
 msgstr "1: Лінійний"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:197
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:163
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "2: Linear"
 msgstr "2: Лінійний"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:202
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:168
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "3: Trigonal Planar"
 msgstr "3: Тригональна площина"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:207
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:173
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Tetrahedral"
 msgstr "4: Чотиригранний"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:212
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:178
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "4: Square Planar"
 msgstr "4: Квадрат Планар"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:217
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:183
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Trigonal Bipyramidal"
 msgstr "5: Тригональний біпірамідальний"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:222
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:188
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "5: Square Pyramidal"
 msgstr "5: квадратна піраміда"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:232
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:198
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "6: Trigonal Prism"
 msgstr "6: Трикутна призма"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:237
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:203
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "7: Pentagonal Bipyramidal"
 msgstr "7: П'ятикутна Біпірамідальна"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:242
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:208
 #. i18n: ectx: property (text), item, widget (QComboBox, coordinationComboBox)
 msgid "8: Square Antiprism"
 msgstr "8: Квадратна антипризма"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:315
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:281
 #. i18n: ectx: attribute (title), widget (QWidget, ligandTab)
 msgid "Ligands"
 msgstr "Ліганди"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:321
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:287
 #. i18n: ectx: property (text), widget (QLabel, typeLabel)
 msgid "Type:"
 msgstr "Тип:"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:331
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:297
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Monodentate"
 msgstr "Однозубий"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:336
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:302
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Bidentate"
 msgstr "Двозубий"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:341
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:307
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Tridentate"
 msgstr "Тризубий"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:346
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:312
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Tetradentate"
 msgstr "Чотиризубчасті"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:351
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:317
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Hexadentate"
 msgstr "Шестизубчастий"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:356
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:322
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "Haptic"
 msgstr "Тактильний"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:361
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:327
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
 msgid "From Clipboard"
 msgstr "З буфера обміну"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:384
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:350
 #. i18n: ectx: property (text), widget (QLabel, ligandLabel)
 msgid "Ligand:"
 msgstr "Ліганд:"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:455
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:421
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 msgid "Groups"
 msgstr "Групи"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:461
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:427
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Group:"
 msgstr "Група:"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:471
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:437
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "amide"
 msgstr "амід"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:476
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:442
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "carboxylate"
 msgstr "карбоксилат"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:481
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:447
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ester"
 msgstr "складний ефір"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:486
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:452
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
 msgstr "етилен"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:491
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:457
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
 msgstr "етин"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:496
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:462
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "nitro"
 msgstr "нітро"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:501
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:467
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phenyl"
 msgstr "феніл"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:506
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:472
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
 msgstr "фосфат"
 
-#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:511
+#. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:477
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
 msgstr "сульфонат"
@@ -8611,6 +8610,54 @@ msgstr "Ваші імена"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Ваші електронні листи"
+
+#~ msgid "0"
+#~ msgstr "0"
+
+#~ msgid "+1"
+#~ msgstr "+1"
+
+#~ msgid "+2"
+#~ msgstr "+2"
+
+#~ msgid "+3"
+#~ msgstr "+3"
+
+#~ msgid "+4"
+#~ msgstr "+4"
+
+#~ msgid "+5"
+#~ msgstr "+5"
+
+#~ msgid "+6"
+#~ msgstr "+6"
+
+#~ msgid "+7"
+#~ msgstr "+7"
+
+#~ msgid "Render polygon meshes."
+#~ msgstr "Візуалізація полігональних сіток."
+
+#~ msgid "&Analysis"
+#~ msgstr "&Аналіз"
+
+#~ msgid "∞"
+#~ msgstr "∞"
+
+#~ msgid "..."
+#~ msgstr "…"
+
+#~ msgid "&Import..."
+#~ msgstr "&Імпортувати…"
+
+#~ msgid "Set Color..."
+#~ msgstr "Встановити колір…"
+
+#~ msgid "&Export..."
+#~ msgstr "&Експортувати…"
+
+#~ msgid "&Load data..."
+#~ msgstr "З&авантажити дані…"
 
 #~ msgid "eV"
 #~ msgstr "еВ"
@@ -12463,9 +12510,6 @@ msgstr "Ваші електронні листи"
 #~ msgid "Raman Intensities"
 #~ msgstr "Раманівські інтенсивності"
 
-#~ msgid "Make EFP"
-#~ msgstr "Створити ЕПФ"
-
 #~ msgid "UHF"
 #~ msgstr "UHF"
 
@@ -13084,12 +13128,6 @@ msgstr "Ваші електронні листи"
 
 #~ msgid "yes"
 #~ msgstr "так"
-
-#~ msgid "D2"
-#~ msgstr "D2"
-
-#~ msgid "D3"
-#~ msgstr "D3"
 
 #~ msgid "Dispersion:"
 #~ msgstr "Дисперсія:"

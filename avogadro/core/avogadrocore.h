@@ -64,7 +64,7 @@ inline constexpr bool isCustomElement(unsigned char atomicNumber)
 {
   return atomicNumber >= CustomElementMin && atomicNumber <= CustomElementMax;
 }
-}
+} // namespace Core
 
 /** Unit conversion factors. @{ */
 constexpr double PI_D = 3.141592653589793238462643;
@@ -88,6 +88,6 @@ constexpr float ANGSTROM_TO_BOHR_F = static_cast<float>(ANGSTROM_TO_BOHR_D);
 constexpr Real ANGSTROM_TO_BOHR = static_cast<Real>(ANGSTROM_TO_BOHR_D);
 /** @} */
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif // AVOGADRO_CORE_H

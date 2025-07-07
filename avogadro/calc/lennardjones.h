@@ -22,7 +22,7 @@ class AVOGADROCALC_EXPORT LennardJones : public EnergyCalculator
 {
 public:
   LennardJones();
-  ~LennardJones() = default;
+  ~LennardJones() override = default;
 
   LennardJones* newInstance() const override { return new LennardJones; }
 

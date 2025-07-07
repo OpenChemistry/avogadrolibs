@@ -53,8 +53,8 @@ MolecularView::MolecularView(QWidget* parent)
   setSortingEnabled(false);
 }
 
-void MolecularView::selectionChanged(const QItemSelection& selected,
-                                     const QItemSelection&)
+void MolecularView::selectionChanged(
+  [[maybe_unused]] const QItemSelection& selected, const QItemSelection&)
 {
 }
 

@@ -299,4 +299,4 @@ bool MoleQueueWidget::programSelected()
   return sel.size() > 0;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

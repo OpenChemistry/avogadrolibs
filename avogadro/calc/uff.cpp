@@ -6,6 +6,7 @@
 #include "uff.h"
 #include "uffdata.h"
 
+#include <Eigen/src/Core/util/Meta.h>
 #include <avogadro/core/angleiterator.h>
 #include <avogadro/core/angletools.h>
 #include <avogadro/core/array.h>
@@ -146,7 +147,7 @@ public:
 
             // remaining elements, we want the coordination number
             // and possibly formal charge
-            int charge = m_molecule->formalCharge(i);
+            [[maybe_unused]] int charge = m_molecule->formalCharge(i);
             // UFF fortunately only has square planar as special cases
             // so if it's more than 4 bonds, we just use that type
             if (bonds.size() > 4) {
@@ -214,12 +215,12 @@ public:
       if (atomicNumber == 6 || atomicNumber == 7 || atomicNumber == 8 ||
           atomicNumber == 16) {
 
-        const char symbol = uffparams[m_atomTypes[i]].label[2];
+        const char symbolChar = uffparams[m_atomTypes[i]].label[2];
 
         // we might have an aromatic / resonant N, O, or S
         // e.g., furan, thiophene .. we also mark amide N
         // if it's an sp3 carbon, skip it
-        if (atomicNumber == 6 && symbol == '3')
+        if (atomicNumber == 6 && symbolChar == '3')
           continue;
 
         // check the neighbors
@@ -231,22 +232,22 @@ public:
 
         bool resonant = false;
         for (Index j : neighbors) {
-          auto symbol = uffparams[m_atomTypes[j]].label;
-          if (symbol.size() < 3)
+          auto symbolLabel = uffparams[m_atomTypes[j]].label;
+          if (symbolLabel.size() < 3)
             continue; // not a resonant type
 
-          if (symbol[2] == '2' || symbol[2] == 'R') {
+          if (symbolLabel[2] == '2' || symbolLabel[2] == 'R') {
             resonant = true;
             break;
           }
         }
         if (resonant) {
           // set the resonant type
-          if (atomicNumber == 7 && symbol == '3')
+          if (atomicNumber == 7 && symbolChar == '3')
             m_atomTypes[i] = m_atomTypes[i] + 1; // N_R after N_3
-          else if (atomicNumber == 8 && symbol == '3')
+          else if (atomicNumber == 8 && symbolChar == '3')
             m_atomTypes[i] = m_atomTypes[i] + 2; // O_R after O_3 and O_3_z
-          else if (atomicNumber == 16 && symbol == '3') {
+          else if (atomicNumber == 16 && symbolChar == '3') {
             // loop until we find 'R' .. might be a few different S types
             while (uffparams[m_atomTypes[i]].label[2] != 'R')
               ++m_atomTypes[i];
@@ -976,7 +977,7 @@ public:
       Index l = oop._atom4;
 
       Real koop = oop._koop;
-      Real c0 = oop._c0;
+      [[maybe_unused]] Real c0 = oop._c0;
       Real c1 = oop._c1;
       Real c2 = oop._c2;
 
@@ -1019,12 +1020,13 @@ public:
       Real sinTheta = sin(theta);
 
       // get the cross products
-      Vector3d ij_cross_ik = ij.cross(ik).stableNormalized();
-      Vector3d ik_cross_il = ik.cross(il).stableNormalized();
-      Vector3d ij_cross_il = ij.cross(il).stableNormalized();
+      [[maybe_unused]] Eigen::Vector3d ij_cross_ik =
+        ij.cross(ik).stableNormalized();
+      Eigen::Vector3d ik_cross_il = ik.cross(il).stableNormalized();
+      Eigen::Vector3d ij_cross_il = ij.cross(il).stableNormalized();
 
       // some common factors
-      Real numerator = cosTheta * sinAngle / sinTheta;
+      [[maybe_unused]] Real numerator = cosTheta * sinAngle / sinTheta;
 
       // get the forces on the atoms
       Real dj0 =
@@ -1235,7 +1237,8 @@ void UFF::setMolecule(Core::Molecule* mol)
 
 Real UFF::value(const Eigen::VectorXd& x)
 {
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return 0.0;
   if (m_molecule->atomCount() < 2)
     return 0.0; // no bonds
@@ -1260,7 +1263,8 @@ Real UFF::bondEnergy(const Eigen::VectorXd& x)
 {
   Real energy = 0.0;
 
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return energy; // nothing to do
   if (m_molecule->atomCount() < 2)
     return energy; // no bonds
@@ -1273,7 +1277,8 @@ Real UFF::angleEnergy(const Eigen::VectorXd& x)
 {
   Real energy = 0.0;
 
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return energy; // nothing to do
   if (m_molecule->atomCount() < 3)
     return energy; // no angle
@@ -1286,7 +1291,8 @@ Real UFF::oopEnergy(const Eigen::VectorXd& x)
 {
   Real energy = 0.0;
 
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return energy; // nothing to do
   if (m_molecule->atomCount() < 4)
     return energy; // no oop
@@ -1299,7 +1305,8 @@ Real UFF::torsionEnergy(const Eigen::VectorXd& x)
 {
   Real energy = 0.0;
 
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return energy; // nothing to do
   if (m_molecule->atomCount() < 4)
     return energy; // no torsion
@@ -1312,7 +1319,8 @@ Real UFF::vdwEnergy(const Eigen::VectorXd& x)
 {
   Real energy = 0.0;
 
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return energy; // nothing to do
   if (m_molecule->atomCount() < 2)
     return energy; // nothing to do
@@ -1349,7 +1357,8 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return; // nothing to do
   if (m_molecule->atomCount() < 2)
     return; // no bonds
@@ -1359,7 +1368,8 @@ void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
 void UFF::angleGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return; // nothing to do
   if (m_molecule->atomCount() < 3)
     return; // no bonds
@@ -1369,7 +1379,8 @@ void UFF::angleGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
 void UFF::oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return; // nothing to do
   if (m_molecule->atomCount() < 4)
     return; // no bonds
@@ -1379,7 +1390,8 @@ void UFF::oopGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
 void UFF::torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return; // nothing to do
   if (m_molecule->atomCount() < 4)
     return; // no bonds
@@ -1389,7 +1401,8 @@ void UFF::torsionGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
 void UFF::vdwGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 {
-  if (!m_molecule || !d || x.size() != 3 * m_molecule->atomCount())
+  if (!m_molecule || !d ||
+      x.size() != static_cast<Eigen::Index>(3 * m_molecule->atomCount()))
     return; // nothing to do
   if (m_molecule->atomCount() < 2)
     return; // no bonds

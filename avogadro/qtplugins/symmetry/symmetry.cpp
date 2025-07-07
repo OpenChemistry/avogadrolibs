@@ -9,8 +9,8 @@
 
 #include "symmetryutil.h"
 
-//#include <avogadro/core/unitcell.h>
-//#include <avogadro/core/crystaltools.h>
+// #include <avogadro/core/unitcell.h>
+// #include <avogadro/core/crystaltools.h>
 
 #include <avogadro/qtgui/molecule.h>
 
@@ -30,10 +30,8 @@ using namespace Avogadro::QtPlugins::SymmetryUtil;
 namespace Avogadro::QtPlugins {
 
 Symmetry::Symmetry(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_molecule(nullptr)
-  , m_symmetryWidget(nullptr)
-  , m_viewSymmetryAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_symmetryWidget(nullptr), m_viewSymmetryAction(new QAction(this))
 {
 
   m_ctx = msymCreateContext();
@@ -155,8 +153,7 @@ void Symmetry::viewSymmetry()
     m_symmetryWidget = new SymmetryWidget(qobject_cast<QWidget*>(parent()));
     m_symmetryWidget->setMolecule(m_molecule);
     connect(m_symmetryWidget, SIGNAL(detectSymmetry()), SLOT(detectSymmetry()));
-    connect(m_symmetryWidget,
-            SIGNAL(symmetrizeMolecule()),
+    connect(m_symmetryWidget, SIGNAL(symmetrizeMolecule()),
             SLOT(symmetrizeMolecule()));
   }
 
@@ -357,7 +354,7 @@ void Symmetry::symmetrizeMolecule()
   if (MSYM_SUCCESS != (ret = msymGetElements(m_ctx, &mlength, &melements)))
     return;
 
-  if (mlength != length)
+  if (mlength != static_cast<int>(length))
     return;
 
   for (Index i = 0; i < length; ++i) {
@@ -376,4 +373,4 @@ void Symmetry::standardOrientation()
                           | Molecule::Atoms | Molecule::UnitCell);
 }*/
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

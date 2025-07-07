@@ -14,9 +14,7 @@ TextLabel3D::TextLabel3D()
   setRenderPass(TranslucentPass);
 }
 
-TextLabel3D::~TextLabel3D()
-{
-}
+TextLabel3D::~TextLabel3D() {}
 
 void TextLabel3D::accept(Visitor& visitor)
 {
@@ -43,4 +41,4 @@ float TextLabel3D::radius() const
   return getRadiusInternal();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

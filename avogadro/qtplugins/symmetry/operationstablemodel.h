@@ -22,7 +22,7 @@ extern "C"
 {
 #include <libmsym/msym.h>
 }
-}
+} // namespace msym
 
 #include <QAbstractTableModel>
 #include <QStyledItemDelegate>
@@ -67,6 +67,6 @@ private:
   const msym::msym_symmetry_operation_t* m_operations;
   int m_operations_size;
 };
-}
-}
+} // namespace QtPlugins
+} // namespace Avogadro
 #endif // AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H

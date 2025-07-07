@@ -19,6 +19,7 @@
 #include "vector.h"
 
 #include <bitset>
+#include <cstddef>
 #include <list>
 #include <map>
 #include <string>
@@ -596,10 +597,10 @@ public:
    */
   void perceiveSubstitutedCations();
 
-  int coordinate3dCount();
+  size_t coordinate3dCount() const;
   bool setCoordinate3d(int coord);
-  Array<Vector3> coordinate3d(int index) const;
-  bool setCoordinate3d(const Array<Vector3>& coords, int index);
+  Array<Vector3> coordinate3d(size_t index) const;
+  bool setCoordinate3d(const Array<Vector3>& coords, size_t index);
 
   /**
    * Clear coordinate sets (except the default set)

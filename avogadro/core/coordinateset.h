@@ -25,7 +25,7 @@ class ArraySet
 {
 public:
   ArraySet() : m_content(nullptr), m_data(nullptr) {}
-  ~ArraySet() { delete m_content; }
+  virtual ~ArraySet() { delete m_content; }
 
   /** @return true if the type of the array matches the input type. */
   template <typename T>
@@ -85,7 +85,7 @@ class CoordinateSet : public ArraySet
 public:
   CoordinateSet() { m_content = new Holder<T>(T()); }
 
-  ~CoordinateSet() = default;
+  ~CoordinateSet() override = default;
 
   // Properties
   void resize(Index _size) { m_coordinates.resize(_size); }

@@ -26,14 +26,15 @@ class TemplateToolWidget : public QWidget
 
 public:
   explicit TemplateToolWidget(QWidget* parent_ = 0);
-  ~TemplateToolWidget();
+  ~TemplateToolWidget() override;
 
   void setAtomicNumber(unsigned char atomicNum);
   unsigned char atomicNumber() const;
 
+  void setFormalCharge(int charge);
   signed char formalCharge() const;
 
-  void setCoordination(unsigned char order);
+  void setCoordination(unsigned char geometry);
   unsigned char coordination() const;
   QString coordinationString() const;
 
@@ -44,6 +45,7 @@ public:
   std::vector<size_t>& selectedUIDs();
 
   int currentTab() const;
+  void setCurrentTab(int index);
 
 private slots:
   void elementChanged(int index);

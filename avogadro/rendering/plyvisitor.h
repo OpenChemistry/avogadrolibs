@@ -73,8 +73,10 @@ private:
   std::string m_sceneVertices = "";
   std::string m_sceneFaces = "";
 
-  void visitSphereIcosphereRecursionMethod(const SphereColor& geometry, unsigned int subdivisions);
-  void visitCylinderLateralMethod(const CylinderColor& geometry, unsigned int lateralFaces);
+  void visitSphereIcosphereRecursionMethod(const SphereColor& geometry,
+                                           unsigned int subdivisions);
+  void visitCylinderLateralMethod(const CylinderColor& geometry,
+                                  unsigned int lateralFaces);
 };
 
 } // End namespace Rendering

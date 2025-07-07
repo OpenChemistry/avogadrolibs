@@ -218,4 +218,4 @@ void ApbsDialog::updatePreviewTextImmediately()
 
   m_ui->textEdit->setText(m_inputGenerator->fileContents("apbs.in"));
 }
-}
+} // namespace Avogadro::QtPlugins

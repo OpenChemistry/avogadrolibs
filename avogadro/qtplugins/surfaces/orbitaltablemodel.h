@@ -39,14 +39,14 @@ class ProgressBarDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 public:
-  ProgressBarDelegate(QObject* parent = 0) : QStyledItemDelegate(parent){};
-  QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const
+  ProgressBarDelegate(QObject* parent = 0) : QStyledItemDelegate(parent) {};
+  QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const override
   {
     return QSize(60, 30);
   };
 
   void paint(QPainter* p, const QStyleOptionViewItem& o,
-             const QModelIndex& ind) const
+             const QModelIndex& ind) const override
   {
     QStyleOptionProgressBar opt;
     // Call initFrom() which will set the style based on the parent
@@ -72,14 +72,15 @@ class OrbitalSortingProxyModel : public QSortFilterProxyModel
 
 public:
   OrbitalSortingProxyModel(QObject* parent = 0)
-    : QSortFilterProxyModel(parent), m_HOMOFirst(false){};
+    : QSortFilterProxyModel(parent), m_HOMOFirst(false) {};
 
   bool isHOMOFirst() { return m_HOMOFirst; };
   void HOMOFirst(bool b) { m_HOMOFirst = b; };
 
 protected:
   // Compare orbital values
-  bool lessThan(const QModelIndex& left, const QModelIndex& right) const
+  bool lessThan(const QModelIndex& left,
+                const QModelIndex& right) const override
   {
     if (m_HOMOFirst)
       return left.row() < right.row();
@@ -109,13 +110,15 @@ public:
   //! Constructor
   explicit OrbitalTableModel(QWidget* parent = 0);
   //! Deconstructor
-  virtual ~OrbitalTableModel();
+  ~OrbitalTableModel() override;
 
-  int rowCount(const QModelIndex&) const { return m_orbitals.size(); };
-  int columnCount(const QModelIndex&) const;
+  int rowCount(const QModelIndex&) const override { return m_orbitals.size(); };
+  int columnCount(const QModelIndex&) const override;
 
-  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+  QVariant data(const QModelIndex& index,
+                int role = Qt::DisplayRole) const override;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role) const override;
 
   QModelIndex HOMO() const;
   QModelIndex LUMO() const;

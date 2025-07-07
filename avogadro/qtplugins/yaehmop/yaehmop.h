@@ -30,7 +30,7 @@ class Yaehmop : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit Yaehmop(QObject* parent_ = nullptr);
-  ~Yaehmop();
+  ~Yaehmop() override;
 
   QString name() const override { return tr("Yaehmop"); }
   QString description() const override;

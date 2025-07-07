@@ -108,7 +108,7 @@ private:
   std::vector<std::string> tokens;
 };
 
-} // End namespace
-}
+} // namespace QuantumIO
+} // namespace Avogadro
 
 #endif
