@@ -117,7 +117,8 @@ public:
   bool setLimits(const Molecule& mol, float spacing, float padding);
 
   /**
-   * @return Pointer to the vector containing all the data in a one-dimensional array.
+   * @return Pointer to the vector containing all the data in a one-dimensional
+   * array.
    */
   std::vector<float>* data();
   const std::vector<float>* data() const;
@@ -214,9 +215,8 @@ public:
    * @param klast last z position to fill.
    * @param value Value to fill the stripe with.
    */
-  bool fillStripe(
-    unsigned int i, unsigned int j, unsigned int kfirst, unsigned int klast, float value
-  );
+  bool fillStripe(unsigned int i, unsigned int j, unsigned int kfirst,
+                  unsigned int klast, float value);
 
   /**
    * @return The minimum value at any point in the Cube.
@@ -249,7 +249,8 @@ public:
   std::array<float, 3> computeGradient(int i, int j, int k) const;
 
   /**
-   * Get the values of the eight corners of a cube defined by the indices (i, j, k).
+   * Get the values of the eight corners of a cube defined by the indices
+   * (i, j, k).
    * @param i x index
    * @param j y index
    * @param k z index
@@ -258,14 +259,16 @@ public:
   std::array<float, 8> getValsCube(int i, int j, int k) const;
 
   /**
-  * Get the gradients at the eight corners of the cube defined by the indices (i, j, k).
-  * @param i x index
-  * @param j y index
-  * @param k z index
-  * @return Array of gradients at the eight corners. Each gradient is a 3D vector.
-  */
-  std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const; 
-       
+   * Get the gradients at the eight corners of the cube defined by the indices
+   * (i, j, k).
+   * @param i x index
+   * @param j y index
+   * @param k z index
+   * @return Array of gradients at the eight corners. Each gradient is a 3D
+   * vector.
+   */
+  std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const;
+
   /**
    * Get the data value at the specified indices.
    * @param i x index
@@ -275,19 +278,23 @@ public:
    */
   float getData(int i, int j, int k) const;
 
-/**
- * Retrieves the positions of the eight corners of a cube at grid indices (i, j, k).
- *
- * The indices (i, j, k) are converted to real-space positions (xpos, ypos, zpos), mapping grid indices to physical coordinates.
- * The method returns a cube that spans one step in each of the x, y, and z directions, with step sizes defined by `m_spacing`.
- *
- * @param i X-index.
- * @param j Y-index.
- * @param k Z-index.
- * @return A `std::array` of eight `(x, y, z)` coordinates representing the cube's corners.
- */
+  /**
+   * Retrieves the positions of the eight corners of a cube at grid indices
+   * (i, j, k).
+   *
+   * The indices (i, j, k) are converted to real-space positions (xpos, ypos,
+   * zpos), mapping grid indices to physical coordinates. The method returns a
+   * cube that spans one step in each of the x, y, and z directions, with step
+   * sizes defined by `m_spacing`.
+   *
+   * @param i X-index.
+   * @param j Y-index.
+   * @param k Z-index.
+   * @return A `std::array` of eight `(x, y, z)` coordinates representing the
+   * cube's corners.
+   */
 
-std::array<std::array<float, 3>, 8> getPosCube(int i, int j, int k) const;
+  std::array<std::array<float, 3>, 8> getPosCube(int i, int j, int k) const;
 
 protected:
   std::vector<float> m_data;

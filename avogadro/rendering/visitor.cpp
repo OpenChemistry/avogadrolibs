@@ -7,12 +7,8 @@
 
 namespace Avogadro::Rendering {
 
-Visitor::Visitor()
-{
-}
+Visitor::Visitor() {}
 
-Visitor::~Visitor()
-{
-}
+Visitor::~Visitor() {}
 
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering

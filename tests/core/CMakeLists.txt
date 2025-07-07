@@ -22,7 +22,7 @@ set(tests
   VariantMap
   )
 if(USE_SPGLIB)
-  list(APPEND tests Spacegroup)
+  list(APPEND tests SpaceGroup)
 endif()
 
 # Build up the source file names.

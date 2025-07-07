@@ -12,6 +12,7 @@
 // for partial charges
 #include <avogadro/calc/chargemanager.h>
 
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/colorbutton.h>
@@ -33,6 +34,7 @@ namespace Avogadro::QtPlugins {
 using Avogadro::Rendering::TextLabel3D;
 using Core::Array;
 using Core::Atom;
+using Core::contrastColor;
 using Core::Elements;
 using Core::Molecule;
 using QtGui::PluginLayerManager;
@@ -173,7 +175,7 @@ struct LayerLabel : Core::LayerData
       atom->setObjectName("atom");
 
       // set up the various atom options
-      char val = LabelOptions::None;
+      [[maybe_unused]] char val = LabelOptions::None;
       QStringList text;
 
       // first add the individual options
@@ -222,21 +224,21 @@ struct LayerLabel : Core::LayerData
         if (i == 0) {
           residue->addItem(QObject::tr("None"), QVariant(LabelOptions::None));
         } else {
-          char val = 0x00;
-          QStringList text;
+          char optval = 0x00;
+          QStringList opttext;
           if (i & LabelOptions::Index) {
-            text << QObject::tr("ID");
-            val |= LabelOptions::Index;
+            opttext << QObject::tr("ID");
+            optval |= LabelOptions::Index;
           }
           if (i & LabelOptions::Name) {
-            text << QObject::tr("Name");
-            val |= LabelOptions::Name;
+            opttext << QObject::tr("Name");
+            optval |= LabelOptions::Name;
           }
-          if (val != 0x00) {
+          if (optval != 0x00) {
             QString join = QObject::tr(" & ");
-            residue->addItem(text.join(join), QVariant(val));
-            if (val == residueOptions) {
-              residue->setCurrentText(text.join(join));
+            residue->addItem(opttext.join(join), QVariant(optval));
+            if (optval == residueOptions) {
+              residue->setCurrentText(opttext.join(join));
             }
           }
         }
@@ -405,18 +407,20 @@ void Label::processAtom(const Core::Molecule& molecule,
     }
     if (text != "") {
       const Vector3f pos(atom.position3d().cast<float>());
-      Vector3ub color = interface->color;
+      Vector3ub color = atom.color();
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *
                      interface->radiusScalar;
 
-      TextLabel3D* atomLabel = createLabel(text, pos, radius, color);
+      TextLabel3D* atomLabel =
+        createLabel(text, pos, radius, contrastColor(color));
       geometry->addDrawable(atomLabel);
     }
   }
 }
 
 void Label::processBond(const Core::Molecule& molecule,
-                        Rendering::GroupNode& node, size_t layer)
+                        Rendering::GroupNode& node,
+                        [[maybe_unused]] size_t layer)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
@@ -491,6 +495,9 @@ void Label::atomLabelType(int index)
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/atomoptions", interface->atomOptions);
 }
 
 void Label::bondLabelType(int index)
@@ -501,6 +508,9 @@ void Label::bondLabelType(int index)
                                   ->itemData(index)
                                   .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/bondoptions", interface->bondOptions);
 }
 
 void Label::residueLabelType(int index)
@@ -511,6 +521,9 @@ void Label::residueLabelType(int index)
                                      ->itemData(index)
                                      .toInt());
   emit drawablesChanged();
+
+  QSettings settings;
+  settings.setValue("label/residueoptions", interface->residueOptions);
 }
 
 void Label::setRadiusScalar(double radius)
@@ -520,7 +533,7 @@ void Label::setRadiusScalar(double radius)
   emit drawablesChanged();
 
   QSettings settings;
-  settings.setValue("label/radiusScalar", interface->radiusScalar);
+  settings.setValue("label/radiusscalar", interface->radiusScalar);
 }
 
 QWidget* Label::setupWidget()

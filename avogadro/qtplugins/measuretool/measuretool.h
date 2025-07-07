@@ -48,7 +48,6 @@ public:
   void draw(Rendering::GroupNode& node) override;
 
 private:
-  Vector3ub contrastingColor(const Vector3ub& rgb) const;
   bool toggleAtom(const Rendering::Identifier& atom);
   template <typename T>
   void createLabels(T* mol, Rendering::GeometryNode* geo,

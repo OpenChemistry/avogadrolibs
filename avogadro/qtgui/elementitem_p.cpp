@@ -38,9 +38,7 @@ ElementItem::ElementItem(int elementNumber)
   setData(0, m_element);
 }
 
-ElementItem::~ElementItem()
-{
-}
+ElementItem::~ElementItem() {}
 
 QRectF ElementItem::boundingRect() const
 {
@@ -83,4 +81,4 @@ void ElementItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*,
   painter->drawText(rect, Qt::AlignCenter, m_symbol);
 }
 
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui

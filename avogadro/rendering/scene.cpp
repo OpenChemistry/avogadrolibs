@@ -17,9 +17,7 @@ Scene::Scene()
 {
 }
 
-Scene::~Scene()
-{
-}
+Scene::~Scene() {}
 
 Vector3f Scene::center()
 {

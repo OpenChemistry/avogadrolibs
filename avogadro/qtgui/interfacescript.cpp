@@ -267,10 +267,10 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
     // select some atoms
     if (obj.contains("selectedAtoms") && obj["selectedAtoms"].isArray()) {
       QJsonArray selectedList = obj["selectedAtoms"].toArray();
-      for (int i = 0; i < selectedList.size(); ++i) {
-        if (selectedList[i].isDouble()) {
-          Index index = static_cast<Index>(selectedList[i].toDouble());
-          if (index >= 0 && index < guiMol->atomCount())
+      for (auto&& i : selectedList) {
+        if (i.isDouble()) {
+          auto index = static_cast<Index>(i.toDouble());
+          if (index < guiMol->atomCount())
             guiMol->undoMolecule()->setAtomSelected(index, true);
         }
       }
@@ -411,7 +411,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
             m_errors << tr("Malformed file entry at index %1: Not an object.")
                           .arg(m_filenames.size());
           } // end if/else file is JSON object
-        }   // end foreach file
+        } // end foreach file
       } else {
         result = false;
         m_errors << tr("'files' member not an array.");

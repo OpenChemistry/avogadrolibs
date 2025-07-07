@@ -19,9 +19,7 @@ public:
   mutex lock;
 };
 
-Mutex::Mutex() : d(new PIMPL)
-{
-}
+Mutex::Mutex() : d(new PIMPL) {}
 
 Mutex::~Mutex()
 {
@@ -42,4 +40,4 @@ void Mutex::unlock()
 {
   d->lock.unlock();
 }
-}
+} // namespace Avogadro::Core

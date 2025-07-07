@@ -28,11 +28,10 @@ namespace Avogadro::QtPlugins {
 using Core::Array;
 
 PlotPdf::PlotPdf(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_)
-  , m_actions(QList<QAction*>())
-  , m_molecule(nullptr)
-  , m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent())))
-  , m_displayDialogAction(new QAction(this))
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
+    m_molecule(nullptr),
+    m_pdfOptionsDialog(new PdfOptionsDialog(qobject_cast<QWidget*>(parent()))),
+    m_displayDialogAction(new QAction(this))
 {
   m_displayDialogAction->setText(tr("Plot Pair Distribution Function…"));
   connect(m_displayDialogAction.data(), &QAction::triggered, this,
@@ -136,7 +135,8 @@ void PlotPdf::displayDialog()
   const char* windowName = "Pair Distribution Function";
 
   if (!m_chartDialog)
-    m_chartDialog.reset(new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
+    m_chartDialog.reset(
+      new VTK::ChartDialog(qobject_cast<QWidget*>(this->parent())));
 
   m_chartDialog->setWindowTitle(windowName);
   auto* chart = m_chartDialog->chartWidget();
@@ -204,4 +204,4 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
   return true;
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

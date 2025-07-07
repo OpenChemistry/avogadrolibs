@@ -14,9 +14,7 @@ TextLabel2D::TextLabel2D()
   setRenderPass(Rendering::Overlay2DPass);
 }
 
-TextLabel2D::~TextLabel2D()
-{
-}
+TextLabel2D::~TextLabel2D() {}
 
 void TextLabel2D::accept(Visitor& visitor)
 {
@@ -34,4 +32,4 @@ Vector2i TextLabel2D::anchor() const
   return getAnchorInternal().head<2>().cast<int>();
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::Rendering

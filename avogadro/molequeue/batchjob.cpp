@@ -216,4 +216,4 @@ void BatchJob::setup()
           SLOT(handleErrorResponse(int, int, QString, QJsonValue)));
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::MoleQueue

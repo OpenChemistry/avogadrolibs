@@ -19,7 +19,7 @@ class SpaceGroup : public Avogadro::QtGui::ExtensionPlugin
   Q_OBJECT
 public:
   explicit SpaceGroup(QObject* parent_ = nullptr);
-  ~SpaceGroup();
+  ~SpaceGroup() override;
 
   QString name() const override { return tr("SpaceGroup"); }
   QString description() const override;

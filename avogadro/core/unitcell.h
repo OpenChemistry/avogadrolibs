@@ -294,9 +294,9 @@ inline Vector3 UnitCell::wrapFractional(const Vector3& f) const
   // set anything at 1.0 to 0.0
   if (result[0] >= static_cast<Real>(0.999999))
     result[0] = static_cast<Real>(0.0);
-  if (result[1] == static_cast<Real>(0.999999))
+  if (result[1] >= static_cast<Real>(0.999999))
     result[1] = static_cast<Real>(0.0);
-  if (result[2] == static_cast<Real>(0.999999))
+  if (result[2] >= static_cast<Real>(0.999999))
     result[2] = static_cast<Real>(0.0);
 
   return result;

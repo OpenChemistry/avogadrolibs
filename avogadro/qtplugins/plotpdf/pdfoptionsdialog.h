@@ -24,13 +24,13 @@ class PdfOptionsDialog : public QDialog
 
 public:
   explicit PdfOptionsDialog(QWidget* parent = nullptr);
-  ~PdfOptionsDialog();
+  ~PdfOptionsDialog() override;
 
   double maxRadius() const;
   double step() const;
 
 protected slots:
-  void accept();
+  void accept() override;
 
 private:
   QScopedPointer<Ui::PdfOptionsDialog> m_ui;

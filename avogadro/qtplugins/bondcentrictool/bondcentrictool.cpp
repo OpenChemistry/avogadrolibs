@@ -124,7 +124,8 @@ BondCentricTool::BondCentricTool(QObject* parent_)
        "Double-Click: \tReset the view.\n\n"
        "Left Click & Drag on a Bond to set the Manipulation Plane:\n"
        "Left Click & Drag one of the Atoms in the Bond to change the angle\n"
-       "Right Click & Drag one of the Atoms in the Bond to change the length").arg(shortcut));
+       "Right Click & Drag one of the Atoms in the Bond to change the length")
+      .arg(shortcut));
   setIcon();
 }
 
@@ -1031,7 +1032,7 @@ bool BondCentricTool::buildFragmentRecurse(const QtGui::RWBond& bond,
         return false;
       }
     } // *it != bond
-  }   // foreach bond
+  } // foreach bond
   return true;
 }
 

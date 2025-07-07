@@ -47,7 +47,7 @@ class Surfaces : public QtGui::ExtensionPlugin
 
 public:
   explicit Surfaces(QObject* parent = nullptr);
-  ~Surfaces();
+  ~Surfaces() override;
 
   enum Type
   {
@@ -134,8 +134,8 @@ private:
   QtGui::MeshGenerator* m_meshGenerator1 = nullptr;
   QtGui::MeshGenerator* m_meshGenerator2 = nullptr;
 
-  float m_isoValue = 0.01;
-  int m_smoothingPasses = 6;
+  float m_isoValue = 0.025;
+  int m_smoothingPasses = 2;
   int m_meshesLeft = 0;
 
   bool m_recordingMovie = false;

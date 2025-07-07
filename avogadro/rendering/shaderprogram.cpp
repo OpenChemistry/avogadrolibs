@@ -81,7 +81,7 @@ inline GLenum lookupTextureUnit(GLint index)
       return 0;
   }
 }
-} // end anon namespace
+} // namespace
 
 ShaderProgram::ShaderProgram()
   : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false)
@@ -287,8 +287,8 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
     auto available = std::find(begin, end, false);
 
     if (available == end) {
-      m_error = "Could not set sampler " + name + ". No remaining texture "
-                                                  "units available.";
+      m_error = "Could not set sampler " + name +
+                ". No remaining texture units available.";
       return false;
     }
 
@@ -303,9 +303,8 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
 
     glActiveTexture(textureUnit);
     if (!texture.bind()) {
-      m_error = "Could not set sampler " + name + ": Error while binding "
-                                                  "texture: '" +
-                texture.error() + "'.";
+      m_error = "Could not set sampler " + name +
+                ": Error while binding texture: '" + texture.error() + "'.";
       glActiveTexture(GL_TEXTURE0);
       return false;
     }
@@ -476,4 +475,4 @@ inline int ShaderProgram::findUniform(const std::string& name)
   return location;
 }
 
-} // End Avogadro namespace
+} // namespace Avogadro::Rendering

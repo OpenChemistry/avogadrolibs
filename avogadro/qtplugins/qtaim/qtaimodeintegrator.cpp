@@ -1175,4 +1175,4 @@ qreal QTAIMODEIntegrator::r8_sign(qreal x)
 }
 //****************************************************************************80
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

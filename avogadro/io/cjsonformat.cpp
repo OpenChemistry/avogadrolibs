@@ -80,7 +80,7 @@ json eigenColToJson(const MatrixX& matrix, int column)
 {
   json j;
   j = json::array();
-  for (Index i = 0; i < matrix.rows(); ++i) {
+  for (Eigen::Index i = 0; i < matrix.rows(); ++i) {
     j.push_back(matrix(i, column));
   }
   return j;
@@ -196,10 +196,14 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       json coordSets = atoms["coords"]["3dSets"];
       if (coordSets.is_array() && coordSets.size()) {
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
+          Array<Vector3> setArray;
           json set = coordSets[i];
-          if (isNumericArray(set) && set.size() == 3) {
-            auto a = molecule.atom(i);
-            a.setPosition3d(Vector3(set[0], set[1], set[2]));
+          if (isNumericArray(set)) {
+            for (unsigned int j = 0; j < set.size() / 3; ++j) {
+              setArray.push_back(
+                Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
+            }
+            molecule.setCoordinate3d(setArray, i);
           }
         }
         // Make sure the first step is active once we are done loading the sets.
@@ -280,8 +284,12 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
       json connections = bonds["connections"]["index"];
       for (unsigned int i = 0; i < connections.size() / 2; ++i) {
-        molecule.addBond(static_cast<Index>(connections[2 * i]),
-                         static_cast<Index>(connections[2 * i + 1]), 1);
+        Index atom1 = static_cast<Index>(connections[2 * i]);
+        Index atom2 = static_cast<Index>(connections[2 * i + 1]);
+        if (atom1 < atomCount && atom2 < atomCount &&
+            atom1 != atom2) { // avoid self-bonds
+          molecule.addBond(atom1, atom2, 1);
+        }
       }
       if (bonds.contains("order")) {
         json order = bonds["order"];
@@ -679,10 +687,12 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
       if (properties.find("totalCharge") != properties.end()) {
         molecule.setData("totalCharge",
                          static_cast<int>(properties["totalCharge"]));
-      } else if (properties.find("totalSpinMultiplicity") != properties.end()) {
+      }
+      if (properties.find("totalSpinMultiplicity") != properties.end()) {
         molecule.setData("totalSpinMultiplicity",
                          static_cast<int>(properties["totalSpinMultiplicity"]));
-      } else if (properties.find("dipoleMoment") != properties.end()) {
+      }
+      if (properties.find("dipoleMoment") != properties.end()) {
         // read the numeric array
         json dipole = properties["dipoleMoment"];
         if (isNumericArray(dipole) && dipole.size() == 3) {
@@ -794,18 +804,26 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
 
     json enables = jsonRoot["layer"]["enable"];
-    for (const auto& enable : enables.items()) {
-      names->enable[enable.key()] = std::vector<bool>();
-      for (const auto& e : enable.value()) {
-        names->enable[enable.key()].push_back(e);
+    if (enables.is_object()) {
+      for (const auto& enable : enables.items()) {
+        if (isBooleanArray(enable.value())) {
+          names->enable[enable.key()] = std::vector<bool>();
+          for (const auto& e : enable.value()) {
+            names->enable[enable.key()].push_back(e);
+          }
+        }
       }
     }
 
     json settings = jsonRoot["layer"]["settings"];
-    for (const auto& setting : settings.items()) {
-      names->settings[setting.key()] = Core::Array<LayerData*>();
-      for (const auto& s : setting.value()) {
-        names->settings[setting.key()].push_back(new LayerData(s));
+    if (settings.is_object()) {
+      for (const auto& setting : settings.items()) {
+        if (isBooleanArray(setting.value())) {
+          names->settings[setting.key()] = Core::Array<LayerData*>();
+          for (const auto& s : setting.value()) {
+            names->settings[setting.key()].push_back(new LayerData(s));
+          }
+        }
       }
     }
   }
@@ -1160,6 +1178,22 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule,
           coordsFractional.push_back(fcoord.z());
         }
         root["atoms"]["coords"]["3dFractional"] = coordsFractional;
+      }
+
+      // if the molecule has multiple coordinate sets, write them out
+      if (molecule.coordinate3dCount() > 1) {
+        json coords3dSets;
+        for (Index i = 0; i < molecule.coordinate3dCount(); ++i) {
+          json coordsSet;
+          const auto& positions = molecule.coordinate3d(i);
+          for (const auto& it : positions) {
+            coordsSet.push_back(it.x());
+            coordsSet.push_back(it.y());
+            coordsSet.push_back(it.z());
+          }
+          coords3dSets.push_back(coordsSet);
+        }
+        root["atoms"]["coords"]["3dSets"] = coords3dSets;
       }
     }
 

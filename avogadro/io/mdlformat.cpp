@@ -214,8 +214,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                 static_cast<unsigned char>(order));
   }
 
-  std::cout << "read atoms and bonds" << std::endl;
-
   // Parse the properties block until the end of the file.
   // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
@@ -224,7 +222,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (!in.good() || buffer.size() < 6) {
       break;
     }
+#ifndef NDEBUG
     std::cout << " prefix " << buffer.substr(0, 6) << std::endl;
+#endif
 
     string prefix = buffer.substr(0, 6);
     if (prefix == "M  END") {
@@ -266,7 +266,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       for (size_t i = 0; i < entryCount; i++) {
-        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        [[maybe_unused]] size_t index(
+          lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
           appendError("Error parsing radical atom index:" +
                       buffer.substr(10 + 8 * i, 3));
@@ -294,13 +295,15 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       for (size_t i = 0; i < entryCount; i++) {
-        size_t index(lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
+        [[maybe_unused]] size_t index(
+          lexicalCast<size_t>(buffer.substr(10 + 8 * i, 3), ok) - 1);
         if (!ok) {
           appendError("Error parsing isotope atom index:" +
                       buffer.substr(10 + 8 * i, 3));
           return false;
         }
-        auto isotope(lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
+        [[maybe_unused]] auto isotope(
+          lexicalCast<int>(buffer.substr(14 + 8 * i, 3), ok));
         if (!ok) {
           appendError("Error parsing isotope type:" +
                       buffer.substr(14 + 8 * i, 3));
@@ -311,8 +314,6 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
     }
   }
-
-  std::cout << " read properties " << std::endl;
 
   if (!foundEnd) {
     appendError("Error, ending tag for file not found.");
@@ -495,7 +496,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             spinMultiplicity += 2;
         } else if (startsWith(key, "ISO=")) {
           // isotope
-          int isotope = lexicalCast<int>(key.substr(4), ok);
+          [[maybe_unused]] int isotope = lexicalCast<int>(key.substr(4), ok);
           if (!ok) {
             appendError("Failed to parse isotope type: " + key);
             return false;

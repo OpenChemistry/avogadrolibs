@@ -39,13 +39,12 @@ public:
   void setupCubes(QStringList cubeNames);
   void setupSteps(int stepCount);
   void setupModels(
-    const std::set<std::pair<std::string, std::string>> &chargeModels
-  );
+    const std::set<std::pair<std::string, std::string>>& chargeModels);
   void reenableCalculateButton();
   void enableRecord();
 
   Surfaces::Type surfaceType();
-  
+
   Surfaces::ColorProperty colorProperty();
   QString colorModel();
   QString colormapName();

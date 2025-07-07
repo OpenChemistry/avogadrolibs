@@ -9,6 +9,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/bond.h>
+#include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/vector.h>
 
@@ -53,6 +54,7 @@ using QtGui::Molecule;
 using QtGui::RWAtom;
 using QtGui::RWBond;
 
+using Avogadro::Core::contrastColor;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -231,28 +233,6 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   return nullptr;
 }
 
-inline Vector3ub contrastingColor(const Vector3ub& rgb)
-{
-  // If we're far 'enough' (+/-32) away from 128, just invert the component.
-  // If we're close to 128, inverting the color will end up too close to the
-  // input -- adjust the component before inverting.
-  const unsigned char minVal = 32;
-  const unsigned char maxVal = 223;
-  Vector3ub result;
-  for (size_t i = 0; i < 3; ++i) {
-    unsigned char input = rgb[i];
-    if (input > 160 || input < 96)
-      result[i] = static_cast<unsigned char>(255 - input);
-    else
-      result[i] = static_cast<unsigned char>(255 - (input / 4));
-
-    // Clamp to 32-->223 to prevent pure black/white
-    result[i] = std::min(maxVal, std::max(minVal, result[i]));
-  }
-
-  return result;
-}
-
 void Editor::draw(Rendering::GroupNode& node)
 {
   if (fabs(m_bondDistance) < 0.3)
@@ -272,7 +252,7 @@ void Editor::draw(Rendering::GroupNode& node)
   Vector3ub color(64, 255, 220);
   if (m_renderer) {
     auto backgroundColor = m_renderer->scene().backgroundColor();
-    color = contrastingColor(
+    color = contrastColor(
       Vector3ub(backgroundColor[0], backgroundColor[1], backgroundColor[2]));
   }
 
@@ -489,9 +469,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
     bondVector *= distance;
     // okay move the atom
     Vector3 newPos = atom2.position3d() + bondVector;
-    // we use the underlying molecule to set the position
-    // so that the undo stack is updated correctly
-    m_molecule->molecule().setAtomPosition3d(atom1.index(), newPos);
+    m_molecule->setAtomPosition3d(atom1.index(), newPos);
     changes |= Molecule::Atoms;
   } else { // instead, check if we can move atom2
     for (const RWBond& b : atom2Bonds) {
@@ -510,9 +488,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
       bondVector *= distance;
       // okay move the atom
       Vector3 newPos = atom1.position3d() + bondVector;
-      // we use the underlying molecule to set the position
-      // so that the undo stack is updated correctly
-      m_molecule->molecule().setAtomPosition3d(atom2.index(), newPos);
+      m_molecule->setAtomPosition3d(atom2.index(), newPos);
       changes |= Molecule::Atoms;
     }
   }
@@ -532,12 +508,14 @@ void Editor::bondLeftClick(QMouseEvent* e)
 void Editor::atomRightClick(QMouseEvent* e)
 {
   e->accept();
+
   // check to see if we need to adjust hydrogens
   Core::Array<Index> bondedAtoms;
+  Core::Array<Index> hToRemove; // atoms to remove
+  RWAtom atom = m_molecule->atom(m_clickedObject.index);
   if (m_toolWidget->adjustHydrogens()) {
     // before we remove the atom, we need to delete any H atoms
     // that are bonded to it -- unless it's a hydrogen atom itself
-    RWAtom atom = m_molecule->atom(m_clickedObject.index);
     if (atom.isValid() && atom.atomicNumber() != Core::Hydrogen) {
       // get the list of bonded atoms
       Core::Array<RWBond> atomBonds = m_molecule->bonds(atom);
@@ -545,7 +523,7 @@ void Editor::atomRightClick(QMouseEvent* e)
         RWAtom bondedAtom = bond.getOtherAtom(atom);
         if (bondedAtom.atomicNumber() == Core::Hydrogen) {
           // remove the H atom
-          m_molecule->removeAtom(bondedAtom.index());
+          hToRemove.push_back(m_molecule->atomUniqueId(bondedAtom));
         } else {
           // save the atom to adjust after we remove the target
           bondedAtoms.push_back(m_molecule->atomUniqueId(bondedAtom));
@@ -553,13 +531,23 @@ void Editor::atomRightClick(QMouseEvent* e)
       }
     }
   }
-  m_molecule->removeAtom(m_clickedObject.index);
+  if (atom.isValid())
+    m_molecule->removeAtom(atom);
 
-  // okay, now adjust the valence on the bonded atoms
+  // remove the hydrogens
+  for (Index hIndex : hToRemove) {
+    RWAtom hAtom = m_molecule->atomByUniqueId(hIndex);
+    if (hAtom.isValid()) {
+      m_molecule->removeAtom(hAtom);
+    }
+  }
+
+  // okay, now adjust any valence on the bonded atoms
   // (e.g., add back some hydrogens)
   for (Index atomIndex : bondedAtoms) {
     RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
-    QtGui::HydrogenTools::adjustHydrogens(atom);
+    if (atom.isValid())
+      QtGui::HydrogenTools::adjustHydrogens(atom, QtGui::HydrogenTools::Add);
   }
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);

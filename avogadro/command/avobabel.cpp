@@ -10,13 +10,13 @@
 #include <sstream>
 #include <string>
 
-using Avogadro::Io::FileFormatManager;
 using Avogadro::Core::Molecule;
+using Avogadro::Io::FileFormatManager;
 using std::cin;
 using std::cout;
 using std::endl;
-using std::string;
 using std::ostringstream;
+using std::string;
 
 void printHelp();
 

@@ -26,21 +26,21 @@ jobs:
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE",
           }
         #- {
         #    name: "Ubuntu ARM", artifact: "",
         #    os: ubuntu-24.04-arm,
         #    cc: "gcc", cxx: "g++",
         #    build_type: "Release",
-        #    cmake_flags: "-G Ninja",
+        #    cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE",
         #  }
         - {
             name: "AppImage x86", artifact: "Avogadro2-x86_64.AppImage",
             os: ubuntu-22.04,
             cc: "gcc", cxx: "g++",
             build_type: "Release",
-            cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DINSTALL_BUNDLE_FILES=ON",
           }
         #- {
         #    name: "AppImage ARM", artifact: "Avogadro2-arm64.AppImage",
@@ -54,14 +54,14 @@ jobs:
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "asan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
           }
         - {
             name: "Ubuntu Undefined Behavior Sanitizer", artifact: "",
             os: ubuntu-latest,
             cc: "gcc", cxx: "g++",
             build_type: "ubsan",
-            cmake_flags: "-G Ninja -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
+            cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -USE_SYSTEM_ZLIB=ON",
           }
 
     steps:
@@ -78,13 +78,13 @@ jobs:
         repository: openchemistry/openchemistry
         submodules: recursive
         path: openchemistry
-          
+
     - name: Checkout avogadroapp
       uses: actions/checkout@v4
       with:
         repository: openchemistry/avogadroapp
         path: openchemistry/avogadroapp
-        
+
     - name: Checkout avogadrolibs
       uses: actions/checkout@v4
       with:
@@ -95,7 +95,7 @@ jobs:
       with:
         repository: openchemistry/avogadro-i18n
         path: openchemistry/avogadro-i18n
-    
+
     - name: Checkout avogadrogenerators
       uses: actions/checkout@v4
       with:
@@ -169,7 +169,8 @@ jobs:
         wget -c -nv "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
         chmod a+x *.AppImage
 
-        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --appdir appdir
+        # Though it is not great security practice, bundle libssl and libcrypto
+        ./linuxdeploy-x86_64.AppImage -d appdir/usr/share/applications/*.desktop --plugin qt --library /lib/x86_64-linux-gnu/libssl.so.3 --library /lib/x86_64-linux-gnu/libcrypto.so.3 --appdir appdir
         # add the custom AppRun
         rm appdir/AppRun
         cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun

@@ -23,8 +23,8 @@
 
 namespace Avogadro {
 
-AVOGADROCORE_EXPORT const char *version();
+AVOGADROCORE_EXPORT const char* version();
 
-} // end Avogadro namespace
+} // namespace Avogadro
 
 #endif /* VERSION_H_ */

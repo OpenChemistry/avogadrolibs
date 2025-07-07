@@ -91,4 +91,4 @@ void CoordinateTextEdit::showToolTip(QHelpEvent* e) const
   }
 }
 
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

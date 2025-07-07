@@ -63,11 +63,12 @@ msym_thresholds_t sloppy_thresholds = {
 };
 
 SymmetryWidget::SymmetryWidget(QWidget* parent_)
-  : QWidget(parent_), m_ui(new Ui::SymmetryWidget), m_molecule(nullptr),
+  : QWidget(parent_), m_ui(new Ui::SymmetryWidget),
     m_equivalenceTreeModel(new QStandardItemModel(this)),
     m_operationsTableModel(new OperationsTableModel(this)),
-    m_subgroupsTreeModel(new QStandardItemModel(this)), m_es(nullptr),
-    m_sops(nullptr), m_sg(nullptr), m_sopsl(0), m_sgl(0), m_radius(0.0)
+    m_subgroupsTreeModel(new QStandardItemModel(this)), m_molecule(nullptr),
+    m_es(nullptr), m_sops(nullptr), m_sg(nullptr), m_sopsl(0), m_sgl(0),
+    m_radius(0.0)
 {
   setWindowFlags(Qt::Dialog);
   m_ui->setupUi(this);
@@ -123,7 +124,7 @@ void SymmetryWidget::setMolecule(QtGui::Molecule* molecule)
   }
 }
 
-void SymmetryWidget::moleculeChanged(unsigned int changes)
+void SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   /*
   if (changes & Molecule::UnitCell)
@@ -131,7 +132,8 @@ void SymmetryWidget::moleculeChanged(unsigned int changes)
 }
 
 void SymmetryWidget::operationsSelectionChanged(
-  const QItemSelection& selected, const QItemSelection& deselected)
+  [[maybe_unused]] const QItemSelection& selected,
+  [[maybe_unused]] const QItemSelection& deselected)
 {
 
   if (!m_molecule)
@@ -167,7 +169,7 @@ void SymmetryWidget::operationsSelectionChanged(
   }
 
   foreach (QModelIndex i, selection) {
-    unsigned int row = i.row();
+    int row = i.row();
     if (!i.isValid() || row >= m_sopsl)
       continue;
     float x = m_sops[row].v[0], y = m_sops[row].v[1], z = m_sops[row].v[2];
@@ -204,8 +206,9 @@ void SymmetryWidget::operationsSelectionChanged(
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
-void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
-                                               const QItemSelection& deselected)
+void SymmetryWidget::subgroupsSelectionChanged(
+  [[maybe_unused]] const QItemSelection& selected,
+  [[maybe_unused]] const QItemSelection& deselected)
 {
   // QModelIndexList selection =
   // m_ui->subgroupsTree->selectionModel()->selectedIndexes();
@@ -248,7 +251,8 @@ void SymmetryWidget::subgroupsSelectionChanged(const QItemSelection& selected,
 }
 
 void SymmetryWidget::equivalenceSelectionChanged(
-  const QItemSelection& selected, const QItemSelection& deselected)
+  [[maybe_unused]] const QItemSelection& selected,
+  [[maybe_unused]] const QItemSelection& deselected)
 {
   QModelIndex i =
     m_ui->equivalenceTree->selectionModel()->selectedIndexes().first();

@@ -30,8 +30,8 @@
 namespace Avogadro::QtPlugins {
 
 ScriptEnergy::ScriptEnergy(const QString& scriptFileName_)
-  : m_interpreter(new QtGui::PythonScript(scriptFileName_)), m_valid(true),
-    m_inputFormat(NotUsed), m_gradients(false), m_ions(false),
+  : m_interpreter(new QtGui::PythonScript(scriptFileName_)),
+    m_inputFormat(NotUsed), m_valid(true), m_gradients(false), m_ions(false),
     m_radicals(false), m_unitCells(false)
 {
   m_elements.reset();
@@ -116,7 +116,7 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
 
   // write the new coordinates and read the energy
   QByteArray input;
-  for (Index i = 0; i < x.size(); i += 3) {
+  for (Eigen::Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
     input += QString::number(x[i]).toUtf8() + " " +
              QString::number(x[i + 1]).toUtf8() + " " +
@@ -152,7 +152,7 @@ void ScriptEnergy::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // Get the gradient from the script
   // write the new coordinates and read the energy
   QByteArray input;
-  for (Index i = 0; i < x.size(); i += 3) {
+  for (Eigen::Index i = 0; i < x.size(); i += 3) {
     // write as x y z (space separated)
     input += QString::number(x[i]).toUtf8() + " " +
              QString::number(x[i + 1]).toUtf8() + " " +

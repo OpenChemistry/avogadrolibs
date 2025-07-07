@@ -63,7 +63,7 @@ public:
    * pluginManager->pluginFactories<Avogadro::QtGui::ScenePluginFactory>();
    * @endcode
    */
-  template<typename T>
+  template <typename T>
   QList<T*> pluginFactories() const;
 
   /**
@@ -78,7 +78,7 @@ public:
    * @param id The identifier of the plugin factory.
    * @return The plugin factory if the plugin was found, nullptr otherwise.
    */
-  template<typename T>
+  template <typename T>
   T* pluginFactory(const QString& id) const;
 
 private:
@@ -97,7 +97,7 @@ private:
   QList<QObject*> m_plugins;
 };
 
-template<typename T>
+template <typename T>
 QList<T*> PluginManager::pluginFactories() const
 {
   QList<T*> factories;
@@ -109,7 +109,7 @@ QList<T*> PluginManager::pluginFactories() const
   return factories;
 }
 
-template<typename T>
+template <typename T>
 T* PluginManager::pluginFactory(const QString& id) const
 {
   T* factory;
@@ -121,7 +121,7 @@ T* PluginManager::pluginFactory(const QString& id) const
   return factory;
 }
 
-} // End QtPlugins namespace
-} // End Avogadro namespace
+} // namespace QtPlugins
+} // namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_PLUGINMANAGER_H
