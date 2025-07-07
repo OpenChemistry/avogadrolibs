@@ -46,6 +46,9 @@ sdist.include = ["python/avogadro/*.py"]
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "avogadro"
 install.strip = false
+# Ensure all shared libraries are included
+wheel.packages = ["avogadro"]
+wheel.py-api = "py3"
 
 [tool.scikit-build.cmake.define]
 USE_SPGLIB = "FALSE"

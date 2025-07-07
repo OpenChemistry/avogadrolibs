@@ -10,16 +10,48 @@ env:
   # builds to skip (e.g. skip 32-bit windows)
   CIBW_SKIP: "cp38-macosx_arm64 *-manylinux_i686 *-win32"
 
+  # Specify which Python versions to build for
+  CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-*"
+
+  # Add build verbosity for better debugging
+  CIBW_BUILD_VERBOSITY: 1
+
   # Need to do some setup before repairing the wheel on linux...
   CIBW_REPAIR_WHEEL_COMMAND_LINUX: bash scripts/github-actions/repair_command_linux.sh
 
   CIBW_BEFORE_ALL_LINUX: bash scripts/github-actions/repair-linux.sh
+
+  # Ensure proper dylib handling on macOS
+  CIBW_REPAIR_WHEEL_COMMAND_MACOS: |
+    # First, ensure all dylibs are in the wheel
+    echo "Checking wheel contents before repair..."
+    python -m wheel unpack {wheel} --dest temp_wheel_dir
+    WHEEL_NAME=$(basename {wheel} .whl)
+    
+    # Copy any missing dylibs from the build directory
+    if [ -d "temp_wheel_dir/$WHEEL_NAME/avogadro" ]; then
+      echo "Copying missing dylibs..."
+      find . -name "libAvogadro*.dylib" -exec cp {} temp_wheel_dir/$WHEEL_NAME/avogadro/ \; 2>/dev/null || true
+    fi
+    
+    # Repack the wheel
+    cd temp_wheel_dir
+    python -m wheel pack $WHEEL_NAME --dest-dir ../
+    cd ..
+    cp $WHEEL_NAME.whl {wheel}
+    rm -rf temp_wheel_dir
+    
+    # Now run standard delocate
+    delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel}
 
   # Specify eigen location for windows and add wheel build flag
   CIBW_ENVIRONMENT_WINDOWS: "EXTRA_CMAKE_ARGS=-DEIGEN3_INCLUDE_DIR:PATH=/c/eigen PYTHON_WHEEL_BUILD=TRUE"
 
   # Set wheel build flag for all platforms
   CIBW_ENVIRONMENT: "PYTHON_WHEEL_BUILD=TRUE"
+
+  # Pass environment variables to build process
+  CIBW_ENVIRONMENT_PASS_LINUX: "PYTHON_WHEEL_BUILD"
 
   # On Mac build both x64 and arm64
   CIBW_ARCHS_MACOS: "x86_64 arm64"
@@ -58,7 +90,7 @@ jobs:
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.0.0
+        uses: pypa/cibuildwheel@v2.16.5
 
       - uses: actions/upload-artifact@v4
         with:
