@@ -1181,17 +1181,18 @@ public:
       // dE / dr for a Lennard-Jones potential
       // E = depth * (x^12 / r^12 - 2 * x^6 / r^6)
       // dE / dr = -12 * depth * x^12 / r^13 + 12 * depth * x^6 / r^7
-      //         = 12 * depth * x^6 / r^7 * (x^6 / r^6 - 1)
+      //         = -12 * depth * x^6 / r^7 * (x^6 / r^6 - 1)
 
       // TODO: handle unit cells and periodic boundary conditions
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
+
       Real r2 = dx * dx + dy * dy + dz * dz;
       Real r6 = r2 * r2 * r2;
       Real r7 = r6 * sqrt(r2);
       Real x6 = xij * xij * xij * xij * xij * xij;
-      Real dE = 12 * depth * x6 / r7 * (x6 / r6 - 1);
+      Real dE = 12 * depth * x6 / r7 * (1 - x6 / r6);
 
       grad[3 * i] += dE * dx;
       grad[3 * i + 1] += dE * dy;
@@ -1251,7 +1252,7 @@ Real UFF::value(const Eigen::VectorXd& x)
   // TODO: out-of-plane component
   // energy += d->oopEnergies(x);
   // van der Waals component
-  // energy += d->vdwEnergies(x);
+  energy += d->vdwEnergies(x);
   // UFF doesn't have electrostatics
   return energy;
 }
@@ -1340,7 +1341,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   // TODO: out-of-plane gradients
   // d->oopGradient(x, grad);
   // van der Waals gradients
-  // d->vdwGradient(x, grad);
+  d->vdwGradient(x, grad);
   // UFF doesn't have electrostatics so we're done
 
   // handle any constraints
