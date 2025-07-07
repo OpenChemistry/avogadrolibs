@@ -550,8 +550,6 @@ public:
             break;
         }
 
-        std::cout << " SetDihedral " << t._n << " " << phi0 << " " << std::endl;
-
         t._cos_phi0 = cos(t._n * phi0 * DEG_TO_RAD);
         // geometric mean of the two V1 parameters
         t._ijkl = 0.5 * sqrt(Vi_j * Vi_k);
@@ -1097,8 +1095,10 @@ public:
       Real rjk = jk.norm();
       Real rkl = kl.norm();
 
+      /*
       std::cout << " TorsionGrad " << i << " " << j << " " << k << " " << l
                 << " " << rij << " " << rjk << " " << rkl << std::endl;
+      */
 
       // check if the bond vectors are near zero
       if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3) {
@@ -1106,59 +1106,52 @@ public:
       }
 
       Real phi = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+      Real sinPhi = sin(phi);
+      Real cosPhi = cos(phi);
       Real cosPhi0 = torsion._cos_phi0;
       Real kijkl = torsion._ijkl;
       // dE / dphi
       Real dE = kijkl * torsion._n * sin(torsion._n * phi) * cosPhi0;
 
-      // debug
-      std::cout << " TorsionGrad " << phi * RAD_TO_DEG << " " << cosPhi0 << " "
-                << dE << " " << std::endl;
-
-      // check for nan
-      if (std::isnan(dE))
+      // skip this torsion
+      if (std::abs(sinPhi) < 1e-6 || std::isnan(dE))
         continue;
 
-      // get the displacements in Cartesian coordinates
-      // use cross products
-      Vector3d A = ij.cross(jk);
-      Vector3d B = jk.cross(kl);
-      Vector3d C = jk.cross(A);
+      // Using the BallView / Open Babel formula
+      // http://dx.doi.org/10.22028/D291-25896 (Appendix A)
+      // Thanks to Andreas Moll
+      // for the derivation of the gradients
 
-      // get the magnitudes
-      Real rA = A.norm();
-      Real rB = B.norm();
+      // get the unit vectors
+      Vector3d n1 = ij / rij;
+      Vector3d n2 = jk / rjk;
+      Vector3d n3 = kl / rkl;
 
-      if (rA < 1e-6 || rB < 1e-6 || rjk < 1e-6) {
-        continue; // skip this torsion
-      }
+      // get the gradient components
+      Vector3d grad_i = -n1.cross(n2) / (rij * sinPhi * sinPhi);
+      Vector3d grad_l = n2.cross(n3) / (rkl * sinPhi * sinPhi);
+      // grad_j and grad_k are a bit more complicated
+      Real fraction1 = (rij / rjk) * (-cos(phi));
+      Real fraction2 = (rkl / rjk) * (-cos(phi));
+      Vector3d grad_j = grad_i * (fraction1 - 1) - grad_l * (fraction2);
+      Vector3d grad_k = -(grad_i + grad_l + grad_j);
 
-      // calculate the derivatives
-      Vector3d grad_i = -dE * rjk * A / (rA * rA);
-      grad[3 * i] += grad_i[0];
-      grad[3 * i + 1] += grad_i[1];
-      grad[3 * i + 2] += grad_i[2];
+      // add the gradients to the total gradients for each atom
+      grad[3 * i] += dE * grad_i[0];
+      grad[3 * i + 1] += dE * grad_i[1];
+      grad[3 * i + 2] += dE * grad_i[2];
 
-      // atom l
-      Vector3d grad_l = dE * rjk * B / (rB * rB);
-      grad[3 * l] += grad_l[0];
-      grad[3 * l + 1] += grad_l[1];
-      grad[3 * l + 2] += grad_l[2];
+      grad[3 * j] += dE * grad_j[0];
+      grad[3 * j + 1] += dE * grad_j[1];
+      grad[3 * j + 2] += dE * grad_j[2];
 
-      Real dot_ij_jk = ij.dot(jk);
-      Real dot_jk_kl = jk.dot(kl);
+      grad[3 * k] += dE * grad_k[0];
+      grad[3 * k + 1] += dE * grad_k[1];
+      grad[3 * k + 2] += dE * grad_k[2];
 
-      Vector3d grad_j = (dot_ij_jk / (rjk * rjk) - 1.0) * grad_i -
-                        (dot_jk_kl / (rjk * rjk)) * grad_l;
-
-      grad[3 * j] += grad_j[0];
-      grad[3 * j + 1] += grad_j[1];
-      grad[3 * j + 2] += grad_j[2];
-
-      Vector3d grad_k = -grad_i - grad_j - grad_l;
-      grad[3 * k] += grad_k[0];
-      grad[3 * k + 1] += grad_k[1];
-      grad[3 * k + 2] += grad_k[2];
+      grad[3 * l] += dE * grad_l[0];
+      grad[3 * l + 1] += dE * grad_l[1];
+      grad[3 * l + 2] += dE * grad_l[2];
     }
   }
 
@@ -1240,10 +1233,10 @@ Real UFF::value(const Eigen::VectorXd& x)
   energy += d->angleEnergies(x);
   // torsion component
   energy += d->torsionEnergies(x);
-  // out-of-plane component
+  // TODO: out-of-plane component
   // energy += d->oopEnergies(x);
   // van der Waals component
-  energy += d->vdwEnergies(x);
+  // energy += d->vdwEnergies(x);
   // UFF doesn't have electrostatics
   return energy;
 }
@@ -1329,10 +1322,10 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
   d->angleGradient(x, grad);
   // torsion gradients
   d->torsionGradient(x, grad);
-  // out-of-plane gradients
+  // TODO: out-of-plane gradients
   // d->oopGradient(x, grad);
   // van der Waals gradients
-  d->vdwGradient(x, grad);
+  // d->vdwGradient(x, grad);
   // UFF doesn't have electrostatics so we're done
 
   // handle any constraints
