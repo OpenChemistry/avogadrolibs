@@ -14,6 +14,7 @@
 
 #include <cmath>
 #include <istream>
+#include <memory>
 #include <ostream>
 #include <string>
 
@@ -232,8 +233,14 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
         unitcell[1] = M_PI_2 - asin(unitcell[1]); /* cosAB */
       }
 
-      mol.setUnitCell(new UnitCell(unitcell[0], unitcell[2], unitcell[5],
-                                   unitcell[4], unitcell[3], unitcell[1]));
+      auto cell =
+        std::make_unique<UnitCell>(unitcell[0], unitcell[2], unitcell[5],
+                                   unitcell[4], unitcell[3], unitcell[1]);
+      if (!cell->isRegular()) {
+        appendError("cell matrix is singular");
+        return false;
+      }
+      mol.setUnitCell(cell.release());
     } else {
       inStream.read(buff, leadingNum);
     }

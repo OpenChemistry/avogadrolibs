@@ -16,7 +16,7 @@
 #include <avogadro/core/utilities.h>
 
 #include <iostream>
-
+#include <memory>
 #include <string>
 
 using namespace std::string_literals;
@@ -210,9 +210,13 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       }
     }
 
-    auto* cell = new UnitCell;
-    cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
-    molecule.setUnitCell(cell);
+    auto cell = std::make_unique<UnitCell>(
+      cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
+    if (!cell->isRegular()) {
+      appendError("box vectors are not linear independent");
+      return false;
+    }
+    molecule.setUnitCell(cell.release());
   }
 
   return true;

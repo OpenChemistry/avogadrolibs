@@ -150,12 +150,21 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
     getline(inStream, buffer);
   } // done reading the file
 
+  std::unique_ptr<Core::UnitCell> unitcell = nullptr;
+  std::string tmp;
   if (hasLattice) {
-    auto* cell = new Core::UnitCell(v1, v2, v3);
-    mol.setUnitCell(cell);
+    unitcell = std::make_unique<Core::UnitCell>(v1, v2, v3);
+    tmp = "$lattice";
   } else if (hasCell) {
-    auto* cell = new Core::UnitCell(a, b, c, alpha, beta, gamma);
-    mol.setUnitCell(cell);
+    unitcell = std::make_unique<Core::UnitCell>(a, b, c, alpha, beta, gamma);
+    tmp = "$cell";
+  }
+  if (unitcell) {
+    if (!unitcell->isRegular()) {
+      appendError(tmp + " does not give linear independent lattice vectors");
+      return false;
+    }
+    mol.setUnitCell(unitcell.release());
   }
 
   // if we have fractional coordinates, we need to convert them to cartesian

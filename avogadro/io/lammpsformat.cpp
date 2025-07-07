@@ -13,6 +13,7 @@
 #include <avogadro/core/vector.h>
 
 #include <istream>
+#include <memory>
 #include <ostream>
 #include <sstream>
 #include <string>
@@ -213,9 +214,15 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     return false;
   }
   mol.setCoordinate3d(mol.atomPositions3d(), 0);
-  mol.setUnitCell(new UnitCell(Vector3(x_max - x_min, 0, 0),
-                               Vector3(tilt_xy, y_max - y_min, 0),
-                               Vector3(tilt_xz, tilt_yz, z_max - z_min)));
+  auto uc = std::make_unique<UnitCell>(
+    Vector3(x_max - x_min, 0, 0), Vector3(tilt_xy, y_max - y_min, 0),
+    Vector3(tilt_xz, tilt_yz, z_max - z_min));
+  if (!uc->isRegular()) {
+    appendError(
+      "'ITEM: BOX BOUNDS' does not give linear-independent lattive vectors");
+    return false;
+  }
+  mol.setUnitCell(uc.release());
 
   // Do we have an animation?
   size_t numAtoms2;
@@ -367,9 +374,15 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     mol.setCoordinate3d(positions, coordSet++);
-    mol.setUnitCell(new UnitCell(Vector3(x_max - x_min, 0, 0),
-                                 Vector3(tilt_xy, y_max - y_min, 0),
-                                 Vector3(tilt_xz, tilt_yz, z_max - z_min)));
+    uc = std::make_unique<UnitCell>(Vector3(x_max - x_min, 0, 0),
+                                    Vector3(tilt_xy, y_max - y_min, 0),
+                                    Vector3(tilt_xz, tilt_yz, z_max - z_min));
+    if (!uc->isRegular()) {
+      appendError(
+        "'ITEM: BOX BOUNDS' does not give linear-independent lattive vectors");
+      return false;
+    }
+    mol.setUnitCell(uc.release());
   }
 
   return true;
