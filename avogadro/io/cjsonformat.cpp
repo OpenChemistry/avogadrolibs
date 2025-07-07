@@ -284,8 +284,12 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     if (bonds.is_object() && isNumericArray(bonds["connections"]["index"])) {
       json connections = bonds["connections"]["index"];
       for (unsigned int i = 0; i < connections.size() / 2; ++i) {
-        molecule.addBond(static_cast<Index>(connections[2 * i]),
-                         static_cast<Index>(connections[2 * i + 1]), 1);
+        Index atom1 = static_cast<Index>(connections[2 * i]);
+        Index atom2 = static_cast<Index>(connections[2 * i + 1]);
+        if (atom1 < atomCount && atom2 < atomCount &&
+            atom1 != atom2) { // avoid self-bonds
+          molecule.addBond(atom1, atom2, 1);
+        }
       }
       if (bonds.contains("order")) {
         json order = bonds["order"];
@@ -800,18 +804,26 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule,
     }
 
     json enables = jsonRoot["layer"]["enable"];
-    for (const auto& enable : enables.items()) {
-      names->enable[enable.key()] = std::vector<bool>();
-      for (const auto& e : enable.value()) {
-        names->enable[enable.key()].push_back(e);
+    if (enables.is_object()) {
+      for (const auto& enable : enables.items()) {
+        if (isBooleanArray(enable.value())) {
+          names->enable[enable.key()] = std::vector<bool>();
+          for (const auto& e : enable.value()) {
+            names->enable[enable.key()].push_back(e);
+          }
+        }
       }
     }
 
     json settings = jsonRoot["layer"]["settings"];
-    for (const auto& setting : settings.items()) {
-      names->settings[setting.key()] = Core::Array<LayerData*>();
-      for (const auto& s : setting.value()) {
-        names->settings[setting.key()].push_back(new LayerData(s));
+    if (settings.is_object()) {
+      for (const auto& setting : settings.items()) {
+        if (isBooleanArray(setting.value())) {
+          names->settings[setting.key()] = Core::Array<LayerData*>();
+          for (const auto& s : setting.value()) {
+            names->settings[setting.key()].push_back(new LayerData(s));
+          }
+        }
       }
     }
   }
