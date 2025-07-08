@@ -286,7 +286,7 @@ void Forcefield::optimize()
   cppoptlib::Criteria<Real> crit = cppoptlib::Criteria<Real>::defaults();
 
   // e.g., every N steps, update coordinates
-  crit.iterations = 2;
+  crit.iterations = 5;
   // we don't set function or gradient criteria
   // .. these seem to be broken in the solver code
   // .. so we handle ourselves
@@ -445,6 +445,25 @@ void Forcefield::forces()
   Core::Array<Vector3> forces = m_molecule->atomPositions3d();
 
   m_method->gradient(positions, gradient);
+
+#ifndef NDEBUG
+  qDebug() << " current gradient ";
+  for (Index i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " element "
+             << m_molecule->atom(i).atomicNumber()
+             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
+             << ", " << gradient[3 * i + 2];
+  }
+
+  qDebug() << " numeric gradient ";
+  m_method->finiteGradient(positions, gradient);
+  for (Index i = 0; i < n; ++i) {
+    qDebug() << " atom " << i << " element "
+             << m_molecule->atom(i).atomicNumber()
+             << " grad: " << gradient[3 * i] << ", " << gradient[3 * i + 1]
+             << ", " << gradient[3 * i + 2];
+  }
+#endif
 
   for (Index i = 0; i < n; ++i) {
     forces[i] =
