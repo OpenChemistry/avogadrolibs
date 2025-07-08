@@ -47,7 +47,7 @@ SelectionTool::SelectionTool(QObject* parent_)
     m_drawSelectionBox(false), m_doubleClick(false), m_initSelectionBox(false),
     m_layerManager("Selection Tool")
 {
-  QString shortcut = tr("Ctrl+5", "control-key 5");
+  QString shortcut = tr("Ctrl+4", "control-key 4");
   m_activateAction->setText(tr("Selection"));
   m_activateAction->setToolTip(
     tr("Selection Tool \t(%1)\n\n"
