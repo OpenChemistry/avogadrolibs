@@ -44,6 +44,9 @@ class EnergyCalculator;
 class AVOGADROCALC_EXPORT EnergyManager
 {
 public:
+  EnergyManager(const EnergyManager&) = delete;            // Not implemented.
+  EnergyManager& operator=(const EnergyManager&) = delete; // Not implemented.
+
   /**
    * Get the singleton instance of the energy manager. This instance should
    * not be deleted.
@@ -136,9 +139,6 @@ private:
 
   EnergyManager();
   ~EnergyManager();
-
-  EnergyManager(const EnergyManager&);            // Not implemented.
-  EnergyManager& operator=(const EnergyManager&); // Not implemented.
 
   /**
    * @brief Append warnings/errors to the error message string.
