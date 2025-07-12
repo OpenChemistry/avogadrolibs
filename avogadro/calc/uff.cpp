@@ -1257,6 +1257,10 @@ Real UFF::value(const Eigen::VectorXd& x)
   // van der Waals component
   energy += d->vdwEnergies(x);
   // UFF doesn't have electrostatics
+
+  // Add constraint energies
+  energy += constraintEnergies(x);
+
   return energy;
 }
 
@@ -1354,6 +1358,7 @@ void UFF::gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
 
   // handle any constraints
   cleanGradients(grad);
+  constraintGradients(x, grad);
 }
 
 void UFF::bondGradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad)
