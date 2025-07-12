@@ -106,7 +106,22 @@ public:
   /**
    * @return the type of constraint
    */
-  Constraint::Type type() const;
+  Constraint::Type type() const
+  {
+    if (m_type != None)
+      return m_type;
+
+    if (m_cIndex == MaxIndex && m_dIndex == MaxIndex)
+      m_type = DistanceConstraint;
+    else if (m_dIndex == MaxIndex)
+      m_type = AngleConstraint;
+    else if (m_dIndex != MaxIndex)
+      m_type = TorsionConstraint;
+    else
+      m_type = UnknownConstraint;
+
+    return m_type;
+  }
 
   /**
    * Set the type of constraint
@@ -123,23 +138,6 @@ protected:
   Real m_k = 1000.0; // force constant, default to 1000 kcal/mol/Angstrom^2
   mutable Constraint::Type m_type = None; // cached type, initialized to None
 };
-
-inline Constraint::Type Constraint::type() const
-{
-  if (m_type != None)
-    return m_type;
-
-  if (m_cIndex == MaxIndex && m_dIndex == MaxIndex)
-    m_type = DistanceConstraint;
-  else if (m_dIndex == MaxIndex)
-    m_type = AngleConstraint;
-  else if (m_dIndex != MaxIndex)
-    m_type = TorsionConstraint;
-  else
-    m_type = UnknownConstraint;
-
-  return m_type;
-}
 
 } // End namespace Core
 } // End namespace Avogadro
