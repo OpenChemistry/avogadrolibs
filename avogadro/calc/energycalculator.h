@@ -8,6 +8,7 @@
 
 #include "avogadrocalcexport.h"
 
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/variantmap.h>
 #include <avogadro/core/vector.h>
@@ -96,6 +97,31 @@ public:
   void cleanGradients(TVector& grad);
 
   /**
+   * Called to get the energies for the current set of constraints.
+   * which should be added to the value() method for real energies
+   * in derived classes
+   * @return the sum of the constraint energies
+   */
+  Real constraintEnergies(const TVector& x);
+
+  /**
+   * Called to get the gradients for the current set of constraints.
+   * which should be added to the gradient() method in derived classes.
+   * @param x the current coordinates
+   * @param grad the gradient vector to be updated with constraint gradients
+   */
+  void constraintGradients(const TVector& x, TVector& grad);
+
+  /**
+   * Called to get the constraints for this method.
+   * @return the constraints for this method
+   */
+  Core::Array<Core::Constraint> constraints() const;
+
+  // Set the constraints for this method
+  void setConstraints(const Core::Array<Core::Constraint>& constraints);
+
+  /**
    * Called to update the "frozen" mask (e.g., during editing)
    */
   void setMask(TVector mask) { m_mask = mask; }
@@ -119,6 +145,12 @@ protected:
   void appendError(const std::string& errorString, bool newLine = true) const;
 
   TVector m_mask; // optimize or frozen atom mask
+  // Separate the constraints into different types
+  // for speed and convenience.
+  Core::Array<Core::Constraint> m_distanceConstraints;
+  Core::Array<Core::Constraint> m_angleConstraints;
+  Core::Array<Core::Constraint> m_torsionConstraints;
+  Core::Array<Core::Constraint> m_outOfPlaneConstraints;
 
 private:
   mutable std::string m_error;

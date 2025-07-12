@@ -6,6 +6,7 @@ avogadro_headers(Calc
   defaultmodel.h
   energycalculator.h
   energymanager.h
+  gradients.h
   lennardjones.h
   uff.h
   uffdata.h
