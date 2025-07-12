@@ -59,6 +59,32 @@ TEST(UnitCellTest, cellParameters)
   Real beta = static_cast<Real>(120 * DEG_TO_RAD);
   Real gamma = static_cast<Real>(85 * DEG_TO_RAD);
 
+  const Vector3 ux{ 1.0, 0.0, 0.0 }, uy{ 0.0, 1.0, 0.0 }, uz{ 0.0, 0.0, 1.0 },
+    zero{ 0.0, 0.0, 0.0 };
+
+  EXPECT_TRUE(UnitCell(a, b, c, alpha, beta, gamma).isRegular());
+  EXPECT_FALSE(UnitCell(a, b, 0.0, alpha, beta, gamma).isRegular());
+  EXPECT_FALSE(UnitCell(a, b, c, 0.0, beta, gamma).isRegular());
+  EXPECT_FALSE(UnitCell(a, b, c, alpha, beta, 360 * DEG_TO_RAD).isRegular());
+  EXPECT_FALSE(UnitCell(zero, uy, uz).isRegular());
+  EXPECT_FALSE(UnitCell(ux, -2.0 * ux, uz).isRegular());
+
+  Matrix3 m;
+  m.col(0) = ux;
+  m.col(1) = uy;
+  m.col(2) = uz;
+  EXPECT_TRUE(UnitCell{ m }.isRegular());
+
+  m.col(0) = ux;
+  m.col(1) = zero;
+  m.col(2) = uz;
+  EXPECT_FALSE(UnitCell{ m }.isRegular());
+
+  m.col(0) = 2 * ux + uy + uz;
+  m.col(1) = ux + uy;
+  m.col(2) = 0.5 * (ux + uz);
+  EXPECT_FALSE(UnitCell{ m }.isRegular());
+
   UnitCell unitCell;
   unitCell.setCellParameters(a, b, c, alpha, beta, gamma);
   EXPECT_FLOAT_EQ(static_cast<float>(a), static_cast<float>(unitCell.a()));

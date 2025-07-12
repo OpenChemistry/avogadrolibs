@@ -267,19 +267,16 @@ void UnitCellDialog::revertFractionalMatrix()
 
 void UnitCellDialog::updateParameters()
 {
-  constexpr double tiny = 1e-6;
   const auto a = static_cast<Real>(m_ui->a->value());
   const auto b = static_cast<Real>(m_ui->b->value());
   const auto c = static_cast<Real>(m_ui->c->value());
   assert(a > 0.0 && b > 0.0 && c > 0.0);
-  const auto w = a * b * c;
   Core::UnitCell tmp;
   tmp.setCellParameters(a, b, c,
                         static_cast<Real>(m_ui->alpha->value()) * DEG_TO_RAD,
                         static_cast<Real>(m_ui->beta->value()) * DEG_TO_RAD,
                         static_cast<Real>(m_ui->gamma->value()) * DEG_TO_RAD);
-  const auto vol = tmp.volume();
-  if (std::isnan(vol) || vol < tiny * w) {
+  if (!tmp.isRegular()) {
     QMessageBox::warning(nullptr, tr("Unit Cell Editor"),
                          tr("Ignoring singular cell matrix"));
     return;
@@ -289,13 +286,8 @@ void UnitCellDialog::updateParameters()
 
 void UnitCellDialog::updateCellMatrix()
 {
-  constexpr double tiny = 1e-6;
   const Matrix3 tmp = stringToMatrix(m_ui->cellMatrix->toPlainText());
-  const Real a = tmp.col(0).norm();
-  const Real b = tmp.col(1).norm();
-  const Real c = tmp.col(2).norm();
-  const Real w = a * b * c;
-  if (w <= 0.0 || std::fabs(tmp.determinant()) < w * tiny) {
+  if (!Core::UnitCell::isRegular(tmp)) {
     QMessageBox::warning(nullptr, tr("Unit Cell Editor"),
                          tr("Ignoring singular cell matrix"));
     return;
@@ -305,13 +297,8 @@ void UnitCellDialog::updateCellMatrix()
 
 void UnitCellDialog::updateFractionalMatrix()
 {
-  constexpr double tiny = 1e-6;
   const Matrix3 tmp = stringToMatrix(m_ui->fractionalMatrix->toPlainText());
-  const Real a = tmp.col(0).norm();
-  const Real b = tmp.col(1).norm();
-  const Real c = tmp.col(2).norm();
-  const Real w = a * b * c;
-  if (w <= 0.0 || std::fabs(tmp.determinant()) < w * tiny) {
+  if (!Core::UnitCell::isRegular(tmp)) {
     QMessageBox::warning(nullptr, tr("Unit Cell Editor"),
                          tr("Ignoring singular fractional cell matrix"));
     return;
