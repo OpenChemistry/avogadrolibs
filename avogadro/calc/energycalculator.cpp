@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "energycalculator.h"
+#include "gradients.h"
 
 #include <iostream>
 #include <avogadro/core/angletools.h>
@@ -132,13 +133,45 @@ Real EnergyCalculator::constraintEnergies(const TVector& x)
   }
 
   for (const auto& constraint : m_torsionConstraints) {
-    // Calculate energy for torsion constraints
-    // totalEnergy += calculateTorsionEnergy(constraint);
+    const Index a = constraint.aIndex();
+    const Index b = constraint.bIndex();
+    const Index c = constraint.cIndex();
+    const Index d = constraint.dIndex();
+    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
+        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+      // shouldn't happen, invalid constraint
+      continue;
+
+    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
+    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    const Real angle = calculateDihedral(vA, vB, vC, vD);
+    const Real delta = angle - constraint.value();
+
+    // harmonic restraint
+    totalEnergy += constraint.k() * delta * delta;
   }
 
   for (const auto& constraint : m_outOfPlaneConstraints) {
-    // Calculate energy for out-of-plane constraints
-    // totalEnergy += calculateOutOfPlaneEnergy(constraint);
+    const Index a = constraint.aIndex();
+    const Index b = constraint.bIndex();
+    const Index c = constraint.cIndex();
+    const Index d = constraint.dIndex();
+    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
+        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+      // shouldn't happen, invalid constraint
+      continue;
+
+    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
+    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    const Real angle = outOfPlaneAngle(vA, vB, vC, vD);
+    const Real delta = angle - constraint.value();
+
+    // harmonic restraint
+    totalEnergy += constraint.k() * delta * delta;
   }
 
   return totalEnergy;
@@ -170,15 +203,112 @@ void EnergyCalculator::constraintGradients(const TVector& x, TVector& grad)
   }
 
   for (const auto& constraint : m_angleConstraints) {
-    // TODO
+    const Index a = constraint.aIndex();
+    const Index b = constraint.bIndex();
+    const Index c = constraint.cIndex();
+    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
+        (3 * c + 2 >= x.size()))
+      // shouldn't happen, invalid constraint
+      continue;
+
+    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
+    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+
+    Vector3d aGrad, bGrad, cGrad;
+    const Real angle = angleGradient(vA, vB, vC, aGrad, bGrad, cGrad);
+    const Real delta = angle - constraint.value();
+    const Real dE = constraint.k() * 2 * delta;
+
+    // update the master gradients
+    grad[3 * a] += dE * aGrad[0];
+    grad[3 * a + 1] += dE * aGrad[1];
+    grad[3 * a + 2] += dE * aGrad[2];
+
+    grad[3 * b] += dE * bGrad[0];
+    grad[3 * b + 1] += dE * bGrad[1];
+    grad[3 * b + 2] += dE * bGrad[2];
+
+    grad[3 * c] += dE * cGrad[0];
+    grad[3 * c + 1] += dE * cGrad[1];
+    grad[3 * c + 2] += dE * cGrad[2];
   }
 
   for (const auto& constraint : m_torsionConstraints) {
-    // TODO
+    const Index a = constraint.aIndex();
+    const Index b = constraint.bIndex();
+    const Index c = constraint.cIndex();
+    const Index d = constraint.dIndex();
+    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
+        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+      // shouldn't happen, invalid constraint
+      continue;
+
+    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
+    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    Vector3d aGrad, bGrad, cGrad, dGrad;
+    const Real angle =
+      dihedralGradient(vA, vB, vC, vD, aGrad, bGrad, cGrad, dGrad);
+    const Real delta = angle - constraint.value();
+    const Real dE = constraint.k() * 2 * delta;
+
+    // update the master gradients
+    grad[3 * a] += dE * aGrad[0];
+    grad[3 * a + 1] += dE * aGrad[1];
+    grad[3 * a + 2] += dE * aGrad[2];
+
+    grad[3 * b] += dE * bGrad[0];
+    grad[3 * b + 1] += dE * bGrad[1];
+    grad[3 * b + 2] += dE * bGrad[2];
+
+    grad[3 * c] += dE * cGrad[0];
+    grad[3 * c + 1] += dE * cGrad[1];
+    grad[3 * c + 2] += dE * cGrad[2];
+
+    grad[3 * d] += dE * dGrad[0];
+    grad[3 * d + 1] += dE * dGrad[1];
+    grad[3 * d + 2] += dE * dGrad[2];
   }
 
   for (const auto& constraint : m_outOfPlaneConstraints) {
-    // TODO
+
+    const Index a = constraint.aIndex();
+    const Index b = constraint.bIndex();
+    const Index c = constraint.cIndex();
+    const Index d = constraint.dIndex();
+    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
+        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+      // shouldn't happen, invalid constraint
+      continue;
+
+    const Vector3d vA(x[3 * a], x[3 * a + 1], x[3 * a + 2]);
+    const Vector3d vB(x[3 * b], x[3 * b + 1], x[3 * b + 2]);
+    const Vector3d vC(x[3 * c], x[3 * c + 1], x[3 * c + 2]);
+    const Vector3d vD(x[3 * d], x[3 * d + 1], x[3 * d + 2]);
+    Vector3d aGrad, bGrad, cGrad, dGrad;
+    const Real angle =
+      outOfPlaneGradient(vA, vB, vC, vD, aGrad, bGrad, cGrad, dGrad);
+    const Real delta = angle - constraint.value();
+    const Real dE = constraint.k() * 2 * delta;
+
+    // update the master gradients
+    grad[3 * a] += dE * aGrad[0];
+    grad[3 * a + 1] += dE * aGrad[1];
+    grad[3 * a + 2] += dE * aGrad[2];
+
+    grad[3 * b] += dE * bGrad[0];
+    grad[3 * b + 1] += dE * bGrad[1];
+    grad[3 * b + 2] += dE * bGrad[2];
+
+    grad[3 * c] += dE * cGrad[0];
+    grad[3 * c + 1] += dE * cGrad[1];
+    grad[3 * c + 2] += dE * cGrad[2];
+
+    grad[3 * d] += dE * dGrad[0];
+    grad[3 * d + 1] += dE * dGrad[1];
+    grad[3 * d + 2] += dE * dGrad[2];
   }
 }
 

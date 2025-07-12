@@ -14,25 +14,28 @@ namespace Avogadro::Calc {
 
 /**
  * Calculate the components of the gradient for the angle a-b-c
+ * @return the angle between a-b-c in radians
  */
-inline void angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
+inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
                           Vector3& aGrad, Vector3& bGrad, Vector3& cGrad)
 {
   cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
 
   const Vector3 ab = a - b;
   const Vector3 cb = a - b;
-  Real rab = ab.norm();
-  Real rcb = cb.norm();
+  const Real rab = ab.norm();
+  const Real rcb = cb.norm();
+  const Real dot = ab.dot(cb);
+  const Real norms = rab * rcb;
+  const Real angle = std::acos(-dot / norms);
 
   if (rab < 1.e-3 || rcb < 1.e-3)
-    return;
+    return angle;
 
-  Real dot = ab.dot(cb);
   const Vector3 ab_cross_cb = ab.cross(cb);
   Real crossNorm = ab_cross_cb.norm();
   if (crossNorm < 1.e-6)
-    return;
+    return angle;
 
   // Use the cross product to get the gradients
   const Vector3 n = ab_cross_cb / crossNorm;
@@ -53,19 +56,29 @@ inline void angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   aGrad = (grad_cross_a * dot - crossNorm * grad_dot_a) / denom;
   bGrad = (grad_cross_b * dot - crossNorm * grad_dot_b) / denom;
   cGrad = (grad_cross_c * dot - crossNorm * grad_dot_c) / denom;
+
+  return angle;
 }
 
-inline void dihedralGradient(const Vector3& a, const Vector3& b,
+/**
+ * Calculate the components of the gradient for the dihedral a-b-c-d
+ * @return the torsion angle around a-b-c-d in radians
+ */
+inline Real dihedralGradient(const Vector3& a, const Vector3& b,
                              const Vector3& c, const Vector3& d, Vector3& aGrad,
-                             Vector3& bGrad, Vector3& cGrad, Vector4& dGrad)
+                             Vector3& bGrad, Vector3& cGrad, Vector3& dGrad)
 {
+  dGrad = cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
+  return 0.0;
 }
 
-inline void outOfPlaneGradient(const Vector3& point, const Vector3& b,
+inline Real outOfPlaneGradient(const Vector3& point, const Vector3& b,
                                const Vector3& c, const Vector3& d,
                                Vector3& aGrad, Vector3& bGrad, Vector3& cGrad,
-                               Vector4& dGrad)
+                               Vector3& dGrad)
 {
+  dGrad = cGrad = bGrad = aGrad = { 0.0, 0.0, 0.0 };
+  return 0.0;
 }
 
 } // namespace Avogadro::Calc
