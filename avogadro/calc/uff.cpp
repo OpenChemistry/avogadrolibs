@@ -644,7 +644,7 @@ public:
       Real dx = x[3 * i] - x[3 * j];
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
-      Real r = sqrt(dx * dx + dy * dy + dz * dz);
+      Real r = std::hypot(dx, dy, dz);
       Real dr = r - r0;
 
       /*
@@ -674,8 +674,8 @@ public:
       Real dx2 = x[3 * k] - x[3 * j];
       Real dy2 = x[3 * k + 1] - x[3 * j + 1];
       Real dz2 = x[3 * k + 2] - x[3 * j + 2];
-      Real r1 = sqrt(dx1 * dx1 + dy1 * dy1 + dz1 * dz1);
-      Real r2 = sqrt(dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
+      Real r1 = std::hypot(dx1, dy1, dz1);
+      Real r2 = std::hypot(dx2, dy2, dz2);
       Real dot = dx1 * dx2 + dy1 * dy2 + dz1 * dz2;
       Real theta = acos(dot / (r1 * r2));
 
@@ -819,7 +819,7 @@ public:
       Real dy = x[3 * i + 1] - x[3 * j + 1];
       Real dz = x[3 * i + 2] - x[3 * j + 2];
 
-      Real r = sqrt(dx * dx + dy * dy + dz * dz);
+      Real r = std::hypot(dx, dy, dz);
       Real dr = r - r0;
       Real f = 2.0 * kb * dr / r;
       grad[3 * i] += f * dx;

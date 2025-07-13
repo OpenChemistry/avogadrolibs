@@ -66,7 +66,7 @@ bool CrystalTools::rotateToStandardOrientation(Molecule& molecule, Options opts)
 
   // Cache some frequently used values:
   // Length of v1
-  const Real L1 = std::sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+  const Real L1 = std::hypot(x1, y1, z1);
   // Squared norm of v1's yz projection
   const Real sqrdnorm1yz = y1 * y1 + z1 * z1;
   // Squared norm of v2's yz projection
