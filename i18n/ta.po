@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-06 03:06+0000\n"
+"POT-Creation-Date: 2025-07-13 03:13+0000\n"
 "PO-Revision-Date: 2025-05-31 19:02+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/avogadro/"
@@ -180,7 +180,7 @@ msgstr "தொடரவும்"
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:66
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:377
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:380
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:955
 #. i18n: ectx: property (text), widget (QPushButton, closeButton)
@@ -2075,7 +2075,7 @@ msgid "Bond Selected Atoms"
 msgstr "பிணைப்பு தேர்ந்தெடுக்கப்பட்ட அணுக்கள்"
 
 #: qtplugins/bonding/bonding.cpp:62
-#: qtplugins/propertytables/propertymodel.cpp:544
+#: qtplugins/propertytables/propertymodel.cpp:575
 msgid "Bond"
 msgstr "கடனீடு"
 
@@ -2817,10 +2817,27 @@ msgstr "உரையை அலச முடியாது"
 msgid "Failed to read the data with the supplied format."
 msgstr "வழங்கப்பட்ட வடிவத்துடன் தரவைப் படிக்கத் தவறிவிட்டது."
 
-#: qtplugins/crystal/unitcelldialog.cpp:249
-#: qtplugins/crystal/unitcelldialog.cpp:262
+#: qtplugins/crystal/unitcelldialog.cpp:250
+#: qtplugins/crystal/unitcelldialog.cpp:263
 msgid "No unit cell present."
 msgstr "யூனிட் செல் இல்லை."
+
+#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
+#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
+#: qtplugins/crystal/unitcelldialog.cpp:283
+#: qtplugins/crystal/unitcelldialog.cpp:299
+#: qtplugins/crystal/unitcelldialog.cpp:315:400
+msgid "Unit Cell Editor"
+msgstr "யூனிட் செல் எடிட்டர்"
+
+#: qtplugins/crystal/unitcelldialog.cpp:284
+#: qtplugins/crystal/unitcelldialog.cpp:300
+msgid "Ignoring singular cell matrix"
+msgstr ""
+
+#: qtplugins/crystal/unitcelldialog.cpp:316
+msgid "Ignoring singular fractional cell matrix"
+msgstr ""
 
 #: qtplugins/customelements/customelements.cpp:19
 msgid "Reassign &Custom Elements…"
@@ -3023,7 +3040,7 @@ msgstr "& கணக்கிடுங்கள்"
 
 #: qtplugins/forcefield/forcefield.cpp:251
 #: qtplugins/forcefield/forcefield.cpp:409
-#: qtplugins/forcefield/forcefield.cpp:460
+#: qtplugins/forcefield/forcefield.cpp:479
 #: qtplugins/playertool/playertool.cpp:348
 #: qtplugins/playertool/playertool.cpp:380 qtplugins/surfaces/surfaces.cpp:931
 #: qtplugins/surfaces/surfaces.cpp:975 qtplugins/surfaces/surfaces.cpp:987
@@ -3046,7 +3063,7 @@ msgstr "சக்தி: %L1"
 msgid "%1 Energy = %L2"
 msgstr "%1 ஆற்றல் = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:459
+#: qtplugins/forcefield/forcefield.cpp:478
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 படை விதிமுறை = %L2"
@@ -3353,7 +3370,7 @@ msgstr "குறியெண்"
 msgid "Unique ID"
 msgstr "தனித்துவமான ஐடி"
 
-#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:500
+#: qtplugins/label/label.cpp:185 qtplugins/propertytables/propertymodel.cpp:531
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 msgid "Element"
 msgstr "தனிமம்"
@@ -3383,13 +3400,13 @@ msgstr "நீளம்"
 msgid "Bond Label:"
 msgstr "பிணைப்பு லேபிள்:"
 
-#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:553
+#: qtplugins/label/label.cpp:230 qtplugins/propertytables/propertymodel.cpp:584
 msgid "ID"
 msgstr "ஐடி"
 
 #: qtplugins/label/label.cpp:234
 #: qtplugins/plugindownloader/downloaderwidget.cpp:63
-#: qtplugins/propertytables/propertymodel.cpp:551
+#: qtplugins/propertytables/propertymodel.cpp:582
 msgid "Name"
 msgstr "பெயர்"
 
@@ -3582,7 +3599,7 @@ msgid "unknown molecule"
 msgstr "அறியப்படாத மூலக்கூறு"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:260
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Property"
 msgstr "சொத்து"
 
@@ -4418,158 +4435,158 @@ msgstr "போவ்ரே"
 msgid "Render the scene using POV-Ray."
 msgstr "POV-RAY ஐப் பயன்படுத்தி காட்சியை வழங்கவும்."
 
-#: qtplugins/propertytables/propertymodel.cpp:502
+#: qtplugins/propertytables/propertymodel.cpp:533
 msgid "Valence"
 msgstr "இணைதிறன்"
 
-#: qtplugins/propertytables/propertymodel.cpp:504
+#: qtplugins/propertytables/propertymodel.cpp:535
 msgid "Formal Charge"
 msgstr "முறையான கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:507
+#: qtplugins/propertytables/propertymodel.cpp:538
 #, qt-format
 msgctxt "e.g. MMFF94 Partial Charge or Gasteiger Partial Charge"
 msgid "%1 Partial Charge"
 msgstr "%1 பகுதி கட்டணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:512
+#: qtplugins/propertytables/propertymodel.cpp:543
 msgid "X (Å)"
 msgstr "ஃச் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:514
+#: qtplugins/propertytables/propertymodel.cpp:545
 msgid "Y (Å)"
 msgstr "ஒய் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:516
+#: qtplugins/propertytables/propertymodel.cpp:547
 msgid "Z (Å)"
 msgstr "சட் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:518
-#: qtplugins/propertytables/propertymodel.cpp:538
+#: qtplugins/propertytables/propertymodel.cpp:549
+#: qtplugins/propertytables/propertymodel.cpp:569
 msgid "Label"
 msgstr "சிட்டை"
 
-#: qtplugins/propertytables/propertymodel.cpp:520
-#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:551
+#: qtplugins/propertytables/propertymodel.cpp:592
 msgid "Color"
 msgstr "நிறம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:523
+#: qtplugins/propertytables/propertymodel.cpp:554
 msgid "Atom"
 msgstr "அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:530
-#: qtplugins/propertytables/propertymodel.cpp:571
-#: qtplugins/propertytables/propertymodel.cpp:588
+#: qtplugins/propertytables/propertymodel.cpp:561
+#: qtplugins/propertytables/propertymodel.cpp:602
+#: qtplugins/propertytables/propertymodel.cpp:619
 #: qtplugins/symmetry/operationstablemodel.cpp:57
 msgid "Type"
 msgstr "வகை"
 
-#: qtplugins/propertytables/propertymodel.cpp:532
+#: qtplugins/propertytables/propertymodel.cpp:563
 msgid "Start Atom"
 msgstr "அணுவைத் தொடங்கவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:534
+#: qtplugins/propertytables/propertymodel.cpp:565
 msgid "End Atom"
 msgstr "இறுதி அணு"
 
-#: qtplugins/propertytables/propertymodel.cpp:536
+#: qtplugins/propertytables/propertymodel.cpp:567
 msgid "Bond Order"
 msgstr "பாண்ட் ஆணை"
 
-#: qtplugins/propertytables/propertymodel.cpp:540
+#: qtplugins/propertytables/propertymodel.cpp:571
 msgctxt "in Angstrom"
 msgid "Length (Å)"
 msgstr "நீளம் (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:555
+#: qtplugins/propertytables/propertymodel.cpp:586
 msgid "Chain"
 msgstr "சங்கிலி"
 
-#: qtplugins/propertytables/propertymodel.cpp:557
+#: qtplugins/propertytables/propertymodel.cpp:588
 msgid "Secondary Structure"
 msgstr "இரண்டாம் நிலை அமைப்பு"
 
-#: qtplugins/propertytables/propertymodel.cpp:559
+#: qtplugins/propertytables/propertymodel.cpp:590
 msgid "Heterogen"
 msgstr "பன்முகத்தன்மை வாய்ந்த"
 
-#: qtplugins/propertytables/propertymodel.cpp:573
-#: qtplugins/propertytables/propertymodel.cpp:590
+#: qtplugins/propertytables/propertymodel.cpp:604
+#: qtplugins/propertytables/propertymodel.cpp:621
 msgid "Atom 1"
 msgstr "அணு 1"
 
-#: qtplugins/propertytables/propertymodel.cpp:575
+#: qtplugins/propertytables/propertymodel.cpp:606
 msgid "Vertex"
 msgstr "வெர்டெக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:577
-#: qtplugins/propertytables/propertymodel.cpp:594
+#: qtplugins/propertytables/propertymodel.cpp:608
+#: qtplugins/propertytables/propertymodel.cpp:625
 msgid "Atom 3"
 msgstr "அணு 3"
 
-#: qtplugins/propertytables/propertymodel.cpp:579
-#: qtplugins/propertytables/propertymodel.cpp:598
+#: qtplugins/propertytables/propertymodel.cpp:610
+#: qtplugins/propertytables/propertymodel.cpp:629
 msgid "Angle (°)"
 msgstr "(°) கோணம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:592
+#: qtplugins/propertytables/propertymodel.cpp:623
 msgid "Atom 2"
 msgstr "அணு 2"
 
-#: qtplugins/propertytables/propertymodel.cpp:596
+#: qtplugins/propertytables/propertymodel.cpp:627
 msgid "Atom 4"
 msgstr "அணு 4"
 
-#: qtplugins/propertytables/propertymodel.cpp:609
+#: qtplugins/propertytables/propertymodel.cpp:640
 msgctxt "root mean squared displacement in Angstrom"
 msgid "RMSD (Å)"
 msgstr "Rmsd (Å)"
 
-#: qtplugins/propertytables/propertymodel.cpp:612
+#: qtplugins/propertytables/propertymodel.cpp:643
 msgid "Energy (kcal/mol)"
 msgstr "ஆற்றல் (கிலோகலோரி/மோல்)"
 
-#: qtplugins/propertytables/propertymodel.cpp:808
+#: qtplugins/propertytables/propertymodel.cpp:839
 msgid "Adjust Fragment"
 msgstr "துண்டு சரிசெய்யவும்"
 
-#: qtplugins/propertytables/propertymodel.cpp:934
+#: qtplugins/propertytables/propertymodel.cpp:965
 msgctxt "pi helix"
 msgid "π Helix"
 msgstr "எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:936
+#: qtplugins/propertytables/propertymodel.cpp:967
 msgctxt "protein bend secondary structure"
 msgid "Bend"
 msgstr "வளைவு"
 
-#: qtplugins/propertytables/propertymodel.cpp:938
+#: qtplugins/propertytables/propertymodel.cpp:969
 msgctxt "alpha helix"
 msgid "α Helix"
 msgstr "α எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:940
+#: qtplugins/propertytables/propertymodel.cpp:971
 msgctxt "beta sheet"
 msgid "β Sheet"
 msgstr "β தாள்"
 
-#: qtplugins/propertytables/propertymodel.cpp:942
+#: qtplugins/propertytables/propertymodel.cpp:973
 msgctxt "3-10 helix"
 msgid "3-10 helix"
 msgstr "3-10 எலிக்ச்"
 
-#: qtplugins/propertytables/propertymodel.cpp:944
+#: qtplugins/propertytables/propertymodel.cpp:975
 msgctxt "beta bridge"
 msgid "β Bridge"
 msgstr "பி பாலம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:946
+#: qtplugins/propertytables/propertymodel.cpp:977
 msgctxt "protein turn secondary structure"
 msgid "Turn"
 msgstr "திருப்பம்"
 
-#: qtplugins/propertytables/propertymodel.cpp:948
+#: qtplugins/propertytables/propertymodel.cpp:979
 msgctxt "protein coil secondary structure"
 msgid "Coil"
 msgstr "சுருள்"
@@ -5510,7 +5527,7 @@ msgstr "பிழைத்திருத்த ச்கிரிப்ட்�
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:52
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:363
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:366
 #. i18n: ectx: property (text), widget (QPushButton, computeButton)
 msgid "Submit Calculation…"
 msgstr "கணக்கீட்டை சமர்ப்பிக்கவும்…"
@@ -5921,21 +5938,21 @@ msgstr "சிபி 2 கே உள்ளீடு"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:22
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:333
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:336
 #. i18n: ectx: property (text), widget (QPushButton, resetAllButton)
 msgid "Reset All"
 msgstr "அனைத்தையும் மீட்டமைக்கவும்"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:29
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:340
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:343
 #. i18n: ectx: property (text), widget (QPushButton, defaultsButton)
 msgid "Defaults"
 msgstr "இயல்புநிலை"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:59
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:370
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:373
 #. i18n: ectx: property (text), widget (QPushButton, generateButton)
 msgid "Save File…"
 msgstr "கோப்பைச் சேமி…"
@@ -5949,7 +5966,7 @@ msgstr "& அடிப்படை அமைப்பு"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:101
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:167
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:170
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -5958,7 +5975,7 @@ msgstr "தலைப்பு:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:114
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:310
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:313
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:60
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -5967,7 +5984,7 @@ msgstr "கோப்பு பெயர் அடிப்படை:"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:124
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:320
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:323
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:70
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, baseNameEdit)
@@ -5976,7 +5993,7 @@ msgstr "பணி"
 
 #. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:131
 #. i18n: ectx: property (text), widget (QLabel, label)
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:284
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:287
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Calculate:"
 msgstr "கணக்கிடுங்கள்:"
@@ -6053,22 +6070,22 @@ msgstr "அதிகபட்ச எச்சிஎஃப்"
 msgid "EPS SCF"
 msgstr "இபிஎச் எச்சிஎஃப்"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:539
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:542
 #. i18n: ectx: property (text), widget (QLabel, label_13)
 msgid "SCF GUESS"
 msgstr "எச்சிஎஃப் யூக"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:566
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:569
 #. i18n: ectx: property (text), widget (QLabel, label_24)
 msgid "OUTER MAX SCF"
 msgstr "வெளிப்புற மேக்ச் எச்சிஎஃப்"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:600
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:603
 #. i18n: ectx: property (text), widget (QLabel, label_25)
 msgid "OUTER EPS SCF"
 msgstr "வெளிப்புற இபிஎச் எச்சிஎஃப்"
 
-#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:634
+#. i18n: file: qtplugins/cp2kinput/cp2kinputdialog.ui:640
 #. i18n: ectx: property (text), widget (QLabel, label_26)
 msgid "OT T MINIMIZER"
 msgstr "வழங்கியவர் டி மினிமிசர்"
@@ -6102,11 +6119,6 @@ msgstr "B மீண்டும்:"
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C repeat:"
 msgstr "சி மீண்டும்:"
-
-#. i18n: file: qtplugins/crystal/unitcelldialog.ui:14
-#. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::UnitCellDialog)
-msgid "Unit Cell Editor"
-msgstr "யூனிட் செல் எடிட்டர்"
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6315,17 +6327,17 @@ msgstr "இல்:"
 msgid "CONV THRESH"
 msgstr ""
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:141
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:144
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Multiplicity:"
 msgstr "பெருக்கம்:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:154
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:157
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "With:"
 msgstr "உடன்:"
 
-#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:251
+#. i18n: file: qtplugins/gamessinput/gamessinputdialog.ui:254
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Charge:"
 msgstr "கட்டணம்:"
