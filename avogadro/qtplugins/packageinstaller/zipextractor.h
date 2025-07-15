@@ -22,7 +22,7 @@ class ZipExtractor : public QObject
 
 public:
   ZipExtractor();
-  ~ZipExtractor();
+  ~ZipExtractor() override;
   int copyData(struct archive* ar, struct archive* aw);
   QList<QString> extract(const std::string& extractdir,
                          const std::string& absolutepath);

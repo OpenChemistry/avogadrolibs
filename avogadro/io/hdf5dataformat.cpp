@@ -75,14 +75,14 @@ class ResizeMatrixX : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
 
 public:
   ResizeMatrixX(MatrixX& data) : m_data(data) {}
-  bool resize(const std::vector<int>& dims)
+  bool resize(const std::vector<int>& dims) override
   {
     if (dims.size() != 2)
       return false;
     m_data.resize(dims[0], dims[1]);
     return true;
   }
-  void* dataPointer() { return m_data.data(); }
+  void* dataPointer() override { return m_data.data(); }
 };
 
 class ResizeVector : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
@@ -91,12 +91,12 @@ class ResizeVector : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
 
 public:
   ResizeVector(std::vector<double>& data) : m_data(data) {}
-  bool resize(const std::vector<int>& dims)
+  bool resize(const std::vector<int>& dims) override
   {
     m_data.resize(dimsToNumberOfElements(dims));
     return true;
   }
-  void* dataPointer() { return &m_data[0]; }
+  void* dataPointer() override { return &m_data[0]; }
 };
 
 class ResizeArray : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
@@ -105,12 +105,12 @@ class ResizeArray : public Avogadro::Io::Hdf5DataFormat::ResizeContainer
 
 public:
   ResizeArray(Avogadro::Core::Array<double>& data) : m_data(data) {}
-  bool resize(const std::vector<int>& dims)
+  bool resize(const std::vector<int>& dims) override
   {
     m_data.resize(dimsToNumberOfElements(dims));
     return true;
   }
-  void* dataPointer() { return &m_data[0]; }
+  void* dataPointer() override { return &m_data[0]; }
 };
 
 } // end unnamed namespace

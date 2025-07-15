@@ -25,7 +25,7 @@ public:
 
 protected:
   vtkCustomPiecewiseControlPointsItem();
-  virtual ~vtkCustomPiecewiseControlPointsItem();
+  ~vtkCustomPiecewiseControlPointsItem() override;
 
   // Utility function to determine whether a position is near the piecewise
   // function.

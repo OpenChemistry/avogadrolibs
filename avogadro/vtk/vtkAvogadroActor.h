@@ -57,7 +57,7 @@ public:
 
 protected:
   vtkAvogadroActor();
-  ~vtkAvogadroActor();
+  ~vtkAvogadroActor() override;
 
   Avogadro::Rendering::Scene* m_scene;
   double m_bounds[6];

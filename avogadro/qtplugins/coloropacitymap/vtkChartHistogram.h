@@ -63,7 +63,7 @@ protected:
 
 private:
   vtkChartHistogram();
-  virtual ~vtkChartHistogram();
+  ~vtkChartHistogram() override;
 };
 
 #endif // tomvizvtkChartHistogram_h
