@@ -60,7 +60,7 @@ inline constexpr unsigned char CustomElementCount =
  * @return True if @a atomicNumber denotes a custom element type.
  */
 namespace Core {
-inline constexpr bool isCustomElement(unsigned char atomicNumber)
+constexpr bool isCustomElement(unsigned char atomicNumber)
 {
   return atomicNumber >= CustomElementMin && atomicNumber <= CustomElementMax;
 }

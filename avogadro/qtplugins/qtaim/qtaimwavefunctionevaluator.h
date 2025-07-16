@@ -114,7 +114,7 @@ private:
   Matrix<qreal, Dynamic, 1> m_cdg013;
   Matrix<qreal, Dynamic, 1> m_cdg004;
 
-  static inline qreal ipow(qreal a, qint64 n) { return (qreal)pow(a, (int)n); }
+  static qreal ipow(qreal a, qint64 n) { return (qreal)pow(a, (int)n); }
 };
 
 } // namespace Avogadro::QtPlugins
