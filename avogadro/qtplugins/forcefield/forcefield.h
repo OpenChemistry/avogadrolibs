@@ -32,6 +32,7 @@ class Forcefield : public QtGui::ExtensionPlugin
   Q_OBJECT
 
 public:
+  // Currently unused - defaults to LBFGS
   enum Minimizer
   {
     SteepestDescent = 0,
@@ -75,6 +76,10 @@ private slots:
   void optimize();
   void freezeSelected();
   void unfreezeSelected();
+
+  // fuse adds all pairwise distance constraints
+  void fuseSelected();
+  // todo add constraints dialog
 
 private:
   QList<QAction*> m_actions;

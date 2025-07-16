@@ -52,6 +52,7 @@ const int freezeAction = 3;
 const int unfreezeAction = 4;
 const int constraintAction = 5;
 const int forcesAction = 6;
+const int fuseAction = 7;
 
 Forcefield::Forcefield(QObject* parent_)
   : ExtensionPlugin(parent_), m_method(nullptr)
@@ -115,6 +116,14 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Unfreeze Selected Atoms"));
   action->setData(unfreezeAction);
   connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
+  m_actions.push_back(action);
+
+  action = new QAction(this);
+  action->setEnabled(true);
+  action->setText(
+    tr("Fuse Atoms", "freeze atomic distances / glue atoms together"));
+  action->setData(fuseAction);
+  connect(action, SIGNAL(triggered()), SLOT(fuseSelected()));
   m_actions.push_back(action);
 
   // initialize the calculators
@@ -533,6 +542,11 @@ void Forcefield::unfreezeSelected()
       m_molecule->setFrozenAtom(i, false);
     }
   }
+}
+
+void Forcefield::fuseSelected()
+{
+  // loop through all atom pairs and set distance constraints
 }
 
 void Forcefield::refreshScripts()
